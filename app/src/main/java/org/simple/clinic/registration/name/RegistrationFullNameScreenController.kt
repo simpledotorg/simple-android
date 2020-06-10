@@ -3,12 +3,8 @@ package org.simple.clinic.registration.name
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -23,22 +19,6 @@ class RegistrationFullNameScreenController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.mergeArray(
-        updateOngoingEntryAndProceed(replayedEvents)
-    )
+    return Observable.never()
   }
-
-  private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
-    val fullNameTextChanges = events.ofType<RegistrationFullNameTextChanged>().map { it.fullName }
-    val doneClicks = events.ofType<RegistrationFullNameDoneClicked>()
-
-    return doneClicks
-        .withLatestFrom(fullNameTextChanges)
-        .filter { (_, name) -> name.isNotBlank() }
-        .map { (_, name) -> ongoingRegistrationEntry().copy(fullName = name) }
-        .doOnNext(userSession::saveOngoingRegistrationEntry)
-        .map { { ui: Ui -> ui.openRegistrationPinEntryScreen() } }
-  }
-
-  private fun ongoingRegistrationEntry(): OngoingRegistrationEntry = (userSession.ongoingRegistrationEntry() as Just).value
 }

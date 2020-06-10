@@ -24,16 +24,10 @@ class RegistrationFullNameScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        preFillExistingDetails(replayedEvents),
         showValidationError(replayedEvents),
         hideValidationError(replayedEvents),
-        updateOngoingEntryAndProceed(replayedEvents))
-  }
-
-  private fun preFillExistingDetails(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RegistrationFullNameScreenCreated>()
-        .map { { ui: Ui -> ui.preFillUserDetails(ongoingRegistrationEntry()) } }
+        updateOngoingEntryAndProceed(replayedEvents)
+    )
   }
 
   private fun showValidationError(events: Observable<UiEvent>): Observable<UiChange> {

@@ -46,7 +46,7 @@ class ContactPatientInitTest {
   fun `when the screen is restored, do not load the patient profile and latest appointment if they are already loaded`() {
     val model = defaultModel()
         .patientProfileLoaded(TestData.patientProfile(patientUuid = patientUuid))
-        .overdueAppointmentLoaded(None)
+        .overdueAppointmentLoaded(None())
 
     spec
         .whenInit(model)

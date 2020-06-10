@@ -33,6 +33,6 @@ class ProtocolModule {
   @Provides
   @Named("last_protocol_pull_token")
   fun lastPullToken(rxSharedPreferences: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPreferences.getObject("last_protocol_pull_timestamp", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPreferences.getObject("last_protocol_pull_timestamp", None(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 }

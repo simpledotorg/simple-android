@@ -64,7 +64,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
 
   private fun currentProtocol(facility: Facility): Optional<Protocol> {
     return if (facility.protocolUuid == null)
-      None
+      None()
     else
       protocolRepository.protocolImmediate(facility.protocolUuid).toOptional()
   }

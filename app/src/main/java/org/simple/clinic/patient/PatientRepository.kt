@@ -148,7 +148,7 @@ class PatientRepository @Inject constructor(
         .map { patients ->
           when {
             patients.isNotEmpty() -> Just(patients.first())
-            else -> None
+            else -> None<Patient>()
           }
         }
   }
@@ -449,7 +449,7 @@ class PatientRepository @Inject constructor(
         .map { addresses ->
           when {
             addresses.isNotEmpty() -> Just(addresses.first())
-            else -> None
+            else -> None<PatientAddress>()
           }
         }
   }
@@ -467,7 +467,7 @@ class PatientRepository @Inject constructor(
         .map { numbers ->
           when {
             numbers.isNotEmpty() -> Just(numbers.first())
-            else -> None
+            else -> None<PatientPhoneNumber>()
           }
         }
   }
@@ -589,7 +589,7 @@ class PatientRepository @Inject constructor(
         .findPatientsWithBusinessId(identifier)
         .map { patients ->
           if (patients.isEmpty()) {
-            None
+            None()
           } else {
             patients.first().toOptional()
           }
@@ -604,7 +604,7 @@ class PatientRepository @Inject constructor(
         .latestForPatientByType(patientUuid, BpPassport)
         .map { bpPassports ->
           if (bpPassports.isEmpty()) {
-            None
+            None()
           } else {
             bpPassports.first().toOptional()
           }
@@ -618,7 +618,7 @@ class PatientRepository @Inject constructor(
         .latestForPatientByType(patientUuid, BangladeshNationalId)
         .map { bangladeshNationalId ->
           if (bangladeshNationalId.isEmpty()) {
-            None
+            None()
           } else {
             bangladeshNationalId.first().toOptional()
           }

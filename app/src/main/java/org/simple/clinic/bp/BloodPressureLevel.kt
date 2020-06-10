@@ -13,9 +13,9 @@ enum class BloodPressureLevel(private val urgency: Int, val displayTextRes: Opti
 
   MODERATELY_HIGH(2, Just(R.string.bloodpressure_level_high)),
 
-  MILDLY_HIGH(1, None),
+  MILDLY_HIGH(1, None()),
 
-  NORMAL(0, None),
+  NORMAL(0, None()),
 
   LOW(-1, Just(R.string.bloodpressure_level_low));
 

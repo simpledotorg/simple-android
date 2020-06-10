@@ -37,7 +37,7 @@ abstract class BaseSyncCoordinatorAndroidTest<T, P> {
       return
     }
 
-    lastPullToken().set(None)
+    lastPullToken().set(None())
 
     val recordsToInsert = 2 * batchSize().numberOfRecords + 7
     val payloads = (0 until recordsToInsert).map { (::generatePayload)() }

@@ -76,7 +76,7 @@ class HelpScreenControllerTest {
 
   @Test
   fun `when the help file does not exist then screen should show no-help view`() {
-    whenever(helpRepository.helpFile()).thenReturn(Observable.just(None))
+    whenever(helpRepository.helpFile()).thenReturn(Observable.just(None()))
 
     uiEvents.onNext(ScreenCreated())
 

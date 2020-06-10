@@ -14,6 +14,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import java.io.File
 import javax.inject.Inject
 
 typealias Ui = HelpScreen
@@ -49,7 +50,7 @@ class HelpScreenController @Inject constructor(
         .map { helpFileUri -> { ui: Ui -> ui.showHelp(helpFileUri) } }
 
     val showEmptyView = helpFileStream
-        .ofType<None>()
+        .ofType<None<File>>()
         .map { Ui::showNoHelpAvailable }
 
     return showHelp.mergeWith(showEmptyView)

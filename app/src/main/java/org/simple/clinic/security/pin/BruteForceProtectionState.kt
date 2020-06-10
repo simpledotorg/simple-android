@@ -10,7 +10,7 @@ import org.threeten.bp.Instant
 @JsonClass(generateAdapter = true)
 data class BruteForceProtectionState(
     val failedAuthCount: Int = 0,
-    val limitReachedAt: Optional<Instant> = None
+    val limitReachedAt: Optional<Instant> = None()
 ) {
 
   fun authenticationFailed(): BruteForceProtectionState {

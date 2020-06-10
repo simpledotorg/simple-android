@@ -86,7 +86,7 @@ class UserSessionAndroidTest {
     userSession.logout().blockingGet()
 
     assertThat(userSession.loggedInUser().blockingFirst())
-        .isEqualTo(None)
+        .isEqualTo(None<User>())
   }
 
   @Test

@@ -43,7 +43,7 @@ class ReportsRepositoryTest {
 
     val fileStreamObserver = repository.reportsFile().test()
 
-    fileStreamObserver.assertValue(None)
+    fileStreamObserver.assertValue(None())
   }
 
   @Test
@@ -55,7 +55,7 @@ class ReportsRepositoryTest {
 
     val fileStreamObserver = repository.reportsFile().test()
 
-    fileStreamObserver.assertValue(None)
+    fileStreamObserver.assertValue(None())
   }
 
   @Test
@@ -121,6 +121,6 @@ class ReportsRepositoryTest {
     val reportsFileStream = repository.reportsFile().test()
     repository.deleteReportsFile().test().assertNoErrors()
 
-    reportsFileStream.assertValues(file.toOptional(), None)
+    reportsFileStream.assertValues(file.toOptional(), None())
   }
 }

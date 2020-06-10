@@ -4,8 +4,8 @@
 ### Feature
 - User can soft delete patient
 - Add diagnosis and blood sugar readings to the teleconsultation message
+- User can now select from multiple doctors when requesting a teleconsultation
 - [In Progress 09 Jun 2020] New Onboarding UI
-- [In Progress: 09 Jun 2020] Support multiple teleconsultation phone numbers
 
 ### Changes
 - Rename the button label to 'Next' when assigning a new BP passport to an existing patient

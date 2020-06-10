@@ -9,6 +9,7 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.util.Rules
+import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.unwrapJust
 import javax.inject.Inject
 

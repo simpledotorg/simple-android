@@ -65,10 +65,6 @@ sealed class Optional<T>(
   @Suppress("DeprecatedCallableAddReplaceWith")
   operator fun component1(): T? = if (isPresent()) get() else null
 
-  fun isNotEmpty(): Boolean {
-    return this is Just
-  }
-
   companion object {
 
     private fun <T> fromJavaOptional(optional: JOptional<T>): Optional<T> {
@@ -137,3 +133,9 @@ fun <T> Optional<T>.toNullable(): T? = if (isPresent()) get() else null
     replaceWith = ReplaceWith("!isPresent()")
 )
 fun Optional<*>.isEmpty(): Boolean = !isPresent()
+
+@Deprecated(
+    message = "Use .isPresent() instead.",
+    replaceWith = ReplaceWith("isPresent()")
+)
+fun Optional<*>.isNotEmpty(): Boolean = isPresent()

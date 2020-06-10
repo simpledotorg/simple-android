@@ -10,6 +10,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.isNotEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 

@@ -13,3 +13,5 @@ data class NameValidated(val result: RegistrationNameValidationResult) : Registr
 class RegistrationFullNameDoneClicked : RegistrationNameEvent() {
   override val analyticsName = "Registration:Name Entry:Done Clicked"
 }
+
+object CurrentRegistrationEntrySaved : RegistrationNameEvent()

@@ -7,6 +7,7 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.isNotEmpty
 
 @Parcelize
 data class PatientEntryModel(

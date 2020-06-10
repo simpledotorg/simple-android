@@ -6,13 +6,19 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 
 @Parcelize
 data class RegistrationNameModel(
-    val ongoingRegistrationEntry: OngoingRegistrationEntry
+    val ongoingRegistrationEntry: OngoingRegistrationEntry,
+    val nameValidationResult: RegistrationNameValidationResult?
 ) : Parcelable {
 
   companion object {
     fun create(
         registrationEntry: OngoingRegistrationEntry
-    ): RegistrationNameModel = RegistrationNameModel(ongoingRegistrationEntry = registrationEntry)
+    ): RegistrationNameModel {
+      return RegistrationNameModel(
+          ongoingRegistrationEntry = registrationEntry,
+          nameValidationResult = null
+      )
+    }
   }
 
   fun nameChanged(fullName: String): RegistrationNameModel {

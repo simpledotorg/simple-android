@@ -4,8 +4,8 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.isNotEmpty
 
 @Parcelize
 data class SetupActivityModel(

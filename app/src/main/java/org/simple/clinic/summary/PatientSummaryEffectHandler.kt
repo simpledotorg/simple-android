@@ -26,6 +26,7 @@ import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.isEmpty
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
 import java.util.UUID

@@ -69,10 +69,6 @@ sealed class Optional<T>(
     return this is Just
   }
 
-  fun isEmpty(): Boolean {
-    return this is None
-  }
-
   companion object {
 
     private fun <T> fromJavaOptional(optional: JOptional<T>): Optional<T> {
@@ -135,3 +131,9 @@ fun <T> T?.toOptional(): Optional<T> = Optional.ofNullable(this)
  * Converts [Optional] to either its non-null value if it's non-empty or `null` if it's empty.
  */
 fun <T> Optional<T>.toNullable(): T? = if (isPresent()) get() else null
+
+@Deprecated(
+    message = "Use .isPresent() instead.",
+    replaceWith = ReplaceWith("!isPresent()")
+)
+fun Optional<*>.isEmpty(): Boolean = !isPresent()

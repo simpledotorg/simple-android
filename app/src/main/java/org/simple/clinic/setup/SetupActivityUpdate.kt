@@ -8,6 +8,7 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.isEmpty
 
 class SetupActivityUpdate : Update<SetupActivityModel, SetupActivityEvent, SetupActivityEffect> {
 

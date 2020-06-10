@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -23,12 +22,12 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class RegistrationFullNameScreenControllerTest {
+class RegistrationNameScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val uiEvents = PublishSubject.create<UiEvent>()!!
+  private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<RegistrationNameUi>()
   private val userSession = mock<UserSession>()
 
@@ -37,12 +36,10 @@ class RegistrationFullNameScreenControllerTest {
       phoneNumber = "1111111111"
   )
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<RegistrationNameModel, RegistrationNameEvent, RegistrationNameEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -143,13 +140,6 @@ class RegistrationFullNameScreenControllerTest {
   private fun setupController(
       ongoingRegistrationEntry: OngoingRegistrationEntry = currentOngoingRegistrationEntry
   ) {
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingRegistrationEntry.toOptional())
-
-    val controller = RegistrationFullNameScreenController(userSession)
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
 
     val uiRenderer = RegistrationNameUiRenderer(ui)
     val effectHandler = RegistrationNameEffectHandler(
@@ -167,7 +157,5 @@ class RegistrationFullNameScreenControllerTest {
         modelUpdateListener = uiRenderer::render
     )
     testFixture.start()
-
-    uiEvents.onNext(RegistrationFullNameScreenCreated())
   }
 }

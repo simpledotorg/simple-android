@@ -31,9 +31,8 @@ class HelpRepository @Inject constructor(
         .map { result ->
           if (result is GetFileResult.Success && result.file.length() > 0L) {
             Just(result.file)
-
           } else {
-            None
+            None<File>()
           }
         }
 
@@ -54,7 +53,7 @@ class HelpRepository @Inject constructor(
         .ofType<GetFileResult.Success>()
         .map { fileStorage.delete(it.file) }
         .doOnSuccess {
-          if (it is DeleteFileResult.Success) fileChangedSubject.onNext(None)
+          if (it is DeleteFileResult.Success) fileChangedSubject.onNext(None())
         }
         .toSingle(DeleteFileResult.Success)
   }

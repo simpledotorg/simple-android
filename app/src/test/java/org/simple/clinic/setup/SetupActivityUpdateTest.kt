@@ -6,8 +6,8 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.appconfig.Country
 import org.simple.clinic.TestData
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -109,15 +109,15 @@ class SetupActivityUpdateTest {
   }
 
   private fun previouslyLoggedInUserFetched(user: User): UserDetailsFetched {
-    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Just(user), userSelectedCountry = None)
+    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Just(user), userSelectedCountry = None())
   }
 
   private fun onboardedUserWithoutLoggingInFetched(): UserDetailsFetched {
-    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = None, userSelectedCountry = None)
+    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = None(), userSelectedCountry = None())
   }
 
   private fun completelyNewUserFetched(): UserDetailsFetched {
-    return UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = None, userSelectedCountry = None)
+    return UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = None(), userSelectedCountry = None())
   }
 
   private fun loggedInUserFetched(user: User, country: Country): UserDetailsFetched {
@@ -128,13 +128,13 @@ class SetupActivityUpdateTest {
 private fun SetupActivityModel.previouslyLoggedInUser(user: User): SetupActivityModel {
   return this
       .withLoggedInUser(Just(user))
-      .withSelectedCountry(None)
+      .withSelectedCountry(None())
 }
 
 private fun SetupActivityModel.completelyNewUser(): SetupActivityModel {
   return this
-      .withLoggedInUser(None)
-      .withSelectedCountry(None)
+      .withLoggedInUser(None())
+      .withSelectedCountry(None())
 }
 
 private fun SetupActivityModel.loggedInUser(user: User, country: Country): SetupActivityModel {

@@ -30,7 +30,7 @@ class BloodSugarModule {
   @Provides
   @Named("last_blood_sugar_pull_token")
   fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_blood_sugar_pull_token", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getObject("last_blood_sugar_pull_token", None(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 
   @Provides

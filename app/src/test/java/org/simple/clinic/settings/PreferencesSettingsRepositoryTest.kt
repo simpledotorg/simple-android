@@ -23,7 +23,7 @@ class PreferencesSettingsRepositoryTest {
   @Test
   fun `if user selected locale is not set, fetching the current language should return the default language`() {
     // given
-    whenever(preference.get()).doReturn(None)
+    whenever(preference.get()).doReturn(None())
 
     // then
     repository

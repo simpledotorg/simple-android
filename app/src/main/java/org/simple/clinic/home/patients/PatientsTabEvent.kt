@@ -35,7 +35,7 @@ class UserApprovedStatusDismissed : PatientsTabEvent() {
 }
 
 data class ScanCardIdButtonClicked(
-    override var permission: Optional<RuntimePermissionResult> = None,
+    override var permission: Optional<RuntimePermissionResult> = None(),
     override val permissionString: String = Manifest.permission.CAMERA,
     override val permissionRequestCode: Int = 1
 ) : PatientsTabEvent(), RequiresPermission {

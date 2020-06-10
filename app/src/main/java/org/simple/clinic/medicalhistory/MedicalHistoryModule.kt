@@ -29,6 +29,6 @@ class MedicalHistoryModule {
   @Provides
   @Named("last_medicalhistory_pull_token")
   fun lastPullTokenV2(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_medicalhistory_pull_token_v2", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getObject("last_medicalhistory_pull_token_v2", None(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 }

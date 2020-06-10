@@ -1,5 +1,12 @@
 package org.simple.clinic.util
 
+import java.util.Objects
+import java.util.function.Consumer
+import java.util.function.Function
+import java.util.function.Predicate
+import java.util.function.Supplier
+import java.util.Optional as JOptional
+
 /**
  * Modified to use [Just] instead of Just.
  *
@@ -18,7 +25,34 @@ package org.simple.clinic.util
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-sealed class Optional<out T : Any> {
+sealed class Optional<T>(
+    private val wrapped: JOptional<T>
+) {
+  fun get(): T = wrapped.get()
+
+  fun filter(predicate: Predicate<T>): Optional<T> = fromJavaOptional(wrapped.filter(predicate))
+
+  fun isPresent(): Boolean = wrapped.isPresent
+
+  fun ifPresent(consumer: Consumer<T>) {
+    wrapped.ifPresent(consumer)
+  }
+
+  fun <U> map(mapper: Function<T, U>): Optional<U> = fromJavaOptional(wrapped.map(mapper))
+
+  fun <U> flatMap(mapper: Function<T, Optional<U>>): Optional<U> {
+    return if (isPresent()) mapper.apply(get()) else None()
+  }
+
+  fun orElse(other: T): T = wrapped.orElse(other)
+
+  fun orElseGet(other: Supplier<T>): T = wrapped.orElseGet(other)
+
+  fun <X : Throwable> orElseThrow(exceptionSupplier: Supplier<X>): T = wrapped.orElseThrow(exceptionSupplier)
+
+  override fun toString(): String {
+    return wrapped.toString()
+  }
 
   /**
    * Converts [Optional] to either its non-null value if it's [Just] or `null` if it's [None].
@@ -28,7 +62,13 @@ sealed class Optional<out T : Any> {
   /**
    * Unwraps this optional into the value it holds or null if there is no value held.
    */
-  abstract operator fun component1(): T?
+  @Deprecated(message = """
+    Destructuring `Optional` is deprecated since we are moving to the Java Optional class (https://github.com/simpledotorg/simple-android/issues/1381).
+    
+    Do not use this anymore and use some of the alternate methods on the class.
+  """)
+  @Suppress("DeprecatedCallableAddReplaceWith")
+  operator fun component1(): T? = if (isPresent()) get() else null
 
   fun isNotEmpty(): Boolean {
     return this is Just
@@ -40,36 +80,46 @@ sealed class Optional<out T : Any> {
 
   companion object {
 
-    /**
-     * Wraps an instance of T (or null) into an [Optional]:
-     *
-     * ```java
-     * String a = "str";
-     * String b = null;
-     *
-     * Optional<String> optionalA = Optional.toOptional(a); // Just("str")
-     * Optional<String> optionalB = Optional.toOptional(b); // None
-     * ```
-     *
-     * This is the preferred method of obtaining an instance of [Optional] in Java. In Kotlin,
-     * prefer using the [toOptional][com.gojuno.koptional.toOptional] extension function.
-     */
-    @JvmStatic
-    fun <T : Any> toOptional(value: T?): Optional<T> = if (value == null) None else Just(value)
+    private fun <T> fromJavaOptional(optional: JOptional<T>): Optional<T> {
+      return if (optional.isPresent) Just(optional.get()) else None()
+    }
+
+    fun <T> empty(): Optional<T> = None()
+
+    fun <T> of(value: T): Optional<T> = Just(value)
+
+    fun <T> ofNullable(value: T?): Optional<T> = if (value != null) Just(value) else None()
   }
 }
 
-data class Just<out T : Any>(val value: T) : Optional<T>() {
-  override fun toString() = "Just($value)"
-  override fun toNullable(): T = value
+class Just<T>(val value: T) : Optional<T>(JOptional.of(value)) {
+  override fun toNullable(): T? = value
+
+  override fun equals(other: Any?): Boolean {
+    return when {
+      this === other -> true
+      other == null || other !is Just<*> -> false
+      else -> other.value == value
+    }
+  }
+
+  override fun hashCode(): Int = value.hashCode()
 }
 
-object None : Optional<Nothing>() {
-  override fun toString() = "None"
-
-  override fun component1(): Nothing? = null
-
+class None<T> : Optional<T>(JOptional.empty()) {
   override fun toNullable(): Nothing? = null
+
+  override fun equals(other: Any?): Boolean {
+    return when {
+      this === other -> true
+      other == null || other !is None<*> -> false
+      else -> true
+    }
+  }
+
+  override fun hashCode(): Int {
+    return Objects.hash(null)
+  }
 }
 
 /**
@@ -86,4 +136,4 @@ object None : Optional<Nothing>() {
  * This is the preferred method of obtaining an instance of [Optional] in Kotlin. In Java, prefer
  * using the static [Optional.toOptional] method.
  */
-fun <T : Any> T?.toOptional(): Optional<T> = if (this == null) None else Just(this)
+fun <T> T?.toOptional(): Optional<T> = if (this == null) None() else Just(this)

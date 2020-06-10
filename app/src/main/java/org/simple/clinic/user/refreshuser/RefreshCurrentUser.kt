@@ -45,7 +45,7 @@ class RefreshCurrentUser @Inject constructor(
   private fun fetchUserDetails(): Optional<LoggedInUserPayload> {
     val response = usersApi.self().execute()
 
-    return if (response.code() == 200) Just(response.body()!!.user) else None
+    return if (response.code() == 200) Just(response.body()!!.user) else None()
   }
 
   private fun newLoggedInStatus(

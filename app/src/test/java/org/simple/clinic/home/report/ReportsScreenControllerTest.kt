@@ -73,7 +73,7 @@ class ReportsScreenControllerTest {
 
   @Test
   fun `when the reports file does not exist then screen should show no-reports view`() {
-    whenever(reportsRepository.reportsFile()).thenReturn(Observable.just(None))
+    whenever(reportsRepository.reportsFile()).thenReturn(Observable.just(None()))
 
     uiEvents.onNext(ScreenCreated())
 

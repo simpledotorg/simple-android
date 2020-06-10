@@ -1483,7 +1483,7 @@ class PatientRepositoryAndroidTest {
     assertThat(savedMeta).isEqualTo(expectedSavedMeta)
 
     val (updatedPatient) = patientRepository.patient(patientProfile.patient.uuid).blockingFirst() as Just
-    assertThat(updatedPatient.syncStatus).isEqualTo(PENDING)
+    assertThat(updatedPatient!!.syncStatus).isEqualTo(PENDING)
   }
 
   @Test
@@ -1523,7 +1523,7 @@ class PatientRepositoryAndroidTest {
     assertThat(savedMeta).isEqualTo(expectedSavedMeta)
 
     val (updatedPatient) = patientRepository.patient(patientProfile.patient.uuid).blockingFirst() as Just
-    assertThat(updatedPatient.syncStatus).isEqualTo(PENDING)
+    assertThat(updatedPatient!!.syncStatus).isEqualTo(PENDING)
   }
 
   @Test
@@ -1585,7 +1585,7 @@ class PatientRepositoryAndroidTest {
     val savedPatientNationalId = patientRepository.bangladeshNationalIdForPatient(savedPatient.uuid).blockingFirst()
 
     // then
-    assertThat(savedPatientNationalId).isEqualTo(None)
+    assertThat(savedPatientNationalId).isEqualTo(None<BusinessId>())
   }
 
   @Test
@@ -1710,8 +1710,8 @@ class PatientRepositoryAndroidTest {
     val (patientResultTwo) = patientRepository.findPatientWithBusinessId(identifier = sharedBusinessIdentifier).blockingFirst() as Just<Patient>
     assertThat(patientResultTwo).isEqualTo(patientTwoWithSharedBusinessId.patient)
 
-    assertThat(patientRepository.findPatientWithBusinessId(deletedBusinessIdentifier).blockingFirst()).isEqualTo(None)
-    assertThat(patientRepository.findPatientWithBusinessId("missing_identifier").blockingFirst()).isEqualTo(None)
+    assertThat(patientRepository.findPatientWithBusinessId(deletedBusinessIdentifier).blockingFirst()).isEqualTo(None<Patient>())
+    assertThat(patientRepository.findPatientWithBusinessId("missing_identifier").blockingFirst()).isEqualTo(None<Patient>())
   }
 
   @Test
@@ -2956,7 +2956,7 @@ class PatientRepositoryAndroidTest {
 
     // then
     val expectedResults = mapOf(
-        patientWithNoBps to None,
+        patientWithNoBps to None(),
         patientWithOneBp to LastSeen(
             lastSeenOn = instant,
             lastSeenAtFacilityName = facilityName,
@@ -3253,7 +3253,7 @@ class PatientRepositoryAndroidTest {
     val resultForNotDeletedPatient = findPatientWithIdentifier(notDeletedPatientIdentifier) as Just<Patient>
 
     //then
-    assertThat(resultForDeletedPatient).isEqualTo(None)
+    assertThat(resultForDeletedPatient).isEqualTo(None<Patient>())
     assertThat(resultForNotDeletedPatient.value.uuid).isEqualTo(notDeletedPatientId)
   }
 

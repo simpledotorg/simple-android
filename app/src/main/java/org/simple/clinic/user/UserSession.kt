@@ -190,7 +190,7 @@ class UserSession @Inject constructor(
   fun loggedInUser(): Observable<Optional<User>> {
     return appDatabase.userDao().user()
         .toObservable()
-        .map { if (it.isEmpty()) None else Just(it.first()) }
+        .map { if (it.isEmpty()) None<User>() else Just(it.first()) }
   }
 
   @Deprecated(

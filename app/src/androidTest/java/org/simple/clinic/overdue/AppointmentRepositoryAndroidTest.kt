@@ -2339,7 +2339,7 @@ class AppointmentRepositoryAndroidTest {
 
     // then
     val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, today.plusDays(1))
-    assertThat(latest_appointment_today).isEqualTo(None)
+    assertThat(latest_appointment_today).isEqualTo(None<OverdueAppointment>())
 
     val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, aWeekInFuture.plusDays(1)) as Just
     assertThat(latest_appointment_a_week_later.value.appointment).isEqualTo(appointment_scheduled_for_today_with_reminder_a_week_in_the_future)

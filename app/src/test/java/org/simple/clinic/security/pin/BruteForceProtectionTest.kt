@@ -39,7 +39,7 @@ class BruteForceProtectionTest {
   fun `when incrementing the count of failed attempts and the limit is reached then the blocked-at time should be set`() {
     val bruteForceProtectionState = BruteForceProtectionState(
         failedAuthCount = config.limitOfFailedAttempts - 1,
-        limitReachedAt = None
+        limitReachedAt = None()
     )
     whenever(state.asObservable()).thenReturn(Observable.just(bruteForceProtectionState))
 

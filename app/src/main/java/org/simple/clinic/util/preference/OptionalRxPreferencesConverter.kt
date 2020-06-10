@@ -9,7 +9,7 @@ class OptionalRxPreferencesConverter<T : Any>(private val valueConverter: Prefer
 
   override fun deserialize(serialized: String): Optional<T> {
     return when {
-      serialized.isEmpty() -> None
+      serialized.isEmpty() -> None()
       else -> Just(valueConverter.deserialize(serialized))
     }
   }

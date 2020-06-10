@@ -40,7 +40,7 @@ class UpdateAnalyticsUserIdTest {
   @Test
   fun `when there is no logged in user present, the user id must not be set`() {
     // given
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(None))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(None()))
 
     // when
     updateAnalyticsUserId.listen()

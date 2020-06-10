@@ -79,7 +79,24 @@ sealed class Optional<T>(
   }
 }
 
-class Just<T>(val value: T) : Optional<T>(JOptional.of(value)) {
+@Deprecated(
+    message = """
+    `Just` is deprecated since we are moving to the Java Optional class (https://github.com/simpledotorg/simple-android/issues/1381).
+    
+    Do not use this anymore and use the factory methods on `Optional` directly.
+  """
+)
+class Just<T>
+@Deprecated(
+    message = "Use `Optional.of()` instead",
+    replaceWith = ReplaceWith(
+        expression = "Optional.of(value)",
+        imports = ["org.simple.clinic.util.Optional"]
+    )
+)
+constructor(
+    val value: T
+) : Optional<T>(JOptional.of(value)) {
 
   override fun equals(other: Any?): Boolean {
     return when {
@@ -92,7 +109,22 @@ class Just<T>(val value: T) : Optional<T>(JOptional.of(value)) {
   override fun hashCode(): Int = value.hashCode()
 }
 
-class None<T> : Optional<T>(JOptional.empty()) {
+@Deprecated(
+    message = """
+    `None` is deprecated since we are moving to the Java Optional class (https://github.com/simpledotorg/simple-android/issues/1381).
+    
+    Do not use this anymore and use the factory methods on `Optional` directly.
+  """
+)
+class None<T>
+@Deprecated(
+    message = "Use `Optional.empty()` instead",
+    replaceWith = ReplaceWith(
+        expression = "Optional.empty()",
+        imports = ["org.simple.clinic.util.Optional"]
+    )
+)
+constructor(): Optional<T>(JOptional.empty()) {
 
   override fun equals(other: Any?): Boolean {
     return when {

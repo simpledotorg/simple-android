@@ -1,3 +1,7 @@
 package org.simple.clinic.registration.name
 
-class RegistrationNameEffect
+import org.simple.clinic.user.OngoingRegistrationEntry
+
+sealed class RegistrationNameEffect
+
+data class PrefillFields(val entry: OngoingRegistrationEntry): RegistrationNameEffect()

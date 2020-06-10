@@ -26,6 +26,7 @@ class RegistrationNameEffectHandler @AssistedInject constructor(
         .addConsumer(PrefillFields::class.java, { uiActions.preFillUserDetails(it.entry) }, schedulers.ui())
         .addTransformer(ValidateEnteredName::class.java, validateNameEntry())
         .addTransformer(SaveCurrentRegistrationEntry::class.java, saveCurrentRegistrationEntry())
+        .addAction(ProceedToPinEntry::class.java, uiActions::openRegistrationPinEntryScreen, schedulers.ui())
         .build()
   }
 

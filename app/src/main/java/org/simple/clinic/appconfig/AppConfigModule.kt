@@ -11,6 +11,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.preference.MoshiObjectPreferenceConverter
 import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
+import org.simple.clinic.util.toNullable
 import retrofit2.Retrofit
 import javax.inject.Named
 

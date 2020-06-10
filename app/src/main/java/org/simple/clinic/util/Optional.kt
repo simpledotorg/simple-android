@@ -55,11 +55,6 @@ sealed class Optional<T>(
   }
 
   /**
-   * Converts [Optional] to either its non-null value if it's [Just] or `null` if it's [None].
-   */
-  abstract fun toNullable(): T?
-
-  /**
    * Unwraps this optional into the value it holds or null if there is no value held.
    */
   @Deprecated(message = """
@@ -93,7 +88,6 @@ sealed class Optional<T>(
 }
 
 class Just<T>(val value: T) : Optional<T>(JOptional.of(value)) {
-  override fun toNullable(): T? = value
 
   override fun equals(other: Any?): Boolean {
     return when {
@@ -107,7 +101,6 @@ class Just<T>(val value: T) : Optional<T>(JOptional.of(value)) {
 }
 
 class None<T> : Optional<T>(JOptional.empty()) {
-  override fun toNullable(): Nothing? = null
 
   override fun equals(other: Any?): Boolean {
     return when {
@@ -137,3 +130,8 @@ class None<T> : Optional<T>(JOptional.empty()) {
  * using the static [Optional.toOptional] method.
  */
 fun <T> T?.toOptional(): Optional<T> = if (this == null) None() else Just(this)
+
+/**
+ * Converts [Optional] to either its non-null value if it's non-empty or `null` if it's empty.
+ */
+fun <T> Optional<T>.toNullable(): T? = if (isPresent()) get() else null

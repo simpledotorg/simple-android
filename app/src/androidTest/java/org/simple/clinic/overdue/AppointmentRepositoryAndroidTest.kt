@@ -48,6 +48,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.toUtcInstant
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant

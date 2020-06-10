@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -62,7 +63,7 @@ class RegistrationFullNameScreenControllerTest {
     verify(userSession).saveOngoingRegistrationEntry(entryWithName)
     verify(ui).openRegistrationPinEntryScreen()
     verify(ui).preFillUserDetails(currentOngoingRegistrationEntry)
-    verify(ui).hideValidationError()
+    verify(ui, times(2)).hideValidationError()
     verifyNoMoreInteractions(ui)
   }
 
@@ -77,6 +78,7 @@ class RegistrationFullNameScreenControllerTest {
 
     // then
     verify(ui).preFillUserDetails(ongoingEntry)
+    verify(ui).hideValidationError()
     verifyNoMoreInteractions(ui)
   }
 
@@ -106,7 +108,7 @@ class RegistrationFullNameScreenControllerTest {
     // then
     verify(userSession).saveOngoingRegistrationEntry(currentOngoingRegistrationEntry.withName(validName))
     verify(ui).openRegistrationPinEntryScreen()
-    verify(ui).hideValidationError()
+    verify(ui, times(2)).hideValidationError()
     verifyNoMoreInteractions(ui)
   }
 

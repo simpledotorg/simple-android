@@ -1,7 +1,6 @@
 package org.simple.clinic.registration.name
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -11,9 +10,21 @@ class RegistrationNameUpdate : Update<RegistrationNameModel, RegistrationNameEve
   override fun update(model: RegistrationNameModel, event: RegistrationNameEvent): Next<RegistrationNameModel, RegistrationNameEffect> {
     return when (event) {
       is RegistrationFullNameTextChanged -> next(model.nameChanged(event.fullName))
-      is NameValidated -> next(model.nameValidated(event.result))
+      is NameValidated -> nameValidated(model, event)
       is RegistrationFullNameDoneClicked -> dispatch(ValidateEnteredName(model.ongoingRegistrationEntry.fullName!!) as RegistrationNameEffect)
-      is CurrentRegistrationEntrySaved -> noChange()
+      is CurrentRegistrationEntrySaved -> dispatch(ProceedToPinEntry)
     }
+  }
+
+  private fun nameValidated(
+      model: RegistrationNameModel,
+      event: NameValidated
+  ): Next<RegistrationNameModel, RegistrationNameEffect> {
+    val updatedModel = model.nameValidated(event.result)
+
+    return if (updatedModel.isEnteredNameValid)
+      next(updatedModel, SaveCurrentRegistrationEntry(updatedModel.ongoingRegistrationEntry) as RegistrationNameEffect)
+    else
+      next(updatedModel)
   }
 }

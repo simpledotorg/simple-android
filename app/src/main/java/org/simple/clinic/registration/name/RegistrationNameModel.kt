@@ -3,6 +3,7 @@ package org.simple.clinic.registration.name
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.registration.name.RegistrationNameValidationResult.NotValidated
+import org.simple.clinic.registration.name.RegistrationNameValidationResult.Valid
 import org.simple.clinic.user.OngoingRegistrationEntry
 
 @Parcelize
@@ -21,6 +22,9 @@ data class RegistrationNameModel(
       )
     }
   }
+
+  val isEnteredNameValid: Boolean
+    get() = nameValidationResult == Valid
 
   fun nameChanged(fullName: String): RegistrationNameModel {
     return copy(

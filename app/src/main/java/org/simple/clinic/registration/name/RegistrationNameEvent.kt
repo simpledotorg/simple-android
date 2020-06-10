@@ -9,3 +9,7 @@ data class RegistrationFullNameTextChanged(val fullName: String) : RegistrationN
 }
 
 data class NameValidated(val result: RegistrationNameValidationResult) : RegistrationNameEvent()
+
+class RegistrationFullNameDoneClicked : RegistrationNameEvent() {
+  override val analyticsName = "Registration:Name Entry:Done Clicked"
+}

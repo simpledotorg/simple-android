@@ -671,7 +671,7 @@ class PatientSummaryUpdateTest {
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(OpenContactDoctorSheet(phoneNumbers) as PatientSummaryEffect)
+                hasEffects(OpenSelectDoctorSheet(phoneNumbers) as PatientSummaryEffect)
             )
         )
   }

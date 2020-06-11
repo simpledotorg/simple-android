@@ -7,6 +7,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -40,7 +41,7 @@ class RegistrationConfirmPinScreenController @Inject constructor(
       val autoSubmits = upstream
           .ofType<RegistrationConfirmPinTextChanged>()
           .distinctUntilChanged()
-          .filter { it.confirmPin.length == 4 }
+          .filter { it.confirmPin.length == SECURITY_PIN_LENGTH }
           .map { RegistrationConfirmPinDoneClicked() }
       upstream.mergeWith(autoSubmits)
     }

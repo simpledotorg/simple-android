@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -60,7 +61,7 @@ class RegistrationPinScreenControllerTest {
     verify(userSession).ongoingRegistrationEntry()
     verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin(input))
     verify(ui).openRegistrationConfirmPinScreen()
-    verify(ui).hideIncompletePinError()
+    verify(ui, times(2)).hideIncompletePinError()
     verifyNoMoreInteractions(ui, userSession)
   }
 
@@ -80,7 +81,7 @@ class RegistrationPinScreenControllerTest {
     verify(userSession).ongoingRegistrationEntry()
     verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin(validPin))
     verify(ui).openRegistrationConfirmPinScreen()
-    verify(ui).hideIncompletePinError()
+    verify(ui, times(2)).hideIncompletePinError()
     verifyNoMoreInteractions(ui, userSession)
   }
 
@@ -108,6 +109,7 @@ class RegistrationPinScreenControllerTest {
 
     // then
     verify(ui).hideIncompletePinError()
+    verify(ui).showIncompletePinError()
     verifyNoMoreInteractions(ui, userSession)
   }
 

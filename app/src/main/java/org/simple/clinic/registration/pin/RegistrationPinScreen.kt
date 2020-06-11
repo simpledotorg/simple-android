@@ -10,14 +10,17 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_pin.view.*
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenDestroyed
 import javax.inject.Inject
 
-class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class RegistrationPinScreen(
+    context: Context,
+    attrs: AttributeSet
+) : RelativeLayout(context, attrs), RegistrationPinUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -66,18 +69,18 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
           .editorActions(pinEditText) { it == EditorInfo.IME_ACTION_DONE }
           .map { RegistrationPinDoneClicked() }
 
-  fun showIncompletePinError() {
+  override fun showIncompletePinError() {
     pinHintTextView.visibility = View.GONE
     errorTextView.visibility = View.VISIBLE
     errorTextView.text = resources.getString(R.string.registrationpin_error_incomplete_pin)
   }
 
-  fun hideIncompletePinError() {
+  override fun hideIncompletePinError() {
     pinHintTextView.visibility = View.VISIBLE
     errorTextView.visibility = View.GONE
   }
 
-  fun openRegistrationConfirmPinScreen() {
+  override fun openRegistrationConfirmPinScreen() {
     screenRouter.push(RegistrationConfirmPinScreenKey())
   }
 }

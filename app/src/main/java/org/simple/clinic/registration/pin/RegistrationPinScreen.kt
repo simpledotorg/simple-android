@@ -13,6 +13,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_pin.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
@@ -54,7 +55,7 @@ class RegistrationPinScreen(
     MobiusDelegate.forView(
       events = events.ofType(),
         defaultModel = RegistrationPinModel.create(screenKey.registrationEntry),
-        update = RegistrationPinUpdate(),
+        update = RegistrationPinUpdate(requiredPinLength = SECURITY_PIN_LENGTH),
         init = RegistrationPinInit(),
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render

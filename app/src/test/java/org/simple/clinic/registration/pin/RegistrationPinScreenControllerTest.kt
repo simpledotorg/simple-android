@@ -13,6 +13,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -86,7 +87,7 @@ class RegistrationPinScreenControllerTest {
     val invalidPin = "1"
 
     // when
-    setupController()
+    setupController(requiredPinLength = 4)
     uiEvents.onNext(RegistrationPinTextChanged(invalidPin))
     uiEvents.onNext(RegistrationPinTextChanged(validPin))
 
@@ -101,7 +102,7 @@ class RegistrationPinScreenControllerTest {
   @Test
   fun `when proceed is clicked with a PIN of length less than 4 digits then an error should be shown`() {
     // when
-    setupController()
+    setupController(requiredPinLength = 4)
     uiEvents.onNext(RegistrationPinTextChanged("123"))
     uiEvents.onNext(RegistrationPinDoneClicked())
 
@@ -126,6 +127,7 @@ class RegistrationPinScreenControllerTest {
   }
 
   private fun setupController(
+      requiredPinLength: Int = SECURITY_PIN_LENGTH,
       ongoingRegistrationEntry: OngoingRegistrationEntry = this.ongoingRegistrationEntry
   ) {
     whenever(userSession.ongoingRegistrationEntry()) doReturn Just(ongoingRegistrationEntry)
@@ -148,7 +150,7 @@ class RegistrationPinScreenControllerTest {
         events = uiEvents.ofType(),
         defaultModel = RegistrationPinModel.create(ongoingRegistrationEntry),
         init = RegistrationPinInit(),
-        update = RegistrationPinUpdate(),
+        update = RegistrationPinUpdate(requiredPinLength = requiredPinLength),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )

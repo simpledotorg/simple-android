@@ -1,3 +1,5 @@
 package org.simple.clinic.registration.pin
 
-interface RegistrationPinUiActions
+interface RegistrationPinUiActions {
+  fun openRegistrationConfirmPinScreen()
+}

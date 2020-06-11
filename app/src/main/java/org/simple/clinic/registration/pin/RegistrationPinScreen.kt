@@ -10,10 +10,12 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_pin.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import javax.inject.Inject
 
@@ -27,6 +29,17 @@ class RegistrationPinScreen(
 
   @Inject
   lateinit var controller: RegistrationPinScreenController
+
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenCreates(),
+            pinTextChanges(),
+            doneClicks()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -45,11 +58,7 @@ class RegistrationPinScreen(
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            screenCreates(),
-            pinTextChanges(),
-            doneClicks()
-        ),
+        events = events,
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

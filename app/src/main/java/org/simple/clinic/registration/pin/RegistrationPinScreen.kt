@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_pin.view.*
@@ -14,7 +14,6 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.di.injector
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
@@ -93,17 +92,17 @@ class RegistrationPinScreen(
   }
 
   private fun pinTextChanges() =
-      RxTextView.textChanges(pinEditText)
+      pinEditText.textChanges()
           .map(CharSequence::toString)
           .map(::RegistrationPinTextChanged)
 
   private fun doneClicks(): Observable<RegistrationPinDoneClicked>? {
-    val imeDoneClicks = RxTextView
-        .editorActions(pinEditText) { it == EditorInfo.IME_ACTION_DONE }
+    val imeDoneClicks = pinEditText
+        .editorActions() { it == EditorInfo.IME_ACTION_DONE }
         .map { RegistrationPinDoneClicked() }
 
-    val pinAutoSubmits = RxTextView
-        .textChanges(pinEditText)
+    val pinAutoSubmits = pinEditText
+        .textChanges()
         .filter { it.length == SECURITY_PIN_LENGTH }
         .map { RegistrationPinDoneClicked() }
 

@@ -112,10 +112,18 @@ class RegistrationPinScreen(
           .map(CharSequence::toString)
           .map(::RegistrationPinTextChanged)
 
-  private fun doneClicks() =
-      RxTextView
-          .editorActions(pinEditText) { it == EditorInfo.IME_ACTION_DONE }
-          .map { RegistrationPinDoneClicked() }
+  private fun doneClicks(): Observable<RegistrationPinDoneClicked>? {
+    val imeDoneClicks = RxTextView
+        .editorActions(pinEditText) { it == EditorInfo.IME_ACTION_DONE }
+        .map { RegistrationPinDoneClicked() }
+
+    val pinAutoSubmits = RxTextView
+        .textChanges(pinEditText)
+        .filter { it.length == SECURITY_PIN_LENGTH }
+        .map { RegistrationPinDoneClicked() }
+
+    return imeDoneClicks.mergeWith(pinAutoSubmits)
+  }
 
   override fun showIncompletePinError() {
     pinHintTextView.visibility = View.GONE

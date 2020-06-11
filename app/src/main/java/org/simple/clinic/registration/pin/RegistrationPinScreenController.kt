@@ -22,24 +22,12 @@ class RegistrationPinScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(autoSubmitPin())
         .replay()
 
     return Observable.merge(
         showValidationError(replayedEvents),
         hideValidationError(replayedEvents),
         updateOngoingEntryAndProceed(replayedEvents))
-  }
-
-  private fun autoSubmitPin(): ObservableTransformer<UiEvent, UiEvent> {
-    return ObservableTransformer { events ->
-      val doneClicksStream = events
-          .ofType<RegistrationPinTextChanged>()
-          .filter { isPinValid(it.pin) }
-          .map { RegistrationPinDoneClicked() }
-
-      events.mergeWith(doneClicksStream)
-    }
   }
 
   private fun isPinValid(pin: String) = pin.length == SECURITY_PIN_LENGTH

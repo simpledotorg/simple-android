@@ -5,7 +5,6 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.user.UserSession
@@ -24,29 +23,10 @@ class RegistrationPinScreenController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.merge(
-        showValidationError(replayedEvents),
-        hideValidationError(replayedEvents),
-        updateOngoingEntryAndProceed(replayedEvents))
+    return updateOngoingEntryAndProceed(replayedEvents)
   }
 
   private fun isPinValid(pin: String) = pin.length == SECURITY_PIN_LENGTH
-
-  private fun showValidationError(events: Observable<UiEvent>): Observable<UiChange> {
-    val pinTextChanges = events.ofType<RegistrationPinTextChanged>().map { it.pin }
-
-    return events
-        .ofType<RegistrationPinDoneClicked>()
-        .withLatestFrom(pinTextChanges)
-        .filter { (_, pin) -> isPinValid(pin).not() }
-        .map { { ui: Ui -> ui.showIncompletePinError() } }
-  }
-
-  private fun hideValidationError(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RegistrationPinDoneClicked>()
-        .map { { ui: Ui -> ui.hideIncompletePinError() } }
-  }
 
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
     val doneClicks = events.ofType<RegistrationPinDoneClicked>()

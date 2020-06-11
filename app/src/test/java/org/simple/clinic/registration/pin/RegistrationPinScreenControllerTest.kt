@@ -137,12 +137,17 @@ class RegistrationPinScreenControllerTest {
 
     val uiRenderer = RegistrationPinUiRenderer(ui)
 
+    val effectHandler = RegistrationPinEffectHandler(
+        userSession = userSession,
+        uiActions = ui
+    )
+
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = RegistrationPinModel.create(ongoingRegistrationEntry),
         init = RegistrationPinInit(),
         update = RegistrationPinUpdate(),
-        effectHandler = RegistrationPinEffectHandler(ui).build(),
+        effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )
     testFixture.start()

@@ -1,6 +1,6 @@
 package org.simple.clinic.registration.name
 
-interface RegistrationNameUi: RegistrationNameUiActions {
+interface RegistrationNameUi {
   fun showEmptyNameValidationError()
   fun hideValidationError()
 }

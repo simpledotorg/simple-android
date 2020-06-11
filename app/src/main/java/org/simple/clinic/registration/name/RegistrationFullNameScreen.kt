@@ -23,7 +23,10 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 
-class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), RegistrationNameUi {
+class RegistrationFullNameScreen(
+    context: Context,
+    attrs: AttributeSet
+) : RelativeLayout(context, attrs), RegistrationNameUi, RegistrationNameUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

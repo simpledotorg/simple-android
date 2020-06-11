@@ -13,7 +13,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = RegistrationPinScreen
+typealias Ui = RegistrationPinUi
 typealias UiChange = (Ui) -> Unit
 
 class RegistrationPinScreenController @Inject constructor(

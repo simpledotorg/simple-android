@@ -1,3 +1,8 @@
 package org.simple.clinic.introvideoscreen
 
-class IntroVideoModel
+class IntroVideoModel {
+
+  companion object {
+    fun default() = IntroVideoModel()
+  }
+}

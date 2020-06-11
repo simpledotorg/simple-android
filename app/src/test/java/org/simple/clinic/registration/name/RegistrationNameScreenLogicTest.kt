@@ -29,6 +29,7 @@ class RegistrationNameScreenLogicTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<RegistrationNameUi>()
+  private val uiActions = mock<RegistrationNameUiActions>()
   private val userSession = mock<UserSession>()
 
   private val currentOngoingRegistrationEntry = OngoingRegistrationEntry(
@@ -58,10 +59,11 @@ class RegistrationNameScreenLogicTest {
 
     // then
     verify(userSession).saveOngoingRegistrationEntry(entryWithName)
-    verify(ui).openRegistrationPinEntryScreen()
-    verify(ui).preFillUserDetails(currentOngoingRegistrationEntry)
+    verify(uiActions).openRegistrationPinEntryScreen()
+    verify(uiActions).preFillUserDetails(currentOngoingRegistrationEntry)
     verify(ui, times(2)).hideValidationError()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -74,9 +76,10 @@ class RegistrationNameScreenLogicTest {
     setupController(ongoingRegistrationEntry = ongoingEntry)
 
     // then
-    verify(ui).preFillUserDetails(ongoingEntry)
+    verify(uiActions).preFillUserDetails(ongoingEntry)
     verify(ui).hideValidationError()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -89,14 +92,14 @@ class RegistrationNameScreenLogicTest {
 
     // when
     setupController()
-    verify(ui).preFillUserDetails(currentOngoingRegistrationEntry)
+    verify(uiActions).preFillUserDetails(currentOngoingRegistrationEntry)
     uiEvents.onNext(RegistrationFullNameTextChanged(invalidName))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
     // then
     verify(ui).hideValidationError()
     verify(ui).showEmptyNameValidationError()
-    clearInvocations(ui)
+    clearInvocations(ui, uiActions)
 
     // when
     uiEvents.onNext(RegistrationFullNameTextChanged(validName))
@@ -104,9 +107,10 @@ class RegistrationNameScreenLogicTest {
 
     // then
     verify(userSession).saveOngoingRegistrationEntry(currentOngoingRegistrationEntry.withName(validName))
-    verify(ui).openRegistrationPinEntryScreen()
+    verify(uiActions).openRegistrationPinEntryScreen()
     verify(ui, times(2)).hideValidationError()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -118,11 +122,12 @@ class RegistrationNameScreenLogicTest {
 
     // then
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
-    verify(ui).preFillUserDetails(currentOngoingRegistrationEntry)
+    verify(uiActions).preFillUserDetails(currentOngoingRegistrationEntry)
     verify(ui).hideValidationError()
     verify(ui).showEmptyNameValidationError()
-    verify(ui, never()).openRegistrationPinEntryScreen()
+    verify(uiActions, never()).openRegistrationPinEntryScreen()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -132,9 +137,10 @@ class RegistrationNameScreenLogicTest {
     uiEvents.onNext(RegistrationFullNameTextChanged(""))
 
     // then
-    verify(ui).preFillUserDetails(currentOngoingRegistrationEntry)
+    verify(uiActions).preFillUserDetails(currentOngoingRegistrationEntry)
     verify(ui).hideValidationError()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   private fun setupController(
@@ -145,7 +151,7 @@ class RegistrationNameScreenLogicTest {
     val effectHandler = RegistrationNameEffectHandler(
         schedulers = TrampolineSchedulersProvider(),
         userSession = userSession,
-        uiActions = ui
+        uiActions = uiActions
     )
 
     testFixture = MobiusTestFixture(

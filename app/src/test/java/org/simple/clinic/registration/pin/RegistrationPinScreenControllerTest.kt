@@ -42,12 +42,14 @@ class RegistrationPinScreenControllerTest {
 
   @Test
   fun `when 4 digits are entered then the PIN should be submitted automatically`() {
+    // when
     setupController()
     uiEvents.onNext(RegistrationPinTextChanged("1"))
     uiEvents.onNext(RegistrationPinTextChanged("12"))
     uiEvents.onNext(RegistrationPinTextChanged("123"))
     uiEvents.onNext(RegistrationPinTextChanged("1234"))
 
+    // then
     verify(userSession).ongoingRegistrationEntry()
     verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin("1234"))
     verify(screen).hideIncompletePinError()
@@ -57,11 +59,14 @@ class RegistrationPinScreenControllerTest {
 
   @Test
   fun `when next button is clicked then ongoing entry should be updated with the input PIN and the next screen should be opened`() {
+    // given
     val input = "1234"
 
+    // when
     setupController()
     uiEvents.onNext(RegistrationPinTextChanged(input))
 
+    // then
     verify(userSession).ongoingRegistrationEntry()
     verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin(input))
     verify(screen).openRegistrationConfirmPinScreen()
@@ -71,13 +76,16 @@ class RegistrationPinScreenControllerTest {
 
   @Test
   fun `proceed button clicks should only be accepted if the input PIN is of 4 digits`() {
+    // given
     val validPin = "1234"
     val invalidPin = "1"
 
+    // when
     setupController()
     uiEvents.onNext(RegistrationPinTextChanged(invalidPin))
     uiEvents.onNext(RegistrationPinTextChanged(validPin))
 
+    // then
     verify(userSession).ongoingRegistrationEntry()
     verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin(validPin))
     verify(screen).openRegistrationConfirmPinScreen()
@@ -87,10 +95,12 @@ class RegistrationPinScreenControllerTest {
 
   @Test
   fun `when proceed is clicked with a PIN of length less than 4 digits then an error should be shown`() {
+    // when
     setupController()
     uiEvents.onNext(RegistrationPinTextChanged("123"))
     uiEvents.onNext(RegistrationPinDoneClicked())
 
+    // then
     verify(userSession, never()).ongoingRegistrationEntry()
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(screen).showIncompletePinError()
@@ -101,8 +111,11 @@ class RegistrationPinScreenControllerTest {
 
   @Test
   fun `when the PIN is submitted then any visible errors should be removed`() {
+    // when
     setupController()
     uiEvents.onNext(RegistrationPinDoneClicked())
+
+    // then
     verify(screen).hideIncompletePinError()
     verifyNoMoreInteractions(screen, userSession)
   }

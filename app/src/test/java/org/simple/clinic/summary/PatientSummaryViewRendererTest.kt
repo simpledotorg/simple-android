@@ -130,7 +130,6 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).showDiabetesView()
     verify(ui).showContactDoctorButton()
-    verify(ui).showContactDoctorButtonTextAndIcon()
     verify(ui).disableContactDoctorButton()
     verifyNoMoreInteractions(ui)
   }
@@ -149,7 +148,6 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).showDiabetesView()
     verify(ui).showContactDoctorButton()
-    verify(ui).showContactDoctorButtonTextAndIcon()
     verify(ui).disableContactDoctorButton()
     verifyNoMoreInteractions(ui)
   }
@@ -168,8 +166,7 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).showDiabetesView()
     verify(ui).showContactDoctorButton()
-    verify(ui).showContactButtonProgress()
-    verify(ui).enableContactDoctorButton()
+    verify(ui).fetchingTeleconsultInfo()
     verifyNoMoreInteractions(ui)
   }
 

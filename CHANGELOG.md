@@ -19,6 +19,7 @@
 - [In Progress: 10 Jun 2020] Migrate `RegistrationPhoneScreen` to Mobius
 - Add support for [Java 8 desugaring](https://developer.android.com/studio/write/java8-support)
 - Implement [Java `Optional`](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html) APIs on the project `Optional` type
+- Implement `ProgressMaterialButton`
 
 ### Fixes
 - Fix blood pressure "High" label displaying when blood pressure is low.

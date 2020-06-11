@@ -1,6 +1,7 @@
 package org.simple.clinic.registration.pin
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -8,11 +9,13 @@ import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_pin.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
@@ -30,6 +33,9 @@ class RegistrationPinScreen(
   @Inject
   lateinit var controller: RegistrationPinScreenController
 
+  @Inject
+  lateinit var effectHandlerFactory: RegistrationPinEffectHandler.Factory
+
   private val events by unsafeLazy {
     Observable
         .merge(
@@ -39,6 +45,19 @@ class RegistrationPinScreen(
         )
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate: MobiusDelegate<RegistrationPinModel, RegistrationPinEvent, RegistrationPinEffect> by unsafeLazy {
+    val uiRenderer = RegistrationPinUiRenderer(this)
+
+    MobiusDelegate.forView(
+      events = events.ofType(),
+        defaultModel = RegistrationPinModel.create(),
+        update = RegistrationPinUpdate(),
+        init = RegistrationPinInit(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   override fun onFinishInflate() {
@@ -64,6 +83,24 @@ class RegistrationPinScreen(
     )
 
     post { pinEditText.requestFocus() }
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates() = Observable.just(RegistrationPinScreenCreated())

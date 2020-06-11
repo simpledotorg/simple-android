@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.screen_registration_pin.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.SECURITY_PIN_LENGTH
+import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
@@ -60,7 +61,7 @@ class RegistrationPinScreen(
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     backButton.setOnClickListener {
       screenRouter.pop()
@@ -122,5 +123,9 @@ class RegistrationPinScreen(
 
   override fun openRegistrationConfirmPinScreen() {
     screenRouter.push(RegistrationConfirmPinScreenKey())
+  }
+
+  interface Injector {
+    fun inject(target: RegistrationPinScreen)
   }
 }

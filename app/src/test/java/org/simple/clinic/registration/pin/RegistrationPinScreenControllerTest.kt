@@ -6,8 +6,9 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -31,21 +32,18 @@ class RegistrationPinScreenControllerTest {
       fullName = "Anish Acharya"
   )
 
-  private lateinit var controller: RegistrationPinScreenController
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    controller = RegistrationPinScreenController(userSession)
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
   fun `when 4 digits are entered then the PIN should be submitted automatically`() {
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingRegistrationEntry.toOptional())
 
+    setupController()
     uiEvents.onNext(RegistrationPinTextChanged("1"))
     uiEvents.onNext(RegistrationPinTextChanged("12"))
     uiEvents.onNext(RegistrationPinTextChanged("123"))
@@ -60,6 +58,7 @@ class RegistrationPinScreenControllerTest {
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingRegistrationEntry.toOptional())
 
+    setupController()
     uiEvents.onNext(RegistrationPinTextChanged(input))
 
     verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin(input))
@@ -73,6 +72,7 @@ class RegistrationPinScreenControllerTest {
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingRegistrationEntry.toOptional())
 
+    setupController()
     uiEvents.onNext(RegistrationPinTextChanged(invalidPin))
     uiEvents.onNext(RegistrationPinTextChanged(validPin))
 
@@ -82,6 +82,7 @@ class RegistrationPinScreenControllerTest {
 
   @Test
   fun `when proceed is clicked with a PIN of length less than 4 digits then an error should be shown`() {
+    setupController()
     uiEvents.onNext(RegistrationPinTextChanged("123"))
     uiEvents.onNext(RegistrationPinDoneClicked())
 
@@ -92,7 +93,16 @@ class RegistrationPinScreenControllerTest {
 
   @Test
   fun `when the PIN is submitted then any visible errors should be removed`() {
+    setupController()
     uiEvents.onNext(RegistrationPinDoneClicked())
     verify(screen).hideIncompletePinError()
+  }
+
+  private fun setupController() {
+    val controller = RegistrationPinScreenController(userSession)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

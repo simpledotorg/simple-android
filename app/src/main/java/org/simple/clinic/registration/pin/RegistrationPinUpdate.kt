@@ -10,9 +10,19 @@ class RegistrationPinUpdate(
 ) : Update<RegistrationPinModel, RegistrationPinEvent, RegistrationPinEffect> {
 
   override fun update(model: RegistrationPinModel, event: RegistrationPinEvent): Next<RegistrationPinModel, RegistrationPinEffect> {
-    return when(event) {
+    return when (event) {
       is CurrentOngoingEntrySaved -> dispatch(ProceedToConfirmPin)
       is RegistrationPinTextChanged -> next(model.pinChanged(event.pin))
+      is RegistrationPinDoneClicked -> validateModel(model)
     }
+  }
+
+  private fun validateModel(model: RegistrationPinModel): Next<RegistrationPinModel, RegistrationPinEffect> {
+    val updatedModel = if (model.isEnteredPinOfLength(requiredPinLength))
+      model.validPinEntered()
+    else
+      model.pinDoesNotMatchRequiredLength()
+
+    return next(updatedModel)
   }
 }

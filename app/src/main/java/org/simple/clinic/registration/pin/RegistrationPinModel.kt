@@ -2,7 +2,9 @@ package org.simple.clinic.registration.pin
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.registration.pin.RegistrationPinValidationResult.DoesNotMatchRequiredLength
 import org.simple.clinic.registration.pin.RegistrationPinValidationResult.NotValidated
+import org.simple.clinic.registration.pin.RegistrationPinValidationResult.Valid
 import org.simple.clinic.user.OngoingRegistrationEntry
 
 @Parcelize
@@ -19,6 +21,19 @@ data class RegistrationPinModel(
   }
 
   fun pinChanged(pin: String): RegistrationPinModel {
-    return copy(ongoingRegistrationEntry = ongoingRegistrationEntry.withPin(pin))
+    return copy(
+        ongoingRegistrationEntry = ongoingRegistrationEntry.withPin(pin),
+        pinValidationResult = NotValidated
+    )
   }
+
+  fun validPinEntered(): RegistrationPinModel {
+    return copy(pinValidationResult = Valid)
+  }
+
+  fun pinDoesNotMatchRequiredLength(): RegistrationPinModel {
+    return copy(pinValidationResult = DoesNotMatchRequiredLength)
+  }
+
+  fun isEnteredPinOfLength(length: Int): Boolean = ongoingRegistrationEntry.pin?.length == length
 }

@@ -27,6 +27,7 @@ class RegistrationPinScreenLogicTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<RegistrationPinUi>()
+  private val uiActions = mock<RegistrationPinUiActions>()
   private val userSession = mock<UserSession>()
 
   private val ongoingRegistrationEntry = OngoingRegistrationEntry(
@@ -53,9 +54,9 @@ class RegistrationPinScreenLogicTest {
 
     // then
     verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin(input))
-    verify(ui).openRegistrationConfirmPinScreen()
+    verify(uiActions).openRegistrationConfirmPinScreen()
     verify(ui, times(2)).hideIncompletePinError()
-    verifyNoMoreInteractions(ui, userSession)
+    verifyNoMoreInteractions(ui, userSession, uiActions)
   }
 
   @Test
@@ -72,9 +73,9 @@ class RegistrationPinScreenLogicTest {
 
     // then
     verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin(validPin))
-    verify(ui).openRegistrationConfirmPinScreen()
+    verify(uiActions).openRegistrationConfirmPinScreen()
     verify(ui, times(2)).hideIncompletePinError()
-    verifyNoMoreInteractions(ui, userSession)
+    verifyNoMoreInteractions(ui, userSession, uiActions)
   }
 
   @Test
@@ -87,9 +88,9 @@ class RegistrationPinScreenLogicTest {
     // then
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(ui).showIncompletePinError()
-    verify(ui, never()).openRegistrationConfirmPinScreen()
+    verify(uiActions, never()).openRegistrationConfirmPinScreen()
     verify(ui).hideIncompletePinError()
-    verifyNoMoreInteractions(ui, userSession)
+    verifyNoMoreInteractions(ui, userSession, uiActions)
   }
 
   @Test
@@ -101,7 +102,7 @@ class RegistrationPinScreenLogicTest {
     // then
     verify(ui).hideIncompletePinError()
     verify(ui).showIncompletePinError()
-    verifyNoMoreInteractions(ui, userSession)
+    verifyNoMoreInteractions(ui, userSession, uiActions)
   }
 
   private fun setupController(
@@ -113,7 +114,7 @@ class RegistrationPinScreenLogicTest {
     val effectHandler = RegistrationPinEffectHandler(
         userSession = userSession,
         schedulers = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
 
     testFixture = MobiusTestFixture(

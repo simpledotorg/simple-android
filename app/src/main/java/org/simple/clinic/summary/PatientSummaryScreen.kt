@@ -56,6 +56,7 @@ import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.WhatsAppMessageSender
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -445,24 +446,16 @@ class PatientSummaryScreen(
     activity.startActivityForResult(intent, CONTACT_DOCTOR_SHEET)
   }
 
-  override fun showContactDoctorButtonTextAndIcon() {
-    contactDoctorButton.text = context.getString(R.string.patientsummary_contact_doctor)
-    contactDoctorButton.setIconResource(R.drawable.ic_whatsapp)
-    contactDoctorProgress.visibility = View.GONE
-  }
-
-  override fun showContactButtonProgress() {
-    contactDoctorButton.text = null
-    contactDoctorButton.icon = null
-    contactDoctorProgress.visibility = View.VISIBLE
-  }
-
   override fun enableContactDoctorButton() {
-    contactDoctorButton.isEnabled = true
+    contactDoctorButton.setButtonState(ButtonState.Enabled)
   }
 
   override fun disableContactDoctorButton() {
-    contactDoctorButton.isEnabled = false
+    contactDoctorButton.setButtonState(ButtonState.Disabled)
+  }
+
+  override fun fetchingTeleconsultInfo() {
+    contactDoctorButton.setButtonState(ButtonState.InProgress)
   }
 
   override fun showTeleconsultInfoError() {
@@ -472,11 +465,11 @@ class PatientSummaryScreen(
   }
 
   override fun showContactDoctorButton() {
-    contactDoctorFrame.visibility = View.VISIBLE
+    contactDoctorButton.visibility = View.VISIBLE
   }
 
   override fun hideContactDoctorButton() {
-    contactDoctorFrame.visibility = View.GONE
+    contactDoctorButton.visibility = View.GONE
   }
 }
 

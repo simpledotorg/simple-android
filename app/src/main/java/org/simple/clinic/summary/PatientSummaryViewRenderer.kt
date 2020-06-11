@@ -23,24 +23,18 @@ class PatientSummaryViewRenderer(
 
   private fun setupUiForTeleconsult(model: PatientSummaryModel) {
     if (model.isTeleconsultationEnabled && model.isUserLoggedIn) {
-      ui.showContactDoctorButton()
-
-      when (model.teleconsultInfo) {
-        is TeleconsultInfo.Fetched -> {
-          ui.showContactDoctorButtonTextAndIcon()
-          ui.enableContactDoctorButton()
-        }
-        is TeleconsultInfo.MissingPhoneNumber, is TeleconsultInfo.NetworkError -> {
-          ui.showContactDoctorButtonTextAndIcon()
-          ui.disableContactDoctorButton()
-        }
-        is TeleconsultInfo.Fetching -> {
-          ui.showContactButtonProgress()
-          ui.enableContactDoctorButton()
-        }
-      }
+      renderContactDoctorButton(model)
     } else {
       ui.hideContactDoctorButton()
+    }
+  }
+
+  private fun renderContactDoctorButton(model: PatientSummaryModel) {
+    ui.showContactDoctorButton()
+    when (model.teleconsultInfo) {
+      is TeleconsultInfo.Fetched -> ui.enableContactDoctorButton()
+      is TeleconsultInfo.MissingPhoneNumber, is TeleconsultInfo.NetworkError -> ui.disableContactDoctorButton()
+      is TeleconsultInfo.Fetching -> ui.fetchingTeleconsultInfo()
     }
   }
 

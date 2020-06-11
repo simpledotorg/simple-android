@@ -490,7 +490,7 @@ class PatientSummaryEffectHandlerTest {
     )
 
     // when
-    testCase.dispatch(OpenContactDoctorSheet(phoneNumbers))
+    testCase.dispatch(OpenSelectDoctorSheet(phoneNumbers))
 
     // then
     verify(uiActions).openContactDoctorSheet(facility, phoneNumbers)

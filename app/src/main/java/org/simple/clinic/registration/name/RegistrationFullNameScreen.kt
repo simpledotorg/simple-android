@@ -7,14 +7,14 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.widget.editorActions
+import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_name.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
@@ -94,14 +94,15 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
   }
 
   private fun nameTextChanges() =
-      RxTextView.textChanges(fullNameEditText)
+      fullNameEditText
+          .textChanges()
           .map(CharSequence::toString)
           .map { it.trim() }
           .map(::RegistrationFullNameTextChanged)
 
   private fun doneClicks() =
-      RxTextView
-          .editorActions(fullNameEditText) { it == EditorInfo.IME_ACTION_DONE }
+      fullNameEditText
+          .editorActions() { it == EditorInfo.IME_ACTION_DONE }
           .map { RegistrationFullNameDoneClicked() }
 
   override fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {

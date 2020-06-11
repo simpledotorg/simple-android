@@ -1,6 +1,7 @@
 package org.simple.clinic.registration.pin
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -13,8 +14,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -41,8 +42,6 @@ class RegistrationPinScreenControllerTest {
 
   @Test
   fun `when 4 digits are entered then the PIN should be submitted automatically`() {
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingRegistrationEntry.toOptional())
-
     setupController()
     uiEvents.onNext(RegistrationPinTextChanged("1"))
     uiEvents.onNext(RegistrationPinTextChanged("12"))
@@ -56,8 +55,6 @@ class RegistrationPinScreenControllerTest {
   fun `when next button is clicked then ongoing entry should be updated with the input PIN and the next screen should be opened`() {
     val input = "1234"
 
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingRegistrationEntry.toOptional())
-
     setupController()
     uiEvents.onNext(RegistrationPinTextChanged(input))
 
@@ -69,8 +66,6 @@ class RegistrationPinScreenControllerTest {
   fun `proceed button clicks should only be accepted if the input PIN is of 4 digits`() {
     val validPin = "1234"
     val invalidPin = "1"
-
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingRegistrationEntry.toOptional())
 
     setupController()
     uiEvents.onNext(RegistrationPinTextChanged(invalidPin))
@@ -98,7 +93,11 @@ class RegistrationPinScreenControllerTest {
     verify(screen).hideIncompletePinError()
   }
 
-  private fun setupController() {
+  private fun setupController(
+      ongoingRegistrationEntry: OngoingRegistrationEntry = this.ongoingRegistrationEntry
+  ) {
+    whenever(userSession.ongoingRegistrationEntry()) doReturn Just(ongoingRegistrationEntry)
+
     val controller = RegistrationPinScreenController(userSession)
 
     controllerSubscription = uiEvents

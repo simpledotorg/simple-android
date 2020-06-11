@@ -13,6 +13,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_name.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
@@ -60,7 +61,7 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     backButton.setOnClickListener {
       screenRouter.pop()
@@ -118,5 +119,9 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
 
   override fun openRegistrationPinEntryScreen() {
     screenRouter.push(RegistrationPinScreenKey())
+  }
+
+  interface Injector {
+    fun inject(target: RegistrationFullNameScreen)
   }
 }

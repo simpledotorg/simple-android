@@ -5,9 +5,11 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class RegistrationPinEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
+    private val schedulers: SchedulersProvider,
     @Assisted private val uiActions: RegistrationPinUiActions
 ) {
 
@@ -19,6 +21,7 @@ class RegistrationPinEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<RegistrationPinEffect, RegistrationPinEvent> {
     return RxMobius.subtypeEffectHandler<RegistrationPinEffect, RegistrationPinEvent>()
         .addTransformer(SaveCurrentOngoingEntry::class.java, saveCurrentOngoingEntry())
+        .addAction(ProceedToConfirmPin::class.java, { uiActions.openRegistrationConfirmPinScreen() }, schedulers.ui())
         .build()
   }
 

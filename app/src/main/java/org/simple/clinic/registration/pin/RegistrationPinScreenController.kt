@@ -22,7 +22,6 @@ class RegistrationPinScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(ReportAnalyticsEvents())
         .compose(autoSubmitPin())
         .replay()
 

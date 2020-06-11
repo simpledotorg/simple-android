@@ -4,8 +4,8 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
@@ -48,7 +48,11 @@ class RegistrationPinScreenControllerTest {
     uiEvents.onNext(RegistrationPinTextChanged("123"))
     uiEvents.onNext(RegistrationPinTextChanged("1234"))
 
+    verify(userSession).ongoingRegistrationEntry()
     verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin("1234"))
+    verify(screen).hideIncompletePinError()
+    verify(screen).openRegistrationConfirmPinScreen()
+    verifyNoMoreInteractions(screen, userSession)
   }
 
   @Test
@@ -58,8 +62,11 @@ class RegistrationPinScreenControllerTest {
     setupController()
     uiEvents.onNext(RegistrationPinTextChanged(input))
 
+    verify(userSession).ongoingRegistrationEntry()
     verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin(input))
     verify(screen).openRegistrationConfirmPinScreen()
+    verify(screen).hideIncompletePinError()
+    verifyNoMoreInteractions(screen, userSession)
   }
 
   @Test
@@ -71,8 +78,11 @@ class RegistrationPinScreenControllerTest {
     uiEvents.onNext(RegistrationPinTextChanged(invalidPin))
     uiEvents.onNext(RegistrationPinTextChanged(validPin))
 
-    verify(userSession, times(1)).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin(validPin))
-    verify(screen, times(1)).openRegistrationConfirmPinScreen()
+    verify(userSession).ongoingRegistrationEntry()
+    verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin(validPin))
+    verify(screen).openRegistrationConfirmPinScreen()
+    verify(screen).hideIncompletePinError()
+    verifyNoMoreInteractions(screen, userSession)
   }
 
   @Test
@@ -81,9 +91,12 @@ class RegistrationPinScreenControllerTest {
     uiEvents.onNext(RegistrationPinTextChanged("123"))
     uiEvents.onNext(RegistrationPinDoneClicked())
 
-    verify(screen).showIncompletePinError()
+    verify(userSession, never()).ongoingRegistrationEntry()
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
+    verify(screen).showIncompletePinError()
     verify(screen, never()).openRegistrationConfirmPinScreen()
+    verify(screen).hideIncompletePinError()
+    verifyNoMoreInteractions(screen, userSession)
   }
 
   @Test
@@ -91,6 +104,7 @@ class RegistrationPinScreenControllerTest {
     setupController()
     uiEvents.onNext(RegistrationPinDoneClicked())
     verify(screen).hideIncompletePinError()
+    verifyNoMoreInteractions(screen, userSession)
   }
 
   private fun setupController(

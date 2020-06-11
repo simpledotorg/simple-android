@@ -66,10 +66,6 @@ class RegistrationPinScreen(
       screenRouter.pop()
     }
 
-    // Because PIN is auto-submitted when 4 digits are entered, restoring the
-    // existing PIN will immediately take the user to the next screen.
-    pinEditText.isSaveEnabled = false
-
     post { pinEditText.requestFocus() }
   }
 
@@ -92,7 +88,9 @@ class RegistrationPinScreen(
   }
 
   private fun pinTextChanges() =
-      pinEditText.textChanges()
+      pinEditText
+          .textChanges()
+          .skip(1)
           .map(CharSequence::toString)
           .map(::RegistrationPinTextChanged)
 
@@ -103,6 +101,7 @@ class RegistrationPinScreen(
 
     val pinAutoSubmits = pinEditText
         .textChanges()
+        .skip(1)
         .filter { it.length == SECURITY_PIN_LENGTH }
         .map { RegistrationPinDoneClicked() }
 

@@ -31,6 +31,17 @@ class IntroVideoEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
   }
 
+  @Test
+  fun `when open home effect is received, then open home screen`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenHome)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openHome()
+    verifyNoMoreInteractions(uiActions)
+  }
 
   @After
   fun teardown() {

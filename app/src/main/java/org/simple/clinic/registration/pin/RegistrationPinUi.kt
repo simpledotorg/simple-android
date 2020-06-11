@@ -1,6 +1,6 @@
 package org.simple.clinic.registration.pin
 
-interface RegistrationPinUi {
+interface RegistrationPinUi: RegistrationPinUiActions {
   fun showIncompletePinError()
   fun hideIncompletePinError()
   fun openRegistrationConfirmPinScreen()

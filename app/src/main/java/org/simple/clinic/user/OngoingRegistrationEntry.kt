@@ -34,4 +34,8 @@ data class OngoingRegistrationEntry(
   fun withName(name: String): OngoingRegistrationEntry {
     return copy(fullName = name)
   }
+
+  fun withPin(pin: String): OngoingRegistrationEntry {
+    return copy(pin = pin)
+  }
 }

@@ -1,14 +1,11 @@
 package org.simple.clinic.registration.pin
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -17,14 +14,13 @@ import org.junit.Test
 import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class RegistrationPinScreenControllerTest {
+class RegistrationPinScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -38,12 +34,10 @@ class RegistrationPinScreenControllerTest {
       fullName = "Anish Acharya"
   )
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<RegistrationPinModel, RegistrationPinEvent, RegistrationPinEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -114,14 +108,6 @@ class RegistrationPinScreenControllerTest {
       requiredPinLength: Int = SECURITY_PIN_LENGTH,
       ongoingRegistrationEntry: OngoingRegistrationEntry = this.ongoingRegistrationEntry
   ) {
-    whenever(userSession.ongoingRegistrationEntry()) doReturn Just(ongoingRegistrationEntry)
-
-    val controller = RegistrationPinScreenController(userSession)
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
     val uiRenderer = RegistrationPinUiRenderer(ui)
 
     val effectHandler = RegistrationPinEffectHandler(

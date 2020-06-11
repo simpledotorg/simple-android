@@ -7,9 +7,13 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 @Parcelize
 data class RegistrationPinModel(
     val ongoingRegistrationEntry: OngoingRegistrationEntry
-): Parcelable {
+) : Parcelable {
 
   companion object {
     fun create(registrationEntry: OngoingRegistrationEntry): RegistrationPinModel = RegistrationPinModel(registrationEntry)
+  }
+
+  fun pinChanged(pin: String): RegistrationPinModel {
+    return copy(ongoingRegistrationEntry = ongoingRegistrationEntry.withPin(pin))
   }
 }

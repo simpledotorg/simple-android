@@ -68,4 +68,4 @@ data class FetchTeleconsultationInfo(val facilityUuid: UUID) : PatientSummaryEff
 
 object ShowTeleconsultInfoError : PatientSummaryEffect()
 
-data class OpenContactDoctorSheet(val phoneNumbers: List<TeleconsultPhoneNumber>) : PatientSummaryEffect()
+data class OpenSelectDoctorSheet(val phoneNumbers: List<TeleconsultPhoneNumber>) : PatientSummaryEffect()

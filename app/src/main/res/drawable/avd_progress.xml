@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?><!-- https://github.com/alexjlockwood/adp-delightful-details/blob/master/app/src/main/res/drawable/avd_progress_indeterminate_circular.xml -->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:aapt="http://schemas.android.com/aapt">
+
+  <aapt:attr name="android:drawable">
+    <vector
+      android:width="24dp"
+      android:height="24dp"
+      android:tint="?attr/colorSecondary"
+      android:viewportWidth="48"
+      android:viewportHeight="48">
+      <group
+        android:name="progressBarContainer"
+        android:translateX="24"
+        android:translateY="24">
+        <path
+          android:name="progressBar"
+          android:fillColor="@android:color/transparent"
+          android:pathData="M0,0 m 0,-18 a 18,18 0 1,1 0,36 a 18,18 0 1,1 0,-36"
+          android:strokeWidth="4"
+          android:strokeColor="@android:color/white"
+          android:strokeLineCap="square"
+          android:strokeLineJoin="miter"
+          android:trimPathStart="0"
+          android:trimPathEnd="0.03"
+          android:trimPathOffset="0" />
+      </group>
+    </vector>
+  </aapt:attr>
+
+  <target android:name="progressBar">
+    <aapt:attr name="android:animation">
+      <set>
+        <objectAnimator
+          android:duration="1333"
+          android:propertyName="trimPathStart"
+          android:repeatCount="-1"
+          android:valueFrom="0"
+          android:valueTo="0.75"
+          android:valueType="floatType">
+          <aapt:attr name="android:interpolator">
+            <pathInterpolator android:pathData="L0.5,0 C 0.7,0 0.6,1 1,1" />
+          </aapt:attr>
+        </objectAnimator>
+        <objectAnimator
+          android:duration="1333"
+          android:propertyName="trimPathEnd"
+          android:repeatCount="-1"
+          android:valueFrom="0.03"
+          android:valueTo="0.78"
+          android:valueType="floatType">
+          <aapt:attr name="android:interpolator">
+            <pathInterpolator android:pathData="C0.2,0 0.1,1 0.5,0.96 C 0.96666666666,0.96 0.99333333333,1 1,1" />
+          </aapt:attr>
+        </objectAnimator>
+        <objectAnimator
+          android:duration="1333"
+          android:interpolator="@android:anim/linear_interpolator"
+          android:propertyName="trimPathOffset"
+          android:repeatCount="-1"
+          android:valueFrom="0"
+          android:valueTo="0.25"
+          android:valueType="floatType" />
+      </set>
+    </aapt:attr>
+  </target>
+
+  <target android:name="progressBarContainer">
+    <aapt:attr name="android:animation">
+      <objectAnimator
+        android:duration="4444"
+        android:interpolator="@android:anim/linear_interpolator"
+        android:propertyName="rotation"
+        android:repeatCount="-1"
+        android:valueFrom="0"
+        android:valueTo="720"
+        android:valueType="floatType" />
+    </aapt:attr>
+  </target>
+
+</animated-vector>

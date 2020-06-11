@@ -9,6 +9,7 @@ class IntroVideoUpdate : Update<IntroVideoModel, IntroVideoEvent, IntroVideoEffe
       IntroVideoEffect> {
     return when (event) {
       VideoClicked -> dispatch(OpenVideo, OpenHome)
+      SkipClicked -> dispatch(OpenHome)
     }
   }
 }

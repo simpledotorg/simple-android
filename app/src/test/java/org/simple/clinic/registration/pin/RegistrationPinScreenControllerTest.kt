@@ -47,23 +47,6 @@ class RegistrationPinScreenControllerTest {
   }
 
   @Test
-  fun `when 4 digits are entered then the PIN should be submitted automatically`() {
-    // when
-    setupController()
-    uiEvents.onNext(RegistrationPinTextChanged("1"))
-    uiEvents.onNext(RegistrationPinTextChanged("12"))
-    uiEvents.onNext(RegistrationPinTextChanged("123"))
-    uiEvents.onNext(RegistrationPinTextChanged("1234"))
-
-    // then
-    verify(userSession).ongoingRegistrationEntry()
-    verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin("1234"))
-    verify(ui).hideIncompletePinError()
-    verify(ui).openRegistrationConfirmPinScreen()
-    verifyNoMoreInteractions(ui, userSession)
-  }
-
-  @Test
   fun `when next button is clicked then ongoing entry should be updated with the input PIN and the next screen should be opened`() {
     // given
     val input = "1234"
@@ -71,6 +54,7 @@ class RegistrationPinScreenControllerTest {
     // when
     setupController()
     uiEvents.onNext(RegistrationPinTextChanged(input))
+    uiEvents.onNext(RegistrationPinDoneClicked())
 
     // then
     verify(userSession).ongoingRegistrationEntry()
@@ -90,6 +74,7 @@ class RegistrationPinScreenControllerTest {
     setupController(requiredPinLength = 4)
     uiEvents.onNext(RegistrationPinTextChanged(invalidPin))
     uiEvents.onNext(RegistrationPinTextChanged(validPin))
+    uiEvents.onNext(RegistrationPinDoneClicked())
 
     // then
     verify(userSession).ongoingRegistrationEntry()

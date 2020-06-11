@@ -19,5 +19,6 @@ class IntroVideoEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<IntroVideoEffect, IntroVideoEvent> = RxMobius
       .subtypeEffectHandler<IntroVideoEffect, IntroVideoEvent>()
       .addAction(OpenVideo::class.java, { uiActions.openVideo() }, schedulersProvider.ui())
+      .addAction(OpenHome::class.java, { uiActions.openHome() }, schedulersProvider.ui())
       .build()
 }

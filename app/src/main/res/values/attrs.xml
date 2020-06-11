@@ -32,4 +32,12 @@
     <attr name="layout" format="reference" />
     <attr name="analyticsName" format="string" />
   </declare-styleable>
+
+  <declare-styleable name="ProgressMaterialButton">
+    <attr name="buttonState" format="enum">
+      <enum name="in-progress" value="0" />
+      <enum name="enabled" value="1" />
+      <enum name="disabled" value="2" />
+    </attr>
+  </declare-styleable>
 </resources>

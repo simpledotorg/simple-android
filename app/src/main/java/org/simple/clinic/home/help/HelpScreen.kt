@@ -10,8 +10,8 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_help.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.injector
 import org.simple.clinic.help.HelpScreenTryAgainClicked
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -39,7 +39,7 @@ class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, 
 
     webView.settings.javaScriptEnabled = true
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     bindUiToController(
         ui = this,
@@ -80,5 +80,9 @@ class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, 
 
   fun showUnexpectedErrorMessage() {
     errorMessageTextView.setText(R.string.help_something_went_wrong)
+  }
+
+  interface Injector {
+    fun inject(target: HelpScreen)
   }
 }

@@ -4,7 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_help.view.*
 import org.simple.clinic.R
@@ -44,14 +45,14 @@ class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, 
         ui = this,
         events = Observable.merge(screenCreates(), tryAgainClicks()),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
-  private fun tryAgainClicks() = RxView
-      .clicks(tryAgainButton)
+  private fun tryAgainClicks() = tryAgainButton
+      .clicks()
       .map { HelpScreenTryAgainClicked }
 
   fun showHelp(uri: URI) {

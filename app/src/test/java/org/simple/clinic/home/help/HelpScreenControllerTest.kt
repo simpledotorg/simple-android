@@ -14,13 +14,11 @@ import org.simple.clinic.help.HelpPullResult
 import org.simple.clinic.help.HelpRepository
 import org.simple.clinic.help.HelpScreenTryAgainClicked
 import org.simple.clinic.help.HelpSync
-import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import java.io.File
-import java.net.URI
 
 class HelpScreenControllerTest {
 
@@ -42,41 +40,35 @@ class HelpScreenControllerTest {
 
   @Test
   fun `when a help file is emitted then update the screen`() {
-    val file: File = mock()
-    val uri = URI("")
+    val content = "Help"
 
-    whenever(file.toURI()).thenReturn(uri)
-    whenever(helpRepository.helpFile()).thenReturn(Observable.just(file.toOptional()))
+    whenever(helpRepository.helpContentText()).thenReturn(Observable.just(content.toOptional()))
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).showHelp(uri)
+    verify(screen).showHelp(content)
   }
 
   @Test
   fun `screen should be updated whenever the help file changes`() {
-    val file1: File = mock()
-    val file2: File = mock()
-    val uri1 = URI("uri1")
-    val uri2 = URI("uri2")
+    val please = "Please"
+    val help = "Help"
 
-    whenever(file1.toURI()).thenReturn(uri1)
-    whenever(file2.toURI()).thenReturn(uri2)
-    whenever(helpRepository.helpFile()).thenReturn(Observable.just(
-        file1.toOptional(),
-        file2.toOptional()
+    whenever(helpRepository.helpContentText()).thenReturn(Observable.just(
+        please.toOptional(),
+        help.toOptional()
     ))
 
     uiEvents.onNext(ScreenCreated())
 
     val inorder = inOrder(screen)
-    inorder.verify(screen).showHelp(uri1)
-    inorder.verify(screen).showHelp(uri2)
+    inorder.verify(screen).showHelp(please)
+    inorder.verify(screen).showHelp(help)
   }
 
   @Test
   fun `when the help file does not exist then screen should show no-help view`() {
-    whenever(helpRepository.helpFile()).thenReturn(Observable.just(None()))
+    whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
 
     uiEvents.onNext(ScreenCreated())
 

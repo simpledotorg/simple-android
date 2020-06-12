@@ -16,7 +16,6 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.visibleOrGone
-import java.net.URI
 import javax.inject.Inject
 
 class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
@@ -55,11 +54,11 @@ class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, 
       .clicks()
       .map { HelpScreenTryAgainClicked }
 
-  fun showHelp(uri: URI) {
+  fun showHelp(html: String) {
     webView.visibleOrGone(true)
     progressBar.visibleOrGone(false)
     noContentView.visibleOrGone(false)
-    webView.loadUrl(uri.toString())
+    webView.loadDataWithBaseURL(null, html, "text/html", Charsets.UTF_8.name(), null)
   }
 
   fun showNoHelpAvailable() {

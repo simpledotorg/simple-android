@@ -40,6 +40,7 @@
 - Add support for building Android App Bundles (AABs)
 - Migrate `PatientsScreen` to Mobius
 - Migrated `SyncIndicatorController` to Mobius
+- Add extension for extracting intent data from `ActivityResult`
 
 ### Fixes
 - Fix camera crash when QR scanner view is paused/closed

@@ -10,11 +10,10 @@ import org.simple.clinic.help.HelpPullResult
 import org.simple.clinic.help.HelpRepository
 import org.simple.clinic.help.HelpScreenTryAgainClicked
 import org.simple.clinic.help.HelpSync
-import org.simple.clinic.util.None
-import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.extractIfPresent
+import org.simple.clinic.util.filterNotPresent
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import java.io.File
 import javax.inject.Inject
 
 typealias Ui = HelpScreen
@@ -38,19 +37,18 @@ class HelpScreenController @Inject constructor(
   }
 
   private fun toggleHelpView(events: Observable<UiEvent>): Observable<UiChange> {
-    val helpFileStream = events
+    val helpContentStream = events
         .ofType<ScreenCreated>()
-        .flatMap { repository.helpFile() }
+        .flatMap { repository.helpContentText() }
         .replay()
         .refCount()
 
-    val showHelp = helpFileStream
-        .filterAndUnwrapJust()
-        .map { it.toURI() }
-        .map { helpFileUri -> { ui: Ui -> ui.showHelp(helpFileUri) } }
+    val showHelp = helpContentStream
+        .extractIfPresent()
+        .map { helpContent -> { ui: Ui -> ui.showHelp(helpContent) } }
 
-    val showEmptyView = helpFileStream
-        .ofType<None<File>>()
+    val showEmptyView = helpContentStream
+        .filterNotPresent()
         .map { Ui::showNoHelpAvailable }
 
     return showHelp.mergeWith(showEmptyView)

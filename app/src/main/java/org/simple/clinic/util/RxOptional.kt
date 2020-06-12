@@ -46,3 +46,7 @@ fun <T : Any> Single<Optional<T>>.extractIfPresent(): Maybe<T> {
   return filter(Optional<T>::isPresent)
       .map(Optional<T>::get)
 }
+
+fun <T> Observable<Optional<T>>.filterNotPresent(): Observable<Optional<T>> {
+  return filter { !it.isPresent() }
+}

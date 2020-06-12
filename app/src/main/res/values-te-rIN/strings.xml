@@ -421,10 +421,6 @@
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_no_blood_sugars">రక్తంలోని చక్కెర జోడించలేదు</string>
   <string name="bloodsugarsummaryview_add_blood_sugar_button">మధుమేహం</string>
-  <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>
-  <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
-  <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
-
   <string name="bloodpressurehistory_add_bp_button">కొత్త బిపి</string>
 
   <!-- Contact patient -->

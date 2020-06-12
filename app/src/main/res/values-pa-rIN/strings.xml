@@ -464,9 +464,6 @@
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_no_blood_sugars">ਕੋਈ ਬਲੱਡ ਸ਼ੂਗਰ ਨਹੀਂ ਜੋੜੇ ਗਏ</string>
   <string name="bloodsugarsummaryview_add_blood_sugar_button">ਸ਼ੂਗਰ</string>
-  <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>
-  <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
-  <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
 
   <!-- Blood Pressure History screen -->
   <string name="bloodpressurehistory_add_bp_button">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ</string>

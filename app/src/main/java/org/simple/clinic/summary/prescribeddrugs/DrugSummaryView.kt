@@ -25,6 +25,7 @@ import org.simple.clinic.summary.DRUGS_REQCODE_ALERT_FACILITY_CHANGE
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
@@ -93,8 +94,9 @@ class DrugSummaryView(
   private fun setupAlertResults(screenDestroys: Observable<ScreenDestroyed>) {
     screenRouter.streamScreenResults()
         .ofType<ActivityResult>()
-        .filter { it.requestCode == DRUGS_REQCODE_ALERT_FACILITY_CHANGE && it.succeeded() }
-        .map { AlertFacilityChangeSheet.readContinuationExtra<ContinueToScreen>(it.data!!).screenKey }
+        .extractSuccessful(DRUGS_REQCODE_ALERT_FACILITY_CHANGE) { intent ->
+          AlertFacilityChangeSheet.readContinuationExtra<ContinueToScreen>(intent).screenKey
+        }
         .takeUntil(screenDestroys)
         .subscribe(screenRouter::push)
   }

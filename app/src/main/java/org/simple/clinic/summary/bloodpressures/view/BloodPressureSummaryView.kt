@@ -47,6 +47,7 @@ import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewUpdate
 import org.simple.clinic.summary.bloodpressures.SeeAllClicked
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -215,8 +216,9 @@ class BloodPressureSummaryView(
   private fun setupBpRecordedEvents(screenDestroys: Observable<ScreenDestroyed>) {
     screenRouter.streamScreenResults()
         .ofType<ActivityResult>()
-        .filter { it.requestCode == SUMMARY_REQCODE_BP_ENTRY && it.succeeded() }
-        .filter { BloodPressureEntrySheet.wasBloodPressureSaved(it.data!!) }
+        .extractSuccessful(SUMMARY_REQCODE_BP_ENTRY) { intent ->
+          BloodPressureEntrySheet.wasBloodPressureSaved(intent)
+        }
         .takeUntil(screenDestroys)
         .subscribe { bpRecorded?.invoke() }
   }
@@ -225,8 +227,9 @@ class BloodPressureSummaryView(
   private fun alertFacilityChangeSheetClosed(onDestroys: Observable<ScreenDestroyed>) {
     screenRouter.streamScreenResults()
         .ofType<ActivityResult>()
-        .filter { it.requestCode == BP_REQCODE_ALERT_FACILITY_CHANGE && it.succeeded() }
-        .map { AlertFacilityChangeSheet.readContinuationExtra<ContinueToActivity>(it.data!!) }
+        .extractSuccessful(BP_REQCODE_ALERT_FACILITY_CHANGE) { intent ->
+          AlertFacilityChangeSheet.readContinuationExtra<ContinueToActivity>(intent)
+        }
         .takeUntil(onDestroys)
         .subscribe { activity.startActivityForResult(it.intent, it.requestCode) }
   }

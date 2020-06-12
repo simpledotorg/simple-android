@@ -51,6 +51,7 @@ import org.simple.clinic.summary.bloodsugar.UiActions
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -225,8 +226,9 @@ class BloodSugarSummaryView(
   private fun alertFacilityChangeSheetClosed(onDestroys: Observable<ScreenDestroyed>) {
     screenRouter.streamScreenResults()
         .ofType<ActivityResult>()
-        .filter { it.requestCode == BLOOD_SUGAR_REQCODE_ALERT_FACILITY_CHANGE && it.succeeded() }
-        .map { AlertFacilityChangeSheet.readContinuationExtra<ContinueToActivity>(it.data!!) }
+        .extractSuccessful(BLOOD_SUGAR_REQCODE_ALERT_FACILITY_CHANGE) { intent ->
+          AlertFacilityChangeSheet.readContinuationExtra<ContinueToActivity>(intent)
+        }
         .takeUntil(onDestroys)
         .subscribe { activity.startActivityForResult(it.intent, it.requestCode) }
   }

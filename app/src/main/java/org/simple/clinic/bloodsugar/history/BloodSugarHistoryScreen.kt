@@ -36,6 +36,7 @@ import org.simple.clinic.summary.TYPE_PICKER_SHEET
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.PagingItemAdapter
@@ -193,9 +194,8 @@ class BloodSugarHistoryScreen(
   private fun openEntrySheetAfterTypeIsSelected(onDestroys: Observable<ScreenDestroyed>) {
     screenRouter.streamScreenResults()
         .ofType<ActivityResult>()
-        .filter { it.requestCode == TYPE_PICKER_SHEET && it.succeeded() && it.data != null }
+        .extractSuccessful(TYPE_PICKER_SHEET) { intent -> intent }
         .takeUntil(onDestroys)
-        .map { it.data!! }
         .subscribe(::showBloodSugarEntrySheet)
   }
 

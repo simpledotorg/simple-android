@@ -30,6 +30,7 @@ import org.simple.clinic.registration.register.RegistrationLoadingScreenKey
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -117,10 +118,8 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     return screenRouter
         .streamScreenResults()
         .ofType<ActivityResult>()
-        .filter { it.requestCode == CONFIRM_FACILITY_SHEET && it.succeeded() && it.data != null }
         .takeUntil(onScreenDestroyed)
-        .map { it.data!! }
-        .map { intent ->
+        .extractSuccessful(CONFIRM_FACILITY_SHEET) { intent ->
           val confirmedFacilityUuid = ConfirmFacilitySheet.confirmedFacilityUuid(intent)
           RegistrationFacilityConfirmed(confirmedFacilityUuid)
         }

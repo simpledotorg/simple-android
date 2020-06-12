@@ -55,6 +55,7 @@ import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.WhatsAppMessageSender
+import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -179,10 +180,8 @@ class PatientSummaryScreen(
     return screenRouter
         .streamScreenResults()
         .ofType<ActivityResult>()
-        .filter { it.requestCode == CONTACT_DOCTOR_SHEET && it.succeeded() && it.data != null }
-        .map { it.data!! }
-        .map {
-          val teleconsultPhoneNumberString = ContactDoctorSheet.readPhoneNumberExtra(it)
+        .extractSuccessful(CONTACT_DOCTOR_SHEET) { intent ->
+          val teleconsultPhoneNumberString = ContactDoctorSheet.readPhoneNumberExtra(intent)
           val teleconsultPhoneNumber = TeleconsultPhoneNumber(teleconsultPhoneNumberString)
 
           ContactDoctorPhoneNumberSelected(teleconsultPhoneNumber)
@@ -239,16 +238,18 @@ class PatientSummaryScreen(
 
   private fun appointmentScheduleSheetClosed() = screenRouter.streamScreenResults()
       .ofType<ActivityResult>()
-      .filter { it.requestCode == SUMMARY_REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() }
-      .map { ScheduleAppointmentSheet.readExtra<ScheduleAppointmentSheetExtra>(it.data!!) }
+      .extractSuccessful(SUMMARY_REQCODE_SCHEDULE_APPOINTMENT) { intent ->
+        ScheduleAppointmentSheet.readExtra<ScheduleAppointmentSheetExtra>(intent)
+      }
       .map { ScheduledAppointment(it.sheetOpenedFrom) }
 
   @SuppressLint("CheckResult")
   private fun alertFacilityChangeSheetClosed(onDestroys: Observable<ScreenDestroyed>) {
     screenRouter.streamScreenResults()
         .ofType<ActivityResult>()
-        .filter { it.requestCode == SUMMARY_REQCODE_ALERT_FACILITY_CHANGE && it.succeeded() }
-        .map { AlertFacilityChangeSheet.readContinuationExtra<Continuation>(it.data!!) }
+        .extractSuccessful(SUMMARY_REQCODE_ALERT_FACILITY_CHANGE) { intent ->
+          AlertFacilityChangeSheet.readContinuationExtra<Continuation>(intent)
+        }
         .takeUntil(onDestroys)
         .subscribe(::openContinuation)
   }

@@ -33,6 +33,7 @@ import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsTabScreen
 import org.simple.clinic.home.report.ReportsScreen
+import org.simple.clinic.introvideoscreen.IntroVideoScreenInjector
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.login.pin.LoginPinScreen
@@ -91,7 +92,8 @@ interface TheActivityComponent :
     DeletePatientScreenInjector,
     PatientsTabScreen.Injector,
     HelpScreen.Injector,
-    ReportsScreen.Injector {
+    ReportsScreen.Injector,
+    IntroVideoScreenInjector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: AppLockScreen)

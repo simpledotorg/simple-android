@@ -1,6 +1,8 @@
 package org.simple.clinic.introvideoscreen
 
-sealed class IntroVideoEvent
+import org.simple.clinic.widgets.UiEvent
+
+sealed class IntroVideoEvent : UiEvent
 
 object VideoClicked : IntroVideoEvent()
 

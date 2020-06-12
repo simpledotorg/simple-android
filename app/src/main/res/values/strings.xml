@@ -222,14 +222,6 @@
   <string name="patientsummary_teleconsult_network_error">Cannot connect due to poor internet</string>
   <string name="patientsummary_teleconsult_network_error_retry">Retry</string>
 
-  <string name="patientsummary_contact_doctor_bloodsugartype_rbs" translatable="false">RBS</string>
-  <string name="patientsummary_contact_doctor_bloodsugartype_ppbs" translatable="false">PPBS</string>
-  <string name="patientsummary_contact_doctor_bloodsugartype_fbs" translatable="false">FBS</string>
-  <string name="patientsummary_contact_doctor_bloodsugartype_hba1c" translatable="false">HbA1c</string>
-
-  <string name="patientsummary_contact_doctor_unit_type_mg_dl" translatable="false">mg/dl</string>
-  <string name="patientsummary_contact_doctor_unit_type_percentage" translatable="false">%</string>
-
   <string name="bloodpressuresummaryview_see_all_button">See all</string>
 
   <!-- Lint fails to find usages for these strings. -->
@@ -553,10 +545,6 @@
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_no_blood_sugars">No blood sugars added</string>
   <string name="bloodsugarsummaryview_add_blood_sugar_button">Diabetes</string>
-  <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>
-  <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
-  <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
-  <string name="bloodsugarsummary_bloodsugartype_hba1c" translatable="false">HbA1c</string>
   <string name="bloodpressurehistory_blood_sugar_date_time" translatable="false">%1$s\n%2$s</string>
 
   <string name="bloodsugar_reading_type_rbs" translatable="false">RBS</string>
@@ -576,8 +564,6 @@
   <string name="bloodsugarhistory_add_blood_sugar_button">Diabetes</string>
   <string name="bloodsugarhistory_blood_sugar_date_time" translatable="false">%1$s\n%2$s</string>
   <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
-  <string name="bloodsugarhistory_unit_type_mg_dl" translatable="false">mg/dl</string>
-  <string name="bloodsugarhistory_unit_type_percentage" translatable="false">%</string>
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">History</string>

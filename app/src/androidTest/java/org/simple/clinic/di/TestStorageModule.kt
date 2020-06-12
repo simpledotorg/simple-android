@@ -10,6 +10,7 @@ import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.storage.FileStorageModule
 import org.simple.clinic.storage.SharedPreferencesModule
 import org.simple.clinic.storage.migrations.RoomMigrationsModule
+import org.simple.clinic.storage.text.TextStoreModule
 import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.user.User
 
@@ -18,7 +19,8 @@ import org.simple.clinic.user.User
   SharedPreferencesModule::class,
   PatientModule::class,
   FileStorageModule::class,
-  PatientSummaryModule::class
+  PatientSummaryModule::class,
+  TextStoreModule::class
 ])
 class TestStorageModule {
 

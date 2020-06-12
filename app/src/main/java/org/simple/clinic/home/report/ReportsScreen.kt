@@ -8,7 +8,7 @@ import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_report.view.*
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -31,7 +31,7 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
 
     webView.settings.javaScriptEnabled = true
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     bindUiToController(
         ui = this,
@@ -56,5 +56,9 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
   private fun showWebview(isVisible: Boolean) {
     webView.visibleOrGone(isVisible)
     noReportView.visibleOrGone(isVisible.not())
+  }
+
+  interface Injector {
+    fun inject(target: ReportsScreen)
   }
 }

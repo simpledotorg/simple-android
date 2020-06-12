@@ -8,12 +8,6 @@ import kotlinx.android.synthetic.main.list_blood_sugar_history_item.*
 import kotlinx.android.synthetic.main.list_new_blood_sugar_button.*
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
-import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
-import org.simple.clinic.bloodsugar.Fasting
-import org.simple.clinic.bloodsugar.HbA1c
-import org.simple.clinic.bloodsugar.PostPrandial
-import org.simple.clinic.bloodsugar.Random
-import org.simple.clinic.bloodsugar.Unknown
 import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
@@ -49,8 +43,10 @@ sealed class BloodSugarHistoryListItem : PagingItemAdapter.Item<Event> {
       val isBloodSugarHigh = measurement.reading.isHigh
       val isBloodSugarLow = measurement.reading.isLow
 
+      val displayUnit = context.getString(bloodSugarReading.displayUnit)
+      val displayType = context.getString(bloodSugarReading.displayType)
       val readingPrefix = bloodSugarReading.displayValue
-      val readingSuffix = "${unitForReadingType(context, bloodSugarReading.type)} ${textForReadingType(context, bloodSugarReading.type)}"
+      val readingSuffix = "$displayUnit $displayType"
 
       holder.readingsTextView.text = "$readingPrefix${bloodSugarReading.displayUnitSeparator}$readingSuffix"
       holder.dateTimeTextView.text = formattedBPDateTime
@@ -83,24 +79,6 @@ sealed class BloodSugarHistoryListItem : PagingItemAdapter.Item<Event> {
         TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Caption_Grey1)
       } else {
         TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body2Left_Grey1)
-      }
-    }
-
-    private fun unitForReadingType(context: Context, type: BloodSugarMeasurementType): String {
-      return when (type) {
-        Random, PostPrandial, Fasting -> context.getString(R.string.bloodsugarhistory_unit_type_mg_dl)
-        HbA1c -> context.getString(R.string.bloodsugarhistory_unit_type_percentage)
-        is Unknown -> ""
-      }
-    }
-
-    private fun textForReadingType(context: Context, type: BloodSugarMeasurementType): String {
-      return when (type) {
-        Random -> context.getString(R.string.bloodsugarsummary_bloodsugartype_rbs)
-        PostPrandial -> context.getString(R.string.bloodsugarsummary_bloodsugartype_ppbs)
-        Fasting -> context.getString(R.string.bloodsugarsummary_bloodsugartype_fbs)
-        HbA1c -> context.getString(R.string.bloodsugarsummary_bloodsugartype_hba1c)
-        is Unknown -> ""
       }
     }
   }

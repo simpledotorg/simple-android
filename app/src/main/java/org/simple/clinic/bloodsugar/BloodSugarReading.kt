@@ -1,7 +1,9 @@
 package org.simple.clinic.bloodsugar
 
 import android.os.Parcelable
+import androidx.annotation.StringRes
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.entry.ValidationResult
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarEmpty
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
@@ -40,6 +42,23 @@ data class BloodSugarReading(val value: String, val type: BloodSugarMeasurementT
         HbA1c -> value.toFloat().toString()
         is Unknown -> value.toInt().toString()
       }
+    }
+
+  @get:StringRes
+  val displayType: Int
+    get() = when (type) {
+      Random -> R.string.bloodsugar_reading_type_rbs
+      PostPrandial -> R.string.bloodsugar_reading_type_ppbs
+      Fasting -> R.string.bloodsugar_reading_type_fbs
+      HbA1c -> R.string.bloodsugar_reading_type_hba1c
+      else -> throw IllegalArgumentException("Unknown blood sugar type $type")
+    }
+
+  @get:StringRes
+  val displayUnit: Int
+    get() = when (type) {
+      Random, PostPrandial, Fasting, is Unknown -> R.string.bloodsugar_reading_unit_type_mg_dl
+      HbA1c -> R.string.bloodsugar_reading_unit_type_percentage
     }
 
   val displayUnitSeparator: String

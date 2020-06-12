@@ -2,12 +2,6 @@ package org.simple.clinic.summary.teleconsultation
 
 import android.content.res.Resources
 import org.simple.clinic.R
-import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
-import org.simple.clinic.bloodsugar.Fasting
-import org.simple.clinic.bloodsugar.HbA1c
-import org.simple.clinic.bloodsugar.PostPrandial
-import org.simple.clinic.bloodsugar.Random
-import org.simple.clinic.bloodsugar.Unknown
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.summary.PatientTeleconsultationInfo
 import org.simple.clinic.util.UserClock
@@ -68,8 +62,8 @@ class TeleconsultationMessageBuilder @Inject constructor(
       val bloodSugars = patientTeleconsultationInfo
           .bloodSugars.joinToString(separator = LINE_BREAK) {
             val bloodSugarRecordedAtDate = dateFormatter.format(it.recordedAt.toLocalDateAtZone(userClock.zone))
-            val bloodSugarType = textForBloodSugarType(it.reading.type)
-            val bloodSugarUnit = unitForBloodSugarType(it.reading.type)
+            val bloodSugarType = resources.getString(it.reading.displayType)
+            val bloodSugarUnit = resources.getString(it.reading.displayUnit)
 
             "$bloodSugarType ${it.reading.displayValue}${it.reading.displayUnitSeparator}${bloodSugarUnit} ($bloodSugarRecordedAtDate)"
           }
@@ -120,24 +114,6 @@ class TeleconsultationMessageBuilder @Inject constructor(
     }
 
     message.appendln("")
-  }
-
-  private fun textForBloodSugarType(type: BloodSugarMeasurementType): String {
-    return when (type) {
-      Random -> resources.getString(R.string.patientsummary_contact_doctor_bloodsugartype_rbs)
-      PostPrandial -> resources.getString(R.string.patientsummary_contact_doctor_bloodsugartype_ppbs)
-      Fasting -> resources.getString(R.string.patientsummary_contact_doctor_bloodsugartype_fbs)
-      HbA1c -> resources.getString(R.string.patientsummary_contact_doctor_bloodsugartype_hba1c)
-      is Unknown -> ""
-    }
-  }
-
-  private fun unitForBloodSugarType(type: BloodSugarMeasurementType): String {
-    return when (type) {
-      Random, PostPrandial, Fasting -> resources.getString(R.string.patientsummary_contact_doctor_unit_type_mg_dl)
-      HbA1c -> resources.getString(R.string.patientsummary_contact_doctor_unit_type_percentage)
-      is Unknown -> ""
-    }
   }
 
   private fun textForDiagnosisAnswer(answer: Answer): String {

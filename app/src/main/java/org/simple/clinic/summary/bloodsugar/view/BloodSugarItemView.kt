@@ -9,13 +9,7 @@ import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.patientsummary_bloodsugar_item_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
-import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.BloodSugarReading
-import org.simple.clinic.bloodsugar.Fasting
-import org.simple.clinic.bloodsugar.HbA1c
-import org.simple.clinic.bloodsugar.PostPrandial
-import org.simple.clinic.bloodsugar.Random
-import org.simple.clinic.bloodsugar.Unknown
 import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.visibleOrGone
 
@@ -48,8 +42,10 @@ class BloodSugarItemView(
 
   @SuppressLint("SetTextI18n")
   private fun renderBloodSugarReading(reading: BloodSugarReading) {
+    val displayUnit = context.getString(reading.displayUnit)
+    val displayType = context.getString(reading.displayType)
     val readingPrefix = reading.displayValue
-    val readingSuffix = "${unitForReadingType(context, reading.type)} ${textForReadingType(context, reading.type)}"
+    val readingSuffix = "$displayUnit $displayType"
 
     readingTextView.text = "$readingPrefix${reading.displayUnitSeparator}$readingSuffix"
 
@@ -77,23 +73,5 @@ class BloodSugarItemView(
         .append(bloodSugarDateTime)
         .popSpan()
         .build()
-  }
-
-  private fun unitForReadingType(context: Context, type: BloodSugarMeasurementType): String {
-    return when (type) {
-      Random, PostPrandial, Fasting -> context.getString(R.string.bloodsugarhistory_unit_type_mg_dl)
-      HbA1c -> context.getString(R.string.bloodsugarhistory_unit_type_percentage)
-      is Unknown -> ""
-    }
-  }
-
-  private fun textForReadingType(context: Context, type: BloodSugarMeasurementType): String {
-    return when (type) {
-      Random -> context.getString(R.string.bloodsugarsummary_bloodsugartype_rbs)
-      PostPrandial -> context.getString(R.string.bloodsugarsummary_bloodsugartype_ppbs)
-      Fasting -> context.getString(R.string.bloodsugarsummary_bloodsugartype_fbs)
-      HbA1c -> context.getString(R.string.bloodsugarsummary_bloodsugartype_hba1c)
-      is Unknown -> ""
-    }
   }
 }

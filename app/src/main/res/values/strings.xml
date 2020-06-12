@@ -559,6 +559,14 @@
   <string name="bloodsugarsummary_bloodsugartype_hba1c" translatable="false">HbA1c</string>
   <string name="bloodpressurehistory_blood_sugar_date_time" translatable="false">%1$s\n%2$s</string>
 
+  <string name="bloodsugar_reading_type_rbs" translatable="false">RBS</string>
+  <string name="bloodsugar_reading_type_ppbs" translatable="false">PPBS</string>
+  <string name="bloodsugar_reading_type_fbs" translatable="false">FBS</string>
+  <string name="bloodsugar_reading_type_hba1c" translatable="false">HbA1c</string>
+
+  <string name="bloodsugar_reading_unit_type_mg_dl" translatable="false">mg/dl</string>
+  <string name="bloodsugar_reading_unit_type_percentage" translatable="false">%</string>
+
   <!-- Blood Pressure History screen -->
   <string name="bloodpressurehistory_add_bp_button">Blood Pressure</string>
   <string name="bloodpressurehistory_bp_time_date" translatable="false">%1$s\n%2$s</string>

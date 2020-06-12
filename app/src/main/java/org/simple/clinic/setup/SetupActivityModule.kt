@@ -21,9 +21,4 @@ class SetupActivityModule {
         isdCode = "91"
     )
   }
-
-  @Provides
-  fun providesSetupActivityConfig() : SetupActivityConfig {
-    return SetupActivityConfig(newOnboardingScreenEnabled = false)
-  }
 }

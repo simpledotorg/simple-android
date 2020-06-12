@@ -413,7 +413,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("bc761c6c-032f-4f1d-a66a-3ec81e9e8aa3"))
     uiEvents.onNext(RegistrationFacilityConfirmed(facility1.uuid))
 
-    verify(screen).openRegistrationScreen()
+    verify(screen).openIntroVideoScreen()
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityId = facility1.uuid))
     verify(userSession).saveOngoingRegistrationEntryAsUser()
   }

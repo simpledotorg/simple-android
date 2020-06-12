@@ -108,26 +108,13 @@ class SetupActivity : AppCompatActivity(), UiActions {
     overridePendingTransition(0, 0)
   }
 
-  override fun showOnboardingScreen() {
-    // TODO (HS): Show splash screen once the new onboarding screen is implemented
-    if (setupActivityConfig.newOnboardingScreenEnabled) {
-      navigateToSplashScreen()
-    } else {
-      navigateToOnboardingScreen()
-    }
+  override fun showSplashScreen() {
+    navigateToSplashScreen()
   }
 
   private fun navigateToSplashScreen() {
     if (navController.currentDestination?.id != R.id.splashScreen) {
       navController.navigate(R.id.action_placeholderScreen_to_splashScreen)
-    }
-  }
-
-  private fun navigateToOnboardingScreen() {
-    // If onboarding screen is already being shown don't navigate again, it would cause
-    // duplicate destinations
-    if (navController.currentDestination?.id != R.id.onboardingScreenOld) {
-      navController.navigate(R.id.action_placeholderScreen_to_onboardingScreenOld)
     }
   }
 

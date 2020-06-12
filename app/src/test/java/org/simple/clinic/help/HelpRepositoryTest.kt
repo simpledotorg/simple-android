@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.storage.files.DeleteFileResult
@@ -15,6 +16,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
 import java.io.File
 
+@Ignore("Ignored for now, will be completely changed in a later commit.")
 class HelpRepositoryTest {
 
   @get:Rule

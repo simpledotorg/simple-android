@@ -471,9 +471,6 @@
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_no_blood_sugars">ምንም የደም ስኳር የለም</string>
   <string name="bloodsugarsummaryview_add_blood_sugar_button">የስኳር በሽታ</string>
-  <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>
-  <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
-  <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
   <!-- Blood Pressure History screen -->
   <string name="bloodpressurehistory_add_bp_button">ደም ግፊት</string>
   <string name="bloodpressurehistory_toolbar_title">%1$s ፣ %2$s ፣ %3$s</string>

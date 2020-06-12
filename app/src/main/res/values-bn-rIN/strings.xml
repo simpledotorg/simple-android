@@ -420,10 +420,6 @@
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_no_blood_sugars">কোনও ব্লাড সুগার যোগ করা হয়নি</string>
   <string name="bloodsugarsummaryview_add_blood_sugar_button">ডায়াবেটিস</string>
-  <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>
-  <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
-  <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
-
   <string name="bloodpressurehistory_add_bp_button">নতুন বিপি</string>
 
   <!-- Contact patient -->

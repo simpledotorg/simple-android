@@ -222,7 +222,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .flatMap {
           userSession
               .saveOngoingRegistrationEntryAsUser()
-              .andThen(Observable.just { ui: Ui -> ui.openRegistrationScreen() })
+              .andThen(Observable.just { ui: Ui -> ui.openIntroVideoScreen() })
         }
   }
 }

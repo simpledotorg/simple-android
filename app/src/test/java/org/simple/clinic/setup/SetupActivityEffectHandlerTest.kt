@@ -79,13 +79,13 @@ class SetupActivityEffectHandlerTest {
   }
 
   @Test
-  fun `when the show onboarding screen effect is received, the onboarding screen must be shown`() {
+  fun `when the show onboarding screen effect is received, the splash screen must be shown`() {
     // when
     testCase.dispatch(ShowOnboardingScreen)
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).showOnboardingScreen()
+    verify(uiActions).showSplashScreen()
     verifyNoMoreInteractions(uiActions)
   }
 

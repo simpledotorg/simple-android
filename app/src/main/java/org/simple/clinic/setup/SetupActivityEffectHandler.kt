@@ -34,7 +34,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<SetupActivityEffect, SetupActivityEvent>()
         .addTransformer(FetchUserDetails::class.java, fetchUserDetails(schedulersProvider.io()))
         .addAction(GoToMainActivity::class.java, uiActions::goToMainActivity, schedulersProvider.ui())
-        .addAction(ShowOnboardingScreen::class.java, uiActions::showOnboardingScreen, schedulersProvider.ui())
+        .addAction(ShowOnboardingScreen::class.java, uiActions::showSplashScreen, schedulersProvider.ui())
         // We could technically also implicitly wait on the database to
         // initialize by querying the actual user data and make it a
         // property of the FetchUserDetails effect, but that has the

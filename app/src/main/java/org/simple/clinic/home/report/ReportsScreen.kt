@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_report.view.*
 import org.simple.clinic.bindUiToController
@@ -37,7 +37,7 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
         ui = this,
         events = screenCreates(),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
   }
 

@@ -34,9 +34,6 @@ class SetupActivity : AppCompatActivity(), UiActions {
   @Inject
   lateinit var effectHandlerFactory: SetupActivityEffectHandler.Factory
 
-  @Inject
-  lateinit var setupActivityConfig: SetupActivityConfig
-
   private val screenResults = ScreenResultBus()
 
   private val delegate by unsafeLazy {

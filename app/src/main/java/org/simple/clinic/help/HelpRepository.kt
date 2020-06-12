@@ -15,6 +15,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.ofType
 import org.simple.clinic.util.toOptional
 import java.io.File
+import java.util.function.Function
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -37,6 +38,22 @@ class HelpRepository @Inject constructor(
         }
 
     return fileChangedSubject.mergeWith(initialFile)
+  }
+
+  fun helpContentText(): Observable<Optional<String>> {
+    val initialFile = Observable
+        .fromCallable { fileStorage.getFile(helpFilePath) }
+        .map { result ->
+          if (result is GetFileResult.Success && result.file.length() > 0L) {
+            Optional.of(result.file)
+          } else {
+            Optional.empty()
+          }
+        }
+
+    return initialFile
+        .mergeWith(fileChangedSubject)
+        .map { fileOptional -> fileOptional.map(Function<File, String> { it.readText() }) }
   }
 
   fun updateHelp(helpContent: String): Completable {

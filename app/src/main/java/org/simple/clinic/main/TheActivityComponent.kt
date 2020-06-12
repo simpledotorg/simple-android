@@ -89,7 +89,8 @@ interface TheActivityComponent :
     LoginPinScreen.Injector,
     EnterOtpScreen.Injector,
     DeletePatientScreenInjector,
-    PatientsTabScreen.Injector {
+    PatientsTabScreen.Injector,
+    HelpScreen.Injector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: AppLockScreen)
@@ -118,7 +119,6 @@ interface TheActivityComponent :
   fun inject(target: RecentPatientsView)
   fun inject(target: SyncIndicatorView)
   fun inject(target: AddPhoneNumberDialog)
-  fun inject(target: HelpScreen)
   fun inject(target: AddIdToPatientSearchScreen)
   fun inject(target: PatientSearchView)
   fun inject(target: AddIdToPatientSearchResultsScreen)

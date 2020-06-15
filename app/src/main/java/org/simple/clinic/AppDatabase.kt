@@ -28,6 +28,7 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
+import org.simple.clinic.storage.text.TextRecord
 import org.simple.clinic.summary.addphone.MissingPhoneReminder
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User
@@ -52,13 +53,14 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       ProtocolDrug::class,
       BusinessId::class,
       MissingPhoneReminder::class,
-      BloodSugarMeasurement::class
+      BloodSugarMeasurement::class,
+      TextRecord::class
     ],
     views = [
       OverdueAppointment::class,
       PatientSearchResult::class
     ],
-    version = 67,
+    version = 68,
     exportSchema = true
 )
 @TypeConverters(
@@ -119,6 +121,8 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun missingPhoneReminderDao(): MissingPhoneReminder.RoomDao
 
   abstract fun bloodSugarDao(): BloodSugarMeasurement.RoomDao
+
+  abstract fun textRecordDao(): TextRecord.RoomDao
 
   fun clearPatientData() {
     runInTransaction {

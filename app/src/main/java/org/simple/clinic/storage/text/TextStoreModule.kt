@@ -2,24 +2,18 @@ package org.simple.clinic.storage.text
 
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.storage.files.FileStorage
-import javax.inject.Named
+import org.simple.clinic.AppDatabase
 
 @Module
 class TextStoreModule {
 
   @Provides
-  fun textStore(
-      fileStorage: FileStorage,
-      @Named("reports_file_path") reportsFilePath: String,
-      @Named("help_file_path") helpFilePath: String
+  fun provideDao(appDatabase: AppDatabase): TextRecord.RoomDao = appDatabase.textRecordDao()
+
+  @Provides
+  fun provideTextStore(
+      dao: TextRecord.RoomDao
   ): TextStore {
-    return LocalFileTextStore(
-        fileStorage = fileStorage,
-        keysToFilePath = mapOf(
-            "reports" to reportsFilePath,
-            "help" to helpFilePath
-        )
-    )
+    return LocalDbTextStore(dao)
   }
 }

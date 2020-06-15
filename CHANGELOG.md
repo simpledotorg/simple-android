@@ -6,6 +6,7 @@
 - Add diagnosis and blood sugar readings to the teleconsultation message
 - User can now select from multiple doctors when requesting a teleconsultation
 - [In Progress 09 Jun 2020] New Onboarding UI
+- Show new registration label for recent patients in home screen
 
 ### Changes
 - Rename the button label to 'Next' when assigning a new BP passport to an existing patient

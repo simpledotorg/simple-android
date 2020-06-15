@@ -14,6 +14,7 @@ import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.Instant
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
@@ -29,7 +30,8 @@ data class RecentPatientItem(
     val gender: Gender,
     val updatedAt: Instant,
     val dateFormatter: DateTimeFormatter,
-    val clock: UserClock
+    val clock: UserClock,
+    val isNewRegistration: Boolean
 ) : RecentPatientItemType<RecentPatientItem.RecentPatientViewHolder>(uuid.hashCode().toLong()) {
 
   override fun getLayout(): Int = R.layout.recent_patient_item_view
@@ -43,13 +45,14 @@ data class RecentPatientItem(
       uiEvents.onNext(RecentPatientItemClicked(patientUuid = uuid))
     }
 
-    viewHolder.render(name, age, gender, updatedAt, dateFormatter, clock)
+    viewHolder.render(name, age, gender, updatedAt, dateFormatter, clock, isNewRegistration)
   }
 
   class RecentPatientViewHolder(rootView: View) : ViewHolder(rootView) {
     private val nameAgeTextView by bindView<TextView>(R.id.recentpatient_item_title)
     private val lastSeenTextView by bindView<TextView>(R.id.recentpatient_item_last_seen)
     private val genderImageView by bindView<ImageView>(R.id.recentpatient_item_gender)
+    private val newRegistrationTextView by bindView<TextView>(R.id.recentpatient_new_registration)
 
     fun render(
         name: String,
@@ -57,8 +60,10 @@ data class RecentPatientItem(
         gender: Gender,
         updatedAt: Instant,
         dateFormatter: DateTimeFormatter,
-        clock: UserClock
+        clock: UserClock,
+        isNewRegistration: Boolean
     ) {
+      newRegistrationTextView.visibleOrGone(isNewRegistration)
       nameAgeTextView.text = itemView.resources.getString(R.string.patients_recentpatients_nameage, name, age.toString())
       genderImageView.setImageResource(gender.displayIconRes)
       lastSeenTextView.text = dateFormatter.format(updatedAt.toLocalDateAtZone(clock.zone))

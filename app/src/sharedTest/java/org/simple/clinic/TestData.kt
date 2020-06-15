@@ -92,7 +92,8 @@ object TestData {
       gender: Gender = randomGender(),
       patientDeletedReason: DeletedReason? = null,
       patientCreatedAt: Instant = Instant.now(),
-      patientUpdatedAt: Instant = Instant.now()
+      patientUpdatedAt: Instant = Instant.now(),
+      patientRecordedAt: Instant = Instant.parse("2018-01-01T00:00:00Z")
   ): PatientProfile {
     val phoneNumbers = if (!patientPhoneNumber.isNullOrBlank()) {
       listOf(patientPhoneNumber(patientUuid = patientUuid, number = patientPhoneNumber))
@@ -118,7 +119,8 @@ object TestData {
             gender = gender,
             deletedReason = patientDeletedReason,
             createdAt = patientCreatedAt,
-            updatedAt = patientUpdatedAt
+            updatedAt = patientUpdatedAt,
+            recordedAt = patientRecordedAt
         ),
         address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = phoneNumbers,
@@ -987,13 +989,15 @@ object TestData {
       gender: Gender = randomGender(),
       dateOfBirth: LocalDate? = null,
       age: Age? = null,
-      updatedAt: Instant = Instant.now()
+      patientRecordedAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
+      updatedAt: Instant = Instant.parse("2018-01-01T00:00:00Z")
   ) = RecentPatient(
       uuid = uuid,
       fullName = fullName,
       gender = gender,
       dateOfBirth = dateOfBirth,
       age = age,
+      patientRecordedAt = patientRecordedAt,
       updatedAt = updatedAt
   )
 

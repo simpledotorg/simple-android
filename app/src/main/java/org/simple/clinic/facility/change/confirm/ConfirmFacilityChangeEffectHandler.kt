@@ -58,8 +58,7 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
 
   private fun clearAndSyncReports(scheduler: Scheduler) {
     reportsRepository
-        .deleteReportsFile()
-        .toCompletable()
+        .deleteReports()
         .andThen(reportsSync.sync().onErrorComplete())
         .subscribeOn(scheduler)
         .subscribe()

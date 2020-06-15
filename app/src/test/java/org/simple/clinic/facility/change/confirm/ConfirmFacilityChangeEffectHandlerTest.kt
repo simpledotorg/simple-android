@@ -9,14 +9,12 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
 import io.reactivex.Completable
-import io.reactivex.Single
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
-import org.simple.clinic.storage.files.DeleteFileResult
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
@@ -49,7 +47,7 @@ class ConfirmFacilityChangeEffectHandlerTest {
 
     whenever(userSession.loggedInUserImmediate()) doReturn loggedInUser
     whenever(facilityRepository.setCurrentFacility(loggedInUser, facility)) doReturn Completable.complete()
-    whenever(reportsRepository.deleteReportsFile()).thenReturn(Single.just(DeleteFileResult.Success))
+    whenever(reportsRepository.deleteReports()) doReturn Completable.complete()
     whenever(reportsSync.sync()) doReturn Completable.complete()
 
     //when
@@ -57,7 +55,7 @@ class ConfirmFacilityChangeEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(FacilityChanged)
-    verify(reportsRepository).deleteReportsFile()
+    verify(reportsRepository).deleteReports()
     verify(reportsSync).sync()
     verify(isFacilitySwitchedPreference).set(true)
     verifyZeroInteractions(uiActions)

@@ -1,13 +1,18 @@
 # CHANGELOG
 
 ## Next Release
+### Changes
+- [In Progress 09 Jun 2020] New Onboarding UI
+- Show new registration label for recent patients in home screen
+
+### Internal
+- Migrated `RecentPatientItemType` to use `ItemAdapter`
+
+## On Demo
 ### Feature
 - User can soft delete patient
 - Add diagnosis and blood sugar readings to the teleconsultation message
 - User can now select from multiple doctors when requesting a teleconsultation
-- [In Progress 09 Jun 2020] New Onboarding UI
-- Show new registration label for recent patients in home screen
-- Migrated `RecentPatientItemType` to use `ItemAdapter`
 
 ### Changes
 - Rename the button label to 'Next' when assigning a new BP passport to an existing patient

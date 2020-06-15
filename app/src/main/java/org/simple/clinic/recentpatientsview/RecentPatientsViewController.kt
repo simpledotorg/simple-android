@@ -88,12 +88,11 @@ class RecentPatientsViewController @Inject constructor(
   private fun addSeeAllIfListTooLong(
       recentPatients: List<RecentPatientItem>,
       recentPatientLimit: Int
-  ) =
-      if (recentPatients.size > recentPatientLimit) {
-        recentPatients.take(recentPatientLimit) + SeeAllItem
-      } else {
-        recentPatients
-      }
+  ) = if (recentPatients.size > recentPatientLimit) {
+    recentPatients.take(recentPatientLimit) + SeeAllItem
+  } else {
+    recentPatients
+  }
 
   private fun recentPatientItem(recentPatient: RecentPatient, today: LocalDate): RecentPatientItem {
     val patientRegisteredOnDate = recentPatient.patientRecordedAt.toLocalDateAtZone(userClock.zone)

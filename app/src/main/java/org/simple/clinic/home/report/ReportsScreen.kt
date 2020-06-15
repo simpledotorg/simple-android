@@ -13,7 +13,6 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
-import java.net.URI
 import javax.inject.Inject
 
 class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
@@ -43,9 +42,9 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
 
   private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
 
-  fun showReport(uri: URI) {
+  fun showReport(html: String) {
     showWebview(true)
-    webView.loadUrl(uri.toString())
+    webView.loadDataWithBaseURL(null, html, "text/html", Charsets.UTF_8.name(), null)
   }
 
   fun showNoReportsAvailable() {

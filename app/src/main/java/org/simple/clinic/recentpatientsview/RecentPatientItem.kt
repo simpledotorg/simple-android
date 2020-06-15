@@ -49,10 +49,10 @@ data class RecentPatientItem(
   }
 
   class RecentPatientViewHolder(rootView: View) : ViewHolder(rootView) {
-    private val nameAgeTextView by bindView<TextView>(R.id.recentpatient_item_title)
-    private val lastSeenTextView by bindView<TextView>(R.id.recentpatient_item_last_seen)
-    private val genderImageView by bindView<ImageView>(R.id.recentpatient_item_gender)
-    private val newRegistrationTextView by bindView<TextView>(R.id.recentpatient_new_registration)
+    private val nameAgeTextView by bindView<TextView>(R.id.patientNameTextView)
+    private val lastSeenTextView by bindView<TextView>(R.id.lastSeenTextView)
+    private val genderImageView by bindView<ImageView>(R.id.genderImageView)
+    private val newRegistrationTextView by bindView<TextView>(R.id.newRegistrationTextView)
 
     fun render(
         name: String,
@@ -85,6 +85,6 @@ object SeeAllItem : RecentPatientItemType<SeeAllItemViewHolder>(0) {
   }
 
   class SeeAllItemViewHolder(rootView: View) : ViewHolder(rootView) {
-    val seeAllButton by bindView<View>(R.id.seeall_button)
+    val seeAllButton by bindView<View>(R.id.seeAllButton)
   }
 }

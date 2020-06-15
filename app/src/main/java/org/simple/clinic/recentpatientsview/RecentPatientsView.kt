@@ -1,26 +1,24 @@
 package org.simple.clinic.recentpatientsview
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jakewharton.rxbinding2.view.RxView
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.ViewHolder
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.recentpatient.RecentPatientsScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -43,10 +41,9 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
   private val recyclerView by bindView<RecyclerView>(R.id.recentpatients_recyclerview)
   private val emptyStateView by bindView<View>(R.id.recentpatients_no_recent_patients)
 
-  private val groupAdapter = GroupAdapter<ViewHolder>()
-  private val adapterEvents = PublishSubject.create<UiEvent>()
+  private val recentAdapter = ItemAdapter(RecentPatientItemTTypeDiffCallback())
+  private val detaches = detaches()
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     TheActivity.component.inject(this)
@@ -55,23 +52,24 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
 
     recyclerView.apply {
       layoutManager = LinearLayoutManager(context)
-      adapter = groupAdapter
+      adapter = recentAdapter
       isNestedScrollingEnabled = false
     }
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(screenCreates(), adapterEvents),
+        events = Observable.merge(screenCreates(), adapterEvents()),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches.map { ScreenDestroyed() }
     )
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
-  fun updateRecentPatients(recentPatients: List<RecentPatientItemType<out ViewHolder>>) {
-    recentPatients.forEach { it.uiEvents = adapterEvents }
-    groupAdapter.update(recentPatients)
+  private fun adapterEvents() = recentAdapter.itemEvents.ofType<UiEvent>()
+
+  fun updateRecentPatients(recentPatients: List<RecentPatientItemType>) {
+    recentAdapter.submitList(recentPatients)
   }
 
   fun showOrHideRecentPatients(isVisible: Boolean) {

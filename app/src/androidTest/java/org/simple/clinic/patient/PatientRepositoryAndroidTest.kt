@@ -52,7 +52,9 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.reports.ReportsRepository
+import org.simple.clinic.reports.ReportsRepository.Companion.REPORTS_KEY
 import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.storage.text.TextStore
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -125,6 +127,9 @@ class PatientRepositoryAndroidTest {
   @Inject
   lateinit var currentFacility: Facility
 
+  @Inject
+  lateinit var textStore: TextStore
+
   @get:Rule
   val rules: RuleChain = Rules
       .global()
@@ -140,7 +145,7 @@ class PatientRepositoryAndroidTest {
 
   @After
   fun tearDown() {
-    reportsRepository.deleteReportsFile().blockingGet()
+    reportsRepository.deleteReports().blockingAwait()
   }
 
   @Test
@@ -567,7 +572,6 @@ class PatientRepositoryAndroidTest {
     ).blockingAwait()
 
     reportsRepository.updateReports("test reports!").blockingAwait()
-    val (reportsFile) = reportsRepository.reportsFile().blockingFirst()
 
     // We need to ensure that ONLY the tables related to the patient get cleared,
     // and the ones referring to the user must be left untouched
@@ -583,7 +587,7 @@ class PatientRepositoryAndroidTest {
     assertThat(database.userDao().userImmediate()).isNotNull()
     assertThat(database.appointmentDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.medicalHistoryDao().count().blockingFirst()).isGreaterThan(0)
-    assertThat(reportsFile!!.exists()).isTrue()
+    assertThat(textStore.get(REPORTS_KEY)).isNotEmpty()
 
     patientRepository.clearPatientData().blockingAwait()
 
@@ -596,7 +600,7 @@ class PatientRepositoryAndroidTest {
     assertThat(database.prescriptionDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.appointmentDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.medicalHistoryDao().count().blockingFirst()).isEqualTo(0)
-    assertThat(reportsFile.exists()).isFalse()
+    assertThat(textStore.get(REPORTS_KEY)).isEmpty()
 
     assertThat(database.facilityDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.userDao().userImmediate()).isNotNull()

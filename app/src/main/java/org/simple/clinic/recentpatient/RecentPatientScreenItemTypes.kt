@@ -52,8 +52,8 @@ data class RecentPatientItem(
   }
 
   class RecentPatientItemViewHolder(rootView: View) : ViewHolder(rootView) {
-    val titleTextView by bindView<TextView>(R.id.recentpatient_item_title)
-    val lastSeenTextView by bindView<TextView>(R.id.recentpatient_item_last_seen)
-    val genderImageView by bindView<ImageView>(R.id.recentpatient_item_gender)
+    val titleTextView by bindView<TextView>(R.id.patientNameTextView)
+    val lastSeenTextView by bindView<TextView>(R.id.lastSeenTextView)
+    val genderImageView by bindView<ImageView>(R.id.genderImageView)
   }
 }

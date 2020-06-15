@@ -15,7 +15,7 @@
     android:layout_margin="@dimen/spacing_16">
 
     <ImageView
-      android:id="@+id/recentpatient_item_gender"
+      android:id="@+id/genderImageView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       app:layout_constraintStart_toStartOf="parent"
@@ -24,53 +24,53 @@
       tools:src="@drawable/ic_patient_transgender" />
 
     <TextView
-      android:id="@+id/recentpatient_item_title"
+      android:id="@+id/patientNameTextView"
       style="@style/Clinic.V2.TextAppearance.Subtitle1Left.Blue1"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_16"
       android:layout_marginEnd="@dimen/spacing_16"
       android:layout_marginBottom="@dimen/spacing_4"
-      app:layout_constraintBottom_toTopOf="@id/recentpatient_new_registration"
+      app:layout_constraintBottom_toTopOf="@id/newRegistrationTextView"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toEndOf="@+id/recentpatient_item_gender"
-      app:layout_constraintTop_toTopOf="@+id/recentpatient_item_gender"
+      app:layout_constraintStart_toEndOf="@+id/genderImageView"
+      app:layout_constraintTop_toTopOf="@+id/genderImageView"
       tools:text="Anish Acharya, 43" />
 
     <TextView
-      android:id="@+id/recentpatient_new_registration"
+      android:id="@+id/newRegistrationTextView"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/spacing_12"
       android:text="@string/recent_patients_itemview_new_registration"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Green1"
       android:visibility="gone"
-      app:layout_constraintBottom_toTopOf="@id/recentpatient_item_last_seen_label"
-      app:layout_constraintEnd_toEndOf="@id/recentpatient_item_title"
-      app:layout_constraintStart_toStartOf="@id/recentpatient_item_title"
-      app:layout_constraintTop_toBottomOf="@id/recentpatient_item_title"
+      app:layout_constraintBottom_toTopOf="@id/lastSeenLabelTextView"
+      app:layout_constraintEnd_toEndOf="@id/patientNameTextView"
+      app:layout_constraintStart_toStartOf="@id/patientNameTextView"
+      app:layout_constraintTop_toBottomOf="@id/patientNameTextView"
       tools:visibility="visible" />
 
     <TextView
-      android:id="@+id/recentpatient_item_last_seen_label"
+      android:id="@+id/lastSeenLabelTextView"
       style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/recent_patients_itemview_last_seen"
       android:textAllCaps="true"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintStart_toStartOf="@+id/recentpatient_item_title"
-      app:layout_constraintTop_toBottomOf="@+id/recentpatient_new_registration" />
+      app:layout_constraintStart_toStartOf="@+id/patientNameTextView"
+      app:layout_constraintTop_toBottomOf="@+id/newRegistrationTextView" />
 
     <TextView
-      android:id="@+id/recentpatient_item_last_seen"
+      android:id="@+id/lastSeenTextView"
       style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:ellipsize="end"
       android:maxLines="1"
-      app:layout_constraintBaseline_toBaselineOf="@+id/recentpatient_item_last_seen_label"
-      app:layout_constraintStart_toEndOf="@+id/recentpatient_item_last_seen_label"
+      app:layout_constraintBaseline_toBaselineOf="@+id/lastSeenLabelTextView"
+      app:layout_constraintStart_toEndOf="@+id/lastSeenLabelTextView"
       tools:text="Today" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>

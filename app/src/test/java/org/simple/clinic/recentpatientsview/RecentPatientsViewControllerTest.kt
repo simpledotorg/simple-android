@@ -94,21 +94,24 @@ class RecentPatientsViewControllerTest {
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(userClock)),
             gender = Transgender,
-            updatedAt = Instant.now(userClock)
+            updatedAt = Instant.now(userClock),
+            patientRecordedAt = Instant.now(userClock)
         ),
         TestData.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
             age = Age(24, Instant.now(userClock)),
             gender = Male,
-            updatedAt = Instant.now(userClock).minus(1, ChronoUnit.DAYS)
+            updatedAt = Instant.now(userClock).minus(1, ChronoUnit.DAYS),
+            patientRecordedAt = Instant.now(userClock).minus(5, ChronoUnit.DAYS)
         ),
         TestData.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(userClock)),
             gender = Female,
-            updatedAt = Instant.now(userClock).minus(3, ChronoUnit.DAYS)
+            updatedAt = Instant.now(userClock).minus(3, ChronoUnit.DAYS),
+            patientRecordedAt = Instant.now(userClock).minus(10, ChronoUnit.DAYS)
         )
     )))
 
@@ -122,7 +125,8 @@ class RecentPatientsViewControllerTest {
             gender = Transgender,
             updatedAt = Instant.parse("2020-02-01T00:00:00Z"),
             dateFormatter = dateFormatter,
-            clock = userClock
+            clock = userClock,
+            isNewRegistration = true
         ),
         RecentPatientItem(
             uuid = patientUuid2,
@@ -131,7 +135,8 @@ class RecentPatientsViewControllerTest {
             gender = Male,
             updatedAt = Instant.parse("2020-01-31T00:00:00Z"),
             dateFormatter = dateFormatter,
-            clock = userClock
+            clock = userClock,
+            isNewRegistration = false
         ),
         RecentPatientItem(
             uuid = patientUuid3,
@@ -140,7 +145,8 @@ class RecentPatientsViewControllerTest {
             gender = Female,
             updatedAt = Instant.parse("2020-01-29T00:00:00Z"),
             dateFormatter = dateFormatter,
-            clock = userClock
+            clock = userClock,
+            isNewRegistration = false
         )
     ))
     verify(screen).showOrHideRecentPatients(isVisible = true)
@@ -162,21 +168,24 @@ class RecentPatientsViewControllerTest {
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(userClock)),
             gender = Transgender,
-            updatedAt = Instant.now(userClock)
+            updatedAt = Instant.now(userClock),
+            patientRecordedAt = Instant.now(userClock)
         ),
         TestData.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
             age = Age(24, Instant.now(userClock)),
             gender = Male,
-            updatedAt = Instant.now(userClock).minus(1, ChronoUnit.DAYS)
+            updatedAt = Instant.now(userClock).minus(1, ChronoUnit.DAYS),
+            patientRecordedAt = Instant.now(userClock).minus(3, ChronoUnit.DAYS)
         ),
         TestData.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(userClock)),
             gender = Female,
-            updatedAt = Instant.now(userClock).minus(4, ChronoUnit.DAYS)
+            updatedAt = Instant.now(userClock).minus(4, ChronoUnit.DAYS),
+            patientRecordedAt = Instant.now(userClock).minus(15, ChronoUnit.DAYS)
         ),
         TestData.recentPatient(
             uuid = patientUuid4,
@@ -196,7 +205,8 @@ class RecentPatientsViewControllerTest {
             gender = Transgender,
             updatedAt = Instant.parse("2020-01-01T00:00:00Z"),
             dateFormatter = dateFormatter,
-            clock = userClock
+            clock = userClock,
+            isNewRegistration = true
         ),
         RecentPatientItem(
             uuid = patientUuid2,
@@ -205,7 +215,8 @@ class RecentPatientsViewControllerTest {
             gender = Male,
             updatedAt = Instant.parse("2019-12-31T00:00:00Z"),
             dateFormatter = dateFormatter,
-            clock = userClock
+            clock = userClock,
+            isNewRegistration = false
         ),
         RecentPatientItem(
             uuid = patientUuid3,
@@ -214,7 +225,8 @@ class RecentPatientsViewControllerTest {
             gender = Female,
             updatedAt = Instant.parse("2019-12-28T00:00:00Z"),
             dateFormatter = dateFormatter,
-            clock = userClock
+            clock = userClock,
+            isNewRegistration = false
         ),
         SeeAllItem
     ))

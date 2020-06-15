@@ -2,14 +2,12 @@ package org.simple.clinic.recentpatientsview
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.recent_patients.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
@@ -38,9 +36,6 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
   @Inject
   lateinit var screenRouter: ScreenRouter
 
-  private val recyclerView by bindView<RecyclerView>(R.id.recentpatients_recyclerview)
-  private val emptyStateView by bindView<View>(R.id.recentpatients_no_recent_patients)
-
   private val recentAdapter = ItemAdapter(RecentPatientItemTTypeDiffCallback())
   private val detaches = detaches()
 
@@ -50,7 +45,7 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
 
     inflate(context, R.layout.recent_patients, this)
 
-    recyclerView.apply {
+    recentRecyclerView.apply {
       layoutManager = LinearLayoutManager(context)
       adapter = recentAdapter
       isNestedScrollingEnabled = false
@@ -73,8 +68,8 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
   }
 
   fun showOrHideRecentPatients(isVisible: Boolean) {
-    recyclerView.visibleOrGone(isVisible)
-    emptyStateView.visibleOrGone(isVisible.not())
+    recentRecyclerView.visibleOrGone(isVisible)
+    noRecentPatientsTextView.visibleOrGone(isVisible.not())
   }
 
   fun openRecentPatientsScreen() {

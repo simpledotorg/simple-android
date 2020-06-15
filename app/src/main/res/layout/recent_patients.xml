@@ -7,14 +7,14 @@
   tools:parentTag="org.simple.clinic.recentpatientsview.RecentPatientsView">
 
   <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/recentpatients_recyclerview"
+    android:id="@+id/recentRecyclerView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipToPadding="false"
     android:paddingBottom="@dimen/spacing_96" />
 
   <TextView
-    android:id="@+id/recentpatients_no_recent_patients"
+    android:id="@+id/noRecentPatientsTextView"
     style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

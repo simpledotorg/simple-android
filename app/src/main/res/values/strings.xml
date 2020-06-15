@@ -437,7 +437,7 @@
   <string name="recent_patients_toolbar_title">Recent</string>
 
   <!-- Recent Patients Item View -->
-  <string name="recent_patients_itemview_last_seen">Last Seen:\u0020</string>
+  <string name="recent_patients_itemview_last_seen">Visited:\u0020</string>
   <string name="recent_patients_itemview_title">%1$s, %2$s</string>
   <string name="recent_patients_itemview_new_registration">New registration</string>
 

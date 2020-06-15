@@ -23,6 +23,8 @@ data class RecentPatient(
     @Embedded(prefix = "age_")
     val age: Age?,
 
+    val patientRecordedAt: Instant,
+
     val updatedAt: Instant
 ) {
 
@@ -32,7 +34,7 @@ data class RecentPatient(
     companion object {
 
       const val RECENT_PATIENT_QUERY = """
-        SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt,
+        SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.recordedAt patientRecordedAt,
         MAX(
             IFNULL(BP.latestRecordedAt, '0'),
             IFNULL(PD.latestUpdatedAt, '0'),

@@ -1272,6 +1272,7 @@ class PatientRepositoryAndroidTest {
       gender = gender,
       dateOfBirth = dateOfBirth,
       age = age,
+      patientRecordedAt = this.recordedAt,
       updatedAt = recordedAt
   )
 
@@ -1323,6 +1324,7 @@ class PatientRepositoryAndroidTest {
           gender = gender,
           dateOfBirth = dateOfBirth,
           age = age,
+          patientRecordedAt = this.recordedAt,
           updatedAt = updatedAt
       )
     }
@@ -1430,6 +1432,7 @@ class PatientRepositoryAndroidTest {
           gender = gender,
           dateOfBirth = dateOfBirth,
           age = age,
+          patientRecordedAt = this.recordedAt,
           updatedAt = createdAt
       )
     }
@@ -2301,7 +2304,8 @@ class PatientRepositoryAndroidTest {
             addressUuid = patient1AddressUuid,
             age = recentPatient1.age,
             gender = recentPatient1.gender,
-            status = Active
+            status = Active,
+            recordedAt = recentPatient1.patientRecordedAt
         ))
         .blockingAwait()
 

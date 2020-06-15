@@ -600,7 +600,7 @@ class PatientRepositoryAndroidTest {
     assertThat(database.prescriptionDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.appointmentDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.medicalHistoryDao().count().blockingFirst()).isEqualTo(0)
-    assertThat(textStore.get(REPORTS_KEY)).isEmpty()
+    assertThat(textStore.get(REPORTS_KEY)).isNull()
 
     assertThat(database.facilityDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.userDao().userImmediate()).isNotNull()

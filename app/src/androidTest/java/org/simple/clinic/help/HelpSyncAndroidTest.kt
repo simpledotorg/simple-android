@@ -43,11 +43,7 @@ class HelpSyncAndroidTest {
   @Test
   fun when_pulling_help_from_the_server_it_should_save_the_content_as_a_file() {
     textStore.delete(HELP_KEY)
-    // Technically, it should be `null`. But due to an implementation
-    // detail, `AndroidFileStorage` will end up creating an empty file
-    // when `get()` is called, so it will never be `null`.
-    // This will be fixed when we switch to a Room DAO.
-    assertThat(textStore.get(HELP_KEY)).isEmpty()
+    assertThat(textStore.get(HELP_KEY)).isNull()
 
     helpSync
         .pull()

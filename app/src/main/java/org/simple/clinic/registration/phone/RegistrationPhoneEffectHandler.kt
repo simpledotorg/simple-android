@@ -75,7 +75,7 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
       effects
           .map {
             OngoingLoginEntry(
-                uuid = uuidGenerator.v4(),
+                uuid = it.userUuid,
                 phoneNumber = it.number,
                 status = it.status
             )

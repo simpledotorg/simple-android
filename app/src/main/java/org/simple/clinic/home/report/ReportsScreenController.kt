@@ -6,11 +6,10 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.reports.ReportsRepository
-import org.simple.clinic.util.None
-import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.extractIfPresent
+import org.simple.clinic.util.filterNotPresent
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import java.io.File
 import javax.inject.Inject
 
 typealias Ui = ReportsScreen
@@ -27,16 +26,16 @@ class ReportsScreenController @Inject constructor(
 
     val reports = replayedEvents
         .ofType<ScreenCreated>()
-        .flatMap { reportsRepository.reportsFile() }
+        .flatMap { reportsRepository.reportsContentText() }
         .replay()
         .refCount()
 
     val showReports = reports
-        .filterAndUnwrapJust()
-        .map { { ui: Ui -> ui.showReport(it.toURI()) } }
+        .extractIfPresent()
+        .map { helpContent -> { ui: Ui -> ui.showReport(helpContent) } }
 
     val showReportNotPresent = reports
-        .ofType<None<File>>()
+        .filterNotPresent()
         .map { Ui::showNoReportsAvailable }
 
     return showReports.mergeWith(showReportNotPresent)

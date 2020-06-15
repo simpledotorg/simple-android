@@ -81,6 +81,7 @@ class RegistrationPhoneScreen(
     }
     context.injector<Injector>().inject(this)
 
+    isdCodeEditText.setText(resources.getString(R.string.registrationphone_country_code, country.isdCode))
     phoneNumberEditText.showKeyboard()
   }
 
@@ -114,7 +115,6 @@ class RegistrationPhoneScreen(
           .map { RegistrationPhoneDoneClicked() }
 
   override fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
-    isdCodeEditText.setText(resources.getString(R.string.registrationphone_country_code, country.isdCode))
     phoneNumberEditText.setTextAndCursor(ongoingEntry.phoneNumber)
   }
 

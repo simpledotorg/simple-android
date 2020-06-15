@@ -1,27 +1,23 @@
 package org.simple.clinic.recentpatientsview
 
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import com.xwray.groupie.ViewHolder
+import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.recent_patient_item_view.*
+import kotlinx.android.synthetic.main.see_all_item_view.*
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
-import org.simple.clinic.recentpatientsview.SeeAllItem.SeeAllItemViewHolder
-import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.Instant
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 
-sealed class RecentPatientItemType<VH : ViewHolder>(adapterId: Long) : GroupieItemWithUiEvents<VH>(adapterId) {
-  override lateinit var uiEvents: Subject<UiEvent>
-}
+sealed class RecentPatientItemType : ItemAdapter.Item<UiEvent>
 
 data class RecentPatientItem(
     val uuid: UUID,
@@ -32,59 +28,44 @@ data class RecentPatientItem(
     val dateFormatter: DateTimeFormatter,
     val clock: UserClock,
     val isNewRegistration: Boolean
-) : RecentPatientItemType<RecentPatientItem.RecentPatientViewHolder>(uuid.hashCode().toLong()) {
+) : RecentPatientItemType() {
 
-  override fun getLayout(): Int = R.layout.recent_patient_item_view
+  override fun layoutResId(): Int = R.layout.recent_patient_item_view
 
-  override fun createViewHolder(itemView: View): RecentPatientViewHolder {
-    return RecentPatientViewHolder(itemView)
-  }
+  override fun render(holder: ViewHolderX, subject: Subject<UiEvent>) {
+    val context = holder.itemView.context
 
-  override fun bind(viewHolder: RecentPatientViewHolder, position: Int) {
-    viewHolder.itemView.setOnClickListener {
-      uiEvents.onNext(RecentPatientItemClicked(patientUuid = uuid))
+    holder.itemView.setOnClickListener {
+      subject.onNext(RecentPatientItemClicked(patientUuid = uuid))
     }
 
-    viewHolder.render(name, age, gender, updatedAt, dateFormatter, clock, isNewRegistration)
+    holder.newRegistrationTextView.visibleOrGone(isNewRegistration)
+    holder.patientNameTextView.text = context.resources.getString(R.string.patients_recentpatients_nameage, name, age.toString())
+    holder.genderImageView.setImageResource(gender.displayIconRes)
+    holder.lastSeenTextView.text = dateFormatter.format(updatedAt.toLocalDateAtZone(clock.zone))
   }
+}
 
-  class RecentPatientViewHolder(rootView: View) : ViewHolder(rootView) {
-    private val nameAgeTextView by bindView<TextView>(R.id.patientNameTextView)
-    private val lastSeenTextView by bindView<TextView>(R.id.lastSeenTextView)
-    private val genderImageView by bindView<ImageView>(R.id.genderImageView)
-    private val newRegistrationTextView by bindView<TextView>(R.id.newRegistrationTextView)
+object SeeAllItem : RecentPatientItemType() {
+  override fun layoutResId(): Int = R.layout.see_all_item_view
 
-    fun render(
-        name: String,
-        age: Int,
-        gender: Gender,
-        updatedAt: Instant,
-        dateFormatter: DateTimeFormatter,
-        clock: UserClock,
-        isNewRegistration: Boolean
-    ) {
-      newRegistrationTextView.visibleOrGone(isNewRegistration)
-      nameAgeTextView.text = itemView.resources.getString(R.string.patients_recentpatients_nameage, name, age.toString())
-      genderImageView.setImageResource(gender.displayIconRes)
-      lastSeenTextView.text = dateFormatter.format(updatedAt.toLocalDateAtZone(clock.zone))
+  override fun render(holder: ViewHolderX, subject: Subject<UiEvent>) {
+    holder.seeAllButton.setOnClickListener {
+      subject.onNext(SeeAllItemClicked)
     }
   }
 }
 
-object SeeAllItem : RecentPatientItemType<SeeAllItemViewHolder>(0) {
-  override fun getLayout() = R.layout.see_all_item_view
-
-  override fun createViewHolder(itemView: View): SeeAllItemViewHolder {
-    return SeeAllItemViewHolder(itemView)
-  }
-
-  override fun bind(viewHolder: SeeAllItemViewHolder, position: Int) {
-    viewHolder.seeAllButton.setOnClickListener {
-      uiEvents.onNext(SeeAllItemClicked)
+class RecentPatientItemTTypeDiffCallback : DiffUtil.ItemCallback<RecentPatientItemType>() {
+  override fun areItemsTheSame(oldItem: RecentPatientItemType, newItem: RecentPatientItemType): Boolean {
+    return when {
+      oldItem is SeeAllItem && newItem is SeeAllItem -> true
+      oldItem is RecentPatientItem && newItem is RecentPatientItem -> oldItem.uuid == newItem.uuid
+      else -> false
     }
   }
 
-  class SeeAllItemViewHolder(rootView: View) : ViewHolder(rootView) {
-    val seeAllButton by bindView<View>(R.id.seeAllButton)
+  override fun areContentsTheSame(oldItem: RecentPatientItemType, newItem: RecentPatientItemType): Boolean {
+    return oldItem == newItem
   }
 }

@@ -2,7 +2,7 @@
 
 ## Next Release
 ### Changes
-- [In Progress 09 Jun 2020] New Onboarding UI
+- New Onboarding UI
 - Show new registration label for recent patients in home screen
 
 ### Internal

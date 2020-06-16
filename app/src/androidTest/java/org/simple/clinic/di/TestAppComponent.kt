@@ -32,7 +32,6 @@ import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
 import org.simple.clinic.storage.DaoWithUpsertAndroidTest
-import org.simple.clinic.storage.files.AndroidFileStorageAndroidTest
 import org.simple.clinic.storage.migrations.BaseDatabaseMigrationTest
 import org.simple.clinic.storage.migrations.DatabaseMigrationAndroidTest
 import org.simple.clinic.storage.migrations.Migration57AndroidTest
@@ -77,7 +76,6 @@ interface TestAppComponent {
   fun inject(target: ProtocolRepositoryAndroidTest)
   fun inject(target: RegisterPatientRule)
   fun inject(target: DatabaseMigrationAndroidTest)
-  fun inject(target: AndroidFileStorageAndroidTest)
   fun inject(target: ReportsSyncAndroidTest)
   fun inject(target: MissingPhoneReminderRepositoryAndroidTest)
   fun inject(target: BusinessIdMetaDataAdapterAndroidTest)

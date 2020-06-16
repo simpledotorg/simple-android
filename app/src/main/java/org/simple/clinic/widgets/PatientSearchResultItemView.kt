@@ -47,48 +47,45 @@ class PatientSearchResultItemView(
     renderPatientAddress(model.address)
     renderPatientDateOfBirth(model.dateOfBirth)
     renderPatientPhoneNumber(model.phoneNumber)
-    renderLastRecordedBloodPressure(model.lastSeen, currentFacilityUuid)
+    renderLastSeen(model.lastSeen, currentFacilityUuid)
   }
 
-  private fun renderLastRecordedBloodPressure(
+  private fun renderLastSeen(
       lastSeen: PatientSearchResult.LastSeen?,
       currentFacilityUuid: UUID
   ) {
+    lastSeenContainer.visibleOrGone(lastSeen != null)
     if (lastSeen == null) {
-      lastBpContainer.visibility = View.GONE
+      lastSeenContainer.visibility = View.GONE
     } else {
-      lastBpContainer.visibility = View.VISIBLE
+      lastSeenContainer.visibility = View.VISIBLE
 
       val lastSeenDate = lastSeen.lastSeenOn.toLocalDateAtZone(userClock.zone)
-      val formattedLastBpDate = dateTimeFormatter.format(lastSeenDate)
+      val formattedLastSeenDate = dateTimeFormatter.format(lastSeenDate)
 
       val isCurrentFacility = lastSeen.lastSeenAtFacilityUuid == currentFacilityUuid
       if (isCurrentFacility) {
-        lastSeenLabel.text = formattedLastBpDate
+        lastSeenTextView.text = formattedLastSeenDate
       } else {
-        lastSeenLabel.text = resources.getString(
+        lastSeenTextView.text = resources.getString(
             R.string.patientsearchresults_item_last_seen_date_with_facility,
-            formattedLastBpDate,
+            formattedLastSeenDate,
             lastSeen.lastSeenAtFacilityName)
       }
     }
   }
 
   private fun renderPatientPhoneNumber(phoneNumber: String?) {
-    if (phoneNumber.isNullOrBlank()) {
-      phoneNumberLabel.visibility = View.GONE
-    } else {
-      phoneNumberLabel.visibility = View.VISIBLE
-      phoneNumberLabel.text = phoneNumber
+    phoneNumberContainer.visibleOrGone(phoneNumber.isNullOrBlank().not())
+    if (phoneNumber != null) {
+      phoneNumberTextView.text = phoneNumber
     }
   }
 
   private fun renderPatientDateOfBirth(dateOfBirth: LocalDate?) {
-    if (dateOfBirth == null) {
-      dateOfBirthLabel.visibility = View.GONE
-    } else {
-      dateOfBirthLabel.visibility = View.VISIBLE
-      dateOfBirthLabel.text = dateTimeFormatter.format(dateOfBirth)
+    dateOfBirthContainer.visibleOrGone(dateOfBirth != null)
+    if (dateOfBirth != null) {
+      dateOfBirthTextView.text = dateTimeFormatter.format(dateOfBirth)
     }
   }
 

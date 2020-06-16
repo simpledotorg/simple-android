@@ -7,18 +7,17 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -40,8 +39,7 @@ class RecentPatientsScreen(context: Context, attrs: AttributeSet) : LinearLayout
   private val toolbar by bindView<Toolbar>(R.id.recentpatients_toolbar)
   private val recyclerView by bindView<RecyclerView>(R.id.recentpatients_recyclerview)
 
-  private val groupAdapter = GroupAdapter<ViewHolder>()
-  private val adapterEvents = PublishSubject.create<UiEvent>()
+  private val recentAdapter = ItemAdapter(RecentPatientItem.DiffCallback())
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -54,7 +52,7 @@ class RecentPatientsScreen(context: Context, attrs: AttributeSet) : LinearLayout
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(screenCreates(), adapterEvents),
+        events = Observable.merge(screenCreates(), adapterEvents()),
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
@@ -69,8 +67,14 @@ class RecentPatientsScreen(context: Context, attrs: AttributeSet) : LinearLayout
 
     recyclerView.apply {
       layoutManager = LinearLayoutManager(context)
-      adapter = groupAdapter
+      adapter = recentAdapter
     }
+  }
+
+  private fun adapterEvents(): Observable<UiEvent> {
+    return recentAdapter
+        .itemEvents
+        .ofType()
   }
 
   fun openPatientSummary(patientUuid: UUID) {
@@ -82,8 +86,7 @@ class RecentPatientsScreen(context: Context, attrs: AttributeSet) : LinearLayout
         ))
   }
 
-  fun updateRecentPatients(allItemTypes: List<RecentPatientScreenItemTypes<out ViewHolder>>) {
-    allItemTypes.forEach { it.uiEvents = adapterEvents }
-    groupAdapter.update(allItemTypes)
+  fun updateRecentPatients(allItemTypes: List<RecentPatientItem>) {
+    recentAdapter.submitList(allItemTypes)
   }
 }

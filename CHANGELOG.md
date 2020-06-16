@@ -5,6 +5,7 @@
 - New Onboarding UI
 - Show new registration label for recent patients in home screen
 - Redesigned patient card in search results
+- [In Progress: 16 Jun 2020] Redesigned patient card in recent patients screen
 
 ### Internal
 - Migrated `RecentPatientItemType` to use `ItemAdapter`

@@ -42,11 +42,13 @@
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">Patient is not registered</string>
   <string name="patientsearchresults_register_patient">Register as a new patient</string>
   <string name="patientsearchresults_register_patient_for_empty_state">Register patient</string>
-  <string name="patientsearchresults_item_last_seen">Last Seen:</string>
+  <string name="patientsearchresults_item_last_seen">Visited</string>
   <string name="patientsearchresults_item_last_seen_date_with_facility" translatable="false">%1$s, %2$s</string>
   <string name="patientsearchresults_current_facility_header">Has visited %s</string>
   <string name="patientsearchresults_other_results_header">Other Results</string>
   <string name="patientsearchresults_no_patients_match">No patients match</string>
+  <string name="patientsearchresults_item_phone_number">Phone</string>
+  <string name="patientsearchresults_item_birthdate">Birthdate</string>
 
   <!-- Manual patient entry -->
   <string name="patiententry_contentdescription_up_button">Go back to search</string>

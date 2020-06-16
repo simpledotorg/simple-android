@@ -8,6 +8,7 @@
 
 ### Internal
 - Migrated `RecentPatientItemType` to use `ItemAdapter`
+- [In Progress: 16 Jun 2020] Migrate `RegistrationFullNameScreen` to Mobius
 
 ### Fixes
 - Fixed retrying on a failed teleconsultation fetch when in airplane mode

@@ -10,6 +10,7 @@ import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.storage.FileStorageModule
 import org.simple.clinic.storage.SharedPreferencesModule
 import org.simple.clinic.storage.migrations.RoomMigrationsModule
+import org.simple.clinic.storage.text.TextRecord
 import org.simple.clinic.storage.text.TextStoreModule
 import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.user.User
@@ -44,4 +45,7 @@ class TestStorageModule {
   fun userDao(appDatabase: AppDatabase): User.RoomDao {
     return appDatabase.userDao()
   }
+
+  @Provides
+  fun provideTextStoreDao(appDatabase: AppDatabase): TextRecord.RoomDao = appDatabase.textRecordDao()
 }

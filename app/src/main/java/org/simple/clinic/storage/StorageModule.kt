@@ -10,6 +10,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.storage.migrations.RoomMigrationsModule
+import org.simple.clinic.storage.text.TextRecord
 import org.simple.clinic.storage.text.TextStoreModule
 import org.simple.clinic.user.User
 
@@ -41,4 +42,7 @@ class StorageModule {
   fun userDao(appDatabase: AppDatabase): User.RoomDao {
     return appDatabase.userDao()
   }
+
+  @Provides
+  fun provideTextStoreDao(appDatabase: AppDatabase): TextRecord.RoomDao = appDatabase.textRecordDao()
 }

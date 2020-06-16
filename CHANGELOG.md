@@ -9,6 +9,9 @@
 ### Internal
 - Migrated `RecentPatientItemType` to use `ItemAdapter`
 
+### Fixes
+- Fixed retrying on a failed teleconsultation fetch when in airplane mode
+
 ## On Demo
 ### Feature
 - User can soft delete patient

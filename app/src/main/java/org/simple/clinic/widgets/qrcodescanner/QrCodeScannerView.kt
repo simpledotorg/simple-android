@@ -78,8 +78,8 @@ constructor(
 
     cameraProvider.unbindAll()
 
-    val camera = cameraProvider.bindToLifecycle(qrCodeScannerLifecycle, cameraSelector, preview, analyzer)
-    preview.setSurfaceProvider(previewView.createSurfaceProvider(camera.cameraInfo))
+    cameraProvider.bindToLifecycle(qrCodeScannerLifecycle, cameraSelector, preview, analyzer)
+    preview.setSurfaceProvider(previewView.createSurfaceProvider())
   }
 
   override fun onDetachedFromWindow() {

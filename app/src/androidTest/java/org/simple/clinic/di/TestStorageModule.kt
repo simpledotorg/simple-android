@@ -7,7 +7,6 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.patient.PatientModule
-import org.simple.clinic.storage.FileStorageModule
 import org.simple.clinic.storage.SharedPreferencesModule
 import org.simple.clinic.storage.migrations.RoomMigrationsModule
 import org.simple.clinic.storage.text.TextRecord
@@ -19,7 +18,6 @@ import org.simple.clinic.user.User
   RoomMigrationsModule::class,
   SharedPreferencesModule::class,
   PatientModule::class,
-  FileStorageModule::class,
   PatientSummaryModule::class,
   TextStoreModule::class
 ])

@@ -5,8 +5,9 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
+import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_confirm_pin.view.*
 import org.simple.clinic.bindUiToController
@@ -51,7 +52,7 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
             doneClicks()
         ),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
 
     // Showing the keyboard again in case the user returns from location permission screen.
@@ -61,17 +62,19 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
   private fun screenCreates() = Observable.just(RegistrationConfirmPinScreenCreated())
 
   private fun confirmPinTextChanges() =
-      RxTextView.textChanges(confirmPinEditText)
+      confirmPinEditText
+          .textChanges()
           .map(CharSequence::toString)
           .map(::RegistrationConfirmPinTextChanged)
 
   private fun resetPinClicks() =
-      RxView.clicks(resetPinButton)
+      resetPinButton
+          .clicks()
           .map { RegistrationResetPinClicked() }
 
   private fun doneClicks() =
-      RxTextView
-          .editorActions(confirmPinEditText) { it == EditorInfo.IME_ACTION_DONE }
+      confirmPinEditText
+          .editorActions() { it == EditorInfo.IME_ACTION_DONE }
           .map { RegistrationConfirmPinDoneClicked() }
 
   fun showPinMismatchError() {

@@ -7,8 +7,9 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -37,21 +38,18 @@ class RegistrationConfirmPinScreenControllerTest {
       pin = originalPin
   )
 
-  private lateinit var controller: RegistrationConfirmPinScreenController
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    controller = RegistrationConfirmPinScreenController(userSession, clock)
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
   fun `when 4 digits are entered then the PIN should be submitted automatically`() {
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
+    setupController()
     uiEvents.onNext(RegistrationConfirmPinTextChanged("1"))
     uiEvents.onNext(RegistrationConfirmPinTextChanged("12"))
     uiEvents.onNext(RegistrationConfirmPinTextChanged("123"))
@@ -66,6 +64,7 @@ class RegistrationConfirmPinScreenControllerTest {
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
+    setupController()
     uiEvents.onNext(RegistrationConfirmPinTextChanged(input))
 
     val inOrder = inOrder(userSession, screen)
@@ -80,9 +79,9 @@ class RegistrationConfirmPinScreenControllerTest {
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
+    setupController()
     uiEvents.onNext(RegistrationConfirmPinTextChanged(invalidConfirmationPin))
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
-
     uiEvents.onNext(RegistrationConfirmPinTextChanged(validConfirmationPin))
 
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation(validConfirmationPin, clock))
@@ -93,6 +92,7 @@ class RegistrationConfirmPinScreenControllerTest {
   fun `when proceed is clicked with a confirmation PIN that does not match with original PIN then an error should be shown`() {
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
+    setupController()
     uiEvents.onNext(RegistrationConfirmPinTextChanged("4567"))
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
@@ -106,6 +106,7 @@ class RegistrationConfirmPinScreenControllerTest {
     val ongoingEntryWithoutPins = ongoingEntry.copy(pin = null, pinConfirmation = null)
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
+    setupController()
     uiEvents.onNext(RegistrationResetPinClicked())
 
     val inOrder = inOrder(userSession, screen)
@@ -119,9 +120,18 @@ class RegistrationConfirmPinScreenControllerTest {
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
+    setupController()
     uiEvents.onNext(RegistrationConfirmPinTextChanged(invalidConfirmationPin))
 
     verify(screen).clearPin()
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
+  }
+
+  private fun setupController() {
+    val controller = RegistrationConfirmPinScreenController(userSession, clock)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

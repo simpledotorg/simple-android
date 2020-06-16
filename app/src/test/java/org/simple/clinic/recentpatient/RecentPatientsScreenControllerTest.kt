@@ -85,21 +85,24 @@ class RecentPatientsScreenControllerTest {
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(userClock)),
             gender = Gender.Transgender,
-            updatedAt = today
+            updatedAt = today,
+            patientRecordedAt = today
         ),
         TestData.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
             age = Age(24, Instant.now(userClock)),
             gender = Gender.Male,
-            updatedAt = yesterday
+            updatedAt = yesterday,
+            patientRecordedAt = twoDaysAgo
         ),
         TestData.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(userClock)),
             gender = Gender.Female,
-            updatedAt = twoDaysAgo
+            updatedAt = twoDaysAgo,
+            patientRecordedAt = twoDaysAgo
         )
     )))
 
@@ -113,7 +116,8 @@ class RecentPatientsScreenControllerTest {
             gender = Gender.Transgender,
             lastSeen = Instant.parse("2020-02-14T00:00:00Z"),
             dateFormatter = dateFormatter,
-            clock = userClock
+            clock = userClock,
+            isNewRegistration = true
         ),
         RecentPatientItem(
             uuid = patientUuid2,
@@ -122,7 +126,8 @@ class RecentPatientsScreenControllerTest {
             gender = Gender.Male,
             lastSeen = Instant.parse("2020-02-13T00:00:00Z"),
             dateFormatter = dateFormatter,
-            clock = userClock
+            clock = userClock,
+            isNewRegistration = false
         ),
         RecentPatientItem(
             uuid = patientUuid3,
@@ -131,7 +136,8 @@ class RecentPatientsScreenControllerTest {
             gender = Gender.Female,
             lastSeen = Instant.parse("2020-02-12T00:00:00Z"),
             dateFormatter = dateFormatter,
-            clock = userClock
+            clock = userClock,
+            isNewRegistration = false
         )
     ))
   }

@@ -94,7 +94,8 @@ interface TheActivityComponent :
     ReportsScreen.Injector,
     IntroVideoScreenInjector,
     RegistrationFullNameScreen.Injector,
-    RegistrationPinScreen.Injector {
+    RegistrationPinScreen.Injector,
+    RegistrationConfirmPinScreen.Injector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: AppLockScreen)
@@ -103,7 +104,6 @@ interface TheActivityComponent :
   fun inject(target: PatientSearchScreen)
   fun inject(target: PatientSearchResultsScreen)
   fun inject(target: PatientSummaryScreen)
-  fun inject(target: RegistrationConfirmPinScreen)
   fun inject(target: RegistrationLocationPermissionScreen)
   fun inject(target: RegistrationFacilitySelectionScreen)
   fun inject(target: FacilityChangeActivity)

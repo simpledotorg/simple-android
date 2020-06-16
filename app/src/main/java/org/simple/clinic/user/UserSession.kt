@@ -11,8 +11,6 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.security.PasswordHasher
-import org.simple.clinic.storage.files.ClearAllFilesResult
-import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
@@ -34,7 +32,6 @@ class UserSession @Inject constructor(
     private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
-    private val fileStorage: FileStorage,
     private val reportPendingRecords: ReportPendingRecordsToAnalytics,
     private val selectedCountryPreference: Preference<Optional<Country>>,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
@@ -141,8 +138,7 @@ class UserSession @Inject constructor(
         .concatArray(
             reportPendingRecords.report().onErrorComplete(),
             clearLocalDatabase(),
-            clearSharedPreferences(),
-            clearPrivateFiles()
+            clearSharedPreferences()
         )
         .toSingleDefault(LogoutResult.Success as LogoutResult)
         .onErrorReturn { cause -> LogoutResult.Failure(cause) }
@@ -167,17 +163,6 @@ class UserSession @Inject constructor(
       onboardingComplete.set(true)
       sharedPreferences.edit().putString(selectedCountryPreference.key(), savedCountryData).apply()
     }
-  }
-
-  private fun clearPrivateFiles(): Completable {
-    return Single
-        .fromCallable { fileStorage.clearAllFiles() }
-        .flatMapCompletable { result ->
-          when (result) {
-            is ClearAllFilesResult.Failure -> Completable.error(result.cause)
-            else -> Completable.complete()
-          }
-        }
   }
 
   fun loggedInUser(): Observable<Optional<User>> {

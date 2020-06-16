@@ -10,6 +10,7 @@ import com.jakewharton.rxbinding3.view.detaches
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_confirm_pin.view.*
+import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreenKey
@@ -72,10 +73,19 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
           .clicks()
           .map { RegistrationResetPinClicked() }
 
-  private fun doneClicks() =
-      confirmPinEditText
-          .editorActions() { it == EditorInfo.IME_ACTION_DONE }
-          .map { RegistrationConfirmPinDoneClicked() }
+  private fun doneClicks(): Observable<RegistrationConfirmPinDoneClicked>? {
+    val imeDoneClicks = confirmPinEditText
+        .editorActions() { it == EditorInfo.IME_ACTION_DONE }
+        .map { RegistrationConfirmPinDoneClicked() }
+
+    val pinAutoSubmits = confirmPinEditText
+        .textChanges()
+        .skip(1)
+        .filter { it.length == SECURITY_PIN_LENGTH }
+        .map { RegistrationConfirmPinDoneClicked() }
+
+    return imeDoneClicks.mergeWith(pinAutoSubmits)
+  }
 
   fun showPinMismatchError() {
     errorStateViewGroup.visibility = View.VISIBLE

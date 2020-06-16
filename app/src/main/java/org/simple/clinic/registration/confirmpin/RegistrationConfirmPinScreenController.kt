@@ -7,7 +7,6 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -25,7 +24,6 @@ class RegistrationConfirmPinScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(autoSubmitPin())
         .compose(validatePin())
         .compose(ReportAnalyticsEvents())
         .replay()
@@ -34,17 +32,6 @@ class RegistrationConfirmPinScreenController @Inject constructor(
         showValidationError(replayedEvents),
         resetPins(replayedEvents),
         saveConfirmPinAndProceed(replayedEvents))
-  }
-
-  private fun autoSubmitPin(): ObservableTransformer<UiEvent, UiEvent> {
-    return ObservableTransformer { upstream ->
-      val autoSubmits = upstream
-          .ofType<RegistrationConfirmPinTextChanged>()
-          .distinctUntilChanged()
-          .filter { it.confirmPin.length == SECURITY_PIN_LENGTH }
-          .map { RegistrationConfirmPinDoneClicked() }
-      upstream.mergeWith(autoSubmits)
-    }
   }
 
   private fun validatePin(): ObservableTransformer<UiEvent, UiEvent> {

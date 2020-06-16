@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.disposables.Disposable
@@ -54,6 +53,7 @@ class RegistrationConfirmPinScreenControllerTest {
     uiEvents.onNext(RegistrationConfirmPinTextChanged("12"))
     uiEvents.onNext(RegistrationConfirmPinTextChanged("123"))
     uiEvents.onNext(RegistrationConfirmPinTextChanged("1234"))
+    uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation("1234", clock))
   }
@@ -66,6 +66,7 @@ class RegistrationConfirmPinScreenControllerTest {
 
     setupController()
     uiEvents.onNext(RegistrationConfirmPinTextChanged(input))
+    uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     val inOrder = inOrder(userSession, screen)
     inOrder.verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation("1234", clock))
@@ -83,6 +84,7 @@ class RegistrationConfirmPinScreenControllerTest {
     uiEvents.onNext(RegistrationConfirmPinTextChanged(invalidConfirmationPin))
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
     uiEvents.onNext(RegistrationConfirmPinTextChanged(validConfirmationPin))
+    uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation(validConfirmationPin, clock))
     verify(screen).openFacilitySelectionScreen()
@@ -96,7 +98,7 @@ class RegistrationConfirmPinScreenControllerTest {
     uiEvents.onNext(RegistrationConfirmPinTextChanged("4567"))
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
-    verify(screen, times(2)).showPinMismatchError()
+    verify(screen).showPinMismatchError()
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(screen, never()).openFacilitySelectionScreen()
   }
@@ -122,6 +124,7 @@ class RegistrationConfirmPinScreenControllerTest {
 
     setupController()
     uiEvents.onNext(RegistrationConfirmPinTextChanged(invalidConfirmationPin))
+    uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     verify(screen).clearPin()
     verify(userSession, never()).saveOngoingRegistrationEntry(any())

@@ -11,6 +11,7 @@ import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
+import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.Instant
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
@@ -22,7 +23,8 @@ data class RecentPatientItem(
     val gender: Gender,
     val lastSeen: Instant,
     val dateFormatter: DateTimeFormatter,
-    val clock: UserClock
+    val clock: UserClock,
+    val isNewRegistration: Boolean
 ) : ItemAdapter.Item<UiEvent> {
 
   override fun layoutResId(): Int = R.layout.recent_patient_item_view
@@ -33,6 +35,8 @@ data class RecentPatientItem(
 
       lastSeenTextView.text = dateFormatter.format(lastSeen.toLocalDateAtZone(clock.zone))
       genderImageView.setImageResource(gender.displayIconRes)
+
+      newRegistrationTextView.visibleOrGone(isNewRegistration)
 
       itemView.setOnClickListener {
         subject.onNext(RecentPatientItemClicked(patientUuid = uuid))

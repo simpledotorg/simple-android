@@ -10,7 +10,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_confirm_pin.view.*
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -31,7 +31,8 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
 
     backButton.setOnClickListener {
       screenRouter.pop()
@@ -89,5 +90,9 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
 
   fun goBackToPinScreen() {
     screenRouter.pop()
+  }
+
+  interface Injector {
+    fun inject(target: RegistrationConfirmPinScreen)
   }
 }

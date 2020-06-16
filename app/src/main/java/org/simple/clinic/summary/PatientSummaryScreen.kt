@@ -134,7 +134,9 @@ class PatientSummaryScreen(
   private val teleconsultationErrorSnackbar by unsafeLazy {
     Snackbar.make(rootLayout, R.string.patientsummary_teleconsult_network_error, Snackbar.LENGTH_INDEFINITE)
         .setAction(R.string.patientsummary_teleconsult_network_error_retry) {
-          snackbarActionClicks.onNext(RetryFetchTeleconsultInfo)
+          postDelayed({
+            snackbarActionClicks.onNext(RetryFetchTeleconsultInfo)
+          }, 100)
         }
         .setActionTextColor(ContextCompat.getColor(context, R.color.green2))
         .setAnchorView(R.id.doneButtonFrame)

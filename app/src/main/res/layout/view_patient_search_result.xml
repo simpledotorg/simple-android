@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
@@ -35,9 +34,10 @@
         android:id="@+id/patientNameAgeGenderLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_4"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Blue1"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.Emphasis.Blue1"
         tools:text="Anshu Acharya, M, 43" />
 
       <TextView
@@ -45,55 +45,72 @@
         style="@style/Clinic.V2.TextAppearance.Body2Left.Grey0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="51dp"
         android:textColor="@color/gray_950"
         tools:text="House No. 14, Street No. 10/11, Guru Gobind Singh Nagar, Bathinda" />
 
       <LinearLayout
+        android:id="@+id/phoneNumberContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_12">
 
         <TextView
-          android:id="@+id/dateOfBirthLabel"
+          style="@style/Clinic.V2.TextAppearance.Body2Bold.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="6dp"
-          android:layout_marginEnd="@dimen/spacing_12"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1"
-          tools:text="24-Mar-1975" />
+          android:text="@string/patientsearchresults_item_phone_number" />
 
         <org.simple.clinic.widgets.TintableCompoundDrawableTextView
-          android:id="@+id/phoneNumberLabel"
+          android:id="@+id/phoneNumberTextView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="6dp"
-          android:drawablePadding="@dimen/spacing_4"
+          android:layout_marginStart="@dimen/spacing_8"
           android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1"
-          app:drawableStartCompat="@drawable/ic_call_16dp"
           tools:text="98*****365" />
+
       </LinearLayout>
 
       <LinearLayout
-        android:id="@+id/lastBpContainer"
+        android:id="@+id/dateOfBirthContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_12">
+
+        <TextView
+          style="@style/Clinic.V2.TextAppearance.Body2Bold.Grey1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/patientsearchresults_item_birthdate" />
+
+        <TextView
+          android:id="@+id/dateOfBirthTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/spacing_8"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+          tools:text="24-Mar-1975" />
+
+      </LinearLayout>
+
+      <LinearLayout
+        android:id="@+id/lastSeenContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_12"
         android:orientation="horizontal">
 
         <TextView
-          style="@style/Clinic.V2.TextAppearance.Body2Tag.Green1"
+          style="@style/Clinic.V2.TextAppearance.Body2Bold.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/patientsearchresults_item_last_seen"
-          android:textAllCaps="true" />
+          android:text="@string/patientsearchresults_item_last_seen" />
 
         <TextView
-          android:id="@+id/lastSeenLabel"
-          style="@style/Clinic.V2.TextAppearance.Body2Left.Green1"
+          android:id="@+id/lastSeenTextView"
+          style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginStart="@dimen/spacing_4"
+          android:layout_marginStart="@dimen/spacing_8"
           android:ellipsize="end"
           android:maxLines="1"
           tools:text="12-Jul-2018, PHC Bagta" />

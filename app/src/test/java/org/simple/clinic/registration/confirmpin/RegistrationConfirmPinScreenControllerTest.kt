@@ -1,10 +1,12 @@
 package org.simple.clinic.registration.confirmpin
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
@@ -56,6 +58,8 @@ class RegistrationConfirmPinScreenControllerTest {
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation("1234", clock))
+    verify(screen).openFacilitySelectionScreen()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -71,6 +75,7 @@ class RegistrationConfirmPinScreenControllerTest {
     val inOrder = inOrder(userSession, screen)
     inOrder.verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation("1234", clock))
     inOrder.verify(screen).openFacilitySelectionScreen()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -83,11 +88,16 @@ class RegistrationConfirmPinScreenControllerTest {
     setupController()
     uiEvents.onNext(RegistrationConfirmPinTextChanged(invalidConfirmationPin))
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
+
+    verify(screen).showPinMismatchError()
+    clearInvocations(screen)
+
     uiEvents.onNext(RegistrationConfirmPinTextChanged(validConfirmationPin))
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation(validConfirmationPin, clock))
     verify(screen).openFacilitySelectionScreen()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -98,9 +108,11 @@ class RegistrationConfirmPinScreenControllerTest {
     uiEvents.onNext(RegistrationConfirmPinTextChanged("4567"))
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
-    verify(screen).showPinMismatchError()
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
+    verify(screen).showPinMismatchError()
+    verify(screen).clearPin()
     verify(screen, never()).openFacilitySelectionScreen()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -114,6 +126,7 @@ class RegistrationConfirmPinScreenControllerTest {
     val inOrder = inOrder(userSession, screen)
     inOrder.verify(userSession).saveOngoingRegistrationEntry(ongoingEntryWithoutPins)
     inOrder.verify(screen).goBackToPinScreen()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -126,8 +139,10 @@ class RegistrationConfirmPinScreenControllerTest {
     uiEvents.onNext(RegistrationConfirmPinTextChanged(invalidConfirmationPin))
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
-    verify(screen).clearPin()
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
+    verify(screen).showPinMismatchError()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   private fun setupController() {

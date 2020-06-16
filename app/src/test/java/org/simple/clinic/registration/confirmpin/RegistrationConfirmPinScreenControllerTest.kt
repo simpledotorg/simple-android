@@ -133,5 +133,7 @@ class RegistrationConfirmPinScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(RegistrationConfirmPinScreenCreated())
   }
 }

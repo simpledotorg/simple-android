@@ -3,6 +3,7 @@ package org.simple.clinic.registration
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Single
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.registration.phone.LengthBasedNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.Distance
@@ -21,13 +22,19 @@ class RegistrationModule {
   }
 
   @Provides
-  fun phoneNumberValidator(): PhoneNumberValidator {
+  fun phoneNumberValidator(country: Country): PhoneNumberValidator {
     // In the future, we will want to return a validator depending upon the location.
-    return LengthBasedNumberValidator(
-        minimumRequiredLengthMobile = 10,
-        maximumAllowedLengthMobile = 10,
-        minimumRequiredLengthLandlinesOrMobile = 6,
-        maximumAllowedLengthLandlinesOrMobile = 12
-    )
+    return when (country.isoCountryCode) {
+      Country.ETHIOPIA -> LengthBasedNumberValidator(
+          minimumRequiredLengthMobile = 9,
+          maximumAllowedLengthMobile = 10,
+          minimumRequiredLengthLandlinesOrMobile = 9,
+          maximumAllowedLengthLandlinesOrMobile = 10)
+      else -> LengthBasedNumberValidator(
+          minimumRequiredLengthMobile = 10,
+          maximumAllowedLengthMobile = 10,
+          minimumRequiredLengthLandlinesOrMobile = 6,
+          maximumAllowedLengthLandlinesOrMobile = 12)
+    }
   }
 }

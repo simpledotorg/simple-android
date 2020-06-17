@@ -23,7 +23,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.TestData
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Gender
@@ -33,12 +33,12 @@ import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
+import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.registration.phone.LengthBasedNumberValidator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -68,7 +68,10 @@ class PatientEntryScreenLogicTest {
   private val userSession = mock<UserSession>()
   private val userClock: UserClock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val dobValidator = UserInputDateValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
-  private val numberValidator = IndianPhoneNumberValidator()
+  private val numberValidator = LengthBasedNumberValidator(10,
+      10,
+      6,
+      12)
   private val patientRegisteredCount = mock<Preference<Int>>()
   private val ageValidator = UserInputAgeValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
 

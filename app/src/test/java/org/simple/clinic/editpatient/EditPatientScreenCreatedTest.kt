@@ -18,7 +18,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
+import org.simple.clinic.registration.phone.LengthBasedNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -172,7 +172,12 @@ class EditPatientScreenCreatedTest {
         events = Observable.never<EditPatientEvent>(),
         defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null),
         init = EditPatientInit(patient, address, phoneNumber, null),
-        update = EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
+        update = EditPatientUpdate(LengthBasedNumberValidator(
+            10,
+            10,
+            6,
+            12),
+            UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
         effectHandler = editPatientEffectHandler.build(),
         modelUpdateListener = { /* nothing here */ }
     ).start()

@@ -26,7 +26,6 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.sync.PatientPayload
-import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
@@ -36,12 +35,9 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
-import java.util.Arrays
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -52,16 +48,13 @@ typealias FacilityUuid = UUID
 @AppScope
 class PatientRepository @Inject constructor(
     private val database: AppDatabase,
-    private val dobValidator: UserInputDateValidator,
-    private val numberValidator: PhoneNumberValidator,
     private val utcClock: UtcClock,
     private val searchPatientByName: SearchPatientByName,
     private val config: PatientConfig,
     private val reportsRepository: ReportsRepository,
     private val businessIdMetaDataAdapter: BusinessIdMetaDataAdapter,
     private val schedulersProvider: SchedulersProvider,
-    @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter,
-    private val ageValidator: UserInputAgeValidator
+    @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
@@ -266,17 +259,6 @@ class PatientRepository @Inject constructor(
   ): Single<Patient> {
     val cachedOngoingEntry = ongoingEntry().cache()
 
-    val validation = cachedOngoingEntry
-        .flatMapCompletable {
-          val validationErrors = it.validationErrors(dobValidator, numberValidator, ageValidator)
-          if (validationErrors.isEmpty()) {
-            Completable.complete()
-          } else {
-            val errorNames = validationErrors.map { it.name }.toTypedArray()
-            Completable.error(AssertionError("Patient entry has errors: ${Arrays.toString(errorNames)}"))
-          }
-        }
-
     val addressSave = cachedOngoingEntry
         .map {
           with(it) {
@@ -374,8 +356,7 @@ class PatientRepository @Inject constructor(
           }
         }
 
-    return validation
-        .andThen(addressSave)
+    return addressSave
         .andThen(patientSave)
         .andThen(businessIdSave)
         .andThen(alternativeIdSave)

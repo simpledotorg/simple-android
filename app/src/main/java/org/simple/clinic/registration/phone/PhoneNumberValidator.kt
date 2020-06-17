@@ -23,22 +23,27 @@ interface PhoneNumberValidator {
   fun validate(number: String, type: Type): Result
 }
 
-class IndianPhoneNumberValidator : PhoneNumberValidator {
+class LengthBasedNumberValidator(
+    val minimumRequiredLengthMobile: Int,
+    val maximumAllowedLengthMobile: Int,
+    val minimumRequiredLengthLandlinesOrMobile: Int,
+    val maximumAllowedLengthLandlinesOrMobile: Int
+) : PhoneNumberValidator {
   override fun validate(number: String, type: PhoneNumberValidator.Type): Result {
     return when (type) {
       MOBILE -> {
         when {
           number.isBlank() -> Result.BLANK
-          number.length < 10 -> LENGTH_TOO_SHORT
-          number.length > 10 -> LENGTH_TOO_LONG
+          number.length < minimumRequiredLengthMobile -> LENGTH_TOO_SHORT
+          number.length > maximumAllowedLengthMobile -> LENGTH_TOO_LONG
           else -> VALID
         }
       }
       LANDLINE_OR_MOBILE -> {
         when {
           number.isBlank() -> Result.BLANK
-          number.length < 6 -> LENGTH_TOO_SHORT
-          number.length > 12 -> LENGTH_TOO_LONG
+          number.length < minimumRequiredLengthLandlinesOrMobile -> LENGTH_TOO_SHORT
+          number.length > maximumAllowedLengthLandlinesOrMobile -> LENGTH_TOO_LONG
           else -> VALID
         }
       }

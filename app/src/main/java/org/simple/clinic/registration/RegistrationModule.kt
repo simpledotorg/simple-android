@@ -3,7 +3,7 @@ package org.simple.clinic.registration
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Single
-import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
+import org.simple.clinic.registration.phone.LengthBasedNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.Distance
 import org.threeten.bp.Duration
@@ -23,6 +23,11 @@ class RegistrationModule {
   @Provides
   fun phoneNumberValidator(): PhoneNumberValidator {
     // In the future, we will want to return a validator depending upon the location.
-    return IndianPhoneNumberValidator()
+    return LengthBasedNumberValidator(
+        minimumRequiredLengthMobile = 10,
+        maximumAllowedLengthMobile = 10,
+        minimumRequiredLengthLandlinesOrMobile = 6,
+        maximumAllowedLengthLandlinesOrMobile = 12
+    )
   }
 }

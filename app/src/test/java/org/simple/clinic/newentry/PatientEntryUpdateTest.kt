@@ -13,7 +13,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
-import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
+import org.simple.clinic.registration.phone.LengthBasedNumberValidator
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserClock
@@ -24,7 +24,10 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
 class PatientEntryUpdateTest {
-  private val phoneNumberValidator = IndianPhoneNumberValidator()
+  private val phoneNumberValidator = LengthBasedNumberValidator(10,
+      10,
+      6,
+      12)
   private val userClock: UserClock = TestUserClock(LocalDate.parse("2020-01-01"))
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val dobValidator = UserInputDateValidator(userClock, dateOfBirthFormat)

@@ -43,7 +43,10 @@ class RegistrationPhoneScreenLogicTest {
 
   private val ui = mock<RegistrationPhoneUi>()
   private val userSession = mock<UserSession>()
-  private val numberValidator = IndianPhoneNumberValidator()
+  private val numberValidator = LengthBasedNumberValidator(10,
+      10,
+      6,
+      12)
   private val findUserWithPhoneNumber = mock<UserLookup>()
   private val facilitySync = mock<FacilitySync>()
 

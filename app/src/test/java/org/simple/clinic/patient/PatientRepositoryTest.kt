@@ -40,8 +40,6 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.advanceTimeBy
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Duration
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
@@ -62,10 +60,7 @@ class PatientRepositoryTest {
   private val patientPhoneNumberDao = mock<PatientPhoneNumber.RoomDao>()
   private val bloodPressureMeasurementDao = mock<BloodPressureMeasurement.RoomDao>()
   private val businessIdDao = mock<BusinessId.RoomDao>()
-  private val dobValidator = mock<UserInputDateValidator>()
-  private val ageValidator = mock<UserInputAgeValidator>()
   private val facilityRepository = mock<FacilityRepository>()
-  private val numberValidator = mock<PhoneNumberValidator>()
   private val searchPatientByName = mock<SearchPatientByName>()
   private val businessIdMetaAdapter = mock<BusinessIdMetaDataAdapter>()
 
@@ -82,16 +77,13 @@ class PatientRepositoryTest {
 
     repository = PatientRepository(
         database = database,
-        dobValidator = dobValidator,
-        numberValidator = numberValidator,
         utcClock = clock,
         searchPatientByName = searchPatientByName,
         config = config,
         reportsRepository = mock(),
         businessIdMetaDataAdapter = businessIdMetaAdapter,
         schedulersProvider = schedulersProvider,
-        dateOfBirthFormat = dateOfBirthFormat,
-        ageValidator = ageValidator)
+        dateOfBirthFormat = dateOfBirthFormat)
 
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
     whenever(bloodPressureMeasurementDao.patientToFacilityIds(any())).thenReturn(Flowable.just(listOf()))

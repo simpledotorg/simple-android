@@ -241,24 +241,6 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun when_a_patient_with_null_dateofbirth_and_null_age_is_saved_then_it_should_not_be_accepted() {
-    val patientEntry = testData.ongoingPatientEntry(dateOfBirth = null, age = null)
-
-    patientRepository.saveOngoingEntry(patientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient(
-            loggedInUser = loggedInUser,
-            facility = currentFacility,
-            patientUuid = UUID.fromString("0d8b5e31-2695-49b3-ba23-d4f198012870"),
-            addressUuid = UUID.fromString("05dfcc13-b855-4e06-be91-7c09c79d98ca"),
-            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
-            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
-            supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
-        ))
-        .test()
-        .assertError(AssertionError::class.java)
-  }
-
-  @Test
   fun when_a_patient_with_an_identifier_is_saved_then_it_should_be_correctly_saved_in_the_database() {
     val identifier = testData.identifier(value = "id", type = BpPassport)
     val patientEntry = testData.ongoingPatientEntry(identifier = identifier)

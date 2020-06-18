@@ -5,6 +5,7 @@ import android.content.Context
 import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.patientsummary_bloodsugar_item_content.view.*
 import org.simple.clinic.R
@@ -30,6 +31,7 @@ class BloodSugarItemView(
       editMeasurementClicked: (BloodSugarMeasurement) -> Unit
   ) {
     renderBloodSugarReading(measurement.reading)
+    renderBloodSugarLevel(measurement.reading)
     renderDateTime(bloodSugarDate, bloodSugarTime)
 
     bloodSugarItemRoot.apply {
@@ -40,6 +42,25 @@ class BloodSugarItemView(
     bloodSugarEditButton.visibleOrGone(isBloodSugarEditable)
   }
 
+  private fun renderBloodSugarLevel(reading: BloodSugarReading) {
+    when {
+      reading.isLow -> {
+        bloodSugarLevelTextView.visibility = View.VISIBLE
+        bloodSugarLevelTextView.text = context.getString(R.string.bloodsugar_level_low)
+        bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_filled)
+      }
+      reading.isHigh -> {
+        bloodSugarLevelTextView.visibility = View.VISIBLE
+        bloodSugarLevelTextView.text = context.getString(R.string.bloodsugar_level_high)
+        bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_filled)
+      }
+      else -> {
+        bloodSugarLevelTextView.visibility = View.GONE
+        bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_outline)
+      }
+    }
+  }
+
   @SuppressLint("SetTextI18n")
   private fun renderBloodSugarReading(reading: BloodSugarReading) {
     val displayUnit = context.getString(reading.displayUnit)
@@ -48,12 +69,6 @@ class BloodSugarItemView(
     val readingSuffix = "$displayUnit $displayType"
 
     readingTextView.text = "$readingPrefix${reading.displayUnitSeparator}$readingSuffix"
-
-    if (reading.isHigh || reading.isLow) {
-      bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_filled)
-    } else {
-      bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_outline)
-    }
   }
 
   private fun renderDateTime(bloodSugarDate: String, bloodSugarTime: String?) {

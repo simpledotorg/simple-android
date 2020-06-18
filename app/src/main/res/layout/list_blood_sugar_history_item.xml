@@ -44,46 +44,67 @@
     android:layout_gravity="center_vertical"
     android:src="@drawable/ic_blood_sugar_outline"
     app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
-    app:layout_constraintEnd_toStartOf="@id/readingsTextView"
+    app:layout_constraintEnd_toStartOf="@id/flow"
+    app:layout_constraintHorizontal_bias="0"
     app:layout_constraintStart_toEndOf="@id/startGuideline"
     app:layout_constraintTop_toBottomOf="@id/topGuideline"
     tools:ignore="ContentDescription" />
 
-  <org.simple.clinic.widgets.TintableCompoundDrawableTextView
+  <androidx.constraintlayout.helper.widget.Flow
+    android:id="@+id/flow"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_12"
+    app:constraint_referenced_ids="readingsTextView, bloodSugarLevelTextView, editButton"
+    app:flow_horizontalBias="0"
+    app:flow_horizontalGap="@dimen/spacing_8"
+    app:flow_horizontalStyle="packed"
+    app:flow_wrapMode="chain"
+    app:layout_constraintBottom_toBottomOf="@id/bloodSugarIconImageView"
+    app:layout_constraintEnd_toStartOf="@id/dateTimeTextView"
+    app:layout_constraintStart_toEndOf="@id/bloodSugarIconImageView"
+    app:layout_constraintTop_toTopOf="@id/bloodSugarIconImageView" />
+
+  <TextView
     android:id="@+id/readingsTextView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
-    android:layout_marginStart="@dimen/spacing_12"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
-    app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
-    app:layout_constraintEnd_toStartOf="@id/editButton"
-    app:layout_constraintStart_toEndOf="@id/bloodSugarIconImageView"
-    app:layout_constraintTop_toBottomOf="@id/topGuideline"
+    tools:ignore="MissingConstraints"
     tools:text="150 mg/dL RBS" />
 
   <TextView
-    android:id="@+id/editButton"
-    style="@style/Clinic.V2.TextAppearance.Button2.Blue1"
+    android:id="@+id/bloodSugarLevelTextView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_8"
-    android:text="@string/patientsummary_edit"
+    android:text="@string/bloodsugar_level_high"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
     android:visibility="gone"
-    app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
-    app:layout_constraintEnd_toStartOf="@id/dateTimeTextView"
-    app:layout_constraintStart_toEndOf="@id/readingsTextView"
-    app:layout_constraintTop_toBottomOf="@id/topGuideline" />
+    tools:ignore="MissingConstraints"
+    tools:visibility="visible" />
+
+  <TextView
+    android:id="@+id/editButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/patientsummary_edit"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Blue1"
+    android:visibility="gone"
+    tools:ignore="MissingConstraints"
+    tools:visibility="visible" />
 
   <TextView
     android:id="@+id/dateTimeTextView"
-    android:layout_width="0dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_8"
     android:textAlignment="viewEnd"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center.Grey1"
     app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
     app:layout_constraintEnd_toStartOf="@id/endGuideline"
-    app:layout_constraintStart_toEndOf="@id/readingsTextView"
+    app:layout_constraintHorizontal_bias="1"
+    app:layout_constraintStart_toEndOf="@id/flow"
     app:layout_constraintTop_toBottomOf="@id/topGuideline"
     tools:text="10-Aug-2019" />
 

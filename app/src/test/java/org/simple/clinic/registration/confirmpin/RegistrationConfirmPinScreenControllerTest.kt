@@ -135,9 +135,7 @@ class RegistrationConfirmPinScreenControllerTest {
     uiEvents.onNext(RegistrationResetPinClicked())
 
     // then
-    val inOrder = inOrder(userSession, ui)
-    inOrder.verify(userSession).saveOngoingRegistrationEntry(ongoingEntryWithoutPins)
-    inOrder.verify(ui).goBackToPinScreen()
+    verify(ui).goBackToPinScreen(ongoingEntryWithoutPins)
     verifyNoMoreInteractions(ui)
   }
 
@@ -163,12 +161,6 @@ class RegistrationConfirmPinScreenControllerTest {
   ) {
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingRegistrationEntry.toOptional())
 
-    val controller = RegistrationConfirmPinScreenController(userSession, clock)
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
     val effectHandler = RegistrationConfirmPinEffectHandler(
         schedulers = TrampolineSchedulersProvider(),
         userSession = userSession,
@@ -186,6 +178,12 @@ class RegistrationConfirmPinScreenControllerTest {
         modelUpdateListener = uiRenderer::render
     )
     testFixture.start()
+
+    val controller = RegistrationConfirmPinScreenController(userSession, clock) { testFixture.model }
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(RegistrationConfirmPinScreenCreated())
   }

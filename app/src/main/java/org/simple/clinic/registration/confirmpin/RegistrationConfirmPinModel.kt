@@ -41,6 +41,6 @@ data class RegistrationConfirmPinModel(
       pinConfirmation: String,
       timestamp: Instant
   ): RegistrationConfirmPinModel {
-    return copy(ongoingRegistrationEntry = ongoingRegistrationEntry.withPinConfirmation(pinConfirmation, timestamp))
+    return copy(ongoingRegistrationEntry = ongoingRegistrationEntry.withPinConfirmation(pinConfirmation))
   }
 }

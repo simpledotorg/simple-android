@@ -2,7 +2,6 @@ package org.simple.clinic.user
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.threeten.bp.Instant
 import java.util.UUID
 
 @Parcelize
@@ -12,12 +11,11 @@ data class OngoingRegistrationEntry(
     val fullName: String? = null,
     val pin: String? = null,
     val pinConfirmation: String? = null,
-    val facilityId: UUID? = null,
-    val createdAt: Instant? = null
+    val facilityId: UUID? = null
 ): Parcelable {
 
-  fun withPinConfirmation(pinConfirmation: String, timestamp: Instant): OngoingRegistrationEntry {
-    return this.copy(pinConfirmation = pinConfirmation, createdAt = timestamp)
+  fun withPinConfirmation(pinConfirmation: String): OngoingRegistrationEntry {
+    return this.copy(pinConfirmation = pinConfirmation)
   }
 
   fun withPhoneNumber(number: String): OngoingRegistrationEntry {

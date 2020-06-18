@@ -14,3 +14,5 @@ object ClearPin: RegistrationConfirmPinEffect()
 data class SaveCurrentRegistrationEntry(val entry: OngoingRegistrationEntry): RegistrationConfirmPinEffect()
 
 object OpenFacilitySelectionScreen: RegistrationConfirmPinEffect()
+
+data class GoBackToPinEntry(val entry: OngoingRegistrationEntry): RegistrationConfirmPinEffect()

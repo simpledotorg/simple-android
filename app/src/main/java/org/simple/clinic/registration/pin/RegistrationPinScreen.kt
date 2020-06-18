@@ -63,6 +63,8 @@ class RegistrationPinScreen(
     }
     context.injector<Injector>().inject(this)
 
+    pinEditText.isSaveEnabled = false
+
     backButton.setOnClickListener {
       screenRouter.pop()
     }

@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.os.Parcelable
 import android.view.View
 import androidx.annotation.CheckResult
+import flow.Direction
 import flow.Flow
 import flow.History
 import flow.KeyChanger
@@ -88,6 +89,28 @@ class ScreenRouter(
     Timber.tag("Screen Router").i("Pop")
     val popped = flow().goBack()
     return BackStackPopCallback(popped)
+  }
+
+  fun replaceKeyOfSameType(screenKey: FullScreenKey) {
+    Timber.tag("Screen Router").i("Replace key of type: ${screenKey.analyticsName}")
+
+    val builder = flow().history.buildUpon()
+
+    require(!builder.isEmpty) { "Cannot replace key with empty history!" }
+
+    while (!builder.isEmpty) {
+      val top = builder.pop()!!
+      if (top.javaClass == screenKey.javaClass) {
+        builder.push(screenKey)
+        break
+      }
+    }
+
+    if (builder.isEmpty) {
+      throw RuntimeException("Could not find key of type [${screenKey.javaClass.name}] to replace!")
+    } else {
+      flow().setHistory(builder.build(), Direction.REPLACE)
+    }
   }
 
   @CheckResult

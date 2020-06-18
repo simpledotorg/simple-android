@@ -18,7 +18,9 @@ import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreenKey
+import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.hideKeyboard
@@ -34,7 +36,7 @@ class RegistrationConfirmPinScreen(
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: RegistrationConfirmPinScreenController
+  lateinit var controller: RegistrationConfirmPinScreenController.Factory
 
   @Inject
   lateinit var effectHandlerFactory: RegistrationConfirmPinEffectHandler.Factory
@@ -84,7 +86,7 @@ class RegistrationConfirmPinScreen(
     bindUiToController(
         ui = this,
         events = events,
-        controller = controller,
+        controller = controller.create { delegate.currentModel },
         screenDestroys = detaches().map { ScreenDestroyed() }
     )
 
@@ -151,8 +153,8 @@ class RegistrationConfirmPinScreen(
     screenRouter.push(RegistrationLocationPermissionScreenKey())
   }
 
-  override fun goBackToPinScreen() {
-    screenRouter.pop()
+  override fun goBackToPinScreen(entry: OngoingRegistrationEntry) {
+    screenRouter.replaceKeyOfSameType(RegistrationPinScreenKey(entry))
   }
 
   interface Injector {

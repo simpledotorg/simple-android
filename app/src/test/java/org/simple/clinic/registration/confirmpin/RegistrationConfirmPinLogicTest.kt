@@ -31,6 +31,7 @@ class RegistrationConfirmPinLogicTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<RegistrationConfirmPinUi>()
+  private val uiActions = mock<RegistrationConfirmPinUiActions>()
   private val userSession = mock<UserSession>()
   private val clock = TestUtcClock()
 
@@ -61,8 +62,8 @@ class RegistrationConfirmPinLogicTest {
 
     // then
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation("1234", Instant.now(clock)))
-    verify(ui).openFacilitySelectionScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openFacilitySelectionScreen()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -76,10 +77,10 @@ class RegistrationConfirmPinLogicTest {
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     // then
-    val inOrder = inOrder(userSession, ui)
+    val inOrder = inOrder(userSession, uiActions)
     inOrder.verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation("1234", Instant.now(clock)))
-    inOrder.verify(ui).openFacilitySelectionScreen()
-    verifyNoMoreInteractions(ui)
+    inOrder.verify(uiActions).openFacilitySelectionScreen()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -95,7 +96,7 @@ class RegistrationConfirmPinLogicTest {
 
     // then
     verify(ui).showPinMismatchError()
-    clearInvocations(ui)
+    clearInvocations(ui, uiActions)
 
     // when
     uiEvents.onNext(RegistrationConfirmPinTextChanged(validConfirmationPin))
@@ -103,8 +104,8 @@ class RegistrationConfirmPinLogicTest {
 
     // then
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation(validConfirmationPin, Instant.now(clock)))
-    verify(ui).openFacilitySelectionScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openFacilitySelectionScreen()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -117,9 +118,9 @@ class RegistrationConfirmPinLogicTest {
     // then
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(ui).showPinMismatchError()
-    verify(ui).clearPin()
-    verify(ui, never()).openFacilitySelectionScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).clearPin()
+    verify(uiActions, never()).openFacilitySelectionScreen()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -132,8 +133,8 @@ class RegistrationConfirmPinLogicTest {
     uiEvents.onNext(RegistrationResetPinClicked())
 
     // then
-    verify(ui).goBackToPinScreen(ongoingEntryWithoutPins)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).goBackToPinScreen(ongoingEntryWithoutPins)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -149,8 +150,8 @@ class RegistrationConfirmPinLogicTest {
     // then
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(ui).showPinMismatchError()
-    verify(ui).clearPin()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).clearPin()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupController(
@@ -162,7 +163,7 @@ class RegistrationConfirmPinLogicTest {
         schedulers = TrampolineSchedulersProvider(),
         userSession = userSession,
         utcClock = clock,
-        uiActions = ui
+        uiActions = uiActions
     )
     val uiRenderer = RegistrationConfirmPinUiRenderer(ui)
 

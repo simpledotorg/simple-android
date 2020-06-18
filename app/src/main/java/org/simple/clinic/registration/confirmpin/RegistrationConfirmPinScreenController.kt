@@ -14,7 +14,7 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = RegistrationConfirmPinScreen
+typealias Ui = RegistrationConfirmPinUi
 typealias UiChange = (Ui) -> Unit
 
 class RegistrationConfirmPinScreenController @Inject constructor(

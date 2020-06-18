@@ -2,7 +2,6 @@ package org.simple.clinic.registration.confirmpin
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.clearInvocations
-import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
@@ -16,7 +15,6 @@ import org.junit.Test
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
@@ -32,7 +30,6 @@ class RegistrationConfirmPinLogicTest {
   private val ui = mock<RegistrationConfirmPinUi>()
   private val uiActions = mock<RegistrationConfirmPinUiActions>()
   private val userSession = mock<UserSession>()
-  private val clock = TestUtcClock()
 
   private val originalPin = "1234"
   private val ongoingEntry = OngoingRegistrationEntry(
@@ -60,7 +57,6 @@ class RegistrationConfirmPinLogicTest {
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     // then
-    verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation("1234"))
     verify(uiActions).openFacilitySelectionScreen()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -76,9 +72,7 @@ class RegistrationConfirmPinLogicTest {
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     // then
-    val inOrder = inOrder(userSession, uiActions)
-    inOrder.verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation("1234"))
-    inOrder.verify(uiActions).openFacilitySelectionScreen()
+    verify(uiActions).openFacilitySelectionScreen()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -102,7 +96,6 @@ class RegistrationConfirmPinLogicTest {
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     // then
-    verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation(validConfirmationPin))
     verify(uiActions).openFacilitySelectionScreen()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -125,7 +118,7 @@ class RegistrationConfirmPinLogicTest {
   @Test
   fun `when reset PIN is clicked then both PINs should be reset in ongoing entry and the user should be taken to the PIN entry screen`() {
     // given
-    val ongoingEntryWithoutPins = ongoingEntry.copy(pin = null, pinConfirmation = null)
+    val ongoingEntryWithoutPins = ongoingEntry.copy(pin = null)
 
     // when
     setupController()
@@ -161,7 +154,6 @@ class RegistrationConfirmPinLogicTest {
     val effectHandler = RegistrationConfirmPinEffectHandler(
         schedulers = TrampolineSchedulersProvider(),
         userSession = userSession,
-        utcClock = clock,
         uiActions = uiActions
     )
     val uiRenderer = RegistrationConfirmPinUiRenderer(ui)

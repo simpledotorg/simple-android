@@ -10,20 +10,15 @@ data class OngoingRegistrationEntry(
     val phoneNumber: String? = null,
     val fullName: String? = null,
     val pin: String? = null,
-    val pinConfirmation: String? = null,
     val facilityId: UUID? = null
 ): Parcelable {
-
-  fun withPinConfirmation(pinConfirmation: String): OngoingRegistrationEntry {
-    return this.copy(pinConfirmation = pinConfirmation)
-  }
 
   fun withPhoneNumber(number: String): OngoingRegistrationEntry {
     return copy(phoneNumber = number)
   }
 
   fun resetPin(): OngoingRegistrationEntry {
-    return this.copy(pin = null, pinConfirmation = null)
+    return this.copy(pin = null)
   }
 
   fun withName(name: String): OngoingRegistrationEntry {

@@ -17,6 +17,7 @@
 
 ### Fixes
 - Fixed retrying on a failed teleconsultation fetch when in airplane mode
+- Fixed showing diagnosis text in teleconsult message when diagnosis are unanswered
 
 ## On Demo
 ### Feature

@@ -516,15 +516,15 @@
   <string name="bloodsugartype_hba1c" translatable="false">HbA1c</string>
 
   <!-- Blood sugar entry -->
-  <string name="bloodsugarentry_mg_dl" translatable="false">mg/dl</string>
+  <string name="bloodsugarentry_mg_dl" translatable="false">mg/dL</string>
   <string name="bloodsugarentry_percentage" translatable="false">%</string>
   <string name="bloodsugarentry_sheet_title_enter_date">Date of visit</string>
   <string name="bloodsugarentry_day">Day</string>
   <string name="bloodsugarentry_month">Month</string>
   <string name="bloodsugarentry_year">Year</string>
-  <string name="bloodsugarentry_error_lower_limit">Value cannot be less than 30 mg/dl</string>
+  <string name="bloodsugarentry_error_lower_limit">Value cannot be less than 30 mg/dL</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">Value cannot be less than 3%</string>
-  <string name="bloodsugarentry_error_higher_limit">Value cannot be more than 1000 mg/dl</string>
+  <string name="bloodsugarentry_error_higher_limit">Value cannot be more than 1000 mg/dL</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">Value cannot be more than 25%</string>
   <string name="bloodsugarentry_error_empty">Value cannot be empty</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">Enter a valid date in DD/MM/YYYY</string>
@@ -555,7 +555,7 @@
   <string name="bloodsugar_reading_type_fbs" translatable="false">FBS</string>
   <string name="bloodsugar_reading_type_hba1c" translatable="false">HbA1c</string>
 
-  <string name="bloodsugar_reading_unit_type_mg_dl" translatable="false">mg/dl</string>
+  <string name="bloodsugar_reading_unit_type_mg_dl" translatable="false">mg/dL</string>
   <string name="bloodsugar_reading_unit_type_percentage" translatable="false">%</string>
 
   <!-- Blood Pressure History screen -->

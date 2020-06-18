@@ -19,3 +19,7 @@ class RegistrationConfirmPinDoneClicked : RegistrationConfirmPinEvent() {
 }
 
 object RegistrationEntrySaved: RegistrationConfirmPinEvent()
+
+class RegistrationResetPinClicked : RegistrationConfirmPinEvent() {
+  override val analyticsName = "Registration:Confirm PIN:Reset Clicked"
+}

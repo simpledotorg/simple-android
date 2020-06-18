@@ -2,12 +2,14 @@ package org.simple.clinic.registration.confirmpin
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.NotValidated
 import org.simple.clinic.user.OngoingRegistrationEntry
 
 @Parcelize
 data class RegistrationConfirmPinModel(
     val ongoingRegistrationEntry: OngoingRegistrationEntry,
-    val enteredPinConfirmation: String
+    val enteredPinConfirmation: String,
+    val confirmPinValidationResult: RegistrationConfirmPinValidationResult
 ) : Parcelable {
 
   companion object {
@@ -16,7 +18,8 @@ data class RegistrationConfirmPinModel(
     ): RegistrationConfirmPinModel {
       return RegistrationConfirmPinModel(
           ongoingRegistrationEntry = registrationEntry,
-          enteredPinConfirmation = ""
+          enteredPinConfirmation = "",
+          confirmPinValidationResult = NotValidated
       )
     }
   }

@@ -17,6 +17,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
@@ -119,8 +120,8 @@ class RegistrationPinScreen(
     errorTextView.visibility = View.GONE
   }
 
-  override fun openRegistrationConfirmPinScreen() {
-    screenRouter.push(RegistrationConfirmPinScreenKey())
+  override fun openRegistrationConfirmPinScreen(registrationEntry: OngoingRegistrationEntry) {
+    screenRouter.push(RegistrationConfirmPinScreenKey(registrationEntry))
   }
 
   interface Injector {

@@ -11,7 +11,7 @@ class RegistrationPinUpdate(
 
   override fun update(model: RegistrationPinModel, event: RegistrationPinEvent): Next<RegistrationPinModel, RegistrationPinEffect> {
     return when (event) {
-      is CurrentOngoingEntrySaved -> dispatch(ProceedToConfirmPin)
+      is CurrentOngoingEntrySaved -> dispatch(ProceedToConfirmPin(model.ongoingRegistrationEntry))
       is RegistrationPinTextChanged -> next(model.pinChanged(event.pin))
       is RegistrationPinDoneClicked -> doneClicked(model)
     }

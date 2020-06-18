@@ -6,4 +6,4 @@ sealed class RegistrationPinEffect
 
 data class SaveCurrentOngoingEntry(val entry: OngoingRegistrationEntry): RegistrationPinEffect()
 
-object ProceedToConfirmPin: RegistrationPinEffect()
+data class ProceedToConfirmPin(val entry: OngoingRegistrationEntry): RegistrationPinEffect()

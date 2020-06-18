@@ -53,8 +53,9 @@ class RegistrationPinScreenLogicTest {
     uiEvents.onNext(RegistrationPinDoneClicked())
 
     // then
-    verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin(input))
-    verify(uiActions).openRegistrationConfirmPinScreen()
+    val entryWithPin = ongoingRegistrationEntry.withPin(input)
+    verify(userSession).saveOngoingRegistrationEntry(entryWithPin)
+    verify(uiActions).openRegistrationConfirmPinScreen(entryWithPin)
     verify(ui, times(2)).hideIncompletePinError()
     verifyNoMoreInteractions(ui, userSession, uiActions)
   }
@@ -72,8 +73,9 @@ class RegistrationPinScreenLogicTest {
     uiEvents.onNext(RegistrationPinDoneClicked())
 
     // then
-    verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin(validPin))
-    verify(uiActions).openRegistrationConfirmPinScreen()
+    val entryWithPin = ongoingRegistrationEntry.withPin(validPin)
+    verify(userSession).saveOngoingRegistrationEntry(entryWithPin)
+    verify(uiActions).openRegistrationConfirmPinScreen(entryWithPin)
     verify(ui, times(2)).hideIncompletePinError()
     verifyNoMoreInteractions(ui, userSession, uiActions)
   }
@@ -88,7 +90,7 @@ class RegistrationPinScreenLogicTest {
     // then
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(ui).showIncompletePinError()
-    verify(uiActions, never()).openRegistrationConfirmPinScreen()
+    verify(uiActions, never()).openRegistrationConfirmPinScreen(any())
     verify(ui).hideIncompletePinError()
     verifyNoMoreInteractions(ui, userSession, uiActions)
   }

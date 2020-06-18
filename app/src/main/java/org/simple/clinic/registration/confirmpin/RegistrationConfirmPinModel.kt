@@ -2,6 +2,7 @@ package org.simple.clinic.registration.confirmpin
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.DoesNotMatchEnteredPin
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.NotValidated
 import org.simple.clinic.user.OngoingRegistrationEntry
 
@@ -23,6 +24,9 @@ data class RegistrationConfirmPinModel(
       )
     }
   }
+
+  val pinConfirmationDoesNotMatchEnteredPin: Boolean
+    get() = confirmPinValidationResult == DoesNotMatchEnteredPin
 
   fun withEnteredPinConfirmation(confirmPin: String): RegistrationConfirmPinModel {
     return copy(enteredPinConfirmation = confirmPin, confirmPinValidationResult = NotValidated)

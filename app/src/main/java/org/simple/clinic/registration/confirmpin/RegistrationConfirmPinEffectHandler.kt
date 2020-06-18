@@ -6,6 +6,7 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.DoesNotMatchEnteredPin
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.Valid
+import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class RegistrationConfirmPinEffectHandler @AssistedInject constructor(
@@ -29,9 +30,20 @@ class RegistrationConfirmPinEffectHandler @AssistedInject constructor(
   private fun validatePinConfirmation(): ObservableTransformer<ValidatePinConfirmation, RegistrationConfirmPinEvent> {
     return ObservableTransformer { effects ->
       effects
-          .map { (pinConfirmation, entry) -> pinConfirmation != entry.pin!! }
-          .map { isPinConfirmationSameAsEnteredPin -> if (isPinConfirmationSameAsEnteredPin) Valid else DoesNotMatchEnteredPin }
+          .map { (pinConfirmation, entry) -> checkIfConfirmedPinIsValid(pinConfirmation, entry) }
           .map(::PinConfirmationValidated)
     }
+  }
+
+  private fun checkIfConfirmedPinIsValid(
+      pinConfirmation: String,
+      entry: OngoingRegistrationEntry
+  ): RegistrationConfirmPinValidationResult {
+    val isPinConfirmationSameAsEnteredPin = pinConfirmation == entry.pin!!
+
+    return if (isPinConfirmationSameAsEnteredPin)
+      Valid
+    else
+      DoesNotMatchEnteredPin
   }
 }

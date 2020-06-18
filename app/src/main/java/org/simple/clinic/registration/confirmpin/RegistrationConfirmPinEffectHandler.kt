@@ -27,6 +27,7 @@ class RegistrationConfirmPinEffectHandler @AssistedInject constructor(
         .addTransformer(ValidatePinConfirmation::class.java, validatePinConfirmation())
         .addAction(ClearPin::class.java, uiActions::clearPin, schedulers.ui())
         .addTransformer(SaveCurrentRegistrationEntry::class.java, saveCurrentRegistrationEntry())
+        .addAction(OpenFacilitySelectionScreen::class.java, uiActions::openFacilitySelectionScreen, schedulers.ui())
         .build()
   }
 

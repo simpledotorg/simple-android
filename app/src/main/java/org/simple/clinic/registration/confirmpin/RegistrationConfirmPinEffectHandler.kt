@@ -6,8 +6,10 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.DoesNotMatchEnteredPin
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.Valid
+import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class RegistrationConfirmPinEffectHandler @AssistedInject constructor(
+    private val schedulers: SchedulersProvider,
     @Assisted private val uiActions: RegistrationConfirmPinUiActions
 ) {
 
@@ -20,6 +22,7 @@ class RegistrationConfirmPinEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<RegistrationConfirmPinEffect, RegistrationConfirmPinEvent>()
         .addTransformer(ValidatePinConfirmation::class.java, validatePinConfirmation())
+        .addAction(ClearPin::class.java, uiActions::clearPin, schedulers.ui())
         .build()
   }
 

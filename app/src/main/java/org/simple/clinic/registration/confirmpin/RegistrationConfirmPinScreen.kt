@@ -20,7 +20,10 @@ import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class RegistrationConfirmPinScreen(
+    context: Context,
+    attrs: AttributeSet
+) : RelativeLayout(context, attrs), RegistrationConfirmPinUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -87,21 +90,21 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
     return imeDoneClicks.mergeWith(pinAutoSubmits)
   }
 
-  fun showPinMismatchError() {
+  override fun showPinMismatchError() {
     errorStateViewGroup.visibility = View.VISIBLE
     pinHintTextView.visibility = View.GONE
   }
 
-  fun clearPin() {
+  override fun clearPin() {
     confirmPinEditText.text = null
   }
 
-  fun openFacilitySelectionScreen() {
+  override fun openFacilitySelectionScreen() {
     hideKeyboard()
     screenRouter.push(RegistrationLocationPermissionScreenKey())
   }
 
-  fun goBackToPinScreen() {
+  override fun goBackToPinScreen() {
     screenRouter.pop()
   }
 

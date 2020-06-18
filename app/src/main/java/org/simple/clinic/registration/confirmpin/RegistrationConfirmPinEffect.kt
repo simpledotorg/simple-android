@@ -8,3 +8,5 @@ data class ValidatePinConfirmation(
     val pinConfirmation: String,
     val entry: OngoingRegistrationEntry
 ): RegistrationConfirmPinEffect()
+
+object ClearPin: RegistrationConfirmPinEffect()

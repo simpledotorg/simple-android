@@ -18,6 +18,7 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -167,7 +168,7 @@ class RegistrationConfirmPinScreenControllerTest {
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
 
-    val effectHandler = RegistrationConfirmPinEffectHandler(uiActions = ui)
+    val effectHandler = RegistrationConfirmPinEffectHandler(uiActions = ui, schedulers = TrampolineSchedulersProvider())
     val uiRenderer = RegistrationConfirmPinUiRenderer(ui)
 
     testFixture = MobiusTestFixture(

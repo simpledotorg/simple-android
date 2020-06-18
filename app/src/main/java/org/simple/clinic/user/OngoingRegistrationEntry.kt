@@ -2,7 +2,6 @@ package org.simple.clinic.user
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -17,10 +16,8 @@ data class OngoingRegistrationEntry(
     val createdAt: Instant? = null
 ): Parcelable {
 
-  fun withPinConfirmation(pinConfirmation: String, clock: UtcClock): OngoingRegistrationEntry {
-    check(this.pin == pinConfirmation) { "Stored PIN != Entered PIN confirmation!" }
-
-    return this.copy(pinConfirmation = pinConfirmation, createdAt = Instant.now(clock))
+  fun withPinConfirmation(pinConfirmation: String, timestamp: Instant): OngoingRegistrationEntry {
+    return this.copy(pinConfirmation = pinConfirmation, createdAt = timestamp)
   }
 
   fun withPhoneNumber(number: String): OngoingRegistrationEntry {

@@ -99,16 +99,20 @@ class TeleconsultationMessageBuilder @Inject constructor(
   }
 
   private fun addDiagnosisSectionToMessage(patientTeleconsultationInfo: PatientTeleconsultationInfo, message: StringBuilder) {
-    message.appendln(resources.getString(R.string.patientsummary_contact_doctor_diagnosis))
-
     val hyperTensionTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_hypertension)
+    val diabetesTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_diabetes)
+
     val diagnosedWithHypertension = patientTeleconsultationInfo.medicalHistory.diagnosedWithHypertension
+    val diagnosedWithDiabetes = patientTeleconsultationInfo.medicalHistory.diagnosedWithDiabetes
+
+    if (diagnosedWithHypertension.isAnswered || diagnosedWithDiabetes.isAnswered) {
+      message.appendln(resources.getString(R.string.patientsummary_contact_doctor_diagnosis))
+    }
+
     if (diagnosedWithHypertension.isAnswered) {
       message.appendln("$hyperTensionTitle ${textForDiagnosisAnswer(diagnosedWithHypertension)}")
     }
 
-    val diabetesTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_diabetes)
-    val diagnosedWithDiabetes = patientTeleconsultationInfo.medicalHistory.diagnosedWithDiabetes
     if (diagnosedWithDiabetes.isAnswered) {
       message.appendln("$diabetesTitle ${textForDiagnosisAnswer(diagnosedWithDiabetes)}")
     }

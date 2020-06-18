@@ -1,8 +1,8 @@
 package org.simple.clinic.registration.confirmpin
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.next
 
 class RegistrationConfirmPinUpdate : Update<RegistrationConfirmPinModel, RegistrationConfirmPinEvent, RegistrationConfirmPinEffect> {
 
@@ -10,6 +10,8 @@ class RegistrationConfirmPinUpdate : Update<RegistrationConfirmPinModel, Registr
       model: RegistrationConfirmPinModel,
       event: RegistrationConfirmPinEvent
   ): Next<RegistrationConfirmPinModel, RegistrationConfirmPinEffect> {
-    return noChange()
+    return when(event) {
+      is RegistrationConfirmPinTextChanged -> next(model.withEnteredPinConfirmation(event.confirmPin))
+    }
   }
 }

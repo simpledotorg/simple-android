@@ -1,6 +1,6 @@
 package org.simple.clinic.registration.confirmpin
 
-interface RegistrationConfirmPinUi {
+interface RegistrationConfirmPinUi : RegistrationConfirmPinUiActions {
   fun showPinMismatchError()
   fun clearPin()
   fun openFacilitySelectionScreen()

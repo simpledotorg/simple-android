@@ -15,12 +15,11 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
+import org.threeten.bp.Instant
 import javax.inject.Inject
 
 
@@ -65,26 +64,25 @@ class UserSessionAndroidTest {
         registrationFacility = facility
     )
     userSession.saveOngoingRegistrationEntry(ongoingRegistrationEntry)
-    userSession.saveOngoingRegistrationEntryAsUser().blockingAwait()
+    userSession.saveOngoingRegistrationEntryAsUser(Instant.parse("2018-01-01T00:00:00Z")).blockingAwait()
 
     assertThat(userSession.isUserLoggedIn()).isTrue()
-    val (loggedInUser) = userSession.loggedInUser().blockingFirst()
-    assertThat(loggedInUser!!.status).isEqualTo(UserStatus.WaitingForApproval)
+    val loggedInUser = userSession.loggedInUser().blockingFirst().get()
+    assertThat(loggedInUser.status).isEqualTo(UserStatus.WaitingForApproval)
 
     val currentFacility = facilityRepository
         .currentFacility(user)
         .blockingFirst()
     assertThat(currentFacility.uuid).isEqualTo(facility.uuid)
 
-    assertThat(userSession.ongoingRegistrationEntry()).isEqualTo(Just(ongoingRegistrationEntry))
+    assertThat(userSession.ongoingRegistrationEntry()).isEqualTo(Optional.of(ongoingRegistrationEntry))
   }
 
   @Test
   fun when_user_is_logged_out_then_all_app_data_should_get_cleared() {
     userSession.logout().blockingGet()
 
-    assertThat(userSession.loggedInUser().blockingFirst())
-        .isEqualTo(None<User>())
+    assertThat(userSession.loggedInUser().blockingFirst().isPresent()).isFalse()
   }
 
   @Test
@@ -114,6 +112,6 @@ class UserSessionAndroidTest {
 
     userSession.logout().blockingGet()
 
-    assertThat(selectedCountryPreference.get()).isEqualTo(Just(country))
+    assertThat(selectedCountryPreference.get()).isEqualTo(Optional.of(country))
   }
 }

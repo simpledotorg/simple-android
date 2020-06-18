@@ -33,6 +33,7 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Distance
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -50,6 +51,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
   private val facilitySync = mock<FacilitySync>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
+  private val currentTime = Instant.parse("2018-01-01T00:00:00Z")
+  private val utcClock = TestUtcClock(currentTime)
   private val listItemBuilder = mock<FacilityListItemBuilder>()
   private val screenLocationUpdates = mock<ScreenLocationUpdates>()
 
@@ -70,7 +73,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
         userSession = userSession,
         configProvider = configProvider.firstOrError(),
         listItemBuilder = listItemBuilder,
-        screenLocationUpdates = screenLocationUpdates
+        screenLocationUpdates = screenLocationUpdates,
+        utcClock = utcClock
     )
 
     uiEvents
@@ -269,9 +273,9 @@ class RegistrationFacilitySelectionScreenControllerTest {
         fullName = "Ashok",
         pin = "1234",
         pinConfirmation = "5678",
-        createdAt = Instant.parse("2018-01-01T00:00:00Z"))
+        createdAt = currentTime)
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
-    whenever(userSession.saveOngoingRegistrationEntryAsUser()).thenReturn(Completable.complete())
+    whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
 
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("5cf9d744-7f34-4633-aa46-a6c7e7542060"))
     uiEvents.onNext(RegistrationFacilityClicked(facility1))
@@ -287,16 +291,16 @@ class RegistrationFacilitySelectionScreenControllerTest {
         fullName = "Ashok",
         pin = "1234",
         pinConfirmation = "5678",
-        createdAt = Instant.parse("2018-01-01T00:00:00Z"))
+        createdAt = currentTime)
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
-    whenever(userSession.saveOngoingRegistrationEntryAsUser()).thenReturn(Completable.complete())
+    whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
 
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("bc761c6c-032f-4f1d-a66a-3ec81e9e8aa3"))
     uiEvents.onNext(RegistrationFacilityConfirmed(facility1.uuid))
 
     verify(screen).openIntroVideoScreen()
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityId = facility1.uuid))
-    verify(userSession).saveOngoingRegistrationEntryAsUser()
+    verify(userSession).saveOngoingRegistrationEntryAsUser(currentTime)
   }
 
   @Test

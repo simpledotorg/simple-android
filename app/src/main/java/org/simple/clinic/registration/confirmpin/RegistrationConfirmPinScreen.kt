@@ -27,7 +27,7 @@ import javax.inject.Inject
 class RegistrationConfirmPinScreen(
     context: Context,
     attrs: AttributeSet
-) : RelativeLayout(context, attrs), RegistrationConfirmPinUi {
+) : RelativeLayout(context, attrs), RegistrationConfirmPinUi, RegistrationConfirmPinUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

@@ -4,14 +4,12 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Instant
 import javax.inject.Inject
 
 typealias Ui = RegistrationConfirmPinUi
@@ -24,45 +22,9 @@ class RegistrationConfirmPinScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(validatePin())
         .replay()
 
-    return Observable.merge(
-        resetPins(replayedEvents),
-        saveConfirmPinAndProceed(replayedEvents))
-  }
-
-  private fun validatePin(): ObservableTransformer<UiEvent, UiEvent> {
-    return ObservableTransformer { upstream ->
-      val doneClicks = upstream.ofType<RegistrationConfirmPinDoneClicked>()
-
-      val pinTextChanges = upstream
-          .ofType<RegistrationConfirmPinTextChanged>()
-          .map { it.confirmPin }
-
-      val validations = doneClicks
-          .withLatestFrom(pinTextChanges) { _, confirmPin -> ongoingRegistrationEntry() to confirmPin }
-          .map { (currentEntry, confirmPin) ->
-            val valid = currentEntry.pin == confirmPin
-            RegistrationConfirmPinValidated(confirmPin, valid)
-          }
-
-      upstream.mergeWith(validations)
-    }
-  }
-
-  private fun saveConfirmPinAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RegistrationConfirmPinValidated>()
-        .filter { it.valid }
-        .map { confirmPinValidated ->
-          ongoingRegistrationEntry().withPinConfirmation(
-              pinConfirmation = confirmPinValidated.enteredPin,
-              timestamp = Instant.now(utcClock)
-          )
-        }
-        .doOnNext(userSession::saveOngoingRegistrationEntry)
-        .map { { ui: Ui -> ui.openFacilitySelectionScreen() } }
+    return resetPins(replayedEvents)
   }
 
   private fun resetPins(events: Observable<UiEvent>): Observable<UiChange> {

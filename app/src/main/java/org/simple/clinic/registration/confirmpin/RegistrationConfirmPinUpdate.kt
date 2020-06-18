@@ -1,7 +1,6 @@
 package org.simple.clinic.registration.confirmpin
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -16,7 +15,7 @@ class RegistrationConfirmPinUpdate : Update<RegistrationConfirmPinModel, Registr
       is RegistrationConfirmPinTextChanged -> next(model.withEnteredPinConfirmation(event.confirmPin))
       is RegistrationConfirmPinDoneClicked -> dispatch(ValidatePinConfirmation(model.enteredPinConfirmation, model.ongoingRegistrationEntry))
       is PinConfirmationValidated -> validateEnteredPin(model, event)
-      is RegistrationEntrySaved -> noChange()
+      is RegistrationEntrySaved -> dispatch(OpenFacilitySelectionScreen)
     }
   }
 
@@ -24,12 +23,14 @@ class RegistrationConfirmPinUpdate : Update<RegistrationConfirmPinModel, Registr
       model: RegistrationConfirmPinModel,
       event: PinConfirmationValidated
   ): Next<RegistrationConfirmPinModel, RegistrationConfirmPinEffect> {
-    val updatedModel = model.validatedPinConfirmation(event.result)
+    var updatedModel = model.validatedPinConfirmation(event.result)
 
-    return if (updatedModel.pinConfirmationDoesNotMatchEnteredPin) {
-      next(updatedModel, ClearPin as RegistrationConfirmPinEffect)
+    return if (updatedModel.pinConfirmationMatchesEnteredPin) {
+      updatedModel = updatedModel.updateRegistrationEntryWithPinConfirmation(updatedModel.enteredPinConfirmation, event.timestamp)
+
+      next(updatedModel, SaveCurrentRegistrationEntry(updatedModel.ongoingRegistrationEntry))
     } else {
-      next(updatedModel)
+      next(updatedModel, ClearPin)
     }
   }
 }

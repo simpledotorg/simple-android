@@ -7,5 +7,3 @@ class RegistrationConfirmPinScreenCreated : UiEvent
 class RegistrationResetPinClicked : UiEvent {
   override val analyticsName = "Registration:Confirm PIN:Reset Clicked"
 }
-
-class RegistrationConfirmPinValidated(val enteredPin: String, val valid: Boolean) : UiEvent

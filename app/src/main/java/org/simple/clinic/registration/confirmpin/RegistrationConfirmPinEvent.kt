@@ -13,3 +13,5 @@ data class PinConfirmationValidated(val result: RegistrationConfirmPinValidation
 class RegistrationConfirmPinDoneClicked : RegistrationConfirmPinEvent() {
   override val analyticsName = "Registration:Confirm Pin:Done Clicked"
 }
+
+object RegistrationEntrySaved: RegistrationConfirmPinEvent()

@@ -1,6 +1,7 @@
 package org.simple.clinic.registration.confirmpin
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -9,11 +10,13 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_confirm_pin.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
@@ -33,6 +36,9 @@ class RegistrationConfirmPinScreen(
   @Inject
   lateinit var controller: RegistrationConfirmPinScreenController
 
+  @Inject
+  lateinit var effectHandlerFactory: RegistrationConfirmPinEffectHandler.Factory
+
   private val events by unsafeLazy {
     Observable
         .merge(
@@ -43,6 +49,19 @@ class RegistrationConfirmPinScreen(
         )
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = RegistrationConfirmPinUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = RegistrationConfirmPinModel.create(),
+        update = RegistrationConfirmPinUpdate(),
+        init = RegistrationConfirmPinInit(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   override fun onFinishInflate() {
@@ -70,6 +89,24 @@ class RegistrationConfirmPinScreen(
 
     // Showing the keyboard again in case the user returns from location permission screen.
     confirmPinEditText.showKeyboard()
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    delegate.stop()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates() = Observable.just(RegistrationConfirmPinScreenCreated())

@@ -8,11 +8,14 @@ import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidatio
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.Valid
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.threeten.bp.Instant
 
 class RegistrationConfirmPinEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val userSession: UserSession,
+    private val utcClock: UtcClock,
     @Assisted private val uiActions: RegistrationConfirmPinUiActions
 ) {
 
@@ -35,7 +38,7 @@ class RegistrationConfirmPinEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .map { (pinConfirmation, entry) -> checkIfConfirmedPinIsValid(pinConfirmation, entry) }
-          .map(::PinConfirmationValidated)
+          .map { PinConfirmationValidated(it, Instant.now(utcClock)) }
     }
   }
 

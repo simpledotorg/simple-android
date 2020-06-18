@@ -10,11 +10,13 @@ import com.jakewharton.rxbinding3.view.detaches
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_confirm_pin.view.*
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
@@ -30,6 +32,18 @@ class RegistrationConfirmPinScreen(
 
   @Inject
   lateinit var controller: RegistrationConfirmPinScreenController
+
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenCreates(),
+            confirmPinTextChanges(),
+            resetPinClicks(),
+            doneClicks()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -49,12 +63,7 @@ class RegistrationConfirmPinScreen(
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            screenCreates(),
-            confirmPinTextChanges(),
-            resetPinClicks(),
-            doneClicks()
-        ),
+        events = events,
         controller = controller,
         screenDestroys = detaches().map { ScreenDestroyed() }
     )

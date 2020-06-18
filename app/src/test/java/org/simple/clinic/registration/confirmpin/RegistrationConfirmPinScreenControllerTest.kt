@@ -172,7 +172,7 @@ class RegistrationConfirmPinScreenControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = RegistrationConfirmPinModel.create(),
+        defaultModel = RegistrationConfirmPinModel.create(ongoingRegistrationEntry),
         init = RegistrationConfirmPinInit(),
         update = RegistrationConfirmPinUpdate(),
         effectHandler = effectHandler.build(),

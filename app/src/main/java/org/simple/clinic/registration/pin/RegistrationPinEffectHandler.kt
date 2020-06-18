@@ -21,7 +21,7 @@ class RegistrationPinEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<RegistrationPinEffect, RegistrationPinEvent> {
     return RxMobius.subtypeEffectHandler<RegistrationPinEffect, RegistrationPinEvent>()
         .addTransformer(SaveCurrentOngoingEntry::class.java, saveCurrentOngoingEntry())
-        .addAction(ProceedToConfirmPin::class.java, { uiActions.openRegistrationConfirmPinScreen() }, schedulers.ui())
+        .addConsumer(ProceedToConfirmPin::class.java, { uiActions.openRegistrationConfirmPinScreen(it.entry) }, schedulers.ui())
         .build()
   }
 

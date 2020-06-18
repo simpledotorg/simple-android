@@ -31,6 +31,7 @@ class RegistrationConfirmPinEffectHandler @AssistedInject constructor(
         .addAction(ClearPin::class.java, uiActions::clearPin, schedulers.ui())
         .addTransformer(SaveCurrentRegistrationEntry::class.java, saveCurrentRegistrationEntry())
         .addAction(OpenFacilitySelectionScreen::class.java, uiActions::openFacilitySelectionScreen, schedulers.ui())
+        .addConsumer(GoBackToPinEntry::class.java, { uiActions.goBackToPinScreen(it.entry) }, schedulers.ui())
         .build()
   }
 

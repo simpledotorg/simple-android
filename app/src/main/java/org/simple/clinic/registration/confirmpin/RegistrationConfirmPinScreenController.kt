@@ -5,7 +5,6 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
@@ -29,14 +28,6 @@ class RegistrationConfirmPinScreenController @AssistedInject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return resetPins(replayedEvents)
-  }
-
-  private fun resetPins(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RegistrationResetPinClicked>()
-        .map { modelSupplier() }
-        .map { it.ongoingRegistrationEntry.resetPin() }
-        .map { { ui: Ui -> ui.goBackToPinScreen(it) } }
+    return Observable.never()
   }
 }

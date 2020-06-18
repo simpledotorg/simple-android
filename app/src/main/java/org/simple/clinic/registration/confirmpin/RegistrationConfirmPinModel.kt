@@ -6,7 +6,8 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 
 @Parcelize
 data class RegistrationConfirmPinModel(
-    val ongoingRegistrationEntry: OngoingRegistrationEntry
+    val ongoingRegistrationEntry: OngoingRegistrationEntry,
+    val enteredPinConfirmation: String
 ) : Parcelable {
 
   companion object {
@@ -14,8 +15,13 @@ data class RegistrationConfirmPinModel(
         registrationEntry: OngoingRegistrationEntry
     ): RegistrationConfirmPinModel {
       return RegistrationConfirmPinModel(
-          ongoingRegistrationEntry = registrationEntry
+          ongoingRegistrationEntry = registrationEntry,
+          enteredPinConfirmation = ""
       )
     }
+  }
+
+  fun withEnteredPinConfirmation(confirmPin: String): RegistrationConfirmPinModel {
+    return copy(enteredPinConfirmation = confirmPin)
   }
 }

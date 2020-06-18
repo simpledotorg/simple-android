@@ -9,3 +9,7 @@ data class RegistrationConfirmPinTextChanged(val confirmPin: String) : Registrat
 }
 
 data class PinConfirmationValidated(val result: RegistrationConfirmPinValidationResult) : RegistrationConfirmPinEvent()
+
+class RegistrationConfirmPinDoneClicked : RegistrationConfirmPinEvent() {
+  override val analyticsName = "Registration:Confirm Pin:Done Clicked"
+}

@@ -172,6 +172,7 @@ class RegistrationConfirmPinScreenControllerTest {
     val effectHandler = RegistrationConfirmPinEffectHandler(
         schedulers = TrampolineSchedulersProvider(),
         userSession = userSession,
+        utcClock = clock,
         uiActions = ui
     )
     val uiRenderer = RegistrationConfirmPinUiRenderer(ui)

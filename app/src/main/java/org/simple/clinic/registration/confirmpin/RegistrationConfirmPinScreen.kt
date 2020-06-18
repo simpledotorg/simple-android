@@ -53,10 +53,11 @@ class RegistrationConfirmPinScreen(
 
   private val delegate by unsafeLazy {
     val uiRenderer = RegistrationConfirmPinUiRenderer(this)
+    val screenKey = screenRouter.key<RegistrationConfirmPinScreenKey>(this)
 
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = RegistrationConfirmPinModel.create(),
+        defaultModel = RegistrationConfirmPinModel.create(screenKey.registrationEntry),
         update = RegistrationConfirmPinUpdate(),
         init = RegistrationConfirmPinInit(),
         effectHandler = effectHandlerFactory.create(this).build(),

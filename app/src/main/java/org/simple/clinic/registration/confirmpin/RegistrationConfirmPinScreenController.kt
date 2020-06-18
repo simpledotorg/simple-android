@@ -11,6 +11,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
 import javax.inject.Inject
 
 typealias Ui = RegistrationConfirmPinUi
@@ -57,7 +58,7 @@ class RegistrationConfirmPinScreenController @Inject constructor(
         .map { confirmPinValidated ->
           ongoingRegistrationEntry().withPinConfirmation(
               pinConfirmation = confirmPinValidated.enteredPin,
-              clock = utcClock
+              timestamp = Instant.now(utcClock)
           )
         }
         .doOnNext(userSession::saveOngoingRegistrationEntry)

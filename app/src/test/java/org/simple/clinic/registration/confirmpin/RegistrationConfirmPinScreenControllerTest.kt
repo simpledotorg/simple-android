@@ -22,6 +22,7 @@ import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import org.threeten.bp.Instant
 import java.util.UUID
 
 class RegistrationConfirmPinScreenControllerTest {
@@ -62,7 +63,7 @@ class RegistrationConfirmPinScreenControllerTest {
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     // then
-    verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation("1234", clock))
+    verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation("1234", Instant.now(clock)))
     verify(ui).openFacilitySelectionScreen()
     verifyNoMoreInteractions(ui)
   }
@@ -79,7 +80,7 @@ class RegistrationConfirmPinScreenControllerTest {
 
     // then
     val inOrder = inOrder(userSession, ui)
-    inOrder.verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation("1234", clock))
+    inOrder.verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation("1234", Instant.now(clock)))
     inOrder.verify(ui).openFacilitySelectionScreen()
     verifyNoMoreInteractions(ui)
   }
@@ -104,7 +105,7 @@ class RegistrationConfirmPinScreenControllerTest {
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     // then
-    verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation(validConfirmationPin, clock))
+    verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.withPinConfirmation(validConfirmationPin, Instant.now(clock)))
     verify(ui).openFacilitySelectionScreen()
     verifyNoMoreInteractions(ui)
   }

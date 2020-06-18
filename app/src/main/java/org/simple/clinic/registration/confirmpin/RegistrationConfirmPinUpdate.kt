@@ -12,6 +12,7 @@ class RegistrationConfirmPinUpdate : Update<RegistrationConfirmPinModel, Registr
   ): Next<RegistrationConfirmPinModel, RegistrationConfirmPinEffect> {
     return when(event) {
       is RegistrationConfirmPinTextChanged -> next(model.withEnteredPinConfirmation(event.confirmPin))
+      is PinConfirmationValidated -> next(model.validatedPinConfirmation(event.result))
     }
   }
 }

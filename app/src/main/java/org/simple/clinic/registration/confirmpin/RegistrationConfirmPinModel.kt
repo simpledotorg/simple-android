@@ -25,6 +25,10 @@ data class RegistrationConfirmPinModel(
   }
 
   fun withEnteredPinConfirmation(confirmPin: String): RegistrationConfirmPinModel {
-    return copy(enteredPinConfirmation = confirmPin)
+    return copy(enteredPinConfirmation = confirmPin, confirmPinValidationResult = NotValidated)
+  }
+
+  fun validatedPinConfirmation(result: RegistrationConfirmPinValidationResult): RegistrationConfirmPinModel {
+    return copy(confirmPinValidationResult = result)
   }
 }

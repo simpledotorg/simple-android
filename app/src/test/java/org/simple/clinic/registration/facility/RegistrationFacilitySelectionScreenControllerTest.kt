@@ -272,8 +272,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
         phoneNumber = "1234567890",
         fullName = "Ashok",
         pin = "1234",
-        pinConfirmation = "5678",
-        createdAt = currentTime)
+        pinConfirmation = "5678")
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
     whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
 
@@ -290,8 +289,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
         phoneNumber = "1234567890",
         fullName = "Ashok",
         pin = "1234",
-        pinConfirmation = "5678",
-        createdAt = currentTime)
+        pinConfirmation = "5678")
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
     whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
 

@@ -459,8 +459,7 @@ object TestData {
         fullName = faker.name.name(),
         pin = pin,
         pinConfirmation = pin,
-        facilityId = registrationFacility.uuid,
-        createdAt = Instant.now())
+        facilityId = registrationFacility.uuid)
   }
 
   fun bpPayload(

@@ -60,7 +60,7 @@
     app:layout_constraintEnd_toStartOf="@id/editButton"
     app:layout_constraintStart_toEndOf="@id/bloodSugarIconImageView"
     app:layout_constraintTop_toBottomOf="@id/topGuideline"
-    tools:text="150 mg/dl RBS" />
+    tools:text="150 mg/dL RBS" />
 
   <TextView
     android:id="@+id/editButton"

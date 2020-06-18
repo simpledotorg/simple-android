@@ -39,7 +39,7 @@
     app:layout_constraintEnd_toStartOf="@id/dateTimeTextView"
     app:layout_constraintStart_toEndOf="@id/bloodSugarIconImageView"
     app:layout_constraintTop_toTopOf="parent"
-    tools:text="120 mg/dl FBS" />
+    tools:text="120 mg/dL FBS" />
 
   <TextView
     android:id="@+id/bloodSugarEditButton"

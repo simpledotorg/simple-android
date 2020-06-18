@@ -446,9 +446,9 @@
   <string name="bloodsugarentry_day">Guyyaa</string>
   <string name="bloodsugarentry_month">Ji’a</string>
   <string name="bloodsugarentry_year">Waggaa</string>
-  <string name="bloodsugarentry_error_lower_limit">Hammichi 30 mg/dl gadi ta’uu hin danda’u</string>
+  <string name="bloodsugarentry_error_lower_limit">Hammichi 30 mg/dL gadi ta’uu hin danda’u</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">Hammichi 3\% gadi ta’uu hin danda’u</string>
-  <string name="bloodsugarentry_error_higher_limit">Hammichi 1000 mg/dl o; ta’uu hin danda’u</string>
+  <string name="bloodsugarentry_error_higher_limit">Hammichi 1000 mg/dL o; ta’uu hin danda’u</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">Hammichi 25\% ol ta’uu hin danda’u</string>
   <string name="bloodsugarentry_error_empty">Hammichi duwwaa ta’uu hin danda’u</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">Guyyaa sirrii GG/JJ/WWWW keessatti galchi</string>

@@ -169,7 +169,11 @@ class RegistrationConfirmPinScreenControllerTest {
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
 
-    val effectHandler = RegistrationConfirmPinEffectHandler(uiActions = ui, schedulers = TrampolineSchedulersProvider())
+    val effectHandler = RegistrationConfirmPinEffectHandler(
+        schedulers = TrampolineSchedulersProvider(),
+        userSession = userSession,
+        uiActions = ui
+    )
     val uiRenderer = RegistrationConfirmPinUiRenderer(ui)
 
     testFixture = MobiusTestFixture(

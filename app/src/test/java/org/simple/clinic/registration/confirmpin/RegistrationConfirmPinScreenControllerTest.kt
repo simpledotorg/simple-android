@@ -9,6 +9,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -19,6 +20,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class RegistrationConfirmPinScreenControllerTest {
@@ -40,10 +42,12 @@ class RegistrationConfirmPinScreenControllerTest {
   )
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<RegistrationConfirmPinModel, RegistrationConfirmPinEvent, RegistrationConfirmPinEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -168,6 +172,19 @@ class RegistrationConfirmPinScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
+
+    val effectHandler = RegistrationConfirmPinEffectHandler(uiActions = ui)
+    val uiRenderer = RegistrationConfirmPinUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = RegistrationConfirmPinModel.create(),
+        init = RegistrationConfirmPinInit(),
+        update = RegistrationConfirmPinUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
+    testFixture.start()
 
     uiEvents.onNext(RegistrationConfirmPinScreenCreated())
   }

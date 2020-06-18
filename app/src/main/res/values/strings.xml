@@ -232,6 +232,9 @@
   <!--suppress UnusedResources -->
   <string name="bloodpressure_level_high">High</string>
 
+  <string name="bloodsugar_level_low">Low</string>
+  <string name="bloodsugar_level_high">High</string>
+
   <string name="timestamp_today">Today</string>
   <string name="timestamp_yesterday">Yesterday</string>
   <!--suppress PluralsCandidate -->

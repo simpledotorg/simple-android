@@ -16,6 +16,7 @@ class RegistrationConfirmPinUpdate : Update<RegistrationConfirmPinModel, Registr
       is RegistrationConfirmPinDoneClicked -> dispatch(ValidatePinConfirmation(model.enteredPinConfirmation, model.ongoingRegistrationEntry))
       is PinConfirmationValidated -> validateEnteredPin(model, event)
       is RegistrationEntrySaved -> dispatch(OpenFacilitySelectionScreen)
+      is RegistrationResetPinClicked -> dispatch(GoBackToPinEntry(model.ongoingRegistrationEntry.resetPin()))
     }
   }
 

@@ -4,6 +4,8 @@ import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.DoesNotMatchEnteredPin
+import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.Valid
 
 class RegistrationConfirmPinEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: RegistrationConfirmPinUiActions
@@ -17,6 +19,16 @@ class RegistrationConfirmPinEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<RegistrationConfirmPinEffect, RegistrationConfirmPinEvent> {
     return RxMobius
         .subtypeEffectHandler<RegistrationConfirmPinEffect, RegistrationConfirmPinEvent>()
+        .addTransformer(ValidatePinConfirmation::class.java, validatePinConfirmation())
         .build()
+  }
+
+  private fun validatePinConfirmation(): ObservableTransformer<ValidatePinConfirmation, RegistrationConfirmPinEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .map { (pinConfirmation, entry) -> pinConfirmation != entry.pin!! }
+          .map { isPinConfirmationSameAsEnteredPin -> if (isPinConfirmationSameAsEnteredPin) Valid else DoesNotMatchEnteredPin }
+          .map(::PinConfirmationValidated)
+    }
   }
 }

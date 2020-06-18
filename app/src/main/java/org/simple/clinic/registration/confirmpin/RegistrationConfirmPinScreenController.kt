@@ -27,7 +27,6 @@ class RegistrationConfirmPinScreenController @Inject constructor(
         .replay()
 
     return Observable.merge(
-        showValidationError(replayedEvents),
         resetPins(replayedEvents),
         saveConfirmPinAndProceed(replayedEvents))
   }
@@ -49,18 +48,6 @@ class RegistrationConfirmPinScreenController @Inject constructor(
 
       upstream.mergeWith(validations)
     }
-  }
-
-  private fun showValidationError(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RegistrationConfirmPinValidated>()
-        .filter { it.valid.not() }
-        .map {
-          { ui: Ui ->
-            ui.showPinMismatchError()
-            ui.clearPin()
-          }
-        }
   }
 
   private fun saveConfirmPinAndProceed(events: Observable<UiEvent>): Observable<UiChange> {

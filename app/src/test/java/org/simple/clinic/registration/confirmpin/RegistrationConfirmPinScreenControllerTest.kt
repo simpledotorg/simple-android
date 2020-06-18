@@ -52,9 +52,6 @@ class RegistrationConfirmPinScreenControllerTest {
 
   @Test
   fun `when 4 digits are entered then the PIN should be submitted automatically`() {
-    // given
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
-
     // when
     setupController()
     uiEvents.onNext(RegistrationConfirmPinTextChanged("1"))
@@ -73,7 +70,6 @@ class RegistrationConfirmPinScreenControllerTest {
   fun `when next is clicked with a matching PIN then ongoing entry should be updated and the next screen should be opened`() {
     // given
     val input = "1234"
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
     // when
     setupController()
@@ -92,7 +88,6 @@ class RegistrationConfirmPinScreenControllerTest {
     // given
     val invalidConfirmationPin = "123"
     val validConfirmationPin = "1234"
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
     // when
     setupController()
@@ -115,9 +110,6 @@ class RegistrationConfirmPinScreenControllerTest {
 
   @Test
   fun `when proceed is clicked with a confirmation PIN that does not match with original PIN then an error should be shown`() {
-    // given
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
-
     // when
     setupController()
     uiEvents.onNext(RegistrationConfirmPinTextChanged("4567"))
@@ -135,7 +127,6 @@ class RegistrationConfirmPinScreenControllerTest {
   fun `when reset PIN is clicked then both PINs should be reset in ongoing entry and the user should be taken to the PIN entry screen`() {
     // given
     val ongoingEntryWithoutPins = ongoingEntry.copy(pin = null, pinConfirmation = null)
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
     // when
     setupController()
@@ -152,7 +143,6 @@ class RegistrationConfirmPinScreenControllerTest {
   fun `when PIN validation fails then the PIN should be cleared`() {
     // given
     val invalidConfirmationPin = "5678"
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
     // when
     setupController()
@@ -166,7 +156,11 @@ class RegistrationConfirmPinScreenControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
-  private fun setupController() {
+  private fun setupController(
+      ongoingRegistrationEntry: OngoingRegistrationEntry = ongoingEntry
+  ) {
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingRegistrationEntry.toOptional())
+
     val controller = RegistrationConfirmPinScreenController(userSession, clock)
 
     controllerSubscription = uiEvents

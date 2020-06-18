@@ -271,8 +271,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
         uuid = UUID.fromString("eb0a9bc0-b24d-4f3f-9990-aa05e217be1a"),
         phoneNumber = "1234567890",
         fullName = "Ashok",
-        pin = "1234",
-        pinConfirmation = "5678")
+        pin = "1234")
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
     whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
 
@@ -288,8 +287,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
         uuid = UUID.fromString("252ef188-318c-443c-9c0c-37644e84bb6d"),
         phoneNumber = "1234567890",
         fullName = "Ashok",
-        pin = "1234",
-        pinConfirmation = "5678")
+        pin = "1234")
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
     whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
 

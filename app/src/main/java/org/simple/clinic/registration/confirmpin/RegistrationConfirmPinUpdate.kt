@@ -24,11 +24,9 @@ class RegistrationConfirmPinUpdate : Update<RegistrationConfirmPinModel, Registr
       model: RegistrationConfirmPinModel,
       event: PinConfirmationValidated
   ): Next<RegistrationConfirmPinModel, RegistrationConfirmPinEffect> {
-    var updatedModel = model.validatedPinConfirmation(event.result)
+    val updatedModel = model.validatedPinConfirmation(event.result)
 
     return if (updatedModel.pinConfirmationMatchesEnteredPin) {
-      updatedModel = updatedModel.updateRegistrationEntryWithPinConfirmation(updatedModel.enteredPinConfirmation, event.timestamp)
-
       next(updatedModel, SaveCurrentRegistrationEntry(updatedModel.ongoingRegistrationEntry))
     } else {
       next(updatedModel, ClearPin)

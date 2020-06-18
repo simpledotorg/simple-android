@@ -458,7 +458,6 @@ object TestData {
         phoneNumber = phoneNumber,
         fullName = faker.name.name(),
         pin = pin,
-        pinConfirmation = pin,
         facilityId = registrationFacility.uuid)
   }
 

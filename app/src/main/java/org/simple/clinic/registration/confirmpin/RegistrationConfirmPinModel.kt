@@ -5,7 +5,6 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.NotValidated
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.Valid
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.threeten.bp.Instant
 
 @Parcelize
 data class RegistrationConfirmPinModel(
@@ -35,12 +34,5 @@ data class RegistrationConfirmPinModel(
 
   fun validatedPinConfirmation(result: RegistrationConfirmPinValidationResult): RegistrationConfirmPinModel {
     return copy(confirmPinValidationResult = result)
-  }
-
-  fun updateRegistrationEntryWithPinConfirmation(
-      pinConfirmation: String,
-      timestamp: Instant
-  ): RegistrationConfirmPinModel {
-    return copy(ongoingRegistrationEntry = ongoingRegistrationEntry.withPinConfirmation(pinConfirmation))
   }
 }

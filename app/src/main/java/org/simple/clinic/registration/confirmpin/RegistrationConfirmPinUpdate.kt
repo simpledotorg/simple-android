@@ -1,6 +1,7 @@
 package org.simple.clinic.registration.confirmpin
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -15,6 +16,7 @@ class RegistrationConfirmPinUpdate : Update<RegistrationConfirmPinModel, Registr
       is RegistrationConfirmPinTextChanged -> next(model.withEnteredPinConfirmation(event.confirmPin))
       is RegistrationConfirmPinDoneClicked -> dispatch(ValidatePinConfirmation(model.enteredPinConfirmation, model.ongoingRegistrationEntry))
       is PinConfirmationValidated -> validateEnteredPin(model, event)
+      is RegistrationEntrySaved -> noChange()
     }
   }
 

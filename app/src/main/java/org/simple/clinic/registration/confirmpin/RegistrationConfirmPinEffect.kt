@@ -10,3 +10,5 @@ data class ValidatePinConfirmation(
 ): RegistrationConfirmPinEffect()
 
 object ClearPin: RegistrationConfirmPinEffect()
+
+data class SaveCurrentRegistrationEntry(val entry: OngoingRegistrationEntry): RegistrationConfirmPinEffect()

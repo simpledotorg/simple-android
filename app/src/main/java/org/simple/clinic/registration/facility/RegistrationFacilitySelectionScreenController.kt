@@ -24,8 +24,10 @@ import org.simple.clinic.location.ScreenLocationUpdates
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
 import javax.inject.Inject
 
 typealias Ui = RegistrationFacilitySelectionScreen
@@ -37,7 +39,8 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
     private val userSession: UserSession,
     private val configProvider: Single<RegistrationConfig>,
     private val listItemBuilder: FacilityListItemBuilder,
-    private val screenLocationUpdates: ScreenLocationUpdates
+    private val screenLocationUpdates: ScreenLocationUpdates,
+    private val utcClock: UtcClock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -188,7 +191,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .doOnNext(userSession::saveOngoingRegistrationEntry)
         .flatMap {
           userSession
-              .saveOngoingRegistrationEntryAsUser()
+              .saveOngoingRegistrationEntryAsUser(Instant.now(utcClock))
               .andThen(Observable.just { ui: Ui -> ui.openIntroVideoScreen() })
         }
   }

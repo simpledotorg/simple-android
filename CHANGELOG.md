@@ -5,6 +5,8 @@
 - New Onboarding UI
 - Show new registration label for recent patients in home screen
 - Redesigned patient card in search results
+- Changed blood sugar unit from `mg/dl` to `mg/dL`
+- Show blood sugar high/low level labels
 - Redesigned patient card in recent patients screen
 - New illustrations for location permission screen, overdue screen, reports screen
 

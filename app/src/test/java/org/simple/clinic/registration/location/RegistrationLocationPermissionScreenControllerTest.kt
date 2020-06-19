@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Before
@@ -15,6 +16,7 @@ import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 
 class RegistrationLocationPermissionScreenControllerTest {
 
@@ -25,10 +27,12 @@ class RegistrationLocationPermissionScreenControllerTest {
   private val ui = mock<RegistrationLocationPermissionUi>()
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<RegistrationLocationPermissionModel, RegistrationLocationPermissionEvent, RegistrationLocationPermissionEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -59,5 +63,17 @@ class RegistrationLocationPermissionScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
+
+    val uiRenderer = RegistrationLocationPermissionUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = RegistrationLocationPermissionModel.create(),
+        update = RegistrationLocationPermissionUpdate(),
+        effectHandler = RegistrationLocationPermissionEffectHandler(ui).build(),
+        init = RegistrationLocationPermissionInit(),
+        modelUpdateListener = uiRenderer::render
+    )
+    testFixture.start()
   }
 }

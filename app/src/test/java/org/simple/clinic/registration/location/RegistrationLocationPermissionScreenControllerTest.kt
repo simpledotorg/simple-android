@@ -15,6 +15,7 @@ import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 
@@ -65,12 +66,13 @@ class RegistrationLocationPermissionScreenControllerTest {
         .subscribe { uiChange -> uiChange(ui) }
 
     val uiRenderer = RegistrationLocationPermissionUiRenderer(ui)
+    val effectHandler = RegistrationLocationPermissionEffectHandler(TrampolineSchedulersProvider(), ui)
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = RegistrationLocationPermissionModel.create(),
         update = RegistrationLocationPermissionUpdate(),
-        effectHandler = RegistrationLocationPermissionEffectHandler(ui).build(),
+        effectHandler = effectHandler.build(),
         init = RegistrationLocationPermissionInit(),
         modelUpdateListener = uiRenderer::render
     )

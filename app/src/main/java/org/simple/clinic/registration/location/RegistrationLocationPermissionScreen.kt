@@ -9,7 +9,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_location_permission.view.*
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RequestPermissions
@@ -35,7 +35,7 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     bindUiToController(
         ui = this,
@@ -61,5 +61,9 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
 
   fun openFacilitySelectionScreen() {
     screenRouter.push(RegistrationFacilitySelectionScreenKey())
+  }
+
+  interface Injector {
+    fun inject(target: RegistrationLocationPermissionScreen)
   }
 }

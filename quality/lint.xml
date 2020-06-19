@@ -19,6 +19,7 @@
     <ignore path="src/main/res/drawable/ic_onboarding_intro_1.xml" />
     <ignore path="src/main/res/drawable/ic_onboarding_intro_2.xml" />
     <ignore path="src/main/res/drawable/ic_onboarding_intro_3.xml" />
+    <ignore path="src/main/res/drawable/illustration_overdue.xml" />
   </issue>
 
   <issue id="ParcelCreator" severity="informational" />
@@ -51,5 +52,6 @@
     <ignore path="src/main/res/drawable/ic_onboarding_intro_2.xml" />
     <ignore path="src/main/res/drawable/ic_onboarding_intro_3.xml" />
     <ignore path="src/main/res/drawable/illustration_location.xml" />
+    <ignore path="src/main/res/drawable/illustration_overdue.xml" />
   </issue>
 </lint>

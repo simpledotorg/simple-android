@@ -18,30 +18,32 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingEnd="@dimen/spacing_32"
-    android:paddingStart="@dimen/spacing_32"
     android:visibility="visible">
 
     <ImageView
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/spacing_32"
-      android:layout_marginTop="@dimen/spacing_40"
+      android:adjustViewBounds="true"
       android:contentDescription="@string/overdue_no_patients"
-      android:src="@drawable/ic_overdue_empty_list" />
+      android:src="@drawable/illustration_overdue" />
 
     <TextView
       style="@style/Clinic.V2.TextAppearance.H6.Grey1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_32"
+      android:layout_marginEnd="@dimen/spacing_32"
       android:text="@string/overdue_no_patients"
       tools:ignore="UnusedAttribute" />
 
     <TextView
-      style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey2"
+      style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_32"
       android:layout_marginTop="@dimen/spacing_12"
+      android:layout_marginEnd="@dimen/spacing_32"
       android:text="@string/overdue_empty_desc" />
   </LinearLayout>
 

@@ -2,17 +2,17 @@ package org.simple.clinic.patient
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
-import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT
-import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
+import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
@@ -24,9 +24,9 @@ import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toNullable
@@ -117,7 +117,7 @@ data class OngoingNewPatientEntry(
       dobValidator: UserInputDateValidator,
       numberValidator: PhoneNumberValidator,
       ageValidator: UserInputAgeValidator
-  ) : List<PatientEntryValidationError> {
+  ): List<PatientEntryValidationError> {
     val errors = ArrayList<PatientEntryValidationError>()
 
     if (personalDetails == null) {
@@ -152,10 +152,10 @@ data class OngoingNewPatientEntry(
 
     if (phoneNumber != null) {
       errors += when (numberValidator.validate(phoneNumber.number, LANDLINE_OR_MOBILE)) {
-        BLANK -> listOf(PHONE_NUMBER_NON_NULL_BUT_BLANK)
-        LENGTH_TOO_SHORT -> listOf(PHONE_NUMBER_LENGTH_TOO_SHORT)
-        LENGTH_TOO_LONG -> listOf(PHONE_NUMBER_LENGTH_TOO_LONG)
-        PhoneNumberValidator.Result.VALID -> listOf()
+        is Blank -> listOf(PHONE_NUMBER_NON_NULL_BUT_BLANK)
+        is LengthTooShort -> listOf(PHONE_NUMBER_LENGTH_TOO_SHORT)
+        is LengthTooLong -> listOf(PHONE_NUMBER_LENGTH_TOO_LONG)
+        is PhoneNumberValidator.Result.ValidNumber -> listOf()
       }
     }
 

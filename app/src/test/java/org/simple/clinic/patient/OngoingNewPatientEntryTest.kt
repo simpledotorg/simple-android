@@ -11,7 +11,7 @@ import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.OngoingNewPatientEntry.PhoneNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.ValidNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
@@ -71,13 +71,13 @@ class OngoingNewPatientEntryTest {
 
   fun values(): Array<Any> {
     return arrayOf(
-        arrayOf(false, " ", " ", " ", " ", " ", " ", PhoneNumberValidator.Result.BLANK),
-        arrayOf(false, " ", null, null, " ", " ", " ", PhoneNumberValidator.Result.BLANK),
-        arrayOf(false, "Ashok Kumar", "01-01-1971", "47", "colony", "state", "district", PhoneNumberValidator.Result.LENGTH_TOO_SHORT),
-        arrayOf(false, "Ashok Kumar", "01/01/1971", null, "colony", "state", "district", PhoneNumberValidator.Result.BLANK),
-        arrayOf(false, "Ashok Kumar", "01/01/1971", null, "colony", "state", "district", PhoneNumberValidator.Result.LENGTH_TOO_SHORT),
-        arrayOf(false, "Ashok Kumar", "01/01/1971", null, "colony", "state", "district", PhoneNumberValidator.Result.LENGTH_TOO_LONG),
-        arrayOf(true, "Ashok Kumar", "01/01/1971", null, "colony", "state", "district", PhoneNumberValidator.Result.VALID)
+        arrayOf(false, " ", " ", " ", " ", " ", " ", PhoneNumberValidator.Result.Blank),
+        arrayOf(false, " ", null, null, " ", " ", " ", PhoneNumberValidator.Result.Blank),
+        arrayOf(false, "Ashok Kumar", "01-01-1971", "47", "colony", "state", "district", PhoneNumberValidator.Result.LengthTooShort(6)),
+        arrayOf(false, "Ashok Kumar", "01/01/1971", null, "colony", "state", "district", PhoneNumberValidator.Result.Blank),
+        arrayOf(false, "Ashok Kumar", "01/01/1971", null, "colony", "state", "district", PhoneNumberValidator.Result.LengthTooShort(6)),
+        arrayOf(false, "Ashok Kumar", "01/01/1971", null, "colony", "state", "district", PhoneNumberValidator.Result.LengthTooLong(12)),
+        arrayOf(true, "Ashok Kumar", "01/01/1971", null, "colony", "state", "district", PhoneNumberValidator.Result.ValidNumber)
     )
   }
 
@@ -100,7 +100,7 @@ class OngoingNewPatientEntryTest {
     whenever(mockDobValidator.validate("01/01/3000")).thenReturn(DateIsInFuture)
 
     val mockNumValidator = mock<PhoneNumberValidator>()
-    whenever(mockNumValidator.validate("phone-number", LANDLINE_OR_MOBILE)).thenReturn(VALID)
+    whenever(mockNumValidator.validate("phone-number", LANDLINE_OR_MOBILE)).thenReturn(ValidNumber)
 
     val validationErrors = entry.validationErrors(mockDobValidator, mockNumValidator, mockAgeValidator)
 

@@ -10,10 +10,10 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PhoneNumberDetails
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.ValidNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.UiEvent
@@ -48,14 +48,14 @@ class AddPhoneNumberDialogController @Inject constructor(
     val showValidationError = newNumberAndValidationResult
         .map<UiChange> { (_, result) ->
           when (result) {
-            VALID -> { _: Ui -> }
-            BLANK, LENGTH_TOO_SHORT -> { ui: Ui -> ui.showPhoneNumberTooShortError() }
-            LENGTH_TOO_LONG -> { ui: Ui -> ui.showPhoneNumberTooLongError() }
+            is ValidNumber -> { _: Ui -> }
+            is Blank, is LengthTooShort -> { ui: Ui -> ui.showPhoneNumberTooShortError() }
+            is LengthTooLong -> { ui: Ui -> ui.showPhoneNumberTooLongError() }
           }
         }
 
     val saveNumber = newNumberAndValidationResult
-        .filter { (_, result) -> result == VALID }
+        .filter { (_, result) -> result == ValidNumber }
         .map { (newNumber, _) -> newNumber }
         .withLatestFrom(patientUuidStream)
         .flatMap { (newNumber, patientUuid) ->

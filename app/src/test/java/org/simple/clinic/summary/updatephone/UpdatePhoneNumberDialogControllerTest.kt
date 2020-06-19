@@ -19,11 +19,10 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.values
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.ValidNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
@@ -70,7 +69,7 @@ class UpdatePhoneNumberDialogControllerTest {
     val newNumber = "1234567890"
     val existingPhoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid, number = "0987654321")
 
-    whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(VALID)
+    whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(ValidNumber)
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
 
@@ -114,9 +113,9 @@ class UpdatePhoneNumberDialogControllerTest {
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
     when (validationError) {
-      BLANK, LENGTH_TOO_SHORT -> verify(dialog).showPhoneNumberTooShortError()
-      LENGTH_TOO_LONG -> verify(dialog).showPhoneNumberTooLongError()
-      VALID -> throw AssertionError()
+      Blank, is LengthTooShort -> verify(dialog).showPhoneNumberTooShortError()
+      is LengthTooLong -> verify(dialog).showPhoneNumberTooLongError()
+      ValidNumber -> throw AssertionError()
     }.exhaustive()
   }
 
@@ -133,5 +132,5 @@ class UpdatePhoneNumberDialogControllerTest {
   }
 
   @Suppress("unused")
-  private fun `validation errors`() = values().filter { it != VALID }
+  private fun `validation errors`() = listOf(Blank, LengthTooShort(6),LengthTooLong(12))
 }

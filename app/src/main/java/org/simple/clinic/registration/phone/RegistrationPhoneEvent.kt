@@ -21,10 +21,10 @@ data class EnteredNumberValidated(val result: RegistrationPhoneValidationResult)
     // TODO (vs) 04/06/20: https://www.pivotaltracker.com/story/show/173170198
     fun fromValidateNumberResult(result: PhoneNumberValidator.Result): EnteredNumberValidated {
       val registrationPhoneValidationResult = when (result) {
-        PhoneNumberValidator.Result.VALID -> RegistrationPhoneValidationResult.Valid
-        PhoneNumberValidator.Result.LENGTH_TOO_SHORT -> RegistrationPhoneValidationResult.Invalid.TooShort
-        PhoneNumberValidator.Result.LENGTH_TOO_LONG -> RegistrationPhoneValidationResult.Invalid.TooLong
-        PhoneNumberValidator.Result.BLANK -> RegistrationPhoneValidationResult.Invalid.Blank
+        is PhoneNumberValidator.Result.ValidNumber -> RegistrationPhoneValidationResult.Valid
+        is PhoneNumberValidator.Result.LengthTooShort -> RegistrationPhoneValidationResult.Invalid.TooShort
+        is PhoneNumberValidator.Result.LengthTooLong -> RegistrationPhoneValidationResult.Invalid.TooLong
+        is PhoneNumberValidator.Result.Blank -> RegistrationPhoneValidationResult.Invalid.Blank
       }
 
       return EnteredNumberValidated(registrationPhoneValidationResult)

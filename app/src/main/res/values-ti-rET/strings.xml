@@ -76,8 +76,8 @@
   <string name="patiententry_error_both_dateofbirth_and_age_empty">ናይ ተሓካሚ ዕድመ ኣእትው/ዊ</string>
   <string name="patiententry_error_invalid_dateofbirth">ናይ ተሓካሚ ዕለተ ትውልዲ ብ ዕ/ወ/ዓ.ም መሰረት ኣእትው/ዊ</string>
   <string name="patiententry_error_dateofbirth_is_in_future">ናይ ተሓካሚ ዕለተ ትውልዲ ኣዓሪ/ዪ</string>
-  <string name="patiententry_error_phonenumber_length_less">ስልኪ ቁጽሪ ትሕቲ 6 ቁጽርታት ክኸውን ኣይኽእልን</string>
-  <string name="patiententry_error_phonenumber_length_more">ስልኪ ቁጽሪ ልዕሊ 12 ቁጽርታት ክኸውን ኣይኽእልን</string>
+  <string name="patiententry_error_phonenumber_length_less">ስልኪ ቁጽሪ ትሕቲ %1$s ቁጽርታት ክኸውን ኣይኽእልን</string>
+  <string name="patiententry_error_phonenumber_length_more">ስልኪ ቁጽሪ ልዕሊ %1$s ቁጽርታት ክኸውን ኣይኽእልን</string>
   <string name="patiententry_identifier">ናይ ትውልዲ ቦታ ፓስፖርት</string>
   <string name="patiententry_consent_header">ስምምዕ፥\ u0020</string>
   <string name="patiententry_consent_first_para">ኣብ ታሕቲ ብምትንካፍ፡ ኩሉ ኣብዚ ዘእተኻዮ/ኽዮ ናይ ተሓካሚ ሓበሬታ ብኣገባብን ስምምዕን ከም ዝረኸብካዮ/ዝረኸብኪዮ  ኣረጋግጽ/ጺ እዚ ማለት፡ ተሓካሚ ወይ ድማ ሕጋዊ ኣላዪኡ/ኣ ግላዊ ሓበሬታታቶም ከም ዝተኣከበን ኣብ ኣፕሊኬሽን ከምዝኣተወን ከምኡ ውን ብ ኣገልግሎት ሓጺር መልእኽቲ፡ ዋትስኣፕ ወይ ካልኦት ኣገባባት ብምጥቃም በቲ ዝተመዝገበ ስልኪ ቁጽሪ ከም ነዘራርቦም ይፈልጡ ማለት’ዩ።</string>

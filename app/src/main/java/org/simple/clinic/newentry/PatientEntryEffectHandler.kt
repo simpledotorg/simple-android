@@ -19,24 +19,24 @@ import org.simple.clinic.newentry.Field.State
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.PatientEntryValidationError
-import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT
-import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT
-import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
-import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
-import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
-import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT
-import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
-import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
-import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
-import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
-import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
-import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
-import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.AgeExceedsMaxLimit
+import org.simple.clinic.patient.PatientEntryValidationError.AgeExceedsMinLimit
+import org.simple.clinic.patient.PatientEntryValidationError.BothDateOfBirthAndAgeAbsent
+import org.simple.clinic.patient.PatientEntryValidationError.BothDateOfBirthAndAgePresent
+import org.simple.clinic.patient.PatientEntryValidationError.ColonyOrVillageEmpty
+import org.simple.clinic.patient.PatientEntryValidationError.DateOfBirthInFuture
+import org.simple.clinic.patient.PatientEntryValidationError.DistrictEmpty
+import org.simple.clinic.patient.PatientEntryValidationError.DobExceedsMaxLimit
+import org.simple.clinic.patient.PatientEntryValidationError.DobExceedsMinLimit
+import org.simple.clinic.patient.PatientEntryValidationError.EmptyAddressDetails
+import org.simple.clinic.patient.PatientEntryValidationError.FullNameEmpty
+import org.simple.clinic.patient.PatientEntryValidationError.InvalidDateOfBirth
+import org.simple.clinic.patient.PatientEntryValidationError.MissingGender
+import org.simple.clinic.patient.PatientEntryValidationError.PersonalDetailsEmpty
+import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberLengthTooLong
+import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberLengthTooShort
+import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberNonNullButBlank
+import org.simple.clinic.patient.PatientEntryValidationError.StateEmpty
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ValueChangedCallback
@@ -123,8 +123,8 @@ class PatientEntryEffectHandler(
 
   private fun hidePhoneLengthErrors() {
     with(validationActions) {
-      showLengthTooLongPhoneNumberError(false)
-      showLengthTooShortPhoneNumberError(false)
+      showLengthTooLongPhoneNumberError(false, 0)
+      showLengthTooShortPhoneNumberError(false, 0)
     }
   }
 
@@ -162,25 +162,25 @@ class PatientEntryEffectHandler(
         .onEach { Analytics.reportInputValidationError(it.analyticsName) }
         .forEach {
           when (it) {
-            FULL_NAME_EMPTY -> validationActions.showEmptyFullNameError(true)
-            PHONE_NUMBER_LENGTH_TOO_SHORT -> validationActions.showLengthTooShortPhoneNumberError(true)
-            PHONE_NUMBER_LENGTH_TOO_LONG -> validationActions.showLengthTooLongPhoneNumberError(true)
-            BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> validationActions.showEmptyDateOfBirthAndAgeError(true)
-            INVALID_DATE_OF_BIRTH -> validationActions.showInvalidDateOfBirthError(true)
-            DATE_OF_BIRTH_IN_FUTURE -> validationActions.showDateOfBirthIsInFutureError(true)
-            MISSING_GENDER -> validationActions.showMissingGenderError(true)
-            COLONY_OR_VILLAGE_EMPTY -> validationActions.showEmptyColonyOrVillageError(true)
-            DISTRICT_EMPTY -> validationActions.showEmptyDistrictError(true)
-            STATE_EMPTY -> validationActions.showEmptyStateError(true)
-            AGE_EXCEEDS_MAX_LIMIT -> validationActions.showAgeExceedsMaxLimitError(true)
-            DOB_EXCEEDS_MAX_LIMIT -> validationActions.showDOBExceedsMaxLimitError(true)
-            AGE_EXCEEDS_MIN_LIMIT -> validationActions.showAgeExceedsMinLimitError(true)
-            DOB_EXCEEDS_MIN_LIMIT -> validationActions.showDOBExceedsMinLimitError(true)
+            FullNameEmpty -> validationActions.showEmptyFullNameError(true)
+            is PhoneNumberLengthTooShort -> validationActions.showLengthTooShortPhoneNumberError(true, it.limit)
+            is PhoneNumberLengthTooLong -> validationActions.showLengthTooLongPhoneNumberError(true, it.limit)
+            BothDateOfBirthAndAgeAbsent -> validationActions.showEmptyDateOfBirthAndAgeError(true)
+            InvalidDateOfBirth -> validationActions.showInvalidDateOfBirthError(true)
+            DateOfBirthInFuture -> validationActions.showDateOfBirthIsInFutureError(true)
+            MissingGender -> validationActions.showMissingGenderError(true)
+            ColonyOrVillageEmpty -> validationActions.showEmptyColonyOrVillageError(true)
+            DistrictEmpty -> validationActions.showEmptyDistrictError(true)
+            StateEmpty -> validationActions.showEmptyStateError(true)
+            AgeExceedsMaxLimit -> validationActions.showAgeExceedsMaxLimitError(true)
+            DobExceedsMaxLimit -> validationActions.showDOBExceedsMaxLimitError(true)
+            AgeExceedsMinLimit -> validationActions.showAgeExceedsMinLimitError(true)
+            DobExceedsMinLimit -> validationActions.showDOBExceedsMinLimitError(true)
 
-            EMPTY_ADDRESS_DETAILS,
-            PHONE_NUMBER_NON_NULL_BUT_BLANK,
-            BOTH_DATEOFBIRTH_AND_AGE_PRESENT,
-            PERSONAL_DETAILS_EMPTY -> {
+            EmptyAddressDetails,
+            PhoneNumberNonNullButBlank,
+            BothDateOfBirthAndAgePresent,
+            PersonalDetailsEmpty -> {
               throw AssertionError("Should never receive this error: $it")
             }
           }

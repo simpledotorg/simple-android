@@ -3,16 +3,16 @@ package org.simple.clinic.editpatient
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
-import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_IN_FUTURE
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_PARSE_ERROR
-import org.simple.clinic.editpatient.EditPatientValidationError.DISTRICT_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
-import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
+import org.simple.clinic.editpatient.EditPatientValidationError.BothDateOfBirthAndAgeAdsent
+import org.simple.clinic.editpatient.EditPatientValidationError.ColonyOrVillageEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthInFuture
+import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParseError
+import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
+import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -25,13 +25,13 @@ class EditPatientUpdate(
     private val ageValidator: UserInputAgeValidator
 ) : Update<EditPatientModel, EditPatientEvent, EditPatientEffect> {
   private val errorsForEventType = mapOf(
-      PhoneNumberChanged::class to setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_LONG, PHONE_NUMBER_LENGTH_TOO_SHORT),
-      NameChanged::class to setOf(FULL_NAME_EMPTY),
-      ColonyOrVillageChanged::class to setOf(COLONY_OR_VILLAGE_EMPTY),
-      StateChanged::class to setOf(STATE_EMPTY),
-      DistrictChanged::class to setOf(DISTRICT_EMPTY),
-      AgeChanged::class to setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
-      DateOfBirthChanged::class to setOf(DATE_OF_BIRTH_PARSE_ERROR, DATE_OF_BIRTH_IN_FUTURE)
+      PhoneNumberChanged::class to setOf(PhoneNumberEmpty, PhoneNumberLengthTooLong(0), PhoneNumberLengthTooShort(0)),
+      NameChanged::class to setOf(FullNameEmpty),
+      ColonyOrVillageChanged::class to setOf(ColonyOrVillageEmpty),
+      StateChanged::class to setOf(StateEmpty),
+      DistrictChanged::class to setOf(DistrictEmpty),
+      AgeChanged::class to setOf(BothDateOfBirthAndAgeAdsent),
+      DateOfBirthChanged::class to setOf(DateOfBirthParseError, DateOfBirthInFuture)
   )
 
   override fun update(

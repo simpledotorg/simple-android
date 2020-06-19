@@ -69,7 +69,7 @@ class PatientEntryUpdateTest {
   //Tests for validation errors in Patient Entry Screen
   @Test
   fun `when the user leaves full name field empty, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.FULL_NAME_EMPTY)
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.FullNameEmpty)
     val model = defaultModel
         .fullNameChanged("")
         .ageChanged("21")
@@ -94,7 +94,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user enters phone number which is too short, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT)
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.PhoneNumberLengthTooShort(6))
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("21")
@@ -119,7 +119,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user enters phone number which is too long, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG)
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.PhoneNumberLengthTooLong(12))
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("21")
@@ -145,7 +145,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user doesn't enter date of birth and age, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.BothDateOfBirthAndAgeAbsent)
     val model = defaultModel
         .fullNameChanged("Name")
         .genderChanged(Just(Gender.Male))
@@ -169,7 +169,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user enters invalid date of birth, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.INVALID_DATE_OF_BIRTH)
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.InvalidDateOfBirth)
     val model = defaultModel
         .fullNameChanged("Name")
         .dateOfBirthChanged("02-19-2000")
@@ -194,7 +194,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user enters date of birth in future, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE)
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DateOfBirthInFuture)
     val model = defaultModel
         .fullNameChanged("Name")
         .dateOfBirthChanged("02/02/2021")
@@ -219,7 +219,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user leaves gender field empty, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.MISSING_GENDER)
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.MissingGender)
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
@@ -243,7 +243,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user leaves colony or village field empty, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY)
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.ColonyOrVillageEmpty)
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
@@ -267,7 +267,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user leaves district field empty, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DISTRICT_EMPTY)
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DistrictEmpty)
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
@@ -291,7 +291,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user leaves state field empty, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.STATE_EMPTY)
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.StateEmpty)
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
@@ -315,7 +315,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the age exceeds max limit, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT)
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.AgeExceedsMaxLimit)
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged(MAX_ALLOWED_PATIENT_AGE.plus(1).toString())
@@ -340,7 +340,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the age exceeds min limit, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT)
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.AgeExceedsMinLimit)
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged(MIN_ALLOWED_PATIENT_AGE.minus(1).toString())
@@ -365,7 +365,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the date of birth exceeds max limit, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT)
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DobExceedsMaxLimit)
     val enteredDate = dateOfBirthFormat.format(LocalDate.now(userClock).minusYears(MAX_ALLOWED_PATIENT_AGE.toLong().plus(1)))
     val model = defaultModel
         .fullNameChanged("Name")
@@ -391,7 +391,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the date of birth exceeds min limit, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT)
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DobExceedsMinLimit)
     val enteredDate = dateOfBirthFormat.format(LocalDate.now(userClock))
     val model = defaultModel
         .fullNameChanged("Name")

@@ -32,9 +32,9 @@ class PhoneNumberValidatorTest {
 
     assertThat(validator.validate("", LANDLINE_OR_MOBILE)).isEqualTo(Blank)
     assertThat(validator.validate("918", LANDLINE_OR_MOBILE)).isEqualTo(LengthTooShort(6))
-    assertThat(validator.validate("1982322", LANDLINE_OR_MOBILE)).isEqualTo(ValidNumber)
-    assertThat(validator.validate("129391872", LANDLINE_OR_MOBILE)).isEqualTo(ValidNumber)
-    assertThat(validator.validate("9868197263872", LANDLINE_OR_MOBILE)).isEqualTo(LengthTooLong(12))
+    assertThat(validator.validate("1982322678", LANDLINE_OR_MOBILE)).isEqualTo(ValidNumber)
+    assertThat(validator.validate("1293918728", LANDLINE_OR_MOBILE)).isEqualTo(ValidNumber)
+    assertThat(validator.validate("9868197269876", LANDLINE_OR_MOBILE)).isEqualTo(LengthTooLong(12))
   }
 
   @Test

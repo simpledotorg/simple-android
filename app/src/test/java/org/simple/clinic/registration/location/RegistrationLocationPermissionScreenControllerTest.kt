@@ -22,7 +22,7 @@ class RegistrationLocationPermissionScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()!!
-  private val screen = mock<RegistrationLocationPermissionScreen>()
+  private val ui = mock<RegistrationLocationPermissionUi>()
 
   private lateinit var controllerSubscription: Disposable
 
@@ -36,10 +36,10 @@ class RegistrationLocationPermissionScreenControllerTest {
     // when
     setupController()
     uiEvents.onNext(RequestLocationPermission(permission = Optional.of(GRANTED)))
-    
+
     // then
-    verify(screen).openFacilitySelectionScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).openFacilitySelectionScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -49,8 +49,8 @@ class RegistrationLocationPermissionScreenControllerTest {
     uiEvents.onNext(RequestLocationPermission(permission = Optional.of(DENIED)))
 
     // then
-    verify(screen, never()).openFacilitySelectionScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui, never()).openFacilitySelectionScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -58,6 +58,6 @@ class RegistrationLocationPermissionScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
   }
 }

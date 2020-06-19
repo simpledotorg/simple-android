@@ -19,7 +19,10 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
-class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class RegistrationLocationPermissionScreen(
+    context: Context,
+    attrs: AttributeSet
+) : RelativeLayout(context, attrs), RegistrationLocationPermissionUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -59,7 +62,7 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
 
   private fun allowLocationClicks(): Observable<UiEvent> = allowAccessButton.clicks().map { RequestLocationPermission() }
 
-  fun openFacilitySelectionScreen() {
+  override fun openFacilitySelectionScreen() {
     screenRouter.push(RegistrationFacilitySelectionScreenKey())
   }
 

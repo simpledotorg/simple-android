@@ -8,7 +8,8 @@
   <WebView
     android:id="@+id/webView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    tools:visibility="gone" />
 
   <LinearLayout
     android:id="@+id/noReportView"
@@ -18,11 +19,11 @@
     android:orientation="vertical">
 
     <ImageView
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="@dimen/spacing_40"
-      android:layout_marginTop="@dimen/spacing_40"
-      android:src="@drawable/reports_illustration"
+      android:layout_marginBottom="@dimen/spacing_32"
+      android:adjustViewBounds="true"
+      android:src="@drawable/illustration_reports"
       tools:ignore="ContentDescription" />
 
     <TextView
@@ -32,13 +33,12 @@
       android:text="@string/reports_come_back_later" />
 
     <TextView
-      style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey2"
+      style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="@dimen/spacing_12"
-      android:layout_marginEnd="@dimen/spacing_24"
-      android:layout_marginStart="@dimen/spacing_24"
+      android:layout_marginStart="@dimen/spacing_32"
       android:layout_marginTop="@dimen/spacing_12"
+      android:layout_marginEnd="@dimen/spacing_32"
       android:text="@string/reports_you_will_be_able_to_see" />
   </LinearLayout>
 </org.simple.clinic.home.report.ReportsScreen>

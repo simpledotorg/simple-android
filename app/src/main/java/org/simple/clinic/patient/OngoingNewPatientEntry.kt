@@ -2,24 +2,24 @@ package org.simple.clinic.patient
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT
-import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT
-import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
-import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
-import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
-import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT
-import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
-import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
-import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
-import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
-import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
-import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
-import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.AgeExceedsMaxLimit
+import org.simple.clinic.patient.PatientEntryValidationError.AgeExceedsMinLimit
+import org.simple.clinic.patient.PatientEntryValidationError.BothDateOfBirthAndAgeAbsent
+import org.simple.clinic.patient.PatientEntryValidationError.BothDateOfBirthAndAgePresent
+import org.simple.clinic.patient.PatientEntryValidationError.ColonyOrVillageEmpty
+import org.simple.clinic.patient.PatientEntryValidationError.DateOfBirthInFuture
+import org.simple.clinic.patient.PatientEntryValidationError.DistrictEmpty
+import org.simple.clinic.patient.PatientEntryValidationError.DobExceedsMaxLimit
+import org.simple.clinic.patient.PatientEntryValidationError.DobExceedsMinLimit
+import org.simple.clinic.patient.PatientEntryValidationError.EmptyAddressDetails
+import org.simple.clinic.patient.PatientEntryValidationError.FullNameEmpty
+import org.simple.clinic.patient.PatientEntryValidationError.InvalidDateOfBirth
+import org.simple.clinic.patient.PatientEntryValidationError.MissingGender
+import org.simple.clinic.patient.PatientEntryValidationError.PersonalDetailsEmpty
+import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberLengthTooLong
+import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberLengthTooShort
+import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberNonNullButBlank
+import org.simple.clinic.patient.PatientEntryValidationError.StateEmpty
 import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.Identifier
@@ -121,57 +121,57 @@ data class OngoingNewPatientEntry(
     val errors = ArrayList<PatientEntryValidationError>()
 
     if (personalDetails == null) {
-      errors += PERSONAL_DETAILS_EMPTY
+      errors += PersonalDetailsEmpty
     }
 
     personalDetails?.apply {
       if (dateOfBirth.isNullOrBlank() && age.isNullOrBlank()) {
-        errors += BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+        errors += BothDateOfBirthAndAgeAbsent
 
       } else if (dateOfBirth?.isNotBlank() == true && age?.isNotBlank() == true) {
-        errors += BOTH_DATEOFBIRTH_AND_AGE_PRESENT
+        errors += BothDateOfBirthAndAgePresent
 
       } else if (dateOfBirth != null) {
         errors += dobValidationCheck(dobValidator, dateOfBirth, ageValidator)
 
       } else if (age != null) {
         errors += when (ageValidator.validate(age.toInt())) {
-          ExceedsMaxAgeLimit -> listOf(AGE_EXCEEDS_MAX_LIMIT)
-          ExceedsMinAgeLimit -> listOf(AGE_EXCEEDS_MIN_LIMIT)
+          ExceedsMaxAgeLimit -> listOf(AgeExceedsMaxLimit)
+          ExceedsMinAgeLimit -> listOf(AgeExceedsMinLimit)
           else -> emptyList()
         }
       }
 
       if (fullName.isBlank()) {
-        errors += FULL_NAME_EMPTY
+        errors += FullNameEmpty
       }
       if (gender == null) {
-        errors += MISSING_GENDER
+        errors += MissingGender
       }
     }
 
     if (phoneNumber != null) {
-      errors += when (numberValidator.validate(phoneNumber.number, LANDLINE_OR_MOBILE)) {
-        is Blank -> listOf(PHONE_NUMBER_NON_NULL_BUT_BLANK)
-        is LengthTooShort -> listOf(PHONE_NUMBER_LENGTH_TOO_SHORT)
-        is LengthTooLong -> listOf(PHONE_NUMBER_LENGTH_TOO_LONG)
+      errors += when (val errorNumber = numberValidator.validate(phoneNumber.number, LANDLINE_OR_MOBILE)) {
+        is Blank -> listOf(PhoneNumberNonNullButBlank)
+        is LengthTooShort -> listOf(PhoneNumberLengthTooShort(errorNumber.minimumAllowedNumberLength))
+        is LengthTooLong -> listOf(PhoneNumberLengthTooLong(errorNumber.maximumRequiredNumberLength))
         is PhoneNumberValidator.Result.ValidNumber -> listOf()
       }
     }
 
     if (address == null) {
-      errors += EMPTY_ADDRESS_DETAILS
+      errors += EmptyAddressDetails
     }
 
     address?.apply {
       if (colonyOrVillage.isBlank()) {
-        errors += COLONY_OR_VILLAGE_EMPTY
+        errors += ColonyOrVillageEmpty
       }
       if (district.isBlank()) {
-        errors += DISTRICT_EMPTY
+        errors += DistrictEmpty
       }
       if (state.isBlank()) {
-        errors += STATE_EMPTY
+        errors += StateEmpty
       }
     }
 
@@ -184,12 +184,12 @@ data class OngoingNewPatientEntry(
       ageValidator: UserInputAgeValidator
   ): List<PatientEntryValidationError> {
     return when (dobValidator.validate(dateOfBirth)) {
-      InvalidPattern -> listOf(INVALID_DATE_OF_BIRTH)
-      DateIsInFuture -> listOf(DATE_OF_BIRTH_IN_FUTURE)
+      InvalidPattern -> listOf(InvalidDateOfBirth)
+      DateIsInFuture -> listOf(DateOfBirthInFuture)
       is Valid -> {
         when (ageValidator.validate(dateOfBirth)){
-          ExceedsMaxAgeLimit -> listOf(DOB_EXCEEDS_MAX_LIMIT)
-          ExceedsMinAgeLimit -> listOf(DOB_EXCEEDS_MIN_LIMIT)
+          ExceedsMaxAgeLimit -> listOf(DobExceedsMaxLimit)
+          ExceedsMinAgeLimit -> listOf(DobExceedsMinLimit)
           else -> emptyList()
         }
       }

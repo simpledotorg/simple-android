@@ -17,16 +17,16 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
-import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_IN_FUTURE
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_PARSE_ERROR
-import org.simple.clinic.editpatient.EditPatientValidationError.DISTRICT_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
-import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
+import org.simple.clinic.editpatient.EditPatientValidationError.BothDateOfBirthAndAgeAdsent
+import org.simple.clinic.editpatient.EditPatientValidationError.ColonyOrVillageEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthInFuture
+import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParseError
+import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
+import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -94,7 +94,7 @@ class EditPatientScreenSaveTest {
     uiEvents.onNext(NameChanged(""))
     uiEvents.onNext(SaveClicked)
 
-    verify(ui).showValidationErrors(setOf(FULL_NAME_EMPTY))
+    verify(ui).showValidationErrors(setOf(FullNameEmpty))
   }
 
   @Test
@@ -117,7 +117,7 @@ class EditPatientScreenSaveTest {
     uiEvents.onNext(ColonyOrVillageChanged(""))
     uiEvents.onNext(SaveClicked)
 
-    verify(ui).showValidationErrors(setOf(COLONY_OR_VILLAGE_EMPTY))
+    verify(ui).showValidationErrors(setOf(ColonyOrVillageEmpty))
   }
 
   @Test
@@ -141,7 +141,7 @@ class EditPatientScreenSaveTest {
     uiEvents.onNext(DistrictChanged(""))
     uiEvents.onNext(SaveClicked)
 
-    verify(ui).showValidationErrors(setOf(DISTRICT_EMPTY))
+    verify(ui).showValidationErrors(setOf(DistrictEmpty))
   }
 
   @Test
@@ -165,7 +165,7 @@ class EditPatientScreenSaveTest {
     uiEvents.onNext(StateChanged(""))
     uiEvents.onNext(SaveClicked)
 
-    verify(ui).showValidationErrors(setOf(STATE_EMPTY))
+    verify(ui).showValidationErrors(setOf(StateEmpty))
   }
 
   @Test
@@ -187,7 +187,7 @@ class EditPatientScreenSaveTest {
     uiEvents.onNext(AgeChanged(""))
     uiEvents.onNext(SaveClicked)
 
-    verify(ui).showValidationErrors(setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT))
+    verify(ui).showValidationErrors(setOf(BothDateOfBirthAndAgeAdsent))
   }
 
   @Test
@@ -218,8 +218,8 @@ class EditPatientScreenSaveTest {
   @Suppress("Unused")
   private fun `params for date of birth should be validated`(): List<DateOfBirthTestParams> {
     return listOf(
-        DateOfBirthTestParams("20/40-80", InvalidPattern, DATE_OF_BIRTH_PARSE_ERROR),
-        DateOfBirthTestParams("01/01/$nextYear", DateIsInFuture, DATE_OF_BIRTH_IN_FUTURE)
+        DateOfBirthTestParams("20/40-80", InvalidPattern, DateOfBirthParseError),
+        DateOfBirthTestParams("01/01/$nextYear", DateIsInFuture, DateOfBirthInFuture)
     )
   }
 
@@ -715,7 +715,7 @@ class EditPatientScreenSaveTest {
             "",
             "1",
             null,
-            setOf(FULL_NAME_EMPTY, PHONE_NUMBER_EMPTY, COLONY_OR_VILLAGE_EMPTY, DISTRICT_EMPTY, STATE_EMPTY),
+            setOf(FullNameEmpty, PhoneNumberEmpty, ColonyOrVillageEmpty, DistrictEmpty, StateEmpty),
             ""
         ),
         ValidateFieldsTestParams(
@@ -726,7 +726,7 @@ class EditPatientScreenSaveTest {
             "",
             "",
             null,
-            setOf(FULL_NAME_EMPTY, COLONY_OR_VILLAGE_EMPTY, DISTRICT_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
+            setOf(FullNameEmpty, ColonyOrVillageEmpty, DistrictEmpty, StateEmpty, BothDateOfBirthAndAgeAdsent),
             enteredPhoneNumber = "1234567890"
         ),
         ValidateFieldsTestParams(
@@ -737,7 +737,7 @@ class EditPatientScreenSaveTest {
             "",
             "1",
             null,
-            setOf(FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, DISTRICT_EMPTY, STATE_EMPTY),
+            setOf(FullNameEmpty, PhoneNumberLengthTooShort(6), DistrictEmpty, StateEmpty),
             enteredPhoneNumber = "1234"
         ),
         ValidateFieldsTestParams(
@@ -748,7 +748,7 @@ class EditPatientScreenSaveTest {
             "",
             "",
             null,
-            setOf(FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, DISTRICT_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
+            setOf(FullNameEmpty, PhoneNumberLengthTooShort(6), DistrictEmpty, StateEmpty, BothDateOfBirthAndAgeAdsent),
             enteredPhoneNumber = "1234"
         ),
         ValidateFieldsTestParams(
@@ -759,7 +759,7 @@ class EditPatientScreenSaveTest {
             "",
             "1",
             null,
-            setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY),
+            setOf(PhoneNumberLengthTooLong(12), ColonyOrVillageEmpty, StateEmpty),
             "12345678901234"
         ),
         ValidateFieldsTestParams(
@@ -770,7 +770,7 @@ class EditPatientScreenSaveTest {
             "",
             null,
             "24/24/2000",
-            setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY, DATE_OF_BIRTH_PARSE_ERROR),
+            setOf(PhoneNumberLengthTooLong(12), ColonyOrVillageEmpty, StateEmpty, DateOfBirthParseError),
             "12345678901234"
         ),
         ValidateFieldsTestParams(
@@ -781,7 +781,7 @@ class EditPatientScreenSaveTest {
             "",
             null,
             null,
-            setOf(FULL_NAME_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
+            setOf(FullNameEmpty, StateEmpty, BothDateOfBirthAndAgeAdsent),
             "1234567890"
         ),
         ValidateFieldsTestParams(
@@ -792,7 +792,7 @@ class EditPatientScreenSaveTest {
             "",
             null,
             "01/01/$nextYear",
-            setOf(FULL_NAME_EMPTY, STATE_EMPTY, DATE_OF_BIRTH_IN_FUTURE),
+            setOf(FullNameEmpty, StateEmpty, DateOfBirthInFuture),
             "1234567890"
         ),
         ValidateFieldsTestParams(
@@ -803,7 +803,7 @@ class EditPatientScreenSaveTest {
             "State",
             "",
             null,
-            setOf(FULL_NAME_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
+            setOf(FullNameEmpty, BothDateOfBirthAndAgeAdsent),
             "12334567890"
         ),
         ValidateFieldsTestParams(
@@ -879,11 +879,11 @@ class EditPatientScreenSaveTest {
   @Suppress("Unused")
   private fun `params for validating phone numbers`(): List<ValidatePhoneNumberTestParams> {
     return listOf(
-        ValidatePhoneNumberTestParams(null, "1234", PHONE_NUMBER_LENGTH_TOO_SHORT),
-        ValidatePhoneNumberTestParams(null, "12345678901234", PHONE_NUMBER_LENGTH_TOO_LONG),
-        ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "12345678901234", PHONE_NUMBER_LENGTH_TOO_LONG),
-        ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "", PHONE_NUMBER_EMPTY),
-        ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "1234", PHONE_NUMBER_LENGTH_TOO_SHORT)
+        ValidatePhoneNumberTestParams(null, "1234", PhoneNumberLengthTooShort(6)),
+        ValidatePhoneNumberTestParams(null, "12345678901234", PhoneNumberLengthTooLong(12)),
+        ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "12345678901234", PhoneNumberLengthTooLong(12)),
+        ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "", PhoneNumberEmpty),
+        ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "1234", PhoneNumberLengthTooShort(6))
     )
   }
 

@@ -83,8 +83,8 @@
   <string name="patiententry_error_both_dateofbirth_and_age_empty">Enter patient’s age</string>
   <string name="patiententry_error_invalid_dateofbirth">Enter patient’s date of birth in DD/MM/YYYY</string>
   <string name="patiententry_error_dateofbirth_is_in_future">Fix patient’s date of birth</string>
-  <string name="patiententry_error_phonenumber_length_less">Phone number cannot be less than 6 digits</string>
-  <string name="patiententry_error_phonenumber_length_more">Phone number cannot be more than 12 digits</string>
+  <string name="patiententry_error_phonenumber_length_less">Phone number cannot be less than %1$s digits</string>
+  <string name="patiententry_error_phonenumber_length_more">Phone number cannot be more than %1$s digits</string>
   <string name="patiententry_identifier">BP Passport</string>
   <string name="patiententry_consent_header">Consent:\u0020</string>
   <string name="patiententry_consent_first_para">By tapping below, you confirm that any patient data you enter here has been obtained under appropriate informed consent. This means that the patient or legal guardian knows that you are entering their personal data into the app, understands what data is being collected, and knows that they may be contacted via SMS, WhatsApp, or other methods using the phone number provided in the app.</string>

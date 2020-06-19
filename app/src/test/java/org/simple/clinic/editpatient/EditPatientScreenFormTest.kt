@@ -18,16 +18,16 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
-import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_IN_FUTURE
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_PARSE_ERROR
-import org.simple.clinic.editpatient.EditPatientValidationError.DISTRICT_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
-import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
+import org.simple.clinic.editpatient.EditPatientValidationError.BothDateOfBirthAndAgeAdsent
+import org.simple.clinic.editpatient.EditPatientValidationError.ColonyOrVillageEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthInFuture
+import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParseError
+import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
+import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
@@ -102,18 +102,18 @@ class EditPatientScreenFormTest {
   @Suppress("Unused")
   private fun `params for hiding errors on text changes`(): List<HidingErrorsOnTextChangeParams> {
     return listOf(
-        HidingErrorsOnTextChangeParams(NameChanged(""), setOf(FULL_NAME_EMPTY)),
-        HidingErrorsOnTextChangeParams(NameChanged("Name"), setOf(FULL_NAME_EMPTY)),
-        HidingErrorsOnTextChangeParams(PhoneNumberChanged(""), setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_LONG)),
-        HidingErrorsOnTextChangeParams(PhoneNumberChanged("12345"), setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_LONG)),
-        HidingErrorsOnTextChangeParams(ColonyOrVillageChanged(""), setOf(COLONY_OR_VILLAGE_EMPTY)),
-        HidingErrorsOnTextChangeParams(ColonyOrVillageChanged("Colony"), setOf(COLONY_OR_VILLAGE_EMPTY)),
-        HidingErrorsOnTextChangeParams(StateChanged(""), setOf(STATE_EMPTY)),
-        HidingErrorsOnTextChangeParams(StateChanged("State"), setOf(STATE_EMPTY)),
-        HidingErrorsOnTextChangeParams(DistrictChanged(""), setOf(DISTRICT_EMPTY)),
-        HidingErrorsOnTextChangeParams(DistrictChanged("District"), setOf(DISTRICT_EMPTY)),
-        HidingErrorsOnTextChangeParams(AgeChanged("1"), setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT)),
-        HidingErrorsOnTextChangeParams(DateOfBirthChanged("20/02/1990"), setOf(DATE_OF_BIRTH_IN_FUTURE, DATE_OF_BIRTH_PARSE_ERROR)),
+        HidingErrorsOnTextChangeParams(NameChanged(""), setOf(FullNameEmpty)),
+        HidingErrorsOnTextChangeParams(NameChanged("Name"), setOf(FullNameEmpty)),
+        HidingErrorsOnTextChangeParams(PhoneNumberChanged(""), setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0), PhoneNumberLengthTooLong(0))),
+        HidingErrorsOnTextChangeParams(PhoneNumberChanged("12345"), setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0), PhoneNumberLengthTooLong(0))),
+        HidingErrorsOnTextChangeParams(ColonyOrVillageChanged(""), setOf(ColonyOrVillageEmpty)),
+        HidingErrorsOnTextChangeParams(ColonyOrVillageChanged("Colony"), setOf(ColonyOrVillageEmpty)),
+        HidingErrorsOnTextChangeParams(StateChanged(""), setOf(StateEmpty)),
+        HidingErrorsOnTextChangeParams(StateChanged("State"), setOf(StateEmpty)),
+        HidingErrorsOnTextChangeParams(DistrictChanged(""), setOf(DistrictEmpty)),
+        HidingErrorsOnTextChangeParams(DistrictChanged("District"), setOf(DistrictEmpty)),
+        HidingErrorsOnTextChangeParams(AgeChanged("1"), setOf(BothDateOfBirthAndAgeAdsent)),
+        HidingErrorsOnTextChangeParams(DateOfBirthChanged("20/02/1990"), setOf(DateOfBirthInFuture, DateOfBirthParseError)),
         HidingErrorsOnTextChangeParams(GenderChanged(Transgender), emptySet())
     )
   }

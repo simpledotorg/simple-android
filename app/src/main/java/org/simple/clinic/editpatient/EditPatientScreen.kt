@@ -23,20 +23,20 @@ import kotlinx.android.synthetic.main.patient_edit_bp_passport_view.view.*
 import kotlinx.android.synthetic.main.screen_edit_patient.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.editpatient.EditPatientValidationError.AGE_EXCEEDS_MAX_LIMIT
-import org.simple.clinic.editpatient.EditPatientValidationError.AGE_EXCEEDS_MIN_LIMIT
-import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_IN_FUTURE
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_PARSE_ERROR
-import org.simple.clinic.editpatient.EditPatientValidationError.DISTRICT_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
-import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
+import org.simple.clinic.editpatient.EditPatientValidationError.AgeExceedsMaxLimit
+import org.simple.clinic.editpatient.EditPatientValidationError.AgeExceedsMinLimit
+import org.simple.clinic.editpatient.EditPatientValidationError.BothDateOfBirthAndAgeAdsent
+import org.simple.clinic.editpatient.EditPatientValidationError.ColonyOrVillageEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthExceedsMaxLimit
+import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthExceedsMinLimit
+import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthInFuture
+import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParseError
+import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
+import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenKey
 import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Features
@@ -374,20 +374,22 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   override fun showValidationErrors(errors: Set<EditPatientValidationError>) {
     errors.forEach {
       when (it) {
-        FULL_NAME_EMPTY -> showEmptyFullNameError(true)
-        PHONE_NUMBER_EMPTY,
-        PHONE_NUMBER_LENGTH_TOO_SHORT -> showLengthTooShortPhoneNumberError()
-        PHONE_NUMBER_LENGTH_TOO_LONG -> showLengthTooLongPhoneNumberError()
-        COLONY_OR_VILLAGE_EMPTY -> showEmptyColonyOrVillageError(true)
-        DISTRICT_EMPTY -> showEmptyDistrictError(true)
-        STATE_EMPTY -> showEmptyStateError(true)
-        BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> showAgeEmptyError(true)
-        DATE_OF_BIRTH_PARSE_ERROR -> showInvalidaDateOfBithError()
-        DATE_OF_BIRTH_IN_FUTURE -> showDateOfBirthIsInFutureError()
-        AGE_EXCEEDS_MAX_LIMIT -> showAgeExceedsMaxLimitError()
-        DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT -> showDateOfBirthExceedsMaxLimitError()
-        AGE_EXCEEDS_MIN_LIMIT -> showAgeExceedsMinLimitError()
-        DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT -> showDateOfBirthExceedsMinLimitError()
+        FullNameEmpty -> showEmptyFullNameError(true)
+        is PhoneNumberLengthTooShort -> showLengthTooShortPhoneNumberError(it.minimumAllowedNumberLength)
+        is PhoneNumberLengthTooLong -> showLengthTooLongPhoneNumberError(it.maximumAllowedNumberLength)
+        ColonyOrVillageEmpty -> showEmptyColonyOrVillageError(true)
+        DistrictEmpty -> showEmptyDistrictError(true)
+        StateEmpty -> showEmptyStateError(true)
+        BothDateOfBirthAndAgeAdsent -> showAgeEmptyError(true)
+        DateOfBirthParseError -> showInvalidaDateOfBithError()
+        DateOfBirthInFuture -> showDateOfBirthIsInFutureError()
+        AgeExceedsMaxLimit -> showAgeExceedsMaxLimitError()
+        DateOfBirthExceedsMaxLimit -> showDateOfBirthExceedsMaxLimitError()
+        AgeExceedsMinLimit -> showAgeExceedsMinLimitError()
+        DateOfBirthExceedsMinLimit -> showDateOfBirthExceedsMinLimitError()
+        PhoneNumberEmpty -> {
+          throw AssertionError("Should  never receive this error: $it")
+        }
       }.exhaustive()
     }
   }
@@ -395,38 +397,38 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   override fun hideValidationErrors(errors: Set<EditPatientValidationError>) {
     errors.forEach {
       when (it) {
-        FULL_NAME_EMPTY -> {
+        FullNameEmpty -> {
           showEmptyFullNameError(false)
         }
 
-        PHONE_NUMBER_EMPTY,
-        PHONE_NUMBER_LENGTH_TOO_SHORT,
-        PHONE_NUMBER_LENGTH_TOO_LONG -> {
+        PhoneNumberEmpty,
+        is PhoneNumberLengthTooShort,
+        is PhoneNumberLengthTooLong -> {
           hidePhoneNumberError()
         }
 
-        COLONY_OR_VILLAGE_EMPTY -> {
+        ColonyOrVillageEmpty -> {
           showEmptyColonyOrVillageError(false)
         }
 
-        DISTRICT_EMPTY -> {
+        DistrictEmpty -> {
           showEmptyDistrictError(false)
         }
 
-        STATE_EMPTY -> {
+        StateEmpty -> {
           showEmptyStateError(false)
         }
 
-        BOTH_DATEOFBIRTH_AND_AGE_ABSENT,
-        AGE_EXCEEDS_MAX_LIMIT,
-        AGE_EXCEEDS_MIN_LIMIT -> {
+        BothDateOfBirthAndAgeAdsent,
+        AgeExceedsMaxLimit,
+        AgeExceedsMinLimit -> {
           showAgeEmptyError(false)
         }
 
-        DATE_OF_BIRTH_PARSE_ERROR,
-        DATE_OF_BIRTH_IN_FUTURE,
-        DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT,
-        DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT -> {
+        DateOfBirthParseError,
+        DateOfBirthInFuture,
+        DateOfBirthExceedsMaxLimit,
+        DateOfBirthExceedsMinLimit -> {
           hideDateOfBirthError()
         }
       }.exhaustive()
@@ -468,12 +470,12 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
   }
 
-  private fun showLengthTooShortPhoneNumberError() {
-    phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_length_less)
+  private fun showLengthTooShortPhoneNumberError(requiredNumberLength: Int) {
+    phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_length_less, requiredNumberLength.toString())
   }
 
-  private fun showLengthTooLongPhoneNumberError() {
-    phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_length_more)
+  private fun showLengthTooLongPhoneNumberError(requiredNumberLength: Int) {
+    phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_length_more, requiredNumberLength.toString())
   }
 
   private fun showInvalidaDateOfBithError() {

@@ -2,20 +2,20 @@ package org.simple.clinic.editpatient
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.editpatient.EditPatientValidationError.AGE_EXCEEDS_MAX_LIMIT
-import org.simple.clinic.editpatient.EditPatientValidationError.AGE_EXCEEDS_MIN_LIMIT
-import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_IN_FUTURE
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_PARSE_ERROR
-import org.simple.clinic.editpatient.EditPatientValidationError.DISTRICT_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
-import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
+import org.simple.clinic.editpatient.EditPatientValidationError.AgeExceedsMaxLimit
+import org.simple.clinic.editpatient.EditPatientValidationError.AgeExceedsMinLimit
+import org.simple.clinic.editpatient.EditPatientValidationError.BothDateOfBirthAndAgeAdsent
+import org.simple.clinic.editpatient.EditPatientValidationError.ColonyOrVillageEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthExceedsMaxLimit
+import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthExceedsMinLimit
+import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthInFuture
+import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParseError
+import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
+import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
+import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.patient.Age
@@ -31,7 +31,6 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTo
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
 import org.simple.clinic.util.valueOrEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.*
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAgeLimit
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMinAgeLimit
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -171,28 +170,28 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
   }
 
   private fun nameCheck(): ValidationCheck =
-      { if (name.isBlank()) FULL_NAME_EMPTY else null }
+      { if (name.isBlank()) FullNameEmpty else null }
 
   private fun phoneNumberCheck(
       alreadySavedNumber: PatientPhoneNumber?,
       numberValidator: PhoneNumberValidator
   ): ValidationCheck = {
-    when (numberValidator.validate(phoneNumber, Type.LANDLINE_OR_MOBILE)) {
-      is LengthTooShort -> PHONE_NUMBER_LENGTH_TOO_SHORT
-      is LengthTooLong -> PHONE_NUMBER_LENGTH_TOO_LONG
-      is Blank -> if (alreadySavedNumber != null) PHONE_NUMBER_EMPTY else null
+    when (val error = numberValidator.validate(phoneNumber, Type.LANDLINE_OR_MOBILE)) {
+      is LengthTooShort -> PhoneNumberLengthTooShort(error.minimumAllowedNumberLength)
+      is LengthTooLong -> PhoneNumberLengthTooLong(error.maximumRequiredNumberLength)
+      is Blank -> if (alreadySavedNumber != null) PhoneNumberEmpty else null
       is PhoneNumberValidator.Result.ValidNumber -> null
     }
   }
 
   private fun colonyOrVillageCheck(): ValidationCheck =
-      { if (colonyOrVillage.isBlank()) COLONY_OR_VILLAGE_EMPTY else null }
+      { if (colonyOrVillage.isBlank()) ColonyOrVillageEmpty else null }
 
   private fun stateCheck(): ValidationCheck =
-      { if (state.isBlank()) STATE_EMPTY else null }
+      { if (state.isBlank()) StateEmpty else null }
 
   private fun districtCheck(): ValidationCheck =
-      { if (district.isBlank()) DISTRICT_EMPTY else null }
+      { if (district.isBlank()) DistrictEmpty else null }
 
   private fun ageOrDateOfBirthCheck(
       dobValidator: UserInputDateValidator,
@@ -212,11 +211,11 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     val dateOfBirth = ageOrDateOfBirth.dateOfBirth
 
     return when (dobValidator.validate(dateOfBirth)) {
-      InvalidPattern -> DATE_OF_BIRTH_PARSE_ERROR
-      DateIsInFuture -> DATE_OF_BIRTH_IN_FUTURE
+      InvalidPattern -> DateOfBirthParseError
+      DateIsInFuture -> DateOfBirthInFuture
       is UserInputDateValidator.Result.Valid -> when (ageValidator.validate(dateOfBirth)) {
-        ExceedsMaxAgeLimit -> DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT
-        ExceedsMinAgeLimit -> DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT
+        ExceedsMaxAgeLimit -> DateOfBirthExceedsMaxLimit
+        ExceedsMinAgeLimit -> DateOfBirthExceedsMinLimit
         else -> null
       }
     }
@@ -229,10 +228,10 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     val age = ageOrDateOfBirth.age
 
     return when {
-      age.isBlank() -> BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+      age.isBlank() -> BothDateOfBirthAndAgeAdsent
       else -> when (ageValidator.validate(age.toInt())) {
-        ExceedsMaxAgeLimit -> AGE_EXCEEDS_MAX_LIMIT
-        ExceedsMinAgeLimit -> AGE_EXCEEDS_MIN_LIMIT
+        ExceedsMaxAgeLimit -> AgeExceedsMaxLimit
+        ExceedsMinAgeLimit -> AgeExceedsMinLimit
         else -> null
       }
     }

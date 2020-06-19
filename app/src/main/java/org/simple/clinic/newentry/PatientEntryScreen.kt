@@ -432,17 +432,17 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
   }
 
-  override fun showLengthTooShortPhoneNumberError(show: Boolean) {
+  override fun showLengthTooShortPhoneNumberError(show: Boolean, requiredNumberLength: Int) {
     if (show) {
-      phoneNumberInputLayout.error = context.getString(R.string.patiententry_error_phonenumber_length_less)
+      phoneNumberInputLayout.error = context.getString(R.string.patiententry_error_phonenumber_length_less, requiredNumberLength.toString())
     } else {
       phoneNumberInputLayout.error = null
     }
   }
 
-  override fun showLengthTooLongPhoneNumberError(show: Boolean) {
+  override fun showLengthTooLongPhoneNumberError(show: Boolean, requiredNumberLength: Int) {
     if (show) {
-      phoneNumberInputLayout.error = context.getString(R.string.patiententry_error_phonenumber_length_more)
+      phoneNumberInputLayout.error = context.getString(R.string.patiententry_error_phonenumber_length_more, requiredNumberLength.toString())
     } else {
       phoneNumberInputLayout.error = null
     }

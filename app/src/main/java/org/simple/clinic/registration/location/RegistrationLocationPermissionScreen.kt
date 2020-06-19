@@ -1,6 +1,7 @@
 package org.simple.clinic.registration.location
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding3.view.clicks
@@ -11,6 +12,7 @@ import kotlinx.android.synthetic.main.screen_registration_location_permission.vi
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreenKey
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
@@ -36,6 +38,9 @@ class RegistrationLocationPermissionScreen(
   @Inject
   lateinit var runtimePermissions: RuntimePermissions
 
+  @Inject
+  lateinit var effectHandlerFactory: RegistrationLocationPermissionEffectHandler.Factory
+
   private val events by unsafeLazy {
     val permissionResults = screenRouter
         .streamScreenResults()
@@ -45,6 +50,19 @@ class RegistrationLocationPermissionScreen(
         .compose(RequestPermissions<UiEvent>(runtimePermissions, permissionResults))
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = RegistrationLocationPermissionUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = RegistrationLocationPermissionModel.create(),
+        update = RegistrationLocationPermissionUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = RegistrationLocationPermissionInit(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   override fun onFinishInflate() {
@@ -72,6 +90,24 @@ class RegistrationLocationPermissionScreen(
     // Can't tell why, but the keyboard stays
     // visible on coming from the previous screen.
     hideKeyboard()
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun allowLocationClicks(): Observable<UiEvent> = allowAccessButton.clicks().map { RequestLocationPermission() }

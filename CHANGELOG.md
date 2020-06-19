@@ -5,13 +5,13 @@
 - New Onboarding UI
 - Show new registration label for recent patients in home screen
 - Redesigned patient card in search results
-- [In Progress: 16 Jun 2020] Redesigned patient card in recent patients screen
+- Redesigned patient card in recent patients screen
 - New illustrations for location permission screen, overdue screen, reports screen
 
 ### Internal
 - Migrated `RecentPatientItemType` to use `ItemAdapter`
 - Moved storage of cached webviews (Progress, Help) to an implementation backed by the local database instead of files
-- [In Progress: 17 Jun 2020] Migrate `RegistrationFullNameScreen` to Mobius
+- [In Progress: 19 Jun 2020] Migrate `RegistrationFullNameScreen` to Mobius
 
 ### Fixes
 - Fixed retrying on a failed teleconsultation fetch when in airplane mode

@@ -12,6 +12,7 @@
 - Show overdue appointment count badge in overdue tab
 - Changed normal call buttons in the app from green to blue
 - Updated translations: `bn_BD`, `kn_IN`, `mr_IN`, `am_ET`
+- Ethiopia phone number validation
 
 ### Internal
 - Migrated `RecentPatientItemType` to use `ItemAdapter`

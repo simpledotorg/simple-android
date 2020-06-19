@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -19,20 +18,18 @@ import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 
-class RegistrationLocationPermissionScreenControllerTest {
+class RegistrationLocationPermissionScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val uiEvents = PublishSubject.create<UiEvent>()!!
+  private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<RegistrationLocationPermissionUi>()
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<RegistrationLocationPermissionModel, RegistrationLocationPermissionEvent, RegistrationLocationPermissionEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -59,12 +56,6 @@ class RegistrationLocationPermissionScreenControllerTest {
   }
 
   private fun setupController() {
-    val controller = RegistrationLocationPermissionScreenController()
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
     val uiRenderer = RegistrationLocationPermissionUiRenderer(ui)
     val effectHandler = RegistrationLocationPermissionEffectHandler(TrampolineSchedulersProvider(), ui)
 

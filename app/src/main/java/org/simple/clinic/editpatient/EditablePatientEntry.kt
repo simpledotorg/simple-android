@@ -25,19 +25,18 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
 import org.simple.clinic.util.valueOrEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.*
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAgeLimit
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMinAgeLimit
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
@@ -179,10 +178,10 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
       numberValidator: PhoneNumberValidator
   ): ValidationCheck = {
     when (numberValidator.validate(phoneNumber, Type.LANDLINE_OR_MOBILE)) {
-      LENGTH_TOO_SHORT -> PHONE_NUMBER_LENGTH_TOO_SHORT
-      LENGTH_TOO_LONG -> PHONE_NUMBER_LENGTH_TOO_LONG
-      BLANK -> if (alreadySavedNumber != null) PHONE_NUMBER_EMPTY else null
-      VALID -> null
+      is LengthTooShort -> PHONE_NUMBER_LENGTH_TOO_SHORT
+      is LengthTooLong -> PHONE_NUMBER_LENGTH_TOO_LONG
+      is Blank -> if (alreadySavedNumber != null) PHONE_NUMBER_EMPTY else null
+      is PhoneNumberValidator.Result.ValidNumber -> null
     }
   }
 
@@ -215,7 +214,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     return when (dobValidator.validate(dateOfBirth)) {
       InvalidPattern -> DATE_OF_BIRTH_PARSE_ERROR
       DateIsInFuture -> DATE_OF_BIRTH_IN_FUTURE
-      is Valid -> when (ageValidator.validate(dateOfBirth)) {
+      is UserInputDateValidator.Result.Valid -> when (ageValidator.validate(dateOfBirth)) {
         ExceedsMaxAgeLimit -> DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT
         ExceedsMinAgeLimit -> DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT
         else -> null

@@ -5,7 +5,6 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -16,7 +15,6 @@ class RegistrationLocationPermissionScreenController @Inject constructor() : Obs
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(ReportAnalyticsEvents())
         .replay()
 
     return handlePermissionGrants(replayedEvents)

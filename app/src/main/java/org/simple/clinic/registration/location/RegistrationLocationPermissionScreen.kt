@@ -8,12 +8,15 @@ import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_location_permission.view.*
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreenKey
+import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -33,6 +36,17 @@ class RegistrationLocationPermissionScreen(
   @Inject
   lateinit var runtimePermissions: RuntimePermissions
 
+  private val events by unsafeLazy {
+    val permissionResults = screenRouter
+        .streamScreenResults()
+        .ofType<ActivityPermissionResult>()
+
+    allowLocationClicks()
+        .compose(RequestPermissions<UiEvent>(runtimePermissions, permissionResults))
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -42,7 +56,7 @@ class RegistrationLocationPermissionScreen(
 
     bindUiToController(
         ui = this,
-        events = allowLocationClicks().compose(RequestPermissions(runtimePermissions, screenRouter.streamScreenResults().ofType())),
+        events = events,
         controller = controller,
         screenDestroys = detaches().map { ScreenDestroyed() }
     )

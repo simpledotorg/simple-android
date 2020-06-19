@@ -76,8 +76,8 @@
   <string name="patiententry_error_both_dateofbirth_and_age_empty">Umrii dhukkubsataa galchi</string>
   <string name="patiententry_error_invalid_dateofbirth">Guyyaa dhalootaa dhukkubsataa galchi akka GG/JJ/WWWW tti</string>
   <string name="patiententry_error_dateofbirth_is_in_future">Guyyaa dhaloota dhukkubsataa sirreessi</string>
-  <string name="patiententry_error_phonenumber_length_less">Lakkoofsi bilbilaa dijitii 6 gadi ta’uu hin danda’u</string>
-  <string name="patiententry_error_phonenumber_length_more">Lakkoofsi bilbilaa dijitii 12 ol ta’uu hin danda’u</string>
+  <string name="patiententry_error_phonenumber_length_less">Lakkoofsi bilbilaa dijitii %1$s gadi ta’uu hin danda’u</string>
+  <string name="patiententry_error_phonenumber_length_more">Lakkoofsi bilbilaa dijitii %1$s ol ta’uu hin danda’u</string>
   <string name="patiententry_identifier">Paaspoortii BP</string>
   <string name="patiententry_consent_header">Hayyama:\u0020</string>
   <string name="patiententry_consent_first_para">Kan armaan gadii kana tuquudhaan, ati ragaan dhukkuubsataa ati galchite kamiyyuu hayyama hubatamaa jalatti kan funaaname ta’uu mirkaneessita. Kana jechuun dhukkubsataan yookan eegduun seera qabeessi ati ragaalee kanniin akka apppiitti galchaa jirtu ni beeku jechuudha, ragaan maalii akka sassaabbamu, fii tarii karaa SMS, WhatsApp, yookan maloota biraa lakkoofsa bilbilaa appicha keessatti kenname fayyadamanii qunammamuu akka danda’an beeku.</string>

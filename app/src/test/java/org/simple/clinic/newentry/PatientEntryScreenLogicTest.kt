@@ -363,6 +363,10 @@ class PatientEntryScreenLogicTest {
       onNext(SaveClicked)
     }
 
+    // These get invoked every time the phone number changes
+    verify(validationActions, times(3)).showLengthTooLongPhoneNumberError(false, 0)
+    verify(validationActions, times(3)).showLengthTooShortPhoneNumberError(false, 0)
+
     verify(validationActions, atLeastOnce()).showEmptyFullNameError(true)
     verify(validationActions, atLeastOnce()).showEmptyDateOfBirthAndAgeError(true)
     verify(validationActions, atLeastOnce()).showInvalidDateOfBirthError(true)
@@ -370,8 +374,8 @@ class PatientEntryScreenLogicTest {
     verify(validationActions, atLeastOnce()).showEmptyColonyOrVillageError(true)
     verify(validationActions, atLeastOnce()).showEmptyDistrictError(true)
     verify(validationActions, atLeastOnce()).showEmptyStateError(true)
-    verify(validationActions, atLeastOnce()).showLengthTooShortPhoneNumberError(true)
-    verify(validationActions, atLeastOnce()).showLengthTooLongPhoneNumberError(true)
+    verify(validationActions, atLeastOnce()).showLengthTooShortPhoneNumberError(true, 6)
+    verify(validationActions, atLeastOnce()).showLengthTooLongPhoneNumberError(true, 12)
   }
 
   @Test

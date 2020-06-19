@@ -105,6 +105,6 @@ class OngoingNewPatientEntryTest {
     val validationErrors = entry.validationErrors(mockDobValidator, mockNumValidator, mockAgeValidator)
 
     assertThat(validationErrors).hasSize(1)
-    assertThat(validationErrors).contains(PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE)
+    assertThat(validationErrors).contains(PatientEntryValidationError.DateOfBirthInFuture)
   }
 }

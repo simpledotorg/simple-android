@@ -78,8 +78,8 @@
   <string name="patiententry_error_both_dateofbirth_and_age_empty">रूग्णाचे वय प्रविष्‍ट करा</string>
   <string name="patiententry_error_invalid_dateofbirth">रूग्णाची जन्‍मतारीख DD/MM/YYYY मध्‍ये प्रविष्‍ट करा</string>
   <string name="patiententry_error_dateofbirth_is_in_future">रूग्णाची जन्‍मतारीख निश्चित करा</string>
-  <string name="patiententry_error_phonenumber_length_less">फोन नंबर 6 अंकांहून लहान असू शकत नाही</string>
-  <string name="patiententry_error_phonenumber_length_more">फोन नंबर 12 अंकांहून मोठा असू शकत नाही</string>
+  <string name="patiententry_error_phonenumber_length_less">फोन नंबर %1$s अंकांहून लहान असू शकत नाही</string>
+  <string name="patiententry_error_phonenumber_length_more">फोन नंबर %1$s अंकांहून मोठा असू शकत नाही</string>
   <string name="patiententry_identifier">बीपी पासपोर्ट</string>
   <string name="patiententry_consent_header">संमती:\u0020</string>
   <string name="patiententry_consent_first_para">खाली टॅप करून, तुम्‍ही पुष्‍टी करता की तुम्‍ही प्रविष्‍ट केलेला कोणताही रूग्ण डेटा उचित माहिती संमतीतंर्गत मिळवण्यात आला आहे. याचाच अर्थ असा होतो की रूग्ण किंवा कायदेशीर गार्डियनला माहीत आहे की तुम्‍ही अॅपमध्‍ये त्‍यांच्‍या खाजगी डेटामध्‍ये प्रवेश करत आहात, कोणता डेटा गोळा केला आहे हे समजून घेण्‍यासाठी आणि ते SMS, WhatsApp किंवा अन्‍य पद्धतीने अॅपमध्‍ये प्रदान केलेला फोन नंबर वापरून संपर्कात आले असतील.</string>

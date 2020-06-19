@@ -9,7 +9,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = RegistrationLocationPermissionScreen
+typealias Ui = RegistrationLocationPermissionUi
 typealias UiChange = (Ui) -> Unit
 
 class RegistrationLocationPermissionScreenController @Inject constructor() : ObservableTransformer<UiEvent, UiChange> {

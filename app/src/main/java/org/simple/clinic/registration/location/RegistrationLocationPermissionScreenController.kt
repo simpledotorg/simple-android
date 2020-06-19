@@ -3,7 +3,6 @@ package org.simple.clinic.registration.location
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -17,13 +16,6 @@ class RegistrationLocationPermissionScreenController @Inject constructor() : Obs
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return handlePermissionGrants(replayedEvents)
-  }
-
-  private fun handlePermissionGrants(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RequestLocationPermission>()
-        .filter(RequestLocationPermission::isPermissionGranted)
-        .map { { ui: Ui -> ui.openFacilitySelectionScreen() } }
+    return Observable.never()
   }
 }

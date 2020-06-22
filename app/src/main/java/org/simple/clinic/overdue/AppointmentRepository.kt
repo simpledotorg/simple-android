@@ -129,6 +129,17 @@ class AppointmentRepository @Inject constructor(
     )
   }
 
+  fun overdueAppointmentsCount(
+      since: LocalDate,
+      facility: Facility
+  ): Observable<Int> {
+    return overdueDao.overdueAtFacilityCount(
+        facilityUuid = facility.uuid,
+        scheduledBefore = since,
+        scheduledAfter = since.minus(appointmentConfig.periodForIncludingOverdueAppointments)
+    ).map { it.size }
+  }
+
   fun lastCreatedAppointmentForPatient(patientUuid: UUID): Optional<Appointment> {
     return appointmentDao.lastCreatedAppointmentForPatient(patientUuid).toOptional()
   }

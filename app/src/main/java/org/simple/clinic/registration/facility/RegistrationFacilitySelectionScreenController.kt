@@ -37,7 +37,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
     private val facilitySync: FacilitySync,
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession,
-    private val configProvider: Single<RegistrationConfig>,
+    private val config: RegistrationConfig,
     private val listItemBuilder: FacilityListItemBuilder,
     private val screenLocationUpdates: ScreenLocationUpdates,
     private val utcClock: UtcClock
@@ -59,9 +59,9 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
 
   @SuppressLint("MissingPermission")
   private fun fetchLocation() = ObservableTransformer<UiEvent, UiEvent> { events ->
-    val locationUpdates = Observables
-        .combineLatest(events.ofType<ScreenCreated>(), configProvider.toObservable()) { _, config -> config }
-        .switchMap { config ->
+    val locationUpdates = events
+        .ofType<ScreenCreated>()
+        .switchMap {
           screenLocationUpdates.streamUserLocation(
               updateInterval = config.locationUpdateInterval,
               timeout = config.locationListenerExpiry,
@@ -124,8 +124,8 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .map { it.location }
 
     val filteredFacilityListItems = Observables
-        .combineLatest(searchQueryChanges, locationUpdates, configProvider.toObservable())
-        .switchMap { (query, locationUpdate, config) ->
+        .combineLatest(searchQueryChanges, locationUpdates)
+        .switchMap { (query, locationUpdate) ->
           val userLocation = when (locationUpdate) {
             is Available -> locationUpdate.location
             is Unavailable -> null

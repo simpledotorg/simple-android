@@ -312,7 +312,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
         facilitySync = facilitySync,
         facilityRepository = facilityRepository,
         userSession = userSession,
-        configProvider = Single.just(config),
+        config = config,
         listItemBuilder = listItemBuilder,
         screenLocationUpdates = screenLocationUpdates,
         utcClock = utcClock

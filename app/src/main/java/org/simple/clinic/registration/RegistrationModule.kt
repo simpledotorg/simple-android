@@ -2,7 +2,6 @@ package org.simple.clinic.registration
 
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Single
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.registration.phone.LengthBasedNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -13,12 +12,13 @@ import org.threeten.bp.Duration
 class RegistrationModule {
 
   @Provides
-  fun config(): Single<RegistrationConfig> {
-    return Single.just(RegistrationConfig(
+  fun config(): RegistrationConfig {
+    return RegistrationConfig(
         locationListenerExpiry = Duration.ofSeconds(5),
         locationUpdateInterval = Duration.ofSeconds(1),
         proximityThresholdForNearbyFacilities = Distance.ofKilometers(2.0),
-        staleLocationThreshold = Duration.ofMinutes(10)))
+        staleLocationThreshold = Duration.ofMinutes(10)
+    )
   }
 
   @Provides

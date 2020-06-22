@@ -20,7 +20,7 @@
 - Fixed retrying on a failed teleconsultation fetch when in airplane mode
 - Fixed showing diagnosis text in teleconsult message when diagnosis are unanswered
 
-## On Demo
+## 2020-06-22-7314
 ### Feature
 - User can soft delete patient
 - Add diagnosis and blood sugar readings to the teleconsultation message

@@ -11,7 +11,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
-import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -59,12 +58,12 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   private lateinit var controllerSubscription: Disposable
 
-  private val configTemplate = RegistrationConfig(
+  private val registrationConfig = RegistrationConfig(
       locationListenerExpiry = Duration.ofSeconds(0),
       locationUpdateInterval = Duration.ofSeconds(0),
       proximityThresholdForNearbyFacilities = Distance.ofKilometers(0.0),
-      staleLocationThreshold = Duration.ofSeconds(0))
-  private val configProvider = BehaviorSubject.createDefault(configTemplate)
+      staleLocationThreshold = Duration.ofSeconds(0)
+  )
 
   @After
   fun tearDown() {
@@ -87,17 +86,16 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `when screen is started, location should be fetched`() {
-    configProvider.onNext(configTemplate.copy(locationUpdateInterval = Duration.ofDays(5)))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.never())
     whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.never())
 
-    setupController()
+    setupController(registrationConfig.copy(locationUpdateInterval = Duration.ofDays(5)))
     uiEvents.onNext(ScreenCreated())
 
     verify(screenLocationUpdates).streamUserLocation(
         updateInterval = Duration.ofDays(5),
-        timeout = configTemplate.locationListenerExpiry,
-        discardOlderThan = configTemplate.staleLocationThreshold
+        timeout = registrationConfig.locationListenerExpiry,
+        discardOlderThan = registrationConfig.staleLocationThreshold
     )
   }
 
@@ -119,8 +117,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `when both facilities and location are fetched only then should facilities be shown`() {
-    configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
-
     val facilities = listOf(
         TestData.facility(name = "Facility 1"),
         TestData.facility(name = "Facility 2"))
@@ -144,8 +140,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `when facilities are fetched, but location is unavailable then facilities should still be shown`() {
-    configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
-
     val facilities = listOf(
         TestData.facility(name = "Facility 1"),
         TestData.facility(name = "Facility 2"))
@@ -254,7 +248,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
         facilities = facilities,
         searchQuery = searchQuery,
         userLocation = null,
-        proximityThreshold = configTemplate.proximityThresholdForNearbyFacilities)
+        proximityThreshold = registrationConfig.proximityThresholdForNearbyFacilities)
     verify(screen).updateFacilities(facilityListItems, FIRST_UPDATE)
     verify(screen).updateFacilities(facilityListItems, SUBSEQUENT_UPDATE)
   }
@@ -311,12 +305,14 @@ class RegistrationFacilitySelectionScreenControllerTest {
     inOrder.verify(screen).showToolbarWithSearchField()
   }
 
-  private fun setupController() {
+  private fun setupController(
+      config: RegistrationConfig = registrationConfig
+  ) {
     val controller = RegistrationFacilitySelectionScreenController(
         facilitySync = facilitySync,
         facilityRepository = facilityRepository,
         userSession = userSession,
-        configProvider = configProvider.firstOrError(),
+        configProvider = Single.just(config),
         listItemBuilder = listItemBuilder,
         screenLocationUpdates = screenLocationUpdates,
         utcClock = utcClock

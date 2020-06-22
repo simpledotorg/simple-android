@@ -97,7 +97,7 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
             removeAppointmentReasonSelections(),
             hotEvents
         )
-        .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, this, permissionResults))
+        .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, permissionResults))
         .compose(ReportAnalyticsEvents())
         .cast<ContactPatientEvent>()
 

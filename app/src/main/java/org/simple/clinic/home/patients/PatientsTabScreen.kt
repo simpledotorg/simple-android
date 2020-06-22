@@ -79,7 +79,7 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
             scanCardIdButtonClicks(),
             simpleVideoClicked()
         )
-        .compose<UiEvent>(RequestPermissions(runtimePermissions, activity, screenRouter.streamScreenResults().ofType()))
+        .compose<UiEvent>(RequestPermissions(runtimePermissions, screenRouter.streamScreenResults().ofType()))
         .compose(ReportAnalyticsEvents())
   }
 

@@ -78,7 +78,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
           .flatMapObservable { config ->
             locationRepository
                 .streamUserLocation(config.locationUpdateInterval, io())
-                .filter { isRecentLocation(it, config) }
+                .filter { it.isRecent(elapsedRealtimeClock, config.staleLocationThreshold) }
           }
           .onErrorResumeNext(Observable.empty())
     }
@@ -95,13 +95,6 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .map { RegistrationFacilityUserLocationUpdated(it) }
 
     events.mergeWith(locationUpdates)
-  }
-
-  private fun isRecentLocation(update: LocationUpdate, config: RegistrationConfig): Boolean {
-    return when (update) {
-      is Available -> update.age(elapsedRealtimeClock) <= config.staleLocationThreshold
-      is Unavailable -> true
-    }
   }
 
   private fun fetchFacilities(events: Observable<UiEvent>): Observable<UiChange> {

@@ -15,9 +15,9 @@ import org.simple.clinic.facility.change.FacilityChangeConfig
 import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
+import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ElapsedRealtimeClock
-import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.util.timer
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -80,18 +80,11 @@ class FacilitySelectionActivityController @Inject constructor(
           .flatMap { config ->
             locationRepository
                 .streamUserLocation(config.locationUpdateInterval, Schedulers.io())
-                .filter { isRecentLocation(it, config) }
+                .filter { it.isRecent(elapsedRealtimeClock, config.staleLocationThreshold) }
           }
           .onErrorResumeNext(Observable.empty())
     }
     return Observable.merge(locationWaitExpiry(), fetchLocation())
-  }
-
-  private fun isRecentLocation(update: LocationUpdate, config: FacilityChangeConfig): Boolean {
-    return when (update) {
-      is LocationUpdate.Available -> update.age(elapsedRealtimeClock) <= config.staleLocationThreshold
-      is LocationUpdate.Unavailable -> true
-    }
   }
 
   private fun showProgressForReadingLocation(events: Observable<UiEvent>): Observable<UiChange> {

@@ -9,6 +9,7 @@
 - Show blood sugar high/low level labels
 - Redesigned patient card in recent patients screen
 - New illustrations for location permission screen, overdue screen, reports screen
+- Show overdue appointment count badge in overdue tab
 
 ### Internal
 - Migrated `RecentPatientItemType` to use `ItemAdapter`

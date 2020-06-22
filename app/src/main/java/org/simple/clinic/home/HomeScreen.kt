@@ -93,4 +93,12 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   fun openFacilitySelection() {
     activity.startActivity(FacilityChangeActivity.intent(context))
   }
+
+  fun showOverdueAppointmentCount(count: Int) {
+    // TODO (SM): Update overdue tab badge to display the overdue count
+  }
+
+  fun removeOverdueAppointmentCount() {
+    // TODO (SM): Remove overdue appointment count badge from overdue tab
+  }
 }

@@ -135,11 +135,7 @@ data class OngoingNewPatientEntry(
         errors += dobValidationCheck(dobValidator, dateOfBirth, ageValidator)
 
       } else if (age != null) {
-        errors += when (ageValidator.validate(age.toInt())) {
-          ExceedsMaxAgeLimit -> listOf(AgeExceedsMaxLimit)
-          ExceedsMinAgeLimit -> listOf(AgeExceedsMinLimit)
-          else -> emptyList()
-        }
+        validateAge(errors, ageValidator, age)
       }
 
       if (fullName.isBlank()) {
@@ -151,12 +147,7 @@ data class OngoingNewPatientEntry(
     }
 
     if (phoneNumber != null) {
-      errors += when (val errorNumber = numberValidator.validate(phoneNumber.number, LANDLINE_OR_MOBILE)) {
-        is Blank -> listOf(PhoneNumberNonNullButBlank)
-        is LengthTooShort -> listOf(PhoneNumberLengthTooShort(errorNumber.minimumAllowedNumberLength))
-        is LengthTooLong -> listOf(PhoneNumberLengthTooLong(errorNumber.maximumRequiredNumberLength))
-        is PhoneNumberValidator.Result.ValidNumber -> listOf()
-      }
+      validatePhoneNumber(errors, numberValidator, phoneNumber)
     }
 
     if (address == null) {
@@ -178,6 +169,31 @@ data class OngoingNewPatientEntry(
     return errors
   }
 
+  private fun validatePhoneNumber(
+      errors: ArrayList<PatientEntryValidationError>,
+      numberValidator: PhoneNumberValidator,
+      phoneNumber: PhoneNumber
+  ) {
+    errors += when (val errorNumber = numberValidator.validate(phoneNumber.number, LANDLINE_OR_MOBILE)) {
+      is Blank -> listOf(PhoneNumberNonNullButBlank)
+      is LengthTooShort -> listOf(PhoneNumberLengthTooShort(errorNumber.minimumAllowedNumberLength))
+      is LengthTooLong -> listOf(PhoneNumberLengthTooLong(errorNumber.maximumRequiredNumberLength))
+      is PhoneNumberValidator.Result.ValidNumber -> listOf()
+    }
+  }
+
+  private fun validateAge(
+      errors: ArrayList<PatientEntryValidationError>,
+      ageValidator: UserInputAgeValidator,
+      age: String
+  ) {
+    errors += when (ageValidator.validate(age.toInt())) {
+      ExceedsMaxAgeLimit -> listOf(AgeExceedsMaxLimit)
+      ExceedsMinAgeLimit -> listOf(AgeExceedsMinLimit)
+      else -> emptyList()
+    }
+  }
+
   private fun dobValidationCheck(
       dobValidator: UserInputDateValidator,
       dateOfBirth: String,
@@ -186,13 +202,18 @@ data class OngoingNewPatientEntry(
     return when (dobValidator.validate(dateOfBirth)) {
       InvalidPattern -> listOf(InvalidDateOfBirth)
       DateIsInFuture -> listOf(DateOfBirthInFuture)
-      is Valid -> {
-        when (ageValidator.validate(dateOfBirth)){
-          ExceedsMaxAgeLimit -> listOf(DobExceedsMaxLimit)
-          ExceedsMinAgeLimit -> listOf(DobExceedsMinLimit)
-          else -> emptyList()
-        }
-      }
+      is Valid -> validateDob(ageValidator,dateOfBirth)
+    }
+  }
+
+  private fun validateDob(
+      ageValidator: UserInputAgeValidator,
+      dateOfBirth: String
+  ): List<PatientEntryValidationError> {
+    return when (ageValidator.validate(dateOfBirth)) {
+      ExceedsMaxAgeLimit -> listOf(DobExceedsMaxLimit)
+      ExceedsMinAgeLimit -> listOf(DobExceedsMinLimit)
+      else -> emptyList()
     }
   }
 

@@ -14,7 +14,7 @@
 ### Internal
 - Migrated `RecentPatientItemType` to use `ItemAdapter`
 - Moved storage of cached webviews (Progress, Help) to an implementation backed by the local database instead of files
-- [In Progress: 19 Jun 2020] Migrate `RegistrationFullNameScreen` to Mobius
+- Migrated `RegistrationFullNameScreen` to Mobius
 
 ### Fixes
 - Fixed retrying on a failed teleconsultation fetch when in airplane mode

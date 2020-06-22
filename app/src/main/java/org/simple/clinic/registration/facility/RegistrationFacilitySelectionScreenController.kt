@@ -23,7 +23,6 @@ import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.location.ScreenLocationUpdates
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -185,7 +184,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .ofType<RegistrationFacilityConfirmed>()
         .map { it.facilityUuid }
         .map { facilityUuid ->
-          val entry = (userSession.ongoingRegistrationEntry() as Just).value
+          val entry = userSession.ongoingRegistrationEntry().get()
           entry.copy(facilityId = facilityUuid)
         }
         .doOnNext(userSession::saveOngoingRegistrationEntry)

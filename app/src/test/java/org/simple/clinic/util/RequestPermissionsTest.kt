@@ -1,6 +1,5 @@
 package org.simple.clinic.util
 
-import android.app.Activity
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -24,10 +23,9 @@ class RequestPermissionsTest {
   private val permissionResults = PublishSubject.create<ActivityPermissionResult>()
 
   private val runtimePermissions = mock<RuntimePermissions>()
-  private val activity = mock<Activity>()
 
   private val receivedEvents = events
-      .compose(RequestPermissions<Event>(runtimePermissions, activity, permissionResults))
+      .compose(RequestPermissions<Event>(runtimePermissions, permissionResults))
       .test()
 
   @After
@@ -38,8 +36,8 @@ class RequestPermissionsTest {
   @Test
   fun `events requiring permission should not be forwarded if the permission is denied`() {
     // given
-    whenever(runtimePermissions.check(activity, "permission_1")) doReturn DENIED
-    whenever(runtimePermissions.check(activity, "permission_2")) doReturn DENIED
+    whenever(runtimePermissions.check("permission_1")) doReturn DENIED
+    whenever(runtimePermissions.check("permission_2")) doReturn DENIED
 
     // when
     events.onNext(FirstEvent)
@@ -57,8 +55,8 @@ class RequestPermissionsTest {
   @Test
   fun `events requiring permission should be forwarded if the current permission is granted`() {
     // given
-    whenever(runtimePermissions.check(activity, "permission_1")) doReturn GRANTED
-    whenever(runtimePermissions.check(activity, "permission_2")) doReturn GRANTED
+    whenever(runtimePermissions.check("permission_1")) doReturn GRANTED
+    whenever(runtimePermissions.check("permission_2")) doReturn GRANTED
 
     // when
     events.onNext(FirstEvent)
@@ -71,9 +69,9 @@ class RequestPermissionsTest {
     receivedEvents
         .assertValues(
             FirstEvent,
-            SecondEvent(permission = Just(GRANTED)),
+            SecondEvent(permission = Optional.of(GRANTED)),
             ThirdEvent,
-            FourthEvent(permission = Just(GRANTED)),
+            FourthEvent(permission = Optional.of(GRANTED)),
             FirstEvent
         )
         .assertNotTerminated()
@@ -81,8 +79,8 @@ class RequestPermissionsTest {
 
   @Test
   fun `permission should be requested if it currently is denied`() {
-    whenever(runtimePermissions.check(activity, "permission_1")) doReturn DENIED
-    whenever(runtimePermissions.check(activity, "permission_2")) doReturn DENIED
+    whenever(runtimePermissions.check("permission_1")) doReturn DENIED
+    whenever(runtimePermissions.check("permission_2")) doReturn DENIED
 
     // when
     events.onNext(FirstEvent)
@@ -92,13 +90,13 @@ class RequestPermissionsTest {
     events.onNext(FirstEvent)
 
     // then
-    verify(runtimePermissions).request(activity, "permission_1", 1)
-    verify(runtimePermissions).request(activity, "permission_2", 2)
+    verify(runtimePermissions).request("permission_1", 1)
+    verify(runtimePermissions).request("permission_2", 2)
   }
 
   @Test
   fun `permission should not be requested if it currently is granted`() {
-    whenever(runtimePermissions.check(activity, "permission_2")) doReturn GRANTED
+    whenever(runtimePermissions.check("permission_2")) doReturn GRANTED
 
     // when
     events.onNext(FirstEvent)
@@ -108,14 +106,14 @@ class RequestPermissionsTest {
     events.onNext(FirstEvent)
 
     // then
-    verify(runtimePermissions, never()).request(activity, "permission_2", 2)
+    verify(runtimePermissions, never()).request("permission_2", 2)
   }
 
   @Test
   fun `when a permission is granted, the event should be forwarded`() {
     // given
-    whenever(runtimePermissions.check(activity, "permission_1")).doReturn(DENIED, GRANTED)
-    whenever(runtimePermissions.check(activity, "permission_2")).doReturn(DENIED, DENIED)
+    whenever(runtimePermissions.check("permission_1")).doReturn(DENIED, GRANTED)
+    whenever(runtimePermissions.check("permission_2")).doReturn(DENIED, DENIED)
 
     // when
     events.onNext(FirstEvent)
@@ -131,7 +129,7 @@ class RequestPermissionsTest {
             FirstEvent,
             ThirdEvent,
             FirstEvent,
-            FourthEvent(permission = Just(DENIED))
+            FourthEvent(permission = Optional.of(DENIED))
         )
         .assertNotTerminated()
 
@@ -141,8 +139,8 @@ class RequestPermissionsTest {
             FirstEvent,
             ThirdEvent,
             FirstEvent,
-            FourthEvent(permission = Just(DENIED)),
-            SecondEvent(permission = Just(GRANTED))
+            FourthEvent(permission = Optional.of(DENIED)),
+            SecondEvent(permission = Optional.of(GRANTED))
         )
         .assertNotTerminated()
   }

@@ -130,7 +130,7 @@ class FacilityChangeActivity : AppCompatActivity() {
           .map(::FacilityChangeClicked)
 
   private fun locationPermissionChanges(): Observable<UiEvent> {
-    val permissionResult = runtimePermissions.check(this, LOCATION_PERMISSION)
+    val permissionResult = runtimePermissions.check(LOCATION_PERMISSION)
     return Observable.just(FacilityChangeLocationPermissionChanged(permissionResult))
   }
 

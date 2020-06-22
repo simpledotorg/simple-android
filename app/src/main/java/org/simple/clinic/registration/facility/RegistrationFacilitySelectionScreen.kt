@@ -126,7 +126,7 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
   }
 
   private fun locationPermissionChanges(): Observable<UiEvent> {
-    val permissionResult = runtimePermissions.check(activity, LOCATION_PERMISSION)
+    val permissionResult = runtimePermissions.check(LOCATION_PERMISSION)
     return Observable.just(RegistrationFacilityLocationPermissionChanged(permissionResult))
   }
 

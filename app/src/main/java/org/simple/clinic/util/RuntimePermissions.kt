@@ -1,7 +1,7 @@
 package org.simple.clinic.util
 
-import android.app.Activity
 import android.content.pm.PackageManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
@@ -11,19 +11,21 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.util.RuntimePermissionResult
-import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
+import org.simple.clinic.router.screen.ActivityPermissionResult
 import javax.inject.Inject
 
-class RuntimePermissions @Inject constructor() {
+class RuntimePermissions @Inject constructor(
+    private val activity: AppCompatActivity
+) {
 
-  fun check(activity: Activity, permission: String): RuntimePermissionResult {
+  fun check(permission: String): RuntimePermissionResult {
     val permissionGranted = ActivityCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
     return if (permissionGranted) GRANTED else DENIED
   }
 
-  fun request(activity: Activity, permission: String, requestCode: Int) {
+  fun request(permission: String, requestCode: Int) {
     ActivityCompat.requestPermissions(activity, arrayOf(permission), requestCode)
   }
 }
@@ -39,7 +41,6 @@ interface RequiresPermission {
 
 class RequestPermissions<T : Any>(
     private val runtimePermissions: RuntimePermissions,
-    private val activity: Activity,
     private val permissionResults: Observable<ActivityPermissionResult>
 ) : ObservableTransformer<T, T> {
 
@@ -67,9 +68,9 @@ class RequestPermissions<T : Any>(
   ): Observable<T> {
     return events
         .cast<RequiresPermission>()
-        .doOnNext { event -> event.permission = Just(runtimePermissions.check(activity, event.permissionString)) }
+        .doOnNext { event -> event.permission = Optional.of(runtimePermissions.check(event.permissionString)) }
         .doOnNext { event ->
-          when ((event.permission as Just).value) {
+          when (event.permission.get()) {
             DENIED -> {
               // This means that the permission needs to be requested
               // since the framework runtime permissions framework
@@ -79,7 +80,7 @@ class RequestPermissions<T : Any>(
               val requestCode = event.permissionRequestCode
 
               inFlightPermissionRequests = inFlightPermissionRequests + (requestCode to event)
-              runtimePermissions.request(activity, permission, requestCode)
+              runtimePermissions.request(permission, requestCode)
             }
             GRANTED -> permissionCompletedEvents.onNext(event as T)
           }
@@ -95,7 +96,7 @@ class RequestPermissions<T : Any>(
           val event = inFlightPermissionRequests[requestCode]
 
           if (event != null) {
-            event.permission = Just(runtimePermissions.check(activity, event.permissionString))
+            event.permission = Optional.of(runtimePermissions.check(event.permissionString))
             permissionCompletedEvents.onNext(event as T)
           }
         }
@@ -111,8 +112,8 @@ class RequestPermissions<T : Any>(
         .doOnNext { event ->
           val permissionResult = event.permission
 
-          if(permissionResult is Just) {
-            Analytics.reportPermissionResult(event.permissionString, permissionResult.value)
+          if (permissionResult.isPresent()) {
+            Analytics.reportPermissionResult(event.permissionString, permissionResult.get())
           }
         }
         .flatMap { Observable.empty<T>() }

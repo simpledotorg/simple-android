@@ -3,7 +3,6 @@ package org.simple.clinic.registration.location
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
-import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
@@ -26,9 +25,6 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var activity: AppCompatActivity
-
-  @Inject
   lateinit var controller: RegistrationLocationPermissionScreenController
 
   @Inject
@@ -43,7 +39,7 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
 
     bindUiToController(
         ui = this,
-        events = allowLocationClicks().compose(RequestPermissions(runtimePermissions, activity, screenRouter.streamScreenResults().ofType())),
+        events = allowLocationClicks().compose(RequestPermissions(runtimePermissions, screenRouter.streamScreenResults().ofType())),
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

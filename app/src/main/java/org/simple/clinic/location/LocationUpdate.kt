@@ -17,4 +17,14 @@ sealed class LocationUpdate {
       return timeSinceSystemBoot - timeSinceBootWhenRecorded
     }
   }
+
+  fun isRecent(
+      clock: ElapsedRealtimeClock,
+      locationStaleAfter: Duration
+  ): Boolean {
+    return when(this) {
+      Unavailable -> true
+      is Available -> age(clock) <= locationStaleAfter
+    }
+  }
 }

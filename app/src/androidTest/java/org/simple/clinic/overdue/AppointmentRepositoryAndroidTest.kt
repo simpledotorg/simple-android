@@ -2346,6 +2346,62 @@ class AppointmentRepositoryAndroidTest {
     assertThat(latest_appointment_a_week_later.value.appointment).isEqualTo(appointment_scheduled_for_today_with_reminder_a_week_in_the_future)
   }
 
+  @Test
+  fun fetching_overdue_appointments_count_should_work_correctly() {
+    fun createOverdueAppointment(
+        patientUuid: UUID,
+        scheduledDate: LocalDate,
+        facilityUuid: UUID
+    ) {
+      val patientProfile = TestData.patientProfile(
+          patientUuid = patientUuid,
+          generatePhoneNumber = true
+      )
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+      val bp = TestData.bloodPressureMeasurement(
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid
+      )
+      bpRepository.save(listOf(bp)).blockingAwait()
+
+      val bloodSugar = TestData.bloodSugarMeasurement(
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid
+      )
+      bloodSugarRepository.save(listOf(bloodSugar)).blockingAwait()
+
+      val appointment = TestData.appointment(
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid,
+          scheduledDate = scheduledDate,
+          status = Scheduled,
+          cancelReason = null
+      )
+      appointmentRepository.save(listOf(appointment)).blockingAwait()
+    }
+
+    //given
+    val patientWithOneDayOverdue = UUID.fromString("9b794e72-6ebb-48c3-a8d7-69751ffeecc2")
+    val patientWithTenDaysOverdue = UUID.fromString("0fc57e45-7018-4c03-9218-f90f6fc0f268")
+    val patientWithOverAnYearDaysOverdue = UUID.fromString("51467803-f588-4a65-8def-7a15f41bdd13")
+
+    val now = LocalDate.now(clock)
+    val facilityUuid = UUID.fromString("ccc66ec1-5029-455b-bf92-caa6d90a9a79")
+
+    val facility = TestData.facility(uuid = facilityUuid)
+
+    createOverdueAppointment(patientWithOneDayOverdue, now.minusDays(1), facilityUuid)
+    createOverdueAppointment(patientWithTenDaysOverdue, now.minusDays(10), facilityUuid)
+    createOverdueAppointment(patientWithOverAnYearDaysOverdue, now.minusDays(370), facilityUuid)
+
+    //when
+    val overdueAppointmentsCount = appointmentRepository.overdueAppointmentsCount(since = now, facility = facility).blockingFirst()
+
+    //then
+    assertThat(overdueAppointmentsCount).isEqualTo(2)
+  }
+
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {
     appointmentRepository.setSyncStatus(appointmentUuids.toList(), DONE).blockingAwait()
   }

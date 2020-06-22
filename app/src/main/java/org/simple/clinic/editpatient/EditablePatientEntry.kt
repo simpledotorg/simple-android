@@ -179,10 +179,13 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     when (val error = numberValidator.validate(phoneNumber, Type.LANDLINE_OR_MOBILE)) {
       is LengthTooShort -> PhoneNumberLengthTooShort(error.minimumAllowedNumberLength)
       is LengthTooLong -> PhoneNumberLengthTooLong(error.maximumRequiredNumberLength)
-      is Blank -> if (alreadySavedNumber != null) PhoneNumberEmpty else null
+      is Blank -> checkIfPhoneNumberIsBlank(alreadySavedNumber)
       is PhoneNumberValidator.Result.ValidNumber -> null
     }
   }
+
+  private fun checkIfPhoneNumberIsBlank(alreadySavedNumber: PatientPhoneNumber?) =
+      if (alreadySavedNumber != null) PhoneNumberEmpty else null
 
   private fun colonyOrVillageCheck(): ValidationCheck =
       { if (colonyOrVillage.isBlank()) ColonyOrVillageEmpty else null }
@@ -213,11 +216,18 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     return when (dobValidator.validate(dateOfBirth)) {
       InvalidPattern -> DateOfBirthParseError
       DateIsInFuture -> DateOfBirthInFuture
-      is UserInputDateValidator.Result.Valid -> when (ageValidator.validate(dateOfBirth)) {
-        ExceedsMaxAgeLimit -> DateOfBirthExceedsMaxLimit
-        ExceedsMinAgeLimit -> DateOfBirthExceedsMinLimit
-        else -> null
-      }
+      is UserInputDateValidator.Result.Valid -> validateDob(ageValidator, dateOfBirth)
+    }
+  }
+
+  private fun validateDob(
+      ageValidator: UserInputAgeValidator,
+      dateOfBirth: String
+  ): EditPatientValidationError? {
+    return when (ageValidator.validate(dateOfBirth)) {
+      ExceedsMaxAgeLimit -> DateOfBirthExceedsMaxLimit
+      ExceedsMinAgeLimit -> DateOfBirthExceedsMinLimit
+      else -> null
     }
   }
 
@@ -229,11 +239,15 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
 
     return when {
       age.isBlank() -> BothDateOfBirthAndAgeAdsent
-      else -> when (ageValidator.validate(age.toInt())) {
-        ExceedsMaxAgeLimit -> AgeExceedsMaxLimit
-        ExceedsMinAgeLimit -> AgeExceedsMinLimit
-        else -> null
-      }
+      else -> ageValidate(ageValidator, age)
+    }
+  }
+
+  private fun ageValidate(ageValidator: UserInputAgeValidator, age: String): EditPatientValidationError? {
+    return when (ageValidator.validate(age.toInt())) {
+      ExceedsMaxAgeLimit -> AgeExceedsMaxLimit
+      ExceedsMinAgeLimit -> AgeExceedsMinLimit
+      else -> null
     }
   }
 }

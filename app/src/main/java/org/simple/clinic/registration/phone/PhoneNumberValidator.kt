@@ -33,21 +33,29 @@ class LengthBasedNumberValidator(
   override fun validate(number: String, type: PhoneNumberValidator.Type): Result {
     return when (type) {
       MOBILE -> {
-        when {
-          number.isBlank() -> Blank
-          number.length < minimumRequiredLengthMobile -> LengthTooShort(minimumRequiredLengthMobile)
-          number.length > maximumAllowedLengthMobile -> LengthTooLong(maximumAllowedLengthMobile)
-          else -> ValidNumber
-        }
+        validateMobile(number, minimumRequiredLengthMobile, maximumAllowedLengthMobile)
       }
       LANDLINE_OR_MOBILE -> {
-        when {
-          number.isBlank() -> Blank
-          number.length < minimumRequiredLengthLandlinesOrMobile -> LengthTooShort(minimumRequiredLengthLandlinesOrMobile)
-          number.length > maximumAllowedLengthLandlinesOrMobile -> LengthTooLong(maximumAllowedLengthLandlinesOrMobile)
-          else -> ValidNumber
-        }
+        validateLandlinesOrMobile(number, minimumRequiredLengthLandlinesOrMobile, maximumAllowedLengthLandlinesOrMobile)
       }
+    }
+  }
+
+  fun validateLandlinesOrMobile(number: String, minimumRequiredLength: Int, maximumAllowedLength: Int): Result {
+    return when {
+      number.isBlank() -> Blank
+      number.length < minimumRequiredLength -> LengthTooShort(minimumRequiredLength)
+      number.length > maximumAllowedLength -> LengthTooLong(maximumAllowedLength)
+      else -> ValidNumber
+    }
+  }
+
+  private fun validateMobile(number: String, minimumRequiredLength: Int, maximumAllowedLength: Int): Result {
+    return when {
+      number.isBlank() -> Blank
+      number.length < minimumRequiredLength -> LengthTooShort(minimumRequiredLength)
+      number.length > maximumAllowedLength -> LengthTooLong(maximumAllowedLength)
+      else -> ValidNumber
     }
   }
 }

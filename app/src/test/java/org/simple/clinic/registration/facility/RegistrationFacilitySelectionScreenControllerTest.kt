@@ -10,9 +10,10 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -56,7 +57,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
   private val listItemBuilder = mock<FacilityListItemBuilder>()
   private val screenLocationUpdates = mock<ScreenLocationUpdates>()
 
-  private lateinit var controller: RegistrationFacilitySelectionScreenController
+  private lateinit var controllerSubscription: Disposable
 
   private val configTemplate = RegistrationConfig(
       locationListenerExpiry = Duration.ofSeconds(0),
@@ -65,21 +66,9 @@ class RegistrationFacilitySelectionScreenControllerTest {
       staleLocationThreshold = Duration.ofSeconds(0))
   private val configProvider = BehaviorSubject.createDefault(configTemplate)
 
-  @Before
-  fun setUp() {
-    controller = RegistrationFacilitySelectionScreenController(
-        facilitySync = facilitySync,
-        facilityRepository = facilityRepository,
-        userSession = userSession,
-        configProvider = configProvider.firstOrError(),
-        listItemBuilder = listItemBuilder,
-        screenLocationUpdates = screenLocationUpdates,
-        utcClock = utcClock
-    )
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -90,6 +79,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
     whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(facilitySync).pullWithResult()
@@ -101,15 +91,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.recordCount()).thenReturn(Observable.never())
     whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.never())
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(screenLocationUpdates).streamUserLocation(
-        // This should be `Duration.ofDays(5)`, but because of a problem
-        // with the current way of setting up controllers, the updated
-        // configuration isn't available to the controller when it
-        // subscribes to the stream. This has been changed in another
-        // branch, and will get fixed when this commit gets pulled there.
-        updateInterval = Duration.ZERO,
+        updateInterval = Duration.ofDays(5),
         timeout = configTemplate.locationListenerExpiry,
         discardOlderThan = configTemplate.staleLocationThreshold
     )
@@ -123,6 +109,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
     whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     val inOrder = inOrder(screen)
@@ -144,6 +131,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val locationUpdates = PublishSubject.create<LocationUpdate>()
     whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(locationUpdates)
 
+    setupController()
     uiEvents.run {
       onNext(ScreenCreated())
       onNext(RegistrationFacilitySearchQueryChanged(""))
@@ -165,6 +153,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged("f"))
 
@@ -179,6 +168,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
     whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(facilitySync, never()).pullWithResult()
@@ -194,6 +184,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
     whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.never())
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "F"))
@@ -214,6 +205,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
         .thenReturn(Single.just(FacilityPullResult.UnexpectedError))
         .thenReturn(Single.just(FacilityPullResult.NetworkError))
 
+    setupController()
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = ""))
     uiEvents.onNext(RegistrationFacilitySelectionRetryClicked())
@@ -230,6 +222,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
     whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
+    setupController()
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
     uiEvents.onNext(RegistrationFacilitySelectionRetryClicked())
 
@@ -252,6 +245,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val facilityListItems = emptyList<FacilityListItem>()
     whenever(listItemBuilder.build(any(), any(), any(), any())).thenReturn(facilityListItems)
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(searchQuery))
@@ -276,6 +270,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
 
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("5cf9d744-7f34-4633-aa46-a6c7e7542060"))
+
+    setupController()
     uiEvents.onNext(RegistrationFacilityClicked(facility1))
 
     verify(screen).showConfirmFacilitySheet(facility1.uuid, facility1.name)
@@ -292,6 +288,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
 
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("bc761c6c-032f-4f1d-a66a-3ec81e9e8aa3"))
+
+    setupController()
     uiEvents.onNext(RegistrationFacilityConfirmed(facility1.uuid))
 
     verify(screen).openIntroVideoScreen()
@@ -305,10 +303,27 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilitySync.pullWithResult()).thenReturn(Single.never())
     whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     val inOrder = inOrder(screen)
     inOrder.verify(screen).showToolbarWithoutSearchField()
     inOrder.verify(screen).showToolbarWithSearchField()
+  }
+
+  private fun setupController() {
+    val controller = RegistrationFacilitySelectionScreenController(
+        facilitySync = facilitySync,
+        facilityRepository = facilityRepository,
+        userSession = userSession,
+        configProvider = configProvider.firstOrError(),
+        listItemBuilder = listItemBuilder,
+        screenLocationUpdates = screenLocationUpdates,
+        utcClock = utcClock
+    )
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

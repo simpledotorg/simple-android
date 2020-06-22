@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.screen_home.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.change.FacilityChangeActivity
+import org.simple.clinic.home.HomeTab.OVERDUE
 import org.simple.clinic.home.help.HelpScreenKey
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
@@ -95,10 +96,23 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   }
 
   fun showOverdueAppointmentCount(count: Int) {
-    // TODO (SM): Update overdue tab badge to display the overdue count
+    val overdueTabIndex = HomeTab.values().indexOf(OVERDUE)
+    val overdueTab = homeTabLayout.getTabAt(overdueTabIndex)
+
+    overdueTab?.run {
+      @Suppress("UsePropertyAccessSyntax")
+      getOrCreateBadge().apply {
+        isVisible = true
+        maxCharacterCount = 3
+        number = count
+      }
+    }
   }
 
   fun removeOverdueAppointmentCount() {
-    // TODO (SM): Remove overdue appointment count badge from overdue tab
+    val overdueTabIndex = HomeTab.values().indexOf(OVERDUE)
+    val overdueTab = homeTabLayout.getTabAt(overdueTabIndex)
+
+    overdueTab?.removeBadge()
   }
 }

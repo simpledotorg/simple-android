@@ -52,6 +52,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     rootLayout.hideKeyboard()
 
     viewPager.adapter = HomePagerAdapter(context)
+    homeTabLayout.setupWithViewPager(viewPager)
 
     // The WebView in "Progress" tab is expensive to load. Pre-instantiating
     // it when the app starts reduces its time-to-display.

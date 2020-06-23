@@ -31,11 +31,11 @@ import org.threeten.bp.Duration
 import timber.log.Timber
 
 fun EditText.showKeyboard() {
-  post {
+  postDelayed({
     this.requestFocus()
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
-  }
+  }, 100)
 }
 
 fun ViewGroup.hideKeyboard() {

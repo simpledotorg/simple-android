@@ -24,12 +24,10 @@ import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.introvideoscreen.IntroVideoScreenKey
-import org.simple.clinic.location.LOCATION_PERMISSION
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.ScreenCreated
@@ -51,9 +49,6 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
   @Inject
   lateinit var activity: AppCompatActivity
 
-  @Inject
-  lateinit var runtimePermissions: RuntimePermissions
-
   private val recyclerViewAdapter = FacilitiesAdapter()
 
   @SuppressLint("CheckResult")
@@ -73,7 +68,6 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
             searchQueryChanges(),
             retryClicks(),
             facilityClicks(),
-            locationPermissionChanges(),
             registrationFacilityConfirmations(onScreenDestroyed)
         ),
         controller = controller,
@@ -123,11 +117,6 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
           val confirmedFacilityUuid = ConfirmFacilitySheet.confirmedFacilityUuid(intent)
           RegistrationFacilityConfirmed(confirmedFacilityUuid)
         }
-  }
-
-  private fun locationPermissionChanges(): Observable<UiEvent> {
-    val permissionResult = runtimePermissions.check(LOCATION_PERMISSION)
-    return Observable.just(RegistrationFacilityLocationPermissionChanged(permissionResult))
   }
 
   @SuppressLint("CheckResult")

@@ -1,28 +1,22 @@
 package org.simple.clinic.facility.change
 
-import android.annotation.SuppressLint
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
-import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
-import org.simple.clinic.location.LocationRepository
-import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.location.LocationUpdate.Available
 import org.simple.clinic.location.LocationUpdate.Unavailable
-import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
+import org.simple.clinic.location.ScreenLocationUpdates
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.ElapsedRealtimeClock
 import org.simple.clinic.util.filterAndUnwrapJust
-import org.simple.clinic.util.timer
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -33,10 +27,9 @@ typealias UiChange = (Ui) -> Unit
 class FacilityChangeActivityController @Inject constructor(
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession,
-    private val locationRepository: LocationRepository,
     private val configProvider: Observable<FacilityChangeConfig>,
-    private val elapsedRealtimeClock: ElapsedRealtimeClock,
-    private val listItemBuilder: FacilityListItemBuilder
+    private val listItemBuilder: FacilityListItemBuilder,
+    private val screenLocationUpdates: ScreenLocationUpdates
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -52,41 +45,18 @@ class FacilityChangeActivityController @Inject constructor(
         confirmFacilityChange(replayedEvents))
   }
 
-  @SuppressLint("MissingPermission")
-  private fun fetchLocation(): Observable<LocationUpdate> {
-    val locationWaitExpiry = {
-      configProvider
-          .flatMap { Observables.timer(it.locationListenerExpiry) }
-          .map { Unavailable }
-    }
-    val fetchLocation = {
-      configProvider
-          .flatMap { config ->
-            locationRepository
-                .streamUserLocation(config.locationUpdateInterval, io())
-                .filter { it.isRecent(elapsedRealtimeClock, config.staleLocationThreshold) }
-          }
-          .onErrorResumeNext(Observable.empty())
-    }
-
-    return Observable.merge(locationWaitExpiry(), fetchLocation())
-  }
-
   private fun locationUpdates() = ObservableTransformer<UiEvent, UiEvent> { events ->
-    val locationPermissionChanges = events
-        .ofType<FacilityChangeLocationPermissionChanged>()
-        .map { it.result }
-
     val locationUpdates = Observables
-        .combineLatest(events.ofType<ScreenCreated>(), locationPermissionChanges)
-        .switchMap { (_, permissionResult) ->
-          when (permissionResult!!) {
-            GRANTED -> fetchLocation()
-            DENIED -> Observable.just(Unavailable)
-          }
+        .combineLatest(events.ofType<ScreenCreated>(), configProvider) { _, config -> config }
+        .switchMap { config ->
+          screenLocationUpdates.streamUserLocation(
+              updateInterval = config.locationUpdateInterval,
+              timeout = config.locationListenerExpiry,
+              discardOlderThan = config.staleLocationThreshold
+          )
         }
         .take(1)
-        .map { FacilityChangeUserLocationUpdated(it) }
+        .map(::FacilityChangeUserLocationUpdated)
 
     events.mergeWith(locationUpdates)
   }

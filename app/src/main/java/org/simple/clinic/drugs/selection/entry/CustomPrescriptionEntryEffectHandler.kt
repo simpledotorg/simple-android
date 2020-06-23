@@ -4,6 +4,7 @@ import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -11,6 +12,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
+import java.util.UUID
 
 class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: CustomPrescriptionEntryUiActions,
@@ -47,9 +49,14 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .flatMap { effect ->
-            val prescription = prescriptionRepository.prescriptionImmediate(effect.prescriptionUuid)
             prescriptionRepository
-                .updatePrescription(prescription.copy(name = effect.drugName, dosage = effect.dosage))
+                .softDeletePrescription(effect.prescriptionUuid)
+                .andThen(savePrescription(
+                    uuid = uuidGenerator.v4(),
+                    patientUuid = effect.patientUuid,
+                    drugName = effect.drugName,
+                    dosage = effect.dosage
+                ))
                 .andThen(Observable.just(CustomPrescriptionSaved))
           }
     }
@@ -59,21 +66,34 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .flatMap { savePrescription ->
-            val currentFacility = currentFacility.get()
-
-            prescriptionRepository
-                .savePrescription(
-                    uuid = uuidGenerator.v4(),
-                    patientUuid = savePrescription.patientUuid,
-                    name = savePrescription.drugName,
-                    dosage = savePrescription.dosage.nullIfBlank(),
-                    rxNormCode = null,
-                    isProtocolDrug = false,
-                    facility = currentFacility
-                )
-                .andThen(Observable.just(CustomPrescriptionSaved))
+            savePrescription(
+                uuid = uuidGenerator.v4(),
+                patientUuid = savePrescription.patientUuid,
+                drugName = savePrescription.drugName,
+                dosage = savePrescription.dosage
+            ).andThen(Observable.just(CustomPrescriptionSaved))
           }
     }
+  }
+
+  private fun savePrescription(
+      uuid: UUID,
+      patientUuid: UUID,
+      drugName: String,
+      dosage: String?
+  ): Completable {
+    val currentFacility = currentFacility.get()
+
+    return prescriptionRepository
+        .savePrescription(
+            uuid = uuid,
+            patientUuid = patientUuid,
+            name = drugName,
+            dosage = dosage.nullIfBlank(),
+            rxNormCode = null,
+            isProtocolDrug = false,
+            facility = currentFacility
+        )
   }
 
   private fun fetchPrescription(): ObservableTransformer<FetchPrescription, CustomPrescriptionEntryEvent> {

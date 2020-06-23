@@ -19,6 +19,7 @@
 ### Fixes
 - Fixed retrying on a failed teleconsultation fetch when in airplane mode
 - Fixed showing diagnosis text in teleconsult message when diagnosis are unanswered
+- Fixed keyboard not opening in app lock screen
 
 ## 2020-06-22-7314
 ### Feature

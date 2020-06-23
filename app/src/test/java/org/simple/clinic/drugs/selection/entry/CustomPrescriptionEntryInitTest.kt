@@ -30,8 +30,9 @@ class CustomPrescriptionEntryInitTest {
 
   @Test
   fun `when the sheet is opened for changing an existing prescription, fetch the existing prescription`() {
+    val patientUuid = UUID.fromString("f1ba8c5d-cef8-4f0c-bef1-68252eafd76f")
     val prescribedDrugUuid = UUID.fromString("f9e77712-87f1-4adc-95c9-ebf59b24d816")
-    val defaultModel = CustomPrescriptionEntryModel.create(Update(prescribedDrugUuid))
+    val defaultModel = CustomPrescriptionEntryModel.create(Update(patientUuid, prescribedDrugUuid))
 
     initSpec
         .whenInit(defaultModel)

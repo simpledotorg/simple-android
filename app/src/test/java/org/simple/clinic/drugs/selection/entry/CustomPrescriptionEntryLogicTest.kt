@@ -248,7 +248,7 @@ class CustomPrescriptionEntryLogicTest {
   }
 
   private fun createSheetForUpdatingPrescription(prescriptionUuid: UUID) {
-    val openAsUpdate = OpenAs.Update(prescriptionUuid)
+    val openAsUpdate = OpenAs.Update(patientUuid, prescriptionUuid)
     instantiateFixture(openAsUpdate)
   }
 

@@ -35,9 +35,9 @@ class CustomPrescriptionEntryUpdate : Update<CustomPrescriptionEntryModel, Custo
   }
 
   private fun createOrUpdatePrescriptionEntry(model: CustomPrescriptionEntryModel): Next<CustomPrescriptionEntryModel, CustomPrescriptionEntryEffect> {
-    return when (model.openAs) {
-      is OpenAs.New -> dispatch(SaveCustomPrescription(model.openAs.patientUuid, model.drugName!!, model.dosage))
-      is OpenAs.Update -> dispatch(UpdatePrescription(model.openAs.prescribedDrugUuid, model.drugName!!, model.dosage))
+    return when (val openAs = model.openAs) {
+      is OpenAs.New -> dispatch(SaveCustomPrescription(openAs.patientUuid, model.drugName!!, model.dosage))
+      is OpenAs.Update -> dispatch(UpdatePrescription(openAs.patientUuid, openAs.prescribedDrugUuid, model.drugName!!, model.dosage))
     }
   }
 }

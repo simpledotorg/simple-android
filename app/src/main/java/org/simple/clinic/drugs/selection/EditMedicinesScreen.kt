@@ -158,6 +158,6 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
   }
 
   override fun showUpdateCustomPrescriptionSheet(prescribedDrug: PrescribedDrug) {
-    activity.startActivity(CustomPrescriptionEntrySheet.intentForUpdatingPrescription(context, prescribedDrug.uuid))
+    activity.startActivity(CustomPrescriptionEntrySheet.intentForUpdatingPrescription(context, prescribedDrug.patientUuid, prescribedDrug.uuid))
   }
 }

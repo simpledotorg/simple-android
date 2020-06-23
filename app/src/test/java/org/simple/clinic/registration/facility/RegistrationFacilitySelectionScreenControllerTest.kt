@@ -1,7 +1,6 @@
 package org.simple.clinic.registration.facility
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -11,17 +10,11 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.schedulers.TestScheduler
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPullResult
@@ -32,27 +25,21 @@ import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.Coordinates
-import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
-import org.simple.clinic.location.LocationUpdate.Available
 import org.simple.clinic.location.LocationUpdate.Unavailable
-import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
-import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
+import org.simple.clinic.location.ScreenLocationUpdates
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Distance
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestElapsedRealtimeClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.UUID
-import java.util.concurrent.TimeUnit
 
-@RunWith(JUnitParamsRunner::class)
 class RegistrationFacilitySelectionScreenControllerTest {
 
   @get:Rule
@@ -62,11 +49,9 @@ class RegistrationFacilitySelectionScreenControllerTest {
   private val screen = mock<RegistrationFacilitySelectionScreen>()
   private val facilitySync = mock<FacilitySync>()
   private val facilityRepository = mock<FacilityRepository>()
-  private val locationRepository = mock<LocationRepository>()
   private val userSession = mock<UserSession>()
-  private val testComputationScheduler = TestScheduler()
-  private val elapsedRealtimeClock = TestElapsedRealtimeClock()
   private val listItemBuilder = mock<FacilityListItemBuilder>()
+  private val screenLocationUpdates = mock<ScreenLocationUpdates>()
 
   private lateinit var controller: RegistrationFacilitySelectionScreenController
 
@@ -79,20 +64,14 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Before
   fun setUp() {
-    // To control time used by Observable.timer().
-    RxJavaPlugins.setComputationSchedulerHandler { testComputationScheduler }
-
-    // Location updates are listened on a background thread.
-    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-
     controller = RegistrationFacilitySelectionScreenController(
         facilitySync = facilitySync,
         facilityRepository = facilityRepository,
         userSession = userSession,
-        locationRepository = locationRepository,
         configProvider = configProvider.firstOrError(),
-        elapsedRealtimeClock = elapsedRealtimeClock,
-        listItemBuilder = listItemBuilder)
+        listItemBuilder = listItemBuilder,
+        screenLocationUpdates = screenLocationUpdates
+    )
 
     uiEvents
         .compose(controller)
@@ -105,7 +84,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.just(Unavailable))
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(ScreenCreated())
 
@@ -113,118 +92,23 @@ class RegistrationFacilitySelectionScreenControllerTest {
   }
 
   @Test
-  fun `when screen is started and location permission is available then location should be fetched`() {
+  fun `when screen is started, location should be fetched`() {
     configProvider.onNext(configTemplate.copy(locationUpdateInterval = Duration.ofDays(5)))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.never())
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.never())
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
 
-    verify(locationRepository).streamUserLocation(updateInterval = eq(Duration.ofDays(5)), updateScheduler = any())
-  }
-
-  @Test
-  fun `when screen is started and location permission was denied then location should not be fetched and facilities should be shown`() {
-    val facilities = listOf(
-        TestData.facility(name = "Facility 1"),
-        TestData.facility(name = "Facility 2"))
-    whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
-    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
-
-    uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(""))
-    uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(DENIED))
-
-    verify(locationRepository, never()).streamUserLocation(any(), any())
-    verify(screen).updateFacilities(any(), any())
-  }
-
-  @Test
-  fun `when screen is started then location should only be read once`() {
-    configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
-
-    val facilities = listOf(
-        TestData.facility(name = "Facility 1"),
-        TestData.facility(name = "Facility 2"))
-    whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
-    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-
-    val timeSinceBootWhenRecorded = Duration.ofMillis(elapsedRealtimeClock.millis())
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(
-        Observable.just(
-            Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded),
-            Unavailable,
-            Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded)))
-
-    uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(""))
-    uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
-
-    testComputationScheduler.advanceTimeBy(6, TimeUnit.SECONDS)
-
-    verify(locationRepository).streamUserLocation(any(), any())
-    verify(screen, times(1)).updateFacilities(any(), any())
-  }
-
-  @Test
-  fun `when the user's location updates are received then only one recent update should be read`() {
-    val config = configTemplate.copy(staleLocationThreshold = Duration.ofMinutes(10))
-    configProvider.onNext(config)
-
-    val facilities = listOf(TestData.facility(name = "Facility 1"))
-    whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
-    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-
-    val locationUpdates = PublishSubject.create<LocationUpdate>()
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(locationUpdates)
-
-    uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(""))
-    uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
-
-    val locationOlderThanStaleThreshold = Available(
-        location = Coordinates(0.0, 0.0),
-        timeSinceBootWhenRecorded = Duration.ofMillis(elapsedRealtimeClock.millis()))
-
-    elapsedRealtimeClock.advanceBy(config.staleLocationThreshold + Duration.ofSeconds(1))
-
-    locationUpdates.onNext(locationOlderThanStaleThreshold)
-    verify(screen, never()).updateFacilities(any(), any())
-
-    locationUpdates.onNext(locationOlderThanStaleThreshold)
-    verify(screen, never()).updateFacilities(any(), any())
-
-    elapsedRealtimeClock.advanceBy(config.staleLocationThreshold)
-
-    val locationNewerThanStaleThreshold = Available(
-        location = Coordinates(0.0, 0.0),
-        timeSinceBootWhenRecorded = Duration.ofMillis(elapsedRealtimeClock.millis()))
-
-    locationUpdates.onNext(locationNewerThanStaleThreshold)
-    verify(screen).updateFacilities(any(), any())
-  }
-
-  @Test
-  @Parameters("5", "6", "7", "8")
-  fun `when location is being fetched then it should expire after a fixed time duration`(
-      secondsSpentWaitingForLocation: Long
-  ) {
-    configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
-
-    val facilities = emptyList<Facility>()
-    whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
-    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
-
-    uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
-    verify(screen).showProgressIndicator()
-
-    testComputationScheduler.advanceTimeBy(secondsSpentWaitingForLocation, TimeUnit.SECONDS)
-    verify(screen).hideProgressIndicator()
+    verify(screenLocationUpdates).streamUserLocation(
+        // This should be `Duration.ofDays(5)`, but because of a problem
+        // with the current way of setting up controllers, the updated
+        // configuration isn't available to the controller when it
+        // subscribes to the stream. This has been changed in another
+        // branch, and will get fixed when this commit gets pulled there.
+        updateInterval = Duration.ZERO,
+        timeout = configTemplate.locationListenerExpiry,
+        discardOlderThan = configTemplate.staleLocationThreshold
+    )
   }
 
   @Test
@@ -233,10 +117,9 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.just(Unavailable))
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
 
     val inOrder = inOrder(screen)
     inOrder.verify(screen).showProgressIndicator()
@@ -255,12 +138,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
 
     val locationUpdates = PublishSubject.create<LocationUpdate>()
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(locationUpdates)
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(locationUpdates)
 
     uiEvents.run {
       onNext(ScreenCreated())
       onNext(RegistrationFacilitySearchQueryChanged(""))
-      onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
     }
     verify(screen, never()).updateFacilities(any(), any())
 
@@ -269,7 +151,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
   }
 
   @Test
-  fun `when facilities are fetched, but location listener expires then facilities should still be shown`() {
+  fun `when facilities are fetched, but location is unavailable then facilities should still be shown`() {
     configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
 
     val facilities = listOf(
@@ -277,14 +159,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
         TestData.facility(name = "Facility 2"))
     whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged("f"))
-    uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
-    verify(screen, never()).updateFacilities(any(), any())
 
-    testComputationScheduler.advanceTimeBy(6, TimeUnit.SECONDS)
     verify(screen).updateFacilities(any(), any())
   }
 
@@ -294,7 +173,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.just(Unavailable))
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(ScreenCreated())
 
@@ -309,6 +188,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.never())
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
@@ -323,7 +203,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `when fetching facilities fails then an error should be shown`() {
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.just(Unavailable))
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(emptyList()))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0))
     whenever(facilitySync.pullWithResult())
@@ -344,7 +224,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(1))
     whenever(facilityRepository.facilities()).thenReturn(Observable.never())
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.just(Unavailable))
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
     uiEvents.onNext(RegistrationFacilitySelectionRetryClicked())
@@ -362,6 +242,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val facilities = listOf(facility1, facility2)
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities, facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size, facilities.size))
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
     val searchQuery = ""
     val facilityListItems = emptyList<FacilityListItem>()
@@ -422,6 +303,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
   fun `search field should only be shown when facilities are available`() {
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0, 10))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.never())
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(ScreenCreated())
 

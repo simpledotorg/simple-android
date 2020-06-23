@@ -59,7 +59,7 @@ class RegistrationNameScreenLogicTest {
 
     // then
     verify(userSession).saveOngoingRegistrationEntry(entryWithName)
-    verify(uiActions).openRegistrationPinEntryScreen()
+    verify(uiActions).openRegistrationPinEntryScreen(entryWithName)
     verify(uiActions).preFillUserDetails(currentOngoingRegistrationEntry)
     verify(ui, times(2)).hideValidationError()
     verifyNoMoreInteractions(ui)
@@ -106,8 +106,9 @@ class RegistrationNameScreenLogicTest {
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
     // then
-    verify(userSession).saveOngoingRegistrationEntry(currentOngoingRegistrationEntry.withName(validName))
-    verify(uiActions).openRegistrationPinEntryScreen()
+    val entryWithName = currentOngoingRegistrationEntry.withName(validName)
+    verify(userSession).saveOngoingRegistrationEntry(entryWithName)
+    verify(uiActions).openRegistrationPinEntryScreen(entryWithName)
     verify(ui, times(2)).hideValidationError()
     verifyNoMoreInteractions(ui)
     verifyNoMoreInteractions(uiActions)
@@ -125,7 +126,7 @@ class RegistrationNameScreenLogicTest {
     verify(uiActions).preFillUserDetails(currentOngoingRegistrationEntry)
     verify(ui).hideValidationError()
     verify(ui).showEmptyNameValidationError()
-    verify(uiActions, never()).openRegistrationPinEntryScreen()
+    verify(uiActions, never()).openRegistrationPinEntryScreen(any())
     verifyNoMoreInteractions(ui)
     verifyNoMoreInteractions(uiActions)
   }

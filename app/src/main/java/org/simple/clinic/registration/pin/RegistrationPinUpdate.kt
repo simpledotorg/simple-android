@@ -13,16 +13,23 @@ class RegistrationPinUpdate(
     return when (event) {
       is CurrentOngoingEntrySaved -> dispatch(ProceedToConfirmPin)
       is RegistrationPinTextChanged -> next(model.pinChanged(event.pin))
-      is RegistrationPinDoneClicked -> validateModel(model)
+      is RegistrationPinDoneClicked -> doneClicked(model)
     }
   }
 
-  private fun validateModel(model: RegistrationPinModel): Next<RegistrationPinModel, RegistrationPinEffect> {
-    val updatedModel = if (model.isEnteredPinOfLength(requiredPinLength))
+  private fun doneClicked(model: RegistrationPinModel): Next<RegistrationPinModel, RegistrationPinEffect> {
+    val updatedModel = validateModel(model)
+
+    return if (updatedModel.isEnteredPinValid)
+      next(updatedModel, SaveCurrentOngoingEntry(updatedModel.ongoingRegistrationEntry))
+    else
+      next(updatedModel)
+  }
+
+  private fun validateModel(model: RegistrationPinModel): RegistrationPinModel {
+    return if (model.isEnteredPinOfLength(requiredPinLength))
       model.validPinEntered()
     else
       model.pinDoesNotMatchRequiredLength()
-
-    return next(updatedModel)
   }
 }

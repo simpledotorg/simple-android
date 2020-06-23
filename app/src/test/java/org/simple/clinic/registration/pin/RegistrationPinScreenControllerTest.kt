@@ -139,7 +139,7 @@ class RegistrationPinScreenControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = RegistrationPinModel.create(),
+        defaultModel = RegistrationPinModel.create(ongoingRegistrationEntry),
         init = RegistrationPinInit(),
         update = RegistrationPinUpdate(),
         effectHandler = RegistrationPinEffectHandler(ui).build(),

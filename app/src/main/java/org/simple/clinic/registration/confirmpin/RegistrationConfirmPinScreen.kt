@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.screen_registration_confirm_pin.view.*
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreenKey
-import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.hideKeyboard
@@ -89,6 +88,6 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
   }
 
   fun goBackToPinScreen() {
-    screenRouter.push(RegistrationPinScreenKey())
+    screenRouter.pop()
   }
 }

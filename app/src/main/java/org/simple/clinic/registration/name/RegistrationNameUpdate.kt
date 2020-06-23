@@ -12,7 +12,7 @@ class RegistrationNameUpdate : Update<RegistrationNameModel, RegistrationNameEve
       is RegistrationFullNameTextChanged -> next(model.nameChanged(event.fullName))
       is NameValidated -> nameValidated(model, event)
       is RegistrationFullNameDoneClicked -> dispatch(ValidateEnteredName(model.ongoingRegistrationEntry.fullName!!) as RegistrationNameEffect)
-      is CurrentRegistrationEntrySaved -> dispatch(ProceedToPinEntry)
+      is CurrentRegistrationEntrySaved -> dispatch(ProceedToPinEntry(model.ongoingRegistrationEntry))
     }
   }
 

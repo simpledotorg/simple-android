@@ -1,6 +1,5 @@
 package org.simple.clinic.drugs.selection.entry
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -25,6 +24,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -43,6 +43,7 @@ class CustomPrescriptionEntryLogicTest {
   private val patientUuid = UUID.fromString("a90376d0-e29a-428f-80dc-bd4bdd74d9bf")
   private val prescriptionUuid = UUID.fromString("eef2b1c9-52cd-43d9-b109-b120b0e4c16c")
   private val updatePrescription = TestData.prescription(uuid = prescriptionUuid)
+  private val uuidGenerator = FakeUuidGenerator.fixed(prescriptionUuid)
 
   private lateinit var fixture: MobiusTestFixture<CustomPrescriptionEntryModel, CustomPrescriptionEntryEvent, CustomPrescriptionEntryEffect>
 
@@ -193,28 +194,6 @@ class CustomPrescriptionEntryLogicTest {
   }
 
   @Test
-  fun `when sheet is opened in edit mode and save is clicked after making changes, then the prescription should be updated`() {
-    //given
-    val prescribedDrug = TestData.prescription(uuid = prescriptionUuid, name = "Atnlol", dosage = "20mg")
-    val updatedPrescribedDrug = prescribedDrug.copy(name = "Atenolol", dosage = "5mg")
-
-    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescribedDrug))
-    whenever(prescriptionRepository.updatePrescription(updatedPrescribedDrug)).thenReturn(Completable.complete())
-    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(prescribedDrug)
-
-    //when
-    createSheetForUpdatingPrescription(prescriptionUuid)
-    uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Atenolol"))
-    uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("5mg"))
-    uiEvents.onNext(SaveCustomPrescriptionClicked)
-
-    //then
-    verify(prescriptionRepository).updatePrescription(updatedPrescribedDrug)
-    verify(prescriptionRepository, never()).savePrescription(any(), any(), any(), any())
-    verify(uiActions).finish()
-  }
-
-  @Test
   fun `when remove is clicked, then show confirmation dialog`() {
     //given
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(updatePrescription))
@@ -247,19 +226,22 @@ class CustomPrescriptionEntryLogicTest {
     instantiateFixture(openAsNew)
   }
 
-  private fun createSheetForUpdatingPrescription(prescriptionUuid: UUID) {
+  private fun createSheetForUpdatingPrescription(prescriptionUuid: UUID, uuidGenerator: UuidGenerator = this.uuidGenerator) {
     val openAsUpdate = OpenAs.Update(patientUuid, prescriptionUuid)
-    instantiateFixture(openAsUpdate)
+    instantiateFixture(openAsUpdate, uuidGenerator)
   }
 
-  private fun instantiateFixture(openAs: OpenAs) {
+  private fun instantiateFixture(
+      openAs: OpenAs,
+      uuidGenerator: UuidGenerator = this.uuidGenerator
+  ) {
     val uiRenderer = CustomPrescriptionEntryUiRenderer(ui)
     val effectHandler = CustomPrescriptionEntryEffectHandler(
         uiActions = uiActions,
         schedulersProvider = TrampolineSchedulersProvider(),
         prescriptionRepository = prescriptionRepository,
         currentFacility = Lazy { facility },
-        uuidGenerator = FakeUuidGenerator.fixed(prescriptionUuid)
+        uuidGenerator = uuidGenerator
     )
 
     fixture = MobiusTestFixture(

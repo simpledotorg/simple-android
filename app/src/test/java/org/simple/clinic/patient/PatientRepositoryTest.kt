@@ -12,6 +12,7 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.schedulers.TestScheduler
 import io.reactivex.subjects.BehaviorSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -22,7 +23,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestData
-import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.FacilityRepository
@@ -34,6 +34,7 @@ import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
@@ -72,7 +73,8 @@ class PatientRepositoryTest {
   private val dateOfBirthFormat = DateTimeFormatter.ISO_DATE
   private val user = TestData.loggedInUser()
   private val facility = TestData.facility()
-  private val schedulersProvider = TestSchedulersProvider()
+  private val computationScheduler = TestScheduler()
+  private val schedulersProvider = TestSchedulersProvider.trampoline(computationScheduler = computationScheduler)
 
   @Before
   fun setUp() {
@@ -303,19 +305,19 @@ class PatientRepositoryTest {
     whenever(patientSearchResultDao.nameAndId(any()))
         .thenReturn(
             BehaviorSubject.createDefault(listOf(PatientNameAndId(patientUuid, "Name")))
-                .doOnNext { schedulersProvider.testScheduler.advanceTimeBy(timeTakenToFetchPatientNameAndId) }
+                .doOnNext { computationScheduler.advanceTimeBy(timeTakenToFetchPatientNameAndId) }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
     whenever(searchPatientByName.search(any(), any()))
         .thenReturn(
             BehaviorSubject.createDefault(listOf(patientUuid))
-                .doOnNext { schedulersProvider.testScheduler.advanceTimeBy(timeTakenToFuzzyFilterPatientNames) }
+                .doOnNext { computationScheduler.advanceTimeBy(timeTakenToFuzzyFilterPatientNames) }
                 .firstOrError()
         )
     whenever(patientSearchResultDao.searchByIds(any(), any()))
         .thenReturn(
             BehaviorSubject.createDefault(listOf(TestData.patientSearchResult(uuid = patientUuid)))
-                .doOnNext { schedulersProvider.testScheduler.advanceTimeBy(timeTakenToFetchPatientDetails) }
+                .doOnNext { computationScheduler.advanceTimeBy(timeTakenToFetchPatientDetails) }
                 .firstOrError()
         )
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)

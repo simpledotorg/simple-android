@@ -1,15 +1,27 @@
 package org.simple.clinic.util.scheduler
 
 import io.reactivex.Scheduler
-import io.reactivex.schedulers.TestScheduler
+import io.reactivex.schedulers.Schedulers
 
-class TestSchedulersProvider: SchedulersProvider {
+class TestSchedulersProvider(
+    val ioScheduler: Scheduler,
+    val computationScheduler: Scheduler,
+    val uiScheduler: Scheduler
+) : SchedulersProvider {
 
-  val testScheduler: TestScheduler = TestScheduler()
+  companion object {
+    fun trampoline(
+        ioScheduler: Scheduler = Schedulers.trampoline(),
+        computationScheduler: Scheduler = Schedulers.trampoline(),
+        uiScheduler: Scheduler = Schedulers.trampoline()
+    ): SchedulersProvider {
+      return TestSchedulersProvider(ioScheduler, computationScheduler, uiScheduler)
+    }
+  }
 
-  override fun io(): Scheduler = testScheduler
+  override fun io(): Scheduler = ioScheduler
 
-  override fun computation(): Scheduler = testScheduler
+  override fun computation(): Scheduler = computationScheduler
 
-  override fun ui(): Scheduler = testScheduler
+  override fun ui(): Scheduler = uiScheduler
 }

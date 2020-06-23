@@ -121,8 +121,8 @@ class RegistrationFullNameScreen(
     validationErrorTextView.visibility = View.GONE
   }
 
-  override fun openRegistrationPinEntryScreen() {
-    screenRouter.push(RegistrationPinScreenKey())
+  override fun openRegistrationPinEntryScreen(registrationEntry: OngoingRegistrationEntry) {
+    screenRouter.push(RegistrationPinScreenKey(registrationEntry))
   }
 
   interface Injector {

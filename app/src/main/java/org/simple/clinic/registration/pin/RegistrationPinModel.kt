@@ -2,11 +2,14 @@ package org.simple.clinic.registration.pin
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.user.OngoingRegistrationEntry
 
 @Parcelize
-class RegistrationPinModel: Parcelable {
+data class RegistrationPinModel(
+    val ongoingRegistrationEntry: OngoingRegistrationEntry
+): Parcelable {
 
   companion object {
-    fun create(): RegistrationPinModel = RegistrationPinModel()
+    fun create(registrationEntry: OngoingRegistrationEntry): RegistrationPinModel = RegistrationPinModel(registrationEntry)
   }
 }

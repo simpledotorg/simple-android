@@ -10,4 +10,4 @@ data class ValidateEnteredName(val name: String) : RegistrationNameEffect()
 
 data class SaveCurrentRegistrationEntry(val entry: OngoingRegistrationEntry) : RegistrationNameEffect()
 
-object ProceedToPinEntry : RegistrationNameEffect()
+data class ProceedToPinEntry(val entry: OngoingRegistrationEntry) : RegistrationNameEffect()

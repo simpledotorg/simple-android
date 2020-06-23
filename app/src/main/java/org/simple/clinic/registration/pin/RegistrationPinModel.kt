@@ -20,6 +20,9 @@ data class RegistrationPinModel(
     )
   }
 
+  val isEnteredPinValid: Boolean
+    get() = pinValidationResult == Valid
+
   fun pinChanged(pin: String): RegistrationPinModel {
     return copy(
         ongoingRegistrationEntry = ongoingRegistrationEntry.withPin(pin),

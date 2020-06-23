@@ -9,9 +9,6 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.schedulers.TestScheduler
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -27,17 +24,16 @@ import org.simple.clinic.facility.change.FacilityChangeConfig
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.Coordinates
-import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
+import org.simple.clinic.location.LocationUpdate.Unavailable
+import org.simple.clinic.location.ScreenLocationUpdates
+import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Distance
-import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestElapsedRealtimeClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
-import java.util.concurrent.TimeUnit
 
 @RunWith(JUnitParamsRunner::class)
 class FacilitySelectionActivityControllerTest {
@@ -49,11 +45,9 @@ class FacilitySelectionActivityControllerTest {
   private val screen = mock<FacilitySelectionActivity>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
-  private val locationRepository = mock<LocationRepository>()
   private val listItemBuilder = mock<FacilityListItemBuilder>()
-  private val testComputationScheduler = TestScheduler()
   private val user = TestData.loggedInUser()
-  private val elapsedRealtimeClock = TestElapsedRealtimeClock()
+  private val screenLocationUpdates = mock<ScreenLocationUpdates>()
 
   private val configTemplate = FacilityChangeConfig(
       locationListenerExpiry = Duration.ofSeconds(0),
@@ -66,19 +60,13 @@ class FacilitySelectionActivityControllerTest {
 
   @Before
   fun setUp() {
-    // To control time used by Observable.timer().
-    RxJavaPlugins.setComputationSchedulerHandler { testComputationScheduler }
-
-    // Location updates are listened on a background thread.
-    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-
     controller = FacilitySelectionActivityController(
         facilityRepository = facilityRepository,
         userSession = userSession,
-        locationRepository = locationRepository,
         configProvider = configProvider,
-        elapsedRealtimeClock = elapsedRealtimeClock,
-        listItemBuilder = listItemBuilder)
+        listItemBuilder = listItemBuilder,
+        screenLocationUpdates = screenLocationUpdates
+    )
 
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
 
@@ -93,12 +81,13 @@ class FacilitySelectionActivityControllerTest {
     val facility2 = TestData.facility()
     val facilities = listOf(facility1, facility2)
     whenever(facilityRepository.facilitiesInCurrentGroup(user = user)).thenReturn(Observable.just(facilities, facilities))
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
     val searchQuery = ""
     val facilityListItems = emptyList<FacilityListItem>()
     whenever(listItemBuilder.build(any(), any(), any(), any())).thenReturn(facilityListItems)
 
-    uiEvents.onNext(FacilitySelectionUserLocationUpdated(LocationUpdate.Unavailable))
+    uiEvents.onNext(FacilitySelectionUserLocationUpdated(Unavailable))
     uiEvents.onNext(FacilitySelectionSearchQueryChanged(searchQuery))
 
     verify(listItemBuilder, times(2)).build(
@@ -116,9 +105,10 @@ class FacilitySelectionActivityControllerTest {
         TestData.facility(name = "Facility 1"),
         TestData.facility(name = "Facility 2"))
     whenever(facilityRepository.facilitiesInCurrentGroup(any(), eq(user))).thenReturn(Observable.just(facilities))
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilitySelectionUserLocationUpdated(LocationUpdate.Unavailable))
+    uiEvents.onNext(FacilitySelectionUserLocationUpdated(Unavailable))
     uiEvents.onNext(FacilitySelectionSearchQueryChanged(query = "F"))
     uiEvents.onNext(FacilitySelectionSearchQueryChanged(query = "Fa"))
     uiEvents.onNext(FacilitySelectionSearchQueryChanged(query = "Fac"))
@@ -138,116 +128,23 @@ class FacilitySelectionActivityControllerTest {
   }
 
   @Test
-  fun `when screen is started and location permission is available then location should be fetched`() {
-    configProvider.onNext(configTemplate.copy(locationUpdateInterval = Duration.ofDays(5)))
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
-
-    uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilitySelectionLocationPermissionChanged(RuntimePermissionResult.GRANTED))
-
-    verify(locationRepository).streamUserLocation(updateInterval = eq(Duration.ofDays(5)), updateScheduler = any())
-  }
-
-  @Test
-  fun `when screen is started and location permission was denied then location should not be fetched and facilities should be shown`() {
+  fun `when screen is started and location is not available, facilities should be shown`() {
     val facilities = listOf(
         TestData.facility(name = "Facility 1"),
         TestData.facility(name = "Facility 2"))
     whenever(facilityRepository.facilitiesInCurrentGroup(any(), any())).thenReturn(Observable.just(facilities))
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(FacilitySelectionSearchQueryChanged(""))
     uiEvents.onNext(FacilitySelectionLocationPermissionChanged(RuntimePermissionResult.DENIED))
 
-    verify(locationRepository, never()).streamUserLocation(any(), any())
     verify(screen).updateFacilities(any(), any())
-  }
-
-  @Test
-  fun `when screen is started then location should only be read once`() {
-    configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
-
-    val facilities = listOf(
-        TestData.facility(name = "Facility 1"),
-        TestData.facility(name = "Facility 2"))
-    whenever(facilityRepository.facilitiesInCurrentGroup(any(), any())).thenReturn(Observable.just(facilities))
-
-    val timeSinceBootWhenRecorded = Duration.ofMillis(elapsedRealtimeClock.millis())
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(
-        Observable.just(
-            LocationUpdate.Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded),
-            LocationUpdate.Unavailable,
-            LocationUpdate.Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded)))
-
-    uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilitySelectionSearchQueryChanged(""))
-    uiEvents.onNext(FacilitySelectionLocationPermissionChanged(RuntimePermissionResult.GRANTED))
-
-    testComputationScheduler.advanceTimeBy(6, TimeUnit.SECONDS)
-
-    verify(locationRepository).streamUserLocation(any(), any())
-    verify(screen, times(1)).updateFacilities(any(), any())
-  }
-
-  @Test
-  fun `when the user's location updates are received then only one recent update should be read`() {
-    val config = configTemplate.copy(staleLocationThreshold = Duration.ofMinutes(10))
-    configProvider.onNext(config)
-
-    val facilities = listOf(TestData.facility(name = "Facility 1"))
-    whenever(facilityRepository.facilitiesInCurrentGroup(any(), any())).thenReturn(Observable.just(facilities))
-
-    val locationUpdates = PublishSubject.create<LocationUpdate>()
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(locationUpdates)
-
-    uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilitySelectionSearchQueryChanged(""))
-    uiEvents.onNext(FacilitySelectionLocationPermissionChanged(RuntimePermissionResult.GRANTED))
-
-    val locationOlderThanStaleThreshold = LocationUpdate.Available(
-        location = Coordinates(0.0, 0.0),
-        timeSinceBootWhenRecorded = Duration.ofMillis(elapsedRealtimeClock.millis()))
-
-    elapsedRealtimeClock.advanceBy(config.staleLocationThreshold + Duration.ofSeconds(1))
-
-    locationUpdates.onNext(locationOlderThanStaleThreshold)
-    verify(screen, never()).updateFacilities(any(), any())
-
-    locationUpdates.onNext(locationOlderThanStaleThreshold)
-    verify(screen, never()).updateFacilities(any(), any())
-
-    elapsedRealtimeClock.advanceBy(config.staleLocationThreshold)
-
-    val locationNewerThanStaleThreshold = LocationUpdate.Available(
-        location = Coordinates(0.0, 0.0),
-        timeSinceBootWhenRecorded = Duration.ofMillis(elapsedRealtimeClock.millis()))
-
-    locationUpdates.onNext(locationNewerThanStaleThreshold)
-    verify(screen).updateFacilities(any(), any())
-  }
-
-  @Test
-  @Parameters("5", "6", "7", "8")
-  fun `when location is being fetched then it should expire after a fixed time duration`(
-      secondsSpentWaitingForLocation: Long
-  ) {
-    configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
-
-    whenever(facilityRepository.facilitiesInCurrentGroup(any(), any())).thenReturn(Observable.just(emptyList()))
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
-
-    uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilitySelectionLocationPermissionChanged(RuntimePermissionResult.GRANTED))
-    verify(screen).showProgressIndicator()
-
-    testComputationScheduler.advanceTimeBy(secondsSpentWaitingForLocation, TimeUnit.SECONDS)
-    verify(screen).hideProgressIndicator()
   }
 
   @Test
   fun `when screen starts and location permission is available then progress indicator should be shown`() {
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(FacilitySelectionLocationPermissionChanged(RuntimePermissionResult.GRANTED))
@@ -258,7 +155,7 @@ class FacilitySelectionActivityControllerTest {
 
   @Test
   fun `when screen starts and location permission was denied then progress indicator should not be shown`() {
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(FacilitySelectionLocationPermissionChanged(RuntimePermissionResult.DENIED))
@@ -271,7 +168,7 @@ class FacilitySelectionActivityControllerTest {
   fun `when a location update is received then progress indicator should be hidden`(
       locationUpdate: LocationUpdate
   ) {
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.just(locationUpdate))
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(locationUpdate))
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(FacilitySelectionLocationPermissionChanged(RuntimePermissionResult.GRANTED))
@@ -281,7 +178,7 @@ class FacilitySelectionActivityControllerTest {
 
   @Suppress("unused")
   fun `params for location updates`() = listOf(
-      LocationUpdate.Unavailable,
+      Unavailable,
       LocationUpdate.Available(location = Coordinates(0.0, 0.0), timeSinceBootWhenRecorded = Duration.ofNanos(0))
   )
 
@@ -295,7 +192,7 @@ class FacilitySelectionActivityControllerTest {
     whenever(facilityRepository.facilitiesInCurrentGroup(any(), any())).thenReturn(Observable.just(facilities))
 
     val locationUpdates = PublishSubject.create<LocationUpdate>()
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(locationUpdates)
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(locationUpdates)
 
     uiEvents.run {
       onNext(ScreenCreated())
@@ -309,44 +206,24 @@ class FacilitySelectionActivityControllerTest {
   }
 
   @Test
-  fun `when facilities are fetched, but location listener expires then facilities should still be shown`() {
-    configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
-
-    val facilities = listOf(
-        TestData.facility(name = "Facility 1"),
-        TestData.facility(name = "Facility 2"))
-    whenever(facilityRepository.facilitiesInCurrentGroup(any(), any())).thenReturn(Observable.just(facilities))
-    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
-
-    uiEvents.run {
-      onNext(ScreenCreated())
-      onNext(FacilitySelectionSearchQueryChanged("f"))
-      onNext(FacilitySelectionLocationPermissionChanged(RuntimePermissionResult.GRANTED))
-    }
-    verify(screen, never()).updateFacilities(any(), any())
-
-    testComputationScheduler.advanceTimeBy(6, TimeUnit.SECONDS)
-    verify(screen).updateFacilities(any(), any())
-  }
-
-  @Test
   @Parameters(method = "params for user location updates")
   fun `search field should only be shown when a user location update is received`(
       locationUpdate: LocationUpdate
   ) {
+    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(locationUpdate))
     uiEvents.onNext(ScreenCreated())
 
     val inOrder = inOrder(screen)
     inOrder.verify(screen).showToolbarWithoutSearchField()
 
-    uiEvents.onNext(FacilitySelectionUserLocationUpdated(LocationUpdate.Unavailable))
+    uiEvents.onNext(FacilitySelectionUserLocationUpdated(Unavailable))
     inOrder.verify(screen).showToolbarWithSearchField()
   }
 
   @Suppress("unused")
   fun `params for user location updates`(): List<Any> {
     return listOf(
-        LocationUpdate.Unavailable,
+        Unavailable,
         LocationUpdate.Available(location = Coordinates(0.0, 0.0), timeSinceBootWhenRecorded = Duration.ofNanos(0)))
   }
 

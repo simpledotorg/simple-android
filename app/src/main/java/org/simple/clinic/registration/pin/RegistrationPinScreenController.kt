@@ -3,12 +3,8 @@ package org.simple.clinic.registration.pin
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.Observables
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -23,32 +19,6 @@ class RegistrationPinScreenController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return updateOngoingEntryAndProceed(replayedEvents)
-  }
-
-  private fun isPinValid(pin: String) = pin.length == SECURITY_PIN_LENGTH
-
-  private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
-    val doneClicks = events.ofType<RegistrationPinDoneClicked>()
-    val pinTextChanges = events
-        .ofType<RegistrationPinTextChanged>()
-        .map { it.pin }
-
-    return Observables
-        .combineLatest(doneClicks, pinTextChanges) { _, pin -> pin}
-        .filter(::isPinValid)
-        .doOnNext { pin ->
-          // TODO (vs) 09/06/20: Remove this magic number from here and move it where it makes sense
-          if (pin.length > 4) {
-            throw AssertionError("Shouldn't happen")
-          }
-        }
-        .map { pin ->
-          val entry = (userSession.ongoingRegistrationEntry() as Just).value
-
-          entry.copy(pin = pin)
-        }
-        .doOnNext(userSession::saveOngoingRegistrationEntry)
-        .map { { ui: Ui -> ui.openRegistrationConfirmPinScreen() } }
+    return Observable.never()
   }
 }

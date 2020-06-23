@@ -58,7 +58,6 @@ class RegistrationPinScreenControllerTest {
     uiEvents.onNext(RegistrationPinDoneClicked())
 
     // then
-    verify(userSession).ongoingRegistrationEntry()
     verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin(input))
     verify(ui).openRegistrationConfirmPinScreen()
     verify(ui, times(2)).hideIncompletePinError()
@@ -78,7 +77,6 @@ class RegistrationPinScreenControllerTest {
     uiEvents.onNext(RegistrationPinDoneClicked())
 
     // then
-    verify(userSession).ongoingRegistrationEntry()
     verify(userSession).saveOngoingRegistrationEntry(ongoingRegistrationEntry.withPin(validPin))
     verify(ui).openRegistrationConfirmPinScreen()
     verify(ui, times(2)).hideIncompletePinError()
@@ -93,7 +91,6 @@ class RegistrationPinScreenControllerTest {
     uiEvents.onNext(RegistrationPinDoneClicked())
 
     // then
-    verify(userSession, never()).ongoingRegistrationEntry()
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(ui).showIncompletePinError()
     verify(ui, never()).openRegistrationConfirmPinScreen()

@@ -205,9 +205,9 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
       return intent
     }
 
-    fun intentForUpdatingPrescription(context: Context, prescribedDrugUuid: UUID): Intent {
+    fun intentForUpdatingPrescription(context: Context, patientUuid: UUID, prescribedDrugUuid: UUID): Intent {
       val intent = Intent(context, CustomPrescriptionEntrySheet::class.java)
-      intent.putExtra(KEY_OPEN_AS, OpenAs.Update(prescribedDrugUuid))
+      intent.putExtra(KEY_OPEN_AS, OpenAs.Update(patientUuid, prescribedDrugUuid))
       return intent
     }
   }

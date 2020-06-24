@@ -656,22 +656,16 @@
     <item name="cornerRadius">2dp</item>
   </style>
 
-  <style name="Clinic.V2.MaterialButton.Blue2">
-    <item name="backgroundTint">@color/blue2</item>
-    <item name="android:textColor">@color/blue1</item>
-    <item name="iconTint">@color/blue1</item>
-  </style>
-
-  <style name="Clinic.V2.MaterialButton.Green1">
-    <item name="backgroundTint">@color/green1</item>
+  <style name="Clinic.V2.MaterialButton.Blue1">
+    <item name="backgroundTint">@color/blue1</item>
     <item name="android:textColor">@color/white100</item>
     <item name="iconTint">@color/white100</item>
   </style>
 
-  <style name="Clinic.V2.MaterialButton.Green3">
-    <item name="backgroundTint">@color/green3</item>
-    <item name="android:textColor">@color/green1</item>
-    <item name="iconTint">@color/green1</item>
+  <style name="Clinic.V2.MaterialButton.Blue2">
+    <item name="backgroundTint">@color/blue2</item>
+    <item name="android:textColor">@color/blue1</item>
+    <item name="iconTint">@color/blue1</item>
   </style>
 
   <style name="Clinic.V2.MaterialButton.Red2">

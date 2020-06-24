@@ -14,6 +14,8 @@ import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreenKey
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.feature.Feature.CameraXQrScanner
+import org.simple.clinic.feature.Features
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport.SHORT_CODE_LENGTH
@@ -47,7 +49,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   lateinit var utcClock: UtcClock
 
   @Inject
-  lateinit var config: ScanSimpleIdConfig
+  lateinit var features: Features
 
   private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
 
@@ -65,7 +67,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     toolBar.setNavigationOnClickListener { screenRouter.pop() }
     setupShortCodeTextField()
 
-    qrCodeScannerView = if (config.useNewQrScanner) {
+    qrCodeScannerView = if (features.isEnabled(CameraXQrScanner)) {
       QrCodeScannerView(context)
     } else {
       QrCodeScannerView_Old(context)

@@ -18,15 +18,17 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Destroyed
 import org.simple.clinic.activity.ActivityLifecycle.Started
-import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.deeplink.DeepLinkResult
 import org.simple.clinic.deeplink.OpenPatientSummary
 import org.simple.clinic.deeplink.ShowNoPatientUuid
 import org.simple.clinic.deeplink.ShowPatientNotFound
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.feature.Feature.LogSavedStateSizes
+import org.simple.clinic.feature.Features
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockScreenKey
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
@@ -92,9 +94,6 @@ class TheActivity : AppCompatActivity() {
   lateinit var locale: Locale
 
   @Inject
-  lateinit var config: TheActivityConfig
-
-  @Inject
   lateinit var syncSetup: SyncSetup
 
   @Inject
@@ -102,6 +101,9 @@ class TheActivity : AppCompatActivity() {
 
   @Inject
   lateinit var utcClock: UtcClock
+
+  @Inject
+  lateinit var features: Features
 
   private val disposables = CompositeDisposable()
 
@@ -202,7 +204,7 @@ class TheActivity : AppCompatActivity() {
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
-    if (config.shouldLogSavedStateSizes) {
+    if (features.isEnabled(LogSavedStateSizes)) {
       screenRouter.logSizesOfSavedStates()
     }
     super.onSaveInstanceState(outState)

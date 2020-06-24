@@ -19,6 +19,7 @@
 - [In Progress: 23 Jun 2020] Migrate `RegistrationPinScreen` to Mobius
 - Make non-protocol drugs immutable
 - Refactored logic around fetching location in facility selection screens to a common class
+- Decoupled feature toggles from the remote configuration setup
 
 ### Fixes
 - Fixed retrying on a failed teleconsultation fetch when in airplane mode

@@ -38,6 +38,8 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenKey
+import org.simple.clinic.feature.Feature.DeletePatient
+import org.simple.clinic.feature.Features
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.newentry.country.InputFields
@@ -109,7 +111,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   lateinit var inputFields: InputFields
 
   @Inject
-  lateinit var editPatientConfig: EditPatientConfig
+  lateinit var features: Features
 
   private val screenKey by unsafeLazy {
     screenRouter.key<EditPatientScreenKey>(this)
@@ -164,7 +166,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     setInputFieldsHint()
     showOrHideGenderRadioButtons()
 
-    deletePatient.visibleOrGone(editPatientConfig.deletePatientFeatureEnabled)
+    deletePatient.visibleOrGone(features.isEnabled(DeletePatient))
     deletePatient.setOnClickListener { screenRouter.push(DeletePatientScreenKey(screenKey.patient.uuid)) }
   }
 

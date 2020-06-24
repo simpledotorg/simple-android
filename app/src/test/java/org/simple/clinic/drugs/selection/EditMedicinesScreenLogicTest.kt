@@ -195,7 +195,7 @@ class EditMedicinesScreenLogicTest {
   }
 
   @Test
-  fun `when a custom prescription is clicked then open upate custom prescription screen`() {
+  fun `when a custom prescription is clicked then open update custom prescription screen`() {
     //given
     val prescribedDrug = TestData.prescription()
     whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(emptyList())

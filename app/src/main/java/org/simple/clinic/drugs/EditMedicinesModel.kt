@@ -18,6 +18,10 @@ data class EditMedicinesModel(
     }
   }
 
+  fun isProtocolDrug(prescribedDrug: PrescribedDrug): Boolean {
+    return protocolDrugs!!.any { it.matches(prescribedDrug) }
+  }
+
   fun prescribedDrugsFetched(listFetched: List<PrescribedDrug>) =
       copy(prescribedDrugs = listFetched)
 

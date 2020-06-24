@@ -9,10 +9,14 @@ import com.nhaarman.mockitokotlin2.mock
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.appupdate.AppUpdateState.*
+import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
+import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
+import org.simple.clinic.remoteconfig.DefaultValueConfigReader
+import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 
 @RunWith(JUnitParamsRunner::class)
 class CheckAppUpdateAvailabilityTest {
@@ -22,16 +26,6 @@ class CheckAppUpdateAvailabilityTest {
   private val differenceInVersionsToShowUpdate = 1
 
   lateinit var checkUpdateAvailable: CheckAppUpdateAvailability
-
-  @Before
-  fun setup() {
-
-    val versionCodeCheck = { versionCode: Int, _: Application, _: AppUpdateConfig ->
-      versionCode.minus(currentAppVersionCode) >= differenceInVersionsToShowUpdate
-    }
-
-    checkUpdateAvailable = CheckAppUpdateAvailability(mock(), configProvider, versionCodeCheck)
-  }
 
   @Test
   @Parameters(method = "params for checking app update")
@@ -54,11 +48,13 @@ class CheckAppUpdateAvailabilityTest {
         flexibleUpdateIntent
     )
 
+    setup(isFeatureEnabled = isInAppUpdateEnabled)
+
     val testObserver = checkUpdateAvailable
         .shouldNudgeForUpdate(appUpdateInfo)
         .test()
 
-    configProvider.onNext(AppUpdateConfig(isInAppUpdateEnabled, 1))
+    configProvider.onNext(AppUpdateConfig(1))
 
     with(testObserver) {
       assertNoErrors()
@@ -122,6 +118,25 @@ class CheckAppUpdateAvailabilityTest {
             isInAppUpdateEnabled = true,
             appUpdateState = ShowAppUpdate
         )
+    )
+  }
+
+  private fun setup(
+      isFeatureEnabled: Boolean
+  ) {
+    val versionCodeCheck = { versionCode: Int, _: Application, _: AppUpdateConfig ->
+      versionCode.minus(currentAppVersionCode) >= differenceInVersionsToShowUpdate
+    }
+
+    val features = Features(
+        remoteConfigService = NoOpRemoteConfigService(DefaultValueConfigReader()),
+        overrides = mapOf(Feature.NotifyAppUpdateAvailable to isFeatureEnabled)
+    )
+    checkUpdateAvailable = CheckAppUpdateAvailability(
+        appContext = mock(),
+        config = configProvider,
+        versionUpdateCheck = versionCodeCheck,
+        features = features
     )
   }
 }

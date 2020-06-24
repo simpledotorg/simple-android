@@ -13,12 +13,15 @@ import org.simple.clinic.BuildConfig
 import org.simple.clinic.appupdate.AppUpdateState.AppUpdateStateError
 import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
+import org.simple.clinic.feature.Feature.*
+import org.simple.clinic.feature.Features
 import javax.inject.Inject
 
 class CheckAppUpdateAvailability @Inject constructor(
     private val appContext: Application,
     private val config: Observable<AppUpdateConfig>,
-    private val versionUpdateCheck: (Int, Application, AppUpdateConfig) -> Boolean = isVersionApplicableForUpdate
+    private val versionUpdateCheck: (Int, Application, AppUpdateConfig) -> Boolean = isVersionApplicableForUpdate,
+    private val features: Features
 ) {
 
   fun listen(): Observable<AppUpdateState> {
@@ -77,7 +80,7 @@ class CheckAppUpdateAvailability @Inject constructor(
   }
 
   private fun checkForUpdate(appUpdateInfo: AppUpdateInfo, config: AppUpdateConfig): Boolean {
-    return config.inAppUpdateEnabled
+    return features.isEnabled(NotifyAppUpdateAvailable)
         && appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
         && appUpdateInfo.isUpdateTypeAllowed(FLEXIBLE)
         && versionUpdateCheck(appUpdateInfo.availableVersionCode(), appContext, config)

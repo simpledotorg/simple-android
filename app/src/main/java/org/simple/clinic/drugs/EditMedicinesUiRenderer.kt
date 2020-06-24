@@ -10,14 +10,39 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
 
   override fun render(model: EditMedicinesModel) {
     if (model.prescribedDrugs != null && model.protocolDrugs != null)
-      renderPrescribedProtocolDrugs(model.prescribedDrugs, model.protocolDrugs)
+      renderPrescribedProtocolDrugs(model, model.prescribedDrugs, model.protocolDrugs)
   }
 
-  private fun renderPrescribedProtocolDrugs(prescribedDrugs: List<PrescribedDrug>, protocolDrugs: List<ProtocolDrugAndDosages>) {
-    val prescribedProtocolDrugs = prescribedDrugs.filter { it.isProtocolDrug }
-    val isAtLeastOneCustomDrugPrescribed = prescribedDrugs.any { it.isProtocolDrug.not() }
+  private fun renderPrescribedProtocolDrugs(
+      model: EditMedicinesModel,
+      prescribedDrugs: List<PrescribedDrug>,
+      protocolDrugs: List<ProtocolDrugAndDosages>
+  ) {
+    val (prescribedProtocolDrugs, prescribedCustomDrugs) = prescribedDrugs.partition(model::isProtocolDrug)
+    val isAtLeastOneCustomDrugPrescribed = prescribedCustomDrugs.isNotEmpty()
+
+    val protocolDrugSelectionItems = protocolDrugSelectionItems(protocolDrugs, prescribedProtocolDrugs, isAtLeastOneCustomDrugPrescribed)
+    val customPrescribedDrugItems = customPrescribedDrugItems(prescribedCustomDrugs)
+    val drugsList = protocolDrugSelectionItems + customPrescribedDrugItems
+
+    ui.populateDrugsList(drugsList)
+  }
+
+  private fun customPrescribedDrugItems(
+      prescribedCustomDrugs: List<PrescribedDrug>
+  ): List<CustomPrescribedDrugListItem> {
+    return prescribedCustomDrugs
+        .sortedBy { it.updatedAt }
+        .mapIndexed { index, prescribedDrug -> CustomPrescribedDrugListItem(prescribedDrug, index == prescribedCustomDrugs.lastIndex) }
+  }
+
+  private fun protocolDrugSelectionItems(
+      protocolDrugs: List<ProtocolDrugAndDosages>,
+      prescribedProtocolDrugs: List<PrescribedDrug>,
+      isAtLeastOneCustomDrugPrescribed: Boolean
+  ): List<ProtocolDrugListItem> {
     // Show dosage if prescriptions exist for them.
-    val protocolDrugSelectionItems = protocolDrugs
+    return protocolDrugs
         .mapIndexed { index: Int, drugAndDosages: ProtocolDrugAndDosages ->
           val matchingPrescribedDrug = prescribedProtocolDrugs.firstOrNull { it.name == drugAndDosages.drugName }
           ProtocolDrugListItem(
@@ -26,15 +51,5 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
               prescribedDrug = matchingPrescribedDrug,
               hideDivider = isAtLeastOneCustomDrugPrescribed.not() && index == protocolDrugs.lastIndex)
         }
-
-    val customDrugs = prescribedDrugs
-        .filter { it.isProtocolDrug.not() }
-    val customPrescribedDrugItems = customDrugs
-        .sortedBy { it.updatedAt }
-        .mapIndexed { index, prescribedDrug -> CustomPrescribedDrugListItem(prescribedDrug, index == customDrugs.lastIndex) }
-
-    val drugsList = protocolDrugSelectionItems + customPrescribedDrugItems
-
-    ui.populateDrugsList(drugsList)
   }
 }

@@ -9,7 +9,6 @@ import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
-import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.TestUserClock
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
@@ -162,10 +161,8 @@ class SetAppointmentReminderUiRendererTest {
 
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
-      proxyPhoneNumber: String = "12345678",
       timeToAppointments: List<TimeToAppointment> = this.timeToAppointments
   ): ContactPatientModel {
-    val phoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber, phoneMaskFeatureEnabled)
     val appointmentConfig = AppointmentConfig(
         appointmentDuePeriodForDefaulters = Period.ZERO,
         scheduleAppointmentsIn = emptyList(),
@@ -176,10 +173,10 @@ class SetAppointmentReminderUiRendererTest {
 
     return ContactPatientModel.create(
         patientUuid = patientUuid,
-        phoneNumberMaskerConfig = phoneNumberMaskerConfig,
         appointmentConfig = appointmentConfig,
         userClock = clock,
-        mode = UiMode.SetAppointmentReminder
+        mode = UiMode.SetAppointmentReminder,
+        secureCallFeatureEnabled = phoneMaskFeatureEnabled
     )
   }
 }

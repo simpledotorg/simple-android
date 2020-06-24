@@ -6,7 +6,6 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.patient.PatientProfile
-import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
@@ -29,21 +28,17 @@ data class ContactPatientModel(
   companion object {
     fun create(
         patientUuid: UUID,
-        phoneNumberMaskerConfig: PhoneNumberMaskerConfig,
         appointmentConfig: AppointmentConfig,
         userClock: UserClock,
-        mode: UiMode
+        mode: UiMode,
+        secureCallFeatureEnabled: Boolean
     ): ContactPatientModel {
-      val secureCallingFeatureEnabled = with(phoneNumberMaskerConfig) {
-        phoneMaskingFeatureEnabled && proxyPhoneNumber.isNotBlank()
-      }
-
       val potentialAppointments = PotentialAppointmentDate.from(appointmentConfig.remindAppointmentsIn, userClock)
 
       return ContactPatientModel(
           patientUuid = patientUuid,
           uiMode = mode,
-          secureCallingFeatureEnabled = secureCallingFeatureEnabled,
+          secureCallingFeatureEnabled = secureCallFeatureEnabled,
           potentialAppointments = potentialAppointments,
           selectedAppointmentDate = potentialAppointments.first().scheduledFor,
           selectedRemoveAppointmentReason = null

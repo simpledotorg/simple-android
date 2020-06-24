@@ -17,6 +17,7 @@
 - Migrated `RegistrationFullNameScreen` to Mobius
 - [In Progress: 23 Jun 2020] Migrate `RegistrationPinScreen` to Mobius
 - Make non-protocol drugs immutable
+- Refactored logic around fetching location in facility selection screens to a common class
 
 ### Fixes
 - Fixed retrying on a failed teleconsultation fetch when in airplane mode

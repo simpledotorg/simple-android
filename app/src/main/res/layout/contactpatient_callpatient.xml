@@ -124,7 +124,7 @@
 
   <com.google.android.material.button.MaterialButton
     android:id="@+id/normalCallButton"
-    style="@style/Clinic.V2.MaterialButton.Green3"
+    style="@style/Clinic.V2.MaterialButton.Blue2"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
@@ -135,16 +135,14 @@
     android:text="@string/contactpatient_call_normal"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
     app:icon="@drawable/ic_call_16dp"
-    app:iconTint="@color/green1"
     app:layout_constraintEnd_toStartOf="@+id/secureCallButton"
     app:layout_constraintHorizontal_chainStyle="spread"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/removeFromOverdueListTextView"
-    app:layout_constraintWidth_max="256dp" />
+    app:layout_constraintTop_toBottomOf="@id/removeFromOverdueListTextView" />
 
   <com.google.android.material.button.MaterialButton
     android:id="@+id/secureCallButton"
-    style="@style/Clinic.V2.MaterialButton.Green1"
+    style="@style/Clinic.V2.MaterialButton.Blue1"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/spacing_16"

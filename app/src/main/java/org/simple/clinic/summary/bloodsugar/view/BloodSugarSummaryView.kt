@@ -28,6 +28,8 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
+import org.simple.clinic.feature.Feature.EditBloodSugar
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityResult
@@ -101,6 +103,9 @@ class BloodSugarSummaryView(
 
   @field:[Inject Named("time_for_measurement_history")]
   lateinit var timeFormatter: DateTimeFormatter
+
+  @Inject
+  lateinit var features: Features
 
   private val uiRenderer: BloodSugarSummaryViewUiRenderer by unsafeLazy {
     BloodSugarSummaryViewUiRenderer(this, bloodSugarSummaryConfig)
@@ -292,7 +297,7 @@ class BloodSugarSummaryView(
   }
 
   private fun isBloodSugarEditable(measurement: BloodSugarMeasurement): Boolean {
-    if (bloodSugarSummaryConfig.bloodSugarEditFeatureEnabled.not() || measurement.reading.type is Unknown) {
+    if (features.isDisabled(EditBloodSugar) || measurement.reading.type is Unknown) {
       return false
     }
     val now = Instant.now(utcClock)

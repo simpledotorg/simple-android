@@ -16,6 +16,8 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.feature.Feature.SecureCalling
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
@@ -70,6 +72,9 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
   @Inject
   lateinit var appointmentConfig: AppointmentConfig
 
+  @Inject
+  lateinit var features: Features
+
   private lateinit var component: ContactPatientBottomSheetComponent
 
   private val patientUuid by unsafeLazy { intent.getSerializableExtra(KEY_PATIENT_UUID) as UUID }
@@ -108,10 +113,10 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
         events = events,
         defaultModel = ContactPatientModel.create(
             patientUuid = patientUuid,
-            phoneNumberMaskerConfig = phoneMaskConfig,
             appointmentConfig = appointmentConfig,
             userClock = userClock,
-            mode = UiMode.CallPatient
+            mode = UiMode.CallPatient,
+            secureCallFeatureEnabled = features.isEnabled(SecureCalling) && phoneMaskConfig.proxyPhoneNumber.isNotBlank()
         ),
         update = ContactPatientUpdate(phoneMaskConfig),
         effectHandler = effectHandlerFactory.create(this).build(),

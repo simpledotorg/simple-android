@@ -11,7 +11,6 @@ import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.TestUserClock
@@ -151,10 +150,8 @@ class CallPatientUiRendererTest {
 
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
-      proxyPhoneNumber: String = "12345678",
       timeToAppointments: List<TimeToAppointment> = this.timeToAppointments
   ): ContactPatientModel {
-    val phoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber, phoneMaskFeatureEnabled)
     val appointmentConfig = AppointmentConfig(
         appointmentDuePeriodForDefaulters = Period.ZERO,
         scheduleAppointmentsIn = emptyList(),
@@ -165,10 +162,10 @@ class CallPatientUiRendererTest {
 
     return ContactPatientModel.create(
         patientUuid = patientUuid,
-        phoneNumberMaskerConfig = phoneNumberMaskerConfig,
         appointmentConfig = appointmentConfig,
         userClock = clock,
-        mode = UiMode.CallPatient
+        mode = UiMode.CallPatient,
+        secureCallFeatureEnabled = phoneMaskFeatureEnabled
     )
   }
 }

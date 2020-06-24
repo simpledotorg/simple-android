@@ -14,8 +14,7 @@ class BloodSugarSummaryViewUiRendererTest {
   private val ui = mock<BloodSugarSummaryViewUi>()
   private val config = BloodSugarSummaryConfig(
       bloodSugarEditableDuration = Duration.ofSeconds(3600),
-      numberOfBloodSugarsToDisplay = 3,
-      bloodSugarEditFeatureEnabled = false
+      numberOfBloodSugarsToDisplay = 3
   )
   private val renderer = BloodSugarSummaryViewUiRenderer(ui, config)
   private val patientUuid = UUID.fromString("9dd563b5-99a5-4f43-b3ab-47c43ed5d62c")

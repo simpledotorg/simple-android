@@ -50,7 +50,6 @@ import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.registration.phone.loggedout.LoggedOutOfDeviceDialog
 import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.registration.register.RegistrationLoadingScreen
-import org.simple.clinic.remoteconfig.RemoteConfigService
 import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
@@ -161,9 +160,4 @@ class TheActivityModule {
 
   @Provides
   fun fragmentManager(activity: AppCompatActivity): FragmentManager = activity.supportFragmentManager
-
-  @Provides
-  fun provideTheActivityConfig(configService: RemoteConfigService): TheActivityConfig {
-    return TheActivityConfig.read(configService.reader())
-  }
 }

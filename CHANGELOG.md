@@ -25,6 +25,7 @@
 - Fixed retrying on a failed teleconsultation fetch when in airplane mode
 - Fixed showing diagnosis text in teleconsult message when diagnosis are unanswered
 - Fixed keyboard not opening in app lock screen
+- Fixed prescription created from a protocol drug not-showing in `EditMedicinesScreen`
 
 ## 2020-06-22-7314
 ### Feature

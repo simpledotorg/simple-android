@@ -16,6 +16,7 @@
 - Moved storage of cached webviews (Progress, Help) to an implementation backed by the local database instead of files
 - Migrated `RegistrationFullNameScreen` to Mobius
 - [In Progress: 23 Jun 2020] Migrate `RegistrationPinScreen` to Mobius
+- Make non-protocol drugs immutable
 
 ### Fixes
 - Fixed retrying on a failed teleconsultation fetch when in airplane mode

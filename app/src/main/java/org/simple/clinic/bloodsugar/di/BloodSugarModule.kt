@@ -32,10 +32,4 @@ class BloodSugarModule {
   fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
     return rxSharedPrefs.getObject("last_blood_sugar_pull_token", None(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
-
-  @Provides
-  @Named("is_hba1c_enabled")
-  fun isHbA1cEnabled(): Boolean {
-    return true
-  }
 }

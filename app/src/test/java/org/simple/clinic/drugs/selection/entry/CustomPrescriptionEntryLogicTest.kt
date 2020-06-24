@@ -104,7 +104,6 @@ class CustomPrescriptionEntryLogicTest {
         isProtocolDrug = false,
         facility = facility
     )
-    verify(prescriptionRepository, never()).updatePrescription(any())
     verify(uiActions).finish()
   }
 

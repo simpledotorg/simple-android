@@ -138,16 +138,6 @@ class PrescriptionRepository @Inject constructor(
 
   fun prescriptionImmediate(prescriptionUuid: UUID): PrescribedDrug = dao.prescriptionImmediate(prescriptionUuid)!!
 
-  fun updatePrescription(prescription: PrescribedDrug): Completable {
-    return Completable.fromAction {
-      val updatedPrescription = prescription.copy(
-          updatedAt = Instant.now(utcClock),
-          syncStatus = SyncStatus.PENDING
-      )
-      dao.save(listOf(updatedPrescription))
-    }
-  }
-
   override fun pendingSyncRecordCount(): Observable<Int> {
     return dao
         .count(SyncStatus.PENDING)

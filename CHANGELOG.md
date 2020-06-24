@@ -10,6 +10,7 @@
 - Redesigned patient card in recent patients screen
 - New illustrations for location permission screen, overdue screen, reports screen
 - Show overdue appointment count badge in overdue tab
+- Changed normal call buttons in the app from green to blue
 
 ### Internal
 - Migrated `RecentPatientItemType` to use `ItemAdapter`

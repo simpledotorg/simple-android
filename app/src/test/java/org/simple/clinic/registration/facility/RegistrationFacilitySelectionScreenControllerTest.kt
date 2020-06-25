@@ -1,6 +1,5 @@
 package org.simple.clinic.registration.facility
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -20,6 +19,7 @@ import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
+import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Address
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name
@@ -77,7 +77,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
-    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
+    whenever(screenLocationUpdates.streamUserLocation(
+        updateInterval = registrationConfig.locationUpdateInterval,
+        timeout = registrationConfig.locationListenerExpiry,
+        discardOlderThan = registrationConfig.staleLocationThreshold
+    )).thenReturn(Observable.just(Unavailable))
 
     setupController()
     uiEvents.onNext(ScreenCreated())
@@ -87,14 +91,19 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `when screen is started, location should be fetched`() {
+    val locationUpdateInterval = Duration.ofDays(5)
     whenever(facilityRepository.recordCount()).thenReturn(Observable.never())
-    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.never())
+    whenever(screenLocationUpdates.streamUserLocation(
+        updateInterval = locationUpdateInterval,
+        timeout = registrationConfig.locationListenerExpiry,
+        discardOlderThan = registrationConfig.staleLocationThreshold
+    )).thenReturn(Observable.never())
 
-    setupController(registrationConfig.copy(locationUpdateInterval = Duration.ofDays(5)))
+    setupController(registrationConfig.copy(locationUpdateInterval = locationUpdateInterval))
     uiEvents.onNext(ScreenCreated())
 
     verify(screenLocationUpdates).streamUserLocation(
-        updateInterval = Duration.ofDays(5),
+        updateInterval = locationUpdateInterval,
         timeout = registrationConfig.locationListenerExpiry,
         discardOlderThan = registrationConfig.staleLocationThreshold
     )
@@ -106,7 +115,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
-    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
+    whenever(screenLocationUpdates.streamUserLocation(
+        updateInterval = registrationConfig.locationUpdateInterval,
+        timeout = registrationConfig.locationListenerExpiry,
+        discardOlderThan = registrationConfig.staleLocationThreshold
+    )).thenReturn(Observable.just(Unavailable))
 
     setupController()
     uiEvents.onNext(ScreenCreated())
@@ -118,18 +131,28 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `when facilities are fetched, but location is unavailable then facilities should still be shown`() {
-    val facilities = listOf(
-        TestData.facility(name = "Facility 1"),
-        TestData.facility(name = "Facility 2"))
-    whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
+    val phcObvious = TestData.facility(name = "PHC Obvious", district = "Bangalore Central", state = "Karnataka")
+    val chcNilenso = TestData.facility(name = "CHC Nilenso", streetAddress = "10th Cross Road", district = "Indiranagar", state = "Karnataka")
+    val facilities = listOf(phcObvious, chcNilenso)
+    val searchQuery = "f"
+
+    whenever(facilityRepository.facilities(searchQuery)).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
+    whenever(screenLocationUpdates.streamUserLocation(
+        updateInterval = registrationConfig.locationUpdateInterval,
+        timeout = registrationConfig.locationListenerExpiry,
+        discardOlderThan = registrationConfig.staleLocationThreshold
+    )).thenReturn(Observable.just(Unavailable))
 
     setupController()
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(RegistrationFacilitySearchQueryChanged("f"))
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(searchQuery))
 
-    verify(screen).updateFacilities(any(), any())
+    val expectedFacilityListItems = listOf(
+        FacilityOption(phcObvious, Name.Plain("PHC Obvious"), address = Address.WithoutStreet(district = "Bangalore Central", state = "Karnataka")),
+        FacilityOption(chcNilenso, Name.Plain("CHC Nilenso"), address = Address.WithStreet(street = "10th Cross Road", district = "Indiranagar", state = "Karnataka"))
+    )
+    verify(screen).updateFacilities(expectedFacilityListItems, FIRST_UPDATE)
   }
 
   @Test
@@ -138,7 +161,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
-    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
+    whenever(screenLocationUpdates.streamUserLocation(
+        updateInterval = registrationConfig.locationUpdateInterval,
+        timeout = registrationConfig.locationListenerExpiry,
+        discardOlderThan = registrationConfig.staleLocationThreshold
+    )).thenReturn(Observable.just(Unavailable))
 
     setupController()
     uiEvents.onNext(ScreenCreated())
@@ -148,29 +175,48 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `when search query is changed then the query should be used for fetching filtered facilities`() {
-    val facilities = listOf(
-        TestData.facility(name = "Facility 1"),
-        TestData.facility(name = "Facility 2"))
-    whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
-    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
+    val phcObvious = TestData.facility(name = "PHC Obvious", streetAddress = "Richmond Road", district = "Bangalore Central", state = "Karnataka")
+    val chcNilenso = TestData.facility(name = "CHC Nilenso", district = "Indiranagar", state = "Karnataka")
+
+    whenever(facilityRepository.facilities("HC")).thenReturn(Observable.just(listOf(phcObvious, chcNilenso)))
+    whenever(facilityRepository.facilities("PHC")).thenReturn(Observable.just(listOf(phcObvious)))
+    whenever(facilityRepository.facilities("CHC")).thenReturn(Observable.just(listOf(chcNilenso)))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(2))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
-    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.never())
+    whenever(screenLocationUpdates.streamUserLocation(
+        updateInterval = registrationConfig.locationUpdateInterval,
+        timeout = registrationConfig.locationListenerExpiry,
+        discardOlderThan = registrationConfig.staleLocationThreshold
+    )).thenReturn(Observable.never())
 
     setupController()
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
-    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "F"))
-    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "Fa"))
-    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "Fac"))
 
-    verify(facilityRepository).facilities("F")
-    verify(facilityRepository).facilities("Fa")
-    verify(facilityRepository).facilities("Fac")
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "HC"))
+    verify(screen).updateFacilities(listOf(
+        FacilityOption(phcObvious, Name.Highlighted("PHC Obvious", 1, 3), address = Address.WithStreet(street = "Richmond Road", district = "Bangalore Central", state = "Karnataka")),
+        FacilityOption(chcNilenso, Name.Highlighted("CHC Nilenso", 1, 3), address = Address.WithoutStreet(district = "Indiranagar", state = "Karnataka"))
+    ), FIRST_UPDATE)
+
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "PHC"))
+    verify(screen).updateFacilities(listOf(
+        FacilityOption(phcObvious, Name.Highlighted("PHC Obvious", 0, 3), address = Address.WithStreet(street = "Richmond Road", district = "Bangalore Central", state = "Karnataka"))
+    ), SUBSEQUENT_UPDATE)
+
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "CHC"))
+    verify(screen).updateFacilities(listOf(
+        FacilityOption(chcNilenso, Name.Highlighted("CHC Nilenso", 0, 3), address = Address.WithoutStreet(district = "Indiranagar", state = "Karnataka"))
+    ), SUBSEQUENT_UPDATE)
   }
 
   @Test
   fun `when fetching facilities fails then an error should be shown`() {
-    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
+    whenever(screenLocationUpdates.streamUserLocation(
+        updateInterval = registrationConfig.locationUpdateInterval,
+        timeout = registrationConfig.locationListenerExpiry,
+        discardOlderThan = registrationConfig.staleLocationThreshold
+    )).thenReturn(Observable.just(Unavailable))
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(emptyList()))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0))
     whenever(facilitySync.pullWithResult())
@@ -192,7 +238,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(1))
     whenever(facilityRepository.facilities()).thenReturn(Observable.never())
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
-    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
+    whenever(screenLocationUpdates.streamUserLocation(
+        updateInterval = registrationConfig.locationUpdateInterval,
+        timeout = registrationConfig.locationListenerExpiry,
+        discardOlderThan = registrationConfig.staleLocationThreshold
+    )).thenReturn(Observable.just(Unavailable))
 
     setupController()
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
@@ -213,7 +263,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     whenever(facilityRepository.facilities(searchQuery)).thenReturn(Observable.just(facilities, facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size, facilities.size))
-    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
+    whenever(screenLocationUpdates.streamUserLocation(
+        updateInterval = registrationConfig.locationUpdateInterval,
+        timeout = registrationConfig.locationListenerExpiry,
+        discardOlderThan = registrationConfig.staleLocationThreshold
+    )).thenReturn(Observable.just(Unavailable))
 
     val expectedFacilityListItems = listOf(
         FacilityOption(phcObvious, Name.Plain("PHC Obvious"), address = Address.WithStreet(street = "Richmond Road", district = "Bangalore Central", state = "Karnataka")),
@@ -271,7 +325,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
   fun `search field should only be shown when facilities are available`() {
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0, 10))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.never())
-    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
+    whenever(screenLocationUpdates.streamUserLocation(
+        updateInterval = registrationConfig.locationUpdateInterval,
+        timeout = registrationConfig.locationListenerExpiry,
+        discardOlderThan = registrationConfig.staleLocationThreshold
+    )).thenReturn(Observable.just(Unavailable))
 
     setupController()
     uiEvents.onNext(ScreenCreated())

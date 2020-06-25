@@ -251,10 +251,6 @@
   <string name="registrationfacilities_screen_title">ਆਪਣਾ ਕਲੀਨਿਕ ਚੁਣੋ</string>
   <string name="registrationfacilities_search_hint">ਆਪਣੇ ਕਲੀਨਿਕ ਦੀ ਖੋਜ ਕਰੋ</string>
   <!-- Street, District, State -->
-  <string name="registrationfacilities_error_unexpected_title">ਕੁਝ ਗੜਬੜ ਹੋ ਗਈ</string>
-  <string name="registrationfacilities_error_unexpected_message">ਕਿਰਪਾ ਕਰਕੇ ਕੁਝ ਸਮੇਂ ਬਾਅਦ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਬਣੇ ਰਹੋ।</string>
-  <string name="registrationfacilities_error_internet_connection_title">ਕੋਈ ਇੰਟਰਨੈੱਟ ਕਨੈਕਸ਼ਨ ਉਪਲਬਧ ਨਹੀਂ ਹੈ</string>
-  <string name="registrationfacilities_retry">ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
   <string name="registrationfacilities_header_suggested_facilities">ਸੁਝਾਏ ਗਏ ਕਲੀਨਿਕ</string>
   <string name="registrationfacilities_header_all_facilities">ਸਾਰੇ ਕਲੀਨਿਕ</string>
 

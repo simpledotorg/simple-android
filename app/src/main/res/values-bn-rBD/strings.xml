@@ -1,20 +1,20 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">সিম্পল</string>
+  <string name="app_name">সিম্পিল</string>
 
   <!-- Common -->
   <string name="gender_female">মহিলা</string>
   <string name="gender_male">পুরুষ</string>
   <string name="gender_transgender">ট্রান্সজেন্ডার</string>
   <!--suppress UnusedResources -->
-  <string name="gender_male_letter">ম:</string>
+  <string name="gender_male_letter">এম</string>
   <!--suppress UnusedResources -->
-  <string name="gender_female_letter">পু:</string>
+  <string name="gender_female_letter">এফ</string>
   <!--suppress UnusedResources -->
-  <string name="gender_trans_letter">তৃ </string>
+  <string name="gender_trans_letter">টি</string>
   <string name="api_unexpected_error">কিছু ভুল হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।</string>
-  <string name="api_network_error">কোন ইন্টারনেট সংযোগ নেই</string>
-  <string name="api_server_error">সার্ভারে ত্রূটি! অনুগ্রহ করে পরে আবার চেষ্টা করুন।</string>
+  <string name="api_network_error">কোনও ইন্টারনেট সংযোগ নেই</string>
+  <string name="api_server_error">সার্ভার ত্রুটি! অনুগ্রহ করে পরে আবার চেষ্টা করুন।</string>
 
   <!-- Country names -->
   <string name="country_india">ভারত</string>
@@ -36,15 +36,17 @@
   <string name="patientsearch_hint">নাম বা ফোন নম্বর</string>
 
   <!-- Patient search results -->
-  <string name="patientsearchresults_empty_state">কোন  রোগী খুঁজে পাওয়া যায়নি</string>
-  <string name="patientsearchresults_register_patient_rationale">এই তালিকা রোগীকে খুঁজে পাচ্ছে না?</string>
+  <string name="patientsearchresults_empty_state">কোনও রোগী খুঁজে পাওয়া যায়নি</string>
+  <string name="patientsearchresults_register_patient_rationale">এই তালিকায় রোগীকে খুঁজে পাচ্ছেন না?</string>
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">রোগী নিবন্ধিত নয়</string>
   <string name="patientsearchresults_register_patient">নতুন রোগী হিসাবে নিবন্ধন করুন</string>
   <string name="patientsearchresults_register_patient_for_empty_state">নিবন্ধিত রোগী</string>
-  <string name="patientsearchresults_item_last_seen">শেষ দেখা হয়েছিল:</string>
+  <string name="patientsearchresults_item_last_seen">দেখা হয়েছে</string>
   <string name="patientsearchresults_current_facility_header">%s দেখেছেন</string>
   <string name="patientsearchresults_other_results_header">অন্যান্য ফলাফল</string>
-  <string name="patientsearchresults_no_patients_match">কোন রোগী খুঁজে পাওয়া যায়নি</string>
+  <string name="patientsearchresults_no_patients_match">কোনও রোগী খুঁজে পাওয়া যায়নি</string>
+  <string name="patientsearchresults_item_phone_number">ফোন</string>
+  <string name="patientsearchresults_item_birthdate">জন্মদিন</string>
 
   <!-- Manual patient entry -->
   <string name="patiententry_contentdescription_up_button">অনুসন্ধানে ফিরে যান</string>
@@ -60,7 +62,7 @@
   <string name="patiententry_street_house_road_number">বাড়ির এবং রাস্তার নম্বর</string>
   <string name="patiententry_village_colony_ward">গ্রাম / কলোনি / ওয়ার্ড</string>
   <string name="patiententry_village_ward">গ্রাম / ওয়ার্ড</string>
-  <string name="patiententry_kebele">গ্রাম</string>
+  <string name="patiententry_kebele">কেবেল</string>
   <string name="patiententry_zone">ইউনিয়ন</string>
   <string name="patiententry_district">জেলা</string>
   <string name="patiententry_woreda">প্রশাসনিক অঞ্চল</string>
@@ -92,6 +94,8 @@
   <string name="patientedit_confirm_discard_title">পরিবর্তনগুলো কি বাতিল করবেন?</string>
   <string name="patientedit_confirm_discard_ok">খারিজ করুন</string>
   <string name="patientedit_confirm_discard_cancel">বাতিল করুন</string>
+  <string name="patientedit_delete_patient">মুছুন</string>
+
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
@@ -166,9 +170,9 @@
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
   <string name="patientsummary_bangladesh_national_id">আইডি</string>
 
-  <string name="patientsummary_contact_doctor">চিকিৎসক</string>
-  <string name="patientsummary_teleconsult_network_error">দুর্বল ইন্টারনেটের কারণে সংযোগ করতে পারে নাই</string>
-  <string name="patientsummary_teleconsult_network_error_retry">পুনরায় চেষ্টা করুন</string>
+  <string name="patientsummary_contact_doctor">ডাক্তার</string>
+  <string name="patientsummary_teleconsult_network_error">দুর্বল ইন্টারনেটের জন্য সংযোগ করা গেল না</string>
+  <string name="patientsummary_teleconsult_network_error_retry">পুনরায় চেষ্টা করুন</string>
 
   <string name="bloodpressuresummaryview_see_all_button">সবাইকে দেখুন</string>
 
@@ -177,6 +181,9 @@
   <string name="bloodpressure_level_low">নিম্ন</string>
   <!--suppress UnusedResources -->
   <string name="bloodpressure_level_high">উচ্চ</string>
+
+  <string name="bloodsugar_level_low">নিম্ন</string>
+  <string name="bloodsugar_level_high">উচ্চ</string>
 
   <string name="timestamp_today">আজ</string>
   <string name="timestamp_yesterday">গতকাল</string>
@@ -252,6 +259,15 @@
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">শুরু করা</string>
+  <string name="screenonboarding_intro_1">হাইপারটেনশনের সহস্রাধিক \nরোগীদের অনুসন্ধান করুন \nও</string>
+  <string name="screenonboarding_intro_1_hypertension">খুঁজে পান</string>
+  <string name="screenonboarding_intro_2">ব্লাড প্রেসার \n</string>
+  <string name="screenonboarding_intro_2_bp">ও ওষুধগুলির \n</string>
+  <string name="screenonboarding_intro_2_and">রেকর্ড</string>
+  <string name="screenonboarding_intro_2_medicines">রক্ষণাবেক্ষণ করুন</string>
+  <string name="screenonboarding_intro_3">ভিজিটগুলির জন্য</string>
+  <string name="screenonboarding_intro_3_reminder">\nফিরে আসতে রোগীরা</string>
+  <string name="screenonboarding_intro_3_visits">\nঅনুস্মারক বার্তাগুলি পান</string>
 
   <!-- Overdue List -->
   <string name="overdue_no_patients">সময়াতীত হওয়া কোন রোগী নেই</string>
@@ -352,7 +368,7 @@
   <string name="help_try_again">আবার চেষ্টা করুন</string>
 
   <!-- Link Id Sheet-->
-  <string name="linkidwithpatient_button_add">যোগ করুন</string>
+  <string name="linkidwithpatient_button_add">পরবর্তী</string>
   <string name="linkidwithpatient_button_cancel">বাতিল করুন</string>
   <string name="linkidwithpatient_add_id_text">%1$s\u0020যোগ করুন</string>
   <string name="linkidwithpatient_to_patient_text">\u0020থেকে\u00A0রোগীর?</string>
@@ -367,8 +383,9 @@
   <string name="recent_patients_toolbar_title">সাম্প্রতিক</string>
 
   <!-- Recent Patients Item View -->
-  <string name="recent_patients_itemview_last_seen">শেষ দেখা হয়েছিল:\u0020</string>
+  <string name="recent_patients_itemview_last_seen">দেখা হয়েছে:\u0020</string>
   <string name="recent_patients_itemview_title">%1$s, %2$s</string>
+  <string name="recent_patients_itemview_new_registration">নতুন নিবন্ধীকরণ</string>
 
   <!-- Add ID to Patient: Search Results-->
   <string name="addidtopatientsearchresults_add">%1$s\u0020যোগ করুন</string>
@@ -444,9 +461,9 @@
   <string name="bloodsugarentry_day">দিন</string>
   <string name="bloodsugarentry_month">মাস</string>
   <string name="bloodsugarentry_year">বছর</string>
-  <string name="bloodsugarentry_error_lower_limit">মান 30 মিগ্রা/ডেসিলির কম হতে পারবে না</string>
+  <string name="bloodsugarentry_error_lower_limit">মান 30 মিগ্রা/ডেসিলি এর কম হতে পারবে না</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">মান 3% এর কম হতে পারবে না</string>
-  <string name="bloodsugarentry_error_higher_limit">মান 1000 মিগ্রা/ডেসিলির বেশি হতে পারবে না</string>
+  <string name="bloodsugarentry_error_higher_limit">মান 1000 মিগ্রা/ডেসিলি এর বেশি হতে পারবে না</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">মান 25% এর বেশি হতে পারবে না</string>
   <string name="bloodsugarentry_error_empty">মান খালি রাখা যাবে না</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YYYY বিন্যাসে একটি বৈধ তারিখ লিখুন</string>
@@ -476,12 +493,13 @@
   <!-- Blood Sugar History screen -->
   <string name="bloodsugarhistory_add_blood_sugar_button">ডায়াবেটিস</string>
   <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">ইতিহাস</string>
   <string name="medicalhistorysummaryview_diagnosis">রোগ নির্ণয় (প্রয়োজন)</string>
 
   <!-- Summary prescriptions view -->
-  <string name="drugsummaryview_no_medicines">কোনো ওষুধ যোগ করা হয়নি</string>
+  <string name="drugsummaryview_no_medicines">কোনো ওষুধ যোগ করা হয়নি</string>
 
   <!-- Access Denied screen -->
   <string name="accessdeniedscreen_title_access_denied">অ্যাক্সেস প্রত্যাখাত</string>
@@ -517,7 +535,7 @@
   <string name="contactpatient_help_text">সুরক্ষিত কলগুলো আপনার নম্বরটিকে গোপন করে এবং এগুলো টোল ফ্রি</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">পরে ফোন করুন</string>
-  <string name="contactpatient_done">সম্পন্ন হয়েছে</string>
+  <string name="contactpatient_done">সম্পন্ন</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s দিন</item>
     <item quantity="other">%s দিন</item>
@@ -540,11 +558,32 @@
   <string name="contactpatient_other_reason">অন্য কারণ</string>
 
   <!-- Deep link -->
-  <string name="deeplink_patient_profile_not_found">রোগীর সম্পর্কিত তথ্য পাওয়া যায় নি</string>
-  <string name="deeplink_patient_profile_not_found_desc">দয়া করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন এবং রোগীদের সিঙ্ক করুন</string>
+  <string name="deeplink_patient_profile_not_found">রোগীর প্রোফাইল খুঁজে পাওয়া যায়নি</string>
+  <string name="deeplink_patient_profile_not_found_desc">অনুগ্রহ করে আপনার ইন্টারনেট পরীক্ষা করে রোগীদের সিঙ্ক করুন</string>
   <string name="deeplink_patient_profile_not_found_positive_action">ঠিক আছে</string>
-  <string name="deeplink_no_patient">রোগী পাওয়া যায় নি</string>
-  <string name="deeplink_no_patient_desc">টেলি পরামর্শ শুরু করুন এবং রোগীর তথ্যের জন্য স্বাস্থ্য কর্মীকে জিজ্ঞাসা করুন</string>
-  <string name="deeplink_no_patient_positive_action">সব ঠিক আছে
-</string>
+  <string name="deeplink_no_patient">রোগীকে খুঁজে পাওয়া যায় নি</string>
+  <string name="deeplink_no_patient_desc">টেলিফোনের মাধ্যমে পরামর্শ শুরু করুন এবং স্বাস্থ্যসেবা কর্মীর কাছে রোগীর তথ্য চান</string>
+  <string name="deeplink_no_patient_positive_action">ঠিক আছে</string>
+
+  <!-- Delete patient -->
+  <string name="deletepatient_select_a_reason">একটি কারণ নির্বাচন করুন</string>
+  <string name="deletereason_duplicate_patient">এটি একজন ডুপ্লিকেট রোগী</string>
+  <string name="deletereason_accidental_registration">রোগীকে ভুল করে নিবন্ধন করা হয়েছে</string>
+  <string name="deletereason_died">মারা গেছে</string>
+  <string name="deletereason_confirm_title">রোগীকে মুছবেন?</string>
+  <string name="deletereason_confirm_message">এটি %1$s কে সরিয়ে দেবে</string>
+  <string name="deletereason_confirm_positive">মুছুন</string>
+  <string name="deletereason_confirm_negative">বাতিল করুন</string>
+
+  <!-- Splash screen -->
+  <string name="screensplash_next">পরবর্তী</string>
+
+  <!-- Contact doctor sheet -->
+  <string name="contactdoctor_title">ডাক্তারগণ</string>
+  <string name="contactdoctor_subtitle">%1$s কে অর্পণ করা হয়েছে</string>
+
+  <!-- Intro Video Screen -->
+  <string name="screenintrovideo_how_to_use_simple_app">সিম্পিল অ্যাপটি কীভাবে ব্যবহার করবেন</string>
+  <string name="screenintrovideo_watch_video">ভিডিও দেখুন</string>
+  <string name="screenintrovideo_skip">ছেড়ে যান</string>
 </resources>

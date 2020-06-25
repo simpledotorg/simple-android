@@ -4,7 +4,7 @@ import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilityListItem
 import java.util.UUID
 
-interface RegistrationFacilitySelectionUi {
+interface RegistrationFacilitySelectionUi: RegistrationFacilitySelectionUiActions {
   fun showProgressIndicator()
   fun hideProgressIndicator()
   fun showToolbarWithSearchField()

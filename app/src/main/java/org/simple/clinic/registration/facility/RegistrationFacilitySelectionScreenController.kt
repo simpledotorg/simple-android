@@ -23,7 +23,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import javax.inject.Inject
 
-typealias Ui = RegistrationFacilitySelectionScreen
+typealias Ui = RegistrationFacilitySelectionUi
 typealias UiChange = (Ui) -> Unit
 
 class RegistrationFacilitySelectionScreenController @Inject constructor(

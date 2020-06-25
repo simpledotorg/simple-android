@@ -46,7 +46,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val screen = mock<RegistrationFacilitySelectionScreen>()
+  private val ui = mock<RegistrationFacilitySelectionUi>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
   private val currentTime = Instant.parse("2018-01-01T00:00:00Z")
@@ -86,8 +86,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
         timeout = registrationConfig.locationListenerExpiry,
         discardOlderThan = registrationConfig.staleLocationThreshold
     )
-    verify(screen).showProgressIndicator()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showProgressIndicator()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -101,9 +101,9 @@ class RegistrationFacilitySelectionScreenControllerTest {
     setupController()
 
     // then
-    val inOrder = inOrder(screen)
-    inOrder.verify(screen).showProgressIndicator()
-    inOrder.verify(screen).hideProgressIndicator()
+    val inOrder = inOrder(ui)
+    inOrder.verify(ui).showProgressIndicator()
+    inOrder.verify(ui).hideProgressIndicator()
     inOrder.verifyNoMoreInteractions()
   }
 
@@ -127,11 +127,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
         FacilityOption(phcObvious, Name.Plain("PHC Obvious"), address = Address.WithoutStreet(district = "Bangalore Central", state = "Karnataka")),
         FacilityOption(chcNilenso, Name.Plain("CHC Nilenso"), address = Address.WithStreet(street = "10th Cross Road", district = "Indiranagar", state = "Karnataka"))
     )
-    verify(screen).showProgressIndicator()
-    verify(screen).hideProgressIndicator()
-    verify(screen).showToolbarWithSearchField()
-    verify(screen).updateFacilities(expectedFacilityListItems, FIRST_UPDATE)
-    verifyNoMoreInteractions(screen)
+    verify(ui).showProgressIndicator()
+    verify(ui).hideProgressIndicator()
+    verify(ui).showToolbarWithSearchField()
+    verify(ui).updateFacilities(expectedFacilityListItems, FIRST_UPDATE)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -150,34 +150,34 @@ class RegistrationFacilitySelectionScreenControllerTest {
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "HC"))
 
     // then
-    verify(screen).showProgressIndicator()
-    verify(screen).hideProgressIndicator()
-    verify(screen).showToolbarWithSearchField()
-    verify(screen).updateFacilities(listOf(
+    verify(ui).showProgressIndicator()
+    verify(ui).hideProgressIndicator()
+    verify(ui).showToolbarWithSearchField()
+    verify(ui).updateFacilities(listOf(
         FacilityOption(phcObvious, Name.Highlighted("PHC Obvious", 1, 3), address = Address.WithStreet(street = "Richmond Road", district = "Bangalore Central", state = "Karnataka")),
         FacilityOption(chcNilenso, Name.Highlighted("CHC Nilenso", 1, 3), address = Address.WithoutStreet(district = "Indiranagar", state = "Karnataka"))
     ), FIRST_UPDATE)
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
 
     // when
-    clearInvocations(screen)
+    clearInvocations(ui)
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "PHC"))
 
     // then
-    verify(screen).updateFacilities(listOf(
+    verify(ui).updateFacilities(listOf(
         FacilityOption(phcObvious, Name.Highlighted("PHC Obvious", 0, 3), address = Address.WithStreet(street = "Richmond Road", district = "Bangalore Central", state = "Karnataka"))
     ), SUBSEQUENT_UPDATE)
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
 
     // when
-    clearInvocations(screen)
+    clearInvocations(ui)
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "CHC"))
 
     // then
-    verify(screen).updateFacilities(listOf(
+    verify(ui).updateFacilities(listOf(
         FacilityOption(chcNilenso, Name.Highlighted("CHC Nilenso", 0, 3), address = Address.WithoutStreet(district = "Indiranagar", state = "Karnataka"))
     ), SUBSEQUENT_UPDATE)
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -201,12 +201,12 @@ class RegistrationFacilitySelectionScreenControllerTest {
         FacilityOption(phcObvious, Name.Plain("PHC Obvious"), address = Address.WithStreet(street = "Richmond Road", district = "Bangalore Central", state = "Karnataka")),
         FacilityOption(chcNilenso, Name.Plain("CHC Nilenso"), address = Address.WithoutStreet(district = "Indiranagar", state = "Karnataka"))
     )
-    verify(screen).showProgressIndicator()
-    verify(screen).hideProgressIndicator()
-    verify(screen).showToolbarWithSearchField()
-    verify(screen).updateFacilities(expectedFacilityListItems, FIRST_UPDATE)
-    verify(screen).updateFacilities(expectedFacilityListItems, SUBSEQUENT_UPDATE)
-    verifyNoMoreInteractions(screen)
+    verify(ui).showProgressIndicator()
+    verify(ui).hideProgressIndicator()
+    verify(ui).showToolbarWithSearchField()
+    verify(ui).updateFacilities(expectedFacilityListItems, FIRST_UPDATE)
+    verify(ui).updateFacilities(expectedFacilityListItems, SUBSEQUENT_UPDATE)
+    verifyNoMoreInteractions(ui)
 
   }
 
@@ -229,11 +229,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
     uiEvents.onNext(RegistrationFacilityClicked(facility1))
 
     // then
-    verify(screen).showProgressIndicator()
-    verify(screen).hideProgressIndicator()
-    verify(screen).showToolbarWithSearchField()
-    verify(screen).showConfirmFacilitySheet(facility1.uuid, facility1.name)
-    verifyNoMoreInteractions(screen)
+    verify(ui).showProgressIndicator()
+    verify(ui).hideProgressIndicator()
+    verify(ui).showToolbarWithSearchField()
+    verify(ui).showConfirmFacilitySheet(facility1.uuid, facility1.name)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -255,11 +255,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
     uiEvents.onNext(RegistrationFacilityConfirmed(facility1.uuid))
 
     // then
-    verify(screen).showProgressIndicator()
-    verify(screen).hideProgressIndicator()
-    verify(screen).showToolbarWithSearchField()
-    verify(screen).openIntroVideoScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showProgressIndicator()
+    verify(ui).hideProgressIndicator()
+    verify(ui).showToolbarWithSearchField()
+    verify(ui).openIntroVideoScreen()
+    verifyNoMoreInteractions(ui)
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityId = facility1.uuid))
     verify(userSession).saveOngoingRegistrationEntryAsUser(currentTime)
   }
@@ -273,11 +273,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
     setupController()
 
     // then
-    val inOrder = inOrder(screen)
-    inOrder.verify(screen).showProgressIndicator()
-    inOrder.verify(screen).showToolbarWithoutSearchField()
-    inOrder.verify(screen).showToolbarWithSearchField()
-    inOrder.verify(screen).hideProgressIndicator()
+    val inOrder = inOrder(ui)
+    inOrder.verify(ui).showProgressIndicator()
+    inOrder.verify(ui).showToolbarWithoutSearchField()
+    inOrder.verify(ui).showToolbarWithSearchField()
+    inOrder.verify(ui).hideProgressIndicator()
     inOrder.verifyNoMoreInteractions()
   }
 
@@ -302,7 +302,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
   }

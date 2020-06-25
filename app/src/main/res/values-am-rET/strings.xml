@@ -251,10 +251,6 @@
   <string name="registrationfacilities_screen_title">ክሊኒክዎን ይምረጡ</string>
   <string name="registrationfacilities_search_hint">ክሊኒክዎን ይፈልጉ</string>
   <!-- Street, District, State -->
-  <string name="registrationfacilities_error_unexpected_title">የሆነ ስህተት ተከስቷል</string>
-  <string name="registrationfacilities_error_unexpected_message">እባክዎን ከተወሰነ ጊዜ በኋላ እንደገና ይሞክሩ ወይም ከተቆጣጣሪዎ ጋር ይገናኙ ፡፡</string>
-  <string name="registrationfacilities_error_internet_connection_title">ምንም የበይነመረብ ግንኙነት የለም</string>
-  <string name="registrationfacilities_retry">ድጋሚ ይሞክሩ</string>
   <string name="registrationfacilities_header_suggested_facilities">የተጠቆሙ ክሊኒኮች</string>
   <string name="registrationfacilities_header_all_facilities">ሁሉም ክሊኒኮች</string>
 

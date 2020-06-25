@@ -251,10 +251,6 @@
   <string name="registrationfacilities_screen_title">ನಿಮ್ಮ ಕ್ಲಿನಿಕ್ ಆಯ್ಕೆಮಾಡಿ</string>
   <string name="registrationfacilities_search_hint">ನಿಮ್ಮ ಕ್ಲಿನಿಕ್‌ಗಾಗಿ ಶೋಧಿಸಿ</string>
   <!-- Street, District, State -->
-  <string name="registrationfacilities_error_unexpected_title">ಏನೋ ತಪ್ಪಾಗಿದೆ</string>
-  <string name="registrationfacilities_error_unexpected_message">ದಯವಿಟ್ಟು ಮತ್ತೊಮ್ಮೆ ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ನಿಮ್ಮ ಸೂಪರ್‌ವೈಸರ್‌ನೊಂದಿಗೆ ಸಂಪರ್ಕದಲ್ಲಿರಿ.</string>
-  <string name="registrationfacilities_error_internet_connection_title">ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವಿಲ್ಲ</string>
-  <string name="registrationfacilities_retry">ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ</string>
   <string name="registrationfacilities_header_suggested_facilities">ಸಲಹೆ ಮಾಡಲಾದ ಕ್ಲಿನಿಕ್‌ಗಳು</string>
   <string name="registrationfacilities_header_all_facilities">ಎಲ್ಲಾ ಕ್ಲಿನಿಕ್‌ಗಳು</string>
 

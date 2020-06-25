@@ -238,14 +238,9 @@
   <string name="registrationlocation_allow_access">আপনার অবস্থান খুঁজে পাওয়ার সম্মতি দিন</string>
   <string name="registrationfacilities_screen_title">আপনার ক্লিনিক নির্বাচন করুন</string>
   <string name="registrationfacilities_search_hint">আপনার ক্লিনিক অনুসন্ধান করুন</string>
-  <string name="registrationfacilities_error_unexpected_title">কিছু গন্ডগোল হয়েছে</string>
-  <string name="registrationfacilities_error_unexpected_message">অনুগ্রহ করে কিছু সময় পরে আবার চেষ্টা করুন বা আপনার সুপারভাইজারের সাথে যোগাযোগ করুন৷</string>
 
   <!-- Onboarding -->
-  <string name="registrationfacilities_error_internet_connection_title">কোনো ইন্টারনেট সংযোগ নেই</string>
-
   <!-- Overdue List -->
-  <string name="registrationfacilities_retry">আবার চেষ্টা করুন</string>
   <string name="registrationfacilities_header_suggested_facilities">সম্ভাব্য ক্লিনিক গুলি</string>
   <string name="registrationfacilities_header_all_facilities">সকল ক্লিনিকসমূহ</string>
   <string name="onboarding_get_started">শুরু করুন</string>

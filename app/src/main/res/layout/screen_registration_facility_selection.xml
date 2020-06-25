@@ -50,43 +50,4 @@
     android:scrollbarStyle="insideOverlay"
     android:scrollbars="vertical"
     tools:listitem="@layout/list_facility_selection_option" />
-
-  <LinearLayout
-    android:id="@+id/errorContainer"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:visibility="gone">
-
-    <TextView
-      android:id="@+id/errorTitleTextView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:fontFamily="sans-serif-medium"
-      android:text="@string/registrationfacilities_error_unexpected_title"
-      android:textColor="@color/black_opacity_40"
-      android:textSize="20sp" />
-
-    <TextView
-      android:id="@+id/errorMessageTextView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/spacing_48"
-      android:layout_marginTop="@dimen/spacing_8"
-      android:layout_marginEnd="@dimen/spacing_48"
-      android:gravity="center_horizontal"
-      android:lineSpacingExtra="@dimen/spacing_8"
-      android:textColor="@color/black_opacity_40"
-      android:textSize="@dimen/textsize_16"
-      tools:text="@string/registrationfacilities_error_unexpected_message" />
-
-    <com.google.android.material.button.MaterialButton
-      android:id="@+id/errorRetryButton"
-      style="?attr/borderlessButtonStyle"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/registrationfacilities_retry" />
-  </LinearLayout>
 </org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen>

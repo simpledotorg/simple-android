@@ -3,13 +3,11 @@ package org.simple.clinic.registration.facility
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
-import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
 import com.jakewharton.rxbinding3.widget.textChanges
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
@@ -67,7 +65,6 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
         events = Observable.mergeArray(
             screenCreates(),
             searchQueryChanges(),
-            retryClicks(),
             facilityClicks(),
             registrationFacilityConfirmations(onScreenDestroyed)
         ),
@@ -98,11 +95,6 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
       searchEditText
           .textChanges()
           .map { text -> RegistrationFacilitySearchQueryChanged(text.toString()) }
-
-  private fun retryClicks() =
-      errorRetryButton
-          .clicks()
-          .map { RegistrationFacilitySelectionRetryClicked() }
 
   private fun facilityClicks() =
       recyclerViewAdapter
@@ -148,23 +140,6 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
 
   fun showToolbarWithoutSearchField() {
     toolbarViewFlipper.displayedChildResId = R.id.toolbarViewWithoutSearch
-  }
-
-  fun showNetworkError() {
-    errorContainer.visibility = View.VISIBLE
-    errorMessageTextView.visibility = View.GONE
-    errorTitleTextView.setText(R.string.registrationfacilities_error_internet_connection_title)
-  }
-
-  fun showUnexpectedError() {
-    errorContainer.visibility = View.VISIBLE
-    errorMessageTextView.visibility = View.VISIBLE
-    errorTitleTextView.setText(R.string.registrationfacilities_error_unexpected_title)
-    errorMessageTextView.setText(R.string.registrationfacilities_error_unexpected_message)
-  }
-
-  fun hideError() {
-    errorContainer.visibility = View.GONE
   }
 
   fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {

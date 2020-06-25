@@ -251,10 +251,6 @@
   <string name="registrationfacilities_screen_title">మీ క్లినిక్‌ను ఎంచుకోండి</string>
   <string name="registrationfacilities_search_hint">మీ క్లినిక్ కోసం వెతకండి</string>
   <!-- Street, District, State -->
-  <string name="registrationfacilities_error_unexpected_title">ఏదో తప్పు జరిగింది</string>
-  <string name="registrationfacilities_error_unexpected_message">కొంత సమయం తర్వాత మళ్లీ ప్రయత్నించండి లేదా మీ సూపర్‌వైజర్‌ను సంప్రదించండి.</string>
-  <string name="registrationfacilities_error_internet_connection_title">ఇంటర్నెట్ కనెక్షన్ లేదు</string>
-  <string name="registrationfacilities_retry">మళ్లీ ప్రయత్నించండి</string>
   <string name="registrationfacilities_header_suggested_facilities">సూచించిన క్లినిక్‌లు</string>
   <string name="registrationfacilities_header_all_facilities">అన్ని క్లినిక్‌లు</string>
 

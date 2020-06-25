@@ -19,12 +19,12 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_facility_selection.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.injector
 import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.introvideoscreen.IntroVideoScreenKey
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
@@ -57,7 +57,8 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
 
     val onScreenDestroyed = detaches().map { ScreenDestroyed() }
 
@@ -190,5 +191,9 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
 
   companion object {
     private const val CONFIRM_FACILITY_SHEET = 1
+  }
+
+  interface Injector {
+    fun inject(target: RegistrationFacilitySelectionScreen)
   }
 }

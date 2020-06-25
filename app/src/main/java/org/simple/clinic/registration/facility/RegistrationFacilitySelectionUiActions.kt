@@ -1,0 +1,3 @@
+package org.simple.clinic.registration.facility
+
+interface RegistrationFacilitySelectionUiActions

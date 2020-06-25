@@ -4,17 +4,11 @@ import android.annotation.SuppressLint
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.facility.FacilityPullResult
-import org.simple.clinic.facility.FacilityPullResult.NetworkError
-import org.simple.clinic.facility.FacilityPullResult.Success
-import org.simple.clinic.facility.FacilityPullResult.UnexpectedError
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItemBuilder
@@ -33,7 +27,6 @@ typealias Ui = RegistrationFacilitySelectionScreen
 typealias UiChange = (Ui) -> Unit
 
 class RegistrationFacilitySelectionScreenController @Inject constructor(
-    private val facilitySync: FacilitySync,
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession,
     private val config: RegistrationConfig,
@@ -49,11 +42,12 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        fetchFacilities(replayedEvents),
+        showProgress(replayedEvents),
         showFacilities(replayedEvents),
         toggleSearchFieldInToolbar(replayedEvents),
         proceedOnFacilityClicks(replayedEvents),
-        proceedOnFacilityConfirmation(replayedEvents))
+        proceedOnFacilityConfirmation(replayedEvents)
+    )
   }
 
   @SuppressLint("MissingPermission")
@@ -73,44 +67,11 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
     events.mergeWith(locationUpdates)
   }
 
-  private fun fetchFacilities(events: Observable<UiEvent>): Observable<UiChange> {
-    val fetchFacilitiesOnStart = events
-        .ofType<ScreenCreated>()
-        .flatMap { facilityRepository.recordCount() }
-        .take(1)
-        .flatMapSingle { count ->
-          when (count) {
-            0 -> facilitySync.pullWithResult()
-            else -> Single.just(FacilityPullResult.Success)
-          }
-        }
-
-    val fetchFacilitiesOnRetry = events
-        .ofType<RegistrationFacilitySelectionRetryClicked>()
-        .switchMap { facilitySync.pullWithResult().toObservable() }
-
-    val fetchFacilities = fetchFacilitiesOnStart.mergeWith(fetchFacilitiesOnRetry)
-
-    val locationUpdates = events.ofType<RegistrationFacilityUserLocationUpdated>()
-
-    // We don't care about the location here. We just want to show
-    // progress until we receive an update, even if it's empty.
-    return Observables.combineLatest(fetchFacilities, locationUpdates)
-        .flatMap { (facilityPullResult, _) ->
-          when (facilityPullResult) {
-            is Success -> Observable.just(
-                { ui: Ui -> ui.hideProgressIndicator() })
-            is NetworkError -> Observable.just(
-                { ui: Ui -> ui.hideProgressIndicator() },
-                { ui: Ui -> ui.showNetworkError() })
-            is UnexpectedError -> Observable.just(
-                { ui: Ui -> ui.hideProgressIndicator() },
-                { ui: Ui -> ui.showUnexpectedError() })
-          }
-        }
-        .startWith(Observable.just(
-            { ui: Ui -> ui.hideError() },
-            { ui: Ui -> ui.showProgressIndicator() }))
+  private fun showProgress(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<RegistrationFacilityUserLocationUpdated>()
+        .map { { ui: Ui -> ui.hideProgressIndicator() } }
+        .startWith(Observable.just(Ui::showProgressIndicator))
   }
 
   private fun showFacilities(events: Observable<UiEvent>): Observable<UiChange> {

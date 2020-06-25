@@ -117,29 +117,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
   }
 
   @Test
-  fun `when both facilities and location are fetched only then should facilities be shown`() {
-    val facilities = listOf(
-        TestData.facility(name = "Facility 1"),
-        TestData.facility(name = "Facility 2"))
-    whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
-    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
-
-    val locationUpdates = PublishSubject.create<LocationUpdate>()
-    whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(locationUpdates)
-
-    setupController()
-    uiEvents.run {
-      onNext(ScreenCreated())
-      onNext(RegistrationFacilitySearchQueryChanged(""))
-    }
-    verify(screen, never()).updateFacilities(any(), any())
-
-    locationUpdates.onNext(LocationUpdate.Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded = Duration.ofNanos(0)))
-    verify(screen).updateFacilities(any(), any())
-  }
-
-  @Test
   fun `when facilities are fetched, but location is unavailable then facilities should still be shown`() {
     val facilities = listOf(
         TestData.facility(name = "Facility 1"),
@@ -246,7 +223,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
     setupController()
     uiEvents.onNext(ScreenCreated())
 
-    uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
+    val location = LocationUpdate.Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded = Duration.ofNanos(0))
+    uiEvents.onNext(RegistrationFacilityUserLocationUpdated(location))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(""))
     verify(screen).updateFacilities(expectedFacilityListItems, FIRST_UPDATE)
   }

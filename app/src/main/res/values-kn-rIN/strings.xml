@@ -41,10 +41,12 @@
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">ರೋಗಿ ನೋಂದಾಯಿಸಿಕೊಂಡಿಲ್ಲ</string>
   <string name="patientsearchresults_register_patient">ಹೊಸ ರೋಗಿಯಾಗಿ ನೋಂದಾಯಿಸಿ</string>
   <string name="patientsearchresults_register_patient_for_empty_state">ರೋಗಿಯನ್ನು ನೋಂದಾಯಿಸಿ</string>
-  <string name="patientsearchresults_item_last_seen">ಕೊನೆಯದಾಗಿ ನೋಡಿರುವುದು:</string>
+  <string name="patientsearchresults_item_last_seen">ಭೇಟಿ ನೀಡಲಾಗಿದೆ</string>
   <string name="patientsearchresults_current_facility_header">ಅವರು %s ಗೆ ಭೇಟಿ ನೀಡಿದ್ದಾರೆ</string>
   <string name="patientsearchresults_other_results_header">ಇತರೆ ಫಲಿತಾಂಶಗಳು</string>
   <string name="patientsearchresults_no_patients_match">ಯಾವುದೇ ರೋಗಿ ಹೊಂದಾಣಿಕೆಯಾಗುತ್ತಿಲ್ಲ</string>
+  <string name="patientsearchresults_item_phone_number">ಫೋನ್</string>
+  <string name="patientsearchresults_item_birthdate">ಜನ್ಮದಿನಾಂಕ</string>
 
   <!-- Manual patient entry -->
   <string name="patiententry_contentdescription_up_button">ಹುಡುಕಾಟಕ್ಕೆ ಹಿಂದಕ್ಕೆ ಹೋಗಿ</string>
@@ -60,7 +62,7 @@
   <string name="patiententry_street_house_road_number">ಮನೆ ಮತ್ತು ರಸ್ತೆ ಸಂಖ್ಯೆ</string>
   <string name="patiententry_village_colony_ward">ಗ್ರಾಮ / ಕಾಲೋನಿ / ವಾರ್ಡ್</string>
   <string name="patiententry_village_ward">ಗ್ರಾಮ / ವಾರ್ಡ್</string>
-  <string name="patiententry_kebele">ಗ್ರಾಮ</string>
+  <string name="patiententry_kebele">ಕೆಬೇಲ್</string>
   <string name="patiententry_zone">ಪ್ರದೇಶ</string>
   <string name="patiententry_district">ಜಿಲ್ಲೆ</string>
   <string name="patiententry_woreda">ವೊರೇಡಾ</string>
@@ -88,9 +90,12 @@
   <string name="patiententry_age_exceeds_min_limit_error">ವಯಸ್ಸು 0 ವರ್ಷಗಳಿಗೆ ಸಮಾನವಾಗಿರಬಾರದು</string>
 
   <string name="patientedit_save_patient">ಉಳಿಸಿ</string>
+  <string name="patientedit_bp_passports_label">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್‌ಗಳು</string>
   <string name="patientedit_confirm_discard_title">ಬದಲಾವಣೆಗಳನ್ನು ತ್ಯಜಿಸುವುದೇ?</string>
   <string name="patientedit_confirm_discard_ok">ತ್ಯಜಿಸಿ</string>
   <string name="patientedit_confirm_discard_cancel">ರದ್ದುಮಾಡಿ</string>
+  <string name="patientedit_delete_patient">ಅಳಿಸಿ</string>
+
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
@@ -165,6 +170,10 @@
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
   <string name="patientsummary_bangladesh_national_id">ಐಡಿ</string>
 
+  <string name="patientsummary_contact_doctor">ವೈದ್ಯ</string>
+  <string name="patientsummary_teleconsult_network_error">ಕಳಪೆ ಇಂಟರ್ನೆಟ್ ಕಾರಣದಿಂದ ಸಂಪರ್ಕಿಸಲಾಗುವುದಿಲ್ಲ</string>
+  <string name="patientsummary_teleconsult_network_error_retry">ಮರುಪ್ರಯತ್ನಿಸಿ</string>
+
   <string name="bloodpressuresummaryview_see_all_button">ಎಲ್ಲವನ್ನು ವೀಕ್ಷಿಸಿ</string>
 
   <!-- Lint fails to find usages for these strings. -->
@@ -172,6 +181,9 @@
   <string name="bloodpressure_level_low">ಕಡಿಮೆ</string>
   <!--suppress UnusedResources -->
   <string name="bloodpressure_level_high">ಹೆಚ್ಚು</string>
+
+  <string name="bloodsugar_level_low">ಕಡಿಮೆ</string>
+  <string name="bloodsugar_level_high">ಹೆಚ್ಚು</string>
 
   <string name="timestamp_today">ಇಂದು</string>
   <string name="timestamp_yesterday">ನಿನ್ನೆ</string>
@@ -247,6 +259,15 @@
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">ಪ್ರಾರಂಭಿಸಿ</string>
+  <string name="screenonboarding_intro_1">ಈ ಮೂಲಕ \ಸಾವಿರಾರು ರೋಗಿಗಳನ್ನು ಹುಡುಕಿ \nಮತ್ತು \nಕಂಡುಹಿಡಿಯಿರಿ</string>
+  <string name="screenonboarding_intro_1_hypertension">\ ಅಧಿಕ ರಕ್ತದೊತ್ತಡ</string>
+  <string name="screenonboarding_intro_2">ರಕ್ತದ ಒತ್ತಡಗಳು \n</string>
+  <string name="screenonboarding_intro_2_bp">ಮತ್ತು ಔಷಧಿಗಳ \n</string>
+  <string name="screenonboarding_intro_2_and">\ದಾಖಲೆಗಳನ್ನು</string>
+  <string name="screenonboarding_intro_2_medicines">\ ಇರಿಸಿಕೊಳ್ಳಿ</string>
+  <string name="screenonboarding_intro_3">ಭೇಟಿಗಳಿಗಾಗಿ ಹಿಂತಿರುಗುವುದಕ್ಕಾಗಿ ರೋಗಿಗಳು</string>
+  <string name="screenonboarding_intro_3_reminder">\nಜ್ಞಾಪನೆ ಸಂದೇಶಗಳನ್ನು</string>
+  <string name="screenonboarding_intro_3_visits">\nಸ್ವೀಕರಿಸುತ್ತಾರೆ</string>
 
   <!-- Overdue List -->
   <string name="overdue_no_patients">ಯಾವ ರೋಗಿಗಳು ಬಾಕಿ ಇಲ್ಲ</string>
@@ -347,7 +368,7 @@
   <string name="help_try_again">ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ</string>
 
   <!-- Link Id Sheet-->
-  <string name="linkidwithpatient_button_add">ಸೇರಿಸಿ</string>
+  <string name="linkidwithpatient_button_add">ಮುಂದಿನ</string>
   <string name="linkidwithpatient_button_cancel">ರದ್ದುಮಾಡಿ</string>
   <string name="linkidwithpatient_add_id_text">%1$s\u0020 ಸೇರಿಸಿ</string>
   <string name="linkidwithpatient_to_patient_text">\u0020\u00A0ರೋಗಿಗೆ?</string>
@@ -362,8 +383,9 @@
   <string name="recent_patients_toolbar_title">ಇತ್ತೀಚಿನ</string>
 
   <!-- Recent Patients Item View -->
-  <string name="recent_patients_itemview_last_seen">ಕಡೆಯದಾಗಿ ನೋಡಿರುವುದು:\u0020</string>
+  <string name="recent_patients_itemview_last_seen">ಭೇಟಿ ನೀಡಲಾಗಿದೆ:\u0020</string>
   <string name="recent_patients_itemview_title">%1$s, %2$s</string>
+  <string name="recent_patients_itemview_new_registration">ಹೊಸ ನೋಂದಣಿ</string>
 
   <!-- Add ID to Patient: Search Results-->
   <string name="addidtopatientsearchresults_add">%1$s\u0020 ಸೇರಿಸಿ</string>
@@ -441,7 +463,7 @@
   <string name="bloodsugarentry_year">ವರ್ಷ</string>
   <string name="bloodsugarentry_error_lower_limit">ಮೌಲ್ಯವು 30 ಮಿಗ್ರಾಂ/ಡೆಲೀಗಿಂತ ಕಡಿಮೆ ಇರಬಾರದು</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">ಮೌಲ್ಯವು 3% ಗಿಂತ ಕಡಿಮೆ ಇರಬಾರದು</string>
-  <string name="bloodsugarentry_error_higher_limit">ಮೌಲ್ಯವು 1000 ಮಿಗ್ರಾಂ/ಡೆಲೀಗಿಂತ ಹೆಚ್ಚು ಇರಬಾರದು</string>
+  <string name="bloodsugarentry_error_higher_limit">ಮೌಲ್ಯವು 1000 ಮಿಗ್ರಾಂ/ಡೆಲೀಗಿಂತ ಹೆಚ್ಚಿರಬಾರದು</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">ಮೌಲ್ಯವು 25% ಗಿಂತ ಹೆಚ್ಚು ಇರಬಾರದು</string>
   <string name="bloodsugarentry_error_empty">ಮೌಲ್ಯವು ಖಾಲಿ ಇರಬಾರದು</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YYYY ನಲ್ಲಿ ಮಾನ್ಯ ದಿನಾಂಕವನ್ನು ನಮೂದಿಸಿ</string>
@@ -471,6 +493,7 @@
   <!-- Blood Sugar History screen -->
   <string name="bloodsugarhistory_add_blood_sugar_button">ಡಯಾಬಿಟಿಸ್</string>
   <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">ಇತಿಹಾಸ</string>
   <string name="medicalhistorysummaryview_diagnosis">ರೋಗನಿರ್ಣಯ (ಅಗತ್ಯವಿದೆ)</string>
@@ -513,14 +536,6 @@
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">ನಂತರ ಇಷ್ಟು ಸಮಯದಲ್ಲಿ ಕರೆ ಮಾಡಿ</string>
   <string name="contactpatient_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
-  <string name="contactpatient_select_a_reason">ಕಾರಣವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
-  <string name="contactpatient_patient_already_visited">ರೋಗಿಯನ್ನು ಈಗಾಗಲೇ ಭೇಟಿಮಾಡಲಾಗಿದೆ</string>
-  <string name="contactpatient_patient_is_not_responding">ರೋಗಿ ಉತ್ತರಿಸುತ್ತಿಲ್ಲ</string>
-  <string name="contactpatient_invalid_phone_number">ಫೋನ್ ನಂಬರ್ ಕೆಲಸ ಮಾಡುತ್ತಿಲ್ಲ</string>
-  <string name="contactpatient_public_hospital_transfer">ಇನ್ನೊಂದು ಸಾರ್ವಜನಿಕ ಆರೋಗ್ಯ ಸೌಲಭ್ಯಕ್ಕೆ ವರ್ಗಾಯಿಸಲಾಗಿದೆ</string>
-  <string name="contactpatient_moved_to_private">ಖಾಸಗಿ ವೈದ್ಯರಲ್ಲಿಗೆ ಹೋಗಿದ್ದಾರೆ</string>
-  <string name="contactpatient_patient_died">ಮರಣ ಹೊಂದಿದ್ದಾರೆ</string>
-  <string name="contactpatient_other_reason">ಇತರೆ ಕಾರಣ</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s ದಿನ</item>
     <item quantity="other">%s ದಿನಗಳು</item>
@@ -533,4 +548,42 @@
     <item quantity="one">%s ತಿಂಗಳು</item>
     <item quantity="other">%s ತಿಂಗಳುಗಳು</item>
   </plurals>
+  <string name="contactpatient_select_a_reason">ಕಾರಣವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+  <string name="contactpatient_patient_already_visited">ರೋಗಿಯನ್ನು ಈಗಾಗಲೇ ಭೇಟಿಮಾಡಲಾಗಿದೆ</string>
+  <string name="contactpatient_patient_is_not_responding">ರೋಗಿ ಉತ್ತರಿಸುತ್ತಿಲ್ಲ</string>
+  <string name="contactpatient_invalid_phone_number">ಫೋನ್ ನಂಬರ್ ಕೆಲಸ ಮಾಡುತ್ತಿಲ್ಲ</string>
+  <string name="contactpatient_public_hospital_transfer">ಇನ್ನೊಂದು ಸಾರ್ವಜನಿಕ ಆರೋಗ್ಯ ಸೌಲಭ್ಯಕ್ಕೆ ವರ್ಗಾಯಿಸಲಾಗಿದೆ</string>
+  <string name="contactpatient_moved_to_private">ಖಾಸಗಿ ವೈದ್ಯರಲ್ಲಿಗೆ ಹೋಗಿದ್ದಾರೆ</string>
+  <string name="contactpatient_patient_died">ಮರಣ ಹೊಂದಿದ್ದಾರೆ</string>
+  <string name="contactpatient_other_reason">ಇತರೆ ಕಾರಣ</string>
+
+  <!-- Deep link -->
+  <string name="deeplink_patient_profile_not_found">ರೋಗಿ ವಿವರ ಕಂಡುಬಂದಿಲ್ಲ</string>
+  <string name="deeplink_patient_profile_not_found_desc">ದಯವಿಟ್ಟು ನಿಮ್ಮ ಇಂಟರ್ನೆಟ್ ಪರಿಶೀಲಿಸಿ ಮತ್ತು ರೋಗಿಗಳನ್ನು ಸಿಂಕ್ ಮಾಡಿ</string>
+  <string name="deeplink_patient_profile_not_found_positive_action">ಸರಿ</string>
+  <string name="deeplink_no_patient">ರೋಗಿ ಕಂಡುಬಂದಿಲ್ಲ</string>
+  <string name="deeplink_no_patient_desc">ಟೆಲೆಕನ್ಸಲ್ಟೇಶನ್ ಆರಂಭಿಸಿ ಮತ್ತು ರೋಗಿ ಮಾಹಿತಿಗಾಗಿ ಆರೋಗ್ಯಪಾಲನೆ ಕಾರ್ಯಕರ್ತರನ್ನು ಕೇಳಿ</string>
+  <string name="deeplink_no_patient_positive_action">ಸರಿ</string>
+
+  <!-- Delete patient -->
+  <string name="deletepatient_select_a_reason">ಕಾರಣವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+  <string name="deletereason_duplicate_patient">ಇವರು ನಕಲು ರೋಗಿಯಾಗಿದ್ದಾರೆ</string>
+  <string name="deletereason_accidental_registration">ರೋಗಿ ತಪ್ಪಾಗಿ ನೋಂದಾಯಿತವಾಗಿದ್ದಾರೆ</string>
+  <string name="deletereason_died">ಮರಣ ಹೊಂದಿದ್ದಾರೆ</string>
+  <string name="deletereason_confirm_title">ರೋಗಿಯನ್ನು ಅಳಿಸುವುದೇ?</string>
+  <string name="deletereason_confirm_message">ಇದು %1$s ಅನ್ನು ತೆಗೆದುಹಾಕುತ್ತದೆ</string>
+  <string name="deletereason_confirm_positive">ಅಳಿಸಿ</string>
+  <string name="deletereason_confirm_negative">ರದ್ದುಮಾಡಿ</string>
+
+  <!-- Splash screen -->
+  <string name="screensplash_next">ಮುಂದಿನ</string>
+
+  <!-- Contact doctor sheet -->
+  <string name="contactdoctor_title">ವೈದ್ಯರು</string>
+  <string name="contactdoctor_subtitle">%1$s ಗೆ ನಿಯೋಜಿಸಲಾಗಿದೆ</string>
+
+  <!-- Intro Video Screen -->
+  <string name="screenintrovideo_how_to_use_simple_app">ಸಿಂಪಲ್ ಆ್ಯಪ್ ಅನ್ನು ಹೇಗೆ ಬಳಸುವುದು</string>
+  <string name="screenintrovideo_watch_video">ವೀಡಿಯೋವನ್ನು ವೀಕ್ಷಿಸಿ</string>
+  <string name="screenintrovideo_skip">ಸ್ಕಿಪ್ ಮಾಡಿ</string>
 </resources>

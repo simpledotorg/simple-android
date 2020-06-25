@@ -3,30 +3,30 @@
   <string name="app_name">ቀላል</string>
 
   <!-- Common -->
-  <string name="gender_female">ሰቶች</string>
+  <string name="gender_female">ሴት</string>
   <string name="gender_male">ወንድ</string>
   <string name="gender_transgender">ጾታእልፍ</string>
   <!--suppress UnusedResources -->
   <string name="gender_male_letter">ወ</string>
   <!--suppress UnusedResources -->
-  <string name="gender_female_letter">ሰ</string>
+  <string name="gender_female_letter">ሴ</string>
   <!--suppress UnusedResources -->
   <string name="gender_trans_letter">ጾኢ</string>
-  <string name="api_unexpected_error">የሆነ ስህተት ተከስቷል። እባክዎ ደግሞ ይሞክሩ</string>
+  <string name="api_unexpected_error">የሆነ ስህተት ተከስቷል። እባክዎ ደግመው ይሞክሩ</string>
   <string name="api_network_error">ምንም የበይነመረብ ግንኙነት የለም</string>
-  <string name="api_server_error">የአገልጋይ ስህተት! እባክዎ ቆየት ብለው ይሞክሩ።</string>
+  <string name="api_server_error">የሰርቨር ስህተት! እባክዎ ቆየት ብለው ይሞክሩ።</string>
 
   <!-- Country names -->
   <string name="country_india">ህንድ</string>
   <string name="country_bangladesh">ባንግላደሽ</string>
-  <string name="country_ethiopia">እትዮጵያ</string>
+  <string name="country_ethiopia">ኢትዮጵያ</string>
 
   <!-- Home -->
   <string name="home_help">እርዳታ</string>
   <string name="home_settings">ቅንጅቶች</string>
 
   <!--Business id Identifier -->
-  <string name="identifiertype_bp_passport">የ BP ፓስፖርት</string>
+  <string name="identifiertype_bp_passport">የደም ግፊት ፓስፖርት</string>
   <string name="identifiertype_bangladesh_national_id">ብሔራዊ መታወቂያ ቁጥር</string>
   <string name="identifiertype_unknown">መታወቂያ</string>
 
@@ -36,15 +36,17 @@
   <string name="patientsearch_hint">ስም ወይም ስልክ ቁጥር</string>
 
   <!-- Patient search results -->
-  <string name="patientsearchresults_empty_state">ምንም ሕመምተኞች አይዛመዱም</string>
-  <string name="patientsearchresults_register_patient_rationale">በዚህ ዝርዝር ውስጥ ህመምተኛውን ማግኘት አልተቻለም?</string>
-  <string name="patientsearchresults_register_patient_rationale_for_empty_state">ህመምተኛው አልተመዘገበም</string>
-  <string name="patientsearchresults_register_patient">እንደ አዲስ ህመምተኛ ይመዝገቡ</string>
-  <string name="patientsearchresults_register_patient_for_empty_state">ህመምተኛ ያስመዝግቡ</string>
-  <string name="patientsearchresults_item_last_seen">መጨረሻ ላይ የታዩት:</string>
+  <string name="patientsearchresults_empty_state">ከታካሚው ጋር አይዛመድም</string>
+  <string name="patientsearchresults_register_patient_rationale">በዚህ ዝርዝር ውስጥ ታካሚውንውን ማግኘት አልተቻለም?</string>
+  <string name="patientsearchresults_register_patient_rationale_for_empty_state">ታካሚው አልተመዘገበም</string>
+  <string name="patientsearchresults_register_patient">እንደ አዲስ ታካሚ ይመዝገቡ</string>
+  <string name="patientsearchresults_register_patient_for_empty_state">ታካሚውን ይመዝግቡ</string>
+  <string name="patientsearchresults_item_last_seen">ጎብኝተዋል</string>
   <string name="patientsearchresults_current_facility_header">ጎብኝተዋል %s</string>
   <string name="patientsearchresults_other_results_header">ሌሎች ውጤቶች</string>
-  <string name="patientsearchresults_no_patients_match">ምንም ሕመምተኞች አይዛመዱም</string>
+  <string name="patientsearchresults_no_patients_match">ከታካሚው ጋር አይዛመድም</string>
+  <string name="patientsearchresults_item_phone_number">ስልክ ቁጥር</string>
+  <string name="patientsearchresults_item_birthdate">የትውልድ ቀን</string>
 
   <!-- Manual patient entry -->
   <string name="patiententry_contentdescription_up_button">ወደ ፍለጋ ተመለስ</string>
@@ -57,7 +59,7 @@
   <string name="patiententry_dateofbirth_and_age_separator">ወይም</string>
   <string name="patiententry_age">እድሜ</string>
   <string name="patiententry_street_address">የቤት አድራሻ</string>
-  <string name="patiententry_street_house_road_number">የቦእት እና የማንገድ ቁጥር</string>
+  <string name="patiententry_street_house_road_number">የቤት እና የመንገድ ቁጥር</string>
   <string name="patiententry_village_colony_ward">መንደር/ጎጥ/ወረዳ</string>
   <string name="patiententry_village_ward">መንደር/ወረዳ</string>
   <string name="patiententry_kebele">ቀበሌ</string>
@@ -71,24 +73,24 @@
   <string name="patiententry_error_empty_fullname">የታካሚውን ሙሉ ስም ያስገቡ</string>
   <string name="patiententry_error_empty_gender">የታካሚውን ጾታ ይምረጡ</string>
   <string name="patiententry_error_empty_colony_or_village">መንደር/ጎጥ/ወረዳ ያስገቡ</string>
-  <string name="patiententry_error_empty_district">የታካሚውን የቤት አውራጃ ያስገቡ</string>
+  <string name="patiententry_error_empty_district">የታካሚው ቤት የሚገኝበት ወረዳ ያስገቡ</string>
   <string name="patiententry_error_state_empty">የታካሚውን የቤት ሁኔታ ያስገቡ</string>
   <string name="patiententry_error_both_dateofbirth_and_age_empty">የታካሚውን ዕድሜ ያስገቡ</string>
   <string name="patiententry_error_invalid_dateofbirth">የታካሚውን የትውልድ ቀን በ ቀቀ/ወወ/ዓዓ ውስጥ ያስገቡ</string>
   <string name="patiententry_error_dateofbirth_is_in_future">የታካሚውን የትውልድ ቀን ያስተካክሉ</string>
   <string name="patiententry_error_phonenumber_length_less">የስልክ ቁጥር ከ 6 ቁጥሮች በታች መሆን አይችልም</string>
   <string name="patiententry_error_phonenumber_length_more">የስልክ ቁጥር ከ 12 ቁጥሮች በላይ መሆን አይችልም</string>
-  <string name="patiententry_identifier">የ BP ፓስፖርት</string>
+  <string name="patiententry_identifier">የደም ግፊት ፓስፖርት</string>
   <string name="patiententry_consent_header">ስምምነት:\u0020</string>
-  <string name="patiententry_consent_first_para">ከዚህ በታች መታ በማድረግ እዚህ ያስገቡት ማንኛውም የታካሚ መረጃ በተገቢው በተረጋገጠ ስምምነት የተገኘ መሆኑን ያረጋግጣሉ። ይህ ማለት ታካሚው ወይም የሕግ አሳዳጊው የግል ውሂባቸውን ወደ መተግበሪያው ውስጥ እንደሚገቡ ያውቃሉ፣ ምን ውሂብ እየተሰበሰበ እንዳለ ይገነዘባል፣ እና በመተግበሪያው ውስጥ የሚገኘውን የስልክ ቁጥር በመጠቀም በኤስኤምኤስ፣ በ WhatsApp ወይም በሌሎች መንገዶች ሊገናኙ እንደሚችሉ ያውቃል።</string>
-  <string name="patiententry_consent_second_para">በእርስዎ ወይም እርስዎ የሚሰሩበት የጤና አጠባበቅ አቅራቢ ማንኛውም የተፈቀደለት እዚህ የታመሙትን መረጃዎች እና መረጃዎች ማግኘት ይችላል። መተግበሪያውን በመጠቀም ታካሚው ወይም የሕግ አሳዳጊው በዚህ መተግበሪያ አማካኝነት የተገኘውን መረጃ መድረስ የሚችል እና በዚያ መዳረሻ የሚስማሙ መሆናቸውን ይገነዘባሉ።</string>
+  <string name="patiententry_consent_first_para">ከዚህ በታች መታ በማድረግ እዚህ ያስገቡት ማንኛውም የታካሚ መረጃ በተገቢው በተረጋገጠ ስምምነት የተገኘ መሆኑን ያረጋግጣሉ። ይህ ማለት ታካሚው ወይም የታካሚው ሞግዚት የግል መረጃ ወደ መተግበሪያው ውስጥ እንደሚገቡ ያውቃሉ፣ ምን መረጃ እየተሰበሰበ እንዳለ ይገነዘባሉ፣ እንዲሁም በመተግበሪያው ውስጥ የሚገኘውን የስልክ ቁጥር በመጠቀም በኤስኤምኤስ፣ በ WhatsApp ወይም በሌሎች መንገዶች ሊገናኙ እንደሚችሉ ያውቃሉ።</string>
+  <string name="patiententry_consent_second_para">እርስዎ የፈቀዱለት ማንኛውም ሰው ወይም እርስዎ የሚሰሩለት የጤና ባለሙያ ፤ እዚህ ያስገቡትን የታካሚ መረጃዎች ማግኘት ይችላል። መተግበሪያውን በመጠቀም ታካሚው ወይም የታካሚው ሞግዚት በዚህ መተግበሪያ አማካኝነት የተገኘውን መረጃ ማን መድረስ እንደሚችል መገንዘባቸውን እና ተሰማሚነታቸውን አረጋግጠዋል።</string>
   <string name="patiententry_consent_whatsapp_sms_reminders">የ WhatsApp / ኤስኤምኤስ አስታዋሾች</string>
-  <string name="patiententry_consent_sms_reminders">SMS አስታዋሾች</string>
+  <string name="patiententry_consent_sms_reminders">ኤስኤምኤስ አስታዋሾች</string>
   <string name="patiententry_age_exceeds_max_limit_error">ዕድሜ ከ 120 ዓመት በላይ መሆን አይችልም</string>
   <string name="patiententry_age_exceeds_min_limit_error">ዕድሜ ከ 0 ዓመት ጋር እኩል መሆን አይችልም</string>
 
   <string name="patientedit_save_patient">አስቀምጥ</string>
-  <string name="patientedit_bp_passports_label">BP ፓስፖርቶች</string>
+  <string name="patientedit_bp_passports_label">የደም ግፊት ፓስፖርቶች</string>
   <string name="patientedit_confirm_discard_title">ለውጦች ይወገዱ?</string>
   <string name="patientedit_confirm_discard_ok">ይወገዱ</string>
   <string name="patientedit_confirm_discard_cancel">ይቅር</string>
@@ -97,34 +99,34 @@
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
-  <string name="tab_patient">ህመምተኞች</string>
+  <string name="tab_patient">ታካሚዎች</string>
   <!--suppress UnusedResources -->
   <string name="tab_overdue">ጊዜው ያለፈበት</string>
   <!--suppress UnusedResources -->
-  <string name="tab_progress">እድገት</string>
+  <string name="tab_progress">መሻሻል</string>
 
   <string name="home_search_patient_name_phone">የታካሚውን ስም ያስገቡ</string>
   <string name="patients_user_awaiting_approval_title">መጽደቅን በመጠባበቅ ላይ</string>
-  <string name="patients_user_awaiting_approval_message">አንዴ ከፀደቀ ፣ ክሊኒክዎ ውስጥ የታካሚ መዛግብቶችን ማግኘት ይችላሉ።</string>
-  <string name="patients_user_approved_title">ጸድቀዋል!</string>
+  <string name="patients_user_awaiting_approval_message">አንዴ ከፀደቀ ፣ ክሊኒክዎ ውስጥ የታካሚ ማህደርን ማግኘት ይችላሉ።</string>
+  <string name="patients_user_approved_title">ጸድቆሎታል!</string>
   <string name="patients_awaiting_sms_verification_title">የኤስኤምኤስ ማረጋገጫ በመጠበቅ ላይ</string>
   <string name="patients_user_approved_message">አሁን ለክሊኒክዎ ሁሉንም የታካሚ መረጃዎች ማየት ይችላሉ</string>
-  <string name="patients_awaiting_sms_verification_message">አንዴ ከተረጋገጠ ከህክምና ክሊኒክዎ የሕመምተኛ መዝገቦችን ማግኘት ይችላሉ።</string>
+  <string name="patients_awaiting_sms_verification_message">አንዴ ከተረጋገጠ ከህክምና ክሊኒክዎ የታካሚውን  የግል ማህደሮቸን ማግኘት ይችላሉ።</string>
   <string name="patients_dismiss_user_approved_status">ገባኝ</string>
   <string name="patients_enter_code">ኮድ ያስገቡ</string>
-  <string name="patients_you_are_now_logged_in">ማረጋገጥ ተሳክቷል! የታካሚዎች መዝገብ አሁን ይታያል።</string>
+  <string name="patients_you_are_now_logged_in">ማረጋገጥ ተሳክቷል! የታካሚዎች የግል ማህደር አሁን ይታያል።</string>
   <string name="patients_loggedoutalert_title">በአንድ ጊዜ በአንድ መሣሪያ ላይ ብቻ ነው መግባት የሚችሉት</string>
   <string name="patients_loggedoutalert_message">ከቀዳሚው መሣሪያዎ ወጥተው ነበር</string>
   <string name="patients_loggedoutalert_dismiss">ገባኝ</string>
-  <string name="patients_scan_simple_card">BP ፓስፖርት ስካን ያድርጉ</string>
+  <string name="patients_scan_simple_card">የደም ግፊት ፓስፖርት ስካን ያድርጉ</string>
   <string name="patients_recentpatients_title">የቅርብ</string>
-  <string name="patients_recentpatients_no_recent_patients">ምንም የቅርብ ጊዜ ህመምተኞች የሉም</string>
-  <string name="patients_recentpatients_see_all">ሁሉንም ተመልከት</string>
+  <string name="patients_recentpatients_no_recent_patients">ምንም የቅርብ ጊዜ ታካሚዎች የሉም</string>
+  <string name="patients_recentpatients_see_all">ሁሉንም ይመልከቱ</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">ደም ግፊት</string>
-  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">ደም ግፊት ያአርትዑ</string>
+  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">ደም ግፊት ያርትኡ ወይም ያስትካክሉ</string>
   <string name="bloodpressureentry_sheet_title_enter_date">የተጎበኘበት ቀን</string>
   <string name="bloodpressureentry_remove">ያስወግዱ</string>
   <string name="bloodpressureentry_systolic">ሲይስቶሊክ</string>
@@ -141,8 +143,8 @@
   <string name="bloodpressureentry_error_diastolic_empty">የ ሰልኮሊክ እና ድያስቶሊክ ግፊት ያስገቡ</string>
   <string name="bloodpressureentry_error_date_invalid_pattern">በ ቀን/ወር/ዓመት ትክክለኛ ቀን ያስገቡ</string>
   <string name="bloodpressureentry_error_date_is_in_future">ቀን ለወደፊቱ መሆን አይችልም</string>
-  <string name="bloodpressureentry_remove_bp_title">BP ያስወግዱ</string>
-  <string name="bloodpressureentry_remove_bp_message">እርግጠኛ ነዎት ይህን የደም ግፊት ቀረጻ ለማስወገድ ይፈልጋሉ?</string>
+  <string name="bloodpressureentry_remove_bp_title">የደም ግፊት ያስወግዱ</string>
+  <string name="bloodpressureentry_remove_bp_message">እርግጠኛ ነዎት ይህን የደም ግፊት ቅጂ ለማስወገድ ይፈልጋሉ?</string>
   <string name="bloodpressureentry_remove_bp_confirm">ያስወግዱ</string>
   <string name="bloodpressureentry_remove_bp_cancel">ይቅር</string>
 
@@ -151,19 +153,19 @@
   <string name="patientsummary_prescriptions_add">መድኃኒቶች</string>
   <string name="patientsummary_prescriptions_update">መድኃኒቶችን ያርትዑ</string>
   <string name="patientsummary_bp_add_new">ደም ግፊት</string>
-  <string name="patientsummary_finish_saving_patient">አስቀምጥ</string>
-  <string name="patientsummary_bp_none_added">ያርታዑ</string>
-  <string name="patientsummary_edit">ያርትዑ</string>
+  <string name="patientsummary_finish_saving_patient">ሴቭ ያድርጉ</string>
+  <string name="patientsummary_bp_none_added">ምንም የደም ግፊት አልገባም</string>
+  <string name="patientsummary_edit">ያርትዑ ወይም ያስተካክሉ</string>
 
-  <string name="patientsummary_updatephone_dialog_title">ስልክ ቁጥር ያዘምኑ</string>
+  <string name="patientsummary_updatephone_dialog_title">ስልክ ቁጥር ያረጋግጡ ወይም ይቀይሩ</string>
   <string name="patientsummary_updatephone_dialog_message">የታካሚው ስልክ ቁጥር ከዚህ በፊት የተሳሳተ ነው የሚል ምልክት ተደርጎበታል</string>
   <string name="patientsummary_updatephone_phone_hint">ስልክ ቁጥር</string>
-  <string name="patientsummary_updatephone_save">አስቀምጥ</string>
+  <string name="patientsummary_updatephone_save">ሴቭ</string>
   <string name="patientsummary_updatephone_cancel">ዝለል</string>
-  <string name="patientsummary_addphone_dialog_title">ስልክ ቁጥር ያዘምኑ</string>
-  <string name="patientsummary_addphone_dialog_message">በታመመ ጊዜ የታካሚው ስልክ ቁጥር አልገባም</string>
+  <string name="patientsummary_addphone_dialog_title">ስልክ ቁጥር ያረጋግጡ ወይም ይቀይሩ</string>
+  <string name="patientsummary_addphone_dialog_message">በምዝገባ ጊዜ የታካሚው ስልክ ቁጥር አልገባም</string>
   <string name="patientsummary_addphone_phone_hint">ስልክ ቁጥር</string>
-  <string name="patientsummary_addphone_save">አስቀምጥ</string>
+  <string name="patientsummary_addphone_save">ሴቭ</string>
   <string name="patientsummary_addphone_cancel">ዝለል</string>
   <string name="patientsummary_toolbar_title">%1$s ፣ %2$s ፣ %3$s</string>
   <string name="patientsummary_bangladesh_national_id">መታወቂያ</string>
@@ -172,7 +174,7 @@
   <string name="patientsummary_teleconsult_network_error">በመጥፎ በይነመረብ አማካኝነት ማገናኘት አልተቻለም</string>
   <string name="patientsummary_teleconsult_network_error_retry">በድጋሚ ይሞክሩ</string>
 
-  <string name="bloodpressuresummaryview_see_all_button">ሁሉንም ተመልከት</string>
+  <string name="bloodpressuresummaryview_see_all_button">ሁሉንም ይመልከቱ</string>
 
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
@@ -180,18 +182,21 @@
   <!--suppress UnusedResources -->
   <string name="bloodpressure_level_high">ከፍተኛ</string>
 
+  <string name="bloodsugar_level_low">ዝቅተኛ</string>
+  <string name="bloodsugar_level_high">ከፍተኛ</string>
+
   <string name="timestamp_today">ዛሬ</string>
   <string name="timestamp_yesterday">ትናንት</string>
   <!--suppress PluralsCandidate -->
   <string name="timestamp_days_ago">ከ %s ቀናት በፊት</string>
 
   <!-- Prescribed drugs -->
-  <string name="patient_prescribeddrugs_screen_title">BP መድኃኒቶች</string>
+  <string name="patient_prescribeddrugs_screen_title">የደም ግፊት መድኃኒቶች</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">ሌላ መድሃኒት ያክሉ</string>
 
   <string name="customprescription_enter_medicine">መድሃኒት ያስገቡ</string>
   <string name="customprescription_edit_medicine">መድሃኒት ያርትዑ</string>
-  <string name="customprescription_save_drug">አስቀምጥ</string>
+  <string name="customprescription_save_drug">ሴቭ</string>
   <string name="customprescription_drug_name_hint">የመድኃኒት ስም</string>
   <string name="customprescription_drug_dosage_hint">የመድኃኒት መጠን</string>
 
@@ -204,15 +209,15 @@
   <string name="loginpin_go_back">ወደ ስልክ ቁጥር ማያ ገጽ ይመለሱ</string>
 
   <!-- App lock -->
-  <string name="applock_logout">አንቺን አይደለም?</string>
-  <string name="applock_reset_pin_alert_title">የደህንነት ፒን ዳግም ይጀመር?</string>
+  <string name="applock_logout">አርስዎ አይደሉም?</string>
+  <string name="applock_reset_pin_alert_title">የደህንነት PIN ዳግም ይጀመር?</string>
   <string name="applock_reset_pin_alert_message">እርግጠኛ ነዎት የደህንነት ፒንዎን ዳግም ማስጀመር ይፈልጋሉ?</string>
   <string name="applock_reset_pin_alert_confirm">ዳግም አስጀምር</string>
   <string name="applock_reset_pin_alert_cancel">ይቅር</string>
 
   <!-- PIN entry -->
   <string name="pinentry_forgotpin">PIN ረሱ?</string>
-  <string name="pinentry_error_incorrect_pin_on_first_attempt">PIN ከዋናው ፒን ጋር አይዛመድም</string>
+  <string name="pinentry_error_incorrect_pin_on_first_attempt">ፒኑ ከዋናው ፒን ጋር አይዛመድም</string>
   <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">የተሳሳተ PIN ፣ %s የቀረ ሙከራ</string>
   <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">%s የተሳሳቱ ሙከራዎችን አድርገዋል</string>
   <string name="pinentry_pin_number_hint">የእርስዎ የደህንነት PIN</string>
@@ -221,11 +226,11 @@
 
   <!-- Registration -->
   <string name="registrationphone_phone_number_label">የእርስዎ ስልክ ቁጥር</string>
-  <string name="registrationphone_error_invalid_number">ስልክ ቁጥርን ያረጋግጡ ፡፡ በጣም አጭር ይመስላል።</string>
-  <string name="registration_loggedout_dialog_title">ወጥተው ወጥተዋል</string>
+  <string name="registrationphone_error_invalid_number">ስልክ ቁጥርዎን ያረጋግጡ ፡፡ በጣም አጭር ይመስላል።</string>
+  <string name="registration_loggedout_dialog_title"> ወጥተዋል</string>
   <string name="registration_loggedout_dialog_message">ለመቀጠል እባክዎ እንደገና ይግቡ</string>
   <string name="registration_loggedout_dialog_confirm">እሺ</string>
-  <string name="registrationname_name_label">ሙሉ ስምህን ንገረን</string>
+  <string name="registrationname_name_label">ሙሉ ስምዎን ይንገሩን</string>
   <string name="registrationname_error_empty_name">እባክዎ ሙሉ ስምዎን ያስገቡ</string>
 
   <string name="registrationpin_pin_label">የደህንነት PIN ዎን ይፍጠሩ</string>
@@ -233,12 +238,12 @@
   <string name="registrationpin_error_incomplete_pin">PIN በጣም አጭር ነው። እባክዎ 4 ቁጥሮች ያስገቡ።</string>
 
   <string name="registrationconfirmpin_confirm_pin_label">የደህንነት PIN እንደገና ያስገቡ</string>
-  <string name="registrationconfirmpin_error_pin_mismatch">PIN ከዋናው ፒን ጋር አይዛመድም</string>
+  <string name="registrationconfirmpin_error_pin_mismatch">ፒኑ ከዋናው ፒን ጋር አይዛመድም</string>
   <string name="registrationconfirmpin_reset_pin">PIN ዳግም ያስጀምሩ</string>
 
-  <string name="registrationlocation_screen_title">ሥፍራ ድረስ</string>
+  <string name="registrationlocation_screen_title">ያሉበት ቦታ መዳረሻ</string>
   <string name="registrationlocation_skip_permission">ዝለል</string>
-  <string name="registrationlocation_permission_rationale_description">መገኛዎ ክሊኒክዎን ለማግኘት ይረዳናል</string>
+  <string name="registrationlocation_permission_rationale_description">መዳረሻዎ ክሊኒክዎን ለማግኘት ይረዳናል</string>
   <string name="registrationlocation_permission_rationale_title">ክሊኒክዎን በፍጥነት ያግኙ</string>
   <string name="registrationlocation_allow_access">የአካባቢ መዳረሻ ፍቀድ</string>
 
@@ -248,27 +253,36 @@
   <string name="registrationfacilities_error_unexpected_title">የሆነ ስህተት ተከስቷል</string>
   <string name="registrationfacilities_error_unexpected_message">እባክዎን ከተወሰነ ጊዜ በኋላ እንደገና ይሞክሩ ወይም ከተቆጣጣሪዎ ጋር ይገናኙ ፡፡</string>
   <string name="registrationfacilities_error_internet_connection_title">ምንም የበይነመረብ ግንኙነት የለም</string>
-  <string name="registrationfacilities_retry">ድጋሚ ሞክር</string>
+  <string name="registrationfacilities_retry">ድጋሚ ይሞክሩ</string>
   <string name="registrationfacilities_header_suggested_facilities">የተጠቆሙ ክሊኒኮች</string>
   <string name="registrationfacilities_header_all_facilities">ሁሉም ክሊኒኮች</string>
 
   <!-- Onboarding -->
-  <string name="onboarding_get_started">መጀመር</string>
+  <string name="onboarding_get_started">ያስጀምሩ</string>
+  <string name="screenonboarding_intro_1">ይፈልጉ \&amp; ይፈልጉ \n በሺዎች የሚቆጠሩ ታካሚዎችን ከ \n ጋር</string>
+  <string name="screenonboarding_intro_1_hypertension">\ የደም ግፊት</string>
+  <string name="screenonboarding_intro_2">የ \n መዝገቦችን ይያዙ</string>
+  <string name="screenonboarding_intro_2_bp">የደም ግፊቶች \n</string>
+  <string name="screenonboarding_intro_2_and">\&amp;</string>
+  <string name="screenonboarding_intro_2_medicines">\ መድሃኒቶች</string>
+  <string name="screenonboarding_intro_3">ታካሚው ተቀብሏል</string>
+  <string name="screenonboarding_intro_3_reminder">\n አስተዋሽ መልእክቶች</string>
+  <string name="screenonboarding_intro_3_visits">ለጉብኝቶች መመለስ</string>
 
   <!-- Overdue List -->
-  <string name="overdue_no_patients">ምንም ሕመምተኞች ጊዜው አያልፍም</string>
-  <string name="overdue_empty_desc">ለቀጣይ የደም ግፊት ንባብ መርሃግብር የተያዙትን ጉብኝት ያመለጡትን ህመምተኞች መደወል ይችላሉ</string>
+  <string name="overdue_no_patients">ምንም የዘገየ ታካሚ የለም</string>
+  <string name="overdue_empty_desc">ለቀጣይ የደም ግፊት ንባብ መርሃግብር ተቀጥረው ያልመጡትን ታካሚዎችመደወል ይችላሉ</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
   <string name="overdue_list_item_diagnosis_diabetes">የስኳር በሽታ</string>
-  <string name="overdue_list_item_diagnosis_hypertension">የደም ብዛት</string>
+  <string name="overdue_list_item_diagnosis_hypertension">ከፍተኛ የደም ግፊት</string>
   <string name="overdue_list_item_diagnosis_none">ምንም</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s ቀን አልduል</item>
     <item quantity="other">%s ቀናት ጊዜው አልፎበታል</item>
   </plurals>
-  <string name="overduelist_diagnosis_label">Dx</string>
+  <string name="overduelist_diagnosis_label">ምርመራ</string>
   <string name="overduelist_visited">ጎብኝተዋል</string>
-  <string name="overduelist_high_risk">ከፍተኛ አደጋ</string>
+  <string name="overduelist_high_risk">ከፍተኛ ተጋላጭነት</string>
 
   <!-- Facility change -->
   <string name="changefacility_screen_title">ክሊኒክዎን ይምረጡ</string>
@@ -291,11 +305,11 @@
   </plurals>
   <plurals name="scheduleappointment_appointment_in_weeks">
     <item quantity="one">%sሳምንት</item>
-    <item quantity="other">%s ሳምንቶች</item>
+    <item quantity="other">%s ሳምንታት</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_months">
     <item quantity="one">%sወር</item>
-    <item quantity="other">%s ወሮች</item>
+    <item quantity="other">%s ወራት</item>
   </plurals>
 
   <!-- Forgot PIN -->
@@ -317,7 +331,7 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_kidney">የኩላሊት በሽታ</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diagnosed_with_hypertension">የደም ብዛት</string>
+  <string name="medicalhistory_question_diagnosed_with_hypertension">ከፍተኛ የደም ግፊት</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">የስኳር በሽታ</string>
   <string name="newmedicalhistory_next">ቀጣይ</string>
@@ -333,28 +347,28 @@
 
   <!--Scan Simple ID-->
   <string name="scansimpleid_title">የካርድ መታወቂያ ይቃኙ</string>
-  <string name="scansimpleid_shortcode_error_empty">የ BP ፓስፖርት ቁጥር ያስገቡ</string>
-  <string name="scansimpleid_shortcode_error_not_required_length">የ BP ፓስፖርት ቁጥር ከ 7 ቁጥሮች በታች ነው</string>
-  <string name="scansimpleid_type_bp_passport_number">ወይም የ BP ፓስፖርት ቁጥርን ይተይቡ</string>
+  <string name="scansimpleid_shortcode_error_empty">የደም ግፊት ፓስፖርት ቁጥር ያስገቡ</string>
+  <string name="scansimpleid_shortcode_error_not_required_length">የደም ግፊት ፓስፖርት ቁጥር ከ 7 ቁጥሮች በታች ነው</string>
+  <string name="scansimpleid_type_bp_passport_number">ወይም የደም ግፊት ፓስፖርት ቁጥርን ያስገቡ</string>
 
   <!--- Sync Indicator-->
-  <string name="syncindicator_status_pending">በመጠባበቅ ላይ ያለ ሥምሪያ</string>
-  <string name="syncindicator_status_failed">ማመሳሰል አልተሳካም</string>
-  <string name="syncindicator_status_syncing">በማመሳሰል ላይ…</string>
-  <string name="syncindicator_status_synced_just_now">አሁን ተመሳስሏል</string>
-  <string name="syncindicator_status_synced_min_ago">ከ %sደቂቃ በፊት ተመሳስሏል</string>
-  <string name="syncindicator_dialog_error_network">የታካሚ መዝገቦችን ለማመሳሰል የሚሰራ የበይነመረብ ግንኙነት እንዳለዎት ያረጋግጡ።</string>
+  <string name="syncindicator_status_pending">ለመጣመር በመጠባበቅ ላይ </string>
+  <string name="syncindicator_status_failed">መጣመር አልተሳካም</string>
+  <string name="syncindicator_status_syncing">በመጣመር ላይ…</string>
+  <string name="syncindicator_status_synced_just_now">አሁን ተጣምሯል</string>
+  <string name="syncindicator_status_synced_min_ago">ከ %sደቂቃ በፊት ተጣምሯል</string>
+  <string name="syncindicator_dialog_error_network">የታካሚ የግል ማህደሮች ጋር ለመጣመር፤ የሚሰራ የበይነመረብ ግንኙነት እንዳለዎት ያረጋግጡ።</string>
   <string name="syncindicator_dialog_button_text">እሺ</string>
-  <string name="syncindicator_dialog_error_server">የአስምር አገልጋዮች በአሁኑ ሰዓት ዝቅ አሉ ፡፡ እባክዎን ቆይተው እንደገና ይሞክሩ ወይም ከተቆጣጣሪዎ ጋር ይገናኙ ፡፡</string>
+  <string name="syncindicator_dialog_error_server">አሁን አጣማሪ ሰርቨሮች ዝቅ ብለዋል፤ እባክዎን ቆይተው እንደገና ይሞክሩ ወይም ከተቆጣጣሪዎ ጋር ይገናኙ ፡፡</string>
 
   <!-- Help Screen -->
   <string name="help_title">እርዳታ</string>
   <string name="help_no_connection">ምንም የበይነመረብ ግንኙነት የለም</string>
   <string name="help_something_went_wrong">የሆነ ስህተት ተከስቷል</string>
-  <string name="help_try_again">ድጋሚ ሞክር</string>
+  <string name="help_try_again">ድጋሚ ይሞክሩ</string>
 
   <!-- Link Id Sheet-->
-  <string name="linkidwithpatient_button_add">ያክሉ</string>
+  <string name="linkidwithpatient_button_add">ቀጣይ</string>
   <string name="linkidwithpatient_button_cancel">ይቅር</string>
   <string name="linkidwithpatient_add_id_text">ያክሉ %1$s\u0020</string>
   <string name="linkidwithpatient_to_patient_text">\u0020 ወደ \u00A0ታካሚ?</string>
@@ -371,50 +385,51 @@
   <!-- Recent Patients Item View -->
   <string name="recent_patients_itemview_last_seen">ለመጨረሻ ጊዜ የታየው:\u0020</string>
   <string name="recent_patients_itemview_title">%1$s, %2$s</string>
+  <string name="recent_patients_itemview_new_registration">አዲስ ምዝገባ</string>
 
   <!-- Add ID to Patient: Search Results-->
   <string name="addidtopatientsearchresults_add">ያክሉ %1$s\u0020</string>
   <string name="addidtopatientsearchresults_to_patient">\u0020ወደ \u2026</string>
 
   <!-- App update : Dialog -->
-  <string name="appupdatedialog_title">መተግበሪያን አዘምን</string>
-  <string name="appupdatedialog_body">ቀላል ለማዘመን ወደ Play መደብር ይወሰዳሉ</string>
-  <string name="appupdatedialog_positive_button_text">አዘምን</string>
+  <string name="appupdatedialog_title">መተግበሪያን አዘምን ወይም አድስ</string>
+  <string name="appupdatedialog_body">በቀላሉ ለማዘመን ወደ Play መደብር ይወሰዳሉ</string>
+  <string name="appupdatedialog_positive_button_text">አዘምን ወይም አድስ</string>
   <string name="appupdatedialog_negative_button_text">አሁን አይሆንም</string>
 
   <!-- All Patients In Facility View-->
-  <string name="allpatientsinfacility_nopatients_message">እዚህ ተቋምዎ የተመዘገቡትን ሁሉንም ህመምተኞች ማየት ይችላሉ ፡፡</string>
-  <string name="allpatientsinfacility_nopatients_title">በ %1$s ላይ ምንም ህመምተኞች የሉም</string>
-  <string name="allpatientsinfacility_foundpatients_header">ሁሉም ህመምተኞች: %1$s</string>
+  <string name="allpatientsinfacility_nopatients_message">እዚህ ተቋምዎ የተመዘገቡትን ሁሉንም ታካሚዎች ማየት ይችላሉ ፡፡</string>
+  <string name="allpatientsinfacility_nopatients_title">በ %1$s ላይ ምንም ታካሚዎች የሉም</string>
+  <string name="allpatientsinfacility_foundpatients_header">ሁሉም ታካሚዎች: %1$s</string>
 
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">የሆነ ስህተት ተከስቷል</string>
   <string name="registrationloader_error_unexpected_message">እባክዎን ከተወሰነ ጊዜ በኋላ እንደገና ይሞክሩ ወይም ከተቆጣጣሪዎ ጋር ይገናኙ ፡፡</string>
   <string name="registrationloader_error_internet_connection_title">ምንም የበይነመረብ ግንኙነት የለም</string>
   <!--suppress UnusedResources -->
-  <string name="registrationloader_retry">ድጋሚ ሞክር</string>
+  <string name="registrationloader_retry">ድጋሚ ይሞክሩ</string>
 
   <!-- Short code search -->
   <string name="shortcodesearchresult_enter_patient_name_button">የታካሚውን ስም ያስገቡ</string>
 
   <!-- Simple video -->
   <string name="simple_video_watch_video">ቪዲዮን ይመልከቱ</string>
-  <string name="simple_video_how_to_use_the_simple_app">ቀላል መተግበሪያን እንዴት መጠቀም እንደሚቻል</string>
+  <string name="simple_video_how_to_use_the_simple_app">ሲምፕል መተግበሪያን እንዴት መጠቀም እንደሚቻል</string>
   <string name="simple_video_duration">%s ደቂቃዎች</string>
 
   <!-- Settings -->
-  <string name="settings_title">ቅንጅቶች</string>
-  <string name="settings_user_name_icon_content">የቅንብሮች የተጠቃሚ ስም አዶ</string>
-  <string name="settings_user_phone_icon_content">የቅንብሮች ተጠቃሚ ስልክ ቁጥር አዶ</string>
-  <string name="settings_current_language_icon_content">የአሁን ቋንቋ አዶ</string>
-  <string name="settings_app_version_icon_content">ቅንብሮች መተግበሪያ ስሪት አዶ</string>
+  <string name="settings_title">ቅንብሮች ወይም settings</string>
+  <string name="settings_user_name_icon_content">የቅንብሮች የተጠቃሚ ስም ምልክት ወይም icon</string>
+  <string name="settings_user_phone_icon_content">የቅንብሮች ተጠቃሚ ስልክ ቁጥር ምልክት ወይም icon</string>
+  <string name="settings_current_language_icon_content">የቅንብሮች የአሁን ቋንቋ ምልክት</string>
+  <string name="settings_app_version_icon_content">የቅንብሮች መተግበሪያ ስሪት ምልክት</string>
   <string name="settings_name">ስም</string>
   <string name="settings_number">ስልክ ቁጥር</string>
   <string name="settings_language">ቋንቋ</string>
   <string name="settings_change">ለውጥ</string>
   <string name="settings_language_hint">ቋንቋ ይምረጡ</string>
   <string name="settings_software">ሶፍትዌር</string>
-  <string name="settings_update">አዘምን</string>
+  <string name="settings_update">አዘምን ወይም አድስ</string>
   <string name="settings_software_version">ስሪት %1$s</string>
 
   <!-- Change language screen -->
@@ -422,54 +437,54 @@
   <string name="changelanguage_done">ተጠናቅቋል</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">ቆይ በናተህ…</string>
-  <string name="placeholder_loading_message">የውሂብ ጎታ ጥገና በሂደት ላይ። ይህ አንድ ደቂቃ ብቻ ይወስዳል።</string>
+  <string name="placeholder_loading_title">እባክዎ ትንሽ ይጠብቁ…</string>
+  <string name="placeholder_loading_message">ዳታ ቤዝ ጥገና በሂደት ላይ ነው፤ ይህ አንድ ደቂቃ ብቻ ይወስዳል።</string>
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">ቀላል አርማ</string>
   <string name="selectcountry_next">ቀጣይ</string>
   <string name="selectcountry_title">ሀገርዎን ይምረጡ</string>
   <string name="selectcountry_networkerror">ምንም የበይነመረብ ግንኙነት የለም!</string>
-  <string name="selectcountry_servererror">የአገልጋይ ስህተት! እባክዎ ቆየት ብለው ይሞክሩ!</string>
+  <string name="selectcountry_servererror">የሰርቨር ስህተት! እባክዎ ቆየት ብለው ይሞክሩ!</string>
   <string name="selectcountry_genericerror">የሆነ ስህተት ተከስቷል! እባክዎ ቆየት ብለው ይሞክሩ!</string>
-  <string name="selectcountry_retry">ድጋሚ ሞክር</string>
+  <string name="selectcountry_retry">ድጋሚ ይሞክሩ</string>
   <string name="scheduleappointment_at">በ</string>
   <string name="scheduleappointment_change">ለውጥ</string>
 
   <!-- BloodSugar type picker -->
-  <string name="bloodsugartype_picker_title">አንድ ልኬት ይምረጡ</string>
+  <string name="bloodsugartype_picker_title">ልኬት ይምረጡ</string>
   <string name="bloodsugartype_picker_desc">እርግጠኛ ካልሆኑ  ‘RBS’ን ይምረጡ ፡፡</string>
   <string name="bloodsugartype_rbs">የዘፈቀደ የደም ስኳር (RBS)</string>
-  <string name="bloodsugartype_fbs">የደም ስኳር (FBS)</string>
-  <string name="bloodsugartype_ppbs">የቅድመ ወሊድ የደም ስኳር (PPBS)</string>
+  <string name="bloodsugartype_fbs">የባዶ ሆድ የደም ስኳር መጠን (FBS)</string>
+  <string name="bloodsugartype_ppbs">ከምግብ በኋላ የደም ስኳር መጠን (PPBS)</string>
   <string name="bloodsugarentry_sheet_title_enter_date">የተጎበኘበት ቀን</string>
   <string name="bloodsugarentry_day">ቀን</string>
   <string name="bloodsugarentry_month">ወር</string>
   <string name="bloodsugarentry_year">አመት</string>
-  <string name="bloodsugarentry_error_lower_limit">እሴት ከ 30 mg / dl በታች መሆን አይችልም</string>
-  <string name="bloodsugarentry_error_lower_limit_hba1c">እሴት ከ 3% በታች መሆን አይችልም</string>
-  <string name="bloodsugarentry_error_higher_limit">እሴት ከ 1000 mg / dl በላይ መሆን አይችልም</string>
-  <string name="bloodsugarentry_error_higher_limit_hba1c">እሴት ከ 25% በላይ መሆን አይችልም</string>
-  <string name="bloodsugarentry_error_empty">እሴት ባዶ ሊሆን አይችልም</string>
+  <string name="bloodsugarentry_error_lower_limit">ልኬት ወይም መጠን ከ30 mg/dL በታች ሊሆን አይችልም</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">ልኬት ከ 3% በታች መሆን አይችልም</string>
+  <string name="bloodsugarentry_error_higher_limit">ውጤቱ ከ1000 mg/dL በላይ ሊሆን አይችልም</string>
+  <string name="bloodsugarentry_error_higher_limit_hba1c">ውጤቱ ከ 25% በላይ መሆን አይችልም</string>
+  <string name="bloodsugarentry_error_empty">ልኬት ባዶ ሊሆን አይችልም</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">በ ቀን/ወር/ዓመት ትክክለኛ ቀን ያስገቡ</string>
   <string name="bloodsugarentry_error_date_is_in_future">ቀን ለወደፊቱ መሆን አይችልም</string>
   <string name="bloodsugarentry_random_title">የዘፈቀደ የደም ስኳር</string>
-  <string name="bloodsugarentry_post_prandial_title">የቅድመ ወሊድ የደም ስኳር ይለጥፉ</string>
-  <string name="bloodsugarentry_fasting_title">የደም ስኳርን መጾም</string>
+  <string name="bloodsugarentry_post_prandial_title">ከምግብ በኋላ የደም ስኳር መጠን</string>
+  <string name="bloodsugarentry_fasting_title">የባዶ ሆድ የደም ስኳርን መጠን</string>
   <string name="bloodsugarentry_remove">ያስወግዱ</string>
-  <string name="bloodsugarentry_edit_random_title">የዘፈቀደ የደም ስኳር ያርትዑ</string>
-  <string name="bloodsugarentry_edit_post_prandial_title">የድህረ ወሊድ የደም ስኳር አርትዕ</string>
-  <string name="bloodsugarentry_edit_fasting_title">የጾም የደም ስኳር ያርትዑ</string>
+  <string name="bloodsugarentry_edit_random_title">የዘፈቀደ ወይም RBS የደም ስኳር ልኬትን ያስተካክሉ</string>
+  <string name="bloodsugarentry_edit_post_prandial_title">ከምግብ በኋላ የደም ስኳር ልኬትን ያስተካክሉ ወይም ያርትኡ</string>
+  <string name="bloodsugarentry_edit_fasting_title">የባዶ ሆድ የደም ስኳር ልኬትን ያስተካክሉ ወይም ያርትዑ</string>
   <string name="bloodsugarentry_edit_hba1c_title">HbA1c ያርትዑ</string>
 
   <!-- Confirm remove blood sugar dialog -->
-  <string name="bloodsugarentry_remove_blood_sugar_title">የደም ስኳር ያስወግዱ</string>
-  <string name="bloodsugarentry_remove_blood_sugar_message">እርግጠኛ ነዎት ይህን የደም ስኳር ቀረጻ ለማስወገድ ይፈልጋሉ?</string>
+  <string name="bloodsugarentry_remove_blood_sugar_title">የደም ስኳር መጠንን ያስወግዱ</string>
+  <string name="bloodsugarentry_remove_blood_sugar_message">እርግጠኛ ነዎት ይህን የደም ስኳር ልኬት ቅጂ ለማስወገድ ይፈልጋሉ?</string>
   <string name="bloodsugarentry_remove_blood_sugar_confirm">ያስወግዱ</string>
   <string name="bloodsugarentry_remove_blood_sugar_cancel">ይቅር</string>
 
   <!-- Blood Sugar Summary view -->
-  <string name="bloodsugarsummaryview_no_blood_sugars">ምንም የደም ስኳር የለም</string>
+  <string name="bloodsugarsummaryview_no_blood_sugars">ምንም የደም ስኳር መጠን አልገባም</string>
   <string name="bloodsugarsummaryview_add_blood_sugar_button">የስኳር በሽታ</string>
   <!-- Blood Pressure History screen -->
   <string name="bloodpressurehistory_add_bp_button">ደም ግፊት</string>
@@ -478,19 +493,20 @@
   <!-- Blood Sugar History screen -->
   <string name="bloodsugarhistory_add_blood_sugar_button">የስኳር በሽታ</string>
   <string name="bloodsugarhistory_toolbar_title">%1$s ፣ %2$s ፣ %3$s</string>
+
   <!-- Summary CV History view -->
-  <string name="medicalhistorysummaryview_history">ታሪክ</string>
+  <string name="medicalhistorysummaryview_history">ታሪክ </string>
   <string name="medicalhistorysummaryview_diagnosis">ምርመራ (አስፈላጊ)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">ምንም መድሃኒቶች አልታከሉም</string>
 
   <!-- Access Denied screen -->
-  <string name="accessdeniedscreen_title_access_denied">መድረሻ ተከልክሏል</string>
-  <string name="accessdeniedscreen_description">ወደ ቀላል መዳረሻ ተከልክሏል። ይህ ስህተት ነው ብለው ካመኑ እባክዎ ተቆጣጣሪዎን ያነጋግሩ። \ n\n መድረሻዎ ከተመለሰ ፣ ቀላል ያራግፉ እና ከ Play ማከማቻው ይጫኑት።</string>
+  <string name="accessdeniedscreen_title_access_denied">መግባት ወይም መድረስ ተከልክሏል</string>
+  <string name="accessdeniedscreen_description">ወደ ሲምፕል መዳረሻ ተከልክሏል። ይህ ስህተት ነው ብለው ካመኑ እባክዎ ተቆጣጣሪዎን ያነጋግሩ።  ሲምፕል መዳረሻዎ ከተመለሰ ፣ የበፊቱን ሲምፕል ያስወግዱ እና ደግመው ከ Play ማከማቻው ይጫኑት።</string>
 
   <!-- Confirm Facility change sheet -->
-  <string name="confirmfacilitychange_title">መገልገያ …ወደ ለውጥ</string>
+  <string name="confirmfacilitychange_title">ተቋሙን ወደ ……ለውጥ</string>
   <string name="confirmfacilitychange_negative_button">ይቅር</string>
   <string name="confirmfacilitychange_positive_button">አዎ</string>
   <string name="confirmfacilitychange_facility_name">%s?</string>
@@ -510,15 +526,15 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">ታካሚን እንደ \”ለመጎብኘት ተስማምቷል”\ ምልክት ያድርጉብት</string>
+  <string name="contactpatient_agreed_to_visit">ታካሚን ”ለመጎብኘት ተስማምቷል” ብለው ያመላክቱ</string>
   <string name="contactpatient_remind_call_later">በኋላ ላይ ለመደወል ያስታውሱ…</string>
   <string name="contactpatient_remove_from_list">ጊዜው ካለፈበት ዝርዝር ያስወግዱ…</string>
-  <string name="contactpatient_result_of_call">የጥሪ ውጤት</string>
+  <string name="contactpatient_result_of_call">የ ስልክ ጥሪ ውጤት</string>
   <string name="contactpatient_call_normal">መደበኛ</string>
   <string name="contactpatient_call_secure">ደህንነቱ የተጠበቀ</string>
   <string name="contactpatient_help_text">ደህንነቱ የተጠበቀ ጥሪዎች ቁጥርዎን ይደብቃሉ እና ክፍያ ነፃ ናቸው</string>
   <string name="contactpatient_patientdetails">%1$s ፣ %2$s ፣ %3$s</string>
-  <string name="contactpatient_call_later_in">በኋላ ደውል</string>
+  <string name="contactpatient_call_later_in">በኋላ ይደውሉ</string>
   <string name="contactpatient_done">ተጠናቅቋል</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s ቀን</item>
@@ -526,39 +542,48 @@
   </plurals>
   <plurals name="contactpatient_weeks">
     <item quantity="one">%sሳምንት</item>
-    <item quantity="other">%s ሳምንቶች</item>
+    <item quantity="other">%s ሳምንታት</item>
   </plurals>
   <plurals name="contactpatient_months">
     <item quantity="one">%sወር</item>
-    <item quantity="other">%s ወሮች</item>
+    <item quantity="other">%s ወራት</item>
   </plurals>
   <string name="contactpatient_select_a_reason">ምክንያት ይምረጡ</string>
   <string name="contactpatient_patient_already_visited">ህመምተኛው ቀድሞውኑ ጎብኝቷል</string>
   <string name="contactpatient_patient_is_not_responding">ህመምተኛው ምላሽ እየሰጠ አይደለም</string>
   <string name="contactpatient_invalid_phone_number">ስልክ ቁጥር አይሰራም</string>
   <string name="contactpatient_public_hospital_transfer">ወደ ሌላ የህዝብ ጤና ተቋም ተዛወረ</string>
-  <string name="contactpatient_moved_to_private">ወደ የግል ባለሙያው ተዛውሯል</string>
-  <string name="contactpatient_patient_died">ሞተ</string>
+  <string name="contactpatient_moved_to_private">ወደ የግል ጤና ባለሙያው ወይም ተቋም ተዛውሯል</string>
+  <string name="contactpatient_patient_died">በህይወት የለም</string>
   <string name="contactpatient_other_reason">ሌላ ምክንያት</string>
 
   <!-- Deep link -->
   <string name="deeplink_patient_profile_not_found">የታካሚ መገለጫ አልተገኘም</string>
-  <string name="deeplink_patient_profile_not_found_desc">በትህትና በይነመረብዎን ይሞክሩ እና ታካሚዎችን ያሳምሩ</string>
+  <string name="deeplink_patient_profile_not_found_desc">በትህትና በይነመረብዎን ይሞክሩ እና ታካሚዎችን ያጣምሩ</string>
   <string name="deeplink_patient_profile_not_found_positive_action">እሺ</string>
-  <string name="deeplink_no_patient">ታካሚ አልተገኘም</string>
-  <string name="deeplink_no_patient_desc">ቴሌምክክር ይጀምሩና የጤና እንክብካቤ ሰራተኛን የታካሚ መረጃ ይጠይቁ</string>
+  <string name="deeplink_no_patient">ታካሚው አልተገኙም</string>
+  <string name="deeplink_no_patient_desc">ቴሌምክክር ይጀምሩና ከጤና ባለሙያ የታካሚ መረጃን ይጠይቁ</string>
   <string name="deeplink_no_patient_positive_action">እሺ</string>
 
   <!-- Delete patient -->
-  <string name="deletepatient_select_a_reason">አንድ ምክንያት ይምረጡ</string>
-  <string name="deletereason_duplicate_patient">ይህ የተደገመ ታካሚ ነው</string>
-  <string name="deletereason_accidental_registration">በስህተት የተመዘገበ ታካሚ</string>
-  <string name="deletereason_died">ሞተ</string>
-  <string name="deletereason_confirm_title">ታካሚ ያጥፉ?</string>
+  <string name="deletepatient_select_a_reason">ምክንያት ይምረጡ</string>
+  <string name="deletereason_duplicate_patient">ይህ ታካሚ ድጋሚ ነው</string>
+  <string name="deletereason_accidental_registration">ታካሚው በስህተት የተመዘገበ ነው</string>
+  <string name="deletereason_died">በህይወት የለም</string>
+  <string name="deletereason_confirm_title">ታካሚው ይሰረዝ?</string>
   <string name="deletereason_confirm_message">ይህ %1$s ን ያስወግዳል</string>
   <string name="deletereason_confirm_positive">ያስወግዱ</string>
   <string name="deletereason_confirm_negative">ይቅር</string>
 
   <!-- Splash screen -->
   <string name="screensplash_next">ቀጣይ</string>
+
+  <!-- Contact doctor sheet -->
+  <string name="contactdoctor_title">ሐኪሞች</string>
+  <string name="contactdoctor_subtitle">ለ %1$s ተመድቧል</string>
+
+  <!-- Intro Video Screen -->
+  <string name="screenintrovideo_how_to_use_simple_app">ሲምፕል መተግበርያን እንዴት መጠቀም ይቻላል</string>
+  <string name="screenintrovideo_watch_video">ቪዲዮን ይመልከቱ</string>
+  <string name="screenintrovideo_skip">ዝለል</string>
 </resources>

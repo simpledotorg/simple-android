@@ -36,7 +36,10 @@ import org.simple.clinic.widgets.hideKeyboard
 import java.util.UUID
 import javax.inject.Inject
 
-class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class RegistrationFacilitySelectionScreen(
+    context: Context,
+    attrs: AttributeSet
+) : RelativeLayout(context, attrs), RegistrationFacilitySelectionUi {
 
   @Inject
   lateinit var controller: RegistrationFacilitySelectionScreenController
@@ -126,23 +129,23 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
         }
   }
 
-  fun showProgressIndicator() {
+  override fun showProgressIndicator() {
     progressView.visibility = VISIBLE
   }
 
-  fun hideProgressIndicator() {
+  override fun hideProgressIndicator() {
     progressView.visibility = GONE
   }
 
-  fun showToolbarWithSearchField() {
+  override fun showToolbarWithSearchField() {
     toolbarViewFlipper.displayedChildResId = R.id.toolbarViewWithSearch
   }
 
-  fun showToolbarWithoutSearchField() {
+  override fun showToolbarWithoutSearchField() {
     toolbarViewFlipper.displayedChildResId = R.id.toolbarViewWithoutSearch
   }
 
-  fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
+  override fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
     // Avoid animating the items on their first entry.
     facilityRecyclerView.itemAnimator = when (updateType) {
       FIRST_UPDATE -> null
@@ -155,11 +158,11 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     recyclerViewAdapter.submitList(facilityItems)
   }
 
-  fun openIntroVideoScreen() {
+  override fun openIntroVideoScreen() {
     screenRouter.push(IntroVideoScreenKey())
   }
 
-  fun showConfirmFacilitySheet(facilityUuid: UUID, facilityName: String) {
+  override fun showConfirmFacilitySheet(facilityUuid: UUID, facilityName: String) {
     val intent = ConfirmFacilitySheet.intentForConfirmFacilitySheet(context, facilityUuid, facilityName)
     activity.startActivityForResult(intent, CONFIRM_FACILITY_SHEET)
   }

@@ -41,10 +41,12 @@
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">Dhukkubsataan hin galmoofne</string>
   <string name="patientsearchresults_register_patient">Akka dhukkubsataa haaraatti galmeessi</string>
   <string name="patientsearchresults_register_patient_for_empty_state">Dhukkubsataa galmeessi</string>
-  <string name="patientsearchresults_item_last_seen">Daawwannaa Darbe:</string>
+  <string name="patientsearchresults_item_last_seen">Daawwatameera</string>
   <string name="patientsearchresults_current_facility_header">%s Daawwateera</string>
   <string name="patientsearchresults_other_results_header">Bu’aawwan bira</string>
   <string name="patientsearchresults_no_patients_match">Dhukkubsataan firoomu hin jiru</string>
+  <string name="patientsearchresults_item_phone_number">Bilbila</string>
+  <string name="patientsearchresults_item_birthdate">Guyyaa dhalootaa</string>
 
   <!-- Manual patient entry -->
   <string name="patiententry_contentdescription_up_button">Gara barbaachatti duuba deebi’i</string>
@@ -180,6 +182,9 @@
   <!--suppress UnusedResources -->
   <string name="bloodpressure_level_high">Ol aanaa</string>
 
+  <string name="bloodsugar_level_low">Gadi aanaa</string>
+  <string name="bloodsugar_level_high">Ol aanaa</string>
+
   <string name="timestamp_today">Har’a</string>
   <string name="timestamp_yesterday">Kaleessa</string>
   <!--suppress PluralsCandidate -->
@@ -254,6 +259,15 @@
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">Jalqabi</string>
+  <string name="screenonboarding_intro_1">Barbaadi \&amp; argadhu \ndhukkubsattoota kumaatamoota \nwajjiin</string>
+  <string name="screenonboarding_intro_1_hypertension">Baayyina dhiiga</string>
+  <string name="screenonboarding_intro_2">Galmeessa \n tursiisi</string>
+  <string name="screenonboarding_intro_2_bp">Dhiibbaa dhiigaa</string>
+  <string name="screenonboarding_intro_2_and">\&amp;</string>
+  <string name="screenonboarding_intro_2_medicines">Dawaawwan</string>
+  <string name="screenonboarding_intro_3">Dhukkubsatoota fudhatan</string>
+  <string name="screenonboarding_intro_3_reminder">\nergaa yaadachiisa</string>
+  <string name="screenonboarding_intro_3_visits">\ndeebi’anii ilaalamuuf kan dhufan</string>
 
   <!-- Overdue List -->
   <string name="overdue_no_patients">Dhukkubsattoonni irra darbe hin jiran</string>
@@ -354,7 +368,7 @@
   <string name="help_try_again">Deebisii yaali</string>
 
   <!-- Link Id Sheet-->
-  <string name="linkidwithpatient_button_add">Dabali</string>
+  <string name="linkidwithpatient_button_add">Kan itti aanu</string>
   <string name="linkidwithpatient_button_cancel">Adda kuti</string>
   <string name="linkidwithpatient_add_id_text">%1$s\u0020dabali</string>
   <string name="linkidwithpatient_to_patient_text">Dhukkubataau0020 hanga\u00A0?</string>
@@ -369,8 +383,9 @@
   <string name="recent_patients_toolbar_title">Dhiyoo</string>
 
   <!-- Recent Patients Item View -->
-  <string name="recent_patients_itemview_last_seen">Xumuraaf kan ilaalame:\u0020</string>
+  <string name="recent_patients_itemview_last_seen">Daawwatameerau0020</string>
   <string name="recent_patients_itemview_title">%1$s, %2$s</string>
+  <string name="recent_patients_itemview_new_registration">Galmee haaraa</string>
 
   <!-- Add ID to Patient: Search Results-->
   <string name="addidtopatientsearchresults_add">%1$s\u0020dabali</string>
@@ -446,10 +461,10 @@
   <string name="bloodsugarentry_day">Guyyaa</string>
   <string name="bloodsugarentry_month">Ji’a</string>
   <string name="bloodsugarentry_year">Waggaa</string>
-  <string name="bloodsugarentry_error_lower_limit">Hammichi 30 mg/dL gadi ta’uu hin danda’u</string>
-  <string name="bloodsugarentry_error_lower_limit_hba1c">Hammichi 3\% gadi ta’uu hin danda’u</string>
-  <string name="bloodsugarentry_error_higher_limit">Hammichi 1000 mg/dL o; ta’uu hin danda’u</string>
-  <string name="bloodsugarentry_error_higher_limit_hba1c">Hammichi 25\% ol ta’uu hin danda’u</string>
+  <string name="bloodsugarentry_error_lower_limit">Gatiin 30 mg/dL gadi ta’uu hin danda’u</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">Hammichi 3%% gadi ta’uu hin danda’u</string>
+  <string name="bloodsugarentry_error_higher_limit">Hammichi 1000 mg/dl ol ta’uu hin danda’u</string>
+  <string name="bloodsugarentry_error_higher_limit_hba1c">Hammichi 25%% ol ta’uu hin danda’u</string>
   <string name="bloodsugarentry_error_empty">Hammichi duwwaa ta’uu hin danda’u</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">Guyyaa sirrii GG/JJ/WWWW keessatti galchi</string>
   <string name="bloodsugarentry_error_date_is_in_future">Guyyaan gara fuulduraa ta’uu hin danda’u</string>
@@ -478,6 +493,7 @@
   <!-- Blood Sugar History screen -->
   <string name="bloodsugarhistory_add_blood_sugar_button">Sukkaara</string>
   <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">Seenaa</string>
   <string name="medicalhistorysummaryview_diagnosis">Qorannoo (Barbaadameera)</string>
@@ -551,14 +567,23 @@
 
   <!-- Delete patient -->
   <string name="deletepatient_select_a_reason">Sababa filadhu</string>
-  <string name="deletereason_duplicate_patient">Kuni dhukkubsataa deddeebifameedha</string>
-  <string name="deletereason_accidental_registration">Dhukkubsataa dogongoraan galmaa’e</string>
+  <string name="deletereason_duplicate_patient">Kuni dhukkubsataa irra deddeebi’amedha</string>
+  <string name="deletereason_accidental_registration">Dhukkubsataan dogongoraan galmeeffame</string>
   <string name="deletereason_died">Boqateera</string>
-  <string name="deletereason_confirm_title">Dhukkubsataa balleessi?</string>
-  <string name="deletereason_confirm_message">Kuni %1$s balleessa</string>
+  <string name="deletereason_confirm_title">Dhukkubsaticha balleessi?</string>
+  <string name="deletereason_confirm_message">Kuni %1$s dhabamsiisa</string>
   <string name="deletereason_confirm_positive">Haqi</string>
   <string name="deletereason_confirm_negative">Adda kuti</string>
 
   <!-- Splash screen -->
   <string name="screensplash_next">Kan itti aanu</string>
+
+  <!-- Contact doctor sheet -->
+  <string name="contactdoctor_title">Dooktaroota</string>
+  <string name="contactdoctor_subtitle">Gara %1$s qajeelfame</string>
+
+  <!-- Intro Video Screen -->
+  <string name="screenintrovideo_how_to_use_simple_app">Appii Simple akkamitti fayyadamuu danda’a</string>
+  <string name="screenintrovideo_watch_video">Viidiyoo daawwadhu</string>
+  <string name="screenintrovideo_skip">Irra utaali</string>
 </resources>

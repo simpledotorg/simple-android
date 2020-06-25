@@ -41,10 +41,12 @@
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">रूग्ण ओळखला नाही</string>
   <string name="patientsearchresults_register_patient">नवीन रूग्णाची नोंदणी करा</string>
   <string name="patientsearchresults_register_patient_for_empty_state">रूग्णाची नोंदणी करा</string>
-  <string name="patientsearchresults_item_last_seen">शेवटचे पाहिलेले:</string>
+  <string name="patientsearchresults_item_last_seen">भेट दिली</string>
   <string name="patientsearchresults_current_facility_header">%s ला भेट दिली</string>
   <string name="patientsearchresults_other_results_header">अन्‍य निकाल</string>
   <string name="patientsearchresults_no_patients_match">कोणतेही रूग्ण जुळत नाहीत</string>
+  <string name="patientsearchresults_item_phone_number">दूरध्‍वनी</string>
+  <string name="patientsearchresults_item_birthdate">वाढदिवस</string>
 
   <!-- Manual patient entry -->
   <string name="patiententry_contentdescription_up_button">शोधण्‍यासाठी मागे जा</string>
@@ -60,7 +62,7 @@
   <string name="patiententry_street_house_road_number">घर किंवा मार्ग क्रमांक</string>
   <string name="patiententry_village_colony_ward">गाव / कॉलनी / वॉर्ड</string>
   <string name="patiententry_village_ward">गाव / वॉर्ड</string>
-  <string name="patiententry_kebele">गाव</string>
+  <string name="patiententry_kebele">कबियल</string>
   <string name="patiententry_zone">युनियन</string>
   <string name="patiententry_district">जिल्‍हा</string>
   <string name="patiententry_woreda">वॉरेदा</string>
@@ -88,9 +90,12 @@
   <string name="patiententry_age_exceeds_min_limit_error">वय 0 वर्षां इतके असू शकत नाही</string>
 
   <string name="patientedit_save_patient">जतन करा</string>
+  <string name="patientedit_bp_passports_label">बीपी पासपोर्ट्स</string>
   <string name="patientedit_confirm_discard_title">बदल टाकून द्यायचे?</string>
   <string name="patientedit_confirm_discard_ok">टाकून द्या</string>
   <string name="patientedit_confirm_discard_cancel">रद्द करा</string>
+  <string name="patientedit_delete_patient">हटवा</string>
+
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
@@ -165,6 +170,10 @@
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
   <string name="patientsummary_bangladesh_national_id">आयडी</string>
 
+  <string name="patientsummary_contact_doctor">डॉक्‍टर</string>
+  <string name="patientsummary_teleconsult_network_error">खराब इंटरनेटमुळे कनेक्‍ट करू शकत नाही</string>
+  <string name="patientsummary_teleconsult_network_error_retry">पुन्‍हा प्रयत्‍न करा</string>
+
   <string name="bloodpressuresummaryview_see_all_button">सर्व पहा</string>
 
   <!-- Lint fails to find usages for these strings. -->
@@ -172,6 +181,9 @@
   <string name="bloodpressure_level_low">निम्न</string>
   <!--suppress UnusedResources -->
   <string name="bloodpressure_level_high">उच्च</string>
+
+  <string name="bloodsugar_level_low">निम्न</string>
+  <string name="bloodsugar_level_high">उच्च</string>
 
   <string name="timestamp_today">आज</string>
   <string name="timestamp_yesterday">काल</string>
@@ -247,6 +259,15 @@
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">सुरुवात करा</string>
+  <string name="screenonboarding_intro_1">हायपरटेंशनचे हजारो \nरूग्ण शोधा \nआणि</string>
+  <string name="screenonboarding_intro_1_hypertension">मिळवा</string>
+  <string name="screenonboarding_intro_2">रक्तदाब आणि \n</string>
+  <string name="screenonboarding_intro_2_bp">औषधाच्या \n</string>
+  <string name="screenonboarding_intro_2_and">नोंदी</string>
+  <string name="screenonboarding_intro_2_medicines">ठेवा</string>
+  <string name="screenonboarding_intro_3">भेटींना परत</string>
+  <string name="screenonboarding_intro_3_reminder">\nयेण्याबाबत रुग्णांना स्मरण</string>
+  <string name="screenonboarding_intro_3_visits">\nसंदेश मिळतात</string>
 
   <!-- Overdue List -->
   <string name="overdue_no_patients">कोणतेही ओव्‍हरड्यू रूग्ण नाहीत</string>
@@ -347,7 +368,7 @@
   <string name="help_try_again">पुन्‍हा प्रयत्‍न करा</string>
 
   <!-- Link Id Sheet-->
-  <string name="linkidwithpatient_button_add">जोडा</string>
+  <string name="linkidwithpatient_button_add">पुढील</string>
   <string name="linkidwithpatient_button_cancel">रद्द करा</string>
   <string name="linkidwithpatient_add_id_text">%1$s\u0020 जोडा</string>
   <string name="linkidwithpatient_to_patient_text">\u0020\u00A0रूग्णाला?</string>
@@ -362,8 +383,9 @@
   <string name="recent_patients_toolbar_title">अलीकडील</string>
 
   <!-- Recent Patients Item View -->
-  <string name="recent_patients_itemview_last_seen">शेवटचे पाहिलेले:\u0020</string>
+  <string name="recent_patients_itemview_last_seen">भेट दिली:\u0020</string>
   <string name="recent_patients_itemview_title">%1$s, %2$s</string>
+  <string name="recent_patients_itemview_new_registration">नवीन नोंदणी</string>
 
   <!-- Add ID to Patient: Search Results-->
   <string name="addidtopatientsearchresults_add">%1$s\u0020 जोडा</string>
@@ -415,7 +437,7 @@
   <string name="changelanguage_done">पूर्ण झाले</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">कृपया वाट पाहा…</string>
+  <string name="placeholder_loading_title">कृपया वाट पाहा...</string>
   <string name="placeholder_loading_message">डेटाबेस व्‍यवस्‍थापन प्रगतीत आहे. यास फक्‍त मिनिट लागेल.</string>
 
   <!-- Select Country Screen -->
@@ -439,9 +461,9 @@
   <string name="bloodsugarentry_day">दिवस</string>
   <string name="bloodsugarentry_month">महिना</string>
   <string name="bloodsugarentry_year">वर्ष</string>
-  <string name="bloodsugarentry_error_lower_limit">मूल्‍य 30 मिग्रॅ/डीएल पेक्षा कमी असू शकत नाही</string>
+  <string name="bloodsugarentry_error_lower_limit">मूल्य 30 mg/dL पेक्षा कमी असू शकत नाही</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">मूल्य 3% पेक्षा कमी असू शकत नाही</string>
-  <string name="bloodsugarentry_error_higher_limit">मूल्‍य 1000 मिग्रॅ/डीएल पेक्षा जास्‍त असू शकत नाही</string>
+  <string name="bloodsugarentry_error_higher_limit">मूल्य 1000 mg/dL पेक्षा जास्‍त असू शकत नाही</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">मूल्‍य 25% पेक्षा जास्‍त असू शकत नाही</string>
   <string name="bloodsugarentry_error_empty">मूल्‍य रिक्‍त असू शकत नाही</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">वैध तारीख DD/MM/YYYY मध्‍ये प्रविष्ट करा</string>
@@ -471,6 +493,7 @@
   <!-- Blood Sugar History screen -->
   <string name="bloodsugarhistory_add_blood_sugar_button">डायबिटिस</string>
   <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">इतिहास</string>
   <string name="medicalhistorysummaryview_diagnosis">निदान (आवश्यक)</string>
@@ -503,7 +526,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">रूग्णाला \"भेटीसाठी सहमत\" चिन्हांकित करा</string>
+  <string name="contactpatient_agreed_to_visit">रूग्णाला \&quot;भेटीसाठी सहमत\&quot; चिन्हांकित करा</string>
   <string name="contactpatient_remind_call_later">नंतर कॉल करण्‍याची आठवण करून द्या…</string>
   <string name="contactpatient_remove_from_list">ओव्‍हरड्यू यादीतून दूर करा…</string>
   <string name="contactpatient_result_of_call">कॉलसाठी निकाल</string>
@@ -511,16 +534,8 @@
   <string name="contactpatient_call_secure">सुरक्षित</string>
   <string name="contactpatient_help_text">सुरक्षित कॉल्‍स तुमचे नंबर लपवतात आणि टोल फ्री आहेत</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
-  <string name="contactpatient_call_later_in">नंतर कॉल करा</string>
+  <string name="contactpatient_call_later_in">मध्‍ये नंतर कॉल करा</string>
   <string name="contactpatient_done">पूर्ण झाले</string>
-  <string name="contactpatient_select_a_reason">एक कारण निवडा</string>
-  <string name="contactpatient_patient_already_visited">रुग्णाने आधीच भेट दिली आहे</string>
-  <string name="contactpatient_patient_is_not_responding">रुग्ण प्रतिसाद देत नाही</string>
-  <string name="contactpatient_invalid_phone_number">फोन नंबर कार्यक्षम नाही</string>
-  <string name="contactpatient_public_hospital_transfer">दुसऱ्या सार्वजनिक आरोग्य सुविधेत स्थानांतरित केले</string>
-  <string name="contactpatient_moved_to_private">खाजगी प्रॅक्टिशनरकडे नेले</string>
-  <string name="contactpatient_patient_died">मरण पावले</string>
-  <string name="contactpatient_other_reason">इतर कारण</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s दिवस</item>
     <item quantity="other">%s दिवस</item>
@@ -533,4 +548,42 @@
     <item quantity="one">%s महिना</item>
     <item quantity="other">%s महिने</item>
   </plurals>
+  <string name="contactpatient_select_a_reason">कारण निवडा</string>
+  <string name="contactpatient_patient_already_visited">रूग्णाने आधीच भेट दिली आहे</string>
+  <string name="contactpatient_patient_is_not_responding">रूग्ण प्रतिसाद देत नाही</string>
+  <string name="contactpatient_invalid_phone_number">फोन नंबर काम करत नाही</string>
+  <string name="contactpatient_public_hospital_transfer">अन्‍य सार्वजनिक आरोग्‍य सुविधेत ट्रांसफर केले</string>
+  <string name="contactpatient_moved_to_private">खाजगी सरावकर्त्‍याकडे हलवले</string>
+  <string name="contactpatient_patient_died">मृत झाले</string>
+  <string name="contactpatient_other_reason">इतर कारण</string>
+
+  <!-- Deep link -->
+  <string name="deeplink_patient_profile_not_found">रुग्‍ण प्रोफाइल आढळली नाही</string>
+  <string name="deeplink_patient_profile_not_found_desc">कृपया आपले इंटरनेट तपासा आणि रुग्‍ण सिंक करा</string>
+  <string name="deeplink_patient_profile_not_found_positive_action">ठीक आहे</string>
+  <string name="deeplink_no_patient">रुग्‍ण आढळला नाही</string>
+  <string name="deeplink_no_patient_desc">टेलिकंसल्‍टेशन सुरू करा आणि रुग्‍ण माहितीसाठी हेल्‍थकेअर कर्मचार्‍याला विचारा</string>
+  <string name="deeplink_no_patient_positive_action">ठीक आहे</string>
+
+  <!-- Delete patient -->
+  <string name="deletepatient_select_a_reason">कारण निवडा</string>
+  <string name="deletereason_duplicate_patient">हा ड्युप्लिकेट रुग्ण आहे</string>
+  <string name="deletereason_accidental_registration">रुग्णाची चुकून नोंदणी केली</string>
+  <string name="deletereason_died">मृत झाले</string>
+  <string name="deletereason_confirm_title">रुग्ण हटवायचा?</string>
+  <string name="deletereason_confirm_message">अशाने %1$s काढले जाईल</string>
+  <string name="deletereason_confirm_positive">हटवा</string>
+  <string name="deletereason_confirm_negative">रद्द करा</string>
+
+  <!-- Splash screen -->
+  <string name="screensplash_next">पुढील</string>
+
+  <!-- Contact doctor sheet -->
+  <string name="contactdoctor_title">डॉक्टर</string>
+  <string name="contactdoctor_subtitle">%1$s यांना नियुक्त</string>
+
+  <!-- Intro Video Screen -->
+  <string name="screenintrovideo_how_to_use_simple_app">सिंपल अॅप कसे वापरायचे</string>
+  <string name="screenintrovideo_watch_video">व्हिडिओ पहा</string>
+  <string name="screenintrovideo_skip">वगळा</string>
 </resources>

@@ -77,7 +77,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
     )).thenReturn(Observable.never())
 
     setupController(registrationConfig.copy(locationUpdateInterval = locationUpdateInterval))
-    uiEvents.onNext(ScreenCreated())
 
     verify(screenLocationUpdates).streamUserLocation(
         updateInterval = locationUpdateInterval,
@@ -98,7 +97,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
     )).thenReturn(Observable.just(Unavailable))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     val inOrder = inOrder(screen)
     inOrder.verify(screen).showProgressIndicator()
@@ -121,7 +119,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
     )).thenReturn(Observable.just(Unavailable))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(searchQuery))
 
     val expectedFacilityListItems = listOf(
@@ -147,7 +144,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
     )).thenReturn(Observable.never())
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
 
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "HC"))
@@ -188,7 +184,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
     )
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     val location = LocationUpdate.Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded = Duration.ofNanos(0))
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(location))
@@ -205,6 +200,12 @@ class RegistrationFacilitySelectionScreenControllerTest {
         pin = "1234")
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
     whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(1))
+    whenever(screenLocationUpdates.streamUserLocation(
+        updateInterval = registrationConfig.locationUpdateInterval,
+        timeout = registrationConfig.locationListenerExpiry,
+        discardOlderThan = registrationConfig.staleLocationThreshold
+    )).thenReturn(Observable.just(Unavailable))
 
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("5cf9d744-7f34-4633-aa46-a6c7e7542060"))
 
@@ -223,6 +224,12 @@ class RegistrationFacilitySelectionScreenControllerTest {
         pin = "1234")
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
     whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(1))
+    whenever(screenLocationUpdates.streamUserLocation(
+        updateInterval = registrationConfig.locationUpdateInterval,
+        timeout = registrationConfig.locationListenerExpiry,
+        discardOlderThan = registrationConfig.staleLocationThreshold
+    )).thenReturn(Observable.just(Unavailable))
 
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("bc761c6c-032f-4f1d-a66a-3ec81e9e8aa3"))
 
@@ -244,7 +251,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
     )).thenReturn(Observable.just(Unavailable))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     val inOrder = inOrder(screen)
     inOrder.verify(screen).showToolbarWithoutSearchField()
@@ -266,5 +272,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

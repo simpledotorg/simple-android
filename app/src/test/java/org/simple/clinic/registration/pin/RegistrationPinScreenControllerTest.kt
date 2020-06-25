@@ -19,7 +19,7 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -126,7 +126,7 @@ class RegistrationPinScreenControllerTest {
 
     val effectHandler = RegistrationPinEffectHandler(
         userSession = userSession,
-        schedulers = TrampolineSchedulersProvider(),
+        schedulers = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )
 

@@ -29,6 +29,7 @@
 - Fixed showing diagnosis text in teleconsult message when diagnosis are unanswered
 - Fixed keyboard not opening in app lock screen
 - Fixed prescription created from a protocol drug not-showing in `EditMedicinesScreen`
+- Fix changing of appointment facility does not update the facility
 
 ## 2020-06-22-7314
 ### Feature

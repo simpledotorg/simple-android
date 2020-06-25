@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
@@ -21,10 +20,12 @@ import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
-import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
-import org.simple.clinic.facility.change.FacilityListItem
+import org.simple.clinic.facility.change.FacilityListItem.FacilityOption
+import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Address
+import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name
 import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.Coordinates
+import org.simple.clinic.location.DistanceCalculator
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.location.ScreenLocationUpdates
@@ -46,14 +47,14 @@ class RegistrationFacilitySelectionScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val uiEvents = PublishSubject.create<UiEvent>()!!
+  private val uiEvents = PublishSubject.create<UiEvent>()
   private val screen = mock<RegistrationFacilitySelectionScreen>()
   private val facilitySync = mock<FacilitySync>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
   private val currentTime = Instant.parse("2018-01-01T00:00:00Z")
   private val utcClock = TestUtcClock(currentTime)
-  private val listItemBuilder = mock<FacilityListItemBuilder>()
+  private val listItemBuilder = FacilityListItemBuilder(DistanceCalculator())
   private val screenLocationUpdates = mock<ScreenLocationUpdates>()
 
   private lateinit var controllerSubscription: Disposable
@@ -228,29 +229,26 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `when facilities are received then their UI models for facility list should be created`() {
-    val facility1 = TestData.facility(name = "Facility 1")
-    val facility2 = TestData.facility(name = "Facility 2")
-    val facilities = listOf(facility1, facility2)
-    whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities, facilities))
+    val phcObvious = TestData.facility(name = "PHC Obvious", streetAddress = "Richmond Road", district = "Bangalore Central", state = "Karnataka")
+    val chcNilenso = TestData.facility(name = "CHC Nilenso", district = "Indiranagar", state = "Karnataka")
+    val facilities = listOf(phcObvious, chcNilenso)
+    val searchQuery = ""
+
+    whenever(facilityRepository.facilities(searchQuery)).thenReturn(Observable.just(facilities, facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size, facilities.size))
     whenever(screenLocationUpdates.streamUserLocation(any(), any(), any())).thenReturn(Observable.just(Unavailable))
 
-    val searchQuery = ""
-    val facilityListItems = emptyList<FacilityListItem>()
-    whenever(listItemBuilder.build(any(), any(), any(), any())).thenReturn(facilityListItems)
+    val expectedFacilityListItems = listOf(
+        FacilityOption(phcObvious, Name.Plain("PHC Obvious"), address = Address.WithStreet(street = "Richmond Road", district = "Bangalore Central", state = "Karnataka")),
+        FacilityOption(chcNilenso, Name.Plain("CHC Nilenso"), address = Address.WithoutStreet(district = "Indiranagar", state = "Karnataka"))
+    )
 
     setupController()
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
-    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(searchQuery))
 
-    verify(listItemBuilder, times(2)).build(
-        facilities = facilities,
-        searchQuery = searchQuery,
-        userLocation = null,
-        proximityThreshold = registrationConfig.proximityThresholdForNearbyFacilities)
-    verify(screen).updateFacilities(facilityListItems, FIRST_UPDATE)
-    verify(screen).updateFacilities(facilityListItems, SUBSEQUENT_UPDATE)
+    uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(""))
+    verify(screen).updateFacilities(expectedFacilityListItems, FIRST_UPDATE)
   }
 
   @Test

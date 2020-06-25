@@ -16,6 +16,7 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
@@ -76,7 +77,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
   private val calendarDateSelectedEvents: Subject<AppointmentCalendarDateSelected> = PublishSubject.create()
-  private val facilityChanges: Subject<PatientFacilityChanged> = PublishSubject.create()
+  private val facilityChanges: DeferredEventSource<ScheduleAppointmentEvent> = DeferredEventSource()
 
   private val events by unsafeLazy {
     Observable
@@ -86,8 +87,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
             notNowClicks(),
             doneClicks(),
             appointmentDateClicks(),
-            calendarDateSelectedEvents,
-            facilityChanges
+            calendarDateSelectedEvents
         )
         .compose(ReportAnalyticsEvents())
   }
@@ -110,7 +110,8 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
         ),
         init = ScheduleAppointmentInit(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
+        modelUpdateListener = uiRenderer::render,
+        additionalEventSources = listOf(facilityChanges)
     )
   }
 
@@ -167,11 +168,9 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     if (requestCode == REQCODE_FACILITY_SELECT && resultCode == Activity.RESULT_OK) {
-      if (data != null) {
-        val selectedFacility = FacilitySelectionActivity.selectedFacility(data)
-        val patientFacilityChanged = PatientFacilityChanged(facility = selectedFacility)
-        facilityChanges.onNext(patientFacilityChanged)
-      }
+      val selectedFacility = FacilitySelectionActivity.selectedFacility(data!!)
+      val patientFacilityChanged = PatientFacilityChanged(facility = selectedFacility)
+      facilityChanges.notify(patientFacilityChanged)
     }
   }
 

@@ -70,13 +70,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
   fun `when screen is started, location should be fetched`() {
     val locationUpdateInterval = Duration.ofDays(5)
     whenever(facilityRepository.recordCount()).thenReturn(Observable.never())
-    whenever(screenLocationUpdates.streamUserLocation(
-        updateInterval = locationUpdateInterval,
-        timeout = registrationConfig.locationListenerExpiry,
-        discardOlderThan = registrationConfig.staleLocationThreshold
-    )).thenReturn(Observable.never())
 
-    setupController(registrationConfig.copy(locationUpdateInterval = locationUpdateInterval))
+    setupController(
+        registrationConfig.copy(locationUpdateInterval = locationUpdateInterval),
+        locationUpdate = Observable.never()
+    )
 
     verify(screenLocationUpdates).streamUserLocation(
         updateInterval = locationUpdateInterval,
@@ -90,11 +88,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val facilities = emptyList<Facility>()
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-    whenever(screenLocationUpdates.streamUserLocation(
-        updateInterval = registrationConfig.locationUpdateInterval,
-        timeout = registrationConfig.locationListenerExpiry,
-        discardOlderThan = registrationConfig.staleLocationThreshold
-    )).thenReturn(Observable.just(Unavailable))
 
     setupController()
 
@@ -112,11 +105,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     whenever(facilityRepository.facilities(searchQuery)).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-    whenever(screenLocationUpdates.streamUserLocation(
-        updateInterval = registrationConfig.locationUpdateInterval,
-        timeout = registrationConfig.locationListenerExpiry,
-        discardOlderThan = registrationConfig.staleLocationThreshold
-    )).thenReturn(Observable.just(Unavailable))
 
     setupController()
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(searchQuery))
@@ -137,11 +125,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.facilities("PHC")).thenReturn(Observable.just(listOf(phcObvious)))
     whenever(facilityRepository.facilities("CHC")).thenReturn(Observable.just(listOf(chcNilenso)))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(2))
-    whenever(screenLocationUpdates.streamUserLocation(
-        updateInterval = registrationConfig.locationUpdateInterval,
-        timeout = registrationConfig.locationListenerExpiry,
-        discardOlderThan = registrationConfig.staleLocationThreshold
-    )).thenReturn(Observable.never())
 
     setupController()
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
@@ -172,11 +155,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     whenever(facilityRepository.facilities(searchQuery)).thenReturn(Observable.just(facilities, facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size, facilities.size))
-    whenever(screenLocationUpdates.streamUserLocation(
-        updateInterval = registrationConfig.locationUpdateInterval,
-        timeout = registrationConfig.locationListenerExpiry,
-        discardOlderThan = registrationConfig.staleLocationThreshold
-    )).thenReturn(Observable.just(Unavailable))
 
     val expectedFacilityListItems = listOf(
         FacilityOption(phcObvious, Name.Plain("PHC Obvious"), address = Address.WithStreet(street = "Richmond Road", district = "Bangalore Central", state = "Karnataka")),
@@ -201,11 +179,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
     whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(1))
-    whenever(screenLocationUpdates.streamUserLocation(
-        updateInterval = registrationConfig.locationUpdateInterval,
-        timeout = registrationConfig.locationListenerExpiry,
-        discardOlderThan = registrationConfig.staleLocationThreshold
-    )).thenReturn(Observable.just(Unavailable))
 
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("5cf9d744-7f34-4633-aa46-a6c7e7542060"))
 
@@ -225,11 +198,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
     whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(1))
-    whenever(screenLocationUpdates.streamUserLocation(
-        updateInterval = registrationConfig.locationUpdateInterval,
-        timeout = registrationConfig.locationListenerExpiry,
-        discardOlderThan = registrationConfig.staleLocationThreshold
-    )).thenReturn(Observable.just(Unavailable))
 
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("bc761c6c-032f-4f1d-a66a-3ec81e9e8aa3"))
 
@@ -244,11 +212,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
   @Test
   fun `search field should only be shown when facilities are available`() {
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0, 10))
-    whenever(screenLocationUpdates.streamUserLocation(
-        updateInterval = registrationConfig.locationUpdateInterval,
-        timeout = registrationConfig.locationListenerExpiry,
-        discardOlderThan = registrationConfig.staleLocationThreshold
-    )).thenReturn(Observable.just(Unavailable))
 
     setupController()
 
@@ -258,8 +221,15 @@ class RegistrationFacilitySelectionScreenControllerTest {
   }
 
   private fun setupController(
-      config: RegistrationConfig = registrationConfig
+      config: RegistrationConfig = registrationConfig,
+      locationUpdate: Observable<LocationUpdate> = Observable.just(Unavailable)
   ) {
+    whenever(screenLocationUpdates.streamUserLocation(
+        updateInterval = config.locationUpdateInterval,
+        timeout = config.locationListenerExpiry,
+        discardOlderThan = config.staleLocationThreshold
+    )).thenReturn(locationUpdate)
+
     val controller = RegistrationFacilitySelectionScreenController(
         facilityRepository = facilityRepository,
         userSession = userSession,

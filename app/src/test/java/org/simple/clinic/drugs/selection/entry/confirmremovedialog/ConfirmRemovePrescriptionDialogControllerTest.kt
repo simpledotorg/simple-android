@@ -22,7 +22,7 @@ class ConfirmRemovePrescriptionDialogControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val prescriptionRepository = mock<PrescriptionRepository>()
-  private val dialog = mock<ConfirmRemovePrescriptionDialog>()
+  private val uiActions = mock<UiActions>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
@@ -46,14 +46,14 @@ class ConfirmRemovePrescriptionDialogControllerTest {
 
     // then
     verify(prescriptionRepository).softDeletePrescription(prescribedDrugUuid)
-    verify(dialog).dismiss()
-    verifyNoMoreInteractions(dialog)
+    verify(uiActions).closeDialog()
+    verifyNoMoreInteractions(uiActions)
   }
 
   private fun setupController() {
     val controller = ConfirmRemovePrescriptionDialogController(prescriptionRepository, prescribedDrugUuid)
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(dialog) }
+        .subscribe { uiChange -> uiChange(uiActions) }
   }
 }

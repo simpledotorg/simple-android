@@ -18,7 +18,7 @@
 - Migrated `RecentPatientItemType` to use `ItemAdapter`
 - Moved storage of cached webviews (Progress, Help) to an implementation backed by the local database instead of files
 - Migrated `RegistrationFullNameScreen` to Mobius
-- [In Progress: 25 Jun 2020] Migrate `RegistrationPinScreen` to Mobius
+- Migrated `RegistrationPinScreen` to Mobius
 - Make non-protocol drugs immutable
 - Refactored logic around fetching location in facility selection screens to a common class
 - Decoupled feature toggles from the remote configuration setup

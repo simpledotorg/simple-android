@@ -14,6 +14,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.RemovePrescriptionClicked
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -38,6 +39,16 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment(), UiActions {
     requireArguments().getSerializable(KEY_PRESCRIPTION_UUID) as UUID
   }
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenDestroys,
+            removeClicks()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   @SuppressLint("CheckResult")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val dialog = AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle_Destructive)
@@ -57,7 +68,7 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment(), UiActions {
   }
 
   private fun setupDialog(): Observable<UiChange> {
-    return Observable.merge(screenDestroys, removeClicks())
+    return events
         .observeOn(io())
         .compose(controller.create(prescriptionUuidToDelete))
         .observeOn(mainThread())

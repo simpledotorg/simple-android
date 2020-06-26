@@ -7,7 +7,6 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.RemovePrescriptionClicked
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.widgets.UiEvent
@@ -28,7 +27,6 @@ class ConfirmRemovePrescriptionDialogController @AssistedInject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(ReportAnalyticsEvents())
         .replay()
     return removePrescription(replayedEvents)
   }

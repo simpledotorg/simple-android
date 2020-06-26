@@ -38,12 +38,15 @@ class ConfirmRemovePrescriptionDialogControllerTest {
 
   @Test
   fun `when remove is clicked, then delete prescription`() {
+    // given
     whenever(prescriptionRepository.softDeletePrescription(prescribedDrugUuid)).thenReturn(Completable.complete())
 
+    // when
     setupController()
     uiEvents.onNext(ConfirmRemovePrescriptionDialogCreated(prescribedDrugUuid))
     uiEvents.onNext(RemovePrescriptionClicked)
 
+    // then
     verify(prescriptionRepository).softDeletePrescription(prescribedDrugUuid)
     verify(dialog).dismiss()
     verifyNoMoreInteractions(dialog)

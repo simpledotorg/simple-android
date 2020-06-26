@@ -19,13 +19,17 @@ class MobiusTestFixtureTest {
   private val view = VerifiableCounterView()
   private val modelUpdateListener = { model: CounterModel -> view.render(model) }
   private val effectHandler = createEffectHandler(view)
+  private val firstAdditionalEventSource = ImmediateEventSource<CounterEvent>()
+  private val secondAdditionalEventSource = ImmediateEventSource<CounterEvent>()
+
   private val fixture = MobiusTestFixture(
-      events,
-      defaultModel,
-      null,
-      CounterUpdate(),
-      effectHandler,
-      modelUpdateListener
+      events = events,
+      defaultModel = defaultModel,
+      init = null,
+      update = CounterUpdate(),
+      effectHandler = effectHandler,
+      modelUpdateListener = modelUpdateListener,
+      additionalEventSources = listOf(firstAdditionalEventSource, secondAdditionalEventSource)
   )
 
   @Before
@@ -85,5 +89,20 @@ class MobiusTestFixtureTest {
     // then
     assertThat(view.model)
         .isEqualTo(defaultModel)
+  }
+
+  @Test
+  fun `it can dispatch events via the additional event sources to update the model`() {
+    // when
+    with(events) {
+      onNext(Increment)
+      firstAdditionalEventSource.notifyEvent(Increment)
+      onNext(Increment)
+      secondAdditionalEventSource.notifyEvent(Increment)
+    }
+
+    // then
+    assertThat(fixture.model)
+        .isEqualTo(4)
   }
 }

@@ -2,6 +2,7 @@ package org.simple.clinic.drugs.selection.entry.confirmremovedialog
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
@@ -26,7 +27,7 @@ class ConfirmRemovePrescriptionDialogControllerTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  private val prescribedDrugUuid = UUID.randomUUID()
+  private val prescribedDrugUuid = UUID.fromString("fe94ba47-4d34-476c-809f-c2adfc11914a")
 
   private lateinit var controllerSubscription: Disposable
 
@@ -45,6 +46,7 @@ class ConfirmRemovePrescriptionDialogControllerTest {
 
     verify(prescriptionRepository).softDeletePrescription(prescribedDrugUuid)
     verify(dialog).dismiss()
+    verifyNoMoreInteractions(dialog)
   }
 
   private fun setupController() {

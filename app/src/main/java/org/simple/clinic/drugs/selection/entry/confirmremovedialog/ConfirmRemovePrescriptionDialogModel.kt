@@ -4,4 +4,9 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class ConfirmRemovePrescriptionDialogModel : Parcelable
+class ConfirmRemovePrescriptionDialogModel : Parcelable {
+
+  companion object {
+    fun create() = ConfirmRemovePrescriptionDialogModel()
+  }
+}

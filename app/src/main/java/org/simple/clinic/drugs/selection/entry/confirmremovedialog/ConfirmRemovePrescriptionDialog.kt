@@ -9,7 +9,7 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.ofType
@@ -135,7 +135,7 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment(), UiActions {
 
   private fun removeClicks(): Observable<UiEvent> {
     val button = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
-    return RxView.clicks(button).map { RemovePrescriptionClicked }
+    return button.clicks().map { RemovePrescriptionClicked }
   }
 
   companion object {

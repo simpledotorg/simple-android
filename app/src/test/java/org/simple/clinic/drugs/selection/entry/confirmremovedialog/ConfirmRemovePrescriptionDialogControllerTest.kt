@@ -4,8 +4,9 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemovePrescriptionDialogCreated
@@ -22,24 +23,23 @@ class ConfirmRemovePrescriptionDialogControllerTest {
 
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val dialog = mock<ConfirmRemovePrescriptionDialog>()
-  lateinit var controller: ConfirmRemovePrescriptionDialogController
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private val prescribedDrugUuid = UUID.randomUUID()
 
-  @Before
-  fun setUp() {
-    controller = ConfirmRemovePrescriptionDialogController(prescriptionRepository)
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(dialog) }
+  private lateinit var controllerSubscription: Disposable
+
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
   fun `when remove is clicked, then delete prescription`() {
     whenever(prescriptionRepository.softDeletePrescription(prescribedDrugUuid)).thenReturn(Completable.complete())
 
+    setupController()
     uiEvents.onNext(ConfirmRemovePrescriptionDialogCreated(prescribedDrugUuid))
     uiEvents.onNext(RemovePrescriptionClicked)
 
@@ -47,4 +47,10 @@ class ConfirmRemovePrescriptionDialogControllerTest {
     verify(dialog).dismiss()
   }
 
+  private fun setupController() {
+    val controller = ConfirmRemovePrescriptionDialogController(prescriptionRepository)
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(dialog) }
+  }
 }

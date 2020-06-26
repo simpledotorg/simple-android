@@ -16,6 +16,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_facility_selection.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.change.FacilitiesUpdateType
@@ -27,6 +28,7 @@ import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.extractSuccessful
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -52,6 +54,22 @@ class RegistrationFacilitySelectionScreen(
 
   private val recyclerViewAdapter = FacilitiesAdapter()
 
+  private val screenDestroys: Observable<ScreenDestroyed> = detaches()
+      .map { ScreenDestroyed() }
+      .share()
+
+  private val events by unsafeLazy {
+    Observable
+        .mergeArray(
+            screenCreates(),
+            searchQueryChanges(),
+            facilityClicks(),
+            registrationFacilityConfirmations(screenDestroys)
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -61,18 +79,11 @@ class RegistrationFacilitySelectionScreen(
 
     context.injector<Injector>().inject(this)
 
-    val onScreenDestroyed = detaches().map { ScreenDestroyed() }
-
     bindUiToController(
         ui = this,
-        events = Observable.mergeArray(
-            screenCreates(),
-            searchQueryChanges(),
-            facilityClicks(),
-            registrationFacilityConfirmations(onScreenDestroyed)
-        ),
+        events = events,
         controller = controller,
-        screenDestroys = onScreenDestroyed
+        screenDestroys = screenDestroys
     )
 
     toolbarViewWithSearch.setNavigationOnClickListener {
@@ -89,7 +100,7 @@ class RegistrationFacilitySelectionScreen(
 
     // Hiding the keyboard without adding a post{} block doesn't seem to work.
     post { hideKeyboard() }
-    hideKeyboardOnListScroll(onScreenDestroyed)
+    hideKeyboardOnListScroll(screenDestroys)
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())

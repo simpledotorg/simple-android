@@ -10,7 +10,6 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemovePrescriptionDialogCreated
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.RemovePrescriptionClicked
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.util.RxErrorsRule
@@ -43,7 +42,6 @@ class ConfirmRemovePrescriptionDialogControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(ConfirmRemovePrescriptionDialogCreated(prescribedDrugUuid))
     uiEvents.onNext(RemovePrescriptionClicked)
 
     // then
@@ -53,7 +51,7 @@ class ConfirmRemovePrescriptionDialogControllerTest {
   }
 
   private fun setupController() {
-    val controller = ConfirmRemovePrescriptionDialogController(prescriptionRepository)
+    val controller = ConfirmRemovePrescriptionDialogController(prescriptionRepository, prescribedDrugUuid)
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(dialog) }

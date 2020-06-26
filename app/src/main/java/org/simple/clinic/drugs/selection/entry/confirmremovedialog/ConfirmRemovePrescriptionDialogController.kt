@@ -13,7 +13,7 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-typealias Ui = ConfirmRemovePrescriptionDialog
+typealias Ui = UiActions
 typealias UiChange = (Ui) -> Unit
 
 class ConfirmRemovePrescriptionDialogController @AssistedInject constructor(
@@ -39,7 +39,7 @@ class ConfirmRemovePrescriptionDialogController @AssistedInject constructor(
         .flatMap {
           prescriptionRepository
               .softDeletePrescription(prescribedDrugUuid)
-              .andThen(Observable.just { ui: Ui -> ui.dismiss() })
+              .andThen(Observable.just { ui: Ui -> ui.closeDialog() })
         }
   }
 

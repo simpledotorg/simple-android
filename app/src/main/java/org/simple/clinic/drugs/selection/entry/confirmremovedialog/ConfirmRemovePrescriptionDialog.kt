@@ -23,7 +23,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment() {
+class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment(), UiActions {
 
   @Inject
   lateinit var prescriptionRepository: PrescriptionRepository
@@ -76,6 +76,10 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment() {
   override fun onStart() {
     super.onStart()
     onStarts.onNext(Any())
+  }
+
+  override fun closeDialog() {
+    dismiss()
   }
 
   private fun removeClicks(): Observable<UiEvent> {

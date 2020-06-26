@@ -3,6 +3,7 @@ package org.simple.clinic.mobius
 import android.os.Parcelable
 import com.spotify.mobius.Connectable
 import com.spotify.mobius.Connection
+import com.spotify.mobius.EventSource
 import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
 import com.spotify.mobius.MobiusLoop
@@ -24,7 +25,8 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
     private val update: Update<M, E, F>,
     private val effectHandler: ObservableTransformer<F, E>,
     private val modelUpdateListener: (M) -> Unit,
-    private val savedStateHandle: SavedStateHandle<M>
+    private val savedStateHandle: SavedStateHandle<M>,
+    private val additionalEventSources: List<EventSource<E>>
 ) : Connectable<M, E> {
 
   companion object {
@@ -34,7 +36,8 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
         update: Update<M, E, F>,
         effectHandler: ObservableTransformer<F, E>,
         init: Init<M, F> = Init { first(defaultModel) },
-        modelUpdateListener: (M) -> Unit = {}
+        modelUpdateListener: (M) -> Unit = {},
+        additionalEventSources: List<EventSource<E>> = emptyList()
     ): MobiusDelegate<M, E, F> {
       return MobiusDelegate(
           events = events,
@@ -43,7 +46,8 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
           update = update,
           effectHandler = effectHandler,
           modelUpdateListener = modelUpdateListener,
-          savedStateHandle = ViewSavedStateHandle(defaultModel::class.java.name)
+          savedStateHandle = ViewSavedStateHandle(defaultModel::class.java.name),
+          additionalEventSources = additionalEventSources
       )
     }
 
@@ -53,7 +57,8 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
         update: Update<M, E, F>,
         effectHandler: ObservableTransformer<F, E>,
         init: Init<M, F> = Init { first(defaultModel) },
-        modelUpdateListener: (M) -> Unit = {}
+        modelUpdateListener: (M) -> Unit = {},
+        additionalEventSources: List<EventSource<E>> = emptyList()
     ): MobiusDelegate<M, E, F> {
       return MobiusDelegate(
           events = events,
@@ -62,7 +67,8 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
           update = update,
           effectHandler = effectHandler,
           modelUpdateListener = modelUpdateListener,
-          savedStateHandle = ActivitySavedStateHandle(defaultModel::class.java.name)
+          savedStateHandle = ActivitySavedStateHandle(defaultModel::class.java.name),
+          additionalEventSources = additionalEventSources
       )
     }
   }
@@ -86,7 +92,8 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
       update = update,
       effectHandler = effectHandler,
       modelUpdateListener = modelUpdateListener,
-      savedStateHandle = ViewSavedStateHandle(defaultModel::class.java.name)
+      savedStateHandle = ViewSavedStateHandle(defaultModel::class.java.name),
+      additionalEventSources = emptyList()
   )
 
   private val controller: MobiusLoop.Controller<M, E> by lazy(NONE) {
@@ -102,6 +109,7 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
             { effects -> effects.compose(effectHandler) }
         )
         .init(init)
+        .eventSources(additionalEventSources)
   }
 
   @Deprecated(message = "Added to aid refactoring to Mobius. Do not use anywhere else.")

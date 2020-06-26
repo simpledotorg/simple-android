@@ -14,11 +14,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
-import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemovePrescriptionDialogCreated
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.RemovePrescriptionClicked
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -30,10 +29,14 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment() {
   lateinit var prescriptionRepository: PrescriptionRepository
 
   @Inject
-  lateinit var controller: ConfirmRemovePrescriptionDialogController
+  lateinit var controller: ConfirmRemovePrescriptionDialogController.Factory
 
   private val onStarts = PublishSubject.create<Any>()
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
+
+  private val prescriptionUuidToDelete by unsafeLazy {
+    requireArguments().getSerializable(KEY_PRESCRIPTION_UUID) as UUID
+  }
 
   @SuppressLint("CheckResult")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -54,9 +57,9 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment() {
   }
 
   private fun setupDialog(): Observable<UiChange> {
-    return Observable.merge(dialogCreates(), screenDestroys, removeClicks())
+    return Observable.merge(screenDestroys, removeClicks())
         .observeOn(io())
-        .compose(controller)
+        .compose(controller.create(prescriptionUuidToDelete))
         .observeOn(mainThread())
   }
 
@@ -73,11 +76,6 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment() {
   override fun onStart() {
     super.onStart()
     onStarts.onNext(Any())
-  }
-
-  private fun dialogCreates(): Observable<UiEvent> {
-    val prescriptionUuidToDelete = arguments!!.getSerializable(KEY_PRESCRIPTION_UUID) as UUID
-    return Observable.just(ConfirmRemovePrescriptionDialogCreated(prescriptionUuidToDelete))
   }
 
   private fun removeClicks(): Observable<UiEvent> {

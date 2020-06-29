@@ -53,7 +53,6 @@
   <string name="patiententry_full_name">ರೋಗಿಯ ಹೆಸರು</string>
   <string name="patiententry_phone_number">ಫೋನ್ ಸಂಖ್ಯೆ</string>
   <string name="patiententry_bangladesh_national_id">ರಾಷ್ಟ್ರೀಯ ಐಡಿ ಸಂಖ್ಯೆ</string>
-  <string name="patiententry_ethiopia_national_id">ರಾಷ್ಟ್ರೀಯ ಐಡಿ</string>
   <string name="patiententry_date_of_birth_unfocused">ಜನ್ಮ ದಿನಾಂಕ</string>
   <string name="patiententry_date_of_birth_focused">D.O.B (ಹುಟ್ಟಿದ ದಿನಾಂಕ): DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">ಅಥವಾ</string>

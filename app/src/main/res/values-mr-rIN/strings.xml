@@ -53,7 +53,6 @@
   <string name="patiententry_full_name">रूग्णाचे नाव</string>
   <string name="patiententry_phone_number">फोन नंबर</string>
   <string name="patiententry_bangladesh_national_id">राष्‍ट्रीय आयडी क्रमांक</string>
-  <string name="patiententry_ethiopia_national_id">राष्‍ट्रीय आयडी</string>
   <string name="patiententry_date_of_birth_unfocused">जन्‍मतारीख</string>
   <string name="patiententry_date_of_birth_focused">जन्मदिवस: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">किंवा</string>

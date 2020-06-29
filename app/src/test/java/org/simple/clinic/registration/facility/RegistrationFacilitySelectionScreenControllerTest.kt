@@ -3,6 +3,7 @@ package org.simple.clinic.registration.facility
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -86,7 +87,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     )
 
     // then
-    verify(screenLocationUpdates).streamUserLocation(
+    verify(screenLocationUpdates, times(2)).streamUserLocation(
         updateInterval = locationUpdateInterval,
         timeout = registrationConfig.locationListenerExpiry,
         discardOlderThan = registrationConfig.staleLocationThreshold
@@ -311,6 +312,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     val effectHandler = RegistrationFacilitySelectionEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
+        screenLocationUpdates = screenLocationUpdates,
         uiActions = ui
     )
     val uiRenderer = RegistrationFacilitySelectionUiRenderer(ui)
@@ -318,7 +320,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = RegistrationFacilitySelectionModel.create(),
-        init = RegistrationFacilitySelectionInit(),
+        init = RegistrationFacilitySelectionInit.create(config),
         update = RegistrationFacilitySelectionUpdate(),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render

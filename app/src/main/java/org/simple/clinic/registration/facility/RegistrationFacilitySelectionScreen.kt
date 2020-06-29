@@ -26,6 +26,7 @@ import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.introvideoscreen.IntroVideoScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
@@ -57,6 +58,9 @@ class RegistrationFacilitySelectionScreen(
   @Inject
   lateinit var effectHandlerFactory: RegistrationFacilitySelectionEffectHandler.Factory
 
+  @Inject
+  lateinit var config: RegistrationConfig
+
   private val recyclerViewAdapter = FacilitiesAdapter()
 
   private val screenDestroys: Observable<ScreenDestroyed> = detaches()
@@ -83,7 +87,7 @@ class RegistrationFacilitySelectionScreen(
         defaultModel = RegistrationFacilitySelectionModel.create(),
         update = RegistrationFacilitySelectionUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        init = RegistrationFacilitySelectionInit(),
+        init = RegistrationFacilitySelectionInit.create(config),
         modelUpdateListener = uiRenderer::render
     )
   }

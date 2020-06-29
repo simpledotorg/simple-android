@@ -2,6 +2,7 @@ package org.simple.clinic.registration.facility
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +25,7 @@ import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.introvideoscreen.IntroVideoScreenKey
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
@@ -52,6 +54,9 @@ class RegistrationFacilitySelectionScreen(
   @Inject
   lateinit var activity: AppCompatActivity
 
+  @Inject
+  lateinit var effectHandlerFactory: RegistrationFacilitySelectionEffectHandler.Factory
+
   private val recyclerViewAdapter = FacilitiesAdapter()
 
   private val screenDestroys: Observable<ScreenDestroyed> = detaches()
@@ -68,6 +73,19 @@ class RegistrationFacilitySelectionScreen(
         )
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = RegistrationFacilitySelectionUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = RegistrationFacilitySelectionModel.create(),
+        update = RegistrationFacilitySelectionUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = RegistrationFacilitySelectionInit(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   @SuppressLint("CheckResult")
@@ -101,6 +119,24 @@ class RegistrationFacilitySelectionScreen(
     // Hiding the keyboard without adding a post{} block doesn't seem to work.
     post { hideKeyboard() }
     hideKeyboardOnListScroll(screenDestroys)
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    delegate.stop()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())

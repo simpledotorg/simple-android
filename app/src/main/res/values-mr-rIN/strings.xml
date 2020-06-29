@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">सिंपल</string>
+  <string name="app_name">Simple</string>
 
   <!-- Common -->
   <string name="gender_female">स्त्री</string>
@@ -13,7 +13,7 @@
   <!--suppress UnusedResources -->
   <string name="gender_trans_letter">तृतीयपंथी</string>
   <string name="api_unexpected_error">काहीतरी चुकले. कृपया पुन्‍हा प्रयत्‍न करा.</string>
-  <string name="api_network_error">कोणतेही इंटरनेट कनेक्‍शन नाही</string>
+  <string name="api_network_error">इंटरनेट कनेक्‍शन नाही</string>
   <string name="api_server_error">सर्व्‍हर त्रुटी! कृपया पुन्‍हा प्रयत्‍न करा.</string>
 
   <!-- Country names -->
@@ -46,7 +46,7 @@
   <string name="patientsearchresults_other_results_header">अन्‍य निकाल</string>
   <string name="patientsearchresults_no_patients_match">कोणतेही रूग्ण जुळत नाहीत</string>
   <string name="patientsearchresults_item_phone_number">दूरध्‍वनी</string>
-  <string name="patientsearchresults_item_birthdate">वाढदिवस</string>
+  <string name="patientsearchresults_item_birthdate">जन्‍मतारीख</string>
 
   <!-- Manual patient entry -->
   <string name="patiententry_contentdescription_up_button">शोधण्‍यासाठी मागे जा</string>
@@ -78,8 +78,8 @@
   <string name="patiententry_error_both_dateofbirth_and_age_empty">रूग्णाचे वय प्रविष्‍ट करा</string>
   <string name="patiententry_error_invalid_dateofbirth">रूग्णाची जन्‍मतारीख DD/MM/YYYY मध्‍ये प्रविष्‍ट करा</string>
   <string name="patiententry_error_dateofbirth_is_in_future">रूग्णाची जन्‍मतारीख निश्चित करा</string>
-  <string name="patiententry_error_phonenumber_length_less">फोन नंबर %1$s अंकांहून लहान असू शकत नाही</string>
-  <string name="patiententry_error_phonenumber_length_more">फोन नंबर %1$s अंकांहून मोठा असू शकत नाही</string>
+  <string name="patiententry_error_phonenumber_length_less">फोन नंबर  %1$s अंकीपेक्षा कमी असू शकत नाही</string>
+  <string name="patiententry_error_phonenumber_length_more">फोन नंबर  %1$s अंकीपेक्षा जास्त असू शकत नाही</string>
   <string name="patiententry_identifier">बीपी पासपोर्ट</string>
   <string name="patiententry_consent_header">संमती:\u0020</string>
   <string name="patiententry_consent_first_para">खाली टॅप करून, तुम्‍ही पुष्‍टी करता की तुम्‍ही प्रविष्‍ट केलेला कोणताही रूग्ण डेटा उचित माहिती संमतीतंर्गत मिळवण्यात आला आहे. याचाच अर्थ असा होतो की रूग्ण किंवा कायदेशीर गार्डियनला माहीत आहे की तुम्‍ही अॅपमध्‍ये त्‍यांच्‍या खाजगी डेटामध्‍ये प्रवेश करत आहात, कोणता डेटा गोळा केला आहे हे समजून घेण्‍यासाठी आणि ते SMS, WhatsApp किंवा अन्‍य पद्धतीने अॅपमध्‍ये प्रदान केलेला फोन नंबर वापरून संपर्कात आले असतील.</string>
@@ -114,7 +114,7 @@
   <string name="patients_awaiting_sms_verification_message">सत्‍यापित होताच, तुमच्‍या क्लिनिकमधून तुम्‍हाला रूग्णाच्‍या रेकॉर्डचा ऍक्‍सेस असेल.</string>
   <string name="patients_dismiss_user_approved_status">समजले</string>
   <string name="patients_enter_code">कोड प्रविष्‍ट करा</string>
-  <string name="patients_you_are_now_logged_in">सत्‍यापन यशस्‍वी झाले! रूग्णाचे रेकॉर्ड दृश्‍यमान नाहीत.</string>
+  <string name="patients_you_are_now_logged_in">पडताळणी यशस्वी! आता रुग्णाचे रेकॉर्ड दिसत आहे.</string>
   <string name="patients_loggedoutalert_title">तुम्‍ही एकावेळी फक्‍त एका उपकरणावर लॉग इन करू शकता</string>
   <string name="patients_loggedoutalert_message">तुमच्‍या मागील उपकरणावरून आपण लॉग आउट केले आहे.</string>
   <string name="patients_loggedoutalert_dismiss">समजले</string>

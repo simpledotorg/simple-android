@@ -437,7 +437,7 @@
   <string name="changelanguage_done">पूर्ण झाले</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">कृपया वाट पाहा…</string>
+  <string name="placeholder_loading_title">कृपया वाट पाहा...</string>
   <string name="placeholder_loading_message">डेटाबेस व्‍यवस्‍थापन प्रगतीत आहे. यास फक्‍त मिनिट लागेल.</string>
 
   <!-- Select Country Screen -->
@@ -526,7 +526,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">रूग्णाला \"भेटीसाठी सहमत\" चिन्हांकित करा</string>
+  <string name="contactpatient_agreed_to_visit">रूग्णाला \&quot;भेटीसाठी सहमत\&quot; चिन्हांकित करा</string>
   <string name="contactpatient_remind_call_later">नंतर कॉल करण्‍याची आठवण करून द्या…</string>
   <string name="contactpatient_remove_from_list">ओव्‍हरड्यू यादीतून दूर करा…</string>
   <string name="contactpatient_result_of_call">कॉलसाठी निकाल</string>

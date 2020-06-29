@@ -53,7 +53,6 @@
   <string name="patiententry_full_name">የታካሚ ስም</string>
   <string name="patiententry_phone_number">ስልክ ቁጥር</string>
   <string name="patiententry_bangladesh_national_id">ብሔራዊ መታወቂያ ቁጥር</string>
-  <string name="patiententry_ethiopia_national_id">ብሔራዊ መታወቂያ</string>
   <string name="patiententry_date_of_birth_unfocused">የትውልድ ቀን</string>
   <string name="patiententry_date_of_birth_focused">የ.ት.ቅ፡ ቀቀ/ወወ/ዐዐ</string>
   <string name="patiententry_dateofbirth_and_age_separator">ወይም</string>

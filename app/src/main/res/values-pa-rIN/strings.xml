@@ -51,7 +51,6 @@
   <string name="patiententry_full_name">ਮਰੀਜ਼ ਦਾ ਨਾਮ</string>
   <string name="patiententry_phone_number">ਫ਼ੋਨ ਨੰਬਰ</string>
   <string name="patiententry_bangladesh_national_id">ਰਾਸ਼ਟਰੀ ਆਈ ਡੀ ਸੰਖਿਆ</string>
-  <string name="patiententry_ethiopia_national_id">ਰਾਸ਼ਟਰੀ ਆਈ.ਡੀ.</string>
   <string name="patiententry_date_of_birth_unfocused">ਜਨਮ ਮਿਤੀ</string>
   <string name="patiententry_date_of_birth_focused">D.O.B (ਜਨਮ ਮਿਤੀ): DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">ਜਾਂ</string>

@@ -51,7 +51,6 @@
   <string name="patiententry_full_name">ስም ተሓካሚ</string>
   <string name="patiententry_phone_number">ቁጽሪ ተሎፎን</string>
   <string name="patiententry_bangladesh_national_id">ሃገራዊ መለለዪ ቁጽሪ</string>
-  <string name="patiententry_ethiopia_national_id">ሃገራዊ መለለዪ ቁጽሪ</string>
   <string name="patiententry_date_of_birth_unfocused">ዕለተ ትውልዲ</string>
   <string name="patiententry_date_of_birth_focused">ዕ.ት፡ ዕ/ወ/ዓ.ም</string>
   <string name="patiententry_dateofbirth_and_age_separator">ወይ</string>

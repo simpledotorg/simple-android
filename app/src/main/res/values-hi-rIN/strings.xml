@@ -51,7 +51,6 @@
   <string name="patiententry_full_name">रोगी का नाम</string>
   <string name="patiententry_phone_number">फ़ोन नंबर</string>
   <string name="patiententry_bangladesh_national_id">राष्ट्रीय आईडी संख्या</string>
-  <string name="patiententry_ethiopia_national_id">राष्ट्रीय आईडी</string>
   <string name="patiententry_date_of_birth_unfocused">जन्म तिथि</string>
   <string name="patiententry_date_of_birth_focused">जन्म तिथि: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">या</string>

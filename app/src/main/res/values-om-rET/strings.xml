@@ -53,7 +53,6 @@
   <string name="patiententry_full_name">Maqaa dhukkubsataa\ttootaa</string>
   <string name="patiententry_phone_number">Lakkoofsa bilbilaa</string>
   <string name="patiententry_bangladesh_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
-  <string name="patiententry_ethiopia_national_id">Lakkoosa eenyummeessaa biyyoolessaa</string>
   <string name="patiententry_date_of_birth_unfocused">Guyyaa dhaloota</string>
   <string name="patiententry_date_of_birth_focused">G,Dh GG/JJ/WWWW</string>
   <string name="patiententry_dateofbirth_and_age_separator">Yookan</string>

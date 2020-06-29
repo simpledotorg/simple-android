@@ -3,17 +3,20 @@ package org.simple.clinic.registration.facility
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.location.LocationUpdate
 
 @Parcelize
 data class RegistrationFacilitySelectionModel(
     val searchQuery: String,
-    val facilities: List<Facility>?
+    val facilities: List<Facility>?,
+    val currentLocation: LocationUpdate?
 ) : Parcelable {
 
   companion object {
     fun create(): RegistrationFacilitySelectionModel = RegistrationFacilitySelectionModel(
         searchQuery = "",
-        facilities = null
+        facilities = null,
+        currentLocation = null
     )
   }
 
@@ -23,5 +26,9 @@ data class RegistrationFacilitySelectionModel(
 
   fun facilitiesLoaded(facilities: List<Facility>): RegistrationFacilitySelectionModel {
     return copy(facilities = facilities)
+  }
+
+  fun locationFetched(locationUpdate: LocationUpdate): RegistrationFacilitySelectionModel {
+    return copy(currentLocation = locationUpdate)
   }
 }

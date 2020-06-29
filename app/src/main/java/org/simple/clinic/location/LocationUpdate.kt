@@ -1,12 +1,16 @@
 package org.simple.clinic.location
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.util.ElapsedRealtimeClock
 import java.time.Duration
 
-sealed class LocationUpdate {
+sealed class LocationUpdate: Parcelable {
 
+  @Parcelize
   object Unavailable : LocationUpdate()
 
+  @Parcelize
   data class Available(
       val location: Coordinates,
       val timeSinceBootWhenRecorded: Duration

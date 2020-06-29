@@ -13,7 +13,7 @@ class RegistrationFacilitySelectionUpdate: Update<RegistrationFacilitySelectionM
       event: RegistrationFacilitySelectionEvent
   ): Next<RegistrationFacilitySelectionModel, RegistrationFacilitySelectionEffect> {
     return when(event) {
-      is LocationFetched -> noChange()
+      is LocationFetched -> next(model.locationFetched(event.update))
       is FacilitiesFetched -> next(model.queryChanged(event.query).facilitiesLoaded(event.facilities))
       is RegistrationFacilitySearchQueryChanged -> dispatch(LoadFacilitiesWithQuery(event.query))
     }

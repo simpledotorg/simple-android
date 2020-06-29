@@ -9,3 +9,5 @@ data class FetchCurrentLocation(
     val timeout: Duration,
     val discardOlderThan: Duration
 ): RegistrationFacilitySelectionEffect()
+
+data class LoadFacilitiesWithQuery(val query: String) : RegistrationFacilitySelectionEffect()

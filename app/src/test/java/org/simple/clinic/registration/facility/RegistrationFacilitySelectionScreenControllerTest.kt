@@ -313,6 +313,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val effectHandler = RegistrationFacilitySelectionEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
         screenLocationUpdates = screenLocationUpdates,
+        facilityRepository = facilityRepository,
         uiActions = ui
     )
     val uiRenderer = RegistrationFacilitySelectionUiRenderer(ui)

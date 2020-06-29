@@ -4,12 +4,14 @@ import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.location.ScreenLocationUpdates
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class RegistrationFacilitySelectionEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val screenLocationUpdates: ScreenLocationUpdates,
+    private val facilityRepository: FacilityRepository,
     @Assisted private val uiActions: RegistrationFacilitySelectionUiActions
 ) {
 
@@ -22,6 +24,7 @@ class RegistrationFacilitySelectionEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<RegistrationFacilitySelectionEffect, RegistrationFacilitySelectionEvent>()
         .addTransformer(FetchCurrentLocation::class.java, fetchLocation())
+        .addTransformer(LoadFacilitiesWithQuery::class.java, loadFacilitiesWithQuery())
         .build()
   }
 
@@ -38,6 +41,18 @@ class RegistrationFacilitySelectionEffectHandler @AssistedInject constructor(
                 .take(1)
           }
           .map(::LocationFetched)
+    }
+  }
+
+  private fun loadFacilitiesWithQuery(): ObservableTransformer<LoadFacilitiesWithQuery, RegistrationFacilitySelectionEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMap { effect ->
+            facilityRepository
+                .facilities(searchQuery = effect.query)
+                .subscribeOn(schedulersProvider.io())
+                .map { FacilitiesFetched(query = effect.query, facilities = it) }
+          }
     }
   }
 }

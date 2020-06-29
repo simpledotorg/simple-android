@@ -1,6 +1,11 @@
 # CHANGELOG
 
 ## Next Release
+### Internal
+- [In Progress: 25 Jun 2020] Migrate `RegistrationPinScreen` to Mobius
+- [In Progress: 26 Jun 2020] Migrate `ConfirmRemovePrescriptionDialog` to Mobius
+
+## On Demo
 ### Changes
 - New Onboarding UI
 - Show new registration label for recent patients in home screen
@@ -22,7 +27,6 @@
 - Make non-protocol drugs immutable
 - Refactored logic around fetching location in facility selection screens to a common class
 - Decoupled feature toggles from the remote configuration setup
-- [In Progress: 26 Jun 2020] Migrate `ConfirmRemovePrescriptionDialog` to Mobius
 
 ### Fixes
 - Fixed retrying on a failed teleconsultation fetch when in airplane mode

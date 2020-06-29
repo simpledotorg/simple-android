@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Changes
+- Updated translations: ``mr_IN`, `om_ET`
+
 ### Internal
 - [In Progress: 25 Jun 2020] Migrate `RegistrationPinScreen` to Mobius
 - [In Progress: 26 Jun 2020] Migrate `ConfirmRemovePrescriptionDialog` to Mobius
@@ -16,7 +19,7 @@
 - New illustrations for location permission screen, overdue screen, reports screen
 - Show overdue appointment count badge in overdue tab
 - Changed normal call buttons in the app from green to blue
-- Updated translations: `bn_BD`, `kn_IN`, `mr_IN`, `am_ET`, `om_ET`
+- Updated translations: `bn_BD`, `kn_IN`, `mr_IN`, `am_ET`
 - Ethiopia phone number validation
 
 ### Internal

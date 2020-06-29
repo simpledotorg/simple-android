@@ -91,8 +91,8 @@
 
   <string name="patientedit_save_patient">जतन करा</string>
   <string name="patientedit_bp_passports_label">बीपी पासपोर्ट्स</string>
-  <string name="patientedit_confirm_discard_title">बदल टाकून द्यायचे?</string>
-  <string name="patientedit_confirm_discard_ok">टाकून द्या</string>
+  <string name="patientedit_confirm_discard_title">बदल वगळणे?</string>
+  <string name="patientedit_confirm_discard_ok">रद्द करा</string>
   <string name="patientedit_confirm_discard_cancel">रद्द करा</string>
   <string name="patientedit_delete_patient">हटवा</string>
 
@@ -219,8 +219,8 @@
   <string name="pinentry_forgotpin">PIN विसरलात?</string>
   <string name="pinentry_error_incorrect_pin_on_first_attempt">PIN मूळ PIN शी जुळत नाही</string>
   <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">चुकीचा PIN, %s प्रयत्न शिल्लक</string>
-  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">तुमच्‍याजवळ %s चुकीचे प्रयत्‍न आहेत</string>
-  <string name="pinentry_pin_number_hint">सुरक्षितता PIN रिसेट करा</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">तुम्ही %s चुकीचे प्रयत्न केले आहेत</string>
+  <string name="pinentry_pin_number_hint">सुरक्षितता PIN</string>
   <string name="pinentry_bruteforcelock_timer_label">नंतर पुन्‍हा प्रयत्‍न करा</string>
   <!-- minutes:seconds -->
 
@@ -243,8 +243,8 @@
 
   <string name="registrationlocation_screen_title">स्‍थान ऍक्‍सेस</string>
   <string name="registrationlocation_skip_permission">वगळा</string>
-  <string name="registrationlocation_permission_rationale_description">तुमचे स्‍थान तुमची क्लिनिक शोधणत मदत करेल</string>
-  <string name="registrationlocation_permission_rationale_title">तुमची क्लिनिक अधिक जलद शोधा</string>
+  <string name="registrationlocation_permission_rationale_description">तुमचे ठिकाण आपल्याला आपले दवाखाने शोधण्यास मदत करेल</string>
+  <string name="registrationlocation_permission_rationale_title">आपले दवाखाने लवकर शोधा</string>
   <string name="registrationlocation_allow_access">स्‍थान ऍक्‍सेसला अनुमती द्या</string>
 
   <string name="registrationfacilities_screen_title">तुमचे क्लिनिक निवडा</string>
@@ -252,7 +252,7 @@
   <!-- Street, District, State -->
   <string name="registrationfacilities_error_unexpected_title">काहीतरी चुकले</string>
   <string name="registrationfacilities_error_unexpected_message">कृपया काही वेळाने पुन्‍हा प्रयत्‍न करा आणि तुमच्‍या सुपरव्‍हायजरच्‍या संपर्कात राहा.</string>
-  <string name="registrationfacilities_error_internet_connection_title">कोणतेही इंटरनेट कनेक्‍शन नाही</string>
+  <string name="registrationfacilities_error_internet_connection_title">इंटरनेट कनेक्‍शन नाही</string>
   <string name="registrationfacilities_retry">पुन्‍हा प्रयत्‍न करा</string>
   <string name="registrationfacilities_header_suggested_facilities">सूचित क्लिनिक</string>
   <string name="registrationfacilities_header_all_facilities">सर्व क्लिनिक</string>
@@ -260,7 +260,7 @@
   <!-- Onboarding -->
   <string name="onboarding_get_started">सुरुवात करा</string>
   <string name="screenonboarding_intro_1">हायपरटेंशनचे हजारो \nरूग्ण शोधा \nआणि</string>
-  <string name="screenonboarding_intro_1_hypertension">मिळवा</string>
+  <string name="screenonboarding_intro_1_hypertension">\उच्चरक्तदाब</string>
   <string name="screenonboarding_intro_2">रक्तदाब आणि \n</string>
   <string name="screenonboarding_intro_2_bp">औषधाच्या \n</string>
   <string name="screenonboarding_intro_2_and">नोंदी</string>
@@ -273,8 +273,8 @@
   <string name="overdue_no_patients">कोणतेही ओव्‍हरड्यू रूग्ण नाहीत</string>
   <string name="overdue_empty_desc">फॉलो-अप रक्‍त्‍दाब रिडिंगसाठी शेड्यूल भेट विसरलेल्‍या रूग्णांना तुम्‍ही कॉल करू शकाल.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">डायबिटिस</string>
-  <string name="overdue_list_item_diagnosis_hypertension">हायपरटेंशन</string>
+  <string name="overdue_list_item_diagnosis_diabetes">मधुमेह</string>
+  <string name="overdue_list_item_diagnosis_hypertension">उच्च रक्तदाब</string>
   <string name="overdue_list_item_diagnosis_none">काही नाही</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s दिवस ओव्‍हरड्यू</item>
@@ -290,7 +290,7 @@
 
   <!-- Enter OTP -->
   <string name="enterotp_check_sms_sent_to">वर पाठवलेला SMS तपासा</string>
-  <string name="enterotp_enter_verification_code">चुकीचा सत्यापन कोड</string>
+  <string name="enterotp_enter_verification_code">पडताळणी कोड प्रविष्ट करा</string>
   <string name="enterotp_incorrect_code">चुकीचा कोड, कृपया पुन्‍हा प्रयत्‍न करा</string>
   <string name="enterotp_resend_sms">SMS पुन्हा पाठवा</string>
   <string name="enterotp_sms_sent">नवीन सत्यापन SMS पाठवला</string>
@@ -331,9 +331,9 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_kidney">किडनीचा आजार</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diagnosed_with_hypertension">हायपरटेंशन</string>
+  <string name="medicalhistory_question_diagnosed_with_hypertension">उच्च रक्तदाब</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diabetes">डायबिटिस</string>
+  <string name="medicalhistory_question_diabetes">मधुमेह</string>
   <string name="newmedicalhistory_next">पुढील</string>
   <string name="newmedicalhistory_yes">होय</string>
   <string name="newmedicalhistory_no">नाही</string>
@@ -392,7 +392,7 @@
   <string name="addidtopatientsearchresults_to_patient">\u0020\u2026 ला</string>
 
   <!-- App update : Dialog -->
-  <string name="appupdatedialog_title">अॅप अद्यतनित करा</string>
+  <string name="appupdatedialog_title">ॲप अद्यतनित करा</string>
   <string name="appupdatedialog_body">तुम्‍हाला सिंपल अद्यतनित करण्‍यासाठी प्‍ले स्‍टोअरवर नेण्‍यात येईल</string>
   <string name="appupdatedialog_positive_button_text">अद्यतनित करा</string>
   <string name="appupdatedialog_negative_button_text">आता नाही</string>
@@ -405,7 +405,7 @@
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">काहीतरी चुकले</string>
   <string name="registrationloader_error_unexpected_message">कृपया काही वेळाने पुन्‍हा प्रयत्‍न करा आणि तुमच्‍या सुपरव्‍हायजरच्‍या संपर्कात राहा.</string>
-  <string name="registrationloader_error_internet_connection_title">कोणतेही इंटरनेट कनेक्‍शन नाही</string>
+  <string name="registrationloader_error_internet_connection_title">इंटरनेट कनेक्‍शन नाही</string>
   <!--suppress UnusedResources -->
   <string name="registrationloader_retry">पुन्‍हा प्रयत्‍न करा</string>
 
@@ -414,7 +414,7 @@
 
   <!-- Simple video -->
   <string name="simple_video_watch_video">व्हिडिओ पहा</string>
-  <string name="simple_video_how_to_use_the_simple_app">सिंपल अॅप कसे पाहायचे</string>
+  <string name="simple_video_how_to_use_the_simple_app">सिंपल ॲप कसे वापरावे</string>
   <string name="simple_video_duration">%s मिनिटे</string>
 
   <!-- Settings -->
@@ -444,7 +444,7 @@
   <string name="selectcountry_logo_contentdescription">सिंपल लोगो</string>
   <string name="selectcountry_next">पुढील</string>
   <string name="selectcountry_title">तुमचा देश निवडा</string>
-  <string name="selectcountry_networkerror">कोणतेही इंटरनेट कनेक्‍शन नाही!</string>
+  <string name="selectcountry_networkerror">इंटरनेट कनेक्‍शन नाही!</string>
   <string name="selectcountry_servererror">सर्व्‍हर त्रुटी! कृपया पुन्‍हा प्रयत्‍न करा!</string>
   <string name="selectcountry_genericerror">काहीतरी चुकले! कृपया पुन्‍हा प्रयत्‍न करा!</string>
   <string name="selectcountry_retry">पुन्‍हा प्रयत्‍न करा</string>
@@ -479,19 +479,19 @@
 
   <!-- Confirm remove blood sugar dialog -->
   <string name="bloodsugarentry_remove_blood_sugar_title">ब्‍लड शूगर काढा</string>
-  <string name="bloodsugarentry_remove_blood_sugar_message">तुम्‍ही ही रक्‍तदाब रेकॉर्डिंग काढू इच्छित असल्‍याची आपल्‍याला खात्री आहे?</string>
+  <string name="bloodsugarentry_remove_blood_sugar_message">तुम्हाला हे रक्तातील साखरेचे रेकॉर्डिंग काढून टाकायचे आहे का?</string>
   <string name="bloodsugarentry_remove_blood_sugar_confirm">काढून टाका</string>
   <string name="bloodsugarentry_remove_blood_sugar_cancel">रद्द करा</string>
 
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_no_blood_sugars">कोणतीही ब्‍लड शुगर जोडलेले नाही</string>
-  <string name="bloodsugarsummaryview_add_blood_sugar_button">डायबिटिस</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">मधुमेह</string>
   <!-- Blood Pressure History screen -->
   <string name="bloodpressurehistory_add_bp_button">रक्‍तदाब</string>
   <string name="bloodpressurehistory_toolbar_title">%1$s, %2$s, %3$s</string>
 
   <!-- Blood Sugar History screen -->
-  <string name="bloodsugarhistory_add_blood_sugar_button">डायबिटिस</string>
+  <string name="bloodsugarhistory_add_blood_sugar_button">मधुमेह</string>
   <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
 
   <!-- Summary CV History view -->
@@ -503,7 +503,7 @@
 
   <!-- Access Denied screen -->
   <string name="accessdeniedscreen_title_access_denied">प्रवेश नाकारला</string>
-  <string name="accessdeniedscreen_description">साधा प्रवेश नाकारला आहे. ही एक त्रुटी असल्याचे आपल्याला वाटत असल्यास कृपया आपल्या पर्यवेक्षकाशी संपर्क साधा.\n\nआपला प्रवेश पुनर्संचयित झाला असल्यास, साधे विस्थापित करा आणि प्ले स्टोअर वरून स्थापित करा.</string>
+  <string name="accessdeniedscreen_description">प्रवेश नाकारला आहे. ही एक त्रुटी असल्याचे आपल्याला वाटत असल्यास कृपया आपल्या पर्यवेक्षकाशी संपर्क साधा.\n\nआपला प्रवेश पुनर्संचयित झाला असल्यास, साधे विस्थापित करा आणि प्ले स्टोअर वरून स्थापित करा.</string>
 
   <!-- Confirm Facility change sheet -->
   <string name="confirmfacilitychange_title">मध्ये सुविधा बदला</string>
@@ -553,7 +553,7 @@
   <string name="contactpatient_patient_is_not_responding">रूग्ण प्रतिसाद देत नाही</string>
   <string name="contactpatient_invalid_phone_number">फोन नंबर काम करत नाही</string>
   <string name="contactpatient_public_hospital_transfer">अन्‍य सार्वजनिक आरोग्‍य सुविधेत ट्रांसफर केले</string>
-  <string name="contactpatient_moved_to_private">खाजगी सरावकर्त्‍याकडे हलवले</string>
+  <string name="contactpatient_moved_to_private">खासगी डॉक्टरांकडे गेले</string>
   <string name="contactpatient_patient_died">मृत झाले</string>
   <string name="contactpatient_other_reason">इतर कारण</string>
 
@@ -583,7 +583,7 @@
   <string name="contactdoctor_subtitle">%1$s यांना नियुक्त</string>
 
   <!-- Intro Video Screen -->
-  <string name="screenintrovideo_how_to_use_simple_app">सिंपल अॅप कसे वापरायचे</string>
+  <string name="screenintrovideo_how_to_use_simple_app">सिंपल ॲप कसे वापरायचे</string>
   <string name="screenintrovideo_watch_video">व्हिडिओ पहा</string>
   <string name="screenintrovideo_skip">वगळा</string>
 </resources>

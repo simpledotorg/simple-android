@@ -9,10 +9,6 @@ data class RegistrationFacilityClicked(val facility: Facility) : UiEvent {
   override val analyticsName = "Registration:Facility Selection:Done Clicked"
 }
 
-data class RegistrationFacilitySearchQueryChanged(val query: String) : UiEvent {
-  override val analyticsName = "Registration:Facility Selection:Search Query Changed"
-}
-
 data class RegistrationFacilityUserLocationUpdated(val location: LocationUpdate) : UiEvent {
   override val analyticsName = "Registration:Facility Selection:Location Updated ${when (location) {
     is LocationUpdate.Unavailable -> "TurnedOff"

@@ -20,9 +20,6 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
-import org.simple.clinic.facility.change.FacilityListItem.FacilityOption
-import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Address
-import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name
 import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.location.DistanceCalculator
@@ -129,10 +126,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(searchQuery))
 
     // then
-    val expectedFacilityListItems = listOf(
-        FacilityOption(phcObvious, Name.Plain("PHC Obvious"), address = Address.WithoutStreet(district = "Bangalore Central", state = "Karnataka")),
-        FacilityOption(chcNilenso, Name.Plain("CHC Nilenso"), address = Address.WithStreet(street = "10th Cross Road", district = "Indiranagar", state = "Karnataka"))
-    )
+    val expectedFacilityListItems = listItemBuilder.build(facilities, searchQuery, null, registrationConfig.proximityThresholdForNearbyFacilities)
     verify(ui).showProgressIndicator()
     verify(ui).hideProgressIndicator()
     verify(ui).showToolbarWithSearchField()
@@ -159,10 +153,10 @@ class RegistrationFacilitySelectionScreenControllerTest {
     verify(ui).showProgressIndicator()
     verify(ui).hideProgressIndicator()
     verify(ui).showToolbarWithSearchField()
-    verify(ui).updateFacilities(listOf(
-        FacilityOption(phcObvious, Name.Highlighted("PHC Obvious", 1, 3), address = Address.WithStreet(street = "Richmond Road", district = "Bangalore Central", state = "Karnataka")),
-        FacilityOption(chcNilenso, Name.Highlighted("CHC Nilenso", 1, 3), address = Address.WithoutStreet(district = "Indiranagar", state = "Karnataka"))
-    ), FIRST_UPDATE)
+    verify(ui).updateFacilities(
+        facilityItems = listItemBuilder.build(listOf(phcObvious, chcNilenso), "HC", null, registrationConfig.proximityThresholdForNearbyFacilities),
+        updateType = FIRST_UPDATE
+    )
     verifyNoMoreInteractions(ui)
 
     // when
@@ -170,9 +164,10 @@ class RegistrationFacilitySelectionScreenControllerTest {
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "PHC"))
 
     // then
-    verify(ui).updateFacilities(listOf(
-        FacilityOption(phcObvious, Name.Highlighted("PHC Obvious", 0, 3), address = Address.WithStreet(street = "Richmond Road", district = "Bangalore Central", state = "Karnataka"))
-    ), SUBSEQUENT_UPDATE)
+    verify(ui).updateFacilities(
+        facilityItems = listItemBuilder.build(listOf(phcObvious), "PHC", null, registrationConfig.proximityThresholdForNearbyFacilities),
+        updateType = SUBSEQUENT_UPDATE
+    )
     verifyNoMoreInteractions(ui)
 
     // when
@@ -180,9 +175,10 @@ class RegistrationFacilitySelectionScreenControllerTest {
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "CHC"))
 
     // then
-    verify(ui).updateFacilities(listOf(
-        FacilityOption(chcNilenso, Name.Highlighted("CHC Nilenso", 0, 3), address = Address.WithoutStreet(district = "Indiranagar", state = "Karnataka"))
-    ), SUBSEQUENT_UPDATE)
+    verify(ui).updateFacilities(
+        facilityItems = listItemBuilder.build(listOf(chcNilenso), "CHC", null, registrationConfig.proximityThresholdForNearbyFacilities),
+        updateType = SUBSEQUENT_UPDATE
+    )
     verifyNoMoreInteractions(ui)
   }
 
@@ -200,13 +196,10 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     // when
     setupController(locationUpdate = Observable.just(location))
-    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(""))
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(searchQuery))
 
     // then
-    val expectedFacilityListItems = listOf(
-        FacilityOption(phcObvious, Name.Plain("PHC Obvious"), address = Address.WithStreet(street = "Richmond Road", district = "Bangalore Central", state = "Karnataka")),
-        FacilityOption(chcNilenso, Name.Plain("CHC Nilenso"), address = Address.WithoutStreet(district = "Indiranagar", state = "Karnataka"))
-    )
+    val expectedFacilityListItems = listItemBuilder.build(facilities, searchQuery, null, registrationConfig.proximityThresholdForNearbyFacilities)
     verify(ui).showProgressIndicator()
     verify(ui).hideProgressIndicator()
     verify(ui).showToolbarWithSearchField()

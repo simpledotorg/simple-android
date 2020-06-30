@@ -23,7 +23,6 @@ import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItem
-import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.introvideoscreen.IntroVideoScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.RegistrationConfig
@@ -57,7 +56,7 @@ class RegistrationFacilitySelectionScreen(
   lateinit var config: RegistrationConfig
 
   @Inject
-  lateinit var facilityListItemBuilder: FacilityListItemBuilder
+  lateinit var uiRendererFactory: RegistrationFacilitySelectionUiRenderer.Factory
 
   private val recyclerViewAdapter = FacilitiesAdapter()
 
@@ -73,7 +72,7 @@ class RegistrationFacilitySelectionScreen(
   }
 
   private val delegate by unsafeLazy {
-    val uiRenderer = RegistrationFacilitySelectionUiRenderer(this, facilityListItemBuilder, config)
+    val uiRenderer = uiRendererFactory.create(this)
     val screenKey = screenRouter.key<RegistrationFacilitySelectionScreenKey>(this)
 
     MobiusDelegate.forView(

@@ -90,8 +90,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
         timeout = registrationConfig.locationListenerExpiry,
         discardOlderThan = registrationConfig.staleLocationThreshold
     )
-    verify(ui, times(2)).showProgressIndicator()
-    verify(ui).showToolbarWithoutSearchField()
+    verify(ui, times(3)).showProgressIndicator()
+    verify(ui, times(2)).showToolbarWithoutSearchField()
     verifyNoMoreInteractions(ui)
   }
 
@@ -107,7 +107,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     // then
     val inOrder = inOrder(ui)
-    inOrder.verify(ui, times(2)).showProgressIndicator()
+    inOrder.verify(ui, times(3)).showProgressIndicator()
     inOrder.verify(ui).hideProgressIndicator()
     inOrder.verify(ui).updateFacilities(emptyList(), FIRST_UPDATE)
     inOrder.verify(ui).showToolbarWithoutSearchField()
@@ -132,9 +132,9 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     // then
     val expectedFacilityListItems = listItemBuilder.build(facilities, searchQuery, null, registrationConfig.proximityThresholdForNearbyFacilities)
-    verify(ui, times(2)).showProgressIndicator()
+    verify(ui, times(3)).showProgressIndicator()
     verify(ui, times(2)).hideProgressIndicator()
-    verify(ui).showToolbarWithSearchField()
+    verify(ui, times(3)).showToolbarWithSearchField()
     verify(ui).updateFacilities(expectedFacilityListItems, FIRST_UPDATE)
     verify(ui).updateFacilities(expectedFacilityListItems, SUBSEQUENT_UPDATE)
     verifyNoMoreInteractions(ui)
@@ -157,9 +157,9 @@ class RegistrationFacilitySelectionScreenControllerTest {
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "HC"))
 
     // then
-    verify(ui, times(2)).showProgressIndicator()
+    verify(ui, times(3)).showProgressIndicator()
     verify(ui, times(2)).hideProgressIndicator()
-    verify(ui).showToolbarWithSearchField()
+    verify(ui, times(3)).showToolbarWithSearchField()
     verify(ui).updateFacilities(
         facilityItems = listItemBuilder.build(listOf(phcObvious, chcNilenso), "", null, registrationConfig.proximityThresholdForNearbyFacilities),
         updateType = FIRST_UPDATE
@@ -176,6 +176,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     // then
     verify(ui).hideProgressIndicator()
+    verify(ui).showToolbarWithSearchField()
     verify(ui).updateFacilities(
         facilityItems = listItemBuilder.build(listOf(phcObvious), "PHC", null, registrationConfig.proximityThresholdForNearbyFacilities),
         updateType = SUBSEQUENT_UPDATE
@@ -188,6 +189,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     // then
     verify(ui).hideProgressIndicator()
+    verify(ui).showToolbarWithSearchField()
     verify(ui).updateFacilities(
         facilityItems = listItemBuilder.build(listOf(chcNilenso), "CHC", null, registrationConfig.proximityThresholdForNearbyFacilities),
         updateType = SUBSEQUENT_UPDATE
@@ -213,9 +215,9 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     // then
     val expectedFacilityListItems = listItemBuilder.build(facilities, searchQuery, null, registrationConfig.proximityThresholdForNearbyFacilities)
-    verify(ui, times(2)).showProgressIndicator()
+    verify(ui, times(3)).showProgressIndicator()
     verify(ui, times(4)).hideProgressIndicator()
-    verify(ui).showToolbarWithSearchField()
+    verify(ui, times(5)).showToolbarWithSearchField()
     verify(ui).updateFacilities(expectedFacilityListItems, FIRST_UPDATE)
     verify(ui, times(3)).updateFacilities(expectedFacilityListItems, SUBSEQUENT_UPDATE)
     verifyNoMoreInteractions(ui)
@@ -242,9 +244,9 @@ class RegistrationFacilitySelectionScreenControllerTest {
     uiEvents.onNext(RegistrationFacilityClicked(facility1))
 
     // then
-    verify(ui, times(2)).showProgressIndicator()
+    verify(ui, times(3)).showProgressIndicator()
     verify(ui).hideProgressIndicator()
-    verify(ui).showToolbarWithSearchField()
+    verify(ui, times(2)).showToolbarWithSearchField()
     verify(ui).showConfirmFacilitySheet(facility1.uuid, facility1.name)
     verify(ui).updateFacilities(
         facilityItems = listItemBuilder.build(listOf(facility1), "", null, registrationConfig.proximityThresholdForNearbyFacilities),
@@ -273,9 +275,9 @@ class RegistrationFacilitySelectionScreenControllerTest {
     uiEvents.onNext(RegistrationFacilityConfirmed(facility1.uuid))
 
     // then
-    verify(ui, times(2)).showProgressIndicator()
+    verify(ui, times(3)).showProgressIndicator()
     verify(ui).hideProgressIndicator()
-    verify(ui).showToolbarWithSearchField()
+    verify(ui, times(2)).showToolbarWithSearchField()
     verify(ui).openIntroVideoScreen()
     verify(ui).updateFacilities(
         facilityItems = listItemBuilder.build(listOf(facility1), "", null, registrationConfig.proximityThresholdForNearbyFacilities),
@@ -290,19 +292,17 @@ class RegistrationFacilitySelectionScreenControllerTest {
   fun `search field should only be shown when facilities are available`() {
     // given
     whenever(facilityRepository.facilities("")).thenReturn(Observable.just(emptyList()))
-    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0, 10))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(10))
 
     // when
     setupController()
 
     // then
-    val inOrder = inOrder(ui)
-    inOrder.verify(ui, times(2)).showProgressIndicator()
-    inOrder.verify(ui).hideProgressIndicator()
-    inOrder.verify(ui).updateFacilities(emptyList(), FIRST_UPDATE)
-    inOrder.verify(ui).showToolbarWithoutSearchField()
-    inOrder.verify(ui).showToolbarWithSearchField()
-    inOrder.verifyNoMoreInteractions()
+    verify(ui, times(3)).showProgressIndicator()
+    verify(ui, times(2)).showToolbarWithSearchField()
+    verify(ui).hideProgressIndicator()
+    verify(ui).updateFacilities(emptyList(), FIRST_UPDATE)
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController(

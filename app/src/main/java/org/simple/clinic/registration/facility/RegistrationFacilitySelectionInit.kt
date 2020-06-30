@@ -33,6 +33,10 @@ class RegistrationFacilitySelectionInit(
       ))
     }
 
+    if (!model.hasLoadedTotalFacilityCount) {
+      effects.add(LoadTotalFacilityCount)
+    }
+
     effects.add(LoadFacilitiesWithQuery(model.searchQuery))
 
     return first(model, effects)

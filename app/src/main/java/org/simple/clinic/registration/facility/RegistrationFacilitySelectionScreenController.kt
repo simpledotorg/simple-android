@@ -11,7 +11,6 @@ import org.simple.clinic.location.ScreenLocationUpdates
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import javax.inject.Inject
@@ -33,25 +32,9 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        toggleSearchFieldInToolbar(replayedEvents),
         proceedOnFacilityClicks(replayedEvents),
         proceedOnFacilityConfirmation(replayedEvents)
     )
-  }
-
-  private fun toggleSearchFieldInToolbar(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ScreenCreated>()
-        .flatMap { facilityRepository.recordCount() }
-        .map { count -> count > 0 }
-        .distinctUntilChanged()
-        .map { hasFacilities ->
-          if (hasFacilities) {
-            { ui: Ui -> ui.showToolbarWithSearchField() }
-          } else {
-            { ui: Ui -> ui.showToolbarWithoutSearchField() }
-          }
-        }
   }
 
   private fun proceedOnFacilityClicks(events: Observable<UiEvent>): Observable<UiChange> {

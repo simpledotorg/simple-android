@@ -11,3 +11,5 @@ data class FetchCurrentLocation(
 ): RegistrationFacilitySelectionEffect()
 
 data class LoadFacilitiesWithQuery(val query: String) : RegistrationFacilitySelectionEffect()
+
+object LoadTotalFacilityCount: RegistrationFacilitySelectionEffect()

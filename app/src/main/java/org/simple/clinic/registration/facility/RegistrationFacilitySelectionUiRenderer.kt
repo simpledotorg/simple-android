@@ -23,6 +23,14 @@ class RegistrationFacilitySelectionUiRenderer(
     } else {
       ui.showProgressIndicator()
     }
+
+    if (model.hasLoadedTotalFacilityCount) {
+      if (model.totalFacilityCount!! > 0) {
+        ui.showToolbarWithSearchField()
+      } else {
+        ui.showToolbarWithoutSearchField()
+      }
+    }
   }
 
   private fun renderFacilities(model: RegistrationFacilitySelectionModel) {

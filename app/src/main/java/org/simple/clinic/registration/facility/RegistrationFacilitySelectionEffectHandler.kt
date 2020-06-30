@@ -25,6 +25,7 @@ class RegistrationFacilitySelectionEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<RegistrationFacilitySelectionEffect, RegistrationFacilitySelectionEvent>()
         .addTransformer(FetchCurrentLocation::class.java, fetchLocation())
         .addTransformer(LoadFacilitiesWithQuery::class.java, loadFacilitiesWithQuery())
+        .addTransformer(LoadTotalFacilityCount::class.java, loadTotalCountOfFacilities())
         .build()
   }
 
@@ -52,6 +53,19 @@ class RegistrationFacilitySelectionEffectHandler @AssistedInject constructor(
                 .facilities(searchQuery = effect.query)
                 .subscribeOn(schedulersProvider.io())
                 .map { FacilitiesFetched(query = effect.query, facilities = it) }
+          }
+    }
+  }
+
+  private fun loadTotalCountOfFacilities(): ObservableTransformer<LoadTotalFacilityCount, RegistrationFacilitySelectionEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMap {
+            facilityRepository
+                .recordCount()
+                .subscribeOn(schedulersProvider.io())
+                .take(1)
+                .map(::TotalFacilityCountLoaded)
           }
     }
   }

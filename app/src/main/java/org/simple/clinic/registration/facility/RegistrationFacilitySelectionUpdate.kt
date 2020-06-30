@@ -16,6 +16,7 @@ class RegistrationFacilitySelectionUpdate: Update<RegistrationFacilitySelectionM
       is LocationFetched -> next(model.locationFetched(event.update))
       is FacilitiesFetched -> next(model.queryChanged(event.query).facilitiesLoaded(event.facilities))
       is RegistrationFacilitySearchQueryChanged -> dispatch(LoadFacilitiesWithQuery(event.query))
+      is TotalFacilityCountLoaded -> next(model.facilityCountLoaded(event.count))
     }
   }
 }

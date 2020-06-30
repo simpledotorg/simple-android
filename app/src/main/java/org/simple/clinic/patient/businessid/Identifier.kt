@@ -12,6 +12,7 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
@@ -37,6 +38,7 @@ data class Identifier(
         "$prefix${Unicode.nonBreakingSpace}$suffix"
       }
       BangladeshNationalId -> value
+      EthiopiaMedicalRecordNumber -> value
       is Unknown -> value
     }
   }
@@ -45,6 +47,7 @@ data class Identifier(
     return when (type) {
       BpPassport -> resources.getString(R.string.identifiertype_bp_passport)
       BangladeshNationalId -> resources.getString(R.string.identifiertype_bangladesh_national_id)
+      EthiopiaMedicalRecordNumber -> resources.getString(R.string.identifiertype_ethiopia_medical_record_number)
       is Unknown -> resources.getString(R.string.identifiertype_unknown)
     }
   }
@@ -70,12 +73,16 @@ data class Identifier(
     object BangladeshNationalId : IdentifierType()
 
     @Parcelize
+    object EthiopiaMedicalRecordNumber : IdentifierType()
+
+    @Parcelize
     data class Unknown(val actual: String) : IdentifierType()
 
     object TypeAdapter : SafeEnumTypeAdapter<IdentifierType>(
         knownMappings = mapOf(
             BpPassport to "simple_bp_passport",
-            BangladeshNationalId to "bangladesh_national_id"
+            BangladeshNationalId to "bangladesh_national_id",
+            EthiopiaMedicalRecordNumber to "ethiopia_medical_record"
         ),
         unknownStringToEnumConverter = { Unknown(it) },
         unknownEnumToStringConverter = { (it as Unknown).actual }

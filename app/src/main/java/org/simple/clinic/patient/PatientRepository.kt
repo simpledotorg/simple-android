@@ -23,6 +23,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.sync.PatientPayload
@@ -548,6 +549,7 @@ class PatientRepository @Inject constructor(
     return when (identifierType) {
       BpPassport -> createBpPassportMetaData(assigningUser)
       BangladeshNationalId -> createBangladeshNationalIdMetadata(assigningUser)
+      EthiopiaMedicalRecordNumber -> TODO()
       is Unknown -> Single.error<BusinessIdMetaAndVersion>(IllegalArgumentException("Cannot create meta for identifier of type: $identifierType"))
     }
   }

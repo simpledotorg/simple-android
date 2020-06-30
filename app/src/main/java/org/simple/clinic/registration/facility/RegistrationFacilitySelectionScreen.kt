@@ -42,7 +42,7 @@ import javax.inject.Inject
 class RegistrationFacilitySelectionScreen(
     context: Context,
     attrs: AttributeSet
-) : RelativeLayout(context, attrs), RegistrationFacilitySelectionUi {
+) : RelativeLayout(context, attrs), RegistrationFacilitySelectionUi, RegistrationFacilitySelectionUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

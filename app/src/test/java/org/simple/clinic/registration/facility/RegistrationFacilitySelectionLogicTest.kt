@@ -46,6 +46,7 @@ class RegistrationFacilitySelectionLogicTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<RegistrationFacilitySelectionUi>()
+  private val uiActions = mock<RegistrationFacilitySelectionUiActions>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
   private val currentTime = Instant.parse("2018-01-01T00:00:00Z")
@@ -249,12 +250,12 @@ class RegistrationFacilitySelectionLogicTest {
     verify(ui, times(3)).showProgressIndicator()
     verify(ui).hideProgressIndicator()
     verify(ui, times(2)).showToolbarWithSearchField()
-    verify(ui).showConfirmFacilitySheet(facility1.uuid, facility1.name)
     verify(ui).updateFacilities(
         facilityItems = listItemBuilder.build(listOf(facility1), "", null, registrationConfig.proximityThresholdForNearbyFacilities),
         updateType = FIRST_UPDATE
     )
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showConfirmFacilitySheet(facility1.uuid, facility1.name)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -275,12 +276,12 @@ class RegistrationFacilitySelectionLogicTest {
     verify(ui, times(3)).showProgressIndicator()
     verify(ui).hideProgressIndicator()
     verify(ui, times(2)).showToolbarWithSearchField()
-    verify(ui).openIntroVideoScreen()
     verify(ui).updateFacilities(
         facilityItems = listItemBuilder.build(listOf(facility1), "", null, registrationConfig.proximityThresholdForNearbyFacilities),
         updateType = FIRST_UPDATE
     )
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openIntroVideoScreen()
+    verifyNoMoreInteractions(uiActions)
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityId = facility1.uuid))
     verify(userSession).saveOngoingRegistrationEntryAsUser(currentTime)
   }
@@ -319,7 +320,7 @@ class RegistrationFacilitySelectionLogicTest {
         facilityRepository = facilityRepository,
         userSession = userSession,
         utcClock = utcClock,
-        uiActions = ui
+        uiActions = uiActions
     )
     val uiRenderer = RegistrationFacilitySelectionUiRenderer(ui, listItemBuilder, config)
 

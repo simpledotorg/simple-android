@@ -25,4 +25,13 @@ sealed class BusinessIdMetaData {
       @Json(name = "assigning_facility_id")
       val assigningFacilityUuid: UUID
   ) : BusinessIdMetaData()
+
+  @JsonClass(generateAdapter = true)
+  data class MedicalRecordNumberMetaDataV1(
+      @Json(name = "assigning_user_id")
+      val assigningUserUuid: UUID,
+
+      @Json(name = "assigning_facility_id")
+      val assigningFacilityUuid: UUID
+  ) : BusinessIdMetaData()
 }

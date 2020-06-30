@@ -18,7 +18,6 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_facility_selection.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
@@ -34,8 +33,6 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
@@ -46,9 +43,6 @@ class RegistrationFacilitySelectionScreen(
     context: Context,
     attrs: AttributeSet
 ) : RelativeLayout(context, attrs), RegistrationFacilitySelectionUi {
-
-  @Inject
-  lateinit var controller: RegistrationFacilitySelectionScreenController
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -67,17 +61,12 @@ class RegistrationFacilitySelectionScreen(
 
   private val recyclerViewAdapter = FacilitiesAdapter()
 
-  private val screenDestroys: Observable<ScreenDestroyed> = detaches()
-      .map { ScreenDestroyed() }
-      .share()
-
   private val events by unsafeLazy {
     Observable
         .mergeArray(
-            screenCreates(),
             searchQueryChanges(),
             facilityClicks(),
-            registrationFacilityConfirmations(screenDestroys)
+            registrationFacilityConfirmations()
         )
         .compose(ReportAnalyticsEvents())
         .share()
@@ -106,13 +95,6 @@ class RegistrationFacilitySelectionScreen(
 
     context.injector<Injector>().inject(this)
 
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = screenDestroys
-    )
-
     toolbarViewWithSearch.setNavigationOnClickListener {
       screenRouter.pop()
     }
@@ -127,7 +109,7 @@ class RegistrationFacilitySelectionScreen(
 
     // Hiding the keyboard without adding a post{} block doesn't seem to work.
     post { hideKeyboard() }
-    hideKeyboardOnListScroll(screenDestroys)
+    hideKeyboardOnListScroll()
   }
 
   override fun onAttachedToWindow() {
@@ -148,8 +130,6 @@ class RegistrationFacilitySelectionScreen(
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
-  private fun screenCreates() = Observable.just(ScreenCreated())
-
   private fun searchQueryChanges() =
       searchEditText
           .textChanges()
@@ -160,11 +140,10 @@ class RegistrationFacilitySelectionScreen(
           .facilityClicks
           .map(::RegistrationFacilityClicked)
 
-  private fun registrationFacilityConfirmations(onScreenDestroyed: Observable<ScreenDestroyed>): Observable<UiEvent> {
+  private fun registrationFacilityConfirmations(): Observable<UiEvent> {
     return screenRouter
         .streamScreenResults()
         .ofType<ActivityResult>()
-        .takeUntil(onScreenDestroyed)
         .extractSuccessful(CONFIRM_FACILITY_SHEET) { intent ->
           val confirmedFacilityUuid = ConfirmFacilitySheet.confirmedFacilityUuid(intent)
           RegistrationFacilityConfirmed(confirmedFacilityUuid)
@@ -172,14 +151,14 @@ class RegistrationFacilitySelectionScreen(
   }
 
   @SuppressLint("CheckResult")
-  private fun hideKeyboardOnListScroll(onScreenDestroyed: Observable<ScreenDestroyed>) {
+  private fun hideKeyboardOnListScroll() {
     val scrollEvents = RxRecyclerView.scrollEvents(facilityRecyclerView)
     val scrollStateChanges = RxRecyclerView.scrollStateChanges(facilityRecyclerView)
 
     Observables.combineLatest(scrollEvents, scrollStateChanges)
         .compose(RecyclerViewUserScrollDetector.streamDetections())
         .filter { it.byUser }
-        .takeUntil(onScreenDestroyed)
+        .takeUntil(detaches())
         .subscribe {
           hideKeyboard()
         }

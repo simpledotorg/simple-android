@@ -18,6 +18,7 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion
 import org.simple.clinic.patient.businessid.BusinessIdMetaData.BangladeshNationalIdMetaDataV1
 import org.simple.clinic.patient.businessid.BusinessIdMetaData.BpPassportMetaDataV1
+import org.simple.clinic.patient.businessid.BusinessIdMetaData.MedicalRecordNumberMetaDataV1
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
@@ -549,9 +550,15 @@ class PatientRepository @Inject constructor(
     return when (identifierType) {
       BpPassport -> createBpPassportMetaData(assigningUser)
       BangladeshNationalId -> createBangladeshNationalIdMetadata(assigningUser)
-      EthiopiaMedicalRecordNumber -> TODO()
+      EthiopiaMedicalRecordNumber -> createEthiopiaMedicalRecordNumberMetadata(assigningUser)
       is Unknown -> Single.error<BusinessIdMetaAndVersion>(IllegalArgumentException("Cannot create meta for identifier of type: $identifierType"))
     }
+  }
+
+  private fun createEthiopiaMedicalRecordNumberMetadata(assigningUser: User): Single<BusinessIdMetaAndVersion> {
+    return Single.just(MedicalRecordNumberMetaDataV1(assigningUserUuid = assigningUser.uuid, assigningFacilityUuid = assigningUser.currentFacilityUuid))
+        .map { businessIdMetaDataAdapter.serialize(it, MetaDataVersion.MedicalRecordNumberMetaDataV1) to MetaDataVersion.MedicalRecordNumberMetaDataV1 }
+        .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
   }
 
   private fun createBpPassportMetaData(assigningUser: User): Single<BusinessIdMetaAndVersion> {

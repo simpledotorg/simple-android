@@ -2,6 +2,7 @@ package org.simple.clinic.registration.facility
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 
@@ -17,6 +18,7 @@ class RegistrationFacilitySelectionUpdate: Update<RegistrationFacilitySelectionM
       is RegistrationFacilitySearchQueryChanged -> dispatch(LoadFacilitiesWithQuery(event.query))
       is TotalFacilityCountLoaded -> next(model.facilityCountLoaded(event.count))
       is RegistrationFacilityClicked -> dispatch(OpenConfirmFacilitySheet(event.facility))
+      is CurrentRegistrationEntrySaved -> noChange()
     }
   }
 }

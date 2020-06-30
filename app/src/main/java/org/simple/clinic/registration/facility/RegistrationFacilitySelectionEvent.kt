@@ -19,3 +19,5 @@ data class TotalFacilityCountLoaded(val count: Int) : RegistrationFacilitySelect
 data class RegistrationFacilityClicked(val facility: Facility) : RegistrationFacilitySelectionEvent() {
   override val analyticsName = "Registration:Facility Selection:Done Clicked"
 }
+
+object CurrentRegistrationEntrySaved: RegistrationFacilitySelectionEvent()

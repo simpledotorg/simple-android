@@ -334,6 +334,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
         schedulersProvider = TestSchedulersProvider.trampoline(),
         screenLocationUpdates = screenLocationUpdates,
         facilityRepository = facilityRepository,
+        userSession = userSession,
+        utcClock = utcClock,
         uiActions = ui
     )
     val uiRenderer = RegistrationFacilitySelectionUiRenderer(ui, listItemBuilder, config)

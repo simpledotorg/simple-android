@@ -9,7 +9,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -34,14 +33,13 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.time.Duration
 import java.time.Instant
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class RegistrationFacilitySelectionScreenControllerTest {
+class RegistrationFacilitySelectionLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -61,7 +59,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
       pin = "1234"
   )
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<RegistrationFacilitySelectionModel, RegistrationFacilitySelectionEvent, RegistrationFacilitySelectionEffect>
 
   private val registrationConfig = RegistrationConfig(
@@ -73,7 +70,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -317,19 +313,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
         discardOlderThan = config.staleLocationThreshold
     )).thenReturn(locationUpdate)
 
-    val controller = RegistrationFacilitySelectionScreenController(
-        facilityRepository = facilityRepository,
-        userSession = userSession,
-        config = config,
-        listItemBuilder = listItemBuilder,
-        screenLocationUpdates = screenLocationUpdates,
-        utcClock = utcClock
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
     val effectHandler = RegistrationFacilitySelectionEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
         screenLocationUpdates = screenLocationUpdates,
@@ -349,7 +332,5 @@ class RegistrationFacilitySelectionScreenControllerTest {
         modelUpdateListener = uiRenderer::render
     )
     testFixture.start()
-
-    uiEvents.onNext(ScreenCreated())
   }
 }

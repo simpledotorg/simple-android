@@ -75,7 +75,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
   fun `when screen is started, location should be fetched`() {
     // given
     val locationUpdateInterval = Duration.ofDays(5)
-    whenever(facilityRepository.recordCount()).thenReturn(Observable.never())
+    whenever(facilityRepository.facilities("")).thenReturn(Observable.just(emptyList()))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0))
 
     // when
     setupController(
@@ -84,12 +85,13 @@ class RegistrationFacilitySelectionScreenControllerTest {
     )
 
     // then
-    verify(screenLocationUpdates, times(2)).streamUserLocation(
+    verify(screenLocationUpdates).streamUserLocation(
         updateInterval = locationUpdateInterval,
         timeout = registrationConfig.locationListenerExpiry,
         discardOlderThan = registrationConfig.staleLocationThreshold
     )
-    verify(ui).showProgressIndicator()
+    verify(ui, times(2)).showProgressIndicator()
+    verify(ui).showToolbarWithoutSearchField()
     verifyNoMoreInteractions(ui)
   }
 
@@ -105,8 +107,10 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     // then
     val inOrder = inOrder(ui)
-    inOrder.verify(ui).showProgressIndicator()
+    inOrder.verify(ui, times(2)).showProgressIndicator()
     inOrder.verify(ui).hideProgressIndicator()
+    inOrder.verify(ui).updateFacilities(emptyList(), FIRST_UPDATE)
+    inOrder.verify(ui).showToolbarWithoutSearchField()
     inOrder.verifyNoMoreInteractions()
   }
 
@@ -118,6 +122,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val facilities = listOf(phcObvious, chcNilenso)
     val searchQuery = "f"
 
+    whenever(facilityRepository.facilities("")).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.facilities(searchQuery)).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
 
@@ -127,10 +132,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     // then
     val expectedFacilityListItems = listItemBuilder.build(facilities, searchQuery, null, registrationConfig.proximityThresholdForNearbyFacilities)
-    verify(ui).showProgressIndicator()
-    verify(ui).hideProgressIndicator()
+    verify(ui, times(2)).showProgressIndicator()
+    verify(ui, times(2)).hideProgressIndicator()
     verify(ui).showToolbarWithSearchField()
     verify(ui).updateFacilities(expectedFacilityListItems, FIRST_UPDATE)
+    verify(ui).updateFacilities(expectedFacilityListItems, SUBSEQUENT_UPDATE)
     verifyNoMoreInteractions(ui)
   }
 
@@ -140,6 +146,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val phcObvious = TestData.facility(name = "PHC Obvious", streetAddress = "Richmond Road", district = "Bangalore Central", state = "Karnataka")
     val chcNilenso = TestData.facility(name = "CHC Nilenso", district = "Indiranagar", state = "Karnataka")
 
+    whenever(facilityRepository.facilities("")).thenReturn(Observable.just(listOf(phcObvious, chcNilenso)))
     whenever(facilityRepository.facilities("HC")).thenReturn(Observable.just(listOf(phcObvious, chcNilenso)))
     whenever(facilityRepository.facilities("PHC")).thenReturn(Observable.just(listOf(phcObvious)))
     whenever(facilityRepository.facilities("CHC")).thenReturn(Observable.just(listOf(chcNilenso)))
@@ -150,12 +157,16 @@ class RegistrationFacilitySelectionScreenControllerTest {
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "HC"))
 
     // then
-    verify(ui).showProgressIndicator()
-    verify(ui).hideProgressIndicator()
+    verify(ui, times(2)).showProgressIndicator()
+    verify(ui, times(2)).hideProgressIndicator()
     verify(ui).showToolbarWithSearchField()
     verify(ui).updateFacilities(
-        facilityItems = listItemBuilder.build(listOf(phcObvious, chcNilenso), "HC", null, registrationConfig.proximityThresholdForNearbyFacilities),
+        facilityItems = listItemBuilder.build(listOf(phcObvious, chcNilenso), "", null, registrationConfig.proximityThresholdForNearbyFacilities),
         updateType = FIRST_UPDATE
+    )
+    verify(ui).updateFacilities(
+        facilityItems = listItemBuilder.build(listOf(phcObvious, chcNilenso), "HC", null, registrationConfig.proximityThresholdForNearbyFacilities),
+        updateType = SUBSEQUENT_UPDATE
     )
     verifyNoMoreInteractions(ui)
 
@@ -164,6 +175,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "PHC"))
 
     // then
+    verify(ui).hideProgressIndicator()
     verify(ui).updateFacilities(
         facilityItems = listItemBuilder.build(listOf(phcObvious), "PHC", null, registrationConfig.proximityThresholdForNearbyFacilities),
         updateType = SUBSEQUENT_UPDATE
@@ -175,6 +187,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "CHC"))
 
     // then
+    verify(ui).hideProgressIndicator()
     verify(ui).updateFacilities(
         facilityItems = listItemBuilder.build(listOf(chcNilenso), "CHC", null, registrationConfig.proximityThresholdForNearbyFacilities),
         updateType = SUBSEQUENT_UPDATE
@@ -200,11 +213,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     // then
     val expectedFacilityListItems = listItemBuilder.build(facilities, searchQuery, null, registrationConfig.proximityThresholdForNearbyFacilities)
-    verify(ui).showProgressIndicator()
-    verify(ui).hideProgressIndicator()
+    verify(ui, times(2)).showProgressIndicator()
+    verify(ui, times(4)).hideProgressIndicator()
     verify(ui).showToolbarWithSearchField()
     verify(ui).updateFacilities(expectedFacilityListItems, FIRST_UPDATE)
-    verify(ui).updateFacilities(expectedFacilityListItems, SUBSEQUENT_UPDATE)
+    verify(ui, times(3)).updateFacilities(expectedFacilityListItems, SUBSEQUENT_UPDATE)
     verifyNoMoreInteractions(ui)
 
   }
@@ -217,21 +230,26 @@ class RegistrationFacilitySelectionScreenControllerTest {
         phoneNumber = "1234567890",
         fullName = "Ashok",
         pin = "1234")
+    val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("5cf9d744-7f34-4633-aa46-a6c7e7542060"))
+
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
     whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
+    whenever(facilityRepository.facilities("")).thenReturn(Observable.just(listOf(facility1)))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(1))
-
-    val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("5cf9d744-7f34-4633-aa46-a6c7e7542060"))
 
     // when
     setupController()
     uiEvents.onNext(RegistrationFacilityClicked(facility1))
 
     // then
-    verify(ui).showProgressIndicator()
+    verify(ui, times(2)).showProgressIndicator()
     verify(ui).hideProgressIndicator()
     verify(ui).showToolbarWithSearchField()
     verify(ui).showConfirmFacilitySheet(facility1.uuid, facility1.name)
+    verify(ui).updateFacilities(
+        facilityItems = listItemBuilder.build(listOf(facility1), "", null, registrationConfig.proximityThresholdForNearbyFacilities),
+        updateType = FIRST_UPDATE
+    )
     verifyNoMoreInteractions(ui)
   }
 
@@ -243,21 +261,26 @@ class RegistrationFacilitySelectionScreenControllerTest {
         phoneNumber = "1234567890",
         fullName = "Ashok",
         pin = "1234")
+    val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("bc761c6c-032f-4f1d-a66a-3ec81e9e8aa3"))
+
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
     whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
+    whenever(facilityRepository.facilities("")).thenReturn(Observable.just(listOf(facility1)))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(1))
-
-    val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("bc761c6c-032f-4f1d-a66a-3ec81e9e8aa3"))
 
     // when
     setupController()
     uiEvents.onNext(RegistrationFacilityConfirmed(facility1.uuid))
 
     // then
-    verify(ui).showProgressIndicator()
+    verify(ui, times(2)).showProgressIndicator()
     verify(ui).hideProgressIndicator()
     verify(ui).showToolbarWithSearchField()
     verify(ui).openIntroVideoScreen()
+    verify(ui).updateFacilities(
+        facilityItems = listItemBuilder.build(listOf(facility1), "", null, registrationConfig.proximityThresholdForNearbyFacilities),
+        updateType = FIRST_UPDATE
+    )
     verifyNoMoreInteractions(ui)
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityId = facility1.uuid))
     verify(userSession).saveOngoingRegistrationEntryAsUser(currentTime)
@@ -266,6 +289,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
   @Test
   fun `search field should only be shown when facilities are available`() {
     // given
+    whenever(facilityRepository.facilities("")).thenReturn(Observable.just(emptyList()))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0, 10))
 
     // when
@@ -273,10 +297,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     // then
     val inOrder = inOrder(ui)
-    inOrder.verify(ui).showProgressIndicator()
+    inOrder.verify(ui, times(2)).showProgressIndicator()
+    inOrder.verify(ui).hideProgressIndicator()
+    inOrder.verify(ui).updateFacilities(emptyList(), FIRST_UPDATE)
     inOrder.verify(ui).showToolbarWithoutSearchField()
     inOrder.verify(ui).showToolbarWithSearchField()
-    inOrder.verify(ui).hideProgressIndicator()
     inOrder.verifyNoMoreInteractions()
   }
 
@@ -309,7 +334,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
         facilityRepository = facilityRepository,
         uiActions = ui
     )
-    val uiRenderer = RegistrationFacilitySelectionUiRenderer(ui)
+    val uiRenderer = RegistrationFacilitySelectionUiRenderer(ui, listItemBuilder, config)
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),

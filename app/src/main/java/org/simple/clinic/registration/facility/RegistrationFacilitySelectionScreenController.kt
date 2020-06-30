@@ -1,18 +1,12 @@
 package org.simple.clinic.registration.facility
 
-import android.annotation.SuppressLint
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
-import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItemBuilder
-import org.simple.clinic.location.LocationUpdate.Available
-import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.location.ScreenLocationUpdates
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.user.UserSession
@@ -36,84 +30,13 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(fetchLocation())
         .replay()
 
     return Observable.mergeArray(
-        showProgress(replayedEvents),
-        showFacilities(replayedEvents),
         toggleSearchFieldInToolbar(replayedEvents),
         proceedOnFacilityClicks(replayedEvents),
         proceedOnFacilityConfirmation(replayedEvents)
     )
-  }
-
-  @SuppressLint("MissingPermission")
-  private fun fetchLocation() = ObservableTransformer<UiEvent, UiEvent> { events ->
-    val locationUpdates = events
-        .ofType<ScreenCreated>()
-        .switchMap {
-          screenLocationUpdates.streamUserLocation(
-              updateInterval = config.locationUpdateInterval,
-              timeout = config.locationListenerExpiry,
-              discardOlderThan = config.staleLocationThreshold
-          )
-        }
-        .take(1)
-        .map(::RegistrationFacilityUserLocationUpdated)
-
-    events.mergeWith(locationUpdates)
-  }
-
-  private fun showProgress(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RegistrationFacilityUserLocationUpdated>()
-        .map { { ui: Ui -> ui.hideProgressIndicator() } }
-        .startWith(Observable.just(Ui::showProgressIndicator))
-  }
-
-  private fun showFacilities(events: Observable<UiEvent>): Observable<UiChange> {
-    val searchQueryChanges = events
-        .ofType<RegistrationFacilitySearchQueryChanged>()
-        .map { it.query }
-
-    val locationUpdates = events
-        .ofType<RegistrationFacilityUserLocationUpdated>()
-        .map { it.location }
-
-    val filteredFacilityListItems = Observables
-        .combineLatest(searchQueryChanges, locationUpdates)
-        .switchMap { (query, locationUpdate) ->
-          val userLocation = when (locationUpdate) {
-            is Available -> locationUpdate.location
-            is Unavailable -> null
-          }
-
-          facilityRepository
-              .facilities(query)
-              .map {
-                listItemBuilder.build(
-                    facilities = it,
-                    searchQuery = query,
-                    userLocation = userLocation,
-                    proximityThreshold = config.proximityThresholdForNearbyFacilities)
-              }
-        }
-        .replay()
-        .refCount()
-
-    val firstUpdate = filteredFacilityListItems
-        .map { listItems -> listItems to FIRST_UPDATE }
-        .take(1)
-
-    val subsequentUpdates = filteredFacilityListItems
-        .map { listItems -> listItems to SUBSEQUENT_UPDATE }
-        .skip(1)
-
-    return Observable.merge(firstUpdate, subsequentUpdates)
-        .map { (listItems, updateType) ->
-          { ui: Ui -> ui.updateFacilities(listItems, updateType) }
-        }
   }
 
   private fun toggleSearchFieldInToolbar(events: Observable<UiEvent>): Observable<UiChange> {

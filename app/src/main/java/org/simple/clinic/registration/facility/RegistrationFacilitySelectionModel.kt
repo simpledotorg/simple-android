@@ -20,6 +20,12 @@ data class RegistrationFacilitySelectionModel(
     )
   }
 
+  val hasLoadedFacilities: Boolean
+    get() = facilities != null && currentLocation != null
+
+  val hasFetchedLocation: Boolean
+    get() = currentLocation != null
+
   fun queryChanged(query: String): RegistrationFacilitySelectionModel {
     return copy(searchQuery = query)
   }

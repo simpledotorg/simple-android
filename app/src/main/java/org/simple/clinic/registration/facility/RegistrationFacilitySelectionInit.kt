@@ -1,8 +1,8 @@
 package org.simple.clinic.registration.facility
 
 import com.spotify.mobius.First
+import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
-import org.simple.clinic.mobius.first
 import org.simple.clinic.registration.RegistrationConfig
 import java.time.Duration
 
@@ -23,13 +23,18 @@ class RegistrationFacilitySelectionInit(
   }
 
   override fun init(model: RegistrationFacilitySelectionModel): First<RegistrationFacilitySelectionModel, RegistrationFacilitySelectionEffect> {
-    return first(
-        model,
-        FetchCurrentLocation(
-            updateInterval = locationUpdateInterval,
-            timeout = locationTimeout,
-            discardOlderThan = discardLocationOlderThan
-        )
-    )
+    val effects = mutableSetOf<RegistrationFacilitySelectionEffect>()
+
+    if (!model.hasFetchedLocation) {
+      effects.add(FetchCurrentLocation(
+          updateInterval = locationUpdateInterval,
+          timeout = locationTimeout,
+          discardOlderThan = discardLocationOlderThan
+      ))
+    }
+
+    effects.add(LoadFacilitiesWithQuery(model.searchQuery))
+
+    return first(model, effects)
   }
 }

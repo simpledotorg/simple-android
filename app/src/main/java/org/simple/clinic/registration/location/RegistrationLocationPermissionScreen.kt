@@ -14,6 +14,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreenKey
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.unsafeLazy
@@ -35,6 +36,8 @@ class RegistrationLocationPermissionScreen(
   @Inject
   lateinit var effectHandlerFactory: RegistrationLocationPermissionEffectHandler.Factory
 
+  private val screenKey by unsafeLazy { screenRouter.key<RegistrationLocationPermissionScreenKey>(this) }
+
   private val events by unsafeLazy {
     val permissionResults = screenRouter
         .streamScreenResults()
@@ -55,7 +58,7 @@ class RegistrationLocationPermissionScreen(
 
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = RegistrationLocationPermissionModel.create(),
+        defaultModel = RegistrationLocationPermissionModel.create(screenKey.ongoingRegistrationEntry),
         update = RegistrationLocationPermissionUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = RegistrationLocationPermissionInit(),
@@ -109,8 +112,8 @@ class RegistrationLocationPermissionScreen(
         .map { SkipClicked }
   }
 
-  override fun openFacilitySelectionScreen() {
-    screenRouter.push(RegistrationFacilitySelectionScreenKey())
+  override fun openFacilitySelectionScreen(registrationEntry: OngoingRegistrationEntry) {
+    screenRouter.push(RegistrationFacilitySelectionScreenKey(registrationEntry))
   }
 
   interface Injector {

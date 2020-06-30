@@ -85,10 +85,11 @@ class RegistrationFacilitySelectionScreen(
 
   private val delegate by unsafeLazy {
     val uiRenderer = RegistrationFacilitySelectionUiRenderer(this, facilityListItemBuilder, config)
+    val screenKey = screenRouter.key<RegistrationFacilitySelectionScreenKey>(this)
 
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = RegistrationFacilitySelectionModel.create(),
+        defaultModel = RegistrationFacilitySelectionModel.create(screenKey.ongoingRegistrationEntry),
         update = RegistrationFacilitySelectionUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = RegistrationFacilitySelectionInit.create(config),

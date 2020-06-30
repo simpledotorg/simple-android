@@ -54,6 +54,12 @@ class RegistrationFacilitySelectionScreenControllerTest {
   private val utcClock = TestUtcClock(currentTime)
   private val listItemBuilder = FacilityListItemBuilder(DistanceCalculator())
   private val screenLocationUpdates = mock<ScreenLocationUpdates>()
+  private val ongoingEntry = OngoingRegistrationEntry(
+      uuid = UUID.fromString("759f5f53-6f71-4a00-825b-c74654a5e448"),
+      phoneNumber = "1111111111",
+      fullName = "Anish Acharya",
+      pin = "1234"
+  )
 
   private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<RegistrationFacilitySelectionModel, RegistrationFacilitySelectionEvent, RegistrationFacilitySelectionEffect>
@@ -258,11 +264,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
   @Test
   fun `when a facility is confirmed then the ongoing entry should be updated with selected facility and the user should be logged in`() {
     // given
-    val ongoingEntry = OngoingRegistrationEntry(
-        uuid = UUID.fromString("252ef188-318c-443c-9c0c-37644e84bb6d"),
-        phoneNumber = "1234567890",
-        fullName = "Ashok",
-        pin = "1234")
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("bc761c6c-032f-4f1d-a66a-3ec81e9e8aa3"))
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
@@ -307,7 +308,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   private fun setupController(
       config: RegistrationConfig = registrationConfig,
-      locationUpdate: Observable<LocationUpdate> = Observable.just(Unavailable)
+      locationUpdate: Observable<LocationUpdate> = Observable.just(Unavailable),
+      ongoingRegistrationEntry: OngoingRegistrationEntry = ongoingEntry
   ) {
     whenever(screenLocationUpdates.streamUserLocation(
         updateInterval = config.locationUpdateInterval,
@@ -338,7 +340,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = RegistrationFacilitySelectionModel.create(),
+        defaultModel = RegistrationFacilitySelectionModel.create(ongoingRegistrationEntry),
         init = RegistrationFacilitySelectionInit.create(config),
         update = RegistrationFacilitySelectionUpdate(),
         effectHandler = effectHandler.build(),

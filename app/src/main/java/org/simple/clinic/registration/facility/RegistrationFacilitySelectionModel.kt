@@ -4,22 +4,27 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.location.LocationUpdate
+import org.simple.clinic.user.OngoingRegistrationEntry
 
 @Parcelize
 data class RegistrationFacilitySelectionModel(
     val searchQuery: String,
     val facilities: List<Facility>?,
     val currentLocation: LocationUpdate?,
-    val totalFacilityCount: Int?
+    val totalFacilityCount: Int?,
+    val ongoingEntry: OngoingRegistrationEntry
 ) : Parcelable {
 
   companion object {
-    fun create(): RegistrationFacilitySelectionModel = RegistrationFacilitySelectionModel(
-        searchQuery = "",
-        facilities = null,
-        currentLocation = null,
-        totalFacilityCount = null
-    )
+    fun create(entry: OngoingRegistrationEntry): RegistrationFacilitySelectionModel {
+      return RegistrationFacilitySelectionModel(
+          searchQuery = "",
+          facilities = null,
+          currentLocation = null,
+          totalFacilityCount = null,
+          ongoingEntry = entry
+      )
+    }
   }
 
   val hasLoadedFacilities: Boolean

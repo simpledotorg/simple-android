@@ -41,6 +41,10 @@ class BusinessIdMetaDataAdapterAndroidTest {
                 assigningUserUuid = UUID.randomUUID(),
                 assigningFacilityUuid = UUID.randomUUID()
             )
+            BusinessId.MetaDataVersion.MedicalRecordNumberMetaDataV1 -> BusinessIdMetaData.MedicalRecordNumberMetaDataV1(
+                assigningUserUuid = UUID.randomUUID(),
+                assigningFacilityUuid = UUID.randomUUID()
+            )
           }
         }
 

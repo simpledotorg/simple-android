@@ -6,6 +6,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 
 
@@ -46,6 +47,12 @@ class IdentifierDisplayTest {
         val unknownId = Identifier(value = someOtherIdValue, type = Unknown("some-other-id"))
 
         IdentifierTestData(identifier = unknownId, expectedDisplayValue = someOtherIdValue)
+      }
+      EthiopiaMedicalRecordNumber -> {
+        val ethiopiaMedicalRecordNumberValue = "87675747"
+        val ethiopiaMedicalRecordNumber = Identifier(value = ethiopiaMedicalRecordNumberValue, type = EthiopiaMedicalRecordNumber)
+
+        IdentifierTestData(identifier = ethiopiaMedicalRecordNumber, expectedDisplayValue = ethiopiaMedicalRecordNumberValue)
       }
     }
   }

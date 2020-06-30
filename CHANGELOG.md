@@ -9,6 +9,9 @@
 - [In Progress: 01 Jul 2020] Migrate `RegistrationConfirmPinScreen` to Mobius
 - [In Progress: 26 Jun 2020] Migrate `ConfirmRemovePrescriptionDialog` to Mobius
 
+### Changes
+- Add support for Medical Record Number in Ethiopia
+
 ## On Demo
 ### Changes
 - New Onboarding UI

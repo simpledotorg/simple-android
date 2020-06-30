@@ -6,12 +6,10 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding3.view.detaches
 import com.jakewharton.rxbinding3.widget.textChanges
-import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
@@ -20,8 +18,6 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.change.FacilitiesUpdateType
-import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
-import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.introvideoscreen.IntroVideoScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
@@ -31,6 +27,7 @@ import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
@@ -58,7 +55,7 @@ class RegistrationFacilitySelectionScreen(
   @Inject
   lateinit var uiRendererFactory: RegistrationFacilitySelectionUiRenderer.Factory
 
-  private val recyclerViewAdapter = FacilitiesAdapter()
+  private val recyclerViewAdapter = ItemAdapter(FacilityListItem.Differ())
 
   private val events by unsafeLazy {
     Observable
@@ -136,8 +133,9 @@ class RegistrationFacilitySelectionScreen(
 
   private fun facilityClicks() =
       recyclerViewAdapter
-          .facilityClicks
-          .map(::RegistrationFacilityClicked)
+          .itemEvents
+          .ofType<FacilityListItem.FacilityItemClicked>()
+          .map { RegistrationFacilityClicked(it.facility) }
 
   private fun registrationFacilityConfirmations(): Observable<UiEvent> {
     return screenRouter
@@ -180,15 +178,6 @@ class RegistrationFacilitySelectionScreen(
   }
 
   override fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
-    // Avoid animating the items on their first entry.
-    facilityRecyclerView.itemAnimator = when (updateType) {
-      FIRST_UPDATE -> null
-      SUBSEQUENT_UPDATE -> SlideUpAlphaAnimator()
-          .withInterpolator(FastOutSlowInInterpolator())
-          .apply { moveDuration = 200 }
-    }
-
-    facilityRecyclerView.scrollToPosition(0)
     recyclerViewAdapter.submitList(facilityItems)
   }
 

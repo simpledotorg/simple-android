@@ -8,29 +8,26 @@ import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.widget.RxTextView
-import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.screen_facility_change.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
-import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.confirm.ConfirmFacilityChangeSheet
 import org.simple.clinic.facility.change.confirm.FacilityChangeComponent
 import org.simple.clinic.location.LOCATION_PERMISSION
-import org.simple.clinic.registration.facility.FacilitiesAdapter
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.wrap
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -52,7 +49,7 @@ class FacilityChangeActivity : AppCompatActivity() {
   lateinit var runtimePermissions: RuntimePermissions
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
-  private val recyclerViewAdapter = FacilitiesAdapter()
+  private val recyclerViewAdapter = ItemAdapter(FacilityListItem.Differ())
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -126,8 +123,9 @@ class FacilityChangeActivity : AppCompatActivity() {
 
   private fun facilityClicks() =
       recyclerViewAdapter
-          .facilityClicks
-          .map(::FacilityChangeClicked)
+          .itemEvents
+          .ofType<FacilityListItem.FacilityItemClicked>()
+          .map { FacilityChangeClicked(it.facility) }
 
   private fun locationPermissionChanges(): Observable<UiEvent> {
     val permissionResult = runtimePermissions.check(LOCATION_PERMISSION)
@@ -158,15 +156,6 @@ class FacilityChangeActivity : AppCompatActivity() {
   }
 
   fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
-    // Avoid animating the items on their first entry.
-    facilityList.itemAnimator = when (updateType) {
-      FIRST_UPDATE -> null
-      SUBSEQUENT_UPDATE -> SlideUpAlphaAnimator()
-          .withInterpolator(FastOutSlowInInterpolator())
-          .apply { moveDuration = 200 }
-    }
-
-    facilityList.scrollToPosition(0)
     recyclerViewAdapter.submitList(facilityItems)
   }
 

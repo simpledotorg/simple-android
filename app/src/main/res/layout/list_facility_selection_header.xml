@@ -10,7 +10,7 @@
   android:paddingTop="@dimen/spacing_24">
 
   <TextView
-    android:id="@+id/facility_header_item_name"
+    android:id="@+id/headerNameTextView"
     style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

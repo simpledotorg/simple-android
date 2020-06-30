@@ -6,12 +6,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.widget.RxTextView
-import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.screen_patient_facility_change.*
 import org.simple.clinic.ClinicApp
@@ -21,10 +20,10 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.location.LOCATION_PERMISSION
-import org.simple.clinic.registration.facility.FacilitiesAdapter
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.wrap
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -55,7 +54,7 @@ class FacilitySelectionActivity : AppCompatActivity() {
 
   private lateinit var component: FacilitySelectionActivityComponent
 
-  private val recyclerViewAdapter = FacilitiesAdapter()
+  private val recyclerViewAdapter = ItemAdapter(FacilityListItem.Differ())
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -118,19 +117,11 @@ class FacilitySelectionActivity : AppCompatActivity() {
 
   private fun facilityClicks() =
       recyclerViewAdapter
-          .facilityClicks
-          .map { FacilitySelected(it) }
+          .itemEvents
+          .ofType<FacilityListItem.FacilityItemClicked>()
+          .map { FacilitySelected(it.facility) }
 
   fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
-    // Avoid animating the items on their first entry.
-    facilityList.itemAnimator = when (updateType) {
-      FacilitiesUpdateType.FIRST_UPDATE -> null
-      FacilitiesUpdateType.SUBSEQUENT_UPDATE -> SlideUpAlphaAnimator()
-          .withInterpolator(FastOutSlowInInterpolator())
-          .apply { moveDuration = 200 }
-    }
-
-    facilityList.scrollToPosition(0)
     recyclerViewAdapter.submitList(facilityItems)
   }
 

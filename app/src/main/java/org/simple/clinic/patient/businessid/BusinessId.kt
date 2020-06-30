@@ -94,12 +94,16 @@ data class BusinessId(
     object BangladeshNationalIdMetaDataV1 : MetaDataVersion()
 
     @Parcelize
+    object MedicalRecordNumberMetaDataV1 : MetaDataVersion()
+
+    @Parcelize
     data class Unknown(val actual: String) : MetaDataVersion()
 
     object TypeAdapter : SafeEnumTypeAdapter<MetaDataVersion>(
         knownMappings = mapOf(
             BpPassportMetaDataV1 to "org.simple.bppassport.meta.v1",
-            BangladeshNationalIdMetaDataV1 to "org.simple.bangladesh_national_id.meta.v1"
+            BangladeshNationalIdMetaDataV1 to "org.simple.bangladesh_national_id.meta.v1",
+            MedicalRecordNumberMetaDataV1 to "org.simple.ethiopia_medical_record.meta.v1"
         ),
         unknownStringToEnumConverter = { Unknown(it) },
         unknownEnumToStringConverter = { (it as Unknown).actual }

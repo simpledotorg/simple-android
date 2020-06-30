@@ -27,7 +27,9 @@ class PatientModule {
         BusinessId.MetaDataVersion.BpPassportMetaDataV1 to
             moshi.adapter(BusinessIdMetaData.BpPassportMetaDataV1::class.java) as JsonAdapter<BusinessIdMetaData>,
         BusinessId.MetaDataVersion.BangladeshNationalIdMetaDataV1 to
-            moshi.adapter(BusinessIdMetaData.BangladeshNationalIdMetaDataV1::class.java) as JsonAdapter<BusinessIdMetaData>
+            moshi.adapter(BusinessIdMetaData.BangladeshNationalIdMetaDataV1::class.java) as JsonAdapter<BusinessIdMetaData>,
+        BusinessId.MetaDataVersion.MedicalRecordNumberMetaDataV1 to
+            moshi.adapter(BusinessIdMetaData.MedicalRecordNumberMetaDataV1::class.java) as JsonAdapter<BusinessIdMetaData>
     )
 
     return MoshiBusinessIdMetaDataAdapter(adapters)

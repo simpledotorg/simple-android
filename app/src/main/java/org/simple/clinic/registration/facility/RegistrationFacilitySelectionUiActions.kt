@@ -1,3 +1,7 @@
 package org.simple.clinic.registration.facility
 
-interface RegistrationFacilitySelectionUiActions
+import java.util.UUID
+
+interface RegistrationFacilitySelectionUiActions {
+  fun showConfirmFacilitySheet(facilityUuid: UUID, facilityName: String)
+}

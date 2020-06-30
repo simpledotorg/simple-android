@@ -26,6 +26,7 @@ class RegistrationFacilitySelectionEffectHandler @AssistedInject constructor(
         .addTransformer(FetchCurrentLocation::class.java, fetchLocation())
         .addTransformer(LoadFacilitiesWithQuery::class.java, loadFacilitiesWithQuery())
         .addTransformer(LoadTotalFacilityCount::class.java, loadTotalCountOfFacilities())
+        .addConsumer(OpenConfirmFacilitySheet::class.java, { uiActions.showConfirmFacilitySheet(it.facility.uuid, it.facility.name) }, schedulersProvider.ui())
         .build()
   }
 

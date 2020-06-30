@@ -15,3 +15,7 @@ data class RegistrationFacilitySearchQueryChanged(val query: String) : Registrat
 }
 
 data class TotalFacilityCountLoaded(val count: Int) : RegistrationFacilitySelectionEvent()
+
+data class RegistrationFacilityClicked(val facility: Facility) : RegistrationFacilitySelectionEvent() {
+  override val analyticsName = "Registration:Facility Selection:Done Clicked"
+}

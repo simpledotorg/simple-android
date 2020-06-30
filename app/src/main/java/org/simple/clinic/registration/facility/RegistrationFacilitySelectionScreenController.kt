@@ -32,16 +32,8 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        proceedOnFacilityClicks(replayedEvents),
         proceedOnFacilityConfirmation(replayedEvents)
     )
-  }
-
-  private fun proceedOnFacilityClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RegistrationFacilityClicked>()
-        .map { it.facility }
-        .map { facility -> { ui: Ui -> ui.showConfirmFacilitySheet(facility.uuid, facility.name) } }
   }
 
   private fun proceedOnFacilityConfirmation(events: Observable<UiEvent>): Observable<UiChange> {

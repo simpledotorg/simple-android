@@ -17,7 +17,6 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.location.LOCATION_PERMISSION
 import org.simple.clinic.util.LocaleOverrideContextWrapper
@@ -121,7 +120,7 @@ class FacilitySelectionActivity : AppCompatActivity() {
           .ofType<FacilityListItem.FacilityItemClicked>()
           .map { FacilitySelected(it.facility) }
 
-  fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
+  fun updateFacilities(facilityItems: List<FacilityListItem>) {
     recyclerViewAdapter.submitList(facilityItems)
   }
 

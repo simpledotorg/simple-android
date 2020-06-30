@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.screen_registration_facility_selection.vie
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
-import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.introvideoscreen.IntroVideoScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
@@ -177,7 +176,7 @@ class RegistrationFacilitySelectionScreen(
     toolbarViewFlipper.displayedChildResId = R.id.toolbarViewWithoutSearch
   }
 
-  override fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
+  override fun updateFacilities(facilityItems: List<FacilityListItem>) {
     recyclerViewAdapter.submitList(facilityItems)
   }
 

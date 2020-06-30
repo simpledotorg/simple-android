@@ -155,7 +155,7 @@ class FacilityChangeActivity : AppCompatActivity() {
     }
   }
 
-  fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
+  fun updateFacilities(facilityItems: List<FacilityListItem>) {
     recyclerViewAdapter.submitList(facilityItems)
   }
 

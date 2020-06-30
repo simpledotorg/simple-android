@@ -9,5 +9,4 @@ interface RegistrationFacilitySelectionUi: RegistrationFacilitySelectionUiAction
   fun showToolbarWithSearchField()
   fun showToolbarWithoutSearchField()
   fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType)
-  fun openIntroVideoScreen()
 }

@@ -34,6 +34,7 @@ class RegistrationFacilitySelectionEffectHandler @AssistedInject constructor(
         .addTransformer(LoadTotalFacilityCount::class.java, loadTotalCountOfFacilities())
         .addConsumer(OpenConfirmFacilitySheet::class.java, { uiActions.showConfirmFacilitySheet(it.facility.uuid, it.facility.name) }, schedulersProvider.ui())
         .addTransformer(SaveRegistrationEntryAsUser::class.java, saveCurrentRegistrationEntry())
+        .addAction(MoveToIntroVideoScreen::class.java, uiActions::openIntroVideoScreen, schedulersProvider.ui())
         .build()
   }
 

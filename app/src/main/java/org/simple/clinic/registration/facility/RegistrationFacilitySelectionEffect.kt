@@ -19,3 +19,5 @@ object LoadTotalFacilityCount: RegistrationFacilitySelectionEffect()
 data class OpenConfirmFacilitySheet(val facility: Facility): RegistrationFacilitySelectionEffect()
 
 data class SaveRegistrationEntryAsUser(val entry: OngoingRegistrationEntry): RegistrationFacilitySelectionEffect()
+
+object MoveToIntroVideoScreen: RegistrationFacilitySelectionEffect()

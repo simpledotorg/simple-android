@@ -4,9 +4,13 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class RegistrationLoadingModel : Parcelable {
+data class RegistrationLoadingModel(
+    val registerUserResult: RegisterUserResult?
+) : Parcelable {
 
   companion object {
-    fun create(): RegistrationLoadingModel = RegistrationLoadingModel()
+    fun create(): RegistrationLoadingModel {
+      return RegistrationLoadingModel(registerUserResult = null)
+    }
   }
 }

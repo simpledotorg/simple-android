@@ -4,7 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_loading.view.*
 import org.simple.clinic.R
@@ -42,14 +43,14 @@ class RegistrationLoadingScreen(
         ui = this,
         events = Observable.merge(screenCreates(), retryClicks()),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
   }
 
   private fun screenCreates() = Observable.just<UiEvent>(ScreenCreated())
 
-  private fun retryClicks() = RxView
-      .clicks(errorRetryButton)
+  private fun retryClicks() = errorRetryButton
+      .clicks()
       .map { RegisterErrorRetryClicked }
       .doAfterNext { showLoader() }
 

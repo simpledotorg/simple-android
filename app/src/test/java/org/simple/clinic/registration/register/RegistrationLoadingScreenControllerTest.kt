@@ -8,8 +8,9 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
@@ -43,13 +44,11 @@ class RegistrationLoadingScreenControllerTest {
   )
   private val facility = TestData.facility(UUID.fromString("37e253a9-8a8a-4c60-8aac-34338dc47e8b"))
 
-  private val controller = RegistrationLoadingScreenController(userSession, facilityRepository, registerUser)
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -58,6 +57,7 @@ class RegistrationLoadingScreenControllerTest {
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
     whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(Success)
 
+    setupController()
     uiEvents.onNext(RegisterErrorRetryClicked)
 
     verify(registerUser).registerUserAtFacility(user, facility)
@@ -73,6 +73,7 @@ class RegistrationLoadingScreenControllerTest {
     whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.never()
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -88,6 +89,7 @@ class RegistrationLoadingScreenControllerTest {
     whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(Success)
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -104,6 +106,7 @@ class RegistrationLoadingScreenControllerTest {
     whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(NetworkError)
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -119,10 +122,19 @@ class RegistrationLoadingScreenControllerTest {
     whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(UnexpectedError)
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
     verify(screen).showUnexpectedError()
     verifyNoMoreInteractions(screen)
+  }
+
+  private fun setupController() {
+    val controller = RegistrationLoadingScreenController(userSession, facilityRepository, registerUser)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

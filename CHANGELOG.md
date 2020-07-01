@@ -5,7 +5,8 @@
 - Updated translations: ``mr_IN`, `om_ET`
 
 ### Internal
-- [In Progress: 25 Jun 2020] Migrate `RegistrationPinScreen` to Mobius
+- Migrated `RegistrationPinScreen` to Mobius
+- [In Progress: 01 Jul 2020] Migrate `RegistrationConfirmPinScreen` to Mobius
 - [In Progress: 26 Jun 2020] Migrate `ConfirmRemovePrescriptionDialog` to Mobius
 
 ## On Demo

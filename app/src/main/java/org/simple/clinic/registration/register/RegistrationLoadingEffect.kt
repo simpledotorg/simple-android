@@ -10,3 +10,5 @@ object LoadRegistrationDetails: RegistrationLoadingEffect()
 data class RegisterUserAtFacility(val user: User, val facility: Facility): RegistrationLoadingEffect()
 
 object ClearCurrentRegistrationEntry: RegistrationLoadingEffect()
+
+object GoToHomeScreen: RegistrationLoadingEffect()

@@ -9,8 +9,8 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_loading.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
@@ -32,7 +32,7 @@ class RegistrationLoadingScreen(
   override fun onFinishInflate() {
     super.onFinishInflate()
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     loaderBack.setOnClickListener {
       screenRouter.pop()
@@ -72,5 +72,9 @@ class RegistrationLoadingScreen(
 
   private fun showLoader() {
     viewSwitcher.showNext()
+  }
+
+  interface Injector {
+    fun inject(target: RegistrationLoadingScreen)
   }
 }

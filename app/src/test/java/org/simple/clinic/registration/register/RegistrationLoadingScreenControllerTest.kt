@@ -158,6 +158,7 @@ class RegistrationLoadingScreenControllerTest {
         schedulers = TestSchedulersProvider.trampoline(),
         userSession = userSession,
         facilityRepository = facilityRepository,
+        registerUser = registerUser,
         uiActions = ui
     )
     val uiRenderer = RegistrationLoadingUiRenderer(ui)

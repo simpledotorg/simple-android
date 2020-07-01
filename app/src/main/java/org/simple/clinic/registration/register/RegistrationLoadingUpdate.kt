@@ -9,6 +9,7 @@ class RegistrationLoadingUpdate : Update<RegistrationLoadingModel, RegistrationL
   override fun update(model: RegistrationLoadingModel, event: RegistrationLoadingEvent): Next<RegistrationLoadingModel, RegistrationLoadingEffect> {
     return when(event) {
       is RegistrationDetailsLoaded -> noChange()
+      is UserRegistrationCompleted -> noChange()
     }
   }
 }

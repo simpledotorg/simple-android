@@ -12,6 +12,7 @@ class RegistrationLoadingUpdate : Update<RegistrationLoadingModel, RegistrationL
       is RegistrationDetailsLoaded -> dispatch(RegisterUserAtFacility(event.user, event.facility))
       is UserRegistrationCompleted -> userRegistrationCompleted(event, model)
       is CurrentRegistrationEntryCleared -> dispatch(GoToHomeScreen)
+      is RegisterErrorRetryClicked -> next(model.clearRegistrationResult(), LoadRegistrationDetails)
     }
   }
 

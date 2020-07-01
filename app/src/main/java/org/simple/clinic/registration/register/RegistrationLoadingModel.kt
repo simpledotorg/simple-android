@@ -20,4 +20,8 @@ data class RegistrationLoadingModel(
   fun withRegistrationResult(result: RegisterUserResult): RegistrationLoadingModel {
     return copy(registerUserResult = result)
   }
+
+  fun clearRegistrationResult(): RegistrationLoadingModel {
+    return copy(registerUserResult = null)
+  }
 }

@@ -18,6 +18,7 @@ class RegistrationLocationPermissionUpdate : Update<RegistrationLocationPermissi
         else
           noChange()
       }
+      is SkipClicked -> dispatch(OpenFacilitySelectionScreen)
     }
   }
 }

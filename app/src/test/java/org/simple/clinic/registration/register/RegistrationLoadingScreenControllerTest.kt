@@ -55,6 +55,7 @@ class RegistrationLoadingScreenControllerTest {
 
   @Test
   fun `when retry button is clicked, then user registration should be attempted again`() {
+    // given
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
     whenever(registerUser.registerUserAtFacility(user, facility)).doReturn(
@@ -62,15 +63,19 @@ class RegistrationLoadingScreenControllerTest {
         Single.just<RegistrationResult>(Success)
     )
 
+    // when
     setupController()
 
+    // then
     verify(screen).showNetworkError()
     verifyNoMoreInteractions(screen)
     verify(userSession, never()).clearOngoingRegistrationEntry()
 
+    // when
     clearInvocations(screen)
     uiEvents.onNext(RegisterErrorRetryClicked)
 
+    // then
     verify(userSession).clearOngoingRegistrationEntry()
     verify(screen).openHomeScreen()
     verifyNoMoreInteractions(screen)

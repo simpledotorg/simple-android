@@ -16,3 +16,7 @@ data class RequestLocationPermission(
 ) : RegistrationLocationPermissionEvent(), RequiresPermission {
   override val analyticsName = "Registration:Location Access Clicked"
 }
+
+object SkipClicked : RegistrationLocationPermissionEvent() {
+  override val analyticsName: String = "Registration:Location Permission:Skip Clicked"
+}

@@ -40,7 +40,11 @@ class RegistrationLocationPermissionScreen(
         .streamScreenResults()
         .ofType<ActivityPermissionResult>()
 
-    allowLocationClicks()
+    Observable
+        .merge(
+            allowLocationClicks(),
+            skipClicks()
+        )
         .compose(RequestPermissions<UiEvent>(runtimePermissions, permissionResults))
         .compose(ReportAnalyticsEvents())
         .share()
@@ -70,10 +74,6 @@ class RegistrationLocationPermissionScreen(
       screenRouter.pop()
     }
 
-    skipButton.setOnClickListener {
-      openFacilitySelectionScreen()
-    }
-
     // Can't tell why, but the keyboard stays
     // visible on coming from the previous screen.
     hideKeyboard()
@@ -97,7 +97,17 @@ class RegistrationLocationPermissionScreen(
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
-  private fun allowLocationClicks(): Observable<UiEvent> = allowAccessButton.clicks().map { RequestLocationPermission() }
+  private fun allowLocationClicks(): Observable<RegistrationLocationPermissionEvent> {
+    return allowAccessButton
+        .clicks()
+        .map { RequestLocationPermission() }
+  }
+
+  private fun skipClicks(): Observable<RegistrationLocationPermissionEvent> {
+    return skipButton
+        .clicks()
+        .map { SkipClicked }
+  }
 
   override fun openFacilitySelectionScreen() {
     screenRouter.push(RegistrationFacilitySelectionScreenKey())

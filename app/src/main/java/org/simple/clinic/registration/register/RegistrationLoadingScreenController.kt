@@ -12,7 +12,6 @@ import org.simple.clinic.user.registeruser.RegistrationResult.NetworkError
 import org.simple.clinic.user.registeruser.RegistrationResult.Success
 import org.simple.clinic.user.registeruser.RegistrationResult.UnexpectedError
 import org.simple.clinic.util.filterAndUnwrapJust
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -32,10 +31,8 @@ class RegistrationLoadingScreenController @Inject constructor(
   private fun registerOnStart(events: Observable<UiEvent>): Observable<UiChange> {
 
     val retryClicks = events.ofType<RegisterErrorRetryClicked>()
-    val creates = events.ofType<ScreenCreated>()
 
-    val register = Observable
-        .merge(creates, retryClicks)
+    val register = retryClicks
         .flatMap {
           val savedUser = userSession
               .loggedInUser()

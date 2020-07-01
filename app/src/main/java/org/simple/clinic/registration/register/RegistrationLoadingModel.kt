@@ -13,4 +13,11 @@ data class RegistrationLoadingModel(
       return RegistrationLoadingModel(registerUserResult = null)
     }
   }
+
+  val hasUserRegistrationCompleted: Boolean
+    get() = registerUserResult != null
+
+  fun withRegistrationResult(result: RegisterUserResult): RegistrationLoadingModel {
+    return copy(registerUserResult = result)
+  }
 }

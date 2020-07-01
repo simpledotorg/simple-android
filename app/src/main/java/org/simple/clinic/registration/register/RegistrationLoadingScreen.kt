@@ -9,11 +9,13 @@ import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_loading.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -30,6 +32,16 @@ class RegistrationLoadingScreen(
   @Inject
   lateinit var screenRouter: ScreenRouter
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenCreates(),
+            retryClicks()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
 
@@ -41,7 +53,7 @@ class RegistrationLoadingScreen(
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(screenCreates(), retryClicks()),
+        events = events,
         controller = controller,
         screenDestroys = detaches().map { ScreenDestroyed() }
     )

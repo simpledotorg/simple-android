@@ -7,6 +7,8 @@ import com.spotify.mobius.Update
 class RegistrationLoadingUpdate : Update<RegistrationLoadingModel, RegistrationLoadingEvent, RegistrationLoadingEffect> {
 
   override fun update(model: RegistrationLoadingModel, event: RegistrationLoadingEvent): Next<RegistrationLoadingModel, RegistrationLoadingEffect> {
-    return noChange()
+    return when(event) {
+      is RegistrationDetailsLoaded -> noChange()
+    }
   }
 }

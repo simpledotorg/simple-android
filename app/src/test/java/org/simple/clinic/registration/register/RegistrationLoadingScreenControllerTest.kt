@@ -156,6 +156,8 @@ class RegistrationLoadingScreenControllerTest {
 
     val effectHandler = RegistrationLoadingEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
+        userSession = userSession,
+        facilityRepository = facilityRepository,
         uiActions = ui
     )
     val uiRenderer = RegistrationLoadingUiRenderer(ui)

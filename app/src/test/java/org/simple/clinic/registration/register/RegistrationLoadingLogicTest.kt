@@ -32,7 +32,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class RegistrationLoadingScreenControllerTest {
+class RegistrationLoadingLogicTest {
 
   private val userSession = mock<UserSession>()
   private val ui = mock<RegistrationLoadingUi>()

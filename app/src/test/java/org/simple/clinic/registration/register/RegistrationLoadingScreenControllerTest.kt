@@ -52,7 +52,7 @@ class RegistrationLoadingScreenControllerTest {
   }
 
   @Test
-  fun `when retry button is clicked, then register api should be called`() {
+  fun `when retry button is clicked, then user registration should be attempted again`() {
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
     whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(Success)
@@ -66,7 +66,7 @@ class RegistrationLoadingScreenControllerTest {
   }
 
   @Test
-  fun `when screen is created, then the user registration api should be called`() {
+  fun `when screen is created, then the user registration should be attempted`() {
     // given
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
@@ -82,7 +82,7 @@ class RegistrationLoadingScreenControllerTest {
   }
 
   @Test
-  fun `when the register user call succeeds, then clear registration entry and go to home screen`() {
+  fun `when the user registration succeeds, then clear registration entry and go to home screen`() {
     // given
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
@@ -99,7 +99,7 @@ class RegistrationLoadingScreenControllerTest {
   }
 
   @Test
-  fun `when the register call fails with a network error, show the network error message`() {
+  fun `when the user registration fails with a network error, show the network error message`() {
     // given
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
@@ -115,7 +115,7 @@ class RegistrationLoadingScreenControllerTest {
   }
 
   @Test
-  fun `when the register call fails with any other error, show the generic error message`() {
+  fun `when the user registration fails with any other error, show the generic error message`() {
     // given
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)

@@ -28,6 +28,7 @@ data class Country(
     get() {
       return when (isoCountryCode) {
         BANGLADESH -> Identifier.IdentifierType.BangladeshNationalId
+        ETHIOPIA -> Identifier.IdentifierType.EthiopiaMedicalRecordNumber
         else -> null
       }
     }

@@ -1,7 +1,9 @@
 package org.simple.clinic.registration.register
 
+import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
@@ -55,14 +57,23 @@ class RegistrationLoadingScreenControllerTest {
   fun `when retry button is clicked, then user registration should be attempted again`() {
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
-    whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(Success)
+    whenever(registerUser.registerUserAtFacility(user, facility)).doReturn(
+        Single.just<RegistrationResult>(NetworkError),
+        Single.just<RegistrationResult>(Success)
+    )
 
     setupController()
+
+    verify(screen).showNetworkError()
+    verifyNoMoreInteractions(screen)
+    verify(userSession, never()).clearOngoingRegistrationEntry()
+
+    clearInvocations(screen)
     uiEvents.onNext(RegisterErrorRetryClicked)
 
-    verify(registerUser).registerUserAtFacility(user, facility)
     verify(userSession).clearOngoingRegistrationEntry()
     verify(screen).openHomeScreen()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -74,7 +85,6 @@ class RegistrationLoadingScreenControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(registerUser).registerUserAtFacility(user, facility)
@@ -90,7 +100,6 @@ class RegistrationLoadingScreenControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(userSession).clearOngoingRegistrationEntry()
@@ -107,7 +116,6 @@ class RegistrationLoadingScreenControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(screen).showNetworkError()
@@ -123,7 +131,6 @@ class RegistrationLoadingScreenControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(screen).showUnexpectedError()
@@ -136,5 +143,7 @@ class RegistrationLoadingScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

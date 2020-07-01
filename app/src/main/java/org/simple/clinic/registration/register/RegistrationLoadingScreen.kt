@@ -1,18 +1,21 @@
 package org.simple.clinic.registration.register
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_loading.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
@@ -32,6 +35,9 @@ class RegistrationLoadingScreen(
   @Inject
   lateinit var screenRouter: ScreenRouter
 
+  @Inject
+  lateinit var effectHandlerFactory: RegistrationLoadingEffectHandler.Factory
+
   private val events by unsafeLazy {
     Observable
         .merge(
@@ -40,6 +46,19 @@ class RegistrationLoadingScreen(
         )
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = RegistrationLoadingUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = RegistrationLoadingModel.create(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        update = RegistrationLoadingUpdate(),
+        init = RegistrationLoadingInit(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   override fun onFinishInflate() {
@@ -57,6 +76,24 @@ class RegistrationLoadingScreen(
         controller = controller,
         screenDestroys = detaches().map { ScreenDestroyed() }
     )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates() = Observable.just<UiEvent>(ScreenCreated())

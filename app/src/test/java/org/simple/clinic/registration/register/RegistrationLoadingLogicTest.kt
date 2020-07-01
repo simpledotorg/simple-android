@@ -36,6 +36,7 @@ class RegistrationLoadingLogicTest {
 
   private val userSession = mock<UserSession>()
   private val ui = mock<RegistrationLoadingUi>()
+  private val uiActions = mock<RegistrationLoadingUiActions>()
   private val registerUser = mock<RegisterUser>()
   private val facilityRepository = mock<FacilityRepository>()
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -69,17 +70,17 @@ class RegistrationLoadingLogicTest {
 
     // then
     verify(ui).showNetworkError()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
     verify(userSession, never()).clearOngoingRegistrationEntry()
 
     // when
-    clearInvocations(ui)
+    clearInvocations(ui, uiActions)
     uiEvents.onNext(RegisterErrorRetryClicked)
 
     // then
     verify(userSession).clearOngoingRegistrationEntry()
-    verify(ui).openHomeScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openHomeScreen()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -94,7 +95,7 @@ class RegistrationLoadingLogicTest {
 
     // then
     verify(registerUser).registerUserAtFacility(user, facility)
-    verifyZeroInteractions(ui)
+    verifyZeroInteractions(ui, uiActions)
   }
 
   @Test
@@ -109,8 +110,8 @@ class RegistrationLoadingLogicTest {
 
     // then
     verify(userSession).clearOngoingRegistrationEntry()
-    verify(ui).openHomeScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openHomeScreen()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -125,7 +126,7 @@ class RegistrationLoadingLogicTest {
 
     // then
     verify(ui).showNetworkError()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -140,7 +141,7 @@ class RegistrationLoadingLogicTest {
 
     // then
     verify(ui).showUnexpectedError()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   private fun setupController() {
@@ -149,7 +150,7 @@ class RegistrationLoadingLogicTest {
         userSession = userSession,
         facilityRepository = facilityRepository,
         registerUser = registerUser,
-        uiActions = ui
+        uiActions = uiActions
     )
     val uiRenderer = RegistrationLoadingUiRenderer(ui)
 

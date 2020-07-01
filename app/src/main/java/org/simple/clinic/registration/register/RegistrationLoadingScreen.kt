@@ -21,7 +21,7 @@ import javax.inject.Inject
 class RegistrationLoadingScreen(
     context: Context,
     attrs: AttributeSet
-) : LinearLayout(context, attrs), RegistrationLoadingUi {
+) : LinearLayout(context, attrs), RegistrationLoadingUi, RegistrationLoadingUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

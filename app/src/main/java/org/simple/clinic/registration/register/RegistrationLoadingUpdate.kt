@@ -10,6 +10,7 @@ class RegistrationLoadingUpdate : Update<RegistrationLoadingModel, RegistrationL
     return when(event) {
       is RegistrationDetailsLoaded -> noChange()
       is UserRegistrationCompleted -> noChange()
+      is CurrentRegistrationEntryCleared -> noChange()
     }
   }
 }

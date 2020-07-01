@@ -29,6 +29,7 @@ class RegistrationLoadingEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<RegistrationLoadingEffect, RegistrationLoadingEvent>()
         .addTransformer(LoadRegistrationDetails::class.java, loadRegistrationDetails())
         .addTransformer(RegisterUserAtFacility::class.java, registerUserAtFacility())
+        .addTransformer(ClearCurrentRegistrationEntry::class.java, clearCurrentRegistrationEntry())
         .build()
   }
 
@@ -61,6 +62,14 @@ class RegistrationLoadingEffectHandler @AssistedInject constructor(
                 .subscribeOn(schedulers.io())
                 .map { UserRegistrationCompleted(RegisterUserResult.from(it)) }
           }
+    }
+  }
+
+  private fun clearCurrentRegistrationEntry(): ObservableTransformer<ClearCurrentRegistrationEntry, RegistrationLoadingEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .doOnNext { userSession.clearOngoingRegistrationEntry() }
+          .map { CurrentRegistrationEntryCleared }
     }
   }
 }

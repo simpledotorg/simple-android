@@ -9,3 +9,5 @@ sealed class RegistrationLoadingEvent : UiEvent
 data class RegistrationDetailsLoaded(val user: User, val facility: Facility) : RegistrationLoadingEvent()
 
 data class UserRegistrationCompleted(val result: RegisterUserResult) : RegistrationLoadingEvent()
+
+object CurrentRegistrationEntryCleared: RegistrationLoadingEvent()

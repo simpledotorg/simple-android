@@ -16,7 +16,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = RegistrationLoadingScreen
+typealias Ui = RegistrationLoadingUi
 typealias UiChange = (Ui) -> Unit
 
 class RegistrationLoadingScreenController @Inject constructor(

@@ -34,7 +34,7 @@ import java.util.UUID
 class RegistrationLoadingScreenControllerTest {
 
   private val userSession = mock<UserSession>()
-  private val screen = mock<RegistrationLoadingScreen>()
+  private val ui = mock<RegistrationLoadingUi>()
   private val registerUser = mock<RegisterUser>()
   private val facilityRepository = mock<FacilityRepository>()
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -67,18 +67,18 @@ class RegistrationLoadingScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).showNetworkError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showNetworkError()
+    verifyNoMoreInteractions(ui)
     verify(userSession, never()).clearOngoingRegistrationEntry()
 
     // when
-    clearInvocations(screen)
+    clearInvocations(ui)
     uiEvents.onNext(RegisterErrorRetryClicked)
 
     // then
     verify(userSession).clearOngoingRegistrationEntry()
-    verify(screen).openHomeScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).openHomeScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -93,7 +93,7 @@ class RegistrationLoadingScreenControllerTest {
 
     // then
     verify(registerUser).registerUserAtFacility(user, facility)
-    verifyZeroInteractions(screen)
+    verifyZeroInteractions(ui)
   }
 
   @Test
@@ -108,8 +108,8 @@ class RegistrationLoadingScreenControllerTest {
 
     // then
     verify(userSession).clearOngoingRegistrationEntry()
-    verify(screen).openHomeScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).openHomeScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -123,8 +123,8 @@ class RegistrationLoadingScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).showNetworkError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showNetworkError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -138,8 +138,8 @@ class RegistrationLoadingScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).showUnexpectedError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUnexpectedError()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -147,7 +147,7 @@ class RegistrationLoadingScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
   }

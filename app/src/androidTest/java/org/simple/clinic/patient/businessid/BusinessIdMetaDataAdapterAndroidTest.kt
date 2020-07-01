@@ -24,6 +24,9 @@ class BusinessIdMetaDataAdapterAndroidTest {
     TestClinicApp.appComponent().inject(this)
   }
 
+  private val assigningUserUuid: UUID = UUID.fromString("22219626-2b2e-46c9-9e3d-889580adae83")
+  private val assigningFacilityUuid: UUID = UUID.fromString("c4718eb9-26b7-436c-998e-9ae2ee22c4fd")
+
   @Test
   fun all_known_mappings_of_business_meta_version_must_be_de_serialized_correctly() {
     // This test is to ensure that whenever a new meta version is added, its corresponding
@@ -34,16 +37,16 @@ class BusinessIdMetaDataAdapterAndroidTest {
           metaDataVersion to when (metaDataVersion) {
             is BusinessId.MetaDataVersion.Unknown -> throw RuntimeException("$metaDataVersion should be a part of known mappings!")
             BusinessId.MetaDataVersion.BpPassportMetaDataV1 -> BusinessIdMetaData.BpPassportMetaDataV1(
-                assigningUserUuid = UUID.randomUUID(),
-                assigningFacilityUuid = UUID.randomUUID()
+                assigningUserUuid = assigningUserUuid,
+                assigningFacilityUuid = assigningFacilityUuid
             )
             BusinessId.MetaDataVersion.BangladeshNationalIdMetaDataV1 -> BusinessIdMetaData.BangladeshNationalIdMetaDataV1(
-                assigningUserUuid = UUID.randomUUID(),
-                assigningFacilityUuid = UUID.randomUUID()
+                assigningUserUuid = assigningUserUuid,
+                assigningFacilityUuid = assigningFacilityUuid
             )
             BusinessId.MetaDataVersion.MedicalRecordNumberMetaDataV1 -> BusinessIdMetaData.MedicalRecordNumberMetaDataV1(
-                assigningUserUuid = UUID.randomUUID(),
-                assigningFacilityUuid = UUID.randomUUID()
+                assigningUserUuid = assigningUserUuid,
+                assigningFacilityUuid = assigningFacilityUuid
             )
           }
         }

@@ -34,7 +34,8 @@ class SettingsModule {
         ProvidedLanguage(displayName = "తెలుగు", languageCode = "te-IN"),
         ProvidedLanguage(displayName = "বাংলা", languageCode = "bn-BD"),
         ProvidedLanguage(displayName = "ትግርኛ", languageCode = "ti-ET"),
-        ProvidedLanguage(displayName = "Afan Oromo", languageCode = "om-ET")
+        ProvidedLanguage(displayName = "Afan Oromo", languageCode = "om-ET"),
+        ProvidedLanguage(displayName = "አማርኛ", languageCode = "am-ET")
     )
 
     return PreferencesSettingsRepository(

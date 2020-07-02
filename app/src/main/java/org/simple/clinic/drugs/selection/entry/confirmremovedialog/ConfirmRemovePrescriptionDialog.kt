@@ -17,7 +17,6 @@ import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bp.entry.confirmremovebloodpressure.RemovePrescriptionClicked
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.mobius.MobiusDelegate
@@ -88,14 +87,6 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment(), UiActions {
     return dialog
   }
 
-  @SuppressLint("CheckResult")
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    events
-        .takeUntil(screenDestroys)
-        .subscribe(dialogEvents::onNext)
-  }
-
   private fun setupDialog(): Observable<UiChange> {
     return events
         .observeOn(io())
@@ -117,6 +108,14 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment(), UiActions {
     super.onStart()
     onStarts.onNext(Any())
     delegate.start()
+  }
+
+  @SuppressLint("CheckResult")
+  override fun onResume() {
+    super.onResume()
+    events
+        .takeUntil(screenDestroys)
+        .subscribe(dialogEvents::onNext)
   }
 
   override fun onStop() {

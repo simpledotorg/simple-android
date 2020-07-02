@@ -38,8 +38,6 @@ class UserSession @Inject constructor(
     @Named("onboarding_complete") private val onboardingComplete: Preference<Boolean>
 ) {
 
-  private var ongoingRegistrationEntry: OngoingRegistrationEntry? = null
-
   @Deprecated(message = "Use OngoingLoginEntryRepository directly.")
   fun saveOngoingLoginEntry(entry: OngoingLoginEntry): Completable {
     return ongoingLoginEntryRepository.saveLoginEntry(entry)
@@ -93,10 +91,6 @@ class UserSession @Inject constructor(
           currentFacilityUuid = payload.registrationFacilityId
       )
     }
-  }
-
-  fun saveOngoingRegistrationEntry(entry: OngoingRegistrationEntry) {
-    this.ongoingRegistrationEntry = entry
   }
 
   fun storeUserAndAccessToken(userPayload: LoggedInUserPayload, accessToken: String): Completable {

@@ -24,10 +24,6 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       is SearchForExistingUserCompleted -> registerOrLoginUser(model, event.result)
       is UserCreatedLocally -> next(model.switchToPhoneEntryMode(), ProceedToLogin)
       is CurrentUserUnauthorizedStatusLoaded -> showUserLoggedOut(event)
-      is CurrentRegistrationEntrySaved -> {
-        val updatedModel = model.switchToPhoneEntryMode()
-        next(updatedModel, ContinueRegistration(model.ongoingRegistrationEntry))
-      }
     }
   }
 
@@ -68,7 +64,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
   ): Next<RegistrationPhoneModel, RegistrationPhoneEffect> {
     return when (result) {
       is SearchUserResult.Found -> saveFoundUserLocally(model, result.uuid, result.status)
-      SearchUserResult.NotFound -> dispatch(SaveCurrentRegistrationEntry(model.ongoingRegistrationEntry!!) as RegistrationPhoneEffect)
+      SearchUserResult.NotFound -> next(model.switchToPhoneEntryMode(), ContinueRegistration(model.ongoingRegistrationEntry))
       SearchUserResult.NetworkError -> next(model.switchToPhoneEntryMode().withRegistrationResult(RegistrationResult.NetworkError))
       SearchUserResult.OtherError -> next(model.switchToPhoneEntryMode().withRegistrationResult(RegistrationResult.OtherError))
     }

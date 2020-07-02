@@ -70,7 +70,6 @@ class RegistrationPhoneScreenLogicTest {
     setupController(ongoingRegistrationEntry = ongoingEntry)
 
     // then
-    verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(ui).preFillUserDetails(ongoingEntry)
   }
 
@@ -89,7 +88,6 @@ class RegistrationPhoneScreenLogicTest {
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(userSession).saveOngoingRegistrationEntry(entryWithPhoneNumber)
     verify(ui).openRegistrationNameEntryScreen(entryWithPhoneNumber)
   }
 
@@ -110,13 +108,13 @@ class RegistrationPhoneScreenLogicTest {
 
     // then
     verifyZeroInteractions(userSession)
+    verify(ui, never()).openRegistrationNameEntryScreen(any())
 
     // when
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(validNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(userSession).saveOngoingRegistrationEntry(entryWithValidNumber)
     verify(ui).openRegistrationNameEntryScreen(entryWithValidNumber)
   }
 
@@ -132,7 +130,6 @@ class RegistrationPhoneScreenLogicTest {
 
     // then
     verify(ui).showInvalidNumberError()
-    verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(ui, never()).openRegistrationNameEntryScreen(any())
   }
 

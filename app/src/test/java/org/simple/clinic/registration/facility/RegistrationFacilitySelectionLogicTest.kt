@@ -258,7 +258,6 @@ class RegistrationFacilitySelectionLogicTest {
     verify(ui).updateFacilities(listItemBuilder.build(listOf(facility1), "", null, registrationConfig.proximityThresholdForNearbyFacilities))
     verify(uiActions).openIntroVideoScreen()
     verifyNoMoreInteractions(uiActions)
-    verify(userSession).saveOngoingRegistrationEntry(entryWithFacility)
     verify(userSession).saveOngoingRegistrationEntryAsUser(entryWithFacility, currentTime)
   }
 

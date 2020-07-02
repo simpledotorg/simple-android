@@ -11,8 +11,6 @@ data class ValidatePinConfirmation(
 
 object ClearPin: RegistrationConfirmPinEffect()
 
-data class SaveCurrentRegistrationEntry(val entry: OngoingRegistrationEntry): RegistrationConfirmPinEffect()
-
 data class OpenFacilitySelectionScreen(val entry: OngoingRegistrationEntry): RegistrationConfirmPinEffect()
 
 data class GoBackToPinEntry(val entry: OngoingRegistrationEntry): RegistrationConfirmPinEffect()

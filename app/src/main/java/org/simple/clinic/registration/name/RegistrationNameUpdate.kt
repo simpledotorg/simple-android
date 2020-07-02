@@ -12,7 +12,6 @@ class RegistrationNameUpdate : Update<RegistrationNameModel, RegistrationNameEve
       is RegistrationFullNameTextChanged -> next(model.nameChanged(event.fullName))
       is NameValidated -> nameValidated(model, event)
       is RegistrationFullNameDoneClicked -> dispatch(ValidateEnteredName(model.ongoingRegistrationEntry.fullName!!) as RegistrationNameEffect)
-      is CurrentRegistrationEntrySaved -> dispatch(ProceedToPinEntry(model.ongoingRegistrationEntry))
     }
   }
 
@@ -23,7 +22,7 @@ class RegistrationNameUpdate : Update<RegistrationNameModel, RegistrationNameEve
     val updatedModel = model.nameValidated(event.result)
 
     return if (updatedModel.isEnteredNameValid)
-      next(updatedModel, SaveCurrentRegistrationEntry(updatedModel.ongoingRegistrationEntry) as RegistrationNameEffect)
+      next(updatedModel, ProceedToPinEntry(model.ongoingRegistrationEntry) as RegistrationNameEffect)
     else
       next(updatedModel)
   }

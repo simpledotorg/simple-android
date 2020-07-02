@@ -64,7 +64,7 @@ class ConfirmRemovePrescriptionDialogControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = ConfirmRemovePrescriptionDialogModel.create(),
+        defaultModel = ConfirmRemovePrescriptionDialogModel.create(prescribedDrugUuid),
         init = Init { first(it) },
         update = ConfirmRemovePrescriptionDialogUpdate(),
         effectHandler = ConfirmRemovePrescriptionDialogEffectHandler(uiActions).build(),

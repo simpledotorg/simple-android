@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -16,7 +15,6 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -149,8 +147,6 @@ class RegistrationConfirmPinLogicTest {
   private fun setupController(
       ongoingRegistrationEntry: OngoingRegistrationEntry = ongoingEntry
   ) {
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingRegistrationEntry.toOptional())
-
     val effectHandler = RegistrationConfirmPinEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         userSession = userSession,

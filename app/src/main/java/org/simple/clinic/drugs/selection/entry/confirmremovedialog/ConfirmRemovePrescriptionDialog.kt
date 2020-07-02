@@ -59,7 +59,7 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment(), UiActions {
   private val delegate: MobiusDelegate<ConfirmRemovePrescriptionDialogModel, ConfirmRemovePrescriptionDialogEvent, ConfirmRemovePrescriptionDialogEffect> by unsafeLazy {
     MobiusDelegate.forActivity(
         events = dialogEvents.ofType(),
-        defaultModel = ConfirmRemovePrescriptionDialogModel.create(),
+        defaultModel = ConfirmRemovePrescriptionDialogModel.create(prescriptionUuidToDelete),
         update = ConfirmRemovePrescriptionDialogUpdate(),
         effectHandler = effectHandlerFactory.create(this).build()
     )

@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import com.spotify.mobius.Init
 import io.reactivex.Completable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -32,12 +31,10 @@ class ConfirmRemovePrescriptionDialogLogicTest {
 
   private val prescribedDrugUuid = UUID.fromString("fe94ba47-4d34-476c-809f-c2adfc11914a")
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<ConfirmRemovePrescriptionDialogModel, ConfirmRemovePrescriptionDialogEvent, ConfirmRemovePrescriptionDialogEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -57,11 +54,6 @@ class ConfirmRemovePrescriptionDialogLogicTest {
   }
 
   private fun setupController() {
-    val controller = ConfirmRemovePrescriptionDialogController(prescriptionRepository, prescribedDrugUuid)
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(uiActions) }
-
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = ConfirmRemovePrescriptionDialogModel.create(prescribedDrugUuid),

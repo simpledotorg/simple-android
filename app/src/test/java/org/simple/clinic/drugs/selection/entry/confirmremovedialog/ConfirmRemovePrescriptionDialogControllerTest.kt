@@ -12,7 +12,6 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.bp.entry.confirmremovebloodpressure.RemovePrescriptionClicked
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.mobius.first
 import org.simple.clinic.util.RxErrorsRule

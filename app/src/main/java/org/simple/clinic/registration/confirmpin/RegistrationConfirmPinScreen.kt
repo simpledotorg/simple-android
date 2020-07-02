@@ -71,10 +71,6 @@ class RegistrationConfirmPinScreen(
       screenRouter.pop()
     }
 
-    // Because PIN is auto-submitted when 4 digits are entered, restoring the
-    // existing PIN will immediately take the user to the next screen.
-    confirmPinEditText.isSaveEnabled = false
-
     // Showing the keyboard again in case the user returns from location permission screen.
     confirmPinEditText.showKeyboard()
   }
@@ -115,6 +111,8 @@ class RegistrationConfirmPinScreen(
 
     val pinAutoSubmits = confirmPinEditText
         .textChanges()
+        // Because PIN is auto-submitted when 4 digits are entered, restoring the
+        // existing PIN will immediately take the user to the next screen.
         .skip(1)
         .filter { it.length == SECURITY_PIN_LENGTH }
         .map { RegistrationConfirmPinDoneClicked() }

@@ -5,9 +5,7 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.bp.entry.confirmremovebloodpressure.RemovePrescriptionClicked
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -28,17 +26,6 @@ class ConfirmRemovePrescriptionDialogController @AssistedInject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
-    return removePrescription(replayedEvents)
+    return Observable.never()
   }
-
-  private fun removePrescription(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RemovePrescriptionClicked>()
-        .flatMap {
-          prescriptionRepository
-              .softDeletePrescription(prescribedDrugUuid)
-              .andThen(Observable.just { ui: Ui -> ui.closeDialog() })
-        }
-  }
-
 }

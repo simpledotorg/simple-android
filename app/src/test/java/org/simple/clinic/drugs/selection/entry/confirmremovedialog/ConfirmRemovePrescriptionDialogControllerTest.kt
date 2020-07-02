@@ -70,6 +70,7 @@ class ConfirmRemovePrescriptionDialogControllerTest {
         update = ConfirmRemovePrescriptionDialogUpdate(),
         effectHandler = ConfirmRemovePrescriptionDialogEffectHandler(
             schedulersProvider = TestSchedulersProvider.trampoline(),
+            prescriptionRepository = prescriptionRepository,
             uiActions = uiActions
         ).build(),
         modelUpdateListener = { }

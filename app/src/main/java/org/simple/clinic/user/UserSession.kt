@@ -56,8 +56,11 @@ class UserSession @Inject constructor(
     ongoingLoginEntryRepository.clearLoginEntry()
   }
 
-  fun saveOngoingRegistrationEntryAsUser(timestamp: Instant): Completable {
-    val user = ongoingRegistrationEntry!!.let { entry ->
+  fun saveOngoingRegistrationEntryAsUser(
+      ongoingRegistrationEntry: OngoingRegistrationEntry,
+      timestamp: Instant
+  ): Completable {
+    val user = ongoingRegistrationEntry.let { entry ->
       User(
           uuid = entry.uuid!!,
           fullName = entry.fullName!!,
@@ -72,7 +75,7 @@ class UserSession @Inject constructor(
       )
     }
 
-    return storeUser(user, ongoingRegistrationEntry!!.facilityId!!)
+    return storeUser(user, ongoingRegistrationEntry.facilityId!!)
         .doOnSubscribe { Timber.i("Logging in from ongoing registration entry") }
   }
 

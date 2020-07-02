@@ -222,7 +222,7 @@ class RegistrationFacilitySelectionLogicTest {
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("5cf9d744-7f34-4633-aa46-a6c7e7542060"))
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
-    whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
+    whenever(userSession.saveOngoingRegistrationEntryAsUser(ongoingEntry, currentTime)).thenReturn(Completable.complete())
     whenever(facilityRepository.facilities("")).thenReturn(Observable.just(listOf(facility1)))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(1))
 
@@ -243,9 +243,10 @@ class RegistrationFacilitySelectionLogicTest {
   fun `when a facility is confirmed then the ongoing entry should be updated with selected facility and the user should be logged in`() {
     // given
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("bc761c6c-032f-4f1d-a66a-3ec81e9e8aa3"))
+    val entryWithFacility = ongoingEntry.copy(facilityId = facility1.uuid)
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
-    whenever(userSession.saveOngoingRegistrationEntryAsUser(currentTime)).thenReturn(Completable.complete())
+    whenever(userSession.saveOngoingRegistrationEntryAsUser(entryWithFacility, currentTime)).thenReturn(Completable.complete())
     whenever(facilityRepository.facilities("")).thenReturn(Observable.just(listOf(facility1)))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(1))
 
@@ -260,8 +261,8 @@ class RegistrationFacilitySelectionLogicTest {
     verify(ui).updateFacilities(listItemBuilder.build(listOf(facility1), "", null, registrationConfig.proximityThresholdForNearbyFacilities))
     verify(uiActions).openIntroVideoScreen()
     verifyNoMoreInteractions(uiActions)
-    verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityId = facility1.uuid))
-    verify(userSession).saveOngoingRegistrationEntryAsUser(currentTime)
+    verify(userSession).saveOngoingRegistrationEntry(entryWithFacility)
+    verify(userSession).saveOngoingRegistrationEntryAsUser(entryWithFacility, currentTime)
   }
 
   @Test

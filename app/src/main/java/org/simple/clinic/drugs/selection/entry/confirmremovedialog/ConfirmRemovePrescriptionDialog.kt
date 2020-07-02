@@ -11,9 +11,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -32,12 +30,8 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment(), UiActions {
   lateinit var prescriptionRepository: PrescriptionRepository
 
   @Inject
-  lateinit var controller: ConfirmRemovePrescriptionDialogController.Factory
-
-  @Inject
   lateinit var effectHandlerFactory: ConfirmRemovePrescriptionDialogEffectHandler.Factory
 
-  private val onStarts = PublishSubject.create<Any>()
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
 
   private val prescriptionUuidToDelete by unsafeLazy {
@@ -71,27 +65,12 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment(), UiActions {
 
   @SuppressLint("CheckResult")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val dialog = AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle_Destructive)
+    return AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle_Destructive)
         .setTitle(R.string.customprescription_delete_title)
         .setMessage(R.string.customprescription_delete_message)
         .setPositiveButton(R.string.customprescription_delete_confirm, null)
         .setNegativeButton(R.string.customprescription_delete_cancel, null)
         .create()
-
-    onStarts
-        .take(1)
-        .flatMap { setupDialog() }
-        .takeUntil(screenDestroys)
-        .subscribe { uiChange -> uiChange(this) }
-
-    return dialog
-  }
-
-  private fun setupDialog(): Observable<UiChange> {
-    return events
-        .observeOn(io())
-        .compose(controller.create(prescriptionUuidToDelete))
-        .observeOn(mainThread())
   }
 
   override fun onAttach(context: Context) {
@@ -106,7 +85,6 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment(), UiActions {
 
   override fun onStart() {
     super.onStart()
-    onStarts.onNext(Any())
     delegate.start()
   }
 

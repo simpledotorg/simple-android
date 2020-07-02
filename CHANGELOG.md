@@ -11,6 +11,7 @@
 
 ### Changes
 - Add support for Medical Record Number in Ethiopia
+- Add Amharic translation
 
 ## On Demo
 ### Changes

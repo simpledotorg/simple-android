@@ -2,7 +2,7 @@
 
 ## Next Release
 ### Changes
-- Updated translations: ``mr_IN`, `om_ET`
+- Updated translations: `mr_IN`, `om_ET`
 
 ### Internal
 - Migrated `RegistrationPinScreen` to Mobius

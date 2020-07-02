@@ -16,6 +16,7 @@ import org.simple.clinic.bp.entry.confirmremovebloodpressure.RemovePrescriptionC
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.mobius.first
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -67,7 +68,10 @@ class ConfirmRemovePrescriptionDialogControllerTest {
         defaultModel = ConfirmRemovePrescriptionDialogModel.create(prescribedDrugUuid),
         init = Init { first(it) },
         update = ConfirmRemovePrescriptionDialogUpdate(),
-        effectHandler = ConfirmRemovePrescriptionDialogEffectHandler(uiActions).build(),
+        effectHandler = ConfirmRemovePrescriptionDialogEffectHandler(
+            schedulersProvider = TestSchedulersProvider.trampoline(),
+            uiActions = uiActions
+        ).build(),
         modelUpdateListener = { }
     )
 

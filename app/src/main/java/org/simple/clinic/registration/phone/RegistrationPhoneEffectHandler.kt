@@ -36,7 +36,6 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .addTransformer(SearchForExistingUser::class.java, findUserByPhoneNumber())
         .addConsumer(ShowAccessDeniedScreen::class.java, { uiActions.showAccessDeniedScreen(it.number) }, schedulers.ui())
         .addTransformer(CreateUserLocally::class.java, createUserLocally())
-        .addTransformer(ClearCurrentRegistrationEntry::class.java, clearCurrentRegistrationEntry())
         .addAction(ProceedToLogin::class.java, uiActions::openLoginPinEntryScreen, schedulers.ui())
         .addTransformer(LoadCurrentUserUnauthorizedStatus::class.java, loadCurrentUserUnauthorizedStatus())
         .addAction(ShowUserLoggedOutAlert::class.java, uiActions::showLoggedOutOfDeviceDialog, schedulers.ui())
@@ -85,14 +84,6 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
                 .saveOngoingLoginEntry(it)
                 .andThen(Single.just(UserCreatedLocally as RegistrationPhoneEvent))
           }
-    }
-  }
-
-  private fun clearCurrentRegistrationEntry(): ObservableTransformer<ClearCurrentRegistrationEntry, RegistrationPhoneEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .doOnNext { userSession.clearOngoingRegistrationEntry() }
-          .map { CurrentRegistrationEntryCleared }
     }
   }
 

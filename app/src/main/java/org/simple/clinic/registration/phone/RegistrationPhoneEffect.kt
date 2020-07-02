@@ -18,8 +18,6 @@ data class ShowAccessDeniedScreen(val number: String): RegistrationPhoneEffect()
 
 data class CreateUserLocally(val userUuid: UUID, val number: String, val status: UserStatus): RegistrationPhoneEffect()
 
-object ClearCurrentRegistrationEntry: RegistrationPhoneEffect()
-
 object ProceedToLogin: RegistrationPhoneEffect()
 
 object LoadCurrentUserUnauthorizedStatus: RegistrationPhoneEffect()

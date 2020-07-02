@@ -99,10 +99,6 @@ class UserSession @Inject constructor(
     this.ongoingRegistrationEntry = entry
   }
 
-  fun clearOngoingRegistrationEntry() {
-    ongoingRegistrationEntry = null
-  }
-
   fun storeUserAndAccessToken(userPayload: LoggedInUserPayload, accessToken: String): Completable {
     accessTokenPreference.set(Just(accessToken))
     return storeUser(

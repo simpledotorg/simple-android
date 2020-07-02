@@ -22,8 +22,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       is EnteredNumberValidated -> syncFacilitiesOnValidNumber(model, event)
       is FacilitiesSynced -> lookupUserByNumber(event, model)
       is SearchForExistingUserCompleted -> registerOrLoginUser(model, event.result)
-      is UserCreatedLocally -> dispatch(ClearCurrentRegistrationEntry)
-      is CurrentRegistrationEntryCleared -> next(model.switchToPhoneEntryMode(), ProceedToLogin)
+      is UserCreatedLocally -> next(model.switchToPhoneEntryMode(), ProceedToLogin)
       is CurrentUserUnauthorizedStatusLoaded -> showUserLoggedOut(event)
       is CurrentRegistrationEntrySaved -> {
         val updatedModel = model.switchToPhoneEntryMode()

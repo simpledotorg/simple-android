@@ -224,7 +224,6 @@ class RegistrationPhoneScreenLogicTest {
 
     // then
     verify(userSession).saveOngoingLoginEntry(entryToBeSaved)
-    verify(userSession).clearOngoingRegistrationEntry()
     verify(ui).openLoginPinEntryScreen()
     verify(ui, never()).showAccessDeniedScreen(inputNumber)
   }
@@ -245,7 +244,6 @@ class RegistrationPhoneScreenLogicTest {
     // then
     verify(ui).showAccessDeniedScreen(inputNumber)
     verify(userSession, never()).saveOngoingLoginEntry(any())
-    verify(userSession, never()).clearOngoingRegistrationEntry()
     verify(ui, never()).openLoginPinEntryScreen()
   }
 

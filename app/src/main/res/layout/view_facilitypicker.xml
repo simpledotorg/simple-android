@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:parentTag="org.simple.clinic.facilitypicker.FacilityPickerView">
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/grey4">
+
+    <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
+      android:id="@+id/toolbarViewFlipper"
+      style="@style/Clinic.V2.FacilitySelection.ToolbarFlipper"
+      app:debug_displayedChild="0">
+
+      <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarViewWithoutSearch"
+        style="@style/Clinic.V2.FacilitySelection.ToolbarWithoutSearch"
+        app:title="@string/facilitypicker_screen_title" />
+
+      <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
+        android:id="@+id/toolbarViewWithSearch"
+        style="@style/Clinic.V2.FacilitySelection.ToolbarWithSearch">
+
+        <EditText
+          android:id="@+id/searchEditText"
+          style="@style/Clinic.V2.FacilitySelection.SearchField"
+          android:hint="@string/facilitypicker_search_hint"
+          android:importantForAutofill="no"
+          tools:ignore="UnusedAttribute" />
+      </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
+    </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
+
+    <LinearLayout
+      android:id="@+id/progressView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@+id/toolbarViewFlipper"
+      android:orientation="vertical"
+      android:visibility="gone">
+
+      <include layout="@layout/list_facility_selection_progress" />
+
+      <include layout="@layout/list_facility_selection_progress" />
+
+      <include layout="@layout/list_facility_selection_progress" />
+
+      <include layout="@layout/list_facility_selection_progress" />
+
+      <include layout="@layout/list_facility_selection_progress" />
+
+      <include layout="@layout/list_facility_selection_progress" />
+
+      <include layout="@layout/list_facility_selection_progress" />
+
+      <include layout="@layout/list_facility_selection_progress" />
+
+      <include layout="@layout/list_facility_selection_progress" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/facilityRecyclerView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@+id/toolbarViewFlipper"
+      android:clipToPadding="false"
+      android:paddingBottom="@dimen/spacing_8"
+      android:scrollbarStyle="insideOverlay"
+      android:scrollbars="vertical"
+      tools:listitem="@layout/list_facility_selection_option" />
+  </RelativeLayout>
+</merge>

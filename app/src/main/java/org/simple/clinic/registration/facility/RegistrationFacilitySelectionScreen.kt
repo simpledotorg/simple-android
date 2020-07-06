@@ -13,7 +13,7 @@ import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_registration_facility_selection.view.*
+import kotlinx.android.synthetic.main.view_facilitypicker.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector

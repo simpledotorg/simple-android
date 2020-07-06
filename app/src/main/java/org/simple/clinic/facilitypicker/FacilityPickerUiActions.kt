@@ -1,3 +1,7 @@
 package org.simple.clinic.facilitypicker
 
-interface FacilityPickerUiActions
+import org.simple.clinic.facility.Facility
+
+interface FacilityPickerUiActions {
+  fun dispatchSelectedFacility(facility: Facility)
+}

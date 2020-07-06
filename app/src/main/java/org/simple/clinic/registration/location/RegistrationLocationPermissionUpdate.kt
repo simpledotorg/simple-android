@@ -3,6 +3,7 @@ package org.simple.clinic.registration.location
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 
 class RegistrationLocationPermissionUpdate : Update<RegistrationLocationPermissionModel,
     RegistrationLocationPermissionEvent, RegistrationLocationPermissionEffect> {
@@ -11,6 +12,14 @@ class RegistrationLocationPermissionUpdate : Update<RegistrationLocationPermissi
       model: RegistrationLocationPermissionModel,
       event: RegistrationLocationPermissionEvent
   ): Next<RegistrationLocationPermissionModel, RegistrationLocationPermissionEffect> {
-    return noChange()
+    when (event) {
+      is RequestLocationPermission -> {
+        if (event.isPermissionGranted) {
+          return dispatch(OpenFacilitySelectionScreen)
+        }
+
+        return noChange()
+      }
+    }
   }
 }

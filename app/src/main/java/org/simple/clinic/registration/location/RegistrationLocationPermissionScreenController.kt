@@ -18,13 +18,6 @@ class RegistrationLocationPermissionScreenController @Inject constructor() : Obs
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return handlePermissionGrants(replayedEvents)
-  }
-
-  private fun handlePermissionGrants(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RequestLocationPermission>()
-        .filter(RequestLocationPermission::isPermissionGranted)
-        .map { { ui: Ui -> ui.openFacilitySelectionScreen() } }
+    return Observable.never()
   }
 }

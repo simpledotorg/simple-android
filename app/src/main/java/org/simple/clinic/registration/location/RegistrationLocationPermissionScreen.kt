@@ -4,8 +4,8 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
-import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_location_permission.view.*
@@ -64,7 +64,7 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
         ui = this,
         events = events,
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
 
     toolbar.setOnClickListener {

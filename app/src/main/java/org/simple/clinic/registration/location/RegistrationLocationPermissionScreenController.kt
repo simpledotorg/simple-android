@@ -16,7 +16,6 @@ class RegistrationLocationPermissionScreenController @Inject constructor() : Obs
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(ReportAnalyticsEvents())
         .replay()
 
     return handlePermissionGrants(replayedEvents)

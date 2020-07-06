@@ -32,9 +32,11 @@ class RegistrationLocationPermissionScreenControllerTest {
 
   @Test
   fun `when location permission is received then facility selection screen should be opened`() {
+    // when
     setupController()
     uiEvents.onNext(RequestLocationPermission(permission = Optional.of(GRANTED)))
 
+    // then
     verify(screen).openFacilitySelectionScreen()
     verifyNoMoreInteractions(screen)
   }

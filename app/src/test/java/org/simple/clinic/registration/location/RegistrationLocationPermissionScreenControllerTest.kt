@@ -8,14 +8,13 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.mobius.first
-import org.simple.clinic.util.Just
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 
@@ -59,7 +58,10 @@ class RegistrationLocationPermissionScreenControllerTest {
         defaultModel = RegistrationLocationPermissionModel.create(),
         init = Init { first(it) },
         update = RegistrationLocationPermissionUpdate(),
-        effectHandler = RegistrationLocationPermissionEffectHandler(uiActions).build(),
+        effectHandler = RegistrationLocationPermissionEffectHandler(
+            schedulersProvider = TestSchedulersProvider.trampoline(),
+            uiActions = uiActions
+        ).build(),
         modelUpdateListener = { /* no-op */ }
     )
 

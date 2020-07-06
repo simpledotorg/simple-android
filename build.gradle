@@ -75,7 +75,7 @@ buildscript {
       zxing               : '3.3.3',
       paging              : '2.1.2',
       appcompat           : '1.2.0-beta01',
-      navigation          : '2.2.2',
+      navigation          : '2.3.0',
       lottie              : '3.4.0',
       desugarJdk          : '1.0.5'
   ]

@@ -110,7 +110,8 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   private fun navigateToSplashScreen() {
-    if (navController.currentDestination?.id != R.id.splashScreen) {
+    if (navController.currentDestination?.id == R.id.placeholderScreen &&
+        navController.currentDestination?.id != R.id.splashScreen) {
       navController.navigate(R.id.action_placeholderScreen_to_splashScreen)
     }
   }
@@ -118,7 +119,8 @@ class SetupActivity : AppCompatActivity(), UiActions {
   override fun showCountrySelectionScreen() {
     // If select country screen is already being shown don't navigate again, it would cause
     // duplicate destinations
-    if (navController.currentDestination?.id != R.id.selectCountryScreen) {
+    if (navController.currentDestination?.id == R.id.placeholderScreen &&
+        navController.currentDestination?.id != R.id.selectCountryScreen) {
       navController.navigate(R.id.action_placeholderScreen_to_selectCountryScreen)
     }
   }

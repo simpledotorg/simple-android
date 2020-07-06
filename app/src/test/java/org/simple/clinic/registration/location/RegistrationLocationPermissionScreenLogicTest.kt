@@ -26,12 +26,10 @@ class RegistrationLocationPermissionScreenLogicTest {
   val uiEvents = PublishSubject.create<UiEvent>()
   val uiActions = mock<UiActions>()
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var textFixture: MobiusTestFixture<RegistrationLocationPermissionModel, RegistrationLocationPermissionEvent, RegistrationLocationPermissionEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     textFixture.dispose()
   }
 
@@ -47,12 +45,6 @@ class RegistrationLocationPermissionScreenLogicTest {
   }
 
   private fun setupController() {
-    val controller = RegistrationLocationPermissionScreenController()
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(uiActions) }
-
     textFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = RegistrationLocationPermissionModel.create(),

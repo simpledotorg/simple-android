@@ -11,7 +11,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_location_permission.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
@@ -58,7 +58,7 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     bindUiToController(
         ui = this,
@@ -104,5 +104,9 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
 
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+  }
+
+  interface Injector {
+    fun inject(target: RegistrationLocationPermissionScreen)
   }
 }

@@ -5,7 +5,9 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
-class FacilityPickerUpdate: Update<FacilityPickerModel, FacilityPickerEvent, FacilityPickerEffect> {
+class FacilityPickerUpdate(
+    private val pickFrom: PickFrom
+) : Update<FacilityPickerModel, FacilityPickerEvent, FacilityPickerEffect> {
 
   override fun update(model: FacilityPickerModel, event: FacilityPickerEvent): Next<FacilityPickerModel, FacilityPickerEffect> {
     return when (event) {

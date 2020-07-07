@@ -17,6 +17,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.change.FacilityListItemBuilder
+import org.simple.clinic.facilitypicker.PickFrom.AllFacilities
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.location.DistanceCalculator
 import org.simple.clinic.location.LocationUpdate
@@ -235,7 +236,8 @@ class FacilityPickerLogicTest {
 
   private fun setupController(
       config: RegistrationConfig = registrationConfig,
-      locationUpdate: Observable<LocationUpdate> = Observable.just(Unavailable)
+      locationUpdate: Observable<LocationUpdate> = Observable.just(Unavailable),
+      pickFrom: PickFrom = AllFacilities
   ) {
     whenever(screenLocationUpdates.streamUserLocation(
         updateInterval = config.locationUpdateInterval,
@@ -255,7 +257,7 @@ class FacilityPickerLogicTest {
         events = uiEvents.ofType(),
         defaultModel = FacilityPickerModel.create(),
         init = FacilityPickerInit(config),
-        update = FacilityPickerUpdate(),
+        update = FacilityPickerUpdate(pickFrom),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )

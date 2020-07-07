@@ -52,8 +52,15 @@ class FacilityPickerView(
 
   private val recyclerViewAdapter = ItemAdapter(FacilityListItem.Differ())
 
+  private val pickFrom: PickFrom
+
   init {
     inflate(context, R.layout.view_facilitypicker, this)
+
+    val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.FacilityPickerView)
+    pickFrom = PickFrom.forAttribute(typedArray)
+    typedArray.recycle()
+
     context.injector<Injector>().inject(this)
 
     toolbarViewWithSearch.setNavigationOnClickListener { backClicked?.invoke() }
@@ -85,7 +92,7 @@ class FacilityPickerView(
     MobiusDelegate.forView(
         events = events,
         defaultModel = FacilityPickerModel.create(),
-        update = FacilityPickerUpdate(),
+        update = FacilityPickerUpdate(pickFrom),
         effectHandler = effectHandlerFactory.inject(this).build(),
         init = FacilityPickerInit(config),
         modelUpdateListener = uiRenderer::render

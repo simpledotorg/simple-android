@@ -85,7 +85,9 @@ data class PatientPayload(
         recordedAt = recordedAt,
         syncStatus = newStatus,
         reminderConsent = reminderConsent,
-        deletedReason = deletedReason
+        deletedReason = deletedReason,
+        registration_facility_id = null,
+        assigned_facility_id = null
     )
   }
 }

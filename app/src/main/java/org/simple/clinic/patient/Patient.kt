@@ -65,7 +65,11 @@ data class Patient(
 
     val reminderConsent: ReminderConsent,
 
-    val deletedReason: DeletedReason?
+    val deletedReason: DeletedReason?,
+
+    val registration_facility_id : UUID?,
+
+    val assigned_facility_id : UUID?
 ) : Parcelable {
 
   fun withNameAndGender(fullName: String, gender: Gender): Patient =

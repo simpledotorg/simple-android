@@ -301,7 +301,9 @@ class PatientRepository @Inject constructor(
                 recordedAt = Instant.now(utcClock),
                 syncStatus = PENDING,
                 reminderConsent = reminderConsent,
-                deletedReason = null
+                deletedReason = null,
+                registration_facility_id = null,
+                assigned_facility_id = null
             )
           }
         }

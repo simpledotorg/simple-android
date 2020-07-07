@@ -260,7 +260,7 @@ class FacilityPickerLogicTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = FacilityPickerModel.create(),
-        init = FacilityPickerInit(config),
+        init = FacilityPickerInit(pickFrom, config),
         update = FacilityPickerUpdate(pickFrom),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render

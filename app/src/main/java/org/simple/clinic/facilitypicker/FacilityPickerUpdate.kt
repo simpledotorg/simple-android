@@ -2,6 +2,8 @@ package org.simple.clinic.facilitypicker
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.facilitypicker.PickFrom.AllFacilities
+import org.simple.clinic.facilitypicker.PickFrom.InCurrentGroup
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
@@ -13,7 +15,14 @@ class FacilityPickerUpdate(
     return when (event) {
       is LocationFetched -> next(model.locationFetched(event.update))
       is FacilitiesFetched -> next(model.queryChanged(event.query).facilitiesLoaded(event.facilities))
-      is SearchQueryChanged -> dispatch(LoadFacilitiesWithQuery(event.query))
+      is SearchQueryChanged -> {
+        val effect = when (pickFrom) {
+          AllFacilities -> LoadFacilitiesWithQuery(event.query)
+          InCurrentGroup -> LoadFacilitiesInCurrentGroup(event.query)
+        }
+
+        dispatch(effect)
+      }
       is TotalFacilityCountLoaded -> next(model.facilityCountLoaded(event.count))
       is FacilityClicked -> dispatch(ForwardSelectedFacility(event.facility))
     }

@@ -94,7 +94,7 @@ class FacilityPickerView(
         defaultModel = FacilityPickerModel.create(),
         update = FacilityPickerUpdate(pickFrom),
         effectHandler = effectHandlerFactory.inject(this).build(),
-        init = FacilityPickerInit(config),
+        init = FacilityPickerInit(pickFrom, config),
         modelUpdateListener = uiRenderer::render
     )
   }

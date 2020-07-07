@@ -14,7 +14,7 @@
 - Add support for Medical Record Number in Ethiopia
 - Add Amharic translation
 
-## On Demo
+## 2020-07-07-7330
 ### Changes
 - New Onboarding UI
 - Show new registration label for recent patients in home screen

@@ -339,8 +339,6 @@
   <string name="overduelist_transferred">Transferred to</string>
 
   <!-- Facility change -->
-  <string name="changefacility_screen_title">Select your clinic</string>
-  <string name="facilitychange_search_hint">Search for your clinic</string>
 
   <!-- Enter OTP -->
   <string name="enterotp_check_sms_sent_to">Check SMS sent to</string>

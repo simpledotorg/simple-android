@@ -282,8 +282,6 @@
   <string name="overduelist_high_risk">ከፍተኛ ተጋላጭነት</string>
 
   <!-- Facility change -->
-  <string name="changefacility_screen_title">ክሊኒክዎን ይምረጡ</string>
-  <string name="facilitychange_search_hint">ክሊኒክዎን ይፈልጉ</string>
 
   <!-- Enter OTP -->
   <string name="enterotp_check_sms_sent_to">የተላከው ኤስኤምኤስ ያረጋግጡ</string>

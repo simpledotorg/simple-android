@@ -282,8 +282,6 @@
   <string name="overduelist_high_risk">ልዑል ስግኣት</string>
 
   <!-- Facility change -->
-  <string name="changefacility_screen_title">ሕክምናኻ ምረጽ</string>
-  <string name="facilitychange_search_hint">ሕክምናኻ ድለይ</string>
 
   <!-- Enter OTP -->
   <string name="enterotp_check_sms_sent_to">ናብ [] ዝተላእከ ሓጺር መልእኽቲ ኣረጋግጽ</string>

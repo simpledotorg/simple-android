@@ -60,7 +60,7 @@ class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi {
 
     MobiusDelegate.forActivity(
         events = events.ofType(),
-        defaultModel = FacilityChangeModel(),
+        defaultModel = FacilityChangeModel.create(),
         update = FacilityChangeUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = FacilityChangeInit(),

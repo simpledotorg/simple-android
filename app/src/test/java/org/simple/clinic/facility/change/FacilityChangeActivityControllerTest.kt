@@ -86,12 +86,14 @@ class FacilityChangeActivityControllerTest {
     val uiRenderer = FacilityChangeUiRenderer(ui)
     val effectHandler = FacilityChangeEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
+        userSession = userSession,
+        facilityRepository = facilityRepository,
         uiActions = ui
     )
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = FacilityChangeModel(),
+        defaultModel = FacilityChangeModel.create(),
         update = FacilityChangeUpdate(),
         effectHandler = effectHandler.build(),
         init = FacilityChangeInit(),

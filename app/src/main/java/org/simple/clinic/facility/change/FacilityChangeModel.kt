@@ -2,6 +2,23 @@ package org.simple.clinic.facility.change
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.facility.Facility
 
 @Parcelize
-class FacilityChangeModel: Parcelable
+data class FacilityChangeModel(
+    val currentFacility: Facility?
+) : Parcelable {
+
+  companion object {
+    fun create(): FacilityChangeModel {
+      return FacilityChangeModel(currentFacility = null)
+    }
+  }
+
+  val hasLoadedCurrentFacility: Boolean
+    get() = currentFacility != null
+
+  fun currentFacilityLoaded(facility: Facility): FacilityChangeModel {
+    return copy(currentFacility = facility)
+  }
+}

@@ -3,16 +3,14 @@ package org.simple.clinic.facility.change
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class FacilityChangeEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
+    private val currentFacility: Lazy<Facility>,
     @Assisted private val uiActions: FacilityChangeUiActions
 ) {
 
@@ -33,15 +31,8 @@ class FacilityChangeEffectHandler @AssistedInject constructor(
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, FacilityChangeEvent> {
     return ObservableTransformer { effects ->
       effects
-          .switchMap {
-            userSession
-                .loggedInUser()
-                .subscribeOn(schedulers.io())
-                .filterAndUnwrapJust()
-                .switchMap(facilityRepository::currentFacility)
-                .take(1)
-                .map(::CurrentFacilityLoaded)
-          }
+          .observeOn(schedulers.io())
+          .map { CurrentFacilityLoaded(currentFacility.get()) }
     }
   }
 }

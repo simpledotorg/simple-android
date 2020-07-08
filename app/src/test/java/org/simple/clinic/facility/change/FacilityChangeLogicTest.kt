@@ -1,19 +1,14 @@
 package org.simple.clinic.facility.change
 
-import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Observable
+import dagger.Lazy
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
@@ -27,10 +22,6 @@ class FacilityChangeLogicTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()!!
   private val ui = mock<FacilityChangeUi>()
-  private val facilityRepository = mock<FacilityRepository>()
-  private val userSession = mock<UserSession>()
-
-  private val user = TestData.loggedInUser(uuid = UUID.fromString("43ea80dc-7aff-4679-b714-c4e74c529f84"))
   private val currentFacility = TestData.facility(uuid = UUID.fromString("6dc536d9-b460-4143-9b3b-7caedf17c0d9"))
 
   private lateinit var testFixture: MobiusTestFixture<FacilityChangeModel, FacilityChangeEvent, FacilityChangeEffect>
@@ -67,14 +58,10 @@ class FacilityChangeLogicTest {
   }
 
   private fun setupController() {
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
-    whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(currentFacility)
-
     val uiRenderer = FacilityChangeUiRenderer(ui)
     val effectHandler = FacilityChangeEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
-        userSession = userSession,
-        facilityRepository = facilityRepository,
+        currentFacility = Lazy { currentFacility },
         uiActions = ui
     )
 

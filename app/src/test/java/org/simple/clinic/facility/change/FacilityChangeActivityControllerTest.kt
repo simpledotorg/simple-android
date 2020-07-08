@@ -5,8 +5,9 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -31,21 +32,11 @@ class FacilityChangeActivityControllerTest {
   private val user = TestData.loggedInUser()
   private val currentFacility = TestData.facility(UUID.fromString("6dc536d9-b460-4143-9b3b-7caedf17c0d9"))
 
-  private lateinit var controller: FacilityChangeActivityController
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    controller = FacilityChangeActivityController(
-        facilityRepository = facilityRepository,
-        userSession = userSession
-    )
-
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
-    whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(currentFacility)
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -54,6 +45,7 @@ class FacilityChangeActivityControllerTest {
     val newFacility = TestData.facility(UUID.fromString("ce22e8b1-eba2-463f-8e91-0c237ebebf6b"))
 
     //when
+    setupController()
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(FacilityChangeClicked(newFacility))
 
@@ -67,10 +59,25 @@ class FacilityChangeActivityControllerTest {
     val newFacility = currentFacility
 
     //when
+    setupController()
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(FacilityChangeClicked(newFacility))
 
     //then
     verify(screen).goBack()
+  }
+
+  private fun setupController() {
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(currentFacility)
+
+    val controller = FacilityChangeActivityController(
+        facilityRepository = facilityRepository,
+        userSession = userSession
+    )
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

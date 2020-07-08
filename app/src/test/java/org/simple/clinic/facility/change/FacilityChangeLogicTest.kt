@@ -22,7 +22,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class FacilityChangeActivityControllerTest {
+class FacilityChangeLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

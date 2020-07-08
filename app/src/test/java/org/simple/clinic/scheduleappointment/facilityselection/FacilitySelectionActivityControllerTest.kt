@@ -4,13 +4,16 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class FacilitySelectionActivityControllerTest {
@@ -22,10 +25,12 @@ class FacilitySelectionActivityControllerTest {
   private val ui = mock<FacilitySelectionUi>()
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<FacilitySelectionModel, FacilitySelectionEvent, FacilitySelectionEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -48,5 +53,21 @@ class FacilitySelectionActivityControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
+
+    val effectHandler = FacilitySelectionEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+    val uiRenderer = FacilitySelectionUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = FacilitySelectionModel(),
+        update = FacilitySelectionUpdate(),
+        effectHandler = effectHandler.build(),
+        init = FacilitySelectionInit(),
+        modelUpdateListener = uiRenderer::render
+    )
+    testFixture.start()
   }
 }

@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_select_facility.*
 import org.simple.clinic.ClinicApp
@@ -15,6 +16,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
@@ -40,6 +42,9 @@ class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi {
   @Inject
   lateinit var controller: FacilitySelectionActivityController
 
+  @Inject
+  lateinit var effectHandlerFactory: FacilitySelectionEffectHandler.Factory
+
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
   private val events by unsafeLazy {
@@ -50,6 +55,19 @@ class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi {
         )
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = FacilitySelectionUiRenderer(this)
+
+    MobiusDelegate.forActivity(
+        events = events.ofType(),
+        defaultModel = FacilitySelectionModel(),
+        update = FacilitySelectionUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = FacilitySelectionInit(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   private lateinit var component: FacilitySelectionActivityComponent
@@ -66,6 +84,8 @@ class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi {
     )
 
     facilityPickerView.backClicked = this@FacilitySelectionActivity::finish
+
+    delegate.onRestoreInstanceState(savedInstanceState)
   }
 
   override fun attachBaseContext(baseContext: Context) {
@@ -82,6 +102,21 @@ class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi {
         .wrap { InjectorProviderContextWrapper.wrap(it, component) }
 
     super.attachBaseContext(wrappedContext)
+  }
+
+  override fun onStart() {
+    super.onStart()
+    delegate.start()
+  }
+
+  override fun onStop() {
+    delegate.stop()
+    super.onStop()
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    delegate.onSaveInstanceState(outState)
+    super.onSaveInstanceState(outState)
   }
 
   override fun onDestroy() {

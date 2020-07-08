@@ -29,8 +29,8 @@ class FacilityChangeActivityControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
 
-  private val user = TestData.loggedInUser()
-  private val currentFacility = TestData.facility(UUID.fromString("6dc536d9-b460-4143-9b3b-7caedf17c0d9"))
+  private val user = TestData.loggedInUser(uuid = UUID.fromString("43ea80dc-7aff-4679-b714-c4e74c529f84"))
+  private val currentFacility = TestData.facility(uuid = UUID.fromString("6dc536d9-b460-4143-9b3b-7caedf17c0d9"))
 
   private lateinit var controllerSubscription: Disposable
 
@@ -42,7 +42,7 @@ class FacilityChangeActivityControllerTest {
   @Test
   fun `when a new facility is selected then the confirmation sheet to change facility should open`() {
     //given
-    val newFacility = TestData.facility(UUID.fromString("ce22e8b1-eba2-463f-8e91-0c237ebebf6b"))
+    val newFacility = TestData.facility(uuid = UUID.fromString("ce22e8b1-eba2-463f-8e91-0c237ebebf6b"))
 
     //when
     setupController()

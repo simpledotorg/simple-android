@@ -3,7 +3,6 @@ package org.simple.clinic.scheduleappointment.facilityselection
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -24,12 +23,10 @@ class FacilitySelectionLogicTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<FacilitySelectionUi>()
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<FacilitySelectionModel, FacilitySelectionEvent, FacilitySelectionEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -48,12 +45,6 @@ class FacilitySelectionLogicTest {
   }
 
   private fun setupController() {
-    val controller = FacilitySelectionActivityController()
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
     val effectHandler = FacilitySelectionEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         uiActions = ui

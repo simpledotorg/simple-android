@@ -8,20 +8,16 @@ import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_select_facility.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
@@ -40,21 +36,11 @@ class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi {
   lateinit var locale: Locale
 
   @Inject
-  lateinit var controller: FacilitySelectionActivityController
-
-  @Inject
   lateinit var effectHandlerFactory: FacilitySelectionEffectHandler.Factory
 
-  private val onDestroys = PublishSubject.create<ScreenDestroyed>()
-
   private val events by unsafeLazy {
-    Observable
-        .merge(
-            screenCreates(),
-            facilityClicks()
-        )
+    facilityClicks()
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val delegate by unsafeLazy {
@@ -75,13 +61,6 @@ class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_select_facility)
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = onDestroys
-    )
 
     facilityPickerView.backClicked = this@FacilitySelectionActivity::finish
 
@@ -118,13 +97,6 @@ class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi {
     delegate.onSaveInstanceState(outState)
     super.onSaveInstanceState(outState)
   }
-
-  override fun onDestroy() {
-    onDestroys.onNext(ScreenDestroyed())
-    super.onDestroy()
-  }
-
-  private fun screenCreates() = Observable.just<UiEvent>(ScreenCreated())
 
   private fun facilityClicks(): Observable<UiEvent> {
     return Observable.create { emitter ->

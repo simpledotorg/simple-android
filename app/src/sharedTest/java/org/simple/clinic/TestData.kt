@@ -245,7 +245,8 @@ object TestData {
       address: PatientAddressPayload = addressPayload(),
       phoneNumbers: List<PatientPhoneNumberPayload>? = listOf(phoneNumberPayload()),
       businessIds: List<BusinessIdPayload> = listOf(businessIdPayload()),
-      deletedReason: DeletedReason? = randomDeletedReason()
+      deletedReason: DeletedReason? = randomDeletedReason(),
+      registeredFacilityId: UUID? = null
   ): PatientPayload {
     return PatientPayload(
         uuid = uuid,
@@ -263,7 +264,8 @@ object TestData {
         businessIds = businessIds,
         recordedAt = recordedAt,
         reminderConsent = Granted,
-        deletedReason = deletedReason
+        deletedReason = deletedReason,
+        registeredFacilityId = registeredFacilityId
     )
   }
 

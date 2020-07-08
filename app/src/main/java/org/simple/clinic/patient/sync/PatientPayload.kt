@@ -67,7 +67,10 @@ data class PatientPayload(
     val reminderConsent: ReminderConsent,
 
     @Json(name = "deleted_reason")
-    val deletedReason: DeletedReason?
+    val deletedReason: DeletedReason?,
+
+    @Json(name = "registration_facility_id")
+    val registeredFacilityId: UUID?
 ) {
 
   fun toDatabaseModel(newStatus: SyncStatus): Patient {
@@ -86,7 +89,7 @@ data class PatientPayload(
         syncStatus = newStatus,
         reminderConsent = reminderConsent,
         deletedReason = deletedReason,
-        registeredFacilityId = null,
+        registeredFacilityId = registeredFacilityId,
         assignedFacilityId = null
     )
   }

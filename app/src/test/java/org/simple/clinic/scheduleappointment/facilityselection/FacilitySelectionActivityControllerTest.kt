@@ -10,6 +10,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 class FacilitySelectionActivityControllerTest {
 
@@ -28,7 +29,7 @@ class FacilitySelectionActivityControllerTest {
 
   @Test
   fun `when facility is selected then it should be passed back as result`() {
-    val newFacility = TestData.facility()
+    val newFacility = TestData.facility(uuid = UUID.fromString("758f6c2e-2bd9-415f-9aaa-665923034e92"))
     setupController()
 
     uiEvents.onNext(FacilitySelected(newFacility))

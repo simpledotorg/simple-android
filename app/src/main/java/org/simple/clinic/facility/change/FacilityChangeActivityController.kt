@@ -14,7 +14,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = FacilityChangeActivity
+typealias Ui = FacilityChangeUi
 typealias UiChange = (Ui) -> Unit
 
 class FacilityChangeActivityController @Inject constructor(

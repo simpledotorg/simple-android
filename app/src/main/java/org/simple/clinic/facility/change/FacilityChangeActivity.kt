@@ -25,7 +25,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
 
-class FacilityChangeActivity : AppCompatActivity() {
+class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi {
 
   @Inject
   lateinit var controller: FacilityChangeActivityController
@@ -107,13 +107,13 @@ class FacilityChangeActivity : AppCompatActivity() {
     finish()
   }
 
-  fun goBack() {
+  override fun goBack() {
     val intent = Intent()
     setResult(Activity.RESULT_CANCELED, intent)
     finish()
   }
 
-  fun openConfirmationSheet(facility: Facility) {
+  override fun openConfirmationSheet(facility: Facility) {
     startActivityForResult(
         ConfirmFacilityChangeSheet.intent(this, facility),
         OPEN_CONFIRMATION_SHEET

@@ -25,7 +25,7 @@ class FacilityChangeActivityControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()!!
-  private val screen = mock<FacilityChangeActivity>()
+  private val ui = mock<FacilityChangeUi>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
 
@@ -49,7 +49,7 @@ class FacilityChangeActivityControllerTest {
     uiEvents.onNext(FacilityChangeClicked(newFacility))
 
     //then
-    verify(screen).openConfirmationSheet(newFacility)
+    verify(ui).openConfirmationSheet(newFacility)
   }
 
   @Test
@@ -62,7 +62,7 @@ class FacilityChangeActivityControllerTest {
     uiEvents.onNext(FacilityChangeClicked(newFacility))
 
     //then
-    verify(screen).goBack()
+    verify(ui).goBack()
   }
 
   private fun setupController() {
@@ -76,7 +76,7 @@ class FacilityChangeActivityControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
   }

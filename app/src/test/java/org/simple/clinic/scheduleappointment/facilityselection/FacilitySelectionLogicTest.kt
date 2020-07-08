@@ -16,7 +16,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class FacilitySelectionActivityControllerTest {
+class FacilitySelectionLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

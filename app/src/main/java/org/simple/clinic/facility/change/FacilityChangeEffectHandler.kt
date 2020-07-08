@@ -25,6 +25,7 @@ class FacilityChangeEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<FacilityChangeEffect, FacilityChangeEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
+        .addConsumer(OpenConfirmFacilityChangeSheet::class.java, { uiActions.openConfirmationSheet(it.facility)}, schedulers.ui())
         .build()
   }
 

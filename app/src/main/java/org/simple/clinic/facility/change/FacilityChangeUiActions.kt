@@ -1,3 +1,7 @@
 package org.simple.clinic.facility.change
 
-interface FacilityChangeUiActions
+import org.simple.clinic.facility.Facility
+
+interface FacilityChangeUiActions {
+  fun openConfirmationSheet(facility: Facility)
+}

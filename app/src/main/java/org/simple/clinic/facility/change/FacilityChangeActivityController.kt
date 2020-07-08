@@ -41,15 +41,10 @@ class FacilityChangeActivityController @Inject constructor(
         .map { it.facility }
         .withLatestFrom(currentFacility)
 
-    val newFacilitySelected = facilityStreams
-        .filter { (selectedFacility, currentFacility) -> selectedFacility.uuid != currentFacility.uuid }
-        .map { (selectedFacility, _) -> selectedFacility }
-        .map { { ui: Ui -> ui.openConfirmationSheet(it) } }
-
-    val sameFacilitySelected = facilityStreams
+    val sameFacilitySelected: Observable<UiChange> = facilityStreams
         .filter { (selectedFacility, currentFacility) -> selectedFacility.uuid == currentFacility.uuid }
         .map { Ui::goBack }
 
-    return newFacilitySelected.mergeWith(sameFacilitySelected)
+    return sameFacilitySelected
   }
 }

@@ -22,6 +22,7 @@ class FacilitySelectionLogicTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<FacilitySelectionUi>()
+  private val uiActions = mock<FacilitySelectionUiActions>()
 
   private lateinit var testFixture: MobiusTestFixture<FacilitySelectionModel, FacilitySelectionEvent, FacilitySelectionEffect>
 
@@ -40,14 +41,14 @@ class FacilitySelectionLogicTest {
     uiEvents.onNext(FacilitySelected(newFacility))
 
     // then
-    verify(ui).sendSelectedFacility(newFacility)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).sendSelectedFacility(newFacility)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupController() {
     val effectHandler = FacilitySelectionEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
     val uiRenderer = FacilitySelectionUiRenderer(ui)
 

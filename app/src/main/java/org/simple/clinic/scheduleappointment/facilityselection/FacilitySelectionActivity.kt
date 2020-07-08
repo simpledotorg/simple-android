@@ -11,10 +11,12 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_select_facility.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -40,6 +42,16 @@ class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi {
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenCreates(),
+            facilityClicks()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   private lateinit var component: FacilitySelectionActivityComponent
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,10 +60,7 @@ class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi {
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            screenCreates(),
-            facilityClicks()
-        ),
+        events = events,
         controller = controller,
         screenDestroys = onDestroys
     )

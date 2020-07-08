@@ -141,7 +141,9 @@ object TestData {
       recordedAt: Instant = Instant.now(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       reminderConsent: ReminderConsent = Granted,
-      deletedReason: DeletedReason? = null
+      deletedReason: DeletedReason? = null,
+      registeredFacilityId: UUID? = null,
+      assignedFacilityId: UUID? = null
   ): Patient {
     return Patient(
         uuid = uuid,
@@ -157,7 +159,10 @@ object TestData {
         recordedAt = recordedAt,
         syncStatus = syncStatus,
         reminderConsent = reminderConsent,
-        deletedReason = deletedReason
+        deletedReason = deletedReason,
+        registeredFacilityId = registeredFacilityId,
+        assignedFacilityId = assignedFacilityId
+
     )
   }
 

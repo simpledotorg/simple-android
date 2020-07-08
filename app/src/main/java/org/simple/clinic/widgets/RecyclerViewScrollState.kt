@@ -1,7 +1,7 @@
 package org.simple.clinic.widgets
 
 import androidx.recyclerview.widget.RecyclerView
-import com.jakewharton.rxbinding2.support.v7.widget.RecyclerViewScrollEvent
+import com.jakewharton.rxbinding3.recyclerview.RecyclerViewScrollEvent
 import io.reactivex.ObservableTransformer
 import kotlin.math.absoluteValue
 
@@ -30,7 +30,7 @@ object RecyclerViewUserScrollDetector {
           .map { (event, stateInt) -> event to RecyclerViewScrollState.fromIntDef(stateInt) }
           .map { (event, state) ->
             // dY will be 0 if the list cannot be scrolled further in the direction of scroll.
-            val byUser = event.dy().absoluteValue > 0 && state == RecyclerViewScrollState.DRAGGING
+            val byUser = event.dy.absoluteValue > 0 && state == RecyclerViewScrollState.DRAGGING
             RecyclerViewScrolled(byUser)
           }
     }

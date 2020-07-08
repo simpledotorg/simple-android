@@ -2,7 +2,7 @@ package org.simple.clinic.widgets
 
 import androidx.recyclerview.widget.RecyclerView
 import com.google.common.truth.Truth.assertThat
-import com.jakewharton.rxbinding2.support.v7.widget.RecyclerViewScrollEvent
+import com.jakewharton.rxbinding3.recyclerview.RecyclerViewScrollEvent
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
@@ -36,7 +36,7 @@ class RecyclerViewUserScrollDetectorTest {
   ])
   fun `scrolls by the user should be detected correctly`(dy: Int, scrollState: Int, expectedToBeByUser: Boolean) {
     val scrollEvent = mock<RecyclerViewScrollEvent>()
-    whenever(scrollEvent.dy()).thenReturn(dy)
+    whenever(scrollEvent.dy).thenReturn(dy)
 
     val scrollEvents = Observable.just(scrollEvent)
     val scrollStateChanges = Observable.just(scrollState)

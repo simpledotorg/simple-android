@@ -7,7 +7,8 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
+import com.jakewharton.rxbinding3.recyclerview.scrollEvents
+import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.jakewharton.rxbinding3.view.detaches
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
@@ -142,8 +143,8 @@ class FacilityPickerView(
 
   @SuppressLint("CheckResult")
   private fun hideKeyboardOnListScroll() {
-    val scrollEvents = RxRecyclerView.scrollEvents(facilityRecyclerView)
-    val scrollStateChanges = RxRecyclerView.scrollStateChanges(facilityRecyclerView)
+    val scrollEvents = facilityRecyclerView.scrollEvents()
+    val scrollStateChanges = facilityRecyclerView.scrollStateChanges()
 
     Observables.combineLatest(scrollEvents, scrollStateChanges)
         .compose(RecyclerViewUserScrollDetector.streamDetections())

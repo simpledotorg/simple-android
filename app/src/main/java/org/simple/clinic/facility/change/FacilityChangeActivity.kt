@@ -25,7 +25,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
 
-class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi {
+class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi, FacilityChangeUiActions {
 
   @Inject
   lateinit var locale: Locale

@@ -2,6 +2,7 @@ package org.simple.clinic.facility.change
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import dagger.Lazy
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -20,8 +21,9 @@ class FacilityChangeLogicTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val uiEvents = PublishSubject.create<UiEvent>()!!
+  private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<FacilityChangeUi>()
+  private val uiActions = mock<FacilityChangeUiActions>()
   private val currentFacility = TestData.facility(uuid = UUID.fromString("6dc536d9-b460-4143-9b3b-7caedf17c0d9"))
 
   private lateinit var testFixture: MobiusTestFixture<FacilityChangeModel, FacilityChangeEvent, FacilityChangeEffect>
@@ -41,7 +43,8 @@ class FacilityChangeLogicTest {
     uiEvents.onNext(FacilityChangeClicked(newFacility))
 
     //then
-    verify(ui).openConfirmationSheet(newFacility)
+    verify(uiActions).openConfirmationSheet(newFacility)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -54,7 +57,8 @@ class FacilityChangeLogicTest {
     uiEvents.onNext(FacilityChangeClicked(newFacility))
 
     //then
-    verify(ui).goBack()
+    verify(uiActions).goBack()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupController() {
@@ -62,7 +66,7 @@ class FacilityChangeLogicTest {
     val effectHandler = FacilityChangeEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         currentFacility = Lazy { currentFacility },
-        uiActions = ui
+        uiActions = uiActions
     )
 
     testFixture = MobiusTestFixture(

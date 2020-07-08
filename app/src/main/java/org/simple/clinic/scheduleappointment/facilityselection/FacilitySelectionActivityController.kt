@@ -3,7 +3,6 @@ package org.simple.clinic.scheduleappointment.facilityselection
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -17,12 +16,7 @@ class FacilitySelectionActivityController @Inject constructor() : ObservableTran
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return changeFacilityAndExit(replayedEvents)
+    return Observable.never()
   }
 
-  private fun changeFacilityAndExit(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<FacilitySelected>()
-        .map { { ui: Ui -> ui.sendSelectedFacility(it.facility) } }
-  }
 }

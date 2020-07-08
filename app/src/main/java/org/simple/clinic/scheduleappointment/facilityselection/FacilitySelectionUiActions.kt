@@ -1,3 +1,7 @@
 package org.simple.clinic.scheduleappointment.facilityselection
 
-interface FacilitySelectionUiActions
+import org.simple.clinic.facility.Facility
+
+interface FacilitySelectionUiActions {
+  fun sendSelectedFacility(selectedFacility: Facility)
+}

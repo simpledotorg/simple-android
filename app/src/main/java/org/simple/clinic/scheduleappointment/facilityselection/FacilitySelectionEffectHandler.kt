@@ -19,6 +19,7 @@ class FacilitySelectionEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<FacilitySelectionEffect, FacilitySelectionEvent> {
     return RxMobius
         .subtypeEffectHandler<FacilitySelectionEffect, FacilitySelectionEvent>()
+        .addConsumer(ForwardSelectedFacility::class.java, { uiActions.sendSelectedFacility(it.facility) }, schedulers.ui())
         .build()
   }
 }

@@ -46,7 +46,6 @@ class FacilityChangeActivityControllerTest {
 
     //when
     setupController()
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(FacilityChangeClicked(newFacility))
 
     //then
@@ -60,7 +59,6 @@ class FacilityChangeActivityControllerTest {
 
     //when
     setupController()
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(FacilityChangeClicked(newFacility))
 
     //then
@@ -79,5 +77,7 @@ class FacilityChangeActivityControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

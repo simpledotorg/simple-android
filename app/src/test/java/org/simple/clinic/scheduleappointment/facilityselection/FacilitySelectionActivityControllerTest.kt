@@ -30,11 +30,14 @@ class FacilitySelectionActivityControllerTest {
 
   @Test
   fun `when facility is selected then it should be passed back as result`() {
+    // given
     val newFacility = TestData.facility(uuid = UUID.fromString("758f6c2e-2bd9-415f-9aaa-665923034e92"))
-    setupController()
 
+    // when
+    setupController()
     uiEvents.onNext(FacilitySelected(newFacility))
 
+    // then
     verify(screen).sendSelectedFacility(newFacility)
     verifyNoMoreInteractions(screen)
   }

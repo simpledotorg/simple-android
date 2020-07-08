@@ -4,4 +4,5 @@ import org.simple.clinic.facility.Facility
 
 interface FacilityChangeUiActions {
   fun openConfirmationSheet(facility: Facility)
+  fun goBack()
 }

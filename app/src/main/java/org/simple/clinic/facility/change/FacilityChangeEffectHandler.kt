@@ -26,6 +26,7 @@ class FacilityChangeEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<FacilityChangeEffect, FacilityChangeEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
         .addConsumer(OpenConfirmFacilityChangeSheet::class.java, { uiActions.openConfirmationSheet(it.facility)}, schedulers.ui())
+        .addAction(GoBack::class.java, uiActions::goBack, schedulers.ui())
         .build()
   }
 

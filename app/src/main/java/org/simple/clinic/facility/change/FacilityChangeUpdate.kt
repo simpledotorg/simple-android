@@ -32,9 +32,10 @@ class FacilityChangeUpdate : Update<FacilityChangeModel, FacilityChangeEvent, Fa
     val currentFacility = model.currentFacility!!
     val selectedFacility = event.facility
 
-    return if (selectedFacility.uuid != currentFacility.uuid)
-      dispatch(OpenConfirmFacilityChangeSheet(selectedFacility) as FacilityChangeEffect)
-    else
-      noChange()
+    val hasSelectedADifferentFacility = selectedFacility.uuid != currentFacility.uuid
+
+    val effect = if (hasSelectedADifferentFacility) OpenConfirmFacilityChangeSheet(selectedFacility) else GoBack
+
+    return dispatch(effect)
   }
 }

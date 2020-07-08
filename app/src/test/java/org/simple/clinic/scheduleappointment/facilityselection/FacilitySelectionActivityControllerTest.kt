@@ -19,7 +19,7 @@ class FacilitySelectionActivityControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val screen = mock<FacilitySelectionActivity>()
+  private val ui = mock<FacilitySelectionUi>()
 
   private lateinit var controllerSubscription: Disposable
 
@@ -38,8 +38,8 @@ class FacilitySelectionActivityControllerTest {
     uiEvents.onNext(FacilitySelected(newFacility))
 
     // then
-    verify(screen).sendSelectedFacility(newFacility)
-    verifyNoMoreInteractions(screen)
+    verify(ui).sendSelectedFacility(newFacility)
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -47,6 +47,6 @@ class FacilitySelectionActivityControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
   }
 }

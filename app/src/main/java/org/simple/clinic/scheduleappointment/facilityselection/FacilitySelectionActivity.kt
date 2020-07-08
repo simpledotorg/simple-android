@@ -22,7 +22,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
 
-class FacilitySelectionActivity : AppCompatActivity() {
+class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi {
 
   companion object {
     const val EXTRA_SELECTED_FACILITY = "selected_facility"
@@ -88,7 +88,7 @@ class FacilitySelectionActivity : AppCompatActivity() {
     }
   }
 
-  fun sendSelectedFacility(selectedFacility: Facility) {
+  override fun sendSelectedFacility(selectedFacility: Facility) {
     val intent = Intent()
     intent.putExtra(EXTRA_SELECTED_FACILITY, selectedFacility)
     setResult(Activity.RESULT_OK, intent)

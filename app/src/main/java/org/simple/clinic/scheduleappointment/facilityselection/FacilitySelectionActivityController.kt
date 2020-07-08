@@ -9,7 +9,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = FacilitySelectionActivity
+typealias Ui = FacilitySelectionUi
 typealias UiChange = (Ui) -> Unit
 
 class FacilitySelectionActivityController @Inject constructor() : ObservableTransformer<UiEvent, UiChange> {

@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.screen_facility_change.*
 import org.simple.clinic.ClinicApp
@@ -17,6 +18,7 @@ import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.ConfirmFacilityChangeSheet
 import org.simple.clinic.facility.change.confirm.FacilityChangeComponent
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.unsafeLazy
@@ -38,6 +40,9 @@ class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi {
   @Inject
   lateinit var runtimePermissions: RuntimePermissions
 
+  @Inject
+  lateinit var effectHandlerFactory: FacilityChangeEffectHandler.Factory
+
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
   private val events by unsafeLazy {
@@ -48,6 +53,19 @@ class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi {
         )
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = FacilityChangeUiRenderer(this)
+
+    MobiusDelegate.forActivity(
+        events = events.ofType(),
+        defaultModel = FacilityChangeModel(),
+        update = FacilityChangeUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = FacilityChangeInit(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +80,8 @@ class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi {
     )
 
     setupUiComponents()
+
+    delegate.onRestoreInstanceState(savedInstanceState)
   }
 
   override fun attachBaseContext(baseContext: Context) {
@@ -73,6 +93,21 @@ class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi {
         .wrap { InjectorProviderContextWrapper.wrap(it, component) }
 
     super.attachBaseContext(wrappedContext)
+  }
+
+  override fun onStart() {
+    super.onStart()
+    delegate.start()
+  }
+
+  override fun onStop() {
+    delegate.stop()
+    super.onStop()
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    delegate.onSaveInstanceState(outState)
+    super.onSaveInstanceState(outState)
   }
 
   override fun onDestroy() {

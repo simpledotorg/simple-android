@@ -191,7 +191,9 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
         recordedAt = timestamp,
         syncStatus = SyncStatus.DONE,
         reminderConsent = ReminderConsent.Granted,
-        deletedReason = null
+        deletedReason = null,
+        registeredFacilityId = null,
+        assignedFacilityId = null
     )
   }
 

@@ -2,6 +2,7 @@ package org.simple.clinic.scheduleappointment.facilityselection
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -35,6 +36,7 @@ class FacilitySelectionActivityControllerTest {
     uiEvents.onNext(FacilitySelected(newFacility))
 
     verify(screen).sendSelectedFacility(newFacility)
+    verifyNoMoreInteractions(screen)
   }
 
   private fun setupController() {

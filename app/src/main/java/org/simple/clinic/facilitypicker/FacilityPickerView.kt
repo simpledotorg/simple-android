@@ -21,7 +21,6 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
@@ -44,7 +43,7 @@ class FacilityPickerView(
   lateinit var uiRendererFactory: FacilityPickerUiRenderer.Factory
 
   @Inject
-  lateinit var config: RegistrationConfig
+  lateinit var config: FacilityPickerConfig
 
   var facilitySelectedCallback: OnFacilitySelected? = null
 

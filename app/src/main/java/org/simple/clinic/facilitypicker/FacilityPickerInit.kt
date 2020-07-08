@@ -5,7 +5,6 @@ import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
 import org.simple.clinic.facilitypicker.PickFrom.AllFacilities
 import org.simple.clinic.facilitypicker.PickFrom.InCurrentGroup
-import org.simple.clinic.registration.RegistrationConfig
 import java.time.Duration
 
 class FacilityPickerInit(
@@ -17,7 +16,7 @@ class FacilityPickerInit(
 
   constructor(
       pickFrom: PickFrom,
-      config: RegistrationConfig
+      config: FacilityPickerConfig
   ) : this(
       pickFrom = pickFrom,
       locationUpdateInterval = config.locationUpdateInterval,

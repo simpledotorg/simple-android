@@ -35,7 +35,6 @@ import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.platform.analytics.Analytics
-import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.advanceTimeBy
@@ -133,7 +132,8 @@ class PatientRepositoryTest {
         recordedAt = mock(),
         reminderConsent = Granted,
         deletedReason = null,
-        registeredFacilityId = null
+        registeredFacilityId = null,
+        assignedFacilityId = null
     )
 
     repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
@@ -192,7 +192,8 @@ class PatientRepositoryTest {
         recordedAt = mock(),
         reminderConsent = Granted,
         deletedReason = null,
-        registeredFacilityId = null
+        registeredFacilityId = null,
+        assignedFacilityId = null
     )
 
     repository.mergeWithLocalData(listOf(serverPatientWithPhone)).blockingAwait()

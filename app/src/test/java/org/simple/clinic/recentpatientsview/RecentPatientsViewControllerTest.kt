@@ -39,7 +39,7 @@ class RecentPatientsViewControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen: RecentPatientsView = mock()
+  private val ui: LatestRecentPatientsUi = mock()
   private val userSession: UserSession = mock()
   private val patientRepository: PatientRepository = mock()
   private val facilityRepository: FacilityRepository = mock()
@@ -94,7 +94,7 @@ class RecentPatientsViewControllerTest {
 
     setupController(recentPatients = recentPatients)
 
-    verify(screen).updateRecentPatients(listOf(
+    verify(ui).updateRecentPatients(listOf(
         RecentPatientItem(
             uuid = patientUuid1,
             name = "Ajay Kumar",
@@ -126,8 +126,8 @@ class RecentPatientsViewControllerTest {
             isNewRegistration = false
         )
     ))
-    verify(screen).showOrHideRecentPatients(isVisible = true)
-    verifyNoMoreInteractions(screen)
+    verify(ui).showOrHideRecentPatients(isVisible = true)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -171,7 +171,7 @@ class RecentPatientsViewControllerTest {
     )
     setupController(recentPatients = recentPatients)
 
-    verify(screen).updateRecentPatients(listOf(
+    verify(ui).updateRecentPatients(listOf(
         RecentPatientItem(
             uuid = patientUuid1,
             name = "Ajay Kumar",
@@ -204,17 +204,17 @@ class RecentPatientsViewControllerTest {
         ),
         SeeAllItem
     ))
-    verify(screen).showOrHideRecentPatients(isVisible = true)
-    verifyNoMoreInteractions(screen)
+    verify(ui).showOrHideRecentPatients(isVisible = true)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
   fun `when screen opens and there are no recent patients then show empty state`() {
     setupController()
 
-    verify(screen).updateRecentPatients(emptyList())
-    verify(screen).showOrHideRecentPatients(isVisible = false)
-    verifyNoMoreInteractions(screen)
+    verify(ui).updateRecentPatients(emptyList())
+    verify(ui).showOrHideRecentPatients(isVisible = false)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -230,7 +230,7 @@ class RecentPatientsViewControllerTest {
         patientRecordedAt = Instant.parse("2018-01-01T00:00:00Z"),
         updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )))
-    verify(screen).updateRecentPatients(listOf(
+    verify(ui).updateRecentPatients(listOf(
         RecentPatientItem(
             uuid = patientUuid,
             name = "Anish Acharya",
@@ -242,27 +242,27 @@ class RecentPatientsViewControllerTest {
             isNewRegistration = false
         )
     ))
-    verify(screen).showOrHideRecentPatients(true)
-    verifyNoMoreInteractions(screen)
+    verify(ui).showOrHideRecentPatients(true)
+    verifyNoMoreInteractions(ui)
 
-    clearInvocations(screen)
+    clearInvocations(ui)
     uiEvents.onNext(RecentPatientItemClicked(patientUuid = patientUuid))
-    verify(screen).openPatientSummary(patientUuid)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientSummary(patientUuid)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
   fun `when see all is clicked, then open recent patients screen`() {
     setupController()
 
-    verify(screen).updateRecentPatients(emptyList())
-    verify(screen).showOrHideRecentPatients(false)
-    verifyNoMoreInteractions(screen)
+    verify(ui).updateRecentPatients(emptyList())
+    verify(ui).showOrHideRecentPatients(false)
+    verifyNoMoreInteractions(ui)
 
-    clearInvocations(screen)
+    clearInvocations(ui)
     uiEvents.onNext(SeeAllItemClicked)
-    verify(screen).openRecentPatientsScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).openRecentPatientsScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController(
@@ -286,7 +286,7 @@ class RecentPatientsViewControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
   }

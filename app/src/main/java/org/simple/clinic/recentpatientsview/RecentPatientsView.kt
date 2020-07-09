@@ -25,7 +25,7 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
+class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs), LatestRecentPatientsUi {
 
   @Inject
   lateinit var controller: RecentPatientsViewController
@@ -63,20 +63,20 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
 
   private fun adapterEvents() = recentAdapter.itemEvents.ofType<UiEvent>()
 
-  fun updateRecentPatients(recentPatients: List<RecentPatientItemType>) {
+  override fun updateRecentPatients(recentPatients: List<RecentPatientItemType>) {
     recentAdapter.submitList(recentPatients)
   }
 
-  fun showOrHideRecentPatients(isVisible: Boolean) {
+  override fun showOrHideRecentPatients(isVisible: Boolean) {
     recentRecyclerView.visibleOrGone(isVisible)
     noRecentPatientsTextView.visibleOrGone(isVisible.not())
   }
 
-  fun openRecentPatientsScreen() {
+  override fun openRecentPatientsScreen() {
     screenRouter.push(RecentPatientsScreenKey())
   }
 
-  fun openPatientSummary(patientUuid: UUID) {
+  override fun openPatientSummary(patientUuid: UUID) {
     screenRouter.push(
         PatientSummaryScreenKey(
             patientUuid = patientUuid,

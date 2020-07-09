@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">ቀላል</string>
+  <string name="app_name">ሲምፕል</string>
 
   <!-- Common -->
   <string name="gender_female">ሴት</string>
@@ -28,6 +28,7 @@
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">የደም ግፊት ፓስፖርት</string>
   <string name="identifiertype_bangladesh_national_id">ብሔራዊ መታወቂያ ቁጥር</string>
+  <string name="identifiertype_ethiopia_medical_record_number">የህክምና መዝገብ ቁጥር</string>
   <string name="identifiertype_unknown">መታወቂያ</string>
 
   <!-- Patient search -->
@@ -53,6 +54,7 @@
   <string name="patiententry_full_name">የታካሚ ስም</string>
   <string name="patiententry_phone_number">ስልክ ቁጥር</string>
   <string name="patiententry_bangladesh_national_id">ብሔራዊ መታወቂያ ቁጥር</string>
+  <string name="patiententry_ethiopia_medical_record_number">የህክምና መዝገብ ቁጥር</string>
   <string name="patiententry_date_of_birth_unfocused">የትውልድ ቀን</string>
   <string name="patiententry_date_of_birth_focused">የ.ት.ቅ፡ ቀቀ/ወወ/ዐዐ</string>
   <string name="patiententry_dateofbirth_and_age_separator">ወይም</string>
@@ -77,8 +79,8 @@
   <string name="patiententry_error_both_dateofbirth_and_age_empty">የታካሚውን ዕድሜ ያስገቡ</string>
   <string name="patiententry_error_invalid_dateofbirth">የታካሚውን የትውልድ ቀን በ ቀቀ/ወወ/ዓዓ ውስጥ ያስገቡ</string>
   <string name="patiententry_error_dateofbirth_is_in_future">የታካሚውን የትውልድ ቀን ያስተካክሉ</string>
-  <string name="patiententry_error_phonenumber_length_less">የስልክ ቁጥር ከ %1$s ቁጥሮች በታች መሆን አይችልም</string>
-  <string name="patiententry_error_phonenumber_length_more">የስልክ ቁጥር ከ %1$s ቁጥሮች በላይ መሆን አይችልም</string>
+  <string name="patiententry_error_phonenumber_length_less">የስልክ ቁጥር ከ %1$sዲጂቶች በታች መሆን አይችልም</string>
+  <string name="patiententry_error_phonenumber_length_more">የስልክ ቁጥር ከ %1$sዲጂቶች በላይ መሆን አይችልም</string>
   <string name="patiententry_identifier">የደም ግፊት ፓስፖርት</string>
   <string name="patiententry_consent_header">ስምምነት:\u0020</string>
   <string name="patiententry_consent_first_para">ከዚህ በታች መታ በማድረግ እዚህ ያስገቡት ማንኛውም የታካሚ መረጃ በተገቢው በተረጋገጠ ስምምነት የተገኘ መሆኑን ያረጋግጣሉ። ይህ ማለት ታካሚው ወይም የታካሚው ሞግዚት የግል መረጃ ወደ መተግበሪያው ውስጥ እንደሚገቡ ያውቃሉ፣ ምን መረጃ እየተሰበሰበ እንዳለ ይገነዘባሉ፣ እንዲሁም በመተግበሪያው ውስጥ የሚገኘውን የስልክ ቁጥር በመጠቀም በኤስኤምኤስ፣ በ WhatsApp ወይም በሌሎች መንገዶች ሊገናኙ እንደሚችሉ ያውቃሉ።</string>

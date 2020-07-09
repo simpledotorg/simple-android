@@ -32,15 +32,9 @@ class RecentPatientsViewController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        openPatientSummary(replayedEvents),
         openRecentPatientsScreen(replayedEvents)
     )
   }
-
-  private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> =
-      events
-          .ofType<RecentPatientItemClicked>()
-          .map { { ui: Ui -> ui.openPatientSummary(it.patientUuid) } }
 
   private fun openRecentPatientsScreen(events: Observable<UiEvent>): Observable<UiChange> =
       events

@@ -295,6 +295,9 @@ class RecentPatientsViewControllerTest {
 
     val effectHandler = LatestRecentPatientsEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        patientRepository = patientRepository,
         uiActions = ui
     )
 

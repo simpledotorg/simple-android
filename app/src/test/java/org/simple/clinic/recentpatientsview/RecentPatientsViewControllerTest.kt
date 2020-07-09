@@ -1,8 +1,10 @@
 package org.simple.clinic.recentpatientsview
 
+import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -125,6 +127,7 @@ class RecentPatientsViewControllerTest {
         )
     ))
     verify(screen).showOrHideRecentPatients(isVisible = true)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -203,30 +206,65 @@ class RecentPatientsViewControllerTest {
         SeeAllItem
     ))
     verify(screen).showOrHideRecentPatients(isVisible = true)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
   fun `when screen opens and there are no recent patients then show empty state`() {
     setupController()
 
+    verify(screen).updateRecentPatients(emptyList())
     verify(screen).showOrHideRecentPatients(isVisible = false)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
   fun `when any recent patient item is clicked, then open patient summary`() {
     val patientUuid = UUID.fromString("418adb0f-032d-4914-93d3-dc0633802e3e")
-    setupController(recentPatients = listOf(TestData.recentPatient(uuid = patientUuid, dateOfBirth = LocalDate.parse("2018-01-01"))))
-    uiEvents.onNext(RecentPatientItemClicked(patientUuid = patientUuid))
+    userClock.setDate(date = LocalDate.parse("2020-01-01"))
 
+    setupController(recentPatients = listOf(TestData.recentPatient(
+        uuid = patientUuid,
+        dateOfBirth = LocalDate.parse("2018-01-01"),
+        fullName = "Anish Acharya",
+        gender = Male,
+        age = null,
+        patientRecordedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )))
+    verify(screen).updateRecentPatients(listOf(
+        RecentPatientItem(
+            uuid = patientUuid,
+            name = "Anish Acharya",
+            age = 2,
+            gender = Male,
+            updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            dateFormatter = dateFormatter,
+            clock = userClock,
+            isNewRegistration = false
+        )
+    ))
+    verify(screen).showOrHideRecentPatients(true)
+    verifyNoMoreInteractions(screen)
+
+    clearInvocations(screen)
+    uiEvents.onNext(RecentPatientItemClicked(patientUuid = patientUuid))
     verify(screen).openPatientSummary(patientUuid)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
   fun `when see all is clicked, then open recent patients screen`() {
     setupController()
-    uiEvents.onNext(SeeAllItemClicked)
 
+    verify(screen).updateRecentPatients(emptyList())
+    verify(screen).showOrHideRecentPatients(false)
+    verifyNoMoreInteractions(screen)
+
+    clearInvocations(screen)
+    uiEvents.onNext(SeeAllItemClicked)
     verify(screen).openRecentPatientsScreen()
+    verifyNoMoreInteractions(screen)
   }
 
   private fun setupController(

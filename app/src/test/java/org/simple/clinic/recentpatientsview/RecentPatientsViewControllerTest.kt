@@ -1,5 +1,6 @@
 package org.simple.clinic.recentpatientsview
 
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -20,6 +21,7 @@ import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -64,10 +66,7 @@ class RecentPatientsViewControllerTest {
     val patientUuid2 = UUID.fromString("3eabf6a2-88d8-41e1-b21c-6f3509963382")
     val patientUuid3 = UUID.fromString("aa228e88-50b0-4ada-a839-926fd6dacf2e")
     userClock.setDate(LocalDate.parse("2020-02-01"))
-    whenever(patientRepository.recentPatients(
-        facilityUuid = facility.uuid,
-        limit = recentPatientLimitPlusOne
-    )).thenReturn(Observable.just(listOf(
+    val recentPatients = listOf(
         TestData.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
@@ -92,9 +91,9 @@ class RecentPatientsViewControllerTest {
             updatedAt = Instant.now(userClock).minus(3, ChronoUnit.DAYS),
             patientRecordedAt = Instant.now(userClock).minus(10, ChronoUnit.DAYS)
         )
-    )))
+    )
 
-    setupController()
+    setupController(recentPatients = recentPatients)
 
     verify(screen).updateRecentPatients(listOf(
         RecentPatientItem(
@@ -138,10 +137,8 @@ class RecentPatientsViewControllerTest {
     val patientUuid3 = UUID.fromString("4b404776-feee-4c0d-8262-d7bb69350d83")
     val patientUuid4 = UUID.fromString("091035b5-efbd-404f-890c-b5016dc32b6d")
     userClock.setDate(date = LocalDate.parse("2020-01-01"))
-    whenever(patientRepository.recentPatients(
-        facilityUuid = facility.uuid,
-        limit = recentPatientLimitPlusOne
-    )).thenReturn(Observable.just(listOf(
+
+    val recentPatients = listOf(
         TestData.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
@@ -172,9 +169,8 @@ class RecentPatientsViewControllerTest {
             age = Age(37, Instant.now(userClock)),
             gender = Transgender
         )
-    )))
-
-    setupController()
+    )
+    setupController(recentPatients = recentPatients)
 
     verify(screen).updateRecentPatients(listOf(
         RecentPatientItem(
@@ -214,11 +210,6 @@ class RecentPatientsViewControllerTest {
 
   @Test
   fun `when screen opens and there are no recent patients then show empty state`() {
-    whenever(patientRepository.recentPatients(
-        facilityUuid = facility.uuid,
-        limit = recentPatientLimitPlusOne
-    )).thenReturn(Observable.just(emptyList()))
-
     setupController()
 
     verify(screen).showOrHideRecentPatients(isVisible = false)
@@ -227,13 +218,7 @@ class RecentPatientsViewControllerTest {
   @Test
   fun `when any recent patient item is clicked, then open patient summary`() {
     val patientUuid = UUID.fromString("418adb0f-032d-4914-93d3-dc0633802e3e")
-
-    whenever(patientRepository.recentPatients(
-        facilityUuid = facility.uuid,
-        limit = recentPatientLimitPlusOne
-    )).thenReturn(Observable.just(listOf(TestData.recentPatient(uuid = patientUuid, dateOfBirth = LocalDate.parse("2018-01-01")))))
-
-    setupController()
+    setupController(recentPatients = listOf(TestData.recentPatient(uuid = patientUuid, dateOfBirth = LocalDate.parse("2018-01-01"))))
     uiEvents.onNext(RecentPatientItemClicked(patientUuid = patientUuid))
 
     verify(screen).openPatientSummary(patientUuid)
@@ -241,20 +226,18 @@ class RecentPatientsViewControllerTest {
 
   @Test
   fun `when see all is clicked, then open recent patients screen`() {
-    whenever(patientRepository.recentPatients(
-        facilityUuid = facility.uuid,
-        limit = recentPatientLimitPlusOne
-    )).thenReturn(Observable.just(emptyList()))
-
     setupController()
     uiEvents.onNext(SeeAllItemClicked)
 
     verify(screen).openRecentPatientsScreen()
   }
 
-  private fun setupController() {
+  private fun setupController(
+      recentPatients: List<RecentPatient> = emptyList()
+  ) {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
+    whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimitPlusOne)) doReturn Observable.just(recentPatients)
 
     val controller = RecentPatientsViewController(
         userSession = userSession,

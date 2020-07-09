@@ -8,8 +8,8 @@
 - Migrated `RegistrationPinScreen` to Mobius
 - Migrated `ConfirmRemovePrescriptionDialog` to Mobius
 - Migrated `RegistrationConfirmPinScreen` to Mobius
-- [In Progress: 07 Jul 2020] Migrate `RegistrationLocationPermissionScreen` to Mobius
 - Updated CI checks to look for [Clubhouse](https://app.clubhouse.io/simpledotorg) tickets instead of Pivotal Tracker
+- Migrated `RegistrationLocationPermissionScreen` to Mobius
 
 ### Changes
 - Add support for Medical Record Number in Ethiopia

@@ -37,7 +37,7 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.UUID
 
-class RecentPatientsViewControllerTest {
+class LatestRecentPatientsLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

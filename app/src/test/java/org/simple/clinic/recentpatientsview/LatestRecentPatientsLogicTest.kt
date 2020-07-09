@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -28,7 +27,6 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
@@ -56,11 +54,9 @@ class LatestRecentPatientsLogicTest {
   private val userClock = TestUserClock(LocalDate.parse("2020-01-01"))
 
   private lateinit var testFixture: MobiusTestFixture<LatestRecentPatientsModel, LatestRecentPatientsEvent, LatestRecentPatientsEffect>
-  private lateinit var controllerSubscription: Disposable
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -282,19 +278,6 @@ class LatestRecentPatientsLogicTest {
         recentPatientLimit = recentPatientLimit
     )
 
-    val controller = RecentPatientsViewController(
-        userSession = userSession,
-        patientRepository = patientRepository,
-        facilityRepository = facilityRepository,
-        userClock = userClock,
-        patientConfig = config,
-        dateFormatter = dateFormatter
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
     val effectHandler = LatestRecentPatientsEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         userSession = userSession,
@@ -319,7 +302,5 @@ class LatestRecentPatientsLogicTest {
         modelUpdateListener = uiRenderer::render
     )
     testFixture.start()
-
-    uiEvents.onNext(ScreenCreated())
   }
 }

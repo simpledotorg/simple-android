@@ -4,8 +4,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import junitparams.JUnitParamsRunner
@@ -66,10 +64,6 @@ class RecentPatientsViewControllerTest {
 
   @Before
   fun setUp() {
-    // This is needed because we manually subscribe to the refresh user status
-    // operation on the IO thread, which was causing flakiness in this test.
-    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
 

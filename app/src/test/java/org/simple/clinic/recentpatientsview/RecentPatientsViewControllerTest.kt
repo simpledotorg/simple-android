@@ -13,13 +13,13 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.PatientConfig
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -45,8 +45,8 @@ class RecentPatientsViewControllerTest {
   private val facilityRepository: FacilityRepository = mock()
 
   private val uiEvents: Subject<UiEvent> = PublishSubject.create()
-  private val loggedInUser = TestData.loggedInUser()
-  private val facility = TestData.facility()
+  private val loggedInUser = TestData.loggedInUser(uuid = UUID.fromString("a4269927-d236-4507-acf9-f75272758740"))
+  private val facility = TestData.facility(uuid = UUID.fromString("ddc6471b-caa4-4bfa-9bf6-60898a77c1ec"))
   private val recentPatientLimit = 3
   private val recentPatientLimitPlusOne = recentPatientLimit + 1
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
@@ -81,9 +81,9 @@ class RecentPatientsViewControllerTest {
 
   @Test
   fun `when screen opens then fetch and set recent patients`() {
-    val patientUuid1 = UUID.randomUUID()
-    val patientUuid2 = UUID.randomUUID()
-    val patientUuid3 = UUID.randomUUID()
+    val patientUuid1 = UUID.fromString("dbb418f0-8329-48c0-a536-a0a781bbdf36")
+    val patientUuid2 = UUID.fromString("3eabf6a2-88d8-41e1-b21c-6f3509963382")
+    val patientUuid3 = UUID.fromString("aa228e88-50b0-4ada-a839-926fd6dacf2e")
     userClock.setDate(LocalDate.parse("2020-02-01"))
     whenever(patientRepository.recentPatients(
         facilityUuid = facility.uuid,
@@ -154,10 +154,10 @@ class RecentPatientsViewControllerTest {
 
   @Test
   fun `when number of recent patients is greater than recent patient limit then add see all item`() {
-    val patientUuid1 = UUID.randomUUID()
-    val patientUuid2 = UUID.randomUUID()
-    val patientUuid3 = UUID.randomUUID()
-    val patientUuid4 = UUID.randomUUID()
+    val patientUuid1 = UUID.fromString("ee387eea-732d-4218-a42b-757e3b87d171")
+    val patientUuid2 = UUID.fromString("3eaf6595-d3cd-41e4-bfb5-b1fa6e17fed9")
+    val patientUuid3 = UUID.fromString("4b404776-feee-4c0d-8262-d7bb69350d83")
+    val patientUuid4 = UUID.fromString("091035b5-efbd-404f-890c-b5016dc32b6d")
     userClock.setDate(date = LocalDate.parse("2020-01-01"))
     whenever(patientRepository.recentPatients(
         facilityUuid = facility.uuid,
@@ -247,7 +247,7 @@ class RecentPatientsViewControllerTest {
 
   @Test
   fun `when any recent patient item is clicked, then open patient summary`() {
-    val patientUuid = UUID.randomUUID()
+    val patientUuid = UUID.fromString("418adb0f-032d-4914-93d3-dc0633802e3e")
     uiEvents.onNext(RecentPatientItemClicked(patientUuid = patientUuid))
 
     verify(screen).openPatientSummary(patientUuid)

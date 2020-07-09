@@ -28,6 +28,7 @@
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">Paaspoortii BP</string>
   <string name="identifiertype_bangladesh_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
+  <string name="identifiertype_ethiopia_medical_record_number">Lakkoofsa Galmee Fayya</string>
   <string name="identifiertype_unknown">ID</string>
 
   <!-- Patient search -->
@@ -53,6 +54,7 @@
   <string name="patiententry_full_name">Maqaa dhukkubsataa\ttootaa</string>
   <string name="patiententry_phone_number">Lakkoofsa bilbilaa</string>
   <string name="patiententry_bangladesh_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
+  <string name="patiententry_ethiopia_medical_record_number">Lakkoofsa Galmee Fayya</string>
   <string name="patiententry_date_of_birth_unfocused">Guyyaa dhaloota</string>
   <string name="patiententry_date_of_birth_focused">G,Dh GG/JJ/WWWW</string>
   <string name="patiententry_dateofbirth_and_age_separator">Yookan</string>
@@ -77,8 +79,8 @@
   <string name="patiententry_error_both_dateofbirth_and_age_empty">Umrii dhukkubsataa galchi</string>
   <string name="patiententry_error_invalid_dateofbirth">Guyyaa dhalootaa dhukkubsataa galchi akka GG/JJ/WWWW tti</string>
   <string name="patiententry_error_dateofbirth_is_in_future">Guyyaa dhaloota dhukkubsataa sirreessi</string>
-  <string name="patiententry_error_phonenumber_length_less">Lakkoofsi bilbilaa dijitii %1$s gadi ta’uu hin danda’u</string>
-  <string name="patiententry_error_phonenumber_length_more">Lakkoofsi bilbilaa dijitii %1$s ol ta’uu hin danda’u</string>
+  <string name="patiententry_error_phonenumber_length_less">Lakkoofsi bilbilaa dijitii %1$sgadi ta\'uu hin danda\'u</string>
+  <string name="patiententry_error_phonenumber_length_more">Lakkoofsi bilbilaa dijitii %1$sol ta\'uu hin danda\'u</string>
   <string name="patiententry_identifier">Paaspoortii BP</string>
   <string name="patiententry_consent_header">Hayyama:\u0020</string>
   <string name="patiententry_consent_first_para">Kan armaan gadii kana tuquudhaan, ati ragaan dhukkuubsataa ati galchite kamiyyuu hayyama hubatamaa jalatti kan funaaname ta’uu mirkaneessita. Kana jechuun dhukkubsataan yookan eegduun seera qabeessi ati ragaalee kanniin akka apppiitti galchaa jirtu ni beeku jechuudha, ragaan maalii akka sassaabbamu, fii tarii karaa SMS, WhatsApp, yookan maloota biraa lakkoofsa bilbilaa appicha keessatti kenname fayyadamanii qunammamuu akka danda’an beeku.</string>
@@ -258,9 +260,10 @@
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">Jalqabi</string>
-  <string name="screenonboarding_intro_1">Barbaadi \&amp; argadhu \ndhukkubsattoota kumaatamoota \nwajjiin</string>
+  <string name="screenonboarding_intro_1">Barbaadi \&amp; argadhu \ndhukkubsattoota kumaatamoota \n wajjiin</string>
   <string name="screenonboarding_intro_1_hypertension">Baayyina dhiiga</string>
-  <string name="screenonboarding_intro_2">Galmeessa \n tursiisi</string>
+  <string name="screenonboarding_intro_2">Galmeessa \n tursiisi
+</string>
   <string name="screenonboarding_intro_2_bp">Dhiibbaa dhiigaa</string>
   <string name="screenonboarding_intro_2_and">\&amp;</string>
   <string name="screenonboarding_intro_2_medicines">Dawaawwan</string>
@@ -382,7 +385,7 @@
   <string name="recent_patients_toolbar_title">Dhiyoo</string>
 
   <!-- Recent Patients Item View -->
-  <string name="recent_patients_itemview_last_seen">Daawwatameerau0020</string>
+  <string name="recent_patients_itemview_last_seen">Daawwatameera u:\u0020</string>
   <string name="recent_patients_itemview_title">%1$s, %2$s</string>
   <string name="recent_patients_itemview_new_registration">Galmee haaraa</string>
 

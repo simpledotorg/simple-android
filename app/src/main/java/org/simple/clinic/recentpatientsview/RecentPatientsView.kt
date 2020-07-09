@@ -9,7 +9,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.recent_patients.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.recentpatient.RecentPatientsScreenKey
@@ -68,7 +68,8 @@ class RecentPatientsView(
 
   override fun onFinishInflate() {
     super.onFinishInflate()
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
 
     inflate(context, R.layout.recent_patients, this)
 
@@ -119,5 +120,9 @@ class RecentPatientsView(
             intention = OpenIntention.ViewExistingPatient,
             screenCreatedTimestamp = Instant.now(utcClock)
         ))
+  }
+
+  interface Injector {
+    fun inject(target: RecentPatientsView)
   }
 }

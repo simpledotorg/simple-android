@@ -10,6 +10,7 @@
 - Migrated `RegistrationConfirmPinScreen` to Mobius
 - Updated CI checks to look for [Clubhouse](https://app.clubhouse.io/simpledotorg) tickets instead of Pivotal Tracker
 - Migrated `RegistrationLocationPermissionScreen` to Mobius
+- Added patient registration and assigned facility columns to the patient model
 
 ### Changes
 - Add support for Medical Record Number in Ethiopia

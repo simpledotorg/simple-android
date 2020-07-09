@@ -26,6 +26,7 @@ class LatestRecentPatientsUiRenderer @AssistedInject constructor(
   override fun render(model: LatestRecentPatientsModel) {
     if (model.hasLoadedRecentPatients) {
       renderRecentPatients(model)
+      renderEmptyView(model)
     }
   }
 
@@ -38,6 +39,14 @@ class LatestRecentPatientsUiRenderer @AssistedInject constructor(
     )
 
     ui.updateRecentPatients(recentPatientItems)
+  }
+
+  private fun renderEmptyView(model: LatestRecentPatientsModel) {
+    if (model.isAtLeastOneRecentPatientPresent) {
+      ui.showOrHideRecentPatients(true)
+    } else {
+      ui.showOrHideRecentPatients(false)
+    }
   }
 
   private fun recentPatientItem(recentPatient: RecentPatient, today: LocalDate): RecentPatientItem {

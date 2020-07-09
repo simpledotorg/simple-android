@@ -2,7 +2,7 @@ package org.simple.clinic.recentpatientsview
 
 import java.util.UUID
 
-interface LatestRecentPatientsUi {
+interface LatestRecentPatientsUi : LatestRecentPatientsUiActions {
   fun updateRecentPatients(recentPatients: List<RecentPatientItemType>)
   fun showOrHideRecentPatients(isVisible: Boolean)
   fun openRecentPatientsScreen()

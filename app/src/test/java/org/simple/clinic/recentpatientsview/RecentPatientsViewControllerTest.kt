@@ -95,7 +95,6 @@ class RecentPatientsViewControllerTest {
     )))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     verify(screen).updateRecentPatients(listOf(
         RecentPatientItem(
@@ -176,7 +175,6 @@ class RecentPatientsViewControllerTest {
     )))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     verify(screen).updateRecentPatients(listOf(
         RecentPatientItem(
@@ -222,7 +220,6 @@ class RecentPatientsViewControllerTest {
     )).thenReturn(Observable.just(emptyList()))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     verify(screen).showOrHideRecentPatients(isVisible = false)
   }
@@ -230,6 +227,12 @@ class RecentPatientsViewControllerTest {
   @Test
   fun `when any recent patient item is clicked, then open patient summary`() {
     val patientUuid = UUID.fromString("418adb0f-032d-4914-93d3-dc0633802e3e")
+
+    whenever(patientRepository.recentPatients(
+        facilityUuid = facility.uuid,
+        limit = recentPatientLimitPlusOne
+    )).thenReturn(Observable.just(listOf(TestData.recentPatient(uuid = patientUuid, dateOfBirth = LocalDate.parse("2018-01-01")))))
+
     setupController()
     uiEvents.onNext(RecentPatientItemClicked(patientUuid = patientUuid))
 
@@ -238,6 +241,11 @@ class RecentPatientsViewControllerTest {
 
   @Test
   fun `when see all is clicked, then open recent patients screen`() {
+    whenever(patientRepository.recentPatients(
+        facilityUuid = facility.uuid,
+        limit = recentPatientLimitPlusOne
+    )).thenReturn(Observable.just(emptyList()))
+
     setupController()
     uiEvents.onNext(SeeAllItemClicked)
 
@@ -263,5 +271,7 @@ class RecentPatientsViewControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

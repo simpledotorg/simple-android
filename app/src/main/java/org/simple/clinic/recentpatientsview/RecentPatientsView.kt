@@ -25,7 +25,10 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs), LatestRecentPatientsUi {
+class RecentPatientsView(
+    context: Context,
+    attrs: AttributeSet
+) : FrameLayout(context, attrs), LatestRecentPatientsUi, LatestRecentPatientsUiActions {
 
   @Inject
   lateinit var utcClock: UtcClock

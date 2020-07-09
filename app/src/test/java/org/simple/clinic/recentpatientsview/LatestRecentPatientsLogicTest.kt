@@ -41,6 +41,7 @@ class LatestRecentPatientsLogicTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui: LatestRecentPatientsUi = mock()
+  private val uiActions: LatestRecentPatientsUiActions = mock()
   private val userSession: UserSession = mock()
   private val patientRepository: PatientRepository = mock()
   private val facilityRepository: FacilityRepository = mock()
@@ -244,12 +245,12 @@ class LatestRecentPatientsLogicTest {
         )
     ))
     verify(ui).showOrHideRecentPatients(true)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
 
     clearInvocations(ui)
     uiEvents.onNext(RecentPatientItemClicked(patientUuid = patientUuid))
-    verify(ui).openPatientSummary(patientUuid)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openPatientSummary(patientUuid)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -258,12 +259,12 @@ class LatestRecentPatientsLogicTest {
 
     verify(ui).updateRecentPatients(emptyList())
     verify(ui).showOrHideRecentPatients(false)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
 
     clearInvocations(ui)
     uiEvents.onNext(SeeAllItemClicked)
-    verify(ui).openRecentPatientsScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openRecentPatientsScreen()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupController(
@@ -283,7 +284,7 @@ class LatestRecentPatientsLogicTest {
         userSession = userSession,
         facilityRepository = facilityRepository,
         patientRepository = patientRepository,
-        uiActions = ui
+        uiActions = uiActions
     )
 
     val uiRenderer = LatestRecentPatientsUiRenderer(

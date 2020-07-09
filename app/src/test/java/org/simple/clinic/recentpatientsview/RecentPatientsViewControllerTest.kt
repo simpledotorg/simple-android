@@ -50,7 +50,7 @@ class RecentPatientsViewControllerTest {
   private val recentPatientLimit = 3
   private val recentPatientLimitPlusOne = recentPatientLimit + 1
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
-  private val userClock = TestUserClock()
+  private val userClock = TestUserClock(LocalDate.parse("2020-01-01"))
 
   private lateinit var controllerSubscription: Disposable
 
@@ -64,7 +64,7 @@ class RecentPatientsViewControllerTest {
     val patientUuid1 = UUID.fromString("dbb418f0-8329-48c0-a536-a0a781bbdf36")
     val patientUuid2 = UUID.fromString("3eabf6a2-88d8-41e1-b21c-6f3509963382")
     val patientUuid3 = UUID.fromString("aa228e88-50b0-4ada-a839-926fd6dacf2e")
-    userClock.setDate(LocalDate.parse("2020-02-01"))
+
     val recentPatients = listOf(
         TestData.recentPatient(
             uuid = patientUuid1,
@@ -100,7 +100,7 @@ class RecentPatientsViewControllerTest {
             name = "Ajay Kumar",
             age = 42,
             gender = Transgender,
-            updatedAt = Instant.parse("2020-02-01T00:00:00Z"),
+            updatedAt = Instant.parse("2020-01-01T00:00:00Z"),
             dateFormatter = dateFormatter,
             clock = userClock,
             isNewRegistration = true
@@ -110,7 +110,7 @@ class RecentPatientsViewControllerTest {
             name = "Vijay Kumar",
             age = 24,
             gender = Male,
-            updatedAt = Instant.parse("2020-01-31T00:00:00Z"),
+            updatedAt = Instant.parse("2019-12-31T00:00:00Z"),
             dateFormatter = dateFormatter,
             clock = userClock,
             isNewRegistration = false
@@ -120,7 +120,7 @@ class RecentPatientsViewControllerTest {
             name = "Vinaya Kumari",
             age = 27,
             gender = Female,
-            updatedAt = Instant.parse("2020-01-29T00:00:00Z"),
+            updatedAt = Instant.parse("2019-12-29T00:00:00Z"),
             dateFormatter = dateFormatter,
             clock = userClock,
             isNewRegistration = false
@@ -136,7 +136,6 @@ class RecentPatientsViewControllerTest {
     val patientUuid2 = UUID.fromString("3eaf6595-d3cd-41e4-bfb5-b1fa6e17fed9")
     val patientUuid3 = UUID.fromString("4b404776-feee-4c0d-8262-d7bb69350d83")
     val patientUuid4 = UUID.fromString("091035b5-efbd-404f-890c-b5016dc32b6d")
-    userClock.setDate(date = LocalDate.parse("2020-01-01"))
 
     val recentPatients = listOf(
         TestData.recentPatient(
@@ -221,7 +220,6 @@ class RecentPatientsViewControllerTest {
   @Test
   fun `when any recent patient item is clicked, then open patient summary`() {
     val patientUuid = UUID.fromString("418adb0f-032d-4914-93d3-dc0633802e3e")
-    userClock.setDate(date = LocalDate.parse("2020-01-01"))
 
     setupController(recentPatients = listOf(TestData.recentPatient(
         uuid = patientUuid,

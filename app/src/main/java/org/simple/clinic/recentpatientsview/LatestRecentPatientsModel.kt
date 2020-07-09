@@ -13,6 +13,9 @@ data class LatestRecentPatientsModel(
     fun create(): LatestRecentPatientsModel = LatestRecentPatientsModel(recentPatients = null)
   }
 
+  val hasLoadedRecentPatients: Boolean
+    get() = recentPatients != null
+
   fun recentPatientsLoaded(recentPatients: List<RecentPatient>): LatestRecentPatientsModel {
     return copy(recentPatients = recentPatients)
   }

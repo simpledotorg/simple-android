@@ -116,7 +116,7 @@ jobs:
           PR_DESCRIPTION="$QUOTED_PR_DESCRIPTION"
           STORY_LINK_REGEX='https:\/\/app.clubhouse.io\/simpledotorg\/story\/[0-9]+\/[A-Za-z0-9_-]+'
 
-          if [[ $PR_DESCRIPTION =~ STORY_LINK_REGEX ]]; then
+          if [[ $PR_DESCRIPTION =~ $STORY_LINK_REGEX ]]; then
             exit 0
           else
             echo "PR description doesn't contain a valid story link"

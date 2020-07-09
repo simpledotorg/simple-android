@@ -12,13 +12,15 @@ class RegistrationLocationPermissionUpdate : Update<RegistrationLocationPermissi
       event: RegistrationLocationPermissionEvent
   ): Next<RegistrationLocationPermissionModel, RegistrationLocationPermissionEffect> {
     return when (event) {
-      is RequestLocationPermission -> {
-        if (event.isPermissionGranted)
-          dispatch(OpenFacilitySelectionScreen as RegistrationLocationPermissionEffect)
-        else
-          noChange()
-      }
+      is RequestLocationPermission -> openFacilitySelectionScreen(event)
       is SkipClicked -> dispatch(OpenFacilitySelectionScreen)
     }
+  }
+
+  private fun openFacilitySelectionScreen(event: RequestLocationPermission): Next<RegistrationLocationPermissionModel, RegistrationLocationPermissionEffect> {
+    return if (event.isPermissionGranted)
+      dispatch(OpenFacilitySelectionScreen as RegistrationLocationPermissionEffect)
+    else
+      noChange()
   }
 }

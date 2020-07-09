@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import org.junit.After
@@ -25,9 +26,11 @@ import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -52,11 +55,13 @@ class RecentPatientsViewControllerTest {
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
   private val userClock = TestUserClock(LocalDate.parse("2020-01-01"))
 
+  private lateinit var testFixture: MobiusTestFixture<LatestRecentPatientsModel, LatestRecentPatientsEvent, LatestRecentPatientsEffect>
   private lateinit var controllerSubscription: Disposable
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -287,6 +292,23 @@ class RecentPatientsViewControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
+
+    val effectHandler = LatestRecentPatientsEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+
+    val uiRenderer = LatestRecentPatientsUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = LatestRecentPatientsModel.create(),
+        update = LatestRecentPatientsUpdate(),
+        effectHandler = effectHandler.build(),
+        init = LatestRecentPatientsInit(),
+        modelUpdateListener = uiRenderer::render
+    )
+    testFixture.start()
 
     uiEvents.onNext(ScreenCreated())
   }

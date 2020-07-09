@@ -302,8 +302,8 @@ class PatientRepository @Inject constructor(
                 syncStatus = PENDING,
                 reminderConsent = reminderConsent,
                 deletedReason = null,
-                registeredFacilityId = null,
-                assignedFacilityId = null
+                registeredFacilityId = facility.uuid,
+                assignedFacilityId = facility.uuid
             )
           }
         }

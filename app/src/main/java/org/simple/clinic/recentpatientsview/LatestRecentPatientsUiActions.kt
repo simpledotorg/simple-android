@@ -1,0 +1,3 @@
+package org.simple.clinic.recentpatientsview
+
+interface LatestRecentPatientsUiActions

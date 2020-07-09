@@ -4,10 +4,11 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import junitparams.JUnitParamsRunner
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -50,27 +51,11 @@ class RecentPatientsViewControllerTest {
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
   private val userClock = TestUserClock()
 
-  private val controller = RecentPatientsViewController(
-      userSession = userSession,
-      patientRepository = patientRepository,
-      facilityRepository = facilityRepository,
-      userClock = userClock,
-      patientConfig = PatientConfig(
-          limitOfSearchResults = 1,
-          recentPatientLimit = recentPatientLimit
-      ),
-      dateFormatter = dateFormatter
-  )
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
-
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -109,6 +94,7 @@ class RecentPatientsViewControllerTest {
         )
     )))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).updateRecentPatients(listOf(
@@ -189,6 +175,7 @@ class RecentPatientsViewControllerTest {
         )
     )))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).updateRecentPatients(listOf(
@@ -234,6 +221,7 @@ class RecentPatientsViewControllerTest {
         limit = recentPatientLimitPlusOne
     )).thenReturn(Observable.just(emptyList()))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).showOrHideRecentPatients(isVisible = false)
@@ -242,6 +230,7 @@ class RecentPatientsViewControllerTest {
   @Test
   fun `when any recent patient item is clicked, then open patient summary`() {
     val patientUuid = UUID.fromString("418adb0f-032d-4914-93d3-dc0633802e3e")
+    setupController()
     uiEvents.onNext(RecentPatientItemClicked(patientUuid = patientUuid))
 
     verify(screen).openPatientSummary(patientUuid)
@@ -249,8 +238,30 @@ class RecentPatientsViewControllerTest {
 
   @Test
   fun `when see all is clicked, then open recent patients screen`() {
+    setupController()
     uiEvents.onNext(SeeAllItemClicked)
 
     verify(screen).openRecentPatientsScreen()
+  }
+
+  private fun setupController() {
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
+
+    val controller = RecentPatientsViewController(
+        userSession = userSession,
+        patientRepository = patientRepository,
+        facilityRepository = facilityRepository,
+        userClock = userClock,
+        patientConfig = PatientConfig(
+            limitOfSearchResults = 1,
+            recentPatientLimit = recentPatientLimit
+        ),
+        dateFormatter = dateFormatter
+    )
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

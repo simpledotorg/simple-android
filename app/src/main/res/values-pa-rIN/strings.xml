@@ -26,8 +26,9 @@
   <string name="home_settings">ਸੈਟਿੰਗਾਂ</string>
 
   <!--Business id Identifier -->
-  <string name="identifiertype_bp_passport">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਪਾਸਪੋਰਟ</string>
+  <string name="identifiertype_bp_passport">ਬੀਪੀ ਪਾਸਪੋਰਟ</string>
   <string name="identifiertype_bangladesh_national_id">ਰਾਸ਼ਟਰੀ ਆਈ ਡੀ ਸੰਖਿਆ</string>
+  <string name="identifiertype_ethiopia_medical_record_number">ਮੈਡੀਕਲ ਰਿਕਾਰਡ ਨੰਬਰ</string>
   <string name="identifiertype_unknown">ਆਈਡੀ</string>
 
   <!-- Patient search -->
@@ -41,16 +42,19 @@
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">ਮਰੀਜ਼ ਰਜਿਸਟਰਡ ਨਹੀਂ ਹੈ</string>
   <string name="patientsearchresults_register_patient">ਇੱਕ ਨਵੇਂ ਮਰੀਜ਼ ਵਜੋਂ ਰਜਿਸਟਰ ਕਰੋ</string>
   <string name="patientsearchresults_register_patient_for_empty_state">ਮਰੀਜ਼ ਨੂੰ ਰਜਿਸਟਰ ਕਰੋ</string>
-  <string name="patientsearchresults_item_last_seen">ਆਖਰੀ ਵਾਰ ਦੇਖਿਆ ਗਿਆ:</string>
+  <string name="patientsearchresults_item_last_seen">ਵਿਜ਼ਿਟਡ</string>
   <string name="patientsearchresults_current_facility_header">%s ਦਾ ਦੌਰਾ ਕੀਤਾ ਹੈ</string>
   <string name="patientsearchresults_other_results_header">ਹੋਰ ਨਤੀਜੇ</string>
   <string name="patientsearchresults_no_patients_match">ਕੋਈ ਮਰੀਜ਼ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ ਹਨ</string>
+  <string name="patientsearchresults_item_phone_number">ਫੋਨ</string>
+  <string name="patientsearchresults_item_birthdate">ਜਨਮ ਮਿਤੀ</string>
 
   <!-- Manual patient entry -->
   <string name="patiententry_contentdescription_up_button">ਖੋਜ \'ਤੇ ਵਾਪਿਸ ਜਾਓ</string>
   <string name="patiententry_full_name">ਮਰੀਜ਼ ਦਾ ਨਾਮ</string>
   <string name="patiententry_phone_number">ਫ਼ੋਨ ਨੰਬਰ</string>
   <string name="patiententry_bangladesh_national_id">ਰਾਸ਼ਟਰੀ ਆਈ ਡੀ ਸੰਖਿਆ</string>
+  <string name="patiententry_ethiopia_medical_record_number">ਮੈਡੀਕਲ ਰਿਕਾਰਡ ਨੰਬਰ</string>
   <string name="patiententry_date_of_birth_unfocused">ਜਨਮ ਮਿਤੀ</string>
   <string name="patiententry_date_of_birth_focused">D.O.B (ਜਨਮ ਮਿਤੀ): DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">ਜਾਂ</string>
@@ -59,7 +63,7 @@
   <string name="patiententry_street_house_road_number">ਮਕਾਨ ਅਤੇ ਰੋਡ ਨੰਬਰ</string>
   <string name="patiententry_village_colony_ward">ਪਿੰਡ / ਕਲੋਨੀ / ਵਾਰਡ</string>
   <string name="patiententry_village_ward">ਪਿੰਡ / ਵਾਰਡ</string>
-  <string name="patiententry_kebele">ਪਿੰਡ</string>
+  <string name="patiententry_kebele">ਕੇਬੇਲੇ</string>
   <string name="patiententry_zone">ਯੂਨੀਅਨ</string>
   <string name="patiententry_district">ਜ਼ਿਲ੍ਹਾ</string>
   <string name="patiententry_woreda">ਵੋਰੈਡਾ</string>
@@ -77,7 +81,7 @@
   <string name="patiententry_error_dateofbirth_is_in_future">ਮਰੀਜ਼ ਦੀ ਜਨਮ ਮਿਤੀ ਸਹੀ ਕਰੋ</string>
   <string name="patiententry_error_phonenumber_length_less">ਫ਼ੋਨ ਨੰਬਰ %1$s ਅੰਕਾਂ ਤੋਂ ਛੋਟਾ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
   <string name="patiententry_error_phonenumber_length_more">ਫ਼ੋਨ ਨੰਬਰ %1$s ਅੰਕਾਂ ਤੋਂ ਵੱਡਾ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
-  <string name="patiententry_identifier">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਪਾਸਪੋਰਟ</string>
+  <string name="patiententry_identifier">ਬੀਪੀ ਪਾਸਪੋਰਟ</string>
   <string name="patiententry_consent_header">ਸਹਿਮਤੀ:\u0020</string>
   <string name="patiententry_consent_first_para">ਹੇਠਾਂ ਟੈਪ ਕਰਕੇ, ਤੁਸੀਂ ਪੁਸ਼ਟੀ ਕਰਦੇ ਹੋ ਕਿ ਤੁਹਾਡੇ ਵਲੋਂ ਇੱਥੇ ਦਾਖ਼ਲ ਕੀਤਾ ਕੋਈ ਵੀ ਮਰੀਜ਼ ਡੇਟਾ ਢੁਕਵੀਂ ਸੂਚਿਤ ਸਹਿਮਤੀ ਤਹਿਤ ਹਾਸਲ ਕੀਤਾ ਗਿਆ ਹੈ। ਇਸਦਾ ਮਤਲਬ ਇਹ ਹੈ ਕਿ ਮਰੀਜ਼ ਜਾਂ ਕਨੂੰਨੀ ਸਰਪ੍ਰਸਤ ਨੂੰ ਪਤਾ ਹੈ ਕਿ ਤੁਸੀਂ ਉਸਦਾ ਨਿੱਜੀ ਡਾਟਾ ਐਪ ਵਿੱਚ ਦਰਜ ਕਰ ਰਹੇ ਹੋ, ਸਮਝਦਾ/ਸਮਝਦੀ ਹੈ ਕਿ ਕਿਹੜਾ ਡਾਟਾ ਇਕੱਤਰ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ, ਅਤੇ ਜਾਣਦਾ/ਜਾਣਦੀ ਹੈ ਕਿ ਐਪ ਵਿੱਚ ਪ੍ਰਦਾਨ ਕੀਤੇ ਫ਼ੋਨ ਨੰਬਰ ਦੀ ਵਰਤੋਂ ਕਰਕੇ SMS, WhatsApp, ਜਾਂ ਹੋਰ ਵਿਧੀਆਂ ਰਾਹੀਂ ਉਹਨਾਂ ਨਾਲ ਸੰਪਰਕ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ।</string>
   <string name="patiententry_consent_second_para">ਤੁਹਾਡੇ ਵਲੋਂ ਅਧਿਕਾਰ ਦਿੱਤੇ ਵਿਅਕਤੀ ਦੀ, ਜਾਂ ਸਿਹਤ-ਸੰਭਾਲ ਪ੍ਰਦਾਤੇ ਦੀ ਜਿਸ ਲਈ ਤੁਸੀਂ ਕੰਮ ਕਰਦੇ ਹੋ, ਮਰੀਜ਼ ਡੇਟਾ ਤੱਕ ਅਤੇ ਤੁਹਾਡੇ ਵਲੋਂ ਇੱਥੇ ਦਾਖ਼ਲ ਕੀਤੀ ਜਾਣਕਾਰੀ ਤੱਕ ਪਹੁੰਚ ਹੋਵੇਗੀ। ਐਪ ਦੀ ਵਰਤੋਂ ਕਰਕੇ, ਤੁਸੀਂ ਪੁਸ਼ਟੀ ਕਰਦੇ ਹੋ ਕਿ ਮਰੀਜ਼ ਜਾਂ ਕਨੂੰਨੀ ਸਰਪ੍ਰਸਤ ਸਮਝਦਾ/ਸਮਝਦੀ ਹੈ ਕਿ ਇਸ ਐਪ ਦੁਆਰਾ ਹਾਸਲ ਕੀਤੇ ਡਾਟਾ ਤੱਕ ਕਿਸ ਵਿਅਕਤੀ ਦੀ ਪਹੁੰਚ ਹੋਵੇਗੀ ਅਤੇ ਉਸ ਪਹੁੰਚ ਲਈ ਸਹਿਮਤੀ ਦਿੰਦਾ/ਦਿੰਦੀ ਹੈ।</string>
@@ -87,9 +91,12 @@
   <string name="patiententry_age_exceeds_min_limit_error">ਉਮਰ 0 ਸਾਲ ਦੇ ਬਰਾਬਰ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
 
   <string name="patientedit_save_patient">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
+  <string name="patientedit_bp_passports_label">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਪਾਸਪੋਰਟ</string>
   <string name="patientedit_confirm_discard_title">ਬਦਲਾਵ ਖਾਰਜ ਕਰਨੇ ਹਨ?</string>
   <string name="patientedit_confirm_discard_ok">ਖਾਰਜ ਕਰੋ</string>
   <string name="patientedit_confirm_discard_cancel">ਰੱਦ ਕਰੋ</string>
+  <string name="patientedit_delete_patient">ਹਟਾਓ</string>
+
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
@@ -164,6 +171,10 @@
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
   <string name="patientsummary_bangladesh_national_id">ਆਈਡੀ</string>
 
+  <string name="patientsummary_contact_doctor">ਡਾਕਟਰ</string>
+  <string name="patientsummary_teleconsult_network_error">ਖ਼ਰਾਬ ਇੰਟਰਨੈਟ ਦੇ ਕਾਰਨ ਕਨੈਕਟ ਨਹੀਂ ਕਰ ਸਕਦੇ</string>
+  <string name="patientsummary_teleconsult_network_error_retry">ਮੁੜ-ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
+
   <string name="bloodpressuresummaryview_see_all_button">ਸਭ ਦੇਖੋ</string>
 
   <!-- Lint fails to find usages for these strings. -->
@@ -171,6 +182,9 @@
   <string name="bloodpressure_level_low">ਘੱਟ</string>
   <!--suppress UnusedResources -->
   <string name="bloodpressure_level_high">ਵੱਧ</string>
+
+  <string name="bloodsugar_level_low">ਘੱਟ</string>
+  <string name="bloodsugar_level_high">ਵੱਧ</string>
 
   <string name="timestamp_today">ਅੱਜ</string>
   <string name="timestamp_yesterday">ਬੀਤਿਆ ਕੱਲ੍ਹ</string>
@@ -246,11 +260,20 @@
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">ਸ਼ੁਰੂਆਤ ਕਰੋ</string>
+  <string name="screenonboarding_intro_1">ਹਾਈਪਰਟੈਂਸ਼ਨ \nਵਾਲੇ ਹਜ਼ਾਰਾਂ ਮਰੀਜ਼ \nਖੋਜੋ</string>
+  <string name="screenonboarding_intro_1_hypertension">ਅਤੇ ਲੱਭੋ</string>
+  <string name="screenonboarding_intro_2">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਅਤੇ \n</string>
+  <string name="screenonboarding_intro_2_bp">ਦਵਾਈਆਂ ਦਾ \n</string>
+  <string name="screenonboarding_intro_2_and">ਰਿਕਾਰਡ</string>
+  <string name="screenonboarding_intro_2_medicines">ਬਣਾਓ</string>
+  <string name="screenonboarding_intro_3">ਮਰੀਜ਼ ਮੁਲਾਕਾਤਾਂ ਲਈ</string>
+  <string name="screenonboarding_intro_3_reminder">\nਵਾਪਸ ਆਉਣ ਵਾਸਤੇ ਰੀਮਾਈਂਡਰ</string>
+  <string name="screenonboarding_intro_3_visits">\nਸੁਨੇਹੇ ਪ੍ਰਾਪਤ ਕਰਨਗੇ</string>
 
   <!-- Overdue List -->
   <string name="overdue_no_patients">ਕੋਈ ਮਰੀਜ਼ ਓਵਰਡਿਊ ਨਹੀਂ ਹਨ</string>
   <string name="overdue_empty_desc">ਤੁਸੀਂ ਇੱਕ ਫੋਲੋ-ਅੱਪ ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਰੀਡਿੰਗ ਲਈ ਅਜਿਹੇ ਮਰੀਜ਼ਾਂ ਨੂੰ ਬੁਲਾਉਣ ਦੇ ਯੋਗ ਹੋਵੋਗੇ ਜੋ ਆਪਣੀ ਨਿਰਧਾਰਤ ਮੁਲਾਕਾਤ ਖੁੰਝਾ ਦਿੰਦੇ ਹਨ।</string>
-  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_name_age">%1$s, %2$s</string>
   <string name="overdue_list_item_diagnosis_diabetes">ਸ਼ੂਗਰ</string>
   <string name="overdue_list_item_diagnosis_hypertension">ਹਾਈਪਰਟੈਂਸ਼ਨ</string>
   <string name="overdue_list_item_diagnosis_none">ਕੋਈ ਨਹੀਂ</string>
@@ -258,9 +281,9 @@
     <item quantity="one">%s ਦਿਨ ਓਵਰਡਿਊ ਹੈ</item>
     <item quantity="other">%s ਦਿਨ ਓਵਰਡਿਊ ਹਨ</item>
   </plurals>
-  <string name="overduelist_high_risk">ਵੱਧ ਜੋਖਮ</string>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">ਵਿਜ਼ਿਟਡ</string>
+  <string name="overduelist_high_risk">ਵੱਧ ਜੋਖਮ</string>
 
   <!-- Facility change -->
   <string name="changefacility_screen_title">ਆਪਣਾ ਕਲੀਨਿਕ ਚੁਣੋ</string>
@@ -346,7 +369,7 @@
   <string name="help_try_again">ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
 
   <!-- Link Id Sheet-->
-  <string name="linkidwithpatient_button_add">ਜੋੜੋ</string>
+  <string name="linkidwithpatient_button_add">ਅਗਲਾ</string>
   <string name="linkidwithpatient_button_cancel">ਰੱਦ ਕਰੋ</string>
   <string name="linkidwithpatient_add_id_text">%1$s\u0020 ਜੋੜੋ</string>
   <string name="linkidwithpatient_to_patient_text">\u0020ਤੋਂ\u00A0ਮਰੀਜ਼?</string>
@@ -363,6 +386,7 @@
   <!-- Recent Patients Item View -->
   <string name="recent_patients_itemview_last_seen">ਆਖਰੀ ਵਾਰ ਦੇਖਿਆ ਗਿਆ:\u0020</string>
   <string name="recent_patients_itemview_title">%1$s, %2$s</string>
+  <string name="recent_patients_itemview_new_registration">ਨਵਾਂ ਰਜਿਸਟ੍ਰੇਸ਼ਨ</string>
 
   <!-- Add ID to Patient: Search Results-->
   <string name="addidtopatientsearchresults_add">%1$s\u0020 ਜੋੜੋ</string>
@@ -463,7 +487,6 @@
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_no_blood_sugars">ਕੋਈ ਬਲੱਡ ਸ਼ੂਗਰ ਨਹੀਂ ਜੋੜੇ ਗਏ</string>
   <string name="bloodsugarsummaryview_add_blood_sugar_button">ਸ਼ੂਗਰ</string>
-
   <!-- Blood Pressure History screen -->
   <string name="bloodpressurehistory_add_bp_button">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ</string>
   <string name="bloodpressurehistory_toolbar_title">%1$s, %2$s, %3$s</string>
@@ -471,6 +494,7 @@
   <!-- Blood Sugar History screen -->
   <string name="bloodsugarhistory_add_blood_sugar_button">ਸ਼ੂਗਰ</string>
   <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">ਅਤੀਤ</string>
   <string name="medicalhistorysummaryview_diagnosis">ਡਾਇਗਨੋਸਿਸ (ਲੋੜੀਂਦਾ)</string>
@@ -510,8 +534,21 @@
   <string name="contactpatient_call_normal">ਸਾਧਾਰਨ</string>
   <string name="contactpatient_call_secure">ਸੁਰੱਖਿਅਤ</string>
   <string name="contactpatient_help_text">ਸੁਰੱਖਿਅਤ ਕਾਲਾਂ ਤੁਹਾਡੇ ਨੰਬਰ ਨੂੰ ਲੁਕਾਉਂਦੀਆਂ ਹਨ ਅਤੇ ਟੌਲ ਫ੍ਰੀ ਹਨ</string>
+  <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">ਮਗਰੋਂ ਕਾਲ ਕਰੋ</string>
   <string name="contactpatient_done">ਹੋ ਗਿਆ</string>
+  <plurals name="contactpatient_days">
+    <item quantity="one">%s ਦਿਨ</item>
+    <item quantity="other">%s ਦਿਨ</item>
+  </plurals>
+  <plurals name="contactpatient_weeks">
+    <item quantity="one">%s ਹਫ਼ਤਾ</item>
+    <item quantity="other">%s ਹਫ਼ਤੇ</item>
+  </plurals>
+  <plurals name="contactpatient_months">
+    <item quantity="one">%s ਮਹੀਨਾ</item>
+    <item quantity="other">%s ਮਹੀਨੇ</item>
+  </plurals>
   <string name="contactpatient_select_a_reason">ਕੋਈ ਕਾਰਨ ਚੁਣੋ</string>
   <string name="contactpatient_patient_already_visited">ਮਰੀਜ਼ ਨੇ ਪਹਿਲਾਂ ਹੀ ਮੁਲਾਕਾਤ ਕਰ ਲਈ ਹੈ</string>
   <string name="contactpatient_patient_is_not_responding">ਮਰੀਜ਼ ਜਵਾਬ ਨਹੀਂ ਦੇ ਰਿਹਾ ਹੈ</string>
@@ -520,17 +557,34 @@
   <string name="contactpatient_moved_to_private">ਨਿੱਜੀ ਪ੍ਰੈਕਟੀਸ਼ਨਰ ਨੂੰ ਭੇਜਿਆ ਗਿਆ</string>
   <string name="contactpatient_patient_died">ਮਰ ਗਿਆ</string>
   <string name="contactpatient_other_reason">ਹੋਰ ਕਾਰਨ</string>
-  <plurals name="contactpatient_days">
-    <item quantity="one">%s ਦਿਨ</item>
-    <item quantity="other">%s ਦਿਨ</item>
-  </plurals>
-  <plurals name="contactpatient_weeks">
-    <item quantity="one">%s ਹਫਤਾ</item>
-    <item quantity="other">%s ਹਫਤੇ</item>
-  </plurals>
-  <plurals name="contactpatient_months">
-    <item quantity="one">%s ਮਹੀਨਾ</item>
-    <item quantity="other">%s ਮਹੀਨੇ</item>
-  </plurals>
-  <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
+
+  <!-- Deep link -->
+  <string name="deeplink_patient_profile_not_found">ਰੋਗੀ ਦੀ ਫਾਈਲ ਨਹੀਂ ਮਿਲੀ</string>
+  <string name="deeplink_patient_profile_not_found_desc">ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਇੰਟਰਨੈਟ ਚੈਕ ਕਰੋ ਅਤੇ ਰੋਗੀਆਂ ਨੂੰ ਸਿੰਕ ਕਰੋ</string>
+  <string name="deeplink_patient_profile_not_found_positive_action">ਠੀਕ ਹੈ</string>
+  <string name="deeplink_no_patient">ਰੋਗੀ ਨਹੀਂ ਮਿਲਿਆ</string>
+  <string name="deeplink_no_patient_desc">ਟੈਲੀਕੰਸਕਟੇਸ਼ਨ ਸ਼ੁਰੂ ਕਰੋ ਅਤੇ ਸਿਹਤ ਸੰਭਾਲ ਕਰਮਚਾਰੀਆਂ ਤੋਂ ਰੋਗੀ ਦੀ ਜਾਣਕਾਰੀ ਮੰਗੋ</string>
+  <string name="deeplink_no_patient_positive_action">ਠੀਕ ਹੈ</string>
+
+  <!-- Delete patient -->
+  <string name="deletepatient_select_a_reason">ਕੋਈ ਕਾਰਨ ਚੁਣੋ</string>
+  <string name="deletereason_duplicate_patient">ਇਹ ਇੱਕ ਡੁਪਲੀਕੇਟ ਮਰੀਜ਼ ਹੈ</string>
+  <string name="deletereason_accidental_registration">ਗ਼ਲਤੀ ਨਾਲ ਰਜਿਸਟਰ ਕੀਤਾ ਗਿਆ ਮਰੀਜ਼</string>
+  <string name="deletereason_died">ਮਰ ਗਿਆ</string>
+  <string name="deletereason_confirm_title">ਮਰੀਜ਼ ਨੂੰ ਮਿਟਾਉਣਾ ਹੈ?</string>
+  <string name="deletereason_confirm_message">ਇਹ %1$s ਨੂੰ ਮਿਟਾ ਦਏਗਾ</string>
+  <string name="deletereason_confirm_positive">ਹਟਾਓ</string>
+  <string name="deletereason_confirm_negative">ਰੱਦ ਕਰੋ</string>
+
+  <!-- Splash screen -->
+  <string name="screensplash_next">ਅਗਲਾ</string>
+
+  <!-- Contact doctor sheet -->
+  <string name="contactdoctor_title">ਡਾਕਟਰਾਂ ਨਾਲ</string>
+  <string name="contactdoctor_subtitle">%1$s ਨੂੰ ਸਪੁਰਦ ਕੀਤਾ ਹੈ</string>
+
+  <!-- Intro Video Screen -->
+  <string name="screenintrovideo_how_to_use_simple_app">ਆਸਾਨ ਐਪ ਦੀ ਵਰਤੋਂ ਕਿਵੇਂ ਕਰਨੀ ਹੈ</string>
+  <string name="screenintrovideo_watch_video">ਵੀਡੀਓ ਦੇਖੋ</string>
+  <string name="screenintrovideo_skip">ਛੱਡ ਦਿਓ</string>
 </resources>

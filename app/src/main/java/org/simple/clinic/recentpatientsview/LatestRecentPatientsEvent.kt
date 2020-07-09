@@ -11,3 +11,7 @@ data class RecentPatientsLoaded(val recentPatients: List<RecentPatient>) : Lates
 data class RecentPatientItemClicked(val patientUuid: UUID) : LatestRecentPatientsEvent() {
   override val analyticsName = "Recent Patients: Item clicked"
 }
+
+object SeeAllItemClicked : LatestRecentPatientsEvent() {
+  override val analyticsName = "Recent Patients: See all clicked"
+}

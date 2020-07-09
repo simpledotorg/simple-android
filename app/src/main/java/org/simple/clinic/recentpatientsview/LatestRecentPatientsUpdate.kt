@@ -14,6 +14,7 @@ class LatestRecentPatientsUpdate : Update<LatestRecentPatientsModel, LatestRecen
     return when(event) {
       is RecentPatientsLoaded -> next(model.recentPatientsLoaded(event.recentPatients))
       is RecentPatientItemClicked -> dispatch(OpenPatientSummary(event.patientUuid))
+      SeeAllItemClicked -> dispatch(OpenAllRecentPatientsScreen)
     }
   }
 }

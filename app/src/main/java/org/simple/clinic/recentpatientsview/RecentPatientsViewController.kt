@@ -3,7 +3,6 @@ package org.simple.clinic.recentpatientsview
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientConfig
@@ -31,13 +30,6 @@ class RecentPatientsViewController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.mergeArray(
-        openRecentPatientsScreen(replayedEvents)
-    )
+    return Observable.never()
   }
-
-  private fun openRecentPatientsScreen(events: Observable<UiEvent>): Observable<UiChange> =
-      events
-          .ofType<SeeAllItemClicked>()
-          .map { { ui: Ui -> ui.openRecentPatientsScreen() } }
 }

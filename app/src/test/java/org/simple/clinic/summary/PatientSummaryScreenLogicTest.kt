@@ -42,7 +42,7 @@ import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
-import org.threeten.bp.Duration
+import java.time.Duration
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)

@@ -10,7 +10,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Instant
+import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Named
 

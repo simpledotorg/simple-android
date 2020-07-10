@@ -2,7 +2,7 @@ package org.simple.clinic.util.moshi
 
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
-import org.threeten.bp.Instant
+import java.time.Instant
 
 class InstantMoshiAdapter {
 

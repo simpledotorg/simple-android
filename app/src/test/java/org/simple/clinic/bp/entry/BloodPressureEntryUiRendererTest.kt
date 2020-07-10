@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.util.TestUserClock
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 import java.util.UUID
 
 class BloodPressureEntryUiRendererTest {

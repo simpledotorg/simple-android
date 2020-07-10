@@ -6,7 +6,7 @@ import okhttp3.Request
 import okhttp3.Response
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.Locale
 import javax.inject.Inject
 

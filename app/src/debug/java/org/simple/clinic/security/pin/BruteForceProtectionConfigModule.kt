@@ -3,7 +3,7 @@ package org.simple.clinic.security.pin
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
-import org.threeten.bp.Duration
+import java.time.Duration
 
 @Module
 class BruteForceProtectionConfigModule {

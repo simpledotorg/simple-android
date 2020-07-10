@@ -2,7 +2,7 @@ package org.simple.clinic.di
 
 import dagger.Module
 import dagger.Provides
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Named
 

@@ -29,8 +29,8 @@ import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.TestUserClock
-import org.threeten.bp.LocalDate
-import org.threeten.bp.Period
+import java.time.LocalDate
+import java.time.Period
 import java.util.UUID
 
 class ContactPatientUpdateTest {

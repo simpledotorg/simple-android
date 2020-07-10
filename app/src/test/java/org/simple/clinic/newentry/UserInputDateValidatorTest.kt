@@ -10,8 +10,8 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @RunWith(JUnitParamsRunner::class)

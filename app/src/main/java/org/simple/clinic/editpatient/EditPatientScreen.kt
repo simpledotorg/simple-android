@@ -76,8 +76,8 @@ import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.textChanges
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 

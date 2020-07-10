@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
 import androidx.arch.core.executor.TaskExecutor
-import org.threeten.bp.Duration
+import java.time.Duration
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.SynchronousQueue
 import java.util.concurrent.ThreadFactory

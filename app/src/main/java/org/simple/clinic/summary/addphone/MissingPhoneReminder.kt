@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
 import org.simple.clinic.patient.PatientUuid
-import org.threeten.bp.Instant
+import java.time.Instant
 
 @Entity(tableName = "MissingPhoneReminder")
 data class MissingPhoneReminder(

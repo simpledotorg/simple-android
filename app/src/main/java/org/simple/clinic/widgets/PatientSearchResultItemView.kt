@@ -16,8 +16,8 @@ import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named

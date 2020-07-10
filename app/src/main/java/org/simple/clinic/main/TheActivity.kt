@@ -46,7 +46,7 @@ import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject

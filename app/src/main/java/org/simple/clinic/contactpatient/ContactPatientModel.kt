@@ -10,7 +10,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.parcelable
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 import java.util.UUID
 
 @Parcelize

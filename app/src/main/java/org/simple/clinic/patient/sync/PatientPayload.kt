@@ -14,8 +14,8 @@ import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 
 @JsonClass(generateAdapter = true)

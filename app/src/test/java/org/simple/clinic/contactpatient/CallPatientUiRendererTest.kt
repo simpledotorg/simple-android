@@ -14,9 +14,9 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.TestUserClock
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.Period
+import java.time.Instant
+import java.time.LocalDate
+import java.time.Period
 import java.util.UUID
 
 class CallPatientUiRendererTest {

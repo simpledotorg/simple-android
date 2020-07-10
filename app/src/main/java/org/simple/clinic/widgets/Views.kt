@@ -27,7 +27,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.NestedScrollView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import org.threeten.bp.Duration
+import java.time.Duration
 import timber.log.Timber
 
 fun EditText.showKeyboard() {

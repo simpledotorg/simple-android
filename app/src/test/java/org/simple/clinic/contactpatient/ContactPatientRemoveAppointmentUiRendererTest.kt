@@ -16,8 +16,8 @@ import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.util.TestUserClock
-import org.threeten.bp.LocalDate
-import org.threeten.bp.Period
+import java.time.LocalDate
+import java.time.Period
 import java.util.UUID
 
 class ContactPatientRemoveAppointmentUiRendererTest {

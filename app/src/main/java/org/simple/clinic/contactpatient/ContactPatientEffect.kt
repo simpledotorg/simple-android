@@ -1,7 +1,7 @@
 package org.simple.clinic.contactpatient
 
 import org.simple.clinic.overdue.AppointmentCancelReason
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 import java.util.UUID
 
 sealed class ContactPatientEffect

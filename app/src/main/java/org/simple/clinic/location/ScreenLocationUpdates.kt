@@ -10,7 +10,7 @@ import org.simple.clinic.util.ElapsedRealtimeClock
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.timer
-import org.threeten.bp.Duration
+import java.time.Duration
 import javax.inject.Inject
 
 class ScreenLocationUpdates @Inject constructor(

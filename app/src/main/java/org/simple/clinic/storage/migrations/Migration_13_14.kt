@@ -4,7 +4,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.uuid.UuidGenerator
-import org.threeten.bp.Instant
+import java.time.Instant
 import javax.inject.Inject
 
 /**

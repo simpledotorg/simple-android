@@ -15,7 +15,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Instant
+import java.time.Instant
 
 class AppLockScreenControllerTest {
 

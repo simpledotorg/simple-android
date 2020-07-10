@@ -13,8 +13,8 @@ import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.Instant
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.Instant
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 sealed class RecentPatientItemType : ItemAdapter.Item<UiEvent>

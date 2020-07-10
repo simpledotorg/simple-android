@@ -34,7 +34,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named

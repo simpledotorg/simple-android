@@ -15,8 +15,8 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.UtcClock
-import org.threeten.bp.Instant
-import org.threeten.bp.temporal.ChronoUnit.DAYS
+import java.time.Instant
+import java.time.temporal.ChronoUnit.DAYS
 import java.util.UUID
 import javax.inject.Inject
 

@@ -4,8 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.util.TestUserClock
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 
 class DateOfBirthTest {
 

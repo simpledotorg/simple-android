@@ -1,7 +1,7 @@
 package org.simple.clinic.contactpatient
 
 import org.simple.clinic.phone.Dialer
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 interface ContactPatientUiActions {
   fun directlyCallPatient(patientPhoneNumber: String, dialer: Dialer)

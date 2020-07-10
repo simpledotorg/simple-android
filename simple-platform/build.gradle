@@ -25,6 +25,4 @@ android {
 dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
   api "com.jakewharton.timber:timber:$versions.timber"
-  api "org.threeten:threetenbp:$versions.threeTenBp:no-tzdb"
-  api "com.gabrielittner.threetenbp:lazythreetenbp:$versions.lazyThreeTenBp"
 }

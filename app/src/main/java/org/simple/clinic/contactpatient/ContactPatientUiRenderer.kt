@@ -12,7 +12,7 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.daysTill
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 class ContactPatientUiRenderer(
     private val ui: ContactPatientUi,

@@ -19,9 +19,9 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.temporal.ChronoUnit
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 data class OverdueAppointmentRow(

@@ -36,8 +36,8 @@ import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
+import java.time.Duration
+import java.time.Instant
 import java.util.UUID
 
 class RegistrationFacilitySelectionScreenControllerTest {

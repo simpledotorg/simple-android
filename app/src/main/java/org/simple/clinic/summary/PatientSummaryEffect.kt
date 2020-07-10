@@ -4,7 +4,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 sealed class PatientSummaryEffect

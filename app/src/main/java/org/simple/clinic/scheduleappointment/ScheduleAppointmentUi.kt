@@ -1,7 +1,7 @@
 package org.simple.clinic.scheduleappointment
 
 import org.simple.clinic.overdue.TimeToAppointment
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 interface ScheduleAppointmentUi {
   fun updateScheduledAppointment(appointmentDate: LocalDate, timeToAppointment: TimeToAppointment)

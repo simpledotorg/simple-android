@@ -16,7 +16,7 @@ import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.threeten.bp.Duration
+import java.time.Duration
 import java.io.IOException
 import java.net.SocketTimeoutException
 

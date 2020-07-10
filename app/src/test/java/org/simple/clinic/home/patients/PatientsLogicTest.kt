@@ -41,9 +41,9 @@ import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.temporal.ChronoUnit
+import java.time.Instant
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import java.net.SocketTimeoutException
 import java.util.UUID
 

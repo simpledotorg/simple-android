@@ -1,7 +1,7 @@
 package org.simple.clinic.util.preference
 
 import com.f2prateek.rx.preferences2.Preference
-import org.threeten.bp.Instant
+import java.time.Instant
 
 class InstantRxPreferencesConverter : Preference.Converter<Instant> {
 

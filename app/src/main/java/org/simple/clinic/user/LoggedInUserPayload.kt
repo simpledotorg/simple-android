@@ -2,7 +2,7 @@ package org.simple.clinic.user
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 @JsonClass(generateAdapter = true)

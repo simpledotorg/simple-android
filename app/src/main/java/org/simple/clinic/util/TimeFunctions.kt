@@ -1,12 +1,12 @@
 package org.simple.clinic.util
 
 import org.simple.clinic.overdue.TimeToAppointment
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalTime
-import org.threeten.bp.ZoneId
-import org.threeten.bp.ZoneOffset.UTC
-import org.threeten.bp.temporal.ChronoUnit
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZoneOffset.UTC
+import java.time.temporal.ChronoUnit
 
 fun Instant.toLocalDateAtZone(zone: ZoneId): LocalDate {
   return this.atZone(UTC)

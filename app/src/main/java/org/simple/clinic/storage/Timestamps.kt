@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.room.Embedded
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.util.UtcClock
-import org.threeten.bp.Instant
+import java.time.Instant
 
 /**
  * There are three timestamps that are always present in every single synced model:

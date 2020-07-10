@@ -15,7 +15,7 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.bloodsugar.sync.BloodSugarMeasurementPayload
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 @Entity(tableName = "BloodSugarMeasurements")

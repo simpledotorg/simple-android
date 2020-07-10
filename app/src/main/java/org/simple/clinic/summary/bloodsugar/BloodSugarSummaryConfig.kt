@@ -1,7 +1,7 @@
 package org.simple.clinic.summary.bloodsugar
 
 import org.simple.clinic.remoteconfig.ConfigReader
-import org.threeten.bp.Duration
+import java.time.Duration
 
 data class BloodSugarSummaryConfig(
     val bloodSugarEditableDuration: Duration,

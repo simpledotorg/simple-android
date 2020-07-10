@@ -2,7 +2,7 @@ package org.simple.clinic.security.pin
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.threeten.bp.Instant
+import java.time.Instant
 
 interface PinEntryUi {
 

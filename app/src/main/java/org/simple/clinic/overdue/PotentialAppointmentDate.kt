@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.plus
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 @Parcelize
 data class PotentialAppointmentDate(

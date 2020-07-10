@@ -11,7 +11,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
-import org.threeten.bp.Instant
+import java.time.Instant
 
 class MedicalHistorySummaryEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,

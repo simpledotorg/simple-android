@@ -25,8 +25,8 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus.PENDING
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
+import java.time.Duration
+import java.time.Instant
 
 @RunWith(JUnitParamsRunner::class)
 class ReportPendingRecordsToAnalyticsTest {

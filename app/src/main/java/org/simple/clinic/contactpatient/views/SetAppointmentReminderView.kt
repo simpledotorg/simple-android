@@ -11,8 +11,8 @@ import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Months
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 

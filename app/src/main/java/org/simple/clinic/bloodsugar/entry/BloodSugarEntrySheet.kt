@@ -44,9 +44,9 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneId
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject

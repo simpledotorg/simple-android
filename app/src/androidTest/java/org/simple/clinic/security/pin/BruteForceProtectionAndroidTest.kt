@@ -16,8 +16,8 @@ import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowe
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUtcClock
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
+import java.time.Duration
+import java.time.Instant
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

@@ -33,7 +33,7 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.dp
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named

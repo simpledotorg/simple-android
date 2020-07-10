@@ -8,7 +8,7 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.UtcClock
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 

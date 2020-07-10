@@ -9,7 +9,7 @@ import io.reactivex.Flowable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.storage.DaoWithUpsert
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 @Entity

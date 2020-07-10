@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
 import org.simple.clinic.util.Distance
-import org.threeten.bp.Duration
+import java.time.Duration
 import javax.inject.Named
 
 @Module

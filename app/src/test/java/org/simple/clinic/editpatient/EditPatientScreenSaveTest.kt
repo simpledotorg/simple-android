@@ -46,11 +46,11 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.mobius.migration.MobiusTestFixture
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.Duration
+import java.time.Instant
+import java.time.LocalDate
+import java.time.Month
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
 

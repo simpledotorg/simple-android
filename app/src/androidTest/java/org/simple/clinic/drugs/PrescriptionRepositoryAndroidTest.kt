@@ -14,10 +14,10 @@ import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUtcClock
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
+import java.time.Duration
+import java.time.Instant
+import java.time.LocalDate
+import java.time.Month
 import java.util.UUID
 import javax.inject.Inject
 

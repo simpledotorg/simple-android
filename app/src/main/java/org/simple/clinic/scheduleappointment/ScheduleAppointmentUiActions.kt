@@ -1,6 +1,6 @@
 package org.simple.clinic.scheduleappointment
 
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 interface ScheduleAppointmentUiActions {
   fun showManualDateSelector(date: LocalDate)

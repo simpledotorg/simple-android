@@ -21,7 +21,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 

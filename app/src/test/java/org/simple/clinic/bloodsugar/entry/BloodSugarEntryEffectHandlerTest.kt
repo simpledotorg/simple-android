@@ -31,8 +31,8 @@ import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 
 class BloodSugarEntryEffectHandlerTest {

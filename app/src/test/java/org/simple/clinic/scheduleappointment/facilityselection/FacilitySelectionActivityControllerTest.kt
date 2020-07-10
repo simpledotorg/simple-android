@@ -33,7 +33,7 @@ import org.simple.clinic.util.Distance
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Duration
+import java.time.Duration
 
 @RunWith(JUnitParamsRunner::class)
 class FacilitySelectionActivityControllerTest {

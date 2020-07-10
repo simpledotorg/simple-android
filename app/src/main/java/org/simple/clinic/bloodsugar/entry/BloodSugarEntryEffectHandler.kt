@@ -29,8 +29,8 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 
 class BloodSugarEntryEffectHandler @AssistedInject constructor(

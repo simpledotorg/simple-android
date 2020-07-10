@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.threeten.bp.Duration
+import java.time.Duration
 import java.util.UUID
 
 class BloodSugarSummaryViewUiRendererTest {

@@ -53,6 +53,7 @@ class RecentPatientsScreenControllerTest {
 
   @Test
   fun `when screen opens then fetch and set recent patients`() {
+    // given
     val patientUuid1 = UUID.fromString("b5cfb2e6-0d73-4189-8131-5b91d8c45780")
     val patientUuid2 = UUID.fromString("47f4281e-d571-4c36-a7fc-039d0a289e2f")
     val patientUuid3 = UUID.fromString("073c9099-5f60-4bc3-b40e-2c67f5ac74e4")
@@ -87,8 +88,10 @@ class RecentPatientsScreenControllerTest {
         )
     )))
 
+    // when
     setupController()
 
+    // then
     verify(screen).updateRecentPatients(listOf(
         RecentPatientItem(
             uuid = patientUuid1,
@@ -126,6 +129,7 @@ class RecentPatientsScreenControllerTest {
 
   @Test
   fun `when any recent patient item is clicked, then open patient summary`() {
+    // given
     val patientUuid = UUID.fromString("c5070a89-d848-4822-80c2-d7c306e437b1")
     val today = Instant.now(userClock)
 
@@ -140,9 +144,11 @@ class RecentPatientsScreenControllerTest {
         )
     )))
 
+    // when
     setupController()
     uiEvents.onNext(RecentPatientItemClicked(patientUuid = patientUuid))
 
+    // then
     verify(screen).updateRecentPatients(listOf(RecentPatientItem(
         uuid = patientUuid,
         name = "Ajay Kumar",

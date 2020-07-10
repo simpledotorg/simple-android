@@ -37,8 +37,8 @@ class RecentPatientsScreenControllerTest {
   private val facilityRepository: FacilityRepository = mock()
 
   private val uiEvents: Subject<UiEvent> = PublishSubject.create()
-  private val loggedInUser = TestData.loggedInUser()
-  private val facility = TestData.facility()
+  private val loggedInUser = TestData.loggedInUser(uuid = UUID.fromString("d192d336-1831-439d-ab6c-2b9228e0a06a"))
+  private val facility = TestData.facility(uuid = UUID.fromString("b8e0fe64-6c31-43df-837a-80ce05b80cea"))
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
   private val userClock = TestUserClock(LocalDate.parse("2020-02-14"))
 
@@ -62,10 +62,10 @@ class RecentPatientsScreenControllerTest {
 
   @Test
   fun `when screen opens then fetch and set recent patients`() {
-    val patientUuid1 = UUID.randomUUID()
-    val patientUuid2 = UUID.randomUUID()
-    val patientUuid3 = UUID.randomUUID()
-    
+    val patientUuid1 = UUID.fromString("b5cfb2e6-0d73-4189-8131-5b91d8c45780")
+    val patientUuid2 = UUID.fromString("47f4281e-d571-4c36-a7fc-039d0a289e2f")
+    val patientUuid3 = UUID.fromString("073c9099-5f60-4bc3-b40e-2c67f5ac74e4")
+
     val today = Instant.now(userClock)
     val yesterday = today.minus(Duration.ofDays(1))
     val twoDaysAgo = today.minus(Duration.ofDays(2))
@@ -134,7 +134,7 @@ class RecentPatientsScreenControllerTest {
 
   @Test
   fun `when any recent patient item is clicked, then open patient summary`() {
-    val patientUuid = UUID.randomUUID()
+    val patientUuid = UUID.fromString("c5070a89-d848-4822-80c2-d7c306e437b1")
     uiEvents.onNext(RecentPatientItemClicked(patientUuid = patientUuid))
 
     verify(screen).openPatientSummary(patientUuid)

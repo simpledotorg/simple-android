@@ -2,6 +2,7 @@ package org.simple.clinic.recentpatient
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -120,6 +121,7 @@ class RecentPatientsScreenControllerTest {
             isNewRegistration = false
         )
     ))
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -141,7 +143,18 @@ class RecentPatientsScreenControllerTest {
     setupController()
     uiEvents.onNext(RecentPatientItemClicked(patientUuid = patientUuid))
 
+    verify(screen).updateRecentPatients(listOf(RecentPatientItem(
+        uuid = patientUuid,
+        name = "Ajay Kumar",
+        age = 42,
+        gender = Gender.Transgender,
+        lastSeen = Instant.parse("2020-02-14T00:00:00Z"),
+        dateFormatter = dateFormatter,
+        clock = userClock,
+        isNewRegistration = true
+    )))
     verify(screen).openPatientSummary(patientUuid)
+    verifyNoMoreInteractions(screen)
   }
 
   private fun setupController() {

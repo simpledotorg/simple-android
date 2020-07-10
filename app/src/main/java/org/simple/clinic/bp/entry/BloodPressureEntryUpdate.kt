@@ -11,7 +11,7 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 class BloodPressureEntryUpdate(
     private val dateValidator: UserInputDateValidator,

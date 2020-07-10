@@ -17,7 +17,7 @@ import org.intellij.lang.annotations.Language
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.room.RoomEnumTypeConverter
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 // We intentionally have to keep the table name same because

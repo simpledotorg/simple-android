@@ -19,7 +19,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 class HomeScreenControllerTest {
 

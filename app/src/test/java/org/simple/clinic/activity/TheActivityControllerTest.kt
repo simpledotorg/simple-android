@@ -47,7 +47,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 

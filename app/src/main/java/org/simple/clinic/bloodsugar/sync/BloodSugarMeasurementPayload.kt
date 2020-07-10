@@ -7,7 +7,7 @@ import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 @JsonClass(generateAdapter = true)

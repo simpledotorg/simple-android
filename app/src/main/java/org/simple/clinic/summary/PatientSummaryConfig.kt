@@ -1,7 +1,7 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.remoteconfig.ConfigReader
-import org.threeten.bp.Duration
+import java.time.Duration
 import javax.inject.Inject
 
 data class PatientSummaryConfig(

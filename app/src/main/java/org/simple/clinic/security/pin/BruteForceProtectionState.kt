@@ -5,7 +5,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
-import org.threeten.bp.Instant
+import java.time.Instant
 
 @JsonClass(generateAdapter = true)
 data class BruteForceProtectionState(

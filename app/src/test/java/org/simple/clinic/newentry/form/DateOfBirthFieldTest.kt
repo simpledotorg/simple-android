@@ -5,8 +5,8 @@ import org.junit.Test
 import org.simple.clinic.newentry.form.ValidationError.DateIsInFuture
 import org.simple.clinic.newentry.form.ValidationError.InvalidDateFormat
 import org.simple.clinic.newentry.form.ValidationError.MissingValue
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class DateOfBirthFieldTest {
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")

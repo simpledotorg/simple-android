@@ -16,8 +16,8 @@ import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 

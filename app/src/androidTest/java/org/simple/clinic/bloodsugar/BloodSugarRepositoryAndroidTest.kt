@@ -14,12 +14,12 @@ import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUtcClock
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
-import org.threeten.bp.temporal.ChronoUnit
-import org.threeten.bp.temporal.ChronoUnit.DAYS
+import java.time.Duration
+import java.time.Instant
+import java.time.LocalDate
+import java.time.Month
+import java.time.temporal.ChronoUnit
+import java.time.temporal.ChronoUnit.DAYS
 import java.util.UUID
 import javax.inject.Inject
 

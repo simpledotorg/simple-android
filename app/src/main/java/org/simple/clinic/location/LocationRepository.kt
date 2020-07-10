@@ -14,7 +14,7 @@ import com.google.android.gms.location.LocationServices
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import org.simple.clinic.location.LocationUpdate.Available
-import org.threeten.bp.Duration
+import java.time.Duration
 import javax.inject.Inject
 
 typealias LocationProvider = FusedLocationProviderClient

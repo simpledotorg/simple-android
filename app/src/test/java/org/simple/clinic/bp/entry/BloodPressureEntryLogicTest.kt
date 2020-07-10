@@ -56,10 +56,10 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.mobius.migration.MobiusTestFixture
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset.UTC
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneOffset.UTC
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
 

@@ -6,11 +6,11 @@ import org.simple.clinic.util.RelativeTimestamp.ExactDate
 import org.simple.clinic.util.RelativeTimestamp.Today
 import org.simple.clinic.util.RelativeTimestamp.WithinSixMonths
 import org.simple.clinic.util.RelativeTimestamp.Yesterday
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.temporal.ChronoUnit.DAYS
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit.DAYS
 import javax.inject.Inject
 
 class RelativeTimestampGenerator @Inject constructor() {

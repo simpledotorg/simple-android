@@ -1,7 +1,7 @@
 package org.simple.clinic.location
 
 import org.simple.clinic.util.ElapsedRealtimeClock
-import org.threeten.bp.Duration
+import java.time.Duration
 
 sealed class LocationUpdate {
 

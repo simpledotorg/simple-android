@@ -7,8 +7,8 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RequiresPermission
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 
 sealed class PatientsTabEvent : UiEvent
 

@@ -17,8 +17,8 @@ import org.simple.clinic.newentry.form.ZoneField
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class InputFieldsFactory(
     private val dateTimeFormatter: DateTimeFormatter,

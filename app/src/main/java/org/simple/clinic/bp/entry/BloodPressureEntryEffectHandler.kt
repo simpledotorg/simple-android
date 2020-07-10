@@ -36,8 +36,8 @@ import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 
 class BloodPressureEntryEffectHandler @AssistedInject constructor(

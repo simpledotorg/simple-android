@@ -14,7 +14,7 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus.PENDING
-import org.threeten.bp.Instant
+import java.time.Instant
 import javax.inject.Inject
 
 class ReportPendingRecordsToAnalytics @Inject constructor(

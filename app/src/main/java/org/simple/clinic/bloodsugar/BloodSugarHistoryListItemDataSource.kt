@@ -17,9 +17,9 @@ import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toLocalDateAtZone
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.Duration
+import java.time.Instant
+import java.time.format.DateTimeFormatter
 import javax.inject.Named
 
 class BloodSugarHistoryListItemDataSource(

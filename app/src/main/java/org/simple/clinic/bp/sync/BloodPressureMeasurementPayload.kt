@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.patient.SyncStatus
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 @JsonClass(generateAdapter = true)

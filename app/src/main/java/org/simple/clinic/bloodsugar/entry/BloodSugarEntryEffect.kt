@@ -2,8 +2,8 @@ package org.simple.clinic.bloodsugar.entry
 
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 
 sealed class BloodSugarEntryEffect

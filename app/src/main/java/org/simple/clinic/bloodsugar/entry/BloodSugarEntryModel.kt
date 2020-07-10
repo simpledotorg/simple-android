@@ -5,7 +5,7 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 @Parcelize
 data class BloodSugarEntryModel(

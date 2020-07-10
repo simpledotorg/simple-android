@@ -8,7 +8,7 @@ import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.util.advanceTimeBy
-import org.threeten.bp.Duration
+import java.time.Duration
 
 class RxTimingAnalyticsTest {
 

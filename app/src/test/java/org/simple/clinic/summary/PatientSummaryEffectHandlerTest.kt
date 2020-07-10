@@ -35,8 +35,8 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
+import java.time.Duration
+import java.time.Instant
 import java.net.UnknownHostException
 import java.util.UUID
 

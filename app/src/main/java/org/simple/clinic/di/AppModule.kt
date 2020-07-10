@@ -44,7 +44,7 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.DefaultSchedulersProvider
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toNullable
-import org.threeten.bp.ZoneId
+import java.time.ZoneId
 import java.util.Locale
 import javax.inject.Named
 

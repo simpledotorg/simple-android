@@ -12,8 +12,8 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.timer
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
+import java.time.Duration
+import java.time.Instant
 import javax.inject.Inject
 import kotlin.math.max
 

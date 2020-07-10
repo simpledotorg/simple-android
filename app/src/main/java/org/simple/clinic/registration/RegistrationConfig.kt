@@ -1,7 +1,7 @@
 package org.simple.clinic.registration
 
 import org.simple.clinic.util.Distance
-import org.threeten.bp.Duration
+import java.time.Duration
 
 data class RegistrationConfig(
     val locationListenerExpiry: Duration,

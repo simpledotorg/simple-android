@@ -4,10 +4,10 @@ import androidx.annotation.VisibleForTesting
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneId
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.format.DateTimeParseException
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import javax.inject.Inject
 import javax.inject.Named
 

@@ -5,10 +5,10 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset
-import org.threeten.bp.temporal.ChronoUnit
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.temporal.ChronoUnit
 
 @RunWith(JUnitParamsRunner::class)
 class TimeFunctionsTest {

@@ -17,8 +17,8 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 import javax.inject.Named
 
 class PatientsEffectHandler @AssistedInject constructor(

@@ -3,8 +3,8 @@ package org.simple.clinic.bp.entry
 import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.ValidationResult
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 
 sealed class BloodPressureEntryEffect

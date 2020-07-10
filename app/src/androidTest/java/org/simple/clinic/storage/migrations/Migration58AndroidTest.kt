@@ -8,7 +8,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.assertValues
 import org.simple.clinic.insert
 import org.simple.clinic.patient.SyncStatus
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 

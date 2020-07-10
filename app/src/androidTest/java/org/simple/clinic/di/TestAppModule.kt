@@ -16,8 +16,8 @@ import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.util.scheduler.DefaultSchedulersProvider
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.threeten.bp.ZoneId
-import org.threeten.bp.ZoneOffset
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.util.Locale
 
 @Module(includes = [

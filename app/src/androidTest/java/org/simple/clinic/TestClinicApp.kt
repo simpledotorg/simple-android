@@ -1,7 +1,6 @@
 package org.simple.clinic
 
 import android.app.Application
-import com.gabrielittner.threetenbp.LazyThreeTen
 import com.tspoon.traceur.Traceur
 import org.simple.clinic.TestClinicApp.Companion.appComponent
 import org.simple.clinic.di.DaggerTestAppComponent
@@ -27,7 +26,6 @@ class TestClinicApp : Application() {
     super.onCreate()
     Timber.plant(Timber.DebugTree())
     Traceur.enableLogging()
-    LazyThreeTen.init(this)
 
     appComponent = buildDaggerGraph()
   }

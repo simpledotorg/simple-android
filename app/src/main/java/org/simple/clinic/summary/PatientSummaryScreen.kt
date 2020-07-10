@@ -64,7 +64,7 @@ import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.isVisible
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named

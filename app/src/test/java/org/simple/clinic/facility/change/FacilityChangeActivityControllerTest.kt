@@ -35,7 +35,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Duration
+import java.time.Duration
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)

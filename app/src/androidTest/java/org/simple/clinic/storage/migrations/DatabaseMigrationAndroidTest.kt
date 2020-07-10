@@ -34,8 +34,8 @@ import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.generateEncounterUuid
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.uuid
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named

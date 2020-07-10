@@ -19,8 +19,8 @@ import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
 

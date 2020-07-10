@@ -6,7 +6,7 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.registration.phone.LengthBasedNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.Distance
-import org.threeten.bp.Duration
+import java.time.Duration
 
 @Module
 class RegistrationModule {

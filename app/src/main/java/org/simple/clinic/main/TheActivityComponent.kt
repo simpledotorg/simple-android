@@ -71,7 +71,7 @@ import org.simple.clinic.util.preference.InstantRxPreferencesConverter
 import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView_Old
-import org.threeten.bp.Instant
+import java.time.Instant
 import javax.inject.Named
 
 @Subcomponent(modules = [TheActivityModule::class])

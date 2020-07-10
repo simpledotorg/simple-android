@@ -8,7 +8,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Timed
-import org.threeten.bp.Duration
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 inline fun <reified U> Single<*>.ofType(): Maybe<U> =

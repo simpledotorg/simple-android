@@ -33,7 +33,7 @@ import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.qrcodescanner.IQrCodeScannerView
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView_Old
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 

@@ -25,8 +25,8 @@ import org.simple.clinic.user.User
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 import javax.inject.Inject
 import kotlin.random.Random
 import kotlin.random.nextInt

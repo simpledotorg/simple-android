@@ -5,7 +5,7 @@ import android.app.DatePickerDialog.OnDateSetListener
 import android.content.Context
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toUtcInstant
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 /**
  * An extension of [DatePickerDialog] that supports the ThreeTenBp

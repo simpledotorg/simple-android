@@ -25,7 +25,7 @@ import org.simple.clinic.sync.SyncProgress.SYNCING
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.threeten.bp.Instant
+import java.time.Instant
 
 @RunWith(JUnitParamsRunner::class)
 class SyncIndicatorStatusCalculatorTest {

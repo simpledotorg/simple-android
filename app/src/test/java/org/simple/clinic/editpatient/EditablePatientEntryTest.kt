@@ -7,10 +7,10 @@ import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth
 import org.simple.clinic.patient.Age
 import org.simple.clinic.TestData
 import org.simple.clinic.util.TestUtcClock
-import org.threeten.bp.Clock
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.Clock
+import java.time.Instant
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class EditablePatientEntryTest {

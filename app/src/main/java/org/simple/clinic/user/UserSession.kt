@@ -20,7 +20,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.toOptional
-import org.threeten.bp.Instant
+import java.time.Instant
 import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject

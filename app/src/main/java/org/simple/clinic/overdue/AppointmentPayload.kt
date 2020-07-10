@@ -2,8 +2,8 @@ package org.simple.clinic.overdue
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 
 @JsonClass(generateAdapter = true)

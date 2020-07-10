@@ -20,7 +20,7 @@ import org.simple.clinic.util.TestElapsedRealtimeClock
 import org.simple.clinic.util.advanceTimeBy
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.threeten.bp.Duration
+import java.time.Duration
 
 class ScreenLocationUpdatesTest {
 

@@ -9,8 +9,8 @@ import android.net.NetworkCapabilities.TRANSPORT_VPN
 import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE
 import org.simple.clinic.platform.util.RuntimePermissionResult
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
+import java.time.Duration
+import java.time.Instant
 
 object Analytics {
   private var reporters: List<AnalyticsReporter> = emptyList()

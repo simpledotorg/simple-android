@@ -18,7 +18,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 @Parcelize

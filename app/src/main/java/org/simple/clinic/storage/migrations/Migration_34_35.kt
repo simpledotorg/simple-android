@@ -3,7 +3,7 @@ package org.simple.clinic.storage.migrations
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.util.UtcClock
-import org.threeten.bp.Instant
+import java.time.Instant
 import javax.inject.Inject
 
 @Suppress("ClassName")

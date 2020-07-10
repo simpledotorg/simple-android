@@ -1,7 +1,7 @@
 package org.simple.clinic.sync.indicator
 
-import org.threeten.bp.Duration
-import org.threeten.bp.temporal.ChronoUnit
+import java.time.Duration
+import java.time.temporal.ChronoUnit
 
 data class SyncIndicatorConfig(val syncFailureThreshold: Duration) {
 

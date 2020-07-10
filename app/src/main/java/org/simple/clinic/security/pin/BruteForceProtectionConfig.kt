@@ -1,6 +1,6 @@
 package org.simple.clinic.security.pin
 
-import org.threeten.bp.Duration
+import java.time.Duration
 
 data class BruteForceProtectionConfig(
     val limitOfFailedAttempts: Int,

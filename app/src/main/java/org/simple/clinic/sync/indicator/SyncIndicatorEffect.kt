@@ -1,7 +1,7 @@
 package org.simple.clinic.sync.indicator
 
 import org.simple.clinic.util.ResolvedError
-import org.threeten.bp.Duration
+import java.time.Duration
 
 sealed class SyncIndicatorEffect
 

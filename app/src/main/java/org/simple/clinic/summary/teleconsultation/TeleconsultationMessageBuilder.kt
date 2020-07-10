@@ -6,7 +6,7 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.summary.PatientTeleconsultationInfo
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 

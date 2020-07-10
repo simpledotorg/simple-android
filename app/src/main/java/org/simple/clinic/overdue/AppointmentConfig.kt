@@ -1,6 +1,6 @@
 package org.simple.clinic.overdue
 
-import org.threeten.bp.Period
+import java.time.Period
 
 data class AppointmentConfig(
     val appointmentDuePeriodForDefaulters: Period,

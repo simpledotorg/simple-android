@@ -15,7 +15,7 @@ import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.interval
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.threeten.bp.Instant
+import java.time.Instant
 import javax.inject.Named
 
 class SyncIndicatorEffectHandler @AssistedInject constructor(

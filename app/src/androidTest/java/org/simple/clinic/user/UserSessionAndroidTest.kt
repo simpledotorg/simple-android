@@ -19,7 +19,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
-import org.threeten.bp.Instant
+import java.time.Instant
 import javax.inject.Inject
 
 

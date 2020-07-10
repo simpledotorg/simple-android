@@ -7,13 +7,12 @@ import androidx.camera.camera2.Camera2Config
 import androidx.camera.core.CameraXConfig
 import androidx.work.Configuration
 import androidx.work.WorkManager
-import com.gabrielittner.threetenbp.LazyThreeTen
 import org.simple.clinic.activity.CloseActivitiesWhenUserIsUnauthorized
-import org.simple.clinic.platform.analytics.Analytics
-import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.analytics.UpdateAnalyticsUserId
 import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
 import org.simple.clinic.di.AppComponent
+import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.util.AppArchTaskExecutorDelegate
 import timber.log.Timber
@@ -46,7 +45,6 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
     // necessary.
     ArchTaskExecutor.getInstance().setDelegate(AppArchTaskExecutorDelegate())
     WorkManager.initialize(this, Configuration.Builder().build())
-    LazyThreeTen.init(this)
 
     appComponent = buildDaggerGraph()
     appComponent.inject(this)

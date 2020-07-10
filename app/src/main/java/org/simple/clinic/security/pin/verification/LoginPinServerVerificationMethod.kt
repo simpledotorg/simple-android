@@ -8,7 +8,7 @@ import org.simple.clinic.security.pin.verification.PinVerificationMethod.Verific
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntryRepository
 import org.simple.clinic.user.UserStatus
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 

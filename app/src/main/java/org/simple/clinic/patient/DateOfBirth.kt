@@ -6,8 +6,8 @@ import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.patient.DateOfBirth.Type.EXACT
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.PatientSearchResultItemView
-import org.threeten.bp.LocalDate
-import org.threeten.bp.Period
+import java.time.LocalDate
+import java.time.Period
 
 /**
  * This is a class that is meant to encapsulate dealing with the intricacies of the [Age] and the

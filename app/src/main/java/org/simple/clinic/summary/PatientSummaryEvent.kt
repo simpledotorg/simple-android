@@ -5,7 +5,7 @@ import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.user.User
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 sealed class PatientSummaryEvent : UiEvent

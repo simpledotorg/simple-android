@@ -7,8 +7,8 @@ import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset.UTC
+import java.time.LocalDate
+import java.time.ZoneOffset.UTC
 
 class BloodPressureEntryEffectHandlerTest {
   private val ui = mock<BloodPressureEntryUi>()

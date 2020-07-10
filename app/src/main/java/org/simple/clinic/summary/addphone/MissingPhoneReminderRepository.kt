@@ -3,7 +3,7 @@ package org.simple.clinic.summary.addphone
 import io.reactivex.Completable
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.util.UtcClock
-import org.threeten.bp.Instant
+import java.time.Instant
 import javax.inject.Inject
 
 class MissingPhoneReminderRepository @Inject constructor(

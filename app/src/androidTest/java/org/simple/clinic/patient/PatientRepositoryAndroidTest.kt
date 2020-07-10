@@ -66,10 +66,10 @@ import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unwrapJust
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.temporal.ChronoUnit
+import java.time.Duration
+import java.time.Instant
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject

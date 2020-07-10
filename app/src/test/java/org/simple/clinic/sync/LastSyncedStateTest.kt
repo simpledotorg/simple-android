@@ -3,7 +3,7 @@ package org.simple.clinic.sync
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.simple.clinic.di.network.NetworkModule
-import org.threeten.bp.Instant
+import java.time.Instant
 
 class LastSyncedStateTest {
 

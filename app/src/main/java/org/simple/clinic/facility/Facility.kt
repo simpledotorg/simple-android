@@ -12,7 +12,7 @@ import io.reactivex.Flowable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.patient.SyncStatus
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 @Entity

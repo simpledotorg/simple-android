@@ -19,9 +19,9 @@ import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import org.threeten.bp.temporal.ChronoUnit
+import java.time.Duration
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncIndicatorEffect> {
   override fun update(model: SyncIndicatorModel, event: SyncIndicatorEvent):

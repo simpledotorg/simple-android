@@ -5,7 +5,7 @@ import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import org.simple.clinic.platform.crash.CrashReporter
-import org.threeten.bp.Duration
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

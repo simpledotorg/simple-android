@@ -32,7 +32,7 @@
       <option name="KOTLIN_TOPLEVEL" value="true" />
     </context>
   </template>
-  <template name="instant" value="org.threeten.bp.Instant.parse(&quot;2018-01-01T00:00:00Z&quot;)" description="Generates an Instant parsed from a static string" toReformat="false" toShortenFQNames="true">
+  <template name="instant" value="java.time.Instant.parse(&quot;2018-01-01T00:00:00Z&quot;)" description="Generates an Instant parsed from a static string" toReformat="false" toShortenFQNames="true">
     <context>
       <option name="KOTLIN_CLASS" value="true" />
       <option name="KOTLIN_EXPRESSION" value="true" />
@@ -40,7 +40,7 @@
       <option name="KOTLIN_TOPLEVEL" value="true" />
     </context>
   </template>
-  <template name="date" value="org.threeten.bp.LocalDate.parse(&quot;2018-01-01&quot;)" description="Generates a LocalDate parsed from a static string" toReformat="false" toShortenFQNames="true">
+  <template name="date" value="java.time.LocalDate.parse(&quot;2018-01-01&quot;)" description="Generates a LocalDate parsed from a static string" toReformat="false" toShortenFQNames="true">
     <context>
       <option name="KOTLIN_CLASS" value="true" />
       <option name="KOTLIN_EXPRESSION" value="true" />

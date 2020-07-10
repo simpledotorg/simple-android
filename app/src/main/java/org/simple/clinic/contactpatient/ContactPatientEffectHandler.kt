@@ -12,7 +12,7 @@ import org.simple.clinic.phone.Dialer
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 class ContactPatientEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,

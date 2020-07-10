@@ -2,7 +2,7 @@ package org.simple.clinic.editpatient
 
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 interface EditPatientUi {
   fun displayBpPassports(identifiers: List<String>)

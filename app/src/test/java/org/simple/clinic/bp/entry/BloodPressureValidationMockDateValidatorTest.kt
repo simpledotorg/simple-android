@@ -38,8 +38,8 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.mobius.migration.MobiusTestFixture
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset
+import java.time.LocalDate
+import java.time.ZoneOffset
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)

@@ -22,7 +22,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.sync.BusinessIdPayload
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 @Entity(

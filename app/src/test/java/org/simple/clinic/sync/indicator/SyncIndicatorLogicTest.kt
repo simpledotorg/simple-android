@@ -41,9 +41,9 @@ import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import org.threeten.bp.temporal.ChronoUnit
+import java.time.Duration
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.net.UnknownHostException
 
 @RunWith(JUnitParamsRunner::class)

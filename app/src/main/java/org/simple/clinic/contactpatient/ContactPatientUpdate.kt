@@ -24,7 +24,7 @@ import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.daysTill
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 class ContactPatientUpdate(
     private val proxyPhoneNumberForMaskedCalls: String

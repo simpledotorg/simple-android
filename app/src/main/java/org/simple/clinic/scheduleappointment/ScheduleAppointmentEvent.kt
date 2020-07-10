@@ -3,7 +3,7 @@ package org.simple.clinic.scheduleappointment
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 sealed class ScheduleAppointmentEvent : UiEvent
 

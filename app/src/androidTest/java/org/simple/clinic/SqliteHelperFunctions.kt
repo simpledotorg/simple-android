@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.common.truth.Truth
 import org.simple.clinic.util.room.LocalDateRoomTypeConverter
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 
 private val dateConverter = LocalDateRoomTypeConverter()

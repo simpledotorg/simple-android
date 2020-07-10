@@ -10,7 +10,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
-import org.threeten.bp.Duration
+import java.time.Duration
 import retrofit2.HttpException
 import retrofit2.Response
 import java.util.UUID

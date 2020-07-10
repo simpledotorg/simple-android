@@ -9,7 +9,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientSearchResult.LastSeen
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 import java.util.Objects
 import java.util.UUID
 

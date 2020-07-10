@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
-import org.threeten.bp.Duration
+import java.time.Duration
 
 @Parcelize
 data class SyncIndicatorModel(

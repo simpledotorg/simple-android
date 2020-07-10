@@ -39,8 +39,8 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.advanceTimeBy
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.threeten.bp.Duration
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.Duration
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)

@@ -8,8 +8,8 @@ import androidx.room.Query
 import io.reactivex.Flowable
 import io.reactivex.Single
 import kotlinx.android.parcel.Parcelize
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 
 @DatabaseView("""

@@ -2,7 +2,7 @@ package org.simple.clinic.contactpatient
 
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.patient.Gender
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 interface ContactPatientUi {
   fun switchToCallPatientView()

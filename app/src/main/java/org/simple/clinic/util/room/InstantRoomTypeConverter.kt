@@ -1,7 +1,7 @@
 package org.simple.clinic.util.room
 
 import androidx.room.TypeConverter
-import org.threeten.bp.Instant
+import java.time.Instant
 import javax.inject.Inject
 
 class InstantRoomTypeConverter @Inject constructor() {

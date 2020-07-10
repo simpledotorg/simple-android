@@ -3,7 +3,7 @@ package org.simple.clinic.storage.migrations
 import org.junit.Test
 import org.simple.clinic.assertValues
 import org.simple.clinic.insert
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 class Migration61AndroidTest : BaseDatabaseMigrationTest(60, 61) {

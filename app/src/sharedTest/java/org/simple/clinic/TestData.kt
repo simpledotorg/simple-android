@@ -65,9 +65,9 @@ import org.simple.clinic.util.randomGender
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.randomOfEnum
 import org.simple.clinic.util.randomPatientPhoneNumberType
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset.UTC
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneOffset.UTC
 import java.net.URI
 import java.util.UUID
 import kotlin.random.nextInt

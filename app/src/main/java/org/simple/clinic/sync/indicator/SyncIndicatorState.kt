@@ -2,7 +2,7 @@ package org.simple.clinic.sync.indicator
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.threeten.bp.Duration
+import java.time.Duration
 
 sealed class SyncIndicatorState : Parcelable {
   @Parcelize object ConnectToSync : SyncIndicatorState()

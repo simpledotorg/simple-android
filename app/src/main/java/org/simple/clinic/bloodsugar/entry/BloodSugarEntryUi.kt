@@ -1,7 +1,7 @@
 package org.simple.clinic.bloodsugar.entry
 
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 import java.util.UUID
 
 interface BloodSugarEntryUi {

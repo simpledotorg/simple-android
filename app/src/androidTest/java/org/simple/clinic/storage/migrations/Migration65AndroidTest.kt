@@ -4,7 +4,7 @@ import org.junit.Test
 import org.simple.clinic.assertValues
 import org.simple.clinic.insert
 import org.simple.clinic.patient.SyncStatus
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 class Migration65AndroidTest : BaseDatabaseMigrationTest(64, 65) {

@@ -15,7 +15,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)

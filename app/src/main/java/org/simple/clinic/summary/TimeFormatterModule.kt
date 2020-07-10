@@ -3,7 +3,7 @@ package org.simple.clinic.summary
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.di.AppScope
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Named
 

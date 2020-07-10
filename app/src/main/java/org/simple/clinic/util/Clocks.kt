@@ -1,9 +1,9 @@
 package org.simple.clinic.util
 
-import org.threeten.bp.Clock
-import org.threeten.bp.Instant
-import org.threeten.bp.ZoneId
-import org.threeten.bp.ZoneOffset.UTC
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZoneOffset.UTC
 
 open class UtcClock : Clock() {
 

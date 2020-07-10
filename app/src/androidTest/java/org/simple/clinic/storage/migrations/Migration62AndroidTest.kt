@@ -5,7 +5,7 @@ import org.simple.clinic.assertTableDoesNotExist
 import org.simple.clinic.assertTableExists
 import org.simple.clinic.assertValues
 import org.simple.clinic.insert
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 class Migration62AndroidTest : BaseDatabaseMigrationTest(61, 62) {

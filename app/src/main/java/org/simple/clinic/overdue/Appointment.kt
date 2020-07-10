@@ -15,8 +15,8 @@ import io.reactivex.Flowable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 
 @Entity(tableName = "Appointment")

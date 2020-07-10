@@ -21,7 +21,7 @@ import org.simple.clinic.util.plus
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.uuid.UuidGenerator
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,

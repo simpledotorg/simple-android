@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.UUID
 
 @JsonClass(generateAdapter = true)

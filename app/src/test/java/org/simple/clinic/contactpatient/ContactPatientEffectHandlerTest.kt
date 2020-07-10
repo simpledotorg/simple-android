@@ -19,7 +19,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 import java.util.UUID
 
 class ContactPatientEffectHandlerTest {

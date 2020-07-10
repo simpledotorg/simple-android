@@ -1,6 +1,6 @@
 package org.simple.clinic.security.pin
 
-import org.threeten.bp.Instant
+import java.time.Instant
 
 sealed class PinEntryEffect
 

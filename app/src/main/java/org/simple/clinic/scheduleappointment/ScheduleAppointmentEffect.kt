@@ -2,7 +2,7 @@ package org.simple.clinic.scheduleappointment
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 import java.util.UUID
 
 sealed class ScheduleAppointmentEffect

@@ -2,8 +2,8 @@ package org.simple.clinic.bp.entry
 
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import java.time.Instant
+import java.time.LocalDate
 
 sealed class BloodPressureEntryEvent : UiEvent
 

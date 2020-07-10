@@ -2,7 +2,7 @@ package org.simple.clinic.util
 
 import com.fasterxml.uuid.Generators
 import com.fasterxml.uuid.impl.NameBasedGenerator
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 import java.util.UUID
 
 private fun createUuid5(name: String): UUID {

@@ -34,7 +34,7 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject

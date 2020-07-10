@@ -3,7 +3,7 @@ package org.simple.clinic.bloodsugar.entry
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 sealed class BloodSugarEntryEvent : UiEvent
 

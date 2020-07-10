@@ -7,7 +7,7 @@ import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.threeten.bp.Duration
+import java.time.Duration
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

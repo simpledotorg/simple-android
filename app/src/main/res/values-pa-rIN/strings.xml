@@ -269,7 +269,7 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">ਕੋਈ ਮਰੀਜ਼ ਓਵਰਡਿਊ ਨਹੀਂ ਹਨ</string>
   <string name="overdue_empty_desc">ਤੁਸੀਂ ਇੱਕ ਫੋਲੋ-ਅੱਪ ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਰੀਡਿੰਗ ਲਈ ਅਜਿਹੇ ਮਰੀਜ਼ਾਂ ਨੂੰ ਬੁਲਾਉਣ ਦੇ ਯੋਗ ਹੋਵੋਗੇ ਜੋ ਆਪਣੀ ਨਿਰਧਾਰਤ ਮੁਲਾਕਾਤ ਖੁੰਝਾ ਦਿੰਦੇ ਹਨ।</string>
-  <string name="overdue_list_item_name_age">%1$s, %2$s</string>
+  <string name="overdue_list_item_name_age">%s, %s</string>
   <string name="overdue_list_item_diagnosis_diabetes">ਸ਼ੂਗਰ</string>
   <string name="overdue_list_item_diagnosis_hypertension">ਹਾਈਪਰਟੈਂਸ਼ਨ</string>
   <string name="overdue_list_item_diagnosis_none">ਕੋਈ ਨਹੀਂ</string>

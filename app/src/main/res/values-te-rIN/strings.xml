@@ -7,9 +7,9 @@
   <string name="gender_male">పురుషుడు</string>
   <string name="gender_transgender">ట్రాన్స్‌జండర్</string>
   <!--suppress UnusedResources -->
-  <string name="gender_male_letter">స్త్రీ</string>
+  <string name="gender_male_letter">పు</string>
   <!--suppress UnusedResources -->
-  <string name="gender_female_letter">పు</string>
+  <string name="gender_female_letter">స్త్రీ</string>
   <!--suppress UnusedResources -->
   <string name="gender_trans_letter">ట్రాన్స్</string>
   <string name="api_unexpected_error">ఏదో తప్పు జరిగింది. మళ్లీ ప్రయత్నించండి.</string>

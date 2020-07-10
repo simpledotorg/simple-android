@@ -40,7 +40,7 @@ class RecentPatientsScreenControllerTest {
   private val loggedInUser = TestData.loggedInUser()
   private val facility = TestData.facility()
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
-  private val userClock = TestUserClock()
+  private val userClock = TestUserClock(LocalDate.parse("2020-02-14"))
 
   private val controller = RecentPatientsScreenController(
       userSession = userSession,
@@ -65,8 +65,7 @@ class RecentPatientsScreenControllerTest {
     val patientUuid1 = UUID.randomUUID()
     val patientUuid2 = UUID.randomUUID()
     val patientUuid3 = UUID.randomUUID()
-
-    userClock.setDate(LocalDate.parse("2020-02-14"))
+    
     val today = Instant.now(userClock)
     val yesterday = today.minus(Duration.ofDays(1))
     val twoDaysAgo = today.minus(Duration.ofDays(2))

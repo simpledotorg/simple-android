@@ -87,7 +87,6 @@ class RecentPatientsScreenControllerTest {
     )))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     verify(screen).updateRecentPatients(listOf(
         RecentPatientItem(
@@ -126,6 +125,18 @@ class RecentPatientsScreenControllerTest {
   @Test
   fun `when any recent patient item is clicked, then open patient summary`() {
     val patientUuid = UUID.fromString("c5070a89-d848-4822-80c2-d7c306e437b1")
+    val today = Instant.now(userClock)
+
+    whenever(patientRepository.recentPatients(facility.uuid)).thenReturn(Observable.just(listOf(
+        TestData.recentPatient(
+            uuid = patientUuid,
+            fullName = "Ajay Kumar",
+            age = Age(42, Instant.now(userClock)),
+            gender = Gender.Transgender,
+            updatedAt = today,
+            patientRecordedAt = today
+        )
+    )))
 
     setupController()
     uiEvents.onNext(RecentPatientItemClicked(patientUuid = patientUuid))
@@ -148,6 +159,8 @@ class RecentPatientsScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }
 

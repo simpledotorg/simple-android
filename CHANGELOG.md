@@ -7,7 +7,7 @@
 - [In Progress: 13th Jul 2020] Migrate `RecentPatientsView` to Mobius
 
 ### Changes
-- Updated translations: `bn_IN`
+- Updated translations: `bn_IN`, `am_ET`
 
 ## On Demo
 ### Internal

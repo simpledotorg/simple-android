@@ -4,9 +4,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -42,22 +43,11 @@ class RecentPatientsScreenControllerTest {
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
   private val userClock = TestUserClock(LocalDate.parse("2020-02-14"))
 
-  private val controller = RecentPatientsScreenController(
-      userSession = userSession,
-      patientRepository = patientRepository,
-      facilityRepository = facilityRepository,
-      userClock = userClock,
-      dateFormatter = dateFormatter
-  )
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -96,6 +86,7 @@ class RecentPatientsScreenControllerTest {
         )
     )))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).updateRecentPatients(listOf(
@@ -135,9 +126,28 @@ class RecentPatientsScreenControllerTest {
   @Test
   fun `when any recent patient item is clicked, then open patient summary`() {
     val patientUuid = UUID.fromString("c5070a89-d848-4822-80c2-d7c306e437b1")
+
+    setupController()
     uiEvents.onNext(RecentPatientItemClicked(patientUuid = patientUuid))
 
     verify(screen).openPatientSummary(patientUuid)
+  }
+
+  private fun setupController() {
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
+
+    val controller = RecentPatientsScreenController(
+        userSession = userSession,
+        patientRepository = patientRepository,
+        facilityRepository = facilityRepository,
+        userClock = userClock,
+        dateFormatter = dateFormatter
+    )
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }
 

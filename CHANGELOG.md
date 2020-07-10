@@ -5,6 +5,9 @@
 - [In Progress: 09th Jul7 2020] Migrate `RegistrationFacilitySelectionScreen` to Mobius
 - [In Progress: 13th Jul 2020] Migrate `ReportsScreen` to Mobius
 
+### Changes
+- Updated translations: `bn_IN`
+
 ## On Demo
 ### Internal
 - Migrated `RegistrationPinScreen` to Mobius

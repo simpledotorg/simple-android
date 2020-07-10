@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -14,7 +15,6 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
@@ -22,11 +22,9 @@ import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.RecentPatient
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
@@ -42,12 +40,9 @@ class LatestRecentPatientsLogicTest {
 
   private val ui: LatestRecentPatientsUi = mock()
   private val uiActions: LatestRecentPatientsUiActions = mock()
-  private val userSession: UserSession = mock()
   private val patientRepository: PatientRepository = mock()
-  private val facilityRepository: FacilityRepository = mock()
 
   private val uiEvents: Subject<UiEvent> = PublishSubject.create()
-  private val loggedInUser = TestData.loggedInUser(uuid = UUID.fromString("a4269927-d236-4507-acf9-f75272758740"))
   private val facility = TestData.facility(uuid = UUID.fromString("ddc6471b-caa4-4bfa-9bf6-60898a77c1ec"))
   private val recentPatientLimit = 3
   private val recentPatientLimitPlusOne = recentPatientLimit + 1
@@ -270,8 +265,6 @@ class LatestRecentPatientsLogicTest {
   private fun setupController(
       recentPatients: List<RecentPatient> = emptyList()
   ) {
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
     whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimitPlusOne)) doReturn Observable.just(recentPatients)
 
     val config = PatientConfig(
@@ -281,9 +274,8 @@ class LatestRecentPatientsLogicTest {
 
     val effectHandler = LatestRecentPatientsEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
-        userSession = userSession,
-        facilityRepository = facilityRepository,
         patientRepository = patientRepository,
+        currentFacility = Lazy { facility },
         uiActions = uiActions
     )
 

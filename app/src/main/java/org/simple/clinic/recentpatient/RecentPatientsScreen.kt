@@ -1,6 +1,7 @@
 package org.simple.clinic.recentpatient
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +12,7 @@ import kotlinx.android.synthetic.main.recent_patients_screen.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -38,6 +40,9 @@ class RecentPatientsScreen(
   @Inject
   lateinit var utcClock: UtcClock
 
+  @Inject
+  lateinit var effectHandlerFactory: AllRecentPatientsEffectHandler.Factory
+
   private val events by unsafeLazy {
     Observable
         .merge(
@@ -46,6 +51,19 @@ class RecentPatientsScreen(
         )
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = AllRecentPatientsUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = AllRecentPatientsModel.create(),
+        update = AllRecentPatientsUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = AllRecentPatientsInit(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   private val recentAdapter = ItemAdapter(RecentPatientItem.DiffCallback())
@@ -66,6 +84,24 @@ class RecentPatientsScreen(
         controller = controller,
         screenDestroys = detaches().map { ScreenDestroyed() }
     )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())

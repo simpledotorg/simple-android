@@ -6,16 +6,13 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.RecentPatient
+import org.simple.clinic.recentpatientsview.RecentPatientItemType
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.filterAndUnwrapJust
-import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
@@ -49,33 +46,8 @@ class RecentPatientsScreenController @Inject constructor(
           .switchMap { facility ->
             patientRepository.recentPatients(facility.uuid)
           }
-          .map {
-            val today = LocalDate.now(userClock)
-            it.map { recentPatient ->
-              recentPatientItem(recentPatient, today)
-            }
-          }
+          .map { RecentPatientItemType.create(it, userClock, dateFormatter) }
           .map { { ui: Ui -> ui.updateRecentPatients(it) } }
-
-  private fun recentPatientItem(recentPatient: RecentPatient, today: LocalDate): RecentPatientItem {
-    val patientRegisteredOnDate = recentPatient.patientRecordedAt.toLocalDateAtZone(userClock.zone)
-    val isNewRegistration = today == patientRegisteredOnDate
-
-    return RecentPatientItem(
-        uuid = recentPatient.uuid,
-        name = recentPatient.fullName,
-        age = age(recentPatient),
-        gender = recentPatient.gender,
-        lastSeen = recentPatient.updatedAt,
-        dateFormatter = dateFormatter,
-        clock = userClock,
-        isNewRegistration = isNewRegistration
-    )
-  }
-
-  private fun age(recentPatient: RecentPatient): Int {
-    return DateOfBirth.fromRecentPatient(recentPatient, userClock).estimateAge(userClock)
-  }
 
   private fun openPatientSummary(events: Observable<UiEvent>): ObservableSource<UiChange> =
       events

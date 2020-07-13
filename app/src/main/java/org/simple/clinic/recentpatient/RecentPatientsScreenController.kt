@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
-typealias Ui = RecentPatientsScreen
+typealias Ui = AllRecentPatientsUi
 typealias UiChange = (Ui) -> Unit
 
 class RecentPatientsScreenController @Inject constructor(

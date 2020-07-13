@@ -33,7 +33,7 @@ class RecentPatientsScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen: RecentPatientsScreen = mock()
+  private val ui: AllRecentPatientsUi = mock()
   private val userSession: UserSession = mock()
   private val patientRepository: PatientRepository = mock()
   private val facilityRepository: FacilityRepository = mock()
@@ -92,7 +92,7 @@ class RecentPatientsScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).updateRecentPatients(listOf(
+    verify(ui).updateRecentPatients(listOf(
         RecentPatientItem(
             uuid = patientUuid1,
             name = "Ajay Kumar",
@@ -124,7 +124,7 @@ class RecentPatientsScreenControllerTest {
             isNewRegistration = false
         )
     ))
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -149,7 +149,7 @@ class RecentPatientsScreenControllerTest {
     uiEvents.onNext(RecentPatientItemClicked(patientUuid = patientUuid))
 
     // then
-    verify(screen).updateRecentPatients(listOf(RecentPatientItem(
+    verify(ui).updateRecentPatients(listOf(RecentPatientItem(
         uuid = patientUuid,
         name = "Ajay Kumar",
         age = 42,
@@ -159,8 +159,8 @@ class RecentPatientsScreenControllerTest {
         clock = userClock,
         isNewRegistration = true
     )))
-    verify(screen).openPatientSummary(patientUuid)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientSummary(patientUuid)
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -177,7 +177,7 @@ class RecentPatientsScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
   }

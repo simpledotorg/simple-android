@@ -25,7 +25,10 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class RecentPatientsScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
+class RecentPatientsScreen(
+    context: Context,
+    attrs: AttributeSet
+) : LinearLayout(context, attrs), AllRecentPatientsUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -77,7 +80,7 @@ class RecentPatientsScreen(context: Context, attrs: AttributeSet) : LinearLayout
         .ofType()
   }
 
-  fun openPatientSummary(patientUuid: UUID) {
+  override fun openPatientSummary(patientUuid: UUID) {
     screenRouter.push(
         PatientSummaryScreenKey(
             patientUuid = patientUuid,
@@ -86,7 +89,7 @@ class RecentPatientsScreen(context: Context, attrs: AttributeSet) : LinearLayout
         ))
   }
 
-  fun updateRecentPatients(allItemTypes: List<RecentPatientItem>) {
+  override fun updateRecentPatients(allItemTypes: List<RecentPatientItem>) {
     recentAdapter.submitList(allItemTypes)
   }
 }

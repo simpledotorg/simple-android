@@ -12,7 +12,7 @@ import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -49,7 +49,8 @@ class RecentPatientsScreen(
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
 
     setupScreen()
 
@@ -91,5 +92,9 @@ class RecentPatientsScreen(
 
   override fun updateRecentPatients(allItemTypes: List<RecentPatientItem>) {
     recentAdapter.submitList(allItemTypes)
+  }
+
+  interface Injector {
+    fun inject(target: RecentPatientsScreen)
   }
 }

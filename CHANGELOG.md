@@ -13,6 +13,7 @@
 - Added patient registration and assigned facility columns to the patient model
 - [In Progress: 09th Jul7 2020] Migrate `RegistrationFacilitySelectionScreen` to Mobius
 - Replaced [ThreeTenBp](https://www.threeten.org/threetenbp/) for time APIs with [`java.time`](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html)
+- [In Progress: 13th Jul 2020] Migrate `ReportsScreen` to Mobius
 
 ### Changes
 - Add support for Medical Record Number in Ethiopia

@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
@@ -72,6 +73,9 @@ class AddPhoneNumberDialogControllerTest {
         numberDetails = numberDetails,
         active = true
     )
+    verifyNoMoreInteractions(repository)
+    verify(dialog).dismiss()
+    verifyNoMoreInteractions(dialog)
   }
 
   @Test
@@ -92,6 +96,14 @@ class AddPhoneNumberDialogControllerTest {
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
 
     verify(repository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
+    verifyNoMoreInteractions(repository)
+
+    when (validationError) {
+      Blank, is LengthTooShort -> verify(dialog).showPhoneNumberTooShortError()
+      is LengthTooLong -> verify(dialog).showPhoneNumberTooLongError()
+      ValidNumber -> throw AssertionError()
+    }.exhaustive()
+    verifyNoMoreInteractions(dialog)
   }
 
   @Test
@@ -110,6 +122,7 @@ class AddPhoneNumberDialogControllerTest {
       is LengthTooLong -> verify(dialog).showPhoneNumberTooLongError()
       ValidNumber -> throw AssertionError()
     }.exhaustive()
+    verifyNoMoreInteractions(dialog)
   }
 
   @Suppress("unused")

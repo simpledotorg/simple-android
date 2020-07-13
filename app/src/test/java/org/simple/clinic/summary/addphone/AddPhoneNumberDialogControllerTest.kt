@@ -64,7 +64,6 @@ class AddPhoneNumberDialogControllerTest {
     )).thenReturn(Completable.complete())
 
     setupController()
-    uiEvents.onNext(AddPhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
 
     verify(repository).createPhoneNumberForPatient(
@@ -90,7 +89,6 @@ class AddPhoneNumberDialogControllerTest {
     )).thenReturn(Completable.complete())
 
     setupController()
-    uiEvents.onNext(AddPhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
 
     verify(repository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
@@ -105,7 +103,6 @@ class AddPhoneNumberDialogControllerTest {
     whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(validationError)
 
     setupController()
-    uiEvents.onNext(AddPhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
 
     when (validationError) {
@@ -124,5 +121,7 @@ class AddPhoneNumberDialogControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(dialog) }
+
+    uiEvents.onNext(AddPhoneNumberDialogCreated(patientUuid))
   }
 }

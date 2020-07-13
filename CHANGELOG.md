@@ -1,6 +1,11 @@
 # CHANGELOG
 
 ## Next Release
+### Internal
+- [In Progress: 09th Jul7 2020] Migrate `RegistrationFacilitySelectionScreen` to Mobius
+- [In Progress: 13th Jul 2020] Migrate `ReportsScreen` to Mobius
+
+## On Demo
 ### Changes
 - Updated translations: `mr_IN`, `om_ET`, `hi_IN`, `pa_IN`, `bn_BD`, `te_IN`, `ti_ET`
 
@@ -11,9 +16,7 @@
 - Updated CI checks to look for [Clubhouse](https://app.clubhouse.io/simpledotorg) tickets instead of Pivotal Tracker
 - Migrated `RegistrationLocationPermissionScreen` to Mobius
 - Added patient registration and assigned facility columns to the patient model
-- [In Progress: 09th Jul7 2020] Migrate `RegistrationFacilitySelectionScreen` to Mobius
 - Replaced [ThreeTenBp](https://www.threeten.org/threetenbp/) for time APIs with [`java.time`](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html)
-- [In Progress: 13th Jul 2020] Migrate `ReportsScreen` to Mobius
 
 ### Changes
 - Add support for Medical Record Number in Ethiopia

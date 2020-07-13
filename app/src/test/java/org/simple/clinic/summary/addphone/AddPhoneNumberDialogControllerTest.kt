@@ -6,10 +6,11 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,15 +43,11 @@ class AddPhoneNumberDialogControllerTest {
   private val patientUuid = UUID.fromString("b2d1e529-8ee9-43f3-bacc-72fe1e73daa6")
   private val generatedPhoneUuid = UUID.fromString("f94bd99b-b182-4138-8e77-d91908b7ada5")
 
-  private lateinit var controller: AddPhoneNumberDialogController
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setup() {
-    controller = AddPhoneNumberDialogController(repository, validator, FakeUuidGenerator.fixed(generatedPhoneUuid))
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(dialog) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -66,6 +63,7 @@ class AddPhoneNumberDialogControllerTest {
         active = true
     )).thenReturn(Completable.complete())
 
+    setupController()
     uiEvents.onNext(AddPhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
 
@@ -91,6 +89,7 @@ class AddPhoneNumberDialogControllerTest {
         active = true
     )).thenReturn(Completable.complete())
 
+    setupController()
     uiEvents.onNext(AddPhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
 
@@ -105,6 +104,7 @@ class AddPhoneNumberDialogControllerTest {
     val newNumber = "123"
     whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(validationError)
 
+    setupController()
     uiEvents.onNext(AddPhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
 
@@ -116,5 +116,13 @@ class AddPhoneNumberDialogControllerTest {
   }
 
   @Suppress("unused")
-  private fun `validation errors`() = listOf(Blank, LengthTooShort(6),LengthTooLong(12))
+  private fun `validation errors`() = listOf(Blank, LengthTooShort(6), LengthTooLong(12))
+
+  private fun setupController() {
+    val controller = AddPhoneNumberDialogController(repository, validator, FakeUuidGenerator.fixed(generatedPhoneUuid))
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(dialog) }
+  }
 }

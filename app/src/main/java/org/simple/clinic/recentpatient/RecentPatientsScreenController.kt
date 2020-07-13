@@ -7,11 +7,8 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.recentpatientsview.RecentPatientItemType
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.filterAndUnwrapJust
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -33,21 +30,9 @@ class RecentPatientsScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        showRecentPatients(replayedEvents),
         openPatientSummary(replayedEvents)
     )
   }
-
-  private fun showRecentPatients(events: Observable<UiEvent>): Observable<UiChange> =
-      events.ofType<ScreenCreated>()
-          .flatMap { userSession.loggedInUser() }
-          .filterAndUnwrapJust()
-          .switchMap { facilityRepository.currentFacility(it) }
-          .switchMap { facility ->
-            patientRepository.recentPatients(facility.uuid)
-          }
-          .map { RecentPatientItemType.create(it, userClock, dateFormatter) }
-          .map { { ui: Ui -> ui.updateRecentPatients(it) } }
 
   private fun openPatientSummary(events: Observable<UiEvent>): ObservableSource<UiChange> =
       events

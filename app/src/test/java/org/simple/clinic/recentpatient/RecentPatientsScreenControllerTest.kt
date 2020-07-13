@@ -193,7 +193,11 @@ class RecentPatientsScreenControllerTest {
         uiActions = ui
     )
 
-    val uiRenderer = AllRecentPatientsUiRenderer(ui)
+    val uiRenderer = AllRecentPatientsUiRenderer(
+        userClock = userClock,
+        dateFormatter = dateFormatter,
+        ui = ui
+    )
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),

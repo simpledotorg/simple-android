@@ -45,6 +45,9 @@ class RecentPatientsScreen(
   @Inject
   lateinit var effectHandlerFactory: AllRecentPatientsEffectHandler.Factory
 
+  @Inject
+  lateinit var uiRendererFactory: AllRecentPatientsUiRenderer.Factory
+
   private val events by unsafeLazy {
     Observable
         .merge(
@@ -56,7 +59,7 @@ class RecentPatientsScreen(
   }
 
   private val delegate by unsafeLazy {
-    val uiRenderer = AllRecentPatientsUiRenderer(this)
+    val uiRenderer = uiRendererFactory.create(this)
 
     MobiusDelegate.forView(
         events = events.ofType(),

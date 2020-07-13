@@ -15,6 +15,7 @@ import org.junit.Test
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -92,7 +93,10 @@ class ReportsScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    val effectHandler = ReportsEffectHandler()
+    val effectHandler = ReportsEffectHandler(
+        reportsRepository = reportsRepository,
+        schedulersProvider = TestSchedulersProvider.trampoline()
+    )
     val uiRenderer = ReportsUiRenderer(ui)
 
     textFixture = MobiusTestFixture(

@@ -3,14 +3,11 @@ package org.simple.clinic.recentpatient
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotterknife.bindView
-import org.simple.clinic.R
+import kotlinx.android.synthetic.main.recent_patients_screen.view.*
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.router.screen.ScreenRouter
@@ -38,9 +35,6 @@ class RecentPatientsScreen(
 
   @Inject
   lateinit var utcClock: UtcClock
-
-  private val toolbar by bindView<Toolbar>(R.id.recentpatients_toolbar)
-  private val recyclerView by bindView<RecyclerView>(R.id.recentpatients_recyclerview)
 
   private val recentAdapter = ItemAdapter(RecentPatientItem.DiffCallback())
 

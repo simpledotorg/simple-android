@@ -53,6 +53,7 @@ class AddPhoneNumberDialogControllerTest {
 
   @Test
   fun `when save is clicked, the number should be saved if it's valid`() {
+    // given
     val newNumber = "1234567890"
     val numberDetails = PhoneNumberDetails.mobile(newNumber)
 
@@ -64,9 +65,11 @@ class AddPhoneNumberDialogControllerTest {
         active = true
     )).thenReturn(Completable.complete())
 
+    // when
     setupController()
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
 
+    // then
     verify(repository).createPhoneNumberForPatient(
         uuid = generatedPhoneUuid,
         patientUuid = patientUuid,
@@ -83,6 +86,7 @@ class AddPhoneNumberDialogControllerTest {
   fun `when save is clicked, the number should not be saved if it's invalid`(
       validationError: Result
   ) {
+    // given
     val newNumber = "123"
     whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(validationError)
     whenever(repository.createPhoneNumberForPatient(
@@ -92,9 +96,11 @@ class AddPhoneNumberDialogControllerTest {
         active = true
     )).thenReturn(Completable.complete())
 
+    // when
     setupController()
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
 
+    // then
     verify(repository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(repository)
 
@@ -111,12 +117,15 @@ class AddPhoneNumberDialogControllerTest {
   fun `when save is clicked, an error should be shown if it's invalid`(
       validationError: Result
   ) {
+    // given
     val newNumber = "123"
     whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(validationError)
 
+    // when
     setupController()
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
 
+    // then
     when (validationError) {
       Blank, is LengthTooShort -> verify(dialog).showPhoneNumberTooShortError()
       is LengthTooLong -> verify(dialog).showPhoneNumberTooLongError()

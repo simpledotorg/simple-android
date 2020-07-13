@@ -15,7 +15,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
-class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
+class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs), ReportsUi {
 
   @Inject
   lateinit var controller: ReportsScreenController
@@ -42,12 +42,12 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
 
   private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
 
-  fun showReport(html: String) {
+  override fun showReport(html: String) {
     showWebview(true)
     webView.loadDataWithBaseURL(null, html, "text/html", Charsets.UTF_8.name(), null)
   }
 
-  fun showNoReportsAvailable() {
+  override fun showNoReportsAvailable() {
     showWebview(false)
     webView.loadUrl("about:blank")
   }

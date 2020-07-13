@@ -22,7 +22,7 @@ class ReportsScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<ReportsScreen>()
+  private val ui = mock<ReportsUi>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val reportsRepository = mock<ReportsRepository>()
 
@@ -43,8 +43,8 @@ class ReportsScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).showReport(reportsContent)
-    verifyNoMoreInteractions(screen)
+    verify(ui).showReport(reportsContent)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -61,11 +61,9 @@ class ReportsScreenControllerTest {
     setupController()
 
     // then
-    inOrder(screen).apply {
-      verify(screen).showReport(firstReport)
-      verify(screen).showReport(secondReport)
-      verifyNoMoreInteractions()
-    }
+    verify(ui).showReport(firstReport)
+    verify(ui).showReport(secondReport)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -77,8 +75,8 @@ class ReportsScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).showNoReportsAvailable()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showNoReportsAvailable()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -86,7 +84,7 @@ class ReportsScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
   }

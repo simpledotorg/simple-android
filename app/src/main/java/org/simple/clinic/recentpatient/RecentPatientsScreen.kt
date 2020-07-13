@@ -8,12 +8,14 @@ import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.recent_patients_screen.view.*
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -36,6 +38,16 @@ class RecentPatientsScreen(
   @Inject
   lateinit var utcClock: UtcClock
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenCreates(),
+            adapterEvents()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   private val recentAdapter = ItemAdapter(RecentPatientItem.DiffCallback())
 
   override fun onFinishInflate() {
@@ -50,7 +62,7 @@ class RecentPatientsScreen(
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(screenCreates(), adapterEvents()),
+        events = events,
         controller = controller,
         screenDestroys = detaches().map { ScreenDestroyed() }
     )

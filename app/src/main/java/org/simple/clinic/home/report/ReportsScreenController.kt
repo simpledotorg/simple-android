@@ -4,7 +4,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.filterNotPresent
@@ -21,7 +20,6 @@ class ReportsScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(ReportAnalyticsEvents())
         .replay()
 
     val reports = replayedEvents

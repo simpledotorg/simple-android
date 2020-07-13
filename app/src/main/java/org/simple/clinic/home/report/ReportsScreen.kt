@@ -7,8 +7,10 @@ import android.widget.FrameLayout
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_report.view.*
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -19,6 +21,12 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
 
   @Inject
   lateinit var controller: ReportsScreenController
+
+  private val events by unsafeLazy {
+    screenCreates()
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
 
   @SuppressLint("SetJavaScriptEnabled")
   override fun onFinishInflate() {
@@ -34,7 +42,7 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
 
     bindUiToController(
         ui = this,
-        events = screenCreates(),
+        events = events,
         controller = controller,
         screenDestroys = detaches().map { ScreenDestroyed() }
     )

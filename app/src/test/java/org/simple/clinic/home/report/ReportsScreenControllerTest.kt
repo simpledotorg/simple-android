@@ -3,6 +3,7 @@ package org.simple.clinic.home.report
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -40,6 +41,7 @@ class ReportsScreenControllerTest {
     setupController()
 
     verify(screen).showReport(reportsContent)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -53,9 +55,11 @@ class ReportsScreenControllerTest {
 
     setupController()
 
-    val inorder = inOrder(screen)
-    inorder.verify(screen).showReport(firstReport)
-    inorder.verify(screen).showReport(secondReport)
+    inOrder(screen).apply {
+      verify(screen).showReport(firstReport)
+      verify(screen).showReport(secondReport)
+      verifyNoMoreInteractions()
+    }
   }
 
   @Test
@@ -65,6 +69,7 @@ class ReportsScreenControllerTest {
     setupController()
 
     verify(screen).showNoReportsAvailable()
+    verifyNoMoreInteractions(screen)
   }
 
   private fun setupController() {

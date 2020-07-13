@@ -13,14 +13,14 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -55,7 +55,7 @@ class AddPhoneNumberDialog : AppCompatDialogFragment() {
   }
 
   @Inject
-  lateinit var controller: AddPhoneNumberDialogController
+  lateinit var controller: AddPhoneNumberDialogController.Factory
 
   private val phoneInputLayout by bindView<TextInputLayout>(R.id.addphone_phone_inputlayout)
   private val numberEditText by bindView<EditText>(R.id.addphone_phone)
@@ -94,18 +94,14 @@ class AddPhoneNumberDialog : AppCompatDialogFragment() {
 
   private fun setupDialog(screenDestroys: Observable<ScreenDestroyed>) {
     val saveButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
+    val patientUuid = arguments!!.getSerializable(KEY_PATIENT_UUID) as PatientUuid
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(dialogCreates(), saveClicks(saveButton)),
-        controller = controller,
+        events = saveClicks(saveButton).ofType(),
+        controller = controller.create(patientUuid),
         screenDestroys = screenDestroys
     )
-  }
-
-  private fun dialogCreates(): Observable<UiEvent> {
-    val patientUuid = arguments!!.getSerializable(KEY_PATIENT_UUID) as PatientUuid
-    return Observable.just(AddPhoneNumberDialogCreated(patientUuid))
   }
 
   private fun saveClicks(saveButton: Button) =

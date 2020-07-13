@@ -133,12 +133,15 @@ class AddPhoneNumberDialogControllerTest {
   }
 
   private fun setupController() {
-    val controller = AddPhoneNumberDialogController(repository, validator, FakeUuidGenerator.fixed(generatedPhoneUuid))
+    val controller = AddPhoneNumberDialogController(
+        repository,
+        validator,
+        FakeUuidGenerator.fixed(generatedPhoneUuid),
+        patientUuid
+    )
 
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(dialog) }
-
-    uiEvents.onNext(AddPhoneNumberDialogCreated(patientUuid))
   }
 }

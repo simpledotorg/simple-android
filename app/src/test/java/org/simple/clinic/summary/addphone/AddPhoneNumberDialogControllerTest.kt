@@ -39,7 +39,7 @@ class AddPhoneNumberDialogControllerTest {
   private val repository = mock<PatientRepository>()
   private val validator = mock<PhoneNumberValidator>()
 
-  private val patientUuid = UUID.randomUUID()
+  private val patientUuid = UUID.fromString("b2d1e529-8ee9-43f3-bacc-72fe1e73daa6")
   private val generatedPhoneUuid = UUID.fromString("f94bd99b-b182-4138-8e77-d91908b7ada5")
 
   private lateinit var controller: AddPhoneNumberDialogController

@@ -14,12 +14,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PhoneNumberDetails
-import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.ValidNumber
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
+import org.simple.clinic.registration.phone.LengthBasedNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
@@ -33,7 +28,13 @@ class AddPhoneNumberDialogControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val dialog = mock<AddPhoneNumberDialog>()
   private val repository = mock<PatientRepository>()
-  private val validator = mock<PhoneNumberValidator>()
+
+  private val validator = LengthBasedNumberValidator(
+      minimumRequiredLengthMobile = 6,
+      maximumAllowedLengthMobile = 12,
+      minimumRequiredLengthLandlinesOrMobile = 6,
+      maximumAllowedLengthLandlinesOrMobile = 12
+  )
 
   private val patientUuid = UUID.fromString("b2d1e529-8ee9-43f3-bacc-72fe1e73daa6")
   private val generatedPhoneUuid = UUID.fromString("f94bd99b-b182-4138-8e77-d91908b7ada5")
@@ -51,7 +52,6 @@ class AddPhoneNumberDialogControllerTest {
     val newNumber = "1234567890"
     val numberDetails = PhoneNumberDetails.mobile(newNumber)
 
-    whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(ValidNumber)
     whenever(repository.createPhoneNumberForPatient(
         uuid = generatedPhoneUuid,
         patientUuid = patientUuid,
@@ -80,8 +80,6 @@ class AddPhoneNumberDialogControllerTest {
     // given
     val newNumber = ""
 
-    whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(Blank)
-
     // when
     setupController()
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
@@ -99,8 +97,6 @@ class AddPhoneNumberDialogControllerTest {
     // given
     val newNumber = "123"
 
-    whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(LengthTooShort(6))
-
     // when
     setupController()
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
@@ -117,8 +113,6 @@ class AddPhoneNumberDialogControllerTest {
   fun `when save is clicked, the number should not be saved if it's too long`() {
     // given
     val newNumber = "1234567890123"
-
-    whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(LengthTooLong(12))
 
     // when
     setupController()

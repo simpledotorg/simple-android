@@ -76,6 +76,8 @@ android {
 
     testInstrumentationRunner "org.simple.clinic.AndroidTestJUnitRunner"
     proguardFiles getDefaultProguardFile(defaultProguardFile), 'proguard-rules.pro'
+
+    vectorDrawables.useSupportLibrary = true
   }
 
   buildTypes {

@@ -186,6 +186,9 @@ class RecentPatientsScreenControllerTest {
 
     val effectHandler = AllRecentPatientsEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        patientRepository = patientRepository,
         uiActions = ui
     )
 

@@ -35,17 +35,21 @@ class ReportsScreenControllerTest {
 
   @Test
   fun `when a reports file is emitted then update the screen`() {
+    // given
     val reportsContent = "Reports"
     whenever(reportsRepository.reportsContentText()).thenReturn(Observable.just(Optional.of(reportsContent)))
 
+    // when
     setupController()
 
+    // then
     verify(screen).showReport(reportsContent)
     verifyNoMoreInteractions(screen)
   }
 
   @Test
   fun `screen should be updated whenever the reports file changes`() {
+    // given
     val firstReport = "Reports for yesterday"
     val secondReport = "Reports for today"
     whenever(reportsRepository.reportsContentText()).thenReturn(Observable.just(
@@ -53,8 +57,10 @@ class ReportsScreenControllerTest {
         Optional.of(secondReport)
     ))
 
+    // when
     setupController()
 
+    // then
     inOrder(screen).apply {
       verify(screen).showReport(firstReport)
       verify(screen).showReport(secondReport)
@@ -64,10 +70,13 @@ class ReportsScreenControllerTest {
 
   @Test
   fun `when the reports file does not exist then screen should show no-reports view`() {
+    // given
     whenever(reportsRepository.reportsContentText()).thenReturn(Observable.just(Optional.empty()))
 
+    // when
     setupController()
 
+    // then
     verify(screen).showNoReportsAvailable()
     verifyNoMoreInteractions(screen)
   }

@@ -22,20 +22,6 @@ class ReportsScreenController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    val reports = replayedEvents
-        .ofType<ScreenCreated>()
-        .flatMap { reportsRepository.reportsContentText() }
-        .replay()
-        .refCount()
-
-    val showReports = reports
-        .extractIfPresent()
-        .map { helpContent -> { ui: Ui -> ui.showReport(helpContent) } }
-
-    val showReportNotPresent = reports
-        .filterNotPresent()
-        .map { Ui::showNoReportsAvailable }
-
-    return showReports.mergeWith(showReportNotPresent)
+    return Observable.never()
   }
 }

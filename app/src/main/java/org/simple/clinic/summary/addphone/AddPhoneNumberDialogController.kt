@@ -1,5 +1,7 @@
 package org.simple.clinic.summary.addphone
 
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -8,6 +10,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.PhoneNumberDetails
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
@@ -17,16 +20,23 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.ValidNum
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 import javax.inject.Inject
 
 typealias Ui = AddPhoneNumberDialog
 typealias UiChange = (Ui) -> Unit
 
-class AddPhoneNumberDialogController @Inject constructor(
+class AddPhoneNumberDialogController @AssistedInject constructor(
     private val repository: PatientRepository,
     private val validator: PhoneNumberValidator,
-    private val uuidGenerator: UuidGenerator
+    private val uuidGenerator: UuidGenerator,
+    @Assisted private val patientUuid: UUID
 ) : ObservableTransformer<UiEvent, UiChange> {
+
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(patientUuid: UUID) : AddPhoneNumberDialogController
+  }
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
@@ -37,10 +47,6 @@ class AddPhoneNumberDialogController @Inject constructor(
   }
 
   private fun addPhoneNumberToPatient(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuidStream = events
-        .ofType<AddPhoneNumberDialogCreated>()
-        .map { it.patientUuid }
-
     val newNumberAndValidationResult = events
         .ofType<AddPhoneNumberSaveClicked>()
         .map { it.number to validator.validate(it.number, type = LANDLINE_OR_MOBILE) }
@@ -57,8 +63,7 @@ class AddPhoneNumberDialogController @Inject constructor(
     val saveNumber = newNumberAndValidationResult
         .filter { (_, result) -> result == ValidNumber }
         .map { (newNumber, _) -> newNumber }
-        .withLatestFrom(patientUuidStream)
-        .flatMap { (newNumber, patientUuid) ->
+        .flatMap { newNumber ->
           repository
               .createPhoneNumberForPatient(
                   uuid = uuidGenerator.v4(),

@@ -17,7 +17,7 @@ import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 
-class ReportsScreenControllerTest {
+class ReportsScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

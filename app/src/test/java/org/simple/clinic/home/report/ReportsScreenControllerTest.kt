@@ -38,7 +38,6 @@ class ReportsScreenControllerTest {
     whenever(reportsRepository.reportsContentText()).thenReturn(Observable.just(Optional.of(reportsContent)))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     verify(screen).showReport(reportsContent)
   }
@@ -53,7 +52,6 @@ class ReportsScreenControllerTest {
     ))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     val inorder = inOrder(screen)
     inorder.verify(screen).showReport(firstReport)
@@ -65,7 +63,6 @@ class ReportsScreenControllerTest {
     whenever(reportsRepository.reportsContentText()).thenReturn(Observable.just(Optional.empty()))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     verify(screen).showNoReportsAvailable()
   }
@@ -76,5 +73,7 @@ class ReportsScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

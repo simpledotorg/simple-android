@@ -5,8 +5,9 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.reports.ReportsRepository
@@ -21,17 +22,14 @@ class ReportsScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val screen = mock<ReportsScreen>()
-
   private val uiEvents = PublishSubject.create<UiEvent>()
+  private val reportsRepository = mock<ReportsRepository>()
 
-  private val reportsRepository: ReportsRepository = mock()
-  private val controller = ReportsScreenController(reportsRepository)
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -39,6 +37,7 @@ class ReportsScreenControllerTest {
     val reportsContent = "Reports"
     whenever(reportsRepository.reportsContentText()).thenReturn(Observable.just(Optional.of(reportsContent)))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).showReport(reportsContent)
@@ -53,6 +52,7 @@ class ReportsScreenControllerTest {
         Optional.of(secondReport)
     ))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     val inorder = inOrder(screen)
@@ -64,8 +64,17 @@ class ReportsScreenControllerTest {
   fun `when the reports file does not exist then screen should show no-reports view`() {
     whenever(reportsRepository.reportsContentText()).thenReturn(Observable.just(Optional.empty()))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).showNoReportsAvailable()
+  }
+
+  private fun setupController() {
+    val controller = ReportsScreenController(reportsRepository)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

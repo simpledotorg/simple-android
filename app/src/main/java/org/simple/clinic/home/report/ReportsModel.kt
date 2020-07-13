@@ -4,4 +4,9 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class ReportsModel : Parcelable
+class ReportsModel : Parcelable {
+
+  companion object {
+    fun create() = ReportsModel()
+  }
+}

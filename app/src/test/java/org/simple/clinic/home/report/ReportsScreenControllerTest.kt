@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -16,6 +17,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 
 class ReportsScreenControllerTest {
 
@@ -27,10 +29,12 @@ class ReportsScreenControllerTest {
   private val reportsRepository = mock<ReportsRepository>()
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var textFixture: MobiusTestFixture<ReportsModel, ReportsEvent, ReportsEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    textFixture.dispose()
   }
 
   @Test
@@ -87,5 +91,18 @@ class ReportsScreenControllerTest {
         .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
+
+    val effectHandler = ReportsEffectHandler()
+    val uiRenderer = ReportsUiRenderer(ui)
+
+    textFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = ReportsModel.create(),
+        init = ReportsInit(),
+        update = ReportsUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
+    textFixture.start()
   }
 }

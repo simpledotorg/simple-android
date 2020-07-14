@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -23,7 +22,6 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Duration
@@ -48,12 +46,10 @@ class AllRecentPatientsLogicTest {
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
   private val userClock = TestUserClock(LocalDate.parse("2020-02-14"))
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<AllRecentPatientsModel, AllRecentPatientsEvent, AllRecentPatientsEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -173,18 +169,6 @@ class AllRecentPatientsLogicTest {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
 
-    val controller = RecentPatientsScreenController(
-        userSession = userSession,
-        patientRepository = patientRepository,
-        facilityRepository = facilityRepository,
-        userClock = userClock,
-        dateFormatter = dateFormatter
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
     val effectHandler = AllRecentPatientsEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
         userSession = userSession,
@@ -208,8 +192,6 @@ class AllRecentPatientsLogicTest {
         init = AllRecentPatientsInit()
     )
     testFixture.start()
-
-    uiEvents.onNext(ScreenCreated())
   }
 }
 

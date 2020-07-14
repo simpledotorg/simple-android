@@ -6,9 +6,6 @@
 - [In Progress: 13th Jul 2020] Migrate `ReportsScreen` to Mobius
 
 ## On Demo
-### Changes
-- Updated translations: `mr_IN`, `om_ET`, `hi_IN`, `pa_IN`, `bn_BD`, `te_IN`, `ti_ET`
-
 ### Internal
 - Migrated `RegistrationPinScreen` to Mobius
 - Migrated `ConfirmRemovePrescriptionDialog` to Mobius
@@ -17,10 +14,12 @@
 - Migrated `RegistrationLocationPermissionScreen` to Mobius
 - Added patient registration and assigned facility columns to the patient model
 - Replaced [ThreeTenBp](https://www.threeten.org/threetenbp/) for time APIs with [`java.time`](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html)
+- Enable vector drawable support library flag in app gradle
 
 ### Changes
 - Add support for Medical Record Number in Ethiopia
 - Add Amharic translation
+- Updated translations: `mr_IN`, `om_ET`, `hi_IN`, `pa_IN`, `bn_BD`, `te_IN`, `ti_ET`
 
 ## 2020-07-07-7330
 ### Changes

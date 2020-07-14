@@ -1,6 +1,6 @@
 package org.simple.clinic.summary.addphone
 
-interface AddPhoneNumberUi {
+interface AddPhoneNumberUi : UiActions {
   fun showPhoneNumberTooShortError()
   fun showPhoneNumberTooLongError()
   fun closeDialog()

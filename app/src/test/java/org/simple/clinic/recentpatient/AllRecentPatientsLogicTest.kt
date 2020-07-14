@@ -36,6 +36,7 @@ class AllRecentPatientsLogicTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui: AllRecentPatientsUi = mock()
+  private val uiActions: AllRecentPatientsUiActions = mock()
   private val userSession: UserSession = mock()
   private val patientRepository: PatientRepository = mock()
   private val facilityRepository: FacilityRepository = mock()
@@ -126,7 +127,7 @@ class AllRecentPatientsLogicTest {
             isNewRegistration = false
         )
     ))
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -161,8 +162,8 @@ class AllRecentPatientsLogicTest {
         clock = userClock,
         isNewRegistration = true
     )))
-    verify(ui).openPatientSummary(patientUuid)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openPatientSummary(patientUuid)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupController() {
@@ -174,7 +175,7 @@ class AllRecentPatientsLogicTest {
         userSession = userSession,
         facilityRepository = facilityRepository,
         patientRepository = patientRepository,
-        uiActions = ui
+        uiActions = uiActions
     )
 
     val uiRenderer = AllRecentPatientsUiRenderer(

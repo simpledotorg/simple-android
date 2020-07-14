@@ -27,7 +27,7 @@ import javax.inject.Inject
 class RecentPatientsScreen(
     context: Context,
     attrs: AttributeSet
-) : LinearLayout(context, attrs), AllRecentPatientsUi {
+) : LinearLayout(context, attrs), AllRecentPatientsUi, AllRecentPatientsUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

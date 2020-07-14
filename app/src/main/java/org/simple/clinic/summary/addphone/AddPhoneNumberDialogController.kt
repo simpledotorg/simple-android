@@ -6,11 +6,9 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.PhoneNumberDetails
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
@@ -21,9 +19,8 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_O
 import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
-import javax.inject.Inject
 
-typealias Ui = AddPhoneNumberDialog
+typealias Ui = AddPhoneNumberUi
 typealias UiChange = (Ui) -> Unit
 
 class AddPhoneNumberDialogController @AssistedInject constructor(
@@ -35,7 +32,7 @@ class AddPhoneNumberDialogController @AssistedInject constructor(
 
   @AssistedInject.Factory
   interface Factory {
-    fun create(patientUuid: UUID) : AddPhoneNumberDialogController
+    fun create(patientUuid: UUID): AddPhoneNumberDialogController
   }
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -71,7 +68,7 @@ class AddPhoneNumberDialogController @AssistedInject constructor(
                   numberDetails = PhoneNumberDetails.mobile(newNumber),
                   active = true
               )
-              .andThen(Observable.just({ ui: Ui -> ui.dismiss() }))
+              .andThen(Observable.just { ui: Ui -> ui.closeDialog() })
         }
 
     return saveNumber.mergeWith(showValidationError)

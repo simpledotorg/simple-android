@@ -26,7 +26,7 @@ class AddPhoneNumberDialogControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val dialog = mock<AddPhoneNumberDialog>()
+  private val ui = mock<AddPhoneNumberUi>()
   private val repository = mock<PatientRepository>()
 
   private val validator = LengthBasedNumberValidator(
@@ -71,8 +71,8 @@ class AddPhoneNumberDialogControllerTest {
         active = true
     )
     verifyNoMoreInteractions(repository)
-    verify(dialog).dismiss()
-    verifyNoMoreInteractions(dialog)
+    verify(ui).closeDialog()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -88,8 +88,8 @@ class AddPhoneNumberDialogControllerTest {
     verify(repository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(repository)
 
-    verify(dialog).showPhoneNumberTooShortError()
-    verifyNoMoreInteractions(dialog)
+    verify(ui).showPhoneNumberTooShortError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -105,8 +105,8 @@ class AddPhoneNumberDialogControllerTest {
     verify(repository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(repository)
 
-    verify(dialog).showPhoneNumberTooShortError()
-    verifyNoMoreInteractions(dialog)
+    verify(ui).showPhoneNumberTooShortError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -122,8 +122,8 @@ class AddPhoneNumberDialogControllerTest {
     verify(repository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(repository)
 
-    verify(dialog).showPhoneNumberTooLongError()
-    verifyNoMoreInteractions(dialog)
+    verify(ui).showPhoneNumberTooLongError()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -136,6 +136,6 @@ class AddPhoneNumberDialogControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(dialog) }
+        .subscribe { uiChange -> uiChange(ui) }
   }
 }

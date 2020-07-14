@@ -49,7 +49,6 @@ class OverdueScreenControllerTest {
         .thenReturn(Observable.just(emptyList()))
 
     setupController()
-    uiEvents.onNext(OverdueScreenCreated())
 
     verify(screen).updateList(emptyList(), false)
     verify(screen).handleEmptyList(true)
@@ -59,6 +58,17 @@ class OverdueScreenControllerTest {
   @Test
   fun `when showPhoneMaskBottomSheet config is true and call patient is clicked then open phone mask bottom sheet`() {
     val patientUuid = UUID.fromString("55daf914-82df-4c41-ba1b-131216fed30c")
+    val overdueAppointments = listOf(
+        TestData.overdueAppointment(
+            patientUuid = patientUuid,
+            appointmentUuid = UUID.fromString("5ee43e06-44fd-413e-a222-23c79f0b0f3a"),
+            phoneNumberUuid = UUID.fromString("1f8c184c-09b2-408c-a87e-96a144b7cf22"),
+            facilityUuid = facility.uuid,
+            isHighRisk = true
+        )
+    )
+    whenever(repository.overdueAppointments(dateOnClock, facility))
+        .thenReturn(Observable.just(overdueAppointments))
 
     setupController()
     uiEvents.onNext(CallPatientClicked(patientUuid))
@@ -90,7 +100,6 @@ class OverdueScreenControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(OverdueScreenCreated())
 
     // then
     verify(screen).handleEmptyList(false)
@@ -111,5 +120,7 @@ class OverdueScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(OverdueScreenCreated())
   }
 }

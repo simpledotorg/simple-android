@@ -76,13 +76,15 @@ class PatientSummaryViewRendererTest {
     val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
     val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
     val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val facility = TestData.facility(uuid = UUID.fromString("fe559cb0-f76c-4f34-a3c7-4e696ae2883c"))
 
     val patientSummaryProfile = PatientSummaryProfile(
         patient = patient,
         address = patientAddress,
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
-        alternativeId = bangladeshNationalId
+        alternativeId = bangladeshNationalId,
+        facility = facility
     )
 
 

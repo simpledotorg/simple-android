@@ -2,7 +2,6 @@ package org.simple.clinic.summary
 
 import com.spotify.mobius.test.FirstMatchers.hasEffects
 import com.spotify.mobius.test.FirstMatchers.hasModel
-import com.spotify.mobius.test.FirstMatchers.hasNoEffects
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
@@ -16,7 +15,7 @@ class PatientSummaryInitTest {
 
   private val patientUuid = UUID.fromString("fca8c3ad-75ca-4053-ba2f-e5c8ffda8991")
   private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, patientUuid)
-
+  private val facility = TestData.facility(uuid = UUID.fromString("6af0d0c5-4c5d-493f-bba9-0bcffde27e07"))
   private val initSpec = InitSpec(PatientSummaryInit())
 
   @Test
@@ -44,7 +43,8 @@ class PatientSummaryInitTest {
         address = TestData.patientAddress(uuid = addressUuid),
         phoneNumber = null,
         bpPassport = null,
-        alternativeId = null
+        alternativeId = null,
+        facility = facility
     )
     val facility = TestData.facility(uuid = UUID.fromString("fc5b49de-0e07-4d33-8b77-6611b47cb403"))
 
@@ -73,7 +73,8 @@ class PatientSummaryInitTest {
         address = TestData.patientAddress(uuid = addressUuid),
         phoneNumber = null,
         bpPassport = null,
-        alternativeId = null
+        alternativeId = null,
+        facility = facility
     )
     val facility = TestData.facility(
         uuid = UUID.fromString("b81cc3ce-760e-420b-a96d-c84125d48827"),
@@ -106,7 +107,8 @@ class PatientSummaryInitTest {
         address = TestData.patientAddress(uuid = addressUuid),
         phoneNumber = null,
         bpPassport = null,
-        alternativeId = null
+        alternativeId = null,
+        facility = facility
     )
     val facility = TestData.facility(
         uuid = UUID.fromString("fc5b49de-0e07-4d33-8b77-6611b47cb403"),

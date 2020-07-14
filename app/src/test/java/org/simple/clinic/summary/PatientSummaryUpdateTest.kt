@@ -32,13 +32,15 @@ class PatientSummaryUpdateTest {
   private val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
   private val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", BpPassport))
   private val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
+  private val facility = TestData.facility(uuid = UUID.fromString("f7666e67-2c8b-4ef4-9e6d-72bfcbb65db0"))
 
   private val patientSummaryProfile = PatientSummaryProfile(
       patient = patient,
       address = patientAddress,
       phoneNumber = phoneNumber,
       bpPassport = bpPassport,
-      alternativeId = bangladeshNationalId
+      alternativeId = bangladeshNationalId,
+      facility = facility
   )
 
   private val facilityWithDiabetesManagementEnabled = TestData.facility(

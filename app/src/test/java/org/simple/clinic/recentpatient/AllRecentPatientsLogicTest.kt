@@ -32,7 +32,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
-class RecentPatientsScreenControllerTest {
+class AllRecentPatientsLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import junitparams.JUnitParamsRunner
 import org.junit.Before
 import org.junit.Rule
@@ -15,7 +14,6 @@ import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -33,7 +31,6 @@ class OverdueScreenControllerTest {
   private val screen = mock<OverdueScreen>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val repository = mock<AppointmentRepository>()
-  private val configStream: Subject<PhoneNumberMaskerConfig> = PublishSubject.create()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
   private val facility = TestData.facility()
@@ -54,8 +51,6 @@ class OverdueScreenControllerTest {
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
-
-    configStream.onNext(PhoneNumberMaskerConfig(proxyPhoneNumber = "0123456789"))
   }
 
   @Test

@@ -6,7 +6,6 @@
 - [In Progress: 13th Jul 2020] Migrate `ReportsScreen` to Mobius
 - [In Progress: 13th Jul 2020] Migrate `RecentPatientsView` to Mobius
 - [In Progress: 13th Jul 2020] Migrate `AddPhoneNumberDialog` to Mobius
-- Enable vector drawable support library flag in app gradle
 
 ### Changes
 - Updated translations: `bn_IN`, `am_ET`, `te_IN`, `pa_IN`, `hi_IN`, `bn_BD`
@@ -20,6 +19,7 @@
 - Migrated `RegistrationLocationPermissionScreen` to Mobius
 - Added patient registration and assigned facility columns to the patient model
 - Replaced [ThreeTenBp](https://www.threeten.org/threetenbp/) for time APIs with [`java.time`](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html)
+- Enable vector drawable support library flag in app gradle
 
 ### Changes
 - Add support for Medical Record Number in Ethiopia

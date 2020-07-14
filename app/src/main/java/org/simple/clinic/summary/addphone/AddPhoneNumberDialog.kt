@@ -18,7 +18,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.util.unsafeLazy
@@ -91,7 +91,7 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    TheActivity.component.inject(this)
+    requireContext().injector<Injector>().inject(this)
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 
@@ -176,5 +176,9 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
 
   override fun closeDialog() {
     dismiss()
+  }
+
+  interface Injector {
+    fun inject(target: AddPhoneNumberDialog)
   }
 }

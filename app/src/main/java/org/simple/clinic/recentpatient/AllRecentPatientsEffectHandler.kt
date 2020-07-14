@@ -27,6 +27,7 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<AllRecentPatientsEffect, AllRecentPatientsEvent>()
         .addTransformer(LoadAllRecentPatients::class.java, loadAllRecentPatients())
+        .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid)}, schedulersProvider.ui())
         .build()
   }
 

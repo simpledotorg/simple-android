@@ -19,6 +19,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -59,6 +60,9 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
   @Inject
   lateinit var controller: AddPhoneNumberDialogController.Factory
 
+  @Inject
+  lateinit var effectHandlerFactory: AddPhoneNumberEffectHandler.Factory
+
   private val phoneInputLayout by bindView<TextInputLayout>(R.id.addphone_phone_inputlayout)
   private val numberEditText by bindView<EditText>(R.id.addphone_phone)
 
@@ -73,9 +77,22 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
         .share()
   }
 
+  private val delegate: MobiusDelegate<AddPhoneNumberModel, AddPhoneNumberEvent, AddPhoneNumberEffect> by unsafeLazy {
+    val uiRenderer = AddPhoneNumberUiRender(this)
+
+    MobiusDelegate.forActivity(
+        events = dialogEvents.ofType(),
+        defaultModel = AddPhoneNumberModel.create(),
+        update = AddPhoneNumberUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     TheActivity.component.inject(this)
+    delegate.onRestoreInstanceState(savedInstanceState)
   }
 
   @SuppressLint("CheckResult", "InflateParams")
@@ -96,6 +113,11 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
     return dialog
   }
 
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    delegate.onSaveInstanceState(outState)
+  }
+
   override fun onDestroyView() {
     super.onDestroyView()
     screenDestroys.onNext(ScreenDestroyed())
@@ -105,6 +127,7 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
     super.onStart()
     onStarts.onNext(Any())
     numberEditText.showKeyboard()
+    delegate.start()
   }
 
   @SuppressLint("CheckResult")
@@ -113,6 +136,11 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
     events
         .takeUntil(screenDestroys)
         .subscribe(dialogEvents::onNext)
+  }
+
+  override fun onStop() {
+    super.onStop()
+    delegate.stop()
   }
 
   private fun setupDialog() {

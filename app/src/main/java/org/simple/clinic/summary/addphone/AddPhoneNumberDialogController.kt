@@ -37,7 +37,6 @@ class AddPhoneNumberDialogController @AssistedInject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(ReportAnalyticsEvents())
         .replay()
 
     return addPhoneNumberToPatient(replayedEvents)

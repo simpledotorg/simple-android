@@ -51,8 +51,9 @@ class AddPhoneNumberDialogController @AssistedInject constructor(
         .map<UiChange> { (_, result) ->
           when (result) {
             is ValidNumber -> { _: Ui -> }
-            is Blank, is LengthTooShort -> { ui: Ui -> ui.showPhoneNumberTooShortError() }
-            is LengthTooLong -> { ui: Ui -> ui.showPhoneNumberTooLongError() }
+            is Blank -> { ui: Ui -> ui.showPhoneNumberBlank() }
+            is LengthTooShort -> { ui: Ui -> ui.showPhoneNumberTooShortError(result.minimumAllowedNumberLength) }
+            is LengthTooLong -> { ui: Ui -> ui.showPhoneNumberTooLongError(result.maximumRequiredNumberLength) }
           }
         }
 

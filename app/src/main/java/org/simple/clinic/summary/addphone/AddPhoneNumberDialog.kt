@@ -134,12 +134,16 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
         .map { AddPhoneNumberSaveClicked(number = numberEditText.text.toString()) }
   }
 
-  override fun showPhoneNumberTooShortError() {
-    phoneInputLayout.error = getString(R.string.patientsummary_addphone_error_phonenumber_length_less)
+  override fun showPhoneNumberBlank() {
+    phoneInputLayout.error = getString(R.string.patientsummary_addphone_error_phonenumber_empty)
   }
 
-  override fun showPhoneNumberTooLongError() {
-    phoneInputLayout.error = getString(R.string.patientsummary_addphone_error_phonenumber_length_more)
+  override fun showPhoneNumberTooShortError(requiredNumberLength: Int) {
+    phoneInputLayout.error = getString(R.string.patientsummary_addphone_error_phonenumber_length_less, requiredNumberLength.toString())
+  }
+
+  override fun showPhoneNumberTooLongError(requiredNumberLength: Int) {
+    phoneInputLayout.error = getString(R.string.patientsummary_addphone_error_phonenumber_length_more, requiredNumberLength.toString())
   }
 
   override fun closeDialog() {

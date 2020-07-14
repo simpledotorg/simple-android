@@ -95,7 +95,7 @@ class AddPhoneNumberDialogControllerTest {
     verify(repository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(repository)
 
-    verify(ui).showPhoneNumberTooShortError()
+    verify(ui).showPhoneNumberBlank()
     verifyNoMoreInteractions(ui)
   }
 
@@ -112,7 +112,7 @@ class AddPhoneNumberDialogControllerTest {
     verify(repository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(repository)
 
-    verify(ui).showPhoneNumberTooShortError()
+    verify(ui).showPhoneNumberTooShortError(6)
     verifyNoMoreInteractions(ui)
   }
 
@@ -129,7 +129,7 @@ class AddPhoneNumberDialogControllerTest {
     verify(repository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(repository)
 
-    verify(ui).showPhoneNumberTooLongError()
+    verify(ui).showPhoneNumberTooLongError(12)
     verifyNoMoreInteractions(ui)
   }
 

@@ -21,7 +21,6 @@
       android:layout_height="wrap_content"
       android:hint="@string/patientsummary_addphone_phone_hint"
       android:imeOptions="flagNoFullscreen"
-      android:inputType="phone"
-      android:maxLength="10" />
+      android:inputType="phone" />
   </com.google.android.material.textfield.TextInputLayout>
 </FrameLayout>

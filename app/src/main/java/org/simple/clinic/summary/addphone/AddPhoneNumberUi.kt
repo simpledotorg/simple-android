@@ -1,7 +1,8 @@
 package org.simple.clinic.summary.addphone
 
 interface AddPhoneNumberUi : UiActions {
-  fun showPhoneNumberTooShortError()
-  fun showPhoneNumberTooLongError()
+  fun showPhoneNumberBlank()
+  fun showPhoneNumberTooShortError(requiredNumberLength: Int)
+  fun showPhoneNumberTooLongError(requiredNumberLength: Int)
   fun closeDialog()
 }

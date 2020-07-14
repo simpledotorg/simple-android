@@ -5,16 +5,16 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.EditText
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
-import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.dialog_patientsummary_addphone.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
@@ -63,9 +63,6 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
   @Inject
   lateinit var effectHandlerFactory: AddPhoneNumberEffectHandler.Factory
 
-  private val phoneInputLayout by bindView<TextInputLayout>(R.id.addphone_phone_inputlayout)
-  private val numberEditText by bindView<EditText>(R.id.addphone_phone)
-
   private val onStarts = PublishSubject.create<Any>()
   private val dialogEvents = PublishSubject.create<UiEvent>()
 
@@ -89,15 +86,22 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
     )
   }
 
+  private var layout: View? = null
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     requireContext().injector<Injector>().inject(this)
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    return layout
+  }
+
   @SuppressLint("CheckResult", "InflateParams")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val layout = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_patientsummary_addphone, null)
+    layout = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_patientsummary_addphone, null)
+
     val dialog = AlertDialog.Builder(requireContext())
         .setTitle(R.string.patientsummary_addphone_dialog_title)
         .setMessage(R.string.patientsummary_addphone_dialog_message)
@@ -118,15 +122,20 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
     delegate.onSaveInstanceState(outState)
   }
 
+  override fun onActivityCreated(savedInstanceState: Bundle?) {
+    super.onActivityCreated(savedInstanceState)
+    phoneNumberEditText.showKeyboard()
+  }
+
   override fun onDestroyView() {
     super.onDestroyView()
     screenDestroys.onNext(ScreenDestroyed())
+    layout = null
   }
 
   override fun onStart() {
     super.onStart()
     onStarts.onNext(Any())
-    numberEditText.showKeyboard()
     delegate.start()
   }
 
@@ -159,19 +168,19 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
 
     return saveButton
         .clicks()
-        .map { AddPhoneNumberSaveClicked(number = numberEditText.text.toString()) }
+        .map { AddPhoneNumberSaveClicked(number = phoneNumberEditText.text.toString()) }
   }
 
   override fun showPhoneNumberBlank() {
-    phoneInputLayout.error = getString(R.string.patientsummary_addphone_error_phonenumber_empty)
+    phoneNumberInputLayout.error = getString(R.string.patientsummary_addphone_error_phonenumber_empty)
   }
 
   override fun showPhoneNumberTooShortError(requiredNumberLength: Int) {
-    phoneInputLayout.error = getString(R.string.patientsummary_addphone_error_phonenumber_length_less, requiredNumberLength.toString())
+    phoneNumberInputLayout.error = getString(R.string.patientsummary_addphone_error_phonenumber_length_less, requiredNumberLength.toString())
   }
 
   override fun showPhoneNumberTooLongError(requiredNumberLength: Int) {
-    phoneInputLayout.error = getString(R.string.patientsummary_addphone_error_phonenumber_length_more, requiredNumberLength.toString())
+    phoneNumberInputLayout.error = getString(R.string.patientsummary_addphone_error_phonenumber_length_more, requiredNumberLength.toString())
   }
 
   override fun closeDialog() {

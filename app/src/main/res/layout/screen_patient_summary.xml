@@ -24,8 +24,8 @@
       android:background="?selectableItemBackgroundBorderless"
       android:contentDescription="@string/patientsummary_contentdescription_up_button"
       android:padding="@dimen/spacing_12"
-      app:srcCompat="@drawable/ic_arrow_back_24dp"
-      android:tint="@color/white" />
+      android:tint="@color/white"
+      app:srcCompat="@drawable/ic_arrow_back_24dp" />
 
     <TextView
       android:id="@+id/editPatientButton"
@@ -150,6 +150,25 @@
         android:id="@+id/medicalHistorySummaryView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+      <TextView
+        android:id="@+id/labelRegistered"
+        style="@style/Clinic.V2.TextAppearance.Subtitle1Left.Emphasis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:text="@string/patientsummary_registered_faciliy_title"
+        android:textAlignment="center" />
+
+      <TextView
+        android:id="@+id/facilityNameAndDateTextView"
+        style="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="@dimen/spacing_24"
+        android:textAlignment="center"
+        tools:text="20-Sep-2019 at DH Bhatinda" />
     </LinearLayout>
   </androidx.core.widget.NestedScrollView>
 
@@ -184,10 +203,10 @@
       android:layout_marginEnd="@dimen/spacing_8"
       android:layout_weight="1"
       android:text="@string/patientsummary_contact_doctor"
-      app:buttonState="in-progress"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       android:visibility="gone"
       app:backgroundTint="@color/contact_doctor_button"
+      app:buttonState="in-progress"
       app:icon="@drawable/ic_whatsapp"
       app:iconTint="@android:color/white" />
 

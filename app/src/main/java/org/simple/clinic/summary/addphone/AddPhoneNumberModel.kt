@@ -4,4 +4,9 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class AddPhoneNumberModel : Parcelable
+class AddPhoneNumberModel : Parcelable {
+
+  companion object {
+    fun create() = AddPhoneNumberModel()
+  }
+}

@@ -5,8 +5,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -35,19 +36,11 @@ class OverdueScreenControllerTest {
   private val dateOnClock = LocalDate.parse("2018-01-01")
   private val userClock = TestUserClock(dateOnClock)
 
-  private val controller = OverdueScreenController(
-      appointmentRepository = repository,
-      userSession = userSession,
-      facilityRepository = facilityRepository,
-      userClock = userClock
-  )
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(user.toOptional()))
-    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
-
-    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -55,6 +48,7 @@ class OverdueScreenControllerTest {
     whenever(repository.overdueAppointments(dateOnClock, facility))
         .thenReturn(Observable.just(emptyList()))
 
+    setupController()
     uiEvents.onNext(OverdueScreenCreated())
 
     verify(screen).updateList(emptyList(), false)
@@ -66,6 +60,7 @@ class OverdueScreenControllerTest {
   fun `when showPhoneMaskBottomSheet config is true and call patient is clicked then open phone mask bottom sheet`() {
     val patientUuid = UUID.fromString("55daf914-82df-4c41-ba1b-131216fed30c")
 
+    setupController()
     uiEvents.onNext(CallPatientClicked(patientUuid))
 
     verify(screen).openPhoneMaskBottomSheet(patientUuid)
@@ -94,11 +89,27 @@ class OverdueScreenControllerTest {
         .thenReturn(Observable.just(overdueAppointments))
 
     // when
+    setupController()
     uiEvents.onNext(OverdueScreenCreated())
 
     // then
     verify(screen).handleEmptyList(false)
     verify(screen).updateList(overdueAppointments, false)
     verifyNoMoreInteractions(screen)
+  }
+
+  private fun setupController() {
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(user.toOptional()))
+    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
+
+    val controller = OverdueScreenController(
+        appointmentRepository = repository,
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        userClock = userClock
+    )
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

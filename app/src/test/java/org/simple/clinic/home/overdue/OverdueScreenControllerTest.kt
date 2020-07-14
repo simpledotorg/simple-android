@@ -73,7 +73,10 @@ class OverdueScreenControllerTest {
     setupController()
     uiEvents.onNext(CallPatientClicked(patientUuid))
 
+    verify(screen).handleEmptyList(false)
+    verify(screen).updateList(overdueAppointments, false)
     verify(screen).openPhoneMaskBottomSheet(patientUuid)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test

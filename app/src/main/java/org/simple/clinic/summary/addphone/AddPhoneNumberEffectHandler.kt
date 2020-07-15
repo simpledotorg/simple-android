@@ -25,6 +25,7 @@ class AddPhoneNumberEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<AddPhoneNumberEffect, AddPhoneNumberEvent> = RxMobius
       .subtypeEffectHandler<AddPhoneNumberEffect, AddPhoneNumberEvent>()
       .addTransformer(AddPhoneNumber::class.java, addPhoneNumber())
+      .addAction(CloseDialog::class.java, uiActions::closeDialog, schedulersProvider.ui())
       .build()
 
   private fun addPhoneNumber(): ObservableTransformer<AddPhoneNumber, AddPhoneNumberEvent> {

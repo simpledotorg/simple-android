@@ -42,7 +42,7 @@
     android:layout_width="@dimen/spacing_16"
     android:layout_height="@dimen/spacing_16"
     android:layout_gravity="center_vertical"
-    android:src="@drawable/ic_blood_sugar_outline"
+    app:srcCompat="@drawable/ic_blood_sugar_outline"
     app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
     app:layout_constraintEnd_toStartOf="@id/flow"
     app:layout_constraintHorizontal_bias="0"

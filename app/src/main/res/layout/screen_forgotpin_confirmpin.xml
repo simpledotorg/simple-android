@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen android:id="@+id/applock_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/applock_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/window_background_auth"
@@ -12,22 +13,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?colorPrimary"
-    android:paddingBottom="@dimen/spacing_16"
-    android:paddingTop="@dimen/spacing_4">
+    android:paddingTop="@dimen/spacing_4"
+    android:paddingBottom="@dimen/spacing_16">
 
     <ImageButton
       android:id="@+id/forgotpin_confirmpin_back"
       style="@style/Clinic.LoginBackButton"
-      android:src="@drawable/ic_arrow_back_24dp"
+      app:srcCompat="@drawable/ic_arrow_back_24dp"
       tools:ignore="ContentDescription" />
 
     <TextView
       android:id="@+id/forgotpin_confirmpin_facility_name"
       style="@style/Clinic.V2.FacilityNameTextView"
       android:layout_centerHorizontal="true"
-      android:layout_marginEnd="@dimen/spacing_24"
       android:layout_marginStart="@dimen/spacing_96"
       android:layout_marginTop="@dimen/spacing_8"
+      android:layout_marginEnd="@dimen/spacing_24"
       tools:text="A really long facility name that does not fit" />
 
     <TextView

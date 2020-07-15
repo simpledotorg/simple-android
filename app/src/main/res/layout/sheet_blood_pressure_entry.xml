@@ -171,7 +171,7 @@
         android:layout_marginTop="@dimen/spacing_4"
         android:background="?selectableItemBackgroundBorderless"
         android:padding="@dimen/spacing_8"
-        android:src="@drawable/ic_arrow_back_24dp"
+        app:srcCompat="@drawable/ic_arrow_back_24dp"
         app:tint="@color/blue1"
         tools:ignore="ContentDescription" />
 

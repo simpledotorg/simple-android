@@ -47,7 +47,7 @@
     android:layout_width="0dp"
     android:layout_height="208dp"
     android:foreground="?selectableItemBackground"
-    android:src="@drawable/thumbnail_simple_video"
+    app:srcCompat="@drawable/thumbnail_simple_video"
     app:layout_constraintBottom_toTopOf="@id/watchVideoButton"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"

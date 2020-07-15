@@ -26,7 +26,7 @@ class OverdueScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<OverdueScreen>()
+  private val ui = mock<OverdueUi>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val repository = mock<AppointmentRepository>()
   private val facilityRepository = mock<FacilityRepository>()
@@ -53,9 +53,9 @@ class OverdueScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).updateList(emptyList(), false)
-    verify(screen).handleEmptyList(true)
-    verifyNoMoreInteractions(screen)
+    verify(ui).updateList(emptyList(), false)
+    verify(ui).handleEmptyList(true)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -79,10 +79,10 @@ class OverdueScreenControllerTest {
     uiEvents.onNext(CallPatientClicked(patientUuid))
 
     // then
-    verify(screen).handleEmptyList(false)
-    verify(screen).updateList(overdueAppointments, false)
-    verify(screen).openPhoneMaskBottomSheet(patientUuid)
-    verifyNoMoreInteractions(screen)
+    verify(ui).handleEmptyList(false)
+    verify(ui).updateList(overdueAppointments, false)
+    verify(ui).openPhoneMaskBottomSheet(patientUuid)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -111,9 +111,9 @@ class OverdueScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).handleEmptyList(false)
-    verify(screen).updateList(overdueAppointments, false)
-    verifyNoMoreInteractions(screen)
+    verify(ui).handleEmptyList(false)
+    verify(ui).updateList(overdueAppointments, false)
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -128,7 +128,7 @@ class OverdueScreenControllerTest {
     )
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(OverdueScreenCreated())
   }

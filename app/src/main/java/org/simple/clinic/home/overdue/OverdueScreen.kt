@@ -21,7 +21,10 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class OverdueScreen(
+    context: Context,
+    attrs: AttributeSet
+) : RelativeLayout(context, attrs), OverdueUi {
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -68,7 +71,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   private fun screenCreates() = Observable.just(OverdueScreenCreated())
 
-  fun updateList(overdueAppointments: List<OverdueAppointment>, isDiabetesManagementEnabled: Boolean) {
+  override fun updateList(overdueAppointments: List<OverdueAppointment>, isDiabetesManagementEnabled: Boolean) {
     overdueListAdapter.submitList(OverdueAppointmentRow.from(
         appointments = overdueAppointments,
         clock = userClock,
@@ -77,12 +80,12 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     ))
   }
 
-  fun handleEmptyList(isEmpty: Boolean) {
+  override fun handleEmptyList(isEmpty: Boolean) {
     viewForEmptyList.visibleOrGone(isEmpty)
     overdueRecyclerView.visibleOrGone(isEmpty.not())
   }
 
-  fun openPhoneMaskBottomSheet(patientUuid: UUID) {
+  override fun openPhoneMaskBottomSheet(patientUuid: UUID) {
     activity.startActivity(ContactPatientBottomSheet.intent(context, patientUuid))
   }
 }

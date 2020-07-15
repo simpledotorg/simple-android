@@ -15,7 +15,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
 import javax.inject.Inject
 
-typealias Ui = OverdueScreen
+typealias Ui = OverdueUi
 typealias UiChange = (Ui) -> Unit
 
 class OverdueScreenController @Inject constructor(

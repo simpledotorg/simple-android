@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -16,21 +17,24 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 
 class ReportsScreenControllerTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<ReportsScreen>()
+  private val ui = mock<ReportsUi>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val reportsRepository = mock<ReportsRepository>()
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var textFixture: MobiusTestFixture<ReportsModel, ReportsEvent, ReportsEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    textFixture.dispose()
   }
 
   @Test
@@ -43,8 +47,8 @@ class ReportsScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).showReport(reportsContent)
-    verifyNoMoreInteractions(screen)
+    verify(ui).showReport(reportsContent)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -61,11 +65,9 @@ class ReportsScreenControllerTest {
     setupController()
 
     // then
-    inOrder(screen).apply {
-      verify(screen).showReport(firstReport)
-      verify(screen).showReport(secondReport)
-      verifyNoMoreInteractions()
-    }
+    verify(ui).showReport(firstReport)
+    verify(ui).showReport(secondReport)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -77,8 +79,8 @@ class ReportsScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).showNoReportsAvailable()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showNoReportsAvailable()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -86,8 +88,21 @@ class ReportsScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
+
+    val effectHandler = ReportsEffectHandler()
+    val uiRenderer = ReportsUiRenderer(ui)
+
+    textFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = ReportsModel.create(),
+        init = ReportsInit(),
+        update = ReportsUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
+    textFixture.start()
   }
 }

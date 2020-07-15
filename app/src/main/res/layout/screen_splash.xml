@@ -10,7 +10,7 @@
     android:id="@+id/splashSimpleLogo"
     android:layout_width="@dimen/spacing_200"
     android:layout_height="@dimen/spacing_40"
-    android:src="@drawable/logo_large"
+    app:srcCompat="@drawable/logo_large"
     app:layout_constraintBottom_toTopOf="@+id/splashLottieView"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"

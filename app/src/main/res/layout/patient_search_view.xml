@@ -50,7 +50,7 @@
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
       android:layout_centerHorizontal="true"
-      android:src="@drawable/ic_arrow_downward_24dp"
+      app:srcCompat="@drawable/ic_arrow_downward_24dp"
       app:tint="@color/grey2"
       tools:ignore="ContentDescription" />
   </RelativeLayout>

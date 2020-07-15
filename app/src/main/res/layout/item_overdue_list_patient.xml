@@ -125,7 +125,7 @@
       android:background="@drawable/overdue_call_button_background"
       android:foreground="?selectableItemBackground"
       android:padding="@dimen/spacing_16"
-      android:src="@drawable/ic_call_24dp"
+      app:srcCompat="@drawable/ic_call_24dp"
       android:tint="@color/white"
       tools:ignore="ContentDescription,UnusedAttribute" />
   </LinearLayout>

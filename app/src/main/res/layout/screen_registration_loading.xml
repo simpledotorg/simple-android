@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.registration.register.RegistrationLoadingScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -30,8 +31,8 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:backgroundTint="@color/grey4"
         android:padding="16dp"
-        android:src="@drawable/ic_arrow_back_24dp"
         android:tint="@color/grey1"
+        app:srcCompat="@drawable/ic_arrow_back_24dp"
         tools:ignore="ContentDescription" />
 
       <LinearLayout

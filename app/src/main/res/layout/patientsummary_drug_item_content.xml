@@ -14,7 +14,7 @@
     android:layout_width="@dimen/spacing_16"
     android:layout_height="@dimen/spacing_16"
     android:contentDescription="@null"
-    android:src="@drawable/prescription_drug"
+    app:srcCompat="@drawable/prescription_drug"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />

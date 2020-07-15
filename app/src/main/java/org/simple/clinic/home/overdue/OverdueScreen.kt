@@ -10,6 +10,7 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_overdue.view.*
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
+import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.UserClock
@@ -49,7 +50,7 @@ class OverdueScreen(
       return
     }
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -87,5 +88,9 @@ class OverdueScreen(
 
   override fun openPhoneMaskBottomSheet(patientUuid: UUID) {
     activity.startActivity(ContactPatientBottomSheet.intent(context, patientUuid))
+  }
+
+  interface Injector {
+    fun inject(target: OverdueScreen)
   }
 }

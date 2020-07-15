@@ -8,11 +8,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_overdue.view.*
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.di.injector
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.visibleOrGone
@@ -43,6 +45,16 @@ class OverdueScreen(
 
   private val overdueListAdapter = ItemAdapter(OverdueAppointmentRow.DiffCallback())
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenCreates(),
+            overdueListAdapter.itemEvents
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -58,10 +70,7 @@ class OverdueScreen(
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            screenCreates(),
-            overdueListAdapter.itemEvents
-        ),
+        events = events,
         controller = controller,
         screenDestroys = screenDestroys
     )

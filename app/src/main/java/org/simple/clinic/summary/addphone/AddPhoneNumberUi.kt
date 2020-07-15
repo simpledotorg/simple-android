@@ -4,4 +4,5 @@ interface AddPhoneNumberUi : UiActions {
   fun showPhoneNumberBlank()
   fun showPhoneNumberTooShortError(requiredNumberLength: Int)
   fun showPhoneNumberTooLongError(requiredNumberLength: Int)
+  fun clearPhoneNumberError()
 }

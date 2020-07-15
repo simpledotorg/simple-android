@@ -185,6 +185,10 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
     phoneNumberInputLayout.error = getString(R.string.patientsummary_addphone_error_phonenumber_length_more, requiredNumberLength.toString())
   }
 
+  override fun clearPhoneNumberError() {
+    phoneNumberInputLayout.error = null
+  }
+
   override fun closeDialog() {
     dismiss()
   }

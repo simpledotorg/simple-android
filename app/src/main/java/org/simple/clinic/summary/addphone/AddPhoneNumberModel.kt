@@ -17,4 +17,7 @@ data class AddPhoneNumberModel(
         validationResult = null
     )
   }
+
+  val hasValidationResult: Boolean
+    get() = validationResult != null
 }

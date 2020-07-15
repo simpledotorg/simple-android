@@ -145,6 +145,7 @@ class AddPhoneNumberDialogControllerTest {
     val effectHandler = AddPhoneNumberEffectHandler(
         repository = repository,
         uuidGenerator = uuidGenerator,
+        validator = validator,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

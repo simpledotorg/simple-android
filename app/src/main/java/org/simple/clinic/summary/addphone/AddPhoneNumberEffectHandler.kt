@@ -7,6 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PhoneNumberDetails
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
 
@@ -14,6 +15,7 @@ class AddPhoneNumberEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val repository: PatientRepository,
     private val uuidGenerator: UuidGenerator,
+    private val validator: PhoneNumberValidator,
     @Assisted private val uiActions: UiActions
 ) {
 
@@ -26,7 +28,16 @@ class AddPhoneNumberEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<AddPhoneNumberEffect, AddPhoneNumberEvent>()
       .addTransformer(AddPhoneNumber::class.java, addPhoneNumber())
       .addAction(CloseDialog::class.java, uiActions::closeDialog, schedulersProvider.ui())
+      .addTransformer(ValidatePhoneNumber::class.java, validatePhoneNumber())
       .build()
+
+  private fun validatePhoneNumber(): ObservableTransformer<ValidatePhoneNumber, AddPhoneNumberEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .map { it.newNumber to validator.validate(it.newNumber, type = PhoneNumberValidator.Type.LANDLINE_OR_MOBILE) }
+          .map { (newNumber, result) -> PhoneNumberValidated(newNumber, result) }
+    }
+  }
 
   private fun addPhoneNumber(): ObservableTransformer<AddPhoneNumber, AddPhoneNumberEvent> {
     return ObservableTransformer { effects ->

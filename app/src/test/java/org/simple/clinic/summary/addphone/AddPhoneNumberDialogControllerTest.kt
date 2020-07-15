@@ -44,12 +44,10 @@ class AddPhoneNumberDialogControllerTest {
   private val patientUuid = UUID.fromString("b2d1e529-8ee9-43f3-bacc-72fe1e73daa6")
   private val generatedPhoneUuid = UUID.fromString("f94bd99b-b182-4138-8e77-d91908b7ada5")
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<AddPhoneNumberModel, AddPhoneNumberEvent, AddPhoneNumberEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -136,12 +134,6 @@ class AddPhoneNumberDialogControllerTest {
 
   private fun setupController() {
     val uuidGenerator = FakeUuidGenerator.fixed(generatedPhoneUuid)
-    val controller = AddPhoneNumberDialogController(
-        repository,
-        validator,
-        uuidGenerator,
-        patientUuid
-    )
 
     val effectHandler = AddPhoneNumberEffectHandler(
         repository = repository,
@@ -151,10 +143,6 @@ class AddPhoneNumberDialogControllerTest {
         uiActions = ui
     )
     val uiRenderer = AddPhoneNumberUiRender(ui)
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),

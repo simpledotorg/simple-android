@@ -78,6 +78,7 @@ class AddPhoneNumberDialogControllerTest {
         active = true
     )
     verifyNoMoreInteractions(repository)
+    verify(ui).clearPhoneNumberError()
     verify(ui).closeDialog()
     verifyNoMoreInteractions(ui)
   }

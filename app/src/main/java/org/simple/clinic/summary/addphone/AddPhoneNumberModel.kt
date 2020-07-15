@@ -11,6 +11,10 @@ data class AddPhoneNumberModel(
     val validationResult: PhoneNumberValidator.Result?
 ) : Parcelable {
 
+  fun validatedPhoneNumber(validationResult: PhoneNumberValidator.Result): AddPhoneNumberModel {
+    return copy(validationResult = validationResult)
+  }
+
   companion object {
     fun create(patientUuid: PatientUuid) = AddPhoneNumberModel(
         patientUuid = patientUuid,

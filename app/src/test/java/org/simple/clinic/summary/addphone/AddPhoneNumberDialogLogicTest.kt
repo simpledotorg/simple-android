@@ -25,7 +25,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class AddPhoneNumberDialogControllerTest {
+class AddPhoneNumberDialogLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

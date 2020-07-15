@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/patients_user_status_awaitingapproval"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/patients_user_status_awaitingapproval"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:layout_gravity="bottom"
@@ -14,7 +15,7 @@
     android:id="@+id/patients_user_awaitingapproval_icon"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:src="@drawable/ic_access_time_24dp"
+    app:srcCompat="@drawable/ic_access_time_24dp"
     tools:ignore="ContentDescription" />
 
   <TextView
@@ -26,8 +27,8 @@
 
   <TextView
     style="@style/Clinic.UserApprovalStatusMessage"
-    android:layout_alignStart="@+id/patients_user_awaitingapproval_title"
     android:layout_below="@+id/patients_user_awaitingapproval_title"
+    android:layout_alignStart="@+id/patients_user_awaitingapproval_title"
     android:layout_marginTop="@dimen/spacing_4"
     android:text="@string/patients_user_awaiting_approval_message" />
 </RelativeLayout>

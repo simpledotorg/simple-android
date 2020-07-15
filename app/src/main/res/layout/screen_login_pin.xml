@@ -17,7 +17,7 @@
       android:id="@+id/backButton"
       style="@style/Clinic.LoginBackButton"
       android:contentDescription="@string/loginpin_go_back"
-      android:src="@drawable/ic_arrow_back_24dp" />
+      app:srcCompat="@drawable/ic_arrow_back_24dp" />
 
     <TextView
       android:id="@+id/phoneNumberTextView"

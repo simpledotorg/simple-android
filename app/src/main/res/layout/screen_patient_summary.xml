@@ -24,7 +24,7 @@
       android:background="?selectableItemBackgroundBorderless"
       android:contentDescription="@string/patientsummary_contentdescription_up_button"
       android:padding="@dimen/spacing_12"
-      android:src="@drawable/ic_arrow_back_24dp"
+      app:srcCompat="@drawable/ic_arrow_back_24dp"
       android:tint="@color/white" />
 
     <TextView

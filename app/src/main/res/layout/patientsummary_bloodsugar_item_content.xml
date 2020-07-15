@@ -18,7 +18,7 @@
     android:layout_marginStart="@dimen/spacing_12"
     android:layout_marginTop="@dimen/spacing_4"
     android:layout_marginBottom="@dimen/spacing_4"
-    android:src="@drawable/ic_blood_sugar_outline"
+    app:srcCompat="@drawable/ic_blood_sugar_outline"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toStartOf="@id/flow"
     app:layout_constraintStart_toStartOf="parent"

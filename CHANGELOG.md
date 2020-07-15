@@ -4,6 +4,7 @@
 ### Internal
 - [In Progress: 09th Jul7 2020] Migrate `RegistrationFacilitySelectionScreen` to Mobius
 - [In Progress: 13th Jul 2020] Migrate `ReportsScreen` to Mobius
+- Use `app:srcCompat` for `ImageView`
 
 ## On Demo
 ### Internal

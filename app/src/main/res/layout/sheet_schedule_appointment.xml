@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -35,8 +36,8 @@
       android:layout_height="wrap_content"
       android:background="?selectableItemBackgroundBorderless"
       android:padding="@dimen/spacing_12"
-      android:src="@drawable/ic_remove_circle_outline_32dp"
       android:tint="@color/appointment_date_stepper"
+      app:srcCompat="@drawable/ic_remove_circle_outline_32dp"
       tools:ignore="ContentDescription" />
 
     <TextView
@@ -57,8 +58,8 @@
       android:layout_height="wrap_content"
       android:background="?selectableItemBackgroundBorderless"
       android:padding="@dimen/spacing_12"
-      android:src="@drawable/ic_add_circle_outline_32dp"
       android:tint="@color/appointment_date_stepper"
+      app:srcCompat="@drawable/ic_add_circle_outline_32dp"
       tools:ignore="ContentDescription" />
 
   </LinearLayout>
@@ -125,12 +126,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
-    android:paddingTop="@dimen/spacing_24"
     android:layout_marginEnd="@dimen/spacing_16"
-    android:paddingBottom="@dimen/spacing_12"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:paddingTop="@dimen/spacing_24"
+    android:paddingBottom="@dimen/spacing_12">
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/notNowButton"

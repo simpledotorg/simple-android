@@ -26,7 +26,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
+class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi, UiActions {
 
   companion object {
     private const val FRAGMENT_TAG = "AddPhoneNumberDialog"

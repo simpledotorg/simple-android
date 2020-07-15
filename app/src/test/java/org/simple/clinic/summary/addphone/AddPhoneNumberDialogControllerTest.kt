@@ -32,6 +32,7 @@ class AddPhoneNumberDialogControllerTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<AddPhoneNumberUi>()
+  private val uiActions = mock<UiActions>()
   private val repository = mock<PatientRepository>()
 
   private val validator = LengthBasedNumberValidator(
@@ -77,8 +78,9 @@ class AddPhoneNumberDialogControllerTest {
     )
     verifyNoMoreInteractions(repository)
     verify(ui).clearPhoneNumberError()
-    verify(ui).closeDialog()
     verifyNoMoreInteractions(ui)
+    verify(uiActions).closeDialog()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -140,7 +142,7 @@ class AddPhoneNumberDialogControllerTest {
         uuidGenerator = uuidGenerator,
         validator = validator,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
     val uiRenderer = AddPhoneNumberUiRender(ui)
 

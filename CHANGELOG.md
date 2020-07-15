@@ -6,6 +6,7 @@
 - [In Progress: 13th Jul 2020] Migrate `ReportsScreen` to Mobius
 - [In Progress: 13th Jul 2020] Migrate `RecentPatientsView` to Mobius
 - [In Progress: 13th Jul 2020] Migrate `AddPhoneNumberDialog` to Mobius
+- Use `app:srcCompat` for `ImageView`
 
 ### Changes
 - Updated translations: `bn_IN`, `am_ET`, `te_IN`, `pa_IN`, `hi_IN`, `bn_BD`

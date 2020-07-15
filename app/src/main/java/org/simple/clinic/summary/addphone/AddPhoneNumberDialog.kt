@@ -17,7 +17,6 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.dialog_patientsummary_addphone.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientUuid
@@ -58,16 +57,12 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
   }
 
   @Inject
-  lateinit var controller: AddPhoneNumberDialogController.Factory
-
-  @Inject
   lateinit var effectHandlerFactory: AddPhoneNumberEffectHandler.Factory
 
   private val patientUuid by unsafeLazy {
     requireArguments().getSerializable(KEY_PATIENT_UUID) as PatientUuid
   }
 
-  private val onStarts = PublishSubject.create<Any>()
   private val dialogEvents = PublishSubject.create<UiEvent>()
 
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
@@ -106,19 +101,13 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     layout = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_patientsummary_addphone, null)
 
-    val dialog = AlertDialog.Builder(requireContext())
+    return AlertDialog.Builder(requireContext())
         .setTitle(R.string.patientsummary_addphone_dialog_title)
         .setMessage(R.string.patientsummary_addphone_dialog_message)
         .setView(layout)
         .setPositiveButton(R.string.patientsummary_addphone_save, null)
         .setNegativeButton(R.string.patientsummary_addphone_cancel, null)
         .create()
-
-    onStarts
-        .take(1)
-        .subscribe { setupDialog() }
-
-    return dialog
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
@@ -139,7 +128,6 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
 
   override fun onStart() {
     super.onStart()
-    onStarts.onNext(Any())
     delegate.start()
   }
 
@@ -154,15 +142,6 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
   override fun onStop() {
     super.onStop()
     delegate.stop()
-  }
-
-  private fun setupDialog() {
-    bindUiToController(
-        ui = this,
-        events = dialogEvents.ofType(),
-        controller = controller.create(patientUuid),
-        screenDestroys = screenDestroys
-    )
   }
 
   private fun saveClicks(): Observable<UiEvent> {

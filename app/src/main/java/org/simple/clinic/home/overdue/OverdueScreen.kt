@@ -5,13 +5,12 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_overdue.view.*
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.di.injector
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ItemAdapter
@@ -55,9 +54,7 @@ class OverdueScreen(
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
 
-    val screenDestroys = RxView
-        .detaches(this)
-        .map { ScreenDestroyed() }
+    val screenDestroys = detaches().map { ScreenDestroyed() }
 
     bindUiToController(
         ui = this,

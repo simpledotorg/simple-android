@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -16,8 +17,10 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.time.LocalDate
 import java.util.UUID
 
@@ -37,10 +40,12 @@ class OverdueScreenControllerTest {
   private val userClock = TestUserClock(dateOnClock)
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<OverdueModel, OverdueEvent, OverdueEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -119,6 +124,21 @@ class OverdueScreenControllerTest {
   private fun setupController() {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(user.toOptional()))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
+
+    val effectHandler = OverdueEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+    val uiRenderer = OverdueUiRenderer(ui)
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = OverdueModel.create(),
+        update = OverdueUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render,
+        init = OverdueInit()
+    )
+    testFixture.start()
 
     val controller = OverdueScreenController(
         appointmentRepository = repository,

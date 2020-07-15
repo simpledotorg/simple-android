@@ -63,6 +63,10 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
   @Inject
   lateinit var effectHandlerFactory: AddPhoneNumberEffectHandler.Factory
 
+  private val patientUuid by unsafeLazy {
+    requireArguments().getSerializable(KEY_PATIENT_UUID) as PatientUuid
+  }
+
   private val onStarts = PublishSubject.create<Any>()
   private val dialogEvents = PublishSubject.create<UiEvent>()
 
@@ -79,7 +83,7 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
 
     MobiusDelegate.forActivity(
         events = dialogEvents.ofType(),
-        defaultModel = AddPhoneNumberModel.create(),
+        defaultModel = AddPhoneNumberModel.create(patientUuid),
         update = AddPhoneNumberUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render
@@ -153,8 +157,6 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi {
   }
 
   private fun setupDialog() {
-    val patientUuid = arguments!!.getSerializable(KEY_PATIENT_UUID) as PatientUuid
-
     bindUiToController(
         ui = this,
         events = dialogEvents.ofType(),

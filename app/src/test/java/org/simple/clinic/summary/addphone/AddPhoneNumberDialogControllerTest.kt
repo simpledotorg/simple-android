@@ -134,14 +134,17 @@ class AddPhoneNumberDialogControllerTest {
   }
 
   private fun setupController() {
+    val uuidGenerator = FakeUuidGenerator.fixed(generatedPhoneUuid)
     val controller = AddPhoneNumberDialogController(
         repository,
         validator,
-        FakeUuidGenerator.fixed(generatedPhoneUuid),
+        uuidGenerator,
         patientUuid
     )
 
     val effectHandler = AddPhoneNumberEffectHandler(
+        repository = repository,
+        uuidGenerator = uuidGenerator,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

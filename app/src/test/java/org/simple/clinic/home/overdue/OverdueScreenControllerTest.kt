@@ -127,6 +127,8 @@ class OverdueScreenControllerTest {
 
     val effectHandler = OverdueEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
+        userSession = userSession,
+        facilityRepository = facilityRepository,
         uiActions = ui
     )
     val uiRenderer = OverdueUiRenderer(ui)

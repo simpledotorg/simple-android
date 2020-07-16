@@ -54,12 +54,14 @@ class LoginPinScreenControllerTest {
 
   @Test
   fun `when screen starts, show phone number`() {
-    whenever(userSession.ongoingLoginEntry())
-        .thenReturn(Single.just(ongoingLoginEntry))
+    // given
+    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
 
+    // when
     setupController()
     uiEvents.onNext(PinScreenCreated())
 
+    // then
     verify(userSession).ongoingLoginEntry()
     verifyNoMoreInteractions(userSession)
 
@@ -69,11 +71,14 @@ class LoginPinScreenControllerTest {
 
   @Test
   fun `when back is clicked, the local ongoing login entry must be cleared`() {
+    // given
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
 
+    // when
     setupController()
     uiEvents.onNext(PinBackClicked())
 
+    // then
     verify(userSession).clearOngoingLoginEntry()
     verifyNoMoreInteractions(userSession)
 

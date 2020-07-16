@@ -3603,7 +3603,9 @@ class PatientRepositoryAndroidTest {
     val patientAddress = testData.patientAddress(uuid = UUID.fromString("b0a989ce-0298-4fdd-9c7d-074d36ddb5ad"))
     val patient = testData.patient(
         uuid = UUID.fromString("b0547622-96a2-48f9-bd41-bd86cbd2dee2"),
-        addressUuid = patientAddress.uuid
+        addressUuid = patientAddress.uuid,
+        registeredFacilityId = null,
+        assignedFacilityId = null
     )
 
     patientAddressDao.save(patientAddress)
@@ -3614,6 +3616,39 @@ class PatientRepositoryAndroidTest {
 
     // then
     assertThat(patientProfile.value.patient).isEqualTo(patient)
+    assertThat(patientProfile.value.patient.registeredFacilityId).isNull()
+    assertThat(patientProfile.value.patient.assignedFacilityId).isNull()
+    assertThat(patientProfile.value.address).isEqualTo(patientAddress)
+    assertThat(patientProfile.value.phoneNumbers).isEmpty()
+    assertThat(patientProfile.value.businessIds).isEmpty()
+  }
+
+  @Test
+  fun fetching_the_patient_profile_should_load_the_registration_and_assigned_facility_uuid() {
+    // given
+    val patientDao = database.patientDao()
+    val patientAddressDao = database.addressDao()
+
+    val registrationFacilityUuid = UUID.fromString("303dbdfe-3fc4-4d28-bd65-3fb35bfe8ac9")
+    val assignedFacilityUuid = UUID.fromString("5085f483-57d0-4bf8-a98a-74908b32b103")
+    val patientAddress = testData.patientAddress(uuid = UUID.fromString("b0a989ce-0298-4fdd-9c7d-074d36ddb5ad"))
+    val patient = testData.patient(
+        uuid = UUID.fromString("b0547622-96a2-48f9-bd41-bd86cbd2dee2"),
+        addressUuid = patientAddress.uuid,
+        registeredFacilityId = registrationFacilityUuid,
+        assignedFacilityId = assignedFacilityUuid
+    )
+
+    patientAddressDao.save(patientAddress)
+    patientDao.save(patient)
+
+    // when
+    val patientProfile = patientRepository.patientProfileImmediate(patient.uuid) as Just<PatientProfile>
+
+    // then
+    assertThat(patientProfile.value.patient).isEqualTo(patient)
+    assertThat(patientProfile.value.patient.registeredFacilityId).isEqualTo(registrationFacilityUuid)
+    assertThat(patientProfile.value.patient.assignedFacilityId).isEqualTo(assignedFacilityUuid)
     assertThat(patientProfile.value.address).isEqualTo(patientAddress)
     assertThat(patientProfile.value.phoneNumbers).isEmpty()
     assertThat(patientProfile.value.businessIds).isEmpty()

@@ -327,6 +327,7 @@ data class Patient(
           P.age_value patient_age_value, P.age_updatedAt patient_age_updatedAt, P.status patient_status,
           P.createdAt patient_createdAt, P.updatedAt patient_updatedAt, P.deletedAt patient_deletedAt,
           P.syncStatus patient_syncStatus, P.recordedAt patient_recordedAt, P.reminderConsent patient_reminderConsent, P.deletedReason patient_deletedReason,
+          P.registeredFacilityId patient_registeredFacilityId, P.assignedFacilityId patient_assignedFacilityId,
 
           PA.uuid addr_uuid, PA.colonyOrVillage addr_colonyOrVillage, PA.district addr_district,
           PA.state addr_state, PA.country addr_country,

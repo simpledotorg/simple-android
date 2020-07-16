@@ -21,6 +21,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.AppointmentCancelReason
@@ -64,6 +65,7 @@ class PatientSummaryScreenLogicTest {
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
+  private val facilityRepository = mock<FacilityRepository>()
   private val patientProfile = TestData.patientProfile(
       patientUuid = patientUuid,
       generatePhoneNumber = true,
@@ -247,6 +249,7 @@ class PatientSummaryScreenLogicTest {
         currentUser = Lazy { user },
         currentFacility = Lazy { facility },
         uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
+        facilityRepository = facilityRepository,
         uiActions = uiActions
     )
 

@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
@@ -13,7 +14,8 @@ data class PatientSummaryProfile(
     val address: PatientAddress,
     val phoneNumber: PatientPhoneNumber?,
     val bpPassport: BusinessId?,
-    val alternativeId: BusinessId?
+    val alternativeId: BusinessId?,
+    val facility: Facility?
 ): Parcelable {
 
   val hasPhoneNumber: Boolean

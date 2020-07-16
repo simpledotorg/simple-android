@@ -56,6 +56,7 @@ import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.WhatsAppMessageSender
 import org.simple.clinic.util.extractSuccessful
+import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -287,10 +288,28 @@ class PatientSummaryScreen(
     val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
 
     displayNameGenderAge(patient.fullName, patient.gender, ageValue)
+    displayRegistrationFacilityName(patientSummaryProfile)
     displayPhoneNumber(patientSummaryProfile.phoneNumber)
     displayPatientAddress(patientSummaryProfile.address)
     displayBpPassport(patientSummaryProfile.bpPassport)
     displayAlternativeId(patientSummaryProfile.alternativeId, patientSummaryProfile.bpPassport != null)
+  }
+
+  private fun displayRegistrationFacilityName(patientSummaryProfile: PatientSummaryProfile) {
+    val registeredFacilityName = patientSummaryProfile.facility?.name
+
+    if (registeredFacilityName != null) {
+      val recordedAt = patientSummaryProfile.patient.recordedAt
+      val recordedDate = dateFormatter.format(recordedAt.toLocalDateAtZone(userClock.zone))
+      val facilityNameAndDate = context.getString(R.string.patientsummary_registered_facility, recordedDate, registeredFacilityName)
+
+      facilityNameAndDateTextView.visibility = View.VISIBLE
+      labelRegistered.visibility = View.VISIBLE
+      facilityNameAndDateTextView.text = facilityNameAndDate
+    } else {
+      facilityNameAndDateTextView.visibility = View.GONE
+      labelRegistered.visibility = View.GONE
+    }
   }
 
   private fun displayPatientAddress(address: PatientAddress) {

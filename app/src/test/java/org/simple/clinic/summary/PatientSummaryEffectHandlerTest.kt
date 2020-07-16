@@ -35,9 +35,9 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
+import java.net.UnknownHostException
 import java.time.Duration
 import java.time.Instant
-import java.net.UnknownHostException
 import java.util.UUID
 
 class PatientSummaryEffectHandlerTest {
@@ -490,7 +490,7 @@ class PatientSummaryEffectHandlerTest {
     )
 
     // when
-    testCase.dispatch(OpenSelectDoctorSheet(phoneNumbers))
+    testCase.dispatch(OpenSelectDoctorSheet(facility, phoneNumbers))
 
     // then
     verify(uiActions).openContactDoctorSheet(facility, phoneNumbers)

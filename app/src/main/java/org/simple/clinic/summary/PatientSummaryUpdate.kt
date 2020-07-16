@@ -113,7 +113,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       model: PatientSummaryModel
   ): PatientSummaryEffect {
     return if (teleconsultInfo.areMultipleDoctorsAvailable) {
-      OpenSelectDoctorSheet(teleconsultInfo.doctorsPhoneNumbers)
+      OpenSelectDoctorSheet(model.currentFacility!!, teleconsultInfo.doctorsPhoneNumbers)
     } else {
       LoadPatientTeleconsultationInfo(
           model.patientUuid,

@@ -7,6 +7,7 @@
 - Use `app:srcCompat` for `ImageView`
 - Migrated `ReportsScreen` to Mobius
 - Migrated `AddPhoneNumberDialog` to Mobius
+- [In Progress: 16th Jul 2020] Migrate `LoginPinScreen` to Mobius
 
 ### Changes
 - Updated translations: `bn_IN`, `am_ET`, `te_IN`, `pa_IN`, `hi_IN`, `bn_BD`

@@ -19,6 +19,9 @@ data class OverdueModel(
     }
   }
 
+  val isDiabetesManagementEnabled: Boolean
+    get() = facility!!.config.diabetesManagementEnabled
+
   val hasLoadedOverdueAppointments: Boolean
     get() = overdueAppointments != null
 

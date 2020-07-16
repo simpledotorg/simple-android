@@ -2,6 +2,7 @@ package org.simple.clinic.home.overdue
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import java.time.LocalDate
 
@@ -13,6 +14,7 @@ class OverdueUpdate(
     return when (event) {
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility), LoadOverdueAppointments(date, event.facility))
       is OverdueAppointmentsLoaded -> next(model.overdueAppointmentsLoaded(event.appointments))
+      is CallPatientClicked -> dispatch(OpenContactPatientScreen(event.patientUuid))
     }
   }
 }

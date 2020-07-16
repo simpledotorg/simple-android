@@ -25,11 +25,15 @@ class RegistrationFacilitySelectionUiRenderer(
     }
 
     if (model.hasLoadedTotalFacilityCount) {
-      if (model.totalFacilityCount!! > 0) {
-        ui.showToolbarWithSearchField()
-      } else {
-        ui.showToolbarWithoutSearchField()
-      }
+      toggleSearchFieldInToolbar(model)
+    }
+  }
+
+  private fun toggleSearchFieldInToolbar(model: RegistrationFacilitySelectionModel) {
+    if (model.totalFacilityCount!! > 0) {
+      ui.showToolbarWithSearchField()
+    } else {
+      ui.showToolbarWithoutSearchField()
     }
   }
 

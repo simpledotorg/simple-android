@@ -14,6 +14,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.recentpatient.RecentPatientsScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
@@ -43,6 +44,12 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
   @Inject
   lateinit var effectHandlerFactory: LatestRecentPatientsEffectHandler.Factory
 
+  @Inject
+  lateinit var uiRendererFactory: LatestRecentPatientsUiRenderer.Factory
+
+  @Inject
+  lateinit var config: PatientConfig
+
   private val recentAdapter = ItemAdapter(RecentPatientItemTTypeDiffCallback())
   private val detaches = detaches()
 
@@ -57,14 +64,14 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
   }
 
   private val delegate by unsafeLazy {
-    val uiRenderer = LatestRecentPatientsUiRenderer(this)
+    val uiRenderer = uiRendererFactory.create(this, config.recentPatientLimit)
 
     MobiusDelegate.forView(
         events = events.ofType(),
         defaultModel = LatestRecentPatientsModel.create(),
         update = LatestRecentPatientsUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        init = LatestRecentPatientsInit(),
+        init = LatestRecentPatientsInit.create(config),
         modelUpdateListener = uiRenderer::render
     )
   }

@@ -1,15 +1,18 @@
 package org.simple.clinic.patient
 
+import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Query
 import io.reactivex.Flowable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.overdue.Appointment.AppointmentType
 import org.simple.clinic.overdue.Appointment.Status
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
 
+@Parcelize
 data class RecentPatient(
 
     val uuid: UUID,
@@ -26,7 +29,7 @@ data class RecentPatient(
     val patientRecordedAt: Instant,
 
     val updatedAt: Instant
-) {
+): Parcelable {
 
   @Dao
   interface RoomDao {

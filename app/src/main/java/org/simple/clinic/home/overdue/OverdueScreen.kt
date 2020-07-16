@@ -6,12 +6,9 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding3.view.detaches
-import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_overdue.view.*
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
@@ -19,7 +16,6 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -39,9 +35,6 @@ class OverdueScreen(
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: OverdueScreenController
-
-  @Inject
   lateinit var userClock: UserClock
 
   @field:[Inject Named("full_date")]
@@ -53,11 +46,8 @@ class OverdueScreen(
   private val overdueListAdapter = ItemAdapter(OverdueAppointmentRow.DiffCallback())
 
   private val events by unsafeLazy {
-    Observable
-        .merge(
-            screenCreates(),
-            overdueListAdapter.itemEvents
-        )
+    overdueListAdapter
+        .itemEvents
         .compose(ReportAnalyticsEvents())
         .share()
   }
@@ -87,15 +77,6 @@ class OverdueScreen(
 
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
-
-    val screenDestroys = detaches().map { ScreenDestroyed() }
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = screenDestroys
-    )
   }
 
   override fun onAttachedToWindow() {
@@ -115,8 +96,6 @@ class OverdueScreen(
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
-
-  private fun screenCreates() = Observable.just(OverdueScreenCreated())
 
   override fun updateList(overdueAppointments: List<OverdueAppointment>, isDiabetesManagementEnabled: Boolean) {
     overdueListAdapter.submitList(OverdueAppointmentRow.from(

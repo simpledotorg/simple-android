@@ -277,15 +277,17 @@ class RecentPatientsViewControllerTest {
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
     whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimitPlusOne)) doReturn Observable.just(recentPatients)
 
+    val config = PatientConfig(
+        limitOfSearchResults = 1,
+        recentPatientLimit = recentPatientLimit
+    )
+
     val controller = RecentPatientsViewController(
         userSession = userSession,
         patientRepository = patientRepository,
         facilityRepository = facilityRepository,
         userClock = userClock,
-        patientConfig = PatientConfig(
-            limitOfSearchResults = 1,
-            recentPatientLimit = recentPatientLimit
-        ),
+        patientConfig = config,
         dateFormatter = dateFormatter
     )
 
@@ -295,17 +297,25 @@ class RecentPatientsViewControllerTest {
 
     val effectHandler = LatestRecentPatientsEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        patientRepository = patientRepository,
         uiActions = ui
     )
 
-    val uiRenderer = LatestRecentPatientsUiRenderer(ui)
+    val uiRenderer = LatestRecentPatientsUiRenderer(
+        userClock = userClock,
+        dateFormatter = dateFormatter,
+        ui = ui,
+        numberOfPatientsToShow = recentPatientLimit
+    )
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = LatestRecentPatientsModel.create(),
         update = LatestRecentPatientsUpdate(),
         effectHandler = effectHandler.build(),
-        init = LatestRecentPatientsInit(),
+        init = LatestRecentPatientsInit.create(config),
         modelUpdateListener = uiRenderer::render
     )
     testFixture.start()

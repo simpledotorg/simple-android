@@ -2,11 +2,26 @@ package org.simple.clinic.summary.addphone
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.patient.PatientUuid
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 
 @Parcelize
-class AddPhoneNumberModel : Parcelable {
+data class AddPhoneNumberModel(
+    val patientUuid: PatientUuid,
+    val validationResult: PhoneNumberValidator.Result?
+) : Parcelable {
+
+  fun validatedPhoneNumber(validationResult: PhoneNumberValidator.Result): AddPhoneNumberModel {
+    return copy(validationResult = validationResult)
+  }
 
   companion object {
-    fun create() = AddPhoneNumberModel()
+    fun create(patientUuid: PatientUuid) = AddPhoneNumberModel(
+        patientUuid = patientUuid,
+        validationResult = null
+    )
   }
+
+  val hasValidationResult: Boolean
+    get() = validationResult != null
 }

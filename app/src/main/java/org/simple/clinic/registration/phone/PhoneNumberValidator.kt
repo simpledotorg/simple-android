@@ -1,5 +1,7 @@
 package org.simple.clinic.registration.phone
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
@@ -14,10 +16,17 @@ interface PhoneNumberValidator {
     MOBILE
   }
 
-  sealed class Result {
+  sealed class Result : Parcelable {
+    @Parcelize
     object ValidNumber : Result()
+
+    @Parcelize
     data class LengthTooShort(val minimumAllowedNumberLength: Int) : Result()
+
+    @Parcelize
     data class LengthTooLong(val maximumRequiredNumberLength: Int) : Result()
+
+    @Parcelize
     object Blank : Result()
   }
 

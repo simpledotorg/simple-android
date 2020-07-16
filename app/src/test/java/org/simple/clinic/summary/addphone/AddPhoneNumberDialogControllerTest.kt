@@ -78,6 +78,7 @@ class AddPhoneNumberDialogControllerTest {
         active = true
     )
     verifyNoMoreInteractions(repository)
+    verify(ui).clearPhoneNumberError()
     verify(ui).closeDialog()
     verifyNoMoreInteractions(ui)
   }
@@ -134,14 +135,18 @@ class AddPhoneNumberDialogControllerTest {
   }
 
   private fun setupController() {
+    val uuidGenerator = FakeUuidGenerator.fixed(generatedPhoneUuid)
     val controller = AddPhoneNumberDialogController(
         repository,
         validator,
-        FakeUuidGenerator.fixed(generatedPhoneUuid),
+        uuidGenerator,
         patientUuid
     )
 
     val effectHandler = AddPhoneNumberEffectHandler(
+        repository = repository,
+        uuidGenerator = uuidGenerator,
+        validator = validator,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )
@@ -153,7 +158,7 @@ class AddPhoneNumberDialogControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = AddPhoneNumberModel.create(),
+        defaultModel = AddPhoneNumberModel.create(patientUuid),
         update = AddPhoneNumberUpdate(),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render,

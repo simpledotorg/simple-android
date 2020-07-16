@@ -129,9 +129,9 @@ class RegistrationConfirmPinScreen(
     confirmPinEditText.text = null
   }
 
-  override fun openFacilitySelectionScreen() {
+  override fun openFacilitySelectionScreen(entry: OngoingRegistrationEntry) {
     hideKeyboard()
-    screenRouter.push(RegistrationLocationPermissionScreenKey())
+    screenRouter.push(RegistrationLocationPermissionScreenKey(entry))
   }
 
   override fun goBackToPinScreen(entry: OngoingRegistrationEntry) {

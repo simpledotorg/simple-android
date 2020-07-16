@@ -15,7 +15,7 @@ import org.junit.Test
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -57,7 +57,7 @@ class RegistrationConfirmPinLogicTest {
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     // then
-    verify(uiActions).openFacilitySelectionScreen()
+    verify(uiActions).openFacilitySelectionScreen(ongoingEntry)
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -72,7 +72,7 @@ class RegistrationConfirmPinLogicTest {
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     // then
-    verify(uiActions).openFacilitySelectionScreen()
+    verify(uiActions).openFacilitySelectionScreen(ongoingEntry)
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -96,7 +96,7 @@ class RegistrationConfirmPinLogicTest {
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     // then
-    verify(uiActions).openFacilitySelectionScreen()
+    verify(uiActions).openFacilitySelectionScreen(ongoingEntry)
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -111,7 +111,7 @@ class RegistrationConfirmPinLogicTest {
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(ui).showPinMismatchError()
     verify(uiActions).clearPin()
-    verify(uiActions, never()).openFacilitySelectionScreen()
+    verify(uiActions, never()).openFacilitySelectionScreen(ongoingEntry)
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -152,7 +152,7 @@ class RegistrationConfirmPinLogicTest {
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingRegistrationEntry.toOptional())
 
     val effectHandler = RegistrationConfirmPinEffectHandler(
-        schedulers = TrampolineSchedulersProvider(),
+        schedulers = TestSchedulersProvider.trampoline(),
         userSession = userSession,
         uiActions = uiActions
     )

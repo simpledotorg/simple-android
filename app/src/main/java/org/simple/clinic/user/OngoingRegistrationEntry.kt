@@ -28,4 +28,8 @@ data class OngoingRegistrationEntry(
   fun withPin(pin: String): OngoingRegistrationEntry {
     return copy(pin = pin)
   }
+
+  fun withFacilityUuid(facilityUuid: UUID): OngoingRegistrationEntry {
+    return copy(facilityId = facilityUuid)
+  }
 }

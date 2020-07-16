@@ -24,8 +24,10 @@ import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItem
+import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.introvideoscreen.IntroVideoScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
@@ -57,6 +59,12 @@ class RegistrationFacilitySelectionScreen(
   @Inject
   lateinit var effectHandlerFactory: RegistrationFacilitySelectionEffectHandler.Factory
 
+  @Inject
+  lateinit var config: RegistrationConfig
+
+  @Inject
+  lateinit var facilityListItemBuilder: FacilityListItemBuilder
+
   private val recyclerViewAdapter = FacilitiesAdapter()
 
   private val screenDestroys: Observable<ScreenDestroyed> = detaches()
@@ -76,14 +84,15 @@ class RegistrationFacilitySelectionScreen(
   }
 
   private val delegate by unsafeLazy {
-    val uiRenderer = RegistrationFacilitySelectionUiRenderer(this)
+    val uiRenderer = RegistrationFacilitySelectionUiRenderer(this, facilityListItemBuilder, config)
+    val screenKey = screenRouter.key<RegistrationFacilitySelectionScreenKey>(this)
 
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = RegistrationFacilitySelectionModel.create(),
+        defaultModel = RegistrationFacilitySelectionModel.create(screenKey.ongoingRegistrationEntry),
         update = RegistrationFacilitySelectionUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        init = RegistrationFacilitySelectionInit(),
+        init = RegistrationFacilitySelectionInit.create(config),
         modelUpdateListener = uiRenderer::render
     )
   }

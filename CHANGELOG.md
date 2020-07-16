@@ -2,7 +2,7 @@
 
 ## Next Release
 ### Internal
-- [In Progress: 13th Jul7 2020] Migrate `RegistrationFacilitySelectionScreen` to Mobius
+- [In Progress: 15th Jul7 2020] Migrate `RegistrationFacilitySelectionScreen` to Mobius
 - [In Progress: 13th Jul 2020] Migrate `RecentPatientsView` to Mobius
 - [In Progress: 14th Jul 2020] Migrate `AddPhoneNumberDialog` to Mobius
 - Use `app:srcCompat` for `ImageView`

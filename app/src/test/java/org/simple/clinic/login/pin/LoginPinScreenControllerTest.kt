@@ -6,8 +6,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -43,13 +44,11 @@ class LoginPinScreenControllerTest {
       updatedAt = null
   )
 
-  private val controller = LoginPinScreenController(
-      userSession = userSession
-  )
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -57,6 +56,7 @@ class LoginPinScreenControllerTest {
     whenever(userSession.ongoingLoginEntry())
         .thenReturn(Single.just(ongoingLoginEntry))
 
+    setupController()
     uiEvents.onNext(PinScreenCreated())
 
     verify(screen).showPhoneNumber(phoneNumber)
@@ -66,7 +66,9 @@ class LoginPinScreenControllerTest {
   fun `when back is clicked, the local ongoing login entry must be cleared`() {
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
 
+    setupController()
     uiEvents.onNext(PinBackClicked())
+
     verify(userSession).clearOngoingLoginEntry()
   }
 
@@ -107,10 +109,21 @@ class LoginPinScreenControllerTest {
         .thenReturn(Completable.complete())
 
     // when
+    setupController()
     uiEvents.onNext(LoginPinAuthenticated(ongoingLoginEntry))
 
     // then
     verify(userSession).storeUser(user = expectedUser, facilityUuid = registrationFacilityUuid)
     verify(screen).openHomeScreen()
+  }
+
+  private fun setupController() {
+    val controller = LoginPinScreenController(
+        userSession = userSession
+    )
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

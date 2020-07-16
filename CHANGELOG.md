@@ -2,19 +2,16 @@
 
 ## Next Release
 ### Internal
-- [In Progress: 13th Jul7 2020] Migrate `RegistrationFacilitySelectionScreen` to Mobius
 - [In Progress: 15th Jul 2020] Migrate `RecentPatientsView` to Mobius
 - Use `app:srcCompat` for `ImageView`
 - Migrated `ReportsScreen` to Mobius
 - Migrated `AddPhoneNumberDialog` to Mobius
 - [In Progress: 16th Jul 2020] Migrate `LoginPinScreen` to Mobius
+- Migrate `RegistrationFacilitySelectionScreen` to Mobius
 
 ### Changes
 - Updated translations: `bn_IN`, `am_ET`, `te_IN`, `pa_IN`, `hi_IN`, `bn_BD`
 - Added Registration Facility name and date in `PatientSummaryScreen`
-
-### Fixes
-- Fixed occasional crash when starting a teleconsultation session ([LINK](https://app.clubhouse.io/simpledotorg/story/414/starting-a-teleconsultation-session-crashes-in-some-scenarios))
 
 ## On Demo
 ### Internal
@@ -31,6 +28,9 @@
 - Add support for Medical Record Number in Ethiopia
 - Add Amharic translation
 - Updated translations: `mr_IN`, `om_ET`, `hi_IN`, `pa_IN`, `bn_BD`, `te_IN`, `ti_ET`
+
+### Fixes
+- Fixed occasional crash when starting a teleconsultation session ([LINK](https://app.clubhouse.io/simpledotorg/story/414/starting-a-teleconsultation-session-crashes-in-some-scenarios))
 
 ## 2020-07-07-7330
 ### Changes

@@ -1,5 +1,7 @@
 package org.simple.clinic.registration.location
 
+import org.simple.clinic.user.OngoingRegistrationEntry
+
 interface RegistrationLocationPermissionUiActions {
-  fun openFacilitySelectionScreen()
+  fun openFacilitySelectionScreen(registrationEntry: OngoingRegistrationEntry)
 }

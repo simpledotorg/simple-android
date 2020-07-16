@@ -15,7 +15,6 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
@@ -29,6 +28,7 @@ class OverdueLogicTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<OverdueUi>()
+  private val uiActions = mock<OverdueUiActions>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val repository = mock<AppointmentRepository>()
   private val facilityRepository = mock<FacilityRepository>()
@@ -56,7 +56,7 @@ class OverdueLogicTest {
     // then
     verify(ui).updateList(emptyList(), false)
     verify(ui).handleEmptyList(true)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -82,8 +82,8 @@ class OverdueLogicTest {
     // then
     verify(ui).handleEmptyList(false)
     verify(ui).updateList(overdueAppointments, false)
-    verify(ui).openPhoneMaskBottomSheet(patientUuid)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openPhoneMaskBottomSheet(patientUuid)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -114,7 +114,7 @@ class OverdueLogicTest {
     // then
     verify(ui).handleEmptyList(false)
     verify(ui).updateList(overdueAppointments, false)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupController() {
@@ -126,7 +126,7 @@ class OverdueLogicTest {
         userSession = userSession,
         facilityRepository = facilityRepository,
         appointmentRepository = repository,
-        uiActions = ui
+        uiActions = uiActions
     )
     val uiRenderer = OverdueUiRenderer(ui)
     testFixture = MobiusTestFixture(

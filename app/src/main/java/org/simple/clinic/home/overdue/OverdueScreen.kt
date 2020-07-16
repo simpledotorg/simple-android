@@ -26,7 +26,7 @@ import javax.inject.Named
 class OverdueScreen(
     context: Context,
     attrs: AttributeSet
-) : RelativeLayout(context, attrs), OverdueUi {
+) : RelativeLayout(context, attrs), OverdueUi, OverdueUiActions {
 
   @Inject
   lateinit var activity: AppCompatActivity

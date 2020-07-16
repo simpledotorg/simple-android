@@ -6,6 +6,9 @@
 - [In Progress: 13th Jul 2020] Migrate `ReportsScreen` to Mobius
 - Use `app:srcCompat` for `ImageView`
 
+### Fixes
+- Fixed occasional crash when starting a teleconsultation session ([LINK](https://app.clubhouse.io/simpledotorg/story/414/starting-a-teleconsultation-session-crashes-in-some-scenarios))
+
 ## On Demo
 ### Internal
 - Migrated `RegistrationPinScreen` to Mobius

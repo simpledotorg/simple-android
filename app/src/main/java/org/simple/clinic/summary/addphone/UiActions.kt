@@ -1,3 +1,5 @@
 package org.simple.clinic.summary.addphone
 
-interface UiActions
+interface UiActions {
+  fun closeDialog()
+}

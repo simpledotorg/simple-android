@@ -39,38 +39,6 @@ class AddPhoneNumberDialogController @AssistedInject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return addPhoneNumberToPatient(replayedEvents)
-  }
-
-  private fun addPhoneNumberToPatient(events: Observable<UiEvent>): Observable<UiChange> {
-    val newNumberAndValidationResult = events
-        .ofType<AddPhoneNumberSaveClicked>()
-        .map { it.number to validator.validate(it.number, type = LANDLINE_OR_MOBILE) }
-
-    val showValidationError = newNumberAndValidationResult
-        .map<UiChange> { (_, result) ->
-          when (result) {
-            is ValidNumber -> { _: Ui -> }
-            is Blank -> { ui: Ui -> ui.showPhoneNumberBlank() }
-            is LengthTooShort -> { ui: Ui -> ui.showPhoneNumberTooShortError(result.minimumAllowedNumberLength) }
-            is LengthTooLong -> { ui: Ui -> ui.showPhoneNumberTooLongError(result.maximumRequiredNumberLength) }
-          }
-        }
-
-    val saveNumber = newNumberAndValidationResult
-        .filter { (_, result) -> result == ValidNumber }
-        .map { (newNumber, _) -> newNumber }
-        .flatMap { newNumber ->
-          repository
-              .createPhoneNumberForPatient(
-                  uuid = uuidGenerator.v4(),
-                  patientUuid = patientUuid,
-                  numberDetails = PhoneNumberDetails.mobile(newNumber),
-                  active = true
-              )
-              .andThen(Observable.just { ui: Ui -> ui.closeDialog() })
-        }
-
-    return saveNumber.mergeWith(showValidationError)
+    return Observable.never()
   }
 }

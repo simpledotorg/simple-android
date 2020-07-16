@@ -53,11 +53,7 @@ class OverdueScreenController @Inject constructor(
           { ui: Ui -> ui.updateList(overdueAppointments, facility.config.diabetesManagementEnabled) }
         }
 
-    val emptyStateStream = overdueAppointmentsStream
-        .map { it.isEmpty() }
-        .map { { ui: Ui -> ui.handleEmptyList(it) } }
-
-    return Observable.merge(overduePatientsStream, emptyStateStream)
+    return overduePatientsStream
   }
 
   private fun openPhoneMaskBottomSheet(events: Observable<UiEvent>): Observable<UiChange> =

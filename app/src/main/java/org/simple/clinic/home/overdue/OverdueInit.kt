@@ -14,6 +14,8 @@ class OverdueInit(
 
     if (!model.hasLoadedCurrentFacility) {
       effects.add(LoadCurrentFacility)
+    } else {
+      effects.add(LoadOverdueAppointments(date, model.facility!!))
     }
 
     return first(model, effects)

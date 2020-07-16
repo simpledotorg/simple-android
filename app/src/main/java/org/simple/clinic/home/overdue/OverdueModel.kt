@@ -6,8 +6,8 @@ import org.simple.clinic.facility.Facility
 
 @Parcelize
 data class OverdueModel(
-    private val facility: Facility?,
-    private val overdueAppointments: List<OverdueAppointment>?
+    val facility: Facility?,
+    val overdueAppointments: List<OverdueAppointment>?
 ) : Parcelable {
 
   companion object {
@@ -18,6 +18,9 @@ data class OverdueModel(
       )
     }
   }
+
+  val hasLoadedOverdueAppointments: Boolean
+    get() = overdueAppointments != null
 
   val hasLoadedCurrentFacility: Boolean
     get() = facility != null

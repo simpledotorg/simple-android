@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -37,14 +36,11 @@ class OverdueLogicTest {
   private val facility = TestData.facility(uuid = UUID.fromString("f4430584-eeaf-4352-b1f5-c21cc96faa6c"))
   private val user = TestData.loggedInUser(uuid = UUID.fromString("977c9f22-c333-477f-826b-00fa601f16ab"))
   private val dateOnClock = LocalDate.parse("2018-01-01")
-  private val userClock = TestUserClock(dateOnClock)
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<OverdueModel, OverdueEvent, OverdueEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -142,17 +138,5 @@ class OverdueLogicTest {
         init = OverdueInit(dateOnClock)
     )
     testFixture.start()
-
-    val controller = OverdueScreenController(
-        appointmentRepository = repository,
-        userSession = userSession,
-        facilityRepository = facilityRepository,
-        userClock = userClock
-    )
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
-    uiEvents.onNext(OverdueScreenCreated())
   }
 }

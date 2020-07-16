@@ -129,6 +129,7 @@ class OverdueScreenControllerTest {
         schedulers = TestSchedulersProvider.trampoline(),
         userSession = userSession,
         facilityRepository = facilityRepository,
+        appointmentRepository = repository,
         uiActions = ui
     )
     val uiRenderer = OverdueUiRenderer(ui)

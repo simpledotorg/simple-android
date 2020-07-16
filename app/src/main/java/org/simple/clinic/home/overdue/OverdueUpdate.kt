@@ -12,6 +12,7 @@ class OverdueUpdate(
   override fun update(model: OverdueModel, event: OverdueEvent): Next<OverdueModel, OverdueEffect> {
     return when (event) {
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
+      is OverdueAppointmentsLoaded -> next(model.overdueAppointmentsLoaded(event.appointments))
     }
   }
 }

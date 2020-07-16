@@ -16,6 +16,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -51,6 +52,7 @@ class PatientSummaryEffectHandlerTest {
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val dataSync = mock<DataSync>()
   private val teleconsultationApi = mock<TeleconsultationApi>()
+  private val facilityRepository = mock<FacilityRepository>()
 
   private val patientSummaryConfig = PatientSummaryConfig(
       bpEditableDuration = Duration.ofMinutes(10),
@@ -79,6 +81,7 @@ class PatientSummaryEffectHandlerTest {
       currentUser = Lazy { user },
       currentFacility = Lazy { facility },
       uuidGenerator = uuidGenerator,
+      facilityRepository = facilityRepository,
       uiActions = uiActions
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -118,6 +121,62 @@ class PatientSummaryEffectHandlerTest {
         currentUser = Lazy { user },
         currentFacility = Lazy { facility },
         uuidGenerator = uuidGenerator,
+        facilityRepository = facilityRepository,
+        uiActions = uiActions
+    )
+    val testCase = EffectHandlerTestCase(effectHandler.build())
+    val registeredFacilityUuid = UUID.fromString("1b359ec9-02e2-4f50-bebd-6001f96df57f")
+    val patient = TestData.patient(patientUuid, registeredFacilityId = registeredFacilityUuid)
+    val patientAddress = TestData.patientAddress(uuid = patient.addressUuid)
+    val patientPhoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", BpPassport))
+    val bangladeshNationId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
+    val facility = TestData.facility(
+        uuid = registeredFacilityUuid,
+        name = "CHC Obvious"
+    )
+
+    val patientProfile = PatientProfile(patient, patientAddress, listOf(patientPhoneNumber), listOf(bangladeshNationId, bpPassport))
+    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Just(patientProfile))
+    whenever(facilityRepository.facility(registeredFacilityUuid)) doReturn Optional.of(facility)
+
+    // when
+    testCase.dispatch(LoadPatientSummaryProfile(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(PatientSummaryProfileLoaded(
+        PatientSummaryProfile(
+            patient = patient,
+            address = patientAddress,
+            phoneNumber = patientPhoneNumber,
+            bpPassport = bpPassport,
+            alternativeId = bangladeshNationId,
+            facility = facility
+        )
+    ))
+  }
+
+  @Test
+  fun `when the load patient summary profile is received and registered facility is not present, then patient summary profile must be fetched`() {
+    // given
+    val bangladesh = TestData.country(isoCountryCode = "BD")
+    val effectHandler = PatientSummaryEffectHandler(
+        schedulersProvider = TrampolineSchedulersProvider(),
+        patientRepository = patientRepository,
+        bloodPressureRepository = bloodPressureRepository,
+        appointmentRepository = mock(),
+        missingPhoneReminderRepository = missingPhoneReminderRepository,
+        bloodSugarRepository = bloodSugarRepository,
+        dataSync = dataSync,
+        medicalHistoryRepository = medicalHistoryRepository,
+        prescriptionRepository = prescriptionRepository,
+        country = bangladesh,
+        patientSummaryConfig = patientSummaryConfig,
+        teleconsultationApi = teleconsultationApi,
+        currentUser = Lazy { user },
+        currentFacility = Lazy { facility },
+        uuidGenerator = uuidGenerator,
+        facilityRepository = facilityRepository,
         uiActions = uiActions
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -140,7 +199,8 @@ class PatientSummaryEffectHandlerTest {
             address = patientAddress,
             phoneNumber = patientPhoneNumber,
             bpPassport = bpPassport,
-            alternativeId = bangladeshNationId
+            alternativeId = bangladeshNationId,
+            facility = null
         )
     ))
   }
@@ -154,10 +214,11 @@ class PatientSummaryEffectHandlerTest {
     )
     val patientSummaryProfile = PatientSummaryProfile(
         patient = patientProfile.patient,
-        phoneNumber = null,
         address = patientProfile.address,
+        phoneNumber = null,
         bpPassport = null,
-        alternativeId = null
+        alternativeId = null,
+        facility = facility
     )
     val facility = TestData.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))
 

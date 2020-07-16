@@ -12,6 +12,7 @@ import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientProfile
@@ -25,11 +26,14 @@ import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.isEmpty
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.util.toNullable
 import org.simple.clinic.uuid.UuidGenerator
 import java.util.UUID
+import java.util.function.Function
 
 class PatientSummaryEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
@@ -47,6 +51,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
+    private val facilityRepository: FacilityRepository,
     @Assisted private val uiActions: PatientSummaryUiActions
 ) {
 
@@ -108,18 +113,34 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .switchMap { patientRepository.patientProfile(it.patientUuid) }
           .filterAndUnwrapJust()
           .map { it.withoutDeletedBusinessIds().withoutDeletedPhoneNumbers() }
-          .map(::mapPatientProfileToSummaryProfile)
+          .map { patientProfile ->
+            val registeredFacility = getRegisteredFacility(patientProfile.patient.registeredFacilityId)
+            patientProfile to registeredFacility
+          }
+          .map { (patientProfile, facility) ->
+            mapPatientProfileToSummaryProfile(patientProfile, facility)
+          }
           .map(::PatientSummaryProfileLoaded)
     }
   }
 
-  private fun mapPatientProfileToSummaryProfile(patientProfile: PatientProfile): PatientSummaryProfile {
+  private fun getRegisteredFacility(patientRegisteredFacilityId: UUID?): Optional<Facility> {
+    return Optional
+        .ofNullable(patientRegisteredFacilityId)
+        .flatMap(Function { facilityRepository.facility(it) })
+  }
+
+  private fun mapPatientProfileToSummaryProfile(
+      patientProfile: PatientProfile,
+      facility: Optional<Facility>
+  ): PatientSummaryProfile {
     return PatientSummaryProfile(
         patient = patientProfile.patient,
         address = patientProfile.address,
         phoneNumber = patientProfile.phoneNumbers.firstOrNull(),
         bpPassport = patientProfile.businessIds.filter { it.identifier.type == BpPassport }.maxBy { it.createdAt },
-        alternativeId = patientProfile.businessIds.filter { it.identifier.type == country.alternativeIdentifierType }.maxBy { it.createdAt }
+        alternativeId = patientProfile.businessIds.filter { it.identifier.type == country.alternativeIdentifierType }.maxBy { it.createdAt },
+        facility = facility.toNullable()
     )
   }
 

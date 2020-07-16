@@ -59,7 +59,6 @@ class LoginPinScreenControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(PinScreenCreated())
 
     // then
     verify(userSession).ongoingLoginEntry()
@@ -72,6 +71,7 @@ class LoginPinScreenControllerTest {
   @Test
   fun `when back is clicked, the local ongoing login entry must be cleared`() {
     // given
+    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
 
     // when
@@ -79,9 +79,11 @@ class LoginPinScreenControllerTest {
     uiEvents.onNext(PinBackClicked())
 
     // then
+    verify(userSession).ongoingLoginEntry()
     verify(userSession).clearOngoingLoginEntry()
     verifyNoMoreInteractions(userSession)
 
+    verify(screen).showPhoneNumber(phoneNumber)
     verify(screen).goBackToRegistrationScreen()
     verifyNoMoreInteractions(screen)
   }
@@ -117,6 +119,7 @@ class LoginPinScreenControllerTest {
         currentFacilityUuid = registrationFacilityUuid
     )
 
+    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(ongoingLoginEntry))
         .thenReturn(Completable.complete())
     whenever(userSession.storeUser(expectedUser, registrationFacilityUuid))
@@ -127,10 +130,12 @@ class LoginPinScreenControllerTest {
     uiEvents.onNext(LoginPinAuthenticated(ongoingLoginEntry))
 
     // then
+    verify(userSession).ongoingLoginEntry()
     verify(userSession).storeUser(user = expectedUser, facilityUuid = registrationFacilityUuid)
     verify(userSession).saveOngoingLoginEntry(ongoingLoginEntry)
     verifyNoMoreInteractions(userSession)
 
+    verify(screen).showPhoneNumber(phoneNumber)
     verify(screen).openHomeScreen()
     verifyNoMoreInteractions(screen)
   }
@@ -143,5 +148,7 @@ class LoginPinScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(PinScreenCreated())
   }
 }

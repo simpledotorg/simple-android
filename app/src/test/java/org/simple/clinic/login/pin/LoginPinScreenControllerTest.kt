@@ -3,6 +3,7 @@ package org.simple.clinic.login.pin
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -59,7 +60,11 @@ class LoginPinScreenControllerTest {
     setupController()
     uiEvents.onNext(PinScreenCreated())
 
+    verify(userSession).ongoingLoginEntry()
+    verifyNoMoreInteractions(userSession)
+
     verify(screen).showPhoneNumber(phoneNumber)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -70,6 +75,10 @@ class LoginPinScreenControllerTest {
     uiEvents.onNext(PinBackClicked())
 
     verify(userSession).clearOngoingLoginEntry()
+    verifyNoMoreInteractions(userSession)
+
+    verify(screen).goBackToRegistrationScreen()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -114,7 +123,11 @@ class LoginPinScreenControllerTest {
 
     // then
     verify(userSession).storeUser(user = expectedUser, facilityUuid = registrationFacilityUuid)
+    verify(userSession).saveOngoingLoginEntry(ongoingLoginEntry)
+    verifyNoMoreInteractions(userSession)
+
     verify(screen).openHomeScreen()
+    verifyNoMoreInteractions(screen)
   }
 
   private fun setupController() {

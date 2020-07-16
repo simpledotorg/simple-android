@@ -6,6 +6,6 @@ import org.simple.clinic.mobius.first
 
 class ReportsInit : Init<ReportsModel, ReportsEffect> {
   override fun init(model: ReportsModel): First<ReportsModel, ReportsEffect> {
-    return first(model)
+    return first(model, LoadReports)
   }
 }

@@ -7,6 +7,16 @@ class ReportsUiRenderer(
 ) : ViewRenderer<ReportsModel> {
 
   override fun render(model: ReportsModel) {
+    if (model.hasLoadedReports) {
+      renderReportsContent(model.reportsContent!!)
+    }
+  }
 
+  private fun renderReportsContent(reportsContent: String) {
+    if (reportsContent.isBlank()) {
+      ui.showNoReportsAvailable()
+    } else {
+      ui.showReport(reportsContent)
+    }
   }
 }

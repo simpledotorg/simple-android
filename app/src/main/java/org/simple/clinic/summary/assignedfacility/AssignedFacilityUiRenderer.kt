@@ -7,6 +7,8 @@ class AssignedFacilityUiRenderer(
 ) : ViewRenderer<AssignedFacilityModel> {
 
   override fun render(model: AssignedFacilityModel) {
-
+    if (model.hasAssignedFacility) {
+      ui.renderAssignedFacilityName(model.assignedFacility!!.name)
+    }
   }
 }

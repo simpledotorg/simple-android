@@ -17,4 +17,8 @@ data class AssignedFacilityModel(
         assignedFacility = null
     )
   }
+
+  fun assignedFacilityUpdated(facility: Facility?): AssignedFacilityModel {
+    return copy(assignedFacility = facility)
+  }
 }

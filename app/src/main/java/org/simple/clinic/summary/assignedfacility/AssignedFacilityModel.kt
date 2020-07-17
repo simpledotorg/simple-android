@@ -2,6 +2,19 @@ package org.simple.clinic.summary.assignedfacility
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.facility.Facility
+import java.util.UUID
 
 @Parcelize
-class AssignedFacilityModel : Parcelable
+data class AssignedFacilityModel(
+    val patientUuid: UUID,
+    val assignedFacility: Facility?
+) : Parcelable {
+
+  companion object {
+    fun create(patientUuid: UUID) = AssignedFacilityModel(
+        patientUuid = patientUuid,
+        assignedFacility = null
+    )
+  }
+}

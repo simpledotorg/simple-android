@@ -54,4 +54,25 @@ class AssignedFacilityUpdateTest {
             hasEffects(OpenFacilitySelection as AssignedFacilityEffect)
         ))
   }
+
+  @Test
+  fun `change assigned facility when new assigned facility is selected`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("c131da1e-7fef-4edd-ac9a-cb5ebf732606"),
+        name = "CHC Obvious"
+    )
+    val newAssignedFacility = TestData.facility(
+        uuid = UUID.fromString("13529930-7195-4cba-9cef-e0489de8da53"),
+        name = "CHC Bagta"
+    )
+    val model = model.assignedFacilityUpdated(facility)
+
+    updateSpec
+        .given(model)
+        .whenEvent(AssignedFacilitySelected(newAssignedFacility))
+        .then(assertThatNext(
+            hasModel(model.assignedFacilityUpdated(newAssignedFacility)),
+            hasEffects(ChangeAssignedFacility(patientUuid, newAssignedFacility.uuid) as AssignedFacilityEffect)
+        ))
+  }
 }

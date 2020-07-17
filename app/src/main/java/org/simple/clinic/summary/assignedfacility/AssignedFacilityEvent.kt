@@ -11,3 +11,5 @@ data class AssignedFacilityLoaded(val facility: Optional<Facility>) : AssignedFa
 object FacilityChanged : AssignedFacilityEvent()
 
 object ChangeAssignedFacilityButtonClicked : AssignedFacilityEvent()
+
+data class AssignedFacilitySelected(val facility: Facility) : AssignedFacilityEvent()

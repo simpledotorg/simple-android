@@ -14,6 +14,10 @@ class AssignedFacilityUpdate : Update<AssignedFacilityModel, AssignedFacilityEve
       is AssignedFacilityLoaded -> next(model.assignedFacilityUpdated(event.facility.toNullable()))
       FacilityChanged -> noChange()
       ChangeAssignedFacilityButtonClicked -> dispatch(OpenFacilitySelection)
+      is AssignedFacilitySelected -> next(
+          model.assignedFacilityUpdated(event.facility),
+          ChangeAssignedFacility(model.patientUuid, event.facility.uuid)
+      )
     }
   }
 }

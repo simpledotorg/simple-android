@@ -55,7 +55,6 @@ class OverdueLogicTest {
 
     // then
     verify(ui).updateList(emptyList(), false)
-    verify(ui).handleEmptyList(true)
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -80,7 +79,6 @@ class OverdueLogicTest {
     uiEvents.onNext(CallPatientClicked(patientUuid))
 
     // then
-    verify(ui).handleEmptyList(false)
     verify(ui).updateList(overdueAppointments, false)
     verify(uiActions).openPhoneMaskBottomSheet(patientUuid)
     verifyNoMoreInteractions(ui, uiActions)
@@ -112,7 +110,6 @@ class OverdueLogicTest {
     setupController()
 
     // then
-    verify(ui).handleEmptyList(false)
     verify(ui).updateList(overdueAppointments, false)
     verifyNoMoreInteractions(ui, uiActions)
   }

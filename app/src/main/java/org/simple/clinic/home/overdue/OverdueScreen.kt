@@ -98,17 +98,16 @@ class OverdueScreen(
   }
 
   override fun updateList(overdueAppointments: List<OverdueAppointment>, isDiabetesManagementEnabled: Boolean) {
+    val areOverdueAppointmentsAvailable = overdueAppointments.isNotEmpty()
+    viewForEmptyList.visibleOrGone(isVisible = !areOverdueAppointmentsAvailable)
+    overdueRecyclerView.visibleOrGone(isVisible = areOverdueAppointmentsAvailable)
+
     overdueListAdapter.submitList(OverdueAppointmentRow.from(
         appointments = overdueAppointments,
         clock = userClock,
         dateFormatter = dateFormatter,
         isDiabetesManagementEnabled = isDiabetesManagementEnabled
     ))
-  }
-
-  override fun handleEmptyList(isEmpty: Boolean) {
-    viewForEmptyList.visibleOrGone(isEmpty)
-    overdueRecyclerView.visibleOrGone(isEmpty.not())
   }
 
   override fun openPhoneMaskBottomSheet(patientUuid: UUID) {

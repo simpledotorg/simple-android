@@ -3,6 +3,8 @@ package org.simple.clinic.summary.assignedfacility
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
@@ -18,11 +20,13 @@ class AssignedFacilityEffectHandlerTest {
 
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
+  private val uiActions = mock<UiActions>()
 
   private val effectHandler = AssignedFacilityEffectHandler(
       patientRepository = patientRepository,
       facilityRepository = facilityRepository,
-      schedulersProvider = TestSchedulersProvider.trampoline()
+      schedulersProvider = TestSchedulersProvider.trampoline(),
+      uiActions = uiActions
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
 
@@ -54,6 +58,8 @@ class AssignedFacilityEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(AssignedFacilityLoaded(Optional.of(facility)))
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -72,5 +78,19 @@ class AssignedFacilityEffectHandlerTest {
     )
 
     effectHandlerTestCase.assertOutgoingEvents(FacilityChanged)
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open facility selection effect is received, then open the facility selection screen`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenFacilitySelection)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openFacilitySelection()
+    verifyNoMoreInteractions(uiActions)
   }
 }

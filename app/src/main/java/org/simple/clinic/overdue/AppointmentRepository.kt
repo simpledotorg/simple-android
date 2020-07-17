@@ -1,5 +1,6 @@
 package org.simple.clinic.overdue
 
+import androidx.paging.DataSource
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -123,6 +124,17 @@ class AppointmentRepository @Inject constructor(
       facility: Facility
   ): Observable<List<OverdueAppointment>> {
     return overdueDao.overdueAtFacility(
+        facilityUuid = facility.uuid,
+        scheduledBefore = since,
+        scheduledAfter = since.minus(appointmentConfig.periodForIncludingOverdueAppointments)
+    )
+  }
+
+  fun overdueAppointmentsDataSource(
+      since: LocalDate,
+      facility: Facility
+  ): DataSource.Factory<Int, OverdueAppointment> {
+    return overdueDao.overdueAtFacilityDataSource(
         facilityUuid = facility.uuid,
         scheduledBefore = since,
         scheduledAfter = since.minus(appointmentConfig.periodForIncludingOverdueAppointments)

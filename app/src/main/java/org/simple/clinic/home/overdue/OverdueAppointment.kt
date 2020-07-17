@@ -1,6 +1,7 @@
 package org.simple.clinic.home.overdue
 
 import android.os.Parcelable
+import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.DatabaseView
 import androidx.room.Embedded
@@ -134,6 +135,21 @@ data class OverdueAppointment(
         scheduledBefore: LocalDate,
         scheduledAfter: LocalDate
     ): Observable<List<OverdueAppointment>>
+
+    @Query("""
+      SELECT * FROM OverdueAppointment
+      WHERE 
+        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid 
+        AND (appt_scheduledDate < :scheduledBefore AND appt_scheduledDate > :scheduledAfter)
+        AND (appt_remindOn < :scheduledBefore OR appt_remindOn IS NULL)
+        GROUP BY appt_patientUuid
+        ORDER BY isAtHighRisk DESC, appt_scheduledDate DESC, appt_updatedAt ASC
+    """)
+    fun overdueAtFacilityDataSource(
+        facilityUuid: UUID,
+        scheduledBefore: LocalDate,
+        scheduledAfter: LocalDate
+    ): DataSource.Factory<Int, OverdueAppointment>
 
     @Query("""
       SELECT COUNT(appt_uuid) FROM OverdueAppointment

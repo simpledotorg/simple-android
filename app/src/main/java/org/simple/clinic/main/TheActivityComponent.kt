@@ -98,7 +98,8 @@ interface TheActivityComponent :
     RegistrationConfirmPinScreen.Injector,
     RegistrationLocationPermissionScreen.Injector,
     RegistrationFacilitySelectionScreen.Injector,
-    AddPhoneNumberDialog.Injector {
+    AddPhoneNumberDialog.Injector,
+    RecentPatientsView.Injector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: AppLockScreen)
@@ -118,7 +119,6 @@ interface TheActivityComponent :
   fun inject(target: ScanSimpleIdScreen)
   fun inject(target: QrCodeScannerView_Old)
   fun inject(target: QrCodeScannerView)
-  fun inject(target: RecentPatientsView)
   fun inject(target: SyncIndicatorView)
   fun inject(target: AddIdToPatientSearchScreen)
   fun inject(target: PatientSearchView)

@@ -5,14 +5,11 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding3.view.detaches
-import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.recent_patients.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.recentpatient.RecentPatientsScreenKey
@@ -22,18 +19,16 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs), LatestRecentPatientsUi {
-
-  @Inject
-  lateinit var controller: RecentPatientsViewController
+class RecentPatientsView(
+    context: Context,
+    attrs: AttributeSet
+) : FrameLayout(context, attrs), LatestRecentPatientsUi, LatestRecentPatientsUiActions {
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -51,14 +46,9 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
   lateinit var config: PatientConfig
 
   private val recentAdapter = ItemAdapter(RecentPatientItemTTypeDiffCallback())
-  private val detaches = detaches()
 
   private val events by unsafeLazy {
-    Observable
-        .merge(
-            screenCreates(),
-            adapterEvents()
-        )
+    adapterEvents()
         .compose(ReportAnalyticsEvents())
         .share()
   }
@@ -78,7 +68,8 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
 
   override fun onFinishInflate() {
     super.onFinishInflate()
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
 
     inflate(context, R.layout.recent_patients, this)
 
@@ -87,13 +78,6 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
       adapter = recentAdapter
       isNestedScrollingEnabled = false
     }
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = detaches.map { ScreenDestroyed() }
-    )
   }
 
   override fun onAttachedToWindow() {
@@ -113,8 +97,6 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
-
-  private fun screenCreates() = Observable.just(ScreenCreated())
 
   private fun adapterEvents() = recentAdapter.itemEvents.ofType<UiEvent>()
 
@@ -138,5 +120,9 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
             intention = OpenIntention.ViewExistingPatient,
             screenCreatedTimestamp = Instant.now(utcClock)
         ))
+  }
+
+  interface Injector {
+    fun inject(target: RecentPatientsView)
   }
 }

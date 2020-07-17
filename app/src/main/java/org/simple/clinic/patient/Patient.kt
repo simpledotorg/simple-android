@@ -67,9 +67,9 @@ data class Patient(
 
     val deletedReason: DeletedReason?,
 
-    val registeredFacilityId : UUID?,
+    val registeredFacilityId: UUID?,
 
-    val assignedFacilityId : UUID?
+    val assignedFacilityId: UUID?
 ) : Parcelable {
 
   fun withNameAndGender(fullName: String, gender: Gender): Patient =
@@ -208,6 +208,21 @@ data class Patient(
         updatedAt: Instant,
         deletedAt: Instant,
         deletedReason: DeletedReason,
+        pendingStatus: SyncStatus
+    )
+
+    @Query("""
+      UPDATE Patient
+      SET
+        assignedFacilityId = :assignedFacilityId,
+        updatedAt = :updatedAt,
+        syncStatus = :pendingStatus
+      WHERE uuid = :patientUuid
+    """)
+    abstract fun updateAssignedFacilityId(
+        patientUuid: UUID,
+        assignedFacilityId: UUID,
+        updatedAt: Instant,
         pendingStatus: SyncStatus
     )
 

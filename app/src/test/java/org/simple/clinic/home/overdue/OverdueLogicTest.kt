@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -11,12 +12,9 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.LocalDate
@@ -31,10 +29,7 @@ class OverdueLogicTest {
   private val uiActions = mock<OverdueUiActions>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val repository = mock<AppointmentRepository>()
-  private val facilityRepository = mock<FacilityRepository>()
-  private val userSession = mock<UserSession>()
   private val facility = TestData.facility(uuid = UUID.fromString("f4430584-eeaf-4352-b1f5-c21cc96faa6c"))
-  private val user = TestData.loggedInUser(uuid = UUID.fromString("977c9f22-c333-477f-826b-00fa601f16ab"))
   private val dateOnClock = LocalDate.parse("2018-01-01")
 
   private lateinit var testFixture: MobiusTestFixture<OverdueModel, OverdueEvent, OverdueEffect>
@@ -115,14 +110,10 @@ class OverdueLogicTest {
   }
 
   private fun setupController() {
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(user.toOptional()))
-    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
-
     val effectHandler = OverdueEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
-        userSession = userSession,
-        facilityRepository = facilityRepository,
         appointmentRepository = repository,
+        currentFacility = Lazy { facility },
         uiActions = uiActions
     )
     val uiRenderer = OverdueUiRenderer(ui)

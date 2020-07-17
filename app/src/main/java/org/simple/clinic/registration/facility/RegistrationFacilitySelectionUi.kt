@@ -3,7 +3,7 @@ package org.simple.clinic.registration.facility
 import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilityListItem
 
-interface RegistrationFacilitySelectionUi: RegistrationFacilitySelectionUiActions {
+interface RegistrationFacilitySelectionUi {
   fun showProgressIndicator()
   fun hideProgressIndicator()
   fun showToolbarWithSearchField()

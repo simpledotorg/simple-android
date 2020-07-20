@@ -2,8 +2,6 @@ package org.simple.clinic.registration.facility
 
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
-import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.LocationUpdate.Available
 import org.simple.clinic.location.LocationUpdate.Unavailable
@@ -20,8 +18,6 @@ class RegistrationFacilitySelectionUiRenderer @AssistedInject constructor(
   interface Factory {
     fun create(ui: RegistrationFacilitySelectionUi): RegistrationFacilitySelectionUiRenderer
   }
-
-  private var hasShownFacilitiesAtLeastOnce = false
 
   override fun render(model: RegistrationFacilitySelectionModel) {
     if (model.hasLoadedFacilities) {
@@ -50,13 +46,6 @@ class RegistrationFacilitySelectionUiRenderer @AssistedInject constructor(
       is Available -> locationUpdate.location
     }
 
-    val updateType = if (hasShownFacilitiesAtLeastOnce) {
-      SUBSEQUENT_UPDATE
-    } else {
-      hasShownFacilitiesAtLeastOnce = true
-      FIRST_UPDATE
-    }
-
     val listItems = facilityListItemBuilder.build(
         facilities = model.facilities!!,
         searchQuery = model.searchQuery,
@@ -64,6 +53,6 @@ class RegistrationFacilitySelectionUiRenderer @AssistedInject constructor(
         proximityThreshold = registrationConfig.proximityThresholdForNearbyFacilities
     )
 
-    ui.updateFacilities(listItems, updateType)
+    ui.updateFacilities(listItems)
   }
 }

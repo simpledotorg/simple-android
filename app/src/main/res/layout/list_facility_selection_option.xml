@@ -6,12 +6,12 @@
   <LinearLayout style="@style/Clinic.V2.FacilitySelection.FacilityContainer">
 
     <TextView
-      android:id="@+id/facility_item_name"
+      android:id="@+id/facilityNameTextView"
       style="@style/Clinic.V2.FacilitySelection.FacilityName"
       tools:text="Facility name" />
 
     <TextView
-      android:id="@+id/facility_item_address"
+      android:id="@+id/facilityAddressTextView"
       style="@style/Clinic.V2.FacilitySelection.FacilityAddress"
       android:layout_marginBottom="@dimen/spacing_16"
       tools:text="A really long address for this facility to test line wrapping" />

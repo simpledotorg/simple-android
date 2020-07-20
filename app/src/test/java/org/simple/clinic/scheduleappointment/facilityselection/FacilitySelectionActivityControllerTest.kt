@@ -19,7 +19,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilityChangeConfig
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.facility.change.FacilityListItemBuilder
@@ -95,8 +94,7 @@ class FacilitySelectionActivityControllerTest {
         searchQuery = searchQuery,
         userLocation = null,
         proximityThreshold = configTemplate.proximityThresholdForNearbyFacilities)
-    verify(screen).updateFacilities(facilityListItems, FacilitiesUpdateType.FIRST_UPDATE)
-    verify(screen).updateFacilities(facilityListItems, FacilitiesUpdateType.SUBSEQUENT_UPDATE)
+    verify(screen, times(2)).updateFacilities(facilityListItems)
   }
 
   @Test
@@ -139,7 +137,7 @@ class FacilitySelectionActivityControllerTest {
     uiEvents.onNext(FacilitySelectionSearchQueryChanged(""))
     uiEvents.onNext(FacilitySelectionLocationPermissionChanged(RuntimePermissionResult.DENIED))
 
-    verify(screen).updateFacilities(any(), any())
+    verify(screen).updateFacilities(any())
   }
 
   @Test
@@ -199,10 +197,10 @@ class FacilitySelectionActivityControllerTest {
       onNext(FacilitySelectionSearchQueryChanged(""))
       onNext(FacilitySelectionLocationPermissionChanged(RuntimePermissionResult.GRANTED))
     }
-    verify(screen, never()).updateFacilities(any(), any())
+    verify(screen, never()).updateFacilities(any())
 
     locationUpdates.onNext(LocationUpdate.Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded = Duration.ofNanos(0)))
-    verify(screen).updateFacilities(any(), any())
+    verify(screen).updateFacilities(any())
   }
 
   @Test

@@ -12,12 +12,21 @@ class PatientSummaryViewRenderer(
       if (model.hasLoadedPatientSummaryProfile) {
         populatePatientProfile(model.patientSummaryProfile!!)
         showEditButton()
+        setupUiForAssignedFacility(model)
       }
 
       if (model.hasLoadedCurrentFacility) {
         setupUiForDiabetesManagement(model.isDiabetesManagementEnabled)
         setupUiForTeleconsult(model)
       }
+    }
+  }
+
+  private fun setupUiForAssignedFacility(model: PatientSummaryModel) {
+    if (model.hasAssignedFacility) {
+      ui.showAssignedFacilityView()
+    } else {
+      ui.hideAssignedFacilityView()
     }
   }
 

@@ -9,8 +9,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
-import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.location.LocationUpdate.Available
 import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.location.ScreenLocationUpdates
@@ -106,21 +104,9 @@ class FacilityChangeActivityController @Inject constructor(
                     proximityThreshold = config.proximityThresholdForNearbyFacilities)
               }
         }
-        .replay()
-        .refCount()
 
-    val firstUpdate = filteredFacilityListItems
-        .map { listItems -> listItems to FIRST_UPDATE }
-        .take(1)
-
-    val subsequentUpdates = filteredFacilityListItems
-        .map { listItems -> listItems to SUBSEQUENT_UPDATE }
-        .skip(1)
-
-    return Observable.merge(firstUpdate, subsequentUpdates)
-        .map { (listItems, updateType) ->
-          { ui: Ui -> ui.updateFacilities(listItems, updateType) }
-        }
+    return filteredFacilityListItems
+        .map { listItems -> { ui: Ui -> ui.updateFacilities(listItems) } }
   }
 
   private fun toggleSearchFieldInToolbar(events: Observable<UiEvent>): Observable<UiChange> {

@@ -20,8 +20,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
-import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.location.LocationUpdate.Available
@@ -102,8 +100,7 @@ class FacilityChangeActivityControllerTest {
         searchQuery = searchQuery,
         userLocation = null,
         proximityThreshold = configTemplate.proximityThresholdForNearbyFacilities)
-    verify(screen).updateFacilities(facilityListItems, FIRST_UPDATE)
-    verify(screen).updateFacilities(facilityListItems, SUBSEQUENT_UPDATE)
+    verify(screen, times(2)).updateFacilities(facilityListItems)
   }
 
   @Test
@@ -210,10 +207,10 @@ class FacilityChangeActivityControllerTest {
       onNext(FacilityChangeSearchQueryChanged(""))
       onNext(FacilityChangeLocationPermissionChanged(GRANTED))
     }
-    verify(screen, never()).updateFacilities(any(), any())
+    verify(screen, never()).updateFacilities(any())
 
     locationUpdates.onNext(Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded = Duration.ofNanos(0)))
-    verify(screen).updateFacilities(any(), any())
+    verify(screen).updateFacilities(any())
   }
 
   @Test
@@ -231,7 +228,7 @@ class FacilityChangeActivityControllerTest {
       onNext(FacilityChangeSearchQueryChanged("f"))
       onNext(FacilityChangeLocationPermissionChanged(GRANTED))
     }
-    verify(screen).updateFacilities(any(), any())
+    verify(screen).updateFacilities(any())
   }
 
   @Test

@@ -17,8 +17,6 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
-import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.location.DistanceCalculator
@@ -112,7 +110,7 @@ class RegistrationFacilitySelectionLogicTest {
     val inOrder = inOrder(ui)
     inOrder.verify(ui, times(3)).showProgressIndicator()
     inOrder.verify(ui).hideProgressIndicator()
-    inOrder.verify(ui).updateFacilities(emptyList(), FIRST_UPDATE)
+    inOrder.verify(ui).updateFacilities(emptyList())
     inOrder.verify(ui).showToolbarWithoutSearchField()
     inOrder.verifyNoMoreInteractions()
   }
@@ -138,8 +136,7 @@ class RegistrationFacilitySelectionLogicTest {
     verify(ui, times(3)).showProgressIndicator()
     verify(ui, times(2)).hideProgressIndicator()
     verify(ui, times(3)).showToolbarWithSearchField()
-    verify(ui).updateFacilities(expectedFacilityListItems, FIRST_UPDATE)
-    verify(ui).updateFacilities(expectedFacilityListItems, SUBSEQUENT_UPDATE)
+    verify(ui, times(2)).updateFacilities(expectedFacilityListItems)
     verifyNoMoreInteractions(ui)
   }
 
@@ -163,14 +160,8 @@ class RegistrationFacilitySelectionLogicTest {
     verify(ui, times(3)).showProgressIndicator()
     verify(ui, times(2)).hideProgressIndicator()
     verify(ui, times(3)).showToolbarWithSearchField()
-    verify(ui).updateFacilities(
-        facilityItems = listItemBuilder.build(listOf(phcObvious, chcNilenso), "", null, registrationConfig.proximityThresholdForNearbyFacilities),
-        updateType = FIRST_UPDATE
-    )
-    verify(ui).updateFacilities(
-        facilityItems = listItemBuilder.build(listOf(phcObvious, chcNilenso), "HC", null, registrationConfig.proximityThresholdForNearbyFacilities),
-        updateType = SUBSEQUENT_UPDATE
-    )
+    verify(ui).updateFacilities(listItemBuilder.build(listOf(phcObvious, chcNilenso), "", null, registrationConfig.proximityThresholdForNearbyFacilities))
+    verify(ui).updateFacilities(listItemBuilder.build(listOf(phcObvious, chcNilenso), "HC", null, registrationConfig.proximityThresholdForNearbyFacilities))
     verifyNoMoreInteractions(ui)
 
     // when
@@ -180,10 +171,7 @@ class RegistrationFacilitySelectionLogicTest {
     // then
     verify(ui).hideProgressIndicator()
     verify(ui).showToolbarWithSearchField()
-    verify(ui).updateFacilities(
-        facilityItems = listItemBuilder.build(listOf(phcObvious), "PHC", null, registrationConfig.proximityThresholdForNearbyFacilities),
-        updateType = SUBSEQUENT_UPDATE
-    )
+    verify(ui).updateFacilities(listItemBuilder.build(listOf(phcObvious), "PHC", null, registrationConfig.proximityThresholdForNearbyFacilities))
     verifyNoMoreInteractions(ui)
 
     // when
@@ -193,10 +181,7 @@ class RegistrationFacilitySelectionLogicTest {
     // then
     verify(ui).hideProgressIndicator()
     verify(ui).showToolbarWithSearchField()
-    verify(ui).updateFacilities(
-        facilityItems = listItemBuilder.build(listOf(chcNilenso), "CHC", null, registrationConfig.proximityThresholdForNearbyFacilities),
-        updateType = SUBSEQUENT_UPDATE
-    )
+    verify(ui).updateFacilities(listItemBuilder.build(listOf(chcNilenso), "CHC", null, registrationConfig.proximityThresholdForNearbyFacilities))
     verifyNoMoreInteractions(ui)
   }
 
@@ -221,8 +206,7 @@ class RegistrationFacilitySelectionLogicTest {
     verify(ui, times(3)).showProgressIndicator()
     verify(ui, times(4)).hideProgressIndicator()
     verify(ui, times(5)).showToolbarWithSearchField()
-    verify(ui).updateFacilities(expectedFacilityListItems, FIRST_UPDATE)
-    verify(ui, times(3)).updateFacilities(expectedFacilityListItems, SUBSEQUENT_UPDATE)
+    verify(ui, times(4)).updateFacilities(expectedFacilityListItems)
     verifyNoMoreInteractions(ui)
 
   }
@@ -250,10 +234,7 @@ class RegistrationFacilitySelectionLogicTest {
     verify(ui, times(3)).showProgressIndicator()
     verify(ui).hideProgressIndicator()
     verify(ui, times(2)).showToolbarWithSearchField()
-    verify(ui).updateFacilities(
-        facilityItems = listItemBuilder.build(listOf(facility1), "", null, registrationConfig.proximityThresholdForNearbyFacilities),
-        updateType = FIRST_UPDATE
-    )
+    verify(ui).updateFacilities(listItemBuilder.build(listOf(facility1), "", null, registrationConfig.proximityThresholdForNearbyFacilities))
     verify(uiActions).showConfirmFacilitySheet(facility1.uuid, facility1.name)
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -276,10 +257,7 @@ class RegistrationFacilitySelectionLogicTest {
     verify(ui, times(3)).showProgressIndicator()
     verify(ui).hideProgressIndicator()
     verify(ui, times(2)).showToolbarWithSearchField()
-    verify(ui).updateFacilities(
-        facilityItems = listItemBuilder.build(listOf(facility1), "", null, registrationConfig.proximityThresholdForNearbyFacilities),
-        updateType = FIRST_UPDATE
-    )
+    verify(ui).updateFacilities(listItemBuilder.build(listOf(facility1), "", null, registrationConfig.proximityThresholdForNearbyFacilities))
     verify(uiActions).openIntroVideoScreen()
     verifyNoMoreInteractions(uiActions)
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityId = facility1.uuid))
@@ -299,7 +277,7 @@ class RegistrationFacilitySelectionLogicTest {
     verify(ui, times(3)).showProgressIndicator()
     verify(ui, times(2)).showToolbarWithSearchField()
     verify(ui).hideProgressIndicator()
-    verify(ui).updateFacilities(emptyList(), FIRST_UPDATE)
+    verify(ui).updateFacilities(emptyList())
     verifyNoMoreInteractions(ui)
   }
 

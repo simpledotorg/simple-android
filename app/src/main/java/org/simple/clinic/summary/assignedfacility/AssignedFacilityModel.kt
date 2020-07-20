@@ -18,6 +18,9 @@ data class AssignedFacilityModel(
     )
   }
 
+  val hasAssignedFacility: Boolean
+    get() = assignedFacility != null
+
   fun assignedFacilityUpdated(facility: Facility?): AssignedFacilityModel {
     return copy(assignedFacility = facility)
   }

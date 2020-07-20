@@ -93,7 +93,9 @@ object TestData {
       patientDeletedReason: DeletedReason? = null,
       patientCreatedAt: Instant = Instant.now(),
       patientUpdatedAt: Instant = Instant.now(),
-      patientRecordedAt: Instant = Instant.parse("2018-01-01T00:00:00Z")
+      patientRecordedAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
+      patientRegisteredFacilityId: UUID? = null,
+      patientAssignedFacilityId: UUID? = null
   ): PatientProfile {
     val phoneNumbers = if (!patientPhoneNumber.isNullOrBlank()) {
       listOf(patientPhoneNumber(patientUuid = patientUuid, number = patientPhoneNumber))
@@ -120,7 +122,9 @@ object TestData {
             deletedReason = patientDeletedReason,
             createdAt = patientCreatedAt,
             updatedAt = patientUpdatedAt,
-            recordedAt = patientRecordedAt
+            recordedAt = patientRecordedAt,
+            registeredFacilityId = patientRegisteredFacilityId,
+            assignedFacilityId = patientAssignedFacilityId
         ),
         address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = phoneNumbers,

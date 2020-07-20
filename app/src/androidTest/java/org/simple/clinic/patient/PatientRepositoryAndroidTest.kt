@@ -3861,4 +3861,37 @@ class PatientRepositoryAndroidTest {
       assertThat(syncStatus).isEqualTo(PENDING)
     }
   }
+
+  @Test
+  fun updating_assigned_facility_id_should_work_correctly() {
+    // given
+    val now = Instant.now(clock)
+    val patientUuid = UUID.fromString("cf6de524-dbbd-49cf-bc2c-112882d42007")
+    val facilityUuid = UUID.fromString("3a2feb69-7b3f-43eb-8263-f4fa77aed1ad")
+    val patient = TestData.patientProfile(
+        patientUuid = patientUuid,
+        patientCreatedAt = now,
+        patientUpdatedAt = now,
+        patientRegisteredFacilityId = facilityUuid,
+        patientAssignedFacilityId = facilityUuid
+    )
+
+    val updatedAssignedFacilityUuid = UUID.fromString("8fcdf153-d85f-4bcb-8cd3-b59ad5b1797a")
+
+    patientRepository.save(listOf(patient)).blockingAwait()
+
+    // when
+    clock.advanceBy(Duration.ofMinutes(40))
+    patientRepository.updateAssignedFacilityId(patientId = patientUuid, assignedFacilityId = updatedAssignedFacilityUuid)
+
+    // then
+    val updatedPatient = patientRepository.patientImmediate(patientUuid)!!
+    val fortyMinutesLater = now.plus(Duration.ofMinutes(40))
+
+    with(updatedPatient) {
+      assertThat(updatedAt).isEqualTo(fortyMinutesLater)
+      assertThat(assignedFacilityId).isEqualTo(updatedAssignedFacilityUuid)
+      assertThat(syncStatus).isEqualTo(PENDING)
+    }
+  }
 }

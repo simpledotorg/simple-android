@@ -55,6 +55,9 @@ data class PatientSummaryModel(
   val canCheckTeleconsultationInfo: Boolean
     get() = hasLoadedCurrentFacility && isTeleconsultationEnabled && isUserLoggedIn
 
+  val hasAssignedFacility: Boolean
+    get() = patientSummaryProfile?.patient?.assignedFacilityId != null
+
   fun patientSummaryProfileLoaded(patientSummaryProfile: PatientSummaryProfile): PatientSummaryModel {
     return copy(patientSummaryProfile = patientSummaryProfile)
   }

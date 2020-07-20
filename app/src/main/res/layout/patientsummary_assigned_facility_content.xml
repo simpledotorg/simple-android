@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <TextView
+    android:id="@+id/assignedFacilityTitleTextView"
+    style="@style/Clinic.V2.TextAppearance.Subtitle1Left.Emphasis.Grey0"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_16"
+    android:text="@string/assigned_facility_view_title"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/assignedFacilityTextView"
+    style="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_8"
+    android:layout_marginBottom="@dimen/spacing_16"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="@id/assignedFacilityTitleTextView"
+    app:layout_constraintTop_toBottomOf="@id/assignedFacilityTitleTextView"
+    tools:text="CHC Obvious" />
+
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/changeAssignedFacilityButton"
+    style="@style/Widget.MaterialComponents.Button.TextButton"
+    android:layout_width="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_8"
+    android:layout_height="wrap_content"
+    android:text="@string/assigned_facility_view_change"
+    android:textColor="@color/blue1"
+    app:layout_constraintBottom_toBottomOf="@id/assignedFacilityTitleTextView"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="@id/assignedFacilityTitleTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

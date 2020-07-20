@@ -493,6 +493,14 @@ class PatientSummaryScreen(
   override fun hideContactDoctorButton() {
     contactDoctorButton.visibility = View.GONE
   }
+
+  override fun showAssignedFacilityView() {
+    assignedFacilityView.visibility = View.VISIBLE
+  }
+
+  override fun hideAssignedFacilityView() {
+    assignedFacilityView.visibility = View.GONE
+  }
 }
 
 @Parcelize

@@ -60,6 +60,7 @@ import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreen
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
+import org.simple.clinic.summary.assignedfacility.AssignedFacilityView
 import org.simple.clinic.summary.bloodpressures.view.BloodPressureSummaryViewInjector
 import org.simple.clinic.summary.bloodsugar.view.BloodSugarSummaryViewInjector
 import org.simple.clinic.summary.linkId.LinkIdWithPatientView
@@ -99,7 +100,8 @@ interface TheActivityComponent :
     RegistrationLocationPermissionScreen.Injector,
     RegistrationFacilitySelectionScreen.Injector,
     AddPhoneNumberDialog.Injector,
-    RecentPatientsView.Injector {
+    RecentPatientsView.Injector,
+    AssignedFacilityView.Injector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: AppLockScreen)

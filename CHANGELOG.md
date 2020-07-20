@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Features
+- [In Progress: 20th Jul 2020] Show assigned facility in patient summary screen
+
 ### Internal
 - Use `app:srcCompat` for `ImageView`
 - Migrated `ReportsScreen` to Mobius

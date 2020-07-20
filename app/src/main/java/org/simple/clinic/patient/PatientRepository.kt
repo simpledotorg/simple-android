@@ -748,5 +748,15 @@ class PatientRepository @Inject constructor(
     )
   }
 
+  fun updateAssignedFacilityId(patientId: UUID, assignedFacilityId: UUID) {
+    val now = Instant.now(utcClock)
+    database.patientDao().updateAssignedFacilityId(
+        patientUuid = patientId,
+        assignedFacilityId = assignedFacilityId,
+        updatedAt = now,
+        pendingStatus = PENDING
+    )
+  }
+
   private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: MetaDataVersion)
 }

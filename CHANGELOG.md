@@ -9,6 +9,9 @@
 ### Fixes
 - Fixed occasional crash when starting a teleconsultation session ([LINK](https://app.clubhouse.io/simpledotorg/story/414/starting-a-teleconsultation-session-crashes-in-some-scenarios))
 
+### Fixes
+- Fix crash when removing phone number for a patient that already has one ([LINK](https://app.clubhouse.io/simpledotorg/story/366/app-crashing-when-phone-number-is-empty-while-editing-patient))
+
 ## On Demo
 ### Internal
 - Migrated `RegistrationPinScreen` to Mobius

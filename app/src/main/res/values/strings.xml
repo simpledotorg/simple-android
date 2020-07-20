@@ -84,6 +84,7 @@
   <string name="patiententry_error_both_dateofbirth_and_age_empty">Enter patient’s age</string>
   <string name="patiententry_error_invalid_dateofbirth">Enter patient’s date of birth in DD/MM/YYYY</string>
   <string name="patiententry_error_dateofbirth_is_in_future">Fix patient’s date of birth</string>
+  <string name="patiententry_error_phonenumber_blank">Phone number cannot be empty</string>
   <string name="patiententry_error_phonenumber_length_less">Phone number cannot be less than %1$s digits</string>
   <string name="patiententry_error_phonenumber_length_more">Phone number cannot be more than %1$s digits</string>
   <string name="patiententry_identifier">BP Passport</string>
@@ -110,6 +111,7 @@
   <string name="patientedit_error_empty_colony_or_village" translatable="false">@string/patiententry_error_empty_colony_or_village</string>
   <string name="patientedit_error_empty_district" translatable="false">@string/patiententry_error_empty_district</string>
   <string name="patientedit_error_state_empty" translatable="false">@string/patiententry_error_state_empty</string>
+  <string name="patientedit_error_phonenumber_blank" translatable="false">@string/patiententry_error_phonenumber_blank</string>
   <string name="patientedit_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
   <string name="patientedit_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
   <string name="patientedit_date_of_birth_unfocused" translatable="false">@string/patiententry_date_of_birth_unfocused</string>

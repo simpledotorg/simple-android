@@ -375,6 +375,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     errors.forEach {
       when (it) {
         FullNameEmpty -> showEmptyFullNameError(true)
+        PhoneNumberEmpty -> showPhoneNumberEmptyError()
         is PhoneNumberLengthTooShort -> showLengthTooShortPhoneNumberError(it.minimumAllowedNumberLength)
         is PhoneNumberLengthTooLong -> showLengthTooLongPhoneNumberError(it.maximumAllowedNumberLength)
         ColonyOrVillageEmpty -> showEmptyColonyOrVillageError(true)
@@ -387,9 +388,6 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         DateOfBirthExceedsMaxLimit -> showDateOfBirthExceedsMaxLimitError()
         AgeExceedsMinLimit -> showAgeExceedsMinLimitError()
         DateOfBirthExceedsMinLimit -> showDateOfBirthExceedsMinLimitError()
-        PhoneNumberEmpty -> {
-          throw AssertionError("Should  never receive this error: $it")
-        }
       }.exhaustive()
     }
   }
@@ -468,6 +466,10 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
       show -> resources.getString(R.string.patientedit_error_both_dateofbirth_and_age_empty)
       else -> null
     }
+  }
+
+  private fun showPhoneNumberEmptyError() {
+    phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_blank)
   }
 
   private fun showLengthTooShortPhoneNumberError(requiredNumberLength: Int) {

@@ -29,7 +29,7 @@ import javax.inject.Named
 class OverdueScreen(
     context: Context,
     attrs: AttributeSet
-) : RelativeLayout(context, attrs), OverdueUi, OverdueUiActions {
+) : RelativeLayout(context, attrs), OverdueUiActions {
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -59,8 +59,6 @@ class OverdueScreen(
   }
 
   private val delegate by unsafeLazy {
-    val uiRenderer = OverdueUiRenderer(this)
-
     val date = LocalDate.now(userClock)
 
     MobiusDelegate.forView(
@@ -69,7 +67,7 @@ class OverdueScreen(
         update = OverdueUpdate(date),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = OverdueInit(date),
-        modelUpdateListener = uiRenderer::render
+        modelUpdateListener = { /* Nothing to do here */ }
     )
   }
 
@@ -101,9 +99,6 @@ class OverdueScreen(
 
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
-  }
-
-  override fun updateList(overdueAppointments: List<OverdueAppointment>, isDiabetesManagementEnabled: Boolean) {
   }
 
   override fun openPhoneMaskBottomSheet(patientUuid: UUID) {

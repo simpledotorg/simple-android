@@ -25,7 +25,6 @@ class OverdueLogicTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val ui = mock<OverdueUi>()
   private val uiActions = mock<OverdueUiActions>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val repository = mock<AppointmentRepository>()
@@ -54,7 +53,7 @@ class OverdueLogicTest {
     // then
     verify(uiActions).showOverdueAppointments(overdueAppointmentRowDataSourceFactory)
     verify(uiActions).openPhoneMaskBottomSheet(patientUuid)
-    verifyNoMoreInteractions(ui, uiActions)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -64,7 +63,7 @@ class OverdueLogicTest {
 
     // then
     verify(uiActions).showOverdueAppointments(overdueAppointmentRowDataSourceFactory)
-    verifyNoMoreInteractions(ui, uiActions)
+    verifyNoMoreInteractions(uiActions)
   }
 
   private fun setupController() {
@@ -79,13 +78,12 @@ class OverdueLogicTest {
         dataSourceFactory = overdueAppointmentRowDataSourceFactoryInjectionFactory,
         uiActions = uiActions
     )
-    val uiRenderer = OverdueUiRenderer(ui)
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = OverdueModel.create(),
         update = OverdueUpdate(dateOnClock),
         effectHandler = effectHandler.build(),
-        modelUpdateListener = uiRenderer::render,
+        modelUpdateListener = { /* Nothing to do here */ },
         init = OverdueInit(dateOnClock)
     )
     testFixture.start()

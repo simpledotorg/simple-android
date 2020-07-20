@@ -46,7 +46,7 @@ class OverdueScreen(
   @Inject
   lateinit var effectHandlerFactory: OverdueEffectHandler.Factory
 
-  @Inject
+  @field:[Inject Named("for_overdue_appointments")]
   lateinit var pagedListConfig: PagedList.Config
 
   private val overdueListAdapter = PagingItemAdapter(OverdueAppointmentRow.DiffCallback())

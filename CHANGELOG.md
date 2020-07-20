@@ -14,6 +14,9 @@
 - Updated translations: `bn_IN`, `am_ET`, `te_IN`, `pa_IN`, `hi_IN`, `bn_BD`
 - Added Registration Facility name and date in `PatientSummaryScreen`
 
+### Fixes
+- Fix crash when removing phone number for a patient that already has one ([LINK](https://app.clubhouse.io/simpledotorg/story/366/app-crashing-when-phone-number-is-empty-while-editing-patient))
+
 ## On Demo
 ### Internal
 - Migrated `RegistrationPinScreen` to Mobius

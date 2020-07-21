@@ -11,7 +11,7 @@ object LoadDefaultAppointmentDate : ScheduleAppointmentEffect()
 
 data class ShowDatePicker(val selectedDate: LocalDate) : ScheduleAppointmentEffect()
 
-object LoadCurrentFacility : ScheduleAppointmentEffect()
+object LoadAppointmentFacility : ScheduleAppointmentEffect()
 
 data class ScheduleAppointmentForPatient(
     val patientUuid: UUID,

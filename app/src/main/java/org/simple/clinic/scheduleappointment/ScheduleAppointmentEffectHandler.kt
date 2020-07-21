@@ -45,7 +45,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<ScheduleAppointmentEffect, ScheduleAppointmentEvent>()
         .addTransformer(LoadDefaultAppointmentDate::class.java, loadDefaultAppointmentDate())
         .addConsumer(ShowDatePicker::class.java, { uiActions.showManualDateSelector(it.selectedDate) }, schedulers.ui())
-        .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
+        .addTransformer(LoadAppointmentFacility::class.java, loadAppointmentFacility())
         .addTransformer(ScheduleAppointmentForPatient::class.java, scheduleAppointmentForPatient())
         .addAction(CloseSheet::class.java, uiActions::closeSheet, schedulers.ui())
         .addTransformer(LoadPatientDefaulterStatus::class.java, loadPatientDefaulterStatus())
@@ -82,7 +82,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     return PotentialAppointmentDate(today.plus(scheduleAppointmentIn), scheduleAppointmentIn)
   }
 
-  private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, ScheduleAppointmentEvent> {
+  private fun loadAppointmentFacility(): ObservableTransformer<LoadAppointmentFacility, ScheduleAppointmentEvent> {
     return ObservableTransformer { effects ->
       effects.map { CurrentFacilityLoaded(currentFacility.get()) }
     }

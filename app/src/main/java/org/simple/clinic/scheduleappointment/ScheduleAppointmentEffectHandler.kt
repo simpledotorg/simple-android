@@ -84,7 +84,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
 
   private fun loadAppointmentFacility(): ObservableTransformer<LoadAppointmentFacility, ScheduleAppointmentEvent> {
     return ObservableTransformer { effects ->
-      effects.map { CurrentFacilityLoaded(currentFacility.get()) }
+      effects.map { AppointmentFacilityLoaded(currentFacility.get()) }
     }
   }
 

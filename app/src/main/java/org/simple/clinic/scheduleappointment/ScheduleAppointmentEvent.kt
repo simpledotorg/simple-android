@@ -25,7 +25,7 @@ object ManuallySelectAppointmentDateClicked : ScheduleAppointmentEvent() {
   override val analyticsName = "Schedule Appointment:Manually Select Appointment Date"
 }
 
-data class AppointmentFacilityLoaded(val facility: Facility) : ScheduleAppointmentEvent()
+data class AppointmentFacilitiesLoaded(val assignedFacility: Facility?, val currentFacility: Facility) : ScheduleAppointmentEvent()
 
 data class PatientFacilityChanged(val facility: Facility) : ScheduleAppointmentEvent() {
   override val analyticsName = "Schedule Appointment: Patient facility changed"

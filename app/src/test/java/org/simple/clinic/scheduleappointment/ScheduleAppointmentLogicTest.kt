@@ -1,6 +1,7 @@
 package org.simple.clinic.scheduleappointment
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -61,6 +62,7 @@ class ScheduleAppointmentLogicTest {
   private val appointmentUuid = UUID.fromString("66168713-32b5-40e8-aa06-eb9821c3c141")
   private val facility = TestData.facility(protocolUuid = protocolUuid)
   private val protocol = TestData.protocol(protocolUuid, followUpDays = 27)
+  private val patient = TestData.patient(uuid = patientUuid)
 
   private val appointmentConfig: AppointmentConfig = AppointmentConfig(
       appointmentDuePeriodForDefaulters = Period.ofDays(30),
@@ -691,6 +693,7 @@ class ScheduleAppointmentLogicTest {
 
     whenever(protocolRepository.protocol(protocol.uuid)).thenReturn(Observable.just(protocol))
     whenever(protocolRepository.protocolImmediate(protocol.uuid)).thenReturn(protocol)
+    whenever(patientRepository.patientImmediate(patientUuid)) doReturn patient
 
     testFixture.start()
   }
@@ -703,6 +706,7 @@ class ScheduleAppointmentLogicTest {
 
     whenever(protocolRepository.protocol(protocolUuid)).thenReturn(Observable.never())
     whenever(protocolRepository.protocolImmediate(protocolUuid)).thenReturn(null)
+    whenever(patientRepository.patientImmediate(patientUuid)) doReturn patient
 
     testFixture.start()
   }
@@ -715,6 +719,7 @@ class ScheduleAppointmentLogicTest {
         protocolRepository = protocolRepository,
         appointmentRepository = repository,
         patientRepository = patientRepository,
+        facilityRepository = facilityRepository,
         appointmentConfig = config,
         userClock = clock,
         schedulers = TrampolineSchedulersProvider(),

@@ -1,15 +1,18 @@
 package org.simple.clinic.registration.register
 
+import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
@@ -43,37 +46,50 @@ class RegistrationLoadingScreenControllerTest {
   )
   private val facility = TestData.facility(UUID.fromString("37e253a9-8a8a-4c60-8aac-34338dc47e8b"))
 
-  private val controller = RegistrationLoadingScreenController(userSession, facilityRepository, registerUser)
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
-  fun `when retry button is clicked, then register api should be called`() {
+  fun `when retry button is clicked, then user registration should be attempted again`() {
+    // given
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
-    whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(Success)
+    whenever(registerUser.registerUserAtFacility(user, facility)).doReturn(
+        Single.just<RegistrationResult>(NetworkError),
+        Single.just<RegistrationResult>(Success)
+    )
 
+    // when
+    setupController()
+
+    // then
+    verify(screen).showNetworkError()
+    verifyNoMoreInteractions(screen)
+    verify(userSession, never()).clearOngoingRegistrationEntry()
+
+    // when
+    clearInvocations(screen)
     uiEvents.onNext(RegisterErrorRetryClicked)
 
-    verify(registerUser).registerUserAtFacility(user, facility)
+    // then
     verify(userSession).clearOngoingRegistrationEntry()
     verify(screen).openHomeScreen()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
-  fun `when screen is created, then the user registration api should be called`() {
+  fun `when screen is created, then the user registration should be attempted`() {
     // given
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
     whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.never()
 
     // when
-    uiEvents.onNext(ScreenCreated())
+    setupController()
 
     // then
     verify(registerUser).registerUserAtFacility(user, facility)
@@ -81,14 +97,14 @@ class RegistrationLoadingScreenControllerTest {
   }
 
   @Test
-  fun `when the register user call succeeds, then clear registration entry and go to home screen`() {
+  fun `when the user registration succeeds, then clear registration entry and go to home screen`() {
     // given
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
     whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(Success)
 
     // when
-    uiEvents.onNext(ScreenCreated())
+    setupController()
 
     // then
     verify(userSession).clearOngoingRegistrationEntry()
@@ -97,14 +113,14 @@ class RegistrationLoadingScreenControllerTest {
   }
 
   @Test
-  fun `when the register call fails with a network error, show the network error message`() {
+  fun `when the user registration fails with a network error, show the network error message`() {
     // given
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
     whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(NetworkError)
 
     // when
-    uiEvents.onNext(ScreenCreated())
+    setupController()
 
     // then
     verify(screen).showNetworkError()
@@ -112,17 +128,27 @@ class RegistrationLoadingScreenControllerTest {
   }
 
   @Test
-  fun `when the register call fails with any other error, show the generic error message`() {
+  fun `when the user registration fails with any other error, show the generic error message`() {
     // given
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
     whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(UnexpectedError)
 
     // when
-    uiEvents.onNext(ScreenCreated())
+    setupController()
 
     // then
     verify(screen).showUnexpectedError()
     verifyNoMoreInteractions(screen)
+  }
+
+  private fun setupController() {
+    val controller = RegistrationLoadingScreenController(userSession, facilityRepository, registerUser)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

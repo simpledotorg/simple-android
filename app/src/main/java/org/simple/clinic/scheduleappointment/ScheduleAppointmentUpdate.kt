@@ -27,13 +27,21 @@ class ScheduleAppointmentUpdate(
       is AppointmentDateDecremented -> selectEarlierAppointmentDate(model)
       is AppointmentCalendarDateSelected -> selectExactAppointmentDate(event, model)
       ManuallySelectAppointmentDateClicked -> dispatch(ShowDatePicker(model.selectedAppointmentDate!!.scheduledFor))
-      is CurrentFacilityLoaded -> next(model.appointmentFacilitySelected(event.facility))
+      is AppointmentFacilitiesLoaded -> appointmentFacilityLoaded(model, event)
       is PatientFacilityChanged -> next(model.appointmentFacilitySelected(event.facility))
       is AppointmentDone -> scheduleManualAppointment(model)
       is AppointmentScheduled -> dispatch(CloseSheet)
       SchedulingSkipped -> dispatch(LoadPatientDefaulterStatus(model.patientUuid))
       is PatientDefaulterStatusLoaded -> scheduleAutomaticAppointment(event, model)
     }
+  }
+
+  private fun appointmentFacilityLoaded(
+      model: ScheduleAppointmentModel,
+      event: AppointmentFacilitiesLoaded
+  ): Next<ScheduleAppointmentModel, ScheduleAppointmentEffect> {
+    val appointmentFacility = event.assignedFacility ?: event.currentFacility
+    return next(model.appointmentFacilitySelected(appointmentFacility))
   }
 
   private fun selectLaterAppointmentDate(model: ScheduleAppointmentModel): Next<ScheduleAppointmentModel, ScheduleAppointmentEffect> {

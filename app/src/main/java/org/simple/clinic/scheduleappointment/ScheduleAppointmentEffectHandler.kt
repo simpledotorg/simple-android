@@ -6,10 +6,12 @@ import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolRepository
@@ -19,15 +21,18 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.plus
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.uuid.UuidGenerator
 import java.time.LocalDate
+import java.util.function.Function
 
 class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val protocolRepository: ProtocolRepository,
     private val appointmentRepository: AppointmentRepository,
     private val patientRepository: PatientRepository,
+    private val facilityRepository: FacilityRepository,
     private val appointmentConfig: AppointmentConfig,
     private val userClock: UserClock,
     private val schedulers: SchedulersProvider,
@@ -45,7 +50,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<ScheduleAppointmentEffect, ScheduleAppointmentEvent>()
         .addTransformer(LoadDefaultAppointmentDate::class.java, loadDefaultAppointmentDate())
         .addConsumer(ShowDatePicker::class.java, { uiActions.showManualDateSelector(it.selectedDate) }, schedulers.ui())
-        .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
+        .addTransformer(LoadAppointmentFacilities::class.java, loadAppointmentFacility())
         .addTransformer(ScheduleAppointmentForPatient::class.java, scheduleAppointmentForPatient())
         .addAction(CloseSheet::class.java, uiActions::closeSheet, schedulers.ui())
         .addTransformer(LoadPatientDefaulterStatus::class.java, loadPatientDefaulterStatus())
@@ -82,10 +87,22 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     return PotentialAppointmentDate(today.plus(scheduleAppointmentIn), scheduleAppointmentIn)
   }
 
-  private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, ScheduleAppointmentEvent> {
+  private fun loadAppointmentFacility(): ObservableTransformer<LoadAppointmentFacilities, ScheduleAppointmentEvent> {
     return ObservableTransformer { effects ->
-      effects.map { CurrentFacilityLoaded(currentFacility.get()) }
+      effects
+          .observeOn(schedulers.io())
+          .map { patientRepository.patientImmediate(it.patientUuid) }
+          .map {
+            val assignedFacility = getAssignedFacility(it).toNullable()
+            AppointmentFacilitiesLoaded(assignedFacility, currentFacility.get())
+          }
     }
+  }
+
+  private fun getAssignedFacility(patient: Patient): Optional<Facility> {
+    return Optional
+        .ofNullable(patient.assignedFacilityId)
+        .flatMap(Function { facilityRepository.facility(it) })
   }
 
   private fun scheduleAppointmentForPatient(): ObservableTransformer<ScheduleAppointmentForPatient, ScheduleAppointmentEvent> {

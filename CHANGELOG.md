@@ -12,6 +12,7 @@
 - Migrated `RecentPatientsView` to Mobius
 - [In Progress: 16th Jul 2020] Migrate `LoginPinScreen` to Mobius
 - Change selection of facility throughout the codebase to use `ItemAdapter`
+- [In Progress: 20th Jul 2020] Migrate `RecentPatientsScreen` to Mobius
 
 ### Changes
 - Updated translations: `bn_IN`, `am_ET`, `te_IN`, `pa_IN`, `hi_IN`, `bn_BD`

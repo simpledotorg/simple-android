@@ -14,7 +14,7 @@ class ScheduleAppointmentInit : Init<ScheduleAppointmentModel, ScheduleAppointme
     }
 
     if (!model.hasLoadedAppointmentFacility) {
-      effects.add(LoadCurrentFacility)
+      effects.add(LoadAppointmentFacilities(model.patientUuid))
     }
 
     return first(model, effects)

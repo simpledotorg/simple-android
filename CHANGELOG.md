@@ -2,7 +2,8 @@
 
 ## Next Release
 ### Features
-- [In Progress: 20th Jul 2020] Show assigned facility in patient summary screen
+- Show assigned facility in the patient summary screen
+- [In Progress] Use patient's assigned facility to schedule an appointment
 
 ### Internal
 - Use `app:srcCompat` for `ImageView`

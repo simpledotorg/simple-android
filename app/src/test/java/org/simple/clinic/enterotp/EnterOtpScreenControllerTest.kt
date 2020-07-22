@@ -92,9 +92,6 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the screen is created, the logged in users phone number must be shown`() {
-    whenever(userSession.loggedInUserImmediate()).doReturn(user)
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Optional.of(user)))
-
     setupController()
 
     verify(screen).showUserPhoneNumber(phoneNumber)
@@ -355,8 +352,6 @@ class EnterOtpScreenControllerTest {
   fun `when resend sms is clicked, the request otp flow should be triggered`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.Success(userPayload))
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -370,8 +365,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call is made, the progress must be shown`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.Success(userPayload))
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -385,8 +378,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call is made, any error must be hidden`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.Success(userPayload))
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -400,8 +391,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call is successful, the progress must be hidden`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.Success(userPayload))
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -415,8 +404,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call fails with a network error, the progress must be hidden`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.NetworkError)
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -430,8 +417,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call fails with a server error, the progress must be hidden`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.ServerError(500))
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -445,8 +430,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call fails with an unexpected error, the progress must be hidden`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.OtherError(RuntimeException()))
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -460,8 +443,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call succeeds, the sms sent message must be shown`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.Success(userPayload))
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -475,8 +456,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call fails with a network error, the sms sent message must not be shown`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.NetworkError)
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -490,8 +469,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call fails with a server error, the sms sent message must not be shown`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.ServerError(400))
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -505,8 +482,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call fails with an unexpected error, the sms sent message must not be shown`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.OtherError(RuntimeException()))
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -520,8 +495,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call completes successfully, the error must not be shown`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.Success(userPayload))
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -537,8 +510,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call fails with a network error, the error must be shown`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.NetworkError)
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -552,8 +523,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call fails with a server error, the error must be shown`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.ServerError(400))
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -567,8 +536,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call fails with an unexpected error, the error must be shown`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.OtherError(RuntimeException()))
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -582,8 +549,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call fails with a network error, the PIN must be cleared`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.NetworkError)
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -597,8 +562,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call fails with a server error, the PIN must be cleared`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.ServerError(400))
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
@@ -612,8 +575,6 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call fails with an unexpected error, the PIN must be cleared`() {
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.OtherError(RuntimeException()))
-    whenever(userSession.loggedInUserImmediate())
-        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 

@@ -380,8 +380,6 @@
   <string name="recent_patients_itemview_new_registration">নতুন রেজিস্ট্রেশন</string>
 
   <!-- Add ID to Patient: Search Results-->
-  <string name="addidtopatientsearchresults_add">%1$s\u0020 যোগ করুন</string>
-  <string name="addidtopatientsearchresults_to_patient">\u0020থেকে\u2026</string>
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">অ্যাপটি আপডেট করুন</string>

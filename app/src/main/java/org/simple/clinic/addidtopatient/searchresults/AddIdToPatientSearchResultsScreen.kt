@@ -3,15 +3,14 @@ package org.simple.clinic.addidtopatient.searchresults
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.searchresultsview.PatientSearchView
@@ -20,8 +19,6 @@ import org.simple.clinic.searchresultsview.SearchPatientWithCriteria
 import org.simple.clinic.searchresultsview.SearchResultClicked
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
-import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
-import org.simple.clinic.util.Truss
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -43,7 +40,6 @@ class AddIdToPatientSearchResultsScreen(context: Context, attrs: AttributeSet) :
   lateinit var utcClock: UtcClock
 
   private val toolbar by bindView<Toolbar>(R.id.addidtopatientsearchresults_toolbar)
-  private val titleTextView by bindView<TextView>(R.id.addidtopatientsearchresults_title)
   private val searchResultsView by bindView<PatientSearchView>(R.id.addidtopatientsearchresults_searchresultsview)
   private val screenKey by unsafeLazy { screenRouter.key<AddIdToPatientSearchResultsScreenKey>(this) }
 
@@ -86,22 +82,6 @@ class AddIdToPatientSearchResultsScreen(context: Context, attrs: AttributeSet) :
     toolbar.setNavigationOnClickListener {
       screenRouter.pop()
     }
-
-    val identifierType = screenKey.identifier.displayType(resources)
-    val identifierValue = screenKey.identifier.displayValue()
-
-    val identifierTextAppearanceSpan = TextAppearanceWithLetterSpacingSpan(
-        context,
-        R.style.Clinic_V2_TextAppearance_Body0Left_NumericBold_White100
-    )
-
-    titleTextView.text = Truss()
-        .append(resources.getString(R.string.addidtopatientsearchresults_add, identifierType))
-        .pushSpan(identifierTextAppearanceSpan)
-        .append(identifierValue)
-        .popSpan()
-        .append(resources.getString(R.string.addidtopatientsearchresults_to_patient))
-        .build()
   }
 
   private fun screenCreates(): Observable<UiEvent> {

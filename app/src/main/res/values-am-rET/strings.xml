@@ -382,8 +382,6 @@
   <string name="recent_patients_itemview_new_registration">አዲስ ምዝገባ</string>
 
   <!-- Add ID to Patient: Search Results-->
-  <string name="addidtopatientsearchresults_add">ያክሉ %1$s\u0020</string>
-  <string name="addidtopatientsearchresults_to_patient">\u0020ወደ \u2026</string>
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">መተግበሪያን አዘምን ወይም አድስ</string>

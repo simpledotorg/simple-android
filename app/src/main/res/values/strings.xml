@@ -441,8 +441,7 @@
   <string name="recent_patients_itemview_new_registration">New registration</string>
 
   <!-- Add ID to Patient: Search Results-->
-  <string name="addidtopatientsearchresults_add">Add %1$s\u0020</string>
-  <string name="addidtopatientsearchresults_to_patient">\u0020to\u2026</string>
+  <string name="addidtopatientsearchresults_toolbar_title" translatable="false">@string/addidtopatientsearch_toolbar_title</string>
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">Update app</string>

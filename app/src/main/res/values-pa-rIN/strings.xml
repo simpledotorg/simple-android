@@ -382,8 +382,6 @@
   <string name="recent_patients_itemview_new_registration">ਨਵਾਂ ਰਜਿਸਟ੍ਰੇਸ਼ਨ</string>
 
   <!-- Add ID to Patient: Search Results-->
-  <string name="addidtopatientsearchresults_add">%1$s\u0020 ਜੋੜੋ</string>
-  <string name="addidtopatientsearchresults_to_patient">\u0020ਤੋਂ\u2026</string>
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਕਰੋ</string>

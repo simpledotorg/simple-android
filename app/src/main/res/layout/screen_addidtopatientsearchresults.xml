@@ -23,7 +23,7 @@
       android:ellipsize="end"
       android:maxLines="2"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.White100"
-      tools:text="Add BP Passport 512 8097 to patient" />
+      android:text="@string/addidtopatientsearchresults_toolbar_title" />
 
   </androidx.appcompat.widget.Toolbar>
 

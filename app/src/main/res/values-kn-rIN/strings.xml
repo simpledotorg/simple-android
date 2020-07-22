@@ -382,8 +382,6 @@
   <string name="recent_patients_itemview_new_registration">ಹೊಸ ನೋಂದಣಿ</string>
 
   <!-- Add ID to Patient: Search Results-->
-  <string name="addidtopatientsearchresults_add">%1$s\u0020 ಸೇರಿಸಿ</string>
-  <string name="addidtopatientsearchresults_to_patient">\u0020ಇಂದ\u2026</string>
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ಆ್ಯಪ್ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>

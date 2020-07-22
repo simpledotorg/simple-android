@@ -11,6 +11,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
@@ -27,14 +28,16 @@ import org.simple.clinic.user.registeruser.RegistrationResult.Success
 import org.simple.clinic.user.registeruser.RegistrationResult.UnexpectedError
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class RegistrationLoadingScreenControllerTest {
 
   private val userSession = mock<UserSession>()
-  private val screen = mock<RegistrationLoadingScreen>()
+  private val ui = mock<RegistrationLoadingUi>()
   private val registerUser = mock<RegisterUser>()
   private val facilityRepository = mock<FacilityRepository>()
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -47,10 +50,12 @@ class RegistrationLoadingScreenControllerTest {
   private val facility = TestData.facility(UUID.fromString("37e253a9-8a8a-4c60-8aac-34338dc47e8b"))
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<RegistrationLoadingModel, RegistrationLoadingEvent, RegistrationLoadingEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -67,18 +72,18 @@ class RegistrationLoadingScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).showNetworkError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showNetworkError()
+    verifyNoMoreInteractions(ui)
     verify(userSession, never()).clearOngoingRegistrationEntry()
 
     // when
-    clearInvocations(screen)
+    clearInvocations(ui)
     uiEvents.onNext(RegisterErrorRetryClicked)
 
     // then
     verify(userSession).clearOngoingRegistrationEntry()
-    verify(screen).openHomeScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).openHomeScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -93,7 +98,7 @@ class RegistrationLoadingScreenControllerTest {
 
     // then
     verify(registerUser).registerUserAtFacility(user, facility)
-    verifyZeroInteractions(screen)
+    verifyZeroInteractions(ui)
   }
 
   @Test
@@ -108,8 +113,8 @@ class RegistrationLoadingScreenControllerTest {
 
     // then
     verify(userSession).clearOngoingRegistrationEntry()
-    verify(screen).openHomeScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).openHomeScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -123,8 +128,8 @@ class RegistrationLoadingScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).showNetworkError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showNetworkError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -138,8 +143,8 @@ class RegistrationLoadingScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).showUnexpectedError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUnexpectedError()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -147,7 +152,23 @@ class RegistrationLoadingScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
+
+    val effectHandler = RegistrationLoadingEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+    val uiRenderer = RegistrationLoadingUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = RegistrationLoadingModel.create(),
+        update = RegistrationLoadingUpdate(),
+        effectHandler = effectHandler.build(),
+        init = RegistrationLoadingInit(),
+        modelUpdateListener = uiRenderer::render
+    )
+    testFixture.start()
 
     uiEvents.onNext(ScreenCreated())
   }

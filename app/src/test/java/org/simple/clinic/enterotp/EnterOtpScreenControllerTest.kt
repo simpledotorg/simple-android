@@ -30,7 +30,6 @@ import org.simple.clinic.user.OngoingLoginEntryRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -99,7 +98,7 @@ class EnterOtpScreenControllerTest {
   @Test
   fun `when the screen is created, the logged in users phone number must be shown`() {
     whenever(userSession.loggedInUserImmediate()).doReturn(user)
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
+    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Optional.of(user)))
 
     uiEvents.onNext(ScreenCreated())
 
@@ -317,8 +316,8 @@ class EnterOtpScreenControllerTest {
     whenever(userSession.loggedInUserImmediate()) doReturn user
     whenever(userSession.loggedInUser()).doReturn(
         Observable.just<Optional<User>>(
-            Just(user),
-            Just(user.copy(loggedInStatus = curLoggedInStatus)))
+            Optional.of(user),
+            Optional.of(user.copy(loggedInStatus = curLoggedInStatus)))
     )
     uiEvents.onNext(ScreenCreated())
 

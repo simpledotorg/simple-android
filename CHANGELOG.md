@@ -6,12 +6,6 @@
 - [In Progress: 13th Jul 2020] Migrate `ReportsScreen` to Mobius
 - Use `app:srcCompat` for `ImageView`
 
-### Fixes
-- Fixed occasional crash when starting a teleconsultation session ([LINK](https://app.clubhouse.io/simpledotorg/story/414/starting-a-teleconsultation-session-crashes-in-some-scenarios))
-
-### Fixes
-- Fix crash when removing phone number for a patient that already has one ([LINK](https://app.clubhouse.io/simpledotorg/story/366/app-crashing-when-phone-number-is-empty-while-editing-patient))
-
 ## On Demo
 ### Internal
 - Migrated `RegistrationPinScreen` to Mobius
@@ -27,6 +21,11 @@
 - Add support for Medical Record Number in Ethiopia
 - Add Amharic translation
 - Updated translations: `mr_IN`, `om_ET`, `hi_IN`, `pa_IN`, `bn_BD`, `te_IN`, `ti_ET`
+- Exclude deleted facilities from facility selection sheets
+
+### Fixes
+- Fixed occasional crash when starting a teleconsultation session ([LINK](https://app.clubhouse.io/simpledotorg/story/414/starting-a-teleconsultation-session-crashes-in-some-scenarios))
+- Fix crash when removing phone number for a patient that already has one ([LINK](https://app.clubhouse.io/simpledotorg/story/366/app-crashing-when-phone-number-is-empty-while-editing-patient))
 
 ## 2020-07-07-7330
 ### Changes

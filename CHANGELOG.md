@@ -3,7 +3,7 @@
 ## Next Release
 ### Features
 - Show assigned facility in the patient summary screen
-- [In Progress] Use patient's assigned facility to schedule an appointment
+- Use patient's assigned facility to schedule an appointment
 
 ### Internal
 - Use `app:srcCompat` for `ImageView`

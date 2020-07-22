@@ -1,22 +1,23 @@
 package org.simple.clinic.recentpatient
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.LinearLayout
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotterknife.bindView
-import org.simple.clinic.R
+import kotlinx.android.synthetic.main.recent_patients_screen.view.*
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -25,7 +26,10 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class RecentPatientsScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
+class RecentPatientsScreen(
+    context: Context,
+    attrs: AttributeSet
+) : LinearLayout(context, attrs), AllRecentPatientsUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -36,8 +40,31 @@ class RecentPatientsScreen(context: Context, attrs: AttributeSet) : LinearLayout
   @Inject
   lateinit var utcClock: UtcClock
 
-  private val toolbar by bindView<Toolbar>(R.id.recentpatients_toolbar)
-  private val recyclerView by bindView<RecyclerView>(R.id.recentpatients_recyclerview)
+  @Inject
+  lateinit var effectHandlerFactory: AllRecentPatientsEffectHandler.Factory
+
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenCreates(),
+            adapterEvents()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = AllRecentPatientsUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = AllRecentPatientsModel.create(),
+        update = AllRecentPatientsUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = AllRecentPatientsInit(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
 
   private val recentAdapter = ItemAdapter(RecentPatientItem.DiffCallback())
 
@@ -46,16 +73,35 @@ class RecentPatientsScreen(context: Context, attrs: AttributeSet) : LinearLayout
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
 
     setupScreen()
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(screenCreates(), adapterEvents()),
+        events = events,
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())
@@ -77,7 +123,7 @@ class RecentPatientsScreen(context: Context, attrs: AttributeSet) : LinearLayout
         .ofType()
   }
 
-  fun openPatientSummary(patientUuid: UUID) {
+  override fun openPatientSummary(patientUuid: UUID) {
     screenRouter.push(
         PatientSummaryScreenKey(
             patientUuid = patientUuid,
@@ -86,7 +132,11 @@ class RecentPatientsScreen(context: Context, attrs: AttributeSet) : LinearLayout
         ))
   }
 
-  fun updateRecentPatients(allItemTypes: List<RecentPatientItem>) {
+  override fun updateRecentPatients(allItemTypes: List<RecentPatientItem>) {
     recentAdapter.submitList(allItemTypes)
+  }
+
+  interface Injector {
+    fun inject(target: RecentPatientsScreen)
   }
 }

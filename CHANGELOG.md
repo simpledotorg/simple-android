@@ -12,7 +12,7 @@
 - Migrated `RegistrationFacilitySelectionScreen` to Mobius
 - Migrated `RecentPatientsView` to Mobius
 - Change selection of facility throughout the codebase to use `ItemAdapter`
-- [In Progress: 20th Jul 2020] Migrate `RecentPatientsScreen` to Mobius
+- [In Progress: 21st Jul 2020] Migrate `RecentPatientsScreen` to Mobius
 - [In Progress: 16th Jul 2020] Migrate `LoginPinScreen` to Mobius
 - [In Progress: 21st Jul 2020] Migrate `RegistrationLoadingScreen` to Mobius
 

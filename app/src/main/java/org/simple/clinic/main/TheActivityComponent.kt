@@ -102,7 +102,8 @@ interface TheActivityComponent :
     AddPhoneNumberDialog.Injector,
     RecentPatientsView.Injector,
     AssignedFacilityView.Injector,
-    RegistrationLoadingScreen.Injector {
+    RegistrationLoadingScreen.Injector,
+    RecentPatientsScreen.Injector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: AppLockScreen)
@@ -127,7 +128,6 @@ interface TheActivityComponent :
   fun inject(target: PatientSearchView)
   fun inject(target: AddIdToPatientSearchResultsScreen)
   fun inject(target: LinkIdWithPatientView)
-  fun inject(target: RecentPatientsScreen)
   fun inject(target: PatientSearchResultItemView)
   fun inject(target: AllPatientsInFacilityView)
   fun inject(target: LoggedOutOfDeviceDialog)

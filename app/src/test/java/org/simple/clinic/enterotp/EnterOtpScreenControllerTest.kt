@@ -9,8 +9,9 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -77,20 +78,11 @@ class EnterOtpScreenControllerTest {
       updatedAt = user.updatedAt
   )
 
-  private val controller = EnterOtpScreenController(
-      userSession = userSession,
-      activateUser = activateUser,
-      loginUserWithOtp = loginUserWithOtp,
-      ongoingLoginEntryRepository = ongoingLoginEntryRepository,
-      schedulersProvider = TestSchedulersProvider.trampoline(),
-      dataSync = dataSync
-  )
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -98,6 +90,7 @@ class EnterOtpScreenControllerTest {
     whenever(userSession.loggedInUserImmediate()).doReturn(user)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Optional.of(user)))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).showUserPhoneNumber(phoneNumber)
@@ -105,6 +98,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when back is pressed, the screen must be closed`() {
+    setupController()
     uiEvents.onNext(EnterOtpBackClicked())
 
     verify(screen).goBack()
@@ -115,6 +109,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen, never()).showIncorrectOtpError()
@@ -125,6 +120,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted("11111"))
 
     verifyZeroInteractions(loginUserWithOtp)
@@ -136,6 +132,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(loginUserWithOtp).loginWithOtp(phoneNumber, pin, otp)
@@ -146,6 +143,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted("11111"))
 
     verifyZeroInteractions(loginUserWithOtp)
@@ -157,6 +155,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(loginUserWithOtp).loginWithOtp(phoneNumber, pin, otp)
@@ -167,6 +166,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).goBack()
@@ -177,6 +177,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(dataSync).fireAndForgetSync()
@@ -187,6 +188,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(UnexpectedError))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).showUnexpectedError()
@@ -198,6 +200,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(NetworkError))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).showNetworkError()
@@ -210,6 +213,7 @@ class EnterOtpScreenControllerTest {
     val errorMessage = "Error"
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(ServerError(errorMessage)))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).showServerError(errorMessage)
@@ -221,6 +225,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(UnexpectedError))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).clearPin()
@@ -231,6 +236,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(NetworkError))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).clearPin()
@@ -241,6 +247,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(ServerError("Error")))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).clearPin()
@@ -251,6 +258,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    setupController()
     uiEvents.onNext(EnterOtpTextChanges("1111"))
     uiEvents.onNext(EnterOtpTextChanges("11111"))
     uiEvents.onNext(EnterOtpTextChanges("111111"))
@@ -264,6 +272,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.never<LoginResult>())
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).showProgress()
@@ -275,7 +284,9 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
+
     verify(screen).hideProgress()
   }
 
@@ -284,7 +295,9 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(NetworkError))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
+
     verify(screen).hideProgress()
   }
 
@@ -293,7 +306,9 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(ServerError("Test")))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
+
     verify(screen).hideProgress()
   }
 
@@ -302,7 +317,9 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(UnexpectedError))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
+
     verify(screen).hideProgress()
   }
 
@@ -315,6 +332,8 @@ class EnterOtpScreenControllerTest {
             Optional.of(user),
             Optional.of(user.copy(loggedInStatus = LOGGED_IN)))
     )
+
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).goBack()
@@ -329,6 +348,8 @@ class EnterOtpScreenControllerTest {
             Optional.of(user),
             Optional.of(user.copy(loggedInStatus = OTP_REQUESTED)))
     )
+
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(screen, never()).goBack()
@@ -343,6 +364,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(activateUser).activate(loggedInUserUuid, pin)
@@ -357,6 +379,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).showProgress()
@@ -371,6 +394,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).hideError()
@@ -385,6 +409,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).hideProgress()
@@ -399,6 +424,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).hideProgress()
@@ -413,6 +439,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).hideProgress()
@@ -427,6 +454,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).hideProgress()
@@ -441,6 +469,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).showSmsSentMessage()
@@ -455,6 +484,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen, never()).showSmsSentMessage()
@@ -469,6 +499,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen, never()).showSmsSentMessage()
@@ -483,6 +514,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen, never()).showSmsSentMessage()
@@ -497,6 +529,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen, never()).showNetworkError()
@@ -513,6 +546,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).showNetworkError()
@@ -527,6 +561,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).showUnexpectedError()
@@ -541,6 +576,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).showUnexpectedError()
@@ -555,6 +591,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).clearPin()
@@ -569,6 +606,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).clearPin()
@@ -583,6 +621,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).clearPin()
@@ -593,6 +632,7 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(ongoingLoginEntryRepository).clearLoginEntry()
@@ -603,8 +643,24 @@ class EnterOtpScreenControllerTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(NetworkError))
 
+    setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(userSession, never()).clearOngoingLoginEntry()
+  }
+
+  private fun setupController() {
+    val controller = EnterOtpScreenController(
+        userSession = userSession,
+        activateUser = activateUser,
+        loginUserWithOtp = loginUserWithOtp,
+        ongoingLoginEntryRepository = ongoingLoginEntryRepository,
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        dataSync = dataSync
+    )
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

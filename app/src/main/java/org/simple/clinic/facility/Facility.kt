@@ -79,12 +79,12 @@ data class Facility(
     @Query("SELECT * FROM facility WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): Facility?
 
-    @Query("SELECT * FROM facility ORDER BY name ASC")
+    @Query("SELECT * FROM facility WHERE deletedAt IS NULL ORDER BY name ASC")
     fun all(): Flowable<List<Facility>>
 
     @Query("""
       SELECT * FROM facility
-      WHERE name LIKE '%' || :nameFilter || '%'
+      WHERE name LIKE '%' || :nameFilter || '%' AND deletedAt IS NULL
       ORDER BY name ASC
     """)
     fun filteredByName(nameFilter: String): Flowable<List<Facility>>
@@ -92,13 +92,14 @@ data class Facility(
     @Query("""
       SELECT * FROM facility
       WHERE name LIKE '%' || :nameFilter || '%' AND groupUuid = :groupUuid
+      AND deletedAt IS NULL
       ORDER BY name ASC
     """)
     fun filteredByNameAndGroup(nameFilter: String, groupUuid: UUID): Flowable<List<Facility>>
 
     @Query("""
       SELECT * FROM facility
-      WHERE groupUuid = :groupUuid
+      WHERE groupUuid = :groupUuid AND deletedAt IS NULL
       ORDER BY name ASC
     """)
     fun filteredByGroup(groupUuid: UUID): Flowable<List<Facility>>

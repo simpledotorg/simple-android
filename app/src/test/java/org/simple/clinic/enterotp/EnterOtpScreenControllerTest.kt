@@ -33,7 +33,7 @@ import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -85,7 +85,7 @@ class EnterOtpScreenControllerTest {
       activateUser = activateUser,
       loginUserWithOtp = loginUserWithOtp,
       ongoingLoginEntryRepository = ongoingLoginEntryRepository,
-      schedulersProvider = TrampolineSchedulersProvider(),
+      schedulersProvider = TestSchedulersProvider.trampoline(),
       dataSync = dataSync
   )
 

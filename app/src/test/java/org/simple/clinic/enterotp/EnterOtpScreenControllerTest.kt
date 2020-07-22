@@ -1,10 +1,12 @@
 package org.simple.clinic.enterotp
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
@@ -95,6 +97,7 @@ class EnterOtpScreenControllerTest {
     setupController()
 
     verify(screen).showUserPhoneNumber(phoneNumber)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -102,7 +105,9 @@ class EnterOtpScreenControllerTest {
     setupController()
     uiEvents.onNext(EnterOtpBackClicked())
 
+    verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).goBack()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -113,7 +118,12 @@ class EnterOtpScreenControllerTest {
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
     verify(screen, never()).showIncorrectOtpError()
+    verify(screen).hideProgress()
+    verify(screen).goBack()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -125,7 +135,10 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted("11111"))
 
     verifyZeroInteractions(loginUserWithOtp)
+    verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showIncorrectOtpError()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -137,6 +150,11 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(loginUserWithOtp).loginWithOtp(phoneNumber, pin, otp)
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).goBack()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -149,6 +167,10 @@ class EnterOtpScreenControllerTest {
 
     verifyZeroInteractions(loginUserWithOtp)
     verify(loginUserWithOtp, never()).loginWithOtp(phoneNumber, pin, otp)
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showIncorrectOtpError()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -160,6 +182,11 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(loginUserWithOtp).loginWithOtp(phoneNumber, pin, otp)
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).goBack()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -171,6 +198,10 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).goBack()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -182,6 +213,11 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(dataSync).fireAndForgetSync()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).goBack()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -193,6 +229,11 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).showUnexpectedError()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
     verify(dataSync, never()).fireAndForgetSync()
   }
 
@@ -205,6 +246,11 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).showNetworkError()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
     verify(dataSync, never()).fireAndForgetSync()
   }
 
@@ -218,6 +264,11 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).showServerError(errorMessage)
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
     verify(dataSync, never()).fireAndForgetSync()
   }
 
@@ -230,6 +281,11 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).clearPin()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).showUnexpectedError()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -241,6 +297,11 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).clearPin()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).showNetworkError()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -252,6 +313,11 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).clearPin()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).showServerError("Error")
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -260,12 +326,23 @@ class EnterOtpScreenControllerTest {
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
     setupController()
-    uiEvents.onNext(EnterOtpTextChanges("1111"))
-    uiEvents.onNext(EnterOtpTextChanges("11111"))
-    uiEvents.onNext(EnterOtpTextChanges("111111"))
-    uiEvents.onNext(EnterOtpTextChanges("11111"))
 
+    verify(screen).showUserPhoneNumber(phoneNumber)
+
+    uiEvents.onNext(EnterOtpTextChanges("1111"))
+    verifyNoMoreInteractions(screen, loginUserWithOtp)
+
+    uiEvents.onNext(EnterOtpTextChanges("11111"))
+    verifyNoMoreInteractions(screen, loginUserWithOtp)
+
+    clearInvocations(screen)
+
+    uiEvents.onNext(EnterOtpTextChanges("111111"))
     verify(loginUserWithOtp).loginWithOtp(phoneNumber, pin, "111111")
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).goBack()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -278,6 +355,8 @@ class EnterOtpScreenControllerTest {
 
     verify(screen).showProgress()
     verify(screen, never()).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -289,6 +368,10 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).goBack()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -300,6 +383,11 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).showNetworkError()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -311,6 +399,11 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).showServerError("Test")
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -322,6 +415,11 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).showUnexpectedError()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -334,6 +432,8 @@ class EnterOtpScreenControllerTest {
     setupController(userStream = userStream)
 
     verify(screen).goBack()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -346,6 +446,8 @@ class EnterOtpScreenControllerTest {
     setupController(userStream = userStream)
 
     verify(screen, never()).goBack()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -359,6 +461,13 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(activateUser).activate(loggedInUserUuid, pin)
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).showSmsSentMessage()
+    verify(screen).hideProgress()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -371,7 +480,13 @@ class EnterOtpScreenControllerTest {
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
     verify(screen).showProgress()
+    verify(screen).showSmsSentMessage()
+    verify(screen).hideProgress()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -384,7 +499,13 @@ class EnterOtpScreenControllerTest {
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).showSmsSentMessage()
+    verify(screen).hideProgress()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -397,7 +518,13 @@ class EnterOtpScreenControllerTest {
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).showSmsSentMessage()
     verify(screen).hideProgress()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -411,6 +538,13 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).showNetworkError()
+    verify(screen).hideProgress()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -424,6 +558,13 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).showUnexpectedError()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -437,6 +578,13 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).showUnexpectedError()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -450,6 +598,12 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).showSmsSentMessage()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -463,6 +617,14 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen, never()).showSmsSentMessage()
+    verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).showNetworkError()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -476,6 +638,14 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen, never()).showSmsSentMessage()
+    verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).showUnexpectedError()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -489,6 +659,14 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen, never()).showSmsSentMessage()
+    verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).showUnexpectedError()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -504,6 +682,13 @@ class EnterOtpScreenControllerTest {
     verify(screen, never()).showNetworkError()
     verify(screen, never()).showServerError(any())
     verify(screen, never()).showUnexpectedError()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).clearPin()
+    verify(screen).showSmsSentMessage()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -517,6 +702,13 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).showNetworkError()
+    verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -530,6 +722,13 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).showUnexpectedError()
+    verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -543,6 +742,13 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).showUnexpectedError()
+    verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -556,6 +762,13 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).clearPin()
+    verify(screen).showNetworkError()
+    verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -569,6 +782,13 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).clearPin()
+    verify(screen).showUnexpectedError()
+    verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -582,6 +802,13 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     verify(screen).clearPin()
+    verify(screen).showUnexpectedError()
+    verify(screen).hideProgress()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).hideError()
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -593,6 +820,11 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(ongoingLoginEntryRepository).clearLoginEntry()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).goBack()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -603,7 +835,13 @@ class EnterOtpScreenControllerTest {
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
-    verify(userSession, never()).clearOngoingLoginEntry()
+    verify(ongoingLoginEntryRepository, never()).clearLoginEntry()
+    verify(screen).showUserPhoneNumber(phoneNumber)
+    verify(screen).showProgress()
+    verify(screen).hideProgress()
+    verify(screen).showNetworkError()
+    verify(screen).clearPin()
+    verifyNoMoreInteractions(screen)
   }
 
   private fun setupController(

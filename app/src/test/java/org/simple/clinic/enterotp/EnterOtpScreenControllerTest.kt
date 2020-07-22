@@ -55,7 +55,12 @@ class EnterOtpScreenControllerTest {
   private val phoneNumber = "1234567890"
   private val loggedInUserUuid = UUID.fromString("13e563ba-a148-4b5d-838d-e38d42dca72c")
   private val registrationFacilityUuid = UUID.fromString("f33bfc01-f595-42ce-8ad8-b70150ccbde2")
-  private val user = TestData.loggedInUser(uuid = loggedInUserUuid, phone = phoneNumber)
+  private val user = TestData.loggedInUser(
+      uuid = loggedInUserUuid,
+      phone = phoneNumber,
+      status = ApprovedForSyncing,
+      loggedInStatus = OTP_REQUESTED
+  )
   private val ongoingLoginEntry = OngoingLoginEntry(
       uuid = loggedInUserUuid,
       phoneNumber = phoneNumber,
@@ -91,7 +96,6 @@ class EnterOtpScreenControllerTest {
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Optional.of(user)))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     verify(screen).showUserPhoneNumber(phoneNumber)
   }
@@ -325,32 +329,24 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when a user is verified for login in the background, the screen must be closed`() {
-    val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = OTP_REQUESTED)
-    whenever(userSession.loggedInUserImmediate()) doReturn user
-    whenever(userSession.loggedInUser()).doReturn(
-        Observable.just<Optional<User>>(
-            Optional.of(user),
-            Optional.of(user.copy(loggedInStatus = LOGGED_IN)))
+    val userStream = Observable.just<Optional<User>>(
+        Optional.of(user),
+        Optional.of(user.copy(loggedInStatus = LOGGED_IN))
     )
 
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    setupController(userStream = userStream)
 
     verify(screen).goBack()
   }
 
   @Test
   fun `when a user is not verified for login in the background, the screen must not be closed`() {
-    val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = OTP_REQUESTED)
-    whenever(userSession.loggedInUserImmediate()) doReturn user
-    whenever(userSession.loggedInUser()).doReturn(
-        Observable.just<Optional<User>>(
-            Optional.of(user),
-            Optional.of(user.copy(loggedInStatus = OTP_REQUESTED)))
+    val userStream = Observable.just<Optional<User>>(
+        Optional.of(user),
+        Optional.of(user.copy(loggedInStatus = OTP_REQUESTED))
     )
 
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    setupController(userStream = userStream)
 
     verify(screen, never()).goBack()
   }
@@ -649,7 +645,13 @@ class EnterOtpScreenControllerTest {
     verify(userSession, never()).clearOngoingLoginEntry()
   }
 
-  private fun setupController() {
+  private fun setupController(
+      user: User = this.user,
+      userStream: Observable<Optional<User>> = Observable.just(Optional.of(user))
+  ) {
+    whenever(userSession.loggedInUserImmediate()) doReturn user
+    whenever(userSession.loggedInUser()) doReturn userStream
+
     val controller = EnterOtpScreenController(
         userSession = userSession,
         activateUser = activateUser,
@@ -662,5 +664,7 @@ class EnterOtpScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

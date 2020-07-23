@@ -37,7 +37,9 @@ data class OverdueAppointmentRow(
     val diagnosedWithDiabetes: Answer?,
     val diagnosedWithHypertension: Answer?,
     val showDiagnosisLabel: Boolean,
-    val patientAddress: OverduePatientAddress
+    val patientAddress: OverduePatientAddress,
+    val isAppointmentAtAssignedFacility: Boolean,
+    val appointmentFacilityName: String?
 ) : ItemAdapter.Item<UiEvent> {
 
   companion object {
@@ -70,7 +72,9 @@ data class OverdueAppointmentRow(
           diagnosedWithDiabetes = overdueAppointment.diagnosedWithDiabetes,
           diagnosedWithHypertension = overdueAppointment.diagnosedWithHypertension,
           showDiagnosisLabel = isDiabetesManagementEnabled,
-          patientAddress = overdueAppointment.patientAddress
+          patientAddress = overdueAppointment.patientAddress,
+          isAppointmentAtAssignedFacility = overdueAppointment.isAppointmentAtAssignedFacility,
+          appointmentFacilityName = overdueAppointment.appointmentFacilityName
       )
     }
 
@@ -128,6 +132,10 @@ data class OverdueAppointmentRow(
 
     holder.diagnosisLabelContainer.visibleOrGone(showDiagnosisLabel)
     holder.diagnosisTextView.text = diagnosisText(context)
+
+    val showTransferLabel  = isAppointmentAtAssignedFacility.not()
+    holder.patientTransferredContainer.visibleOrGone(showTransferLabel)
+    holder.patientTransferredTextView.text = appointmentFacilityName
   }
 
   private fun diagnosisText(context: Context): CharSequence {

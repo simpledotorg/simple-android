@@ -27,6 +27,9 @@ class OverdueAppointmentRowTest {
     val patientAddress1 = TestData.overduePatientAddress()
     val patientAddress2 = TestData.overduePatientAddress()
 
+    val facilityUuid = UUID.fromString("e3cd5735-2ef2-4777-a977-3a42e5a7b03b")
+    val patientAssignedFacilityId = facilityUuid
+
     val appointmentDelayedBy4Days = TestData
         .overdueAppointment(
             name = "Anish Acharya",
@@ -43,7 +46,9 @@ class OverdueAppointmentRowTest {
             patientLastSeen = Instant.parse("2020-01-01T00:00:00Z"),
             diagnosedWithDiabetes = Yes,
             diagnosedWithHypertension = No,
-            patientAddress = patientAddress1
+            patientAddress = patientAddress1,
+            patientAssignedFacilityId = patientAssignedFacilityId,
+            appointmentFacilityName = "PHC Obvious"
         )
     val appointmentDelayedByOneWeek = TestData
         .overdueAppointment(
@@ -56,12 +61,15 @@ class OverdueAppointmentRowTest {
             appointment = TestData.appointment(
                 uuid = UUID.fromString("4f13f6d3-05dc-4248-891b-b5ebd6f56987"),
                 patientUuid = UUID.fromString("0c35a015-d823-4cc5-be77-21ce026c5780"),
-                scheduledDate = LocalDate.parse("2018-12-29")
+                scheduledDate = LocalDate.parse("2018-12-29"),
+                facilityUuid = facilityUuid
             ),
             patientLastSeen = Instant.parse("2019-12-25T00:00:00Z"),
             diagnosedWithDiabetes = No,
             diagnosedWithHypertension = null,
-            patientAddress = patientAddress2
+            patientAddress = patientAddress2,
+            patientAssignedFacilityId = patientAssignedFacilityId,
+            appointmentFacilityName = "PHC Bagta"
         )
 
     val appointments = listOf(appointmentDelayedBy4Days, appointmentDelayedByOneWeek)
@@ -84,7 +92,9 @@ class OverdueAppointmentRowTest {
             diagnosedWithDiabetes = Yes,
             diagnosedWithHypertension = No,
             showDiagnosisLabel = true,
-            patientAddress = patientAddress1
+            patientAddress = patientAddress1,
+            isAppointmentAtAssignedFacility = false,
+            appointmentFacilityName = "PHC Obvious"
         ),
         OverdueAppointmentRow(
             appointmentUuid = UUID.fromString("4f13f6d3-05dc-4248-891b-b5ebd6f56987"),
@@ -99,7 +109,9 @@ class OverdueAppointmentRowTest {
             diagnosedWithDiabetes = No,
             diagnosedWithHypertension = null,
             showDiagnosisLabel = true,
-            patientAddress = patientAddress2
+            patientAddress = patientAddress2,
+            isAppointmentAtAssignedFacility = true,
+            appointmentFacilityName = "PHC Bagta"
         )
     )
     assertThat(overdueListItems)

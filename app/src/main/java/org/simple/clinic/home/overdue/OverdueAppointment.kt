@@ -18,7 +18,7 @@ import java.util.UUID
 
 @DatabaseView(
     """
-      SELECT P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt,
+      SELECT P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId patientAssignedFacilityUuid,
 
           A.uuid appt_uuid, A.patientUuid appt_patientUuid, A.facilityUuid appt_facilityUuid, A.scheduledDate appt_scheduledDate, A.status appt_status,
           A.cancelReason appt_cancelReason, A.remindOn appt_remindOn, A.agreedToVisit appt_agreedToVisit, A.appointmentType appt_appointmentType,
@@ -51,7 +51,9 @@ import java.util.UUID
           ) AS isAtHighRisk,
           
           PA.streetAddress patient_address_streetAddress, PA.colonyOrVillage patient_address_colonyOrVillage,
-          PA.district patient_address_district, PA.state patient_address_state
+          PA.district patient_address_district, PA.state patient_address_state,
+          
+          AF.name appointmentFacilityName
 
           FROM Patient P
 
@@ -67,6 +69,8 @@ import java.util.UUID
           LEFT JOIN (
             SELECT * FROM BloodSugarMeasurements WHERE deletedAt IS NULL GROUP BY patientUuid HAVING max(recordedAt)
           ) BloodSugar ON BloodSugar.patientUuid = P.uuid
+          
+          LEFT JOIN Facility AF ON AF.uuid == A.facilityUuid
           
           WHERE 
             P.deletedAt IS NULL
@@ -103,8 +107,15 @@ data class OverdueAppointment(
 
     val diagnosedWithDiabetes: Answer?,
 
-    val diagnosedWithHypertension: Answer?
+    val diagnosedWithHypertension: Answer?,
+
+    val patientAssignedFacilityUuid: UUID?,
+
+    val appointmentFacilityName: String?
 ) : Parcelable {
+
+  val isAppointmentAtAssignedFacility: Boolean
+    get() = patientAssignedFacilityUuid == appointment.facilityUuid
 
   @Dao
   interface RoomDao {
@@ -112,7 +123,7 @@ data class OverdueAppointment(
     @Query("""
       SELECT * FROM OverdueAppointment
       WHERE 
-        appt_facilityUuid = :facilityUuid 
+        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid 
         AND (appt_scheduledDate < :scheduledBefore AND appt_scheduledDate > :scheduledAfter)
         AND (appt_remindOn < :scheduledBefore OR appt_remindOn IS NULL)
         GROUP BY appt_patientUuid
@@ -127,7 +138,7 @@ data class OverdueAppointment(
     @Query("""
       SELECT COUNT(appt_uuid) FROM OverdueAppointment
       WHERE 
-        appt_facilityUuid = :facilityUuid 
+        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid 
         AND (appt_scheduledDate < :scheduledBefore AND appt_scheduledDate > :scheduledAfter)
         AND (appt_remindOn < :scheduledBefore OR appt_remindOn IS NULL)
         GROUP BY appt_patientUuid

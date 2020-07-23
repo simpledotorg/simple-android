@@ -90,6 +90,30 @@
       </LinearLayout>
 
       <LinearLayout
+        android:id="@+id/patientTransferredContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_56"
+        android:layout_marginBottom="@dimen/spacing_12"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+          style="@style/Clinic.V2.TextAppearance.Body2Bold.Grey1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/overduelist_transferred" />
+
+        <TextView
+          android:id="@+id/patientTransferredTextView"
+          style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/spacing_8"
+          tools:text="PHC Obvious" />
+      </LinearLayout>
+
+      <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_56">
@@ -125,8 +149,8 @@
       android:background="@drawable/overdue_call_button_background"
       android:foreground="?selectableItemBackground"
       android:padding="@dimen/spacing_16"
-      app:srcCompat="@drawable/ic_call_24dp"
       android:tint="@color/white"
+      app:srcCompat="@drawable/ic_call_24dp"
       tools:ignore="ContentDescription,UnusedAttribute" />
   </LinearLayout>
 

@@ -1,7 +1,6 @@
 package org.simple.clinic.enterotp
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -360,37 +359,6 @@ class EnterOtpScreenControllerTest {
     verify(screen).showProgress()
     verify(screen).hideProgress()
     verify(screen).showServerError("Error")
-    verifyNoMoreInteractions(screen)
-  }
-
-  @Test
-  fun `when the OTP changes and meets the otp length, the login call should be made`() {
-    // given
-    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
-    whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
-
-    // when
-    setupController()
-
-    // then
-    verify(screen).showUserPhoneNumber(phoneNumber)
-
-    // then
-    uiEvents.onNext(EnterOtpTextChanges("1111"))
-    verifyNoMoreInteractions(screen, loginUserWithOtp)
-
-    // then
-    uiEvents.onNext(EnterOtpTextChanges("11111"))
-    verifyNoMoreInteractions(screen, loginUserWithOtp)
-
-    clearInvocations(screen)
-
-    // then
-    uiEvents.onNext(EnterOtpTextChanges("111111"))
-    verify(loginUserWithOtp).loginWithOtp(phoneNumber, pin, "111111")
-    verify(screen).showProgress()
-    verify(screen).hideProgress()
-    verify(screen).goBack()
     verifyNoMoreInteractions(screen)
   }
 

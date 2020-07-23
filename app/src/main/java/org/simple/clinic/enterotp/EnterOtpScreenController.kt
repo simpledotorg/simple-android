@@ -81,11 +81,7 @@ class EnterOtpScreenController @Inject constructor(
         .filter { it.otp.length == LOGIN_OTP_LENGTH }
         .map { it.otp }
 
-    val otpFromTextChanges = events.ofType<EnterOtpTextChanges>()
-        .filter { it.otp.length == LOGIN_OTP_LENGTH }
-        .map { it.otp }
-
-    return Observable.merge(otpFromSubmitted, otpFromTextChanges)
+    return otpFromSubmitted
         .flatMap { otp ->
           val entry = ongoingLoginEntry()
 

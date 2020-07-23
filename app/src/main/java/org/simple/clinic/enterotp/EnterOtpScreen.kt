@@ -11,6 +11,7 @@ import com.jakewharton.rxbinding3.view.detaches
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_enterotp.view.*
+import org.simple.clinic.LOGIN_OTP_LENGTH
 import org.simple.clinic.R
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bindUiToController
@@ -18,6 +19,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -45,7 +47,6 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
         events = Observable.mergeArray(
             screenCreates(),
             otpSubmits(),
-            otpTextChanges(),
             backClicks(),
             resendSmsClicks()
         ),
@@ -60,15 +61,21 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
 
   private fun backClicks() = backButton.clicks().map { EnterOtpBackClicked() }
 
-  private fun otpSubmits() =
-      otpEntryEditText.editorActions() { it == EditorInfo.IME_ACTION_DONE }
-          .map { EnterOtpSubmitted(otpEntryEditText.text.toString()) }
+  private fun otpSubmits(): Observable<UiEvent> {
+    val otpFromImeClicks: Observable<UiEvent> = otpEntryEditText
+        .editorActions() { it == EditorInfo.IME_ACTION_DONE }
+        .map { EnterOtpSubmitted(otpEntryEditText.text.toString()) }
+
+    val otpFromTextChanges: Observable<UiEvent> = otpEntryEditText
+        .textChanges()
+        .filter { it.length == LOGIN_OTP_LENGTH }
+        .map { EnterOtpSubmitted(it.toString()) }
+
+    return otpFromImeClicks.mergeWith(otpFromTextChanges)
+  }
 
   private fun resendSmsClicks() =
       resendSmsButton.clicks().map { EnterOtpResendSmsClicked() }
-
-  private fun otpTextChanges() =
-      otpEntryEditText.textChanges().map { EnterOtpTextChanges(it.toString()) }
 
   fun showUserPhoneNumber(phoneNumber: String) {
     val phoneNumberWithCountryCode = resources.getString(

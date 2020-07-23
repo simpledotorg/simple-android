@@ -943,6 +943,7 @@ class EnterOtpScreenControllerTest {
 
     val effectHandler = EnterOtpEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
+        userSession = userSession,
         uiActions = ui
     )
     val uiRenderer = EnterOtpUiRenderer(ui)

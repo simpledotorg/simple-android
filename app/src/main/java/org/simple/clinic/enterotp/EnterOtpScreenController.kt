@@ -37,7 +37,6 @@ class EnterOtpScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        showPhoneNumberOnStart(replayedEvents),
         showOtpValidationErrors(replayedEvents),
         makeLoginCall(replayedEvents),
         closeScreenOnUserLoginInBackground(replayedEvents),
@@ -54,18 +53,6 @@ class EnterOtpScreenController @Inject constructor(
             ui.clearPin()
           }
         }
-  }
-
-  private fun showPhoneNumberOnStart(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ScreenCreated>()
-        // For unknown reasons, this is actually running on the UI
-        // thread and causing a crash. Since we are migrating to Mobius
-        // and this will be handled in the effect handler, we can
-        // manually switch the thread for now.
-        .observeOn(schedulersProvider.io())
-        .map { userSession.loggedInUserImmediate() }
-        .map { user -> { ui: Ui -> ui.showUserPhoneNumber(user.phoneNumber) } }
   }
 
   private fun makeLoginCall(events: Observable<UiEvent>): Observable<UiChange> {

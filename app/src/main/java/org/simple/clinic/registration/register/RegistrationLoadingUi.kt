@@ -1,6 +1,6 @@
 package org.simple.clinic.registration.register
 
-interface RegistrationLoadingUi: RegistrationLoadingUiActions {
+interface RegistrationLoadingUi {
   fun showNetworkError()
   fun showUnexpectedError()
 }

@@ -40,7 +40,6 @@ class EnterOtpScreenController @Inject constructor(
 
     return Observable.mergeArray(
         showPhoneNumberOnStart(replayedEvents),
-        handleBackClicks(replayedEvents),
         showOtpValidationErrors(replayedEvents),
         makeLoginCall(replayedEvents),
         closeScreenOnUserLoginInBackground(replayedEvents),
@@ -69,11 +68,6 @@ class EnterOtpScreenController @Inject constructor(
         .observeOn(schedulersProvider.io())
         .map { userSession.loggedInUserImmediate() }
         .map { user -> { ui: Ui -> ui.showUserPhoneNumber(user.phoneNumber) } }
-  }
-
-  private fun handleBackClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<EnterOtpBackClicked>()
-        .map { { ui: Ui -> ui.goBack() } }
   }
 
   private fun makeLoginCall(events: Observable<UiEvent>): Observable<UiChange> {

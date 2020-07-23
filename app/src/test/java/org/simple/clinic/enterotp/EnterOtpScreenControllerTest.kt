@@ -102,18 +102,6 @@ class EnterOtpScreenControllerTest {
   }
 
   @Test
-  fun `when back is pressed, the screen must be closed`() {
-    // when
-    setupController()
-    uiEvents.onNext(EnterOtpBackClicked())
-
-    // then
-    verify(screen).showUserPhoneNumber(phoneNumber)
-    verify(screen).goBack()
-    verifyNoMoreInteractions(screen)
-  }
-
-  @Test
   fun `when an otp of the right length is submitted, an error must not be shown`() {
     // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)

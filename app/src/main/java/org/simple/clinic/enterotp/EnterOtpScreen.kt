@@ -47,7 +47,6 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
         events = Observable.mergeArray(
             screenCreates(),
             otpSubmits(),
-            backClicks(),
             resendSmsClicks()
         ),
         controller = controller,
@@ -55,11 +54,10 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
     )
 
     otpEntryEditText.showKeyboard()
+    backButton.setOnClickListener { goBack() }
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())
-
-  private fun backClicks() = backButton.clicks().map { EnterOtpBackClicked() }
 
   private fun otpSubmits(): Observable<UiEvent> {
     val otpFromImeClicks: Observable<UiEvent> = otpEntryEditText

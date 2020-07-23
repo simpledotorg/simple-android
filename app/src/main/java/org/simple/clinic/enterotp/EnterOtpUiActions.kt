@@ -1,3 +1,5 @@
 package org.simple.clinic.enterotp
 
-interface EnterOtpUiActions
+interface EnterOtpUiActions {
+  fun clearPin()
+}

@@ -11,5 +11,4 @@ interface EnterOtpUi: EnterOtpUiActions {
   fun showProgress()
   fun hideProgress()
   fun showSmsSentMessage()
-  fun clearPin()
 }

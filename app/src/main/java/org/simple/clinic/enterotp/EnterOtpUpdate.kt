@@ -19,7 +19,11 @@ class EnterOtpUpdate(
           else -> model.enteredOtpNotRequiredLength()
         }
 
-        next(updatedModel)
+        if (updatedModel.isEnteredPinInvalid) {
+          next(updatedModel, ClearPin as EnterOtpEffect)
+        } else {
+          next(updatedModel)
+        }
       }
     }
   }

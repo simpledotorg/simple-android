@@ -23,6 +23,9 @@ data class EnterOtpModel(
   val hasLoadedUser: Boolean
     get() = user != null
 
+  val isEnteredPinInvalid: Boolean
+    get() = otpValidationResult == ValidationResult.IsNotRequiredLength
+
   fun userLoaded(user: User): EnterOtpModel {
     return copy(user = user)
   }

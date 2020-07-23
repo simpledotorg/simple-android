@@ -94,17 +94,21 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the screen is created, the logged in users phone number must be shown`() {
+    // when
     setupController()
 
+    // then
     verify(screen).showUserPhoneNumber(phoneNumber)
     verifyNoMoreInteractions(screen)
   }
 
   @Test
   fun `when back is pressed, the screen must be closed`() {
+    // when
     setupController()
     uiEvents.onNext(EnterOtpBackClicked())
 
+    // then
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).goBack()
     verifyNoMoreInteractions(screen)
@@ -112,12 +116,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when an otp of the right length is submitted, an error must not be shown`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
     verify(screen, never()).showIncorrectOtpError()
@@ -128,12 +135,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when an otp lesser than the required length is submitted, an error must be shown`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted("11111"))
 
+    // then
     verifyZeroInteractions(loginUserWithOtp)
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showIncorrectOtpError()
@@ -143,12 +153,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when an otp of the required length is submitted, the login call must be made`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(loginUserWithOtp).loginWithOtp(phoneNumber, pin, otp)
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -159,12 +172,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when an otp lesser than the required length is submitted, the login call must not be made`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted("11111"))
 
+    // then
     verifyZeroInteractions(loginUserWithOtp)
     verify(loginUserWithOtp, never()).loginWithOtp(phoneNumber, pin, otp)
     verify(screen).showUserPhoneNumber(phoneNumber)
@@ -175,12 +191,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the otp is submitted, the login call must be made`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(loginUserWithOtp).loginWithOtp(phoneNumber, pin, otp)
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -191,12 +210,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call succeeds, the screen must be closed`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(screen).goBack()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -206,12 +228,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call succeeds, a complete sync must be triggered`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(dataSync).fireAndForgetSync()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -222,12 +247,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails unexpectedly, the generic error must be shown`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(UnexpectedError))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(screen).showUnexpectedError()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -239,12 +267,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails with a network error, the network error must be shown`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(NetworkError))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(screen).showNetworkError()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -256,13 +287,16 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails with a server error, the server error must be shown`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     val errorMessage = "Error"
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(ServerError(errorMessage)))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(screen).showServerError(errorMessage)
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -274,12 +308,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails unexpectedly, the PIN should be cleared`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(UnexpectedError))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(screen).clearPin()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -290,12 +327,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails with a network error, the PIN should be cleared`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(NetworkError))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(screen).clearPin()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -306,12 +346,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails with a server error, the PIN should be cleared`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(ServerError("Error")))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(screen).clearPin()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -322,21 +365,27 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the OTP changes and meets the otp length, the login call should be made`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    // when
     setupController()
 
+    // then
     verify(screen).showUserPhoneNumber(phoneNumber)
 
+    // then
     uiEvents.onNext(EnterOtpTextChanges("1111"))
     verifyNoMoreInteractions(screen, loginUserWithOtp)
 
+    // then
     uiEvents.onNext(EnterOtpTextChanges("11111"))
     verifyNoMoreInteractions(screen, loginUserWithOtp)
 
     clearInvocations(screen)
 
+    // then
     uiEvents.onNext(EnterOtpTextChanges("111111"))
     verify(loginUserWithOtp).loginWithOtp(phoneNumber, pin, "111111")
     verify(screen).showProgress()
@@ -347,12 +396,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call is made, the network progress must be shown`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.never<LoginResult>())
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(screen).showProgress()
     verify(screen, never()).hideProgress()
     verify(screen).showUserPhoneNumber(phoneNumber)
@@ -361,12 +413,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call succeeds, the network progress must be hidden`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(screen).hideProgress()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -376,12 +431,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails with a network error, the network progress must be hidden`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(NetworkError))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(screen).hideProgress()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -392,12 +450,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails with a server error, the network progress must be hidden`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(ServerError("Test")))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(screen).hideProgress()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -408,12 +469,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails with an unexpected error, the network progress must be hidden`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(UnexpectedError))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(screen).hideProgress()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -424,13 +488,16 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when a user is verified for login in the background, the screen must be closed`() {
+    // given
     val userStream = Observable.just<Optional<User>>(
         Optional.of(user),
         Optional.of(user.copy(loggedInStatus = LOGGED_IN))
     )
 
+    // when
     setupController(userStream = userStream)
 
+    // then
     verify(screen).goBack()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verifyNoMoreInteractions(screen)
@@ -438,13 +505,16 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when a user is not verified for login in the background, the screen must not be closed`() {
+    // given
     val userStream = Observable.just<Optional<User>>(
         Optional.of(user),
         Optional.of(user.copy(loggedInStatus = OTP_REQUESTED))
     )
 
+    // when
     setupController(userStream = userStream)
 
+    // then
     verify(screen, never()).goBack()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verifyNoMoreInteractions(screen)
@@ -452,14 +522,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when resend sms is clicked, the request otp flow should be triggered`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.Success(userPayload))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(activateUser).activate(loggedInUserUuid, pin)
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).hideError()
@@ -472,14 +545,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call is made, the progress must be shown`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.Success(userPayload))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).hideError()
     verify(screen).showProgress()
@@ -491,14 +567,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call is made, any error must be hidden`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.Success(userPayload))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).hideError()
     verify(screen).showProgress()
@@ -510,14 +589,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call is successful, the progress must be hidden`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.Success(userPayload))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).hideError()
     verify(screen).showProgress()
@@ -529,14 +611,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call fails with a network error, the progress must be hidden`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.NetworkError)
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen).hideProgress()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).hideError()
@@ -549,14 +634,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call fails with a server error, the progress must be hidden`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.ServerError(500))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen).hideProgress()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).hideError()
@@ -569,14 +657,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call fails with an unexpected error, the progress must be hidden`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.OtherError(RuntimeException()))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen).hideProgress()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).hideError()
@@ -589,14 +680,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call succeeds, the sms sent message must be shown`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.Success(userPayload))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen).showSmsSentMessage()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).hideError()
@@ -608,14 +702,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call fails with a network error, the sms sent message must not be shown`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.NetworkError)
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen, never()).showSmsSentMessage()
     verify(screen).hideProgress()
     verify(screen).showUserPhoneNumber(phoneNumber)
@@ -629,14 +726,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call fails with a server error, the sms sent message must not be shown`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.ServerError(400))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen, never()).showSmsSentMessage()
     verify(screen).hideProgress()
     verify(screen).showUserPhoneNumber(phoneNumber)
@@ -650,14 +750,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call fails with an unexpected error, the sms sent message must not be shown`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.OtherError(RuntimeException()))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen, never()).showSmsSentMessage()
     verify(screen).hideProgress()
     verify(screen).showUserPhoneNumber(phoneNumber)
@@ -671,14 +774,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call completes successfully, the error must not be shown`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.Success(userPayload))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen, never()).showNetworkError()
     verify(screen, never()).showServerError(any())
     verify(screen, never()).showUnexpectedError()
@@ -693,14 +799,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call fails with a network error, the error must be shown`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.NetworkError)
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen).showNetworkError()
     verify(screen).hideProgress()
     verify(screen).showUserPhoneNumber(phoneNumber)
@@ -713,14 +822,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call fails with a server error, the error must be shown`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.ServerError(400))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen).showUnexpectedError()
     verify(screen).hideProgress()
     verify(screen).showUserPhoneNumber(phoneNumber)
@@ -733,14 +845,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call fails with an unexpected error, the error must be shown`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.OtherError(RuntimeException()))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen).showUnexpectedError()
     verify(screen).hideProgress()
     verify(screen).showUserPhoneNumber(phoneNumber)
@@ -753,14 +868,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call fails with a network error, the PIN must be cleared`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.NetworkError)
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen).clearPin()
     verify(screen).showNetworkError()
     verify(screen).hideProgress()
@@ -773,14 +891,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call fails with a server error, the PIN must be cleared`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.ServerError(400))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen).clearPin()
     verify(screen).showUnexpectedError()
     verify(screen).hideProgress()
@@ -793,14 +914,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call fails with an unexpected error, the PIN must be cleared`() {
+    // given
     whenever(activateUser.activate(loggedInUserUuid, pin))
         .doReturn(ActivateUser.Result.OtherError(RuntimeException()))
     whenever(ongoingLoginEntryRepository.entryImmediate())
         .doReturn(ongoingLoginEntry)
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
+    // then
     verify(screen).clearPin()
     verify(screen).showUnexpectedError()
     verify(screen).hideProgress()
@@ -813,12 +937,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call succeeds, the ongoing login entry must be cleared`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(ongoingLoginEntryRepository).clearLoginEntry()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()
@@ -829,12 +956,15 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails, the ongoing login entry must not be cleared`() {
+    // given
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(NetworkError))
 
+    // when
     setupController()
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
+    // then
     verify(ongoingLoginEntryRepository, never()).clearLoginEntry()
     verify(screen).showUserPhoneNumber(phoneNumber)
     verify(screen).showProgress()

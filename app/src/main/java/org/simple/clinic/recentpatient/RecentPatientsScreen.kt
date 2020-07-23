@@ -13,6 +13,8 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.recentpatientsview.RecentPatientItemType
+import org.simple.clinic.recentpatientsview.RecentPatientItemTypeDiffCallback
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -43,6 +45,9 @@ class RecentPatientsScreen(
   @Inject
   lateinit var effectHandlerFactory: AllRecentPatientsEffectHandler.Factory
 
+  @Inject
+  lateinit var uiRendererFactory: AllRecentPatientsUiRenderer.Factory
+
   private val events by unsafeLazy {
     Observable
         .merge(
@@ -54,7 +59,7 @@ class RecentPatientsScreen(
   }
 
   private val delegate by unsafeLazy {
-    val uiRenderer = AllRecentPatientsUiRenderer(this)
+    val uiRenderer = uiRendererFactory.create(this)
 
     MobiusDelegate.forView(
         events = events.ofType(),
@@ -66,7 +71,7 @@ class RecentPatientsScreen(
     )
   }
 
-  private val recentAdapter = ItemAdapter(RecentPatientItem.DiffCallback())
+  private val recentAdapter = ItemAdapter(RecentPatientItemTypeDiffCallback())
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -132,7 +137,7 @@ class RecentPatientsScreen(
         ))
   }
 
-  override fun updateRecentPatients(allItemTypes: List<RecentPatientItem>) {
+  override fun updateRecentPatients(allItemTypes: List<RecentPatientItemType>) {
     recentAdapter.submitList(allItemTypes)
   }
 

@@ -17,6 +17,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.recentpatientsview.RecentPatientItem
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -103,7 +104,7 @@ class RecentPatientsScreenControllerTest {
             name = "Ajay Kumar",
             age = 42,
             gender = Gender.Transgender,
-            lastSeen = Instant.parse("2020-02-14T00:00:00Z"),
+            updatedAt = Instant.parse("2020-02-14T00:00:00Z"),
             dateFormatter = dateFormatter,
             clock = userClock,
             isNewRegistration = true
@@ -113,7 +114,7 @@ class RecentPatientsScreenControllerTest {
             name = "Vijay Kumar",
             age = 24,
             gender = Gender.Male,
-            lastSeen = Instant.parse("2020-02-13T00:00:00Z"),
+            updatedAt = Instant.parse("2020-02-13T00:00:00Z"),
             dateFormatter = dateFormatter,
             clock = userClock,
             isNewRegistration = false
@@ -123,7 +124,7 @@ class RecentPatientsScreenControllerTest {
             name = "Vinaya Kumari",
             age = 27,
             gender = Gender.Female,
-            lastSeen = Instant.parse("2020-02-12T00:00:00Z"),
+            updatedAt = Instant.parse("2020-02-12T00:00:00Z"),
             dateFormatter = dateFormatter,
             clock = userClock,
             isNewRegistration = false
@@ -159,7 +160,7 @@ class RecentPatientsScreenControllerTest {
         name = "Ajay Kumar",
         age = 42,
         gender = Gender.Transgender,
-        lastSeen = Instant.parse("2020-02-14T00:00:00Z"),
+        updatedAt = Instant.parse("2020-02-14T00:00:00Z"),
         dateFormatter = dateFormatter,
         clock = userClock,
         isNewRegistration = true
@@ -186,10 +187,17 @@ class RecentPatientsScreenControllerTest {
 
     val effectHandler = AllRecentPatientsEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        patientRepository = patientRepository,
         uiActions = ui
     )
 
-    val uiRenderer = AllRecentPatientsUiRenderer(ui)
+    val uiRenderer = AllRecentPatientsUiRenderer(
+        userClock = userClock,
+        dateFormatter = dateFormatter,
+        ui = ui
+    )
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),

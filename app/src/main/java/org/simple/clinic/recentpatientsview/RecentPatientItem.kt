@@ -5,7 +5,9 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.recent_patient_item_view.*
 import kotlinx.android.synthetic.main.see_all_item_view.*
 import org.simple.clinic.R
+import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
@@ -14,10 +16,53 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
-sealed class RecentPatientItemType : ItemAdapter.Item<UiEvent>
+sealed class RecentPatientItemType : ItemAdapter.Item<UiEvent> {
+
+  companion object {
+
+    fun create(
+        recentPatients: List<RecentPatient>,
+        userClock: UserClock,
+        dateFormatter: DateTimeFormatter
+    ): List<RecentPatientItemType> {
+      val today = LocalDate.now(userClock)
+
+      return recentPatients.map { recentPatientItem(it, today, userClock, dateFormatter) }
+    }
+
+    private fun recentPatientItem(
+        recentPatient: RecentPatient,
+        today: LocalDate,
+        userClock: UserClock,
+        dateFormatter: DateTimeFormatter
+    ): RecentPatientItem {
+      val patientRegisteredOnDate = recentPatient.patientRecordedAt.toLocalDateAtZone(userClock.zone)
+      val isNewRegistration = today == patientRegisteredOnDate
+
+      return RecentPatientItem(
+          uuid = recentPatient.uuid,
+          name = recentPatient.fullName,
+          age = age(recentPatient, userClock),
+          gender = recentPatient.gender,
+          updatedAt = recentPatient.updatedAt,
+          dateFormatter = dateFormatter,
+          clock = userClock,
+          isNewRegistration = isNewRegistration
+      )
+    }
+
+    private fun age(
+        recentPatient: RecentPatient,
+        userClock: UserClock
+    ): Int {
+      return DateOfBirth.fromRecentPatient(recentPatient, userClock).estimateAge(userClock)
+    }
+  }
+}
 
 data class RecentPatientItem(
     val uuid: UUID,
@@ -56,7 +101,7 @@ object SeeAllItem : RecentPatientItemType() {
   }
 }
 
-class RecentPatientItemTTypeDiffCallback : DiffUtil.ItemCallback<RecentPatientItemType>() {
+class RecentPatientItemTypeDiffCallback : DiffUtil.ItemCallback<RecentPatientItemType>() {
   override fun areItemsTheSame(oldItem: RecentPatientItemType, newItem: RecentPatientItemType): Boolean {
     return when {
       oldItem is SeeAllItem && newItem is SeeAllItem -> true

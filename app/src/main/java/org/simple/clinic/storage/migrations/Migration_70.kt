@@ -1,24 +1,19 @@
-package org.simple.clinic.home.overdue
+package org.simple.clinic.storage.migrations
 
-import android.os.Parcelable
-import androidx.room.Dao
-import androidx.room.DatabaseView
-import androidx.room.Embedded
-import androidx.room.Query
-import io.reactivex.Observable
-import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.overdue.Appointment
-import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.PatientPhoneNumber
-import java.time.Instant
-import java.time.LocalDate
-import java.util.UUID
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import org.simple.clinic.storage.inTransaction
+import javax.inject.Inject
 
-@DatabaseView(
-    """
-      SELECT P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId patientAssignedFacilityUuid,
+@Suppress("Classname")
+class Migration_70 @Inject constructor() : Migration(69, 70) {
+
+  override fun migrate(database: SupportSQLiteDatabase) {
+    database.inTransaction {
+      execSQL(""" DROP VIEW `OverdueAppointment` """)
+
+      execSQL("""
+        CREATE VIEW `OverdueAppointment` AS SELECT P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId patientAssignedFacilityUuid,
 
           A.uuid appt_uuid, A.patientUuid appt_patientUuid, A.facilityUuid appt_facilityUuid, A.scheduledDate appt_scheduledDate, A.status appt_status,
           A.cancelReason appt_cancelReason, A.remindOn appt_remindOn, A.agreedToVisit appt_agreedToVisit, A.appointmentType appt_appointmentType,
@@ -78,86 +73,8 @@ import java.util.UUID
             AND A.status = 'scheduled'
             AND PPN.number IS NOT NULL
             AND (BP.recordedAt IS NOT NULL OR BloodSugar.recordedAt IS NOT NULL)
-    """
-)
-@Parcelize
-data class OverdueAppointment(
+      """)
 
-    val fullName: String,
-
-    val gender: Gender,
-
-    val dateOfBirth: LocalDate?,
-
-    @Embedded(prefix = "age_")
-    val age: Age?,
-
-    @Embedded(prefix = "appt_")
-    val appointment: Appointment,
-
-    @Embedded(prefix = "phone_")
-    val phoneNumber: PatientPhoneNumber?,
-
-    @Embedded(prefix = "patient_address_")
-    val patientAddress: OverduePatientAddress,
-
-    val isAtHighRisk: Boolean,
-
-    val patientLastSeen: Instant,
-
-    val diagnosedWithDiabetes: Answer?,
-
-    val diagnosedWithHypertension: Answer?,
-
-    val patientAssignedFacilityUuid: UUID?,
-
-    val appointmentFacilityName: String?
-) : Parcelable {
-
-  @Dao
-  interface RoomDao {
-
-    @Query("""
-      SELECT * FROM OverdueAppointment
-      WHERE 
-        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid 
-        AND (appt_scheduledDate < :scheduledBefore AND appt_scheduledDate > :scheduledAfter)
-        AND (appt_remindOn < :scheduledBefore OR appt_remindOn IS NULL)
-        GROUP BY appt_patientUuid
-        ORDER BY isAtHighRisk DESC, appt_scheduledDate DESC, appt_updatedAt ASC
-    """)
-    fun overdueAtFacility(
-        facilityUuid: UUID,
-        scheduledBefore: LocalDate,
-        scheduledAfter: LocalDate
-    ): Observable<List<OverdueAppointment>>
-
-    @Query("""
-      SELECT COUNT(appt_uuid) FROM OverdueAppointment
-      WHERE 
-        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid 
-        AND (appt_scheduledDate < :scheduledBefore AND appt_scheduledDate > :scheduledAfter)
-        AND (appt_remindOn < :scheduledBefore OR appt_remindOn IS NULL)
-        GROUP BY appt_patientUuid
-        ORDER BY isAtHighRisk DESC, appt_scheduledDate DESC, appt_updatedAt ASC
-    """)
-    fun overdueAtFacilityCount(
-        facilityUuid: UUID,
-        scheduledBefore: LocalDate,
-        scheduledAfter: LocalDate
-    ): Observable<List<Int>>
-
-    @Query("""
-      SELECT * FROM OverdueAppointment
-      WHERE 
-        appt_patientUuid = :patientUUID
-        AND appt_scheduledDate < :scheduledDate
-        AND (appt_remindOn < :scheduledDate OR appt_remindOn IS NULL)
-      GROUP BY appt_patientUuid HAVING MAX(appt_scheduledDate)
-    """)
-    fun latestForPatient(
-        patientUUID: UUID,
-        scheduledDate: LocalDate
-    ): OverdueAppointment?
+    }
   }
 }

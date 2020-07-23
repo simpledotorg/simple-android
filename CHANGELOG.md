@@ -4,6 +4,7 @@
 ### Features
 - Show assigned facility in the patient summary screen
 - Use patient's assigned facility to schedule an appointment
+- Show `Transferred to` label in Overdue screen
 
 ### Internal
 - Use `app:srcCompat` for `ImageView`
@@ -20,6 +21,7 @@
 - Updated translations: `bn_IN`, `am_ET`, `te_IN`, `pa_IN`, `hi_IN`, `bn_BD`
 - Added Registration Facility name and date in `PatientSummaryScreen`
 - Exclude deleted facilities from facility selection sheets
+- Load overdue patients if current facility is same as patient assigned facility
 
 ### Fixes
 - Fix crash when removing phone number for a patient that already has one ([LINK](https://app.clubhouse.io/simpledotorg/story/366/app-crashing-when-phone-number-is-empty-while-editing-patient))

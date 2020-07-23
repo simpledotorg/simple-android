@@ -912,7 +912,9 @@ object TestData {
       patientLastSeen: Instant = Instant.parse("2018-01-01T00:00:00Z"),
       diagnosedWithDiabetes: Answer? = null,
       diagnosedWithHypertension: Answer? = null,
-      patientAddress: OverduePatientAddress = overduePatientAddress()
+      patientAddress: OverduePatientAddress = overduePatientAddress(),
+      patientAssignedFacilityId: UUID? = null,
+      appointmentFacilityName: String? = null
   ): OverdueAppointment {
     return OverdueAppointment(
         fullName = name,
@@ -925,7 +927,9 @@ object TestData {
         isAtHighRisk = isHighRisk,
         patientLastSeen = patientLastSeen,
         diagnosedWithDiabetes = diagnosedWithDiabetes,
-        diagnosedWithHypertension = diagnosedWithHypertension
+        diagnosedWithHypertension = diagnosedWithHypertension,
+        patientAssignedFacilityUuid = patientAssignedFacilityId,
+        appointmentFacilityName = appointmentFacilityName
     )
   }
 

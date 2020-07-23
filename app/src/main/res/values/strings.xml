@@ -343,6 +343,7 @@
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">Visited</string>
   <string name="overduelist_high_risk">High risk</string>
+  <string name="overduelist_transferred">Transferred to</string>
 
   <!-- Facility change -->
   <string name="changefacility_screen_title">Select your clinic</string>

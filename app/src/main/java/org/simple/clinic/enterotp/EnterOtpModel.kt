@@ -26,4 +26,12 @@ data class EnterOtpModel(
   fun userLoaded(user: User): EnterOtpModel {
     return copy(user = user)
   }
+
+  fun enteredOtpValid(): EnterOtpModel {
+    return copy(otpValidationResult = ValidationResult.Valid)
+  }
+
+  fun enteredOtpNotRequiredLength(): EnterOtpModel {
+    return copy(otpValidationResult = ValidationResult.IsNotRequiredLength)
+  }
 }

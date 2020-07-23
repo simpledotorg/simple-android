@@ -37,7 +37,7 @@ class EnterOtpScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        showOtpValidationErrors(replayedEvents),
+//        showOtpValidationErrors(replayedEvents),
         makeLoginCall(replayedEvents),
         closeScreenOnUserLoginInBackground(replayedEvents),
         resendSms(replayedEvents)

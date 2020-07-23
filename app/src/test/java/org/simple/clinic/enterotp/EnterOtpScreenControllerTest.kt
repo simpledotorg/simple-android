@@ -951,7 +951,7 @@ class EnterOtpScreenControllerTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = EnterOtpModel.create(),
-        update = EnterOtpUpdate(),
+        update = EnterOtpUpdate(loginOtpRequiredLength = 6),
         effectHandler = effectHandler.build(),
         init = EnterOtpInit(),
         modelUpdateListener = uiRenderer::render

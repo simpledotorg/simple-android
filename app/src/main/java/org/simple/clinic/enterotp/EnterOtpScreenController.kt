@@ -21,7 +21,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-typealias Ui = EnterOtpScreen
+typealias Ui = EnterOtpUi
 typealias UiChange = (Ui) -> Unit
 
 class EnterOtpScreenController @Inject constructor(

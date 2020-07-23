@@ -24,7 +24,10 @@ import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet) {
+class EnterOtpScreen(
+    context: Context,
+    attributeSet: AttributeSet
+) : RelativeLayout(context, attributeSet), EnterOtpUi {
 
   @Inject
   lateinit var controller: EnterOtpScreenController
@@ -75,7 +78,7 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
   private fun resendSmsClicks() =
       resendSmsButton.clicks().map { EnterOtpResendSmsClicked() }
 
-  fun showUserPhoneNumber(phoneNumber: String) {
+  override fun showUserPhoneNumber(phoneNumber: String) {
     val phoneNumberWithCountryCode = resources.getString(
         R.string.enterotp_phonenumber,
         country.isdCode,
@@ -85,25 +88,25 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
     userPhoneNumberTextView.text = phoneNumberWithCountryCode
   }
 
-  fun goBack() {
+  override fun goBack() {
     hideKeyboard()
     screenRouter.pop()
   }
 
-  fun showUnexpectedError() {
+  override fun showUnexpectedError() {
     showError(resources.getString(R.string.api_unexpected_error))
   }
 
-  fun showNetworkError() {
+  override fun showNetworkError() {
     showError(resources.getString(R.string.api_network_error))
   }
 
-  fun showServerError(error: String) {
+  override fun showServerError(error: String) {
     showError(error)
     otpEntryEditText.showKeyboard()
   }
 
-  fun showIncorrectOtpError() {
+  override fun showIncorrectOtpError() {
     showError(resources.getString(R.string.enterotp_incorrect_code))
     otpEntryEditText.showKeyboard()
   }
@@ -114,27 +117,27 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
     errorTextView.visibility = View.VISIBLE
   }
 
-  fun hideError() {
+  override fun hideError() {
     errorTextView.visibility = View.GONE
   }
 
-  fun showProgress() {
+  override fun showProgress() {
     TransitionManager.beginDelayedTransition(this)
     validateOtpProgressBar.visibility = View.VISIBLE
     otpEntryContainer.visibility = View.INVISIBLE
   }
 
-  fun hideProgress() {
+  override fun hideProgress() {
     TransitionManager.beginDelayedTransition(this)
     validateOtpProgressBar.visibility = View.INVISIBLE
     otpEntryContainer.visibility = View.VISIBLE
   }
 
-  fun showSmsSentMessage() {
+  override fun showSmsSentMessage() {
     smsSentTextView.visibility = View.VISIBLE
   }
 
-  fun clearPin() {
+  override fun clearPin() {
     otpEntryEditText.text = null
   }
 

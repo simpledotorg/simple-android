@@ -13,8 +13,8 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.recentpatientsview.RecentPatientItemTTypeDiffCallback
 import org.simple.clinic.recentpatientsview.RecentPatientItemType
+import org.simple.clinic.recentpatientsview.RecentPatientItemTypeDiffCallback
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -71,7 +71,7 @@ class RecentPatientsScreen(
     )
   }
 
-  private val recentAdapter = ItemAdapter(RecentPatientItemTTypeDiffCallback())
+  private val recentAdapter = ItemAdapter(RecentPatientItemTypeDiffCallback())
 
   override fun onFinishInflate() {
     super.onFinishInflate()

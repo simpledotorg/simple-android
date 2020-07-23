@@ -101,7 +101,7 @@ object SeeAllItem : RecentPatientItemType() {
   }
 }
 
-class RecentPatientItemTTypeDiffCallback : DiffUtil.ItemCallback<RecentPatientItemType>() {
+class RecentPatientItemTypeDiffCallback : DiffUtil.ItemCallback<RecentPatientItemType>() {
   override fun areItemsTheSame(oldItem: RecentPatientItemType, newItem: RecentPatientItemType): Boolean {
     return when {
       oldItem is SeeAllItem && newItem is SeeAllItem -> true

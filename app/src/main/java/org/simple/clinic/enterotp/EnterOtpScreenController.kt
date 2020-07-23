@@ -6,7 +6,6 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.LOGIN_OTP_LENGTH
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginUserWithOtp
 import org.simple.clinic.login.activateuser.ActivateUser
@@ -35,7 +34,6 @@ class EnterOtpScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(ReportAnalyticsEvents())
         .replay()
 
     return Observable.mergeArray(

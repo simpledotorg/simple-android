@@ -13,10 +13,12 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_enterotp.view.*
 import org.simple.clinic.LOGIN_OTP_LENGTH
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -38,6 +40,17 @@ class EnterOtpScreen(
   @Inject
   lateinit var country: Country
 
+  private val events by unsafeLazy {
+    Observable
+        .mergeArray(
+            screenCreates(),
+            otpSubmits(),
+            resendSmsClicks()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -47,11 +60,7 @@ class EnterOtpScreen(
 
     bindUiToController(
         ui = this,
-        events = Observable.mergeArray(
-            screenCreates(),
-            otpSubmits(),
-            resendSmsClicks()
-        ),
+        events = events,
         controller = controller,
         screenDestroys = detaches().map { ScreenDestroyed() }
     )

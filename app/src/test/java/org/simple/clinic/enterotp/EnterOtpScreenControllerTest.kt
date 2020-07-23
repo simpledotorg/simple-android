@@ -11,6 +11,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -36,6 +37,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class EnterOtpScreenControllerTest {
@@ -85,10 +87,12 @@ class EnterOtpScreenControllerTest {
   )
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<EnterOtpModel, EnterOtpEvent, EnterOtpEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -936,6 +940,22 @@ class EnterOtpScreenControllerTest {
   ) {
     whenever(userSession.loggedInUserImmediate()) doReturn user
     whenever(userSession.loggedInUser()) doReturn userStream
+
+    val effectHandler = EnterOtpEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+    val uiRenderer = EnterOtpUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = EnterOtpModel.create(),
+        update = EnterOtpUpdate(),
+        effectHandler = effectHandler.build(),
+        init = EnterOtpInit(),
+        modelUpdateListener = uiRenderer::render
+    )
+    testFixture.start()
 
     val controller = EnterOtpScreenController(
         userSession = userSession,

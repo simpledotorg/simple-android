@@ -37,22 +37,10 @@ class EnterOtpScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-//        showOtpValidationErrors(replayedEvents),
         makeLoginCall(replayedEvents),
         closeScreenOnUserLoginInBackground(replayedEvents),
         resendSms(replayedEvents)
     )
-  }
-
-  private fun showOtpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<EnterOtpSubmitted>()
-        .filter { it.otp.length != LOGIN_OTP_LENGTH }
-        .map {
-          { ui: Ui ->
-            ui.showIncorrectOtpError()
-            ui.clearPin()
-          }
-        }
   }
 
   private fun makeLoginCall(events: Observable<UiEvent>): Observable<UiChange> {

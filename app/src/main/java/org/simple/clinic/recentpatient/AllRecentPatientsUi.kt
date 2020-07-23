@@ -1,8 +1,7 @@
 package org.simple.clinic.recentpatient
 
-import java.util.UUID
+import org.simple.clinic.recentpatientsview.RecentPatientItemType
 
 interface AllRecentPatientsUi : AllRecentPatientsUiActions {
-  fun openPatientSummary(patientUuid: UUID)
-  fun updateRecentPatients(allItemTypes: List<RecentPatientItem>)
+  fun updateRecentPatients(allItemTypes: List<RecentPatientItemType>)
 }

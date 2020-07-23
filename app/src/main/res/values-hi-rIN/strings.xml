@@ -381,7 +381,6 @@
 
   <!-- Recent Patients Item View -->
   <string name="recent_patients_itemview_last_seen">अंतिम बार देखा गया:\u0020</string>
-  <string name="recent_patients_itemview_title">%1$s, %2$s</string>
   <string name="recent_patients_itemview_new_registration">नया पंजीकरण</string>
 
   <!-- Add ID to Patient: Search Results-->

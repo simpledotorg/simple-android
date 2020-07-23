@@ -45,7 +45,7 @@ class RecentPatientsView(
   @Inject
   lateinit var config: PatientConfig
 
-  private val recentAdapter = ItemAdapter(RecentPatientItemTTypeDiffCallback())
+  private val recentAdapter = ItemAdapter(RecentPatientItemTypeDiffCallback())
 
   private val events by unsafeLazy {
     adapterEvents()

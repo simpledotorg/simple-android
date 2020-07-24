@@ -18,6 +18,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
@@ -155,7 +156,11 @@ class LoginPinScreenControllerTest {
 
     uiEvents.onNext(PinScreenCreated())
 
-    val effectHandler = LoginPinEffectHandler(ui)
+    val effectHandler = LoginPinEffectHandler(
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        userSession = userSession,
+        uiActions = ui
+    )
     val uiRenderer = LoginPinUiRenderer(ui)
 
     testFixture = MobiusTestFixture(

@@ -3,18 +3,16 @@ package org.simple.clinic.recentpatient
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class AllRecentPatientsEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
+    private val currentFacility: Lazy<Facility>,
     @Assisted private val uiActions: AllRecentPatientsUiActions
 ) {
 
@@ -34,14 +32,10 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
   private fun loadAllRecentPatients(): ObservableTransformer<LoadAllRecentPatients, AllRecentPatientsEvent> {
     return ObservableTransformer { effects ->
       effects
+          .observeOn(schedulersProvider.io())
           .switchMap {
-            userSession
-                .loggedInUser()
-                .subscribeOn(schedulersProvider.io())
-                .filterAndUnwrapJust()
-                .take(1)
-                .switchMap(facilityRepository::currentFacility)
-                .switchMap { patientRepository.recentPatients(it.uuid) }
+            patientRepository
+                .recentPatients(currentFacility.get().uuid)
                 .map(::RecentPatientsLoaded)
           }
     }

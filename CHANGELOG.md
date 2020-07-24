@@ -6,7 +6,7 @@
 - [In Progress: 13th Jul 2020] Migrate `ReportsScreen` to Mobius
 - Use `app:srcCompat` for `ImageView`
 
-## On Demo
+## 2020-07-23-7353
 ### Internal
 - Migrated `RegistrationPinScreen` to Mobius
 - Migrated `ConfirmRemovePrescriptionDialog` to Mobius

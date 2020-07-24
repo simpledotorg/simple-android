@@ -4,4 +4,9 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class LoginPinModel : Parcelable
+class LoginPinModel : Parcelable {
+
+  companion object {
+    fun create() = LoginPinModel()
+  }
+}

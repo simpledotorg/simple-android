@@ -1,6 +1,6 @@
 package org.simple.clinic.login.pin
 
-interface LoginPinScreenUi {
+interface LoginPinScreenUi : UiActions {
   fun showPhoneNumber(phoneNumber: String)
   fun openHomeScreen()
   fun goBackToRegistrationScreen()

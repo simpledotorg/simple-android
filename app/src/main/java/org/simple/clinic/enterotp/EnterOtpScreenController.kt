@@ -2,11 +2,8 @@ package org.simple.clinic.enterotp
 
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
-import org.simple.clinic.LOGIN_OTP_LENGTH
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginUserWithOtp
 import org.simple.clinic.login.activateuser.ActivateUser
 import org.simple.clinic.sync.DataSync
@@ -37,59 +34,9 @@ class EnterOtpScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-//        makeLoginCall(replayedEvents),
         closeScreenOnUserLoginInBackground(replayedEvents),
         resendSms(replayedEvents)
     )
-  }
-
-  private fun makeLoginCall(events: Observable<UiEvent>): Observable<UiChange> {
-    val otpFromSubmitted = events.ofType<EnterOtpSubmitted>()
-        .filter { it.otp.length == LOGIN_OTP_LENGTH }
-        .map { it.otp }
-
-    return otpFromSubmitted
-        .flatMap { otp ->
-          val entry = ongoingLoginEntry()
-
-          loginUserWithOtp
-              .loginWithOtp(entry.phoneNumber!!, entry.pin!!, otp)
-              .doOnSuccess { loginResult ->
-                if (loginResult is LoginResult.Success) {
-                  ongoingLoginEntryRepository.clearLoginEntry()
-                  dataSync.fireAndForgetSync()
-                }
-              }
-              .flatMapObservable { loginResult ->
-                Observable.merge(
-                    handleLoginResult(loginResult),
-                    Observable.just(Ui::hideProgress)
-                )
-              }
-              .startWith { ui: Ui -> ui.showProgress() }
-        }
-  }
-
-  private fun handleLoginResult(loginResult: LoginResult): Observable<UiChange> {
-    return Single.just(loginResult)
-        .map {
-          when (it) {
-            is LoginResult.Success -> { ui: Ui -> ui.goBack() }
-            is LoginResult.NetworkError -> { ui: Ui ->
-              ui.showNetworkError()
-              ui.clearPin()
-            }
-            is LoginResult.ServerError -> { ui: Ui ->
-              ui.showServerError(it.error)
-              ui.clearPin()
-            }
-            is LoginResult.UnexpectedError -> { ui: Ui ->
-              ui.showUnexpectedError()
-              ui.clearPin()
-            }
-          }
-        }
-        .toObservable()
   }
 
   private fun closeScreenOnUserLoginInBackground(events: Observable<UiEvent>): Observable<UiChange> {

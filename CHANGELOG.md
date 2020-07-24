@@ -16,6 +16,7 @@
 - Change selection of facility throughout the codebase to use `ItemAdapter`
 - Bump patient resync token
 - Migrated `RecentPatientsScreen` to Mobius
+- Remove tracking of ongoing registration entry from `UserSession`
 - [In Progress: 16th Jul 2020] Migrate `LoginPinScreen` to Mobius
 
 ### Changes

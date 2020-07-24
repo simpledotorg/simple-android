@@ -14,6 +14,7 @@
 - Migrated `RecentPatientsView` to Mobius
 - Migrated `RegistrationLoadingScreen` to Mobius
 - Change selection of facility throughout the codebase to use `ItemAdapter`
+- Bump patient resync token
 - [In Progress: 23rd Jul 2020] Migrate `RecentPatientsScreen` to Mobius
 - [In Progress: 16th Jul 2020] Migrate `LoginPinScreen` to Mobius
 

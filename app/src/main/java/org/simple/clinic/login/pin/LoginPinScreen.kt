@@ -8,6 +8,7 @@ import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_login_pin.view.*
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
@@ -18,6 +19,7 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.security.pin.PinAuthenticated
 import org.simple.clinic.security.pin.verification.LoginPinServerVerificationMethod.UserData
 import org.simple.clinic.user.OngoingLoginEntry
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -29,6 +31,18 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   @Inject
   lateinit var controller: LoginPinScreenController
+
+  private val events by unsafeLazy {
+    Observable
+        .mergeArray(
+            screenCreates(),
+            pinAuthentications(),
+            backClicks(),
+            otpReceived()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -42,12 +56,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
     bindUiToController(
         ui = this,
-        events = Observable.mergeArray(
-            screenCreates(),
-            pinAuthentications(),
-            backClicks(),
-            otpReceived()
-        ),
+        events = events,
         controller = controller,
         screenDestroys = detaches().map { ScreenDestroyed() }
     )

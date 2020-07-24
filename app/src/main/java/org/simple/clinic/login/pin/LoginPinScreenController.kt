@@ -23,7 +23,6 @@ class LoginPinScreenController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .compose(UpdateLoginEntryWithEnteredPin(userSession))
-        .compose(ReportAnalyticsEvents())
         .replay()
 
     return Observable.mergeArray(

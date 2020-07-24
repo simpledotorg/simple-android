@@ -7,7 +7,8 @@ import org.simple.clinic.user.User
 @Parcelize
 data class EnterOtpModel(
     val user: User?,
-    val otpValidationResult: ValidationResult
+    val otpValidationResult: ValidationResult,
+    val loginError: LoginError?
 ) : Parcelable {
 
   companion object {
@@ -15,7 +16,8 @@ data class EnterOtpModel(
     fun create(): EnterOtpModel {
       return EnterOtpModel(
           user = null,
-          otpValidationResult = ValidationResult.NotValidated
+          otpValidationResult = ValidationResult.NotValidated,
+          loginError = null
       )
     }
   }

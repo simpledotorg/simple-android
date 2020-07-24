@@ -26,7 +26,7 @@ class LoginPinScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<LoginPinScreen>()
+  private val ui = mock<LoginPinScreenUi>()
   private val userSession = mock<UserSession>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -64,8 +64,8 @@ class LoginPinScreenControllerTest {
     verify(userSession).ongoingLoginEntry()
     verifyNoMoreInteractions(userSession)
 
-    verify(screen).showPhoneNumber(phoneNumber)
-    verifyNoMoreInteractions(screen)
+    verify(ui).showPhoneNumber(phoneNumber)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -83,9 +83,9 @@ class LoginPinScreenControllerTest {
     verify(userSession).clearOngoingLoginEntry()
     verifyNoMoreInteractions(userSession)
 
-    verify(screen).showPhoneNumber(phoneNumber)
-    verify(screen).goBackToRegistrationScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showPhoneNumber(phoneNumber)
+    verify(ui).goBackToRegistrationScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -135,9 +135,9 @@ class LoginPinScreenControllerTest {
     verify(userSession).saveOngoingLoginEntry(ongoingLoginEntry)
     verifyNoMoreInteractions(userSession)
 
-    verify(screen).showPhoneNumber(phoneNumber)
-    verify(screen).openHomeScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showPhoneNumber(phoneNumber)
+    verify(ui).openHomeScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -147,7 +147,7 @@ class LoginPinScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(PinScreenCreated())
   }

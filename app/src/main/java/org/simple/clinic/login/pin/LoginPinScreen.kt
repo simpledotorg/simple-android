@@ -16,13 +16,13 @@ import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.security.pin.PinAuthenticated
-import org.simple.clinic.security.pin.verification.LoginPinServerVerificationMethod.*
+import org.simple.clinic.security.pin.verification.LoginPinServerVerificationMethod.UserData
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), LoginPinScreenUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -102,15 +102,15 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     return Observable.just(LoginPinOtpReceived(key.otp))
   }
 
-  fun showPhoneNumber(phoneNumber: String) {
+  override fun showPhoneNumber(phoneNumber: String) {
     phoneNumberTextView.text = phoneNumber
   }
 
-  fun openHomeScreen() {
+  override fun openHomeScreen() {
     screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.REPLACE)
   }
 
-  fun goBackToRegistrationScreen() {
+  override fun goBackToRegistrationScreen() {
     screenRouter.pop()
   }
 

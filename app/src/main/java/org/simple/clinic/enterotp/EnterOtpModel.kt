@@ -8,7 +8,8 @@ import org.simple.clinic.user.User
 data class EnterOtpModel(
     val user: User?,
     val otpValidationResult: ValidationResult,
-    val loginError: LoginError?
+    val loginError: LoginError?,
+    val isLoginOngoing: Boolean
 ) : Parcelable {
 
   companion object {
@@ -17,7 +18,8 @@ data class EnterOtpModel(
       return EnterOtpModel(
           user = null,
           otpValidationResult = ValidationResult.NotValidated,
-          loginError = null
+          loginError = null,
+          isLoginOngoing = false
       )
     }
   }
@@ -42,5 +44,13 @@ data class EnterOtpModel(
 
   fun loginFailed(error: LoginError): EnterOtpModel {
     return copy(loginError = error)
+  }
+
+  fun loginStarted(): EnterOtpModel {
+    return copy(isLoginOngoing = true, loginError = null)
+  }
+
+  fun loginFinished(): EnterOtpModel {
+    return copy(isLoginOngoing = false)
   }
 }

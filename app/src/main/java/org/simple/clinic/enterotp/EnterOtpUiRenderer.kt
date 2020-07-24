@@ -14,6 +14,8 @@ class EnterOtpUiRenderer(
 
   private val loginErrorChangedCallback = ValueChangedCallback<LoginError?>()
 
+  private val isLoginOngoingChangedCallback = ValueChangedCallback<Boolean>()
+
   override fun render(model: EnterOtpModel) {
     if (model.hasLoadedUser) {
       phoneNumberChangedCallback.pass(model.user!!.phoneNumber, ui::showUserPhoneNumber)
@@ -32,6 +34,13 @@ class EnterOtpUiRenderer(
         OtherError -> ui.showUnexpectedError()
         null -> ui.hideError()
       }
+    }
+
+    isLoginOngoingChangedCallback.pass(model.isLoginOngoing) { isLoginOngoing ->
+      if (isLoginOngoing)
+        ui.showProgress()
+      else
+        ui.hideProgress()
     }
   }
 }

@@ -32,6 +32,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addAction(TriggerSync::class.java, dataSync::fireAndForgetSync)
         .addAction(ClearLoginEntry::class.java, ongoingLoginEntryRepository::clearLoginEntry)
         .addTransformer(LoginUser::class.java, loginUser())
+        .addAction(GoBack::class.java, uiActions::goBack, schedulers.ui())
         .build()
   }
 

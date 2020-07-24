@@ -27,7 +27,7 @@
 ### Fixes
 - Fix crash when removing phone number for a patient that already has one ([LINK](https://app.clubhouse.io/simpledotorg/story/366/app-crashing-when-phone-number-is-empty-while-editing-patient))
 
-## On Demo
+## 2020-07-23-7353
 ### Internal
 - Migrated `RegistrationPinScreen` to Mobius
 - Migrated `ConfirmRemovePrescriptionDialog` to Mobius

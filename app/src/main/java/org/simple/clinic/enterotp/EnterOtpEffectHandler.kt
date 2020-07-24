@@ -4,12 +4,14 @@ import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class EnterOtpEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val userSession: UserSession,
+    private val dataSync: DataSync,
     @Assisted private val uiActions: EnterOtpUiActions
 ) {
 
@@ -23,6 +25,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<EnterOtpEffect, EnterOtpEvent>()
         .addTransformer(LoadUser::class.java, loadUser())
         .addAction(ClearPin::class.java, uiActions::clearPin, schedulers.ui())
+        .addAction(TriggerSync::class.java, dataSync::fireAndForgetSync)
         .build()
   }
 

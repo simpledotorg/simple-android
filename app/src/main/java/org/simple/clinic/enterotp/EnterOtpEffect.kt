@@ -5,3 +5,5 @@ sealed class EnterOtpEffect
 object LoadUser: EnterOtpEffect()
 
 object ClearPin: EnterOtpEffect()
+
+object TriggerSync: EnterOtpEffect()

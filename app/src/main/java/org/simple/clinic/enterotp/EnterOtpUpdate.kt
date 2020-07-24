@@ -1,6 +1,7 @@
 package org.simple.clinic.enterotp
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.next
 
@@ -25,6 +26,7 @@ class EnterOtpUpdate(
           next(updatedModel)
         }
       }
+      is LoginUserCompleted -> noChange()
     }
   }
 }

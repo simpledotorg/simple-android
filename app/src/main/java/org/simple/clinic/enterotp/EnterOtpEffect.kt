@@ -9,3 +9,5 @@ object ClearPin: EnterOtpEffect()
 object TriggerSync: EnterOtpEffect()
 
 object ClearLoginEntry: EnterOtpEffect()
+
+data class LoginUser(val otp: String): EnterOtpEffect()

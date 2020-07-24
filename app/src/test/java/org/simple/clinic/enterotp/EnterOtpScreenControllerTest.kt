@@ -946,6 +946,7 @@ class EnterOtpScreenControllerTest {
         userSession = userSession,
         dataSync = dataSync,
         ongoingLoginEntryRepository = ongoingLoginEntryRepository,
+        loginUserWithOtp = loginUserWithOtp,
         uiActions = ui
     )
     val uiRenderer = EnterOtpUiRenderer(ui)

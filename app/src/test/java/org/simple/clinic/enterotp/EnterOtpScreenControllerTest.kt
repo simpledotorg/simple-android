@@ -945,6 +945,7 @@ class EnterOtpScreenControllerTest {
         schedulers = TestSchedulersProvider.trampoline(),
         userSession = userSession,
         dataSync = dataSync,
+        ongoingLoginEntryRepository = ongoingLoginEntryRepository,
         uiActions = ui
     )
     val uiRenderer = EnterOtpUiRenderer(ui)

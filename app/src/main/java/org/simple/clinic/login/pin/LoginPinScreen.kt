@@ -1,6 +1,7 @@
 package org.simple.clinic.login.pin
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding3.view.clicks
@@ -8,27 +9,58 @@ import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_login_pin.view.*
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.security.pin.PinAuthenticated
-import org.simple.clinic.security.pin.verification.LoginPinServerVerificationMethod.*
+import org.simple.clinic.security.pin.verification.LoginPinServerVerificationMethod.UserData
 import org.simple.clinic.user.OngoingLoginEntry
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), LoginPinScreenUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
   lateinit var controller: LoginPinScreenController
+
+  @Inject
+  lateinit var effectHandler: LoginPinEffectHandler.Factory
+
+  private val events by unsafeLazy {
+    Observable
+        .mergeArray(
+            screenCreates(),
+            pinAuthentications(),
+            backClicks(),
+            otpReceived()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = LoginPinUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = LoginPinModel.create(),
+        init = LoginPinInit(),
+        update = LoginPinUpdate(),
+        effectHandler = effectHandler.create(this).build(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -42,15 +74,28 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
     bindUiToController(
         ui = this,
-        events = Observable.mergeArray(
-            screenCreates(),
-            pinAuthentications(),
-            backClicks(),
-            otpReceived()
-        ),
+        events = events,
         controller = controller,
         screenDestroys = detaches().map { ScreenDestroyed() }
     )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates(): Observable<UiEvent> {
@@ -102,15 +147,15 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     return Observable.just(LoginPinOtpReceived(key.otp))
   }
 
-  fun showPhoneNumber(phoneNumber: String) {
+  override fun showPhoneNumber(phoneNumber: String) {
     phoneNumberTextView.text = phoneNumber
   }
 
-  fun openHomeScreen() {
+  override fun openHomeScreen() {
     screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.REPLACE)
   }
 
-  fun goBackToRegistrationScreen() {
+  override fun goBackToRegistrationScreen() {
     screenRouter.pop()
   }
 

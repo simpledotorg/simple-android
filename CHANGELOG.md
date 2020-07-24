@@ -17,7 +17,7 @@
 - Bump patient resync token
 - Migrated `RecentPatientsScreen` to Mobius
 - Remove tracking of ongoing registration entry from `UserSession`
-- [In Progress: 16th Jul 2020] Migrate `LoginPinScreen` to Mobius
+- [In Progress: 24th Jul 2020] Migrate `LoginPinScreen` to Mobius
 
 ### Changes
 - Updated translations: `bn_IN`, `am_ET`, `te_IN`, `pa_IN`, `hi_IN`, `bn_BD`

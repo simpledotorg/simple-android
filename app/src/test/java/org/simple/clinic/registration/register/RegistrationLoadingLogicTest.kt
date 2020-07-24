@@ -3,7 +3,6 @@ package org.simple.clinic.registration.register
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
@@ -16,7 +15,6 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.user.registeruser.RegistrationResult
@@ -30,7 +28,6 @@ import java.util.UUID
 
 class RegistrationLoadingLogicTest {
 
-  private val userSession = mock<UserSession>()
   private val ui = mock<RegistrationLoadingUi>()
   private val uiActions = mock<RegistrationLoadingUiActions>()
   private val registerUser = mock<RegisterUser>()
@@ -64,14 +61,12 @@ class RegistrationLoadingLogicTest {
     // then
     verify(ui).showNetworkError()
     verifyNoMoreInteractions(ui, uiActions)
-    verify(userSession, never()).clearOngoingRegistrationEntry()
 
     // when
     clearInvocations(ui, uiActions)
     uiEvents.onNext(RegisterErrorRetryClicked)
 
     // then
-    verify(userSession).clearOngoingRegistrationEntry()
     verify(uiActions).openHomeScreen()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -98,7 +93,6 @@ class RegistrationLoadingLogicTest {
     setupController()
 
     // then
-    verify(userSession).clearOngoingRegistrationEntry()
     verify(uiActions).openHomeScreen()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -132,7 +126,6 @@ class RegistrationLoadingLogicTest {
   private fun setupController() {
     val effectHandler = RegistrationLoadingEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
-        userSession = userSession,
         registerUser = registerUser,
         currentUser = Lazy { user },
         currentFacility = Lazy { facility },

@@ -11,7 +11,6 @@ class RegistrationLoadingUpdate : Update<RegistrationLoadingModel, RegistrationL
     return when (event) {
       is RegistrationDetailsLoaded -> dispatch(RegisterUserAtFacility(event.user, event.facility))
       is UserRegistrationCompleted -> userRegistrationCompleted(event, model)
-      is CurrentRegistrationEntryCleared -> dispatch(GoToHomeScreen)
       is RegisterErrorRetryClicked -> next(model.clearRegistrationResult(), LoadRegistrationDetails)
     }
   }
@@ -23,7 +22,7 @@ class RegistrationLoadingUpdate : Update<RegistrationLoadingModel, RegistrationL
     val result = event.result
 
     return if (result == RegisterUserResult.Success) {
-      dispatch(ClearCurrentRegistrationEntry as RegistrationLoadingEffect)
+      dispatch(GoToHomeScreen as RegistrationLoadingEffect)
     } else {
       next(model.withRegistrationResult(result))
     }

@@ -2,7 +2,6 @@ package org.simple.clinic.registration.pin
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
-import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class RegistrationPinUpdate(
@@ -11,7 +10,6 @@ class RegistrationPinUpdate(
 
   override fun update(model: RegistrationPinModel, event: RegistrationPinEvent): Next<RegistrationPinModel, RegistrationPinEffect> {
     return when (event) {
-      is CurrentOngoingEntrySaved -> dispatch(ProceedToConfirmPin(model.ongoingRegistrationEntry))
       is RegistrationPinTextChanged -> next(model.pinChanged(event.pin))
       is RegistrationPinDoneClicked -> doneClicked(model)
     }
@@ -21,7 +19,7 @@ class RegistrationPinUpdate(
     val updatedModel = validateModel(model)
 
     return if (updatedModel.isEnteredPinValid)
-      next(updatedModel, SaveCurrentOngoingEntry(updatedModel.ongoingRegistrationEntry))
+      next(updatedModel, ProceedToConfirmPin(model.ongoingRegistrationEntry))
     else
       next(updatedModel)
   }

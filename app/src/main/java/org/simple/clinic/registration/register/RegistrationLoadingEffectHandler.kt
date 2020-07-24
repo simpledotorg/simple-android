@@ -8,13 +8,11 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class RegistrationLoadingEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
-    private val userSession: UserSession,
     private val registerUser: RegisterUser,
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
@@ -31,7 +29,6 @@ class RegistrationLoadingEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<RegistrationLoadingEffect, RegistrationLoadingEvent>()
         .addTransformer(LoadRegistrationDetails::class.java, loadRegistrationDetails())
         .addTransformer(RegisterUserAtFacility::class.java, registerUserAtFacility())
-        .addTransformer(ClearCurrentRegistrationEntry::class.java, clearCurrentRegistrationEntry())
         .addAction(GoToHomeScreen::class.java, uiActions::openHomeScreen, schedulers.ui())
         .build()
   }
@@ -60,14 +57,6 @@ class RegistrationLoadingEffectHandler @AssistedInject constructor(
                 .subscribeOn(schedulers.io())
                 .map { UserRegistrationCompleted(RegisterUserResult.from(it)) }
           }
-    }
-  }
-
-  private fun clearCurrentRegistrationEntry(): ObservableTransformer<ClearCurrentRegistrationEntry, RegistrationLoadingEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .doOnNext { userSession.clearOngoingRegistrationEntry() }
-          .map { CurrentRegistrationEntryCleared }
     }
   }
 }

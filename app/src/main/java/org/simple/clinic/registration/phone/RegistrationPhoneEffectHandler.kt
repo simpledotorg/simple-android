@@ -36,11 +36,9 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .addTransformer(SearchForExistingUser::class.java, findUserByPhoneNumber())
         .addConsumer(ShowAccessDeniedScreen::class.java, { uiActions.showAccessDeniedScreen(it.number) }, schedulers.ui())
         .addTransformer(CreateUserLocally::class.java, createUserLocally())
-        .addTransformer(ClearCurrentRegistrationEntry::class.java, clearCurrentRegistrationEntry())
         .addAction(ProceedToLogin::class.java, uiActions::openLoginPinEntryScreen, schedulers.ui())
         .addTransformer(LoadCurrentUserUnauthorizedStatus::class.java, loadCurrentUserUnauthorizedStatus())
         .addAction(ShowUserLoggedOutAlert::class.java, uiActions::showLoggedOutOfDeviceDialog, schedulers.ui())
-        .addTransformer(SaveCurrentRegistrationEntry::class.java, saveCurrentRegistrationEntry())
         .addConsumer(ContinueRegistration::class.java, { uiActions.openRegistrationNameEntryScreen(it.entry) }, schedulers.ui())
         .build()
   }
@@ -88,14 +86,6 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun clearCurrentRegistrationEntry(): ObservableTransformer<ClearCurrentRegistrationEntry, RegistrationPhoneEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .doOnNext { userSession.clearOngoingRegistrationEntry() }
-          .map { CurrentRegistrationEntryCleared }
-    }
-  }
-
   private fun loadCurrentUserUnauthorizedStatus(): ObservableTransformer<LoadCurrentUserUnauthorizedStatus, RegistrationPhoneEvent> {
     return ObservableTransformer { effects ->
       effects
@@ -106,14 +96,6 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
                 .firstOrError()
           }
           .map(::CurrentUserUnauthorizedStatusLoaded)
-    }
-  }
-
-  private fun saveCurrentRegistrationEntry(): ObservableTransformer<SaveCurrentRegistrationEntry, RegistrationPhoneEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .doOnNext { userSession.saveOngoingRegistrationEntry(it.entry) }
-          .map { CurrentRegistrationEntrySaved }
     }
   }
 }

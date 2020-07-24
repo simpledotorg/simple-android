@@ -82,10 +82,9 @@ class RegistrationFacilitySelectionEffectHandler @AssistedInject constructor(
   private fun saveCurrentRegistrationEntry(): ObservableTransformer<SaveRegistrationEntryAsUser, RegistrationFacilitySelectionEvent> {
     return ObservableTransformer { effects ->
       effects
-          .doOnNext { userSession.saveOngoingRegistrationEntry(it.entry) }
           .switchMap {
             userSession
-                .saveOngoingRegistrationEntryAsUser(Instant.now(utcClock))
+                .saveOngoingRegistrationEntryAsUser(it.entry, Instant.now(utcClock))
                 .andThen(Observable.just(CurrentRegistrationEntrySaved))
           }
     }

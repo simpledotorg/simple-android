@@ -13,7 +13,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
@@ -28,7 +27,6 @@ class RegistrationPinScreenLogicTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<RegistrationPinUi>()
   private val uiActions = mock<RegistrationPinUiActions>()
-  private val userSession = mock<UserSession>()
 
   private val ongoingRegistrationEntry = OngoingRegistrationEntry(
       uuid = UUID.fromString("db466606-9c0d-4f5f-9283-3c3c4f9b37a7"),
@@ -54,10 +52,9 @@ class RegistrationPinScreenLogicTest {
 
     // then
     val entryWithPin = ongoingRegistrationEntry.withPin(input)
-    verify(userSession).saveOngoingRegistrationEntry(entryWithPin)
     verify(uiActions).openRegistrationConfirmPinScreen(entryWithPin)
     verify(ui, times(2)).hideIncompletePinError()
-    verifyNoMoreInteractions(ui, userSession, uiActions)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -74,10 +71,9 @@ class RegistrationPinScreenLogicTest {
 
     // then
     val entryWithPin = ongoingRegistrationEntry.withPin(validPin)
-    verify(userSession).saveOngoingRegistrationEntry(entryWithPin)
     verify(uiActions).openRegistrationConfirmPinScreen(entryWithPin)
     verify(ui, times(2)).hideIncompletePinError()
-    verifyNoMoreInteractions(ui, userSession, uiActions)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -88,11 +84,10 @@ class RegistrationPinScreenLogicTest {
     uiEvents.onNext(RegistrationPinDoneClicked())
 
     // then
-    verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(ui).showIncompletePinError()
     verify(uiActions, never()).openRegistrationConfirmPinScreen(any())
     verify(ui).hideIncompletePinError()
-    verifyNoMoreInteractions(ui, userSession, uiActions)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -104,7 +99,7 @@ class RegistrationPinScreenLogicTest {
     // then
     verify(ui).hideIncompletePinError()
     verify(ui).showIncompletePinError()
-    verifyNoMoreInteractions(ui, userSession, uiActions)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupController(
@@ -114,7 +109,6 @@ class RegistrationPinScreenLogicTest {
     val uiRenderer = RegistrationPinUiRenderer(ui)
 
     val effectHandler = RegistrationPinEffectHandler(
-        userSession = userSession,
         schedulers = TestSchedulersProvider.trampoline(),
         uiActions = uiActions
     )

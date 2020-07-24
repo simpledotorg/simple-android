@@ -10,8 +10,6 @@ data class RegistrationDetailsLoaded(val user: User, val facility: Facility) : R
 
 data class UserRegistrationCompleted(val result: RegisterUserResult) : RegistrationLoadingEvent()
 
-object CurrentRegistrationEntryCleared: RegistrationLoadingEvent()
-
 object RegisterErrorRetryClicked : RegistrationLoadingEvent() {
   override val analyticsName: String = "Registration:Loading:Retry Clicked"
 }

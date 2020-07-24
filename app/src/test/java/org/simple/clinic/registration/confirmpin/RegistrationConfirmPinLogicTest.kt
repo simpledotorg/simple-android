@@ -1,22 +1,18 @@
 package org.simple.clinic.registration.confirmpin
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -29,7 +25,6 @@ class RegistrationConfirmPinLogicTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<RegistrationConfirmPinUi>()
   private val uiActions = mock<RegistrationConfirmPinUiActions>()
-  private val userSession = mock<UserSession>()
 
   private val originalPin = "1234"
   private val ongoingEntry = OngoingRegistrationEntry(
@@ -108,7 +103,6 @@ class RegistrationConfirmPinLogicTest {
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     // then
-    verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(ui).showPinMismatchError()
     verify(uiActions).clearPin()
     verify(uiActions, never()).openFacilitySelectionScreen(ongoingEntry)
@@ -140,7 +134,6 @@ class RegistrationConfirmPinLogicTest {
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     // then
-    verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(ui).showPinMismatchError()
     verify(uiActions).clearPin()
     verifyNoMoreInteractions(ui, uiActions)
@@ -149,11 +142,8 @@ class RegistrationConfirmPinLogicTest {
   private fun setupController(
       ongoingRegistrationEntry: OngoingRegistrationEntry = ongoingEntry
   ) {
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingRegistrationEntry.toOptional())
-
     val effectHandler = RegistrationConfirmPinEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
-        userSession = userSession,
         uiActions = uiActions
     )
     val uiRenderer = RegistrationConfirmPinUiRenderer(ui)

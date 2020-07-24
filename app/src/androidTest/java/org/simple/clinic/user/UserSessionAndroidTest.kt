@@ -63,8 +63,7 @@ class UserSessionAndroidTest {
         uuid = user.uuid,
         registrationFacility = facility
     )
-    userSession.saveOngoingRegistrationEntry(ongoingRegistrationEntry)
-    userSession.saveOngoingRegistrationEntryAsUser(Instant.parse("2018-01-01T00:00:00Z")).blockingAwait()
+    userSession.saveOngoingRegistrationEntryAsUser(ongoingRegistrationEntry, Instant.parse("2018-01-01T00:00:00Z")).blockingAwait()
 
     assertThat(userSession.isUserLoggedIn()).isTrue()
     val loggedInUser = userSession.loggedInUser().blockingFirst().get()
@@ -74,8 +73,6 @@ class UserSessionAndroidTest {
         .currentFacility(user)
         .blockingFirst()
     assertThat(currentFacility.uuid).isEqualTo(facility.uuid)
-
-    assertThat(userSession.ongoingRegistrationEntry()).isEqualTo(Optional.of(ongoingRegistrationEntry))
   }
 
   @Test

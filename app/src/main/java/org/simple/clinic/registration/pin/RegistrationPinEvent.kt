@@ -4,8 +4,6 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class RegistrationPinEvent: UiEvent
 
-object CurrentOngoingEntrySaved: RegistrationPinEvent()
-
 data class RegistrationPinTextChanged(val pin: String) : RegistrationPinEvent() {
   override val analyticsName = "Registration:Pin Entry:Pin Text Changed"
 }

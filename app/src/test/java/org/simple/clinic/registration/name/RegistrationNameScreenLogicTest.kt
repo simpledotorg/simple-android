@@ -7,17 +7,14 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -30,7 +27,6 @@ class RegistrationNameScreenLogicTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<RegistrationNameUi>()
   private val uiActions = mock<RegistrationNameUiActions>()
-  private val userSession = mock<UserSession>()
 
   private val currentOngoingRegistrationEntry = OngoingRegistrationEntry(
       uuid = UUID.fromString("301a9ea3-caed-4e50-a144-bc5aad66a53d"),
@@ -50,15 +46,12 @@ class RegistrationNameScreenLogicTest {
     val input = "Ashok Kumar"
     val entryWithName = currentOngoingRegistrationEntry.withName(input)
 
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(currentOngoingRegistrationEntry.toOptional())
-
     // when
     setupController()
     uiEvents.onNext(RegistrationFullNameTextChanged(input))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
     // then
-    verify(userSession).saveOngoingRegistrationEntry(entryWithName)
     verify(uiActions).openRegistrationPinEntryScreen(entryWithName)
     verify(uiActions).preFillUserDetails(currentOngoingRegistrationEntry)
     verify(ui, times(2)).hideValidationError()
@@ -70,7 +63,6 @@ class RegistrationNameScreenLogicTest {
   fun `when screen is created then user's existing details should be pre-filled`() {
     // given
     val ongoingEntry = currentOngoingRegistrationEntry.withName("Ashok Kumar")
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
     // when
     setupController(ongoingRegistrationEntry = ongoingEntry)
@@ -87,8 +79,6 @@ class RegistrationNameScreenLogicTest {
     // given
     val validName = "Ashok"
     val invalidName = "  "
-
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(currentOngoingRegistrationEntry.toOptional())
 
     // when
     setupController()
@@ -107,7 +97,6 @@ class RegistrationNameScreenLogicTest {
 
     // then
     val entryWithName = currentOngoingRegistrationEntry.withName(validName)
-    verify(userSession).saveOngoingRegistrationEntry(entryWithName)
     verify(uiActions).openRegistrationPinEntryScreen(entryWithName)
     verify(ui, times(2)).hideValidationError()
     verifyNoMoreInteractions(ui)
@@ -122,7 +111,6 @@ class RegistrationNameScreenLogicTest {
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
     // then
-    verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(uiActions).preFillUserDetails(currentOngoingRegistrationEntry)
     verify(ui).hideValidationError()
     verify(ui).showEmptyNameValidationError()
@@ -151,7 +139,6 @@ class RegistrationNameScreenLogicTest {
     val uiRenderer = RegistrationNameUiRenderer(ui)
     val effectHandler = RegistrationNameEffectHandler(
         schedulers = TrampolineSchedulersProvider(),
-        userSession = userSession,
         uiActions = uiActions
     )
 

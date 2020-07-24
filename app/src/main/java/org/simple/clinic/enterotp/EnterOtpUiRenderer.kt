@@ -12,15 +12,26 @@ class EnterOtpUiRenderer(
 
   private val phoneNumberChangedCallback = ValueChangedCallback<String>()
 
+  private val loginErrorChangedCallback = ValueChangedCallback<LoginError?>()
+
   override fun render(model: EnterOtpModel) {
     if (model.hasLoadedUser) {
       phoneNumberChangedCallback.pass(model.user!!.phoneNumber, ui::showUserPhoneNumber)
     }
 
-    when(model.otpValidationResult) {
+    when (model.otpValidationResult) {
       NotValidated -> { /* Nothing to do here */ }
-      IsNotRequiredLength -> { ui.showIncorrectOtpError() }
+      IsNotRequiredLength -> ui.showIncorrectOtpError()
       Valid -> { /* Nothing to do here */ }
+    }
+
+    loginErrorChangedCallback.pass(model.loginError) { loginError ->
+      when (loginError) {
+        NetworkError -> ui.showNetworkError()
+        is ServerError -> ui.showServerError(loginError.errorMessage)
+        OtherError -> ui.showUnexpectedError()
+        null -> ui.hideError()
+      }
     }
   }
 }

@@ -1,8 +1,9 @@
 package org.simple.clinic.enterotp
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.login.LoginResult
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class EnterOtpUpdate(
@@ -23,10 +24,15 @@ class EnterOtpUpdate(
         if (updatedModel.isEnteredPinInvalid) {
           next(updatedModel, ClearPin as EnterOtpEffect)
         } else {
-          next(updatedModel)
+          next(updatedModel, LoginUser(enteredOtp) as EnterOtpEffect)
         }
       }
-      is LoginUserCompleted -> noChange()
+      is LoginUserCompleted -> {
+        when (val result = event.result) {
+          LoginResult.Success -> dispatch(ClearLoginEntry, TriggerSync, GoBack)
+          else -> next(model.loginFailed(LoginError.from(result)), ClearPin as EnterOtpEffect)
+        }
+      }
     }
   }
 }

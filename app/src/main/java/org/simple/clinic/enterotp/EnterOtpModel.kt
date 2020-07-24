@@ -39,4 +39,8 @@ data class EnterOtpModel(
   fun enteredOtpNotRequiredLength(): EnterOtpModel {
     return copy(otpValidationResult = ValidationResult.IsNotRequiredLength)
   }
+
+  fun loginFailed(error: LoginError): EnterOtpModel {
+    return copy(loginError = error)
+  }
 }

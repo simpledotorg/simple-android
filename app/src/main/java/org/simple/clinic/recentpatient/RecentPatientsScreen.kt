@@ -5,12 +5,10 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.recent_patients_screen.view.*
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.recentpatientsview.RecentPatientItemType
@@ -21,8 +19,6 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import java.util.UUID
@@ -31,13 +27,10 @@ import javax.inject.Inject
 class RecentPatientsScreen(
     context: Context,
     attrs: AttributeSet
-) : LinearLayout(context, attrs), AllRecentPatientsUi {
+) : LinearLayout(context, attrs), AllRecentPatientsUi, AllRecentPatientsUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
-
-  @Inject
-  lateinit var controller: RecentPatientsScreenController
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -49,13 +42,8 @@ class RecentPatientsScreen(
   lateinit var uiRendererFactory: AllRecentPatientsUiRenderer.Factory
 
   private val events by unsafeLazy {
-    Observable
-        .merge(
-            screenCreates(),
-            adapterEvents()
-        )
+    adapterEvents()
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val delegate by unsafeLazy {
@@ -82,13 +70,6 @@ class RecentPatientsScreen(
     context.injector<Injector>().inject(this)
 
     setupScreen()
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = detaches().map { ScreenDestroyed() }
-    )
   }
 
   override fun onAttachedToWindow() {
@@ -108,8 +89,6 @@ class RecentPatientsScreen(
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
-
-  private fun screenCreates() = Observable.just(ScreenCreated())
 
   private fun setupScreen() {
     toolbar.setNavigationOnClickListener {

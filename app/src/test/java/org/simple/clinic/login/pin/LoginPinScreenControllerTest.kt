@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -18,6 +19,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
 import java.util.UUID
 
@@ -26,7 +28,7 @@ class LoginPinScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<LoginPinScreen>()
+  private val ui = mock<LoginPinScreenUi>()
   private val userSession = mock<UserSession>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -46,10 +48,12 @@ class LoginPinScreenControllerTest {
   )
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<LoginPinModel, LoginPinEvent, LoginPinEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -64,8 +68,8 @@ class LoginPinScreenControllerTest {
     verify(userSession).ongoingLoginEntry()
     verifyNoMoreInteractions(userSession)
 
-    verify(screen).showPhoneNumber(phoneNumber)
-    verifyNoMoreInteractions(screen)
+    verify(ui).showPhoneNumber(phoneNumber)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -83,9 +87,9 @@ class LoginPinScreenControllerTest {
     verify(userSession).clearOngoingLoginEntry()
     verifyNoMoreInteractions(userSession)
 
-    verify(screen).showPhoneNumber(phoneNumber)
-    verify(screen).goBackToRegistrationScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showPhoneNumber(phoneNumber)
+    verify(ui).goBackToRegistrationScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -135,9 +139,9 @@ class LoginPinScreenControllerTest {
     verify(userSession).saveOngoingLoginEntry(ongoingLoginEntry)
     verifyNoMoreInteractions(userSession)
 
-    verify(screen).showPhoneNumber(phoneNumber)
-    verify(screen).openHomeScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showPhoneNumber(phoneNumber)
+    verify(ui).openHomeScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -147,8 +151,22 @@ class LoginPinScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(PinScreenCreated())
+
+    val effectHandler = LoginPinEffectHandler(ui)
+    val uiRenderer = LoginPinUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = LoginPinModel.create(),
+        init = LoginPinInit(),
+        update = LoginPinUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
+
+    testFixture.start()
   }
 }

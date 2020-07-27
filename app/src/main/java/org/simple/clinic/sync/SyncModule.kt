@@ -47,26 +47,6 @@ import javax.inject.Named
 class SyncModule {
 
   @Provides
-  @Named("sync_config_frequent")
-  fun frequentSyncConfig(syncModuleConfig: SyncModuleConfig): SyncConfig {
-    return SyncConfig(
-        syncInterval = SyncInterval.FREQUENT,
-        batchSize = syncModuleConfig.frequentSyncBatchSize,
-        syncGroup = SyncGroup.FREQUENT
-    )
-  }
-
-  @Provides
-  @Named("sync_config_daily")
-  fun dailySyncConfig(syncModuleConfig: SyncModuleConfig): SyncConfig {
-    return SyncConfig(
-        syncInterval = SyncInterval.DAILY,
-        batchSize = syncModuleConfig.dailySyncBatchSize,
-        syncGroup = SyncGroup.DAILY
-    )
-  }
-
-  @Provides
   fun syncs(
       facilitySync: FacilitySync,
       protocolSync: ProtocolSync,
@@ -106,11 +86,6 @@ class SyncModule {
         prescriptionSyncRepository,
         bloodSugarRepository
     )
-  }
-
-  @Provides
-  fun syncModuleConfig(reader: ConfigReader): SyncModuleConfig {
-    return SyncModuleConfig.read(reader)
   }
 }
 

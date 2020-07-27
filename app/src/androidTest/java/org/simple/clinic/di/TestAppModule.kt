@@ -34,7 +34,8 @@ import java.util.Locale
   TestRemoteConfigModule::class,
   SyncModule::class,
   DateFormatterModule::class,
-  UuidGeneratorModule::class
+  UuidGeneratorModule::class,
+  TestSyncConfigModule::class
 ])
 class TestAppModule(private val application: Application) {
 

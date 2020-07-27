@@ -3,6 +3,7 @@ package org.simple.clinic.forgotpin.createnewpin
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -28,10 +29,12 @@ class ForgotPinCreateNewPinScreenControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
 
   private val loggedInUser = TestData.loggedInUser(
-      uuid = UUID.fromString("ecf9c120-5e20-4bf5-bfe1-f83e01bcb487")
+      uuid = UUID.fromString("ecf9c120-5e20-4bf5-bfe1-f83e01bcb487"),
+      name = "John Doe"
   )
   private val facility = TestData.facility(
-      uuid = UUID.fromString("7a3f0062-d644-45f8-b421-bd4a80ddd238")
+      uuid = UUID.fromString("7a3f0062-d644-45f8-b421-bd4a80ddd238"),
+      name = "PHC Obvious"
   )
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -49,7 +52,9 @@ class ForgotPinCreateNewPinScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).showUserName(loggedInUser.fullName)
+    verify(screen).showUserName("John Doe")
+    verify(screen).showFacility("PHC Obvious")
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -58,7 +63,9 @@ class ForgotPinCreateNewPinScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).showFacility(facility.name)
+    verify(screen).showUserName("John Doe")
+    verify(screen).showFacility("PHC Obvious")
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -78,6 +85,9 @@ class ForgotPinCreateNewPinScreenControllerTest {
     uiEvents.onNext(ForgotPinCreateNewPinSubmitClicked)
 
     verify(screen, times(3)).showInvalidPinError()
+    verify(screen, times(4)).hideInvalidPinError()
+    verify(screen).showConfirmPinScreen("1111")
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -88,6 +98,8 @@ class ForgotPinCreateNewPinScreenControllerTest {
     uiEvents.onNext(ForgotPinCreateNewPinSubmitClicked)
 
     verify(screen).showConfirmPinScreen("1111")
+    verify(screen).hideInvalidPinError()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -98,6 +110,7 @@ class ForgotPinCreateNewPinScreenControllerTest {
     uiEvents.onNext(ForgotPinCreateNewPinTextChanged("11"))
 
     verify(screen, times(2)).hideInvalidPinError()
+    verifyNoMoreInteractions(screen)
   }
 
   private fun setupController() {

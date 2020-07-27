@@ -1,5 +1,5 @@
 package org.simple.clinic.login.pin
 
-interface LoginPinScreenUi : UiActions {
+interface LoginPinScreenUi {
   fun showPhoneNumber(phoneNumber: String)
 }

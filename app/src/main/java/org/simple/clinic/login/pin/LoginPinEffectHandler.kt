@@ -28,6 +28,7 @@ class LoginPinEffectHandler @AssistedInject constructor(
       .addTransformer(SaveOngoingLoginEntry::class.java, saveOngoingLoginEntry())
       .addTransformer(LoginUser::class.java, loginUser())
       .addAction(OpenHomeScreen::class.java, uiActions::openHomeScreen, schedulersProvider.ui())
+      .addAction(GoBackToRegistrationScreen::class.java, uiActions::goBackToRegistrationScreen, schedulersProvider.ui())
       .build()
 
   private fun loginUser(): ObservableTransformer<LoginUser, LoginPinEvent> {

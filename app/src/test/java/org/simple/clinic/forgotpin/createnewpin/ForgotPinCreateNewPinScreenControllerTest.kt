@@ -1,6 +1,5 @@
 package org.simple.clinic.forgotpin.createnewpin
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -10,9 +9,8 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.TestData
-import org.simple.clinic.user.User
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
@@ -37,7 +35,7 @@ class ForgotPinCreateNewPinScreenControllerTest {
   fun setUp() {
     controller = ForgotPinCreateNewPinScreenController(userSession, facilityRepository)
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just((loggedInUser)))
-    whenever(facilityRepository.currentFacility(any<User>())).thenReturn(Observable.just(facility))
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
 
     uiEvents.compose(controller)
         .subscribe { it.invoke(screen) }

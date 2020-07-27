@@ -1,7 +1,7 @@
 package org.simple.clinic.login.pin
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -18,6 +18,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
@@ -76,11 +77,10 @@ class LoginPinScreenControllerTest {
   fun `when back is clicked, the local ongoing login entry must be cleared`() {
     // given
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
-    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
 
     // when
     setupController()
-    uiEvents.onNext(PinBackClicked())
+    uiEvents.onNext(PinBackClicked)
 
     // then
     verify(userSession).ongoingLoginEntry()
@@ -139,7 +139,7 @@ class LoginPinScreenControllerTest {
     verify(userSession).saveOngoingLoginEntry(ongoingLoginEntry)
     verifyNoMoreInteractions(userSession)
 
-    verify(ui).showPhoneNumber(phoneNumber)
+    verify(ui, times(2)).showPhoneNumber(phoneNumber)
     verify(ui).openHomeScreen()
     verifyNoMoreInteractions(ui)
   }
@@ -153,9 +153,11 @@ class LoginPinScreenControllerTest {
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
 
-    uiEvents.onNext(PinScreenCreated())
-
-    val effectHandler = LoginPinEffectHandler(ui)
+    val effectHandler = LoginPinEffectHandler(
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        userSession = userSession,
+        uiActions = ui
+    )
     val uiRenderer = LoginPinUiRenderer(ui)
 
     testFixture = MobiusTestFixture(

@@ -1,5 +1,6 @@
 package org.simple.clinic.user
 
+import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Insert
@@ -7,10 +8,12 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
+import kotlinx.android.parcel.Parcelize
 import java.time.Instant
 import java.util.UUID
 
 @Entity(tableName = "OngoingLoginEntry")
+@Parcelize
 data class OngoingLoginEntry(
     @PrimaryKey val uuid: UUID,
 
@@ -29,7 +32,7 @@ data class OngoingLoginEntry(
     val createdAt: Instant? = null,
 
     val updatedAt: Instant? = null
-) {
+) : Parcelable {
 
   @Dao
   interface RoomDao {

@@ -7,12 +7,10 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.login.LoginUserWithOtp
 import org.simple.clinic.login.activateuser.ActivateUser
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingLoginEntryRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
@@ -34,16 +32,8 @@ class EnterOtpScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        closeScreenOnUserLoginInBackground(replayedEvents),
         resendSms(replayedEvents)
     )
-  }
-
-  private fun closeScreenOnUserLoginInBackground(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<ScreenCreated>()
-        .flatMap { userSession.loggedInUser() }
-        .compose(NewlyVerifiedUser())
-        .map { { ui: Ui -> ui.goBack() } }
   }
 
   private fun resendSms(events: Observable<UiEvent>): Observable<UiChange> {

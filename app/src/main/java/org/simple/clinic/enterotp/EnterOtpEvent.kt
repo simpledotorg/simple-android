@@ -13,3 +13,5 @@ data class EnterOtpSubmitted(val otp: String) : EnterOtpEvent() {
 }
 
 data class LoginUserCompleted(val result: LoginResult): EnterOtpEvent()
+
+object UserVerifiedInBackground : EnterOtpEvent()

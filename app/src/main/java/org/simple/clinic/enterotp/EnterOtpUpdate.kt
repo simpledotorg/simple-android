@@ -3,6 +3,7 @@ package org.simple.clinic.enterotp
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class EnterOtpUpdate(
@@ -33,6 +34,7 @@ class EnterOtpUpdate(
           else -> next(model.loginFailed(LoginError.from(result)), ClearPin as EnterOtpEffect)
         }
       }
+      UserVerifiedInBackground -> dispatch(GoBack)
     }
   }
 }

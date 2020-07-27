@@ -7,7 +7,7 @@ import com.spotify.mobius.Init
 class EnterOtpInit : Init<EnterOtpModel, EnterOtpEffect> {
 
   override fun init(model: EnterOtpModel): First<EnterOtpModel, EnterOtpEffect> {
-    val effects = mutableSetOf<EnterOtpEffect>()
+    val effects = mutableSetOf<EnterOtpEffect>(ListenForUserBackgroundVerification)
 
     if (!model.hasLoadedUser) {
       effects.add(LoadUser)

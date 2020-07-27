@@ -6,6 +6,7 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.login.LoginUserWithOtp
 import org.simple.clinic.sync.DataSync
+import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.OngoingLoginEntryRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -33,6 +34,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addAction(ClearLoginEntry::class.java, ongoingLoginEntryRepository::clearLoginEntry)
         .addTransformer(LoginUser::class.java, loginUser())
         .addAction(GoBack::class.java, uiActions::goBack, schedulers.ui())
+        .addTransformer(ListenForUserBackgroundVerification::class.java, waitForUserBackgroundVerifications())
         .build()
   }
 
@@ -60,6 +62,19 @@ class EnterOtpEffectHandler @AssistedInject constructor(
             )
           }
           .map(::LoginUserCompleted)
+    }
+  }
+
+  private fun waitForUserBackgroundVerifications(): ObservableTransformer<ListenForUserBackgroundVerification, EnterOtpEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMap {
+            userSession
+                .loggedInUser()
+                .subscribeOn(schedulers.io())
+                .compose(NewlyVerifiedUser())
+                .map { UserVerifiedInBackground }
+          }
     }
   }
 }

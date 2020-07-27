@@ -54,8 +54,7 @@ class RegistrationFacilitySelectionScreen(
         defaultModel = RegistrationFacilitySelectionModel.create(screenKey.ongoingRegistrationEntry),
         update = RegistrationFacilitySelectionUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        init = RegistrationFacilitySelectionInit(),
-        modelUpdateListener = { /* Nothing to do here */ }
+        init = RegistrationFacilitySelectionInit()
     )
   }
 

@@ -41,7 +41,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class EnterOtpScreenControllerTest {
+class EnterOtpLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

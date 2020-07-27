@@ -372,12 +372,16 @@
     app:frameBackgroundDisabled="@color/grey3"
     app:frameBackgroundEnabled="@color/blue2">
 
-    <com.google.android.material.button.MaterialButton
-      style="?attr/materialButtonStyle"
+    <org.simple.clinic.widgets.ProgressMaterialButton
+      android:id="@id/saveButton"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
       android:layout_margin="@dimen/spacing_8"
+      android:backgroundTint="@color/blue1"
       android:text="@string/patiententry_save_patient"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+      app:buttonState="in-progress" />
   </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
+
 </org.simple.clinic.newentry.PatientEntryScreen>

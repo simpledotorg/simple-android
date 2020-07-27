@@ -28,7 +28,7 @@ import javax.inject.Inject
 class EnterOtpScreen(
     context: Context,
     attributeSet: AttributeSet
-) : RelativeLayout(context, attributeSet), EnterOtpUi {
+) : RelativeLayout(context, attributeSet), EnterOtpUi, EnterOtpUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

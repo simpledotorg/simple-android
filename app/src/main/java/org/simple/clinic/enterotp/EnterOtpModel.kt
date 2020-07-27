@@ -9,7 +9,7 @@ data class EnterOtpModel(
     val user: User?,
     val otpValidationResult: ValidationResult,
     val asyncOpError: AsyncOpError?,
-    val isLoginOngoing: Boolean
+    val isAsyncOperationOngoing: Boolean
 ) : Parcelable {
 
   companion object {
@@ -19,7 +19,7 @@ data class EnterOtpModel(
           user = null,
           otpValidationResult = ValidationResult.NotValidated,
           asyncOpError = null,
-          isLoginOngoing = false
+          isAsyncOperationOngoing = false
       )
     }
   }
@@ -43,11 +43,11 @@ data class EnterOtpModel(
   }
 
   fun loginStarted(): EnterOtpModel {
-    return copy(isLoginOngoing = true, asyncOpError = null)
+    return copy(isAsyncOperationOngoing = true, asyncOpError = null)
   }
 
   fun loginFinished(): EnterOtpModel {
-    return copy(isLoginOngoing = false, asyncOpError = null)
+    return copy(isAsyncOperationOngoing = false, asyncOpError = null)
   }
 
   fun loginFailed(error: AsyncOpError): EnterOtpModel {
@@ -55,11 +55,11 @@ data class EnterOtpModel(
   }
 
   fun requestLoginOtpStarted(): EnterOtpModel {
-    return copy(asyncOpError = null, isLoginOngoing = true)
+    return copy(asyncOpError = null, isAsyncOperationOngoing = true)
   }
 
   fun requestLoginOtpFinished(): EnterOtpModel {
-    return copy(isLoginOngoing = false, asyncOpError = null)
+    return copy(isAsyncOperationOngoing = false, asyncOpError = null)
   }
 
   fun requestLoginOtpFailed(error: AsyncOpError): EnterOtpModel {

@@ -14,7 +14,7 @@ class EnterOtpUiRenderer(
 
   private val loginErrorChangedCallback = ValueChangedCallback<AsyncOpError?>()
 
-  private val isLoginOngoingChangedCallback = ValueChangedCallback<Boolean>()
+  private val isAsyncOperationOngoingChangedCallback = ValueChangedCallback<Boolean>()
 
   override fun render(model: EnterOtpModel) {
     if (model.hasLoadedUser) {
@@ -36,8 +36,8 @@ class EnterOtpUiRenderer(
       }
     }
 
-    isLoginOngoingChangedCallback.pass(model.isLoginOngoing) { isLoginOngoing ->
-      if (isLoginOngoing)
+    isAsyncOperationOngoingChangedCallback.pass(model.isAsyncOperationOngoing) { isAsyncOperationOngoing ->
+      if (isAsyncOperationOngoing)
         ui.showProgress()
       else
         ui.hideProgress()

@@ -16,6 +16,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 class ForgotPinCreateNewPinScreenControllerTest {
 
@@ -26,8 +27,12 @@ class ForgotPinCreateNewPinScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
 
-  private val loggedInUser = TestData.loggedInUser()
-  private val facility = TestData.facility()
+  private val loggedInUser = TestData.loggedInUser(
+      uuid = UUID.fromString("ecf9c120-5e20-4bf5-bfe1-f83e01bcb487")
+  )
+  private val facility = TestData.facility(
+      uuid = UUID.fromString("7a3f0062-d644-45f8-b421-bd4a80ddd238")
+  )
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 

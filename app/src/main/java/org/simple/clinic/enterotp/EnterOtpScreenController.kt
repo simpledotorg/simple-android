@@ -31,9 +31,7 @@ class EnterOtpScreenController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.mergeArray(
-        resendSms(replayedEvents)
-    )
+    return Observable.never()
   }
 
   private fun resendSms(events: Observable<UiEvent>): Observable<UiChange> {

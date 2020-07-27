@@ -18,3 +18,7 @@ data class LoginUserCompleted(val result: LoginResult): EnterOtpEvent()
 object UserVerifiedInBackground : EnterOtpEvent()
 
 data class RequestLoginOtpCompleted(val result: ActivateUser.Result): EnterOtpEvent()
+
+class EnterOtpResendSmsClicked: EnterOtpEvent() {
+  override val analyticsName = "Enter OTP Manually:Resend SMS Clicked"
+}

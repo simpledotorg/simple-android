@@ -3,6 +3,7 @@ package org.simple.clinic.enterotp
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.login.activateuser.ActivateUser
 
 sealed class AsyncOpError : Parcelable {
 
@@ -13,6 +14,14 @@ sealed class AsyncOpError : Parcelable {
         is LoginResult.ServerError -> ServerError(loginResult.error)
         LoginResult.UnexpectedError -> OtherError
         else -> throw IllegalArgumentException("$loginResult is not a valid error case!")
+      }
+    }
+
+    fun from(activateUserResult: ActivateUser.Result): AsyncOpError {
+      return when(activateUserResult) {
+        ActivateUser.Result.NetworkError -> NetworkError
+        is ActivateUser.Result.ServerError, is ActivateUser.Result.OtherError -> OtherError
+        else -> throw IllegalArgumentException("$activateUserResult is not a valid error case!")
       }
     }
   }

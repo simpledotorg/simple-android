@@ -53,4 +53,16 @@ data class EnterOtpModel(
   fun loginFinished(): EnterOtpModel {
     return copy(isLoginOngoing = false)
   }
+
+  fun requestLoginOtpStarted(): EnterOtpModel {
+    return copy(asyncOpError = null, isLoginOngoing = true)
+  }
+
+  fun requestLoginOtpFinished(): EnterOtpModel {
+    return copy(isLoginOngoing = false)
+  }
+
+  fun requestLoginOtpFailed(error: AsyncOpError): EnterOtpModel {
+    return copy(asyncOpError = error)
+  }
 }

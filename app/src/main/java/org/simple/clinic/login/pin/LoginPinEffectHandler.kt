@@ -7,6 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import org.simple.clinic.user.OngoingLoginEntry
+import org.simple.clinic.user.OngoingLoginEntryRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -14,6 +15,7 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class LoginPinEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val userSession: UserSession,
+    private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
     @Assisted private val uiActions: UiActions
 ) {
 
@@ -36,7 +38,7 @@ class LoginPinEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .doOnNext { userSession.clearOngoingLoginEntry() }
+          .doOnNext { ongoingLoginEntryRepository.clearLoginEntry() }
           .map { OngoingLoginEntryCleared }
     }
   }
@@ -59,8 +61,8 @@ class LoginPinEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .flatMapSingle { (ongoingLoginEntry) ->
-            userSession
-                .saveOngoingLoginEntry(ongoingLoginEntry)
+            ongoingLoginEntryRepository
+                .saveLoginEntry(ongoingLoginEntry)
                 .andThen(Single.just(LoginPinScreenUpdatedLoginEntry(ongoingLoginEntry)))
           }
     }
@@ -70,7 +72,7 @@ class LoginPinEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMapSingle { userSession.ongoingLoginEntry() }
+          .map { ongoingLoginEntryRepository.entryImmediate() }
           .map(::OngoingLoginEntryLoaded)
     }
   }

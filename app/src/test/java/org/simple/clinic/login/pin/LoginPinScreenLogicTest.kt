@@ -1,19 +1,21 @@
 package org.simple.clinic.login.pin
 
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.user.OngoingLoginEntryRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
@@ -32,6 +34,7 @@ class LoginPinScreenLogicTest {
   private val ui = mock<LoginPinScreenUi>()
   private val uiActions = mock<UiActions>()
   private val userSession = mock<UserSession>()
+  private val ongoingLoginEntryRepository = mock<OngoingLoginEntryRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
@@ -59,14 +62,16 @@ class LoginPinScreenLogicTest {
   @Test
   fun `when screen starts, show phone number`() {
     // given
-    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()) doReturn ongoingLoginEntry
 
     // when
     setupController()
 
     // then
-    verify(userSession).ongoingLoginEntry()
-    verifyNoMoreInteractions(userSession)
+    verify(ongoingLoginEntryRepository).entryImmediate()
+    verifyNoMoreInteractions(ongoingLoginEntryRepository)
+
+    verifyZeroInteractions(userSession)
 
     verify(ui).showPhoneNumber(phoneNumber)
     verifyNoMoreInteractions(ui, uiActions)
@@ -75,16 +80,18 @@ class LoginPinScreenLogicTest {
   @Test
   fun `when back is clicked, the local ongoing login entry must be cleared`() {
     // given
-    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()) doReturn ongoingLoginEntry
 
     // when
     setupController()
     uiEvents.onNext(PinBackClicked)
 
     // then
-    verify(userSession).ongoingLoginEntry()
-    verify(userSession).clearOngoingLoginEntry()
-    verifyNoMoreInteractions(userSession)
+    verify(ongoingLoginEntryRepository).entryImmediate()
+    verify(ongoingLoginEntryRepository).clearLoginEntry()
+    verifyNoMoreInteractions(ongoingLoginEntryRepository)
+
+    verifyZeroInteractions(userSession)
 
     verify(ui).showPhoneNumber(phoneNumber)
     verify(uiActions).goBackToRegistrationScreen()
@@ -122,8 +129,8 @@ class LoginPinScreenLogicTest {
         currentFacilityUuid = registrationFacilityUuid
     )
 
-    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
-    whenever(userSession.saveOngoingLoginEntry(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()) doReturn ongoingLoginEntry
+    whenever(ongoingLoginEntryRepository.saveLoginEntry(ongoingLoginEntry))
         .thenReturn(Completable.complete())
     whenever(userSession.storeUser(expectedUser, registrationFacilityUuid))
         .thenReturn(Completable.complete())
@@ -133,9 +140,11 @@ class LoginPinScreenLogicTest {
     uiEvents.onNext(LoginPinAuthenticated(ongoingLoginEntry))
 
     // then
-    verify(userSession).ongoingLoginEntry()
+    verify(ongoingLoginEntryRepository).entryImmediate()
+    verify(ongoingLoginEntryRepository).saveLoginEntry(ongoingLoginEntry)
+    verifyNoMoreInteractions(ongoingLoginEntryRepository)
+
     verify(userSession).storeUser(user = expectedUser, facilityUuid = registrationFacilityUuid)
-    verify(userSession).saveOngoingLoginEntry(ongoingLoginEntry)
     verifyNoMoreInteractions(userSession)
 
     verify(ui, times(2)).showPhoneNumber(phoneNumber)
@@ -147,6 +156,7 @@ class LoginPinScreenLogicTest {
     val effectHandler = LoginPinEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
         userSession = userSession,
+        ongoingLoginEntryRepository = ongoingLoginEntryRepository,
         uiActions = uiActions
     )
     val uiRenderer = LoginPinUiRenderer(ui)

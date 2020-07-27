@@ -1,6 +1,7 @@
 package org.simple.clinic.forgotpin.createnewpin
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -9,12 +10,14 @@ import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreenKey
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
@@ -33,6 +36,9 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
   @Inject
   lateinit var screenRouter: ScreenRouter
 
+  @Inject
+  lateinit var effectHandlerFactory: ForgotPinCreateNewEffectHandler.Factory
+
   private val userNameTextView by bindView<TextView>(R.id.forgotpin_createpin_user_fullname)
   private val facilityNameTextView by bindView<TextView>(R.id.forgotpin_createpin_facility_name)
   private val pinEntryEditText by bindView<StaggeredEditText>(R.id.forgotpin_createpin_pin)
@@ -47,6 +53,19 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
         )
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = ForgotPinCreateNewUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = ForgotPinCreateNewModel.create(),
+        update = ForgotPinCreateNewUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = ForgotPinCreateNewInit(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   override fun onFinishInflate() {
@@ -65,6 +84,24 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
     )
 
     pinEntryEditText.showKeyboard()
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())

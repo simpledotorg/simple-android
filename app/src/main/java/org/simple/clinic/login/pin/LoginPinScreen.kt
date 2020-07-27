@@ -23,7 +23,7 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), LoginPinScreenUi {
+class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), LoginPinScreenUi, UiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

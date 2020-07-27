@@ -30,6 +30,7 @@ class LoginPinScreenLogicTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<LoginPinScreenUi>()
+  private val uiActions = mock<UiActions>()
   private val userSession = mock<UserSession>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -68,7 +69,7 @@ class LoginPinScreenLogicTest {
     verifyNoMoreInteractions(userSession)
 
     verify(ui).showPhoneNumber(phoneNumber)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -86,8 +87,8 @@ class LoginPinScreenLogicTest {
     verifyNoMoreInteractions(userSession)
 
     verify(ui).showPhoneNumber(phoneNumber)
-    verify(ui).goBackToRegistrationScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).goBackToRegistrationScreen()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -138,15 +139,15 @@ class LoginPinScreenLogicTest {
     verifyNoMoreInteractions(userSession)
 
     verify(ui, times(2)).showPhoneNumber(phoneNumber)
-    verify(ui).openHomeScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openHomeScreen()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupController() {
     val effectHandler = LoginPinEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
         userSession = userSession,
-        uiActions = ui
+        uiActions = uiActions
     )
     val uiRenderer = LoginPinUiRenderer(ui)
 

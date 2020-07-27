@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.detaches
+import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_forgotpin_createpin.view.*
@@ -72,7 +72,7 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
         ui = this,
         events = events,
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
 
     createPinEditText.showKeyboard()
@@ -99,12 +99,13 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
   private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
 
   private fun pinTextChanges() =
-      RxTextView.textChanges(createPinEditText)
+      createPinEditText
+          .textChanges()
           .map { ForgotPinCreateNewPinTextChanged(it.toString()) }
 
   private fun pinSubmitClicked() =
-      RxTextView.editorActions(createPinEditText)
-          .filter { it == EditorInfo.IME_ACTION_DONE }
+      createPinEditText
+          .editorActions { it == EditorInfo.IME_ACTION_DONE }
           .map { ForgotPinCreateNewPinSubmitClicked }
 
   override fun showUserName(name: String) {

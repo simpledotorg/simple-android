@@ -27,11 +27,15 @@ class FacilityPickerUiRenderer @AssistedInject constructor(
     }
 
     if (model.hasLoadedTotalFacilityCount) {
-      if (model.totalFacilityCount!! > 0) {
-        ui.showToolbarWithSearchField()
-      } else {
-        ui.showToolbarWithoutSearchField()
-      }
+      switchToolbarType(model)
+    }
+  }
+
+  private fun switchToolbarType(model: FacilityPickerModel) {
+    if (model.totalFacilityCount!! > 0) {
+      ui.showToolbarWithSearchField()
+    } else {
+      ui.showToolbarWithoutSearchField()
     }
   }
 

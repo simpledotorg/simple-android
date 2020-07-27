@@ -7,3 +7,5 @@ sealed class LoginPinEffect
 object LoadOngoingLoginEntry : LoginPinEffect()
 
 data class SaveOngoingLoginEntry(val entry: OngoingLoginEntry) : LoginPinEffect()
+
+data class LoginUser(val entry: OngoingLoginEntry) : LoginPinEffect()

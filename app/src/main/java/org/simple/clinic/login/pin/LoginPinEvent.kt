@@ -10,3 +10,5 @@ data class OngoingLoginEntryLoaded(val ongoingLoginEntry: OngoingLoginEntry) : L
 data class LoginPinScreenUpdatedLoginEntry(val ongoingLoginEntry: OngoingLoginEntry) : LoginPinEvent() {
   override val analyticsName: String = "Login:Pin Entry:Updated Login Entry"
 }
+
+object UserLoggedIn : LoginPinEvent()

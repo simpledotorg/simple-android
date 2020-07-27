@@ -1,6 +1,7 @@
 package org.simple.clinic.enterotp
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.mobius.dispatch
@@ -35,6 +36,7 @@ class EnterOtpUpdate(
         }
       }
       UserVerifiedInBackground -> dispatch(GoBack)
+      is RequestLoginOtpCompleted -> noChange()
     }
   }
 }

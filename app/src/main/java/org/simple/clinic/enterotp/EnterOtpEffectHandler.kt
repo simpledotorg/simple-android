@@ -5,6 +5,7 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.login.LoginUserWithOtp
+import org.simple.clinic.login.activateuser.ActivateUser
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.OngoingLoginEntryRepository
@@ -17,6 +18,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
     private val dataSync: DataSync,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
     private val loginUserWithOtp: LoginUserWithOtp,
+    private val activateUser: ActivateUser,
     @Assisted private val uiActions: EnterOtpUiActions
 ) {
 
@@ -35,6 +37,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addTransformer(LoginUser::class.java, loginUser())
         .addAction(GoBack::class.java, uiActions::goBack, schedulers.ui())
         .addTransformer(ListenForUserBackgroundVerification::class.java, waitForUserBackgroundVerifications())
+        .addTransformer(RequestLoginOtp::class.java, activateUser())
         .build()
   }
 
@@ -74,6 +77,20 @@ class EnterOtpEffectHandler @AssistedInject constructor(
                 .subscribeOn(schedulers.io())
                 .compose(NewlyVerifiedUser())
                 .map { UserVerifiedInBackground }
+          }
+    }
+  }
+
+  private fun activateUser(): ObservableTransformer<RequestLoginOtp, EnterOtpEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map {
+            val entry = ongoingLoginEntryRepository.entryImmediate()
+
+            val result = activateUser.activate(entry.uuid, entry.pin!!)
+
+            RequestLoginOtpCompleted(result)
           }
     }
   }

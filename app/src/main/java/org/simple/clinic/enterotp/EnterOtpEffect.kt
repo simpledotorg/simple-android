@@ -15,3 +15,5 @@ data class LoginUser(val otp: String): EnterOtpEffect()
 object GoBack: EnterOtpEffect()
 
 object ListenForUserBackgroundVerification: EnterOtpEffect()
+
+object RequestLoginOtp: EnterOtpEffect()

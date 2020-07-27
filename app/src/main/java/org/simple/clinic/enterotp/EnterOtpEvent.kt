@@ -1,6 +1,7 @@
 package org.simple.clinic.enterotp
 
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.login.activateuser.ActivateUser
 import org.simple.clinic.user.User
 import org.simple.clinic.widgets.UiEvent
 
@@ -15,3 +16,5 @@ data class EnterOtpSubmitted(val otp: String) : EnterOtpEvent() {
 data class LoginUserCompleted(val result: LoginResult): EnterOtpEvent()
 
 object UserVerifiedInBackground : EnterOtpEvent()
+
+data class RequestLoginOtpCompleted(val result: ActivateUser.Result): EnterOtpEvent()

@@ -1,19 +1,21 @@
 package org.simple.clinic.login.pin
 
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.user.OngoingLoginEntryRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
@@ -24,13 +26,15 @@ import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
 import java.util.UUID
 
-class LoginPinScreenControllerTest {
+class LoginPinScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<LoginPinScreenUi>()
+  private val uiActions = mock<UiActions>()
   private val userSession = mock<UserSession>()
+  private val ongoingLoginEntryRepository = mock<OngoingLoginEntryRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
@@ -48,48 +52,50 @@ class LoginPinScreenControllerTest {
       updatedAt = null
   )
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<LoginPinModel, LoginPinEvent, LoginPinEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
   @Test
   fun `when screen starts, show phone number`() {
     // given
-    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()) doReturn ongoingLoginEntry
 
     // when
     setupController()
 
     // then
-    verify(userSession).ongoingLoginEntry()
-    verifyNoMoreInteractions(userSession)
+    verify(ongoingLoginEntryRepository).entryImmediate()
+    verifyNoMoreInteractions(ongoingLoginEntryRepository)
+
+    verifyZeroInteractions(userSession)
 
     verify(ui).showPhoneNumber(phoneNumber)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
   fun `when back is clicked, the local ongoing login entry must be cleared`() {
     // given
-    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()) doReturn ongoingLoginEntry
 
     // when
     setupController()
     uiEvents.onNext(PinBackClicked)
 
     // then
-    verify(userSession).ongoingLoginEntry()
-    verify(userSession).clearOngoingLoginEntry()
-    verifyNoMoreInteractions(userSession)
+    verify(ongoingLoginEntryRepository).entryImmediate()
+    verify(ongoingLoginEntryRepository).clearLoginEntry()
+    verifyNoMoreInteractions(ongoingLoginEntryRepository)
+
+    verifyZeroInteractions(userSession)
 
     verify(ui).showPhoneNumber(phoneNumber)
-    verify(ui).goBackToRegistrationScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).goBackToRegistrationScreen()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -123,8 +129,8 @@ class LoginPinScreenControllerTest {
         currentFacilityUuid = registrationFacilityUuid
     )
 
-    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
-    whenever(userSession.saveOngoingLoginEntry(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()) doReturn ongoingLoginEntry
+    whenever(ongoingLoginEntryRepository.saveLoginEntry(ongoingLoginEntry))
         .thenReturn(Completable.complete())
     whenever(userSession.storeUser(expectedUser, registrationFacilityUuid))
         .thenReturn(Completable.complete())
@@ -134,29 +140,24 @@ class LoginPinScreenControllerTest {
     uiEvents.onNext(LoginPinAuthenticated(ongoingLoginEntry))
 
     // then
-    verify(userSession).ongoingLoginEntry()
+    verify(ongoingLoginEntryRepository).entryImmediate()
+    verify(ongoingLoginEntryRepository).saveLoginEntry(ongoingLoginEntry)
+    verifyNoMoreInteractions(ongoingLoginEntryRepository)
+
     verify(userSession).storeUser(user = expectedUser, facilityUuid = registrationFacilityUuid)
-    verify(userSession).saveOngoingLoginEntry(ongoingLoginEntry)
     verifyNoMoreInteractions(userSession)
 
     verify(ui, times(2)).showPhoneNumber(phoneNumber)
-    verify(ui).openHomeScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openHomeScreen()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupController() {
-    val controller = LoginPinScreenController(
-        userSession = userSession
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
     val effectHandler = LoginPinEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
         userSession = userSession,
-        uiActions = ui
+        ongoingLoginEntryRepository = ongoingLoginEntryRepository,
+        uiActions = uiActions
     )
     val uiRenderer = LoginPinUiRenderer(ui)
 

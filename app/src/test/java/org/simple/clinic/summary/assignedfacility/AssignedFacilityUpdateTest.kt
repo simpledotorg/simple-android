@@ -35,16 +35,6 @@ class AssignedFacilityUpdateTest {
   }
 
   @Test
-  fun `when assigned facility is changed, then do nothing`() {
-    updateSpec
-        .given(model)
-        .whenEvent(FacilityChanged)
-        .then(assertThatNext(
-            hasNothing()
-        ))
-  }
-
-  @Test
   fun `when change assign facility button is clicked, then open facility selection`() {
     updateSpec
         .given(model)

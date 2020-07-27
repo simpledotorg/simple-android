@@ -11,7 +11,6 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -36,7 +35,6 @@ import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -87,12 +85,10 @@ class EnterOtpLogicTest {
       updatedAt = user.updatedAt
   )
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<EnterOtpModel, EnterOtpEvent, EnterOtpEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -941,20 +937,5 @@ class EnterOtpLogicTest {
         modelUpdateListener = uiRenderer::render
     )
     testFixture.start()
-
-    val controller = EnterOtpScreenController(
-        userSession = userSession,
-        activateUser = activateUser,
-        loginUserWithOtp = loginUserWithOtp,
-        ongoingLoginEntryRepository = ongoingLoginEntryRepository,
-        schedulersProvider = TestSchedulersProvider.trampoline(),
-        dataSync = dataSync
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
-    uiEvents.onNext(ScreenCreated())
   }
 }

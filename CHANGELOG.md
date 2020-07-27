@@ -18,6 +18,7 @@
 - Migrated `RecentPatientsScreen` to Mobius
 - Remove tracking of ongoing registration entry from `UserSession`
 - [In Progress: 24th Jul 2020] Migrate `LoginPinScreen` to Mobius
+- [In Progress: 24th Jul 2020] Extract facility selection UI into a separate component
 
 ### Changes
 - Updated translations: `bn_IN`, `am_ET`, `te_IN`, `pa_IN`, `hi_IN`, `bn_BD`

@@ -6,38 +6,26 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
-import com.jakewharton.rxbinding3.view.detaches
-import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_facility_selection.view.*
-import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
-import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.introvideoscreen.IntroVideoScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ItemAdapter
-import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.displayedChildResId
-import org.simple.clinic.widgets.hideKeyboard
 import java.util.UUID
 import javax.inject.Inject
 
 class RegistrationFacilitySelectionScreen(
     context: Context,
     attrs: AttributeSet
-) : RelativeLayout(context, attrs), RegistrationFacilitySelectionUi, RegistrationFacilitySelectionUiActions {
+) : RelativeLayout(context, attrs), RegistrationFacilitySelectionUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -48,18 +36,9 @@ class RegistrationFacilitySelectionScreen(
   @Inject
   lateinit var effectHandlerFactory: RegistrationFacilitySelectionEffectHandler.Factory
 
-  @Inject
-  lateinit var config: RegistrationConfig
-
-  @Inject
-  lateinit var uiRendererFactory: RegistrationFacilitySelectionUiRenderer.Factory
-
-  private val recyclerViewAdapter = ItemAdapter(FacilityListItem.Differ())
-
   private val events by unsafeLazy {
     Observable
         .mergeArray(
-            searchQueryChanges(),
             facilityClicks(),
             registrationFacilityConfirmations()
         )
@@ -68,7 +47,6 @@ class RegistrationFacilitySelectionScreen(
   }
 
   private val delegate by unsafeLazy {
-    val uiRenderer = uiRendererFactory.create(this)
     val screenKey = screenRouter.key<RegistrationFacilitySelectionScreenKey>(this)
 
     MobiusDelegate.forView(
@@ -76,8 +54,7 @@ class RegistrationFacilitySelectionScreen(
         defaultModel = RegistrationFacilitySelectionModel.create(screenKey.ongoingRegistrationEntry),
         update = RegistrationFacilitySelectionUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        init = RegistrationFacilitySelectionInit.create(config),
-        modelUpdateListener = uiRenderer::render
+        init = RegistrationFacilitySelectionInit()
     )
   }
 
@@ -90,21 +67,7 @@ class RegistrationFacilitySelectionScreen(
 
     context.injector<Injector>().inject(this)
 
-    toolbarViewWithSearch.setNavigationOnClickListener {
-      screenRouter.pop()
-    }
-    toolbarViewWithoutSearch.setNavigationOnClickListener {
-      screenRouter.pop()
-    }
-
-    facilityRecyclerView.layoutManager = LinearLayoutManager(context)
-    facilityRecyclerView.adapter = recyclerViewAdapter
-
-    searchEditText.requestFocus()
-
-    // Hiding the keyboard without adding a post{} block doesn't seem to work.
-    post { hideKeyboard() }
-    hideKeyboardOnListScroll()
+    facilityPickerView.backClicked = { screenRouter.pop() }
   }
 
   override fun onAttachedToWindow() {
@@ -125,16 +88,11 @@ class RegistrationFacilitySelectionScreen(
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
-  private fun searchQueryChanges() =
-      searchEditText
-          .textChanges()
-          .map { text -> RegistrationFacilitySearchQueryChanged(text.toString()) }
-
-  private fun facilityClicks() =
-      recyclerViewAdapter
-          .itemEvents
-          .ofType<FacilityListItem.FacilityItemClicked>()
-          .map { RegistrationFacilityClicked(it.facility) }
+  private fun facilityClicks(): Observable<RegistrationFacilitySelectionEvent> {
+    return Observable.create { emitter ->
+      facilityPickerView.facilitySelectedCallback = { emitter.onNext(RegistrationFacilityClicked(it)) }
+    }
+  }
 
   private fun registrationFacilityConfirmations(): Observable<UiEvent> {
     return screenRouter
@@ -144,40 +102,6 @@ class RegistrationFacilitySelectionScreen(
           val confirmedFacilityUuid = ConfirmFacilitySheet.confirmedFacilityUuid(intent)
           RegistrationFacilityConfirmed(confirmedFacilityUuid)
         }
-  }
-
-  @SuppressLint("CheckResult")
-  private fun hideKeyboardOnListScroll() {
-    val scrollEvents = RxRecyclerView.scrollEvents(facilityRecyclerView)
-    val scrollStateChanges = RxRecyclerView.scrollStateChanges(facilityRecyclerView)
-
-    Observables.combineLatest(scrollEvents, scrollStateChanges)
-        .compose(RecyclerViewUserScrollDetector.streamDetections())
-        .filter { it.byUser }
-        .takeUntil(detaches())
-        .subscribe {
-          hideKeyboard()
-        }
-  }
-
-  override fun showProgressIndicator() {
-    progressView.visibility = VISIBLE
-  }
-
-  override fun hideProgressIndicator() {
-    progressView.visibility = GONE
-  }
-
-  override fun showToolbarWithSearchField() {
-    toolbarViewFlipper.displayedChildResId = R.id.toolbarViewWithSearch
-  }
-
-  override fun showToolbarWithoutSearchField() {
-    toolbarViewFlipper.displayedChildResId = R.id.toolbarViewWithoutSearch
-  }
-
-  override fun updateFacilities(facilityItems: List<FacilityListItem>) {
-    recyclerViewAdapter.submitList(facilityItems)
   }
 
   override fun openIntroVideoScreen() {

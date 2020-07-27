@@ -1,53 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:animateLayoutChanges="true"
-  android:background="@color/grey4"
-  android:orientation="vertical">
+  android:layout_height="match_parent">
 
-  <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
-    android:id="@+id/toolbarViewFlipper"
-    style="@style/Clinic.V2.FacilitySelection.ToolbarFlipper"
-    app:debug_displayedChild="0">
-
-    <androidx.appcompat.widget.Toolbar
-      android:id="@+id/toolbarViewWithoutSearch"
-      style="@style/Clinic.V2.FacilitySelection.ToolbarWithoutSearch"
-      app:title="@string/registrationfacilities_screen_title" />
-
-    <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
-      android:id="@+id/toolbarViewWithSearch"
-      style="@style/Clinic.V2.FacilitySelection.ToolbarWithSearch">
-
-      <EditText
-        android:id="@+id/searchEditText"
-        style="@style/Clinic.V2.FacilitySelection.SearchField"
-        android:hint="@string/registrationfacilities_search_hint"
-        android:importantForAutofill="no"
-        tools:ignore="UnusedAttribute" />
-    </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
-  </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
-
-  <include
-    android:id="@+id/progressView"
-    layout="@layout/screen_registration_facility_selection_progress_state"
+  <org.simple.clinic.facilitypicker.FacilityPickerView
+    android:id="@+id/facilityPickerView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@+id/toolbarViewFlipper"
-    android:visibility="gone" />
-
-  <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/facilityRecyclerView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_above="@+id/registrationfacilities_done"
-    android:layout_below="@+id/toolbarViewFlipper"
-    android:clipToPadding="false"
-    android:paddingBottom="@dimen/spacing_8"
-    android:scrollbarStyle="insideOverlay"
-    android:scrollbars="vertical"
-    tools:listitem="@layout/list_facility_selection_option" />
+    android:layout_height="match_parent" />
 </org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen>

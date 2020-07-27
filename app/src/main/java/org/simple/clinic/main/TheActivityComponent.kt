@@ -25,6 +25,7 @@ import org.simple.clinic.editpatient.EditPatientScreen
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenInjector
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.facility.change.FacilityChangeActivity
+import org.simple.clinic.facilitypicker.FacilityPickerView
 import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
 import org.simple.clinic.home.HomeScreen
@@ -103,7 +104,8 @@ interface TheActivityComponent :
     RecentPatientsView.Injector,
     AssignedFacilityView.Injector,
     RegistrationLoadingScreen.Injector,
-    RecentPatientsScreen.Injector {
+    RecentPatientsScreen.Injector,
+    FacilityPickerView.Injector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: AppLockScreen)

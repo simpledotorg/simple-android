@@ -13,3 +13,5 @@ data class LoginUser(val entry: OngoingLoginEntry) : LoginPinEffect()
 object OpenHomeScreen : LoginPinEffect()
 
 object GoBackToRegistrationScreen : LoginPinEffect()
+
+object ClearOngoingLoginEntry : LoginPinEffect()

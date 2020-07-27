@@ -29,7 +29,17 @@ class LoginPinEffectHandler @AssistedInject constructor(
       .addTransformer(LoginUser::class.java, loginUser())
       .addAction(OpenHomeScreen::class.java, uiActions::openHomeScreen, schedulersProvider.ui())
       .addAction(GoBackToRegistrationScreen::class.java, uiActions::goBackToRegistrationScreen, schedulersProvider.ui())
+      .addTransformer(ClearOngoingLoginEntry::class.java, clearOngoingLoginEntry())
       .build()
+
+  private fun clearOngoingLoginEntry(): ObservableTransformer<ClearOngoingLoginEntry, LoginPinEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .doOnNext { userSession.clearOngoingLoginEntry() }
+          .map { OngoingLoginEntryCleared }
+    }
+  }
 
   private fun loginUser(): ObservableTransformer<LoginUser, LoginPinEvent> {
     return ObservableTransformer { effects ->

@@ -1,7 +1,6 @@
 package org.simple.clinic.login.pin
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -20,7 +19,8 @@ class LoginPinUpdate : Update<LoginPinModel, LoginPinEvent, LoginPinEffect> {
           LoginUser(event.ongoingLoginEntry)
       )
       UserLoggedIn -> dispatch(OpenHomeScreen)
-      OngoingLoginEntryCleared -> noChange()
+      OngoingLoginEntryCleared -> dispatch(GoBackToRegistrationScreen)
+      PinBackClicked -> dispatch(ClearOngoingLoginEntry)
     }
   }
 }

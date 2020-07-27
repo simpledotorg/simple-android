@@ -3,7 +3,6 @@ package org.simple.clinic.login.pin
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
@@ -20,14 +19,6 @@ class LoginPinScreenController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.mergeArray(
-        backClicks(replayedEvents)
-    )
-  }
-
-  private fun backClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<PinBackClicked>()
-        .doOnNext { userSession.clearOngoingLoginEntry() }
-        .flatMap { Observable.just(Ui::goBackToRegistrationScreen) }
+    return Observable.never()
   }
 }

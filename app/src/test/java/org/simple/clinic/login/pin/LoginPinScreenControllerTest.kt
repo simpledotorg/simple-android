@@ -80,7 +80,7 @@ class LoginPinScreenControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(PinBackClicked())
+    uiEvents.onNext(PinBackClicked)
 
     // then
     verify(userSession).ongoingLoginEntry()

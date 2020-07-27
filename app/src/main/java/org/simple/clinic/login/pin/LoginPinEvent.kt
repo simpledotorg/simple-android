@@ -18,3 +18,7 @@ data class LoginPinScreenUpdatedLoginEntry(val ongoingLoginEntry: OngoingLoginEn
 object UserLoggedIn : LoginPinEvent()
 
 object OngoingLoginEntryCleared : LoginPinEvent()
+
+object PinBackClicked : LoginPinEvent() {
+  override val analyticsName = "Login:Pin Entry:Back Clicked"
+}

@@ -2,11 +2,19 @@ package org.simple.clinic.login.pin
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.user.OngoingLoginEntry
 
 @Parcelize
-class LoginPinModel : Parcelable {
+data class LoginPinModel(val ongoingLoginEntry: OngoingLoginEntry?) : Parcelable {
 
   companion object {
-    fun create() = LoginPinModel()
+    fun create() = LoginPinModel(null)
+  }
+
+  val hasOngoingLoginEntry: Boolean
+    get() = ongoingLoginEntry != null
+
+  fun ongoingLoginEntryUpdated(ongoingLoginEntry: OngoingLoginEntry): LoginPinModel {
+    return copy(ongoingLoginEntry = ongoingLoginEntry)
   }
 }

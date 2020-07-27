@@ -1,7 +1,7 @@
 package org.simple.clinic.login.pin
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -77,7 +77,6 @@ class LoginPinScreenControllerTest {
   fun `when back is clicked, the local ongoing login entry must be cleared`() {
     // given
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
-    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
 
     // when
     setupController()
@@ -140,7 +139,7 @@ class LoginPinScreenControllerTest {
     verify(userSession).saveOngoingLoginEntry(ongoingLoginEntry)
     verifyNoMoreInteractions(userSession)
 
-    verify(ui).showPhoneNumber(phoneNumber)
+    verify(ui, times(2)).showPhoneNumber(phoneNumber)
     verify(ui).openHomeScreen()
     verifyNoMoreInteractions(ui)
   }
@@ -153,8 +152,6 @@ class LoginPinScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
-
-    uiEvents.onNext(PinScreenCreated())
 
     val effectHandler = LoginPinEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),

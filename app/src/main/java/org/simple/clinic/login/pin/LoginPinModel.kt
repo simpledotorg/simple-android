@@ -10,4 +10,11 @@ data class LoginPinModel(val ongoingLoginEntry: OngoingLoginEntry?) : Parcelable
   companion object {
     fun create() = LoginPinModel(null)
   }
+
+  val hasOngoingLoginEntry: Boolean
+    get() = ongoingLoginEntry != null
+
+  fun ongoingLoginEntryUpdated(ongoingLoginEntry: OngoingLoginEntry): LoginPinModel {
+    return copy(ongoingLoginEntry = ongoingLoginEntry)
+  }
 }

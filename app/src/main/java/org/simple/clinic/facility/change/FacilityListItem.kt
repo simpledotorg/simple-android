@@ -34,8 +34,8 @@ sealed class FacilityListItem : ItemAdapter.Item<FacilityListItem.FacilityItemCl
 
     override fun render(holder: ViewHolderX, subject: Subject<FacilityItemClicked>) {
       holder.headerNameTextView.setText(when (this) {
-        is SuggestedFacilities -> R.string.registrationfacilities_header_suggested_facilities
-        is AllFacilities -> R.string.registrationfacilities_header_all_facilities
+        is SuggestedFacilities -> R.string.facilitypicker_header_suggested_facilities
+        is AllFacilities -> R.string.facilitypicker_header_all_facilities
       })
 
       if (hasSpacingWithPreviousSection) {
@@ -82,14 +82,14 @@ sealed class FacilityListItem : ItemAdapter.Item<FacilityListItem.FacilityItemCl
       holder.facilityAddressTextView.text = when (address) {
         is Address.WithStreet -> {
           holder.itemView.resources.getString(
-              R.string.registrationfacilities_facility_address_with_street,
+              R.string.facilitypicker_facility_address_with_street,
               address.street,
               address.district,
               address.state)
         }
         is Address.WithoutStreet -> {
           holder.itemView.resources.getString(
-              R.string.registrationfacilities_facility_address_without_street,
+              R.string.facilitypicker_facility_address_without_street,
               address.district,
               address.state)
         }

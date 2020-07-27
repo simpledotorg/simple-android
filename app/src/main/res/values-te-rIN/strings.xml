@@ -248,11 +248,11 @@
   <string name="registrationlocation_permission_rationale_title">మీ క్లినిక్‌ను త్వరగా కనుగొనండి</string>
   <string name="registrationlocation_allow_access">స్థానం యాక్సెస్‌ను అనుమతించు</string>
 
-  <string name="registrationfacilities_screen_title">మీ క్లినిక్‌ను ఎంచుకోండి</string>
-  <string name="registrationfacilities_search_hint">మీ క్లినిక్ కోసం వెతకండి</string>
+  <string name="facilitypicker_screen_title">మీ క్లినిక్‌ను ఎంచుకోండి</string>
+  <string name="facilitypicker_search_hint">మీ క్లినిక్ కోసం వెతకండి</string>
   <!-- Street, District, State -->
-  <string name="registrationfacilities_header_suggested_facilities">సూచించిన క్లినిక్‌లు</string>
-  <string name="registrationfacilities_header_all_facilities">అన్ని క్లినిక్‌లు</string>
+  <string name="facilitypicker_header_suggested_facilities">సూచించిన క్లినిక్‌లు</string>
+  <string name="facilitypicker_header_all_facilities">అన్ని క్లినిక్‌లు</string>
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">ప్రారంభించండి</string>

@@ -37,17 +37,6 @@ class FacilityListItemBuilder @Inject constructor(val distanceCalculator: Distan
     return listItems
   }
 
-  fun build(
-      facilities: List<Facility>,
-      searchQuery: String
-  ): List<FacilityListItem> {
-    return build(
-        facilities = facilities,
-        searchQuery = searchQuery,
-        userLocation = null,
-        proximityThreshold = Distance.ofKilometers(0.0))
-  }
-
   private fun facilitiesNearbyUser(
       facilities: List<Facility>,
       userLocation: Coordinates,

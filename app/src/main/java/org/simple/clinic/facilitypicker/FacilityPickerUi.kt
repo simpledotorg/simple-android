@@ -1,8 +1,8 @@
-package org.simple.clinic.registration.facility
+package org.simple.clinic.facilitypicker
 
 import org.simple.clinic.facility.change.FacilityListItem
 
-interface RegistrationFacilitySelectionUi {
+interface FacilityPickerUi {
   fun showProgressIndicator()
   fun hideProgressIndicator()
   fun showToolbarWithSearchField()

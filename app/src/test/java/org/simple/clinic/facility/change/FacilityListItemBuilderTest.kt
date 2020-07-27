@@ -5,12 +5,12 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Address
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.location.DistanceCalculator
-import org.simple.clinic.TestData
 import org.simple.clinic.util.Distance
 import org.simple.clinic.util.RxErrorsRule
 
@@ -36,15 +36,15 @@ class FacilityListItemBuilderTest {
         name = Name.Plain(facility.name))
 
     val searchQuery1 = ""
-    val listItems1 = listItemBuilder.build(listOf(facility), searchQuery1).first()
+    val listItems1 = listItemBuilder.build(listOf(facility), searchQuery1, null, Distance.ofKilometers(0.0)).first()
     assertThat(listItems1).isEqualTo(template.copy(name = Name.Plain(facility.name)))
 
     val searchQuery2 = "Death"
-    val listItems2 = listItemBuilder.build(listOf(facility), searchQuery2).first()
+    val listItems2 = listItemBuilder.build(listOf(facility), searchQuery2, null, Distance.ofKilometers(0.0)).first()
     assertThat(listItems2).isEqualTo(template.copy(name = Name.Plain(facility.name)))
 
     val searchQuery3 = "Goth"
-    val listItems3 = listItemBuilder.build(listOf(facility), searchQuery3).first()
+    val listItems3 = listItemBuilder.build(listOf(facility), searchQuery3, null, Distance.ofKilometers(0.0)).first()
     assertThat(listItems3).isEqualTo(template.copy(name = Name.Highlighted(facility.name, highlightStart = 9, highlightEnd = 13)))
   }
 
@@ -59,7 +59,7 @@ class FacilityListItemBuilderTest {
     val nameUiModel = Name.Plain(facilityWithStreet.name)
     val searchQuery = ""
 
-    val listItem1 = listItemBuilder.build(listOf(facilityWithStreet), searchQuery).first()
+    val listItem1 = listItemBuilder.build(listOf(facilityWithStreet), searchQuery, null, Distance.ofKilometers(0.0)).first()
     assertThat(listItem1).isEqualTo(FacilityOption(
         facility = facilityWithStreet,
         name = nameUiModel,
@@ -69,7 +69,7 @@ class FacilityListItemBuilderTest {
             state = facilityWithStreet.state)))
 
     val facilityWithBlankStreet = facilityWithStreet.copy(streetAddress = " ")
-    val listItem2 = listItemBuilder.build(listOf(facilityWithBlankStreet), searchQuery).first()
+    val listItem2 = listItemBuilder.build(listOf(facilityWithBlankStreet), searchQuery, null, Distance.ofKilometers(0.0)).first()
     assertThat(listItem2).isEqualTo(FacilityOption(
         facility = facilityWithBlankStreet,
         name = nameUiModel,
@@ -78,7 +78,7 @@ class FacilityListItemBuilderTest {
             state = facilityWithBlankStreet.state)))
 
     val facilityWithNullStreet = facilityWithStreet.copy(streetAddress = null)
-    val listItem3 = listItemBuilder.build(listOf(facilityWithNullStreet), searchQuery).first()
+    val listItem3 = listItemBuilder.build(listOf(facilityWithNullStreet), searchQuery, null, Distance.ofKilometers(0.0)).first()
     assertThat(listItem3).isEqualTo(FacilityOption(
         facility = facilityWithNullStreet,
         name = nameUiModel,

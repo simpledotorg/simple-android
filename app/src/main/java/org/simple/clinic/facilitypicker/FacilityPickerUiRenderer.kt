@@ -1,25 +1,24 @@
-package org.simple.clinic.registration.facility
+package org.simple.clinic.facilitypicker
 
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import org.simple.clinic.facility.change.FacilityListItemBuilder
-import org.simple.clinic.location.LocationUpdate.Available
-import org.simple.clinic.location.LocationUpdate.Unavailable
+import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.registration.RegistrationConfig
 
-class RegistrationFacilitySelectionUiRenderer @AssistedInject constructor(
-    @Assisted private val ui: RegistrationFacilitySelectionUi,
+class FacilityPickerUiRenderer @AssistedInject constructor(
     private val facilityListItemBuilder: FacilityListItemBuilder,
-    private val registrationConfig: RegistrationConfig
-) : ViewRenderer<RegistrationFacilitySelectionModel> {
+    private val registrationConfig: RegistrationConfig,
+    @Assisted private val ui: FacilityPickerUi
+) : ViewRenderer<FacilityPickerModel> {
 
   @AssistedInject.Factory
   interface Factory {
-    fun create(ui: RegistrationFacilitySelectionUi): RegistrationFacilitySelectionUiRenderer
+    fun create(ui: FacilityPickerUi): FacilityPickerUiRenderer
   }
 
-  override fun render(model: RegistrationFacilitySelectionModel) {
+  override fun render(model: FacilityPickerModel) {
     if (model.hasLoadedFacilities) {
       ui.hideProgressIndicator()
       renderFacilities(model)
@@ -28,11 +27,11 @@ class RegistrationFacilitySelectionUiRenderer @AssistedInject constructor(
     }
 
     if (model.hasLoadedTotalFacilityCount) {
-      toggleSearchFieldInToolbar(model)
+      switchToolbarType(model)
     }
   }
 
-  private fun toggleSearchFieldInToolbar(model: RegistrationFacilitySelectionModel) {
+  private fun switchToolbarType(model: FacilityPickerModel) {
     if (model.totalFacilityCount!! > 0) {
       ui.showToolbarWithSearchField()
     } else {
@@ -40,10 +39,10 @@ class RegistrationFacilitySelectionUiRenderer @AssistedInject constructor(
     }
   }
 
-  private fun renderFacilities(model: RegistrationFacilitySelectionModel) {
+  private fun renderFacilities(model: FacilityPickerModel) {
     val locationCoordinates = when (val locationUpdate = model.currentLocation!!) {
-      Unavailable -> null
-      is Available -> locationUpdate.location
+      LocationUpdate.Unavailable -> null
+      is LocationUpdate.Available -> locationUpdate.location
     }
 
     val listItems = facilityListItemBuilder.build(

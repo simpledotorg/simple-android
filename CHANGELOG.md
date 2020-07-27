@@ -1,6 +1,12 @@
 # CHANGELOG
 
 ## Next Release
+###Internal
+- [In Progress: 24th Jul 2020] Migrate `LoginPinScreen` to Mobius
+- [In Progress: 24th Jul 2020] Extract facility selection UI into a separate component
+- [In Progress: 24th Jul 2020] Migrate `OverdueScreen` to Mobius
+
+## On Demo
 ### Features
 - Show assigned facility in the patient summary screen
 - Use patient's assigned facility to schedule an appointment
@@ -17,9 +23,6 @@
 - Bump patient resync token
 - Migrated `RecentPatientsScreen` to Mobius
 - Remove tracking of ongoing registration entry from `UserSession`
-- [In Progress: 24th Jul 2020] Migrate `LoginPinScreen` to Mobius
-- [In Progress: 24th Jul 2020] Extract facility selection UI into a separate component
-- [In Progress: 24th Jul 2020] Migrate `OverdueScreen` to Mobius
 
 ### Changes
 - Updated translations: `bn_IN`, `am_ET`, `te_IN`, `pa_IN`, `hi_IN`, `bn_BD`

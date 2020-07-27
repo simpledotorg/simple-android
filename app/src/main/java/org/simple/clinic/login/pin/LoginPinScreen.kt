@@ -35,8 +35,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     Observable
         .mergeArray(
             pinAuthentications(),
-            backClicks(),
-            otpReceived()
+            backClicks()
         )
         .compose(ReportAnalyticsEvents())
   }
@@ -121,11 +120,6 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     }
 
     return backClicksFromView.mergeWith(backClicksFromSystem)
-  }
-
-  private fun otpReceived(): Observable<LoginPinOtpReceived>? {
-    val key = screenRouter.key<LoginPinScreenKey>(this)
-    return Observable.just(LoginPinOtpReceived(key.otp))
   }
 
   override fun showPhoneNumber(phoneNumber: String) {

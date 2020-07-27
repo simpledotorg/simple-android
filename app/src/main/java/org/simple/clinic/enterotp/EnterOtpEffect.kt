@@ -17,3 +17,5 @@ object GoBack: EnterOtpEffect()
 object ListenForUserBackgroundVerification: EnterOtpEffect()
 
 object RequestLoginOtp: EnterOtpEffect()
+
+object ShowSmsSentMessage: EnterOtpEffect()

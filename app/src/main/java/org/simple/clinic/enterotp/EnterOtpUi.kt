@@ -9,5 +9,4 @@ interface EnterOtpUi: EnterOtpUiActions {
   fun hideError()
   fun showProgress()
   fun hideProgress()
-  fun showSmsSentMessage()
 }

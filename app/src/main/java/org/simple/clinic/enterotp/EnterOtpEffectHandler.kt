@@ -38,6 +38,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addAction(GoBack::class.java, uiActions::goBack, schedulers.ui())
         .addTransformer(ListenForUserBackgroundVerification::class.java, waitForUserBackgroundVerifications())
         .addTransformer(RequestLoginOtp::class.java, activateUser())
+        .addAction(ShowSmsSentMessage::class.java, uiActions::showSmsSentMessage, schedulers.ui())
         .build()
   }
 

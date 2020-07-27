@@ -2,7 +2,6 @@ package org.simple.clinic.sync
 
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.di.BloodSugarModule
@@ -50,11 +49,11 @@ class SyncModule {
 
   @Provides
   @Named("sync_config_frequent")
-  fun frequentSyncConfig(syncModuleConfig: Single<SyncModuleConfig>): Single<SyncConfig> {
-    return syncModuleConfig.map {
+  fun frequentSyncConfig(syncModuleConfig: SyncModuleConfig): Single<SyncConfig> {
+    return Single.fromCallable {
       SyncConfig(
           syncInterval = SyncInterval.FREQUENT,
-          batchSize = it.frequentSyncBatchSize,
+          batchSize = syncModuleConfig.frequentSyncBatchSize,
           syncGroup = SyncGroup.FREQUENT
       )
     }
@@ -62,12 +61,13 @@ class SyncModule {
 
   @Provides
   @Named("sync_config_daily")
-  fun dailySyncConfig(syncModuleConfig: Single<SyncModuleConfig>): Single<SyncConfig> {
-    return syncModuleConfig.map {
+  fun dailySyncConfig(syncModuleConfig: SyncModuleConfig): Single<SyncConfig> {
+    return Single.fromCallable {
       SyncConfig(
           syncInterval = SyncInterval.DAILY,
-          batchSize = it.dailySyncBatchSize,
-          syncGroup = SyncGroup.DAILY)
+          batchSize = syncModuleConfig.dailySyncBatchSize,
+          syncGroup = SyncGroup.DAILY
+      )
     }
   }
 
@@ -114,8 +114,8 @@ class SyncModule {
   }
 
   @Provides
-  fun syncModuleConfig(reader: ConfigReader): Single<SyncModuleConfig> {
-    return SyncModuleConfig.read(reader).firstOrError()
+  fun syncModuleConfig(reader: ConfigReader): SyncModuleConfig {
+    return SyncModuleConfig.read(reader)
   }
 }
 
@@ -126,33 +126,31 @@ data class SyncModuleConfig(
 
   companion object {
 
-    fun read(reader: ConfigReader): Observable<SyncModuleConfig> {
-      return Observable.fromCallable {
-        val frequentConfigString = reader.string("syncmodule_frequentsync_batchsize", default = "large")
+    fun read(reader: ConfigReader): SyncModuleConfig {
+      val frequentConfigString = reader.string("syncmodule_frequentsync_batchsize", default = "large")
 
-        val frequentBatchSize = when (frequentConfigString.toLowerCase(Locale.ROOT)) {
-          "verysmall" -> BatchSize.VERY_SMALL
-          "small" -> BatchSize.SMALL
-          "medium" -> BatchSize.MEDIUM
-          "large" -> BatchSize.LARGE
-          else -> BatchSize.MEDIUM
-        }
-
-        val dailyConfigString = reader.string("syncmodule_dailysync_batchsize", default = "large")
-
-        val dailyBatchSize = when (dailyConfigString.toLowerCase(Locale.ROOT)) {
-          "verysmall" -> BatchSize.VERY_SMALL
-          "small" -> BatchSize.SMALL
-          "medium" -> BatchSize.MEDIUM
-          "large" -> BatchSize.LARGE
-          else -> BatchSize.MEDIUM
-        }
-
-        SyncModuleConfig(
-            frequentSyncBatchSize = frequentBatchSize,
-            dailySyncBatchSize = dailyBatchSize
-        )
+      val frequentBatchSize = when (frequentConfigString.toLowerCase(Locale.ROOT)) {
+        "verysmall" -> BatchSize.VERY_SMALL
+        "small" -> BatchSize.SMALL
+        "medium" -> BatchSize.MEDIUM
+        "large" -> BatchSize.LARGE
+        else -> BatchSize.MEDIUM
       }
+
+      val dailyConfigString = reader.string("syncmodule_dailysync_batchsize", default = "large")
+
+      val dailyBatchSize = when (dailyConfigString.toLowerCase(Locale.ROOT)) {
+        "verysmall" -> BatchSize.VERY_SMALL
+        "small" -> BatchSize.SMALL
+        "medium" -> BatchSize.MEDIUM
+        "large" -> BatchSize.LARGE
+        else -> BatchSize.MEDIUM
+      }
+
+      return SyncModuleConfig(
+          frequentSyncBatchSize = frequentBatchSize,
+          dailySyncBatchSize = dailyBatchSize
+      )
     }
   }
 }

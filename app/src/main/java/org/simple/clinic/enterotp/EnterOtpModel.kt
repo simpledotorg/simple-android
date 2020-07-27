@@ -42,16 +42,16 @@ data class EnterOtpModel(
     return copy(otpValidationResult = ValidationResult.IsNotRequiredLength)
   }
 
-  fun loginFailed(error: AsyncOpError): EnterOtpModel {
-    return copy(asyncOpError = error)
-  }
-
   fun loginStarted(): EnterOtpModel {
     return copy(isLoginOngoing = true, asyncOpError = null)
   }
 
   fun loginFinished(): EnterOtpModel {
-    return copy(isLoginOngoing = false)
+    return copy(isLoginOngoing = false, asyncOpError = null)
+  }
+
+  fun loginFailed(error: AsyncOpError): EnterOtpModel {
+    return copy(asyncOpError = error)
   }
 
   fun requestLoginOtpStarted(): EnterOtpModel {
@@ -59,7 +59,7 @@ data class EnterOtpModel(
   }
 
   fun requestLoginOtpFinished(): EnterOtpModel {
-    return copy(isLoginOngoing = false)
+    return copy(isLoginOngoing = false, asyncOpError = null)
   }
 
   fun requestLoginOtpFailed(error: AsyncOpError): EnterOtpModel {

@@ -77,8 +77,7 @@ class AssignedFacilityEffectHandlerTest {
         assignedFacilityId = updatedAssignedFacilityId
     )
 
-    effectHandlerTestCase.assertOutgoingEvents(FacilityChanged)
-
+    effectHandlerTestCase.assertNoOutgoingEvents()
     verifyZeroInteractions(uiActions)
   }
 

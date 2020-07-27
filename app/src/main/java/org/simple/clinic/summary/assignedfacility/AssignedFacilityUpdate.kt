@@ -12,7 +12,6 @@ class AssignedFacilityUpdate : Update<AssignedFacilityModel, AssignedFacilityEve
   override fun update(model: AssignedFacilityModel, event: AssignedFacilityEvent): Next<AssignedFacilityModel, AssignedFacilityEffect> {
     return when (event) {
       is AssignedFacilityLoaded -> next(model.assignedFacilityUpdated(event.facility.toNullable()))
-      FacilityChanged -> noChange()
       ChangeAssignedFacilityButtonClicked -> dispatch(OpenFacilitySelection)
       is AssignedFacilitySelected -> next(
           model.assignedFacilityUpdated(event.facility),

@@ -8,8 +8,6 @@ sealed class AssignedFacilityEvent : UiEvent
 
 data class AssignedFacilityLoaded(val facility: Optional<Facility>) : AssignedFacilityEvent()
 
-object FacilityChanged : AssignedFacilityEvent()
-
 object ChangeAssignedFacilityButtonClicked : AssignedFacilityEvent()
 
 data class AssignedFacilitySelected(val facility: Facility) : AssignedFacilityEvent()

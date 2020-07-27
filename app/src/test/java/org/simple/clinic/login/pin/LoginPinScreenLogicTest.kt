@@ -24,7 +24,7 @@ import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
 import java.util.UUID
 
-class LoginPinScreenControllerTest {
+class LoginPinScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

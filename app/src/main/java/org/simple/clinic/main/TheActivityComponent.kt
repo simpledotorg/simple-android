@@ -105,7 +105,8 @@ interface TheActivityComponent :
     AssignedFacilityView.Injector,
     RegistrationLoadingScreen.Injector,
     RecentPatientsScreen.Injector,
-    FacilityPickerView.Injector {
+    FacilityPickerView.Injector,
+    ForgotPinCreateNewPinScreen.Injector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: AppLockScreen)
@@ -116,7 +117,6 @@ interface TheActivityComponent :
   fun inject(target: PatientSummaryScreen)
   fun inject(target: FacilityChangeActivity)
   fun inject(target: ConfirmResetPinDialog)
-  fun inject(target: ForgotPinCreateNewPinScreen)
   fun inject(target: ForgotPinConfirmPinScreen)
   fun inject(target: NewMedicalHistoryScreen)
   fun inject(target: ConfirmDiscardChangesDialog)

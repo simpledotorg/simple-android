@@ -15,8 +15,8 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.injector
 import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreenKey
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
@@ -74,7 +74,7 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
       return
     }
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     bindUiToController(
         ui = this,
@@ -134,5 +134,9 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
 
   override fun hideInvalidPinError() {
     pinErrorTextView.visibility = View.GONE
+  }
+
+  interface Injector {
+    fun inject(target: ForgotPinCreateNewPinScreen)
   }
 }

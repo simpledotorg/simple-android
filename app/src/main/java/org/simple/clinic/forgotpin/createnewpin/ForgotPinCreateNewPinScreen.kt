@@ -23,7 +23,7 @@ import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet) {
+class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet), ForgotPinCreateNewPinUi {
 
   @Inject
   lateinit var controller: ForgotPinCreateNewPinScreenController
@@ -69,24 +69,24 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
           .filter { it == EditorInfo.IME_ACTION_DONE }
           .map { ForgotPinCreateNewPinSubmitClicked }
 
-  fun showUserName(name: String) {
+  override fun showUserName(name: String) {
     userNameTextView.text = name
   }
 
-  fun showFacility(name: String) {
+  override fun showFacility(name: String) {
     facilityNameTextView.text = name
   }
 
-  fun showInvalidPinError() {
+  override fun showInvalidPinError() {
     pinErrorTextView.visibility = View.VISIBLE
   }
 
-  fun showConfirmPinScreen(pin: String) {
+  override fun showConfirmPinScreen(pin: String) {
     hideKeyboard()
     screenRouter.push(ForgotPinConfirmPinScreenKey(pin))
   }
 
-  fun hideInvalidPinError() {
+  override fun hideInvalidPinError() {
     pinErrorTextView.visibility = View.GONE
   }
 }

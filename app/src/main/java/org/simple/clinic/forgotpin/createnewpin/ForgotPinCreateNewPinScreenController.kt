@@ -13,7 +13,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = ForgotPinCreateNewPinScreen
+typealias Ui = ForgotPinCreateNewPinUi
 typealias UiChange = (Ui) -> Unit
 
 class ForgotPinCreateNewPinScreenController @Inject constructor(

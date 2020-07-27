@@ -24,7 +24,7 @@ class ForgotPinCreateNewPinScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<ForgotPinCreateNewPinScreen>()
+  private val ui = mock<ForgotPinCreateNewPinUi>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
 
@@ -50,18 +50,18 @@ class ForgotPinCreateNewPinScreenControllerTest {
   fun `on start, the logged in user's full name must be shown`() {
     setupController()
 
-    verify(screen).showUserName("John Doe")
-    verify(screen).showFacility("PHC Obvious")
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("John Doe")
+    verify(ui).showFacility("PHC Obvious")
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
   fun `on start, the current selected facility should be shown`() {
     setupController()
 
-    verify(screen).showUserName("John Doe")
-    verify(screen).showFacility("PHC Obvious")
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("John Doe")
+    verify(ui).showFacility("PHC Obvious")
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -80,12 +80,12 @@ class ForgotPinCreateNewPinScreenControllerTest {
     uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1111"))
     uiEvents.onNext(ForgotPinCreateNewPinSubmitClicked)
 
-    verify(screen).showUserName("John Doe")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen, times(3)).showInvalidPinError()
-    verify(screen, times(4)).hideInvalidPinError()
-    verify(screen).showConfirmPinScreen("1111")
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("John Doe")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui, times(3)).showInvalidPinError()
+    verify(ui, times(4)).hideInvalidPinError()
+    verify(ui).showConfirmPinScreen("1111")
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -95,11 +95,11 @@ class ForgotPinCreateNewPinScreenControllerTest {
     uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1111"))
     uiEvents.onNext(ForgotPinCreateNewPinSubmitClicked)
 
-    verify(screen).showUserName("John Doe")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen).showConfirmPinScreen("1111")
-    verify(screen).hideInvalidPinError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("John Doe")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui).showConfirmPinScreen("1111")
+    verify(ui).hideInvalidPinError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -109,10 +109,10 @@ class ForgotPinCreateNewPinScreenControllerTest {
     uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1"))
     uiEvents.onNext(ForgotPinCreateNewPinTextChanged("11"))
 
-    verify(screen).showUserName("John Doe")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen, times(2)).hideInvalidPinError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("John Doe")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui, times(2)).hideInvalidPinError()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -122,7 +122,7 @@ class ForgotPinCreateNewPinScreenControllerTest {
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
 
     controllerSubscription = uiEvents.compose(controller)
-        .subscribe { it.invoke(screen) }
+        .subscribe { it.invoke(ui) }
 
     uiEvents.onNext(ScreenCreated())
   }

@@ -16,7 +16,3 @@ data class LoginPinAuthenticated(val newLoginEntry: OngoingLoginEntry): UiEvent 
 // This event does not need an analytics name because it is
 // part of the old, deprecated login flow and will be removed
 data class LoginPinOtpReceived(val otp: String) : UiEvent
-
-data class LoginPinScreenUpdatedLoginEntry(val ongoingLoginEntry: OngoingLoginEntry) : UiEvent {
-  override val analyticsName: String = "Login:Pin Entry:Updated Login Entry"
-}

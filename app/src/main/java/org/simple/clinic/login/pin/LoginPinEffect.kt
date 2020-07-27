@@ -1,5 +1,9 @@
 package org.simple.clinic.login.pin
 
+import org.simple.clinic.user.OngoingLoginEntry
+
 sealed class LoginPinEffect
 
 object LoadOngoingLoginEntry : LoginPinEffect()
+
+data class SaveOngoingLoginEntry(val entry: OngoingLoginEntry) : LoginPinEffect()

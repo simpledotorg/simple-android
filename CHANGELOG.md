@@ -2,7 +2,7 @@
 
 ## Next Release
 ###Internal
-- [In Progress: 24th Jul 2020] Migrate `LoginPinScreen` to Mobius
+- [In Progress: 27th Jul 2020] Migrate `LoginPinScreen` to Mobius
 - [In Progress: 24th Jul 2020] Extract facility selection UI into a separate component
 - [In Progress: 24th Jul 2020] Migrate `OverdueScreen` to Mobius
 

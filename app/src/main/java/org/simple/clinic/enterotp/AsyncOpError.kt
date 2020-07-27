@@ -4,10 +4,10 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.login.LoginResult
 
-sealed class LoginError : Parcelable {
+sealed class AsyncOpError : Parcelable {
 
   companion object {
-    fun from(loginResult: LoginResult): LoginError {
+    fun from(loginResult: LoginResult): AsyncOpError {
       return when (loginResult) {
         LoginResult.NetworkError -> NetworkError
         is LoginResult.ServerError -> ServerError(loginResult.error)
@@ -19,10 +19,10 @@ sealed class LoginError : Parcelable {
 }
 
 @Parcelize
-object NetworkError : LoginError()
+object NetworkError : AsyncOpError()
 
 @Parcelize
-data class ServerError(val errorMessage: String) : LoginError()
+data class ServerError(val errorMessage: String) : AsyncOpError()
 
 @Parcelize
-object OtherError : LoginError()
+object OtherError : AsyncOpError()

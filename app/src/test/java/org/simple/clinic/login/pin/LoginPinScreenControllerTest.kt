@@ -48,12 +48,10 @@ class LoginPinScreenControllerTest {
       updatedAt = null
   )
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<LoginPinModel, LoginPinEvent, LoginPinEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -145,14 +143,6 @@ class LoginPinScreenControllerTest {
   }
 
   private fun setupController() {
-    val controller = LoginPinScreenController(
-        userSession = userSession
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
     val effectHandler = LoginPinEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
         userSession = userSession,

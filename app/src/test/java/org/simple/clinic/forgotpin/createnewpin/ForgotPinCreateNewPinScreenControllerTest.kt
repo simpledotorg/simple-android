@@ -50,8 +50,6 @@ class ForgotPinCreateNewPinScreenControllerTest {
   fun `on start, the logged in user's full name must be shown`() {
     setupController()
 
-    uiEvents.onNext(ScreenCreated())
-
     verify(screen).showUserName("John Doe")
     verify(screen).showFacility("PHC Obvious")
     verifyNoMoreInteractions(screen)
@@ -60,8 +58,6 @@ class ForgotPinCreateNewPinScreenControllerTest {
   @Test
   fun `on start, the current selected facility should be shown`() {
     setupController()
-
-    uiEvents.onNext(ScreenCreated())
 
     verify(screen).showUserName("John Doe")
     verify(screen).showFacility("PHC Obvious")
@@ -84,6 +80,8 @@ class ForgotPinCreateNewPinScreenControllerTest {
     uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1111"))
     uiEvents.onNext(ForgotPinCreateNewPinSubmitClicked)
 
+    verify(screen).showUserName("John Doe")
+    verify(screen).showFacility("PHC Obvious")
     verify(screen, times(3)).showInvalidPinError()
     verify(screen, times(4)).hideInvalidPinError()
     verify(screen).showConfirmPinScreen("1111")
@@ -97,6 +95,8 @@ class ForgotPinCreateNewPinScreenControllerTest {
     uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1111"))
     uiEvents.onNext(ForgotPinCreateNewPinSubmitClicked)
 
+    verify(screen).showUserName("John Doe")
+    verify(screen).showFacility("PHC Obvious")
     verify(screen).showConfirmPinScreen("1111")
     verify(screen).hideInvalidPinError()
     verifyNoMoreInteractions(screen)
@@ -109,6 +109,8 @@ class ForgotPinCreateNewPinScreenControllerTest {
     uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1"))
     uiEvents.onNext(ForgotPinCreateNewPinTextChanged("11"))
 
+    verify(screen).showUserName("John Doe")
+    verify(screen).showFacility("PHC Obvious")
     verify(screen, times(2)).hideInvalidPinError()
     verifyNoMoreInteractions(screen)
   }
@@ -121,5 +123,7 @@ class ForgotPinCreateNewPinScreenControllerTest {
 
     controllerSubscription = uiEvents.compose(controller)
         .subscribe { it.invoke(screen) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

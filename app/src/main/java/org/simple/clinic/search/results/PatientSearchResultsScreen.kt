@@ -12,10 +12,10 @@ import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
@@ -61,7 +61,8 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
     setupScreen()
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
@@ -145,6 +146,10 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
         AlertFacilityChangeSheet.intent(context, facility.name, ContinueToScreen(PatientEntryScreenKey())),
         ALERT_FACILITY_CHANGE
     )
+  }
+
+  interface Injector {
+    fun inject(target: PatientSearchResultsScreen)
   }
 
   companion object {

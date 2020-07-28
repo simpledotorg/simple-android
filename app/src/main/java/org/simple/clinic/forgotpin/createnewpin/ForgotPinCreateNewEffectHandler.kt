@@ -4,6 +4,7 @@ import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -24,7 +25,18 @@ class ForgotPinCreateNewEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<ForgotPinCreateNewEffect, ForgotPinCreateNewEvent>()
       .addTransformer(LoadLoggedInUser::class.java, loadLoggedInUser())
       .addTransformer(LoadCurrentFacility::class.java, loadFacility())
+      .addTransformer(ValidatePin::class.java, validatePin())
       .build()
+
+  private fun validatePin(): ObservableTransformer<ValidatePin, ForgotPinCreateNewEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .map { (pin) ->
+            val isPinValid = pin?.length == SECURITY_PIN_LENGTH
+            PinValidated(isPinValid)
+          }
+    }
+  }
 
   private fun loadFacility(): ObservableTransformer<LoadCurrentFacility, ForgotPinCreateNewEvent> {
     return ObservableTransformer { effects ->

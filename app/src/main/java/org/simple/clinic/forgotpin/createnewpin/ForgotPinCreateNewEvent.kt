@@ -9,3 +9,5 @@ sealed class ForgotPinCreateNewEvent : UiEvent
 data class LoggedInUserLoaded(val user: User) : ForgotPinCreateNewEvent()
 
 data class CurrentFacilityLoaded(val facility: Facility) : ForgotPinCreateNewEvent()
+
+data class PinValidated(val isValid: Boolean) : ForgotPinCreateNewEvent()

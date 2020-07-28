@@ -5,12 +5,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotterknife.bindView
-import org.simple.clinic.R
+import kotlinx.android.synthetic.main.screen_patient_search_results.view.*
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
@@ -23,7 +21,6 @@ import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.searchresultsview.RegisterNewPatient
 import org.simple.clinic.searchresultsview.SearchPatientWithCriteria
 import org.simple.clinic.searchresultsview.SearchResultClicked
@@ -51,9 +48,6 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
 
   @Inject
   lateinit var activity: AppCompatActivity
-
-  private val toolbar by bindView<Toolbar>(R.id.patientsearchresults_toolbar)
-  private val searchResultsView by bindView<PatientSearchView>(R.id.patientsearchresults_searchresultsview)
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {

@@ -282,8 +282,6 @@
   <string name="overduelist_high_risk">उच्‍च धोका</string>
 
   <!-- Facility change -->
-  <string name="changefacility_screen_title">तुमचे क्लिनिक निवडा</string>
-  <string name="facilitychange_search_hint">तुमचे क्लिनिक शोधा</string>
 
   <!-- Enter OTP -->
   <string name="enterotp_check_sms_sent_to">वर पाठवलेला SMS तपासा</string>

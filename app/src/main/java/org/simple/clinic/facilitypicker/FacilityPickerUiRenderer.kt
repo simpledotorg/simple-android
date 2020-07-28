@@ -5,11 +5,10 @@ import com.squareup.inject.assisted.AssistedInject
 import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.mobius.ViewRenderer
-import org.simple.clinic.registration.RegistrationConfig
 
 class FacilityPickerUiRenderer @AssistedInject constructor(
     private val facilityListItemBuilder: FacilityListItemBuilder,
-    private val registrationConfig: RegistrationConfig,
+    private val config: FacilityPickerConfig,
     @Assisted private val ui: FacilityPickerUi
 ) : ViewRenderer<FacilityPickerModel> {
 
@@ -49,7 +48,7 @@ class FacilityPickerUiRenderer @AssistedInject constructor(
         facilities = model.facilities!!,
         searchQuery = model.searchQuery,
         userLocation = locationCoordinates,
-        proximityThreshold = registrationConfig.proximityThresholdForNearbyFacilities
+        proximityThreshold = config.proximityThresholdForNearbyFacilities
     )
 
     ui.updateFacilities(listItems)

@@ -3,15 +3,18 @@ package org.simple.clinic.facilitypicker
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.location.ScreenLocationUpdates
+import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class FacilityPickerEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val screenLocationUpdates: ScreenLocationUpdates,
     private val facilityRepository: FacilityRepository,
+    private val currentUser: Lazy<User>,
     @Assisted private val uiActions: FacilityPickerUiActions
 ) {
 
@@ -27,6 +30,7 @@ class FacilityPickerEffectHandler @AssistedInject constructor(
         .addTransformer(LoadFacilitiesWithQuery::class.java, loadFacilitiesWithQuery())
         .addTransformer(LoadTotalFacilityCount::class.java, loadTotalCountOfFacilities())
         .addConsumer(ForwardSelectedFacility::class.java, { uiActions.dispatchSelectedFacility(it.facility) }, schedulers.ui())
+        .addTransformer(LoadFacilitiesInCurrentGroup::class.java, loadFacilitiesInCurrentGroup())
         .build()
   }
 
@@ -67,6 +71,18 @@ class FacilityPickerEffectHandler @AssistedInject constructor(
                 .subscribeOn(schedulers.io())
                 .take(1)
                 .map(::TotalFacilityCountLoaded)
+          }
+    }
+  }
+
+  private fun loadFacilitiesInCurrentGroup(): ObservableTransformer<LoadFacilitiesInCurrentGroup, FacilityPickerEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .switchMap { effect ->
+            facilityRepository
+                .facilitiesInCurrentGroup(effect.query, currentUser.get())
+                .map { FacilitiesFetched(query = effect.query, facilities = it) }
           }
     }
   }

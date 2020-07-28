@@ -7,7 +7,8 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
+import com.jakewharton.rxbinding3.recyclerview.scrollEvents
+import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.jakewharton.rxbinding3.view.detaches
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
@@ -21,7 +22,6 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
@@ -44,7 +44,7 @@ class FacilityPickerView(
   lateinit var uiRendererFactory: FacilityPickerUiRenderer.Factory
 
   @Inject
-  lateinit var config: RegistrationConfig
+  lateinit var config: FacilityPickerConfig
 
   var facilitySelectedCallback: OnFacilitySelected? = null
 
@@ -52,8 +52,15 @@ class FacilityPickerView(
 
   private val recyclerViewAdapter = ItemAdapter(FacilityListItem.Differ())
 
+  private val pickFrom: PickFrom
+
   init {
     inflate(context, R.layout.view_facilitypicker, this)
+
+    val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.FacilityPickerView)
+    pickFrom = PickFrom.forAttribute(typedArray)
+    typedArray.recycle()
+
     context.injector<Injector>().inject(this)
 
     toolbarViewWithSearch.setNavigationOnClickListener { backClicked?.invoke() }
@@ -85,9 +92,9 @@ class FacilityPickerView(
     MobiusDelegate.forView(
         events = events,
         defaultModel = FacilityPickerModel.create(),
-        update = FacilityPickerUpdate(),
+        update = FacilityPickerUpdate(pickFrom),
         effectHandler = effectHandlerFactory.inject(this).build(),
-        init = FacilityPickerInit(config),
+        init = FacilityPickerInit(pickFrom, config),
         modelUpdateListener = uiRenderer::render
     )
   }
@@ -136,8 +143,8 @@ class FacilityPickerView(
 
   @SuppressLint("CheckResult")
   private fun hideKeyboardOnListScroll() {
-    val scrollEvents = RxRecyclerView.scrollEvents(facilityRecyclerView)
-    val scrollStateChanges = RxRecyclerView.scrollStateChanges(facilityRecyclerView)
+    val scrollEvents = facilityRecyclerView.scrollEvents()
+    val scrollStateChanges = facilityRecyclerView.scrollStateChanges()
 
     Observables.combineLatest(scrollEvents, scrollStateChanges)
         .compose(RecyclerViewUserScrollDetector.streamDetections())

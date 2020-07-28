@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/rootLayout"
@@ -10,45 +10,9 @@
   android:orientation="vertical"
   tools:ignore="Overdraw">
 
-  <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
-    android:id="@+id/toolbarContainer"
-    style="@style/Clinic.V2.FacilitySelection.ToolbarFlipper"
-    app:debug_displayedChild="0">
-
-    <androidx.appcompat.widget.Toolbar
-      android:id="@+id/toolbarWithoutSearch"
-      style="@style/Clinic.V2.FacilitySelection.ToolbarWithoutSearch"
-      app:title="@string/changefacility_screen_title" />
-
-    <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
-      android:id="@+id/toolbarWithSearch"
-      style="@style/Clinic.V2.FacilitySelection.ToolbarWithSearch">
-
-      <EditText
-        android:id="@+id/searchEditText"
-        style="@style/Clinic.V2.FacilitySelection.SearchField"
-        android:hint="@string/facilitychange_search_hint"
-        android:importantForAutofill="no"
-        tools:ignore="UnusedAttribute" />
-    </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
-  </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
-
-  <include
-    android:id="@+id/progress"
-    layout="@layout/screen_registration_facility_selection_progress_state"
+  <org.simple.clinic.facilitypicker.FacilityPickerView
+    android:id="@+id/facilityPickerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/toolbarContainer"
-    android:visibility="gone" />
-
-  <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/facilityList"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@+id/toolbarContainer"
-    android:clipToPadding="false"
-    android:paddingBottom="@dimen/spacing_8"
-    android:scrollbarStyle="insideOverlay"
-    android:scrollbars="vertical"
-    tools:listitem="@layout/list_facility_selection_option" />
-</RelativeLayout>
+    app:pickFrom="in-current-group"/>
+</FrameLayout>

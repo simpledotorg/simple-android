@@ -282,8 +282,6 @@
   <string name="overduelist_high_risk">ਵੱਧ ਜੋਖਮ</string>
 
   <!-- Facility change -->
-  <string name="changefacility_screen_title">ਆਪਣਾ ਕਲੀਨਿਕ ਚੁਣੋ</string>
-  <string name="facilitychange_search_hint">ਆਪਣੇ ਕਲੀਨਿਕ ਦੀ ਖੋਜ ਕਰੋ</string>
 
   <!-- Enter OTP -->
   <string name="enterotp_check_sms_sent_to">ਇਸ \'ਤੇ ਭੇਜੇ ਗਏ SMS ਦੀ ਜਾਂਚ ਕਰੋ</string>

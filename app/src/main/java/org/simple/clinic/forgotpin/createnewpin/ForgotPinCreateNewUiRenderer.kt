@@ -7,6 +7,8 @@ class ForgotPinCreateNewUiRenderer(
 ) : ViewRenderer<ForgotPinCreateNewModel> {
 
   override fun render(model: ForgotPinCreateNewModel) {
-
+    if (model.hasUser) {
+      ui.showUserName(model.user!!.fullName)
+    }
   }
 }

@@ -13,6 +13,9 @@ data class ForgotPinCreateNewModel(
     fun create() = ForgotPinCreateNewModel(user = null)
   }
 
+  val hasUser: Boolean
+    get() = user != null
+
   fun userLoaded(user: User): ForgotPinCreateNewModel {
     return copy(user = user)
   }

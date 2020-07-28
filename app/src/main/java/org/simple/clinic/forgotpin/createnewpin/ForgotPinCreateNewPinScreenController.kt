@@ -27,18 +27,10 @@ class ForgotPinCreateNewPinScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        showUserNameOnScreenCreate(replayedEvents),
         showFacilityOnScreenCreate(replayedEvents),
         showInvalidPinErrorOnIncompletePin(replayedEvents),
         openConfirmPinEntryScreenOnValidPin(replayedEvents),
         hidePinValidationErrors(replayedEvents))
-  }
-
-  private fun showUserNameOnScreenCreate(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ScreenCreated>()
-        .flatMap { userSession.requireLoggedInUser() }
-        .map { { ui: Ui -> ui.showUserName(it.fullName) } }
   }
 
   private fun showFacilityOnScreenCreate(events: Observable<UiEvent>): Observable<UiChange> {

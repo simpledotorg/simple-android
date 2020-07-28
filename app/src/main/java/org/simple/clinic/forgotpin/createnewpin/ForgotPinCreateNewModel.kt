@@ -12,4 +12,8 @@ data class ForgotPinCreateNewModel(
   companion object {
     fun create() = ForgotPinCreateNewModel(user = null)
   }
+
+  fun userLoaded(user: User): ForgotPinCreateNewModel {
+    return copy(user = user)
+  }
 }

@@ -4,8 +4,12 @@ import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class ForgotPinCreateNewEffectHandler @AssistedInject constructor(
+    private val userSession: UserSession,
+    private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: UiActions
 ) {
 
@@ -16,5 +20,15 @@ class ForgotPinCreateNewEffectHandler @AssistedInject constructor(
 
   fun build(): ObservableTransformer<ForgotPinCreateNewEffect, ForgotPinCreateNewEvent> = RxMobius
       .subtypeEffectHandler<ForgotPinCreateNewEffect, ForgotPinCreateNewEvent>()
+      .addTransformer(LoadLoggedInUser::class.java, loadLoggedInUser())
       .build()
+
+  private fun loadLoggedInUser(): ObservableTransformer<LoadLoggedInUser, ForgotPinCreateNewEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .flatMap { userSession.requireLoggedInUser() }
+          .map(::LoggedInUserLoaded)
+    }
+  }
 }

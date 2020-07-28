@@ -7,11 +7,11 @@ import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class ForgotPinCreateNewEffectHandler @AssistedInject constructor(
-    private val userSession: UserSession,
+    private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: UiActions
@@ -55,8 +55,7 @@ class ForgotPinCreateNewEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMap { userSession.requireLoggedInUser() }
-          .map(::LoggedInUserLoaded)
+          .map { LoggedInUserLoaded(currentUser.get()) }
     }
   }
 }

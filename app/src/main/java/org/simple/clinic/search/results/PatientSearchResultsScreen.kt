@@ -5,7 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_patient_search_results.view.*
@@ -59,7 +59,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     context.injector<Injector>().inject(this)
     setupScreen()
 
-    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    val screenDestroys = detaches().map { ScreenDestroyed() }
     bindUiToController(
         ui = this,
         events = Observable.merge(

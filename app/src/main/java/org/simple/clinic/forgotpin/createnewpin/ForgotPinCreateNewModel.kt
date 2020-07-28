@@ -29,4 +29,8 @@ data class ForgotPinCreateNewModel(
   fun facilityLoaded(facility: Facility): ForgotPinCreateNewModel {
     return copy(facility = facility)
   }
+
+  fun pinChanged(pin: String): ForgotPinCreateNewModel {
+    return copy(pin = pin)
+  }
 }

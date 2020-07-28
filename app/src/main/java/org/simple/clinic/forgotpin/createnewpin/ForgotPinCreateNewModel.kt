@@ -2,11 +2,14 @@ package org.simple.clinic.forgotpin.createnewpin
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.user.User
 
 @Parcelize
-class ForgotPinCreateNewModel : Parcelable {
+data class ForgotPinCreateNewModel(
+    val user: User?
+) : Parcelable {
 
   companion object {
-    fun create() = ForgotPinCreateNewModel()
+    fun create() = ForgotPinCreateNewModel(user = null)
   }
 }

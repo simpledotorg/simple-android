@@ -64,10 +64,16 @@ class PatientSearchResultsController @Inject constructor(
   }
 
   private fun createOngoingEntryFromSearchCriteria(searchCriteria: PatientSearchCriteria): OngoingNewPatientEntry {
-    return when (searchCriteria) {
+    var ongoingNewPatientEntry = when (searchCriteria) {
       is Name -> OngoingNewPatientEntry.fromFullName(searchCriteria.patientName)
       is PhoneNumber -> OngoingNewPatientEntry.fromPhoneNumber(searchCriteria.phoneNumber)
     }
+
+    if (searchCriteria.additionalIdentifier != null) {
+      ongoingNewPatientEntry = ongoingNewPatientEntry.withIdentifier(searchCriteria.additionalIdentifier)
+    }
+
+    return ongoingNewPatientEntry
   }
 
   private fun saveEntryAndGoToRegisterPatientScreen(ongoingNewPatientEntry: OngoingNewPatientEntry, currentFacility: Facility): Observable<UiChange> {

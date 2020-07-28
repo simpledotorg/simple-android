@@ -16,8 +16,6 @@ import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -36,7 +34,6 @@ class ForgotPinCreateNewPinScreen(
   private val events by unsafeLazy {
     Observable
         .merge(
-            screenCreates(),
             pinTextChanges(),
             pinSubmitClicked()
         )
@@ -84,8 +81,6 @@ class ForgotPinCreateNewPinScreen(
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
-
-  private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
 
   private fun pinTextChanges() =
       createPinEditText

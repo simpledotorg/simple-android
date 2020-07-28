@@ -16,7 +16,6 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -121,8 +120,6 @@ class ForgotPinCreateNewPinScreenControllerTest {
   private fun setupController() {
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just((loggedInUser)))
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
-
-    uiEvents.onNext(ScreenCreated())
 
     val effectHandler = ForgotPinCreateNewEffectHandler(
         userSession = userSession,

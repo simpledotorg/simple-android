@@ -11,3 +11,5 @@ data class ValidatePin(val pin: String?) : ForgotPinCreateNewEffect()
 object ShowInvalidPinError : ForgotPinCreateNewEffect()
 
 data class ShowConfirmPinScreen(val pin: String) : ForgotPinCreateNewEffect()
+
+object HideInvalidPinError : ForgotPinCreateNewEffect()

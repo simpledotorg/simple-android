@@ -25,7 +25,10 @@ import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet), ForgotPinCreateNewPinUi {
+class ForgotPinCreateNewPinScreen(
+    context: Context,
+    attributeSet: AttributeSet?
+) : RelativeLayout(context, attributeSet), ForgotPinCreateNewPinUi, UiActions {
 
   @Inject
   lateinit var controller: ForgotPinCreateNewPinScreenController

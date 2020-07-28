@@ -27,6 +27,7 @@ class ForgotPinCreateNewPinScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<ForgotPinCreateNewPinUi>()
+  private val uiActions = mock<UiActions>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
 
@@ -84,10 +85,10 @@ class ForgotPinCreateNewPinScreenControllerTest {
 
     verify(ui).showUserName("John Doe")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui, times(3)).showInvalidPinError()
-    verify(ui, times(4)).hideInvalidPinError()
-    verify(ui).showConfirmPinScreen("1111")
-    verifyNoMoreInteractions(ui)
+    verify(uiActions, times(3)).showInvalidPinError()
+    verify(uiActions, times(4)).hideInvalidPinError()
+    verify(uiActions).showConfirmPinScreen("1111")
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -99,9 +100,9 @@ class ForgotPinCreateNewPinScreenControllerTest {
 
     verify(ui).showUserName("John Doe")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui).showConfirmPinScreen("1111")
-    verify(ui).hideInvalidPinError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showConfirmPinScreen("1111")
+    verify(uiActions).hideInvalidPinError()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -113,8 +114,8 @@ class ForgotPinCreateNewPinScreenControllerTest {
 
     verify(ui).showUserName("John Doe")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui, times(2)).hideInvalidPinError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions, times(2)).hideInvalidPinError()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupController() {
@@ -127,7 +128,7 @@ class ForgotPinCreateNewPinScreenControllerTest {
         userSession = userSession,
         facilityRepository = facilityRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
     val uiRenderer = ForgotPinCreateNewUiRenderer(ui)
 

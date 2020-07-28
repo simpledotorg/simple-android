@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -16,8 +17,10 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.time.LocalDate
 import java.util.UUID
 
@@ -26,7 +29,7 @@ class OverdueScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<OverdueScreen>()
+  private val ui = mock<OverdueUi>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val repository = mock<AppointmentRepository>()
   private val facilityRepository = mock<FacilityRepository>()
@@ -37,10 +40,12 @@ class OverdueScreenControllerTest {
   private val userClock = TestUserClock(dateOnClock)
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<OverdueModel, OverdueEvent, OverdueEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -53,9 +58,9 @@ class OverdueScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).updateList(emptyList(), false)
-    verify(screen).handleEmptyList(true)
-    verifyNoMoreInteractions(screen)
+    verify(ui).updateList(emptyList(), false)
+    verify(ui).handleEmptyList(true)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -79,10 +84,10 @@ class OverdueScreenControllerTest {
     uiEvents.onNext(CallPatientClicked(patientUuid))
 
     // then
-    verify(screen).handleEmptyList(false)
-    verify(screen).updateList(overdueAppointments, false)
-    verify(screen).openPhoneMaskBottomSheet(patientUuid)
-    verifyNoMoreInteractions(screen)
+    verify(ui).handleEmptyList(false)
+    verify(ui).updateList(overdueAppointments, false)
+    verify(ui).openPhoneMaskBottomSheet(patientUuid)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -111,14 +116,29 @@ class OverdueScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).handleEmptyList(false)
-    verify(screen).updateList(overdueAppointments, false)
-    verifyNoMoreInteractions(screen)
+    verify(ui).handleEmptyList(false)
+    verify(ui).updateList(overdueAppointments, false)
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(user.toOptional()))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
+
+    val effectHandler = OverdueEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+    val uiRenderer = OverdueUiRenderer(ui)
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = OverdueModel.create(),
+        update = OverdueUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render,
+        init = OverdueInit()
+    )
+    testFixture.start()
 
     val controller = OverdueScreenController(
         appointmentRepository = repository,
@@ -128,7 +148,7 @@ class OverdueScreenControllerTest {
     )
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(OverdueScreenCreated())
   }

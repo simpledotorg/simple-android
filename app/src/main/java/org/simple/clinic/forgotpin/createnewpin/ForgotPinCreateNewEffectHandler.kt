@@ -27,6 +27,7 @@ class ForgotPinCreateNewEffectHandler @AssistedInject constructor(
       .addTransformer(LoadCurrentFacility::class.java, loadFacility())
       .addTransformer(ValidatePin::class.java, validatePin())
       .addAction(ShowInvalidPinError::class.java, uiActions::showInvalidPinError, schedulersProvider.ui())
+      .addConsumer(ShowConfirmPinScreen::class.java, { uiActions.showConfirmPinScreen(it.pin) }, schedulersProvider.ui())
       .build()
 
   private fun validatePin(): ObservableTransformer<ValidatePin, ForgotPinCreateNewEvent> {

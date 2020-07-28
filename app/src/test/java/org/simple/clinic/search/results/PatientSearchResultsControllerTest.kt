@@ -25,7 +25,6 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-@RunWith(JUnitParamsRunner::class)
 class PatientSearchResultsControllerTest {
 
   @get:Rule

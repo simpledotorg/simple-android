@@ -12,8 +12,6 @@ import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.BindsActivity
 import org.simple.clinic.activity.BindsScreenRouter
 import org.simple.clinic.activity.RxActivityLifecycle
-import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreen
-import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreen
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenInjector
 import org.simple.clinic.bp.history.BloodPressureHistoryScreenInjector
@@ -126,9 +124,7 @@ interface TheActivityComponent :
   fun inject(target: QrCodeScannerView_Old)
   fun inject(target: QrCodeScannerView)
   fun inject(target: SyncIndicatorView)
-  fun inject(target: AddIdToPatientSearchScreen)
   fun inject(target: PatientSearchView)
-  fun inject(target: AddIdToPatientSearchResultsScreen)
   fun inject(target: LinkIdWithPatientView)
   fun inject(target: PatientSearchResultItemView)
   fun inject(target: AllPatientsInFacilityView)

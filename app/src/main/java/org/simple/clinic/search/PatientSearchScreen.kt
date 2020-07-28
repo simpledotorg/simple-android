@@ -6,8 +6,10 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
+import com.jakewharton.rxbinding3.widget.editorActionEvents
+import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_patient_search.view.*
@@ -62,7 +64,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     }
     searchQueryEditText.showKeyboard()
 
-    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    val screenDestroys = detaches().map { ScreenDestroyed() }
     hideKeyboardWhenAllPatientsListIsScrolled(screenDestroys)
 
     bindUiToController(
@@ -78,21 +80,24 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   private fun searchTextChanges(): Observable<UiEvent> {
-    return RxTextView
-        .textChanges(searchQueryEditText)
+    return searchQueryEditText
+        .textChanges()
         .map(CharSequence::toString)
         .map(::SearchQueryTextChanged)
   }
 
   private fun searchClicks(): Observable<SearchClicked> {
-    val imeSearchClicks = RxTextView
-        .editorActionEvents(searchQueryEditText)
-        .filter { it.actionId() == EditorInfo.IME_ACTION_SEARCH }
-
-    return RxView
-        .clicks(searchButtonFrame.button)
-        .mergeWith(imeSearchClicks)
+    val imeSearchClicks = searchQueryEditText
+        .editorActionEvents()
+        .filter { it.actionId == EditorInfo.IME_ACTION_SEARCH }
         .map { SearchClicked() }
+
+    val searchClicksFromButton = searchButtonFrame
+        .button
+        .clicks()
+        .map { SearchClicked() }
+
+    return searchClicksFromButton.mergeWith(imeSearchClicks)
   }
 
   private fun patientClickEvents(): Observable<UiEvent> {

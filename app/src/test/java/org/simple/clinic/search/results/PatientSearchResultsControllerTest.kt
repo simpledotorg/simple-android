@@ -8,11 +8,9 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import junitparams.JUnitParamsRunner
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.OngoingNewPatientEntry
@@ -55,11 +53,33 @@ class PatientSearchResultsControllerTest {
 
   @Test
   fun `when patient search result is clicked, then patient summary must be opened`() {
+    // given
     val patientUuid = UUID.fromString("951ad528-1952-4840-aad6-511371736a15")
+    val searchCriteria = PatientSearchCriteria.PhoneNumber("1111111111")
 
+    // when
+    uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey(searchCriteria)))
     uiEvents.onNext(PatientSearchResultClicked(patientUuid))
 
+    // then
     verify(screen).openPatientSummaryScreen(patientUuid)
+    verifyNoMoreInteractions(screen)
+  }
+
+  @Test
+  fun `when patient search result is clicked with additional identifier, then the ID must be linked with the patient`() {
+    // given
+    val patientUuid = UUID.fromString("951ad528-1952-4840-aad6-511371736a15")
+    val identifier = TestData.identifier(value = "1a686bfd-ded2-48c6-9df6-8e61799402f6", type = Identifier.IdentifierType.BpPassport)
+    val searchCriteria = PatientSearchCriteria.Name("Anish", identifier)
+
+    // when
+    uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey(searchCriteria)))
+    uiEvents.onNext(PatientSearchResultClicked(patientUuid))
+
+    // then
+    verify(screen).openLinkIdWithPatientScreen(patientUuid, identifier)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test

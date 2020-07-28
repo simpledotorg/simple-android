@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
@@ -16,6 +17,7 @@ import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -35,16 +37,26 @@ class PatientSearchResultsController @Inject constructor(
 
     return Observable.mergeArray(
         openPatientSummary(replayedEvents),
-        registerNewPatient(replayedEvents)
+        registerNewPatient(replayedEvents),
+        openLinkIdWithPatientScreen(replayedEvents)
     )
   }
 
-  private fun openPatientSummary(events: Observable<UiEvent>): ObservableSource<UiChange> =
-      events.ofType<PatientSearchResultClicked>()
-          .map { it.patientUuid }
-          .map { patientUuid ->
-            { ui: Ui -> ui.openPatientSummaryScreen(patientUuid) }
+  private fun openPatientSummary(events: Observable<UiEvent>): ObservableSource<UiChange> {
+    val additionalIdentifierStream = events
+        .ofType<PatientSearchResultsScreenCreated>()
+        .map { it.key.criteria.additionalIdentifier.toOptional() }
+
+    return events
+        .ofType<PatientSearchResultClicked>()
+        .withLatestFrom(additionalIdentifierStream)
+        .filter { (_, additionalIdentifier) -> !additionalIdentifier.isPresent() }
+        .map { (clickedResult, _) ->
+          { ui: Ui ->
+            ui.openPatientSummaryScreen(clickedResult.patientUuid)
           }
+        }
+  }
 
   private fun registerNewPatient(events: Observable<UiEvent>): Observable<UiChange> {
     val currentFacility = events
@@ -80,5 +92,21 @@ class PatientSearchResultsController @Inject constructor(
     return patientRepository
         .saveOngoingEntry(ongoingNewPatientEntry)
         .andThen(Observable.just { ui: Ui -> ui.openPatientEntryScreen(currentFacility) })
+  }
+
+  private fun openLinkIdWithPatientScreen(events: Observable<UiEvent>): Observable<UiChange> {
+    val additionalIdentifierStream = events
+        .ofType<PatientSearchResultsScreenCreated>()
+        .map { it.key.criteria.additionalIdentifier.toOptional() }
+
+    return events
+        .ofType<PatientSearchResultClicked>()
+        .withLatestFrom(additionalIdentifierStream)
+        .filter { (_, additionalIdentifier) -> additionalIdentifier.isPresent() }
+        .map { (clickedResult, additionalIdentifier) ->
+          { ui: Ui ->
+            ui.openLinkIdWithPatientScreen(clickedResult.patientUuid, additionalIdentifier.get())
+          }
+        }
   }
 }

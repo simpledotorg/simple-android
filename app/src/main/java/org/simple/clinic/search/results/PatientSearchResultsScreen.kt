@@ -20,6 +20,7 @@ import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.searchresultsview.PatientSearchView
@@ -133,6 +134,10 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
 
   fun openPatientSummaryScreen(patientUuid: UUID) {
     screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
+  }
+
+  fun openLinkIdWithPatientScreen(patientUuid: UUID, identifier: Identifier) {
+    screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.LinkIdWithPatient(identifier), Instant.now(utcClock)))
   }
 
   fun openPatientEntryScreen(facility: Facility) {

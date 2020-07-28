@@ -8,7 +8,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -27,18 +26,9 @@ class ForgotPinCreateNewPinScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        showFacilityOnScreenCreate(replayedEvents),
         showInvalidPinErrorOnIncompletePin(replayedEvents),
         openConfirmPinEntryScreenOnValidPin(replayedEvents),
         hidePinValidationErrors(replayedEvents))
-  }
-
-  private fun showFacilityOnScreenCreate(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ScreenCreated>()
-        .flatMap { userSession.requireLoggedInUser() }
-        .switchMap { facilityRepository.currentFacility(it) }
-        .map { { ui: Ui -> ui.showFacility(it.name) } }
   }
 
   private fun showInvalidPinErrorOnIncompletePin(events: Observable<UiEvent>): Observable<UiChange> {

@@ -133,6 +133,7 @@ class ForgotPinCreateNewPinScreenControllerTest {
 
     val effectHandler = ForgotPinCreateNewEffectHandler(
         userSession = userSession,
+        facilityRepository = facilityRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

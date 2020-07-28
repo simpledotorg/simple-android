@@ -21,4 +21,8 @@ data class ForgotPinCreateNewModel(
   fun userLoaded(user: User): ForgotPinCreateNewModel {
     return copy(user = user)
   }
+
+  fun facilityLoaded(facility: Facility): ForgotPinCreateNewModel {
+    return copy(facility = facility)
+  }
 }

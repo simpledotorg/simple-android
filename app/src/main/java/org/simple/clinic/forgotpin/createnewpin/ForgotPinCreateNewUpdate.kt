@@ -11,6 +11,7 @@ class ForgotPinCreateNewUpdate : Update<ForgotPinCreateNewModel, ForgotPinCreate
       Next<ForgotPinCreateNewModel, ForgotPinCreateNewEffect> {
     return when (event) {
       is LoggedInUserLoaded -> next(model.userLoaded(event.user))
+      is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility))
     }
   }
 }

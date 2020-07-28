@@ -3,16 +3,22 @@ package org.simple.clinic.facilitypicker
 import com.spotify.mobius.First
 import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
-import org.simple.clinic.registration.RegistrationConfig
+import org.simple.clinic.facilitypicker.PickFrom.AllFacilities
+import org.simple.clinic.facilitypicker.PickFrom.InCurrentGroup
 import java.time.Duration
 
 class FacilityPickerInit(
+    private val pickFrom: PickFrom,
     private val locationUpdateInterval: Duration,
     private var locationTimeout: Duration,
     private var discardLocationOlderThan: Duration
 ) : Init<FacilityPickerModel, FacilityPickerEffect> {
 
-  constructor(config: RegistrationConfig) : this(
+  constructor(
+      pickFrom: PickFrom,
+      config: FacilityPickerConfig
+  ) : this(
+      pickFrom = pickFrom,
       locationUpdateInterval = config.locationUpdateInterval,
       locationTimeout = config.locationListenerExpiry,
       discardLocationOlderThan = config.staleLocationThreshold
@@ -33,7 +39,12 @@ class FacilityPickerInit(
       effects.add(LoadTotalFacilityCount)
     }
 
-    effects.add(LoadFacilitiesWithQuery(model.searchQuery))
+    val loadFacilitiesEffect = when(pickFrom) {
+      AllFacilities -> LoadFacilitiesWithQuery(model.searchQuery)
+      InCurrentGroup -> LoadFacilitiesInCurrentGroup(model.searchQuery)
+    }
+
+    effects.add(loadFacilitiesEffect)
 
     return first(model, effects)
   }

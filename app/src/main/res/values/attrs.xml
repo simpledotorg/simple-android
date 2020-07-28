@@ -40,4 +40,11 @@
       <enum name="disabled" value="2" />
     </attr>
   </declare-styleable>
+
+  <declare-styleable name="FacilityPickerView">
+    <attr name="pickFrom" format="enum">
+      <enum name="all-facilities" value="0" />
+      <enum name="in-current-group" value="1" />
+    </attr>
+  </declare-styleable>
 </resources>

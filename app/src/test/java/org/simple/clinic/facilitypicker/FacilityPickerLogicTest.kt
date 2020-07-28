@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -17,12 +18,12 @@ import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.change.FacilityListItemBuilder
+import org.simple.clinic.facilitypicker.PickFrom.AllFacilities
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.location.DistanceCalculator
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.location.ScreenLocationUpdates
-import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.util.Distance
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -42,9 +43,11 @@ class FacilityPickerLogicTest {
   private val listItemBuilder = FacilityListItemBuilder(DistanceCalculator())
   private val screenLocationUpdates = mock<ScreenLocationUpdates>()
 
+  private val user = TestData.loggedInUser(uuid = UUID.fromString("5ce27605-4f45-4327-8a05-ddc87021c46e"))
+
   private lateinit var testFixture: MobiusTestFixture<FacilityPickerModel, FacilityPickerEvent, FacilityPickerEffect>
 
-  private val registrationConfig = RegistrationConfig(
+  private val config = FacilityPickerConfig(
       locationListenerExpiry = Duration.ofSeconds(0),
       locationUpdateInterval = Duration.ofSeconds(0),
       proximityThresholdForNearbyFacilities = Distance.ofKilometers(0.0),
@@ -65,15 +68,15 @@ class FacilityPickerLogicTest {
 
     // when
     setupController(
-        registrationConfig.copy(locationUpdateInterval = locationUpdateInterval),
+        config.copy(locationUpdateInterval = locationUpdateInterval),
         locationUpdate = Observable.never()
     )
 
     // then
     verify(screenLocationUpdates).streamUserLocation(
         updateInterval = locationUpdateInterval,
-        timeout = registrationConfig.locationListenerExpiry,
-        discardOlderThan = registrationConfig.staleLocationThreshold
+        timeout = config.locationListenerExpiry,
+        discardOlderThan = config.staleLocationThreshold
     )
     verify(ui, times(3)).showProgressIndicator()
     verify(ui, times(2)).showToolbarWithoutSearchField()
@@ -116,7 +119,7 @@ class FacilityPickerLogicTest {
     uiEvents.onNext(SearchQueryChanged(searchQuery))
 
     // then
-    val expectedFacilityListItems = listItemBuilder.build(facilities, searchQuery, null, registrationConfig.proximityThresholdForNearbyFacilities)
+    val expectedFacilityListItems = listItemBuilder.build(facilities, searchQuery, null, config.proximityThresholdForNearbyFacilities)
     verify(ui, times(3)).showProgressIndicator()
     verify(ui, times(2)).hideProgressIndicator()
     verify(ui, times(3)).showToolbarWithSearchField()
@@ -144,8 +147,8 @@ class FacilityPickerLogicTest {
     verify(ui, times(3)).showProgressIndicator()
     verify(ui, times(2)).hideProgressIndicator()
     verify(ui, times(3)).showToolbarWithSearchField()
-    verify(ui).updateFacilities(listItemBuilder.build(listOf(phcObvious, chcNilenso), "", null, registrationConfig.proximityThresholdForNearbyFacilities))
-    verify(ui).updateFacilities(listItemBuilder.build(listOf(phcObvious, chcNilenso), "HC", null, registrationConfig.proximityThresholdForNearbyFacilities))
+    verify(ui).updateFacilities(listItemBuilder.build(listOf(phcObvious, chcNilenso), "", null, config.proximityThresholdForNearbyFacilities))
+    verify(ui).updateFacilities(listItemBuilder.build(listOf(phcObvious, chcNilenso), "HC", null, config.proximityThresholdForNearbyFacilities))
     verifyNoMoreInteractions(ui)
 
     // when
@@ -155,7 +158,7 @@ class FacilityPickerLogicTest {
     // then
     verify(ui).hideProgressIndicator()
     verify(ui).showToolbarWithSearchField()
-    verify(ui).updateFacilities(listItemBuilder.build(listOf(phcObvious), "PHC", null, registrationConfig.proximityThresholdForNearbyFacilities))
+    verify(ui).updateFacilities(listItemBuilder.build(listOf(phcObvious), "PHC", null, config.proximityThresholdForNearbyFacilities))
     verifyNoMoreInteractions(ui)
 
     // when
@@ -165,7 +168,7 @@ class FacilityPickerLogicTest {
     // then
     verify(ui).hideProgressIndicator()
     verify(ui).showToolbarWithSearchField()
-    verify(ui).updateFacilities(listItemBuilder.build(listOf(chcNilenso), "CHC", null, registrationConfig.proximityThresholdForNearbyFacilities))
+    verify(ui).updateFacilities(listItemBuilder.build(listOf(chcNilenso), "CHC", null, config.proximityThresholdForNearbyFacilities))
     verifyNoMoreInteractions(ui)
   }
 
@@ -186,7 +189,7 @@ class FacilityPickerLogicTest {
     uiEvents.onNext(SearchQueryChanged(searchQuery))
 
     // then
-    val expectedFacilityListItems = listItemBuilder.build(facilities, searchQuery, null, registrationConfig.proximityThresholdForNearbyFacilities)
+    val expectedFacilityListItems = listItemBuilder.build(facilities, searchQuery, null, config.proximityThresholdForNearbyFacilities)
     verify(ui, times(3)).showProgressIndicator()
     verify(ui, times(4)).hideProgressIndicator()
     verify(ui, times(5)).showToolbarWithSearchField()
@@ -211,7 +214,7 @@ class FacilityPickerLogicTest {
     verify(ui, times(3)).showProgressIndicator()
     verify(ui).hideProgressIndicator()
     verify(ui, times(2)).showToolbarWithSearchField()
-    verify(ui).updateFacilities(listItemBuilder.build(listOf(facility1), "", null, registrationConfig.proximityThresholdForNearbyFacilities))
+    verify(ui).updateFacilities(listItemBuilder.build(listOf(facility1), "", null, config.proximityThresholdForNearbyFacilities))
     verify(uiActions).dispatchSelectedFacility(facility1)
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -234,8 +237,9 @@ class FacilityPickerLogicTest {
   }
 
   private fun setupController(
-      config: RegistrationConfig = registrationConfig,
-      locationUpdate: Observable<LocationUpdate> = Observable.just(Unavailable)
+      config: FacilityPickerConfig = this.config,
+      locationUpdate: Observable<LocationUpdate> = Observable.just(Unavailable),
+      pickFrom: PickFrom = AllFacilities
   ) {
     whenever(screenLocationUpdates.streamUserLocation(
         updateInterval = config.locationUpdateInterval,
@@ -247,6 +251,7 @@ class FacilityPickerLogicTest {
         schedulers = TestSchedulersProvider.trampoline(),
         screenLocationUpdates = screenLocationUpdates,
         facilityRepository = facilityRepository,
+        currentUser = Lazy { user },
         uiActions = uiActions
     )
     val uiRenderer = FacilityPickerUiRenderer(listItemBuilder, config, ui)
@@ -254,8 +259,8 @@ class FacilityPickerLogicTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = FacilityPickerModel.create(),
-        init = FacilityPickerInit(config),
-        update = FacilityPickerUpdate(),
+        init = FacilityPickerInit(pickFrom, config),
+        update = FacilityPickerUpdate(pickFrom),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )

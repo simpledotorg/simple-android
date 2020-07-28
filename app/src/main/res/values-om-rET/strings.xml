@@ -283,8 +283,6 @@
   <string name="overduelist_high_risk">Saaxilbahii ol aanaa</string>
 
   <!-- Facility change -->
-  <string name="changefacility_screen_title">Kilinikii kee filadhu</string>
-  <string name="facilitychange_search_hint">Kilinikii kee barbaadi</string>
 
   <!-- Enter OTP -->
   <string name="enterotp_check_sms_sent_to">SMS ergame barbaadi</string>

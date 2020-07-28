@@ -369,10 +369,6 @@
   <string name="linkidwithpatient_to_patient_text">रोगी\u0020से\u00A0जोड़े?</string>
 
   <!-- Add ID to Patient: Search -->
-  <string name="addidtopatientsearch_toolbar_title">रोगी का नाम दर्ज करे</string>
-  <string name="addidtopatientsearch_search">आगे</string>
-  <string name="addidtopatientsearch_error_empty_fullname">रोगी का पूरा नाम या फ़ोन नंबर लिखें</string>
-  <string name="addidtopatientsearch_hint">नाम या फ़ोन नंबर</string>
 
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">हाल ही का</string>

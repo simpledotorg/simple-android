@@ -369,10 +369,6 @@
   <string name="linkidwithpatient_to_patient_text">\u0020కు\u00A0రోగి?</string>
 
   <!-- Add ID to Patient: Search -->
-  <string name="addidtopatientsearch_toolbar_title">రోగిని పేరును నమోదు చేయండి</string>
-  <string name="addidtopatientsearch_search">తదుపరి</string>
-  <string name="addidtopatientsearch_error_empty_fullname">రోగి పూర్తి పేరును లేదా ఫోన్ నంబర్‌ను నమోదు చేయండి</string>
-  <string name="addidtopatientsearch_hint">పేరు లేదా ఫోన్ నంబర్</string>
 
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">ఇటీవల</string>

@@ -369,10 +369,6 @@
   <string name="linkidwithpatient_to_patient_text">\u0020 ወደ \u00A0ታካሚ?</string>
 
   <!-- Add ID to Patient: Search -->
-  <string name="addidtopatientsearch_toolbar_title">የታካሚውን ስም ያስገቡ</string>
-  <string name="addidtopatientsearch_search">ቀጣይ</string>
-  <string name="addidtopatientsearch_error_empty_fullname">የታካሚውን ሙሉ ስም ወይም የስልክ ቁጥር ያስገቡ</string>
-  <string name="addidtopatientsearch_hint">ስም ወይም ስልክ ቁጥር</string>
 
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">የቅርብ</string>

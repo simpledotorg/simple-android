@@ -15,16 +15,18 @@ class FacilityPickerUpdate(
     return when (event) {
       is LocationFetched -> next(model.locationFetched(event.update))
       is FacilitiesFetched -> next(model.queryChanged(event.query).facilitiesLoaded(event.facilities))
-      is SearchQueryChanged -> {
-        val effect = when (pickFrom) {
-          AllFacilities -> LoadFacilitiesWithQuery(event.query)
-          InCurrentGroup -> LoadFacilitiesInCurrentGroup(event.query)
-        }
-
-        dispatch(effect)
-      }
+      is SearchQueryChanged -> loadFacilities(event)
       is TotalFacilityCountLoaded -> next(model.facilityCountLoaded(event.count))
       is FacilityClicked -> dispatch(ForwardSelectedFacility(event.facility))
     }
+  }
+
+  private fun loadFacilities(event: SearchQueryChanged): Next<FacilityPickerModel, FacilityPickerEffect> {
+    val effect = when (pickFrom) {
+      AllFacilities -> LoadFacilitiesWithQuery(event.query)
+      InCurrentGroup -> LoadFacilitiesInCurrentGroup(event.query)
+    }
+
+    return dispatch(effect)
   }
 }

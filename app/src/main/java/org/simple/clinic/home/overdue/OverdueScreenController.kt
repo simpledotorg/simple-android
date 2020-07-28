@@ -5,7 +5,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.user.UserSession
@@ -15,7 +14,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
 import javax.inject.Inject
 
-typealias Ui = OverdueScreen
+typealias Ui = OverdueUi
 typealias UiChange = (Ui) -> Unit
 
 class OverdueScreenController @Inject constructor(
@@ -27,7 +26,6 @@ class OverdueScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(ReportAnalyticsEvents())
         .replay()
 
     return Observable.mergeArray(

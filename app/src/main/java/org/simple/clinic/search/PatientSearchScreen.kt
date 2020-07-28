@@ -16,7 +16,7 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
@@ -55,7 +55,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     searchQueryTextInputLayout.setStartIconOnClickListener {
       screenRouter.pop()
@@ -143,5 +143,9 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun hideSearchButton() {
     searchButtonFrame.visibility = View.GONE
+  }
+
+  interface Injector {
+    fun inject(target: PatientSearchScreen)
   }
 }

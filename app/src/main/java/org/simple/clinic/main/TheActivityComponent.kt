@@ -108,12 +108,12 @@ interface TheActivityComponent :
     FacilityPickerView.Injector,
     ForgotPinCreateNewPinScreen.Injector,
     OverdueScreen.Injector,
-    PatientSearchResultsScreen.Injector {
+    PatientSearchResultsScreen.Injector,
+    PatientSearchScreen.Injector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: AppLockScreen)
   fun inject(target: PatientEntryScreen)
-  fun inject(target: PatientSearchScreen)
   fun inject(target: PatientSummaryScreen)
   fun inject(target: FacilityChangeActivity)
   fun inject(target: ConfirmResetPinDialog)

@@ -13,8 +13,10 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -27,12 +29,14 @@ class PatientSearchScreenControllerTest {
 
   private val screen: PatientSearchScreen = mock()
 
+  private val identifier = TestData.identifier("a8d49ec3-6945-4ef0-9358-f313e08d1579", Identifier.IdentifierType.BpPassport)
+
   private lateinit var controller: PatientSearchScreenController
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   @Before
   fun setUp() {
-    controller = PatientSearchScreenController()
+    controller = PatientSearchScreenController(identifier)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
@@ -133,7 +137,7 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchClicked())
 
     // then
-    verify(screen).openSearchResultsScreen(PhoneNumber(expectedPhoneNumberToSearch))
+    verify(screen).openSearchResultsScreen(PhoneNumber(expectedPhoneNumberToSearch, identifier))
   }
 
   @Test
@@ -159,6 +163,6 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchQueryTextChanged(input))
     uiEvents.onNext(SearchClicked())
 
-    verify(screen).openSearchResultsScreen(Name(expectedNameToSearch))
+    verify(screen).openSearchResultsScreen(Name(expectedNameToSearch, identifier))
   }
 }

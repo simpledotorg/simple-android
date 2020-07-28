@@ -43,13 +43,17 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   lateinit var activity: AppCompatActivity
 
   @Inject
-  lateinit var controller: PatientSearchScreenController
+  lateinit var controllerFactory: PatientSearchScreenController.InjectionFactory
 
   @Inject
   lateinit var utcClock: UtcClock
 
   private val allPatientsInFacility by unsafeLazy {
     allPatientsInFacilityView as AllPatientsInFacilityView
+  }
+
+  private val screenKey by unsafeLazy {
+    screenRouter.key<PatientSearchScreenKey>(this)
   }
 
   override fun onFinishInflate() {
@@ -74,7 +78,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
             searchClicks(),
             patientClickEvents()
         ),
-        controller = controller,
+        controller = controllerFactory.create(screenKey.additionalIdentifier),
         screenDestroys = screenDestroys
     )
   }

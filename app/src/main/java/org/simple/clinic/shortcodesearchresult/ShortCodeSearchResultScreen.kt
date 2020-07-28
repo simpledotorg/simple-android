@@ -14,9 +14,9 @@ import kotlinx.android.synthetic.main.patient_search_view.view.*
 import kotlinx.android.synthetic.main.screen_shortcode_search_result.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ViewControllerBinding
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreenKey
@@ -138,7 +138,7 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
   }
 
   override fun openPatientSearch() {
-    screenRouter.push(PatientSearchScreenKey())
+    screenRouter.push(PatientSearchScreenKey(additionalIdentifier = null))
   }
 
   override fun showLoading() {

@@ -8,11 +8,12 @@ import org.simple.clinic.user.User
 @Parcelize
 data class ForgotPinCreateNewModel(
     val user: User?,
-    val facility: Facility?
+    val facility: Facility?,
+    val pin: String?
 ) : Parcelable {
 
   companion object {
-    fun create() = ForgotPinCreateNewModel(user = null, facility = null)
+    fun create() = ForgotPinCreateNewModel(user = null, facility = null, pin = null)
   }
 
   val hasUser: Boolean

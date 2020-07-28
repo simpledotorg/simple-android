@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -17,6 +18,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class ForgotPinCreateNewPinScreenControllerTest {
@@ -24,7 +26,7 @@ class ForgotPinCreateNewPinScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<ForgotPinCreateNewPinScreen>()
+  private val ui = mock<ForgotPinCreateNewPinUi>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
 
@@ -40,28 +42,30 @@ class ForgotPinCreateNewPinScreenControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<ForgotPinCreateNewModel, ForgotPinCreateNewEvent, ForgotPinCreateNewEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
   fun `on start, the logged in user's full name must be shown`() {
     setupController()
 
-    verify(screen).showUserName("John Doe")
-    verify(screen).showFacility("PHC Obvious")
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("John Doe")
+    verify(ui).showFacility("PHC Obvious")
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
   fun `on start, the current selected facility should be shown`() {
     setupController()
 
-    verify(screen).showUserName("John Doe")
-    verify(screen).showFacility("PHC Obvious")
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("John Doe")
+    verify(ui).showFacility("PHC Obvious")
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -80,12 +84,12 @@ class ForgotPinCreateNewPinScreenControllerTest {
     uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1111"))
     uiEvents.onNext(ForgotPinCreateNewPinSubmitClicked)
 
-    verify(screen).showUserName("John Doe")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen, times(3)).showInvalidPinError()
-    verify(screen, times(4)).hideInvalidPinError()
-    verify(screen).showConfirmPinScreen("1111")
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("John Doe")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui, times(3)).showInvalidPinError()
+    verify(ui, times(4)).hideInvalidPinError()
+    verify(ui).showConfirmPinScreen("1111")
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -95,11 +99,11 @@ class ForgotPinCreateNewPinScreenControllerTest {
     uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1111"))
     uiEvents.onNext(ForgotPinCreateNewPinSubmitClicked)
 
-    verify(screen).showUserName("John Doe")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen).showConfirmPinScreen("1111")
-    verify(screen).hideInvalidPinError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("John Doe")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui).showConfirmPinScreen("1111")
+    verify(ui).hideInvalidPinError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -109,10 +113,10 @@ class ForgotPinCreateNewPinScreenControllerTest {
     uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1"))
     uiEvents.onNext(ForgotPinCreateNewPinTextChanged("11"))
 
-    verify(screen).showUserName("John Doe")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen, times(2)).hideInvalidPinError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("John Doe")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui, times(2)).hideInvalidPinError()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -122,8 +126,24 @@ class ForgotPinCreateNewPinScreenControllerTest {
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
 
     controllerSubscription = uiEvents.compose(controller)
-        .subscribe { it.invoke(screen) }
+        .subscribe { it.invoke(ui) }
 
     uiEvents.onNext(ScreenCreated())
+
+    val effectHandler = ForgotPinCreateNewEffectHandler(
+        uiActions = ui
+    )
+    val uiRenderer = ForgotPinCreateNewUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = ForgotPinCreateNewModel.create(),
+        init = ForgotPinCreateNewInit(),
+        update = ForgotPinCreateNewUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
+
+    testFixture.start()
   }
 }

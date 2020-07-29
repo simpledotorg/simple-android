@@ -30,6 +30,7 @@ import org.simple.clinic.user.resetpin.ResetUserPin
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -71,9 +72,9 @@ class ForgotPinConfirmPinScreenControllerTest {
   @Test
   fun `on start, the logged in user's full name must be shown`() {
     // when
-    setupController()
+    setupController(pin = "0000")
 
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("1111"))
+    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(screen).showUserName("Tushar Talwar")
@@ -82,9 +83,9 @@ class ForgotPinConfirmPinScreenControllerTest {
   @Test
   fun `on start, the current selected facility should be shown`() {
     // when
-    setupController()
+    setupController(pin = "1111")
 
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("1111"))
+    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(screen).showFacility("PHC Obvious")
@@ -98,11 +99,10 @@ class ForgotPinConfirmPinScreenControllerTest {
     whenever(resetUserPin.resetPin(originalPin)) doReturn Single.just<ResetPinResult>(Success)
 
     // when
-    setupController()
+    setupController(pin = originalPin)
 
     // then
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated(originalPin))
-
+    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("1234"))
     verify(screen).showPinMismatchedError()
 
@@ -115,7 +115,7 @@ class ForgotPinConfirmPinScreenControllerTest {
   @Test
   fun `when PIN is changed, any errors must be hidden`() {
     // when
-    setupController()
+    setupController(pin = "")
 
     uiEvents.onNext(ForgotPinConfirmPinTextChanged("1"))
     uiEvents.onNext(ForgotPinConfirmPinTextChanged("11"))
@@ -132,9 +132,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
 
     // when
-    setupController()
+    setupController(pin = pin)
 
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated(pin))
+    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -147,10 +147,10 @@ class ForgotPinConfirmPinScreenControllerTest {
     whenever(syncAndClearPatientData.run()) doReturn Completable.error(RuntimeException())
 
     // when
-    setupController()
-
     val pin = "0000"
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated(pin))
+    setupController(pin = pin)
+
+    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -166,9 +166,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     whenever(userSession.updateLoggedInStatusForUser(loggedInUser.uuid, User.LoggedInStatus.RESETTING_PIN)) doReturn Completable.complete()
 
     // when
-    setupController()
+    setupController(pin = pin)
 
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated(pin))
+    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -179,9 +179,9 @@ class ForgotPinConfirmPinScreenControllerTest {
   @Test
   fun `when an invalid PIN is submitted, it must not attempt to raise the Reset PIN request`() {
     // when
-    setupController()
+    setupController(pin = "0000")
 
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
+    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("1234"))
 
     // then
@@ -192,12 +192,12 @@ class ForgotPinConfirmPinScreenControllerTest {
   @Test
   fun `when a valid PIN is submitted, the progress must be shown`() {
     // when
-    setupController()
-
     val pin = "0000"
+    setupController(pin = pin)
+
     whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
 
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated(pin))
+    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -213,9 +213,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     whenever(resetUserPin.resetPin(pin)) doReturn Single.just<ResetPinResult>(NetworkError)
 
     // when
-    setupController()
+    setupController(pin = pin)
 
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated(pin))
+    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -230,9 +230,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     whenever(resetUserPin.resetPin(pin)) doReturn Single.just<ResetPinResult>(UnexpectedError(RuntimeException()))
 
     // when
-    setupController()
+    setupController(pin = pin)
 
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated(pin))
+    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -247,9 +247,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     whenever(resetUserPin.resetPin(pin)) doReturn Single.just<ResetPinResult>(UserNotFound)
 
     // when
-    setupController()
+    setupController(pin = pin)
 
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated(pin))
+    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -265,9 +265,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     whenever(resetUserPin.resetPin(pin)) doReturn Single.just<ResetPinResult>(Success)
 
     // when
-    setupController()
+    setupController(pin = pin)
 
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated(pin))
+    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -280,21 +280,22 @@ class ForgotPinConfirmPinScreenControllerTest {
     whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
 
     // when
-    setupController()
+    setupController(pin = "0000")
 
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
+    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("0000"))
 
     // then
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, User.LoggedInStatus.RESETTING_PIN)
   }
 
-  private fun setupController() {
+  private fun setupController(pin: String) {
     val controller = ForgotPinConfirmPinScreenController(
         userSession = userSession,
         facilityRepository = facilityRepository,
         resetUserPin = resetUserPin,
-        syncAndClearPatientData = syncAndClearPatientData
+        syncAndClearPatientData = syncAndClearPatientData,
+        previousPin = pin
     )
 
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(loggedInUser))

@@ -15,11 +15,12 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -29,7 +30,7 @@ import javax.inject.Inject
 class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet) {
 
   @Inject
-  lateinit var controller: ForgotPinConfirmPinScreenController
+  lateinit var controller: ForgotPinConfirmPinScreenController.Factory
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -48,6 +49,8 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
     TheActivity.component.inject(this)
 
+    val screenKey = screenRouter.key<ForgotPinConfirmPinScreenKey>(this)
+
     bindUiToController(
         ui = this,
         events = Observable.merge(
@@ -55,7 +58,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
             pinSubmits(),
             pinTextChanges()
         ),
-        controller = controller,
+        controller = controller.create(screenKey.enteredPin),
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
 
@@ -65,8 +68,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   }
 
   private fun screenCreates(): Observable<UiEvent> {
-    val screenKey = screenRouter.key<ForgotPinConfirmPinScreenKey>(this)
-    return Observable.just(ForgotPinConfirmPinScreenCreated(screenKey.enteredPin))
+    return Observable.just(ScreenCreated())
   }
 
   private fun pinSubmits() =

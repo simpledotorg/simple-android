@@ -369,10 +369,6 @@
   <string name="linkidwithpatient_to_patient_text">\u0020\u00A0ರೋಗಿಗೆ?</string>
 
   <!-- Add ID to Patient: Search -->
-  <string name="addidtopatientsearch_toolbar_title">ರೋಗಿಯ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
-  <string name="addidtopatientsearch_search">ಮುಂದಿನ</string>
-  <string name="addidtopatientsearch_error_empty_fullname">ರೋಗಿಯ ಪೂರ್ಣ ಹೆಸರು ಅಥವಾ ಫೋನ್ ನಂಬರ್ ನಮೂದಿಸಿ</string>
-  <string name="addidtopatientsearch_hint">ಹೆಸರು ಅಥವಾ ಫೋನ್ ನಂಬರ್</string>
 
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">ಇತ್ತೀಚಿನ</string>
@@ -382,8 +378,6 @@
   <string name="recent_patients_itemview_new_registration">ಹೊಸ ನೋಂದಣಿ</string>
 
   <!-- Add ID to Patient: Search Results-->
-  <string name="addidtopatientsearchresults_add">%1$s\u0020 ಸೇರಿಸಿ</string>
-  <string name="addidtopatientsearchresults_to_patient">\u0020ಇಂದ\u2026</string>
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ಆ್ಯಪ್ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>

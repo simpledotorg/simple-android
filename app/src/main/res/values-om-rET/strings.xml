@@ -370,10 +370,6 @@
   <string name="linkidwithpatient_to_patient_text">Dhukkubataau0020 hanga\u00A0?</string>
 
   <!-- Add ID to Patient: Search -->
-  <string name="addidtopatientsearch_toolbar_title">Maqaa dhukkubsataa galchi</string>
-  <string name="addidtopatientsearch_search">Kan itti aanu</string>
-  <string name="addidtopatientsearch_error_empty_fullname">Maqaa dhukkubsataa guutuu yookan lakkoofsa bilbilaa galchi</string>
-  <string name="addidtopatientsearch_hint">Maqaa yookan lakkoofsa bilbilaa</string>
 
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">Dhiyoo</string>
@@ -383,8 +379,6 @@
   <string name="recent_patients_itemview_new_registration">Galmee haaraa</string>
 
   <!-- Add ID to Patient: Search Results-->
-  <string name="addidtopatientsearchresults_add">%1$s\u0020dabali</string>
-  <string name="addidtopatientsearchresults_to_patient">\u0020hanga\u2026</string>
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">Appicha haaromsi</string>

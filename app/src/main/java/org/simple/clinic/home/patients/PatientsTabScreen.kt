@@ -160,7 +160,7 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
       .map { SimpleVideoClicked }
 
   override fun openPatientSearchScreen() {
-    screenRouter.push(PatientSearchScreenKey())
+    screenRouter.push(PatientSearchScreenKey(additionalIdentifier = null))
   }
 
   private fun showStatus(@IdRes statusViewId: Int) {

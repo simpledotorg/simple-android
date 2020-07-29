@@ -428,10 +428,6 @@
   <string name="linkidwithpatient_to_patient_text">\u0020to\u00A0patient?</string>
 
   <!-- Add ID to Patient: Search -->
-  <string name="addidtopatientsearch_toolbar_title">Enter patient’s name</string>
-  <string name="addidtopatientsearch_search">Next</string>
-  <string name="addidtopatientsearch_error_empty_fullname">Enter patient’s full name or phone number</string>
-  <string name="addidtopatientsearch_hint">Name or phone number</string>
 
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">Recent</string>
@@ -441,8 +437,6 @@
   <string name="recent_patients_itemview_new_registration">New registration</string>
 
   <!-- Add ID to Patient: Search Results-->
-  <string name="addidtopatientsearchresults_add">Add %1$s\u0020</string>
-  <string name="addidtopatientsearchresults_to_patient">\u0020to\u2026</string>
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">Update app</string>

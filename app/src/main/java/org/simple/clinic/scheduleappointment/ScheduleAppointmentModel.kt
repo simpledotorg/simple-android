@@ -3,6 +3,7 @@ package org.simple.clinic.scheduleappointment
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.util.UserClock
@@ -13,14 +14,16 @@ data class ScheduleAppointmentModel(
     val patientUuid: UUID,
     val potentialAppointmentDates: List<PotentialAppointmentDate>,
     val selectedAppointmentDate: PotentialAppointmentDate?,
-    val appointmentFacility: Facility?
+    val appointmentFacility: Facility?,
+    val doneButtonState : ButtonState
 ) : Parcelable {
 
   companion object {
     fun create(
         patientUuid: UUID,
         timeToAppointments: List<TimeToAppointment>,
-        userClock: UserClock
+        userClock: UserClock,
+        doneButtonState: ButtonState
     ): ScheduleAppointmentModel {
       val potentialAppointmentDates = generatePotentialAppointmentDatesForScheduling(timeToAppointments, userClock)
 
@@ -28,7 +31,8 @@ data class ScheduleAppointmentModel(
           patientUuid = patientUuid,
           potentialAppointmentDates = potentialAppointmentDates,
           selectedAppointmentDate = null,
-          appointmentFacility = null
+          appointmentFacility = null,
+          doneButtonState = doneButtonState
       )
     }
 
@@ -54,5 +58,9 @@ data class ScheduleAppointmentModel(
 
   fun appointmentFacilitySelected(facility: Facility): ScheduleAppointmentModel {
     return copy(appointmentFacility = facility)
+  }
+
+  fun doneButtonStateChanged(doneButtonState: ButtonState) : ScheduleAppointmentModel {
+    return copy(doneButtonState = doneButtonState)
   }
 }

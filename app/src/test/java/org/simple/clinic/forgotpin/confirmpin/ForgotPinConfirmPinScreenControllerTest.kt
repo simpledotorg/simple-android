@@ -45,8 +45,14 @@ class ForgotPinConfirmPinScreenControllerTest {
   private val resetUserPin = mock<ResetUserPin>()
   private val syncAndClearPatientData = mock<SyncAndClearPatientData>()
 
-  private val loggedInUser = TestData.loggedInUser(uuid = UUID.fromString("324d7648-e2a5-4192-831f-533b81181dc2"))
-  private val facility = TestData.facility()
+  private val loggedInUser = TestData.loggedInUser(
+      uuid = UUID.fromString("324d7648-e2a5-4192-831f-533b81181dc2"),
+      name = "Tushar Talwar"
+  )
+  private val facility = TestData.facility(
+      uuid = UUID.fromString("56e8780b-d0d3-4464-9f2e-ae7da54eacb9"),
+      name = "PHC Obvious"
+  )
 
   private val controller = ForgotPinConfirmPinScreenController(
       userSession = userSession,
@@ -77,7 +83,7 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinScreenCreated("1111"))
 
     // then
-    verify(screen).showUserName(loggedInUser.fullName)
+    verify(screen).showUserName("Tushar Talwar")
   }
 
   @Test
@@ -86,7 +92,7 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinScreenCreated("1111"))
 
     // then
-    verify(screen).showFacility(facility.name)
+    verify(screen).showFacility("PHC Obvious")
   }
 
   @Test

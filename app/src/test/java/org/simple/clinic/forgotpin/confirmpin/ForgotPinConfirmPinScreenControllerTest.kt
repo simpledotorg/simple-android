@@ -7,6 +7,8 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -19,6 +21,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.User
+import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.clearpatientdata.SyncAndClearPatientData
 import org.simple.clinic.user.resetpin.ResetPinResult
@@ -76,6 +79,17 @@ class ForgotPinConfirmPinScreenControllerTest {
 
     // then
     verify(screen).showUserName("Tushar Talwar")
+    verify(screen).showFacility("PHC Obvious")
+    verifyNoMoreInteractions(screen)
+
+    verify(userSession, times(2)).loggedInUser()
+    verifyNoMoreInteractions(userSession)
+
+    verify(facilityRepository).currentFacility(loggedInUser)
+    verifyNoMoreInteractions(facilityRepository)
+
+    verifyZeroInteractions(syncAndClearPatientData)
+    verifyZeroInteractions(resetUserPin)
   }
 
   @Test
@@ -84,7 +98,18 @@ class ForgotPinConfirmPinScreenControllerTest {
     setupController(pin = "1111")
 
     // then
+    verify(screen).showUserName("Tushar Talwar")
     verify(screen).showFacility("PHC Obvious")
+    verifyNoMoreInteractions(screen)
+
+    verify(userSession, times(2)).loggedInUser()
+    verifyNoMoreInteractions(userSession)
+
+    verify(facilityRepository).currentFacility(loggedInUser)
+    verifyNoMoreInteractions(facilityRepository)
+
+    verifyZeroInteractions(syncAndClearPatientData)
+    verifyZeroInteractions(resetUserPin)
   }
 
   @Test
@@ -99,12 +124,17 @@ class ForgotPinConfirmPinScreenControllerTest {
 
     // then
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("1234"))
+    verify(screen).showUserName("Tushar Talwar")
+    verify(screen).showFacility("PHC Obvious")
     verify(screen).showPinMismatchedError()
+    verifyNoMoreInteractions(screen)
 
     clearInvocations(screen)
 
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("5678"))
     verify(screen).showPinMismatchedError()
+
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -117,7 +147,19 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinTextChanged("111"))
 
     // then
+    verify(screen).showUserName("Tushar Talwar")
+    verify(screen).showFacility("PHC Obvious")
     verify(screen, times(3)).hideError()
+    verifyNoMoreInteractions(screen)
+
+    verify(userSession, times(2)).loggedInUser()
+    verifyNoMoreInteractions(userSession)
+
+    verify(facilityRepository).currentFacility(loggedInUser)
+    verifyNoMoreInteractions(facilityRepository)
+
+    verifyZeroInteractions(resetUserPin)
+    verifyZeroInteractions(syncAndClearPatientData)
   }
 
   @Test
@@ -132,22 +174,53 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
+    verify(screen).showUserName("Tushar Talwar")
+    verify(screen).showFacility("PHC Obvious")
+    verify(screen).showProgress()
+    verify(screen).showUnexpectedError()
+    verifyNoMoreInteractions(screen)
+
     verify(syncAndClearPatientData).run()
+    verifyNoMoreInteractions(syncAndClearPatientData)
+
+    verify(userSession, times(3)).loggedInUser()
+    verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
+    verifyNoMoreInteractions(userSession)
+
+    verify(facilityRepository).currentFacility(loggedInUser)
+    verifyNoMoreInteractions(facilityRepository)
+
+    verifyZeroInteractions(resetUserPin)
   }
 
   @Test
   fun `when the sync fails, it must show an unexpected error`() {
     // given
+    val pin = "0000"
     whenever(syncAndClearPatientData.run()) doReturn Completable.error(RuntimeException())
 
     // when
-    val pin = "0000"
     setupController(pin = pin)
 
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
+    verify(screen).showUserName("Tushar Talwar")
+    verify(screen).showFacility("PHC Obvious")
+    verify(screen).showProgress()
     verify(screen).showUnexpectedError()
+    verifyNoMoreInteractions(screen)
+
+    verify(userSession, times(2)).loggedInUser()
+    verifyZeroInteractions(userSession)
+
+    verify(facilityRepository).currentFacility(loggedInUser)
+    verifyZeroInteractions(facilityRepository)
+
+    verifyZeroInteractions(resetUserPin)
+
+    verify(syncAndClearPatientData).run()
+    verifyNoMoreInteractions(syncAndClearPatientData)
   }
 
   @Test
@@ -156,7 +229,7 @@ class ForgotPinConfirmPinScreenControllerTest {
     val pin = "0000"
     whenever(resetUserPin.resetPin(pin)) doReturn Single.just<ResetPinResult>(Success)
     whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
-    whenever(userSession.updateLoggedInStatusForUser(loggedInUser.uuid, User.LoggedInStatus.RESETTING_PIN)) doReturn Completable.complete()
+    whenever(userSession.updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)) doReturn Completable.complete()
 
     // when
     setupController(pin = pin)
@@ -164,8 +237,24 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
+    verify(screen).showUserName("Tushar Talwar")
+    verify(screen).showFacility("PHC Obvious")
+    verify(screen).showProgress()
+    verify(screen).goToHomeScreen()
+    verifyNoMoreInteractions(screen)
+
+    verify(userSession, times(3)).loggedInUser()
+    verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
+    verifyNoMoreInteractions(userSession)
+
+    verify(facilityRepository).currentFacility(loggedInUser)
+    verifyNoMoreInteractions(facilityRepository)
+
     verify(syncAndClearPatientData).run()
+    verifyNoMoreInteractions(syncAndClearPatientData)
+
     verify(resetUserPin).resetPin(pin)
+    verifyNoMoreInteractions(resetUserPin)
   }
 
   @Test
@@ -176,8 +265,22 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("1234"))
 
     // then
+    verify(screen).showUserName("Tushar Talwar")
+    verify(screen).showFacility("PHC Obvious")
+    verify(screen).showPinMismatchedError()
+    verifyNoMoreInteractions(screen)
+
     verify(resetUserPin, never()).resetPin(any())
+    verifyNoMoreInteractions(resetUserPin)
+
     verify(syncAndClearPatientData, never()).run()
+    verifyNoMoreInteractions(syncAndClearPatientData)
+
+    verify(userSession, times(2)).loggedInUser()
+    verifyNoMoreInteractions(userSession)
+
+    verify(facilityRepository).currentFacility(loggedInUser)
+    verifyNoMoreInteractions(facilityRepository)
   }
 
   @Test
@@ -191,7 +294,23 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
+    verify(screen).showUserName("Tushar Talwar")
+    verify(screen).showFacility("PHC Obvious")
     verify(screen).showProgress()
+    verify(screen).showUnexpectedError()
+    verifyNoMoreInteractions(screen)
+
+    verify(userSession, times(3)).loggedInUser()
+    verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
+    verifyNoMoreInteractions(userSession)
+
+    verify(facilityRepository).currentFacility(loggedInUser)
+    verifyNoMoreInteractions(facilityRepository)
+
+    verifyZeroInteractions(resetUserPin)
+
+    verify(syncAndClearPatientData).run()
+    verifyNoMoreInteractions(syncAndClearPatientData)
   }
 
   @Test
@@ -199,7 +318,7 @@ class ForgotPinConfirmPinScreenControllerTest {
     // given
     val pin = "0000"
     whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
-    whenever(userSession.updateLoggedInStatusForUser(loggedInUser.uuid, User.LoggedInStatus.RESETTING_PIN)) doReturn Completable.complete()
+    whenever(userSession.updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)) doReturn Completable.complete()
     whenever(resetUserPin.resetPin(pin)) doReturn Single.just<ResetPinResult>(NetworkError)
 
     // when
@@ -208,7 +327,24 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
+    verify(screen).showUserName("Tushar Talwar")
+    verify(screen).showFacility("PHC Obvious")
+    verify(screen).showProgress()
     verify(screen).showNetworkError()
+    verifyNoMoreInteractions(screen)
+
+    verify(userSession, times(3)).loggedInUser()
+    verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
+    verifyNoMoreInteractions(userSession)
+
+    verify(facilityRepository).currentFacility(loggedInUser)
+    verifyNoMoreInteractions(facilityRepository)
+
+    verify(resetUserPin).resetPin(pin)
+    verifyNoMoreInteractions(resetUserPin)
+
+    verify(syncAndClearPatientData).run()
+    verifyNoMoreInteractions(syncAndClearPatientData)
   }
 
   @Test
@@ -224,7 +360,23 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
+    verify(screen).showUserName("Tushar Talwar")
+    verify(screen).showFacility("PHC Obvious")
+    verify(screen).showProgress()
     verify(screen).showUnexpectedError()
+    verifyNoMoreInteractions(screen)
+
+    verify(userSession, times(3)).loggedInUser()
+    verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
+    verifyNoMoreInteractions(userSession)
+
+    verify(facilityRepository).currentFacility(loggedInUser)
+    verifyNoMoreInteractions(facilityRepository)
+
+    verify(syncAndClearPatientData).run()
+    verifyNoMoreInteractions(syncAndClearPatientData)
+
+    verifyZeroInteractions(resetUserPin)
   }
 
   @Test
@@ -240,7 +392,23 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
+    verify(screen).showUserName("Tushar Talwar")
+    verify(screen).showFacility("PHC Obvious")
+    verify(screen).showProgress()
     verify(screen).showUnexpectedError()
+    verifyNoMoreInteractions(screen)
+
+    verify(userSession, times(3)).loggedInUser()
+    verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
+    verifyNoMoreInteractions(userSession)
+
+    verify(facilityRepository).currentFacility(loggedInUser)
+    verifyNoMoreInteractions(facilityRepository)
+
+    verifyZeroInteractions(resetUserPin)
+
+    verify(syncAndClearPatientData).run()
+    verifyNoMoreInteractions(syncAndClearPatientData)
   }
 
   @Test
@@ -248,7 +416,7 @@ class ForgotPinConfirmPinScreenControllerTest {
     // given
     val pin = "0000"
     whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
-    whenever(userSession.updateLoggedInStatusForUser(loggedInUser.uuid, User.LoggedInStatus.RESETTING_PIN)) doReturn Completable.complete()
+    whenever(userSession.updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)) doReturn Completable.complete()
     whenever(resetUserPin.resetPin(pin)) doReturn Single.just<ResetPinResult>(Success)
 
     // when
@@ -257,7 +425,24 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
+    verify(screen).showUserName("Tushar Talwar")
+    verify(screen).showFacility("PHC Obvious")
+    verify(screen).showProgress()
     verify(screen).goToHomeScreen()
+    verifyNoMoreInteractions(screen)
+
+    verify(userSession, times(3)).loggedInUser()
+    verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
+    verifyNoMoreInteractions(userSession)
+
+    verify(facilityRepository).currentFacility(loggedInUser)
+    verifyNoMoreInteractions(facilityRepository)
+
+    verify(resetUserPin).resetPin(pin)
+    verifyNoMoreInteractions(resetUserPin)
+
+    verify(syncAndClearPatientData).run()
+    verifyNoMoreInteractions(syncAndClearPatientData)
   }
 
   @Test
@@ -271,7 +456,23 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("0000"))
 
     // then
-    verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, User.LoggedInStatus.RESETTING_PIN)
+    verify(screen).showUserName("Tushar Talwar")
+    verify(screen).showFacility("PHC Obvious")
+    verify(screen).showProgress()
+    verify(screen).showUnexpectedError()
+    verifyNoMoreInteractions(screen)
+
+    verify(userSession, times(3)).loggedInUser()
+    verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
+    verifyNoMoreInteractions(userSession)
+
+    verify(facilityRepository).currentFacility(loggedInUser)
+    verifyNoMoreInteractions(facilityRepository)
+
+    verifyZeroInteractions(resetUserPin)
+
+    verify(syncAndClearPatientData).run()
+    verifyNoMoreInteractions(syncAndClearPatientData)
   }
 
   private fun setupController(pin: String) {

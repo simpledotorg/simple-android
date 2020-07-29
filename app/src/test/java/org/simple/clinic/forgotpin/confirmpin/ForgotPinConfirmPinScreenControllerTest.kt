@@ -74,8 +74,6 @@ class ForgotPinConfirmPinScreenControllerTest {
     // when
     setupController(pin = "0000")
 
-    uiEvents.onNext(ScreenCreated())
-
     // then
     verify(screen).showUserName("Tushar Talwar")
   }
@@ -84,8 +82,6 @@ class ForgotPinConfirmPinScreenControllerTest {
   fun `on start, the current selected facility should be shown`() {
     // when
     setupController(pin = "1111")
-
-    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(screen).showFacility("PHC Obvious")
@@ -102,7 +98,6 @@ class ForgotPinConfirmPinScreenControllerTest {
     setupController(pin = originalPin)
 
     // then
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("1234"))
     verify(screen).showPinMismatchedError()
 
@@ -134,7 +129,6 @@ class ForgotPinConfirmPinScreenControllerTest {
     // when
     setupController(pin = pin)
 
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -150,7 +144,6 @@ class ForgotPinConfirmPinScreenControllerTest {
     val pin = "0000"
     setupController(pin = pin)
 
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -168,7 +161,6 @@ class ForgotPinConfirmPinScreenControllerTest {
     // when
     setupController(pin = pin)
 
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -181,7 +173,6 @@ class ForgotPinConfirmPinScreenControllerTest {
     // when
     setupController(pin = "0000")
 
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("1234"))
 
     // then
@@ -197,7 +188,6 @@ class ForgotPinConfirmPinScreenControllerTest {
 
     whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
 
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -215,7 +205,6 @@ class ForgotPinConfirmPinScreenControllerTest {
     // when
     setupController(pin = pin)
 
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -232,7 +221,6 @@ class ForgotPinConfirmPinScreenControllerTest {
     // when
     setupController(pin = pin)
 
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -249,7 +237,6 @@ class ForgotPinConfirmPinScreenControllerTest {
     // when
     setupController(pin = pin)
 
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -267,7 +254,6 @@ class ForgotPinConfirmPinScreenControllerTest {
     // when
     setupController(pin = pin)
 
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
@@ -282,7 +268,6 @@ class ForgotPinConfirmPinScreenControllerTest {
     // when
     setupController(pin = "0000")
 
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("0000"))
 
     // then
@@ -304,5 +289,7 @@ class ForgotPinConfirmPinScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { it.invoke(screen) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

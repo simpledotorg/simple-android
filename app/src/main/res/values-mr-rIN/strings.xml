@@ -369,10 +369,6 @@
   <string name="linkidwithpatient_to_patient_text">\u0020\u00A0रूग्णाला?</string>
 
   <!-- Add ID to Patient: Search -->
-  <string name="addidtopatientsearch_toolbar_title">रूग्णाचे नाव प्रविष्ट करा</string>
-  <string name="addidtopatientsearch_search">पुढील</string>
-  <string name="addidtopatientsearch_error_empty_fullname">रूग्णाचे संपूर्ण नाव किंवा फोन नंबर प्रविष्‍ट करा</string>
-  <string name="addidtopatientsearch_hint">नाव किंवा फोन नंबर</string>
 
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">अलीकडील</string>
@@ -382,8 +378,6 @@
   <string name="recent_patients_itemview_new_registration">नवीन नोंदणी</string>
 
   <!-- Add ID to Patient: Search Results-->
-  <string name="addidtopatientsearchresults_add">%1$s\u0020 जोडा</string>
-  <string name="addidtopatientsearchresults_to_patient">\u0020\u2026 ला</string>
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ॲप अद्यतनित करा</string>

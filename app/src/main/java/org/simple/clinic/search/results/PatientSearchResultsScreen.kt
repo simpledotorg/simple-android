@@ -5,24 +5,22 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotterknife.bindView
-import org.simple.clinic.R
+import kotlinx.android.synthetic.main.screen_patient_search_results.view.*
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.searchresultsview.RegisterNewPatient
 import org.simple.clinic.searchresultsview.SearchPatientWithCriteria
 import org.simple.clinic.searchresultsview.SearchResultClicked
@@ -51,19 +49,17 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
   @Inject
   lateinit var activity: AppCompatActivity
 
-  private val toolbar by bindView<Toolbar>(R.id.patientsearchresults_toolbar)
-  private val searchResultsView by bindView<PatientSearchView>(R.id.patientsearchresults_searchresultsview)
-
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
     setupScreen()
 
-    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    val screenDestroys = detaches().map { ScreenDestroyed() }
     bindUiToController(
         ui = this,
         events = Observable.merge(
@@ -135,11 +131,19 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
   }
 
+  fun openLinkIdWithPatientScreen(patientUuid: UUID, identifier: Identifier) {
+    screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.LinkIdWithPatient(identifier), Instant.now(utcClock)))
+  }
+
   fun openPatientEntryScreen(facility: Facility) {
     activity.startActivityForResult(
         AlertFacilityChangeSheet.intent(context, facility.name, ContinueToScreen(PatientEntryScreenKey())),
         ALERT_FACILITY_CHANGE
     )
+  }
+
+  interface Injector {
+    fun inject(target: PatientSearchResultsScreen)
   }
 
   companion object {

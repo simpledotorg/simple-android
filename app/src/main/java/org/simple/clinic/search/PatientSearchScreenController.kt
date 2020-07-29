@@ -1,5 +1,7 @@
 package org.simple.clinic.search
 
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -7,18 +9,25 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.search.PatientSearchValidationError.INPUT_EMPTY
 import org.simple.clinic.widgets.UiEvent
-import javax.inject.Inject
 
 private typealias Ui = PatientSearchScreen
 private typealias UiChange = (Ui) -> Unit
 
-class PatientSearchScreenController @Inject constructor() : ObservableTransformer<UiEvent, UiChange> {
+class PatientSearchScreenController @AssistedInject constructor(
+    @Assisted private val additionalIdentifier: Identifier?
+) : ObservableTransformer<UiEvent, UiChange> {
+
+  @AssistedInject.Factory
+  interface InjectionFactory {
+    fun create(additionalIdentifier: Identifier?): PatientSearchScreenController
+  }
 
   /**
    * Regular expression that matches digits with interleaved white spaces
@@ -79,8 +88,8 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
 
   private fun searchCriteriaFromInput(inputString: String): PatientSearchCriteria {
     return when {
-      digitsRegex.matches(inputString) -> PhoneNumber(inputString.filterNot { it.isWhitespace() })
-      else -> Name(inputString)
+      digitsRegex.matches(inputString) -> PhoneNumber(inputString.filterNot { it.isWhitespace() }, additionalIdentifier)
+      else -> Name(inputString, additionalIdentifier)
     }
   }
 

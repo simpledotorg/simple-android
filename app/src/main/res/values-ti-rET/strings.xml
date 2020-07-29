@@ -369,10 +369,6 @@
   <string name="linkidwithpatient_to_patient_text">\u0020 ናብ\ተሓካሚ ዩ00ኤ0?</string>
 
   <!-- Add ID to Patient: Search -->
-  <string name="addidtopatientsearch_toolbar_title">ናይ ይሕሙም ተሓካሚ ሽም አእቱ</string>
-  <string name="addidtopatientsearch_search">ዝቕጽል</string>
-  <string name="addidtopatientsearch_error_empty_fullname">ሙሉእ ስም ተሓካሚ ወይ ስልኪ ቁጽሪ ኣእትው</string>
-  <string name="addidtopatientsearch_hint">ስም ወይ ስልኪ ቁጽሪ</string>
 
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">ናይ ቀረባ እዋን</string>
@@ -382,8 +378,6 @@
   <string name="recent_patients_itemview_new_registration">ሓድሽ ምዝገባ</string>
 
   <!-- Add ID to Patient: Search Results-->
-  <string name="addidtopatientsearchresults_add">%1$s\u0020ወስኽ</string>
-  <string name="addidtopatientsearchresults_to_patient">\u0020 ናብ \u2026</string>
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ኣፕሊኬሽን ኣሓድስ</string>

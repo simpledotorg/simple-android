@@ -6,7 +6,7 @@
   android:layout_height="match_parent">
 
   <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
-    android:id="@+id/patientsearchresults_toolbar"
+    android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white100"
@@ -20,8 +20,8 @@
     tools:ignore="UnusedAttribute" />
 
   <org.simple.clinic.searchresultsview.PatientSearchView
-    android:id="@+id/patientsearchresults_searchresultsview"
+    android:id="@+id/searchResultsView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/patientsearchresults_toolbar" />
+    android:layout_below="@+id/toolbar" />
 </org.simple.clinic.search.results.PatientSearchResultsScreen>

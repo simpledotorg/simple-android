@@ -8,23 +8,21 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import junitparams.JUnitParamsRunner
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-@RunWith(JUnitParamsRunner::class)
 class PatientSearchResultsControllerTest {
 
   @get:Rule
@@ -55,11 +53,33 @@ class PatientSearchResultsControllerTest {
 
   @Test
   fun `when patient search result is clicked, then patient summary must be opened`() {
+    // given
     val patientUuid = UUID.fromString("951ad528-1952-4840-aad6-511371736a15")
+    val searchCriteria = PatientSearchCriteria.PhoneNumber("1111111111")
 
+    // when
+    uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey(searchCriteria)))
     uiEvents.onNext(PatientSearchResultClicked(patientUuid))
 
+    // then
     verify(screen).openPatientSummaryScreen(patientUuid)
+    verifyNoMoreInteractions(screen)
+  }
+
+  @Test
+  fun `when patient search result is clicked with additional identifier, then the ID must be linked with the patient`() {
+    // given
+    val patientUuid = UUID.fromString("951ad528-1952-4840-aad6-511371736a15")
+    val identifier = TestData.identifier(value = "1a686bfd-ded2-48c6-9df6-8e61799402f6", type = Identifier.IdentifierType.BpPassport)
+    val searchCriteria = PatientSearchCriteria.Name("Anish", identifier)
+
+    // when
+    uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey(searchCriteria)))
+    uiEvents.onNext(PatientSearchResultClicked(patientUuid))
+
+    // then
+    verify(screen).openLinkIdWithPatientScreen(patientUuid, identifier)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -80,6 +100,26 @@ class PatientSearchResultsControllerTest {
   }
 
   @Test
+  fun `when register new patient is clicked with an additional identifier, then patient entry screen must be opened`() {
+    // given
+    val fullName = "name"
+    val identifier = TestData.identifier(value = "1a686bfd-ded2-48c6-9df6-8e61799402f6", type = Identifier.IdentifierType.BpPassport)
+    val ongoingEntry = OngoingNewPatientEntry
+        .fromFullName(fullName)
+        .withIdentifier(identifier)
+
+    whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
+
+    // when
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name(fullName, identifier)))
+
+    // then
+    verify(patientRepository).saveOngoingEntry(ongoingEntry)
+    verify(screen).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(screen)
+  }
+
+  @Test
   fun `when register new patient is clicked after searching with phone number, the number must be used to create the ongoing entry`() {
     // given
     val phoneNumber = "123456"
@@ -89,6 +129,26 @@ class PatientSearchResultsControllerTest {
 
     // when
     uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.PhoneNumber(phoneNumber)))
+
+    // then
+    verify(patientRepository).saveOngoingEntry(ongoingEntry)
+    verify(screen).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(screen)
+  }
+
+  @Test
+  fun `when register new patient is clicked after searching with phone number with additional identifier, the number must be used to create the ongoing entry`() {
+    // given
+    val phoneNumber = "123456"
+    val identifier = TestData.identifier(value = "1a686bfd-ded2-48c6-9df6-8e61799402f6", type = Identifier.IdentifierType.BpPassport)
+    val ongoingEntry = OngoingNewPatientEntry
+        .fromPhoneNumber(phoneNumber)
+        .withIdentifier(identifier)
+
+    whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
+
+    // when
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.PhoneNumber(phoneNumber, identifier)))
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)

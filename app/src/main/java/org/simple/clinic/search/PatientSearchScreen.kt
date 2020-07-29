@@ -6,8 +6,10 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
+import com.jakewharton.rxbinding3.widget.editorActionEvents
+import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_patient_search.view.*
@@ -16,7 +18,7 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
@@ -41,7 +43,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   lateinit var activity: AppCompatActivity
 
   @Inject
-  lateinit var controller: PatientSearchScreenController
+  lateinit var controllerFactory: PatientSearchScreenController.InjectionFactory
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -50,19 +52,23 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     allPatientsInFacilityView as AllPatientsInFacilityView
   }
 
+  private val screenKey by unsafeLazy {
+    screenRouter.key<PatientSearchScreenKey>(this)
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     searchQueryTextInputLayout.setStartIconOnClickListener {
       screenRouter.pop()
     }
     searchQueryEditText.showKeyboard()
 
-    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    val screenDestroys = detaches().map { ScreenDestroyed() }
     hideKeyboardWhenAllPatientsListIsScrolled(screenDestroys)
 
     bindUiToController(
@@ -72,27 +78,30 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
             searchClicks(),
             patientClickEvents()
         ),
-        controller = controller,
+        controller = controllerFactory.create(screenKey.additionalIdentifier),
         screenDestroys = screenDestroys
     )
   }
 
   private fun searchTextChanges(): Observable<UiEvent> {
-    return RxTextView
-        .textChanges(searchQueryEditText)
+    return searchQueryEditText
+        .textChanges()
         .map(CharSequence::toString)
         .map(::SearchQueryTextChanged)
   }
 
   private fun searchClicks(): Observable<SearchClicked> {
-    val imeSearchClicks = RxTextView
-        .editorActionEvents(searchQueryEditText)
-        .filter { it.actionId() == EditorInfo.IME_ACTION_SEARCH }
-
-    return RxView
-        .clicks(searchButtonFrame.button)
-        .mergeWith(imeSearchClicks)
+    val imeSearchClicks = searchQueryEditText
+        .editorActionEvents()
+        .filter { it.actionId == EditorInfo.IME_ACTION_SEARCH }
         .map { SearchClicked() }
+
+    val searchClicksFromButton = searchButtonFrame
+        .button
+        .clicks()
+        .map { SearchClicked() }
+
+    return searchClicksFromButton.mergeWith(imeSearchClicks)
   }
 
   private fun patientClickEvents(): Observable<UiEvent> {
@@ -143,5 +152,9 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun hideSearchButton() {
     searchButtonFrame.visibility = View.GONE
+  }
+
+  interface Injector {
+    fun inject(target: PatientSearchScreen)
   }
 }

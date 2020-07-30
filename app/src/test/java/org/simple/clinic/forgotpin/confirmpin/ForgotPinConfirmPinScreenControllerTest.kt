@@ -509,7 +509,7 @@ class ForgotPinConfirmPinScreenControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = ForgotPinConfirmPinModel.create(),
+        defaultModel = ForgotPinConfirmPinModel.create(previousPin = pin),
         init = ForgotPinConfirmPinInit(),
         update = ForgotPinConfirmPinUpdate(),
         effectHandler = effectHandler.build(),

@@ -8,13 +8,15 @@ import org.simple.clinic.user.User
 @Parcelize
 data class ForgotPinConfirmPinModel(
     val user: User?,
-    val facility: Facility?
+    val facility: Facility?,
+    val previousPin: String
 ) : Parcelable {
 
   companion object {
-    fun create() = ForgotPinConfirmPinModel(
+    fun create(previousPin: String) = ForgotPinConfirmPinModel(
         user = null,
-        facility = null
+        facility = null,
+        previousPin = previousPin
     )
   }
 

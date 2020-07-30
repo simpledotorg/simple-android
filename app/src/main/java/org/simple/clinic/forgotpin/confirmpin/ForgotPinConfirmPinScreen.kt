@@ -51,11 +51,12 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   }
 
   private val delegate by unsafeLazy {
+    val screenKey = screenRouter.key<ForgotPinConfirmPinScreenKey>(this)
     val uiRenderer = ForgotPinConfirmPinUiRenderer(this)
 
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = ForgotPinConfirmPinModel.create(),
+        defaultModel = ForgotPinConfirmPinModel.create(previousPin = screenKey.enteredPin),
         init = ForgotPinConfirmPinInit(),
         update = ForgotPinConfirmPinUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),

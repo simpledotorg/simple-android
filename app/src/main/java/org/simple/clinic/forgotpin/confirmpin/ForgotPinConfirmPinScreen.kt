@@ -1,6 +1,7 @@
 package org.simple.clinic.forgotpin.confirmpin
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -13,12 +14,14 @@ import androidx.annotation.StringRes
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
@@ -33,6 +36,9 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
   @Inject
   lateinit var controller: ForgotPinConfirmPinScreenController.Factory
+
+  @Inject
+  lateinit var effectHandlerFactory: ForgotPinConfirmPinEffectHandler.Factory
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -57,6 +63,29 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
         .share()
   }
 
+  private val delegate by unsafeLazy {
+    val uiRenderer = ForgotPinConfirmPinUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = ForgotPinConfirmPinModel.create(),
+        init = ForgotPinConfirmPinInit(),
+        update = ForgotPinConfirmPinUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
 
@@ -74,6 +103,14 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
     pinEntryEditText.showKeyboard()
 
     backButton.setOnClickListener { goBack() }
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates(): Observable<UiEvent> {

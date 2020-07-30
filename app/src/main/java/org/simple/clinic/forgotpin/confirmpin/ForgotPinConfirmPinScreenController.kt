@@ -42,20 +42,12 @@ class ForgotPinConfirmPinScreenController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        showUserNameOnScreenStarted(replayedEvents),
         showFacilityOnScreenCreated(replayedEvents),
         hideErrorsOnPinTextChanged(replayedEvents),
         showMismatchedPinErrors(replayedEvents),
         showProgress(replayedEvents),
         syncPatientDataAndResetPin(replayedEvents)
     )
-  }
-
-  private fun showUserNameOnScreenStarted(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<ScreenCreated>()
-        .flatMap { userSession.loggedInUser() }
-        .filterAndUnwrapJust()
-        .map { user -> { ui: Ui -> ui.showUserName(user.fullName) } }
   }
 
   private fun showFacilityOnScreenCreated(events: Observable<UiEvent>): Observable<UiChange> {

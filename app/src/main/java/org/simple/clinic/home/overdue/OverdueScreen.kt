@@ -21,6 +21,7 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.visibleOrGone
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
@@ -64,12 +65,14 @@ class OverdueScreen(
   private val delegate by unsafeLazy {
     val uiRenderer = OverdueUiRenderer(this)
 
+    val date = LocalDate.now(userClock)
+
     MobiusDelegate.forView(
         events = events.ofType(),
         defaultModel = OverdueModel.create(),
-        update = OverdueUpdate(),
+        update = OverdueUpdate(date),
         effectHandler = effectHandlerFactory.create(this).build(),
-        init = OverdueInit(),
+        init = OverdueInit(date),
         modelUpdateListener = uiRenderer::render
     )
   }

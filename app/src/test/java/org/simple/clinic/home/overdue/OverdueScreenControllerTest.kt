@@ -127,16 +127,19 @@ class OverdueScreenControllerTest {
 
     val effectHandler = OverdueEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        appointmentRepository = repository,
         uiActions = ui
     )
     val uiRenderer = OverdueUiRenderer(ui)
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = OverdueModel.create(),
-        update = OverdueUpdate(),
+        update = OverdueUpdate(dateOnClock),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render,
-        init = OverdueInit()
+        init = OverdueInit(dateOnClock)
     )
     testFixture.start()
 

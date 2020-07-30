@@ -6,10 +6,11 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,18 +32,17 @@ class PatientSearchScreenControllerTest {
 
   private val identifier = TestData.identifier("a8d49ec3-6945-4ef0-9358-f313e08d1579", Identifier.IdentifierType.BpPassport)
 
-  private lateinit var controller: PatientSearchScreenController
+  private lateinit var controllerSubscription: Disposable
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  @Before
-  fun setUp() {
-    controller = PatientSearchScreenController(identifier)
-
-    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
   fun `when search is clicked with no input then a validation error should be shown`() {
+    setupController()
     uiEvents.onNext(SearchQueryTextChanged(""))
     uiEvents.onNext(SearchClicked())
 
@@ -51,6 +51,7 @@ class PatientSearchScreenControllerTest {
 
   @Test
   fun `when input changes then any validation error on input should be removed`() {
+    setupController()
     uiEvents.onNext(SearchQueryTextChanged("Anish"))
     verify(screen).setEmptyTextFieldErrorVisible(false)
 
@@ -62,6 +63,7 @@ class PatientSearchScreenControllerTest {
 
   @Test
   fun `when search is clicked with empty input then patients shouldn't be searched`() {
+    setupController()
     uiEvents.onNext(SearchQueryTextChanged(""))
     uiEvents.onNext(SearchClicked())
 
@@ -73,6 +75,7 @@ class PatientSearchScreenControllerTest {
     val patientUuid = UUID.fromString("7925e13f-3b04-46b0-b685-7005ebb1b6fd")
 
     // when
+    setupController()
     uiEvents.onNext(PatientItemClicked(patientUuid))
 
     // then
@@ -82,6 +85,7 @@ class PatientSearchScreenControllerTest {
   @Test
   fun `when the search query is blank, the all patients list must be shown`() {
     // when
+    setupController()
     uiEvents.onNext(SearchQueryTextChanged(""))
 
     // then
@@ -91,6 +95,7 @@ class PatientSearchScreenControllerTest {
   @Test
   fun `when the search query is blank, the search button must be hidden`() {
     // when
+    setupController()
     uiEvents.onNext(SearchQueryTextChanged(""))
 
     // then
@@ -100,6 +105,7 @@ class PatientSearchScreenControllerTest {
   @Test
   fun `when the search query is not blank, the all patients list must be hidden`() {
     // when
+    setupController()
     uiEvents.onNext(SearchQueryTextChanged("a"))
 
     // then
@@ -109,6 +115,7 @@ class PatientSearchScreenControllerTest {
   @Test
   fun `when the search query is not blank, the search button must be shown`() {
     // when
+    setupController()
     uiEvents.onNext(SearchQueryTextChanged("a"))
 
     // then
@@ -133,6 +140,7 @@ class PatientSearchScreenControllerTest {
       expectedPhoneNumberToSearch: String
   ) {
     // when
+    setupController()
     uiEvents.onNext(SearchQueryTextChanged(input))
     uiEvents.onNext(SearchClicked())
 
@@ -160,9 +168,18 @@ class PatientSearchScreenControllerTest {
       input: String,
       expectedNameToSearch: String
   ) {
+    setupController()
     uiEvents.onNext(SearchQueryTextChanged(input))
     uiEvents.onNext(SearchClicked())
 
     verify(screen).openSearchResultsScreen(Name(expectedNameToSearch, identifier))
+  }
+
+  private fun setupController() {
+    val controller = PatientSearchScreenController(identifier)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

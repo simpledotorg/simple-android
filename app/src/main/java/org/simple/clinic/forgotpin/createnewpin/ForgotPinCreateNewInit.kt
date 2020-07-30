@@ -8,6 +8,17 @@ class ForgotPinCreateNewInit : Init<ForgotPinCreateNewModel, ForgotPinCreateNewE
 
   override fun init(model: ForgotPinCreateNewModel): First<ForgotPinCreateNewModel,
       ForgotPinCreateNewEffect> {
-    return first(model)
+
+    val effects = mutableSetOf<ForgotPinCreateNewEffect>()
+
+    if (model.hasUser.not()) {
+      effects.add(LoadLoggedInUser)
+    }
+
+    if (model.hasFacility.not()) {
+      effects.add(LoadCurrentFacility)
+    }
+
+    return first(model, effects)
   }
 }

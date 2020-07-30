@@ -64,6 +64,7 @@ import org.simple.clinic.util.Truss
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.ProgressMaterialButton
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
@@ -577,5 +578,13 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   override fun hideIdentifierSection() {
     identifierContainer.visibleOrGone(isVisible = false)
+  }
+
+  override fun nextButtonShowInProgress() {
+    saveButton.setButtonState(ProgressMaterialButton.ButtonState.InProgress)
+  }
+
+  override fun enableNextButton() {
+    saveButton.setButtonState(ProgressMaterialButton.ButtonState.Enabled)
   }
 }

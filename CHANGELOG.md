@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Features
+- Add progress UI for registering a patient
+
 ###Internal
 - Migrated `LoginPinScreen` to Mobius
 - Extracted facility selection UI into a separate component

@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import androidx.annotation.StringRes
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.detaches
+import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_forgotpin_confirmpin.view.*
@@ -25,6 +25,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
+import org.simple.clinic.widgets.textChanges
 import javax.inject.Inject
 
 class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet), ForgotPinConfirmPinUi {
@@ -83,7 +84,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
         ui = this,
         events = events,
         controller = controller.create(screenKey.enteredPin),
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
 
     pinEntryEditText.showKeyboard()
@@ -104,13 +105,13 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   }
 
   private fun pinSubmits() =
-      RxTextView.editorActions(pinEntryEditText)
-          .filter { it == EditorInfo.IME_ACTION_DONE }
+      pinEntryEditText
+          .editorActions { it == EditorInfo.IME_ACTION_DONE }
           .map { ForgotPinConfirmPinSubmitClicked(pinEntryEditText.text.toString()) }
 
   private fun pinTextChanges() =
-      RxTextView.textChanges(pinEntryEditText)
-          .map { ForgotPinConfirmPinTextChanged(it.toString()) }
+      pinEntryEditText
+          .textChanges { ForgotPinConfirmPinTextChanged(it) }
 
   override fun showUserName(name: String) {
     userNameTextView.text = name

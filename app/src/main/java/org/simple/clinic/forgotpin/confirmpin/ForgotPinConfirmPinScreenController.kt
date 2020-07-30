@@ -41,16 +41,10 @@ class ForgotPinConfirmPinScreenController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        hideErrorsOnPinTextChanged(replayedEvents),
         showMismatchedPinErrors(replayedEvents),
         showProgress(replayedEvents),
         syncPatientDataAndResetPin(replayedEvents)
     )
-  }
-
-  private fun hideErrorsOnPinTextChanged(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<ForgotPinConfirmPinTextChanged>()
-        .map { { ui: Ui -> ui.hideError() } }
   }
 
   private fun showMismatchedPinErrors(events: Observable<UiEvent>): Observable<UiChange> {

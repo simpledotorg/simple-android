@@ -42,10 +42,12 @@ class PatientSearchScreenControllerTest {
 
   @Test
   fun `when search is clicked with no input then a validation error should be shown`() {
+    // when
     setupController()
     uiEvents.onNext(SearchQueryTextChanged(""))
     uiEvents.onNext(SearchClicked())
 
+    // then
     verify(screen).setEmptyTextFieldErrorVisible(false)
     verify(screen).setEmptyTextFieldErrorVisible(true)
     verify(screen).showAllPatientsInFacility()
@@ -55,8 +57,11 @@ class PatientSearchScreenControllerTest {
 
   @Test
   fun `when input changes then any validation error on input should be removed`() {
+    // when
     setupController()
     uiEvents.onNext(SearchQueryTextChanged("Anish"))
+
+    // then
     verify(screen).setEmptyTextFieldErrorVisible(false)
     verify(screen).hideAllPatientsInFacility()
     verify(screen).showSearchButton()
@@ -64,7 +69,10 @@ class PatientSearchScreenControllerTest {
 
     clearInvocations(screen)
 
+    // when
     uiEvents.onNext(SearchQueryTextChanged("123"))
+
+    // then
     verify(screen).hideAllPatientsInFacility()
     verify(screen).showSearchButton()
     verify(screen).setEmptyTextFieldErrorVisible(false)
@@ -73,10 +81,12 @@ class PatientSearchScreenControllerTest {
 
   @Test
   fun `when search is clicked with empty input then patients shouldn't be searched`() {
+    // when
     setupController()
     uiEvents.onNext(SearchQueryTextChanged(""))
     uiEvents.onNext(SearchClicked())
 
+    // then
     verify(screen, never()).openSearchResultsScreen(any())
     verify(screen).setEmptyTextFieldErrorVisible(false)
     verify(screen).setEmptyTextFieldErrorVisible(true)
@@ -202,10 +212,12 @@ class PatientSearchScreenControllerTest {
       input: String,
       expectedNameToSearch: String
   ) {
+    // when
     setupController()
     uiEvents.onNext(SearchQueryTextChanged(input))
     uiEvents.onNext(SearchClicked())
 
+    // then
     verify(screen).openSearchResultsScreen(Name(expectedNameToSearch, identifier))
     verify(screen).setEmptyTextFieldErrorVisible(false)
     verify(screen).hideAllPatientsInFacility()

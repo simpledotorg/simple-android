@@ -44,9 +44,9 @@ class ForgotPinConfirmPinScreenControllerTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
+  private val ui = mock<ForgotPinConfirmPinUi>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
-  private val screen = mock<ForgotPinConfirmPinScreen>()
   private val resetUserPin = mock<ResetUserPin>()
   private val syncAndClearPatientData = mock<SyncAndClearPatientData>()
 
@@ -78,9 +78,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     setupController(pin = "0000")
 
     // then
-    verify(screen).showUserName("Tushar Talwar")
-    verify(screen).showFacility("PHC Obvious")
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("Tushar Talwar")
+    verify(ui).showFacility("PHC Obvious")
+    verifyNoMoreInteractions(ui)
 
     verify(userSession, times(2)).loggedInUser()
     verifyNoMoreInteractions(userSession)
@@ -98,9 +98,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     setupController(pin = "1111")
 
     // then
-    verify(screen).showUserName("Tushar Talwar")
-    verify(screen).showFacility("PHC Obvious")
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("Tushar Talwar")
+    verify(ui).showFacility("PHC Obvious")
+    verifyNoMoreInteractions(ui)
 
     verify(userSession, times(2)).loggedInUser()
     verifyNoMoreInteractions(userSession)
@@ -124,17 +124,17 @@ class ForgotPinConfirmPinScreenControllerTest {
 
     // then
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("1234"))
-    verify(screen).showUserName("Tushar Talwar")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen).showPinMismatchedError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("Tushar Talwar")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui).showPinMismatchedError()
+    verifyNoMoreInteractions(ui)
 
-    clearInvocations(screen)
+    clearInvocations(ui)
 
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("5678"))
-    verify(screen).showPinMismatchedError()
+    verify(ui).showPinMismatchedError()
 
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -147,10 +147,10 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinTextChanged("111"))
 
     // then
-    verify(screen).showUserName("Tushar Talwar")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen, times(3)).hideError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("Tushar Talwar")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui, times(3)).hideError()
+    verifyNoMoreInteractions(ui)
 
     verify(userSession, times(2)).loggedInUser()
     verifyNoMoreInteractions(userSession)
@@ -174,11 +174,11 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
-    verify(screen).showUserName("Tushar Talwar")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen).showProgress()
-    verify(screen).showUnexpectedError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("Tushar Talwar")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui).showProgress()
+    verify(ui).showUnexpectedError()
+    verifyNoMoreInteractions(ui)
 
     verify(syncAndClearPatientData).run()
     verifyNoMoreInteractions(syncAndClearPatientData)
@@ -205,11 +205,11 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
-    verify(screen).showUserName("Tushar Talwar")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen).showProgress()
-    verify(screen).showUnexpectedError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("Tushar Talwar")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui).showProgress()
+    verify(ui).showUnexpectedError()
+    verifyNoMoreInteractions(ui)
 
     verify(userSession, times(2)).loggedInUser()
     verifyZeroInteractions(userSession)
@@ -237,11 +237,11 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
-    verify(screen).showUserName("Tushar Talwar")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen).showProgress()
-    verify(screen).goToHomeScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("Tushar Talwar")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui).showProgress()
+    verify(ui).goToHomeScreen()
+    verifyNoMoreInteractions(ui)
 
     verify(userSession, times(3)).loggedInUser()
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
@@ -265,10 +265,10 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("1234"))
 
     // then
-    verify(screen).showUserName("Tushar Talwar")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen).showPinMismatchedError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("Tushar Talwar")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui).showPinMismatchedError()
+    verifyNoMoreInteractions(ui)
 
     verify(resetUserPin, never()).resetPin(any())
     verifyNoMoreInteractions(resetUserPin)
@@ -294,11 +294,11 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
-    verify(screen).showUserName("Tushar Talwar")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen).showProgress()
-    verify(screen).showUnexpectedError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("Tushar Talwar")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui).showProgress()
+    verify(ui).showUnexpectedError()
+    verifyNoMoreInteractions(ui)
 
     verify(userSession, times(3)).loggedInUser()
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
@@ -327,11 +327,11 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
-    verify(screen).showUserName("Tushar Talwar")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen).showProgress()
-    verify(screen).showNetworkError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("Tushar Talwar")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui).showProgress()
+    verify(ui).showNetworkError()
+    verifyNoMoreInteractions(ui)
 
     verify(userSession, times(3)).loggedInUser()
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
@@ -360,11 +360,11 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
-    verify(screen).showUserName("Tushar Talwar")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen).showProgress()
-    verify(screen).showUnexpectedError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("Tushar Talwar")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui).showProgress()
+    verify(ui).showUnexpectedError()
+    verifyNoMoreInteractions(ui)
 
     verify(userSession, times(3)).loggedInUser()
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
@@ -392,11 +392,11 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
-    verify(screen).showUserName("Tushar Talwar")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen).showProgress()
-    verify(screen).showUnexpectedError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("Tushar Talwar")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui).showProgress()
+    verify(ui).showUnexpectedError()
+    verifyNoMoreInteractions(ui)
 
     verify(userSession, times(3)).loggedInUser()
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
@@ -425,11 +425,11 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
-    verify(screen).showUserName("Tushar Talwar")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen).showProgress()
-    verify(screen).goToHomeScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("Tushar Talwar")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui).showProgress()
+    verify(ui).goToHomeScreen()
+    verifyNoMoreInteractions(ui)
 
     verify(userSession, times(3)).loggedInUser()
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
@@ -456,11 +456,11 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("0000"))
 
     // then
-    verify(screen).showUserName("Tushar Talwar")
-    verify(screen).showFacility("PHC Obvious")
-    verify(screen).showProgress()
-    verify(screen).showUnexpectedError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserName("Tushar Talwar")
+    verify(ui).showFacility("PHC Obvious")
+    verify(ui).showProgress()
+    verify(ui).showUnexpectedError()
+    verifyNoMoreInteractions(ui)
 
     verify(userSession, times(3)).loggedInUser()
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
@@ -489,7 +489,7 @@ class ForgotPinConfirmPinScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { it.invoke(screen) }
+        .subscribe { it.invoke(ui) }
 
     uiEvents.onNext(ScreenCreated())
   }

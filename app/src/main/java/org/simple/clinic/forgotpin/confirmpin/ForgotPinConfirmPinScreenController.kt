@@ -22,7 +22,7 @@ import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 
-typealias Ui = ForgotPinConfirmPinScreen
+typealias Ui = ForgotPinConfirmPinUi
 typealias UiChange = (Ui) -> Unit
 
 class ForgotPinConfirmPinScreenController @AssistedInject constructor(

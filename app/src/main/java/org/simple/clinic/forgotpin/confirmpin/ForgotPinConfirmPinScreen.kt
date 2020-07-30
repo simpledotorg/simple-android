@@ -27,7 +27,7 @@ import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet) {
+class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet), ForgotPinConfirmPinUi {
 
   @Inject
   lateinit var controller: ForgotPinConfirmPinScreenController.Factory
@@ -80,11 +80,11 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
       RxTextView.textChanges(pinEntryEditText)
           .map { ForgotPinConfirmPinTextChanged(it.toString()) }
 
-  fun showUserName(name: String) {
+  override fun showUserName(name: String) {
     userNameTextView.text = name
   }
 
-  fun showFacility(name: String) {
+  override fun showFacility(name: String) {
     facilityNameTextView.text = name
   }
 
@@ -92,24 +92,24 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
     screenRouter.pop()
   }
 
-  fun showPinMismatchedError() {
+  override fun showPinMismatchedError() {
     showError(R.string.forgotpin_error_pin_mismatch)
   }
 
-  fun showUnexpectedError() {
+  override fun showUnexpectedError() {
     showError(R.string.api_unexpected_error)
   }
 
-  fun showNetworkError() {
+  override fun showNetworkError() {
     showError(R.string.api_network_error)
   }
 
-  fun hideError() {
+  override fun hideError() {
     pinErrorTextView.visibility = GONE
     pinEntryHintTextView.visibility = VISIBLE
   }
 
-  fun showProgress() {
+  override fun showProgress() {
     progressBar.visibility = VISIBLE
     pinEntryContainer.visibility = INVISIBLE
     hideKeyboard()
@@ -120,7 +120,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
     pinEntryContainer.visibility = VISIBLE
   }
 
-  fun goToHomeScreen() {
+  override fun goToHomeScreen() {
     screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.FORWARD)
   }
 

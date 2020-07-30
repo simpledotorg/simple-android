@@ -15,11 +15,13 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotterknife.bindView
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -44,6 +46,17 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   private val pinEntryContainer by bindView<ViewGroup>(R.id.forgotpin_confirmpin_pin_container)
   private val pinEntryHintTextView by bindView<TextView>(R.id.forgotpin_confirmpin_confirm_message)
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenCreates(),
+            pinSubmits(),
+            pinTextChanges()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
 
@@ -53,11 +66,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            screenCreates(),
-            pinSubmits(),
-            pinTextChanges()
-        ),
+        events = events,
         controller = controller.create(screenKey.enteredPin),
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

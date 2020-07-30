@@ -1,6 +1,7 @@
 package org.simple.clinic.search
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -20,6 +21,7 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResult
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
@@ -52,6 +54,9 @@ class PatientSearchScreen(
   @Inject
   lateinit var utcClock: UtcClock
 
+  @Inject
+  lateinit var effectHandlerFactory: PatientSearchEffectHandler.Factory
+
   private val allPatientsInFacility by unsafeLazy {
     allPatientsInFacilityView as AllPatientsInFacilityView
   }
@@ -69,6 +74,19 @@ class PatientSearchScreen(
         )
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = PatientSearchUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = PatientSearchModel.create(),
+        update = PatientSearchUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = PatientSearchInit(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   override fun onFinishInflate() {
@@ -92,6 +110,24 @@ class PatientSearchScreen(
         controller = controllerFactory.create(screenKey.additionalIdentifier),
         screenDestroys = screenDestroys
     )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun searchTextChanges(): Observable<UiEvent> {

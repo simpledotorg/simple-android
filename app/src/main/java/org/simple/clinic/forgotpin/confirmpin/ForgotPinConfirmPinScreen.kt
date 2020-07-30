@@ -3,19 +3,14 @@ package org.simple.clinic.forgotpin.confirmpin
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ProgressBar
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.annotation.StringRes
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.screen_forgotpin_confirmpin.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
@@ -42,15 +37,6 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
   @Inject
   lateinit var screenRouter: ScreenRouter
-
-  private val backButton by bindView<ImageButton>(R.id.forgotpin_confirmpin_back)
-  private val progressBar by bindView<ProgressBar>(R.id.forgotpin_confirmpin_progress)
-  private val facilityNameTextView by bindView<TextView>(R.id.forgotpin_confirmpin_facility_name)
-  private val userNameTextView by bindView<TextView>(R.id.forgotpin_confirmpin_user_fullname)
-  private val pinEntryEditText by bindView<EditText>(R.id.forgotpin_confirmpin_pin)
-  private val pinErrorTextView by bindView<TextView>(R.id.forgotpin_confirmpin_error)
-  private val pinEntryContainer by bindView<ViewGroup>(R.id.forgotpin_confirmpin_pin_container)
-  private val pinEntryHintTextView by bindView<TextView>(R.id.forgotpin_confirmpin_confirm_message)
 
   private val events by unsafeLazy {
     Observable

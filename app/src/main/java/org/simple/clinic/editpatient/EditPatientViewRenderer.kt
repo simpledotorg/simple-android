@@ -19,5 +19,15 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
     }
 
     ui.setDateOfBirthAndAgeVisibility(fieldToShow)
+
+    manageButtonState(model)
+  }
+
+  private fun manageButtonState(model: EditPatientModel) {
+    if (model.saveButtonState == EditPatientState.SAVING_PATIENT) {
+      ui.showProgress()
+    } else {
+      ui.hideProgress()
+    }
   }
 }

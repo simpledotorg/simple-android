@@ -79,7 +79,8 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
         address: PatientAddress,
         phoneNumber: PatientPhoneNumber?,
         dateOfBirthFormatter: DateTimeFormatter,
-        alternativeId: BusinessId?
+        alternativeId: BusinessId?,
+        saveButtonState: EditPatientState?
     ): EditablePatientEntry {
       return EditablePatientEntry(
           patientUuid = patient.uuid,

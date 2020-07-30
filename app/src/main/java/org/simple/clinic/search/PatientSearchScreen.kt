@@ -34,7 +34,10 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class PatientSearchScreen(
+    context: Context,
+    attrs: AttributeSet
+) : RelativeLayout(context, attrs), PatientSearchUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -120,17 +123,17 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .subscribe { hideKeyboard() }
   }
 
-  fun openSearchResultsScreen(criteria: PatientSearchCriteria) {
+  override fun openSearchResultsScreen(criteria: PatientSearchCriteria) {
     screenRouter.push(PatientSearchResultsScreenKey(criteria))
   }
 
-  fun setEmptyTextFieldErrorVisible(visible: Boolean) {
+  override fun setEmptyTextFieldErrorVisible(visible: Boolean) {
     searchQueryTextInputLayout.error = if (visible) {
       resources.getString(R.string.patientsearch_error_empty_fullname)
     } else null
   }
 
-  fun openPatientSummary(patientUuid: UUID) {
+  override fun openPatientSummary(patientUuid: UUID) {
     screenRouter.push(PatientSummaryScreenKey(
         patientUuid = patientUuid,
         intention = OpenIntention.ViewExistingPatient,
@@ -138,19 +141,19 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     ))
   }
 
-  fun showAllPatientsInFacility() {
+  override fun showAllPatientsInFacility() {
     allPatientsInFacility.visibility = View.VISIBLE
   }
 
-  fun hideAllPatientsInFacility() {
+  override fun hideAllPatientsInFacility() {
     allPatientsInFacility.visibility = View.GONE
   }
 
-  fun showSearchButton() {
+  override fun showSearchButton() {
     searchButtonFrame.visibility = View.VISIBLE
   }
 
-  fun hideSearchButton() {
+  override fun hideSearchButton() {
     searchButtonFrame.visibility = View.GONE
   }
 

@@ -17,7 +17,7 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.search.PatientSearchValidationError.INPUT_EMPTY
 import org.simple.clinic.widgets.UiEvent
 
-private typealias Ui = PatientSearchScreen
+private typealias Ui = PatientSearchUi
 private typealias UiChange = (Ui) -> Unit
 
 class PatientSearchScreenController @AssistedInject constructor(

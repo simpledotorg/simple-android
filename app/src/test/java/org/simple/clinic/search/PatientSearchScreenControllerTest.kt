@@ -28,7 +28,7 @@ class PatientSearchScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen: PatientSearchScreen = mock()
+  private val ui: PatientSearchUi = mock()
 
   private val identifier = TestData.identifier("a8d49ec3-6945-4ef0-9358-f313e08d1579", Identifier.IdentifierType.BpPassport)
 
@@ -48,11 +48,11 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchClicked())
 
     // then
-    verify(screen).setEmptyTextFieldErrorVisible(false)
-    verify(screen).setEmptyTextFieldErrorVisible(true)
-    verify(screen).showAllPatientsInFacility()
-    verify(screen).hideSearchButton()
-    verifyNoMoreInteractions(screen)
+    verify(ui).setEmptyTextFieldErrorVisible(false)
+    verify(ui).setEmptyTextFieldErrorVisible(true)
+    verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -62,21 +62,21 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchQueryTextChanged("Anish"))
 
     // then
-    verify(screen).setEmptyTextFieldErrorVisible(false)
-    verify(screen).hideAllPatientsInFacility()
-    verify(screen).showSearchButton()
-    verifyNoMoreInteractions(screen)
+    verify(ui).setEmptyTextFieldErrorVisible(false)
+    verify(ui).hideAllPatientsInFacility()
+    verify(ui).showSearchButton()
+    verifyNoMoreInteractions(ui)
 
-    clearInvocations(screen)
+    clearInvocations(ui)
 
     // when
     uiEvents.onNext(SearchQueryTextChanged("123"))
 
     // then
-    verify(screen).hideAllPatientsInFacility()
-    verify(screen).showSearchButton()
-    verify(screen).setEmptyTextFieldErrorVisible(false)
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideAllPatientsInFacility()
+    verify(ui).showSearchButton()
+    verify(ui).setEmptyTextFieldErrorVisible(false)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -87,12 +87,12 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchClicked())
 
     // then
-    verify(screen, never()).openSearchResultsScreen(any())
-    verify(screen).setEmptyTextFieldErrorVisible(false)
-    verify(screen).setEmptyTextFieldErrorVisible(true)
-    verify(screen).showAllPatientsInFacility()
-    verify(screen).hideSearchButton()
-    verifyNoMoreInteractions(screen)
+    verify(ui, never()).openSearchResultsScreen(any())
+    verify(ui).setEmptyTextFieldErrorVisible(false)
+    verify(ui).setEmptyTextFieldErrorVisible(true)
+    verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -104,8 +104,8 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(PatientItemClicked(patientUuid))
 
     // then
-    verify(screen).openPatientSummary(patientUuid)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientSummary(patientUuid)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -115,10 +115,10 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchQueryTextChanged(""))
 
     // then
-    verify(screen).showAllPatientsInFacility()
-    verify(screen).hideSearchButton()
-    verify(screen).setEmptyTextFieldErrorVisible(false)
-    verifyNoMoreInteractions(screen)
+    verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
+    verify(ui).setEmptyTextFieldErrorVisible(false)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -128,10 +128,10 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchQueryTextChanged(""))
 
     // then
-    verify(screen).hideSearchButton()
-    verify(screen).showAllPatientsInFacility()
-    verify(screen).setEmptyTextFieldErrorVisible(false)
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideSearchButton()
+    verify(ui).showAllPatientsInFacility()
+    verify(ui).setEmptyTextFieldErrorVisible(false)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -141,11 +141,11 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchQueryTextChanged("a"))
 
     // then
-    verify(screen).hideAllPatientsInFacility()
-    verify(screen).showSearchButton()
-    verify(screen).hideAllPatientsInFacility()
-    verify(screen).setEmptyTextFieldErrorVisible(false)
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideAllPatientsInFacility()
+    verify(ui).showSearchButton()
+    verify(ui).hideAllPatientsInFacility()
+    verify(ui).setEmptyTextFieldErrorVisible(false)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -155,11 +155,11 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchQueryTextChanged("a"))
 
     // then
-    verify(screen).showSearchButton()
-    verify(screen).hideAllPatientsInFacility()
-    verify(screen).hideAllPatientsInFacility()
-    verify(screen).setEmptyTextFieldErrorVisible(false)
-    verifyNoMoreInteractions(screen)
+    verify(ui).showSearchButton()
+    verify(ui).hideAllPatientsInFacility()
+    verify(ui).hideAllPatientsInFacility()
+    verify(ui).setEmptyTextFieldErrorVisible(false)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -185,11 +185,11 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchClicked())
 
     // then
-    verify(screen).openSearchResultsScreen(PhoneNumber(expectedPhoneNumberToSearch, identifier))
-    verify(screen).setEmptyTextFieldErrorVisible(false)
-    verify(screen).hideAllPatientsInFacility()
-    verify(screen).showSearchButton()
-    verifyNoMoreInteractions(screen)
+    verify(ui).openSearchResultsScreen(PhoneNumber(expectedPhoneNumberToSearch, identifier))
+    verify(ui).setEmptyTextFieldErrorVisible(false)
+    verify(ui).hideAllPatientsInFacility()
+    verify(ui).showSearchButton()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -218,11 +218,11 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchClicked())
 
     // then
-    verify(screen).openSearchResultsScreen(Name(expectedNameToSearch, identifier))
-    verify(screen).setEmptyTextFieldErrorVisible(false)
-    verify(screen).hideAllPatientsInFacility()
-    verify(screen).showSearchButton()
-    verifyNoMoreInteractions(screen)
+    verify(ui).openSearchResultsScreen(Name(expectedNameToSearch, identifier))
+    verify(ui).setEmptyTextFieldErrorVisible(false)
+    verify(ui).hideAllPatientsInFacility()
+    verify(ui).showSearchButton()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -230,6 +230,6 @@ class PatientSearchScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
   }
 }

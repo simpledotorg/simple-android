@@ -14,6 +14,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -35,6 +36,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class ForgotPinConfirmPinScreenControllerTest {
@@ -60,6 +62,7 @@ class ForgotPinConfirmPinScreenControllerTest {
   )
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<ForgotPinConfirmPinModel, ForgotPinConfirmPinEvent, ForgotPinConfirmPinEffect>
 
   // FIXME 02-08-2019 : Fix tests with unexpected errors are passing even when stubs are not passed
   // We use onErrorReturn in one of the chains to wrap unexpected errors. However, when we forget
@@ -70,6 +73,7 @@ class ForgotPinConfirmPinScreenControllerTest {
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -492,5 +496,22 @@ class ForgotPinConfirmPinScreenControllerTest {
         .subscribe { it.invoke(ui) }
 
     uiEvents.onNext(ScreenCreated())
+
+    val effectHandler = ForgotPinConfirmPinEffectHandler(
+        uiActions = ui
+    )
+
+    val uiRenderer = ForgotPinConfirmPinUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = ForgotPinConfirmPinModel.create(),
+        init = ForgotPinConfirmPinInit(),
+        update = ForgotPinConfirmPinUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
+
+    testFixture.start()
   }
 }

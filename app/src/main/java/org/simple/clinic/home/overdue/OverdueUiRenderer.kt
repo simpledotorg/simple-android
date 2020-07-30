@@ -7,6 +7,16 @@ class OverdueUiRenderer(
 ) : ViewRenderer<OverdueModel> {
 
   override fun render(model: OverdueModel) {
-    // Nothing to do here yet
+    if (model.hasLoadedOverdueAppointments) {
+      renderOverdueAppointments(model.overdueAppointments!!, model.isDiabetesManagementEnabled)
+    }
+  }
+
+  private fun renderOverdueAppointments(
+      overdueAppointments: List<OverdueAppointment>,
+      diabetesManagementEnabled: Boolean
+  ) {
+    ui.handleEmptyList(overdueAppointments.isEmpty())
+    ui.updateList(overdueAppointments, isDiabetesManagementEnabled = diabetesManagementEnabled)
   }
 }

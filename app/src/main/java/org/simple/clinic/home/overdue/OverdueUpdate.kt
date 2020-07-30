@@ -1,12 +1,20 @@
 package org.simple.clinic.home.overdue
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
+import org.simple.clinic.mobius.next
+import java.time.LocalDate
 
-class OverdueUpdate: Update<OverdueModel, OverdueEvent, OverdueEffect> {
+class OverdueUpdate(
+    val date: LocalDate
+) : Update<OverdueModel, OverdueEvent, OverdueEffect> {
 
   override fun update(model: OverdueModel, event: OverdueEvent): Next<OverdueModel, OverdueEffect> {
-    return noChange()
+    return when (event) {
+      is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility), LoadOverdueAppointments(date, event.facility))
+      is OverdueAppointmentsLoaded -> next(model.overdueAppointmentsLoaded(event.appointments))
+      is CallPatientClicked -> dispatch(OpenContactPatientScreen(event.patientUuid))
+    }
   }
 }

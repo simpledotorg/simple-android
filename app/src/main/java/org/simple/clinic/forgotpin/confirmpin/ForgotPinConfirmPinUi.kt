@@ -6,7 +6,6 @@ interface ForgotPinConfirmPinUi : UiActions {
   fun showPinMismatchedError()
   fun showUnexpectedError()
   fun showNetworkError()
-  fun hideError()
   fun showProgress()
   fun goToHomeScreen()
 }

@@ -1,3 +1,5 @@
 package org.simple.clinic.forgotpin.confirmpin
 
-interface UiActions
+interface UiActions {
+  fun hideError()
+}

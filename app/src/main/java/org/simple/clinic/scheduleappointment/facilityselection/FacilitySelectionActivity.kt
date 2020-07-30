@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.screen_patient_facility_change.*
+import kotlinx.android.synthetic.main.activity_select_facility.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
@@ -44,7 +44,7 @@ class FacilitySelectionActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.screen_patient_facility_change)
+    setContentView(R.layout.activity_select_facility)
 
     bindUiToController(
         ui = this,

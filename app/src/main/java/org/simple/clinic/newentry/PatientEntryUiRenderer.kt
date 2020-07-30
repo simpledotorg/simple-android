@@ -21,6 +21,16 @@ class PatientEntryUiRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntry
 
     val personalDetails = patientEntry.personalDetails ?: return
     changeDateOfBirthAndAgeVisibility(personalDetails)
+
+    buttonVisibility(model)
+  }
+
+  private fun buttonVisibility(model: PatientEntryModel) {
+    if (model.nextButtonState == ButtonState.SAVING) {
+      ui.nextButtonShowInProgress()
+    } else {
+      ui.enableNextButton()
+    }
   }
 
   private fun renderIdentifier(identifier: Identifier?) {

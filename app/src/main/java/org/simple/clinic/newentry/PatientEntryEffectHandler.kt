@@ -41,6 +41,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ValueChangedCallback
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import java.util.concurrent.TimeUnit
 
 class PatientEntryEffectHandler(
     private val userSession: UserSession,

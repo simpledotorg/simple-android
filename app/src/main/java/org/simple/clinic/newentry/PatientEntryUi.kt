@@ -12,4 +12,6 @@ interface PatientEntryUi {
   fun scrollFormOnGenderSelection()
   fun showIdentifierSection()
   fun hideIdentifierSection()
+  fun nextButtonShowInProgress()
+  fun enableNextButton()
 }

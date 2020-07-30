@@ -12,7 +12,8 @@ import org.simple.clinic.util.isNotEmpty
 @Parcelize
 data class PatientEntryModel(
     val patientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry(),
-    val isSelectingGenderForTheFirstTime: Boolean = true
+    val isSelectingGenderForTheFirstTime: Boolean = true,
+    val nextButtonState: ButtonState? = null
 ) : Parcelable {
   companion object {
     val DEFAULT = PatientEntryModel()
@@ -62,4 +63,7 @@ data class PatientEntryModel(
 
   fun zoneChanged(zone: String): PatientEntryModel =
       copy(patientEntry = patientEntry.withZone(zone))
+
+  fun buttonStateChanged(buttonState: ButtonState): PatientEntryModel =
+      copy(nextButtonState = buttonState)
 }

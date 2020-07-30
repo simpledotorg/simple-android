@@ -37,8 +37,8 @@ class PatientEntryUpdate(
       is OngoingEntryFetched -> onOngoingEntryFetched(model, event.patientEntry)
       is DateOfBirthFocusChanged -> onDateOfBirthFocusChanged(model, event.hasFocus)
       is ReminderConsentChanged -> next(model.reminderConsentChanged(event.reminderConsent))
-      is SaveClicked -> onSaveClicked(model.patientEntry)
-      is PatientEntrySaved -> dispatch(OpenMedicalHistoryEntryScreen)
+      is SaveClicked -> onSaveClicked(model)
+      is PatientEntrySaved -> next(model.buttonStateChanged(ButtonState.SAVED), OpenMedicalHistoryEntryScreen)
     }
   }
 
@@ -66,14 +66,13 @@ class PatientEntryUpdate(
   }
 
   private fun onSaveClicked(
-      patientEntry: OngoingNewPatientEntry
+      model: PatientEntryModel
   ): PatientEntryNext {
-    val validationErrors = patientEntry.validationErrors(dobValidator, phoneNumberValidator, ageValidator)
-    val effect = if (validationErrors.isEmpty()) {
-      SavePatient(patientEntry)
+    val validationErrors = model.patientEntry.validationErrors(dobValidator, phoneNumberValidator, ageValidator)
+    return if (validationErrors.isEmpty()) {
+      next(model.buttonStateChanged(ButtonState.SAVING), SavePatient(model.patientEntry))
     } else {
-      ShowValidationErrors(validationErrors)
+      dispatch(ShowValidationErrors(validationErrors))
     }
-    return dispatch(effect)
   }
 }

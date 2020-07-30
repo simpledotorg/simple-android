@@ -14,6 +14,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_patient_search.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
@@ -59,6 +60,17 @@ class PatientSearchScreen(
     screenRouter.key<PatientSearchScreenKey>(this)
   }
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            searchTextChanges(),
+            searchClicks(),
+            patientClickEvents()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -76,11 +88,7 @@ class PatientSearchScreen(
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            searchTextChanges(),
-            searchClicks(),
-            patientClickEvents()
-        ),
+        events = events,
         controller = controllerFactory.create(screenKey.additionalIdentifier),
         screenDestroys = screenDestroys
     )

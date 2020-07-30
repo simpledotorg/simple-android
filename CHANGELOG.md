@@ -6,6 +6,7 @@
 - Extracted facility selection UI into a separate component
 - [In Progress: 28th Jul 2020] Migrate `OverdueScreen` to Mobius
 - [In Progress: 28th Jul 2020] Migrate `ForgotPinCreateNewPinScreen` to Mobius
+- [In Progress: 29th Jul 2020] Migrate `ForgotPinConfirmPinScreen` to Mobius
 
 ## On Demo
 ### Features

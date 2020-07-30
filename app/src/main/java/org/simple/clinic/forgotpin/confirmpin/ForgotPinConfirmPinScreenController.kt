@@ -1,36 +1,42 @@
 package org.simple.clinic.forgotpin.confirmpin
 
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
+import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.clearpatientdata.SyncAndClearPatientData
 import org.simple.clinic.user.resetpin.ResetPinResult.NetworkError
 import org.simple.clinic.user.resetpin.ResetPinResult.Success
 import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
 import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
-import org.simple.clinic.user.User.LoggedInStatus.*
-import org.simple.clinic.user.UserSession
-import org.simple.clinic.user.clearpatientdata.SyncAndClearPatientData
 import org.simple.clinic.user.resetpin.ResetUserPin
 import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import javax.inject.Inject
 
 typealias Ui = ForgotPinConfirmPinScreen
 typealias UiChange = (Ui) -> Unit
 
-class ForgotPinConfirmPinScreenController @Inject constructor(
+class ForgotPinConfirmPinScreenController @AssistedInject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val resetUserPin: ResetUserPin,
-    private val syncAndClearPatientData: SyncAndClearPatientData
+    private val syncAndClearPatientData: SyncAndClearPatientData,
+    @Assisted private val previousPin: String
 ) : ObservableTransformer<UiEvent, UiChange> {
+
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(previousPin: String): ForgotPinConfirmPinScreenController
+  }
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
@@ -48,14 +54,14 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
   }
 
   private fun showUserNameOnScreenStarted(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<ForgotPinConfirmPinScreenCreated>()
+    return events.ofType<ScreenCreated>()
         .flatMap { userSession.loggedInUser() }
         .filterAndUnwrapJust()
         .map { user -> { ui: Ui -> ui.showUserName(user.fullName) } }
   }
 
   private fun showFacilityOnScreenCreated(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<ForgotPinConfirmPinScreenCreated>()
+    return events.ofType<ScreenCreated>()
         .flatMap { userSession.loggedInUser() }
         .filterAndUnwrapJust()
         .switchMap { facilityRepository.currentFacility(it) }
@@ -68,36 +74,23 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
   }
 
   private fun showMismatchedPinErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    val previouslyEnteredPin = events.ofType<ForgotPinConfirmPinScreenCreated>()
-        .map { it.pin }
-
     return events.ofType<ForgotPinConfirmPinSubmitClicked>()
         .map { it.pin }
-        .withLatestFrom(previouslyEnteredPin)
-        .filter { (enteredPin, previousPin) -> enteredPin != previousPin }
+        .filter { enteredPin -> enteredPin != previousPin }
         .map { { ui: Ui -> ui.showPinMismatchedError() } }
   }
 
   private fun showProgress(events: Observable<UiEvent>): Observable<UiChange> {
-    val previouslyEnteredPin = events.ofType<ForgotPinConfirmPinScreenCreated>()
-        .map { it.pin }
-
     return events.ofType<ForgotPinConfirmPinSubmitClicked>()
         .map { it.pin }
-        .withLatestFrom(previouslyEnteredPin)
-        .filter { (enteredPin, previousPin) -> enteredPin == previousPin }
+        .filter { enteredPin -> enteredPin == previousPin }
         .map { { ui: Ui -> ui.showProgress() } }
   }
 
   private fun syncPatientDataAndResetPin(events: Observable<UiEvent>): Observable<UiChange> {
-    val previouslyEnteredPin = events.ofType<ForgotPinConfirmPinScreenCreated>()
-        .map { it.pin }
-
     val validPin = events.ofType<ForgotPinConfirmPinSubmitClicked>()
         .map { it.pin }
-        .withLatestFrom(previouslyEnteredPin)
-        .filter { (enteredPin, previousPin) -> enteredPin == previousPin }
-        .map { (enteredPin, _) -> enteredPin }
+        .filter { enteredPin -> enteredPin == previousPin }
         .share()
 
     val makeResetPinCall = validPin

@@ -500,6 +500,7 @@ class ForgotPinConfirmPinScreenControllerTest {
 
     val effectHandler = ForgotPinConfirmPinEffectHandler(
         userSession = userSession,
+        facilityRepository = facilityRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

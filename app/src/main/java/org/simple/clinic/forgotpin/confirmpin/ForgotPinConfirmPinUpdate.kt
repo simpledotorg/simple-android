@@ -10,6 +10,7 @@ class ForgotPinConfirmPinUpdate : Update<ForgotPinConfirmPinModel, ForgotPinConf
       Next<ForgotPinConfirmPinModel, ForgotPinConfirmPinEffect> {
     return when (event) {
       is LoggedInUserLoaded -> next(model.userLoaded(event.user))
+      is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility))
     }
   }
 }

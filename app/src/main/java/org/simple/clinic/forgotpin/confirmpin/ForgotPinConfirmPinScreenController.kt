@@ -18,7 +18,6 @@ import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
 import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
 import org.simple.clinic.user.resetpin.ResetUserPin
 import org.simple.clinic.util.filterAndUnwrapJust
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 
 typealias Ui = ForgotPinConfirmPinUi
@@ -42,20 +41,11 @@ class ForgotPinConfirmPinScreenController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        showFacilityOnScreenCreated(replayedEvents),
         hideErrorsOnPinTextChanged(replayedEvents),
         showMismatchedPinErrors(replayedEvents),
         showProgress(replayedEvents),
         syncPatientDataAndResetPin(replayedEvents)
     )
-  }
-
-  private fun showFacilityOnScreenCreated(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<ScreenCreated>()
-        .flatMap { userSession.loggedInUser() }
-        .filterAndUnwrapJust()
-        .switchMap { facilityRepository.currentFacility(it) }
-        .map { facility -> { ui: Ui -> ui.showFacility(facility.name) } }
   }
 
   private fun hideErrorsOnPinTextChanged(events: Observable<UiEvent>): Observable<UiChange> {

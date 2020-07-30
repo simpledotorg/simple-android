@@ -3,15 +3,16 @@ package org.simple.clinic.forgotpin.createnewpin
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.SECURITY_PIN_LENGTH
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.user.UserSession
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class ForgotPinCreateNewEffectHandler @AssistedInject constructor(
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
+    private val currentUser: Lazy<User>,
+    private val currentFacility: Lazy<Facility>,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: UiActions
 ) {
@@ -45,8 +46,7 @@ class ForgotPinCreateNewEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMap { userSession.requireLoggedInUser() }
-          .switchMap { facilityRepository.currentFacility(it) }
+          .map { currentFacility.get() }
           .map(::CurrentFacilityLoaded)
     }
   }
@@ -55,8 +55,7 @@ class ForgotPinCreateNewEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMap { userSession.requireLoggedInUser() }
-          .map(::LoggedInUserLoaded)
+          .map { LoggedInUserLoaded(currentUser.get()) }
     }
   }
 }

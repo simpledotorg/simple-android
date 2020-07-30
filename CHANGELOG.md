@@ -7,9 +7,9 @@
 ###Internal
 - Migrated `LoginPinScreen` to Mobius
 - Extracted facility selection UI into a separate component
+- Migrated `ForgotPinCreateNewPinScreen` to Mobius
 - Remove `AddToPatientSearch` screens and merge them with `PatientSearch` screens
 - [In Progress: 30th Jul 2020] Migrate `OverdueScreen` to Mobius
-- [In Progress: 28th Jul 2020] Migrate `ForgotPinCreateNewPinScreen` to Mobius
 - [In Progress: 29th Jul 2020] Migrate `ForgotPinConfirmPinScreen` to Mobius
 - [In Progress: 30th Jul 2020] Migrate `FacilitySelectionActivity` to Mobius
 

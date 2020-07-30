@@ -4,8 +4,8 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -46,7 +46,11 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchQueryTextChanged(""))
     uiEvents.onNext(SearchClicked())
 
-    verify(screen, times(1)).setEmptyTextFieldErrorVisible(true)
+    verify(screen).setEmptyTextFieldErrorVisible(false)
+    verify(screen).setEmptyTextFieldErrorVisible(true)
+    verify(screen).showAllPatientsInFacility()
+    verify(screen).hideSearchButton()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -54,11 +58,17 @@ class PatientSearchScreenControllerTest {
     setupController()
     uiEvents.onNext(SearchQueryTextChanged("Anish"))
     verify(screen).setEmptyTextFieldErrorVisible(false)
+    verify(screen).hideAllPatientsInFacility()
+    verify(screen).showSearchButton()
+    verifyNoMoreInteractions(screen)
 
     clearInvocations(screen)
 
     uiEvents.onNext(SearchQueryTextChanged("123"))
+    verify(screen).hideAllPatientsInFacility()
+    verify(screen).showSearchButton()
     verify(screen).setEmptyTextFieldErrorVisible(false)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -68,6 +78,11 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchClicked())
 
     verify(screen, never()).openSearchResultsScreen(any())
+    verify(screen).setEmptyTextFieldErrorVisible(false)
+    verify(screen).setEmptyTextFieldErrorVisible(true)
+    verify(screen).showAllPatientsInFacility()
+    verify(screen).hideSearchButton()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -80,6 +95,7 @@ class PatientSearchScreenControllerTest {
 
     // then
     verify(screen).openPatientSummary(patientUuid)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -90,6 +106,9 @@ class PatientSearchScreenControllerTest {
 
     // then
     verify(screen).showAllPatientsInFacility()
+    verify(screen).hideSearchButton()
+    verify(screen).setEmptyTextFieldErrorVisible(false)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -100,6 +119,9 @@ class PatientSearchScreenControllerTest {
 
     // then
     verify(screen).hideSearchButton()
+    verify(screen).showAllPatientsInFacility()
+    verify(screen).setEmptyTextFieldErrorVisible(false)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -110,6 +132,10 @@ class PatientSearchScreenControllerTest {
 
     // then
     verify(screen).hideAllPatientsInFacility()
+    verify(screen).showSearchButton()
+    verify(screen).hideAllPatientsInFacility()
+    verify(screen).setEmptyTextFieldErrorVisible(false)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -120,6 +146,10 @@ class PatientSearchScreenControllerTest {
 
     // then
     verify(screen).showSearchButton()
+    verify(screen).hideAllPatientsInFacility()
+    verify(screen).hideAllPatientsInFacility()
+    verify(screen).setEmptyTextFieldErrorVisible(false)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -146,6 +176,10 @@ class PatientSearchScreenControllerTest {
 
     // then
     verify(screen).openSearchResultsScreen(PhoneNumber(expectedPhoneNumberToSearch, identifier))
+    verify(screen).setEmptyTextFieldErrorVisible(false)
+    verify(screen).hideAllPatientsInFacility()
+    verify(screen).showSearchButton()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -173,6 +207,10 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchClicked())
 
     verify(screen).openSearchResultsScreen(Name(expectedNameToSearch, identifier))
+    verify(screen).setEmptyTextFieldErrorVisible(false)
+    verify(screen).hideAllPatientsInFacility()
+    verify(screen).showSearchButton()
+    verifyNoMoreInteractions(screen)
   }
 
   private fun setupController() {

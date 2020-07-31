@@ -13,7 +13,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -35,7 +34,6 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -62,7 +60,6 @@ class ForgotPinConfirmPinScreenControllerTest {
       name = "PHC Obvious"
   )
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<ForgotPinConfirmPinModel, ForgotPinConfirmPinEvent, ForgotPinConfirmPinEffect>
 
   // FIXME 02-08-2019 : Fix tests with unexpected errors are passing even when stubs are not passed
@@ -73,7 +70,6 @@ class ForgotPinConfirmPinScreenControllerTest {
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -481,22 +477,8 @@ class ForgotPinConfirmPinScreenControllerTest {
   }
 
   private fun setupController(pin: String) {
-    val controller = ForgotPinConfirmPinScreenController(
-        userSession = userSession,
-        facilityRepository = facilityRepository,
-        resetUserPin = resetUserPin,
-        syncAndClearPatientData = syncAndClearPatientData,
-        previousPin = pin
-    )
-
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(loggedInUser))
     whenever(facilityRepository.currentFacility(loggedInUser)) doReturn Observable.just(facility)
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { it.invoke(ui) }
-
-    uiEvents.onNext(ScreenCreated())
 
     val effectHandler = ForgotPinConfirmPinEffectHandler(
         userSession = userSession,

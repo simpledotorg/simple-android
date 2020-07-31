@@ -15,3 +15,7 @@ data class ForgotPinConfirmPinTextChanged(val text: String) : ForgotPinConfirmPi
 }
 
 data class PinConfirmationValidated(val isValid: Boolean, val newPin: String) : ForgotPinConfirmPinEvent()
+
+data class ForgotPinConfirmPinSubmitClicked(val pin: String) : ForgotPinConfirmPinEvent() {
+  override val analyticsName = "Forgot PIN:Confirm PIN:Submit Clicked"
+}

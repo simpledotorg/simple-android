@@ -14,7 +14,18 @@ class ForgotPinConfirmPinUpdate : Update<ForgotPinConfirmPinModel, ForgotPinConf
       is LoggedInUserLoaded -> next(model.userLoaded(event.user))
       is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility))
       is ForgotPinConfirmPinTextChanged -> dispatch(HideError)
-      is PinConfirmationValidated -> noChange()
+      is ForgotPinConfirmPinSubmitClicked -> dispatch(ValidatePinConfirmation(model.previousPin, event.pin))
+      is PinConfirmationValidated -> pinConfirmationValidated(event)
+    }
+  }
+
+  private fun pinConfirmationValidated(
+      event: PinConfirmationValidated
+  ): Next<ForgotPinConfirmPinModel, ForgotPinConfirmPinEffect> {
+    return if (event.isValid.not()) {
+      dispatch(ShowMismatchedError)
+    } else {
+      noChange()
     }
   }
 }

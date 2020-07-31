@@ -11,3 +11,5 @@ object HideError : ForgotPinConfirmPinEffect()
 data class ValidatePinConfirmation(val previousPin: String, val enteredPin: String) : ForgotPinConfirmPinEffect()
 
 object ShowMismatchedError : ForgotPinConfirmPinEffect()
+
+object ShowProgress : ForgotPinConfirmPinEffect()

@@ -27,6 +27,7 @@ class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
       .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
       .addAction(HideError::class.java, uiActions::hideError, schedulersProvider.ui())
       .addTransformer(ValidatePinConfirmation::class.java, validatePinConfirmation())
+      .addAction(ShowMismatchedError::class.java, uiActions::showPinMismatchedError, schedulersProvider.ui())
       .build()
 
   private fun validatePinConfirmation(): ObservableTransformer<ValidatePinConfirmation, ForgotPinConfirmPinEvent> {

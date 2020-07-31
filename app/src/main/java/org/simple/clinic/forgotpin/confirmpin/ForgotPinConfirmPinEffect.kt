@@ -17,3 +17,5 @@ object ShowProgress : ForgotPinConfirmPinEffect()
 object ShowNetworkError : ForgotPinConfirmPinEffect()
 
 object ShowUnexpectedError : ForgotPinConfirmPinEffect()
+
+object GoToHomeScreen : ForgotPinConfirmPinEffect()

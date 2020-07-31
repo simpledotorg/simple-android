@@ -6,4 +6,5 @@ interface UiActions {
   fun showProgress()
   fun showNetworkError()
   fun showUnexpectedError()
+  fun goToHomeScreen()
 }

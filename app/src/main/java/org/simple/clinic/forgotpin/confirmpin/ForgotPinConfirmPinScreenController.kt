@@ -41,16 +41,8 @@ class ForgotPinConfirmPinScreenController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        showProgress(replayedEvents),
         syncPatientDataAndResetPin(replayedEvents)
     )
-  }
-
-  private fun showProgress(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<ForgotPinConfirmPinSubmitClicked>()
-        .map { it.pin }
-        .filter { enteredPin -> enteredPin == previousPin }
-        .map { { ui: Ui -> ui.showProgress() } }
   }
 
   private fun syncPatientDataAndResetPin(events: Observable<UiEvent>): Observable<UiChange> {

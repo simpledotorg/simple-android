@@ -1,7 +1,6 @@
 package org.simple.clinic.forgotpin.confirmpin
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -25,7 +24,7 @@ class ForgotPinConfirmPinUpdate : Update<ForgotPinConfirmPinModel, ForgotPinConf
     return if (event.isValid.not()) {
       dispatch(ShowMismatchedError)
     } else {
-      noChange()
+      dispatch(ShowProgress)
     }
   }
 }

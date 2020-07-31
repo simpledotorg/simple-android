@@ -4,6 +4,5 @@ interface ForgotPinConfirmPinUi : UiActions {
   fun showUserName(name: String)
   fun showFacility(name: String)
   fun showUnexpectedError()
-  fun showNetworkError()
   fun goToHomeScreen()
 }

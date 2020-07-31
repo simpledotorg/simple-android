@@ -4,4 +4,5 @@ interface UiActions {
   fun hideError()
   fun showPinMismatchedError()
   fun showProgress()
+  fun showNetworkError()
 }

@@ -13,3 +13,5 @@ data class ValidatePinConfirmation(val previousPin: String, val enteredPin: Stri
 object ShowMismatchedError : ForgotPinConfirmPinEffect()
 
 object ShowProgress : ForgotPinConfirmPinEffect()
+
+object ShowNetworkError : ForgotPinConfirmPinEffect()

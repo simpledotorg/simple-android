@@ -26,7 +26,18 @@ class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
       .addTransformer(LoadLoggedInUser::class.java, loadLoggedInUser())
       .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
       .addAction(HideError::class.java, uiActions::hideError, schedulersProvider.ui())
+      .addTransformer(ValidatePinConfirmation::class.java, validatePinConfirmation())
       .build()
+
+  private fun validatePinConfirmation(): ObservableTransformer<ValidatePinConfirmation, ForgotPinConfirmPinEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .map { (previousPin, enteredPin) ->
+            val isValid = previousPin == enteredPin
+            PinConfirmationValidated(isValid, enteredPin)
+          }
+    }
+  }
 
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, ForgotPinConfirmPinEvent> {
     return ObservableTransformer { effects ->

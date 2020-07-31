@@ -13,3 +13,5 @@ data class CurrentFacilityLoaded(val facility: Facility) : ForgotPinConfirmPinEv
 data class ForgotPinConfirmPinTextChanged(val text: String) : ForgotPinConfirmPinEvent() {
   override val analyticsName = "Forgot PIN:Confirm PIN:Text Changed"
 }
+
+data class PinConfirmationValidated(val isValid: Boolean, val newPin: String) : ForgotPinConfirmPinEvent()

@@ -7,3 +7,5 @@ object LoadLoggedInUser : ForgotPinConfirmPinEffect()
 object LoadCurrentFacility : ForgotPinConfirmPinEffect()
 
 object HideError : ForgotPinConfirmPinEffect()
+
+data class ValidatePinConfirmation(val previousPin: String, val enteredPin: String) : ForgotPinConfirmPinEffect()

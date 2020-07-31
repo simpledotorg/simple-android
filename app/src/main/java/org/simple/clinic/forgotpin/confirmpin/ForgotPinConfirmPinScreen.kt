@@ -39,7 +39,6 @@ class ForgotPinConfirmPinScreen(
   private val events by unsafeLazy {
     Observable
         .merge(
-            screenCreates(),
             pinSubmits(),
             pinTextChanges()
         )
@@ -86,10 +85,6 @@ class ForgotPinConfirmPinScreen(
 
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
-  }
-
-  private fun screenCreates(): Observable<UiEvent> {
-    return Observable.just(ScreenCreated())
   }
 
   private fun pinSubmits() =

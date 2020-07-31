@@ -4,6 +4,7 @@
 ### Features
 - Add progress UI for registering a patient
 - Add progress UI when scheduling appointment in `ScheduleAppointmentSheet`
+- Add progress UI when editing a patient in `EditPatientScreen`
 
 ### Changes
 - Updated translations: `ti`

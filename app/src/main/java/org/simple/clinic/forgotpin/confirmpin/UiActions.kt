@@ -5,4 +5,5 @@ interface UiActions {
   fun showPinMismatchedError()
   fun showProgress()
   fun showNetworkError()
+  fun showUnexpectedError()
 }

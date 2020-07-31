@@ -15,3 +15,5 @@ object ShowMismatchedError : ForgotPinConfirmPinEffect()
 object ShowProgress : ForgotPinConfirmPinEffect()
 
 object ShowNetworkError : ForgotPinConfirmPinEffect()
+
+object ShowUnexpectedError : ForgotPinConfirmPinEffect()

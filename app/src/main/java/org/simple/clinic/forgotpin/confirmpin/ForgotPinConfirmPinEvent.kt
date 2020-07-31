@@ -2,6 +2,7 @@ package org.simple.clinic.forgotpin.confirmpin
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.user.User
+import org.simple.clinic.user.resetpin.ResetPinResult
 import org.simple.clinic.widgets.UiEvent
 
 sealed class ForgotPinConfirmPinEvent : UiEvent
@@ -19,3 +20,5 @@ data class PinConfirmationValidated(val isValid: Boolean, val newPin: String) : 
 data class ForgotPinConfirmPinSubmitClicked(val pin: String) : ForgotPinConfirmPinEvent() {
   override val analyticsName = "Forgot PIN:Confirm PIN:Submit Clicked"
 }
+
+data class PatientSyncAndResetPinCompleted(val resetPinResult: ResetPinResult) : ForgotPinConfirmPinEvent()

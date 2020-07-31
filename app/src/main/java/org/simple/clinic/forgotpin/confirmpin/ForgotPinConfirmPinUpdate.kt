@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.user.resetpin.ResetPinResult
 
 class ForgotPinConfirmPinUpdate : Update<ForgotPinConfirmPinModel, ForgotPinConfirmPinEvent,
     ForgotPinConfirmPinEffect> {
@@ -15,7 +16,19 @@ class ForgotPinConfirmPinUpdate : Update<ForgotPinConfirmPinModel, ForgotPinConf
       is ForgotPinConfirmPinTextChanged -> dispatch(HideError)
       is ForgotPinConfirmPinSubmitClicked -> dispatch(ValidatePinConfirmation(model.previousPin, event.pin))
       is PinConfirmationValidated -> pinConfirmationValidated(event)
+      is PatientSyncAndResetPinCompleted -> patientSyncAndResetPinCompleted(event)
     }
+  }
+
+  private fun patientSyncAndResetPinCompleted(event: PatientSyncAndResetPinCompleted): Next<ForgotPinConfirmPinModel, ForgotPinConfirmPinEffect> {
+    val effect = when (event.resetPinResult) {
+      ResetPinResult.Success -> GoToHomeScreen
+      ResetPinResult.NetworkError -> ShowNetworkError
+      ResetPinResult.UserNotFound,
+      is ResetPinResult.UnexpectedError -> ShowUnexpectedError
+    }
+
+    return dispatch(effect)
   }
 
   private fun pinConfirmationValidated(
@@ -24,7 +37,7 @@ class ForgotPinConfirmPinUpdate : Update<ForgotPinConfirmPinModel, ForgotPinConf
     return if (event.isValid.not()) {
       dispatch(ShowMismatchedError)
     } else {
-      dispatch(ShowProgress)
+      dispatch(ShowProgress, SyncPatientDataAndResetPin(event.newPin))
     }
   }
 }

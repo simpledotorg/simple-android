@@ -40,49 +40,6 @@ class ForgotPinConfirmPinScreenController @AssistedInject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.mergeArray(
-        syncPatientDataAndResetPin(replayedEvents)
-    )
-  }
-
-  private fun syncPatientDataAndResetPin(events: Observable<UiEvent>): Observable<UiChange> {
-    val validPin = events.ofType<ForgotPinConfirmPinSubmitClicked>()
-        .map { it.pin }
-        .filter { enteredPin -> enteredPin == previousPin }
-        .share()
-
-    val makeResetPinCall = validPin
-        .flatMapSingle { newPin -> syncAndClearPatientData.run().toSingleDefault(newPin) }
-        .flatMapSingle { newPin -> setUserLoggedInStatusToResettingPin().toSingleDefault(newPin) }
-        .flatMapSingle(resetUserPin::resetPin)
-        .onErrorReturn(::UnexpectedError)
-        .share()
-
-    val showErrorsOnResetPinCall = makeResetPinCall
-        .filter { it !is Success }
-        .map { result ->
-          when (result) {
-            is NetworkError -> { ui: Ui -> ui.showNetworkError() }
-            is UserNotFound, is UnexpectedError -> { ui: Ui -> ui.showUnexpectedError() }
-            is Success -> { _: Ui -> }
-          }
-        }
-
-    val openHomeOnResetPinCallSuccess = makeResetPinCall
-        .filter { it is Success }
-        .map { { ui: Ui -> ui.goToHomeScreen() } }
-
-    return Observable.mergeArray(
-        showErrorsOnResetPinCall,
-        openHomeOnResetPinCallSuccess
-    )
-  }
-
-  private fun setUserLoggedInStatusToResettingPin(): Completable {
-    return userSession
-        .loggedInUser()
-        .filterAndUnwrapJust()
-        .firstOrError()
-        .flatMapCompletable { user -> userSession.updateLoggedInStatusForUser(user.uuid, RESETTING_PIN) }
+    return Observable.never()
   }
 }

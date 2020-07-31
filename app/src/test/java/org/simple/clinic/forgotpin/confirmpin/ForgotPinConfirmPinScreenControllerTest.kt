@@ -502,6 +502,8 @@ class ForgotPinConfirmPinScreenControllerTest {
         userSession = userSession,
         facilityRepository = facilityRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
+        resetUserPin = resetUserPin,
+        syncAndClearPatientData = syncAndClearPatientData,
         uiActions = ui
     )
 

@@ -28,7 +28,7 @@ import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
 import javax.inject.Inject
 
-class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet), ForgotPinConfirmPinUi {
+class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet), ForgotPinConfirmPinUi, UiActions {
 
   @Inject
   lateinit var controller: ForgotPinConfirmPinScreenController.Factory

@@ -46,6 +46,7 @@ class ForgotPinConfirmPinScreenControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private val ui = mock<ForgotPinConfirmPinUi>()
+  private val uiActions = mock<UiActions>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val resetUserPin = mock<ResetUserPin>()
@@ -81,7 +82,7 @@ class ForgotPinConfirmPinScreenControllerTest {
     // then
     verify(ui).showUserName("Tushar Talwar")
     verify(ui).showFacility("PHC Obvious")
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(userSession, times(2)).loggedInUser()
     verifyNoMoreInteractions(userSession)
@@ -101,7 +102,7 @@ class ForgotPinConfirmPinScreenControllerTest {
     // then
     verify(ui).showUserName("Tushar Talwar")
     verify(ui).showFacility("PHC Obvious")
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(userSession, times(2)).loggedInUser()
     verifyNoMoreInteractions(userSession)
@@ -127,15 +128,15 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("1234"))
     verify(ui).showUserName("Tushar Talwar")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui).showPinMismatchedError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showPinMismatchedError()
+    verifyNoMoreInteractions(ui, uiActions)
 
-    clearInvocations(ui)
+    clearInvocations(uiActions)
 
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("5678"))
-    verify(ui).showPinMismatchedError()
+    verify(uiActions).showPinMismatchedError()
 
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -150,8 +151,8 @@ class ForgotPinConfirmPinScreenControllerTest {
     // then
     verify(ui).showUserName("Tushar Talwar")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui, times(3)).hideError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions, times(3)).hideError()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(userSession, times(2)).loggedInUser()
     verifyNoMoreInteractions(userSession)
@@ -177,9 +178,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     // then
     verify(ui).showUserName("Tushar Talwar")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui).showProgress()
-    verify(ui).showUnexpectedError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showProgress()
+    verify(uiActions).showUnexpectedError()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(syncAndClearPatientData).run()
     verifyNoMoreInteractions(syncAndClearPatientData)
@@ -208,9 +209,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     // then
     verify(ui).showUserName("Tushar Talwar")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui).showProgress()
-    verify(ui).showUnexpectedError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showProgress()
+    verify(uiActions).showUnexpectedError()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(userSession, times(2)).loggedInUser()
     verifyZeroInteractions(userSession)
@@ -240,9 +241,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     // then
     verify(ui).showUserName("Tushar Talwar")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui).showProgress()
-    verify(ui).goToHomeScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showProgress()
+    verify(uiActions).goToHomeScreen()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(userSession, times(3)).loggedInUser()
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
@@ -268,8 +269,8 @@ class ForgotPinConfirmPinScreenControllerTest {
     // then
     verify(ui).showUserName("Tushar Talwar")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui).showPinMismatchedError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showPinMismatchedError()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(resetUserPin, never()).resetPin(any())
     verifyNoMoreInteractions(resetUserPin)
@@ -297,9 +298,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     // then
     verify(ui).showUserName("Tushar Talwar")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui).showProgress()
-    verify(ui).showUnexpectedError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showProgress()
+    verify(uiActions).showUnexpectedError()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(userSession, times(3)).loggedInUser()
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
@@ -330,9 +331,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     // then
     verify(ui).showUserName("Tushar Talwar")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui).showProgress()
-    verify(ui).showNetworkError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showProgress()
+    verify(uiActions).showNetworkError()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(userSession, times(3)).loggedInUser()
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
@@ -363,9 +364,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     // then
     verify(ui).showUserName("Tushar Talwar")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui).showProgress()
-    verify(ui).showUnexpectedError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showProgress()
+    verify(uiActions).showUnexpectedError()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(userSession, times(3)).loggedInUser()
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
@@ -395,9 +396,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     // then
     verify(ui).showUserName("Tushar Talwar")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui).showProgress()
-    verify(ui).showUnexpectedError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showProgress()
+    verify(uiActions).showUnexpectedError()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(userSession, times(3)).loggedInUser()
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
@@ -428,9 +429,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     // then
     verify(ui).showUserName("Tushar Talwar")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui).showProgress()
-    verify(ui).goToHomeScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showProgress()
+    verify(uiActions).goToHomeScreen()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(userSession, times(3)).loggedInUser()
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
@@ -459,9 +460,9 @@ class ForgotPinConfirmPinScreenControllerTest {
     // then
     verify(ui).showUserName("Tushar Talwar")
     verify(ui).showFacility("PHC Obvious")
-    verify(ui).showProgress()
-    verify(ui).showUnexpectedError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showProgress()
+    verify(uiActions).showUnexpectedError()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(userSession, times(3)).loggedInUser()
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
@@ -486,7 +487,7 @@ class ForgotPinConfirmPinScreenControllerTest {
         schedulersProvider = TestSchedulersProvider.trampoline(),
         resetUserPin = resetUserPin,
         syncAndClearPatientData = syncAndClearPatientData,
-        uiActions = ui
+        uiActions = uiActions
     )
 
     val uiRenderer = ForgotPinConfirmPinUiRenderer(ui)

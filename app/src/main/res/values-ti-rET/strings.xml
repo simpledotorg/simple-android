@@ -5,7 +5,7 @@
   <!-- Common -->
   <string name="gender_female">ኣንስተይቲ</string>
   <string name="gender_male">ተባዕታይ</string>
-  <string name="gender_transgender">ተፈጥሮኣዊ ጾታኡ/ኣ ዝቐየረ/ት</string>
+  <string name="gender_transgender">ተፈጥሮኣዊ ፆታኡ/ኣ ዝቐየረ/ት</string>
   <!--suppress UnusedResources -->
   <string name="gender_male_letter">ተ</string>
   <!--suppress UnusedResources -->
@@ -28,7 +28,7 @@
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">BP Passport</string>
   <string name="identifiertype_bangladesh_national_id">ሃገራዊ መለለዪ ቁፅሪ</string>
-  <string name="identifiertype_ethiopia_medical_record_number">ቁጽሪ ሕክምናዊ መዝገብ</string>
+  <string name="identifiertype_ethiopia_medical_record_number">ቁፅሪ  መዝገብ ሕክምና</string>
   <string name="identifiertype_unknown">መለለዪ </string>
 
   <!-- Patient search -->
@@ -54,7 +54,7 @@
   <string name="patiententry_full_name">ሽም ተሓካሚ</string>
   <string name="patiententry_phone_number">ስልኪ ቑፅሪ</string>
   <string name="patiententry_bangladesh_national_id">ሃገራዊ መለለዪ ቑፅሪ</string>
-  <string name="patiententry_ethiopia_medical_record_number">ቁጽሪ ሕክምናዊ መዝገብ</string>
+  <string name="patiententry_ethiopia_medical_record_number">ቁፅሪ ሕክምናዊ መዝገብ</string>
   <string name="patiententry_date_of_birth_unfocused">ዕለተ ትውልዲ</string>
   <string name="patiententry_date_of_birth_focused">ዕ.ት፡ ዕ/ወ/ዓ.ም</string>
   <string name="patiententry_dateofbirth_and_age_separator">ወይ</string>
@@ -79,8 +79,9 @@
   <string name="patiententry_error_both_dateofbirth_and_age_empty">ናይ ተሓካሚ ዕድመ ኣእትው/ዊ</string>
   <string name="patiententry_error_invalid_dateofbirth">ናይ ተሓካሚ ዕለተ ትውልዲ ብ ዕ/ወ/ዓ.ም መሰረት ኣእትው/ዊ</string>
   <string name="patiententry_error_dateofbirth_is_in_future">ናይ ተሓካሚ ዕለተ ትውልዲ ኣዓሪ/ዪ</string>
-  <string name="patiententry_error_phonenumber_length_less">ቁጽሪ ተሌፎን ካብ %1$s ኣሃዛት ንታሕቲ ክኸውን የብሉን</string>
-  <string name="patiententry_error_phonenumber_length_more">ቁጽሪ ተሌፎን ካብ %1$s ኣሃዛት ንላዕሊ ክኸውን የብሉን</string>
+  <string name="patiententry_error_phonenumber_blank">ቑፅሪ ስልኪ ክፍቲ ክኽውን ኣይግባእን</string>
+  <string name="patiententry_error_phonenumber_length_less">ቁፅሪ ተሌፎን ካብ %1$s ኣሃዛት ንታሕቲ ክኸውን የብሉን</string>
+  <string name="patiententry_error_phonenumber_length_more">ቁፅሪ ተሌፎን ካብ %1$s ኣሃዛት ንላዕሊ ክኸውን የብሉን</string>
   <string name="patiententry_identifier">BP Passport</string>
   <string name="patiententry_consent_header">ስምምዕ፥\ u0020</string>
   <string name="patiententry_consent_first_para">ኣብ ታሕቲ ብምትንካፍ፡ ኩሉ ኣብዚ ዘእተኻዮ/ኽዮ ናይ ተሓካሚ ሓበሬታ ብኣገባብን ስምምዕን ከም ዝረኸብካዮ/ዝረኸብኪዮ  ኣረጋግጽ/ጺ እዚ ማለት፡ ተሓካሚ ወይ ድማ ሕጋዊ ኣላዪኡ/ኣ ግላዊ ሓበሬታታቶም ከም ዝተኣከበን ኣብ ኣፕሊኬሽን ከምዝኣተወን ከምኡ ውን ብ ኣገልግሎት ሓጺር መልእኽቲ፡ ዋትስኣፕ ወይ ካልኦት ኣገባባት ብምጥቃም በቲ ዝተመዝገበ ስልኪ ቁጽሪ ከም ነዘራርቦም ይፈልጡ ማለት’ዩ።</string>
@@ -175,6 +176,9 @@
   <string name="patientsummary_teleconsult_network_error">ብምኽኒያት ድኹም ኢንተርኔት ርክብ ምግባር ኣይተኽኣለን</string>
   <string name="patientsummary_teleconsult_network_error_retry">ደጊምካ ፈትን</string>
 
+  <string name="patientsummary_registered_faciliy_title">ዝተመዝገበ</string>
+  <string name="patientsummary_registered_facility">%1$s at%2$s</string>
+
   <string name="bloodpressuresummaryview_see_all_button">ኩሉ ርኣይ</string>
 
   <!-- Lint fails to find usages for these strings. -->
@@ -219,47 +223,41 @@
   <!-- PIN entry -->
   <string name="pinentry_forgotpin">ውልቃዊ ቁፅሪ መንነት ረስኢዕካ/ኪ?</string>
   <string name="pinentry_error_incorrect_pin_on_first_attempt">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ምስ ናይ መጀመርያ ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ኣይሰማማዕን’ዩ</string>
-  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">ግጉይ ውልቃዊ ቁጽሪ መንነት፡ %s ፈተነታት ይተርፉ</string>
-  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">%s ግጉይ ፈተነታት ፈጺምካ/ኪ ኣለኻ/ኺ</string>
-  <string name="pinentry_pin_number_hint">ናይ ድሕነት ውልቃዊ ቁጽሪ መንነትካ/ኪ</string>
-  <string name="pinentry_bruteforcelock_timer_label">መሊስካ ፈትን ድሕሪ</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">ግጉይ ውልቃዊ ቁፅሪ መንነት፡ %s  ግጉይ ፈተነታት</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">%s ግጉይ ፈተነታት ፈፂምካ/ኪ ኣለኻ/ኺ</string>
+  <string name="pinentry_pin_number_hint">ናይ ድሕነት ውልቃዊ ቁፅሪ መንነትካ/ኪ</string>
+  <string name="pinentry_bruteforcelock_timer_label">ድሕሪኡ መሊስካ ፈትን </string>
   <!-- minutes:seconds -->
 
   <!-- Registration -->
-  <string name="registrationphone_phone_number_label">ስልኪ ቁጽርኻ</string>
-  <string name="registrationphone_error_invalid_number">ስልኪ ቁጽሪ ኣረጋግጽ ዝሓጸረ ይመስል</string>
-  <string name="registration_loggedout_dialog_title">ወጺእካ ኣለኻ</string>
-  <string name="registration_loggedout_dialog_message">ንምቕጻል መሊስካ እተው/ዊ</string>
+  <string name="registrationphone_phone_number_label">ስልኪ ቁፅርኻ/ ኺ</string>
+  <string name="registrationphone_error_invalid_number">ስልኪ ቁፅሪ ኣረጋግፅ ዝሓፀረ ይመስል</string>
+  <string name="registration_loggedout_dialog_title">ወፂእካ ኣለኻ /ኺ</string>
+  <string name="registration_loggedout_dialog_message">ንምቕፃል መሊስካ እተው/ዊ</string>
   <string name="registration_loggedout_dialog_confirm">እሺ</string>
-  <string name="registrationname_name_label">ሙሉእ ስምካ/ኪ ንገረና/ርና</string>
-  <string name="registrationname_error_empty_name">ምሉእ ስም ኣእትው/ዊ</string>
+  <string name="registrationname_name_label">ሙሉእ ሽምካ/ኪ ንገረና/ርና</string>
+  <string name="registrationname_error_empty_name">ሙሉእ ሽም ኣእትው/ዊ</string>
 
-  <string name="registrationpin_pin_label">ናይ ድሕነት ውልቃዊ ቁጽሪ መንነት ፍጠር/ሪ</string>
-  <string name="registrationpin_pin_hint">ውልቃዊ ቁጽሪ መንነትካ/ኪ ዘክር፡ ደሓር ከድልየካ’ዩ</string>
-  <string name="registrationpin_error_incomplete_pin">ናይ ውሕስነት ውልቃዊ መለለዪ ቁጽሪ ኣዝዩ ሓጺሩ’ሎ ኣርባዕተ ቁጽርታት ኣእትው/ዊ</string>
+  <string name="registrationpin_pin_label">ናይ ድሕነት ውልቃዊ ቁፅሪ መንነት ፍጠር/ሪ</string>
+  <string name="registrationpin_pin_hint">ውልቃዊ ቁፅሪ መንነትካ/ኪ ዘክር፡ ደሓር ከድልየካ’ዩ</string>
+  <string name="registrationpin_error_incomplete_pin">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ኣዝዩ ሓጺሩ’ሎ ኣርባዕተ ቁፅርታት ኣእትው/ዊ</string>
 
-  <string name="registrationconfirmpin_confirm_pin_label">ንምርግጋጽ ናይ ውሕስነት ውልቃዊ መለለዪ ቁጽሪ መሊስካ/ኪ ዳግማይ ኣእትው/ዊ</string>
-  <string name="registrationconfirmpin_error_pin_mismatch">ናይ ውሕስነት ውልቃዊ መለለዪ ቁጽሪ ምስ ናይ መጀመርያ ናይ ውሕስነት ውልቃዊ መለለዪ ቁጽሪ ኣይሰማማዕን’ዩ</string>
-  <string name="registrationconfirmpin_reset_pin">ውልቃዊ ቁጽሪ መንነት ኣዕርይ/ዪ</string>
+  <string name="registrationconfirmpin_confirm_pin_label">ንምርግጋፅ ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ መሊስካ/ኪ ኣእትው/ዊ</string>
+  <string name="registrationconfirmpin_error_pin_mismatch">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ምስ ናይ መጀመርያ ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ኣይሰማማዕን’ዩ</string>
+  <string name="registrationconfirmpin_reset_pin">ውልቃዊ ቁፅሪ መንነት ኣዕርይ/ዪ</string>
 
   <string name="registrationlocation_screen_title">ናይ ቦታ ሓበሬታ ምርካብ</string>
   <string name="registrationlocation_skip_permission">ምዝላል</string>
-  <string name="registrationlocation_permission_rationale_description">ዘለኻዮ ቦታ ሕክምናኻ ንምርካብ ክሕግዘና’ዩ</string>
-  <string name="registrationlocation_permission_rationale_title">ሕክምናኻ ቀልጢፍካ ርኸብ</string>
+  <string name="registrationlocation_permission_rationale_description">ዘለኻዮ ቦታ ትካለ ሕክምናኻ ንምርካብ ክሕግዘና’ዩ</string>
+  <string name="registrationlocation_permission_rationale_title">ትካል ሕክምናኻ ቀልጢፍካ ርኸብ</string>
   <string name="registrationlocation_allow_access">ቦታ ንምርካብ ፍቓድ ሃብ</string>
-
-  <string name="facilitypicker_screen_title">ሕክምናኻ ምረጽ</string>
-  <string name="facilitypicker_search_hint">ሕክምናኻ ድለይ</string>
-  <!-- Street, District, State -->
-  <string name="facilitypicker_header_suggested_facilities">ከም ሓሳብ ዝቐረቡ ሕክምናታት</string>
-  <string name="facilitypicker_header_all_facilities">ኩሎም ሕክምናታት</string>
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">ጀምር</string>
   <string name="screenonboarding_intro_1">ኣልሽ \&amp; ርኸብ \ኣሽሓት ተሓከምቲ ምስ \</string>
-  <string name="screenonboarding_intro_1_hypertension">\ልዑል ጸቕጢ ደም</string>
+  <string name="screenonboarding_intro_1_hypertension">\ልዑል ፀቕጢ ደም</string>
   <string name="screenonboarding_intro_2">መዝጊብካ ሓዝ \n</string>
-  <string name="screenonboarding_intro_2_bp">ጸቕጢታት ደም \n</string>
+  <string name="screenonboarding_intro_2_bp">ፀቕጢታት ደም \n</string>
   <string name="screenonboarding_intro_2_and">\&amp;</string>
   <string name="screenonboarding_intro_2_medicines">\ መድሓኒታት</string>
   <string name="screenonboarding_intro_3">ተሓከምቲ ዝቕበሉዎ</string>
@@ -268,39 +266,40 @@
 
   <!-- Overdue List -->
   <string name="overdue_no_patients">ዝደንጎየ ተሓካሚ የለን</string>
-  <string name="overdue_empty_desc">ንምክትታል ጸቕጢ ደም ቆጸራ ተመዲቡሎም ዝነበሩ እሞ ዘይመጽኡ ተሓከምቲ ክትድውለሎም ትኽእል ኢኻ/ኺ።</string>
+  <string name="overdue_empty_desc">ንምክትታል ፀቕጢ ደም ቆጸራ ተመዲቡሎም ዝነበሩ እሞ ዘይመፅኡ ተሓከምቲ ክትድውለሎም ትኽእል ኢኻ/ኺ።</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">ሕማም ሽኮር</string>
-  <string name="overdue_list_item_diagnosis_hypertension">ልዑል ጸቕጢ ደም</string>
-  <string name="overdue_list_item_diagnosis_none">ዋላ ሓደ</string>
+  <string name="overdue_list_item_diagnosis_diabetes">ሕማም ሽኮርያ</string>
+  <string name="overdue_list_item_diagnosis_hypertension">ልዑል ፀቕጢ ደም</string>
+  <string name="overdue_list_item_diagnosis_none">ዋላ ሓደ የለን</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s መዓልቲ ደንጉዩ</item>
     <item quantity="other">%s መዓልታታ ደንጉዩ</item>
   </plurals>
-  <string name="overduelist_diagnosis_label">Dx</string>
+  <string name="overduelist_diagnosis_label">ነፀርታ</string>
   <string name="overduelist_visited">ዝተርአየ</string>
   <string name="overduelist_high_risk">ልዑል ስግኣት</string>
+  <string name="overduelist_transferred">ናብ ካሊእ ዝተዛወረ</string>
 
   <!-- Facility change -->
 
   <!-- Enter OTP -->
-  <string name="enterotp_check_sms_sent_to">ናብ [] ዝተላእከ ሓጺር መልእኽቲ ኣረጋግጽ</string>
-  <string name="enterotp_enter_verification_code">ናይ መረጋገጺ ቁጽሪ (ኮድ) ኣእትው</string>
+  <string name="enterotp_check_sms_sent_to">ናብ [] ዝተላእኸ ሓፂር መልእኽቲ ኣረጋግፅ</string>
+  <string name="enterotp_enter_verification_code">ናይ መረጋገፂ ቁፅሪ (ኮድ) ኣእትው</string>
   <string name="enterotp_incorrect_code">ግጉይ ኮድ, መሊስካ/ኪ ፈትን/ኒ</string>
-  <string name="enterotp_resend_sms">ሓጺር መልእኽቲ ዳግማይ መሊስካ ስደድ</string>
-  <string name="enterotp_sms_sent">ሓድሽ ናይ መረጋገጺ ሓጺር መልእኽቲ ተሰዲዱ</string>
+  <string name="enterotp_resend_sms">ሓፂር መልእኽቲ ዳግማይ መሊስካ ልኣኽ</string>
+  <string name="enterotp_sms_sent">ሓድሽ ናይ መረጋገፂ ሓጺር መልእኽቲ ተላኢኹ</string>
 
   <!-- Schedule appointment -->
-  <string name="scheduleappointment_next_visit_in">ዝቕጽል ምብጻሕ ን [] መድብ</string>
+  <string name="scheduleappointment_next_visit_in">ዝቕፅል ዑደት መድብ</string>
   <string name="scheduleappointment_not_now">ሕዚ ኣይኮነን</string>
-  <string name="scheduleappointment_done">ተፈጸመ</string>
+  <string name="scheduleappointment_done">ተፈፂሙ</string>
   <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%sመዓልቲ</item>
     <item quantity="other">%sመዓልታት</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_weeks">
     <item quantity="one">%sሰሙን</item>
-    <item quantity="other">%sሳምንታት</item>
+    <item quantity="other">%sሰሙናት</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_months">
     <item quantity="one">%sወርሒ</item>
@@ -308,15 +307,15 @@
   </plurals>
 
   <!-- Forgot PIN -->
-  <string name="forgotpin_create_new_pin">ሓድሽ ናይ ውሕስነት ውልቃዊ መለለዪ ቁጽሪ ፍጠር (ስራሕ)</string>
-  <string name="forgotpin_create_new_pin_invalid_pin">ናይ ውሕስነት ውልቃዊ መለለዪ ቁጽሪ ኣዝዩ ሓጺሩ’ሎ ኣርባዕተ ቁጽርታት ኣእትው/ዊ</string>
-  <string name="forgotpin_confirm_pin">ንምርግጋጽ ናይ ውሕስነት ውልቃዊ መለለዪ ቁጽሪ መሊስካ/ኪ ዳግማይ ኣእትው/ዊ</string>
-  <string name="forgotpin_confirm_pin_message">ናይ ውሕስነት ውልቃዊ መለለዪ ቁጽርኻ/ኺ ንምርግጋጽ ዳግማይ ኣይትው/ዊ</string>
-  <string name="forgotpin_error_pin_mismatch">ናይ ውሕስነት ውልቃዊ መለለዪ ቁጽሪ ምስ ናይ መጀመርያ ናይ ውሕስነት ውልቃዊ መለለዪ ቁጽሪ ኣይሰማማዕን’ዩ</string>
+  <string name="forgotpin_create_new_pin">ሓድሽ ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ፍጠር (ስራሕ)</string>
+  <string name="forgotpin_create_new_pin_invalid_pin">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ኣዝዩ ሓፂሩ’ሎ ኣርባዕተ ቁፅርታት ኣእትው/ዊ</string>
+  <string name="forgotpin_confirm_pin">ንምርግጋፅ ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ መሊስካ/ኪ ዳግማይ ኣእትው/ዊ</string>
+  <string name="forgotpin_confirm_pin_message">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅርኻ/ኺ ንምርግጋፅ ዳግማይ ኣይትው/ዊ</string>
+  <string name="forgotpin_error_pin_mismatch">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ምስ ናይ መጀመርያ ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ኣይሰማማዕን’ዩ</string>
 
   <!-- Reports -->
-  <string name="reports_come_back_later">ጸኒሕካ/ኪ ተመለስ/ሲ</string>
-  <string name="reports_you_will_be_able_to_see">ንሕክምናኻ/ኺ ናይ ልዑል ጸቕጢ ደም ጸብጻባት ኣብ’ዚ ክትርኢ/እዪ ትኽእል/ሊ ኢኻ/ኺ</string>
+  <string name="reports_come_back_later">ፀኒሕካ/ኪ ተመለስ/ሲ</string>
+  <string name="reports_you_will_be_able_to_see">ንሕክምናኻ/ኺ ናይ ልዑል ጸቕጢ ደም ፀብፃባት ኣብ’ዚ ክትርኢ/እዪ ትኽእል/ሊ ኢኻ/ኺ</string>
 
   <!-- Medical History -->
   <!--suppress UnusedResources used in enum -->
@@ -326,35 +325,35 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_kidney">ሕማም ኩሊት</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diagnosed_with_hypertension">ልዑል ጸቕጢ ደም</string>
+  <string name="medicalhistory_question_diagnosed_with_hypertension">ልዑል ፀቕጢ ደም</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diabetes">ሕማም ሽኮር</string>
-  <string name="newmedicalhistory_next">ዝቕጽል</string>
+  <string name="medicalhistory_question_diabetes">ሕማም ሽኮርያ</string>
+  <string name="newmedicalhistory_next">ዝቕፅል</string>
   <string name="newmedicalhistory_yes">እወ</string>
-  <string name="newmedicalhistory_no">ኣይፋል</string>
+  <string name="newmedicalhistory_no">ኣይፋሉን</string>
   <string name="newmedicalhistory_history">ታሪኽ</string>
   <string name="newmedicalhistory_diagnosis">ምርመራ (ተደልዩ)</string>
-  <string name="newmedicalhistory_diagnosis_required_error">ዓይነት ምርመራ ምረጽ/ጺ</string>
+  <string name="newmedicalhistory_diagnosis_required_error">ዓይነት ምርመራ ምረፅ/ፂ</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
-  <string name="prescribed_drugs_dosage_none">ዋላ ሓደ</string>
-  <string name="prescribed_drug_with_dosages_sheet_drug_name">%sመጠን</string>
+  <string name="prescribed_drugs_dosage_none">ዋላ ሓደ የለን</string>
+  <string name="prescribed_drug_with_dosages_sheet_drug_name">%sዓቐን</string>
 
   <!--Scan Simple ID-->
   <string name="scansimpleid_title">ስእሊ መለለዩ ካርድ ኣብ ኮምፕዩተር ዓቅብ</string>
-  <string name="scansimpleid_shortcode_error_empty">ናይ ትውልዲ ቦታ ፓስፖርት ቁጽሪ ኣእትው</string>
-  <string name="scansimpleid_shortcode_error_not_required_length">ናይ ትውልዲ ቦታ ቁጽሪ ፓስፖርት ትሕቲ 7 ቁጽርታት’ዩ ዘሎ</string>
-  <string name="scansimpleid_type_bp_passport_number">ወይ ድማ ናይ ትውልዲ ቦታቁጽሪ ፓስፖርት ታይፕ ግበር</string>
+  <string name="scansimpleid_shortcode_error_empty">BP Passport ኣእትው</string>
+  <string name="scansimpleid_shortcode_error_not_required_length"> ቁፅሪ BP Passport  ትሕቲ 7 ቁፅርታት’ዩ ዘሎ</string>
+  <string name="scansimpleid_type_bp_passport_number">ቁፅሪ BP Passport  ፀሓፍ</string>
 
   <!--- Sync Indicator-->
-  <string name="syncindicator_status_pending">ምስናይ ንውሳነ ይጽበይ ኣሎ</string>
+  <string name="syncindicator_status_pending"> ምስናይ ንውሳነ ይፅበይ ኣሎ</string>
   <string name="syncindicator_status_failed">ምስናይ ፈሺሉ ኣሎ</string>
   <string name="syncindicator_status_syncing">ኣብ ምስናይ</string>
   <string name="syncindicator_status_synced_just_now">ሕጂ ገና ተሳንዩ</string>
   <string name="syncindicator_status_synced_min_ago">ቅድሚ %s ደቒቕ ተሳንዩ</string>
-  <string name="syncindicator_dialog_error_network">ናይ ተሓካሚ ጸብጻብ ን ክሳነየልካ ጽቡቕ ዝሰርሕ ኢንተርኔት ከም ዘለካ ኣረጋግጽ</string>
+  <string name="syncindicator_dialog_error_network">ናይ ተሓካሚ መዛግብቲ  ንክሳነየልካ ፅቡቕ ዝሰርሕ ኢንተርኔት ከም ዘለካ ኣረጋግፅ</string>
   <string name="syncindicator_dialog_button_text">እሺ</string>
-  <string name="syncindicator_dialog_error_server">እብዚ ግዜ’ዚ ናይ ምስናይ ሰርቨራት ኣይሰርሑን ኣለዉ ጸኒሕካ/ኪ ዳግማይ ፈትን/ኒ ወይ ድማ ምስ ሱፐርቫይዘርካ/ኪ ተዘራረብ/ቢ</string>
+  <string name="syncindicator_dialog_error_server">እብዚ ግዜ’ዚ ናይ ምስናይ ሰርቨራት ኣይሰርሑን ኣለዉ ፀኒሕካ/ኪ ዳግማይ ፈትን/ኒ ወይ ድማ ምስ ሱፐርቫይዘርካ/ኪ ተዘራረብ/ቢ</string>
 
   <!-- Help Screen -->
   <string name="help_title">ሓገዝ</string>
@@ -363,8 +362,8 @@
   <string name="help_try_again">መሊስካ/ኪ ፈትን/ኒ</string>
 
   <!-- Link Id Sheet-->
-  <string name="linkidwithpatient_button_add">ዝቕጽል</string>
-  <string name="linkidwithpatient_button_cancel">ምልጋስ ሰርዝ</string>
+  <string name="linkidwithpatient_button_add">ዝቕፅል</string>
+  <string name="linkidwithpatient_button_cancel"> ሰርዝ</string>
   <string name="linkidwithpatient_add_id_text">%1$s\u0020ወስኽ</string>
   <string name="linkidwithpatient_to_patient_text">\u0020 ናብ\ተሓካሚ ዩ00ኤ0?</string>
 
@@ -374,7 +373,7 @@
   <string name="recent_patients_toolbar_title">ናይ ቀረባ እዋን</string>
 
   <!-- Recent Patients Item View -->
-  <string name="recent_patients_itemview_last_seen">መጨረሻ ዝተራእየሉ: \u0020</string>
+  <string name="recent_patients_itemview_last_seen">ዑደት ተገይሩ: \u0020</string>
   <string name="recent_patients_itemview_new_registration">ሓድሽ ምዝገባ</string>
 
   <!-- Add ID to Patient: Search Results-->
@@ -386,8 +385,8 @@
   <string name="appupdatedialog_negative_button_text">ሕዚ ኣይኮነን</string>
 
   <!-- All Patients In Facility View-->
-  <string name="allpatientsinfacility_nopatients_message">ኮሎም ኣብ ናትካ ኣገልግሎት ጥዕና ዝተመዝገቡ ተሓከምቲ ኣብ’ዚ ክትርእዮም ትኽእል ኢኻ።</string>
-  <string name="allpatientsinfacility_nopatients_title">ዋላ ሓደ ተሓካሚ ኣብ %1$s</string>
+  <string name="allpatientsinfacility_nopatients_message">ኮሎም ኣብ ናትካ ትካዕል ጥዕና ዝተመዝገቡ ተሓከምቲ ኣብ’ዚ ክትርእዮም ትኽእል ኢኻ።</string>
+  <string name="allpatientsinfacility_nopatients_title">ዋላ ሓደ ተሓካሚ የለን ኣብ %1$s</string>
   <string name="allpatientsinfacility_foundpatients_header">ኩሎም ተሓከምቲ: %1$s</string>
 
   <!--Registration loader screen -->
@@ -408,78 +407,78 @@
   <!-- Settings -->
   <string name="settings_title">መቓን</string>
   <string name="settings_user_name_icon_content">ምስሊ ናይ መቓን ስም ተጠቃማይ</string>
-  <string name="settings_user_phone_icon_content">ምስሊ ናይ መቓን ስልኪ ቁጽሪ</string>
+  <string name="settings_user_phone_icon_content">ምስሊ ናይ መቓን ስልኪ ቁፅሪ</string>
   <string name="settings_current_language_icon_content">ምስሊ ናይ መቓን ወቕታዊ ቋንቋ</string>
   <string name="settings_app_version_icon_content">ሴቲንንግ መተግበሪ ስርሒት ኣይከን</string>
-  <string name="settings_name">ስም</string>
+  <string name="settings_name">ሽም</string>
   <string name="settings_number">ስልኪ ቑፅሪ</string>
   <string name="settings_language">ቋንቋ</string>
   <string name="settings_change">ለውጢ</string>
-  <string name="settings_language_hint">ቋንቋ ምረጽ/ጺ</string>
+  <string name="settings_language_hint">ቋንቋ ምረፅ/ፂ</string>
   <string name="settings_software">ሶፍትዌር</string>
   <string name="settings_update">ኣሐድስ</string>
   <string name="settings_software_version">ስርሒት %1$s</string>
 
   <!-- Change language screen -->
-  <string name="changelanguage_title">ቋንቋኻ/ኺ ምረጽ/ጺ</string>
-  <string name="changelanguage_done">ተፈጸመ</string>
+  <string name="changelanguage_title">ቋንቋኻ/ኺ ምረፅ/ፂ</string>
+  <string name="changelanguage_done">ተሰሪሑ</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">ሓንሳብ ጽናሕ…..</string>
+  <string name="placeholder_loading_title">ሓንሳብ ፅናሕ…..</string>
   <string name="placeholder_loading_message">ምትዕርራይ ናይ ዳታ ቤዝ ኣብ መስርሕ ኣሎ እዚ ሓደ ደቐቕ ጥራይ’ዩ ዝወስድ</string>
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">ቀሊል ምልክት</string>
-  <string name="selectcountry_next">ዝቕጽል</string>
-  <string name="selectcountry_title">ሃገርካ/ኪ ምረጽ/ጺ</string>
+  <string name="selectcountry_next">ዝቕፅል</string>
+  <string name="selectcountry_title">ሃገርካ/ኪ ምረፅ/ፂ</string>
   <string name="selectcountry_networkerror">ኣገልግሎት ኢንተርኔት የለን</string>
-  <string name="selectcountry_servererror">ጌጋ ኣብ ኣሳላጢ (ሰርቨር) ጸኒሕካ/ኪ መሊስካ/ኪ ፈትን/ኒ</string>
-  <string name="selectcountry_genericerror">ዝኾነ ጌጋ ኣጋጢሙ ኣሎ ጸኒሕካ/ኪ መሊስካ/ኪ ፈትን/ኒ</string>
+  <string name="selectcountry_servererror">ጌጋ ኣብ ኣሳላጢ (ሰርቨር) ፀኒሕካ/ኪ መሊስካ/ኪ ፈትን/ኒ</string>
+  <string name="selectcountry_genericerror">ዝኾነ ጌጋ ኣጋጢሙ ኣሎ ፀኒሕካ/ኪ መሊስካ/ኪ ፈትን/ኒ</string>
   <string name="selectcountry_retry">መሊስካ/ኪ ፈትን/ኒ</string>
   <string name="scheduleappointment_at">ኣብ</string>
   <string name="scheduleappointment_change">ለውጢ</string>
 
   <!-- BloodSugar type picker -->
-  <string name="bloodsugartype_picker_title">መለክዒ ምረጽ</string>
-  <string name="bloodsugartype_picker_desc">ርግጸኛ እንተዘይኮንካ “ሃንደበታዊ ዓቐን ሽኮር ኣብ ደም” ምረጽ</string>
+  <string name="bloodsugartype_picker_title">መለክዒ ምረፅ</string>
+  <string name="bloodsugartype_picker_desc">ርግፀኛ እንተዘይኮንካ “ሃንደበታዊ ዓቐን ሽኮር ኣብ ደም” ምረፅ</string>
   <string name="bloodsugartype_rbs">ሃንደበታዊ ዓቐን ሽኮር ኣብ ደም</string>
   <string name="bloodsugartype_fbs">ድሕሪ ምጿም ዝርከብ ዓቐን ሽኮር ኣብ ደም</string>
   <string name="bloodsugartype_ppbs">ድሕሪ ምምጋብ ዝርከብ ዓቐን ሽኮር ኣብ ደም</string>
-  <string name="bloodsugarentry_sheet_title_enter_date">ዕለት ምብጻሕ</string>
+  <string name="bloodsugarentry_sheet_title_enter_date">ዑደት ዝግበረሉ ዕለት </string>
   <string name="bloodsugarentry_day">መዓልቲ</string>
   <string name="bloodsugarentry_month">ወርሒ</string>
   <string name="bloodsugarentry_year">ዓመት</string>
-  <string name="bloodsugarentry_error_lower_limit">ተመን ካብ 30 ሚግ/ደሊ ንታሕቲ ክኸውን የብሉን</string>
-  <string name="bloodsugarentry_error_lower_limit_hba1c">መጠን ትሕቲ 3% ክኸውን ኣይክእልን’ዩ</string>
-  <string name="bloodsugarentry_error_higher_limit">ተመን ካብ 1000 ሚግ/ደሊ ንላዕሊ ክኸውን የብሉን</string>
-  <string name="bloodsugarentry_error_higher_limit_hba1c">መጠን ልዕሊ 25% ክኸውን ኣይክእልን’ዩ</string>
-  <string name="bloodsugarentry_error_empty">መጠን ጥራዩ ክኸውን ኣይክእልን</string>
+  <string name="bloodsugarentry_error_lower_limit">ዓቐን ካብ 30 ሚግ/ደሊ ንታሕቲ ክኸውን ኣይኽእልን</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">ዓቐን ትሕቲ 30/uoo25 ክኸውን ኣይክእልን</string>
+  <string name="bloodsugarentry_error_higher_limit">ዓቐን ካብ 1000 ሚግ/ደሊ ንላዕሊ ክኸውን ኣይኽእልን</string>
+  <string name="bloodsugarentry_error_higher_limit_hba1c">ዓቐን ልዕሊ 25/u0025 ክኽውን ኣይኽእልን</string>
+  <string name="bloodsugarentry_error_empty">ዓቕን ጥራዩ ክኸውን ኣይኽእልን</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">ቅቡል ዕለት ብ መሰረት ዕለት/ወርሒ/ዓመተ ምህረት ኣእትው/ዊ</string>
-  <string name="bloodsugarentry_error_date_is_in_future">ዕለት ኣብ መጻኢ ክኸውን ኣይኽእልን</string>
+  <string name="bloodsugarentry_error_date_is_in_future">ዕለት ኣብ መፃኢ ክኸውን ኣይኽእልን</string>
   <string name="bloodsugarentry_random_title">ሃንደበታዊ ዓቐን ሽኮር ኣብ ደም</string>
   <string name="bloodsugarentry_post_prandial_title">ድሕሪ ምምጋብ ዝርከብ ዓቐን ሽኮር ኣብ ደም</string>
-  <string name="bloodsugarentry_fasting_title">ድሕሪ ምጿም ዝርከብ ዓቐን ሽኮር ኣብ ደም</string>
-  <string name="bloodsugarentry_remove">ምልጋስ ሰረዝ</string>
-  <string name="bloodsugarentry_edit_random_title">ሃንደበታዊ ዓቐን ሽኮር ኣብ ደም ኣተዓራርይ/ዪ</string>
-  <string name="bloodsugarentry_edit_post_prandial_title">ድሕሪ ምምጋብ ዝርከብ ዓቐን ሽኮር ኣብ ደም ኣተዓራርይ/ዪ</string>
-  <string name="bloodsugarentry_edit_fasting_title">ድሕሪ ምጿም ዝርከብ ዓቐን ሽኮር ኣብ ደም ኣተዓራርይ/ዪ</string>
+  <string name="bloodsugarentry_fasting_title">ድሕሪ ምፃም ዝርከብ ዓቐን ሽኮር ኣብ ደም</string>
+  <string name="bloodsugarentry_remove">ምልጋስ </string>
+  <string name="bloodsugarentry_edit_random_title">ሃንደበታዊ ዓቐን ሽኮር ኣብ ደም ኣመዓራርይ/ዪ</string>
+  <string name="bloodsugarentry_edit_post_prandial_title">ድሕሪ ምምጋብ ዝርከብ ዓቐን ሽኮር ኣብ ደም ኣመዓራርይ/ዪ</string>
+  <string name="bloodsugarentry_edit_fasting_title">ድሕሪ ምፃም ዝርከብ ዓቐን ሽኮር ኣብ ደም ኣመዓራርይ/ዪ</string>
   <string name="bloodsugarentry_edit_hba1c_title">አብ HbA1c ለውጢ ግበር</string>
 
   <!-- Confirm remove blood sugar dialog -->
   <string name="bloodsugarentry_remove_blood_sugar_title">ዓቐን ሽኮር ደም ኣልግስ</string>
-  <string name="bloodsugarentry_remove_blood_sugar_message">ነዚ ተመዝጊቡ ዘሎ ዓቐን ሽኮር ኣብ ደም ከተልግሶ/ሲዮ ከምእትደልይ ርግጸኛ ዲኻ/ኺ?</string>
-  <string name="bloodsugarentry_remove_blood_sugar_confirm">ምልጋስ ሰረዝ</string>
-  <string name="bloodsugarentry_remove_blood_sugar_cancel">ምልጋስ ሰርዝ</string>
+  <string name="bloodsugarentry_remove_blood_sugar_message">ነዚ ተመዝጊቡ ዘሎ ዓቐን ሽኮር ኣብ ደም ከተልግሶ/ሲዮ ከምእትደልይ ርግፀኛ ዲኻ/ኺ?</string>
+  <string name="bloodsugarentry_remove_blood_sugar_confirm">ምልጋስ </string>
+  <string name="bloodsugarentry_remove_blood_sugar_cancel"> ሰርዝ</string>
 
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_no_blood_sugars">ዝተወሰኸ ዓቐን ሽኮር ኣብ ደም የለን</string>
-  <string name="bloodsugarsummaryview_add_blood_sugar_button">ሕማም ሽኮር</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">ሕማም ሽኮርያ</string>
   <!-- Blood Pressure History screen -->
-  <string name="bloodpressurehistory_add_bp_button">ጸቕጢ ደም</string>
+  <string name="bloodpressurehistory_add_bp_button">ፀቕጢ ደም</string>
   <string name="bloodpressurehistory_toolbar_title">%1$s,%2$s,%3$s</string>
 
   <!-- Blood Sugar History screen -->
-  <string name="bloodsugarhistory_add_blood_sugar_button">ሕማም ሽኮር</string>
+  <string name="bloodsugarhistory_add_blood_sugar_button">ሕማም ሽኮርያ</string>
   <string name="bloodsugarhistory_toolbar_title">%1$s,%2$s,%3$s</string>
 
   <!-- Summary CV History view -->
@@ -490,19 +489,19 @@
   <string name="drugsummaryview_no_medicines">መድሓኒት ኣይተወሰኸን</string>
 
   <!-- Access Denied screen -->
-  <string name="accessdeniedscreen_title_access_denied">ናይ ምእታው ተግባር ተነፊጉ’ሎ</string>
-  <string name="accessdeniedscreen_description">ናብ ቀሊል ናይ ምእታው ተግባር ተነፊጉ’ሎ እዚ ጌጋ’ዩ ኢልካ/ኪ ምስ ትሓስብ/ቢ ን ሱፐርቫይዘርካ ተወከሶ። ክትኣትው/ዊ ምስ ትኽእል/ሊ ድማ ን ቀሊል (Simple) ካብ መሳርሒ ብምውጻእ ካብ ፕለይ ስቶር መሊስካ/ኪ ኣብ መሳርሒኻ/ኺ ጸዓን/ኒ።</string>
+  <string name="accessdeniedscreen_title_access_denied">ንምእታው  ተነፊጉ’ሎ</string>
+  <string name="accessdeniedscreen_description">ናብ ኣፕ ንምእታው ተነፊጉ’ሎ። እዚ ጌጋ’ዩ ኢልካ/ኪ ምስ ትሓስብ/ቢ ን ሱፐርቫይዘርካ ተወከሶ። ክትኣትው/ዊ ምስ ትኽእል/ሊ ድማ ን ቀሊል (Simple) ካብ መሳርሒ ብምውፃእ ካብ ፕለይ ስቶር መሊስካ/ኪ ኣብ መሳርሒኻ/ኺ ፀዓን/ኒ።</string>
 
   <!-- Confirm Facility change sheet -->
-  <string name="confirmfacilitychange_title">ግልጋሎት ወሃቢ ቀይር ናብ</string>
-  <string name="confirmfacilitychange_negative_button">ምልጋስ ሰርዝ</string>
+  <string name="confirmfacilitychange_title">ትካል ጥዕና ቀይር ናብ</string>
+  <string name="confirmfacilitychange_negative_button"> ሰርዝ</string>
   <string name="confirmfacilitychange_positive_button">እወ</string>
   <string name="confirmfacilitychange_facility_name">%s?</string>
 
   <!-- Registration Confirm Facility Change Sheet -->
   <string name="registrationconfirmfacility_title">አበዚ ድዮም ዘለዉ?</string>
   <string name="registrationconfirmfacility_positive_button">እወ</string>
-  <string name="registrationconfirmfacility_negative_button">ምልጋስ ሰርዝ</string>
+  <string name="registrationconfirmfacility_negative_button"> ሰርዝ</string>
 
   <!-- Alert facility change -->
   <string name="alertfacilitychange_title">አበዚ ድዮም ዘለዉ?</string>
@@ -514,64 +513,75 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">ንተሓካሚ “ዳግማይ ንምብጻሕ ዝተሰማምዐ” ዝብል መለለዪ ግበረሉ</string>
-  <string name="contactpatient_remind_call_later">ጸኒሕካ ንምድዋል ኣዘክር</string>
+  <string name="contactpatient_agreed_to_visit">ንተሓካሚ “መሊሱ ዑደት ንምግባር ዝተሰማምዐ” ዝብል ምልክት ግበረሉ</string>
+  <string name="contactpatient_remind_call_later">ፀኒሕካ ንምድዋል ኣዘክር</string>
   <string name="contactpatient_remove_from_list">ካብ መዝገብ ዝደንጎዩ ኣውጽኣዮ</string>
-  <string name="contactpatient_result_of_call">ውጽኢት ጻውዒት</string>
+  <string name="contactpatient_result_of_call">ውፅኢት ፃውዒት ስልኪ</string>
   <string name="contactpatient_call_normal">ንቡር</string>
   <string name="contactpatient_call_secure">ውሕስነት ዘለዎ</string>
-  <string name="contactpatient_help_text">ውሕስነት ዘለዎም ጻውዒታት ስልኪ ቁጽሪ ይሓብኡ ከም’ኡ’ውን ክሳራ ኣየስዕቡን</string>
+  <string name="contactpatient_help_text">ውሕስነት ዘለዎም ፃውዒታት ስልኪ ቁፅሪ ይሓብኡ ከም’ኡ’ውን ክሳራ ኣየስዕቡን</string>
   <string name="contactpatient_patientdetails">%1$s,%2$s,%3$s</string>
   <string name="contactpatient_call_later_in">ደሓር ደውል ኣብ</string>
-  <string name="contactpatient_done">ተፈጸመ</string>
+  <string name="contactpatient_done">ተሰሪሑ</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%sመዓልቲ</item>
     <item quantity="other">%sመዓልታት</item>
   </plurals>
   <plurals name="contactpatient_weeks">
     <item quantity="one">%sሰሙን</item>
-    <item quantity="other">%sሳምንታት</item>
+    <item quantity="other">%sሰሙናት</item>
   </plurals>
   <plurals name="contactpatient_months">
     <item quantity="one">%sወርሒ</item>
     <item quantity="other">%sኣዋርሕ</item>
   </plurals>
-  <string name="contactpatient_select_a_reason">ምኽኒያት ምረጽ</string>
-  <string name="contactpatient_patient_already_visited">ተሓካሚ ድሮ ዳግማይ በጺሑ’ሎ</string>
+  <string name="contactpatient_select_a_reason">ምኽንያት ምረፅ</string>
+  <string name="contactpatient_patient_already_visited">ተሓካሚ መሊሱ ዐደት ገይሩ’ሎ</string>
   <string name="contactpatient_patient_is_not_responding">ተሓካሚ ምላሽ ኣይህብን ኣሎ</string>
-  <string name="contactpatient_invalid_phone_number">ስልኪ ቁጽሪ ኣይሰርሕን ኣሎ</string>
+  <string name="contactpatient_invalid_phone_number">ስልኪ ቁፅሪ ኣይሰርሕን ኣሎ</string>
   <string name="contactpatient_public_hospital_transfer">ናብ ካልእ ትካል ህዝባዊ ጥዕና ተሰጋጊሩ/ራ</string>
-  <string name="contactpatient_moved_to_private">ናብ ናይ ግሊ ብዓል ሞያ ግዒዙ/ዛ</string>
+  <string name="contactpatient_moved_to_private">ናብ ውልቀ በዓል ሞያ ተዛዊሩ</string>
   <string name="contactpatient_patient_died">ሞይቱ/ታ</string>
-  <string name="contactpatient_other_reason">ካልእ ምኽኒያት</string>
+  <string name="contactpatient_other_reason">ካልእ ምኽንያት</string>
 
   <!-- Deep link -->
-  <string name="deeplink_patient_profile_not_found">ናይ ሕሙም ፕሮፋይል ኣይተረኸበን</string>
+  <string name="deeplink_patient_profile_not_found">ናይ ሕሙም መረዳእታ ኣይተረኸበን</string>
   <string name="deeplink_patient_profile_not_found_desc">በይዘኦም ኢንተርኔቶም ይርኣዩ እሞ ሕሙማት የዋድዱ</string>
   <string name="deeplink_patient_profile_not_found_positive_action">እሺ</string>
   <string name="deeplink_no_patient">ሕሙም ኣይተረኸበን</string>
-  <string name="deeplink_no_patient_desc">ናይ ቴሌኮንሰልተሽን ይጀምሩ እሞ ን ናይ ሕማም ክንክን በዓል ሞያ ናይ ሕሙም ሓበሬታ ይሕተቱ</string>
+  <string name="deeplink_no_patient_desc">ናይ ቴሌኮንሰልተሽን ይጀምሩ እሞ ካብ በዓል ሞያ ጥዕና  ሓበሬታ ሕሙም ይሕተቱ</string>
   <string name="deeplink_no_patient_positive_action">እሺ</string>
 
   <!-- Delete patient -->
-  <string name="deletepatient_select_a_reason">ምኽኒያት ምረጽ</string>
+  <string name="deletepatient_select_a_reason">ምኽንያት ምረፅ</string>
   <string name="deletereason_duplicate_patient">እዚ ዝተደገመ ተሓካሚ እዩ</string>
   <string name="deletereason_accidental_registration">ብጌጋ ዝተመዝገበ ተሓካሚ</string>
   <string name="deletereason_died">ሞይቱ/ታ</string>
   <string name="deletereason_confirm_title">ን ተሓካሚ ኣጥፍእ?</string>
   <string name="deletereason_confirm_message">እዚ %1$s ከወግድ እዩ</string>
   <string name="deletereason_confirm_positive">ኣጥፍእ</string>
-  <string name="deletereason_confirm_negative">ምልጋስ ሰርዝ</string>
+  <string name="deletereason_confirm_negative">ሰርዝ</string>
 
   <!-- Splash screen -->
-  <string name="screensplash_next">ዝቕጽል</string>
+  <string name="screensplash_next">ዝቕፅል</string>
 
   <!-- Contact doctor sheet -->
-  <string name="contactdoctor_title">ዶክተራት</string>
+  <string name="contactdoctor_title">ሓካይም</string>
   <string name="contactdoctor_subtitle">ዝተመደቦ ናብ %1$s</string>
 
   <!-- Intro Video Screen -->
   <string name="screenintrovideo_how_to_use_simple_app">Simple መተግበሪ ከመይ ጌርካ ትጥቀመሉ</string>
   <string name="screenintrovideo_watch_video">ቪድዮ ተመልከት</string>
-  <string name="screenintrovideo_skip">ምዝላል</string>
+  <string name="screenintrovideo_skip">ዝለል</string>
+
+  <!-- Assigned Facility -->
+  <string name="assigned_facility_view_title">ዝተመለፀ ትካል ጥዕና</string>
+  <string name="assigned_facility_view_change">ለውጢ</string>
+
+  <!-- Facility Picker -->
+  <string name="facilitypicker_screen_title">ሕክምናኻ ምረፅ</string>
+  <string name="facilitypicker_search_hint">ሕክምናኻ ድለይ</string>
+  <!-- Street, District, State -->
+  <string name="facilitypicker_header_suggested_facilities">ከም ሓሳብ ዝቐረቡ ሕክምናታት</string>
+  <string name="facilitypicker_header_all_facilities">ኩሎም ሕክምናታት</string>
 </resources>

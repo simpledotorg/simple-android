@@ -5,6 +5,9 @@
 - Add progress UI for registering a patient
 - Add progress UI when scheduling appointment in `ScheduleAppointmentSheet`
 
+### Changes
+- Updated translations: `ti`
+
 ###Internal
 - Migrated `LoginPinScreen` to Mobius
 - Extracted facility selection UI into a separate component

@@ -4,9 +4,17 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class PatientSearchModel : Parcelable {
+data class PatientSearchModel(
+    private val enteredQuery: String
+) : Parcelable {
 
   companion object {
-    fun create(): PatientSearchModel = PatientSearchModel()
+    fun create(): PatientSearchModel = PatientSearchModel(
+        enteredQuery = ""
+    )
+  }
+
+  fun queryChanged(query: String): PatientSearchModel {
+    return copy(enteredQuery = query)
   }
 }

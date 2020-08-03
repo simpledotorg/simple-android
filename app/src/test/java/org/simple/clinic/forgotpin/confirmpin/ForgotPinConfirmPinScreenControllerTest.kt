@@ -34,6 +34,7 @@ import org.simple.clinic.user.resetpin.ResetUserPin
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -498,6 +499,11 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     val effectHandler = ForgotPinConfirmPinEffectHandler(
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        resetUserPin = resetUserPin,
+        syncAndClearPatientData = syncAndClearPatientData,
         uiActions = ui
     )
 
@@ -505,7 +511,7 @@ class ForgotPinConfirmPinScreenControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = ForgotPinConfirmPinModel.create(),
+        defaultModel = ForgotPinConfirmPinModel.create(previousPin = pin),
         init = ForgotPinConfirmPinInit(),
         update = ForgotPinConfirmPinUpdate(),
         effectHandler = effectHandler.build(),

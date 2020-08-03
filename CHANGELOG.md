@@ -17,7 +17,7 @@
 - Migrated `FacilitySelectionActivity` to Mobius
 - Migrated `FacilityChangeActivity` to Mobius
 - [In Progress: 30th Jul 2020] Migrate `OverdueScreen` to Mobius
-- [In Progress: 30th Jul 2020] Migrate `ForgotPinConfirmPinScreen` to Mobius
+- [In Progress: 3rd Aug 2020] Migrate `ForgotPinConfirmPinScreen` to Mobius
 
 ## On Demo
 ### Features

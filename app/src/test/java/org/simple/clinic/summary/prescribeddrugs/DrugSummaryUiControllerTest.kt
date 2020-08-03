@@ -80,6 +80,7 @@ class DrugSummaryUiControllerTest {
     setupController()
     events.onNext(PatientSummaryUpdateDrugsClicked())
 
+    // then
     verify(ui).showUpdatePrescribedDrugsScreen(patientUuid, currentFacility)
     verifyNoMoreInteractions(ui)
   }

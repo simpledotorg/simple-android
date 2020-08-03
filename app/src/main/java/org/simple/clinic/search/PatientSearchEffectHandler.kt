@@ -21,6 +21,7 @@ class PatientSearchEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<PatientSearchEffect, PatientSearchEvent>()
         .addConsumer(ReportValidationErrorsToAnalytics::class.java, { reportValidationErrorsToAnalytics(it.errors) }, schedulers.io())
+        .addConsumer(OpenSearchResults::class.java, { uiActions.openSearchResultsScreen(it.searchCriteria)}, schedulers.ui())
         .build()
   }
 

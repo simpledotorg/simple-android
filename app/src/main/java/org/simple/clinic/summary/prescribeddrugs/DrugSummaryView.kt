@@ -14,7 +14,6 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.drugs_summary_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
@@ -61,9 +60,6 @@ class DrugSummaryView(
 
   @Inject
   lateinit var activity: AppCompatActivity
-
-  @Inject
-  lateinit var controllerFactory: DrugSummaryUiController.Factory
 
   @Inject
   lateinit var effectHandlerFactory: DrugSummaryEffectHandler.Factory
@@ -124,12 +120,6 @@ class DrugSummaryView(
     context.injector<DrugSummaryViewInjector>().inject(this)
 
     val screenDestroys = detaches().map { ScreenDestroyed() }
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controllerFactory.create(screenKey.patientUuid),
-        screenDestroys = screenDestroys
-    )
     setupAlertResults(screenDestroys)
   }
 

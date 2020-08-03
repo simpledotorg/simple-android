@@ -3,16 +3,15 @@ package org.simple.clinic.summary.prescribeddrugs
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.user.UserSession
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class DrugSummaryEffectHandler @AssistedInject constructor(
     private val prescriptionRepository: PrescriptionRepository,
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
+    private val currentFacility: Lazy<Facility>,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: DrugSummaryUiActions
 ) {
@@ -33,8 +32,7 @@ class DrugSummaryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map { userSession.loggedInUserImmediate() }
-          .map { facilityRepository.currentFacilityImmediate(it) }
+          .map { currentFacility.get() }
           .map(::CurrentFacilityLoaded)
     }
   }

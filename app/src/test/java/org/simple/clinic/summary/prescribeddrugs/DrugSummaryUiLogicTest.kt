@@ -4,8 +4,8 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -14,8 +14,6 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -29,8 +27,8 @@ class DrugSummaryUiLogicTest {
   private val uiActions = mock<DrugSummaryUiActions>()
   private val repository = mock<PrescriptionRepository>()
   private val events = PublishSubject.create<UiEvent>()
-  private val userSession = mock<UserSession>()
-  private val facilityRepository = mock<FacilityRepository>()
+
+  private val currentFacility = TestData.facility(UUID.fromString("af8e817c-8772-4c84-9f4f-1f331fa0b2a5"))
 
   private lateinit var testFixture: MobiusTestFixture<DrugSummaryModel, DrugSummaryEvent, DrugSummaryEffect>
 
@@ -70,20 +68,14 @@ class DrugSummaryUiLogicTest {
 
     verify(repository).newestPrescriptionsForPatient(patientUuid)
     verifyNoMoreInteractions(repository)
-
-    verifyZeroInteractions(userSession)
-    verifyZeroInteractions(facilityRepository)
   }
 
   @Test
   fun `when update medicines is clicked then updated prescription screen should be shown`() {
     // given
     val loggedInUser = TestData.loggedInUser(UUID.fromString("e83b9b27-0a05-4750-9ef7-270cda65217b"))
-    val currentFacility = TestData.facility(UUID.fromString("af8e817c-8772-4c84-9f4f-1f331fa0b2a5"))
 
     whenever(repository.newestPrescriptionsForPatient(patientUuid)) doReturn Observable.never<List<PrescribedDrug>>()
-    whenever(userSession.loggedInUserImmediate()) doReturn loggedInUser
-    whenever(facilityRepository.currentFacilityImmediate(loggedInUser)) doReturn currentFacility
 
     // when
     setupController()
@@ -95,19 +87,12 @@ class DrugSummaryUiLogicTest {
 
     verify(repository).newestPrescriptionsForPatient(patientUuid)
     verifyNoMoreInteractions(repository)
-
-    verify(userSession).loggedInUserImmediate()
-    verifyNoMoreInteractions(userSession)
-
-    verify(facilityRepository).currentFacilityImmediate(loggedInUser)
-    verifyNoMoreInteractions(facilityRepository)
   }
 
   private fun setupController() {
     val effectHandler = DrugSummaryEffectHandler(
         prescriptionRepository = repository,
-        userSession = userSession,
-        facilityRepository = facilityRepository,
+        currentFacility = Lazy { currentFacility },
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = uiActions
     )

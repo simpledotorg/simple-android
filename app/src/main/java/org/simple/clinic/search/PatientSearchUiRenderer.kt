@@ -19,8 +19,10 @@ class PatientSearchUiRenderer(
     searchQueryChangedCallback.pass(model.enteredQuery) { searchQuery ->
       if (searchQuery.isNotBlank()) {
         ui.hideAllPatientsInFacility()
+        ui.showSearchButton()
       } else {
         ui.showAllPatientsInFacility()
+        ui.hideSearchButton()
       }
     }
   }

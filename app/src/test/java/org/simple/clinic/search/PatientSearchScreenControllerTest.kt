@@ -84,6 +84,7 @@ class PatientSearchScreenControllerTest {
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showSearchButton()
     verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
     verifyNoMoreInteractions(ui)
 
     clearInvocations(ui)
@@ -125,6 +126,7 @@ class PatientSearchScreenControllerTest {
     verify(ui).openPatientSummary(patientUuid)
     verify(ui).setEmptyTextFieldErrorVisible(false)
     verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -162,6 +164,7 @@ class PatientSearchScreenControllerTest {
 
     // then
     verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showSearchButton()
     verify(ui).setEmptyTextFieldErrorVisible(false)
@@ -178,6 +181,7 @@ class PatientSearchScreenControllerTest {
     verify(ui).showSearchButton()
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
     verify(ui).setEmptyTextFieldErrorVisible(false)
     verifyNoMoreInteractions(ui)
   }
@@ -207,6 +211,7 @@ class PatientSearchScreenControllerTest {
     // then
     verify(ui).openSearchResultsScreen(PhoneNumber(expectedPhoneNumberToSearch, identifier))
     verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
     verify(ui).setEmptyTextFieldErrorVisible(false)
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showSearchButton()
@@ -241,6 +246,7 @@ class PatientSearchScreenControllerTest {
     // then
     verify(ui).openSearchResultsScreen(Name(expectedNameToSearch, identifier))
     verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
     verify(ui).setEmptyTextFieldErrorVisible(false)
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showSearchButton()

@@ -5,7 +5,6 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.widgets.UiEvent
@@ -26,23 +25,7 @@ class PatientSearchScreenController @AssistedInject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.mergeArray(
-        toggleSearchButtonVisibility(replayedEvents)
-    )
+    return Observable.never()
   }
 
-  private fun toggleSearchButtonVisibility(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    return events
-        .ofType<SearchQueryTextChanged>()
-        .map { it.text.isNotBlank() }
-        .map { isSearchQueryPresent ->
-          { ui: Ui ->
-            if (isSearchQueryPresent) {
-              ui.showSearchButton()
-            } else {
-              ui.hideSearchButton()
-            }
-          }
-        }
-  }
 }

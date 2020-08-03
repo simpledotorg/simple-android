@@ -51,7 +51,7 @@ class EditPatientUpdate(
       is ZoneChanged -> next(model.updateZone(event.zone))
       is StreetAddressChanged -> next(model.updateStreetAddress(event.streetAddress))
       is BackClicked -> onBackClicked(model)
-      is PatientSaved -> dispatch(GoBackEffect)
+      is PatientSaved -> next(model.buttonStateChanged(EditPatientState.NOT_SAVING_PATIENT), GoBackEffect)
       is SaveClicked -> onSaveClicked(model)
       is AlternativeIdChanged -> next(model.updateAlternativeId(event.alternativeId))
       is BpPassportsFetched -> dispatch(DisplayBpPassportsEffect(event.bpPasssports))
@@ -105,13 +105,11 @@ class EditPatientUpdate(
       model: EditPatientModel
   ): Next<EditPatientModel, EditPatientEffect> {
     val validationErrors = model.ongoingEntry.validate(model.savedPhoneNumber, numberValidator, dobValidator, ageValidator)
-    val effect = if (validationErrors.isEmpty()) {
+    return if (validationErrors.isEmpty()) {
       val (_, ongoingEntry, savedPatient, savedAddress, savedPhoneNumber, savedBangladeshId) = model
-      SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber, savedBangladeshId)
+      next(model.buttonStateChanged(EditPatientState.SAVING_PATIENT), SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber, savedBangladeshId))
     } else {
-      ShowValidationErrorsEffect(validationErrors)
+      dispatch(ShowValidationErrorsEffect(validationErrors))
     }
-
-    return dispatch(effect)
   }
 }

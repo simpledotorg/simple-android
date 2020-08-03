@@ -40,7 +40,7 @@ class PatientSearchScreenController @AssistedInject constructor(
 
     return Observable.mergeArray(
 //        showValidationErrors(replayedEvents),
-        resetValidationErrors(replayedEvents),
+//        resetValidationErrors(replayedEvents),
         openSearchResults(replayedEvents),
         openPatientSummary(replayedEvents),
         toggleAllPatientsVisibility(replayedEvents),

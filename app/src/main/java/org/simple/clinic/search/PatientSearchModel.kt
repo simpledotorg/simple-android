@@ -17,7 +17,7 @@ data class PatientSearchModel(
   }
 
   fun queryChanged(query: String): PatientSearchModel {
-    return copy(enteredQuery = query)
+    return copy(enteredQuery = query, validationErrors = emptySet())
   }
 
   fun invalidQuery(validationErrors: Set<PatientSearchValidationError>): PatientSearchModel {

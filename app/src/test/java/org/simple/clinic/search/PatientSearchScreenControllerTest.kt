@@ -93,7 +93,6 @@ class PatientSearchScreenControllerTest {
     // then
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showSearchButton()
-    verify(ui).setEmptyTextFieldErrorVisible(false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -123,6 +122,7 @@ class PatientSearchScreenControllerTest {
 
     // then
     verify(ui).openPatientSummary(patientUuid)
+    verify(ui).setEmptyTextFieldErrorVisible(false)
     verifyNoMoreInteractions(ui)
   }
 

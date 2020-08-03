@@ -12,8 +12,6 @@ import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.platform.analytics.Analytics
-import org.simple.clinic.search.PatientSearchValidationError.INPUT_EMPTY
 import org.simple.clinic.widgets.UiEvent
 
 private typealias Ui = PatientSearchUi
@@ -39,33 +37,11 @@ class PatientSearchScreenController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-//        showValidationErrors(replayedEvents),
-//        resetValidationErrors(replayedEvents),
         openSearchResults(replayedEvents),
         openPatientSummary(replayedEvents),
         toggleAllPatientsVisibility(replayedEvents),
         toggleSearchButtonVisibility(replayedEvents)
     )
-  }
-
-  private fun showValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<SearchQueryValidationResult.Invalid>()
-        .flatMapIterable { it.errors }
-        .doOnNext { Analytics.reportInputValidationError(it.analyticsName) }
-        .map {
-          { ui: Ui ->
-            when (it) {
-              INPUT_EMPTY -> ui.setEmptyTextFieldErrorVisible(true)
-            }
-          }
-        }
-  }
-
-  private fun resetValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<SearchQueryTextChanged>()
-        .map { { ui: Ui -> ui.setEmptyTextFieldErrorVisible(false) } }
   }
 
   private fun openSearchResults(events: Observable<UiEvent>): Observable<UiChange> {

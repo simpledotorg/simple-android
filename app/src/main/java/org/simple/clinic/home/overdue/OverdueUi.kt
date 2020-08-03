@@ -1,6 +1,5 @@
 package org.simple.clinic.home.overdue
 
-interface OverdueUi: OverdueUiActions {
+interface OverdueUi {
   fun updateList(overdueAppointments: List<OverdueAppointment>, isDiabetesManagementEnabled: Boolean)
-  fun handleEmptyList(isEmpty: Boolean)
 }

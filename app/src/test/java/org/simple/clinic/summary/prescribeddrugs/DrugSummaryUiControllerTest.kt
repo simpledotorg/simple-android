@@ -116,6 +116,7 @@ class DrugSummaryUiControllerTest {
     events.onNext(ScreenCreated())
 
     val effectHandler = DrugSummaryEffectHandler(
+        prescriptionRepository = repository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

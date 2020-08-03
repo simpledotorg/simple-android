@@ -14,10 +14,6 @@ sealed class SearchQueryValidationResult : UiEvent {
   }
 }
 
-class SearchClicked : UiEvent {
-  override val analyticsName = "Patient Search:Search Clicked"
-}
-
 data class PatientItemClicked(val patientUuid: UUID) : UiEvent {
   override val analyticsName = "Patient Search:Patient Item Clicked"
 }

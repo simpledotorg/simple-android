@@ -5,16 +5,22 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class PatientSearchModel(
-    private val enteredQuery: String
+    val enteredQuery: String,
+    val validationErrors: Set<PatientSearchValidationError>
 ) : Parcelable {
 
   companion object {
     fun create(): PatientSearchModel = PatientSearchModel(
-        enteredQuery = ""
+        enteredQuery = "",
+        validationErrors = emptySet()
     )
   }
 
   fun queryChanged(query: String): PatientSearchModel {
     return copy(enteredQuery = query)
+  }
+
+  fun invalidQuery(validationErrors: Set<PatientSearchValidationError>): PatientSearchModel {
+    return copy(validationErrors = validationErrors)
   }
 }

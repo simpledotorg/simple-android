@@ -17,13 +17,13 @@
     android:paddingBottom="@dimen/spacing_16">
 
     <ImageButton
-      android:id="@+id/forgotpin_confirmpin_back"
+      android:id="@+id/backButton"
       style="@style/Clinic.LoginBackButton"
       app:srcCompat="@drawable/ic_arrow_back_24dp"
       tools:ignore="ContentDescription" />
 
     <TextView
-      android:id="@+id/forgotpin_confirmpin_facility_name"
+      android:id="@+id/facilityNameTextView"
       style="@style/Clinic.V2.FacilityNameTextView"
       android:layout_centerHorizontal="true"
       android:layout_marginStart="@dimen/spacing_96"
@@ -32,10 +32,10 @@
       tools:text="A really long facility name that does not fit" />
 
     <TextView
-      android:id="@+id/forgotpin_confirmpin_user_fullname"
+      android:id="@+id/userNameTextView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_below="@id/forgotpin_confirmpin_back"
+      android:layout_below="@id/backButton"
       android:layout_centerHorizontal="true"
       android:layout_marginTop="@dimen/spacing_32"
       android:ellipsize="end"
@@ -57,35 +57,35 @@
     android:layout_below="@+id/forgotpin_confirmpin_logo_container">
 
     <ProgressBar
-      android:id="@+id/forgotpin_confirmpin_progress"
+      android:id="@+id/progressBar"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
       android:visibility="invisible" />
 
     <LinearLayout
-      android:id="@+id/forgotpin_confirmpin_pin_container"
+      android:id="@+id/pinEntryContainer"
       style="@style/Clinic.CardContentContainer.Login">
 
       <TextView
         style="@style/Clinic.LoginPinLabel"
-        android:labelFor="@+id/forgotpin_confirmpin_pin"
+        android:labelFor="@id/pinEntryEditText"
         android:text="@string/forgotpin_confirm_pin" />
 
       <org.simple.clinic.widgets.StaggeredEditText
-        android:id="@+id/forgotpin_confirmpin_pin"
+        android:id="@+id/pinEntryEditText"
         style="@style/Clinic.StaggeredEditText.Pin"
         android:imeOptions="actionDone"
         android:maxLength="4" />
 
       <TextView
-        android:id="@+id/forgotpin_confirmpin_error"
+        android:id="@+id/pinErrorTextView"
         style="@style/Clinic.V2.LoginPinErrorText"
         android:text="@string/forgotpin_error_pin_mismatch"
         tools:visibility="visible" />
 
       <TextView
-        android:id="@+id/forgotpin_confirmpin_confirm_message"
+        android:id="@+id/pinEntryHintTextView"
         style="@style/Clinic.ConfirmPinMessageText"
         android:text="@string/forgotpin_confirm_pin_message" />
     </LinearLayout>

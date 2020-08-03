@@ -1,65 +1,90 @@
 package org.simple.clinic.forgotpin.confirmpin
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ProgressBar
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.annotation.StringRes
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.detaches
+import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
-import kotterknife.bindView
+import io.reactivex.rxkotlin.ofType
+import kotlinx.android.synthetic.main.screen_forgotpin_confirmpin.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
+import org.simple.clinic.widgets.textChanges
 import javax.inject.Inject
 
-class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet) {
+class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet), ForgotPinConfirmPinUi {
 
   @Inject
   lateinit var controller: ForgotPinConfirmPinScreenController.Factory
 
   @Inject
+  lateinit var effectHandlerFactory: ForgotPinConfirmPinEffectHandler.Factory
+
+  @Inject
   lateinit var screenRouter: ScreenRouter
 
-  private val backButton by bindView<ImageButton>(R.id.forgotpin_confirmpin_back)
-  private val progressBar by bindView<ProgressBar>(R.id.forgotpin_confirmpin_progress)
-  private val facilityNameTextView by bindView<TextView>(R.id.forgotpin_confirmpin_facility_name)
-  private val userNameTextView by bindView<TextView>(R.id.forgotpin_confirmpin_user_fullname)
-  private val pinEntryEditText by bindView<EditText>(R.id.forgotpin_confirmpin_pin)
-  private val pinErrorTextView by bindView<TextView>(R.id.forgotpin_confirmpin_error)
-  private val pinEntryContainer by bindView<ViewGroup>(R.id.forgotpin_confirmpin_pin_container)
-  private val pinEntryHintTextView by bindView<TextView>(R.id.forgotpin_confirmpin_confirm_message)
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenCreates(),
+            pinSubmits(),
+            pinTextChanges()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = ForgotPinConfirmPinUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = ForgotPinConfirmPinModel.create(),
+        init = ForgotPinConfirmPinInit(),
+        update = ForgotPinConfirmPinUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     val screenKey = screenRouter.key<ForgotPinConfirmPinScreenKey>(this)
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            screenCreates(),
-            pinSubmits(),
-            pinTextChanges()
-        ),
+        events = events,
         controller = controller.create(screenKey.enteredPin),
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
 
     pinEntryEditText.showKeyboard()
@@ -67,24 +92,32 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
     backButton.setOnClickListener { goBack() }
   }
 
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+  }
+
   private fun screenCreates(): Observable<UiEvent> {
     return Observable.just(ScreenCreated())
   }
 
   private fun pinSubmits() =
-      RxTextView.editorActions(pinEntryEditText)
-          .filter { it == EditorInfo.IME_ACTION_DONE }
+      pinEntryEditText
+          .editorActions { it == EditorInfo.IME_ACTION_DONE }
           .map { ForgotPinConfirmPinSubmitClicked(pinEntryEditText.text.toString()) }
 
   private fun pinTextChanges() =
-      RxTextView.textChanges(pinEntryEditText)
-          .map { ForgotPinConfirmPinTextChanged(it.toString()) }
+      pinEntryEditText
+          .textChanges { ForgotPinConfirmPinTextChanged(it) }
 
-  fun showUserName(name: String) {
+  override fun showUserName(name: String) {
     userNameTextView.text = name
   }
 
-  fun showFacility(name: String) {
+  override fun showFacility(name: String) {
     facilityNameTextView.text = name
   }
 
@@ -92,24 +125,24 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
     screenRouter.pop()
   }
 
-  fun showPinMismatchedError() {
+  override fun showPinMismatchedError() {
     showError(R.string.forgotpin_error_pin_mismatch)
   }
 
-  fun showUnexpectedError() {
+  override fun showUnexpectedError() {
     showError(R.string.api_unexpected_error)
   }
 
-  fun showNetworkError() {
+  override fun showNetworkError() {
     showError(R.string.api_network_error)
   }
 
-  fun hideError() {
+  override fun hideError() {
     pinErrorTextView.visibility = GONE
     pinEntryHintTextView.visibility = VISIBLE
   }
 
-  fun showProgress() {
+  override fun showProgress() {
     progressBar.visibility = VISIBLE
     pinEntryContainer.visibility = INVISIBLE
     hideKeyboard()
@@ -120,7 +153,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
     pinEntryContainer.visibility = VISIBLE
   }
 
-  fun goToHomeScreen() {
+  override fun goToHomeScreen() {
     screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.FORWARD)
   }
 
@@ -130,5 +163,9 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
     pinErrorTextView.setText(errorMessageResId)
     pinErrorTextView.visibility = VISIBLE
     pinEntryEditText.showKeyboard()
+  }
+
+  interface Injector {
+    fun inject(target: ForgotPinConfirmPinScreen)
   }
 }

@@ -21,7 +21,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class DrugSummaryUiControllerTest {
+class DrugSummaryUiLogicTest {
 
   private val patientUuid = UUID.fromString("f5dfca05-59da-4b91-9743-84d2690844c1")
 

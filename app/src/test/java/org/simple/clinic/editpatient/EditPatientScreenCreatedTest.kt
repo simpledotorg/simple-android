@@ -13,6 +13,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
+import org.simple.clinic.editpatient.EditPatientState.NOT_SAVING_PATIENT
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -170,7 +171,7 @@ class EditPatientScreenCreatedTest {
 
     MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         events = Observable.never<EditPatientEvent>(),
-        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null),
+        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT),
         init = EditPatientInit(patient, address, phoneNumber, null),
         update = EditPatientUpdate(LengthBasedNumberValidator(
             10,

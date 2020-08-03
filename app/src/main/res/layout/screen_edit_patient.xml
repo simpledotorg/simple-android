@@ -320,7 +320,7 @@
   </ScrollView>
 
   <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
-    android:id="@+id/saveButton"
+    android:id="@+id/saveButtonFrame"
     style="@style/Clinic.V2.BottomAlignedButtonFrame"
     android:layout_alignParentBottom="true"
     app:buttonBackgroundDisabled="@color/grey2"
@@ -328,12 +328,14 @@
     app:frameBackgroundDisabled="@color/grey3"
     app:frameBackgroundEnabled="@color/blue2">
 
-    <com.google.android.material.button.MaterialButton
+    <org.simple.clinic.widgets.ProgressMaterialButton
+      android:id="@+id/saveButton"
       style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/spacing_8"
       android:text="@string/patientedit_save_patient"
+      app:buttonState="in-progress"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
   </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
 </org.simple.clinic.editpatient.EditPatientScreen>

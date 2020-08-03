@@ -25,4 +25,6 @@ interface EditPatientUi {
   fun hideDatePatternInDateOfBirthLabel()
   fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility)
   fun showDiscardChangesAlert()
+  fun showProgress()
+  fun hideProgress()
 }

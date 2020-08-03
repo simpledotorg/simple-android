@@ -19,7 +19,8 @@ data class EditPatientModel(
     val savedPatient: Patient,
     val savedAddress: PatientAddress,
     val savedPhoneNumber: PatientPhoneNumber?,
-    val savedBangladeshNationalId: BusinessId?
+    val savedBangladeshNationalId: BusinessId?,
+    val saveButtonState: EditPatientState?
 ) : Parcelable {
   companion object {
     fun from(
@@ -27,17 +28,19 @@ data class EditPatientModel(
         address: PatientAddress,
         phoneNumber: PatientPhoneNumber?,
         dateOfBirthFormatter: DateTimeFormatter,
-        bangladeshNationalId: BusinessId?
+        bangladeshNationalId: BusinessId?,
+        saveButtonState: EditPatientState?
     ): EditPatientModel {
       val savedEntry = EditablePatientEntry.from(
           patient,
           address,
           phoneNumber,
           dateOfBirthFormatter,
-          bangladeshNationalId
+          bangladeshNationalId,
+          saveButtonState
       )
       val ongoingEntry = savedEntry.copy()
-      return EditPatientModel(savedEntry, ongoingEntry, patient, address, phoneNumber, bangladeshNationalId)
+      return EditPatientModel(savedEntry, ongoingEntry, patient, address, phoneNumber, bangladeshNationalId, saveButtonState)
     }
   }
 
@@ -73,4 +76,7 @@ data class EditPatientModel(
 
   fun updateStreetAddress(streetAddress: String): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.updateStreetAddress(streetAddress))
+
+  fun buttonStateChanged(buttonState: EditPatientState?): EditPatientModel =
+      copy(saveButtonState = buttonState)
 }

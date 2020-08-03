@@ -66,6 +66,8 @@ import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
+import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
@@ -143,7 +145,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
     MobiusDelegate(
         events,
-        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, bangladeshNationalId),
+        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, bangladeshNationalId, EditPatientState.NOT_SAVING_PATIENT),
         EditPatientInit(patient, address, phoneNumber, bangladeshNationalId),
         EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator),
         effectHandlerFactory.create(this).build(),
@@ -242,7 +244,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   private fun saveClicks(): Observable<EditPatientEvent> {
-    return RxView.clicks(saveButton.button).map { SaveClicked }
+    return RxView.clicks(saveButtonFrame.button).map { SaveClicked }
   }
 
   private fun nameTextChanges(): Observable<EditPatientEvent> {
@@ -568,6 +570,14 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   override fun showDiscardChangesAlert() {
     ConfirmDiscardChangesDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun showProgress() {
+    saveButton.setButtonState(InProgress)
+  }
+
+  override fun hideProgress() {
+    saveButton.setButtonState(Enabled)
   }
 
   override fun setBangladeshNationalId(nationalId: String) {

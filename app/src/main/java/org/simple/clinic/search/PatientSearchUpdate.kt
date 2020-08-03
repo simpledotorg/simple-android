@@ -28,6 +28,7 @@ class PatientSearchUpdate : Update<PatientSearchModel, PatientSearchEvent, Patie
           next(model.invalidQuery(validationErrors), ReportValidationErrorsToAnalytics(validationErrors) as PatientSearchEffect)
         }
       }
+      is PatientItemClicked -> dispatch(OpenPatientSummary(event.patientUuid))
     }
   }
 

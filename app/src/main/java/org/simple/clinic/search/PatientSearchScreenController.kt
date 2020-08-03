@@ -27,17 +27,9 @@ class PatientSearchScreenController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        openPatientSummary(replayedEvents),
         toggleAllPatientsVisibility(replayedEvents),
         toggleSearchButtonVisibility(replayedEvents)
     )
-  }
-
-  private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<PatientItemClicked>()
-        .map { it.patientUuid }
-        .map { patientUuid -> { ui: Ui -> ui.openPatientSummary(patientUuid) } }
   }
 
   private fun toggleAllPatientsVisibility(events: Observable<UiEvent>): ObservableSource<UiChange> {

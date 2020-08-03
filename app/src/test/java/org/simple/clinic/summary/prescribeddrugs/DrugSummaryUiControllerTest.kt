@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
@@ -16,8 +17,10 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class DrugSummaryUiControllerTest {
@@ -31,10 +34,12 @@ class DrugSummaryUiControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<DrugSummaryModel, DrugSummaryEvent, DrugSummaryEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -109,5 +114,22 @@ class DrugSummaryUiControllerTest {
         .subscribe { it.invoke(ui) }
 
     events.onNext(ScreenCreated())
+
+    val effectHandler = DrugSummaryEffectHandler(
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+    val uiRenderer = DrugSummaryUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = events.ofType(),
+        defaultModel = DrugSummaryModel.create(patientUuid),
+        init = DrugSummaryInit(),
+        update = DrugSummaryUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
+
+    testFixture.start()
   }
 }

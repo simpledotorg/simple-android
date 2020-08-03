@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -64,15 +65,21 @@ class DrugSummaryUiControllerTest {
     // then
     verify(ui).populatePrescribedDrugs(prescriptions)
     verifyNoMoreInteractions(ui)
+
+    verify(repository).newestPrescriptionsForPatient(patientUuid)
+    verifyNoMoreInteractions(repository)
+
+    verifyZeroInteractions(userSession)
+    verifyZeroInteractions(facilityRepository)
   }
 
   @Test
   fun `when update medicines is clicked then updated prescription screen should be shown`() {
     // given
-    whenever(repository.newestPrescriptionsForPatient(patientUuid)) doReturn Observable.never<List<PrescribedDrug>>()
     val loggedInUser = TestData.loggedInUser(UUID.fromString("e83b9b27-0a05-4750-9ef7-270cda65217b"))
     val currentFacility = TestData.facility(UUID.fromString("af8e817c-8772-4c84-9f4f-1f331fa0b2a5"))
 
+    whenever(repository.newestPrescriptionsForPatient(patientUuid)) doReturn Observable.never<List<PrescribedDrug>>()
     whenever(userSession.loggedInUserImmediate()) doReturn loggedInUser
     whenever(facilityRepository.currentFacilityImmediate(loggedInUser)) doReturn currentFacility
 
@@ -83,6 +90,15 @@ class DrugSummaryUiControllerTest {
     // then
     verify(ui).showUpdatePrescribedDrugsScreen(patientUuid, currentFacility)
     verifyNoMoreInteractions(ui)
+
+    verify(repository).newestPrescriptionsForPatient(patientUuid)
+    verifyNoMoreInteractions(repository)
+
+    verify(userSession).loggedInUserImmediate()
+    verifyNoMoreInteractions(userSession)
+
+    verify(facilityRepository).currentFacilityImmediate(loggedInUser)
+    verifyNoMoreInteractions(facilityRepository)
   }
 
   private fun setupController() {

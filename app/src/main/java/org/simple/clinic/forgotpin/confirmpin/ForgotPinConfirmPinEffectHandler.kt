@@ -3,7 +3,9 @@ package org.simple.clinic.forgotpin.confirmpin
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.User
@@ -11,12 +13,11 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.clearpatientdata.SyncAndClearPatientData
 import org.simple.clinic.user.resetpin.ResetPinResult
 import org.simple.clinic.user.resetpin.ResetUserPin
-import org.simple.clinic.util.extractIfPresent
-import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
+    private val currentUser: Lazy<User>,
     private val facilityRepository: FacilityRepository,
     private val resetUserPin: ResetUserPin,
     private val syncAndClearPatientData: SyncAndClearPatientData,
@@ -55,10 +56,9 @@ class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
   }
 
   private fun setUserLoggedInStatusToResettingPin(): Completable {
-    return userSession
-        .loggedInUser()
-        .filterAndUnwrapJust()
-        .firstOrError()
+    return Observable
+        .fromCallable { currentUser.get() }
+        .subscribeOn(schedulersProvider.io())
         .flatMapCompletable { user -> userSession.updateLoggedInStatusForUser(user.uuid, User.LoggedInStatus.RESETTING_PIN) }
   }
 
@@ -76,8 +76,7 @@ class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMap { userSession.loggedInUser() }
-          .extractIfPresent()
+          .map { currentUser.get() }
           .flatMap { facilityRepository.currentFacility(it) }
           .map(::CurrentFacilityLoaded)
     }
@@ -87,8 +86,7 @@ class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMap { userSession.loggedInUser() }
-          .extractIfPresent()
+          .map { currentUser.get() }
           .map(::LoggedInUserLoaded)
     }
   }

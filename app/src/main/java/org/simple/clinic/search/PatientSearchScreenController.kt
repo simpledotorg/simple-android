@@ -24,7 +24,6 @@ class PatientSearchScreenController @AssistedInject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(InputValidator())
         .replay()
 
     return Observable.mergeArray(

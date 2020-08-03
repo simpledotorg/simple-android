@@ -1,6 +1,5 @@
 package org.simple.clinic.summary.prescribeddrugs
 
-import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -30,8 +29,7 @@ class DrugSummaryUiControllerTest {
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
 
-  lateinit var controller: DrugSummaryUiController
-  lateinit var controllerSubscription: Disposable
+  private lateinit var controllerSubscription: Disposable
 
   @After
   fun tearDown() {
@@ -87,9 +85,11 @@ class DrugSummaryUiControllerTest {
   }
 
   private fun setupController() {
-    controller = DrugSummaryUiController(patientUuid, repository, facilityRepository, userSession)
+    val controller = DrugSummaryUiController(patientUuid, repository, facilityRepository, userSession)
 
-    controllerSubscription = events.compose(controller).subscribe { it.invoke(ui) }
+    controllerSubscription = events
+        .compose(controller)
+        .subscribe { it.invoke(ui) }
 
     events.onNext(ScreenCreated())
   }

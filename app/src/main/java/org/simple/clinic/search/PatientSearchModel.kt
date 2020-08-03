@@ -2,17 +2,22 @@ package org.simple.clinic.search
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.patient.businessid.Identifier
 
 @Parcelize
 data class PatientSearchModel(
     val enteredQuery: String,
-    val validationErrors: Set<PatientSearchValidationError>
+    val validationErrors: Set<PatientSearchValidationError>,
+    val additionalIdentifier: Identifier?
 ) : Parcelable {
 
   companion object {
-    fun create(): PatientSearchModel = PatientSearchModel(
+    fun create(
+        additionalIdentifier: Identifier?
+    ): PatientSearchModel = PatientSearchModel(
         enteredQuery = "",
-        validationErrors = emptySet()
+        validationErrors = emptySet(),
+        additionalIdentifier = additionalIdentifier
     )
   }
 

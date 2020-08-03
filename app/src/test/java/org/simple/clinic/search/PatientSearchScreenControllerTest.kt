@@ -272,7 +272,7 @@ class PatientSearchScreenControllerTest {
         events = uiEvents.ofType(),
         update = PatientSearchUpdate(),
         effectHandler = effectHandler.build(),
-        defaultModel = PatientSearchModel.create(),
+        defaultModel = PatientSearchModel.create(identifier),
         init = PatientSearchInit(),
         modelUpdateListener = uiRenderer::render
     )

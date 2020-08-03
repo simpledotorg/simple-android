@@ -9,9 +9,19 @@ class PatientSearchUiRenderer(
 
   private val validationErrorsChangedCallback = ValueChangedCallback<Set<PatientSearchValidationError>>()
 
+  private val searchQueryChangedCallback = ValueChangedCallback<String>()
+
   override fun render(model: PatientSearchModel) {
     validationErrorsChangedCallback.pass(model.validationErrors) { errors ->
       ui.setEmptyTextFieldErrorVisible(visible = errors.isNotEmpty())
+    }
+
+    searchQueryChangedCallback.pass(model.enteredQuery) { searchQuery ->
+      if (searchQuery.isNotBlank()) {
+        ui.hideAllPatientsInFacility()
+      } else {
+        ui.showAllPatientsInFacility()
+      }
     }
   }
 }

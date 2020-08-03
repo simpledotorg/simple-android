@@ -27,24 +27,8 @@ class PatientSearchScreenController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        toggleAllPatientsVisibility(replayedEvents),
         toggleSearchButtonVisibility(replayedEvents)
     )
-  }
-
-  private fun toggleAllPatientsVisibility(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    return events
-        .ofType<SearchQueryTextChanged>()
-        .map { it.text.isNotBlank() }
-        .map { isSearchQueryPresent ->
-          { ui: Ui ->
-            if (isSearchQueryPresent) {
-              ui.hideAllPatientsInFacility()
-            } else {
-              ui.showAllPatientsInFacility()
-            }
-          }
-        }
   }
 
   private fun toggleSearchButtonVisibility(events: Observable<UiEvent>): ObservableSource<UiChange> {

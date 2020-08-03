@@ -26,6 +26,7 @@ class DrugSummaryUiControllerTest {
   private val patientUuid = UUID.fromString("f5dfca05-59da-4b91-9743-84d2690844c1")
 
   private val ui = mock<DrugSummaryUi>()
+  private val uiActions = mock<DrugSummaryUiActions>()
   private val repository = mock<PrescriptionRepository>()
   private val events = PublishSubject.create<UiEvent>()
   private val userSession = mock<UserSession>()
@@ -65,7 +66,7 @@ class DrugSummaryUiControllerTest {
 
     // then
     verify(ui).populatePrescribedDrugs(prescriptions)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(repository).newestPrescriptionsForPatient(patientUuid)
     verifyNoMoreInteractions(repository)
@@ -89,8 +90,8 @@ class DrugSummaryUiControllerTest {
     events.onNext(PatientSummaryUpdateDrugsClicked())
 
     // then
-    verify(ui).showUpdatePrescribedDrugsScreen(patientUuid, currentFacility)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showUpdatePrescribedDrugsScreen(patientUuid, currentFacility)
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(repository).newestPrescriptionsForPatient(patientUuid)
     verifyNoMoreInteractions(repository)
@@ -108,7 +109,7 @@ class DrugSummaryUiControllerTest {
         userSession = userSession,
         facilityRepository = facilityRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
     val uiRenderer = DrugSummaryUiRenderer(ui)
 

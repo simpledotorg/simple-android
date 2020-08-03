@@ -45,7 +45,7 @@ import javax.inject.Named
 class DrugSummaryView(
     context: Context,
     attributeSet: AttributeSet
-) : CardView(context, attributeSet), DrugSummaryUi {
+) : CardView(context, attributeSet), DrugSummaryUi, DrugSummaryUiActions {
 
   @field:[Inject Named("full_date")]
   lateinit var fullDateFormatter: DateTimeFormatter

@@ -12,7 +12,6 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -20,8 +19,6 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.clearpatientdata.SyncAndClearPatientData
@@ -31,8 +28,6 @@ import org.simple.clinic.user.resetpin.ResetPinResult.Success
 import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
 import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
 import org.simple.clinic.user.resetpin.ResetUserPin
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
@@ -49,7 +44,6 @@ class ForgotPinConfirmPinScreenLogicTest {
   private val ui = mock<ForgotPinConfirmPinUi>()
   private val uiActions = mock<UiActions>()
   private val userSession = mock<UserSession>()
-  private val facilityRepository = mock<FacilityRepository>()
   private val resetUserPin = mock<ResetUserPin>()
   private val syncAndClearPatientData = mock<SyncAndClearPatientData>()
 
@@ -87,9 +81,6 @@ class ForgotPinConfirmPinScreenLogicTest {
 
     verifyZeroInteractions(userSession)
 
-    verify(facilityRepository).currentFacility(loggedInUser)
-    verifyNoMoreInteractions(facilityRepository)
-
     verifyZeroInteractions(syncAndClearPatientData)
     verifyZeroInteractions(resetUserPin)
   }
@@ -105,9 +96,6 @@ class ForgotPinConfirmPinScreenLogicTest {
     verifyNoMoreInteractions(ui, uiActions)
 
     verifyNoMoreInteractions(userSession)
-
-    verify(facilityRepository).currentFacility(loggedInUser)
-    verifyNoMoreInteractions(facilityRepository)
 
     verifyZeroInteractions(syncAndClearPatientData)
     verifyZeroInteractions(resetUserPin)
@@ -155,9 +143,6 @@ class ForgotPinConfirmPinScreenLogicTest {
 
     verifyZeroInteractions(userSession)
 
-    verify(facilityRepository).currentFacility(loggedInUser)
-    verifyNoMoreInteractions(facilityRepository)
-
     verifyZeroInteractions(resetUserPin)
     verifyZeroInteractions(syncAndClearPatientData)
   }
@@ -186,9 +171,6 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
     verifyNoMoreInteractions(userSession)
 
-    verify(facilityRepository).currentFacility(loggedInUser)
-    verifyNoMoreInteractions(facilityRepository)
-
     verifyZeroInteractions(resetUserPin)
   }
 
@@ -211,10 +193,6 @@ class ForgotPinConfirmPinScreenLogicTest {
     verifyNoMoreInteractions(ui, uiActions)
 
     verifyZeroInteractions(userSession)
-
-    verify(facilityRepository).currentFacility(loggedInUser)
-    verifyZeroInteractions(facilityRepository)
-
     verifyZeroInteractions(resetUserPin)
 
     verify(syncAndClearPatientData).run()
@@ -244,9 +222,6 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
     verifyNoMoreInteractions(userSession)
 
-    verify(facilityRepository).currentFacility(loggedInUser)
-    verifyNoMoreInteractions(facilityRepository)
-
     verify(syncAndClearPatientData).run()
     verifyNoMoreInteractions(syncAndClearPatientData)
 
@@ -274,9 +249,6 @@ class ForgotPinConfirmPinScreenLogicTest {
     verifyNoMoreInteractions(syncAndClearPatientData)
 
     verifyZeroInteractions(userSession)
-
-    verify(facilityRepository).currentFacility(loggedInUser)
-    verifyNoMoreInteractions(facilityRepository)
   }
 
   @Test
@@ -298,9 +270,6 @@ class ForgotPinConfirmPinScreenLogicTest {
 
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
     verifyNoMoreInteractions(userSession)
-
-    verify(facilityRepository).currentFacility(loggedInUser)
-    verifyNoMoreInteractions(facilityRepository)
 
     verifyZeroInteractions(resetUserPin)
 
@@ -331,9 +300,6 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
     verifyNoMoreInteractions(userSession)
 
-    verify(facilityRepository).currentFacility(loggedInUser)
-    verifyNoMoreInteractions(facilityRepository)
-
     verify(resetUserPin).resetPin(pin)
     verifyNoMoreInteractions(resetUserPin)
 
@@ -363,9 +329,6 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
     verifyNoMoreInteractions(userSession)
 
-    verify(facilityRepository).currentFacility(loggedInUser)
-    verifyNoMoreInteractions(facilityRepository)
-
     verify(syncAndClearPatientData).run()
     verifyNoMoreInteractions(syncAndClearPatientData)
 
@@ -393,9 +356,6 @@ class ForgotPinConfirmPinScreenLogicTest {
 
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
     verifyNoMoreInteractions(userSession)
-
-    verify(facilityRepository).currentFacility(loggedInUser)
-    verifyNoMoreInteractions(facilityRepository)
 
     verifyZeroInteractions(resetUserPin)
 
@@ -426,9 +386,6 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
     verifyNoMoreInteractions(userSession)
 
-    verify(facilityRepository).currentFacility(loggedInUser)
-    verifyNoMoreInteractions(facilityRepository)
-
     verify(resetUserPin).resetPin(pin)
     verifyNoMoreInteractions(resetUserPin)
 
@@ -456,9 +413,6 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
     verifyNoMoreInteractions(userSession)
 
-    verify(facilityRepository).currentFacility(loggedInUser)
-    verifyNoMoreInteractions(facilityRepository)
-
     verifyZeroInteractions(resetUserPin)
 
     verify(syncAndClearPatientData).run()
@@ -466,12 +420,10 @@ class ForgotPinConfirmPinScreenLogicTest {
   }
 
   private fun setupController(pin: String) {
-    whenever(facilityRepository.currentFacility(loggedInUser)) doReturn Observable.just(facility)
-
     val effectHandler = ForgotPinConfirmPinEffectHandler(
         userSession = userSession,
         currentUser = Lazy { loggedInUser },
-        facilityRepository = facilityRepository,
+        currentFacility = Lazy { facility },
         resetUserPin = resetUserPin,
         syncAndClearPatientData = syncAndClearPatientData,
         schedulersProvider = TestSchedulersProvider.trampoline(),

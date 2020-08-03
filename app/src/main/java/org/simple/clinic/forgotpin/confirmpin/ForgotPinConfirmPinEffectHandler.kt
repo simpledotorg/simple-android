@@ -7,7 +7,7 @@ import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.clearpatientdata.SyncAndClearPatientData
@@ -18,7 +18,7 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
     private val currentUser: Lazy<User>,
-    private val facilityRepository: FacilityRepository,
+    private val currentFacility: Lazy<Facility>,
     private val resetUserPin: ResetUserPin,
     private val syncAndClearPatientData: SyncAndClearPatientData,
     private val schedulersProvider: SchedulersProvider,
@@ -76,8 +76,7 @@ class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map { currentUser.get() }
-          .flatMap { facilityRepository.currentFacility(it) }
+          .map { currentFacility.get() }
           .map(::CurrentFacilityLoaded)
     }
   }

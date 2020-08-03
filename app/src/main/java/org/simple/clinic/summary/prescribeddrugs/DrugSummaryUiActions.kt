@@ -1,3 +1,8 @@
 package org.simple.clinic.summary.prescribeddrugs
 
-interface DrugSummaryUiActions
+import org.simple.clinic.facility.Facility
+import java.util.UUID
+
+interface DrugSummaryUiActions {
+  fun showUpdatePrescribedDrugsScreen(patientUuid: UUID, currentFacility: Facility)
+}

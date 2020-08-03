@@ -6,5 +6,4 @@ import java.util.UUID
 
 interface DrugSummaryUi : DrugSummaryUiActions {
   fun populatePrescribedDrugs(prescribedDrugs: List<PrescribedDrug>)
-  fun showUpdatePrescribedDrugsScreen(patientUuid: UUID, currentFacility: Facility)
 }

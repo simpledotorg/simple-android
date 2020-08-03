@@ -6,6 +6,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.newentry.ButtonState.SAVED
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.util.TestUserClock
@@ -31,7 +32,8 @@ class ScheduleAppointmentUpdateTest {
   private val model = ScheduleAppointmentModel.create(
       patientUuid = patientUuid,
       timeToAppointments = appointmentConfig.scheduleAppointmentsIn,
-      userClock = clock
+      userClock = clock,
+      doneButtonState = SAVED
   )
 
   @Test

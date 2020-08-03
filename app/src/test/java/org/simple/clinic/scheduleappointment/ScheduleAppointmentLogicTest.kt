@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.reset
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
@@ -20,6 +21,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.newentry.ButtonState.SAVED
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.AppointmentConfig
@@ -91,11 +93,14 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(AppointmentDone)
 
     // then
+    verify(ui, times(4)).hideProgress()
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(false)
+    verify(ui).showProgress()
     verify(ui).updateScheduledAppointment(scheduledDate, Days(protocol.followUpDays))
     verifyNoMoreInteractions(ui)
+
 
     verify(uiActions).closeSheet()
     verifyNoMoreInteractions(uiActions)
@@ -121,6 +126,7 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(SchedulingSkipped)
 
     // then
+    verify(ui, times(4)).hideProgress()
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
@@ -150,6 +156,7 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(SchedulingSkipped)
 
     // then
+    verify(ui, times(3)).hideProgress()
     verify(repository, never()).schedule(any(), any(), any(), any(), any(), any())
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(false)
@@ -178,6 +185,7 @@ class ScheduleAppointmentLogicTest {
     )
 
     // then
+    verify(ui, times(3)).hideProgress()
     verify(ui).showPatientFacility(facility.name)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     verify(ui).enableIncrementButton(true)
@@ -205,6 +213,7 @@ class ScheduleAppointmentLogicTest {
     )
 
     //then
+    verify(ui, times(3)).hideProgress()
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), defaultTimeToAppointment)
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(true)
@@ -307,6 +316,7 @@ class ScheduleAppointmentLogicTest {
 
     // then
     verify(ui).showPatientFacility(facility.name)
+    verify(ui, times(3)).hideProgress()
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
@@ -321,6 +331,7 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.of(year, month, dayOfMonth)))
 
     // then
+    verify(ui).hideProgress()
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-04"), Days(3))
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
@@ -331,6 +342,7 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(AppointmentDateIncremented)
 
     // then
+    verify(ui).hideProgress()
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-05"), Days(4))
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
@@ -732,7 +744,8 @@ class ScheduleAppointmentLogicTest {
         defaultModel = ScheduleAppointmentModel.create(
             patientUuid = patientUuid,
             timeToAppointments = config.scheduleAppointmentsIn,
-            userClock = clock
+            userClock = clock,
+            doneButtonState = SAVED
         ),
         init = ScheduleAppointmentInit(),
         update = ScheduleAppointmentUpdate(

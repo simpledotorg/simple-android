@@ -18,6 +18,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
@@ -27,6 +28,8 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
+import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
 import java.time.LocalDate
@@ -102,7 +105,8 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
         defaultModel = ScheduleAppointmentModel.create(
             patientUuid = patientUuid,
             timeToAppointments = config.scheduleAppointmentsIn,
-            userClock = userClock
+            userClock = userClock,
+            doneButtonState = ButtonState.SAVED
         ),
         update = ScheduleAppointmentUpdate(
             currentDate = LocalDate.now(userClock),
@@ -232,5 +236,13 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
 
   override fun showPatientFacility(facilityName: String) {
     selectedFacilityName.text = facilityName
+  }
+
+  override fun showProgress() {
+    doneButton.setButtonState(InProgress)
+  }
+
+  override fun hideProgress() {
+    doneButton.setButtonState(Enabled)
   }
 }

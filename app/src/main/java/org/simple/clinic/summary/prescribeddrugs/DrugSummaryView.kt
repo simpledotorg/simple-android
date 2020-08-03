@@ -2,6 +2,7 @@ package org.simple.clinic.summary.prescribeddrugs
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,7 @@ import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.DRUGS_REQCODE_ALERT_FACILITY_CHANGE
@@ -63,6 +65,9 @@ class DrugSummaryView(
   @Inject
   lateinit var controllerFactory: DrugSummaryUiController.Factory
 
+  @Inject
+  lateinit var effectHandlerFactory: DrugSummaryEffectHandler.Factory
+
   private val screenKey by unsafeLazy {
     screenRouter.key<PatientSummaryScreenKey>(this)
   }
@@ -75,8 +80,39 @@ class DrugSummaryView(
         .share()
   }
 
+  private val delegate by unsafeLazy {
+    val uiRenderer = DrugSummaryUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = DrugSummaryModel.create(patientUuid = screenKey.patientUuid),
+        init = DrugSummaryInit(),
+        update = DrugSummaryUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
   init {
     inflate(context, R.layout.drugs_summary_view, this)
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   override fun onFinishInflate() {

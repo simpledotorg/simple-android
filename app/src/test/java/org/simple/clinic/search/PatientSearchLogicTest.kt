@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -31,7 +30,7 @@ import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
-class PatientSearchScreenControllerTest {
+class PatientSearchLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -40,8 +39,8 @@ class PatientSearchScreenControllerTest {
 
   private val identifier = TestData.identifier("a8d49ec3-6945-4ef0-9358-f313e08d1579", Identifier.IdentifierType.BpPassport)
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<PatientSearchModel, PatientSearchEvent, PatientSearchEffect>
+
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private val analyticsReporter = MockAnalyticsReporter()
@@ -53,7 +52,6 @@ class PatientSearchScreenControllerTest {
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
     Analytics.clearReporters()
   }
@@ -287,11 +285,5 @@ class PatientSearchScreenControllerTest {
         modelUpdateListener = uiRenderer::render
     )
     testFixture.start()
-
-    val controller = PatientSearchScreenController(identifier)
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
   }
 }

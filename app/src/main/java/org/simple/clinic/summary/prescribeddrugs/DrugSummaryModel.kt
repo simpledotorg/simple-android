@@ -18,6 +18,9 @@ data class DrugSummaryModel(
     )
   }
 
+  val hasPrescribedDrugs: Boolean
+    get() = prescribedDrugs != null
+
   fun prescribedDrugsLoaded(prescribedDrugs: List<PrescribedDrug>): DrugSummaryModel {
     return copy(prescribedDrugs = prescribedDrugs)
   }

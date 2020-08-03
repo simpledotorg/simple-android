@@ -7,6 +7,8 @@ class DrugSummaryUiRenderer(
 ) : ViewRenderer<DrugSummaryModel> {
 
   override fun render(model: DrugSummaryModel) {
-
+    if (model.hasPrescribedDrugs) {
+      ui.populatePrescribedDrugs(model.prescribedDrugs!!)
+    }
   }
 }

@@ -39,7 +39,7 @@ import javax.inject.Inject
 class PatientSearchScreen(
     context: Context,
     attrs: AttributeSet
-) : RelativeLayout(context, attrs), PatientSearchUi {
+) : RelativeLayout(context, attrs), PatientSearchUi, PatientSearchUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

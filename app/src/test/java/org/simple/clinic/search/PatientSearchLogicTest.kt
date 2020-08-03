@@ -37,6 +37,8 @@ class PatientSearchLogicTest {
 
   private val ui: PatientSearchUi = mock()
 
+  private val uiActions: PatientSearchUiActions = mock()
+
   private val identifier = TestData.identifier("a8d49ec3-6945-4ef0-9358-f313e08d1579", Identifier.IdentifierType.BpPassport)
 
   private lateinit var testFixture: MobiusTestFixture<PatientSearchModel, PatientSearchEvent, PatientSearchEffect>
@@ -68,7 +70,7 @@ class PatientSearchLogicTest {
     verify(ui).setEmptyTextFieldErrorVisible(true)
     verify(ui).showAllPatientsInFacility()
     verify(ui).hideSearchButton()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -83,7 +85,7 @@ class PatientSearchLogicTest {
     verify(ui).showSearchButton()
     verify(ui).showAllPatientsInFacility()
     verify(ui).hideSearchButton()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
 
     clearInvocations(ui)
 
@@ -93,7 +95,7 @@ class PatientSearchLogicTest {
     // then
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showSearchButton()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -104,12 +106,12 @@ class PatientSearchLogicTest {
     uiEvents.onNext(SearchClicked())
 
     // then
-    verify(ui, never()).openSearchResultsScreen(any())
+    verify(uiActions, never()).openSearchResultsScreen(any())
     verify(ui).setEmptyTextFieldErrorVisible(false)
     verify(ui).setEmptyTextFieldErrorVisible(true)
     verify(ui).showAllPatientsInFacility()
     verify(ui).hideSearchButton()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -121,11 +123,11 @@ class PatientSearchLogicTest {
     uiEvents.onNext(PatientItemClicked(patientUuid))
 
     // then
-    verify(ui).openPatientSummary(patientUuid)
+    verify(uiActions).openPatientSummary(patientUuid)
     verify(ui).setEmptyTextFieldErrorVisible(false)
     verify(ui).showAllPatientsInFacility()
     verify(ui).hideSearchButton()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -138,7 +140,7 @@ class PatientSearchLogicTest {
     verify(ui).showAllPatientsInFacility()
     verify(ui).hideSearchButton()
     verify(ui).setEmptyTextFieldErrorVisible(false)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -151,7 +153,7 @@ class PatientSearchLogicTest {
     verify(ui).hideSearchButton()
     verify(ui).showAllPatientsInFacility()
     verify(ui).setEmptyTextFieldErrorVisible(false)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -166,7 +168,7 @@ class PatientSearchLogicTest {
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showSearchButton()
     verify(ui).setEmptyTextFieldErrorVisible(false)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -181,7 +183,7 @@ class PatientSearchLogicTest {
     verify(ui).showAllPatientsInFacility()
     verify(ui).hideSearchButton()
     verify(ui).setEmptyTextFieldErrorVisible(false)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -207,13 +209,13 @@ class PatientSearchLogicTest {
     uiEvents.onNext(SearchClicked())
 
     // then
-    verify(ui).openSearchResultsScreen(PhoneNumber(expectedPhoneNumberToSearch, identifier))
+    verify(uiActions).openSearchResultsScreen(PhoneNumber(expectedPhoneNumberToSearch, identifier))
     verify(ui).showAllPatientsInFacility()
     verify(ui).hideSearchButton()
     verify(ui).setEmptyTextFieldErrorVisible(false)
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showSearchButton()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -242,13 +244,13 @@ class PatientSearchLogicTest {
     uiEvents.onNext(SearchClicked())
 
     // then
-    verify(ui).openSearchResultsScreen(Name(expectedNameToSearch, identifier))
+    verify(uiActions).openSearchResultsScreen(Name(expectedNameToSearch, identifier))
     verify(ui).showAllPatientsInFacility()
     verify(ui).hideSearchButton()
     verify(ui).setEmptyTextFieldErrorVisible(false)
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showSearchButton()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -263,7 +265,7 @@ class PatientSearchLogicTest {
     verify(ui).showAllPatientsInFacility()
     verify(ui).setEmptyTextFieldErrorVisible(false)
     verify(ui).setEmptyTextFieldErrorVisible(true)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
 
     val expectedEvent = MockAnalyticsReporter.Event("InputValidationError", mapOf("name" to INPUT_EMPTY.analyticsName))
     assertThat(analyticsReporter.receivedEvents).containsExactly(expectedEvent)
@@ -272,7 +274,7 @@ class PatientSearchLogicTest {
   private fun setupController() {
     val effectHandler = PatientSearchEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
     val uiRenderer = PatientSearchUiRenderer(ui)
 

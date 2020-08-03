@@ -4,11 +4,13 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.util.daysTill
+import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import java.time.LocalDate
 import java.time.Period
 
@@ -30,7 +32,7 @@ class ScheduleAppointmentUpdate(
       is AppointmentFacilitiesLoaded -> appointmentFacilityLoaded(model, event)
       is PatientFacilityChanged -> next(model.appointmentFacilitySelected(event.facility))
       is AppointmentDone -> scheduleManualAppointment(model)
-      is AppointmentScheduled -> dispatch(CloseSheet)
+      is AppointmentScheduled -> next(model.doneButtonStateChanged(ButtonState.SAVED), CloseSheet)
       SchedulingSkipped -> dispatch(LoadPatientDefaulterStatus(model.patientUuid))
       is PatientDefaulterStatusLoaded -> scheduleAutomaticAppointment(event, model)
     }
@@ -86,7 +88,7 @@ class ScheduleAppointmentUpdate(
         type = Manual
     )
 
-    return dispatch(effect)
+    return next(model.doneButtonStateChanged(ButtonState.SAVING), effect)
   }
 
   private fun scheduleAutomaticAppointment(

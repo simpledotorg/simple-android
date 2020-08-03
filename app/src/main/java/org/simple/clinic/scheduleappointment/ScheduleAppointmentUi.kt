@@ -8,4 +8,6 @@ interface ScheduleAppointmentUi {
   fun enableIncrementButton(state: Boolean)
   fun enableDecrementButton(state: Boolean)
   fun showPatientFacility(facilityName: String)
+  fun showProgress()
+  fun hideProgress()
 }

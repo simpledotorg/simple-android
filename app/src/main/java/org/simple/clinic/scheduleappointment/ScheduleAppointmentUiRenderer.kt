@@ -2,6 +2,7 @@ package org.simple.clinic.scheduleappointment
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.util.ValueChangedCallback
 
@@ -21,11 +22,20 @@ class ScheduleAppointmentUiRenderer(
       }
     }
 
-    if(model.hasLoadedAppointmentFacility) {
+    if (model.hasLoadedAppointmentFacility) {
       facilityChangedCallback.pass(model.appointmentFacility!!) { facility ->
         ui.showPatientFacility(facility.name)
       }
     }
+
+    manageButtonState(model)
+  }
+
+  private fun manageButtonState(model: ScheduleAppointmentModel) {
+    if (model.doneButtonState == ButtonState.SAVING) {
+      ui.showProgress()
+    } else
+      ui.hideProgress()
   }
 
   private fun toggleStateOfIncrementButton(

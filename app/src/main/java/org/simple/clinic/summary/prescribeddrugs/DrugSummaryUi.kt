@@ -4,7 +4,7 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import java.util.UUID
 
-interface DrugSummaryUi {
+interface DrugSummaryUi : DrugSummaryUiActions {
   fun populatePrescribedDrugs(prescribedDrugs: List<PrescribedDrug>)
   fun showUpdatePrescribedDrugsScreen(patientUuid: UUID, currentFacility: Facility)
 }

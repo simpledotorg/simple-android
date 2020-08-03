@@ -70,8 +70,7 @@ class DrugSummaryView(
 
   private val internalEvents = PublishSubject.create<DrugSummaryEvent>()
   private val events by unsafeLazy {
-    Observable
-        .merge(screenCreates(), internalEvents)
+    internalEvents
         .compose(ReportAnalyticsEvents())
         .share()
   }
@@ -133,8 +132,6 @@ class DrugSummaryView(
         .takeUntil(screenDestroys)
         .subscribe(screenRouter::push)
   }
-
-  private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
 
   override fun populatePrescribedDrugs(prescribedDrugs: List<PrescribedDrug>) {
     val alphabeticallySortedPrescribedDrugs = prescribedDrugs.sortedBy { it.name }

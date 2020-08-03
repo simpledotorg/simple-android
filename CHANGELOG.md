@@ -15,6 +15,7 @@
 - Migrated `ForgotPinCreateNewPinScreen` to Mobius
 - Remove `AddToPatientSearch` screens and merge them with `PatientSearch` screens
 - Migrated `FacilitySelectionActivity` to Mobius
+- Migrated `FacilityChangeActivity` to Mobius
 - [In Progress: 30th Jul 2020] Migrate `OverdueScreen` to Mobius
 - [In Progress: 30th Jul 2020] Migrate `ForgotPinConfirmPinScreen` to Mobius
 

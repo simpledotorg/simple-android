@@ -5,12 +5,10 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -34,26 +32,6 @@ class DrugSummaryUiController @AssistedInject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.merge(
-        populatePrescribedDrugs(replayedEvents),
-        openPrescribedDrugsScreen(replayedEvents)
-    )
-  }
-
-  private fun populatePrescribedDrugs(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ScreenCreated>()
-        .switchMap { repository.newestPrescriptionsForPatient(patientUuid) }
-        .map { { ui: Ui -> ui.populatePrescribedDrugs(it) } }
-  }
-
-  private fun openPrescribedDrugsScreen(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<PatientSummaryUpdateDrugsClicked>()
-        .map {
-          val user = userSession.loggedInUserImmediate()!!
-          val facility = facilityRepository.currentFacilityImmediate(user)!!
-          { ui: Ui -> ui.showUpdatePrescribedDrugsScreen(patientUuid, facility) }
-        }
+    return Observable.never()
   }
 }

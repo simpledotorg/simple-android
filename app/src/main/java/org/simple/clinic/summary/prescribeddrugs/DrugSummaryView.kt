@@ -12,6 +12,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.drugs_summary_view.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
@@ -67,6 +68,12 @@ class DrugSummaryView(
   }
 
   private val internalEvents = PublishSubject.create<DrugSummaryEvent>()
+  private val events by unsafeLazy {
+    Observable
+        .merge(screenCreates(), internalEvents)
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
 
   init {
     inflate(context, R.layout.drugs_summary_view, this)
@@ -83,7 +90,7 @@ class DrugSummaryView(
     val screenDestroys = detaches().map { ScreenDestroyed() }
     bindUiToController(
         ui = this,
-        events = Observable.merge(screenCreates(), internalEvents),
+        events = events,
         controller = controllerFactory.create(screenKey.patientUuid),
         screenDestroys = screenDestroys
     )

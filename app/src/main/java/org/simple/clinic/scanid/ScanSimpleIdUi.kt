@@ -9,5 +9,4 @@ interface ScanSimpleIdUi : ScanSimpleIdUiActions {
   fun showShortCodeValidationError(failure: ShortCodeValidationResult)
   fun hideShortCodeValidationError()
   fun openPatientShortCodeSearch(validShortCode: String)
-  fun hideQrCodeScannerView()
 }

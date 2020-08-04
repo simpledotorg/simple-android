@@ -7,9 +7,11 @@ import android.text.InputFilter.LengthFilter
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.inputmethod.EditorInfo
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.detaches
+import com.jakewharton.rxbinding3.widget.editorActionEvents
+import com.jakewharton.rxbinding3.widget.textChangeEvents
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_scan_simple.view.*
@@ -124,7 +126,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
         ui = this,
         events = events,
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
   }
 
@@ -142,14 +144,14 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   private fun qrCodeChanges(): Observable<UiEvent> {
-    return RxTextView
-        .textChangeEvents(shortCodeText)
+    return shortCodeText
+        .textChangeEvents()
         .map { ShortCodeChanged }
   }
 
   private fun doneClicks(): Observable<UiEvent> {
-    return RxTextView
-        .editorActionEvents(shortCodeText)
+    return shortCodeText
+        .editorActionEvents { it.actionId == EditorInfo.IME_ACTION_SEARCH }
         .map { ShortCodeSearched(ShortCodeInput(shortCodeText.text.toString())) }
   }
 

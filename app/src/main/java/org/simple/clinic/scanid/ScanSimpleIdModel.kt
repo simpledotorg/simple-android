@@ -4,4 +4,9 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class ScanSimpleIdModel : Parcelable
+class ScanSimpleIdModel : Parcelable {
+
+  companion object {
+    fun create() = ScanSimpleIdModel()
+  }
+}

@@ -64,7 +64,7 @@ class BloodPressureHistoryScreen(
   @field:[Inject Named("time_for_measurement_history")]
   lateinit var timeFormatter: DateTimeFormatter
 
-  @Inject
+  @field:[Inject Named("for_measurement_history")]
   lateinit var measurementHistoryPaginationConfig: PagedList.Config
 
   private val bloodPressureHistoryAdapter = PagingItemAdapter(BloodPressureHistoryListItemDiffCallback())

@@ -9,7 +9,7 @@
 ### Changes
 - Updated translations: `ti`
 
-###Internal
+### Internal
 - Migrated `LoginPinScreen` to Mobius
 - Extracted facility selection UI into a separate component
 - Migrated `ForgotPinCreateNewPinScreen` to Mobius
@@ -19,6 +19,7 @@
 - Migrated `FacilityChangeActivity` to Mobius
 - Migrated `DrugSummaryView` to Mobius
 - Migrated `ForgotPinConfirmPinScreen` to Mobius
+- Change `OverdueScreen` to load data via the paging library
 
 ## On Demo
 ### Features

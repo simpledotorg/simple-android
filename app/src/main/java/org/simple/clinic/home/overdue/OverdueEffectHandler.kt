@@ -13,6 +13,7 @@ class OverdueEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val appointmentRepository: AppointmentRepository,
     private val currentFacility: Lazy<Facility>,
+    private val dataSourceFactory: OverdueAppointmentRowDataSource.Factory.InjectionFactory,
     @Assisted private val uiActions: OverdueUiActions
 ) {
 
@@ -25,8 +26,8 @@ class OverdueEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<OverdueEffect, OverdueEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
-        .addTransformer(LoadOverdueAppointments::class.java, loadOverdueAppointments())
-        .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPhoneMaskBottomSheet(it.patientUuid)}, schedulers.ui())
+        .addConsumer(LoadOverdueAppointments::class.java, ::loadOverdueAppointments, schedulers.ui())
+        .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPhoneMaskBottomSheet(it.patientUuid) }, schedulers.ui())
         .build()
   }
 
@@ -38,15 +39,12 @@ class OverdueEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun loadOverdueAppointments(): ObservableTransformer<LoadOverdueAppointments, OverdueEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .switchMap { effect ->
-            appointmentRepository
-                .overdueAppointments(since = effect.overdueSince, facility = effect.facility)
-                .subscribeOn(schedulers.io())
-                .map(::OverdueAppointmentsLoaded)
-          }
-    }
+  private fun loadOverdueAppointments(loadOverdueAppointments: LoadOverdueAppointments) {
+    val overdueAppointmentsDataSource = appointmentRepository.overdueAppointmentsDataSource(
+        since = loadOverdueAppointments.overdueSince,
+        facility = loadOverdueAppointments.facility
+    )
+
+    uiActions.showOverdueAppointments(dataSourceFactory.create(loadOverdueAppointments.facility, overdueAppointmentsDataSource))
   }
 }

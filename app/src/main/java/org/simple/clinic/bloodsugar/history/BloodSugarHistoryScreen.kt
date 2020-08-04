@@ -79,7 +79,7 @@ class BloodSugarHistoryScreen(
   @Inject
   lateinit var utcClock: UtcClock
 
-  @Inject
+  @field:[Inject Named("for_measurement_history")]
   lateinit var measurementHistoryPaginationConfig: PagedList.Config
 
   private val bloodSugarHistoryAdapter = PagingItemAdapter(BloodSugarHistoryListItemDiffCallback())

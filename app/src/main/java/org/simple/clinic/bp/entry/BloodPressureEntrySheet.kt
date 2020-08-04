@@ -40,6 +40,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
+import org.simple.clinic.widgets.visibleOrGone
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -387,6 +388,14 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
 
   override fun dismiss() {
     finish()
+  }
+
+  override fun showProgress() {
+    progressLoader.visibleOrGone(isVisible = true)
+  }
+
+  override fun hideProgress() {
+    progressLoader.visibleOrGone(isVisible = false)
   }
 
   override fun onBloodPressureRemoved() {

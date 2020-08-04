@@ -598,6 +598,7 @@ class BloodPressureEntrySheetLogicTest {
     )
     verify(ui).hideRemoveBpButton()
     verify(ui).showEnterNewBloodPressureTitle()
+    verify(ui, times(3)).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -621,6 +622,7 @@ class BloodPressureEntrySheetLogicTest {
     verify(ui).setDiastolic(bp.reading.diastolic.toString())
     verify(ui).showRemoveBpButton()
     verify(ui).showEditBloodPressureTitle()
+    verify(ui, times(4)).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -838,7 +840,8 @@ class BloodPressureEntrySheetLogicTest {
     verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
     verify(ui).setBpSavedResultAndFinish()
-
+    verify(ui).showProgress()
+    verify(ui).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -893,7 +896,8 @@ class BloodPressureEntrySheetLogicTest {
 
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
     verify(ui).setBpSavedResultAndFinish()
-
+    verify(ui).showProgress()
+    verify(ui).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -1018,7 +1022,8 @@ class BloodPressureEntrySheetLogicTest {
 
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
     verify(ui).setBpSavedResultAndFinish()
-
+    verify(ui).showProgress()
+    verify(ui).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 

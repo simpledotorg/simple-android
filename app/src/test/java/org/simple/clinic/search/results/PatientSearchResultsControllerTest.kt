@@ -54,8 +54,7 @@ class PatientSearchResultsControllerTest {
     val searchCriteria = PatientSearchCriteria.PhoneNumber("1111111111")
 
     // when
-    setupController()
-    uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey(searchCriteria)))
+    setupController(searchCriteria)
     uiEvents.onNext(PatientSearchResultClicked(patientUuid))
 
     // then
@@ -71,8 +70,7 @@ class PatientSearchResultsControllerTest {
     val searchCriteria = PatientSearchCriteria.Name("Anish", identifier)
 
     // when
-    setupController()
-    uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey(searchCriteria)))
+    setupController(searchCriteria)
     uiEvents.onNext(PatientSearchResultClicked(patientUuid))
 
     // then
@@ -85,12 +83,13 @@ class PatientSearchResultsControllerTest {
     // given
     val fullName = "name"
     val ongoingEntry = OngoingNewPatientEntry.fromFullName(fullName)
+    val searchCriteria = PatientSearchCriteria.Name(fullName)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
-    setupController()
-    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name(fullName)))
+    setupController(searchCriteria)
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(searchCriteria))
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
@@ -106,12 +105,13 @@ class PatientSearchResultsControllerTest {
     val ongoingEntry = OngoingNewPatientEntry
         .fromFullName(fullName)
         .withIdentifier(identifier)
+    val searchCriteria = PatientSearchCriteria.Name(fullName, identifier)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
-    setupController()
-    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name(fullName, identifier)))
+    setupController(searchCriteria)
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(searchCriteria))
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
@@ -124,12 +124,13 @@ class PatientSearchResultsControllerTest {
     // given
     val phoneNumber = "123456"
     val ongoingEntry = OngoingNewPatientEntry.fromPhoneNumber(phoneNumber)
+    val searchCriteria = PatientSearchCriteria.PhoneNumber(phoneNumber)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
-    setupController()
-    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.PhoneNumber(phoneNumber)))
+    setupController(searchCriteria)
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(searchCriteria))
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
@@ -145,12 +146,13 @@ class PatientSearchResultsControllerTest {
     val ongoingEntry = OngoingNewPatientEntry
         .fromPhoneNumber(phoneNumber)
         .withIdentifier(identifier)
+    val searchCriteria = PatientSearchCriteria.PhoneNumber(phoneNumber, identifier)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
-    setupController()
-    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.PhoneNumber(phoneNumber, identifier)))
+    setupController(searchCriteria)
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(searchCriteria))
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
@@ -163,12 +165,13 @@ class PatientSearchResultsControllerTest {
     // given
     val fullName = "name"
     val ongoingEntry = OngoingNewPatientEntry.fromFullName(fullName)
+    val searchCriteria = PatientSearchCriteria.Name(fullName)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
-    setupController()
-    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name(fullName)))
+    setupController(searchCriteria)
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(searchCriteria))
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
@@ -176,7 +179,9 @@ class PatientSearchResultsControllerTest {
     verifyNoMoreInteractions(screen)
   }
 
-  private fun setupController() {
+  private fun setupController(
+      searchCriteria: PatientSearchCriteria
+  ) {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(loggedInUser)))
     whenever(facilityRepository.currentFacility(loggedInUser)) doReturn Observable.just(currentFacility)
 
@@ -185,5 +190,7 @@ class PatientSearchResultsControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey(searchCriteria)))
   }
 }

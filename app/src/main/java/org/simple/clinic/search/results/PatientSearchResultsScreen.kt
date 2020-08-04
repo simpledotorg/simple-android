@@ -28,6 +28,7 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.extractSuccessful
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -41,13 +42,15 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: PatientSearchResultsController
+  lateinit var controllerInjectionFactory: PatientSearchResultsController.InjectionFactory
 
   @Inject
   lateinit var utcClock: UtcClock
 
   @Inject
   lateinit var activity: AppCompatActivity
+
+  private val screenKey by unsafeLazy { screenRouter.key<PatientSearchResultsScreenKey>(this) }
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
@@ -67,7 +70,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
             searchResultClicks(),
             registerNewPatientClicks()
         ),
-        controller = controller,
+        controller = controllerInjectionFactory.create(screenKey.criteria),
         screenDestroys = screenDestroys
     )
 
@@ -108,7 +111,6 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
       screenRouter.pop()
     }
 
-    val screenKey = screenRouter.key<PatientSearchResultsScreenKey>(this)
     toolbar.title = generateToolbarTitleForCriteria(screenKey.criteria)
   }
 

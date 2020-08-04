@@ -1,5 +1,7 @@
 package org.simple.clinic.search.results
 
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -19,16 +21,21 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
-import javax.inject.Inject
 
 typealias Ui = PatientSearchResultsScreen
 typealias UiChange = (Ui) -> Unit
 
-class PatientSearchResultsController @Inject constructor(
+class PatientSearchResultsController @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
-    private val userSession: UserSession
+    private val userSession: UserSession,
+    @Assisted private val patientSearchCriteria: PatientSearchCriteria
 ) : ObservableTransformer<UiEvent, UiChange> {
+
+  @AssistedInject.Factory
+  interface InjectionFactory {
+    fun create(patientSearchCriteria: PatientSearchCriteria): PatientSearchResultsController
+  }
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)

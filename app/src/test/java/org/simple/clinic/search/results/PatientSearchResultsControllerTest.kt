@@ -185,7 +185,12 @@ class PatientSearchResultsControllerTest {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(loggedInUser)))
     whenever(facilityRepository.currentFacility(loggedInUser)) doReturn Observable.just(currentFacility)
 
-    val controller = PatientSearchResultsController(patientRepository, facilityRepository, userSession)
+    val controller = PatientSearchResultsController(
+        patientRepository = patientRepository,
+        facilityRepository = facilityRepository,
+        userSession = userSession,
+        patientSearchCriteria = searchCriteria
+    )
 
     controllerSubscription = uiEvents
         .compose(controller)

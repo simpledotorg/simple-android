@@ -29,7 +29,7 @@ class PatientSearchResultsControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen: PatientSearchResultsScreen = mock()
+  private val ui: PatientSearchResultsUi = mock()
 
   private val patientRepository: PatientRepository = mock()
   private val facilityRepository: FacilityRepository = mock()
@@ -58,8 +58,8 @@ class PatientSearchResultsControllerTest {
     uiEvents.onNext(PatientSearchResultClicked(patientUuid))
 
     // then
-    verify(screen).openPatientSummaryScreen(patientUuid)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientSummaryScreen(patientUuid)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -74,8 +74,8 @@ class PatientSearchResultsControllerTest {
     uiEvents.onNext(PatientSearchResultClicked(patientUuid))
 
     // then
-    verify(screen).openLinkIdWithPatientScreen(patientUuid, identifier)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openLinkIdWithPatientScreen(patientUuid, identifier)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -93,8 +93,8 @@ class PatientSearchResultsControllerTest {
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -115,8 +115,8 @@ class PatientSearchResultsControllerTest {
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -134,8 +134,8 @@ class PatientSearchResultsControllerTest {
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -156,8 +156,8 @@ class PatientSearchResultsControllerTest {
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -175,8 +175,8 @@ class PatientSearchResultsControllerTest {
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController(
@@ -194,7 +194,7 @@ class PatientSearchResultsControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(PatientSearchResultsScreenCreated())
   }

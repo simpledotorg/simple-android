@@ -22,7 +22,7 @@ import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 
-typealias Ui = PatientSearchResultsScreen
+typealias Ui = PatientSearchResultsUi
 typealias UiChange = (Ui) -> Unit
 
 class PatientSearchResultsController @AssistedInject constructor(

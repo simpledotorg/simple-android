@@ -36,7 +36,10 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class PatientSearchResultsScreen(
+    context: Context,
+    attrs: AttributeSet
+) : RelativeLayout(context, attrs), PatientSearchResultsUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -129,15 +132,15 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     return Observable.just(PatientSearchResultsScreenCreated())
   }
 
-  fun openPatientSummaryScreen(patientUuid: UUID) {
+  override fun openPatientSummaryScreen(patientUuid: UUID) {
     screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
   }
 
-  fun openLinkIdWithPatientScreen(patientUuid: UUID, identifier: Identifier) {
+  override fun openLinkIdWithPatientScreen(patientUuid: UUID, identifier: Identifier) {
     screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.LinkIdWithPatient(identifier), Instant.now(utcClock)))
   }
 
-  fun openPatientEntryScreen(facility: Facility) {
+  override fun openPatientEntryScreen(facility: Facility) {
     activity.startActivityForResult(
         AlertFacilityChangeSheet.intent(context, facility.name, ContinueToScreen(PatientEntryScreenKey())),
         ALERT_FACILITY_CHANGE

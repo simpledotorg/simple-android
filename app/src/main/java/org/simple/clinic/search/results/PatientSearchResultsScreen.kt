@@ -2,6 +2,7 @@ package org.simple.clinic.search.results
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
@@ -54,6 +56,9 @@ class PatientSearchResultsScreen(
   @Inject
   lateinit var activity: AppCompatActivity
 
+  @Inject
+  lateinit var effectHandlerInjectionFactory: PatientSearchResultsEffectHandler.InjectionFactory
+
   private val screenKey by unsafeLazy { screenRouter.key<PatientSearchResultsScreenKey>(this) }
 
   private val events by unsafeLazy {
@@ -65,6 +70,19 @@ class PatientSearchResultsScreen(
         )
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = PatientSearchResultsUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = PatientSearchResultsModel.create(),
+        update = PatientSearchResultsUpdate(),
+        effectHandler = effectHandlerInjectionFactory.create(this).build(),
+        init = PatientSearchResultsInit(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   @SuppressLint("CheckResult")
@@ -87,6 +105,24 @@ class PatientSearchResultsScreen(
     )
 
     setupAlertResults(screenDestroys)
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   @SuppressLint("CheckResult")

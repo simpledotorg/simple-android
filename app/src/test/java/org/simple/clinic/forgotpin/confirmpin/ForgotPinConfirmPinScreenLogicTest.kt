@@ -42,7 +42,7 @@ class ForgotPinConfirmPinScreenLogicTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private val ui = mock<ForgotPinConfirmPinUi>()
-  private val uiActions = mock<UiActions>()
+  private val uiActions = mock<ForgotPinConfirmPinUiActions>()
   private val userSession = mock<UserSession>()
   private val resetUserPin = mock<ResetUserPin>()
   private val syncAndClearPatientData = mock<SyncAndClearPatientData>()

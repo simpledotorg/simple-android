@@ -22,12 +22,12 @@ class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
     private val resetUserPin: ResetUserPin,
     private val syncAndClearPatientData: SyncAndClearPatientData,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: UiActions
+    @Assisted private val uiActions: ForgotPinConfirmPinUiActions
 ) {
 
   @AssistedInject.Factory
   interface Factory {
-    fun create(uiActions: UiActions): ForgotPinConfirmPinEffectHandler
+    fun create(uiActions: ForgotPinConfirmPinUiActions): ForgotPinConfirmPinEffectHandler
   }
 
   fun build(): ObservableTransformer<ForgotPinConfirmPinEffect, ForgotPinConfirmPinEvent> = RxMobius

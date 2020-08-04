@@ -28,7 +28,7 @@ import javax.inject.Inject
 class ForgotPinConfirmPinScreen(
     context: Context,
     attributeSet: AttributeSet?
-) : RelativeLayout(context, attributeSet), ForgotPinConfirmPinUi, UiActions {
+) : RelativeLayout(context, attributeSet), ForgotPinConfirmPinUi, ForgotPinConfirmPinUiActions {
 
   @Inject
   lateinit var effectHandlerFactory: ForgotPinConfirmPinEffectHandler.Factory

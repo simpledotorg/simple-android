@@ -3,19 +3,17 @@ package org.simple.clinic.search.results
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class PatientSearchResultsEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val patientRepository: PatientRepository,
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
+    private val currentFacility: Lazy<Facility>,
     @Assisted private val uiActions: PatientSearchResultsUiActions
 ) {
 
@@ -54,16 +52,10 @@ class PatientSearchResultsEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .switchMap {
-            userSession
-                .loggedInUser()
-                .extractIfPresent()
-                .switchMap(facilityRepository::currentFacility)
-                .take(1)
-                .observeOn(schedulers.ui())
-                .doOnNext(uiActions::openPatientEntryScreen)
-                .switchMap { Observable.empty<PatientSearchResultsEvent>() }
-          }
+          .map { currentFacility.get() }
+          .observeOn(schedulers.ui())
+          .doOnNext(uiActions::openPatientEntryScreen)
+          .switchMap { Observable.empty<PatientSearchResultsEvent>() }
     }
   }
 }

@@ -2,6 +2,7 @@ package org.simple.clinic.scanid
 
 import android.content.Context
 import android.graphics.Rect
+import android.os.Parcelable
 import android.text.InputFilter.LengthFilter
 import android.util.AttributeSet
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -17,6 +19,7 @@ import org.simple.clinic.bindUiToController
 import org.simple.clinic.feature.Feature.CameraXQrScanner
 import org.simple.clinic.feature.Features
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport.SHORT_CODE_LENGTH
 import org.simple.clinic.router.screen.RouterDirection
@@ -53,6 +56,9 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   @Inject
   lateinit var features: Features
 
+  @Inject
+  lateinit var effectHandlerFactory: ScanSimpleIdEffectHandler.Factory
+
   private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
 
   private lateinit var qrCodeScannerView: IQrCodeScannerView
@@ -62,6 +68,36 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
         .mergeArray(qrScans(), keyboardEvents(), qrCodeChanges(), doneClicks())
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = ScanSimpleIdUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = ScanSimpleIdModel.create(),
+        update = ScanSimpleIdUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   override fun onFinishInflate() {

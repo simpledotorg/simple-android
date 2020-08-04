@@ -4,7 +4,7 @@ import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-data class PatientSearchResultsScreenCreated(val key: PatientSearchResultsScreenKey) : UiEvent
+class PatientSearchResultsScreenCreated : UiEvent
 
 data class PatientSearchResultClicked(val patientUuid: UUID) : UiEvent {
   override val analyticsName = "Patient Search Results:Search Result Clicked"

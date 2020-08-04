@@ -126,7 +126,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     searchResultsView
         .downstreamUiEvents
         .onNext(SearchPatientWithCriteria(screenKey.criteria))
-    return Observable.just(PatientSearchResultsScreenCreated(screenKey))
+    return Observable.just(PatientSearchResultsScreenCreated())
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {

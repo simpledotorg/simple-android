@@ -196,6 +196,6 @@ class PatientSearchResultsControllerTest {
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
 
-    uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey(searchCriteria)))
+    uiEvents.onNext(PatientSearchResultsScreenCreated())
   }
 }

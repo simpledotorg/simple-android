@@ -52,7 +52,7 @@ class PatientSearchResultsController @AssistedInject constructor(
   private fun openPatientSummary(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val additionalIdentifierStream = events
         .ofType<PatientSearchResultsScreenCreated>()
-        .map { it.key.criteria.additionalIdentifier.toOptional() }
+        .map { patientSearchCriteria.additionalIdentifier.toOptional() }
 
     return events
         .ofType<PatientSearchResultClicked>()
@@ -104,7 +104,7 @@ class PatientSearchResultsController @AssistedInject constructor(
   private fun openLinkIdWithPatientScreen(events: Observable<UiEvent>): Observable<UiChange> {
     val additionalIdentifierStream = events
         .ofType<PatientSearchResultsScreenCreated>()
-        .map { it.key.criteria.additionalIdentifier.toOptional() }
+        .map { patientSearchCriteria.additionalIdentifier.toOptional() }
 
     return events
         .ofType<PatientSearchResultClicked>()

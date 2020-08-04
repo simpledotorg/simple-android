@@ -21,7 +21,7 @@
 - Migrated `ForgotPinConfirmPinScreen` to Mobius
 - Change `OverdueScreen` to load data via the paging library
 
-## On Demo
+## 2020-08-03-7364
 ### Features
 - Show assigned facility in the patient summary screen
 - Use patient's assigned facility to schedule an appointment

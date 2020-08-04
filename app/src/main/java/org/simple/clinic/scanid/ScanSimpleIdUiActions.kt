@@ -1,3 +1,5 @@
 package org.simple.clinic.scanid
 
-interface ScanSimpleIdUiActions
+interface ScanSimpleIdUiActions {
+  fun showQrCodeScannerView()
+}

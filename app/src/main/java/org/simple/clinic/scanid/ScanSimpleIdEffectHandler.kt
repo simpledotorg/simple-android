@@ -18,5 +18,6 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
 
   fun build(): ObservableTransformer<ScanSimpleIdEffect, ScanSimpleIdEvent> = RxMobius
       .subtypeEffectHandler<ScanSimpleIdEffect, ScanSimpleIdEvent>()
+      .addAction(ShowQrCodeScannerView::class.java, uiActions::showQrCodeScannerView, schedulersProvider.ui())
       .build()
 }

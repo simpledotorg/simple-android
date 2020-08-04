@@ -6,14 +6,12 @@ import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import androidx.annotation.StringRes
-import com.jakewharton.rxbinding3.view.detaches
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_forgotpin_confirmpin.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
@@ -21,17 +19,16 @@ import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
 import javax.inject.Inject
 
-class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet), ForgotPinConfirmPinUi {
-
-  @Inject
-  lateinit var controller: ForgotPinConfirmPinScreenController.Factory
+class ForgotPinConfirmPinScreen(
+    context: Context,
+    attributeSet: AttributeSet?
+) : RelativeLayout(context, attributeSet), ForgotPinConfirmPinUi, ForgotPinConfirmPinUiActions {
 
   @Inject
   lateinit var effectHandlerFactory: ForgotPinConfirmPinEffectHandler.Factory
@@ -42,12 +39,10 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   private val events by unsafeLazy {
     Observable
         .merge(
-            screenCreates(),
             pinSubmits(),
             pinTextChanges()
         )
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val delegate by unsafeLazy {
@@ -79,15 +74,6 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
     context.injector<Injector>().inject(this)
 
-    val screenKey = screenRouter.key<ForgotPinConfirmPinScreenKey>(this)
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller.create(screenKey.enteredPin),
-        screenDestroys = detaches().map { ScreenDestroyed() }
-    )
-
     pinEntryEditText.showKeyboard()
 
     backButton.setOnClickListener { goBack() }
@@ -99,10 +85,6 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
-  }
-
-  private fun screenCreates(): Observable<UiEvent> {
-    return Observable.just(ScreenCreated())
   }
 
   private fun pinSubmits() =

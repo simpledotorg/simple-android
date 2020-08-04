@@ -10,7 +10,7 @@ data class PatientSearchResultClicked(val patientUuid: UUID) : UiEvent {
   override val analyticsName = "Patient Search Results:Search Result Clicked"
 }
 
-data class PatientSearchResultRegisterNewPatient(val searchCriteria: PatientSearchCriteria) : UiEvent {
+data class PatientSearchResultRegisterNewPatient(private val searchCriteria: PatientSearchCriteria) : UiEvent {
 
   override val analyticsName: String
     get() {

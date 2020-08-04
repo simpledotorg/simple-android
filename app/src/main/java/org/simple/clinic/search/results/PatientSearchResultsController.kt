@@ -74,8 +74,7 @@ class PatientSearchResultsController @AssistedInject constructor(
 
     return events
         .ofType<PatientSearchResultRegisterNewPatient>()
-        .map { it.searchCriteria }
-        .map(this::createOngoingEntryFromSearchCriteria)
+        .map { createOngoingEntryFromSearchCriteria(patientSearchCriteria) }
         .zipWith(currentFacility)
         .flatMap { (ongoingNewPatientEntry, currentFacility) ->
           saveEntryAndGoToRegisterPatientScreen(ongoingNewPatientEntry, currentFacility)

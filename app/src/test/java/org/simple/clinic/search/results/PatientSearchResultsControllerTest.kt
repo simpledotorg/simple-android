@@ -7,8 +7,9 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -34,21 +35,16 @@ class PatientSearchResultsControllerTest {
   private val facilityRepository: FacilityRepository = mock()
   private val userSession: UserSession = mock()
 
-  private val controller = PatientSearchResultsController(patientRepository, facilityRepository, userSession)
   private val uiEvents = PublishSubject.create<UiEvent>()
-
 
   private val loggedInUser = TestData.loggedInUser(UUID.fromString("e83b9b27-0a05-4750-9ef7-270cda65217b"))
   private val currentFacility = TestData.facility(UUID.fromString("af8e817c-8772-4c84-9f4f-1f331fa0b2a5"))
 
-  @Before
-  fun setUp() {
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  private lateinit var controllerSubscription: Disposable
 
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(loggedInUser)))
-    whenever(facilityRepository.currentFacility(loggedInUser)) doReturn Observable.just(currentFacility)
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -58,6 +54,7 @@ class PatientSearchResultsControllerTest {
     val searchCriteria = PatientSearchCriteria.PhoneNumber("1111111111")
 
     // when
+    setupController()
     uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey(searchCriteria)))
     uiEvents.onNext(PatientSearchResultClicked(patientUuid))
 
@@ -74,6 +71,7 @@ class PatientSearchResultsControllerTest {
     val searchCriteria = PatientSearchCriteria.Name("Anish", identifier)
 
     // when
+    setupController()
     uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey(searchCriteria)))
     uiEvents.onNext(PatientSearchResultClicked(patientUuid))
 
@@ -91,6 +89,7 @@ class PatientSearchResultsControllerTest {
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
+    setupController()
     uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name(fullName)))
 
     // then
@@ -111,6 +110,7 @@ class PatientSearchResultsControllerTest {
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
+    setupController()
     uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name(fullName, identifier)))
 
     // then
@@ -128,6 +128,7 @@ class PatientSearchResultsControllerTest {
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
+    setupController()
     uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.PhoneNumber(phoneNumber)))
 
     // then
@@ -148,6 +149,7 @@ class PatientSearchResultsControllerTest {
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
+    setupController()
     uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.PhoneNumber(phoneNumber, identifier)))
 
     // then
@@ -165,11 +167,23 @@ class PatientSearchResultsControllerTest {
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
+    setupController()
     uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name(fullName)))
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
     verify(screen).openPatientEntryScreen(currentFacility)
     verifyNoMoreInteractions(screen)
+  }
+
+  private fun setupController() {
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(loggedInUser)))
+    whenever(facilityRepository.currentFacility(loggedInUser)) doReturn Observable.just(currentFacility)
+
+    val controller = PatientSearchResultsController(patientRepository, facilityRepository, userSession)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

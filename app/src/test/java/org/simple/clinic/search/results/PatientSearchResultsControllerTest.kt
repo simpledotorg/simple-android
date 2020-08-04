@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -21,7 +22,9 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class PatientSearchResultsControllerTest {
@@ -41,10 +44,12 @@ class PatientSearchResultsControllerTest {
   private val currentFacility = TestData.facility(UUID.fromString("af8e817c-8772-4c84-9f4f-1f331fa0b2a5"))
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<PatientSearchResultsModel, PatientSearchResultsEvent, PatientSearchResultsEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -184,6 +189,22 @@ class PatientSearchResultsControllerTest {
   ) {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(loggedInUser)))
     whenever(facilityRepository.currentFacility(loggedInUser)) doReturn Observable.just(currentFacility)
+
+    val effectHandler = PatientSearchResultsEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+    val uiRenderer = PatientSearchResultsUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = PatientSearchResultsModel.create(),
+        update = PatientSearchResultsUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render,
+        init = PatientSearchResultsInit()
+    )
+    testFixture.start()
 
     val controller = PatientSearchResultsController(
         patientRepository = patientRepository,

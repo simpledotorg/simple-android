@@ -12,6 +12,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.feature.Feature.CameraXQrScanner
 import org.simple.clinic.feature.Features
@@ -27,6 +28,7 @@ import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -55,6 +57,13 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
   private lateinit var qrCodeScannerView: IQrCodeScannerView
 
+  private val events by unsafeLazy {
+    Observable
+        .mergeArray(qrScans(), keyboardEvents(), qrCodeChanges(), doneClicks())
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -77,7 +86,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
     bindUiToController(
         ui = this,
-        events = Observable.mergeArray(qrScans(), keyboardEvents(), qrCodeChanges(), doneClicks()),
+        events = events,
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

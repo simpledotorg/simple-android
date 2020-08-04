@@ -7,7 +7,6 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -31,7 +30,6 @@ class ScanSimpleIdScreenController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .compose(mergeWithScannedBpPassportCodes())
-        .compose(ReportAnalyticsEvents())
         .replay()
 
     return Observable.merge(

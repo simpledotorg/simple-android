@@ -19,7 +19,12 @@ class PatientSearchResultsEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<PatientSearchResultsEffect, PatientSearchResultsEvent> {
     return RxMobius
         .subtypeEffectHandler<PatientSearchResultsEffect, PatientSearchResultsEvent>()
-        .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummaryScreen(it.patientUuid)}, schedulers.ui())
+        .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummaryScreen(it.patientUuid) }, schedulers.ui())
+        .addConsumer(
+            OpenLinkIdWithPatientScreen::class.java,
+            { uiActions.openLinkIdWithPatientScreen(it.patientUuid, it.additionalIdentifier) },
+            schedulers.ui()
+        )
         .build()
   }
 }

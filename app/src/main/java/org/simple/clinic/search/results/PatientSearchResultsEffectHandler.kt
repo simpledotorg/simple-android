@@ -5,12 +5,17 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class PatientSearchResultsEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val patientRepository: PatientRepository,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository,
     @Assisted private val uiActions: PatientSearchResultsUiActions
 ) {
 
@@ -29,6 +34,7 @@ class PatientSearchResultsEffectHandler @AssistedInject constructor(
             schedulers.ui()
         )
         .addTransformer(SaveNewOngoingPatientEntry::class.java, saveNewPatientEntry())
+        .addTransformer(OpenPatientEntryScreen::class.java, openPatientEntryScreen())
         .build()
   }
 
@@ -40,6 +46,23 @@ class PatientSearchResultsEffectHandler @AssistedInject constructor(
             patientRepository
                 .saveOngoingEntry(effect.entry)
                 .andThen(Observable.just(NewOngoingPatientEntrySaved))
+          }
+    }
+  }
+
+  private fun openPatientEntryScreen(): ObservableTransformer<OpenPatientEntryScreen, PatientSearchResultsEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .switchMap {
+            userSession
+                .loggedInUser()
+                .extractIfPresent()
+                .switchMap(facilityRepository::currentFacility)
+                .take(1)
+                .observeOn(schedulers.ui())
+                .doOnNext(uiActions::openPatientEntryScreen)
+                .switchMap { Observable.empty<PatientSearchResultsEvent>() }
           }
     }
   }

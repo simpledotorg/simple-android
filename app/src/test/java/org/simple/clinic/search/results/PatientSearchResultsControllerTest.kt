@@ -193,6 +193,8 @@ class PatientSearchResultsControllerTest {
     val effectHandler = PatientSearchResultsEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         patientRepository = patientRepository,
+        userSession = userSession,
+        facilityRepository = facilityRepository,
         uiActions = ui
     )
     val uiRenderer = PatientSearchResultsUiRenderer(ui)

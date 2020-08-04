@@ -14,3 +14,5 @@ data class OpenLinkIdWithPatientScreen(
 ): PatientSearchResultsEffect()
 
 data class SaveNewOngoingPatientEntry(val entry: OngoingNewPatientEntry): PatientSearchResultsEffect()
+
+object OpenPatientEntryScreen: PatientSearchResultsEffect()

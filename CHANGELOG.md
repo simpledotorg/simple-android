@@ -20,6 +20,7 @@
 - Migrated `DrugSummaryView` to Mobius
 - Migrated `ForgotPinConfirmPinScreen` to Mobius
 - Change `OverdueScreen` to load data via the paging library
+- [In Progress: 04 Aug 2020] Migrate `PatientSearchScreen` to Mobius
 
 ## 2020-08-03-7364
 ### Features

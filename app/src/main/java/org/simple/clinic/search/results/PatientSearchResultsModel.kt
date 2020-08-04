@@ -17,4 +17,7 @@ data class PatientSearchResultsModel(
       )
     }
   }
+
+  val hasAdditionalIdentifier: Boolean
+    get() = additionalIdentifier != null
 }

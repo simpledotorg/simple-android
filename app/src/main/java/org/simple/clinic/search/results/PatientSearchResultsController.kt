@@ -41,26 +41,9 @@ class PatientSearchResultsController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        openPatientSummary(replayedEvents),
         registerNewPatient(replayedEvents),
         openLinkIdWithPatientScreen(replayedEvents)
     )
-  }
-
-  private fun openPatientSummary(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val additionalIdentifierStream = events
-        .ofType<PatientSearchResultsScreenCreated>()
-        .map { patientSearchCriteria.additionalIdentifier.toOptional() }
-
-    return events
-        .ofType<PatientSearchResultClicked>()
-        .withLatestFrom(additionalIdentifierStream)
-        .filter { (_, additionalIdentifier) -> !additionalIdentifier.isPresent() }
-        .map { (clickedResult, _) ->
-          { ui: Ui ->
-            ui.openPatientSummaryScreen(clickedResult.patientUuid)
-          }
-        }
   }
 
   private fun registerNewPatient(events: Observable<UiEvent>): Observable<UiChange> {

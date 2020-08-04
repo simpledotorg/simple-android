@@ -5,7 +5,6 @@ import org.simple.clinic.patient.businessid.Identifier
 import java.util.UUID
 
 interface PatientSearchResultsUi: PatientSearchResultsUiActions {
-  fun openPatientSummaryScreen(patientUuid: UUID)
   fun openLinkIdWithPatientScreen(patientUuid: UUID, identifier: Identifier)
   fun openPatientEntryScreen(facility: Facility)
 }

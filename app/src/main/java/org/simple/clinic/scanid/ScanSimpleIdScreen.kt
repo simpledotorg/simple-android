@@ -16,9 +16,9 @@ import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.CameraXQrScanner
 import org.simple.clinic.feature.Features
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport.SHORT_CODE_LENGTH
@@ -105,7 +105,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
     // It is possible that going back via the app bar from future screens will come back to this
     // screen with the keyboard open. So, we hide it here.
     hideKeyboard()
@@ -205,6 +205,10 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
   override fun showQrCodeScannerView() {
     qrCodeScannerView.showQrCodeScanner()
+  }
+
+  interface Injector {
+    fun inject(target: ScanSimpleIdScreen)
   }
 }
 

@@ -45,9 +45,11 @@ class ScanSimpleIdScreenControllerTest {
 
     whenever(patientRepository.findPatientWithBusinessId(scannedCode.toString())).thenReturn(Observable.just(patient))
 
+    // when
     setupController()
     uiEvents.onNext(ValidPassportCode(scannedCode))
 
+    // then
     verify(screen).openPatientSummary(patientUuid)
     verifyNoMoreInteractions(screen)
   }
@@ -71,11 +73,14 @@ class ScanSimpleIdScreenControllerTest {
 
   @Test
   fun `if scanned qr code is not a valid uuid then do nothing`() {
+    // given
     val scannedCode = "96d93a33-db68"
 
+    // when
     setupController()
     uiEvents.onNext(ScanSimpleIdScreenQrCodeScanned(scannedCode))
 
+    // then
     verifyZeroInteractions(screen)
   }
 

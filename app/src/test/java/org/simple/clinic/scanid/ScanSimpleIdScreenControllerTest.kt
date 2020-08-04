@@ -7,10 +7,11 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
-import org.junit.Before
+import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
@@ -35,13 +36,12 @@ class ScanSimpleIdScreenControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val screen = mock<ScanSimpleIdScreen>()
   private val patientRepository = mock<PatientRepository>()
-  private val controller = ScanSimpleIdScreenController(patientRepository)
 
-  @Before
-  fun setUp() {
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  private lateinit var controllerSubscription: Disposable
+
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -51,6 +51,8 @@ class ScanSimpleIdScreenControllerTest {
       foundPatient: Optional<Patient>
   ) {
     whenever(patientRepository.findPatientWithBusinessId(validScannedCode.toString())).thenReturn(Observable.just(foundPatient))
+
+    setupController()
     uiEvents.onNext(ValidPassportCode(validScannedCode))
 
     when (foundPatient) {
@@ -70,6 +72,7 @@ class ScanSimpleIdScreenControllerTest {
   ) {
     whenever(patientRepository.findPatientWithBusinessId(any())).thenReturn(Observable.just(None()))
 
+    setupController()
     scannedTexts.forEach { scannedText ->
       uiEvents.onNext(ScanSimpleIdScreenQrCodeScanned(scannedText))
     }
@@ -86,6 +89,7 @@ class ScanSimpleIdScreenControllerTest {
   @Test
   fun `when the keyboard is up, then hide the QR code scanner view`() {
     // when
+    setupController()
     uiEvents.onNext(ShowKeyboard)
 
     // then
@@ -96,6 +100,7 @@ class ScanSimpleIdScreenControllerTest {
   @Test
   fun `when the keyboard is dismissed, then show the QR code scanner view`() {
     // when
+    setupController()
     uiEvents.onNext(HideKeyboard)
 
     // then
@@ -106,6 +111,7 @@ class ScanSimpleIdScreenControllerTest {
   @Test
   fun `when the keyboard is up, then don't process invalid QR code scan events`() {
     // when
+    setupController()
     with(uiEvents) {
       onNext(ShowKeyboard)
       onNext(InvalidPassportCode)
@@ -123,6 +129,7 @@ class ScanSimpleIdScreenControllerTest {
     val shortCodeInput = ShortCodeInput(shortCodeText)
 
     //when
+    setupController()
     uiEvents.onNext(ShortCodeSearched(shortCodeInput))
 
     //then
@@ -136,13 +143,13 @@ class ScanSimpleIdScreenControllerTest {
     val invalidShortCode = "3456"
     val invalidShortCodeInput = ShortCodeInput(invalidShortCode)
 
-    uiEvents.onNext(ShortCodeSearched(invalidShortCodeInput))
-    verify(screen).showShortCodeValidationError(NotEqualToRequiredLength)
-
     //when
+    setupController()
+    uiEvents.onNext(ShortCodeSearched(invalidShortCodeInput))
     uiEvents.onNext(ShortCodeChanged)
 
     //then
+    verify(screen).showShortCodeValidationError(NotEqualToRequiredLength)
     verify(screen).hideShortCodeValidationError()
     verifyNoMoreInteractions(screen)
   }
@@ -154,6 +161,7 @@ class ScanSimpleIdScreenControllerTest {
     val validShortCodeInput = ShortCodeInput(validShortCode)
 
     // when
+    setupController()
     uiEvents.onNext(ShortCodeSearched(validShortCodeInput))
 
     // then
@@ -167,6 +175,7 @@ class ScanSimpleIdScreenControllerTest {
     val emptyShortCodeInput = ShortCodeInput("")
 
     //when
+    setupController()
     uiEvents.onNext(ShortCodeSearched(emptyShortCodeInput))
 
     //then
@@ -209,5 +218,13 @@ class ScanSimpleIdScreenControllerTest {
             listOf("a2", "d7b0cf0b-8467-4969-8f17-f98f48badb5a", "ecf08c6a-2f7e-4163-a6c7-c72a5703422a"),
             UUID.fromString("d7b0cf0b-8467-4969-8f17-f98f48badb5a"))
     )
+  }
+
+  private fun setupController() {
+    val controller = ScanSimpleIdScreenController(patientRepository)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

@@ -1,6 +1,6 @@
 package org.simple.clinic.forgotpin.confirmpin
 
-interface UiActions {
+interface ForgotPinConfirmPinUiActions {
   fun hideError()
   fun showPinMismatchedError()
   fun showProgress()

@@ -198,7 +198,7 @@ class PatientSearchResultsControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = PatientSearchResultsModel.create(),
+        defaultModel = PatientSearchResultsModel.create(searchCriteria),
         update = PatientSearchResultsUpdate(),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render,

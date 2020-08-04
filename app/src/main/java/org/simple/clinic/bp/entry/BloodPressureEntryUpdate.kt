@@ -1,6 +1,7 @@
 package org.simple.clinic.bp.entry
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.ValidationResult
@@ -113,15 +114,19 @@ class BloodPressureEntryUpdate(
   private fun onSaveClicked(
       model: BloodPressureEntryModel
   ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> {
-    val bpValidationResult = validateEnteredBp(model)
-    val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
-    val validationErrorEffects = getValidationErrorEffects(bpValidationResult, dateValidationResult)
-
-    return if (validationErrorEffects.isNotEmpty()) {
-      Next.dispatch(validationErrorEffects)
+    return if (model.bloodPressureSaveState == SAVING_BLOOD_PRESSURE) {
+      noChange()
     } else {
-      val bpReading = (bpValidationResult as ValidationResult.Valid).reading
-      next(model.bloodPressureStateChanged(SAVING_BLOOD_PRESSURE), getCreateOrUpdateEntryEffect(model, dateValidationResult, bpReading))
+      val bpValidationResult = validateEnteredBp(model)
+      val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
+      val validationErrorEffects = getValidationErrorEffects(bpValidationResult, dateValidationResult)
+
+      if (validationErrorEffects.isNotEmpty()) {
+        Next.dispatch(validationErrorEffects)
+      } else {
+        val bpReading = (bpValidationResult as ValidationResult.Valid).reading
+        next(model.bloodPressureStateChanged(SAVING_BLOOD_PRESSURE), getCreateOrUpdateEntryEffect(model, dateValidationResult, bpReading))
+      }
     }
   }
 

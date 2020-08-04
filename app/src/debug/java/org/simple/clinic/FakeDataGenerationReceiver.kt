@@ -11,6 +11,8 @@ import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -53,6 +55,9 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
   lateinit var bloodPressureRepository: BloodPressureRepository
 
   @Inject
+  lateinit var appointmentRepository: AppointmentRepository
+
+  @Inject
   lateinit var user: Lazy<User>
 
   @Inject
@@ -87,9 +92,11 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
 
       val patients = records.map { it.patientProfile }
       val bps = records.map { it.bloodPressureMeasurements }.flatten()
+      val appointments = records.map { it.appointment }
 
       patientRepository.save(patients)
           .andThen(bloodPressureRepository.save(bps))
+          .andThen(appointmentRepository.save(appointments))
           .blockingAwait()
     }
   }
@@ -135,9 +142,35 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
         businessIds = emptyList()
     )
 
-    val bloodPressureMeasurement = bloodPressureMeasurement(user, facility, patient, now)
+    val bloodPressureMeasurement = (1..10).map { bloodPressureMeasurement(user, facility, patient, now) }
+    val appointment = appointment(patient, facility)
 
-    return Record(patientProfile, listOf(bloodPressureMeasurement))
+    return Record(patientProfile, bloodPressureMeasurement, appointment)
+  }
+
+  private fun appointment(
+      patient: Patient,
+      facility: Facility
+  ): Appointment {
+    val today = LocalDate.now(clock)
+    val now = Instant.now(clock)
+
+    return Appointment(
+        uuid = uuidGenerator.v4(),
+        facilityUuid = facility.uuid,
+        patientUuid = patient.uuid,
+        scheduledDate = today.minusDays(Random.nextInt(2..30).toLong()),
+        status = Appointment.Status.Scheduled,
+        cancelReason = null,
+        remindOn = null,
+        agreedToVisit = false,
+        appointmentType = Appointment.AppointmentType.Manual,
+        syncStatus = SyncStatus.DONE,
+        createdAt = now,
+        updatedAt = now,
+        deletedAt = null,
+        creationFacilityUuid = facility.uuid
+    )
   }
 
   private fun bloodPressureMeasurement(
@@ -214,7 +247,8 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
 
   private data class Record(
       val patientProfile: PatientProfile,
-      val bloodPressureMeasurements: List<BloodPressureMeasurement>
+      val bloodPressureMeasurements: List<BloodPressureMeasurement>,
+      val appointment: Appointment
   )
 
   private fun randomGender(): Gender = genders.random()

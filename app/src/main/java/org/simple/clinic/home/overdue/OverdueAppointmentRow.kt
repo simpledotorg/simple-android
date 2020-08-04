@@ -14,7 +14,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
-import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import org.simple.clinic.widgets.setCompoundDrawableStart
@@ -40,7 +40,7 @@ data class OverdueAppointmentRow(
     val patientAddress: OverduePatientAddress,
     val isAppointmentAtAssignedFacility: Boolean,
     val appointmentFacilityName: String?
-) : ItemAdapter.Item<UiEvent> {
+) : PagingItemAdapter.Item<UiEvent> {
 
   companion object {
 

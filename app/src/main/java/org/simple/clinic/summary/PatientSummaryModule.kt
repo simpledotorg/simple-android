@@ -1,6 +1,5 @@
 package org.simple.clinic.summary
 
-import androidx.paging.Config
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
@@ -27,12 +26,4 @@ class PatientSummaryModule {
 
   @Provides
   fun missingPhoneReminderDao(appDatabase: AppDatabase) = appDatabase.missingPhoneReminderDao()
-
-  @Provides
-  fun measurementHistoryPaginationConfig() = Config(
-      pageSize = 20,
-      prefetchDistance = 10,
-      initialLoadSizeHint = 40,
-      enablePlaceholders = false
-  )
 }

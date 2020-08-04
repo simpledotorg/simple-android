@@ -16,6 +16,7 @@ import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
 import org.simple.clinic.drugs.sync.PrescriptionSyncAndroidTest
 import org.simple.clinic.facility.FacilityRepositoryAndroidTest
 import org.simple.clinic.help.HelpSyncAndroidTest
+import org.simple.clinic.home.overdue.OverdueAppointmentRowDataSourceTest
 import org.simple.clinic.login.LoginUserWithOtpServerIntegrationTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
 import org.simple.clinic.medicalhistory.MedicalHistorySyncAndroidTest
@@ -92,4 +93,5 @@ interface TestAppComponent {
   fun inject(target: Migration59AndroidTest)
   fun inject(target: BloodPressureHistoryListItemDataSourceTest)
   fun inject(target: BloodSugarHistoryListItemDataSourceTest)
+  fun inject(target: OverdueAppointmentRowDataSourceTest)
 }

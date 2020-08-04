@@ -37,7 +37,7 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
+class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), ScanSimpleIdUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -121,7 +121,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     }
   }
 
-  fun openPatientSummary(patientUuid: UUID) {
+  override fun openPatientSummary(patientUuid: UUID) {
     screenRouter.popAndPush(
         PatientSummaryScreenKey(
             patientUuid = patientUuid,
@@ -132,11 +132,11 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     )
   }
 
-  fun openAddIdToPatientScreen(identifier: Identifier) {
+  override fun openAddIdToPatientScreen(identifier: Identifier) {
     screenRouter.popAndPush(PatientSearchScreenKey(identifier), RouterDirection.FORWARD)
   }
 
-  fun showShortCodeValidationError(failure: ShortCodeValidationResult) {
+  override fun showShortCodeValidationError(failure: ShortCodeValidationResult) {
     shortCodeErrorText.visibility = View.VISIBLE
     val validationErrorMessage = if (failure == Empty) {
       R.string.scansimpleid_shortcode_error_empty
@@ -146,19 +146,19 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     shortCodeErrorText.text = resources.getString(validationErrorMessage)
   }
 
-  fun hideShortCodeValidationError() {
+  override fun hideShortCodeValidationError() {
     shortCodeErrorText.visibility = View.GONE
   }
 
-  fun openPatientShortCodeSearch(validShortCode: String) {
+  override fun openPatientShortCodeSearch(validShortCode: String) {
     screenRouter.popAndPush(ShortCodeSearchResultScreenKey(validShortCode), RouterDirection.FORWARD)
   }
 
-  fun hideQrCodeScannerView() {
+  override fun hideQrCodeScannerView() {
     qrCodeScannerView.hideQrCodeScanner()
   }
 
-  fun showQrCodeScannerView() {
+  override fun showQrCodeScannerView() {
     qrCodeScannerView.showQrCodeScanner()
   }
 }

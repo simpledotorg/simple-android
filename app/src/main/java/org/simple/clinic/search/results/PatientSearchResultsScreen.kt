@@ -60,7 +60,6 @@ class PatientSearchResultsScreen(
   private val events by unsafeLazy {
     Observable
         .merge(
-            screenCreates(),
             searchResultClicks(),
             registerNewPatientClicks()
         )
@@ -98,6 +97,9 @@ class PatientSearchResultsScreen(
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     delegate.start()
+    searchResultsView
+        .downstreamUiEvents
+        .onNext(SearchPatientWithCriteria(screenKey.criteria))
   }
 
   override fun onDetachedFromWindow() {
@@ -155,14 +157,6 @@ class PatientSearchResultsScreen(
       is Name -> patientSearchCriteria.patientName
       is PhoneNumber -> patientSearchCriteria.phoneNumber
     }
-  }
-
-  private fun screenCreates(): Observable<UiEvent> {
-    val screenKey = screenRouter.key<PatientSearchResultsScreenKey>(this)
-    searchResultsView
-        .downstreamUiEvents
-        .onNext(SearchPatientWithCriteria(screenKey.criteria))
-    return Observable.just(PatientSearchResultsScreenCreated())
   }
 
   override fun openPatientSummaryScreen(patientUuid: UUID) {

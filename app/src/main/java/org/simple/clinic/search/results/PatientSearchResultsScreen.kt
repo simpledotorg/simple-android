@@ -11,7 +11,6 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_patient_search_results.view.*
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
@@ -46,9 +45,6 @@ class PatientSearchResultsScreen(
 
   @Inject
   lateinit var screenRouter: ScreenRouter
-
-  @Inject
-  lateinit var controllerInjectionFactory: PatientSearchResultsController.InjectionFactory
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -96,14 +92,6 @@ class PatientSearchResultsScreen(
     setupScreen()
 
     val screenDestroys = detaches().map { ScreenDestroyed() }
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controllerInjectionFactory.create(screenKey.criteria),
-        screenDestroys = screenDestroys
-    )
-
     setupAlertResults(screenDestroys)
   }
 

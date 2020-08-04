@@ -34,7 +34,6 @@ class ScanSimpleIdScreenController @Inject constructor(
 
     return Observable.merge(
         handleScannedBpPassportCodes(replayedEvents),
-        handleKeyboardEvents(replayedEvents),
         handleShortCodeSearch(replayedEvents)
     )
   }
@@ -53,25 +52,6 @@ class ScanSimpleIdScreenController @Inject constructor(
         }
 
     events.mergeWith(scannedBpPassportCodes)
-  }
-
-  private fun handleKeyboardEvents(events: Observable<UiEvent>): Observable<UiChange> {
-    val showKeyboardEvents = events
-        .ofType<ShowKeyboard>()
-
-    val hideKeyboardEvents = events
-        .ofType<HideKeyboard>()
-
-    val hideQrCodeScanner = showKeyboardEvents
-        .map { { ui: Ui -> ui.hideQrCodeScannerView() } }
-
-    val showQrCodeScanner = hideKeyboardEvents
-        .map { { ui: Ui -> ui.showQrCodeScannerView() } }
-
-    return Observable.merge(
-        hideQrCodeScanner,
-        showQrCodeScanner
-    )
   }
 
   private fun handleScannedBpPassportCodes(events: Observable<UiEvent>): Observable<UiChange> {

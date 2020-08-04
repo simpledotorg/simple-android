@@ -49,6 +49,7 @@ class ScanSimpleIdScreenControllerTest {
     uiEvents.onNext(ValidPassportCode(scannedCode))
 
     verify(screen).openPatientSummary(patientUuid)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -65,6 +66,7 @@ class ScanSimpleIdScreenControllerTest {
     // then
     val identifier = Identifier(value = scannedCode.toString(), type = BpPassport)
     verify(screen).openAddIdToPatientScreen(identifier)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test

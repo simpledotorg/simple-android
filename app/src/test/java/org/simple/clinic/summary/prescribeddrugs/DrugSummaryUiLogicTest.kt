@@ -1,41 +1,40 @@
 package org.simple.clinic.summary.prescribeddrugs
 
-import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.user.UserSession
-import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class DrugSummaryUiControllerTest {
+class DrugSummaryUiLogicTest {
 
   private val patientUuid = UUID.fromString("f5dfca05-59da-4b91-9743-84d2690844c1")
 
   private val ui = mock<DrugSummaryUi>()
+  private val uiActions = mock<DrugSummaryUiActions>()
   private val repository = mock<PrescriptionRepository>()
   private val events = PublishSubject.create<UiEvent>()
-  private val userSession = mock<UserSession>()
-  private val facilityRepository = mock<FacilityRepository>()
 
-  lateinit var controller: DrugSummaryUiController
-  lateinit var controllerSubscription: Disposable
+  private val currentFacility = TestData.facility(UUID.fromString("af8e817c-8772-4c84-9f4f-1f331fa0b2a5"))
+
+  private lateinit var testFixture: MobiusTestFixture<DrugSummaryModel, DrugSummaryEvent, DrugSummaryEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -65,32 +64,49 @@ class DrugSummaryUiControllerTest {
 
     // then
     verify(ui).populatePrescribedDrugs(prescriptions)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
+
+    verify(repository).newestPrescriptionsForPatient(patientUuid)
+    verifyNoMoreInteractions(repository)
   }
 
   @Test
   fun `when update medicines is clicked then updated prescription screen should be shown`() {
     // given
-    whenever(repository.newestPrescriptionsForPatient(patientUuid)) doReturn Observable.never<List<PrescribedDrug>>()
     val loggedInUser = TestData.loggedInUser(UUID.fromString("e83b9b27-0a05-4750-9ef7-270cda65217b"))
-    val currentFacility = TestData.facility(UUID.fromString("af8e817c-8772-4c84-9f4f-1f331fa0b2a5"))
 
-    whenever(userSession.loggedInUserImmediate()) doReturn loggedInUser
-    whenever(facilityRepository.currentFacilityImmediate(loggedInUser)) doReturn currentFacility
+    whenever(repository.newestPrescriptionsForPatient(patientUuid)) doReturn Observable.never<List<PrescribedDrug>>()
 
     // when
     setupController()
     events.onNext(PatientSummaryUpdateDrugsClicked())
 
-    verify(ui).showUpdatePrescribedDrugsScreen(patientUuid, currentFacility)
-    verifyNoMoreInteractions(ui)
+    // then
+    verify(uiActions).showUpdatePrescribedDrugsScreen(patientUuid, currentFacility)
+    verifyNoMoreInteractions(ui, uiActions)
+
+    verify(repository).newestPrescriptionsForPatient(patientUuid)
+    verifyNoMoreInteractions(repository)
   }
 
   private fun setupController() {
-    controller = DrugSummaryUiController(patientUuid, repository, facilityRepository, userSession)
+    val effectHandler = DrugSummaryEffectHandler(
+        prescriptionRepository = repository,
+        currentFacility = Lazy { currentFacility },
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        uiActions = uiActions
+    )
+    val uiRenderer = DrugSummaryUiRenderer(ui)
 
-    controllerSubscription = events.compose(controller).subscribe { it.invoke(ui) }
+    testFixture = MobiusTestFixture(
+        events = events.ofType(),
+        defaultModel = DrugSummaryModel.create(patientUuid),
+        init = DrugSummaryInit(),
+        update = DrugSummaryUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
 
-    events.onNext(ScreenCreated())
+    testFixture.start()
   }
 }

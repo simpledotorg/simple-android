@@ -17,6 +17,7 @@
 - Migrated `OverdueScreen` to Mobius
 - Migrated `FacilitySelectionActivity` to Mobius
 - Migrated `FacilityChangeActivity` to Mobius
+- Migrated `DrugSummaryView` to Mobius
 - [In Progress: 3rd Aug 2020] Migrate `ForgotPinConfirmPinScreen` to Mobius
 
 ## On Demo

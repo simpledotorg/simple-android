@@ -2,6 +2,7 @@ package org.simple.clinic.summary.prescribeddrugs
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
@@ -12,13 +13,14 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.drugs_summary_view.view.*
 import org.simple.clinic.R
-import org.simple.clinic.bindUiToController
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.DRUGS_REQCODE_ALERT_FACILITY_CHANGE
@@ -42,7 +44,7 @@ import javax.inject.Named
 class DrugSummaryView(
     context: Context,
     attributeSet: AttributeSet
-) : CardView(context, attributeSet), DrugSummaryUi {
+) : CardView(context, attributeSet), DrugSummaryUi, DrugSummaryUiActions {
 
   @field:[Inject Named("full_date")]
   lateinit var fullDateFormatter: DateTimeFormatter
@@ -60,16 +62,52 @@ class DrugSummaryView(
   lateinit var activity: AppCompatActivity
 
   @Inject
-  lateinit var controllerFactory: DrugSummaryUiController.Factory
+  lateinit var effectHandlerFactory: DrugSummaryEffectHandler.Factory
 
   private val screenKey by unsafeLazy {
     screenRouter.key<PatientSummaryScreenKey>(this)
   }
 
   private val internalEvents = PublishSubject.create<DrugSummaryEvent>()
+  private val events by unsafeLazy {
+    internalEvents
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = DrugSummaryUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = DrugSummaryModel.create(patientUuid = screenKey.patientUuid),
+        init = DrugSummaryInit(),
+        update = DrugSummaryUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
 
   init {
     inflate(context, R.layout.drugs_summary_view, this)
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   override fun onFinishInflate() {
@@ -81,12 +119,6 @@ class DrugSummaryView(
     context.injector<DrugSummaryViewInjector>().inject(this)
 
     val screenDestroys = detaches().map { ScreenDestroyed() }
-    bindUiToController(
-        ui = this,
-        events = Observable.merge(screenCreates(), internalEvents),
-        controller = controllerFactory.create(screenKey.patientUuid),
-        screenDestroys = screenDestroys
-    )
     setupAlertResults(screenDestroys)
   }
 
@@ -100,8 +132,6 @@ class DrugSummaryView(
         .takeUntil(screenDestroys)
         .subscribe(screenRouter::push)
   }
-
-  private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
 
   override fun populatePrescribedDrugs(prescribedDrugs: List<PrescribedDrug>) {
     val alphabeticallySortedPrescribedDrugs = prescribedDrugs.sortedBy { it.name }

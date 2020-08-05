@@ -207,6 +207,7 @@ class HelpScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     val effectHandler = HelpScreenEffectHandler(
+        helpRepository = helpRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

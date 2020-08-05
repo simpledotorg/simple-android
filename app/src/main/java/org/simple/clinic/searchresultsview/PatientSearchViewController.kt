@@ -28,10 +28,7 @@ class PatientSearchViewController @Inject constructor(
         .compose(ReportAnalyticsEvents())
         .replay()
 
-    return Observable.mergeArray(
-        openPatientSummary(replayedEvents),
-        populateSearchResults(replayedEvents)
-    )
+    return populateSearchResults(replayedEvents)
   }
 
   private fun populateSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
@@ -54,10 +51,4 @@ class PatientSearchViewController @Inject constructor(
           }
         }
   }
-
-  private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<SearchResultClicked>()
-        .map { { ui: Ui -> ui.searchResultClicked(it) } }
-  }
-
 }

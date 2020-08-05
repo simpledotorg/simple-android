@@ -61,21 +61,6 @@ class PatientSearchViewControllerTest {
   }
 
   @Test
-  fun `when search result clicked then SearchResultClicked event should be emitted`() {
-    // given
-    val searchResult = TestData.patientSearchResult()
-    val searchResultClicked = SearchResultClicked(searchResult.uuid)
-
-    // when
-    setupController()
-    uiEvents.onNext(searchResultClicked)
-
-    // then
-    verify(ui).searchResultClicked(searchResultClicked)
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
   fun `when searching patients by name returns results, the results should be displayed`() {
     // given
     val searchCriteria = Name(patientName = patientName)

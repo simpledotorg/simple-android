@@ -9,6 +9,7 @@ class ScanSimpleIdUpdate : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimp
     return when (event) {
       ShowKeyboard -> dispatch(HideQrCodeScannerView)
       HideKeyboard -> dispatch(ShowQrCodeScannerView)
+      ShortCodeChanged -> dispatch(HideShortCodeValidationError)
     }
   }
 }

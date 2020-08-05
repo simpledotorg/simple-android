@@ -84,10 +84,6 @@ class ScanSimpleIdScreenController @Inject constructor(
   }
 
   private fun handleShortCodeSearch(events: Observable<UiEvent>): Observable<UiChange> {
-    val hideValidationErrors = events
-        .ofType<ShortCodeChanged>()
-        .map { { ui: Ui -> ui.hideShortCodeValidationError() } }
-
     val shortCodeInputs = events
         .ofType<ShortCodeSearched>()
         .map { it.shortCode }
@@ -106,7 +102,6 @@ class ScanSimpleIdScreenController @Inject constructor(
         .map { { ui: Ui -> ui.openPatientShortCodeSearch(it) } }
 
     return Observable.merge(
-        hideValidationErrors,
         showValidationErrors,
         openPatientSearchScreenChanges
     )

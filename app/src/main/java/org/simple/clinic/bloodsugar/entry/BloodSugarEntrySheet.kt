@@ -365,10 +365,14 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
 
   override fun showProgress() {
     progressLoader.visibleOrGone(isVisible = true)
+    bloodSugarReadingLayout.visibleOrGone(isVisible = false)
+    bloodSugarDateButton.visibleOrGone(isVisible = false)
   }
 
   override fun hideProgress() {
     progressLoader.visibleOrGone(isVisible = false)
+    bloodSugarReadingLayout.visibleOrGone(isVisible = true)
+    bloodSugarDateButton.visibleOrGone(isVisible = true)
   }
 
   override fun showRemoveButton() {

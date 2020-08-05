@@ -12,10 +12,12 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.patient_search_view.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -42,6 +44,16 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   private val externalEvents: Subject<UiEvent> = PublishSubject.create()
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenCreates(),
+            externalEvents
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -57,10 +69,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            screenCreates(),
-            externalEvents
-        ),
+        events = events,
         controller = controller,
         screenDestroys = screenDestroys
     )

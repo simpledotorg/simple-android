@@ -7,7 +7,6 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.help.HelpPullResult
 import org.simple.clinic.help.HelpRepository
-import org.simple.clinic.help.HelpScreenTryAgainClicked
 import org.simple.clinic.help.HelpSync
 import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.filterNotPresent
@@ -29,7 +28,6 @@ class HelpScreenController @Inject constructor(
 
     return Observable.mergeArray(
         toggleHelpView(replayedEvents),
-        showLoadingView(replayedEvents),
         syncHelp(replayedEvents)
     )
   }
@@ -50,12 +48,6 @@ class HelpScreenController @Inject constructor(
         .map { Ui::showNoHelpAvailable }
 
     return showHelp.mergeWith(showEmptyView)
-  }
-
-  private fun showLoadingView(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<HelpScreenTryAgainClicked>()
-        .map { { ui: Ui -> ui.showLoadingView() } }
   }
 
   private fun syncHelp(events: Observable<UiEvent>): Observable<UiChange> {

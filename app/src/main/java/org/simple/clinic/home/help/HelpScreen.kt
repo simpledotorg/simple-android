@@ -14,7 +14,6 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
-import org.simple.clinic.help.HelpScreenTryAgainClicked
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy

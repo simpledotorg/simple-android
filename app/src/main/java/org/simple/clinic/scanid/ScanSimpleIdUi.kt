@@ -7,6 +7,5 @@ interface ScanSimpleIdUi : ScanSimpleIdUiActions {
   fun openPatientSummary(patientUuid: UUID)
   fun openAddIdToPatientScreen(identifier: Identifier)
   fun showShortCodeValidationError(failure: ShortCodeValidationResult)
-  fun hideShortCodeValidationError()
   fun openPatientShortCodeSearch(validShortCode: String)
 }

@@ -20,5 +20,6 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<ScanSimpleIdEffect, ScanSimpleIdEvent>()
       .addAction(ShowQrCodeScannerView::class.java, uiActions::showQrCodeScannerView, schedulersProvider.ui())
       .addAction(HideQrCodeScannerView::class.java, uiActions::hideQrCodeScannerView, schedulersProvider.ui())
+      .addAction(HideShortCodeValidationError::class.java, uiActions::hideShortCodeValidationError, schedulersProvider.ui())
       .build()
 }

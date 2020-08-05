@@ -1,13 +1,17 @@
 package org.simple.clinic.home.help
 
-import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.help.HelpPullResult
@@ -16,41 +20,54 @@ import org.simple.clinic.help.HelpScreenTryAgainClicked
 import org.simple.clinic.help.HelpSync
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 
 class HelpScreenControllerTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  val uiEvents = PublishSubject.create<UiEvent>()
-  val screen = mock<HelpScreen>()
-  val helpRepository = mock<HelpRepository>()
-  val helpSync = mock<HelpSync>()
+  private val uiEvents = PublishSubject.create<UiEvent>()
+  private val ui = mock<HelpScreenUi>()
+  private val helpRepository = mock<HelpRepository>()
+  private val helpSync = mock<HelpSync>()
 
-  val controller = HelpScreenController(repository = helpRepository, sync = helpSync)
+  private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<HelpScreenModel, HelpScreenEvent, HelpScreenEffect>
 
-  @Before
-  fun setUp() {
-    uiEvents.compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
   fun `when a help file is emitted then update the screen`() {
+    // given
     val content = "Help"
 
     whenever(helpRepository.helpContentText()).thenReturn(Observable.just(content.toOptional()))
 
-    uiEvents.onNext(ScreenCreated())
+    // when
+    setupController()
 
-    verify(screen).showHelp(content)
+    // then
+    verify(ui).showHelp(content)
+    verifyNoMoreInteractions(ui)
+
+    verify(helpRepository).helpContentText()
+    verifyNoMoreInteractions(helpRepository)
+
+    verifyZeroInteractions(helpSync)
   }
 
   @Test
   fun `screen should be updated whenever the help file changes`() {
+    // given
     val please = "Please"
     val help = "Help"
 
@@ -59,55 +76,152 @@ class HelpScreenControllerTest {
         help.toOptional()
     ))
 
-    uiEvents.onNext(ScreenCreated())
+    // when
+    setupController()
 
-    val inorder = inOrder(screen)
-    inorder.verify(screen).showHelp(please)
-    inorder.verify(screen).showHelp(help)
+    // then
+    verify(ui).showHelp(please)
+    verify(ui).showHelp(help)
+    verifyNoMoreInteractions(ui)
+
+    verify(helpRepository).helpContentText()
+    verifyNoMoreInteractions(helpRepository)
+
+    verifyZeroInteractions(helpSync)
   }
 
   @Test
   fun `when the help file does not exist then screen should show no-help view`() {
+    // given
     whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
 
-    uiEvents.onNext(ScreenCreated())
+    // when
+    setupController()
 
-    verify(screen).showNoHelpAvailable()
+    // then
+    verify(ui).showNoHelpAvailable()
+    verifyNoMoreInteractions(ui)
+
+    verify(helpRepository).helpContentText()
+    verifyNoMoreInteractions(helpRepository)
+
+    verifyZeroInteractions(helpSync)
   }
 
   @Test
   fun `when try again is clicked, the loading view must be shown`() {
+    // given
+    whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
     whenever(helpSync.pullWithResult()).thenReturn(Single.never())
 
+    // when
+    setupController()
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
-    verify(screen).showLoadingView()
+    // then
+    verify(ui).showLoadingView()
+    verify(ui).showNoHelpAvailable()
+    verifyNoMoreInteractions(ui)
+
+    verify(helpRepository).helpContentText()
+    verifyNoMoreInteractions(helpRepository)
+
+    verify(helpSync).pullWithResult()
+    verifyNoMoreInteractions(helpSync)
   }
 
   @Test
   fun `when try again is clicked, help must be synced`() {
+    // given
+    whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
     whenever(helpSync.pullWithResult()).thenReturn(Single.never())
 
+    // when
+    setupController()
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
+    // then
+    verify(ui).showNoHelpAvailable()
+    verify(ui).showLoadingView()
+    verifyNoMoreInteractions(ui)
+
     verify(helpSync).pullWithResult()
+    verifyNoMoreInteractions(helpSync)
+
+    verify(helpRepository).helpContentText()
+    verifyNoMoreInteractions(helpRepository)
   }
 
   @Test
   fun `when the help sync fails with a network error, the network error message must be shown`() {
+    // given
+    whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
     whenever(helpSync.pullWithResult()).thenReturn(Single.just(HelpPullResult.NetworkError))
 
+    // when
+    setupController()
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
-    verify(screen).showNetworkErrorMessage()
+    // then
+    verify(ui).showNetworkErrorMessage()
+    verify(ui).showLoadingView()
+    verify(ui, times(2)).showNoHelpAvailable()
+    verifyNoMoreInteractions(ui)
+
+    verify(helpRepository).helpContentText()
+    verifyNoMoreInteractions(helpRepository)
+
+    verify(helpSync).pullWithResult()
+    verifyNoMoreInteractions(helpSync)
   }
 
   @Test
   fun `when the help sync fails with any error except network error, the unexpected error message must be shown`() {
+    // given
+    whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
     whenever(helpSync.pullWithResult()).thenReturn(Single.just(HelpPullResult.OtherError))
 
+    // when
+    setupController()
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
-    verify(screen).showUnexpectedErrorMessage()
+    // then
+    verify(ui).showUnexpectedErrorMessage()
+    verify(ui, times(2)).showNoHelpAvailable()
+    verify(ui).showLoadingView()
+    verifyNoMoreInteractions(ui)
+
+    verify(helpRepository).helpContentText()
+    verifyNoMoreInteractions(helpRepository)
+
+    verify(helpSync).pullWithResult()
+    verifyNoMoreInteractions(helpSync)
+  }
+
+  private fun setupController() {
+    val controller = HelpScreenController(repository = helpRepository, sync = helpSync)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(ui) }
+
+    uiEvents.onNext(ScreenCreated())
+
+    val effectHandler = HelpScreenEffectHandler(
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+    val uiRenderer = HelpScreenUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = HelpScreenModel.create(),
+        init = HelpScreenInit(),
+        update = HelpScreenUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
+
+    testFixture.start()
   }
 }

@@ -5,15 +5,12 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.InvalidPassportCode
 import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.ValidPassportCode
-import org.simple.clinic.scanid.ShortCodeValidationResult.Failure
-import org.simple.clinic.scanid.ShortCodeValidationResult.Success
 import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
@@ -32,10 +29,7 @@ class ScanSimpleIdScreenController @Inject constructor(
         .compose(mergeWithScannedBpPassportCodes())
         .replay()
 
-    return Observable.merge(
-        handleScannedBpPassportCodes(replayedEvents),
-        handleShortCodeSearch(replayedEvents)
-    )
+    return handleScannedBpPassportCodes(replayedEvents)
   }
 
   private fun mergeWithScannedBpPassportCodes() = ObservableTransformer<UiEvent, UiEvent> { events ->
@@ -80,30 +74,6 @@ class ScanSimpleIdScreenController @Inject constructor(
     return Observable.merge(
         openPatientSummary,
         openAddIdToPatientSearchScreen
-    )
-  }
-
-  private fun handleShortCodeSearch(events: Observable<UiEvent>): Observable<UiChange> {
-    val shortCodeInputs = events
-        .ofType<ShortCodeSearched>()
-        .map { it.shortCode }
-        .share()
-
-    val shortCodeValidationResults = shortCodeInputs
-        .map { it.validate() }
-
-    val showValidationErrors = shortCodeValidationResults
-        .filter { it is Failure }
-        .map { { ui: Ui -> ui.showShortCodeValidationError(it) } }
-
-    val openPatientSearchScreenChanges = shortCodeValidationResults
-        .filter { it is Success }
-        .withLatestFrom(shortCodeInputs) { _, shortCodeInput -> shortCodeInput.shortCodeText }
-        .map { { ui: Ui -> ui.openPatientShortCodeSearch(it) } }
-
-    return Observable.merge(
-        showValidationErrors,
-        openPatientSearchScreenChanges
     )
   }
 }

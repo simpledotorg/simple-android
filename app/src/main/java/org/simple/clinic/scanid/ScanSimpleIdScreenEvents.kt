@@ -19,8 +19,3 @@ sealed class ScanSimpleIdScreenPassportCodeScanned : ScanSimpleIdScreenEvent() {
     override val analyticsName = "Scan Simple Card:Invalid BP passport code scanned"
   }
 }
-
-data class ShortCodeSearched(val shortCode: ShortCodeInput) : ScanSimpleIdScreenEvent() {
-  override val analyticsName: String
-    get() = "Scan Simple Card:Short code searched"
-}

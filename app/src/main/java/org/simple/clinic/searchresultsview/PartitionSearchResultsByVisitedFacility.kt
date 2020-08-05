@@ -21,11 +21,7 @@ class PartitionSearchResultsByVisitedFacility(
 
     val patientToFacilityUuidStream = searchResults
         .map { patients -> patients.map { it.uuid } }
-        .switchMap {
-          bloodPressureDao
-              .patientToFacilityIds(it)
-              .toObservable()
-        }
+        .map(bloodPressureDao::patientToFacilityIds)
 
     return Observables.combineLatest(searchResults, patientToFacilityUuidStream, facilityStream)
         .map { (patients, patientToFacilities, facility) ->

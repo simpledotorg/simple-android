@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -104,7 +103,7 @@ class SearchResultsLogicTest {
     )
 
     whenever(bloodPressureDao.patientToFacilityIds(patientUuids))
-        .doReturn(Flowable.just(patientAndFacilityIdsToReturn))
+        .doReturn(patientAndFacilityIdsToReturn)
     whenever(patientRepository.search(searchCriteria))
         .doReturn(Observable.just(allSearchResults))
 
@@ -164,7 +163,7 @@ class SearchResultsLogicTest {
     )
 
     whenever(bloodPressureDao.patientToFacilityIds(patientUuids))
-        .doReturn(Flowable.just(patientAndFacilityIdsToReturn))
+        .doReturn(patientAndFacilityIdsToReturn)
     whenever(patientRepository.search(searchCriteria))
         .doReturn(Observable.just(allSearchResults))
 

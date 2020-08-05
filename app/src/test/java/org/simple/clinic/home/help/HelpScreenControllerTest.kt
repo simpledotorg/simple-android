@@ -42,12 +42,15 @@ class HelpScreenControllerTest {
 
   @Test
   fun `when a help file is emitted then update the screen`() {
+    // given
     val content = "Help"
 
     whenever(helpRepository.helpContentText()).thenReturn(Observable.just(content.toOptional()))
 
+    // when
     setupController()
 
+    // then
     verify(screen).showHelp(content)
     verifyNoMoreInteractions(screen)
 
@@ -59,6 +62,7 @@ class HelpScreenControllerTest {
 
   @Test
   fun `screen should be updated whenever the help file changes`() {
+    // given
     val please = "Please"
     val help = "Help"
 
@@ -67,8 +71,10 @@ class HelpScreenControllerTest {
         help.toOptional()
     ))
 
+    // when
     setupController()
 
+    // then
     verify(screen).showHelp(please)
     verify(screen).showHelp(help)
     verifyNoMoreInteractions(screen)
@@ -81,10 +87,13 @@ class HelpScreenControllerTest {
 
   @Test
   fun `when the help file does not exist then screen should show no-help view`() {
+    // given
     whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
 
+    // when
     setupController()
 
+    // then
     verify(screen).showNoHelpAvailable()
     verifyNoMoreInteractions(screen)
 
@@ -96,12 +105,15 @@ class HelpScreenControllerTest {
 
   @Test
   fun `when try again is clicked, the loading view must be shown`() {
+    // given
     whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
     whenever(helpSync.pullWithResult()).thenReturn(Single.never())
 
+    // when
     setupController()
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
+    // then
     verify(screen).showLoadingView()
     verify(screen).showNoHelpAvailable()
     verifyNoMoreInteractions(screen)
@@ -115,12 +127,15 @@ class HelpScreenControllerTest {
 
   @Test
   fun `when try again is clicked, help must be synced`() {
+    // given
     whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
     whenever(helpSync.pullWithResult()).thenReturn(Single.never())
 
+    // when
     setupController()
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
+    // then
     verify(screen).showNoHelpAvailable()
     verify(screen).showLoadingView()
     verifyNoMoreInteractions(screen)
@@ -134,12 +149,15 @@ class HelpScreenControllerTest {
 
   @Test
   fun `when the help sync fails with a network error, the network error message must be shown`() {
+    // given
     whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
     whenever(helpSync.pullWithResult()).thenReturn(Single.just(HelpPullResult.NetworkError))
 
+    // when
     setupController()
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
+    // then
     verify(screen).showNetworkErrorMessage()
     verify(screen).showLoadingView()
     verify(screen, times(2)).showNoHelpAvailable()
@@ -154,12 +172,15 @@ class HelpScreenControllerTest {
 
   @Test
   fun `when the help sync fails with any error except network error, the unexpected error message must be shown`() {
+    // given
     whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
     whenever(helpSync.pullWithResult()).thenReturn(Single.just(HelpPullResult.OtherError))
 
+    // when
     setupController()
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
+    // then
     verify(screen).showUnexpectedErrorMessage()
     verify(screen, times(2)).showNoHelpAvailable()
     verify(screen).showLoadingView()

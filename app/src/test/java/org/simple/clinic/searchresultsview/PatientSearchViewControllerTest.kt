@@ -66,36 +66,45 @@ class PatientSearchViewControllerTest {
 
   @Test
   fun `when search result clicked then SearchResultClicked event should be emitted`() {
+    // given
     val searchResult = TestData.patientSearchResult()
     val searchResultClicked = SearchResultClicked(searchResult.uuid)
 
+    // when
     setupController()
     uiEvents.onNext(searchResultClicked)
 
+    // then
     verify(ui).searchResultClicked(searchResultClicked)
     verifyNoMoreInteractions(ui)
   }
 
   @Test
   fun `when register new patient clicked while searching by name, then RegisterNewPatient event should be emitted`() {
+    // given
     val criteria = Name(patientName = patientName)
 
+    // when
     setupController()
     uiEvents.onNext(SearchPatientWithCriteria(criteria))
     uiEvents.onNext(RegisterNewPatientClicked)
 
+    // then
     verify(ui).registerNewPatient(RegisterNewPatient(criteria))
     verifyNoMoreInteractions(ui)
   }
 
   @Test
   fun `when register new patient clicked while searching by phone, then RegisterNewPatient event should be emitted`() {
+    // given
     val criteria = PhoneNumber(phoneNumber = phoneNumber)
 
+    // when
     setupController()
     uiEvents.onNext(SearchPatientWithCriteria(criteria))
     uiEvents.onNext(RegisterNewPatientClicked)
 
+    // then
     verify(ui).registerNewPatient(RegisterNewPatient(criteria))
     verifyNoMoreInteractions(ui)
   }

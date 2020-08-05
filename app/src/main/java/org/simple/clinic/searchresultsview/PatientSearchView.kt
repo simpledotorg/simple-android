@@ -5,7 +5,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
@@ -53,7 +54,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
             downstreamUiEvents
         ),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
   }
 
@@ -66,8 +67,8 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
       Observable.just(SearchResultsViewCreated)
 
   private fun newPatientClicks() =
-      RxView
-          .clicks(newPatientButton)
+      newPatientButton
+          .clicks()
           .map { RegisterNewPatientClicked }
 
   override fun updateSearchResults(

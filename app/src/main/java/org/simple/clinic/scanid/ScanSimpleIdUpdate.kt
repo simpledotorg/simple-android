@@ -1,6 +1,7 @@
 package org.simple.clinic.scanid
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 
@@ -10,6 +11,7 @@ class ScanSimpleIdUpdate : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimp
       ShowKeyboard -> dispatch(HideQrCodeScannerView)
       HideKeyboard -> dispatch(ShowQrCodeScannerView)
       ShortCodeChanged -> dispatch(HideShortCodeValidationError)
+      is ShortCodeValidated -> noChange()
     }
   }
 }

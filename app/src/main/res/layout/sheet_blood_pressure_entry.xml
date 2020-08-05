@@ -90,7 +90,14 @@
           android:visibility="gone" />
       </RelativeLayout>
 
+      <Space
+        android:id="@+id/bloodPressureEntrySpace"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="@dimen/spacing_96" />
+
       <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bloodPressureEntryLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_optimizationLevel="direct|barrier">

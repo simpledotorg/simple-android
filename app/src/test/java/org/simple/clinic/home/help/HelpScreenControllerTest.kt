@@ -210,6 +210,7 @@ class HelpScreenControllerTest {
 
     val effectHandler = HelpScreenEffectHandler(
         helpRepository = helpRepository,
+        helpSync = helpSync,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

@@ -11,6 +11,7 @@ class HelpScreenUpdate : Update<HelpScreenModel, HelpScreenEvent, HelpScreenEffe
     return when (event) {
       HelpScreenTryAgainClicked -> dispatch(ShowLoadingView)
       is HelpContentLoaded -> next(model.helpContentLoaded(event.helpContent.toNullable()))
+      is HelpSyncPullResult -> next(model.helpPullResultUpdated(event.result))
     }
   }
 }

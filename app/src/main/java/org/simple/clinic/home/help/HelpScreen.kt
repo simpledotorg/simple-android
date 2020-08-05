@@ -9,10 +9,12 @@ import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_help.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.help.HelpScreenTryAgainClicked
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.visibleOrGone
@@ -25,6 +27,13 @@ class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, 
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  private val events by unsafeLazy {
+    Observable
+        .merge(screenCreates(), tryAgainClicks())
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
 
   @SuppressLint("SetJavaScriptEnabled")
   override fun onFinishInflate() {
@@ -42,7 +51,7 @@ class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, 
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(screenCreates(), tryAgainClicks()),
+        events = events,
         controller = controller,
         screenDestroys = detaches().map { ScreenDestroyed() }
     )

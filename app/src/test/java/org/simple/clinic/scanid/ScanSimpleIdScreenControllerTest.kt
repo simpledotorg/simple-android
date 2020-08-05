@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import com.spotify.mobius.Init
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -33,12 +32,10 @@ class ScanSimpleIdScreenControllerTest {
   private val ui = mock<ScanSimpleIdUi>()
   private val patientRepository = mock<PatientRepository>()
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimpleIdEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -187,12 +184,6 @@ class ScanSimpleIdScreenControllerTest {
   }
 
   private fun setupController() {
-    val controller = ScanSimpleIdScreenController(patientRepository)
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
     val effectHandler = ScanSimpleIdEffectHandler(
         patientRepository = patientRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),

@@ -2,11 +2,11 @@ package org.simple.clinic.searchresultsview
 
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
-import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import javax.inject.Inject
 
@@ -25,20 +25,28 @@ class SearchResultsEffectHandler @Inject constructor(
   }
 
   private fun searchForPatients(): ObservableTransformer<SearchWithCriteria, SearchResultsEvent> {
-    val currentFacilityStream = Observable
-        .fromCallable { currentFacility.get() }
-        .subscribeOn(schedulers.io())
-        .take(1)
-
     return ObservableTransformer { effects ->
       effects
           .switchMap { effect ->
             patientRepository
                 .search(effect.searchCriteria)
                 .subscribeOn(schedulers.io())
-                .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, currentFacilityStream))
+                .map { searchResults -> partitionSearchResultsByFacility(searchResults, currentFacility.get()) }
                 .map(::SearchResultsLoaded)
           }
     }
+  }
+
+  private fun partitionSearchResultsByFacility(
+      searchResults: List<PatientSearchResult>,
+      facility: Facility
+  ): PatientSearchResults {
+    val patientIds = searchResults.map { it.uuid }
+
+    return PatientSearchResults.from(
+        searchResults = searchResults,
+        patientToFacilityIds = bloodPressureDao.patientToFacilityIds(patientIds),
+        currentFacility = facility
+    )
   }
 }

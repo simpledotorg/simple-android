@@ -1,20 +1,17 @@
 package org.simple.clinic.scanid
 
-import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
-import org.junit.Before
+import org.junit.After
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.simple.clinic.TestData
-import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -22,70 +19,75 @@ import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.InvalidPas
 import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.ValidPassportCode
 import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.NotEqualToRequiredLength
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-@RunWith(JUnitParamsRunner::class)
 class ScanSimpleIdScreenControllerTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val screen = mock<ScanSimpleIdScreen>()
   private val patientRepository = mock<PatientRepository>()
-  private val controller = ScanSimpleIdScreenController(patientRepository)
 
-  @Before
-  fun setUp() {
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  private lateinit var controllerSubscription: Disposable
+
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
-  @Parameters(method = "params for scanning simple passport qr code")
-  fun `when bp passport qr code is scanned and it is valid then appropriate screen should open`(
-      validScannedCode: UUID,
-      foundPatient: Optional<Patient>
-  ) {
-    whenever(patientRepository.findPatientWithBusinessId(validScannedCode.toString())).thenReturn(Observable.just(foundPatient))
-    uiEvents.onNext(ValidPassportCode(validScannedCode))
+  fun `when bp passport qr code is scanned and is assigned to the patient then open patient summary`() {
+    val scannedCode = UUID.fromString("96d93a33-db68-4435-8c2b-372994a6a325")
+    val patientUuid = UUID.fromString("2cdd0e63-0896-48ca-b066-364da2b27337")
+    val patient = TestData.patient(uuid = patientUuid).toOptional()
 
-    when (foundPatient) {
-      is Just -> verify(screen).openPatientSummary(foundPatient.value.uuid)
-      is None -> {
-        val identifier = Identifier(value = validScannedCode.toString(), type = BpPassport)
-        verify(screen).openAddIdToPatientScreen(identifier)
-      }
-    }
+    whenever(patientRepository.findPatientWithBusinessId(scannedCode.toString())).thenReturn(Observable.just(patient))
+
+    // when
+    setupController()
+    uiEvents.onNext(ValidPassportCode(scannedCode))
+
+    // then
+    verify(screen).openPatientSummary(patientUuid)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
-  @Parameters(method = "params for scanning valid uuids")
-  fun `the qr code must be sent only if it is a valid uuid`(
-      scannedTexts: List<String>,
-      expectedScannedCode: UUID?
-  ) {
-    whenever(patientRepository.findPatientWithBusinessId(any())).thenReturn(Observable.just(None()))
+  fun `when bp passport qr code is scanned and it is not assigned to patient then show add id to patient screen`() {
+    // given
+    val scannedCode = UUID.fromString("96d93a33-db68-4435-8c2b-372994a6a325")
 
-    scannedTexts.forEach { scannedText ->
-      uiEvents.onNext(ScanSimpleIdScreenQrCodeScanned(scannedText))
-    }
+    whenever(patientRepository.findPatientWithBusinessId(scannedCode.toString())) doReturn Observable.just(Optional.empty())
 
-    if (expectedScannedCode == null) {
-      verify(screen, never()).openPatientSummary(any())
-      verify(screen, never()).openAddIdToPatientScreen(any())
-    } else {
-      val identifier = Identifier(expectedScannedCode.toString(), BpPassport)
-      verify(screen).openAddIdToPatientScreen(identifier)
-    }
+    // when
+    setupController()
+    uiEvents.onNext(ValidPassportCode(scannedCode))
+
+    // then
+    val identifier = Identifier(value = scannedCode.toString(), type = BpPassport)
+    verify(screen).openAddIdToPatientScreen(identifier)
+    verifyNoMoreInteractions(screen)
+  }
+
+  @Test
+  fun `if scanned qr code is not a valid uuid then do nothing`() {
+    // given
+    val scannedCode = "96d93a33-db68"
+
+    // when
+    setupController()
+    uiEvents.onNext(ScanSimpleIdScreenQrCodeScanned(scannedCode))
+
+    // then
+    verifyZeroInteractions(screen)
   }
 
   @Test
   fun `when the keyboard is up, then hide the QR code scanner view`() {
     // when
+    setupController()
     uiEvents.onNext(ShowKeyboard)
 
     // then
@@ -96,6 +98,7 @@ class ScanSimpleIdScreenControllerTest {
   @Test
   fun `when the keyboard is dismissed, then show the QR code scanner view`() {
     // when
+    setupController()
     uiEvents.onNext(HideKeyboard)
 
     // then
@@ -106,6 +109,7 @@ class ScanSimpleIdScreenControllerTest {
   @Test
   fun `when the keyboard is up, then don't process invalid QR code scan events`() {
     // when
+    setupController()
     with(uiEvents) {
       onNext(ShowKeyboard)
       onNext(InvalidPassportCode)
@@ -123,6 +127,7 @@ class ScanSimpleIdScreenControllerTest {
     val shortCodeInput = ShortCodeInput(shortCodeText)
 
     //when
+    setupController()
     uiEvents.onNext(ShortCodeSearched(shortCodeInput))
 
     //then
@@ -136,13 +141,13 @@ class ScanSimpleIdScreenControllerTest {
     val invalidShortCode = "3456"
     val invalidShortCodeInput = ShortCodeInput(invalidShortCode)
 
-    uiEvents.onNext(ShortCodeSearched(invalidShortCodeInput))
-    verify(screen).showShortCodeValidationError(NotEqualToRequiredLength)
-
     //when
+    setupController()
+    uiEvents.onNext(ShortCodeSearched(invalidShortCodeInput))
     uiEvents.onNext(ShortCodeChanged)
 
     //then
+    verify(screen).showShortCodeValidationError(NotEqualToRequiredLength)
     verify(screen).hideShortCodeValidationError()
     verifyNoMoreInteractions(screen)
   }
@@ -154,6 +159,7 @@ class ScanSimpleIdScreenControllerTest {
     val validShortCodeInput = ShortCodeInput(validShortCode)
 
     // when
+    setupController()
     uiEvents.onNext(ShortCodeSearched(validShortCodeInput))
 
     // then
@@ -167,6 +173,7 @@ class ScanSimpleIdScreenControllerTest {
     val emptyShortCodeInput = ShortCodeInput("")
 
     //when
+    setupController()
     uiEvents.onNext(ShortCodeSearched(emptyShortCodeInput))
 
     //then
@@ -174,40 +181,11 @@ class ScanSimpleIdScreenControllerTest {
     verifyNoMoreInteractions(screen)
   }
 
-  @Suppress("Unused")
-  private fun `params for scanning simple passport qr code`(): List<List<Any>> {
-    fun testCase(patient: Optional<Patient>): List<Any> {
-      return listOf(UUID.randomUUID(), patient)
-    }
+  private fun setupController() {
+    val controller = ScanSimpleIdScreenController(patientRepository)
 
-    return listOf(
-        testCase(None()),
-        testCase(TestData.patient().toOptional())
-    )
-  }
-
-  @Suppress("Unused")
-  private fun `params for scanning valid uuids`(): List<List<Any?>> {
-    fun testCase(scannedTexts: List<String>, expectedUuid: UUID?): List<Any?> {
-      return listOf(scannedTexts, expectedUuid)
-    }
-
-    return listOf(
-        testCase(emptyList(), null),
-        testCase(listOf("a"), null),
-        testCase(listOf("a", "b2", "c5123"), null),
-        testCase(
-            listOf("ecf08c6a-2f7e-4163-a6c7-c72a5703422a"),
-            UUID.fromString("ecf08c6a-2f7e-4163-a6c7-c72a5703422a")),
-        testCase(
-            listOf("a2", "ecf08c6a-2f7e-4163-a6c7-c72a5703422a"),
-            UUID.fromString("ecf08c6a-2f7e-4163-a6c7-c72a5703422a")),
-        testCase(
-            listOf("a2", "ecf08c6a-2f7e-4163-a6c7-c72a5703422a", "b5"),
-            UUID.fromString("ecf08c6a-2f7e-4163-a6c7-c72a5703422a")),
-        testCase(
-            listOf("a2", "d7b0cf0b-8467-4969-8f17-f98f48badb5a", "ecf08c6a-2f7e-4163-a6c7-c72a5703422a"),
-            UUID.fromString("d7b0cf0b-8467-4969-8f17-f98f48badb5a"))
-    )
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

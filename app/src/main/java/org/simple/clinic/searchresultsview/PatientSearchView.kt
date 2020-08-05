@@ -14,7 +14,7 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.patient_search_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -41,7 +41,8 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
     setupScreen()
 
     bindUiToController(
@@ -107,5 +108,9 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   override fun registerNewPatient(registerNewPatientEvent: RegisterNewPatient) {
     upstreamUiEvents.onNext(registerNewPatientEvent)
+  }
+
+  interface Injector {
+    fun inject(target: PatientSearchView)
   }
 }

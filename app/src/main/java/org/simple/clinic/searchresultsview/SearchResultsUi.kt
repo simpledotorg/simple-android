@@ -1,5 +1,5 @@
 package org.simple.clinic.searchresultsview
 
-interface PatientSearchUi {
+interface SearchResultsUi {
   fun updateSearchResults(results: PatientSearchResults)
 }

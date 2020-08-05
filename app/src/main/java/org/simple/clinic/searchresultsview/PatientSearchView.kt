@@ -26,7 +26,7 @@ import javax.inject.Inject
 private typealias RegisterNewPatientClicked = () -> Unit
 private typealias SearchResultClicked = (UUID) -> Unit
 
-class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSearchUi {
+class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), SearchResultsUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

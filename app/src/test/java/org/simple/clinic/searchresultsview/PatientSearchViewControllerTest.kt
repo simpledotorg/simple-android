@@ -30,7 +30,7 @@ class PatientSearchViewControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val ui = mock<PatientSearchUi>()
+  private val ui = mock<SearchResultsUi>()
   private val patientRepository = mock<PatientRepository>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()

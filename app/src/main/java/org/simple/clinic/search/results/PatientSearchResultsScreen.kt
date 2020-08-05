@@ -23,7 +23,6 @@ import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.searchresultsview.RegisterNewPatient
 import org.simple.clinic.searchresultsview.SearchResultClicked
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -131,10 +130,11 @@ class PatientSearchResultsScreen(
   }
 
   private fun registerNewPatientClicks(): Observable<UiEvent> {
-    return searchResultsView
-        .upstreamUiEvents
-        .ofType<RegisterNewPatient>()
-        .map { PatientSearchResultRegisterNewPatient(it.criteria) }
+    return Observable.create { emitter ->
+      emitter.setCancellable { searchResultsView.registerNewPatientClicked = null }
+
+      searchResultsView.registerNewPatientClicked = { emitter.onNext(PatientSearchResultRegisterNewPatient(screenKey.criteria)) }
+    }
   }
 
   private fun setupScreen() {

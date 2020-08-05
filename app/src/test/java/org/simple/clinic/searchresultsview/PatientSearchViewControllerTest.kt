@@ -76,36 +76,6 @@ class PatientSearchViewControllerTest {
   }
 
   @Test
-  fun `when register new patient clicked while searching by name, then RegisterNewPatient event should be emitted`() {
-    // given
-    val criteria = Name(patientName = patientName)
-
-    // when
-    setupController()
-    uiEvents.onNext(SearchPatientWithCriteria(criteria))
-    uiEvents.onNext(RegisterNewPatientClicked)
-
-    // then
-    verify(ui).registerNewPatient(RegisterNewPatient(criteria))
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when register new patient clicked while searching by phone, then RegisterNewPatient event should be emitted`() {
-    // given
-    val criteria = PhoneNumber(phoneNumber = phoneNumber)
-
-    // when
-    setupController()
-    uiEvents.onNext(SearchPatientWithCriteria(criteria))
-    uiEvents.onNext(RegisterNewPatientClicked)
-
-    // then
-    verify(ui).registerNewPatient(RegisterNewPatient(criteria))
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
   fun `when searching patients by name returns results, the results should be displayed`() {
     // given
     val searchCriteria = Name(patientName = patientName)

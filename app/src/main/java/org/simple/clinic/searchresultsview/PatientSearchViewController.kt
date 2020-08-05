@@ -4,7 +4,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -31,7 +30,6 @@ class PatientSearchViewController @Inject constructor(
 
     return Observable.mergeArray(
         openPatientSummary(replayedEvents),
-        createNewPatient(replayedEvents),
         populateSearchResults(replayedEvents)
     )
   }
@@ -62,15 +60,4 @@ class PatientSearchViewController @Inject constructor(
         .map { { ui: Ui -> ui.searchResultClicked(it) } }
   }
 
-  private fun createNewPatient(events: Observable<UiEvent>): Observable<UiChange> {
-    val searchPatientWithCriteriaStream = events
-        .ofType<SearchPatientWithCriteria>()
-        .map { it.criteria }
-
-    return events.ofType<RegisterNewPatientClicked>()
-        .withLatestFrom(searchPatientWithCriteriaStream)
-        .map { (_, patientSearchCriteria) ->
-          { ui: Ui -> ui.registerNewPatient(RegisterNewPatient(patientSearchCriteria)) }
-        }
-  }
 }

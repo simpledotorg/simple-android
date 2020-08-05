@@ -14,14 +14,6 @@ data class SearchResultClicked(val patientUuid: UUID) : UiEvent {
   override val analyticsName = "Search Results:Search Result Clicked"
 }
 
-object RegisterNewPatientClicked : UiEvent {
-  override val analyticsName = "Search Results:Register New Patient Clicked"
-}
-
-data class RegisterNewPatient(val criteria: PatientSearchCriteria) : UiEvent {
-  override val analyticsName = "Search Results:Register New Patient"
-}
-
 data class SearchPatientWithCriteria(val criteria: PatientSearchCriteria) : UiEvent {
 
   override val analyticsName: String = when (criteria) {

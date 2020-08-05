@@ -5,7 +5,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -23,6 +22,8 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
+private typealias RegisterNewPatientClicked = () -> Unit
+
 class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSearchUi {
 
   @Inject
@@ -32,6 +33,8 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
   lateinit var controller: PatientSearchViewController
 
   val upstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
+
+  var registerNewPatientClicked: RegisterNewPatientClicked? = null
 
   private val adapter = ItemAdapter(SearchResultsItemType.DiffCallback())
 
@@ -52,7 +55,6 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
         ui = this,
         events = Observable.merge(
             screenCreates(),
-            newPatientClicks(),
             searchResultClicks(),
             externalEvents
         ),
@@ -68,15 +70,16 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
   private fun setupScreen() {
     resultsRecyclerView.layoutManager = LinearLayoutManager(context)
     resultsRecyclerView.adapter = adapter
+
+    setupNewPatientClicks()
   }
 
   private fun screenCreates(): Observable<UiEvent> =
       Observable.just(SearchResultsViewCreated)
 
-  private fun newPatientClicks() =
-      newPatientButton
-          .clicks()
-          .map { RegisterNewPatientClicked }
+  private fun setupNewPatientClicks() {
+    newPatientButton.setOnClickListener { registerNewPatientClicked?.invoke() }
+  }
 
   private fun searchResultClicks(): Observable<UiEvent> {
     return adapter
@@ -114,10 +117,6 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
       visible -> R.string.patientsearchresults_register_patient_for_empty_state
       else -> R.string.patientsearchresults_register_patient
     })
-  }
-
-  override fun registerNewPatient(registerNewPatientEvent: RegisterNewPatient) {
-    upstreamUiEvents.onNext(registerNewPatientEvent)
   }
 
   interface Injector {

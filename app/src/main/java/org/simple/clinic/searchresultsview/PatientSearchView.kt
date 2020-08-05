@@ -14,7 +14,6 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.patient_search_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientSearchCriteria
@@ -36,9 +35,6 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: PatientSearchViewController
-
-  @Inject
   lateinit var effectHandler: SearchResultsEffectHandler
 
   var registerNewPatientClicked: RegisterNewPatientClicked? = null
@@ -50,13 +46,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
   private val externalEvents: Subject<UiEvent> = PublishSubject.create()
 
   private val events by unsafeLazy {
-    Observable
-        .merge(
-            screenCreates(),
-            externalEvents
-        )
-        .compose(ReportAnalyticsEvents())
-        .share()
+    externalEvents.compose(ReportAnalyticsEvents())
   }
 
   private val delegate by unsafeLazy {
@@ -81,16 +71,9 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
     }
 
     context.injector<Injector>().inject(this)
+
     val screenDestroys = detaches().map { ScreenDestroyed() }
-
     setupScreen(screenDestroys)
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = screenDestroys
-    )
   }
 
   override fun onAttachedToWindow() {
@@ -122,9 +105,6 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
     setupNewPatientClicks()
     setupSearchResultClicks(screenDestroys)
   }
-
-  private fun screenCreates(): Observable<UiEvent> =
-      Observable.just(SearchResultsViewCreated)
 
   private fun setupNewPatientClicks() {
     newPatientButton.setOnClickListener { registerNewPatientClicked?.invoke() }

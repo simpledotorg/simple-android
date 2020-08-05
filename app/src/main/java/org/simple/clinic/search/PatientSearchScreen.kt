@@ -1,6 +1,7 @@
 package org.simple.clinic.search
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -14,11 +15,13 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_patient_search.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
@@ -34,7 +37,10 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class PatientSearchScreen(
+    context: Context,
+    attrs: AttributeSet
+) : RelativeLayout(context, attrs), PatientSearchUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -48,12 +54,39 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   @Inject
   lateinit var utcClock: UtcClock
 
+  @Inject
+  lateinit var effectHandlerFactory: PatientSearchEffectHandler.Factory
+
   private val allPatientsInFacility by unsafeLazy {
     allPatientsInFacilityView as AllPatientsInFacilityView
   }
 
   private val screenKey by unsafeLazy {
     screenRouter.key<PatientSearchScreenKey>(this)
+  }
+
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            searchTextChanges(),
+            searchClicks(),
+            patientClickEvents()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = PatientSearchUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = PatientSearchModel.create(),
+        update = PatientSearchUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = PatientSearchInit(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   override fun onFinishInflate() {
@@ -73,14 +106,28 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            searchTextChanges(),
-            searchClicks(),
-            patientClickEvents()
-        ),
+        events = events,
         controller = controllerFactory.create(screenKey.additionalIdentifier),
         screenDestroys = screenDestroys
     )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun searchTextChanges(): Observable<UiEvent> {
@@ -120,17 +167,17 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .subscribe { hideKeyboard() }
   }
 
-  fun openSearchResultsScreen(criteria: PatientSearchCriteria) {
+  override fun openSearchResultsScreen(criteria: PatientSearchCriteria) {
     screenRouter.push(PatientSearchResultsScreenKey(criteria))
   }
 
-  fun setEmptyTextFieldErrorVisible(visible: Boolean) {
+  override fun setEmptyTextFieldErrorVisible(visible: Boolean) {
     searchQueryTextInputLayout.error = if (visible) {
       resources.getString(R.string.patientsearch_error_empty_fullname)
     } else null
   }
 
-  fun openPatientSummary(patientUuid: UUID) {
+  override fun openPatientSummary(patientUuid: UUID) {
     screenRouter.push(PatientSummaryScreenKey(
         patientUuid = patientUuid,
         intention = OpenIntention.ViewExistingPatient,
@@ -138,19 +185,19 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     ))
   }
 
-  fun showAllPatientsInFacility() {
+  override fun showAllPatientsInFacility() {
     allPatientsInFacility.visibility = View.VISIBLE
   }
 
-  fun hideAllPatientsInFacility() {
+  override fun hideAllPatientsInFacility() {
     allPatientsInFacility.visibility = View.GONE
   }
 
-  fun showSearchButton() {
+  override fun showSearchButton() {
     searchButtonFrame.visibility = View.VISIBLE
   }
 
-  fun hideSearchButton() {
+  override fun hideSearchButton() {
     searchButtonFrame.visibility = View.GONE
   }
 

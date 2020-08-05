@@ -8,9 +8,6 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.help.HelpPullResult
 import org.simple.clinic.help.HelpRepository
 import org.simple.clinic.help.HelpSync
-import org.simple.clinic.util.extractIfPresent
-import org.simple.clinic.util.filterNotPresent
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -27,27 +24,8 @@ class HelpScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        toggleHelpView(replayedEvents),
         syncHelp(replayedEvents)
     )
-  }
-
-  private fun toggleHelpView(events: Observable<UiEvent>): Observable<UiChange> {
-    val helpContentStream = events
-        .ofType<ScreenCreated>()
-        .flatMap { repository.helpContentText() }
-        .replay()
-        .refCount()
-
-    val showHelp = helpContentStream
-        .extractIfPresent()
-        .map { helpContent -> { ui: Ui -> ui.showHelp(helpContent) } }
-
-    val showEmptyView = helpContentStream
-        .filterNotPresent()
-        .map { Ui::showNoHelpAvailable }
-
-    return showHelp.mergeWith(showEmptyView)
   }
 
   private fun syncHelp(events: Observable<UiEvent>): Observable<UiChange> {

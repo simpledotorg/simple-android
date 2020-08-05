@@ -1,5 +1,6 @@
 package org.simple.clinic.home.help
 
+import org.simple.clinic.help.HelpPullResult
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.UiEvent
 
@@ -10,3 +11,5 @@ object HelpScreenTryAgainClicked : HelpScreenEvent() {
 }
 
 data class HelpContentLoaded(val helpContent: Optional<String>) : HelpScreenEvent()
+
+data class HelpSyncPullResult(val result: HelpPullResult) : HelpScreenEvent()

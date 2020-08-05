@@ -8,8 +8,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Before
@@ -51,8 +49,6 @@ class PatientSearchViewControllerTest {
 
   @Before
   fun setUp() {
-    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-
     whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(currentFacility))
     whenever(patientRepository.search(Name(patientName))).doReturn(Observable.never())

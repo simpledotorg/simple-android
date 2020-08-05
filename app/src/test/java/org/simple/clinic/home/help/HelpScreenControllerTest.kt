@@ -9,6 +9,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -19,9 +20,11 @@ import org.simple.clinic.help.HelpScreenTryAgainClicked
 import org.simple.clinic.help.HelpSync
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 
 class HelpScreenControllerTest {
 
@@ -34,10 +37,12 @@ class HelpScreenControllerTest {
   private val helpSync = mock<HelpSync>()
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<HelpScreenModel, HelpScreenEvent, HelpScreenEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -201,5 +206,22 @@ class HelpScreenControllerTest {
         .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
+
+    val effectHandler = HelpScreenEffectHandler(
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+    val uiRenderer = HelpScreenUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = HelpScreenModel.create(),
+        init = HelpScreenInit(),
+        update = HelpScreenUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
+
+    testFixture.start()
   }
 }

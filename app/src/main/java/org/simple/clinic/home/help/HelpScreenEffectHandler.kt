@@ -18,5 +18,6 @@ class HelpScreenEffectHandler @AssistedInject constructor(
 
   fun build(): ObservableTransformer<HelpScreenEffect, HelpScreenEvent> = RxMobius
       .subtypeEffectHandler<HelpScreenEffect, HelpScreenEvent>()
+      .addAction(ShowLoadingView::class.java, uiActions::showLoadingView, schedulersProvider.ui())
       .build()
 }

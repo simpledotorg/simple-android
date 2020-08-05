@@ -1,10 +1,16 @@
 package org.simple.clinic.help
 
-sealed class HelpPullResult {
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-  object Success: HelpPullResult()
+sealed class HelpPullResult : Parcelable {
 
-  object NetworkError: HelpPullResult()
+  @Parcelize
+  object Success : HelpPullResult()
 
-  object OtherError: HelpPullResult()
+  @Parcelize
+  object NetworkError : HelpPullResult()
+
+  @Parcelize
+  object OtherError : HelpPullResult()
 }

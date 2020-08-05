@@ -55,6 +55,7 @@ class HelpScreenControllerTest {
     setupController()
 
     // then
+    verify(ui).showNoHelpAvailable()
     verify(ui).showHelp(content)
     verifyNoMoreInteractions(ui)
 
@@ -79,6 +80,7 @@ class HelpScreenControllerTest {
     setupController()
 
     // then
+    verify(ui).showNoHelpAvailable()
     verify(ui).showHelp(please)
     verify(ui).showHelp(help)
     verifyNoMoreInteractions(ui)
@@ -98,7 +100,7 @@ class HelpScreenControllerTest {
     setupController()
 
     // then
-    verify(ui).showNoHelpAvailable()
+    verify(ui, times(2)).showNoHelpAvailable()
     verifyNoMoreInteractions(ui)
 
     verify(helpRepository).helpContentText()
@@ -119,7 +121,7 @@ class HelpScreenControllerTest {
 
     // then
     verify(ui).showLoadingView()
-    verify(ui).showNoHelpAvailable()
+    verify(ui, times(2)).showNoHelpAvailable()
     verifyNoMoreInteractions(ui)
 
     verify(helpRepository).helpContentText()
@@ -140,7 +142,7 @@ class HelpScreenControllerTest {
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     // then
-    verify(ui).showNoHelpAvailable()
+    verify(ui, times(2)).showNoHelpAvailable()
     verify(ui).showLoadingView()
     verifyNoMoreInteractions(ui)
 
@@ -164,7 +166,7 @@ class HelpScreenControllerTest {
     // then
     verify(ui).showNetworkErrorMessage()
     verify(ui).showLoadingView()
-    verify(ui, times(2)).showNoHelpAvailable()
+    verify(ui, times(3)).showNoHelpAvailable()
     verifyNoMoreInteractions(ui)
 
     verify(helpRepository).helpContentText()
@@ -186,7 +188,7 @@ class HelpScreenControllerTest {
 
     // then
     verify(ui).showUnexpectedErrorMessage()
-    verify(ui, times(2)).showNoHelpAvailable()
+    verify(ui, times(3)).showNoHelpAvailable()
     verify(ui).showLoadingView()
     verifyNoMoreInteractions(ui)
 

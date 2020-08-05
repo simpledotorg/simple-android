@@ -45,7 +45,7 @@ class PatientSearchViewControllerTest {
 
   private val currentFacility = TestData.facility(UUID.fromString("69cf85c8-6788-4071-b985-0536ae606b70"))
   private val otherFacility = TestData.facility(UUID.fromString("0bb48f0a-3a6c-4e35-8781-74b074443f36"))
-  private val user = TestData.loggedInUser()
+  private val user = TestData.loggedInUser(uuid = UUID.fromString("00b815f7-96dc-4846-bb87-3ef60e690523"))
 
   private val patientName = "name"
   private val phoneNumber: String = "123456"

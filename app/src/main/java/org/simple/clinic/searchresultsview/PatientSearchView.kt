@@ -9,19 +9,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.patient_search_view.view.*
 import org.simple.clinic.R
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
 import javax.inject.Inject
@@ -43,22 +40,19 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   private val adapter = ItemAdapter(SearchResultsItemType.DiffCallback())
 
-  private val externalEvents: Subject<UiEvent> = PublishSubject.create()
-
-  private val events by unsafeLazy {
-    externalEvents.compose(ReportAnalyticsEvents())
-  }
+  private val externalEvents = DeferredEventSource<SearchResultsEvent>()
 
   private val delegate by unsafeLazy {
     val uiRenderer = SearchResultsUiRenderer(this)
 
     MobiusDelegate.forView(
-        events = events.ofType(),
+        events = Observable.never(),
         defaultModel = SearchResultsModel.create(),
         update = SearchResultsUpdate(),
         effectHandler = effectHandler.build(),
         init = SearchResultsInit(),
-        modelUpdateListener = uiRenderer::render
+        modelUpdateListener = uiRenderer::render,
+        additionalEventSources = listOf(externalEvents)
     )
   }
 
@@ -95,7 +89,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
   }
 
   fun searchWithCriteria(searchCriteria: PatientSearchCriteria) {
-    externalEvents.onNext(SearchPatientWithCriteria(searchCriteria))
+    externalEvents.notify(SearchPatientWithCriteria(searchCriteria))
   }
 
   private fun setupScreen(screenDestroys: Observable<ScreenDestroyed>) {

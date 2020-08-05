@@ -16,7 +16,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.help.HelpPullResult
 import org.simple.clinic.help.HelpRepository
-import org.simple.clinic.help.HelpScreenTryAgainClicked
 import org.simple.clinic.help.HelpSync
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule

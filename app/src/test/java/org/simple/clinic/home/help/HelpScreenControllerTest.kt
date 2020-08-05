@@ -29,7 +29,7 @@ class HelpScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val screen = mock<HelpScreen>()
+  private val ui = mock<HelpScreenUi>()
   private val helpRepository = mock<HelpRepository>()
   private val helpSync = mock<HelpSync>()
 
@@ -51,8 +51,8 @@ class HelpScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).showHelp(content)
-    verifyNoMoreInteractions(screen)
+    verify(ui).showHelp(content)
+    verifyNoMoreInteractions(ui)
 
     verify(helpRepository).helpContentText()
     verifyNoMoreInteractions(helpRepository)
@@ -75,9 +75,9 @@ class HelpScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).showHelp(please)
-    verify(screen).showHelp(help)
-    verifyNoMoreInteractions(screen)
+    verify(ui).showHelp(please)
+    verify(ui).showHelp(help)
+    verifyNoMoreInteractions(ui)
 
     verify(helpRepository).helpContentText()
     verifyNoMoreInteractions(helpRepository)
@@ -94,8 +94,8 @@ class HelpScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).showNoHelpAvailable()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showNoHelpAvailable()
+    verifyNoMoreInteractions(ui)
 
     verify(helpRepository).helpContentText()
     verifyNoMoreInteractions(helpRepository)
@@ -114,9 +114,9 @@ class HelpScreenControllerTest {
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     // then
-    verify(screen).showLoadingView()
-    verify(screen).showNoHelpAvailable()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showLoadingView()
+    verify(ui).showNoHelpAvailable()
+    verifyNoMoreInteractions(ui)
 
     verify(helpRepository).helpContentText()
     verifyNoMoreInteractions(helpRepository)
@@ -136,9 +136,9 @@ class HelpScreenControllerTest {
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     // then
-    verify(screen).showNoHelpAvailable()
-    verify(screen).showLoadingView()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showNoHelpAvailable()
+    verify(ui).showLoadingView()
+    verifyNoMoreInteractions(ui)
 
     verify(helpSync).pullWithResult()
     verifyNoMoreInteractions(helpSync)
@@ -158,10 +158,10 @@ class HelpScreenControllerTest {
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     // then
-    verify(screen).showNetworkErrorMessage()
-    verify(screen).showLoadingView()
-    verify(screen, times(2)).showNoHelpAvailable()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showNetworkErrorMessage()
+    verify(ui).showLoadingView()
+    verify(ui, times(2)).showNoHelpAvailable()
+    verifyNoMoreInteractions(ui)
 
     verify(helpRepository).helpContentText()
     verifyNoMoreInteractions(helpRepository)
@@ -181,10 +181,10 @@ class HelpScreenControllerTest {
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     // then
-    verify(screen).showUnexpectedErrorMessage()
-    verify(screen, times(2)).showNoHelpAvailable()
-    verify(screen).showLoadingView()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUnexpectedErrorMessage()
+    verify(ui, times(2)).showNoHelpAvailable()
+    verify(ui).showLoadingView()
+    verifyNoMoreInteractions(ui)
 
     verify(helpRepository).helpContentText()
     verifyNoMoreInteractions(helpRepository)
@@ -198,7 +198,7 @@ class HelpScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
   }

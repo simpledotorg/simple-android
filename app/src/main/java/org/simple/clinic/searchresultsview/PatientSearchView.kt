@@ -2,6 +2,7 @@ package org.simple.clinic.searchresultsview
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
@@ -36,6 +38,9 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
   @Inject
   lateinit var controller: PatientSearchViewController
 
+  @Inject
+  lateinit var effectHandler: SearchResultsEffectHandler
+
   var registerNewPatientClicked: RegisterNewPatientClicked? = null
 
   var searchResultClicked: SearchResultClicked? = null
@@ -52,6 +57,19 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
         )
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = SearchResultsUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = SearchResultsModel.create(),
+        update = SearchResultsUpdate(),
+        effectHandler = effectHandler.build(),
+        init = SearchResultsInit(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   @SuppressLint("CheckResult")
@@ -73,6 +91,24 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
         controller = controller,
         screenDestroys = screenDestroys
     )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   fun searchWithCriteria(searchCriteria: PatientSearchCriteria) {

@@ -1,8 +1,10 @@
 package org.simple.clinic.home.help
 
-import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -47,6 +49,12 @@ class HelpScreenControllerTest {
     setupController()
 
     verify(screen).showHelp(content)
+    verifyNoMoreInteractions(screen)
+
+    verify(helpRepository).helpContentText()
+    verifyNoMoreInteractions(helpRepository)
+
+    verifyZeroInteractions(helpSync)
   }
 
   @Test
@@ -61,9 +69,14 @@ class HelpScreenControllerTest {
 
     setupController()
 
-    val inorder = inOrder(screen)
-    inorder.verify(screen).showHelp(please)
-    inorder.verify(screen).showHelp(help)
+    verify(screen).showHelp(please)
+    verify(screen).showHelp(help)
+    verifyNoMoreInteractions(screen)
+
+    verify(helpRepository).helpContentText()
+    verifyNoMoreInteractions(helpRepository)
+
+    verifyZeroInteractions(helpSync)
   }
 
   @Test
@@ -73,6 +86,12 @@ class HelpScreenControllerTest {
     setupController()
 
     verify(screen).showNoHelpAvailable()
+    verifyNoMoreInteractions(screen)
+
+    verify(helpRepository).helpContentText()
+    verifyNoMoreInteractions(helpRepository)
+
+    verifyZeroInteractions(helpSync)
   }
 
   @Test
@@ -84,6 +103,14 @@ class HelpScreenControllerTest {
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     verify(screen).showLoadingView()
+    verify(screen).showNoHelpAvailable()
+    verifyNoMoreInteractions(screen)
+
+    verify(helpRepository).helpContentText()
+    verifyNoMoreInteractions(helpRepository)
+
+    verify(helpSync).pullWithResult()
+    verifyNoMoreInteractions(helpSync)
   }
 
   @Test
@@ -94,7 +121,15 @@ class HelpScreenControllerTest {
     setupController()
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
+    verify(screen).showNoHelpAvailable()
+    verify(screen).showLoadingView()
+    verifyNoMoreInteractions(screen)
+
     verify(helpSync).pullWithResult()
+    verifyNoMoreInteractions(helpSync)
+
+    verify(helpRepository).helpContentText()
+    verifyNoMoreInteractions(helpRepository)
   }
 
   @Test
@@ -106,6 +141,15 @@ class HelpScreenControllerTest {
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     verify(screen).showNetworkErrorMessage()
+    verify(screen).showLoadingView()
+    verify(screen, times(2)).showNoHelpAvailable()
+    verifyNoMoreInteractions(screen)
+
+    verify(helpRepository).helpContentText()
+    verifyNoMoreInteractions(helpRepository)
+
+    verify(helpSync).pullWithResult()
+    verifyNoMoreInteractions(helpSync)
   }
 
   @Test
@@ -117,6 +161,15 @@ class HelpScreenControllerTest {
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     verify(screen).showUnexpectedErrorMessage()
+    verify(screen, times(2)).showNoHelpAvailable()
+    verify(screen).showLoadingView()
+    verifyNoMoreInteractions(screen)
+
+    verify(helpRepository).helpContentText()
+    verifyNoMoreInteractions(helpRepository)
+
+    verify(helpSync).pullWithResult()
+    verifyNoMoreInteractions(helpSync)
   }
 
   private fun setupController() {

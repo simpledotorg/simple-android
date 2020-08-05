@@ -4,6 +4,5 @@ import org.simple.clinic.patient.businessid.Identifier
 import java.util.UUID
 
 interface ScanSimpleIdUi : ScanSimpleIdUiActions {
-  fun openPatientSummary(patientUuid: UUID)
   fun openAddIdToPatientScreen(identifier: Identifier)
 }

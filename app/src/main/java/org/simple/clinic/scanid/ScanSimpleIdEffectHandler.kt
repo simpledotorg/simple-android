@@ -24,6 +24,7 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       .addConsumer(ShowShortCodeValidationError::class.java, { uiActions.showShortCodeValidationError(it.failure) }, schedulersProvider.ui())
       .addTransformer(ValidateShortCode::class.java, validateShortCode())
       .addConsumer(OpenPatientShortCodeSearch::class.java, { uiActions.openPatientShortCodeSearch(it.shortCode) }, schedulersProvider.ui())
+      .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid) }, schedulersProvider.ui())
       .build()
 
   private fun validateShortCode(): ObservableTransformer<ValidateShortCode, ScanSimpleIdEvent> {

@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -48,7 +47,6 @@ class PatientSearchViewControllerTest {
   private val patientName = "name"
   private val phoneNumber: String = "123456"
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<SearchResultsModel, SearchResultsEvent, SearchResultsEffect>
 
   @Before
@@ -61,7 +59,6 @@ class PatientSearchViewControllerTest {
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -204,18 +201,5 @@ class PatientSearchViewControllerTest {
         init = SearchResultsInit()
     )
     testFixture.start()
-
-    val controller = PatientSearchViewController(
-        patientRepository = patientRepository,
-        userSession = userSession,
-        facilityRepository = facilityRepository,
-        bloodPressureDao = bloodPressureDao
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
-    uiEvents.onNext(SearchResultsViewCreated)
   }
 }

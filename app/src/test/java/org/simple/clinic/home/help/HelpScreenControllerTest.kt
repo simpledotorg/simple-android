@@ -30,6 +30,7 @@ class HelpScreenControllerTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<HelpScreenUi>()
+  private val uiActions = mock<HelpScreenUiActions>()
   private val helpRepository = mock<HelpRepository>()
   private val helpSync = mock<HelpSync>()
 
@@ -116,9 +117,9 @@ class HelpScreenControllerTest {
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     // then
-    verify(ui).showLoadingView()
+    verify(uiActions).showLoadingView()
     verify(ui, times(2)).showNoHelpAvailable()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(helpRepository).helpContentText()
     verifyNoMoreInteractions(helpRepository)
@@ -139,8 +140,8 @@ class HelpScreenControllerTest {
 
     // then
     verify(ui, times(2)).showNoHelpAvailable()
-    verify(ui).showLoadingView()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showLoadingView()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(helpSync).pullWithResult()
     verifyNoMoreInteractions(helpSync)
@@ -161,9 +162,9 @@ class HelpScreenControllerTest {
 
     // then
     verify(ui).showNetworkErrorMessage()
-    verify(ui).showLoadingView()
+    verify(uiActions).showLoadingView()
     verify(ui, times(3)).showNoHelpAvailable()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(helpRepository).helpContentText()
     verifyNoMoreInteractions(helpRepository)
@@ -185,8 +186,8 @@ class HelpScreenControllerTest {
     // then
     verify(ui).showUnexpectedErrorMessage()
     verify(ui, times(3)).showNoHelpAvailable()
-    verify(ui).showLoadingView()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showLoadingView()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(helpRepository).helpContentText()
     verifyNoMoreInteractions(helpRepository)
@@ -200,7 +201,7 @@ class HelpScreenControllerTest {
         helpRepository = helpRepository,
         helpSync = helpSync,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
     val uiRenderer = HelpScreenUiRenderer(ui)
 

@@ -22,7 +22,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
-class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), HelpScreenUi {
+class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), HelpScreenUi, HelpScreenUiActions {
 
   @Inject
   lateinit var controller: HelpScreenController

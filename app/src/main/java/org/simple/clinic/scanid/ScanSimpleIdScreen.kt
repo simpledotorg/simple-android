@@ -44,7 +44,7 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), ScanSimpleIdUi {
+class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), ScanSimpleIdUi, ScanSimpleIdUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

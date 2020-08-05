@@ -6,6 +6,8 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
+import org.simple.clinic.bloodsugar.entry.BloodSugarSaveState.NOT_SAVING_BLOOD_SUGAR
+import org.simple.clinic.bloodsugar.entry.BloodSugarSaveState.SAVING_BLOOD_SUGAR
 import org.simple.clinic.bloodsugar.entry.ValidationResult.Valid
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -40,7 +42,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
       BloodSugarDateClicked -> onBloodSugarDateClicked(model)
       ShowBloodSugarEntryClicked -> showBloodSugarClicked(model)
       SaveClicked -> onSaveClicked(model)
-      is BloodSugarSaved -> dispatch(SetBloodSugarSavedResultAndFinish)
+      is BloodSugarSaved -> next(model.bloodSugarStateChanged(NOT_SAVING_BLOOD_SUGAR), SetBloodSugarSavedResultAndFinish)
       RemoveBloodSugarClicked -> dispatch(ShowConfirmRemoveBloodSugarDialog((model.openAs as OpenAs.Update).bloodSugarMeasurementUuid))
     }
   }
@@ -64,14 +66,18 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
   private fun onSaveClicked(
       model: BloodSugarEntryModel
   ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
-    val bloodSugarValidationResult = model.bloodSugarReading.validate()
-    val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
-    val validationErrorEffects = getValidationErrorEffects(bloodSugarValidationResult, dateValidationResult)
-
-    return if (validationErrorEffects.isNotEmpty()) {
-      Next.dispatch(validationErrorEffects)
+    return if (model.bloodSugarSaveState == SAVING_BLOOD_SUGAR) {
+      Next.noChange()
     } else {
-      dispatch(getCreateorUpdateEntryEffect(model, dateValidationResult))
+      val bloodSugarValidationResult = model.bloodSugarReading.validate()
+      val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
+      val validationErrorEffects = getValidationErrorEffects(bloodSugarValidationResult, dateValidationResult)
+
+      if (validationErrorEffects.isNotEmpty()) {
+        Next.dispatch(validationErrorEffects)
+      } else {
+        next(model.bloodSugarStateChanged(SAVING_BLOOD_SUGAR), getCreateorUpdateEntryEffect(model, dateValidationResult))
+      }
     }
   }
 

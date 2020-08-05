@@ -363,6 +363,14 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     editBloodSugarTitleTextView.text = title
   }
 
+  override fun showProgress() {
+    progressLoader.visibleOrGone(isVisible = true)
+  }
+
+  override fun hideProgress() {
+    progressLoader.visibleOrGone(isVisible = false)
+  }
+
   override fun showRemoveButton() {
     removeBloodSugarButton.visibility = View.VISIBLE
   }

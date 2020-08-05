@@ -20,3 +20,5 @@ data class OpenPatientShortCodeSearch(val shortCode: String) : ScanSimpleIdEffec
 data class OpenPatientSummary(val patientUuid: UUID) : ScanSimpleIdEffect()
 
 data class OpenAddIdToPatientScreen(val identifier: Identifier) : ScanSimpleIdEffect()
+
+data class SearchPatient(val scannedUuid: UUID) : ScanSimpleIdEffect()

@@ -196,6 +196,7 @@ class ScanSimpleIdScreenControllerTest {
         .subscribe { uiChange -> uiChange(ui) }
 
     val effectHandler = ScanSimpleIdEffectHandler(
+        patientRepository = patientRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

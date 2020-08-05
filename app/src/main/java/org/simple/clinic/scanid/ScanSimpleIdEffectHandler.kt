@@ -4,9 +4,11 @@ import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class ScanSimpleIdEffectHandler @AssistedInject constructor(
+    private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: ScanSimpleIdUiActions
 ) {
@@ -26,7 +28,22 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       .addConsumer(OpenPatientShortCodeSearch::class.java, { uiActions.openPatientShortCodeSearch(it.shortCode) }, schedulersProvider.ui())
       .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid) }, schedulersProvider.ui())
       .addConsumer(OpenAddIdToPatientScreen::class.java, { uiActions.openAddIdToPatientScreen(it.identifier) }, schedulersProvider.ui())
+      .addTransformer(SearchPatient::class.java, searchPatient())
       .build()
+
+  private fun searchPatient(): ObservableTransformer<SearchPatient, ScanSimpleIdEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMap { effect ->
+            val scannedUuid = effect.scannedUuid
+
+            patientRepository
+                .findPatientWithBusinessId(scannedUuid.toString())
+                .subscribeOn(schedulersProvider.io())
+                .map { PatientSearchCompleted(it, scannedUuid) }
+          }
+    }
+  }
 
   private fun validateShortCode(): ObservableTransformer<ValidateShortCode, ScanSimpleIdEvent> {
     return ObservableTransformer { effects ->

@@ -8,7 +8,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = ScanSimpleIdUi
+typealias Ui = ScanSimpleIdUiActions
 typealias UiChange = (Ui) -> Unit
 
 class ScanSimpleIdScreenController @Inject constructor(

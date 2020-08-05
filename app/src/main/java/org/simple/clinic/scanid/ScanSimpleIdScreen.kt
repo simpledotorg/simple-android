@@ -44,7 +44,7 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), ScanSimpleIdUi, ScanSimpleIdUiActions {
+class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), ScanSimpleIdUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -73,14 +73,11 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   private val delegate by unsafeLazy {
-    val uiRenderer = ScanSimpleIdUiRenderer(this)
-
     MobiusDelegate.forView(
         events = events.ofType(),
         defaultModel = ScanSimpleIdModel.create(),
         update = ScanSimpleIdUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
+        effectHandler = effectHandlerFactory.create(this).build()
     )
   }
 

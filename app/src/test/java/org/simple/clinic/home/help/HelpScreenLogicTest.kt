@@ -23,7 +23,7 @@ import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 
-class HelpScreenControllerTest {
+class HelpScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

@@ -35,6 +35,8 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   private val adapter = GroupAdapter<ViewHolder>()
 
+  private val externalEvents: Subject<UiEvent> = PublishSubject.create()
+
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -51,7 +53,8 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
         events = Observable.merge(
             screenCreates(),
             newPatientClicks(),
-            downstreamUiEvents
+            downstreamUiEvents,
+            externalEvents
         ),
         controller = controller,
         screenDestroys = detaches().map { ScreenDestroyed() }

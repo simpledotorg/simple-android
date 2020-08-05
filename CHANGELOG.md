@@ -25,8 +25,8 @@
 - Change `OverdueScreen` to load data via the paging library
 - Migrated `PatientSearchScreen` to Mobius
 - [In Progress: 06 Aug 2020] Migrate `EnterOtpScreen` to Mobius
+- Migrated `HelpScreen` to Mobius
 - [In Progress: 05 Aug 2020] Migrate `HelpScreen` to Mobius
-- [In Progress: 06 Aug 2020] Migrate `HomeScreen` to Mobius
 
 ## 2020-08-03-7364
 ### Features

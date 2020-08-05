@@ -6,9 +6,11 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -35,12 +37,6 @@ class PatientSearchViewControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val bloodPressureDao = mock<BloodPressureMeasurement.RoomDao>()
 
-  private val controller = PatientSearchViewController(
-      patientRepository = patientRepository,
-      userSession = userSession,
-      facilityRepository = facilityRepository,
-      bloodPressureDao = bloodPressureDao
-  )
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private val currentFacility = TestData.facility(UUID.fromString("69cf85c8-6788-4071-b985-0536ae606b70"))
@@ -50,6 +46,8 @@ class PatientSearchViewControllerTest {
   private val patientName = "name"
   private val phoneNumber: String = "123456"
 
+  private lateinit var controllerSubscription: Disposable
+
   @Before
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
@@ -58,13 +56,19 @@ class PatientSearchViewControllerTest {
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(currentFacility))
     whenever(patientRepository.search(Name(patientName))).doReturn(Observable.never())
     whenever(patientRepository.search(PhoneNumber(phoneNumber))).doReturn(Observable.never())
-    uiEvents.compose(controller).subscribe { uiChange -> uiChange(ui) }
+  }
+
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
   fun `when search result clicked then SearchResultClicked event should be emitted`() {
     val searchResult = TestData.patientSearchResult()
     val searchResultClicked = SearchResultClicked(searchResult.uuid)
+
+    setupController()
     uiEvents.onNext(searchResultClicked)
 
     verify(ui).searchResultClicked(searchResultClicked)
@@ -74,7 +78,7 @@ class PatientSearchViewControllerTest {
   fun `when register new patient clicked while searching by name, then RegisterNewPatient event should be emitted`() {
     val criteria = Name(patientName = patientName)
 
-    screenCreated()
+    setupController()
     uiEvents.onNext(SearchPatientWithCriteria(criteria))
     uiEvents.onNext(RegisterNewPatientClicked)
 
@@ -85,7 +89,7 @@ class PatientSearchViewControllerTest {
   fun `when register new patient clicked while searching by phone, then RegisterNewPatient event should be emitted`() {
     val criteria = PhoneNumber(phoneNumber = phoneNumber)
 
-    screenCreated()
+    setupController()
     uiEvents.onNext(SearchPatientWithCriteria(criteria))
     uiEvents.onNext(RegisterNewPatientClicked)
 
@@ -139,7 +143,7 @@ class PatientSearchViewControllerTest {
         .doReturn(Observable.just(allSearchResults))
 
     // when
-    screenCreated()
+    setupController()
     uiEvents.onNext(SearchPatientWithCriteria(searchCriteria))
 
     // then
@@ -198,7 +202,7 @@ class PatientSearchViewControllerTest {
         .doReturn(Observable.just(allSearchResults))
 
     // when
-    screenCreated()
+    setupController()
     uiEvents.onNext(SearchPatientWithCriteria(searchCriteria))
 
     // then
@@ -210,7 +214,18 @@ class PatientSearchViewControllerTest {
     verify(ui).updateSearchResults(expectedSearchResults)
   }
 
-  private fun screenCreated() {
+  private fun setupController() {
+    val controller = PatientSearchViewController(
+        patientRepository = patientRepository,
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        bloodPressureDao = bloodPressureDao
+    )
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(ui) }
+
     uiEvents.onNext(SearchResultsViewCreated)
   }
 }

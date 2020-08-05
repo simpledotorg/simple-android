@@ -7,9 +7,8 @@ import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.patient_search_view.view.*
@@ -18,6 +17,7 @@ import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
@@ -31,10 +31,9 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
   @Inject
   lateinit var controller: PatientSearchViewController
 
-  val downstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
   val upstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
 
-  private val adapter = GroupAdapter<ViewHolder>()
+  private val adapter = ItemAdapter(SearchResultsItemType.DiffCallback())
 
   private val externalEvents: Subject<UiEvent> = PublishSubject.create()
 
@@ -54,7 +53,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
         events = Observable.merge(
             screenCreates(),
             newPatientClicks(),
-            downstreamUiEvents,
+            searchResultClicks(),
             externalEvents
         ),
         controller = controller,
@@ -79,6 +78,13 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
           .clicks()
           .map { RegisterNewPatientClicked }
 
+  private fun searchResultClicks(): Observable<UiEvent> {
+    return adapter
+        .itemEvents
+        .ofType<SearchResultsItemType.Event.ResultClicked>()
+        .map { SearchResultClicked(it.patientUuid) }
+  }
+
   override fun updateSearchResults(
       results: PatientSearchResults
   ) {
@@ -86,15 +92,10 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
     newPatientContainer.visibleOrGone(isVisible = true)
     if (results.hasNoResults) {
       setEmptyStateVisible(true)
-      adapter.update(emptyList())
+      adapter.submitList(emptyList())
     } else {
       setEmptyStateVisible(false)
-      SearchResultsItemType
-          .from(results)
-          .let { listItems ->
-            listItems.forEach { it.uiEvents = downstreamUiEvents }
-            adapter.update(listItems)
-          }
+      adapter.submitList(SearchResultsItemType.from(results))
     }
   }
 

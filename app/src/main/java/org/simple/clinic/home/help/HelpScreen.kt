@@ -18,7 +18,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
-class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
+class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), HelpScreenUi {
 
   @Inject
   lateinit var controller: HelpScreenController
@@ -54,30 +54,30 @@ class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, 
       .clicks()
       .map { HelpScreenTryAgainClicked }
 
-  fun showHelp(html: String) {
+  override fun showHelp(html: String) {
     webView.visibleOrGone(true)
     progressBar.visibleOrGone(false)
     noContentView.visibleOrGone(false)
     webView.loadDataWithBaseURL(null, html, "text/html", Charsets.UTF_8.name(), null)
   }
 
-  fun showNoHelpAvailable() {
+  override fun showNoHelpAvailable() {
     webView.visibleOrGone(false)
     progressBar.visibleOrGone(false)
     noContentView.visibleOrGone(true)
     webView.loadUrl("about:blank")
   }
 
-  fun showLoadingView() {
+  override fun showLoadingView() {
     progressBar.visibleOrGone(true)
     noContentView.visibleOrGone(false)
   }
 
-  fun showNetworkErrorMessage() {
+  override fun showNetworkErrorMessage() {
     errorMessageTextView.setText(R.string.help_no_connection)
   }
 
-  fun showUnexpectedErrorMessage() {
+  override fun showUnexpectedErrorMessage() {
     errorMessageTextView.setText(R.string.help_something_went_wrong)
   }
 

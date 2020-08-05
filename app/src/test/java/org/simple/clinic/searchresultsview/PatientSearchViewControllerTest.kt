@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Before
@@ -22,7 +23,9 @@ import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class PatientSearchViewControllerTest {
@@ -46,6 +49,7 @@ class PatientSearchViewControllerTest {
   private val phoneNumber: String = "123456"
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<SearchResultsModel, SearchResultsEvent, SearchResultsEffect>
 
   @Before
   fun setUp() {
@@ -58,6 +62,7 @@ class PatientSearchViewControllerTest {
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -181,6 +186,21 @@ class PatientSearchViewControllerTest {
   }
 
   private fun setupController() {
+    val effectHandler = SearchResultsEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline()
+    )
+    val uiRenderer = SearchResultsUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = SearchResultsModel.create(),
+        update = SearchResultsUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render,
+        init = SearchResultsInit()
+    )
+    testFixture.start()
+
     val controller = PatientSearchViewController(
         patientRepository = patientRepository,
         userSession = userSession,

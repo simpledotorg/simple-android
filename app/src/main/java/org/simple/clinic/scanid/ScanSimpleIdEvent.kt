@@ -30,3 +30,7 @@ data class ShortCodeSearched(val shortCode: ShortCodeInput) : ScanSimpleIdEvent(
 }
 
 data class PatientSearchCompleted(val patient: Optional<Patient>, val scannedId: UUID) : ScanSimpleIdEvent()
+
+data class ScanSimpleIdScreenQrCodeScanned(val text: String) : ScanSimpleIdEvent() {
+  override val analyticsName = "Scan Simple Card:QR code scanned"
+}

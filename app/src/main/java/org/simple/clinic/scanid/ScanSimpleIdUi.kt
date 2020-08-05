@@ -6,5 +6,4 @@ import java.util.UUID
 interface ScanSimpleIdUi : ScanSimpleIdUiActions {
   fun openPatientSummary(patientUuid: UUID)
   fun openAddIdToPatientScreen(identifier: Identifier)
-  fun openPatientShortCodeSearch(validShortCode: String)
 }

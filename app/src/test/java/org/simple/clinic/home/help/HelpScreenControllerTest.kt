@@ -45,7 +45,6 @@ class HelpScreenControllerTest {
     whenever(helpRepository.helpContentText()).thenReturn(Observable.just(content.toOptional()))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     verify(screen).showHelp(content)
   }
@@ -61,7 +60,6 @@ class HelpScreenControllerTest {
     ))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     val inorder = inOrder(screen)
     inorder.verify(screen).showHelp(please)
@@ -73,13 +71,13 @@ class HelpScreenControllerTest {
     whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     verify(screen).showNoHelpAvailable()
   }
 
   @Test
   fun `when try again is clicked, the loading view must be shown`() {
+    whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
     whenever(helpSync.pullWithResult()).thenReturn(Single.never())
 
     setupController()
@@ -90,6 +88,7 @@ class HelpScreenControllerTest {
 
   @Test
   fun `when try again is clicked, help must be synced`() {
+    whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
     whenever(helpSync.pullWithResult()).thenReturn(Single.never())
 
     setupController()
@@ -100,6 +99,7 @@ class HelpScreenControllerTest {
 
   @Test
   fun `when the help sync fails with a network error, the network error message must be shown`() {
+    whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
     whenever(helpSync.pullWithResult()).thenReturn(Single.just(HelpPullResult.NetworkError))
 
     setupController()
@@ -110,6 +110,7 @@ class HelpScreenControllerTest {
 
   @Test
   fun `when the help sync fails with any error except network error, the unexpected error message must be shown`() {
+    whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
     whenever(helpSync.pullWithResult()).thenReturn(Single.just(HelpPullResult.OtherError))
 
     setupController()
@@ -124,5 +125,7 @@ class HelpScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

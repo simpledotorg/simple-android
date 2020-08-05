@@ -26,7 +26,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class ScanSimpleIdScreenControllerTest {
+class ScanSimpleIdScreenLogicTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val uiActions = mock<ScanSimpleIdUiActions>()

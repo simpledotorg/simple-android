@@ -6,8 +6,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.help.HelpPullResult
@@ -25,17 +26,16 @@ class HelpScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  val uiEvents = PublishSubject.create<UiEvent>()
-  val screen = mock<HelpScreen>()
-  val helpRepository = mock<HelpRepository>()
-  val helpSync = mock<HelpSync>()
+  private val uiEvents = PublishSubject.create<UiEvent>()
+  private val screen = mock<HelpScreen>()
+  private val helpRepository = mock<HelpRepository>()
+  private val helpSync = mock<HelpSync>()
 
-  val controller = HelpScreenController(repository = helpRepository, sync = helpSync)
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    uiEvents.compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -44,6 +44,7 @@ class HelpScreenControllerTest {
 
     whenever(helpRepository.helpContentText()).thenReturn(Observable.just(content.toOptional()))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).showHelp(content)
@@ -59,6 +60,7 @@ class HelpScreenControllerTest {
         help.toOptional()
     ))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     val inorder = inOrder(screen)
@@ -70,6 +72,7 @@ class HelpScreenControllerTest {
   fun `when the help file does not exist then screen should show no-help view`() {
     whenever(helpRepository.helpContentText()).thenReturn(Observable.just(Optional.empty()))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).showNoHelpAvailable()
@@ -79,6 +82,7 @@ class HelpScreenControllerTest {
   fun `when try again is clicked, the loading view must be shown`() {
     whenever(helpSync.pullWithResult()).thenReturn(Single.never())
 
+    setupController()
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     verify(screen).showLoadingView()
@@ -88,6 +92,7 @@ class HelpScreenControllerTest {
   fun `when try again is clicked, help must be synced`() {
     whenever(helpSync.pullWithResult()).thenReturn(Single.never())
 
+    setupController()
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     verify(helpSync).pullWithResult()
@@ -97,6 +102,7 @@ class HelpScreenControllerTest {
   fun `when the help sync fails with a network error, the network error message must be shown`() {
     whenever(helpSync.pullWithResult()).thenReturn(Single.just(HelpPullResult.NetworkError))
 
+    setupController()
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     verify(screen).showNetworkErrorMessage()
@@ -106,8 +112,17 @@ class HelpScreenControllerTest {
   fun `when the help sync fails with any error except network error, the unexpected error message must be shown`() {
     whenever(helpSync.pullWithResult()).thenReturn(Single.just(HelpPullResult.OtherError))
 
+    setupController()
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     verify(screen).showUnexpectedErrorMessage()
+  }
+
+  private fun setupController() {
+    val controller = HelpScreenController(repository = helpRepository, sync = helpSync)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

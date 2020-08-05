@@ -3,6 +3,7 @@ package org.simple.clinic.searchresultsview
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -72,6 +73,7 @@ class PatientSearchViewControllerTest {
     uiEvents.onNext(searchResultClicked)
 
     verify(ui).searchResultClicked(searchResultClicked)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -83,6 +85,7 @@ class PatientSearchViewControllerTest {
     uiEvents.onNext(RegisterNewPatientClicked)
 
     verify(ui).registerNewPatient(RegisterNewPatient(criteria))
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -94,6 +97,7 @@ class PatientSearchViewControllerTest {
     uiEvents.onNext(RegisterNewPatientClicked)
 
     verify(ui).registerNewPatient(RegisterNewPatient(criteria))
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -153,6 +157,7 @@ class PatientSearchViewControllerTest {
         currentFacility = currentFacility
     )
     verify(ui).updateSearchResults(expectedSearchResults)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -212,6 +217,7 @@ class PatientSearchViewControllerTest {
         currentFacility = currentFacility
     )
     verify(ui).updateSearchResults(expectedSearchResults)
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {

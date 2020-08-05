@@ -187,7 +187,11 @@ class PatientSearchViewControllerTest {
 
   private fun setupController() {
     val effectHandler = SearchResultsEffectHandler(
-        schedulers = TestSchedulersProvider.trampoline()
+        schedulers = TestSchedulersProvider.trampoline(),
+        patientRepository = patientRepository,
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        bloodPressureDao = bloodPressureDao
     )
     val uiRenderer = SearchResultsUiRenderer(ui)
 

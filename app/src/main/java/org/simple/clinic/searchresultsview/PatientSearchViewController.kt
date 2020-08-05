@@ -3,7 +3,6 @@ package org.simple.clinic.searchresultsview
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.FacilityRepository
@@ -26,27 +25,7 @@ class PatientSearchViewController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return populateSearchResults(replayedEvents)
+    return Observable.never()
   }
 
-  private fun populateSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
-    val searchResultsStream = events
-        .ofType<SearchPatientWithCriteria>()
-        .map { it.criteria }
-        .flatMap(patientRepository::search)
-
-    val currentFacilityStream = userSession
-        .requireLoggedInUser()
-        .switchMap(facilityRepository::currentFacility)
-        .replay()
-        .refCount()
-
-    return searchResultsStream
-        .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, currentFacilityStream))
-        .map { results ->
-          { ui: Ui ->
-            ui.updateSearchResults(results)
-          }
-        }
-  }
 }

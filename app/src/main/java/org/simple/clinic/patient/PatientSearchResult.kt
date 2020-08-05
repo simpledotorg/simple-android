@@ -56,6 +56,7 @@ import java.util.UUID
   ) PatientLastSeen ON PatientLastSeen.patientUuid = P.uuid
   LEFT JOIN Facility F ON F.uuid = PatientLastSeen.lastSeenFacilityUuid
 """)
+@Parcelize
 data class PatientSearchResult(
 
     val uuid: UUID,
@@ -96,7 +97,7 @@ data class PatientSearchResult(
 
     @Embedded(prefix = "lastSeen_")
     val lastSeen: LastSeen?
-) {
+): Parcelable {
 
   override fun toString(): String {
     return "Name: $fullName, UUID: $uuid, Facility UUID: ${lastSeen?.lastSeenAtFacilityUuid}"

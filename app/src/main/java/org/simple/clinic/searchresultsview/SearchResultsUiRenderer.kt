@@ -7,6 +7,8 @@ class SearchResultsUiRenderer(
 ): ViewRenderer<SearchResultsModel> {
 
   override fun render(model: SearchResultsModel) {
-    /* Nothing to do here. Yet. */
+    if(model.hasLoadedSearchResults) {
+      ui.updateSearchResults(model.patientSearchResults!!)
+    }
   }
 }

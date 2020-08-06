@@ -4,7 +4,6 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.ActivityLifecycle.Started
@@ -38,7 +37,7 @@ typealias UiChange = (Ui) -> Unit
 
 class TheActivityController @Inject constructor(
     private val userSession: UserSession,
-    private val appLockConfig: Single<AppLockConfig>,
+    private val appLockConfig: AppLockConfig,
     private val patientRepository: PatientRepository,
     @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -91,13 +90,8 @@ class TheActivityController @Inject constructor(
         .ofType<Stopped>()
         .filter { userSession.isUserLoggedIn() }
         .filter { !lockAfterTimestamp.isSet }
-        .flatMap { _ ->
-          appLockConfig
-              .flatMapObservable {
-                lockAfterTimestamp.set(Instant.now().plusMillis(it.lockAfterTimeMillis))
-                Observable.empty<UiChange>()
-              }
-        }
+        .doOnNext { lockAfterTimestamp.set(Instant.now().plusMillis(appLockConfig.lockAfterTimeMillis)) }
+        .flatMap { Observable.empty<UiChange>() }
   }
 
   private fun displayUserLoggedOutOnOtherDevice(events: Observable<UiEvent>): Observable<UiChange> {

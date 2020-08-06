@@ -2,7 +2,6 @@ package org.simple.clinic.login
 
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Single
 import org.simple.clinic.login.applock.AppLockConfig
 import java.util.concurrent.TimeUnit
 
@@ -10,7 +9,7 @@ import java.util.concurrent.TimeUnit
 class AppLockConfigModule {
 
   @Provides
-  fun appLockConfig(): Single<AppLockConfig> {
-    return Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.SECONDS.toMillis(30)))
+  fun appLockConfig(): AppLockConfig {
+    return AppLockConfig(lockAfterTimeMillis = TimeUnit.SECONDS.toMillis(30))
   }
 }

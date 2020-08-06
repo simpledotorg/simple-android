@@ -12,7 +12,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -20,6 +19,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.activity.ActivityLifecycle.Stopped
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
@@ -28,7 +28,6 @@ import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.main.TheActivityController
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.screen.FullScreenKey
@@ -42,7 +41,6 @@ import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
@@ -70,7 +68,7 @@ class TheActivityControllerTest {
 
   private val controller = TheActivityController(
       userSession = userSession,
-      appLockConfig = Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes))),
+      appLockConfig = AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes)),
       lockAfterTimestamp = lockAfterTimestamp,
       patientRepository = patientRepository
   )

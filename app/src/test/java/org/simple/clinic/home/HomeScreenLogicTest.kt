@@ -13,9 +13,8 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -33,8 +32,6 @@ class HomeScreenLogicTest {
 
   private val ui = mock<HomeScreenUi>()
   private val uiActions = mock<HomeScreenUiActions>()
-  private val facilityRepository = mock<FacilityRepository>()
-  private val userSession = mock<UserSession>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val clock = TestUserClock()
 
@@ -56,18 +53,13 @@ class HomeScreenLogicTest {
         uuid = UUID.fromString("5b2136b8-11d5-4e20-8703-087281679aee"),
         name = "CHC Nathana"
     )
-    val loggedInUser = TestData.loggedInUser(
-        uuid = UUID.fromString("751cfb09-92a2-40df-a6b2-b3f82ecd81a1")
-    )
     val date = LocalDate.parse("2018-01-01")
 
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility1, facility2))
     whenever(appointmentRepository.overdueAppointmentsCount(date, facility1)) doReturn Observable.just(3)
     whenever(appointmentRepository.overdueAppointmentsCount(date, facility2)) doReturn Observable.just(0)
 
     // when
-    setupController()
+    setupController(Observable.just(facility1, facility2))
 
     // then
     verify(ui, times(2)).setFacility("CHC Buchho")
@@ -84,17 +76,12 @@ class HomeScreenLogicTest {
         uuid = UUID.fromString("e497355e-723c-4b35-b55a-778a6233b720"),
         name = "CHC Buchho"
     )
-    val loggedInUser = TestData.loggedInUser(
-        uuid = UUID.fromString("751cfb09-92a2-40df-a6b2-b3f82ecd81a1")
-    )
     val date = LocalDate.parse("2018-01-01")
 
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
     whenever(appointmentRepository.overdueAppointmentsCount(date, facility)) doReturn Observable.just(0)
 
     // when
-    setupController()
+    setupController(Observable.just(facility))
     uiEvents.onNext(HomeFacilitySelectionClicked)
 
     // then
@@ -104,12 +91,11 @@ class HomeScreenLogicTest {
     verifyNoMoreInteractions(ui, uiActions)
   }
 
-  private fun setupController() {
+  private fun setupController(facilityStream: Observable<Facility>) {
     clock.setDate(LocalDate.parse("2018-01-01"))
 
     val effectHandler = HomeScreenEffectHandler(
-        userSession = userSession,
-        facilityRepository = facilityRepository,
+        currentFacilityStream = facilityStream,
         appointmentRepository = appointmentRepository,
         userClock = clock,
         schedulersProvider = TestSchedulersProvider.trampoline(),

@@ -1,26 +1,32 @@
 package org.simple.clinic.home
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_home.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.injector
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.home.HomeTab.OVERDUE
 import org.simple.clinic.home.help.HelpScreenKey
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.SettingsScreenKey
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
-class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), HomeScreenUi {
 
   @Inject
   lateinit var controller: HomeScreenController
@@ -31,22 +37,63 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   @Inject
   lateinit var activity: AppCompatActivity
 
+  @Inject
+  lateinit var effectHandlerFactory: HomeScreenEffectHandler.Factory
+
+  private val events by unsafeLazy {
+    Observable
+        .merge(screenCreates(), facilitySelectionClicks())
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = HomeScreenUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = HomeScreenModel.create(),
+        init = HomeScreenInit(),
+        update = HomeScreenUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     setupToolBar()
     setupHelpClicks()
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(screenCreates(), facilitySelectionClicks()),
+        events = events,
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
 
     // Keyboard stays open after login finishes, not sure why.
@@ -83,19 +130,19 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
-  private fun facilitySelectionClicks() = RxView
-      .clicks(facilitySelectButton)
+  private fun facilitySelectionClicks() = facilitySelectButton
+      .clicks()
       .map { HomeFacilitySelectionClicked() }
 
-  fun setFacility(facilityName: String) {
+  override fun setFacility(facilityName: String) {
     facilitySelectButton.text = facilityName
   }
 
-  fun openFacilitySelection() {
+  override fun openFacilitySelection() {
     activity.startActivity(FacilityChangeActivity.intent(context))
   }
 
-  fun showOverdueAppointmentCount(count: Int) {
+  override fun showOverdueAppointmentCount(count: Int) {
     val overdueTabIndex = HomeTab.values().indexOf(OVERDUE)
     val overdueTab = homeTabLayout.getTabAt(overdueTabIndex)
 
@@ -109,10 +156,14 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     }
   }
 
-  fun removeOverdueAppointmentCount() {
+  override fun removeOverdueAppointmentCount() {
     val overdueTabIndex = HomeTab.values().indexOf(OVERDUE)
     val overdueTab = homeTabLayout.getTabAt(overdueTabIndex)
 
     overdueTab?.removeBadge()
+  }
+
+  interface Injector {
+    fun inject(target: HomeScreen)
   }
 }

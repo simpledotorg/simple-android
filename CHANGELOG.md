@@ -25,6 +25,7 @@
 - [In Progress: 04 Aug 2020] Migrate `PatientSearchScreen` to Mobius
 - [In Progress: 04 Aug 2020] Migrate `EnterOtpScreen` to Mobius
 - [In Progress: 05 Aug 2020] Migrate `HelpScreen` to Mobius
+- [In Progress: 06 Aug 2020] Migrate `HomeScreen` to Mobius
 
 ## 2020-08-03-7364
 ### Features

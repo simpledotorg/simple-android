@@ -18,5 +18,6 @@ class HomeScreenEffectHandler @AssistedInject constructor(
 
   fun build(): ObservableTransformer<HomeScreenEffect, HomeScreenEvent> = RxMobius
       .subtypeEffectHandler<HomeScreenEffect, HomeScreenEvent>()
+      .addAction(OpenFacilitySelection::class.java, uiActions::openFacilitySelection, schedulersProvider.ui())
       .build()
 }

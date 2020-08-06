@@ -6,13 +6,10 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
-import com.jakewharton.rxbinding3.view.detaches
-import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_home.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.home.HomeTab.OVERDUE
@@ -21,15 +18,10 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.SettingsScreenKey
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
 class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), HomeScreenUi, HomeScreenUiActions {
-
-  @Inject
-  lateinit var controller: HomeScreenController
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -41,10 +33,8 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   lateinit var effectHandlerFactory: HomeScreenEffectHandler.Factory
 
   private val events by unsafeLazy {
-    Observable
-        .merge(screenCreates(), facilitySelectionClicks())
+    facilitySelectionClicks()
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val delegate by unsafeLazy {
@@ -89,13 +79,6 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     setupToolBar()
     setupHelpClicks()
 
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = detaches().map { ScreenDestroyed() }
-    )
-
     // Keyboard stays open after login finishes, not sure why.
     rootLayout.hideKeyboard()
 
@@ -127,8 +110,6 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
       screenRouter.push(HelpScreenKey())
     }
   }
-
-  private fun screenCreates() = Observable.just(ScreenCreated())
 
   private fun facilitySelectionClicks() = facilitySelectButton
       .clicks()

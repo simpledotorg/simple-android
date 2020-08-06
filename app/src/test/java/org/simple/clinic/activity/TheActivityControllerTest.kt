@@ -99,31 +99,73 @@ class TheActivityControllerTest {
   }
 
   @Test
-  @Parameters(value = [
-    "NOT_LOGGED_IN|false",
-    "OTP_REQUESTED|true",
-    "LOGGED_IN|true",
-    "RESETTING_PIN|false",
-    "RESET_PIN_REQUESTED|true"
-  ])
-  fun `when activity is started, user is logged in and user was inactive then app lock should be shown`(
-      loggedInStatus: User.LoggedInStatus,
-      shouldShowAppLock: Boolean
-  ) {
+  fun `when activity is started, user has requested an OTP, and user was inactive then app lock should be shown`() {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = loggedInStatus, status = UserStatus.ApprovedForSyncing))))
+        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = OTP_REQUESTED, status = UserStatus.ApprovedForSyncing))))
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     uiEvents.onNext(Started(null))
 
-    if (shouldShowAppLock) {
-      verify(activity).showAppLockScreen()
-    } else {
-      verify(activity, never()).showAppLockScreen()
-    }
+    verify(activity).showAppLockScreen()
+  }
+
+  @Test
+  fun `when activity is started, user is logged in, and user was inactive then app lock should be shown`() {
+    whenever(userSession.isUserLoggedIn()).thenReturn(true)
+    whenever(userSession.loggedInUser())
+        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = LOGGED_IN, status = UserStatus.ApprovedForSyncing))))
+
+    val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
+    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
+
+    uiEvents.onNext(Started(null))
+
+    verify(activity).showAppLockScreen()
+  }
+
+  @Test
+  fun `when activity is started, user has requested a PIN reset, and user was inactive then app lock should be shown`() {
+    whenever(userSession.isUserLoggedIn()).thenReturn(true)
+    whenever(userSession.loggedInUser())
+        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = RESET_PIN_REQUESTED, status = UserStatus.ApprovedForSyncing))))
+
+    val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
+    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
+
+    uiEvents.onNext(Started(null))
+
+    verify(activity).showAppLockScreen()
+  }
+
+  @Test
+  fun `when activity is started, user is not logged in and user was inactive then app lock should not be shown`() {
+    whenever(userSession.isUserLoggedIn()).thenReturn(true)
+    whenever(userSession.loggedInUser())
+        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = NOT_LOGGED_IN, status = UserStatus.ApprovedForSyncing))))
+
+    val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
+    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
+
+    uiEvents.onNext(Started(null))
+
+    verify(activity, never()).showAppLockScreen()
+  }
+
+  @Test
+  fun `when activity is started, user is resetting the PIN, and user was inactive then app lock should not be shown`() {
+    whenever(userSession.isUserLoggedIn()).thenReturn(true)
+    whenever(userSession.loggedInUser())
+        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = RESETTING_PIN, status = UserStatus.ApprovedForSyncing))))
+
+    val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
+    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
+
+    uiEvents.onNext(Started(null))
+
+    verify(activity, never()).showAppLockScreen()
   }
 
   @Test

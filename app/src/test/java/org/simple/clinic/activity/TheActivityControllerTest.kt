@@ -217,32 +217,43 @@ class TheActivityControllerTest {
   }
 
   @Test
-  @Parameters(
-      "OTP_REQUESTED|LOGGED_IN|LOGGED_IN|true",
-      "LOGGED_IN|LOGGED_IN|LOGGED_IN|false"
-  )
-  fun `when a user is verified for login, the logged out alert must be shown`(
-      prevloggedInStatus: User.LoggedInStatus,
-      curLoggedInStatus: User.LoggedInStatus,
-      nextLoggedInStatus: User.LoggedInStatus,
-      shouldShowLoggedOutAlert: Boolean
-  ) {
-    val user = TestData.loggedInUser(status = UserStatus.ApprovedForSyncing, loggedInStatus = prevloggedInStatus)
+  fun `the logged out alert must be shown only at the instant when a user gets verified for login`() {
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("bed4a670-7f03-44ab-87ca-f297ca35375a"),
+        status = UserStatus.ApprovedForSyncing,
+        loggedInStatus = OTP_REQUESTED
+    )
     whenever(lockAfterTimestamp.get()).thenReturn(Instant.MAX)
     whenever(userSession.loggedInUser()).thenReturn(
         Observable.just(
             Just(user),
-            Just(user.copy(loggedInStatus = curLoggedInStatus)),
-            Just(user.copy(loggedInStatus = nextLoggedInStatus)))
+            Just(user.copy(loggedInStatus = LOGGED_IN)),
+            Just(user.copy(loggedInStatus = LOGGED_IN)))
     )
 
     uiEvents.onNext(Started(null))
 
-    if (shouldShowLoggedOutAlert) {
-      verify(activity).showUserLoggedOutOnOtherDeviceAlert()
-    } else {
-      verify(activity, never()).showUserLoggedOutOnOtherDeviceAlert()
-    }
+    verify(activity).showUserLoggedOutOnOtherDeviceAlert()
+  }
+
+  @Test
+  fun `the logged out alert must not be shown if the user is already logged in when the screen is opened`() {
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("bed4a670-7f03-44ab-87ca-f297ca35375a"),
+        status = UserStatus.ApprovedForSyncing,
+        loggedInStatus = LOGGED_IN
+    )
+    whenever(lockAfterTimestamp.get()).thenReturn(Instant.MAX)
+    whenever(userSession.loggedInUser()).thenReturn(
+        Observable.just(
+            Just(user),
+            Just(user.copy(loggedInStatus = LOGGED_IN)),
+            Just(user.copy(loggedInStatus = LOGGED_IN)))
+    )
+
+    uiEvents.onNext(Started(null))
+
+    verify(activity, never()).showUserLoggedOutOnOtherDeviceAlert()
   }
 
   @Test
@@ -389,7 +400,7 @@ class TheActivityControllerTest {
     verify(activity).showAccessDeniedScreen(fullName)
     verifyNoMoreInteractions(activity)
   }
-  
+
   @Test
   fun `when user has access then the access denied screen should not appear`() {
     //given

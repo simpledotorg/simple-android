@@ -97,7 +97,7 @@ class HomeScreenControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(HomeFacilitySelectionClicked())
+    uiEvents.onNext(HomeFacilitySelectionClicked)
 
     // then
     verify(ui).setFacility("CHC Buchho")

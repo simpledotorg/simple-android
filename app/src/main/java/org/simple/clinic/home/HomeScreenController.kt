@@ -29,9 +29,7 @@ class HomeScreenController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.merge(
-        screenSetup(replayedEvents),
-        changeFacility(replayedEvents))
+    return screenSetup(replayedEvents)
   }
 
   private fun screenSetup(events: Observable<UiEvent>): Observable<UiChange> {
@@ -81,11 +79,5 @@ class HomeScreenController @Inject constructor(
                 facilityRepository.currentFacility(it)
               }
         }
-  }
-
-  private fun changeFacility(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<HomeFacilitySelectionClicked>()
-        .map { { ui: Ui -> ui.openFacilitySelection() } }
   }
 }

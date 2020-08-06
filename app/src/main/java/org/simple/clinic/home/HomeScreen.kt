@@ -132,7 +132,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
   private fun facilitySelectionClicks() = facilitySelectButton
       .clicks()
-      .map { HomeFacilitySelectionClicked() }
+      .map { HomeFacilitySelectionClicked }
 
   override fun setFacility(facilityName: String) {
     facilitySelectButton.text = facilityName

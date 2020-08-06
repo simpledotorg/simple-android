@@ -19,7 +19,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientSearchCriteria
@@ -40,16 +39,13 @@ import javax.inject.Inject
 class PatientSearchScreen(
     context: Context,
     attrs: AttributeSet
-) : RelativeLayout(context, attrs), PatientSearchUi {
+) : RelativeLayout(context, attrs), PatientSearchUi, PatientSearchUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
   lateinit var activity: AppCompatActivity
-
-  @Inject
-  lateinit var controllerFactory: PatientSearchScreenController.InjectionFactory
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -73,7 +69,6 @@ class PatientSearchScreen(
             patientClickEvents()
         )
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val delegate by unsafeLazy {
@@ -81,7 +76,7 @@ class PatientSearchScreen(
 
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = PatientSearchModel.create(),
+        defaultModel = PatientSearchModel.create(screenKey.additionalIdentifier),
         update = PatientSearchUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = PatientSearchInit(),
@@ -103,13 +98,6 @@ class PatientSearchScreen(
 
     val screenDestroys = detaches().map { ScreenDestroyed() }
     hideKeyboardWhenAllPatientsListIsScrolled(screenDestroys)
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controllerFactory.create(screenKey.additionalIdentifier),
-        screenDestroys = screenDestroys
-    )
   }
 
   override fun onAttachedToWindow() {

@@ -1,24 +1,28 @@
 package org.simple.clinic.search
 
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
+import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.search.PatientSearchValidationError.INPUT_EMPTY
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
@@ -26,23 +30,32 @@ import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
-class PatientSearchScreenControllerTest {
+class PatientSearchLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
   private val ui: PatientSearchUi = mock()
 
+  private val uiActions: PatientSearchUiActions = mock()
+
   private val identifier = TestData.identifier("a8d49ec3-6945-4ef0-9358-f313e08d1579", Identifier.IdentifierType.BpPassport)
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<PatientSearchModel, PatientSearchEvent, PatientSearchEffect>
+
   private val uiEvents = PublishSubject.create<UiEvent>()
+
+  private val analyticsReporter = MockAnalyticsReporter()
+
+  @Before
+  fun setUp() {
+    Analytics.addReporter(analyticsReporter)
+  }
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
+    Analytics.clearReporters()
   }
 
   @Test
@@ -57,7 +70,7 @@ class PatientSearchScreenControllerTest {
     verify(ui).setEmptyTextFieldErrorVisible(true)
     verify(ui).showAllPatientsInFacility()
     verify(ui).hideSearchButton()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -70,7 +83,9 @@ class PatientSearchScreenControllerTest {
     verify(ui).setEmptyTextFieldErrorVisible(false)
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showSearchButton()
-    verifyNoMoreInteractions(ui)
+    verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
+    verifyNoMoreInteractions(ui, uiActions)
 
     clearInvocations(ui)
 
@@ -80,8 +95,7 @@ class PatientSearchScreenControllerTest {
     // then
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showSearchButton()
-    verify(ui).setEmptyTextFieldErrorVisible(false)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -92,12 +106,12 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchClicked())
 
     // then
-    verify(ui, never()).openSearchResultsScreen(any())
+    verify(uiActions, never()).openSearchResultsScreen(any())
     verify(ui).setEmptyTextFieldErrorVisible(false)
     verify(ui).setEmptyTextFieldErrorVisible(true)
     verify(ui).showAllPatientsInFacility()
     verify(ui).hideSearchButton()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -109,8 +123,11 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(PatientItemClicked(patientUuid))
 
     // then
-    verify(ui).openPatientSummary(patientUuid)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openPatientSummary(patientUuid)
+    verify(ui).setEmptyTextFieldErrorVisible(false)
+    verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -123,7 +140,7 @@ class PatientSearchScreenControllerTest {
     verify(ui).showAllPatientsInFacility()
     verify(ui).hideSearchButton()
     verify(ui).setEmptyTextFieldErrorVisible(false)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -136,7 +153,7 @@ class PatientSearchScreenControllerTest {
     verify(ui).hideSearchButton()
     verify(ui).showAllPatientsInFacility()
     verify(ui).setEmptyTextFieldErrorVisible(false)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -146,11 +163,12 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchQueryTextChanged("a"))
 
     // then
+    verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showSearchButton()
-    verify(ui).hideAllPatientsInFacility()
     verify(ui).setEmptyTextFieldErrorVisible(false)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -162,9 +180,10 @@ class PatientSearchScreenControllerTest {
     // then
     verify(ui).showSearchButton()
     verify(ui).hideAllPatientsInFacility()
-    verify(ui).hideAllPatientsInFacility()
+    verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
     verify(ui).setEmptyTextFieldErrorVisible(false)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -190,11 +209,13 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchClicked())
 
     // then
-    verify(ui).openSearchResultsScreen(PhoneNumber(expectedPhoneNumberToSearch, identifier))
+    verify(uiActions).openSearchResultsScreen(PhoneNumber(expectedPhoneNumberToSearch, identifier))
+    verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
     verify(ui).setEmptyTextFieldErrorVisible(false)
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showSearchButton()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -223,17 +244,37 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchClicked())
 
     // then
-    verify(ui).openSearchResultsScreen(Name(expectedNameToSearch, identifier))
+    verify(uiActions).openSearchResultsScreen(Name(expectedNameToSearch, identifier))
+    verify(ui).showAllPatientsInFacility()
+    verify(ui).hideSearchButton()
     verify(ui).setEmptyTextFieldErrorVisible(false)
     verify(ui).hideAllPatientsInFacility()
     verify(ui).showSearchButton()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
+  }
+
+  @Test
+  fun `when the search query is blank, the input validation error must be reported to analytics`() {
+    // when
+    setupController()
+    uiEvents.onNext(SearchQueryTextChanged(""))
+    uiEvents.onNext(SearchClicked())
+
+    // then
+    verify(ui).hideSearchButton()
+    verify(ui).showAllPatientsInFacility()
+    verify(ui).setEmptyTextFieldErrorVisible(false)
+    verify(ui).setEmptyTextFieldErrorVisible(true)
+    verifyNoMoreInteractions(ui, uiActions)
+
+    val expectedEvent = MockAnalyticsReporter.Event("InputValidationError", mapOf("name" to INPUT_EMPTY.analyticsName))
+    assertThat(analyticsReporter.receivedEvents).containsExactly(expectedEvent)
   }
 
   private fun setupController() {
     val effectHandler = PatientSearchEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
     val uiRenderer = PatientSearchUiRenderer(ui)
 
@@ -241,16 +282,10 @@ class PatientSearchScreenControllerTest {
         events = uiEvents.ofType(),
         update = PatientSearchUpdate(),
         effectHandler = effectHandler.build(),
-        defaultModel = PatientSearchModel.create(),
+        defaultModel = PatientSearchModel.create(identifier),
         init = PatientSearchInit(),
         modelUpdateListener = uiRenderer::render
     )
     testFixture.start()
-
-    val controller = PatientSearchScreenController(identifier)
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
   }
 }

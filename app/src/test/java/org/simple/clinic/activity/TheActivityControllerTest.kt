@@ -3,17 +3,17 @@ package org.simple.clinic.activity
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,7 +29,6 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.main.TheActivityController
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
-import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
@@ -447,61 +446,23 @@ class TheActivityControllerTest {
     verify(patientRepository, never()).clearPatientData()
   }
 
-
-  data class RedirectToSignInParams(
-      val userUnauthorizedValues: List<Boolean>,
-      val numberOfTimesShouldRedirectToSignIn: Int
-  )
-
   @Test
-  @Parameters(method = "params for redirecting to sign in")
-  fun `whenever the user logged in status becomes unauthorized, the sign in screen must be shown`(testCase: RedirectToSignInParams) {
-    val (userUnauthorizedValues, numberOfTimesShouldRedirectToSignIn) = testCase
-    userUnauthorizedValues.forEach(userUnauthorizedSubject::onNext)
+  fun `the sign in screen must be shown only at the moment where the user gets logged out`() {
+    userUnauthorizedSubject.onNext(false)
+    verify(activity, never()).redirectToLogin()
 
-    if (numberOfTimesShouldRedirectToSignIn > 0) {
-      verify(activity, times(numberOfTimesShouldRedirectToSignIn)).redirectToLogin()
-    } else {
-      verify(activity, never()).redirectToLogin()
-    }
-    verifyNoMoreInteractions(activity)
-  }
+    userUnauthorizedSubject.onNext(true)
+    verify(activity).redirectToLogin()
 
-  @Suppress("Unused")
-  private fun `params for redirecting to sign in`(): List<RedirectToSignInParams> {
-    return listOf(
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(true),
-            numberOfTimesShouldRedirectToSignIn = 1
-        ),
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(false),
-            numberOfTimesShouldRedirectToSignIn = 0
-        ),
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(true, true),
-            numberOfTimesShouldRedirectToSignIn = 1
-        ),
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(true, false, true),
-            numberOfTimesShouldRedirectToSignIn = 2
-        ),
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(false, true, true, false, true),
-            numberOfTimesShouldRedirectToSignIn = 2
-        ),
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(false, false, false, false),
-            numberOfTimesShouldRedirectToSignIn = 0
-        ),
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(true, true, true, true),
-            numberOfTimesShouldRedirectToSignIn = 1
-        ),
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(true, false, true, false, true, false),
-            numberOfTimesShouldRedirectToSignIn = 3
-        )
-    )
+    clearInvocations(activity)
+
+    userUnauthorizedSubject.onNext(true)
+    verifyZeroInteractions(activity)
+
+    userUnauthorizedSubject.onNext(false)
+    verifyZeroInteractions(activity)
+
+    userUnauthorizedSubject.onNext(true)
+    verify(activity).redirectToLogin()
   }
 }

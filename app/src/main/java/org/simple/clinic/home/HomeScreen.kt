@@ -5,7 +5,8 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_home.view.*
@@ -92,7 +93,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
         ui = this,
         events = events,
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
 
     // Keyboard stays open after login finishes, not sure why.
@@ -129,8 +130,8 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
-  private fun facilitySelectionClicks() = RxView
-      .clicks(facilitySelectButton)
+  private fun facilitySelectionClicks() = facilitySelectButton
+      .clicks()
       .map { HomeFacilitySelectionClicked() }
 
   override fun setFacility(facilityName: String) {

@@ -21,12 +21,12 @@
 - Migrated `FacilityChangeActivity` to Mobius
 - Migrated `DrugSummaryView` to Mobius
 - Migrated `ForgotPinConfirmPinScreen` to Mobius
-- [In Progress: 05th Aug 2020] Migrate `ScanSimpleIdScreen` to Mobius
 - Change `OverdueScreen` to load data via the paging library
 - Migrated `PatientSearchScreen` to Mobius
 - [In Progress: 06 Aug 2020] Migrate `EnterOtpScreen` to Mobius
 - Migrated `HelpScreen` to Mobius
 - [In Progress: 05 Aug 2020] Migrate `HelpScreen` to Mobius
+- [In Progress: 06 Aug 2020] Migrate `ScanSimpleIdScreen` to Mobius
 
 ### Fixes
 - Fixed issue where recent and overdue patients on home screen would not update after changing facility ([#742](https://app.clubhouse.io/simpledotorg/story/742/home-screen-does-not-update-when-changing-facilities))

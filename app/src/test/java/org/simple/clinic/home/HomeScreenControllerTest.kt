@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -17,8 +18,10 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.time.LocalDate
 import java.util.UUID
 
@@ -36,10 +39,12 @@ class HomeScreenControllerTest {
   private val clock = TestUserClock()
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<HomeScreenModel, HomeScreenEvent, HomeScreenEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -116,5 +121,23 @@ class HomeScreenControllerTest {
         .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
+
+    val effectHandler = HomeScreenEffectHandler(
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+
+    val uiRenderer = HomeScreenUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = HomeScreenModel.create(),
+        init = HomeScreenInit(),
+        update = HomeScreenUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
+
+    testFixture.start()
   }
 }

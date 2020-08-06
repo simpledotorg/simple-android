@@ -17,18 +17,20 @@ class PatientSearchUpdate : Update<PatientSearchModel, PatientSearchEvent, Patie
   override fun update(model: PatientSearchModel, event: PatientSearchEvent): Next<PatientSearchModel, PatientSearchEffect> {
     return when (event) {
       is SearchQueryTextChanged -> next(model.queryChanged(event.text))
-      is SearchClicked -> {
-        val validationErrors = validateInput(model.enteredQuery)
-
-        if (validationErrors.isEmpty()) {
-          val searchCriteria = searchCriteriaFromInput(model.enteredQuery, model.additionalIdentifier)
-
-          dispatch(OpenSearchResults(searchCriteria) as PatientSearchEffect)
-        } else {
-          next(model.invalidQuery(validationErrors), ReportValidationErrorsToAnalytics(validationErrors) as PatientSearchEffect)
-        }
-      }
+      is SearchClicked -> searchClicked(model)
       is PatientItemClicked -> dispatch(OpenPatientSummary(event.patientUuid))
+    }
+  }
+
+  private fun searchClicked(model: PatientSearchModel): Next<PatientSearchModel, PatientSearchEffect> {
+    val validationErrors = validateInput(model.enteredQuery)
+
+    return if (validationErrors.isEmpty()) {
+      val searchCriteria = searchCriteriaFromInput(model.enteredQuery, model.additionalIdentifier)
+
+      dispatch(OpenSearchResults(searchCriteria) as PatientSearchEffect)
+    } else {
+      next(model.invalidQuery(validationErrors), ReportValidationErrorsToAnalytics(validationErrors) as PatientSearchEffect)
     }
   }
 

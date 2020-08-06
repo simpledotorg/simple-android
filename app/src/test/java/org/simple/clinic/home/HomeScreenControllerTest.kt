@@ -1,6 +1,5 @@
 package org.simple.clinic.home
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -13,13 +12,13 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
+import java.util.UUID
 
 class HomeScreenControllerTest {
 
@@ -55,12 +54,21 @@ class HomeScreenControllerTest {
   @Test
   fun `when home screen is created, then setup the home screen`() {
     // given
-    val facility1 = TestData.facility(name = "CHC Buchho")
-    val facility2 = TestData.facility(name = "CHC Nathana")
+    val facility1 = TestData.facility(
+        uuid = UUID.fromString("de250445-0ec9-43e4-be33-2a49ca334535"),
+        name = "CHC Buchho"
+    )
+    val facility2 = TestData.facility(
+        uuid = UUID.fromString("5b2136b8-11d5-4e20-8703-087281679aee"),
+        name = "CHC Nathana"
+    )
+    val loggedInUser = TestData.loggedInUser(
+        uuid = UUID.fromString("751cfb09-92a2-40df-a6b2-b3f82ecd81a1")
+    )
     val date = LocalDate.parse("2018-01-01")
 
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(TestData.loggedInUser()))
-    whenever(facilityRepository.currentFacility(any<User>())).thenReturn(Observable.just(facility1, facility2))
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility1, facility2))
     whenever(appointmentRepository.overdueAppointmentsCount(date, facility1)) doReturn Observable.just(3)
     whenever(appointmentRepository.overdueAppointmentsCount(date, facility2)) doReturn Observable.just(0)
 

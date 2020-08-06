@@ -123,6 +123,8 @@ class HomeScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     val effectHandler = HomeScreenEffectHandler(
+        userSession = userSession,
+        facilityRepository = facilityRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

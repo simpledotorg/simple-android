@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:context="org.simple.clinic.bp.entry.BloodPressureEntrySheet"
+  tools:parentTag="RelativeLayout">
+
+  <ProgressBar
+    android:id="@+id/progressLoader"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_gravity="center"
+    tools:visibility="gone" />
+
+  <org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener
   android:id="@+id/rootLayout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -75,7 +90,14 @@
           android:visibility="gone" />
       </RelativeLayout>
 
+      <Space
+        android:id="@+id/bloodPressureEntrySpace"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="@dimen/spacing_96" />
+
       <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bloodPressureEntryLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_optimizationLevel="direct|barrier">
@@ -287,3 +309,4 @@
     </FrameLayout>
   </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 </org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener>
+</merge>

@@ -31,4 +31,6 @@ interface BloodPressureEntryUi {
   fun setDateOnInputFields(dayOfMonth: String, month: String, fourDigitYear: String)
   fun showDateOnDateButton(date: LocalDate)
   fun dismiss()
+  fun showProgress()
+  fun hideProgress()
 }

@@ -1,11 +1,14 @@
 package org.simple.clinic.bp.entry
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.ValidationResult
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
+import org.simple.clinic.bp.entry.BloodPressureSaveState.NOT_SAVING_BLOOD_PRESSURE
+import org.simple.clinic.bp.entry.BloodPressureSaveState.SAVING_BLOOD_PRESSURE
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.util.UserInputDatePaddingCharacter
@@ -36,7 +39,7 @@ class BloodPressureEntryUpdate(
       is BloodPressureDateClicked -> onBloodPressureDateClicked(model)
       is SaveClicked -> onSaveClicked(model)
       is ShowBpClicked -> showBpClicked(model)
-      is BloodPressureSaved -> dispatch(SetBpSavedResultAndFinish)
+      is BloodPressureSaved -> next(model.bloodPressureStateChanged(NOT_SAVING_BLOOD_PRESSURE), SetBpSavedResultAndFinish)
       is DatePrefilled -> next(model.datePrefilled(event.prefilledDate))
     }
   }
@@ -111,15 +114,19 @@ class BloodPressureEntryUpdate(
   private fun onSaveClicked(
       model: BloodPressureEntryModel
   ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> {
-    val bpValidationResult = validateEnteredBp(model)
-    val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
-    val validationErrorEffects = getValidationErrorEffects(bpValidationResult, dateValidationResult)
-
-    return if (validationErrorEffects.isNotEmpty()) {
-      Next.dispatch(validationErrorEffects)
+    return if (model.bloodPressureSaveState == SAVING_BLOOD_PRESSURE) {
+      noChange()
     } else {
-      val bpReading = (bpValidationResult as ValidationResult.Valid).reading
-      dispatch(getCreateOrUpdateEntryEffect(model, dateValidationResult, bpReading))
+      val bpValidationResult = validateEnteredBp(model)
+      val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
+      val validationErrorEffects = getValidationErrorEffects(bpValidationResult, dateValidationResult)
+
+      if (validationErrorEffects.isNotEmpty()) {
+        Next.dispatch(validationErrorEffects)
+      } else {
+        val bpReading = (bpValidationResult as ValidationResult.Valid).reading
+        next(model.bloodPressureStateChanged(SAVING_BLOOD_PRESSURE), getCreateOrUpdateEntryEffect(model, dateValidationResult, bpReading))
+      }
     }
   }
 

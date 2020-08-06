@@ -24,7 +24,7 @@ import org.simple.mobius.migration.MobiusTestFixture
 import java.time.LocalDate
 import java.util.UUID
 
-class HomeScreenControllerTest {
+class HomeScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

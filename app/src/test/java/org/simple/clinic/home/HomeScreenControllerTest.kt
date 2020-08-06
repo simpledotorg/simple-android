@@ -75,8 +75,11 @@ class HomeScreenControllerTest {
 
   @Test
   fun `when facility change button is clicked facility selection screen should open`() {
+    // when
     setupController()
     uiEvents.onNext(HomeFacilitySelectionClicked())
+
+    // then
     verify(screen).openFacilitySelection()
   }
 

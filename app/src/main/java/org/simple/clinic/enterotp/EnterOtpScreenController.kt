@@ -4,8 +4,8 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
+import org.simple.clinic.LOGIN_OTP_LENGTH
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginUserWithOtp
 import org.simple.clinic.login.activateuser.ActivateUser
@@ -20,10 +20,8 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-typealias Ui = EnterOtpScreen
+typealias Ui = EnterOtpUi
 typealias UiChange = (Ui) -> Unit
-
-private const val OTP_LENGTH = 6
 
 class EnterOtpScreenController @Inject constructor(
     private val userSession: UserSession,
@@ -36,12 +34,10 @@ class EnterOtpScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(ReportAnalyticsEvents())
         .replay()
 
     return Observable.mergeArray(
         showPhoneNumberOnStart(replayedEvents),
-        handleBackClicks(replayedEvents),
         showOtpValidationErrors(replayedEvents),
         makeLoginCall(replayedEvents),
         closeScreenOnUserLoginInBackground(replayedEvents),
@@ -51,7 +47,7 @@ class EnterOtpScreenController @Inject constructor(
 
   private fun showOtpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<EnterOtpSubmitted>()
-        .filter { it.otp.length != OTP_LENGTH }
+        .filter { it.otp.length != LOGIN_OTP_LENGTH }
         .map {
           { ui: Ui ->
             ui.showIncorrectOtpError()
@@ -72,21 +68,12 @@ class EnterOtpScreenController @Inject constructor(
         .map { user -> { ui: Ui -> ui.showUserPhoneNumber(user.phoneNumber) } }
   }
 
-  private fun handleBackClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<EnterOtpBackClicked>()
-        .map { { ui: Ui -> ui.goBack() } }
-  }
-
   private fun makeLoginCall(events: Observable<UiEvent>): Observable<UiChange> {
     val otpFromSubmitted = events.ofType<EnterOtpSubmitted>()
-        .filter { it.otp.length == OTP_LENGTH }
+        .filter { it.otp.length == LOGIN_OTP_LENGTH }
         .map { it.otp }
 
-    val otpFromTextChanges = events.ofType<EnterOtpTextChanges>()
-        .filter { it.otp.length == OTP_LENGTH }
-        .map { it.otp }
-
-    return Observable.merge(otpFromSubmitted, otpFromTextChanges)
+    return otpFromSubmitted
         .flatMap { otp ->
           val entry = ongoingLoginEntry()
 

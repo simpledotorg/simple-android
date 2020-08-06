@@ -5,8 +5,9 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -26,29 +27,18 @@ class HomeScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
-  private lateinit var controller: HomeScreenController
 
+  private val screen = mock<HomeScreen>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val clock = TestUserClock()
 
-  private val screen = mock<HomeScreen>()
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    clock.setDate(LocalDate.parse("2018-01-01"))
-
-    controller = HomeScreenController(
-        userSession,
-        facilityRepository,
-        appointmentRepository,
-        clock
-    )
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -73,6 +63,7 @@ class HomeScreenControllerTest {
     whenever(appointmentRepository.overdueAppointmentsCount(date, facility2)) doReturn Observable.just(0)
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -84,7 +75,23 @@ class HomeScreenControllerTest {
 
   @Test
   fun `when facility change button is clicked facility selection screen should open`() {
+    setupController()
     uiEvents.onNext(HomeFacilitySelectionClicked())
     verify(screen).openFacilitySelection()
+  }
+
+  private fun setupController() {
+    clock.setDate(LocalDate.parse("2018-01-01"))
+
+    val controller = HomeScreenController(
+        userSession,
+        facilityRepository,
+        appointmentRepository,
+        clock
+    )
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

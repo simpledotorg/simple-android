@@ -1,279 +1,279 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/rootLayout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context=".bloodsugar.entry.BloodSugarEntrySheet">
+  android:animateLayoutChanges="true"
+  tools:gravity="bottom">
 
-  <ProgressBar
-    android:id="@+id/progressLoader"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/spacing_56"
-    android:layout_marginBottom="@dimen/spacing_40"
-    android:layout_gravity="center"
-    android:visibility="gone" />
-
-  <org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener
-    android:id="@+id/rootLayout"
+  <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
+    android:id="@+id/viewFlipper"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    tools:gravity="bottom">
+    android:layout_height="wrap_content"
+    android:inAnimation="@anim/measurementinput_date_entry_from_right"
+    android:measureAllChildren="false"
+    android:outAnimation="@anim/measurementinput_reading_exit_to_left"
+    android:paddingTop="@dimen/spacing_12"
+    android:paddingBottom="@dimen/spacing_8"
+    app:debug_displayedChild="0"
+    tools:background="@color/white">
 
-    <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
-      android:id="@+id/viewFlipper"
+    <LinearLayout
+      android:id="@+id/bloodsugarentry_flipper_blood_sugar_entry"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:inAnimation="@anim/measurementinput_date_entry_from_right"
-      android:measureAllChildren="false"
-      android:outAnimation="@anim/measurementinput_reading_exit_to_left"
-      android:paddingTop="@dimen/spacing_12"
-      android:paddingBottom="@dimen/spacing_8"
-      app:debug_displayedChild="0"
-      tools:background="@color/white">
+      android:orientation="vertical">
 
-      <LinearLayout
-        android:id="@+id/bloodsugarentry_flipper_blood_sugar_entry"
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+          android:id="@+id/enterBloodSugarTitleTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerHorizontal="true"
+          android:layout_centerVertical="true"
+          android:layout_marginTop="@dimen/spacing_12"
+          android:layout_marginBottom="@dimen/spacing_4"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          tools:ignore="UnusedAttribute"
+          tools:text="Random blood sugar" />
+
+        <TextView
+          android:id="@+id/editBloodSugarTitleTextView"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_alignParentStart="true"
+          android:layout_marginStart="@dimen/spacing_24"
+          android:ellipsize="end"
+          android:gravity="center_vertical"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+          android:visibility="gone"
+          app:layout_constraintBottom_toBottomOf="@id/removeBloodSugarButton"
+          app:layout_constraintEnd_toStartOf="@id/removeBloodSugarButton"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="@id/removeBloodSugarButton"
+          tools:text="Edit random blood sugar" />
+
+        <com.google.android.material.button.MaterialButton
+          android:id="@+id/removeBloodSugarButton"
+          style="@style/Clinic.V2.TextButton.Red1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="10dp"
+          android:paddingTop="14dp"
+          android:text="@string/bloodsugarentry_remove"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Button2"
+          android:visibility="gone"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@id/editBloodSugarTitleTextView"
+          app:layout_constraintTop_toTopOf="parent" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bloodSugarReadingLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        app:layout_optimizationLevel="direct|barrier">
+
+        <EditText
+          android:id="@+id/bloodSugarReadingEditText"
+          style="@style/Clinic.V2.MeasurementInput.Reading"
+          android:imeOptions="actionDone"
+          android:importantForAutofill="no"
+          android:theme="@style/Clinic.V2.MeasurementInputTheme"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_chainStyle="packed"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          tools:ignore="UnusedAttribute">
+
+          <requestFocus />
+        </EditText>
+
+        <TextView
+          android:id="@+id/bloodSugarReadingUnitLabel"
+          style="@style/Clinic.V2.MeasurementInputLayout"
+          android:labelFor="@+id/bloodSugarReadingEditText"
+          android:text="@string/bloodsugarentry_mg_dl"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+          app:layout_constraintEnd_toEndOf="@+id/bloodSugarReadingEditText"
+          app:layout_constraintStart_toStartOf="@+id/bloodSugarReadingEditText"
+          app:layout_constraintTop_toBottomOf="@+id/bloodSugarReadingEditText" />
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <ProgressBar
+        android:id="@+id/progressLoader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/spacing_40"
+        android:layout_marginBottom="@dimen/spacing_40"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/rootLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/rootLayout" />
+
+      <TextView
+        android:id="@+id/bloodSugarErrorTextView"
+        style="@style/Clinic.V2.TextAppearance.TextInputLayoutError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        tools:text="@string/bloodsugarentry_error_lower_limit" />
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/bloodSugarDateButton"
+        style="?attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+        tools:text="6 December, 2019" />
+    </LinearLayout>
+
+    <FrameLayout
+      android:id="@+id/bloodsugarentry_flipper_date_entry"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+      <ImageButton
+        android:id="@+id/backImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:background="?selectableItemBackgroundBorderless"
+        android:padding="@dimen/spacing_8"
+        app:srcCompat="@drawable/ic_arrow_back_24dp"
+        app:tint="@color/blue1"
+        tools:ignore="ContentDescription" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_12"
+        android:layout_marginBottom="@dimen/spacing_16"
         android:orientation="vertical">
+
+        <TextView
+          android:id="@+id/bloodsugarentry_enter_date"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_horizontal"
+          android:text="@string/bloodsugarentry_sheet_title_enter_date"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content">
 
-          <TextView
-            android:id="@+id/enterBloodSugarTitleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="@dimen/spacing_12"
-            android:layout_marginBottom="@dimen/spacing_4"
-            android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="UnusedAttribute"
-            tools:text="Random blood sugar" />
-
-          <TextView
-            android:id="@+id/editBloodSugarTitleTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="@dimen/spacing_24"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/removeBloodSugarButton"
-            app:layout_constraintEnd_toStartOf="@id/removeBloodSugarButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/removeBloodSugarButton"
-            tools:text="Edit random blood sugar" />
-
-          <com.google.android.material.button.MaterialButton
-            android:id="@+id/removeBloodSugarButton"
-            style="@style/Clinic.V2.TextButton.Red1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:paddingTop="14dp"
-            android:text="@string/bloodsugarentry_remove"
-            android:textAppearance="@style/Clinic.V2.TextAppearance.Button2"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/editBloodSugarTitleTextView"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-          android:id="@+id/bloodSugarReadingLayout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/spacing_16"
-          app:layout_optimizationLevel="direct|barrier">
-
           <EditText
-            android:id="@+id/bloodSugarReadingEditText"
-            style="@style/Clinic.V2.MeasurementInput.Reading"
-            android:imeOptions="actionDone"
+            android:id="@+id/dayEditText"
+            style="@style/Clinic.V2.MeasurementInput.Date"
             android:importantForAutofill="no"
             android:theme="@style/Clinic.V2.MeasurementInputTheme"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bloodsugarentry_day_month_separator"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="UnusedAttribute">
-
-            <requestFocus />
-          </EditText>
+            tools:ignore="UnusedAttribute" />
 
           <TextView
-            android:id="@+id/bloodSugarReadingUnitLabel"
+            android:id="@+id/bloodsugarentry_day_label"
             style="@style/Clinic.V2.MeasurementInputLayout"
-            android:labelFor="@+id/bloodSugarReadingEditText"
-            android:text="@string/bloodsugarentry_mg_dl"
+            android:gravity="center_horizontal"
+            android:labelFor="@id/dayEditText"
+            android:text="@string/bloodsugarentry_day"
             android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
-            app:layout_constraintEnd_toEndOf="@+id/bloodSugarReadingEditText"
-            app:layout_constraintStart_toStartOf="@+id/bloodSugarReadingEditText"
-            app:layout_constraintTop_toBottomOf="@+id/bloodSugarReadingEditText" />
+            app:layout_constraintEnd_toEndOf="@+id/dayEditText"
+            app:layout_constraintStart_toStartOf="@+id/dayEditText"
+            app:layout_constraintTop_toBottomOf="@+id/dayEditText" />
+
+          <TextView
+            android:id="@+id/bloodsugarentry_day_month_separator"
+            style="@style/Clinic.V2.MeasurementInputSeparator"
+            app:layout_constraintBottom_toBottomOf="@+id/dayEditText"
+            app:layout_constraintEnd_toStartOf="@+id/monthEditText"
+            app:layout_constraintStart_toEndOf="@+id/dayEditText"
+            app:layout_constraintTop_toTopOf="@+id/dayEditText" />
+
+          <EditText
+            android:id="@+id/monthEditText"
+            style="@style/Clinic.V2.MeasurementInput.Date"
+            android:importantForAutofill="no"
+            android:theme="@style/Clinic.V2.MeasurementInputTheme"
+            app:layout_constraintEnd_toStartOf="@+id/bloodsugarentry_month_year_separator"
+            app:layout_constraintStart_toEndOf="@+id/bloodsugarentry_day_month_separator"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UnusedAttribute" />
+
+          <TextView
+            android:id="@+id/bloodsugarentry_month_label"
+            style="@style/Clinic.V2.MeasurementInputLayout"
+            android:gravity="center_horizontal"
+            android:labelFor="@id/monthEditText"
+            android:text="@string/bloodsugarentry_month"
+            android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+            app:layout_constraintEnd_toEndOf="@+id/monthEditText"
+            app:layout_constraintStart_toStartOf="@+id/monthEditText"
+            app:layout_constraintTop_toBottomOf="@+id/monthEditText" />
+
+          <TextView
+            android:id="@+id/bloodsugarentry_month_year_separator"
+            style="@style/Clinic.V2.MeasurementInputSeparator"
+            app:layout_constraintBottom_toBottomOf="@+id/monthEditText"
+            app:layout_constraintEnd_toStartOf="@+id/yearEditText"
+            app:layout_constraintStart_toEndOf="@+id/monthEditText"
+            app:layout_constraintTop_toTopOf="@+id/monthEditText" />
+
+          <EditText
+            android:id="@+id/yearEditText"
+            style="@style/Clinic.V2.MeasurementInput.Date"
+            android:importantForAutofill="no"
+            android:theme="@style/Clinic.V2.MeasurementInputTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/bloodsugarentry_month_year_separator"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UnusedAttribute" />
+
+          <TextView
+            android:id="@+id/bloodsugarentry_year_label"
+            style="@style/Clinic.V2.MeasurementInputLayout"
+            android:gravity="center_horizontal"
+            android:labelFor="@id/yearEditText"
+            android:text="@string/bloodsugarentry_year"
+            android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+            app:layout_constraintEnd_toEndOf="@+id/yearEditText"
+            app:layout_constraintStart_toStartOf="@+id/yearEditText"
+            app:layout_constraintTop_toBottomOf="@+id/yearEditText" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-          android:id="@+id/bloodSugarErrorTextView"
+          android:id="@+id/dateErrorTextView"
           style="@style/Clinic.V2.TextAppearance.TextInputLayoutError"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/spacing_8"
           android:gravity="center_horizontal"
-          android:visibility="gone"
-          tools:text="@string/bloodsugarentry_error_lower_limit" />
-
-        <com.google.android.material.button.MaterialButton
-          android:id="@+id/bloodSugarDateButton"
-          style="?attr/borderlessButtonStyle"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:layout_marginTop="@dimen/spacing_8"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
-          tools:text="6 December, 2019" />
+          tools:text="@string/bloodsugarentry_error_date_is_in_future" />
       </LinearLayout>
+    </FrameLayout>
+  </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 
-      <FrameLayout
-        android:id="@+id/bloodsugarentry_flipper_date_entry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+</org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener>
 
-        <ImageButton
-          android:id="@+id/backImageButton"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="@dimen/spacing_16"
-          android:layout_marginTop="@dimen/spacing_4"
-          android:background="?selectableItemBackgroundBorderless"
-          android:padding="@dimen/spacing_8"
-          app:srcCompat="@drawable/ic_arrow_back_24dp"
-          app:tint="@color/blue1"
-          tools:ignore="ContentDescription" />
-
-        <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/spacing_12"
-          android:layout_marginBottom="@dimen/spacing_16"
-          android:orientation="vertical">
-
-          <TextView
-            android:id="@+id/bloodsugarentry_enter_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/bloodsugarentry_sheet_title_enter_date"
-            android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
-
-          <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-              android:id="@+id/dayEditText"
-              style="@style/Clinic.V2.MeasurementInput.Date"
-              android:importantForAutofill="no"
-              android:theme="@style/Clinic.V2.MeasurementInputTheme"
-              app:layout_constraintEnd_toStartOf="@+id/bloodsugarentry_day_month_separator"
-              app:layout_constraintHorizontal_chainStyle="packed"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toTopOf="parent"
-              tools:ignore="UnusedAttribute" />
-
-            <TextView
-              android:id="@+id/bloodsugarentry_day_label"
-              style="@style/Clinic.V2.MeasurementInputLayout"
-              android:gravity="center_horizontal"
-              android:labelFor="@id/dayEditText"
-              android:text="@string/bloodsugarentry_day"
-              android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
-              app:layout_constraintEnd_toEndOf="@+id/dayEditText"
-              app:layout_constraintStart_toStartOf="@+id/dayEditText"
-              app:layout_constraintTop_toBottomOf="@+id/dayEditText" />
-
-            <TextView
-              android:id="@+id/bloodsugarentry_day_month_separator"
-              style="@style/Clinic.V2.MeasurementInputSeparator"
-              app:layout_constraintBottom_toBottomOf="@+id/dayEditText"
-              app:layout_constraintEnd_toStartOf="@+id/monthEditText"
-              app:layout_constraintStart_toEndOf="@+id/dayEditText"
-              app:layout_constraintTop_toTopOf="@+id/dayEditText" />
-
-            <EditText
-              android:id="@+id/monthEditText"
-              style="@style/Clinic.V2.MeasurementInput.Date"
-              android:importantForAutofill="no"
-              android:theme="@style/Clinic.V2.MeasurementInputTheme"
-              app:layout_constraintEnd_toStartOf="@+id/bloodsugarentry_month_year_separator"
-              app:layout_constraintStart_toEndOf="@+id/bloodsugarentry_day_month_separator"
-              app:layout_constraintTop_toTopOf="parent"
-              tools:ignore="UnusedAttribute" />
-
-            <TextView
-              android:id="@+id/bloodsugarentry_month_label"
-              style="@style/Clinic.V2.MeasurementInputLayout"
-              android:gravity="center_horizontal"
-              android:labelFor="@id/monthEditText"
-              android:text="@string/bloodsugarentry_month"
-              android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
-              app:layout_constraintEnd_toEndOf="@+id/monthEditText"
-              app:layout_constraintStart_toStartOf="@+id/monthEditText"
-              app:layout_constraintTop_toBottomOf="@+id/monthEditText" />
-
-            <TextView
-              android:id="@+id/bloodsugarentry_month_year_separator"
-              style="@style/Clinic.V2.MeasurementInputSeparator"
-              app:layout_constraintBottom_toBottomOf="@+id/monthEditText"
-              app:layout_constraintEnd_toStartOf="@+id/yearEditText"
-              app:layout_constraintStart_toEndOf="@+id/monthEditText"
-              app:layout_constraintTop_toTopOf="@+id/monthEditText" />
-
-            <EditText
-              android:id="@+id/yearEditText"
-              style="@style/Clinic.V2.MeasurementInput.Date"
-              android:importantForAutofill="no"
-              android:theme="@style/Clinic.V2.MeasurementInputTheme"
-              app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintStart_toEndOf="@+id/bloodsugarentry_month_year_separator"
-              app:layout_constraintTop_toTopOf="parent"
-              tools:ignore="UnusedAttribute" />
-
-            <TextView
-              android:id="@+id/bloodsugarentry_year_label"
-              style="@style/Clinic.V2.MeasurementInputLayout"
-              android:gravity="center_horizontal"
-              android:labelFor="@id/yearEditText"
-              android:text="@string/bloodsugarentry_year"
-              android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
-              app:layout_constraintEnd_toEndOf="@+id/yearEditText"
-              app:layout_constraintStart_toStartOf="@+id/yearEditText"
-              app:layout_constraintTop_toBottomOf="@+id/yearEditText" />
-          </androidx.constraintlayout.widget.ConstraintLayout>
-
-          <TextView
-            android:id="@+id/dateErrorTextView"
-            style="@style/Clinic.V2.TextAppearance.TextInputLayoutError"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_8"
-            android:gravity="center_horizontal"
-            tools:text="@string/bloodsugarentry_error_date_is_in_future" />
-        </LinearLayout>
-      </FrameLayout>
-    </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
-  </org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener>
-</FrameLayout>

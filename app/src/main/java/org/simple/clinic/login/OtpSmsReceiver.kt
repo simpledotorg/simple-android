@@ -10,6 +10,7 @@ import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
 import org.simple.clinic.ClinicApp
+import org.simple.clinic.LOGIN_OTP_LENGTH
 import org.simple.clinic.R
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.UserSession
@@ -24,7 +25,6 @@ import javax.inject.Inject
 // <#> 000000 is your Simple Verification Code
 // 1zXflK9uq42
 private const val OTP_START_INDEX = 4
-private const val OTP_LENGTH = 6
 
 class OtpSmsReceiver : BroadcastReceiver() {
 
@@ -56,7 +56,7 @@ class OtpSmsReceiver : BroadcastReceiver() {
       CommonStatusCodes.SUCCESS -> {
         val message = extras[SmsRetriever.EXTRA_SMS_MESSAGE] as String
 
-        val otp = message.substring(OTP_START_INDEX, OTP_START_INDEX + OTP_LENGTH)
+        val otp = message.substring(OTP_START_INDEX, OTP_START_INDEX + LOGIN_OTP_LENGTH)
 
         userSession.ongoingLoginEntry()
             .flatMap { entry -> loginUserWithOtp.get().loginWithOtp(entry.phoneNumber!!, entry.pin!!, otp) }

@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
+import org.simple.clinic.bp.entry.BloodPressureSaveState.NOT_SAVING_BLOOD_PRESSURE
 import java.time.LocalDate
 
 @Parcelize
@@ -16,7 +17,8 @@ data class BloodPressureEntryModel(
     val day: String = "",
     val month: String = "",
     val fourDigitYear: String = "",
-    val prefilledDate: LocalDate? = null
+    val prefilledDate: LocalDate? = null,
+    val bloodPressureSaveState: BloodPressureSaveState = NOT_SAVING_BLOOD_PRESSURE
 ) : Parcelable {
   companion object {
     fun create(openAs: OpenAs, year: Int): BloodPressureEntryModel =
@@ -53,6 +55,9 @@ data class BloodPressureEntryModel(
 
   fun datePrefilled(prefilledDate: LocalDate): BloodPressureEntryModel =
       copy(prefilledDate = prefilledDate)
+
+  fun bloodPressureStateChanged(bloodPressureSaveState: BloodPressureSaveState): BloodPressureEntryModel =
+      copy(bloodPressureSaveState = bloodPressureSaveState)
 
   private fun String.unsafeDropLastChar(): String =
       this.substring(0, this.length - 1)

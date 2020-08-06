@@ -12,10 +12,10 @@ import kotlinx.android.synthetic.main.screen_home.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.injector
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.home.HomeTab.OVERDUE
 import org.simple.clinic.home.help.HelpScreenKey
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.SettingsScreenKey
@@ -83,7 +83,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
       return
     }
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     setupToolBar()
     setupHelpClicks()
@@ -160,5 +160,9 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     val overdueTab = homeTabLayout.getTabAt(overdueTabIndex)
 
     overdueTab?.removeBadge()
+  }
+
+  interface Injector {
+    fun inject(target: HomeScreen)
   }
 }

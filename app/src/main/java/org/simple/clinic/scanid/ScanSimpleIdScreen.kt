@@ -2,20 +2,26 @@ package org.simple.clinic.scanid
 
 import android.content.Context
 import android.graphics.Rect
+import android.os.Parcelable
 import android.text.InputFilter.LengthFilter
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.inputmethod.EditorInfo
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.detaches
+import com.jakewharton.rxbinding3.widget.editorActionEvents
+import com.jakewharton.rxbinding3.widget.textChangeEvents
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.CameraXQrScanner
 import org.simple.clinic.feature.Features
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport.SHORT_CODE_LENGTH
 import org.simple.clinic.router.screen.RouterDirection
@@ -27,6 +33,7 @@ import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -37,7 +44,7 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
+class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), ScanSimpleIdUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -51,16 +58,56 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   @Inject
   lateinit var features: Features
 
+  @Inject
+  lateinit var effectHandlerFactory: ScanSimpleIdEffectHandler.Factory
+
   private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
 
   private lateinit var qrCodeScannerView: IQrCodeScannerView
+
+  private val events by unsafeLazy {
+    Observable
+        .mergeArray(qrScans(), keyboardEvents(), qrCodeChanges(), doneClicks())
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = ScanSimpleIdUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = ScanSimpleIdModel.create(),
+        update = ScanSimpleIdUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
     // It is possible that going back via the app bar from future screens will come back to this
     // screen with the keyboard open. So, we hide it here.
     hideKeyboard()
@@ -77,9 +124,9 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
     bindUiToController(
         ui = this,
-        events = Observable.mergeArray(qrScans(), keyboardEvents(), qrCodeChanges(), doneClicks()),
+        events = events,
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
   }
 
@@ -97,14 +144,14 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   private fun qrCodeChanges(): Observable<UiEvent> {
-    return RxTextView
-        .textChangeEvents(shortCodeText)
+    return shortCodeText
+        .textChangeEvents()
         .map { ShortCodeChanged }
   }
 
   private fun doneClicks(): Observable<UiEvent> {
-    return RxTextView
-        .editorActionEvents(shortCodeText)
+    return shortCodeText
+        .editorActionEvents { it.actionId == EditorInfo.IME_ACTION_SEARCH }
         .map { ShortCodeSearched(ShortCodeInput(shortCodeText.text.toString())) }
   }
 
@@ -121,7 +168,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     }
   }
 
-  fun openPatientSummary(patientUuid: UUID) {
+  override fun openPatientSummary(patientUuid: UUID) {
     screenRouter.popAndPush(
         PatientSummaryScreenKey(
             patientUuid = patientUuid,
@@ -132,11 +179,11 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     )
   }
 
-  fun openAddIdToPatientScreen(identifier: Identifier) {
+  override fun openAddIdToPatientScreen(identifier: Identifier) {
     screenRouter.popAndPush(PatientSearchScreenKey(identifier), RouterDirection.FORWARD)
   }
 
-  fun showShortCodeValidationError(failure: ShortCodeValidationResult) {
+  override fun showShortCodeValidationError(failure: ShortCodeValidationResult) {
     shortCodeErrorText.visibility = View.VISIBLE
     val validationErrorMessage = if (failure == Empty) {
       R.string.scansimpleid_shortcode_error_empty
@@ -146,20 +193,24 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     shortCodeErrorText.text = resources.getString(validationErrorMessage)
   }
 
-  fun hideShortCodeValidationError() {
+  override fun hideShortCodeValidationError() {
     shortCodeErrorText.visibility = View.GONE
   }
 
-  fun openPatientShortCodeSearch(validShortCode: String) {
+  override fun openPatientShortCodeSearch(validShortCode: String) {
     screenRouter.popAndPush(ShortCodeSearchResultScreenKey(validShortCode), RouterDirection.FORWARD)
   }
 
-  fun hideQrCodeScannerView() {
+  override fun hideQrCodeScannerView() {
     qrCodeScannerView.hideQrCodeScanner()
   }
 
-  fun showQrCodeScannerView() {
+  override fun showQrCodeScannerView() {
     qrCodeScannerView.showQrCodeScanner()
+  }
+
+  interface Injector {
+    fun inject(target: ScanSimpleIdScreen)
   }
 }
 

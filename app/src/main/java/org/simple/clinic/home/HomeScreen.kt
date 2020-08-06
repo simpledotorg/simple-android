@@ -26,7 +26,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
-class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), HomeScreenUi {
+class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), HomeScreenUi, HomeScreenUiActions {
 
   @Inject
   lateinit var controller: HomeScreenController

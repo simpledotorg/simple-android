@@ -32,6 +32,7 @@ class HomeScreenControllerTest {
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
 
   private val ui = mock<HomeScreenUi>()
+  private val uiActions = mock<HomeScreenUiActions>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
   private val appointmentRepository = mock<AppointmentRepository>()
@@ -73,7 +74,7 @@ class HomeScreenControllerTest {
     verify(ui, times(2)).setFacility("CHC Nathana")
     verify(ui, times(2)).showOverdueAppointmentCount(3)
     verify(ui).removeOverdueAppointmentCount()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -99,8 +100,8 @@ class HomeScreenControllerTest {
     // then
     verify(ui, times(2)).setFacility("CHC Buchho")
     verify(ui).removeOverdueAppointmentCount()
-    verify(ui).openFacilitySelection()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openFacilitySelection()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupController() {
@@ -112,7 +113,7 @@ class HomeScreenControllerTest {
         appointmentRepository = appointmentRepository,
         userClock = clock,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
 
     val uiRenderer = HomeScreenUiRenderer(ui)

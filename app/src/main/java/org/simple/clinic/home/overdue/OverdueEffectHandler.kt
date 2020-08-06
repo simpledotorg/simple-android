@@ -3,7 +3,7 @@ package org.simple.clinic.home.overdue
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import dagger.Lazy
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
@@ -12,7 +12,7 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class OverdueEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val appointmentRepository: AppointmentRepository,
-    private val currentFacility: Lazy<Facility>,
+    private val currentFacilityChanges: Observable<Facility>,
     private val dataSourceFactory: OverdueAppointmentRowDataSource.Factory.InjectionFactory,
     @Assisted private val uiActions: OverdueUiActions
 ) {
@@ -34,8 +34,11 @@ class OverdueEffectHandler @AssistedInject constructor(
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, OverdueEvent> {
     return ObservableTransformer { effects ->
       effects
-          .observeOn(schedulers.io())
-          .map { CurrentFacilityLoaded(currentFacility.get()) }
+          .switchMap {
+            currentFacilityChanges
+                .subscribeOn(schedulers.io())
+                .map(::CurrentFacilityLoaded)
+          }
     }
   }
 

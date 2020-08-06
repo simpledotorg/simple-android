@@ -24,4 +24,6 @@ interface BloodSugarEntryUi {
   fun showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid: UUID)
   fun showEntryTitle(measurementType: BloodSugarMeasurementType)
   fun showEditTitle(measurementType: BloodSugarMeasurementType)
+  fun showProgress()
+  fun hideProgress()
 }

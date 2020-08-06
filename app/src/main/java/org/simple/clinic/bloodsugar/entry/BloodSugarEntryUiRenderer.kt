@@ -12,6 +12,15 @@ class BloodSugarEntryUiRenderer(
 
   override fun render(model: BloodSugarEntryModel) {
     openAsValueChangedCallback.pass(model.openAs) { setupUi(it) }
+    manageProgress(model)
+  }
+
+  private fun manageProgress(model: BloodSugarEntryModel) {
+    if (model.bloodSugarSaveState == BloodSugarSaveState.SAVING_BLOOD_SUGAR) {
+      ui.showProgress()
+    } else {
+      ui.hideProgress()
+    }
   }
 
   private fun setupUi(openAs: OpenAs) {

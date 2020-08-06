@@ -84,7 +84,7 @@ class OverdueLogicTest {
         update = OverdueUpdate(dateOnClock),
         effectHandler = effectHandler.build(),
         modelUpdateListener = { /* Nothing to do here */ },
-        init = OverdueInit(dateOnClock)
+        init = OverdueInit()
     )
     testFixture.start()
   }

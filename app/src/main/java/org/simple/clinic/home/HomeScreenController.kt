@@ -16,7 +16,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
 import javax.inject.Inject
 
-typealias Ui = HomeScreen
+typealias Ui = HomeScreenUi
 typealias UiChange = (Ui) -> Unit
 
 class HomeScreenController @Inject constructor(

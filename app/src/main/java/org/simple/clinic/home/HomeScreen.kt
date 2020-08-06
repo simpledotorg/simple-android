@@ -20,7 +20,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
-class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), HomeScreenUi {
 
   @Inject
   lateinit var controller: HomeScreenController
@@ -87,15 +87,15 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
       .clicks(facilitySelectButton)
       .map { HomeFacilitySelectionClicked() }
 
-  fun setFacility(facilityName: String) {
+  override fun setFacility(facilityName: String) {
     facilitySelectButton.text = facilityName
   }
 
-  fun openFacilitySelection() {
+  override fun openFacilitySelection() {
     activity.startActivity(FacilityChangeActivity.intent(context))
   }
 
-  fun showOverdueAppointmentCount(count: Int) {
+  override fun showOverdueAppointmentCount(count: Int) {
     val overdueTabIndex = HomeTab.values().indexOf(OVERDUE)
     val overdueTab = homeTabLayout.getTabAt(overdueTabIndex)
 
@@ -109,7 +109,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     }
   }
 
-  fun removeOverdueAppointmentCount() {
+  override fun removeOverdueAppointmentCount() {
     val overdueTabIndex = HomeTab.values().indexOf(OVERDUE)
     val overdueTab = homeTabLayout.getTabAt(overdueTabIndex)
 

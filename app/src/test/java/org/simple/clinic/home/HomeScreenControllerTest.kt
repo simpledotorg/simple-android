@@ -29,7 +29,7 @@ class HomeScreenControllerTest {
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
 
-  private val screen = mock<HomeScreen>()
+  private val ui = mock<HomeScreenUi>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
   private val appointmentRepository = mock<AppointmentRepository>()
@@ -67,11 +67,11 @@ class HomeScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).setFacility("CHC Buchho")
-    verify(screen).setFacility("CHC Nathana")
-    verify(screen).showOverdueAppointmentCount(3)
-    verify(screen).removeOverdueAppointmentCount()
-    verifyNoMoreInteractions(screen)
+    verify(ui).setFacility("CHC Buchho")
+    verify(ui).setFacility("CHC Nathana")
+    verify(ui).showOverdueAppointmentCount(3)
+    verify(ui).removeOverdueAppointmentCount()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -95,10 +95,10 @@ class HomeScreenControllerTest {
     uiEvents.onNext(HomeFacilitySelectionClicked())
 
     // then
-    verify(screen).setFacility("CHC Buchho")
-    verify(screen).removeOverdueAppointmentCount()
-    verify(screen).openFacilitySelection()
-    verifyNoMoreInteractions(screen)
+    verify(ui).setFacility("CHC Buchho")
+    verify(ui).removeOverdueAppointmentCount()
+    verify(ui).openFacilitySelection()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -113,7 +113,7 @@ class HomeScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
   }

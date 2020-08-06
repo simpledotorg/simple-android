@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -16,32 +15,29 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.help.HelpPullResult
 import org.simple.clinic.help.HelpRepository
-import org.simple.clinic.help.HelpScreenTryAgainClicked
 import org.simple.clinic.help.HelpSync
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 
-class HelpScreenControllerTest {
+class HelpScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<HelpScreenUi>()
+  private val uiActions = mock<HelpScreenUiActions>()
   private val helpRepository = mock<HelpRepository>()
   private val helpSync = mock<HelpSync>()
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<HelpScreenModel, HelpScreenEvent, HelpScreenEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -56,6 +52,7 @@ class HelpScreenControllerTest {
     setupController()
 
     // then
+    verify(ui).showNoHelpAvailable()
     verify(ui).showHelp(content)
     verifyNoMoreInteractions(ui)
 
@@ -80,6 +77,7 @@ class HelpScreenControllerTest {
     setupController()
 
     // then
+    verify(ui).showNoHelpAvailable()
     verify(ui).showHelp(please)
     verify(ui).showHelp(help)
     verifyNoMoreInteractions(ui)
@@ -99,7 +97,7 @@ class HelpScreenControllerTest {
     setupController()
 
     // then
-    verify(ui).showNoHelpAvailable()
+    verify(ui, times(2)).showNoHelpAvailable()
     verifyNoMoreInteractions(ui)
 
     verify(helpRepository).helpContentText()
@@ -119,9 +117,9 @@ class HelpScreenControllerTest {
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     // then
-    verify(ui).showLoadingView()
-    verify(ui).showNoHelpAvailable()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showLoadingView()
+    verify(ui, times(2)).showNoHelpAvailable()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(helpRepository).helpContentText()
     verifyNoMoreInteractions(helpRepository)
@@ -141,9 +139,9 @@ class HelpScreenControllerTest {
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     // then
-    verify(ui).showNoHelpAvailable()
-    verify(ui).showLoadingView()
-    verifyNoMoreInteractions(ui)
+    verify(ui, times(2)).showNoHelpAvailable()
+    verify(uiActions).showLoadingView()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(helpSync).pullWithResult()
     verifyNoMoreInteractions(helpSync)
@@ -164,9 +162,9 @@ class HelpScreenControllerTest {
 
     // then
     verify(ui).showNetworkErrorMessage()
-    verify(ui).showLoadingView()
-    verify(ui, times(2)).showNoHelpAvailable()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showLoadingView()
+    verify(ui, times(3)).showNoHelpAvailable()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(helpRepository).helpContentText()
     verifyNoMoreInteractions(helpRepository)
@@ -187,9 +185,9 @@ class HelpScreenControllerTest {
 
     // then
     verify(ui).showUnexpectedErrorMessage()
-    verify(ui, times(2)).showNoHelpAvailable()
-    verify(ui).showLoadingView()
-    verifyNoMoreInteractions(ui)
+    verify(ui, times(3)).showNoHelpAvailable()
+    verify(uiActions).showLoadingView()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(helpRepository).helpContentText()
     verifyNoMoreInteractions(helpRepository)
@@ -199,17 +197,11 @@ class HelpScreenControllerTest {
   }
 
   private fun setupController() {
-    val controller = HelpScreenController(repository = helpRepository, sync = helpSync)
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
-    uiEvents.onNext(ScreenCreated())
-
     val effectHandler = HelpScreenEffectHandler(
+        helpRepository = helpRepository,
+        helpSync = helpSync,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
     val uiRenderer = HelpScreenUiRenderer(ui)
 

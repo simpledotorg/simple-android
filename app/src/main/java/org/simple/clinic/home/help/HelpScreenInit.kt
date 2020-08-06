@@ -6,6 +6,11 @@ import com.spotify.mobius.Init
 
 class HelpScreenInit : Init<HelpScreenModel, HelpScreenEffect> {
   override fun init(model: HelpScreenModel): First<HelpScreenModel, HelpScreenEffect> {
-    return first(model)
+    val effects = mutableSetOf<HelpScreenEffect>()
+    if (model.hasHelpContent.not()) {
+      effects.add(LoadHelpContent)
+    }
+
+    return first(model, effects)
   }
 }

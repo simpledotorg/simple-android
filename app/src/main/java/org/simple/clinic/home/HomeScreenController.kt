@@ -39,15 +39,10 @@ class HomeScreenController @Inject constructor(
 
     val overdueAppointmentCountStream = overdueAppointmentCountStream(facilityStream)
 
-    val homeFacilityNameStream = facilityStream
-        .map { facility -> { ui: Ui -> ui.setFacility(facility.name) } }
-
-    val homeOverdueAppointmentCountStream = homeOverdueAppointmentCountStream(overdueAppointmentCountStream)
-
-    return Observable.merge(homeFacilityNameStream, homeOverdueAppointmentCountStream)
+    return homeOverdueAppointmentCountStream(overdueAppointmentCountStream)
   }
 
-  private fun homeOverdueAppointmentCountStream(overdueAppointmentCountStream: Observable<Int>): Observable<(Ui) -> Unit>? {
+  private fun homeOverdueAppointmentCountStream(overdueAppointmentCountStream: Observable<Int>): Observable<UiChange> {
     return overdueAppointmentCountStream
         .map { overdueCount ->
           { ui: Ui ->

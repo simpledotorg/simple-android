@@ -65,7 +65,6 @@ class HomeScreenControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(screen).setFacility("CHC Buchho")
@@ -77,11 +76,27 @@ class HomeScreenControllerTest {
 
   @Test
   fun `when facility change button is clicked facility selection screen should open`() {
+    // given
+    val facility = TestData.facility(
+        uuid = UUID.fromString("e497355e-723c-4b35-b55a-778a6233b720"),
+        name = "CHC Buchho"
+    )
+    val loggedInUser = TestData.loggedInUser(
+        uuid = UUID.fromString("751cfb09-92a2-40df-a6b2-b3f82ecd81a1")
+    )
+    val date = LocalDate.parse("2018-01-01")
+
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
+    whenever(appointmentRepository.overdueAppointmentsCount(date, facility)) doReturn Observable.just(0)
+
     // when
     setupController()
     uiEvents.onNext(HomeFacilitySelectionClicked())
 
     // then
+    verify(screen).setFacility("CHC Buchho")
+    verify(screen).removeOverdueAppointmentCount()
     verify(screen).openFacilitySelection()
     verifyNoMoreInteractions(screen)
   }
@@ -99,5 +114,7 @@ class HomeScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

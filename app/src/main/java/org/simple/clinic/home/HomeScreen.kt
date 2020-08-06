@@ -8,6 +8,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_home.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.home.HomeTab.OVERDUE
@@ -15,6 +16,7 @@ import org.simple.clinic.home.help.HelpScreenKey
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.SettingsScreenKey
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.hideKeyboard
@@ -31,6 +33,13 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   @Inject
   lateinit var activity: AppCompatActivity
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(screenCreates(), facilitySelectionClicks())
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -44,7 +53,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(screenCreates(), facilitySelectionClicks()),
+        events = events,
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

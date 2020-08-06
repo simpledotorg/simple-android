@@ -3,7 +3,6 @@ package org.simple.clinic.activity
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.check
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -43,9 +42,11 @@ import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
@@ -66,11 +67,15 @@ class TheActivityControllerTest {
   private val userUnauthorizedSubject = PublishSubject.create<Boolean>()
   private val userDisapprovedSubject = PublishSubject.create<Boolean>()
 
+  private val currentTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+  private val clock = TestUtcClock(currentTimestamp)
+
   private val controller = TheActivityController(
       userSession = userSession,
       appLockConfig = AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes)),
-      lockAfterTimestamp = lockAfterTimestamp,
-      patientRepository = patientRepository
+      patientRepository = patientRepository,
+      utcClock = clock,
+      lockAfterTimestamp = lockAfterTimestamp
   )
 
   @Before
@@ -109,7 +114,7 @@ class TheActivityControllerTest {
     whenever(userSession.loggedInUser())
         .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = loggedInStatus, status = UserStatus.ApprovedForSyncing))))
 
-    val lockAfterTime = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(1))
+    val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     uiEvents.onNext(Started(null))
@@ -129,10 +134,7 @@ class TheActivityControllerTest {
 
     uiEvents.onNext(Stopped(null))
 
-    verify(lockAfterTimestamp).set(check {
-      // Not the best way, but works.
-      it > Instant.now().minusSeconds(1)
-    })
+    verify(lockAfterTimestamp).set(currentTimestamp.plus(lockInMinutes, ChronoUnit.MINUTES))
   }
 
   @Test

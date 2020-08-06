@@ -24,6 +24,7 @@ import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.filterTrue
 import org.simple.clinic.util.toNullable
@@ -39,6 +40,7 @@ class TheActivityController @Inject constructor(
     private val userSession: UserSession,
     private val appLockConfig: AppLockConfig,
     private val patientRepository: PatientRepository,
+    private val utcClock: UtcClock,
     @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -67,7 +69,7 @@ class TheActivityController @Inject constructor(
               .take(1)
         }
         .filter { it in showAppLockForUserStates }
-        .map { Instant.now() > lockAfterTimestamp.get() }
+        .map { Instant.now(utcClock) > lockAfterTimestamp.get() }
         .replay()
         .refCount()
 
@@ -90,7 +92,7 @@ class TheActivityController @Inject constructor(
         .ofType<Stopped>()
         .filter { userSession.isUserLoggedIn() }
         .filter { !lockAfterTimestamp.isSet }
-        .doOnNext { lockAfterTimestamp.set(Instant.now().plusMillis(appLockConfig.lockAfterTimeMillis)) }
+        .doOnNext { lockAfterTimestamp.set(Instant.now(utcClock).plusMillis(appLockConfig.lockAfterTimeMillis)) }
         .flatMap { Observable.empty<UiChange>() }
   }
 

@@ -3,7 +3,7 @@ package org.simple.clinic.recentpatientsview
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import dagger.Lazy
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
@@ -12,7 +12,7 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class LatestRecentPatientsEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val patientRepository: PatientRepository,
-    private val currentFacility: Lazy<Facility>,
+    private val currentFacilityChanges: Observable<Facility>,
     @Assisted private val uiActions: LatestRecentPatientsUiActions
 ) {
 
@@ -25,7 +25,7 @@ class LatestRecentPatientsEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<LatestRecentPatientsEffect, LatestRecentPatientsEvent>()
         .addTransformer(LoadRecentPatients::class.java, loadRecentPatients())
-        .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid)}, schedulers.ui())
+        .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid) }, schedulers.ui())
         .addAction(OpenAllRecentPatientsScreen::class.java, uiActions::openRecentPatientsScreen, schedulers.ui())
         .build()
   }
@@ -33,10 +33,10 @@ class LatestRecentPatientsEffectHandler @AssistedInject constructor(
   private fun loadRecentPatients(): ObservableTransformer<LoadRecentPatients, LatestRecentPatientsEvent> {
     return ObservableTransformer { effects ->
       effects
-          .observeOn(schedulers.io())
           .switchMap { effect ->
-            patientRepository
-                .recentPatients(currentFacility.get().uuid, effect.count)
+            currentFacilityChanges
+                .subscribeOn(schedulers.io())
+                .switchMap { patientRepository.recentPatients(it.uuid, effect.count) }
                 .map(::RecentPatientsLoaded)
           }
     }

@@ -397,6 +397,13 @@ class TheActivityControllerTest {
   }
 
   @Test
+  fun `when there is no local user, the login screen should be shown`() {
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.empty()))
+
+    assertThat(controller.initialScreenKey()).isInstanceOf(RegistrationPhoneScreenKey::class.java)
+  }
+
+  @Test
   fun `when user is denied access then access denied screen should show`() {
     //given
     val fullName = "Anish Acharya"

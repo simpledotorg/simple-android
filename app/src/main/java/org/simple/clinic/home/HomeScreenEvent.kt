@@ -10,3 +10,5 @@ object HomeFacilitySelectionClicked : HomeScreenEvent() {
 }
 
 data class CurrentFacilityLoaded(val facility: Facility) : HomeScreenEvent()
+
+data class OverdueAppointmentCountLoaded(val overdueAppointmentCount: Int) : HomeScreenEvent()

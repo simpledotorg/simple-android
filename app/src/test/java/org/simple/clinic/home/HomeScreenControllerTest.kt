@@ -125,6 +125,8 @@ class HomeScreenControllerTest {
     val effectHandler = HomeScreenEffectHandler(
         userSession = userSession,
         facilityRepository = facilityRepository,
+        appointmentRepository = appointmentRepository,
+        userClock = clock,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

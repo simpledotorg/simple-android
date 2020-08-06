@@ -3,6 +3,7 @@ package org.simple.clinic.home
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -71,6 +72,7 @@ class HomeScreenControllerTest {
     verify(screen).setFacility("CHC Nathana")
     verify(screen).showOverdueAppointmentCount(3)
     verify(screen).removeOverdueAppointmentCount()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -81,6 +83,7 @@ class HomeScreenControllerTest {
 
     // then
     verify(screen).openFacilitySelection()
+    verifyNoMoreInteractions(screen)
   }
 
   private fun setupController() {

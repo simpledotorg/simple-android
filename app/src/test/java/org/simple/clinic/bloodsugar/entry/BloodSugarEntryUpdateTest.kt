@@ -12,6 +12,8 @@ import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
+import org.simple.clinic.bloodsugar.entry.BloodSugarSaveState.NOT_SAVING_BLOOD_SUGAR
+import org.simple.clinic.bloodsugar.entry.BloodSugarSaveState.SAVING_BLOOD_SUGAR
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
@@ -222,7 +224,7 @@ class BloodSugarEntryUpdateTest {
         .given(validBloodSugarModel)
         .whenEvent(SaveClicked)
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(validBloodSugarModel.bloodSugarStateChanged(SAVING_BLOOD_SUGAR)),
             hasEffects(CreateNewBloodSugarEntry(
                 patientUuid,
                 validBloodSugarDate,
@@ -256,7 +258,7 @@ class BloodSugarEntryUpdateTest {
         .given(validBloodSugarModel)
         .whenEvent(SaveClicked)
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(validBloodSugarModel.bloodSugarStateChanged(SAVING_BLOOD_SUGAR)),
             hasEffects(expectedEffect)
         ))
   }
@@ -294,7 +296,7 @@ class BloodSugarEntryUpdateTest {
         .given(validBloodSugarModel)
         .whenEvent(BloodSugarSaved(wasDateChanged))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(validBloodSugarModel.bloodSugarStateChanged(NOT_SAVING_BLOOD_SUGAR)),
             hasEffects(SetBloodSugarSavedResultAndFinish as BloodSugarEntryEffect)
         ))
   }

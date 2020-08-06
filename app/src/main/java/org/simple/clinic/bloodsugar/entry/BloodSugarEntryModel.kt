@@ -5,6 +5,7 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
+import org.simple.clinic.bloodsugar.entry.BloodSugarSaveState.NOT_SAVING_BLOOD_SUGAR
 import java.time.LocalDate
 
 @Parcelize
@@ -16,7 +17,8 @@ data class BloodSugarEntryModel(
     val day: String = "",
     val month: String = "",
     val fourDigitYear: String = "",
-    val prefilledDate: LocalDate? = null
+    val prefilledDate: LocalDate? = null,
+    val bloodSugarSaveState: BloodSugarSaveState = NOT_SAVING_BLOOD_SUGAR
 ) : Parcelable {
 
   companion object {
@@ -41,4 +43,7 @@ data class BloodSugarEntryModel(
 
   fun datePrefilled(prefilledDate: LocalDate): BloodSugarEntryModel =
       copy(prefilledDate = prefilledDate)
+
+  fun bloodSugarStateChanged(bloodSugarSaveState: BloodSugarSaveState): BloodSugarEntryModel =
+      copy(bloodSugarSaveState = bloodSugarSaveState)
 }

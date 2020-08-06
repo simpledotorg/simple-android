@@ -6,6 +6,7 @@
 - Add progress UI when scheduling appointment in `ScheduleAppointmentSheet`
 - Add progress UI when editing a patient in `EditPatientScreen`
 - Add progress UI when saving Blood pressure measurements in `BloodPressureEntrySheet`
+- Add progress UI when saving Blood Sugar in `BloodSugarEntrySheet`
 
 ### Changes
 - Updated translations: `ti`

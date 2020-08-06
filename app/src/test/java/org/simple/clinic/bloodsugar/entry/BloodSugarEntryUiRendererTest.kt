@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.bloodsugar.Random
+import org.simple.clinic.bloodsugar.entry.BloodSugarSaveState.SAVING_BLOOD_SUGAR
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.util.TestUserClock
@@ -18,13 +19,13 @@ class BloodSugarEntryUiRendererTest {
 
   private val ui = mock<BloodSugarEntryUi>()
   private val bloodSugarEntryUiRenderer = BloodSugarEntryUiRenderer(ui)
+  private val testUserClock = TestUserClock()
+  private val year = LocalDate.now(testUserClock).year
+  private val bloodSugarEntryModel = BloodSugarEntryModel.create(year, New(patientUuid, Random))
 
   @Test
   fun `it should render the entry title when creating a new blood sugar`() {
     // given
-    val testUserClock = TestUserClock()
-    val year = LocalDate.now(testUserClock).year
-    val bloodSugarEntryModel = BloodSugarEntryModel.create(year, New(patientUuid, Random))
 
     // when
     bloodSugarEntryUiRenderer.render(bloodSugarEntryModel)
@@ -32,14 +33,13 @@ class BloodSugarEntryUiRendererTest {
     // then
     verify(ui).hideRemoveButton()
     verify(ui).showEntryTitle(Random)
+    verify(ui).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 
   @Test
   fun `it should render the edit title when updating a blood sugar`() {
     // given
-    val testUserClock = TestUserClock()
-    val year = LocalDate.now(testUserClock).year
     val bloodSugarEntryModel = BloodSugarEntryModel.create(year, Update(bloodSugarUuid, Random))
 
     // when
@@ -48,6 +48,22 @@ class BloodSugarEntryUiRendererTest {
     // then
     verify(ui).showRemoveButton()
     verify(ui).showEditTitle(Random)
+    verify(ui).hideProgress()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when add new blood sugar entry, then show progress UI until blood sugar saved`() {
+    // given
+    val newBloodSugarEntryModel = bloodSugarEntryModel.bloodSugarStateChanged(SAVING_BLOOD_SUGAR)
+
+    // when
+    bloodSugarEntryUiRenderer.render(newBloodSugarEntryModel)
+
+    // then
+    verify(ui).hideRemoveButton()
+    verify(ui).showEntryTitle(Random)
+    verify(ui).showProgress()
     verifyNoMoreInteractions(ui)
   }
 }

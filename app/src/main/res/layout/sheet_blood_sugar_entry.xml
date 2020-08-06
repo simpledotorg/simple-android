@@ -6,8 +6,6 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:animateLayoutChanges="true"
-  android:orientation="vertical"
-  tools:context=".bloodsugar.entry.BloodSugarEntrySheet"
   tools:gravity="bottom">
 
   <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
@@ -82,6 +80,7 @@
       </androidx.constraintlayout.widget.ConstraintLayout>
 
       <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bloodSugarReadingLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16"
@@ -112,6 +111,19 @@
           app:layout_constraintStart_toStartOf="@+id/bloodSugarReadingEditText"
           app:layout_constraintTop_toBottomOf="@+id/bloodSugarReadingEditText" />
       </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <ProgressBar
+        android:id="@+id/progressLoader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/spacing_40"
+        android:layout_marginBottom="@dimen/spacing_40"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/rootLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/rootLayout" />
 
       <TextView
         android:id="@+id/bloodSugarErrorTextView"
@@ -262,4 +274,6 @@
       </LinearLayout>
     </FrameLayout>
   </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
+
 </org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener>
+

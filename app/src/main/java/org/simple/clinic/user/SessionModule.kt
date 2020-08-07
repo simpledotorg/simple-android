@@ -2,6 +2,7 @@ package org.simple.clinic.user
 
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Observable
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.facility.Facility
 
@@ -17,5 +18,16 @@ class SessionModule {
   fun currentFacility(appDatabase: AppDatabase): Facility {
     val user = appDatabase.userDao().userImmediate()!!
     return appDatabase.userDao().currentFacilityImmediate(user.uuid)!!
+  }
+
+  @Provides
+  fun currentFacilityNotifications(appDatabase: AppDatabase): Observable<Facility> {
+    return appDatabase
+        .userDao()
+        .user()
+        .filter { it.isNotEmpty() }
+        .map { it.first().uuid }
+        .switchMap(appDatabase.userDao()::currentFacility)
+        .toObservable()
   }
 }

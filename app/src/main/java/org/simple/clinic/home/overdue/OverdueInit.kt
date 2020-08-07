@@ -1,23 +1,12 @@
 package org.simple.clinic.home.overdue
 
 import com.spotify.mobius.First
-import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
-import java.time.LocalDate
+import org.simple.clinic.mobius.first
 
-class OverdueInit(
-    private val date: LocalDate
-) : Init<OverdueModel, OverdueEffect> {
+class OverdueInit : Init<OverdueModel, OverdueEffect> {
 
   override fun init(model: OverdueModel): First<OverdueModel, OverdueEffect> {
-    val effects = mutableSetOf<OverdueEffect>()
-
-    if (!model.hasLoadedCurrentFacility) {
-      effects.add(LoadCurrentFacility)
-    } else {
-      effects.add(LoadOverdueAppointments(date, model.facility!!))
-    }
-
-    return first(model, effects)
+    return first(model, LoadCurrentFacility)
   }
 }

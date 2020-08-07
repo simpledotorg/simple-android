@@ -63,7 +63,7 @@ class EnterOtpScreen(
     MobiusDelegate.forView(
         events = events.ofType(),
         defaultModel = EnterOtpModel.create(),
-        update = EnterOtpUpdate(),
+        update = EnterOtpUpdate(LOGIN_OTP_LENGTH),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = EnterOtpInit(),
         modelUpdateListener = uiRenderer::render

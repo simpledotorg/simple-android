@@ -25,7 +25,7 @@
 - Migrated `PatientSearchScreen` to Mobius
 - Migrated `HelpScreen` to Mobius
 - Migrated `HomeScreen` to Mobius
-- [In Progress: 06 Aug 2020] Migrate `ScanSimpleIdScreen` to Mobius
+- Migrated `ScanSimpleIdScreen` to Mobius
 - [In Progress: 07 Aug 2020] Migrate `EnterOtpScreen` to Mobius
 
 ### Fixes

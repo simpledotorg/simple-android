@@ -7,26 +7,23 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.LocalDate
 import java.util.UUID
 
-class HomeScreenControllerTest {
+class HomeScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -34,17 +31,14 @@ class HomeScreenControllerTest {
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
 
   private val ui = mock<HomeScreenUi>()
-  private val facilityRepository = mock<FacilityRepository>()
-  private val userSession = mock<UserSession>()
+  private val uiActions = mock<HomeScreenUiActions>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val clock = TestUserClock()
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<HomeScreenModel, HomeScreenEvent, HomeScreenEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -59,25 +53,20 @@ class HomeScreenControllerTest {
         uuid = UUID.fromString("5b2136b8-11d5-4e20-8703-087281679aee"),
         name = "CHC Nathana"
     )
-    val loggedInUser = TestData.loggedInUser(
-        uuid = UUID.fromString("751cfb09-92a2-40df-a6b2-b3f82ecd81a1")
-    )
     val date = LocalDate.parse("2018-01-01")
 
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility1, facility2))
     whenever(appointmentRepository.overdueAppointmentsCount(date, facility1)) doReturn Observable.just(3)
     whenever(appointmentRepository.overdueAppointmentsCount(date, facility2)) doReturn Observable.just(0)
 
     // when
-    setupController()
+    setupController(Observable.just(facility1, facility2))
 
     // then
     verify(ui, times(2)).setFacility("CHC Buchho")
     verify(ui, times(2)).setFacility("CHC Nathana")
     verify(ui, times(2)).showOverdueAppointmentCount(3)
     verify(ui).removeOverdueAppointmentCount()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -87,49 +76,30 @@ class HomeScreenControllerTest {
         uuid = UUID.fromString("e497355e-723c-4b35-b55a-778a6233b720"),
         name = "CHC Buchho"
     )
-    val loggedInUser = TestData.loggedInUser(
-        uuid = UUID.fromString("751cfb09-92a2-40df-a6b2-b3f82ecd81a1")
-    )
     val date = LocalDate.parse("2018-01-01")
 
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
     whenever(appointmentRepository.overdueAppointmentsCount(date, facility)) doReturn Observable.just(0)
 
     // when
-    setupController()
+    setupController(Observable.just(facility))
     uiEvents.onNext(HomeFacilitySelectionClicked)
 
     // then
     verify(ui, times(2)).setFacility("CHC Buchho")
     verify(ui).removeOverdueAppointmentCount()
-    verify(ui).openFacilitySelection()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openFacilitySelection()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
-  private fun setupController() {
+  private fun setupController(facilityStream: Observable<Facility>) {
     clock.setDate(LocalDate.parse("2018-01-01"))
 
-    val controller = HomeScreenController(
-        userSession,
-        facilityRepository,
-        appointmentRepository,
-        clock
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
-    uiEvents.onNext(ScreenCreated())
-
     val effectHandler = HomeScreenEffectHandler(
-        userSession = userSession,
-        facilityRepository = facilityRepository,
+        currentFacilityStream = facilityStream,
         appointmentRepository = appointmentRepository,
         userClock = clock,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
 
     val uiRenderer = HomeScreenUiRenderer(ui)

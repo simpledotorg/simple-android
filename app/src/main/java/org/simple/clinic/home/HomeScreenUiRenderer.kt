@@ -15,9 +15,8 @@ class HomeScreenUiRenderer(private val ui: HomeScreenUi) : ViewRenderer<HomeScre
   }
 
   private fun renderOverdueAppointmentCount(model: HomeScreenModel) {
-    val overdueAppointmentCount = model.overdueAppointmentCount!!
-    if (overdueAppointmentCount > 0)
-      ui.showOverdueAppointmentCount(overdueAppointmentCount)
+    if (model.hasAtLeastOneOverdueAppointment)
+      ui.showOverdueAppointmentCount(model.overdueAppointmentCount!!)
     else
       ui.removeOverdueAppointmentCount()
   }

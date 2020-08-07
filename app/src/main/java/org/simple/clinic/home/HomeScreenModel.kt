@@ -23,6 +23,9 @@ data class HomeScreenModel(
   val hasOverdueAppointmentCount: Boolean
     get() = overdueAppointmentCount != null
 
+  val hasAtLeastOneOverdueAppointment: Boolean
+    get() = overdueAppointmentCount!! > 0
+
   fun facilityLoaded(facility: Facility): HomeScreenModel {
     return copy(facility = facility)
   }

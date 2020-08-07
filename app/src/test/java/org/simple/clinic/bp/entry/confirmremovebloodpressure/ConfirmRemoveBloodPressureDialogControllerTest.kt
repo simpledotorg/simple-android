@@ -80,6 +80,8 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
         .subscribe { uiChange -> uiChange(ui) }
 
     val effectHandler = ConfirmRemoveBloodPressureEffectHandler(
+        bloodPressureRepository = bloodPressureRepository,
+        patientRepository = patientRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

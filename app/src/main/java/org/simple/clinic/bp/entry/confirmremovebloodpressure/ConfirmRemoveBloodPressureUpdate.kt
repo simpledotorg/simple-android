@@ -1,8 +1,8 @@
 package org.simple.clinic.bp.entry.confirmremovebloodpressure
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 
 class ConfirmRemoveBloodPressureUpdate : Update<ConfirmRemoveBloodPressureModel, ConfirmRemoveBloodPressureEvent, ConfirmRemoveBloodPressureEffect> {
 
@@ -10,6 +10,8 @@ class ConfirmRemoveBloodPressureUpdate : Update<ConfirmRemoveBloodPressureModel,
       model: ConfirmRemoveBloodPressureModel,
       event: ConfirmRemoveBloodPressureEvent
   ): Next<ConfirmRemoveBloodPressureModel, ConfirmRemoveBloodPressureEffect> {
-    return noChange()
+    return when (event) {
+      BloodPressureDeleted -> dispatch(CloseDialog)
+    }
   }
 }

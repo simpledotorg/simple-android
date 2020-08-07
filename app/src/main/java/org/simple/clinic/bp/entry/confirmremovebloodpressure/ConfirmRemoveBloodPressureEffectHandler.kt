@@ -3,10 +3,15 @@ package org.simple.clinic.bp.entry.confirmremovebloodpressure
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class ConfirmRemoveBloodPressureEffectHandler @AssistedInject constructor(
+    private val bloodPressureRepository: BloodPressureRepository,
+    private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: ConfirmRemoveBloodPressureDialogUiActions
 ) {
@@ -20,5 +25,19 @@ class ConfirmRemoveBloodPressureEffectHandler @AssistedInject constructor(
       ConfirmRemoveBloodPressureEvent> = RxMobius
       .subtypeEffectHandler<ConfirmRemoveBloodPressureEffect, ConfirmRemoveBloodPressureEvent>()
       .addAction(CloseDialog::class.java, uiActions::closeDialog, schedulersProvider.ui())
+      .addTransformer(DeleteBloodPressure::class.java, deleteBloodPressure())
       .build()
+
+  private fun deleteBloodPressure(): ObservableTransformer<DeleteBloodPressure, ConfirmRemoveBloodPressureEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .switchMap { bloodPressureRepository.measurement(it.bloodPressureMeasurementUuid) }
+          .doOnNext { bloodPressureRepository.markBloodPressureAsDeleted(it) }
+          .switchMap { bloodPressureMeasurement ->
+            patientRepository.updateRecordedAt(bloodPressureMeasurement.patientUuid)
+                .andThen(Observable.just(BloodPressureDeleted))
+          }
+    }
+  }
 }

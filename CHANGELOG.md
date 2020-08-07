@@ -23,7 +23,7 @@
 - Migrated `ForgotPinConfirmPinScreen` to Mobius
 - Change `OverdueScreen` to load data via the paging library
 - Migrated `PatientSearchScreen` to Mobius
-- [In Progress: 06 Aug 2020] Migrate `EnterOtpScreen` to Mobius
+- [In Progress: 07 Aug 2020] Migrate `EnterOtpScreen` to Mobius
 - Migrated `HelpScreen` to Mobius
 - [In Progress: 05 Aug 2020] Migrate `HelpScreen` to Mobius
 - [In Progress: 06 Aug 2020] Migrate `ScanSimpleIdScreen` to Mobius

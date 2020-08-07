@@ -1,6 +1,6 @@
 package org.simple.clinic.main
 
-interface TheActivityUi {
+interface TheActivityUi: TheActivityUiActions {
   fun showAppLockScreen()
 
   // This is here because we need to show the same alert in multiple

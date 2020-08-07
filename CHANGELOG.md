@@ -27,6 +27,7 @@
 - Migrated `HelpScreen` to Mobius
 - [In Progress: 05 Aug 2020] Migrate `HelpScreen` to Mobius
 - [In Progress: 06 Aug 2020] Migrate `ScanSimpleIdScreen` to Mobius
+- [In Progress: 06 Aug 2020] Migrate `HomeScreen` to Mobius
 
 ### Fixes
 - Fixed issue where recent and overdue patients on home screen would not update after changing facility ([#742](https://app.clubhouse.io/simpledotorg/story/742/home-screen-does-not-update-when-changing-facilities))

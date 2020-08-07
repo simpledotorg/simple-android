@@ -101,7 +101,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
 
-  @field:[Inject Named("number_of_patients_registered")]
+  @Inject
+  @Named("number_of_patients_registered")
   lateinit var patientRegisteredCount: Preference<Int>
 
   @Inject

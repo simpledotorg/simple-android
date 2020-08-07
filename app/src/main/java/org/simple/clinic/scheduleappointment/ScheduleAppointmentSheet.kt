@@ -64,7 +64,8 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
   @Inject
   lateinit var userClock: UserClock
 
-  @field:[Inject Named("full_date")]
+  @Inject
+  @Named("full_date")
   lateinit var dateFormatter: DateTimeFormatter
 
   @Inject

@@ -27,10 +27,11 @@ class PatientSearchResultItemView(
     attributeSet: AttributeSet
 ) : CardView(context, attributeSet) {
 
-  @field:[Inject Named("full_date")]
+  @Inject
+  @Named("full_date")
   lateinit var dateTimeFormatter: DateTimeFormatter
 
-  @field:Inject
+  @Inject
   lateinit var userClock: UserClock
 
   override fun onFinishInflate() {

@@ -87,10 +87,12 @@ class BloodPressureSummaryView(
   @Inject
   lateinit var userClock: UserClock
 
-  @field:[Inject Named("full_date")]
+  @Inject
+  @Named("full_date")
   lateinit var dateFormatter: DateTimeFormatter
 
-  @field:[Inject Named("time_for_measurement_history")]
+  @Inject
+  @Named("time_for_measurement_history")
   lateinit var timeFormatter: DateTimeFormatter
 
   @Inject

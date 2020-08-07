@@ -27,7 +27,8 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
   @Inject
   lateinit var locale: Locale
 
-  @field:[Inject Named("is_facility_switched")]
+  @Inject
+  @Named("is_facility_switched")
   lateinit var isFacilitySwitchedPreference: Preference<Boolean>
 
   private lateinit var component: AlertFacilityChangeComponent

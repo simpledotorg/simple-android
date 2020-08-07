@@ -31,7 +31,7 @@ class BloodSugarSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodSugarMeasu
   lateinit var repository: BloodSugarRepository
 
   @Inject
-  @field:Named("last_blood_sugar_pull_token")
+  @Named("last_blood_sugar_pull_token")
   lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject

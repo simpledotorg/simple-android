@@ -57,7 +57,8 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
   @Inject
   lateinit var country: Country
 
-  @field:[Inject Named("training_video_youtube_id")]
+  @Inject
+  @Named("training_video_youtube_id")
   lateinit var youTubeVideoId: String
 
   @Inject

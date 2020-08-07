@@ -25,6 +25,7 @@ import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.main.TheActivityController
+import org.simple.clinic.main.initialScreenKey
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.user.User
@@ -257,7 +258,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = OTP_REQUESTED, status = UserStatus.WaitingForApproval)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(HomeScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(HomeScreenKey::class.java)
   }
 
   @Test
@@ -265,7 +266,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = RESET_PIN_REQUESTED, status = UserStatus.WaitingForApproval)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(HomeScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(HomeScreenKey::class.java)
   }
 
   @Test
@@ -273,7 +274,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = LOGGED_IN, status = UserStatus.WaitingForApproval)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(HomeScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(HomeScreenKey::class.java)
   }
 
   @Test
@@ -281,7 +282,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = OTP_REQUESTED, status = UserStatus.ApprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(HomeScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(HomeScreenKey::class.java)
   }
 
   @Test
@@ -289,7 +290,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = RESET_PIN_REQUESTED, status = UserStatus.ApprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(HomeScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(HomeScreenKey::class.java)
   }
 
   @Test
@@ -297,7 +298,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = LOGGED_IN, status = UserStatus.ApprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(HomeScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(HomeScreenKey::class.java)
   }
 
   @Test
@@ -305,7 +306,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = NOT_LOGGED_IN, status = UserStatus.WaitingForApproval)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(RegistrationPhoneScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
   }
 
   @Test
@@ -313,7 +314,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = NOT_LOGGED_IN, status = UserStatus.ApprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(RegistrationPhoneScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
   }
 
   @Test
@@ -321,7 +322,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = UNAUTHORIZED, status = UserStatus.WaitingForApproval)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(RegistrationPhoneScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
   }
 
   @Test
@@ -329,7 +330,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = UNAUTHORIZED, status = UserStatus.ApprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(RegistrationPhoneScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
   }
 
   @Test
@@ -337,7 +338,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = RESETTING_PIN, status = UserStatus.WaitingForApproval)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(ForgotPinCreateNewPinScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(ForgotPinCreateNewPinScreenKey::class.java)
   }
 
   @Test
@@ -345,7 +346,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = RESETTING_PIN, status = UserStatus.ApprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(ForgotPinCreateNewPinScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(ForgotPinCreateNewPinScreenKey::class.java)
   }
 
   @Test
@@ -353,7 +354,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = NOT_LOGGED_IN, status = UserStatus.DisapprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(AccessDeniedScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(AccessDeniedScreenKey::class.java)
   }
 
   @Test
@@ -361,7 +362,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = OTP_REQUESTED, status = UserStatus.DisapprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(AccessDeniedScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(AccessDeniedScreenKey::class.java)
   }
 
   @Test
@@ -369,7 +370,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = RESET_PIN_REQUESTED, status = UserStatus.DisapprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(AccessDeniedScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(AccessDeniedScreenKey::class.java)
   }
 
   @Test
@@ -377,7 +378,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = RESETTING_PIN, status = UserStatus.DisapprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(AccessDeniedScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(AccessDeniedScreenKey::class.java)
   }
 
   @Test
@@ -385,7 +386,7 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = LOGGED_IN, status = UserStatus.DisapprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(AccessDeniedScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(AccessDeniedScreenKey::class.java)
   }
 
   @Test
@@ -393,14 +394,14 @@ class TheActivityControllerTest {
     val user = TestData.loggedInUser(loggedInStatus = UNAUTHORIZED, status = UserStatus.DisapprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(AccessDeniedScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(AccessDeniedScreenKey::class.java)
   }
 
   @Test
   fun `when there is no local user, the login screen should be shown`() {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.empty()))
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(RegistrationPhoneScreenKey::class.java)
+    assertThat(initialScreenKey(null)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
   }
 
   @Test

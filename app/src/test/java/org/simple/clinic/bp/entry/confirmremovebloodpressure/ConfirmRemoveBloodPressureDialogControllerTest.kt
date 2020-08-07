@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.spotify.mobius.Init
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -34,12 +33,10 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
   private val ui = mock<ConfirmRemoveBloodPressureDialogUi>()
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<ConfirmRemoveBloodPressureModel, ConfirmRemoveBloodPressureEvent, ConfirmRemoveBloodPressureEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -69,16 +66,6 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
   }
 
   private fun setupController(bloodPressureMeasurementUuid: UUID) {
-    val controller = ConfirmRemoveBloodPressureDialogController(
-        bloodPressureRepository = bloodPressureRepository,
-        patientRepository = patientRepository,
-        bloodPressureMeasurementUuid = bloodPressureMeasurementUuid
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
     val effectHandler = ConfirmRemoveBloodPressureEffectHandler(
         bloodPressureRepository = bloodPressureRepository,
         patientRepository = patientRepository,

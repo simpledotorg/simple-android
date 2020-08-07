@@ -3,6 +3,7 @@ package org.simple.clinic.bp.entry.confirmremovebloodpressure
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -55,6 +56,7 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
     markBloodPressureDeletedCompletable.test().assertComplete()
     updatePatientRecordedAtCompletable.test().assertComplete()
     verify(dialog).dismiss()
+    verifyNoMoreInteractions(dialog)
   }
 
   private fun setupController() {

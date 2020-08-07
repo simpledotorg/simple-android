@@ -71,6 +71,7 @@ class TheActivityControllerTest {
     setupController()
 
     verify(activity, never()).showAppLockScreen()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
@@ -88,6 +89,7 @@ class TheActivityControllerTest {
     setupController(userStream = userStream)
 
     verify(activity).showAppLockScreen()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
@@ -105,6 +107,7 @@ class TheActivityControllerTest {
     setupController(userStream = userStream)
 
     verify(activity).showAppLockScreen()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
@@ -122,6 +125,7 @@ class TheActivityControllerTest {
     setupController(userStream = userStream)
 
     verify(activity).showAppLockScreen()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
@@ -140,6 +144,7 @@ class TheActivityControllerTest {
     setupController()
 
     verify(activity, never()).showAppLockScreen()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
@@ -158,6 +163,7 @@ class TheActivityControllerTest {
     setupController()
 
     verify(activity, never()).showAppLockScreen()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
@@ -170,6 +176,7 @@ class TheActivityControllerTest {
     uiEvents.onNext(Stopped(null))
 
     verify(lockAfterTimestamp).set(currentTimestamp.plus(lockInMinutes, ChronoUnit.MINUTES))
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
@@ -182,6 +189,7 @@ class TheActivityControllerTest {
     uiEvents.onNext(Stopped(null))
 
     verify(lockAfterTimestamp, never()).set(any())
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
@@ -199,6 +207,7 @@ class TheActivityControllerTest {
     setupController(userStream = userStream)
 
     verify(lockAfterTimestamp).delete()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
@@ -211,6 +220,7 @@ class TheActivityControllerTest {
     setupController()
 
     verify(lockAfterTimestamp, never()).delete()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
@@ -231,6 +241,7 @@ class TheActivityControllerTest {
     setupController(userStream = userStream)
 
     verify(activity).showUserLoggedOutOnOtherDeviceAlert()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
@@ -251,6 +262,7 @@ class TheActivityControllerTest {
     setupController()
 
     verify(activity, never()).showUserLoggedOutOnOtherDeviceAlert()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
@@ -299,6 +311,7 @@ class TheActivityControllerTest {
 
     //then
     verify(activity, never()).showAccessDeniedScreen(fullName)
+    verifyNoMoreInteractions(activity)
     verify(patientRepository, never()).clearPatientData()
   }
 
@@ -323,6 +336,8 @@ class TheActivityControllerTest {
 
     userUnauthorizedSubject.onNext(true)
     verify(activity).redirectToLogin()
+    
+    verifyNoMoreInteractions(activity)
   }
 
   private fun setupController(

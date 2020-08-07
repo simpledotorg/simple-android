@@ -12,7 +12,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-typealias Ui = ConfirmRemoveBloodPressureDialog
+typealias Ui = ConfirmRemoveBloodPressureDialogUi
 typealias UiChange = (Ui) -> Unit
 
 class ConfirmRemoveBloodPressureDialogController @AssistedInject constructor(
@@ -43,7 +43,7 @@ class ConfirmRemoveBloodPressureDialogController @AssistedInject constructor(
           bloodPressureRepository
               .markBloodPressureAsDeleted(it)
               .andThen(patientRepository.updateRecordedAt(it.patientUuid))
-              .andThen(Observable.just { ui: Ui -> ui.dismiss() })
+              .andThen(Observable.just { ui: Ui -> ui.closeDialog() })
         }
   }
 }

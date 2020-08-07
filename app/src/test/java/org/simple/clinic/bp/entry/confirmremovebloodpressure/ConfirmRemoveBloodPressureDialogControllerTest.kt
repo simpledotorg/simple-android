@@ -26,7 +26,7 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
 
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val patientRepository = mock<PatientRepository>()
-  private val dialog = mock<ConfirmRemoveBloodPressureDialog>()
+  private val ui = mock<ConfirmRemoveBloodPressureDialogUi>()
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private lateinit var controllerSubscription: Disposable
@@ -57,8 +57,8 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
     // then
     markBloodPressureDeletedCompletable.test().assertComplete()
     updatePatientRecordedAtCompletable.test().assertComplete()
-    verify(dialog).dismiss()
-    verifyNoMoreInteractions(dialog)
+    verify(ui).closeDialog()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController(bloodPressureMeasurementUuid: UUID) {
@@ -70,6 +70,6 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(dialog) }
+        .subscribe { uiChange -> uiChange(ui) }
   }
 }

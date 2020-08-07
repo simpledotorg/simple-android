@@ -19,7 +19,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
+class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemoveBloodPressureDialogUi {
   companion object {
     private const val KEY_BP_UUID = "bloodPressureMeasurementUuid"
 
@@ -108,6 +108,10 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
     return RxView.clicks(button)
         .doOnNext { removeBloodPressureListener?.onBloodPressureRemoved() }
         .map { ConfirmRemoveBloodPressureDialogRemoveClicked }
+  }
+
+  override fun closeDialog() {
+    dismiss()
   }
 
   interface RemoveBloodPressureListener {

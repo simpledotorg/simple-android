@@ -3,17 +3,16 @@ package org.simple.clinic.bp.entry.confirmremovebloodpressure
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
-import com.jakewharton.rxbinding2.view.RxView
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -53,15 +52,25 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemov
 
   private var removeBloodPressureListener: RemoveBloodPressureListener? = null
 
+  private val dialogEvents = PublishSubject.create<UiEvent>()
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
   private val onStarts = PublishSubject.create<Any>()
+
+  private val events by unsafeLazy {
+    dialogEvents
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
 
   @SuppressLint("CheckResult")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val dialog = AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle_Destructive)
         .setTitle(R.string.bloodpressureentry_remove_bp_title)
         .setMessage(R.string.bloodpressureentry_remove_bp_message)
-        .setPositiveButton(R.string.bloodpressureentry_remove_bp_confirm, null)
+        .setPositiveButton(R.string.bloodpressureentry_remove_bp_confirm) { _, _ ->
+          removeBloodPressureListener?.onBloodPressureRemoved()
+          dialogEvents.onNext(ConfirmRemoveBloodPressureDialogRemoveClicked)
+        }
         .setNegativeButton(R.string.bloodpressureentry_remove_bp_cancel, null)
         .create()
 
@@ -96,18 +105,10 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemov
 
     bindUiToController(
         ui = this,
-        events = removeClicks(),
+        events = events,
         controller = controller.create(bloodPressureMeasurementUuid),
         screenDestroys = screenDestroys
     )
-  }
-
-  private fun removeClicks(): Observable<UiEvent> {
-    val button = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
-
-    return RxView.clicks(button)
-        .doOnNext { removeBloodPressureListener?.onBloodPressureRemoved() }
-        .map { ConfirmRemoveBloodPressureDialogRemoveClicked }
   }
 
   override fun closeDialog() {

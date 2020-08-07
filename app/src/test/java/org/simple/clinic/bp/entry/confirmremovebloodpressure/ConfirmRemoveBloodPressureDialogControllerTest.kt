@@ -31,6 +31,7 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val patientRepository = mock<PatientRepository>()
   private val ui = mock<ConfirmRemoveBloodPressureDialogUi>()
+  private val uiActions = mock<ConfirmRemoveBloodPressureDialogUiActions>()
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private lateinit var testFixture: MobiusTestFixture<ConfirmRemoveBloodPressureModel, ConfirmRemoveBloodPressureEvent, ConfirmRemoveBloodPressureEffect>
@@ -61,8 +62,8 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
     // then
     markBloodPressureDeletedCompletable.test().assertComplete()
     updatePatientRecordedAtCompletable.test().assertComplete()
-    verify(ui).closeDialog()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).closeDialog()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupController(bloodPressureMeasurementUuid: UUID) {
@@ -70,7 +71,7 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
         bloodPressureRepository = bloodPressureRepository,
         patientRepository = patientRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
 
     testFixture = MobiusTestFixture(

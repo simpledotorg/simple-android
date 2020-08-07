@@ -5,18 +5,23 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import com.spotify.mobius.Init
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class ConfirmRemoveBloodPressureDialogControllerTest {
@@ -30,10 +35,12 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<ConfirmRemoveBloodPressureModel, ConfirmRemoveBloodPressureEvent, ConfirmRemoveBloodPressureEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -71,5 +78,21 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
+
+    val effectHandler = ConfirmRemoveBloodPressureEffectHandler(
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = ConfirmRemoveBloodPressureModel.create(),
+        init = Init { first(it) },
+        update = ConfirmRemoveBloodPressureUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = { /* nothing do here*/ }
+    )
+
+    testFixture.start()
   }
 }

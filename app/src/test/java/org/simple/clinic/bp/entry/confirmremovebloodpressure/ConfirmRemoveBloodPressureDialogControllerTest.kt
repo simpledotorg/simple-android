@@ -30,7 +30,6 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
 
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val patientRepository = mock<PatientRepository>()
-  private val ui = mock<ConfirmRemoveBloodPressureDialogUi>()
   private val uiActions = mock<ConfirmRemoveBloodPressureDialogUiActions>()
   private val uiEvents = PublishSubject.create<UiEvent>()
 
@@ -63,7 +62,7 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
     markBloodPressureDeletedCompletable.test().assertComplete()
     updatePatientRecordedAtCompletable.test().assertComplete()
     verify(uiActions).closeDialog()
-    verifyNoMoreInteractions(ui, uiActions)
+    verifyNoMoreInteractions(uiActions)
   }
 
   private fun setupController(bloodPressureMeasurementUuid: UUID) {

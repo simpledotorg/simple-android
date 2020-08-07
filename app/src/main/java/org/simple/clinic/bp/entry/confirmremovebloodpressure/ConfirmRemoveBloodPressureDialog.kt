@@ -19,7 +19,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemoveBloodPressureDialogUi, ConfirmRemoveBloodPressureDialogUiActions {
+class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemoveBloodPressureDialogUiActions {
   companion object {
     private const val KEY_BP_UUID = "bloodPressureMeasurementUuid"
 

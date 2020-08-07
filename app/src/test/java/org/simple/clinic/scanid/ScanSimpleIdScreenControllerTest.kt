@@ -18,8 +18,6 @@ import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.InvalidPassportCode
-import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.ValidPassportCode
 import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.NotEqualToRequiredLength
 import org.simple.clinic.util.Optional
@@ -54,7 +52,7 @@ class ScanSimpleIdScreenControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(ValidPassportCode(scannedCode))
+    uiEvents.onNext(ScanSimpleIdScreenQrCodeScanned(scannedCode.toString()))
 
     // then
     verify(ui).openPatientSummary(patientUuid)
@@ -70,7 +68,7 @@ class ScanSimpleIdScreenControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(ValidPassportCode(scannedCode))
+    uiEvents.onNext(ScanSimpleIdScreenQrCodeScanned(scannedCode.toString()))
 
     // then
     val identifier = Identifier(value = scannedCode.toString(), type = BpPassport)
@@ -119,7 +117,7 @@ class ScanSimpleIdScreenControllerTest {
     setupController()
     with(uiEvents) {
       onNext(ShowKeyboard)
-      onNext(InvalidPassportCode)
+      onNext(ScanSimpleIdScreenQrCodeScanned("96d93a33-db68"))
     }
 
     // then
@@ -196,6 +194,7 @@ class ScanSimpleIdScreenControllerTest {
         .subscribe { uiChange -> uiChange(ui) }
 
     val effectHandler = ScanSimpleIdEffectHandler(
+        patientRepository = patientRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

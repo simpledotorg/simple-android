@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical"
-  tools:context="org.simple.clinic.bp.entry.BloodPressureEntrySheet"
-  tools:parentTag="RelativeLayout">
-
-  <ProgressBar
-    android:id="@+id/progressLoader"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
-    android:layout_gravity="center"
-    tools:visibility="gone" />
-
-  <org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener
   android:id="@+id/rootLayout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -90,12 +75,6 @@
           android:visibility="gone" />
       </RelativeLayout>
 
-      <Space
-        android:id="@+id/bloodPressureEntrySpace"
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="@dimen/spacing_96" />
-
       <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bloodPressureEntryLayout"
         android:layout_width="match_parent"
@@ -158,6 +137,19 @@
           app:layout_constraintStart_toStartOf="@+id/diastolicEditText"
           app:layout_constraintTop_toBottomOf="@+id/diastolicEditText" />
       </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <ProgressBar
+        android:id="@+id/progressLoader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/spacing_40"
+        android:layout_marginBottom="@dimen/spacing_40"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/rootLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/rootLayout" />
 
       <TextView
         android:id="@+id/bpErrorTextView"
@@ -309,4 +301,3 @@
     </FrameLayout>
   </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 </org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener>
-</merge>

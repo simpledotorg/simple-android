@@ -392,7 +392,6 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
 
   override fun showProgress() {
     progressLoader.visibleOrGone(isVisible = true)
-    bloodPressureEntrySpace.visibleOrGone(isVisible = true)
     bloodPressureEntryLayout.visibleOrGone(isVisible = false)
     bpDateButton.visibleOrGone(isVisible = false)
     removeBloodPressureButton.visibleOrGone(isVisible = false)
@@ -400,10 +399,10 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
 
   override fun hideProgress() {
     progressLoader.visibleOrGone(isVisible = false)
-    bloodPressureEntrySpace.visibleOrGone(isVisible = false)
     bloodPressureEntryLayout.visibleOrGone(isVisible = true)
     bpDateButton.visibleOrGone(isVisible = true)
-    removeBloodPressureButton.visibleOrGone(isVisible = true)
+    if (removeBloodPressureButton.isEnabled)
+      removeBloodPressureButton.visibleOrGone(isVisible = true)
   }
 
   override fun onBloodPressureRemoved() {

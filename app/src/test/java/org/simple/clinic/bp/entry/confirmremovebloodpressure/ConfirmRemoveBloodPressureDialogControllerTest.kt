@@ -49,8 +49,7 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
     whenever(bloodPressureRepository.markBloodPressureAsDeleted(bloodPressure)).doReturn(markBloodPressureDeletedCompletable)
     whenever(patientRepository.updateRecordedAt(patientUuid)).doReturn(updatePatientRecordedAtCompletable)
 
-    setupController()
-    uiEvents.onNext(ConfirmRemoveBloodPressureDialogCreated(bloodPressureMeasurementUuid = bloodPressure.uuid))
+    setupController(bloodPressure.uuid)
     uiEvents.onNext(ConfirmRemoveBloodPressureDialogRemoveClicked)
 
     markBloodPressureDeletedCompletable.test().assertComplete()
@@ -59,10 +58,11 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
     verifyNoMoreInteractions(dialog)
   }
 
-  private fun setupController() {
+  private fun setupController(bloodPressureMeasurementUuid: UUID) {
     val controller = ConfirmRemoveBloodPressureDialogController(
-        bloodPressureRepository,
-        patientRepository
+        bloodPressureRepository = bloodPressureRepository,
+        patientRepository = patientRepository,
+        bloodPressureMeasurementUuid = bloodPressureMeasurementUuid
     )
 
     controllerSubscription = uiEvents

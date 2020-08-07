@@ -49,7 +49,7 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
   }
 
   @Inject
-  lateinit var controller: ConfirmRemoveBloodPressureDialogController
+  lateinit var controller: ConfirmRemoveBloodPressureDialogController.Factory
 
   private var removeBloodPressureListener: RemoveBloodPressureListener? = null
 
@@ -92,10 +92,12 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
   }
 
   private fun setupDialog() {
+    val bloodPressureMeasurementUuid = arguments!!.getSerializable(KEY_BP_UUID) as UUID
+
     bindUiToController(
         ui = this,
-        events = Observable.merge(dialogCreates(), removeClicks()),
-        controller = controller,
+        events = removeClicks(),
+        controller = controller.create(bloodPressureMeasurementUuid),
         screenDestroys = screenDestroys
     )
   }
@@ -106,11 +108,6 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
     return RxView.clicks(button)
         .doOnNext { removeBloodPressureListener?.onBloodPressureRemoved() }
         .map { ConfirmRemoveBloodPressureDialogRemoveClicked }
-  }
-
-  private fun dialogCreates(): Observable<UiEvent> {
-    val bloodPressureMeasurementUuid = arguments!!.getSerializable(KEY_BP_UUID) as UUID
-    return Observable.just(ConfirmRemoveBloodPressureDialogCreated(bloodPressureMeasurementUuid))
   }
 
   interface RemoveBloodPressureListener {

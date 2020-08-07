@@ -19,5 +19,6 @@ class ConfirmRemoveBloodPressureEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<ConfirmRemoveBloodPressureEffect,
       ConfirmRemoveBloodPressureEvent> = RxMobius
       .subtypeEffectHandler<ConfirmRemoveBloodPressureEffect, ConfirmRemoveBloodPressureEvent>()
+      .addAction(CloseDialog::class.java, uiActions::closeDialog, schedulersProvider.ui())
       .build()
 }

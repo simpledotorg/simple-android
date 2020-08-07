@@ -20,8 +20,8 @@ import org.simple.clinic.TestData
 import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.activity.ActivityLifecycle.Stopped
 import org.simple.clinic.login.applock.AppLockConfig
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.main.TheActivityController
+import org.simple.clinic.main.TheActivityUi
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -48,7 +48,7 @@ class TheActivityControllerTest {
 
   private val lockInMinutes = 15L
 
-  private val activity = mock<TheActivity>()
+  private val ui = mock<TheActivityUi>()
   private val userSession = mock<UserSession>()
   private val patientRepository = mock<PatientRepository>()
   private val lockAfterTimestamp = mock<Preference<Instant>>()
@@ -73,8 +73,8 @@ class TheActivityControllerTest {
     setupController()
 
     // then
-    verify(activity, never()).showAppLockScreen()
-    verifyNoMoreInteractions(activity)
+    verify(ui, never()).showAppLockScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -94,8 +94,8 @@ class TheActivityControllerTest {
     setupController(userStream = userStream)
 
     // then
-    verify(activity).showAppLockScreen()
-    verifyNoMoreInteractions(activity)
+    verify(ui).showAppLockScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -115,8 +115,8 @@ class TheActivityControllerTest {
     setupController(userStream = userStream)
 
     // then
-    verify(activity).showAppLockScreen()
-    verifyNoMoreInteractions(activity)
+    verify(ui).showAppLockScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -136,8 +136,8 @@ class TheActivityControllerTest {
     setupController(userStream = userStream)
 
     // then
-    verify(activity).showAppLockScreen()
-    verifyNoMoreInteractions(activity)
+    verify(ui).showAppLockScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -158,8 +158,8 @@ class TheActivityControllerTest {
     setupController()
 
     // then
-    verify(activity, never()).showAppLockScreen()
-    verifyNoMoreInteractions(activity)
+    verify(ui, never()).showAppLockScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -180,8 +180,8 @@ class TheActivityControllerTest {
     setupController()
 
     // then
-    verify(activity, never()).showAppLockScreen()
-    verifyNoMoreInteractions(activity)
+    verify(ui, never()).showAppLockScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -197,7 +197,7 @@ class TheActivityControllerTest {
 
     // then
     verify(lockAfterTimestamp).set(currentTimestamp.plus(lockInMinutes, ChronoUnit.MINUTES))
-    verifyNoMoreInteractions(activity)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -213,7 +213,7 @@ class TheActivityControllerTest {
 
     // then
     verify(lockAfterTimestamp, never()).set(any())
-    verifyNoMoreInteractions(activity)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -234,7 +234,7 @@ class TheActivityControllerTest {
 
     // then
     verify(lockAfterTimestamp).delete()
-    verifyNoMoreInteractions(activity)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -250,7 +250,7 @@ class TheActivityControllerTest {
 
     // then
     verify(lockAfterTimestamp, never()).delete()
-    verifyNoMoreInteractions(activity)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -273,8 +273,8 @@ class TheActivityControllerTest {
     setupController(userStream = userStream)
 
     // then
-    verify(activity).showUserLoggedOutOnOtherDeviceAlert()
-    verifyNoMoreInteractions(activity)
+    verify(ui).showUserLoggedOutOnOtherDeviceAlert()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -297,8 +297,8 @@ class TheActivityControllerTest {
     setupController()
 
     // then
-    verify(activity, never()).showUserLoggedOutOnOtherDeviceAlert()
-    verifyNoMoreInteractions(activity)
+    verify(ui, never()).showUserLoggedOutOnOtherDeviceAlert()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -324,8 +324,8 @@ class TheActivityControllerTest {
 
     //then
     verify(patientRepository).clearPatientData()
-    verify(activity).showAccessDeniedScreen(fullName)
-    verifyNoMoreInteractions(activity)
+    verify(ui).showAccessDeniedScreen(fullName)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -346,8 +346,8 @@ class TheActivityControllerTest {
     setupController()
 
     //then
-    verify(activity, never()).showAccessDeniedScreen(fullName)
-    verifyNoMoreInteractions(activity)
+    verify(ui, never()).showAccessDeniedScreen(fullName)
+    verifyNoMoreInteractions(ui)
     verify(patientRepository, never()).clearPatientData()
   }
 
@@ -361,35 +361,35 @@ class TheActivityControllerTest {
     userUnauthorizedSubject.onNext(false)
 
     // then
-    verify(activity, never()).redirectToLogin()
+    verify(ui, never()).redirectToLogin()
 
     // when
     userUnauthorizedSubject.onNext(true)
 
     // then
-    verify(activity).redirectToLogin()
+    verify(ui).redirectToLogin()
 
-    clearInvocations(activity)
+    clearInvocations(ui)
 
     // when
     userUnauthorizedSubject.onNext(true)
     
     // then
-    verifyZeroInteractions(activity)
+    verifyZeroInteractions(ui)
 
     // when
     userUnauthorizedSubject.onNext(false)
 
     // then
-    verifyZeroInteractions(activity)
+    verifyZeroInteractions(ui)
 
     // when
     userUnauthorizedSubject.onNext(true)
 
     // then
-    verify(activity).redirectToLogin()
+    verify(ui).redirectToLogin()
 
-    verifyNoMoreInteractions(activity)
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController(
@@ -411,7 +411,7 @@ class TheActivityControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(activity) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(Started(null))
   }

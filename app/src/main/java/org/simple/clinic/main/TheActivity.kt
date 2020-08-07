@@ -78,7 +78,7 @@ fun initialScreenKey(
   }
 }
 
-class TheActivity : AppCompatActivity() {
+class TheActivity : AppCompatActivity(), TheActivityUi {
 
   companion object {
     private const val EXTRA_DEEP_LINK_RESULT = "deep_link_result"
@@ -247,21 +247,21 @@ class TheActivity : AppCompatActivity() {
     disposables.clear()
   }
 
-  fun showAppLockScreen() {
+  override fun showAppLockScreen() {
     screenRouter.push(AppLockScreenKey())
   }
 
   // This is here because we need to show the same alert in multiple
   // screens when the user gets verified in the background.
-  fun showUserLoggedOutOnOtherDeviceAlert() {
+  override fun showUserLoggedOutOnOtherDeviceAlert() {
     LoggedOutOnOtherDeviceDialog.show(supportFragmentManager)
   }
 
-  fun redirectToLogin() {
+  override fun redirectToLogin() {
     screenRouter.clearHistoryAndPush(RegistrationPhoneScreenKey(), RouterDirection.REPLACE)
   }
 
-  fun showAccessDeniedScreen(fullName: String) {
+  override fun showAccessDeniedScreen(fullName: String) {
     screenRouter.clearHistoryAndPush(AccessDeniedScreenKey(fullName), RouterDirection.REPLACE)
   }
 

@@ -24,7 +24,7 @@ import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
-typealias Ui = TheActivity
+typealias Ui = TheActivityUi
 typealias UiChange = (Ui) -> Unit
 
 class TheActivityController @Inject constructor(

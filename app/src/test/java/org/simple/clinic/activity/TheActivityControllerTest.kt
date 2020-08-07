@@ -12,6 +12,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -21,7 +22,14 @@ import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.activity.ActivityLifecycle.Stopped
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.main.TheActivityController
+import org.simple.clinic.main.TheActivityEffect
+import org.simple.clinic.main.TheActivityEffectHandler
+import org.simple.clinic.main.TheActivityEvent
+import org.simple.clinic.main.TheActivityInit
+import org.simple.clinic.main.TheActivityModel
 import org.simple.clinic.main.TheActivityUi
+import org.simple.clinic.main.TheActivityUiRenderer
+import org.simple.clinic.main.TheActivityUpdate
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -34,8 +42,10 @@ import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.UUID
@@ -58,10 +68,12 @@ class TheActivityControllerTest {
   private val clock = TestUtcClock(currentTimestamp)
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<TheActivityModel, TheActivityEvent, TheActivityEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -400,6 +412,22 @@ class TheActivityControllerTest {
     whenever(userSession.isUserUnauthorized()).thenReturn(userUnauthorizedStream)
     whenever(userSession.loggedInUser()).thenReturn(userStream)
     whenever(userSession.isUserDisapproved()).thenReturn(userDisapprovedStream)
+
+    val effectHandler = TheActivityEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+    val uiRenderer = TheActivityUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = TheActivityModel.create(),
+        update = TheActivityUpdate(),
+        effectHandler = effectHandler.build(),
+        init = TheActivityInit(),
+        modelUpdateListener = uiRenderer::render
+    )
+    testFixture.start()
 
     val controller = TheActivityController(
         userSession = userSession,

@@ -14,7 +14,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
@@ -54,8 +53,6 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemov
   private var removeBloodPressureListener: RemoveBloodPressureListener? = null
 
   private val dialogEvents = PublishSubject.create<UiEvent>()
-  private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
-  private val onStarts = PublishSubject.create<Any>()
 
   private val events by unsafeLazy {
     dialogEvents
@@ -88,18 +85,12 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemov
 
   override fun onStart() {
     super.onStart()
-    onStarts.onNext(Any())
     delegate.start()
   }
 
   override fun onStop() {
     delegate.stop()
     super.onStop()
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    screenDestroys.onNext(ScreenDestroyed())
   }
 
   override fun onAttach(context: Context) {

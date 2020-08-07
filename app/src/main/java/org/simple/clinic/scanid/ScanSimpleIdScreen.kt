@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.inputmethod.EditorInfo
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.jakewharton.rxbinding3.view.detaches
 import com.jakewharton.rxbinding3.widget.editorActionEvents
 import com.jakewharton.rxbinding3.widget.textChangeEvents
 import io.reactivex.Observable
@@ -17,7 +16,6 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.CameraXQrScanner
 import org.simple.clinic.feature.Features
@@ -34,7 +32,6 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.qrcodescanner.IQrCodeScannerView
@@ -44,13 +41,10 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), ScanSimpleIdUi {
+class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), ScanSimpleIdUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
-
-  @Inject
-  lateinit var controller: ScanSimpleIdScreenController
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -69,18 +63,14 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     Observable
         .mergeArray(qrScans(), keyboardEvents(), qrCodeChanges(), doneClicks())
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val delegate by unsafeLazy {
-    val uiRenderer = ScanSimpleIdUiRenderer(this)
-
     MobiusDelegate.forView(
         events = events.ofType(),
         defaultModel = ScanSimpleIdModel.create(),
         update = ScanSimpleIdUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
+        effectHandler = effectHandlerFactory.create(this).build()
     )
   }
 
@@ -121,13 +111,6 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     }
 
     qrCodeScannerViewContainer.addView(qrCodeScannerView as View)
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = detaches().map { ScreenDestroyed() }
-    )
   }
 
   private fun setupShortCodeTextField() {

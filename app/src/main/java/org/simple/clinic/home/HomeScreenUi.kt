@@ -1,6 +1,6 @@
 package org.simple.clinic.home
 
-interface HomeScreenUi : HomeScreenUiActions {
+interface HomeScreenUi {
   fun setFacility(facilityName: String)
   fun showOverdueAppointmentCount(count: Int)
   fun removeOverdueAppointmentCount()

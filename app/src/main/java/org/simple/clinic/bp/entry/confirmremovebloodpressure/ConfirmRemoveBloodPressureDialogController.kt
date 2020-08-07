@@ -4,7 +4,6 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.PatientRepository
@@ -29,19 +28,6 @@ class ConfirmRemoveBloodPressureDialogController @AssistedInject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return markBloodPressureAsDeleted(replayedEvents)
-  }
-
-  private fun markBloodPressureAsDeleted(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ConfirmRemoveBloodPressureDialogRemoveClicked>()
-        .flatMap { bloodPressureRepository.measurement(bloodPressureMeasurementUuid) }
-        .take(1)
-        .flatMap {
-          bloodPressureRepository
-              .markBloodPressureAsDeleted(it)
-              .andThen(patientRepository.updateRecordedAt(it.patientUuid))
-              .andThen(Observable.just { ui: Ui -> ui.closeDialog() })
-        }
+    return Observable.never()
   }
 }

@@ -12,6 +12,7 @@ class ConfirmRemoveBloodPressureUpdate : Update<ConfirmRemoveBloodPressureModel,
   ): Next<ConfirmRemoveBloodPressureModel, ConfirmRemoveBloodPressureEffect> {
     return when (event) {
       BloodPressureDeleted -> dispatch(CloseDialog)
+      ConfirmRemoveBloodPressureDialogRemoveClicked -> dispatch(DeleteBloodPressure(model.bloodPressureMeasurementUuid))
     }
   }
 }

@@ -92,7 +92,11 @@ class TheActivityControllerTest {
   fun `when activity is started, user has requested an OTP, and user was inactive then app lock should be shown`() {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = OTP_REQUESTED, status = UserStatus.ApprovedForSyncing))))
+        .thenReturn(Observable.just(Just(TestData.loggedInUser(
+            uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+            loggedInStatus = OTP_REQUESTED,
+            status = UserStatus.ApprovedForSyncing
+        ))))
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
@@ -106,7 +110,11 @@ class TheActivityControllerTest {
   fun `when activity is started, user is logged in, and user was inactive then app lock should be shown`() {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = LOGGED_IN, status = UserStatus.ApprovedForSyncing))))
+        .thenReturn(Observable.just(Just(TestData.loggedInUser(
+            uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+            loggedInStatus = LOGGED_IN,
+            status = UserStatus.ApprovedForSyncing
+        ))))
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
@@ -120,7 +128,11 @@ class TheActivityControllerTest {
   fun `when activity is started, user has requested a PIN reset, and user was inactive then app lock should be shown`() {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = RESET_PIN_REQUESTED, status = UserStatus.ApprovedForSyncing))))
+        .thenReturn(Observable.just(Just(TestData.loggedInUser(
+            uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+            loggedInStatus = RESET_PIN_REQUESTED,
+            status = UserStatus.ApprovedForSyncing
+        ))))
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
@@ -134,7 +146,11 @@ class TheActivityControllerTest {
   fun `when activity is started, user is not logged in and user was inactive then app lock should not be shown`() {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = NOT_LOGGED_IN, status = UserStatus.ApprovedForSyncing))))
+        .thenReturn(Observable.just(Just(TestData.loggedInUser(
+            uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+            loggedInStatus = NOT_LOGGED_IN,
+            status = UserStatus.ApprovedForSyncing
+        ))))
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
@@ -148,7 +164,11 @@ class TheActivityControllerTest {
   fun `when activity is started, user is resetting the PIN, and user was inactive then app lock should not be shown`() {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = RESETTING_PIN, status = UserStatus.ApprovedForSyncing))))
+        .thenReturn(Observable.just(Just(TestData.loggedInUser(
+            uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+            loggedInStatus = RESETTING_PIN,
+            status = UserStatus.ApprovedForSyncing
+        ))))
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
@@ -184,7 +204,11 @@ class TheActivityControllerTest {
   fun `when app is started unlocked and lock timer hasn't expired yet then the timer should be unset`() {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = LOGGED_IN, status = UserStatus.ApprovedForSyncing))))
+        .thenReturn(Observable.just(Just(TestData.loggedInUser(
+            uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+            loggedInStatus = LOGGED_IN,
+            status = UserStatus.ApprovedForSyncing
+        ))))
 
     val lockAfterTime = Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(10))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)

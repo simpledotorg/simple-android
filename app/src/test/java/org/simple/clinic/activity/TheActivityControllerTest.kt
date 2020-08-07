@@ -1,7 +1,6 @@
 package org.simple.clinic.activity
 
 import com.f2prateek.rx.preferences2.Preference
-import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
@@ -19,22 +18,16 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.activity.ActivityLifecycle.Stopped
-import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
-import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
-import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.main.TheActivityController
-import org.simple.clinic.main.initialScreenKey
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
-import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
@@ -251,157 +244,6 @@ class TheActivityControllerTest {
     uiEvents.onNext(Started(null))
 
     verify(activity, never()).showUserLoggedOutOnOtherDeviceAlert()
-  }
-
-  @Test
-  fun `when the local user is waiting for approval and has requested a login OTP, the home screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = OTP_REQUESTED, status = UserStatus.WaitingForApproval)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(HomeScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is waiting for approval and has requested a PIN reset, the home screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = RESET_PIN_REQUESTED, status = UserStatus.WaitingForApproval)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(HomeScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is waiting for approval and has logged in, the home screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = LOGGED_IN, status = UserStatus.WaitingForApproval)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(HomeScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is approved for syncing and has requested a login OTP, the home screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = OTP_REQUESTED, status = UserStatus.ApprovedForSyncing)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(HomeScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is approved for syncing and has requested a PIN reset, the home screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = RESET_PIN_REQUESTED, status = UserStatus.ApprovedForSyncing)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(HomeScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is approved for syncing and has logged in, the home screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = LOGGED_IN, status = UserStatus.ApprovedForSyncing)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(HomeScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is waiting for approval and has not logged in, the login screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = NOT_LOGGED_IN, status = UserStatus.WaitingForApproval)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is approved for syncing and has not logged in, the login screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = NOT_LOGGED_IN, status = UserStatus.ApprovedForSyncing)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is waiting for approval and has been unauthorized, the login screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = UNAUTHORIZED, status = UserStatus.WaitingForApproval)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is approved for syncing and has been unauthorized, the login screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = UNAUTHORIZED, status = UserStatus.ApprovedForSyncing)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is waiting for approval and is resetting the PIN, the create new PIN screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = RESETTING_PIN, status = UserStatus.WaitingForApproval)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(ForgotPinCreateNewPinScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is approved for syncing and is resetting the PIN, the create new PIN screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = RESETTING_PIN, status = UserStatus.ApprovedForSyncing)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(ForgotPinCreateNewPinScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is disapproved for syncing and is not logged in, the access denied screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = NOT_LOGGED_IN, status = UserStatus.DisapprovedForSyncing)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(AccessDeniedScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is disapproved for syncing and has requested an OTP, the access denied screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = OTP_REQUESTED, status = UserStatus.DisapprovedForSyncing)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(AccessDeniedScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is disapproved for syncing and has requested a PIN reset, the access denied screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = RESET_PIN_REQUESTED, status = UserStatus.DisapprovedForSyncing)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(AccessDeniedScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is disapproved for syncing and is resetting the PIN, the access denied screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = RESETTING_PIN, status = UserStatus.DisapprovedForSyncing)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(AccessDeniedScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is disapproved for syncing and is logged in, the access denied screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = LOGGED_IN, status = UserStatus.DisapprovedForSyncing)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(AccessDeniedScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is disapproved for syncing and is unauthorized, the access denied screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = UNAUTHORIZED, status = UserStatus.DisapprovedForSyncing)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
-
-    assertThat(initialScreenKey(user)).isInstanceOf(AccessDeniedScreenKey::class.java)
-  }
-
-  @Test
-  fun `when there is no local user, the login screen should be shown`() {
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.empty()))
-
-    assertThat(initialScreenKey(null)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
   }
 
   @Test

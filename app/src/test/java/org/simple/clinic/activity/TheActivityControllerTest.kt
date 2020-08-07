@@ -338,9 +338,9 @@ class TheActivityControllerTest {
   }
 
   private fun setupController(
-      userStream: Observable<Optional<User>> = Observable.never(),
-      userUnauthorizedStream: Observable<Boolean> = Observable.never(),
-      userDisapprovedStream: Observable<Boolean> = Observable.never()
+      userStream: Observable<Optional<User>> = Observable.just(Optional.empty()),
+      userUnauthorizedStream: Observable<Boolean> = Observable.just(false),
+      userDisapprovedStream: Observable<Boolean> = Observable.just(false)
   ) {
     whenever(userSession.isUserUnauthorized()).thenReturn(userUnauthorizedStream)
     whenever(userSession.loggedInUser()).thenReturn(userStream)

@@ -1,6 +1,5 @@
 package org.simple.clinic.bp.entry.confirmremovebloodpressure
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -11,11 +10,12 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.TestData
+import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 class ConfirmRemoveBloodPressureDialogControllerTest {
 
@@ -40,12 +40,16 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
 
   @Test
   fun `when remove is clicked, the blood pressure must be marked as deleted and the dialog should be dismissed`() {
-    val bloodPressure = TestData.bloodPressureMeasurement()
+    val patientUuid = UUID.fromString("268b4091-fb16-4472-a466-baf60c72b895")
+    val bloodPressure = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("9fe5c4c8-f677-4a00-b621-19bd4503e334"),
+        patientUuid = patientUuid
+    )
     val markBloodPressureDeletedCompletable = Completable.complete()
     val updatePatientRecordedAtCompletable = Completable.complete()
     whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).doReturn(Observable.just(bloodPressure))
     whenever(bloodPressureRepository.markBloodPressureAsDeleted(bloodPressure)).doReturn(markBloodPressureDeletedCompletable)
-    whenever(patientRepository.updateRecordedAt(any())).doReturn(updatePatientRecordedAtCompletable)
+    whenever(patientRepository.updateRecordedAt(patientUuid)).doReturn(updatePatientRecordedAtCompletable)
 
     uiEvents.onNext(ConfirmRemoveBloodPressureDialogCreated(bloodPressureMeasurementUuid = bloodPressure.uuid))
     uiEvents.onNext(ConfirmRemoveBloodPressureDialogRemoveClicked)

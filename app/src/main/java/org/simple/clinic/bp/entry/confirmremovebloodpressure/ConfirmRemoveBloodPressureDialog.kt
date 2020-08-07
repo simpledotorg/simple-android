@@ -7,11 +7,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -50,6 +52,9 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemov
   @Inject
   lateinit var controller: ConfirmRemoveBloodPressureDialogController.Factory
 
+  @Inject
+  lateinit var effectHandlerFactory: ConfirmRemoveBloodPressureEffectHandler.Factory
+
   private var removeBloodPressureListener: RemoveBloodPressureListener? = null
 
   private val dialogEvents = PublishSubject.create<UiEvent>()
@@ -60,6 +65,15 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemov
     dialogEvents
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    MobiusDelegate.forActivity(
+        events = events.ofType(),
+        defaultModel = ConfirmRemoveBloodPressureModel.create(),
+        update = ConfirmRemoveBloodPressureUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build()
+    )
   }
 
   @SuppressLint("CheckResult")
@@ -84,6 +98,12 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemov
   override fun onStart() {
     super.onStart()
     onStarts.onNext(Any())
+    delegate.start()
+  }
+
+  override fun onStop() {
+    delegate.stop()
+    super.onStop()
   }
 
   override fun onDestroyView() {

@@ -16,6 +16,7 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Destroyed
 import org.simple.clinic.activity.ActivityLifecycle.Started
@@ -143,6 +144,13 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   private val screenResults: ScreenResultBus = ScreenResultBus()
 
+  private val events by unsafeLazy {
+    lifecycle
+        .startWith(Started(javaClass.simpleName))
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   @SuppressLint("CheckResult")
   override fun onPostCreate(savedInstanceState: Bundle?) {
     super.onPostCreate(savedInstanceState)
@@ -158,8 +166,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
       )
     }
 
-    lifecycle
-        .startWith(Started(javaClass.simpleName))
+    events
         .compose(controller)
         .observeOn(mainThread())
         .takeUntil(lifecycle.ofType<Destroyed>())

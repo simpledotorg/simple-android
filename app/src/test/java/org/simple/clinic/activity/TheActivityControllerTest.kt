@@ -66,16 +66,20 @@ class TheActivityControllerTest {
 
   @Test
   fun `when activity is started and user is logged out then app lock shouldn't be shown`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(false)
 
+    // when
     setupController()
 
+    // then
     verify(activity, never()).showAppLockScreen()
     verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `when activity is started, user has requested an OTP, and user was inactive then app lock should be shown`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     val userStream: Observable<Optional<User>> = Observable.just(Optional.of(TestData.loggedInUser(
         uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
@@ -86,14 +90,17 @@ class TheActivityControllerTest {
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
+    // when
     setupController(userStream = userStream)
 
+    // then
     verify(activity).showAppLockScreen()
     verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `when activity is started, user is logged in, and user was inactive then app lock should be shown`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     val userStream: Observable<Optional<User>> = Observable.just(Optional.of(TestData.loggedInUser(
         uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
@@ -104,14 +111,17 @@ class TheActivityControllerTest {
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
+    // when
     setupController(userStream = userStream)
 
+    // then
     verify(activity).showAppLockScreen()
     verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `when activity is started, user has requested a PIN reset, and user was inactive then app lock should be shown`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     val userStream: Observable<Optional<User>> = Observable.just(Optional.of(TestData.loggedInUser(
         uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
@@ -122,14 +132,17 @@ class TheActivityControllerTest {
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
+    // when
     setupController(userStream = userStream)
 
+    // then
     verify(activity).showAppLockScreen()
     verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `when activity is started, user is not logged in and user was inactive then app lock should not be shown`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(userSession.loggedInUser())
         .thenReturn(Observable.just(Optional.of(TestData.loggedInUser(
@@ -141,14 +154,17 @@ class TheActivityControllerTest {
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
+    //when
     setupController()
 
+    // then
     verify(activity, never()).showAppLockScreen()
     verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `when activity is started, user is resetting the PIN, and user was inactive then app lock should not be shown`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(userSession.loggedInUser())
         .thenReturn(Observable.just(Optional.of(TestData.loggedInUser(
@@ -160,40 +176,49 @@ class TheActivityControllerTest {
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
+    // when
     setupController()
 
+    // then
     verify(activity, never()).showAppLockScreen()
     verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `when app is stopped and lock timer is unset then the timer should be updated`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(lockAfterTimestamp.get()).thenReturn(Instant.MAX)
     whenever(lockAfterTimestamp.isSet).thenReturn(false)
 
+    // when
     setupController()
     uiEvents.onNext(Stopped(null))
 
+    // then
     verify(lockAfterTimestamp).set(currentTimestamp.plus(lockInMinutes, ChronoUnit.MINUTES))
     verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `when app is stopped and lock timer is set then the timer should not be updated`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(lockAfterTimestamp.isSet).thenReturn(true)
     whenever(lockAfterTimestamp.get()).thenReturn(Instant.now())
 
+    // when
     setupController()
     uiEvents.onNext(Stopped(null))
 
+    // then
     verify(lockAfterTimestamp, never()).set(any())
     verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `when app is started unlocked and lock timer hasn't expired yet then the timer should be unset`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     val userStream: Observable<Optional<User>> = Observable.just(Optional.of(TestData.loggedInUser(
         uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
@@ -204,27 +229,33 @@ class TheActivityControllerTest {
     val lockAfterTime = Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(10))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
+    // when
     setupController(userStream = userStream)
 
+    // then
     verify(lockAfterTimestamp).delete()
     verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `when app is started locked and lock timer hasn't expired yet then the timer should not be unset`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
 
     val lockAfterTime = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(5))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
+    // when
     setupController()
 
+    // then
     verify(lockAfterTimestamp, never()).delete()
     verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `the logged out alert must be shown only at the instant when a user gets verified for login`() {
+    // given
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("bed4a670-7f03-44ab-87ca-f297ca35375a"),
         status = UserStatus.ApprovedForSyncing,
@@ -238,14 +269,17 @@ class TheActivityControllerTest {
         Optional.of(user.copy(loggedInStatus = LOGGED_IN))
     )
 
+    // when
     setupController(userStream = userStream)
 
+    // then
     verify(activity).showUserLoggedOutOnOtherDeviceAlert()
     verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `the logged out alert must not be shown if the user is already logged in when the screen is opened`() {
+    // given
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("bed4a670-7f03-44ab-87ca-f297ca35375a"),
         status = UserStatus.ApprovedForSyncing,
@@ -259,8 +293,10 @@ class TheActivityControllerTest {
             Optional.of(user.copy(loggedInStatus = LOGGED_IN)))
     )
 
+    // when
     setupController()
 
+    // then
     verify(activity, never()).showUserLoggedOutOnOtherDeviceAlert()
     verifyNoMoreInteractions(activity)
   }
@@ -317,26 +353,42 @@ class TheActivityControllerTest {
 
   @Test
   fun `the sign in screen must be shown only at the moment where the user gets logged out`() {
+    // given
     val userUnauthorizedSubject = PublishSubject.create<Boolean>()
-    setupController(userUnauthorizedStream = userUnauthorizedSubject)
 
+    // when
+    setupController(userUnauthorizedStream = userUnauthorizedSubject)
     userUnauthorizedSubject.onNext(false)
+
+    // then
     verify(activity, never()).redirectToLogin()
 
+    // when
     userUnauthorizedSubject.onNext(true)
+
+    // then
     verify(activity).redirectToLogin()
 
     clearInvocations(activity)
 
+    // when
     userUnauthorizedSubject.onNext(true)
-    verifyZeroInteractions(activity)
-
-    userUnauthorizedSubject.onNext(false)
-    verifyZeroInteractions(activity)
-
-    userUnauthorizedSubject.onNext(true)
-    verify(activity).redirectToLogin()
     
+    // then
+    verifyZeroInteractions(activity)
+
+    // when
+    userUnauthorizedSubject.onNext(false)
+
+    // then
+    verifyZeroInteractions(activity)
+
+    // when
+    userUnauthorizedSubject.onNext(true)
+
+    // then
+    verify(activity).redirectToLogin()
+
     verifyNoMoreInteractions(activity)
   }
 

@@ -11,7 +11,6 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
@@ -50,9 +49,6 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemov
   }
 
   @Inject
-  lateinit var controller: ConfirmRemoveBloodPressureDialogController.Factory
-
-  @Inject
   lateinit var effectHandlerFactory: ConfirmRemoveBloodPressureEffectHandler.Factory
 
   private var removeBloodPressureListener: RemoveBloodPressureListener? = null
@@ -64,7 +60,6 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemov
   private val events by unsafeLazy {
     dialogEvents
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val delegate by unsafeLazy {
@@ -80,7 +75,7 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemov
 
   @SuppressLint("CheckResult")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val dialog = AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle_Destructive)
+    return AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle_Destructive)
         .setTitle(R.string.bloodpressureentry_remove_bp_title)
         .setMessage(R.string.bloodpressureentry_remove_bp_message)
         .setPositiveButton(R.string.bloodpressureentry_remove_bp_confirm) { _, _ ->
@@ -89,12 +84,6 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemov
         }
         .setNegativeButton(R.string.bloodpressureentry_remove_bp_cancel, null)
         .create()
-
-    onStarts
-        .take(1)
-        .subscribe { setupDialog() }
-
-    return dialog
   }
 
   override fun onStart() {
@@ -120,17 +109,6 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemov
     if (removeBloodPressureListener == null) {
       throw ClassCastException("$context must implement RemoveBloodPressureListener")
     }
-  }
-
-  private fun setupDialog() {
-    val bloodPressureMeasurementUuid = arguments!!.getSerializable(KEY_BP_UUID) as UUID
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller.create(bloodPressureMeasurementUuid),
-        screenDestroys = screenDestroys
-    )
   }
 
   override fun closeDialog() {

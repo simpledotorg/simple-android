@@ -403,7 +403,8 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
     bloodPressureEntrySpace.visibleOrGone(isVisible = false)
     bloodPressureEntryLayout.visibleOrGone(isVisible = true)
     bpDateButton.visibleOrGone(isVisible = true)
-    removeBloodPressureButton.visibleOrGone(isVisible = true)
+    if (removeBloodPressureButton.isEnabled)
+      removeBloodPressureButton.visibleOrGone(isVisible = true)
   }
 
   override fun onBloodPressureRemoved() {

@@ -38,6 +38,7 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
 
   @Test
   fun `when remove is clicked, the blood pressure must be marked as deleted and the dialog should be dismissed`() {
+    // given
     val patientUuid = UUID.fromString("268b4091-fb16-4472-a466-baf60c72b895")
     val bloodPressure = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("9fe5c4c8-f677-4a00-b621-19bd4503e334"),
@@ -49,9 +50,11 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
     whenever(bloodPressureRepository.markBloodPressureAsDeleted(bloodPressure)).doReturn(markBloodPressureDeletedCompletable)
     whenever(patientRepository.updateRecordedAt(patientUuid)).doReturn(updatePatientRecordedAtCompletable)
 
+    // when
     setupController(bloodPressure.uuid)
     uiEvents.onNext(ConfirmRemoveBloodPressureDialogRemoveClicked)
 
+    // then
     markBloodPressureDeletedCompletable.test().assertComplete()
     updatePatientRecordedAtCompletable.test().assertComplete()
     verify(dialog).dismiss()

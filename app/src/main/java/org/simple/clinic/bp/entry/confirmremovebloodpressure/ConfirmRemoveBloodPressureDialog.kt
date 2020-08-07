@@ -68,9 +68,11 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemov
   }
 
   private val delegate by unsafeLazy {
+    val bloodPressureMeasurementUuid = arguments!!.getSerializable(KEY_BP_UUID) as UUID
+
     MobiusDelegate.forActivity(
         events = events.ofType(),
-        defaultModel = ConfirmRemoveBloodPressureModel.create(),
+        defaultModel = ConfirmRemoveBloodPressureModel.create(bloodPressureMeasurementUuid),
         update = ConfirmRemoveBloodPressureUpdate(),
         effectHandler = effectHandlerFactory.create(this).build()
     )

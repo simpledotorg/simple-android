@@ -88,7 +88,7 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = ConfirmRemoveBloodPressureModel.create(),
+        defaultModel = ConfirmRemoveBloodPressureModel.create(bloodPressureMeasurementUuid),
         init = Init { first(it) },
         update = ConfirmRemoveBloodPressureUpdate(),
         effectHandler = effectHandler.build(),

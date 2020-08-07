@@ -6,8 +6,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -25,17 +26,13 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val patientRepository = mock<PatientRepository>()
   private val dialog = mock<ConfirmRemoveBloodPressureDialog>()
-  lateinit var controller: ConfirmRemoveBloodPressureDialogController
-
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  @Before
-  fun setUp() {
-    controller = ConfirmRemoveBloodPressureDialogController(bloodPressureRepository, patientRepository)
+  private lateinit var controllerSubscription: Disposable
 
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(dialog) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -51,11 +48,23 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
     whenever(bloodPressureRepository.markBloodPressureAsDeleted(bloodPressure)).doReturn(markBloodPressureDeletedCompletable)
     whenever(patientRepository.updateRecordedAt(patientUuid)).doReturn(updatePatientRecordedAtCompletable)
 
+    setupController()
     uiEvents.onNext(ConfirmRemoveBloodPressureDialogCreated(bloodPressureMeasurementUuid = bloodPressure.uuid))
     uiEvents.onNext(ConfirmRemoveBloodPressureDialogRemoveClicked)
 
     markBloodPressureDeletedCompletable.test().assertComplete()
     updatePatientRecordedAtCompletable.test().assertComplete()
     verify(dialog).dismiss()
+  }
+
+  private fun setupController() {
+    val controller = ConfirmRemoveBloodPressureDialogController(
+        bloodPressureRepository,
+        patientRepository
+    )
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(dialog) }
   }
 }

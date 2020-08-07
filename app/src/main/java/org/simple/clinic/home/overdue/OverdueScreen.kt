@@ -66,7 +66,7 @@ class OverdueScreen(
         defaultModel = OverdueModel.create(),
         update = OverdueUpdate(date),
         effectHandler = effectHandlerFactory.create(this).build(),
-        init = OverdueInit(date),
+        init = OverdueInit(),
         modelUpdateListener = { /* Nothing to do here */ }
     )
   }

@@ -54,9 +54,6 @@ class TheActivityControllerTest {
   private val patientRepository = mock<PatientRepository>()
   private val lockAfterTimestamp = mock<Preference<Instant>>()
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val userSubject = PublishSubject.create<Optional<User>>()
-  private val userUnauthorizedSubject = PublishSubject.create<Boolean>()
-  private val userDisapprovedSubject = PublishSubject.create<Boolean>()
 
   private val currentTimestamp = Instant.parse("2018-01-01T00:00:00Z")
   private val clock = TestUtcClock(currentTimestamp)
@@ -282,9 +279,10 @@ class TheActivityControllerTest {
     whenever(lockAfterTimestamp.get()).thenReturn(Instant.now())
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
     whenever(userSession.loggedInUserImmediate()).thenReturn(loggedInUser)
+    val userDisapprovedSubject = PublishSubject.create<Boolean>()
 
     //when
-    setupController()
+    setupController(userDisapprovedStream = userDisapprovedSubject)
     userDisapprovedSubject.onNext(true)
 
     //then
@@ -318,7 +316,8 @@ class TheActivityControllerTest {
 
   @Test
   fun `the sign in screen must be shown only at the moment where the user gets logged out`() {
-    setupController()
+    val userUnauthorizedSubject = PublishSubject.create<Boolean>()
+    setupController(userUnauthorizedStream = userUnauthorizedSubject)
 
     userUnauthorizedSubject.onNext(false)
     verify(activity, never()).redirectToLogin()
@@ -339,11 +338,13 @@ class TheActivityControllerTest {
   }
 
   private fun setupController(
-      userStream: Observable<Optional<User>> = userSubject
+      userStream: Observable<Optional<User>> = Observable.never(),
+      userUnauthorizedStream: Observable<Boolean> = Observable.never(),
+      userDisapprovedStream: Observable<Boolean> = Observable.never()
   ) {
-    whenever(userSession.isUserUnauthorized()).thenReturn(userUnauthorizedSubject)
+    whenever(userSession.isUserUnauthorized()).thenReturn(userUnauthorizedStream)
     whenever(userSession.loggedInUser()).thenReturn(userStream)
-    whenever(userSession.isUserDisapproved()).thenReturn(userDisapprovedSubject)
+    whenever(userSession.isUserDisapproved()).thenReturn(userDisapprovedStream)
 
     val controller = TheActivityController(
         userSession = userSession,

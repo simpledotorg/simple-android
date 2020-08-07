@@ -69,7 +69,6 @@ class TheActivityControllerTest {
     whenever(userSession.isUserLoggedIn()).thenReturn(false)
 
     setupController()
-    uiEvents.onNext(Started(null))
 
     verify(activity, never()).showAppLockScreen()
   }
@@ -87,7 +86,6 @@ class TheActivityControllerTest {
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     setupController(userStream = userStream)
-    uiEvents.onNext(Started(null))
 
     verify(activity).showAppLockScreen()
   }
@@ -105,7 +103,6 @@ class TheActivityControllerTest {
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     setupController(userStream = userStream)
-    uiEvents.onNext(Started(null))
 
     verify(activity).showAppLockScreen()
   }
@@ -123,7 +120,6 @@ class TheActivityControllerTest {
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     setupController(userStream = userStream)
-    uiEvents.onNext(Started(null))
 
     verify(activity).showAppLockScreen()
   }
@@ -142,7 +138,6 @@ class TheActivityControllerTest {
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     setupController()
-    uiEvents.onNext(Started(null))
 
     verify(activity, never()).showAppLockScreen()
   }
@@ -161,7 +156,6 @@ class TheActivityControllerTest {
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     setupController()
-    uiEvents.onNext(Started(null))
 
     verify(activity, never()).showAppLockScreen()
   }
@@ -203,7 +197,6 @@ class TheActivityControllerTest {
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     setupController(userStream = userStream)
-    uiEvents.onNext(Started(null))
 
     verify(lockAfterTimestamp).delete()
   }
@@ -216,7 +209,6 @@ class TheActivityControllerTest {
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     setupController()
-    uiEvents.onNext(Started(null))
 
     verify(lockAfterTimestamp, never()).delete()
   }
@@ -237,7 +229,6 @@ class TheActivityControllerTest {
     )
 
     setupController(userStream = userStream)
-    uiEvents.onNext(Started(null))
 
     verify(activity).showUserLoggedOutOnOtherDeviceAlert()
   }
@@ -258,7 +249,6 @@ class TheActivityControllerTest {
     )
 
     setupController()
-    uiEvents.onNext(Started(null))
 
     verify(activity, never()).showUserLoggedOutOnOtherDeviceAlert()
   }
@@ -306,7 +296,6 @@ class TheActivityControllerTest {
 
     //when
     setupController()
-    uiEvents.onNext(Started(null))
 
     //then
     verify(activity, never()).showAccessDeniedScreen(fullName)
@@ -356,5 +345,7 @@ class TheActivityControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(activity) }
+
+    uiEvents.onNext(Started(null))
   }
 }

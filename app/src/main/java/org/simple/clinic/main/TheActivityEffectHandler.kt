@@ -28,6 +28,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<TheActivityEffect, TheActivityEvent>()
         .addTransformer(LoadAppLockInfo::class.java, loadShowAppLockInto())
+        .addAction(ClearLockAfterTimestamp::class.java, { lockAfterTimestamp.delete()}, schedulers.io())
         .build()
   }
 

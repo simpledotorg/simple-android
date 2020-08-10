@@ -35,6 +35,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .addAction(ShowAppLockScreen::class.java, uiActions::showAppLockScreen, schedulers.ui())
         .addTransformer(UpdateLockTimestamp::class.java, updateAppLockTime())
         .addTransformer(ListenForUserVerifications::class.java, listenForUserVerifications())
+        .addAction(ShowUserLoggedOutOnOtherDeviceAlert::class.java, uiActions::showUserLoggedOutOnOtherDeviceAlert, schedulers.ui())
         .build()
   }
 

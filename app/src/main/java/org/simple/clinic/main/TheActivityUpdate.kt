@@ -47,7 +47,7 @@ class TheActivityUpdate(
           noChange()
         }
       }
-      UserWasJustVerified -> noChange()
+      UserWasJustVerified -> dispatch(ShowUserLoggedOutOnOtherDeviceAlert)
     }
   }
 

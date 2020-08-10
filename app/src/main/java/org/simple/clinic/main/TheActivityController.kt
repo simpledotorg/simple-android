@@ -31,17 +31,9 @@ class TheActivityController @Inject constructor(
     val replayedEvents = events.replay().refCount()
 
     return Observable.mergeArray(
-        displayUserLoggedOutOnOtherDevice(replayedEvents),
         redirectToLoginScreen(),
         redirectToAccessDeniedScreen()
     )
-  }
-
-  private fun displayUserLoggedOutOnOtherDevice(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<LifecycleEvent.ActivityStarted>()
-        .flatMap { userSession.loggedInUser() }
-        .compose(NewlyVerifiedUser())
-        .map { { ui: Ui -> ui.showUserLoggedOutOnOtherDeviceAlert() } }
   }
 
   private fun redirectToLoginScreen(): Observable<UiChange> {

@@ -1,6 +1,6 @@
 package org.simple.clinic.enterotp
 
-interface EnterOtpUi: EnterOtpUiActions {
+interface EnterOtpUi {
   fun showUserPhoneNumber(phoneNumber: String)
   fun showUnexpectedError()
   fun showNetworkError()

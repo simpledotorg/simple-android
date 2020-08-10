@@ -19,3 +19,5 @@ object ShowUserLoggedOutOnOtherDeviceAlert : TheActivityEffect()
 object ListenForUserUnauthorizations : TheActivityEffect()
 
 object RedirectToLoginScreen : TheActivityEffect()
+
+object ListenForUserDisapprovals: TheActivityEffect()

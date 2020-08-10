@@ -38,6 +38,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .addAction(ShowUserLoggedOutOnOtherDeviceAlert::class.java, uiActions::showUserLoggedOutOnOtherDeviceAlert, schedulers.ui())
         .addTransformer(ListenForUserUnauthorizations::class.java, listenForUserUnauthorizations())
         .addAction(RedirectToLoginScreen::class.java, uiActions::redirectToLogin, schedulers.ui())
+        .addTransformer(ListenForUserDisapprovals::class.java, listenForUserDisapprovals())
         .build()
   }
 
@@ -97,6 +98,19 @@ class TheActivityEffectHandler @AssistedInject constructor(
                 .distinctUntilChanged()
                 .filterTrue()
                 .map { UserWasUnauthorized }
+          }
+    }
+  }
+
+  private fun listenForUserDisapprovals(): ObservableTransformer<ListenForUserDisapprovals, TheActivityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMap {
+            userSession
+                .isUserDisapproved()
+                .subscribeOn(schedulers.io())
+                .filterTrue()
+                .map { UserWasDisapproved }
           }
     }
   }

@@ -17,4 +17,8 @@ data class LoggedOutOfDeviceModel(
 
   val hasLogoutResult: Boolean
     get() = logoutResult != null
+
+  fun userLoggedOut(logoutResult: LogoutResult): LoggedOutOfDeviceModel {
+    return copy(logoutResult = logoutResult)
+  }
 }

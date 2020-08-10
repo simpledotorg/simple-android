@@ -44,7 +44,6 @@ class LoggedOutOfDeviceDialogControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(dialog).disableOkayButton()
@@ -58,7 +57,6 @@ class LoggedOutOfDeviceDialogControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(dialog).enableOkayButton()
@@ -73,7 +71,6 @@ class LoggedOutOfDeviceDialogControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(dialog, never()).enableOkayButton()
@@ -89,7 +86,6 @@ class LoggedOutOfDeviceDialogControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(dialog, never()).enableOkayButton()
@@ -102,5 +98,7 @@ class LoggedOutOfDeviceDialogControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe({ uiChange -> uiChange(dialog) }, { throw it })
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

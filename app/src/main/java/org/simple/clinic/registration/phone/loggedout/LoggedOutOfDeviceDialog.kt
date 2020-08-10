@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.util.unsafeLazy
@@ -55,6 +56,12 @@ class LoggedOutOfDeviceDialog : AppCompatDialogFragment(), LoggedOutOfDeviceDial
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
   private val onStarts = PublishSubject.create<Any>()
 
+  private val events by unsafeLazy {
+    screenCreates()
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     TheActivity.component.inject(this)
@@ -78,7 +85,7 @@ class LoggedOutOfDeviceDialog : AppCompatDialogFragment(), LoggedOutOfDeviceDial
   private fun setupDialog() {
     bindUiToController(
         ui = this,
-        events = screenCreates(),
+        events = events,
         controller = controller,
         screenDestroys = screenDestroys
     )

@@ -186,4 +186,5 @@
     <item name="rippleColor">#4099ff66</item>
     <item name="android:textColor">@color/snackbar_action</item>
   </style>
+
 </resources>

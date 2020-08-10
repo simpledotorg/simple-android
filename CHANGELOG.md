@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Next Release
+### Internal
+- [In Progress: 10 Aug 2020] Migrate `LoggedOutOfDeviceDialog` to Mobius
+
 ## On Demo
 ### Features
 - Add progress UI for registering a patient

@@ -4,10 +4,8 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterTrue

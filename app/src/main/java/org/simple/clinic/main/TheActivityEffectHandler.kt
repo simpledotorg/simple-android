@@ -36,6 +36,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .addTransformer(UpdateLockTimestamp::class.java, updateAppLockTime())
         .addTransformer(ListenForUserVerifications::class.java, listenForUserVerifications())
         .addAction(ShowUserLoggedOutOnOtherDeviceAlert::class.java, uiActions::showUserLoggedOutOnOtherDeviceAlert, schedulers.ui())
+        .addTransformer(ListenForUserUnauthorizations::class.java, listenForUserUnauthorizations())
         .build()
   }
 
@@ -78,9 +79,23 @@ class TheActivityEffectHandler @AssistedInject constructor(
           .switchMap {
             userSession
                 .loggedInUser()
-                .observeOn(schedulers.io())
+                .subscribeOn(schedulers.io())
                 .compose(NewlyVerifiedUser())
                 .map { UserWasJustVerified }
+          }
+    }
+  }
+
+  private fun listenForUserUnauthorizations(): ObservableTransformer<ListenForUserUnauthorizations, TheActivityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMap {
+            userSession
+                .isUserUnauthorized()
+                .subscribeOn(schedulers.io())
+                .distinctUntilChanged()
+                .filterTrue()
+                .map { UserWasUnauthorized }
           }
     }
   }

@@ -20,3 +20,5 @@ data class AppLockInfoLoaded(
 ): TheActivityEvent()
 
 object UserWasJustVerified: TheActivityEvent()
+
+object UserWasUnauthorized: TheActivityEvent()

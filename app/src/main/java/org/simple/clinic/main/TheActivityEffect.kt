@@ -15,3 +15,5 @@ data class UpdateLockTimestamp(val lockAt: Instant): TheActivityEffect()
 object ListenForUserVerifications: TheActivityEffect()
 
 object ShowUserLoggedOutOnOtherDeviceAlert: TheActivityEffect()
+
+object ListenForUserUnauthorizations: TheActivityEffect()

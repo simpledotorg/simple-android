@@ -8,13 +8,8 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.NewlyVerifiedUser
-import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
-import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.filterTrue
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
@@ -36,20 +31,10 @@ class TheActivityController @Inject constructor(
     val replayedEvents = events.replay().refCount()
 
     return Observable.mergeArray(
-        updateLockTime(replayedEvents),
         displayUserLoggedOutOnOtherDevice(replayedEvents),
         redirectToLoginScreen(),
         redirectToAccessDeniedScreen()
     )
-  }
-
-  private fun updateLockTime(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<LifecycleEvent.ActivityStopped>()
-        .filter { userSession.isUserLoggedIn() }
-        .filter { !lockAfterTimestamp.isSet }
-        .doOnNext { lockAfterTimestamp.set(Instant.now(utcClock).plusMillis(appLockConfig.lockAfterTimeMillis)) }
-        .flatMap { Observable.empty<UiChange>() }
   }
 
   private fun displayUserLoggedOutOnOtherDevice(events: Observable<UiEvent>): Observable<UiChange> {

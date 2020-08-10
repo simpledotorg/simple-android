@@ -209,7 +209,7 @@ class TheActivityControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(ActivityStopped)
+    uiEvents.onNext(ActivityStopped(currentTimestamp))
 
     // then
     verify(lockAfterTimestamp).set(currentTimestamp.plus(lockInMinutes, ChronoUnit.MINUTES))
@@ -224,7 +224,7 @@ class TheActivityControllerTest {
 
     // when
     setupController(lockAtTime = Instant.now(clock))
-    uiEvents.onNext(ActivityStopped)
+    uiEvents.onNext(ActivityStopped(currentTimestamp))
 
     // then
     verify(lockAfterTimestamp, never()).set(any())
@@ -410,6 +410,8 @@ class TheActivityControllerTest {
       userDisapprovedStream: Observable<Boolean> = Observable.just(false),
       lockAtTime: Instant = Instant.MAX
   ) {
+    val appLockConfig = AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes))
+
     whenever(lockAfterTimestamp.get()).thenReturn(lockAtTime)
     whenever(userSession.isUserUnauthorized()).thenReturn(userUnauthorizedStream)
     whenever(userSession.loggedInUser()).thenReturn(userStream)
@@ -427,7 +429,7 @@ class TheActivityControllerTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = TheActivityModel.create(),
-        update = TheActivityUpdate(),
+        update = TheActivityUpdate.create(appLockConfig),
         effectHandler = effectHandler.build(),
         init = TheActivityInit(),
         modelUpdateListener = uiRenderer::render
@@ -436,7 +438,7 @@ class TheActivityControllerTest {
 
     val controller = TheActivityController(
         userSession = userSession,
-        appLockConfig = AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes)),
+        appLockConfig = appLockConfig,
         patientRepository = patientRepository,
         utcClock = clock,
         lockAfterTimestamp = lockAfterTimestamp

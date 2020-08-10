@@ -9,13 +9,10 @@ import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.subjects.PublishSubject
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
-import org.junit.runner.RunWith
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserSession.LogoutResult.Failure
 import org.simple.clinic.user.UserSession.LogoutResult.Success
@@ -23,7 +20,6 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 
-@RunWith(JUnitParamsRunner::class)
 class LoggedOutOfDeviceDialogControllerTest {
 
   @get:Rule
@@ -69,12 +65,11 @@ class LoggedOutOfDeviceDialogControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for logout result failures")
-  fun `when the logout fails, the error must be thrown`(logoutResult: UserSession.LogoutResult) {
+  fun `when the logout fails with runtime exception, then error must be thrown`() {
     // given
     var thrownError: Throwable? = null
     RxJavaPlugins.setErrorHandler { thrownError = it }
-    whenever(userSession.logout()).thenReturn(Single.just(logoutResult))
+    whenever(userSession.logout()).thenReturn(Single.just(Failure(RuntimeException())))
 
     // when
     setupController()
@@ -85,12 +80,20 @@ class LoggedOutOfDeviceDialogControllerTest {
     assertThat(thrownError).isNotNull()
   }
 
-  @Suppress("Unused")
-  fun `params for logout result failures`(): List<UserSession.LogoutResult> {
-    return listOf(
-        Failure(RuntimeException()),
-        Failure(NullPointerException())
-    )
+  @Test
+  fun `when the logout fails with null pointer exception, then error must be thrown`() {
+    // given
+    var thrownError: Throwable? = null
+    RxJavaPlugins.setErrorHandler { thrownError = it }
+    whenever(userSession.logout()).thenReturn(Single.just(Failure(NullPointerException())))
+
+    // when
+    setupController()
+    uiEvents.onNext(ScreenCreated())
+
+    // then
+    verify(dialog, never()).enableOkayButton()
+    assertThat(thrownError).isNotNull()
   }
 
   private fun setupController() {

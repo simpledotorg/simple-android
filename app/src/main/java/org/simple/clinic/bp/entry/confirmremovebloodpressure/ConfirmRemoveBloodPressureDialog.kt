@@ -3,23 +3,24 @@ package org.simple.clinic.bp.entry.confirmremovebloodpressure
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
-import com.jakewharton.rxbinding2.view.RxView
-import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
+class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemoveBloodPressureDialogUi {
   companion object {
     private const val KEY_BP_UUID = "bloodPressureMeasurementUuid"
 
@@ -49,19 +50,41 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
   }
 
   @Inject
-  lateinit var controller: ConfirmRemoveBloodPressureDialogController
+  lateinit var controller: ConfirmRemoveBloodPressureDialogController.Factory
+
+  @Inject
+  lateinit var effectHandlerFactory: ConfirmRemoveBloodPressureEffectHandler.Factory
 
   private var removeBloodPressureListener: RemoveBloodPressureListener? = null
 
+  private val dialogEvents = PublishSubject.create<UiEvent>()
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
   private val onStarts = PublishSubject.create<Any>()
+
+  private val events by unsafeLazy {
+    dialogEvents
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val delegate by unsafeLazy {
+    MobiusDelegate.forActivity(
+        events = events.ofType(),
+        defaultModel = ConfirmRemoveBloodPressureModel.create(),
+        update = ConfirmRemoveBloodPressureUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build()
+    )
+  }
 
   @SuppressLint("CheckResult")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val dialog = AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle_Destructive)
         .setTitle(R.string.bloodpressureentry_remove_bp_title)
         .setMessage(R.string.bloodpressureentry_remove_bp_message)
-        .setPositiveButton(R.string.bloodpressureentry_remove_bp_confirm, null)
+        .setPositiveButton(R.string.bloodpressureentry_remove_bp_confirm) { _, _ ->
+          removeBloodPressureListener?.onBloodPressureRemoved()
+          dialogEvents.onNext(ConfirmRemoveBloodPressureDialogRemoveClicked)
+        }
         .setNegativeButton(R.string.bloodpressureentry_remove_bp_cancel, null)
         .create()
 
@@ -75,6 +98,12 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
   override fun onStart() {
     super.onStart()
     onStarts.onNext(Any())
+    delegate.start()
+  }
+
+  override fun onStop() {
+    delegate.stop()
+    super.onStop()
   }
 
   override fun onDestroyView() {
@@ -92,25 +121,18 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
   }
 
   private fun setupDialog() {
+    val bloodPressureMeasurementUuid = arguments!!.getSerializable(KEY_BP_UUID) as UUID
+
     bindUiToController(
         ui = this,
-        events = Observable.merge(dialogCreates(), removeClicks()),
-        controller = controller,
+        events = events,
+        controller = controller.create(bloodPressureMeasurementUuid),
         screenDestroys = screenDestroys
     )
   }
 
-  private fun removeClicks(): Observable<UiEvent> {
-    val button = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
-
-    return RxView.clicks(button)
-        .doOnNext { removeBloodPressureListener?.onBloodPressureRemoved() }
-        .map { ConfirmRemoveBloodPressureDialogRemoveClicked }
-  }
-
-  private fun dialogCreates(): Observable<UiEvent> {
-    val bloodPressureMeasurementUuid = arguments!!.getSerializable(KEY_BP_UUID) as UUID
-    return Observable.just(ConfirmRemoveBloodPressureDialogCreated(bloodPressureMeasurementUuid))
+  override fun closeDialog() {
+    dismiss()
   }
 
   interface RemoveBloodPressureListener {

@@ -32,6 +32,7 @@ import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockScreenKey
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.ScreenResultBus
@@ -136,6 +137,9 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   @Inject
   lateinit var userSession: UserSession
 
+  @Inject
+  lateinit var effectHandlerFactory: TheActivityEffectHandler.InjectionFactory
+
   private val disposables = CompositeDisposable()
 
   private val screenRouter: ScreenRouter by unsafeLazy {
@@ -149,6 +153,24 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
         .startWith(Started(javaClass.simpleName))
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = TheActivityUiRenderer(this)
+
+    MobiusDelegate.forActivity(
+        events = events.ofType(),
+        defaultModel = TheActivityModel.create(),
+        update = TheActivityUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = TheActivityInit(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    delegate.onRestoreInstanceState(savedInstanceState)
   }
 
   @SuppressLint("CheckResult")
@@ -191,6 +213,16 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)
+  }
+
+  override fun onStart() {
+    super.onStart()
+    delegate.start()
+  }
+
+  override fun onStop() {
+    delegate.stop()
+    super.onStop()
   }
 
   private fun wrapContextWithRouter(baseContext: Context): Context {
@@ -246,6 +278,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     if (features.isEnabled(LogSavedStateSizes)) {
       screenRouter.logSizesOfSavedStates()
     }
+    delegate.onSaveInstanceState(outState)
     super.onSaveInstanceState(outState)
   }
 

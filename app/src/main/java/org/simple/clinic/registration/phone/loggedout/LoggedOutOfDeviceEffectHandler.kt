@@ -14,6 +14,7 @@ class LoggedOutOfDeviceEffectHandler @Inject constructor(
   fun build(): ObservableTransformer<LoggedOutOfDeviceEffect, LoggedOutOfDeviceEvent> = RxMobius
       .subtypeEffectHandler<LoggedOutOfDeviceEffect, LoggedOutOfDeviceEvent>()
       .addTransformer(LogoutUser::class.java, logoutUser())
+      .addConsumer(ThrowError::class.java, { throw it.cause }, schedulersProvider.ui())
       .build()
 
   private fun logoutUser(): ObservableTransformer<LogoutUser, LoggedOutOfDeviceEvent> {

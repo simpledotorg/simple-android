@@ -29,6 +29,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<TheActivityEffect, TheActivityEvent>()
         .addTransformer(LoadAppLockInfo::class.java, loadShowAppLockInto())
         .addAction(ClearLockAfterTimestamp::class.java, { lockAfterTimestamp.delete()}, schedulers.io())
+        .addAction(ShowAppLockScreen::class.java, uiActions::showAppLockScreen, schedulers.ui())
         .build()
   }
 

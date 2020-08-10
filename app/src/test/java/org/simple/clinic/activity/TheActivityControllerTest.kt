@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
@@ -100,13 +101,15 @@ class TheActivityControllerTest {
     )))
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
-    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     // when
-    setupController(userStream = userStream)
+    setupController(
+        userStream = userStream,
+        lockAtTime = lockAfterTime
+    )
 
     // then
-    verify(ui).showAppLockScreen()
+    verify(ui, times(2)).showAppLockScreen()
     verifyNoMoreInteractions(ui)
   }
 
@@ -121,13 +124,15 @@ class TheActivityControllerTest {
     )))
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
-    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     // when
-    setupController(userStream = userStream)
+    setupController(
+        userStream = userStream,
+        lockAtTime = lockAfterTime
+    )
 
     // then
-    verify(ui).showAppLockScreen()
+    verify(ui, times(2)).showAppLockScreen()
     verifyNoMoreInteractions(ui)
   }
 
@@ -142,13 +147,15 @@ class TheActivityControllerTest {
     )))
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
-    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     // when
-    setupController(userStream = userStream)
+    setupController(
+        userStream = userStream,
+        lockAtTime = lockAfterTime
+    )
 
     // then
-    verify(ui).showAppLockScreen()
+    verify(ui, times(2)).showAppLockScreen()
     verifyNoMoreInteractions(ui)
   }
 
@@ -164,10 +171,9 @@ class TheActivityControllerTest {
         ))))
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
-    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     //when
-    setupController()
+    setupController(lockAtTime = lockAfterTime)
 
     // then
     verify(ui, never()).showAppLockScreen()
@@ -186,10 +192,9 @@ class TheActivityControllerTest {
         ))))
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
-    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     // when
-    setupController()
+    setupController(lockAtTime = lockAfterTime)
 
     // then
     verify(ui, never()).showAppLockScreen()
@@ -200,7 +205,6 @@ class TheActivityControllerTest {
   fun `when app is stopped and lock timer is unset then the timer should be updated`() {
     // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
-    whenever(lockAfterTimestamp.get()).thenReturn(Instant.MAX)
     whenever(lockAfterTimestamp.isSet).thenReturn(false)
 
     // when
@@ -217,10 +221,9 @@ class TheActivityControllerTest {
     // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(lockAfterTimestamp.isSet).thenReturn(true)
-    whenever(lockAfterTimestamp.get()).thenReturn(Instant.now())
 
     // when
-    setupController()
+    setupController(lockAtTime = Instant.now(clock))
     uiEvents.onNext(ActivityStopped)
 
     // then
@@ -239,13 +242,12 @@ class TheActivityControllerTest {
     )))
 
     val lockAfterTime = Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(10))
-    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     // when
-    setupController(userStream = userStream)
+    setupController(userStream = userStream, lockAtTime = lockAfterTime)
 
     // then
-    verify(lockAfterTimestamp).delete()
+    verify(lockAfterTimestamp, times(2)).delete()
     verifyNoMoreInteractions(ui)
   }
 
@@ -255,10 +257,9 @@ class TheActivityControllerTest {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
 
     val lockAfterTime = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(5))
-    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     // when
-    setupController()
+    setupController(lockAtTime = lockAfterTime)
 
     // then
     verify(lockAfterTimestamp, never()).delete()
@@ -273,7 +274,6 @@ class TheActivityControllerTest {
         status = UserStatus.ApprovedForSyncing,
         loggedInStatus = OTP_REQUESTED
     )
-    whenever(lockAfterTimestamp.get()).thenReturn(Instant.MAX)
 
     val userStream: Observable<Optional<User>> = Observable.just(
         Optional.of(user),
@@ -297,7 +297,6 @@ class TheActivityControllerTest {
         status = UserStatus.ApprovedForSyncing,
         loggedInStatus = LOGGED_IN
     )
-    whenever(lockAfterTimestamp.get()).thenReturn(Instant.MAX)
     whenever(userSession.loggedInUser()).thenReturn(
         Observable.just(
             Optional.of(user),
@@ -325,13 +324,15 @@ class TheActivityControllerTest {
     )
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
-    whenever(lockAfterTimestamp.get()).thenReturn(Instant.now())
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
     whenever(userSession.loggedInUserImmediate()).thenReturn(loggedInUser)
     val userDisapprovedSubject = PublishSubject.create<Boolean>()
 
     //when
-    setupController(userDisapprovedStream = userDisapprovedSubject)
+    setupController(
+        userDisapprovedStream = userDisapprovedSubject,
+        lockAtTime = Instant.now(clock)
+    )
     userDisapprovedSubject.onNext(true)
 
     //then
@@ -352,10 +353,9 @@ class TheActivityControllerTest {
     )
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
-    whenever(lockAfterTimestamp.get()).thenReturn(Instant.now())
 
     //when
-    setupController()
+    setupController(lockAtTime = Instant.now(clock))
 
     //then
     verify(ui, never()).showAccessDeniedScreen(fullName)
@@ -407,8 +407,10 @@ class TheActivityControllerTest {
   private fun setupController(
       userStream: Observable<Optional<User>> = Observable.just(Optional.empty()),
       userUnauthorizedStream: Observable<Boolean> = Observable.just(false),
-      userDisapprovedStream: Observable<Boolean> = Observable.just(false)
+      userDisapprovedStream: Observable<Boolean> = Observable.just(false),
+      lockAtTime: Instant = Instant.MAX
   ) {
+    whenever(lockAfterTimestamp.get()).thenReturn(lockAtTime)
     whenever(userSession.isUserUnauthorized()).thenReturn(userUnauthorizedStream)
     whenever(userSession.loggedInUser()).thenReturn(userStream)
     whenever(userSession.isUserDisapproved()).thenReturn(userDisapprovedStream)

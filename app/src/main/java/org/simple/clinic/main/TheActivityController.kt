@@ -32,47 +32,15 @@ class TheActivityController @Inject constructor(
     @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
-  private val showAppLockForUserStates = setOf(OTP_REQUESTED, LOGGED_IN, RESET_PIN_REQUESTED)
-
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.replay().refCount()
 
     return Observable.mergeArray(
-        showAppLock(replayedEvents),
         updateLockTime(replayedEvents),
         displayUserLoggedOutOnOtherDevice(replayedEvents),
         redirectToLoginScreen(),
         redirectToAccessDeniedScreen()
     )
-  }
-
-  private fun showAppLock(events: Observable<UiEvent>): Observable<UiChange> {
-    val replayedCanShowAppLock = events
-        .ofType<LifecycleEvent.ActivityStarted>()
-        .flatMap {
-          userSession.loggedInUser()
-              .filterAndUnwrapJust()
-              .filter { it.status != UserStatus.DisapprovedForSyncing }
-              .map { user -> user.loggedInStatus }
-              .take(1)
-        }
-        .filter { it in showAppLockForUserStates }
-        .map { Instant.now(utcClock) > lockAfterTimestamp.get() }
-        .replay()
-        .refCount()
-
-    val showAppLock = replayedCanShowAppLock
-        .filter { show -> show }
-        .map { { ui: Ui -> ui.showAppLockScreen() } }
-
-    val unsetLockTime = replayedCanShowAppLock
-        .filter { show -> !show }
-        .flatMap {
-          lockAfterTimestamp.delete()
-          Observable.empty<UiChange>()
-        }
-
-    return unsetLockTime.mergeWith(showAppLock)
   }
 
   private fun updateLockTime(events: Observable<UiEvent>): Observable<UiChange> {

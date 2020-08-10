@@ -5,3 +5,5 @@ sealed class TheActivityEffect
 object LoadAppLockInfo: TheActivityEffect()
 
 object ClearLockAfterTimestamp: TheActivityEffect()
+
+object ShowAppLockScreen: TheActivityEffect()

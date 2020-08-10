@@ -64,7 +64,7 @@ data class User(
 
     @ColumnInfo(index = true)
     val currentFacilityUuid: UUID
-): Parcelable {
+) : Parcelable {
 
   val canSyncData: Boolean
     get() = loggedInStatus == LoggedInStatus.LOGGED_IN && status == UserStatus.ApprovedForSyncing
@@ -77,6 +77,9 @@ data class User(
 
   val isPendingSmsVerification: Boolean
     get() = loggedInStatus == LoggedInStatus.OTP_REQUESTED
+
+  val isNotDisapprovedForSyncing: Boolean
+    get() = status != UserStatus.DisapprovedForSyncing
 
   fun withStatus(status: UserStatus, clock: UtcClock): User {
     return copy(status = status, updatedAt = Instant.now(clock))

@@ -16,9 +16,10 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.patient.PatientUuid
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
@@ -56,7 +57,7 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
   }
 
   @Inject
-  lateinit var controller: UpdatePhoneNumberDialogController
+  lateinit var controller: UpdatePhoneNumberDialogController.Factory
 
   private val phoneInputLayout by bindView<TextInputLayout>(R.id.updatephone_phone_inputlayout)
   private val numberEditText by bindView<EditText>(R.id.updatephone_phone)
@@ -96,6 +97,7 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
   private fun setupDialog(screenDestroys: Observable<ScreenDestroyed>) {
     val cancelButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_NEGATIVE)
     val saveButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
+    val patientUuid = arguments!!.getSerializable(KEY_PATIENT_UUID) as PatientUuid
 
     bindUiToController(
         ui = this,
@@ -104,14 +106,13 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
             cancelClicks(cancelButton),
             saveClicks(saveButton)
         ),
-        controller = controller,
+        controller = controller.create(patientUuid),
         screenDestroys = screenDestroys
     )
   }
 
   private fun dialogCreates(): Observable<UiEvent> {
-    val patientUuid = arguments!!.getSerializable(KEY_PATIENT_UUID) as PatientUuid
-    return Observable.just(UpdatePhoneNumberDialogCreated(patientUuid))
+    return Observable.just(ScreenCreated())
   }
 
   private fun cancelClicks(cancelButton: Button) =

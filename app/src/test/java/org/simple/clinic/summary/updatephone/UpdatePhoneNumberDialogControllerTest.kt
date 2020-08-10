@@ -16,6 +16,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
@@ -26,6 +27,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_O
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -57,8 +59,7 @@ class UpdatePhoneNumberDialogControllerTest {
     )
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(phoneNumber)))
 
-    setupController()
-    uiEvents.onNext(UpdatePhoneNumberDialogCreated(patientUuid))
+    setupController(patientUuid = patientUuid)
 
     verify(dialog).preFillPhoneNumber(phoneNumber.number)
   }
@@ -76,8 +77,7 @@ class UpdatePhoneNumberDialogControllerTest {
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.complete())
 
-    setupController()
-    uiEvents.onNext(UpdatePhoneNumberDialogCreated(patientUuid))
+    setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
     verify(repository).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
@@ -99,8 +99,7 @@ class UpdatePhoneNumberDialogControllerTest {
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.complete())
 
-    setupController()
-    uiEvents.onNext(UpdatePhoneNumberDialogCreated(patientUuid))
+    setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
@@ -122,8 +121,7 @@ class UpdatePhoneNumberDialogControllerTest {
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.never())
 
-    setupController()
-    uiEvents.onNext(UpdatePhoneNumberDialogCreated(patientUuid))
+    setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
     when (validationError) {
@@ -139,8 +137,7 @@ class UpdatePhoneNumberDialogControllerTest {
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber)).thenReturn(Completable.complete())
 
-    setupController()
-    uiEvents.onNext(UpdatePhoneNumberDialogCreated(patientUuid))
+    setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberCancelClicked)
 
     verify(repository).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber)
@@ -149,11 +146,17 @@ class UpdatePhoneNumberDialogControllerTest {
   @Suppress("unused")
   private fun `validation errors`() = listOf(Blank, LengthTooShort(6), LengthTooLong(12))
 
-  private fun setupController() {
-    val controller = UpdatePhoneNumberDialogController(repository, validator)
+  private fun setupController(patientUuid: PatientUuid) {
+    val controller = UpdatePhoneNumberDialogController(
+        patientUuid = patientUuid,
+        repository = repository,
+        validator = validator
+    )
 
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(dialog) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

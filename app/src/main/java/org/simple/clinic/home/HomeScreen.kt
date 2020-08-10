@@ -80,7 +80,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     setupHelpClicks()
 
     // Keyboard stays open after login finishes, not sure why.
-    rootLayout.hideKeyboard()
+    homeScreenRootLayout.hideKeyboard()
 
     viewPager.adapter = HomePagerAdapter(context)
     homeTabLayout.setupWithViewPager(viewPager)

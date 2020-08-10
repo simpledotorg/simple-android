@@ -18,9 +18,9 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.activity.ActivityLifecycle.Started
-import org.simple.clinic.activity.ActivityLifecycle.Stopped
 import org.simple.clinic.login.applock.AppLockConfig
+import org.simple.clinic.main.LifecycleEvent.ActivityStarted
+import org.simple.clinic.main.LifecycleEvent.ActivityStopped
 import org.simple.clinic.main.TheActivityController
 import org.simple.clinic.main.TheActivityEffect
 import org.simple.clinic.main.TheActivityEffectHandler
@@ -205,7 +205,7 @@ class TheActivityControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(Stopped(null))
+    uiEvents.onNext(ActivityStopped)
 
     // then
     verify(lockAfterTimestamp).set(currentTimestamp.plus(lockInMinutes, ChronoUnit.MINUTES))
@@ -221,7 +221,7 @@ class TheActivityControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(Stopped(null))
+    uiEvents.onNext(ActivityStopped)
 
     // then
     verify(lockAfterTimestamp, never()).set(any())
@@ -441,6 +441,6 @@ class TheActivityControllerTest {
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
 
-    uiEvents.onNext(Started(null))
+    uiEvents.onNext(ActivityStarted)
   }
 }

@@ -5,8 +5,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import org.simple.clinic.activity.ActivityLifecycle.Started
-import org.simple.clinic.activity.ActivityLifecycle.Stopped
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.NewlyVerifiedUser
@@ -50,7 +48,7 @@ class TheActivityController @Inject constructor(
 
   private fun showAppLock(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedCanShowAppLock = events
-        .ofType<Started>()
+        .ofType<LifecycleEvent.ActivityStarted>()
         .flatMap {
           userSession.loggedInUser()
               .filterAndUnwrapJust()
@@ -79,7 +77,7 @@ class TheActivityController @Inject constructor(
 
   private fun updateLockTime(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<Stopped>()
+        .ofType<LifecycleEvent.ActivityStopped>()
         .filter { userSession.isUserLoggedIn() }
         .filter { !lockAfterTimestamp.isSet }
         .doOnNext { lockAfterTimestamp.set(Instant.now(utcClock).plusMillis(appLockConfig.lockAfterTimeMillis)) }
@@ -87,7 +85,7 @@ class TheActivityController @Inject constructor(
   }
 
   private fun displayUserLoggedOutOnOtherDevice(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<Started>()
+    return events.ofType<LifecycleEvent.ActivityStarted>()
         .flatMap { userSession.loggedInUser() }
         .compose(NewlyVerifiedUser())
         .map { { ui: Ui -> ui.showUserLoggedOutOnOtherDeviceAlert() } }

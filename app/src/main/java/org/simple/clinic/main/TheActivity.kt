@@ -9,17 +9,15 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.activity.ActivityLifecycle
-import org.simple.clinic.activity.ActivityLifecycle.Destroyed
-import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.deeplink.DeepLinkResult
 import org.simple.clinic.deeplink.OpenPatientSummary
 import org.simple.clinic.deeplink.ShowNoPatientUuid
@@ -117,9 +115,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   lateinit var controller: TheActivityController
 
   @Inject
-  lateinit var lifecycle: Observable<ActivityLifecycle>
-
-  @Inject
   lateinit var locale: Locale
 
   @Inject
@@ -140,6 +135,8 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   @Inject
   lateinit var effectHandlerFactory: TheActivityEffectHandler.InjectionFactory
 
+  private val lifecycleEvents: Subject<LifecycleEvent> = PublishSubject.create()
+
   private val disposables = CompositeDisposable()
 
   private val screenRouter: ScreenRouter by unsafeLazy {
@@ -149,8 +146,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   private val screenResults: ScreenResultBus = ScreenResultBus()
 
   private val events by unsafeLazy {
-    lifecycle
-        .startWith(Started(javaClass.simpleName))
+    lifecycleEvents
         .compose(ReportAnalyticsEvents())
         .share()
   }
@@ -189,9 +185,10 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     }
 
     events
+        .startWith(LifecycleEvent.ActivityStarted)
         .compose(controller)
         .observeOn(mainThread())
-        .takeUntil(lifecycle.ofType<Destroyed>())
+        .takeUntil(lifecycleEvents.ofType<LifecycleEvent.ActivityDestroyed>())
         .subscribe { uiChange -> uiChange(this) }
 
     if (intent.hasExtra(EXTRA_DEEP_LINK_RESULT)) {
@@ -218,9 +215,11 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   override fun onStart() {
     super.onStart()
     delegate.start()
+    lifecycleEvents.onNext(LifecycleEvent.ActivityStarted)
   }
 
   override fun onStop() {
+    lifecycleEvents.onNext(LifecycleEvent.ActivityStopped)
     delegate.stop()
     super.onStop()
   }
@@ -284,6 +283,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   override fun onDestroy() {
     super.onDestroy()
+    lifecycleEvents.onNext(LifecycleEvent.ActivityDestroyed)
     disposables.clear()
   }
 

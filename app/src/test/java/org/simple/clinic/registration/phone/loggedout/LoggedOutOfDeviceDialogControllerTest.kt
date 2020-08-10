@@ -6,11 +6,12 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
@@ -32,23 +33,21 @@ class LoggedOutOfDeviceDialogControllerTest {
   private val userSession = mock<UserSession>()
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  private val controller = LoggedOutOfDeviceDialogController(userSession)
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    RxJavaPlugins.setErrorHandler(null)
-
-    whenever(userSession.logout())
-        .thenReturn(Single.never())
-
-    uiEvents
-        .compose(controller)
-        .subscribe({ uiChange -> uiChange(dialog) }, { throw it })
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
   fun `when the dialog is created, the okay button must be disabled`() {
+    // given
+    RxJavaPlugins.setErrorHandler(null)
+    whenever(userSession.logout()).thenReturn(Single.never())
+
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -58,10 +57,11 @@ class LoggedOutOfDeviceDialogControllerTest {
   @Test
   fun `when the logout result completes successfully, the okay button must be enabled`() {
     // given
-    whenever(userSession.logout())
-        .thenReturn(Single.just(Success))
+    RxJavaPlugins.setErrorHandler(null)
+    whenever(userSession.logout()).thenReturn(Single.just(Success))
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -74,10 +74,10 @@ class LoggedOutOfDeviceDialogControllerTest {
     // given
     var thrownError: Throwable? = null
     RxJavaPlugins.setErrorHandler { thrownError = it }
-    whenever(userSession.logout())
-        .thenReturn(Single.just(logoutResult))
+    whenever(userSession.logout()).thenReturn(Single.just(logoutResult))
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -91,5 +91,13 @@ class LoggedOutOfDeviceDialogControllerTest {
         Failure(RuntimeException()),
         Failure(NullPointerException())
     )
+  }
+
+  private fun setupController() {
+    val controller = LoggedOutOfDeviceDialogController(userSession)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe({ uiChange -> uiChange(dialog) }, { throw it })
   }
 }

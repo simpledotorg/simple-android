@@ -29,7 +29,8 @@ class IntroVideoScreen(
   @Inject
   lateinit var screenRouter: ScreenRouter
 
-  @field:[Inject Named("training_video_youtube_id")]
+  @Inject
+  @Named("training_video_youtube_id")
   lateinit var youTubeVideoId: String
 
   @Inject

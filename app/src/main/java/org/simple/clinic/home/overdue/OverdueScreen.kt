@@ -40,13 +40,15 @@ class OverdueScreen(
   @Inject
   lateinit var userClock: UserClock
 
-  @field:[Inject Named("full_date")]
+  @Inject
+  @Named("full_date")
   lateinit var dateFormatter: DateTimeFormatter
 
   @Inject
   lateinit var effectHandlerFactory: OverdueEffectHandler.Factory
 
-  @field:[Inject Named("for_overdue_appointments")]
+  @Inject
+  @Named("for_overdue_appointments")
   lateinit var pagedListConfig: PagedList.Config
 
   private val overdueListAdapter = PagingItemAdapter(OverdueAppointmentRow.DiffCallback())

@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class BusinessIdMetaDataAdapterAndroidTest {
 
-  @field:Inject
+  @Inject
   lateinit var businessIdMetaDataAdapter: BusinessIdMetaDataAdapter
 
   @get:Rule

@@ -58,11 +58,11 @@ class DatabaseMigrationAndroidTest {
   lateinit var migrations: List<@JvmSuppressWildcards Migration>
 
   @Inject
-  @field:Named("last_facility_pull_token")
+  @Named("last_facility_pull_token")
   lateinit var lastFacilityPullToken: Preference<Optional<String>>
 
   @Inject
-  @field:Named("last_patient_pull_token")
+  @Named("last_patient_pull_token")
   lateinit var lastPatientPullToken: Preference<Optional<String>>
 
   @Inject

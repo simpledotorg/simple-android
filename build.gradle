@@ -11,7 +11,7 @@ buildscript {
       androidXTestExt     : '1.1.1',
       androidXTest        : '1.2.0',
       timber              : '4.7.0',
-      dagger              : '2.24',
+      dagger              : '2.28.3',
       butterKnife         : '8.8.1',
       kotterKnife         : 'e157638df1',
       coreTesting         : '2.0.0',

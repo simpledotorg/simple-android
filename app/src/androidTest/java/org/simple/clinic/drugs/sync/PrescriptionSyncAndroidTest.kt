@@ -33,7 +33,7 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
   lateinit var repository: PrescriptionRepository
 
   @Inject
-  @field:Named("last_prescription_pull_token")
+  @Named("last_prescription_pull_token")
   lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject

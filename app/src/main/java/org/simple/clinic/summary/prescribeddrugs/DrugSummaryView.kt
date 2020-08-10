@@ -46,7 +46,8 @@ class DrugSummaryView(
     attributeSet: AttributeSet
 ) : CardView(context, attributeSet), DrugSummaryUi, DrugSummaryUiActions {
 
-  @field:[Inject Named("full_date")]
+  @Inject
+  @Named("full_date")
   lateinit var fullDateFormatter: DateTimeFormatter
 
   @Inject

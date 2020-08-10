@@ -30,7 +30,7 @@ class BloodPressureSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodPressur
   lateinit var repository: BloodPressureRepository
 
   @Inject
-  @field:Named("last_bp_pull_token")
+  @Named("last_bp_pull_token")
   lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject

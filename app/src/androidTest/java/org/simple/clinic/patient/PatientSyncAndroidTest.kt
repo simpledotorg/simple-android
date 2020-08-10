@@ -29,7 +29,7 @@ class PatientSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PatientProfile, Pa
   lateinit var repository: PatientRepository
 
   @Inject
-  @field:Named("last_patient_pull_token")
+  @Named("last_patient_pull_token")
   lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject

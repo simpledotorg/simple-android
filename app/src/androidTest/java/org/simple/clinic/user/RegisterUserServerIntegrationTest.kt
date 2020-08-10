@@ -48,7 +48,8 @@ class RegisterUserServerIntegrationTest {
   @Inject
   lateinit var passwordHasher: PasswordHasher
 
-  @field:[Inject Named("user_pin")]
+  @Inject
+  @Named("user_pin")
   lateinit var userPin: String
 
   @get:Rule

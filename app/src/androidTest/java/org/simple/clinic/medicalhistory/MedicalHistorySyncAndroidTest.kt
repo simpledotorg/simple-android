@@ -32,7 +32,7 @@ import javax.inject.Named
 class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHistory, MedicalHistoryPayload>() {
 
   @Inject
-  @field:Named("last_medicalhistory_pull_token")
+  @Named("last_medicalhistory_pull_token")
   lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject

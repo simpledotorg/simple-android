@@ -88,7 +88,8 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   @Inject
   lateinit var screenRouter: ScreenRouter
 
-  @field:[Inject Named("date_for_user_input")]
+  @Inject
+  @Named("date_for_user_input")
   lateinit var dateOfBirthFormat: DateTimeFormatter
 
   @Inject

@@ -30,7 +30,7 @@ class ProtocolSyncAndroidTest {
   lateinit var appDatabase: AppDatabase
 
   @Inject
-  @field:Named("last_protocol_pull_token")
+  @Named("last_protocol_pull_token")
   lateinit var lastPullToken: Preference<Optional<String>>
 
   @get:Rule

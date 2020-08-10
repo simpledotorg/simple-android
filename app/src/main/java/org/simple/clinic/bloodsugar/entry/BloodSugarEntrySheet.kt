@@ -83,7 +83,8 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     }
   }
 
-  @field:[Inject Named("exact_date")]
+  @Inject
+  @Named("exact_date")
   lateinit var dateFormatter: DateTimeFormatter
 
   @Inject

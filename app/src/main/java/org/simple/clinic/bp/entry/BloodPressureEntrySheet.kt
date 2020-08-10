@@ -51,7 +51,8 @@ import javax.inject.Named
 
 class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, RemoveBloodPressureListener {
 
-  @field:[Inject Named("exact_date")]
+  @Inject
+  @Named("exact_date")
   lateinit var dateFormatter: DateTimeFormatter
 
   @Inject

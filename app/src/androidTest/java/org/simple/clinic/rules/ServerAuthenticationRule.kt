@@ -16,9 +16,9 @@ import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilitySync
-import org.simple.clinic.login.UsersApi
 import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.UserPayload
+import org.simple.clinic.login.UsersApi
 import org.simple.clinic.login.activateuser.ActivateUserRequest
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.User
@@ -75,10 +75,12 @@ class ServerAuthenticationRule : TestRule {
   @Inject
   lateinit var passwordHasher: PasswordHasher
 
-  @field:[Inject Named("user_pin")]
+  @Inject
+  @Named("user_pin")
   lateinit var userPin: String
 
-  @field:[Inject Named("user_otp")]
+  @Inject
+  @Named("user_otp")
   lateinit var userOtp: String
 
   private val cachedUserInformationAdapter by unsafeLazy { moshi.adapter(CachedUserInformation::class.java) }

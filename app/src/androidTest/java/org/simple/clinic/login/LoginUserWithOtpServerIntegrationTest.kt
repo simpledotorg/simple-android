@@ -32,10 +32,12 @@ class LoginUserWithOtpServerIntegrationTest {
   @Inject
   lateinit var usersApi: UsersApi
 
-  @field:[Inject Named("user_pin")]
+  @Inject
+  @Named("user_pin")
   lateinit var userPin: String
 
-  @field:[Inject Named("user_otp")]
+  @Inject
+  @Named("user_otp")
   lateinit var userOtp: String
 
   @Before

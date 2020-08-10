@@ -26,7 +26,8 @@ class SetAppointmentReminderView(
     attributeSet: AttributeSet
 ) : ConstraintLayout(context, attributeSet) {
 
-  @field:[Inject Named("date_for_user_input")]
+  @Inject
+  @Named("date_for_user_input")
   lateinit var dateFormatter: DateTimeFormatter
 
   var decrementStepperClicked: DecrementStepperClicked? = null

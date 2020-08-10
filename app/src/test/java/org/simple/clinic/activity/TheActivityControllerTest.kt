@@ -421,6 +421,7 @@ class TheActivityControllerTest {
         schedulers = TestSchedulersProvider.trampoline(),
         userSession = userSession,
         utcClock = clock,
+        patientRepository = patientRepository,
         lockAfterTimestamp = lockAfterTimestamp,
         uiActions = ui
     )

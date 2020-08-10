@@ -6,6 +6,7 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
@@ -18,6 +19,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val userSession: UserSession,
     private val utcClock: UtcClock,
+    private val patientRepository: PatientRepository,
     @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>,
     @Assisted private val uiActions: TheActivityUiActions
 ) {
@@ -39,6 +41,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .addTransformer(ListenForUserUnauthorizations::class.java, listenForUserUnauthorizations())
         .addAction(RedirectToLoginScreen::class.java, uiActions::redirectToLogin, schedulers.ui())
         .addTransformer(ListenForUserDisapprovals::class.java, listenForUserDisapprovals())
+        .addTransformer(ClearPatientData::class.java, clearPatientData())
         .build()
   }
 
@@ -111,6 +114,18 @@ class TheActivityEffectHandler @AssistedInject constructor(
                 .subscribeOn(schedulers.io())
                 .filterTrue()
                 .map { UserWasDisapproved }
+          }
+    }
+  }
+
+  private fun clearPatientData(): ObservableTransformer<ClearPatientData, TheActivityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMap {
+            patientRepository
+                .clearPatientData()
+                .subscribeOn(schedulers.io())
+                .andThen(Observable.just(PatientDataCleared))
           }
     }
   }

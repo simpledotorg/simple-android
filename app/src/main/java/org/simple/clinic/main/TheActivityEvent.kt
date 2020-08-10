@@ -24,3 +24,5 @@ object UserWasJustVerified : TheActivityEvent()
 object UserWasUnauthorized : TheActivityEvent()
 
 object UserWasDisapproved : TheActivityEvent()
+
+object PatientDataCleared: TheActivityEvent()

@@ -6,10 +6,11 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -41,15 +42,11 @@ class UpdatePhoneNumberDialogControllerTest {
 
   private val patientUuid = UUID.fromString("0c1c5a00-2416-4a41-8b9e-8059ac18df5d")
 
-  private lateinit var controller: UpdatePhoneNumberDialogController
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setup() {
-    controller = UpdatePhoneNumberDialogController(repository, validator)
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(dialog) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -60,6 +57,7 @@ class UpdatePhoneNumberDialogControllerTest {
     )
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(phoneNumber)))
 
+    setupController()
     uiEvents.onNext(UpdatePhoneNumberDialogCreated(patientUuid))
 
     verify(dialog).preFillPhoneNumber(phoneNumber.number)
@@ -78,6 +76,7 @@ class UpdatePhoneNumberDialogControllerTest {
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.complete())
 
+    setupController()
     uiEvents.onNext(UpdatePhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
@@ -100,6 +99,7 @@ class UpdatePhoneNumberDialogControllerTest {
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.complete())
 
+    setupController()
     uiEvents.onNext(UpdatePhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
@@ -122,6 +122,7 @@ class UpdatePhoneNumberDialogControllerTest {
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.never())
 
+    setupController()
     uiEvents.onNext(UpdatePhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
@@ -138,6 +139,7 @@ class UpdatePhoneNumberDialogControllerTest {
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber)).thenReturn(Completable.complete())
 
+    setupController()
     uiEvents.onNext(UpdatePhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(UpdatePhoneNumberCancelClicked)
 
@@ -146,4 +148,12 @@ class UpdatePhoneNumberDialogControllerTest {
 
   @Suppress("unused")
   private fun `validation errors`() = listOf(Blank, LengthTooShort(6), LengthTooLong(12))
+
+  private fun setupController() {
+    val controller = UpdatePhoneNumberDialogController(repository, validator)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(dialog) }
+  }
 }

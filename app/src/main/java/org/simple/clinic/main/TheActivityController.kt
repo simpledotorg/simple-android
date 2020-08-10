@@ -29,17 +29,8 @@ class TheActivityController @Inject constructor(
     val replayedEvents = events.replay().refCount()
 
     return Observable.mergeArray(
-        redirectToLoginScreen(),
         redirectToAccessDeniedScreen()
     )
-  }
-
-  private fun redirectToLoginScreen(): Observable<UiChange> {
-    return userSession
-        .isUserUnauthorized()
-        .distinctUntilChanged()
-        .filter { isUserUnauthorized -> isUserUnauthorized }
-        .map { Ui::redirectToLogin }
   }
 
   private fun redirectToAccessDeniedScreen(): Observable<UiChange> {

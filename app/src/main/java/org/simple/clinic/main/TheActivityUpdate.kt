@@ -48,7 +48,7 @@ class TheActivityUpdate(
         }
       }
       UserWasJustVerified -> dispatch(ShowUserLoggedOutOnOtherDeviceAlert)
-      UserWasUnauthorized -> noChange()
+      UserWasUnauthorized -> dispatch(RedirectToLoginScreen)
     }
   }
 

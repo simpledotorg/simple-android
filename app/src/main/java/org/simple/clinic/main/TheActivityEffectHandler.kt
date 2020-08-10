@@ -37,6 +37,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .addTransformer(ListenForUserVerifications::class.java, listenForUserVerifications())
         .addAction(ShowUserLoggedOutOnOtherDeviceAlert::class.java, uiActions::showUserLoggedOutOnOtherDeviceAlert, schedulers.ui())
         .addTransformer(ListenForUserUnauthorizations::class.java, listenForUserUnauthorizations())
+        .addAction(RedirectToLoginScreen::class.java, uiActions::redirectToLogin, schedulers.ui())
         .build()
   }
 

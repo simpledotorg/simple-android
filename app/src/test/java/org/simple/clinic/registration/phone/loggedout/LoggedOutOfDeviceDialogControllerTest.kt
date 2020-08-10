@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
@@ -47,6 +48,7 @@ class LoggedOutOfDeviceDialogControllerTest {
 
     // then
     verify(dialog).disableOkayButton()
+    verifyNoMoreInteractions(dialog)
   }
 
   @Test
@@ -59,7 +61,9 @@ class LoggedOutOfDeviceDialogControllerTest {
     setupController()
 
     // then
+    verify(dialog).disableOkayButton()
     verify(dialog).enableOkayButton()
+    verifyNoMoreInteractions(dialog)
   }
 
   @Test
@@ -73,7 +77,9 @@ class LoggedOutOfDeviceDialogControllerTest {
     setupController()
 
     // then
+    verify(dialog).disableOkayButton()
     verify(dialog, never()).enableOkayButton()
+    verifyNoMoreInteractions(dialog)
     assertThat(thrownError).isNotNull()
   }
 
@@ -88,7 +94,9 @@ class LoggedOutOfDeviceDialogControllerTest {
     setupController()
 
     // then
+    verify(dialog).disableOkayButton()
     verify(dialog, never()).enableOkayButton()
+    verifyNoMoreInteractions(dialog)
     assertThat(thrownError).isNotNull()
   }
 

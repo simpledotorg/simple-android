@@ -11,15 +11,15 @@ import androidx.fragment.app.FragmentManager
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-class LoggedOutOfDeviceDialog : AppCompatDialogFragment() {
+class LoggedOutOfDeviceDialog : AppCompatDialogFragment(), LoggedOutOfDeviceDialogUi {
 
   companion object {
     private const val FRAGMENT_TAG = "LoggedOutOfDeviceDialog"
@@ -96,11 +96,11 @@ class LoggedOutOfDeviceDialog : AppCompatDialogFragment() {
     screenDestroys.onNext(ScreenDestroyed())
   }
 
-  fun enableOkayButton() {
+  override fun enableOkayButton() {
     okayButton.isEnabled = true
   }
 
-  fun disableOkayButton() {
+  override fun disableOkayButton() {
     okayButton.isEnabled = false
   }
 }

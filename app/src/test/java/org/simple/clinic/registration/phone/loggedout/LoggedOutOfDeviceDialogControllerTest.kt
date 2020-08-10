@@ -26,7 +26,7 @@ class LoggedOutOfDeviceDialogControllerTest {
   @get:Rule
   val rule: TestRule = RxErrorsRule()
 
-  private val dialog = mock<LoggedOutOfDeviceDialog>()
+  private val ui = mock<LoggedOutOfDeviceDialogUi>()
   private val userSession = mock<UserSession>()
   private val uiEvents = PublishSubject.create<UiEvent>()
 
@@ -47,8 +47,8 @@ class LoggedOutOfDeviceDialogControllerTest {
     setupController()
 
     // then
-    verify(dialog).disableOkayButton()
-    verifyNoMoreInteractions(dialog)
+    verify(ui).disableOkayButton()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -61,9 +61,9 @@ class LoggedOutOfDeviceDialogControllerTest {
     setupController()
 
     // then
-    verify(dialog).disableOkayButton()
-    verify(dialog).enableOkayButton()
-    verifyNoMoreInteractions(dialog)
+    verify(ui).disableOkayButton()
+    verify(ui).enableOkayButton()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -77,9 +77,9 @@ class LoggedOutOfDeviceDialogControllerTest {
     setupController()
 
     // then
-    verify(dialog).disableOkayButton()
-    verify(dialog, never()).enableOkayButton()
-    verifyNoMoreInteractions(dialog)
+    verify(ui).disableOkayButton()
+    verify(ui, never()).enableOkayButton()
+    verifyNoMoreInteractions(ui)
     assertThat(thrownError).isNotNull()
   }
 
@@ -94,9 +94,9 @@ class LoggedOutOfDeviceDialogControllerTest {
     setupController()
 
     // then
-    verify(dialog).disableOkayButton()
-    verify(dialog, never()).enableOkayButton()
-    verifyNoMoreInteractions(dialog)
+    verify(ui).disableOkayButton()
+    verify(ui, never()).enableOkayButton()
+    verifyNoMoreInteractions(ui)
     assertThat(thrownError).isNotNull()
   }
 
@@ -105,7 +105,7 @@ class LoggedOutOfDeviceDialogControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe({ uiChange -> uiChange(dialog) }, { throw it })
+        .subscribe({ uiChange -> uiChange(ui) }, { throw it })
 
     uiEvents.onNext(ScreenCreated())
   }

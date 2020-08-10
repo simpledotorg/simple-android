@@ -13,7 +13,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = LoggedOutOfDeviceDialog
+typealias Ui = LoggedOutOfDeviceDialogUi
 typealias UiChange = (Ui) -> Unit
 
 class LoggedOutOfDeviceDialogController @Inject constructor(

@@ -47,6 +47,7 @@ class TheActivityUpdate(
           noChange()
         }
       }
+      UserWasJustVerified -> noChange()
     }
   }
 

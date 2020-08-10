@@ -18,3 +18,5 @@ data class AppLockInfoLoaded(
     val currentTimestamp: Instant,
     val lockAtTimestamp: Instant
 ): TheActivityEvent()
+
+object UserWasJustVerified: TheActivityEvent()

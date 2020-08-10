@@ -6,6 +6,7 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterTrue
@@ -33,6 +34,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .addAction(ClearLockAfterTimestamp::class.java, { lockAfterTimestamp.delete() }, schedulers.io())
         .addAction(ShowAppLockScreen::class.java, uiActions::showAppLockScreen, schedulers.ui())
         .addTransformer(UpdateLockTimestamp::class.java, updateAppLockTime())
+        .addTransformer(ListenForUserVerifications::class.java, listenForUserVerifications())
         .build()
   }
 
@@ -65,6 +67,19 @@ class TheActivityEffectHandler @AssistedInject constructor(
                 .filter { !lockAfterTimestamp.isSet }
                 .doOnNext { lockAfterTimestamp.set(effect.lockAt) }
                 .flatMap { Observable.empty<TheActivityEvent>() }
+          }
+    }
+  }
+
+  private fun listenForUserVerifications(): ObservableTransformer<ListenForUserVerifications, TheActivityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMap {
+            userSession
+                .loggedInUser()
+                .observeOn(schedulers.io())
+                .compose(NewlyVerifiedUser())
+                .map { UserWasJustVerified }
           }
     }
   }

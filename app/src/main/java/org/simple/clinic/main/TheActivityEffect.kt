@@ -11,3 +11,5 @@ object ClearLockAfterTimestamp: TheActivityEffect()
 object ShowAppLockScreen: TheActivityEffect()
 
 data class UpdateLockTimestamp(val lockAt: Instant): TheActivityEffect()
+
+object ListenForUserVerifications: TheActivityEffect()

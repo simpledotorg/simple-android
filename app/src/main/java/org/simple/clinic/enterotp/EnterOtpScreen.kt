@@ -8,7 +8,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding3.view.clicks
-import com.jakewharton.rxbinding3.view.detaches
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -17,13 +16,10 @@ import org.simple.clinic.LOGIN_OTP_LENGTH
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
@@ -32,10 +28,7 @@ import javax.inject.Inject
 class EnterOtpScreen(
     context: Context,
     attributeSet: AttributeSet
-) : RelativeLayout(context, attributeSet), EnterOtpUi {
-
-  @Inject
-  lateinit var controller: EnterOtpScreenController
+) : RelativeLayout(context, attributeSet), EnterOtpUi, EnterOtpUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -49,12 +42,10 @@ class EnterOtpScreen(
   private val events by unsafeLazy {
     Observable
         .mergeArray(
-            screenCreates(),
             otpSubmits(),
             resendSmsClicks()
         )
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val delegate by unsafeLazy {
@@ -77,13 +68,6 @@ class EnterOtpScreen(
     }
     context.injector<Injector>().inject(this)
 
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = detaches().map { ScreenDestroyed() }
-    )
-
     otpEntryEditText.showKeyboard()
     backButton.setOnClickListener { goBack() }
   }
@@ -105,8 +89,6 @@ class EnterOtpScreen(
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
-
-  private fun screenCreates() = Observable.just(ScreenCreated())
 
   private fun otpSubmits(): Observable<UiEvent> {
     val otpFromImeClicks: Observable<UiEvent> = otpEntryEditText

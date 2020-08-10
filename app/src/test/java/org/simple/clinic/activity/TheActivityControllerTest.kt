@@ -415,6 +415,9 @@ class TheActivityControllerTest {
 
     val effectHandler = TheActivityEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
+        userSession = userSession,
+        utcClock = clock,
+        lockAfterTimestamp = lockAfterTimestamp,
         uiActions = ui
     )
     val uiRenderer = TheActivityUiRenderer(ui)

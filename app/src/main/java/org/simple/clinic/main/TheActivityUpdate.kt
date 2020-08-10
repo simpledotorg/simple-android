@@ -7,6 +7,11 @@ import com.spotify.mobius.Update
 class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivityEffect> {
 
   override fun update(model: TheActivityModel, event: TheActivityEvent): Next<TheActivityModel, TheActivityEffect> {
-    return noChange()
+    return when(event) {
+      LifecycleEvent.ActivityStarted -> noChange()
+      LifecycleEvent.ActivityStopped -> noChange()
+      LifecycleEvent.ActivityDestroyed -> noChange()
+      is AppLockInfoLoaded -> noChange()
+    }
   }
 }

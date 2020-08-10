@@ -115,6 +115,7 @@ class LoggedOutOfDeviceDialogControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     val effectHandler = LoggedOutOfDeviceEffectHandler(
+        userSession = userSession,
         schedulersProvider = TestSchedulersProvider.trampoline()
     )
 

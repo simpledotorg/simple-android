@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next Release
+## On Demo
 ### Features
 - Add progress UI for registering a patient
 - Add progress UI when scheduling appointment in `ScheduleAppointmentSheet`

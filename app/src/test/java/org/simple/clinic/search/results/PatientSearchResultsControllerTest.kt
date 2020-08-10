@@ -7,8 +7,10 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -20,7 +22,9 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class PatientSearchResultsControllerTest {
@@ -28,27 +32,24 @@ class PatientSearchResultsControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen: PatientSearchResultsScreen = mock()
+  private val ui: PatientSearchResultsUi = mock()
 
   private val patientRepository: PatientRepository = mock()
   private val facilityRepository: FacilityRepository = mock()
   private val userSession: UserSession = mock()
 
-  private val controller = PatientSearchResultsController(patientRepository, facilityRepository, userSession)
   private val uiEvents = PublishSubject.create<UiEvent>()
-
 
   private val loggedInUser = TestData.loggedInUser(UUID.fromString("e83b9b27-0a05-4750-9ef7-270cda65217b"))
   private val currentFacility = TestData.facility(UUID.fromString("af8e817c-8772-4c84-9f4f-1f331fa0b2a5"))
 
-  @Before
-  fun setUp() {
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<PatientSearchResultsModel, PatientSearchResultsEvent, PatientSearchResultsEffect>
 
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(loggedInUser)))
-    whenever(facilityRepository.currentFacility(loggedInUser)) doReturn Observable.just(currentFacility)
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -58,12 +59,12 @@ class PatientSearchResultsControllerTest {
     val searchCriteria = PatientSearchCriteria.PhoneNumber("1111111111")
 
     // when
-    uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey(searchCriteria)))
+    setupController(searchCriteria)
     uiEvents.onNext(PatientSearchResultClicked(patientUuid))
 
     // then
-    verify(screen).openPatientSummaryScreen(patientUuid)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientSummaryScreen(patientUuid)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -74,12 +75,12 @@ class PatientSearchResultsControllerTest {
     val searchCriteria = PatientSearchCriteria.Name("Anish", identifier)
 
     // when
-    uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey(searchCriteria)))
+    setupController(searchCriteria)
     uiEvents.onNext(PatientSearchResultClicked(patientUuid))
 
     // then
-    verify(screen).openLinkIdWithPatientScreen(patientUuid, identifier)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openLinkIdWithPatientScreen(patientUuid, identifier)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -87,16 +88,18 @@ class PatientSearchResultsControllerTest {
     // given
     val fullName = "name"
     val ongoingEntry = OngoingNewPatientEntry.fromFullName(fullName)
+    val searchCriteria = PatientSearchCriteria.Name(fullName)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
-    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name(fullName)))
+    setupController(searchCriteria)
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(searchCriteria))
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -107,16 +110,18 @@ class PatientSearchResultsControllerTest {
     val ongoingEntry = OngoingNewPatientEntry
         .fromFullName(fullName)
         .withIdentifier(identifier)
+    val searchCriteria = PatientSearchCriteria.Name(fullName, identifier)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
-    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name(fullName, identifier)))
+    setupController(searchCriteria)
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(searchCriteria))
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -124,16 +129,18 @@ class PatientSearchResultsControllerTest {
     // given
     val phoneNumber = "123456"
     val ongoingEntry = OngoingNewPatientEntry.fromPhoneNumber(phoneNumber)
+    val searchCriteria = PatientSearchCriteria.PhoneNumber(phoneNumber)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
-    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.PhoneNumber(phoneNumber)))
+    setupController(searchCriteria)
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(searchCriteria))
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -144,16 +151,18 @@ class PatientSearchResultsControllerTest {
     val ongoingEntry = OngoingNewPatientEntry
         .fromPhoneNumber(phoneNumber)
         .withIdentifier(identifier)
+    val searchCriteria = PatientSearchCriteria.PhoneNumber(phoneNumber, identifier)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
-    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.PhoneNumber(phoneNumber, identifier)))
+    setupController(searchCriteria)
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(searchCriteria))
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -161,15 +170,53 @@ class PatientSearchResultsControllerTest {
     // given
     val fullName = "name"
     val ongoingEntry = OngoingNewPatientEntry.fromFullName(fullName)
+    val searchCriteria = PatientSearchCriteria.Name(fullName)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
-    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name(fullName)))
+    setupController(searchCriteria)
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(searchCriteria))
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(screen)
+    verify(ui).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui)
+  }
+
+  private fun setupController(
+      searchCriteria: PatientSearchCriteria
+  ) {
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(loggedInUser)))
+    whenever(facilityRepository.currentFacility(loggedInUser)) doReturn Observable.just(currentFacility)
+
+    val effectHandler = PatientSearchResultsEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+    val uiRenderer = PatientSearchResultsUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = PatientSearchResultsModel.create(),
+        update = PatientSearchResultsUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render,
+        init = PatientSearchResultsInit()
+    )
+    testFixture.start()
+
+    val controller = PatientSearchResultsController(
+        patientRepository = patientRepository,
+        facilityRepository = facilityRepository,
+        userSession = userSession,
+        patientSearchCriteria = searchCriteria
+    )
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(ui) }
+
+    uiEvents.onNext(PatientSearchResultsScreenCreated())
   }
 }

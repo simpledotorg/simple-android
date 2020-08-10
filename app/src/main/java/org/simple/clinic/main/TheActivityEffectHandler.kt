@@ -42,6 +42,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .addAction(RedirectToLoginScreen::class.java, uiActions::redirectToLogin, schedulers.ui())
         .addTransformer(ListenForUserDisapprovals::class.java, listenForUserDisapprovals())
         .addTransformer(ClearPatientData::class.java, clearPatientData())
+        .addTransformer(ShowAccessDeniedScreen::class.java, openAccessDeniedScreen())
         .build()
   }
 
@@ -127,6 +128,17 @@ class TheActivityEffectHandler @AssistedInject constructor(
                 .subscribeOn(schedulers.io())
                 .andThen(Observable.just(PatientDataCleared))
           }
+    }
+  }
+
+  private fun openAccessDeniedScreen(): ObservableTransformer<ShowAccessDeniedScreen, TheActivityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map { userSession.loggedInUserImmediate()!!.fullName }
+          .observeOn(schedulers.ui())
+          .doOnNext(uiActions::showAccessDeniedScreen)
+          .flatMap { Observable.empty<TheActivityEvent>() }
     }
   }
 }

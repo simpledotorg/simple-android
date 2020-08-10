@@ -7,4 +7,5 @@ interface TheActivityUiActions {
   // screens when the user gets verified in the background.
   fun showUserLoggedOutOnOtherDeviceAlert()
   fun redirectToLogin()
+  fun showAccessDeniedScreen(fullName: String)
 }

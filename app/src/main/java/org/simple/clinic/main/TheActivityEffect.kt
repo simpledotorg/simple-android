@@ -23,3 +23,5 @@ object RedirectToLoginScreen : TheActivityEffect()
 object ListenForUserDisapprovals: TheActivityEffect()
 
 object ClearPatientData: TheActivityEffect()
+
+object ShowAccessDeniedScreen: TheActivityEffect()

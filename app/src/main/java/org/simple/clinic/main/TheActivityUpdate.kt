@@ -49,8 +49,8 @@ class TheActivityUpdate(
       }
       UserWasJustVerified -> dispatch(ShowUserLoggedOutOnOtherDeviceAlert)
       UserWasUnauthorized -> dispatch(RedirectToLoginScreen)
-      UserWasDisapproved -> noChange()
-      PatientDataCleared -> noChange()
+      UserWasDisapproved -> dispatch(ClearPatientData)
+      PatientDataCleared -> dispatch(ShowAccessDeniedScreen)
     }
   }
 

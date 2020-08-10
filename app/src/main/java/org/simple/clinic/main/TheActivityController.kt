@@ -8,7 +8,6 @@ import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.filterTrue
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import javax.inject.Inject
@@ -28,19 +27,6 @@ class TheActivityController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.replay().refCount()
 
-    return Observable.mergeArray(
-        redirectToAccessDeniedScreen()
-    )
-  }
-
-  private fun redirectToAccessDeniedScreen(): Observable<UiChange> {
-    return userSession
-        .isUserDisapproved()
-        .filterTrue()
-        .flatMap {
-          val fullName = userSession.loggedInUserImmediate()?.fullName
-          patientRepository.clearPatientData()
-              .andThen(Observable.just { ui: Ui -> ui.showAccessDeniedScreen(fullName!!) })
-        }
+    return Observable.never()
   }
 }

@@ -5,7 +5,6 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserSession.LogoutResult.Failure
 import org.simple.clinic.user.UserSession.LogoutResult.Success
@@ -13,7 +12,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = LoggedOutOfDeviceDialog
+typealias Ui = LoggedOutOfDeviceDialogUi
 typealias UiChange = (Ui) -> Unit
 
 class LoggedOutOfDeviceDialogController @Inject constructor(
@@ -22,7 +21,6 @@ class LoggedOutOfDeviceDialogController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(ReportAnalyticsEvents())
         .replay()
 
     return Observable.merge(

@@ -111,7 +111,8 @@ interface TheActivityComponent :
     PatientSearchScreen.Injector,
     ForgotPinConfirmPinScreen.Injector,
     ScanSimpleIdScreen.Injector,
-    HomeScreen.Injector {
+    HomeScreen.Injector,
+    LoggedOutOfDeviceDialog.Injector {
   fun inject(target: TheActivity)
   fun inject(target: AppLockScreen)
   fun inject(target: PatientEntryScreen)
@@ -129,7 +130,6 @@ interface TheActivityComponent :
   fun inject(target: LinkIdWithPatientView)
   fun inject(target: PatientSearchResultItemView)
   fun inject(target: AllPatientsInFacilityView)
-  fun inject(target: LoggedOutOfDeviceDialog)
   fun inject(target: ShortCodeSearchResultScreen)
   fun inject(target: EditPatientScreen)
   fun inject(target: SettingsScreen)

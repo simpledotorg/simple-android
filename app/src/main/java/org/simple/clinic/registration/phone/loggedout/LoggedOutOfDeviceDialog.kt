@@ -2,6 +2,7 @@ package org.simple.clinic.registration.phone.loggedout
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.Button
@@ -14,7 +15,7 @@ import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
@@ -80,10 +81,14 @@ class LoggedOutOfDeviceDialog : AppCompatDialogFragment(), LoggedOutOfDeviceDial
     )
   }
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)
-    TheActivity.component.inject(this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
@@ -139,5 +144,9 @@ class LoggedOutOfDeviceDialog : AppCompatDialogFragment(), LoggedOutOfDeviceDial
 
   override fun disableOkayButton() {
     okayButton.isEnabled = false
+  }
+
+  interface Injector {
+    fun inject(target: LoggedOutOfDeviceDialog)
   }
 }

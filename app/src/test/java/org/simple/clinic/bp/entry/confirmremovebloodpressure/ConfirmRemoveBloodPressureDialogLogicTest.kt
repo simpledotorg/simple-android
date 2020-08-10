@@ -23,7 +23,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class ConfirmRemoveBloodPressureDialogControllerTest {
+class ConfirmRemoveBloodPressureDialogLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

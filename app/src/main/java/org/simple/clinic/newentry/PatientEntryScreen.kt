@@ -18,10 +18,9 @@ import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.f2prateek.rx.preferences2.Preference
 import com.google.android.material.textfield.TextInputLayout
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxCompoundButton
-import com.jakewharton.rxbinding2.widget.RxRadioGroup
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.widget.checkedChanges
+import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -329,7 +328,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         R.id.maleRadioButton to Male,
         R.id.transgenderRadioButton to Transgender)
 
-    return RxRadioGroup.checkedChanges(genderRadioGroup)
+    return genderRadioGroup
+        .checkedChanges()
         .map { checkedId ->
           val gender = radioIdToGenders[checkedId]
           GenderChanged(gender.toOptional())
@@ -337,15 +337,23 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   private fun saveClicks(): Observable<PatientEntryEvent> {
-    val stateImeClicks = RxTextView.editorActions(stateEditText) { it == EditorInfo.IME_ACTION_DONE }
-
-    return RxView.clicks(saveButtonFrame.button)
-        .mergeWith(stateImeClicks)
+    val stateImeClicks = stateEditText
+        .editorActions() { it == EditorInfo.IME_ACTION_DONE }
         .map { SaveClicked }
+
+    val saveButtonClicks = saveButtonFrame
+        .button
+        .clicks()
+        .map { SaveClicked }
+
+    return saveButtonClicks
+        .mergeWith(stateImeClicks)
+        .cast()
   }
 
   private fun consentChanges(): Observable<PatientEntryEvent> =
-      RxCompoundButton.checkedChanges(consentSwitch)
+      consentSwitch
+          .checkedChanges()
           .map { checked -> if (checked) Granted else Denied }
           .map(::ReminderConsentChanged)
 

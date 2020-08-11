@@ -16,3 +16,7 @@ data class UpdatePhoneNumberSaveClicked(val number: String) : UpdatePhoneNumberE
 }
 
 object ExistingPhoneNumberSaved : UpdatePhoneNumberEvent()
+
+object UpdatePhoneNumberCancelClicked : UpdatePhoneNumberEvent() {
+  override val analyticsName = "Patient Summary:Update Phone Number:Cancel Clicked"
+}

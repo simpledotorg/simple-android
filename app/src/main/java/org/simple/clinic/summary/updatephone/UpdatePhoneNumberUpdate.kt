@@ -14,6 +14,7 @@ class UpdatePhoneNumberUpdate : Update<UpdatePhoneNumberModel, UpdatePhoneNumber
       NewPhoneNumberSaved -> dispatch(CloseDialog)
       is UpdatePhoneNumberSaveClicked -> dispatch(ValidatePhoneNumber(event.number))
       ExistingPhoneNumberSaved -> dispatch(CloseDialog)
+      UpdatePhoneNumberCancelClicked -> dispatch(SaveExistingPhoneNumber(model.patientUuid))
     }
   }
 

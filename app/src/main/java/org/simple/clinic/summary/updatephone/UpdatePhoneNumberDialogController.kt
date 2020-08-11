@@ -5,12 +5,10 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 
 typealias Ui = UpdatePhoneNumberDialogUi
@@ -31,28 +29,6 @@ class UpdatePhoneNumberDialogController @AssistedInject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return saveExistingPhoneNumber(replayedEvents)
-  }
-
-  /**
-   * The dialog is never shown again once it's dismissed, until the phone number
-   * is updated again and an appointment is canceled again. In order to identify
-   * if the dialog can be shown, the timestamps of the cancelled appointment and
-   * the phone number are compared.
-   *
-   * As a result, it's necessary to always bump the phone number's update
-   * timestamp even if it wasn't unchanged.
-   */
-  private fun saveExistingPhoneNumber(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<UpdatePhoneNumberCancelClicked>()
-        .flatMap { repository.phoneNumber(patientUuid) }
-        .unwrapJust()
-        .take(1)
-        .flatMap { phoneNumber ->
-          repository
-              .updatePhoneNumberForPatient(phoneNumber.patientUuid, phoneNumber)
-              .andThen(Observable.just { ui: Ui -> ui.closeDialog() })
-        }
+    return Observable.never()
   }
 }

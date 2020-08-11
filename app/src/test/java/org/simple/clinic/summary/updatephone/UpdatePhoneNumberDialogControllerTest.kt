@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -27,7 +26,6 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_O
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -49,12 +47,10 @@ class UpdatePhoneNumberDialogControllerTest {
 
   private val patientUuid = UUID.fromString("0c1c5a00-2416-4a41-8b9e-8059ac18df5d")
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<UpdatePhoneNumberModel, UpdatePhoneNumberEvent, UpdatePhoneNumberEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -195,18 +191,6 @@ class UpdatePhoneNumberDialogControllerTest {
   }
 
   private fun setupController(patientUuid: PatientUuid) {
-    val controller = UpdatePhoneNumberDialogController(
-        patientUuid = patientUuid,
-        repository = repository,
-        validator = validator
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
-    uiEvents.onNext(ScreenCreated())
-
     val effectHandler = UpdatePhoneNumberEffectHandler(
         patientRepository = repository,
         validator = validator,

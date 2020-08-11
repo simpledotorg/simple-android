@@ -49,20 +49,24 @@ class UpdatePhoneNumberDialogControllerTest {
 
   @Test
   fun `when dialog is created, the existing phone number should be pre-filled`() {
+    // given
     val phoneNumber = TestData.patientPhoneNumber(
         uuid = UUID.fromString("4ada8db2-71dc-4a3b-8d17-69032cab2155"),
         patientUuid = patientUuid
     )
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(phoneNumber)))
 
+    // when
     setupController(patientUuid = patientUuid)
 
+    // then
     verify(dialog).preFillPhoneNumber(phoneNumber.number)
     verifyNoMoreInteractions(dialog)
   }
 
   @Test
   fun `when save is clicked, the number should be saved if it's valid`() {
+    // given
     val newNumber = "1234567890"
     val existingPhoneNumber = TestData.patientPhoneNumber(
         uuid = UUID.fromString("104e74c7-381a-4c07-8728-d6db77086dd3"),
@@ -74,9 +78,11 @@ class UpdatePhoneNumberDialogControllerTest {
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.complete())
 
+    // when
     setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
+    // then
     verify(repository, times(2)).phoneNumber(patientUuid)
     verify(repository).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
     verifyNoMoreInteractions(repository)
@@ -88,6 +94,7 @@ class UpdatePhoneNumberDialogControllerTest {
 
   @Test
   fun `when save is clicked, the number should not be saved if it's blank and an error should be shown`() {
+    // given
     val newNumber = ""
     val existingPhoneNumber = TestData.patientPhoneNumber(
         uuid = UUID.fromString("0e4bf753-009b-4cd6-ae30-aa9935bf2ea6"),
@@ -99,9 +106,11 @@ class UpdatePhoneNumberDialogControllerTest {
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.never())
 
+    // when
     setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
+    // then
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
 
     verify(dialog).preFillPhoneNumber(existingPhoneNumber.number)
@@ -111,6 +120,7 @@ class UpdatePhoneNumberDialogControllerTest {
 
   @Test
   fun `when save is clicked, the number should not be saved if it's too short and an error should be shown`() {
+    // given
     val newNumber = "123"
     val existingPhoneNumber = TestData.patientPhoneNumber(
         uuid = UUID.fromString("0e4bf753-009b-4cd6-ae30-aa9935bf2ea6"),
@@ -122,9 +132,11 @@ class UpdatePhoneNumberDialogControllerTest {
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.never())
 
+    // when
     setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
+    // then
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
 
     verify(dialog).preFillPhoneNumber(existingPhoneNumber.number)
@@ -134,6 +146,7 @@ class UpdatePhoneNumberDialogControllerTest {
 
   @Test
   fun `when save is clicked, the number should not be saved if it's too long and an error should be shown`() {
+    // given
     val newNumber = "123"
     val existingPhoneNumber = TestData.patientPhoneNumber(
         uuid = UUID.fromString("0e4bf753-009b-4cd6-ae30-aa9935bf2ea6"),
@@ -145,9 +158,11 @@ class UpdatePhoneNumberDialogControllerTest {
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.never())
 
+    // when
     setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
+    // then
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
 
     verify(dialog).preFillPhoneNumber(existingPhoneNumber.number)
@@ -157,13 +172,16 @@ class UpdatePhoneNumberDialogControllerTest {
 
   @Test
   fun `when cancel is clicked then the existing number should be saved again`() {
+    // given
     val existingPhoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber)).thenReturn(Completable.complete())
 
+    // when
     setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberCancelClicked)
 
+    // then
     verify(repository, times(2)).phoneNumber(patientUuid)
     verify(repository).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber)
     verifyNoMoreInteractions(repository)

@@ -89,7 +89,7 @@ class PatientEntryScreenLogicTest {
       dateTimeFormatter = dateTimeFormatter,
       today = LocalDate.now(userClock)
   )
-  private val india = TestData.country(isdCode = Country.INDIA)
+  private val india = TestData.country(isoCountryCode = Country.INDIA)
 
   private lateinit var errorConsumer: (Throwable) -> Unit
 

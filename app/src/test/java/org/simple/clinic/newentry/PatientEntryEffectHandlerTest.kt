@@ -40,7 +40,7 @@ class PatientEntryEffectHandlerTest {
       dateTimeFormatter = dateTimeFormatter,
       today = date
   )
-  private val india = TestData.country(isdCode = Country.INDIA)
+  private val india = TestData.country(isoCountryCode = Country.INDIA)
 
   private val ui = mock<PatientEntryUi>()
   private val effectHandler = PatientEntryEffectHandler(

@@ -48,7 +48,7 @@ class PatientEntryUpdateTest {
       dateTimeFormatter = dateOfBirthFormat,
       today = localDate
   )
-  private val india = TestData.country(isdCode = Country.INDIA)
+  private val india = TestData.country(isoCountryCode = Country.INDIA)
 
   @Test
   fun `when the user grants reminder consent, update the model`() {

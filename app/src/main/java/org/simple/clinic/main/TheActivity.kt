@@ -73,10 +73,8 @@ fun initialScreenKey(
   return when {
     canMoveToHomeScreen && !userDisapproved -> HomeScreenKey()
     userDisapproved -> AccessDeniedScreenKey(user?.fullName!!)
-    else -> {
-      return if (user?.loggedInStatus == User.LoggedInStatus.RESETTING_PIN) ForgotPinCreateNewPinScreenKey()
-      else RegistrationPhoneScreenKey()
-    }
+    user?.loggedInStatus == User.LoggedInStatus.RESETTING_PIN -> ForgotPinCreateNewPinScreenKey()
+    else -> RegistrationPhoneScreenKey()
   }
 }
 

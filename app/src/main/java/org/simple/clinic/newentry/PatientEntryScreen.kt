@@ -151,6 +151,10 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
     backButton.setOnClickListener { screenRouter.pop() }
 
+    setupUi(inputFields)
+  }
+
+  override fun setupUi(inputFields: InputFields) {
     // Not sure why, but setting android:nextFocusDown in XML isn't working,
     // so doing this manually here.
     dateOfBirthEditText.imeOptions += EditorInfo.IME_ACTION_NEXT
@@ -171,12 +175,12 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     setConsentText()
     setConsentLabelText()
 
-    showOrHideInputFields()
-    setInputFieldsHint()
-    showOrHideGenderRadioButtons()
+    showOrHideInputFields(inputFields)
+    setInputFieldsHint(inputFields)
+    showOrHideGenderRadioButtons(inputFields)
   }
 
-  private fun showOrHideInputFields() {
+  private fun showOrHideInputFields(inputFields: InputFields) {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,
         AgeField::class.java to ageEditTextInputLayout,
@@ -198,7 +202,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
   }
 
-  private fun setInputFieldsHint() {
+  private fun setInputFieldsHint(inputFields: InputFields) {
     val allTextInputFields: Map<Class<*>, TextInputLayout> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,
         LandlineOrMobileField::class.java to phoneNumberInputLayout,
@@ -215,7 +219,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
   }
 
-  private fun showOrHideGenderRadioButtons() {
+  private fun showOrHideGenderRadioButtons(inputFields: InputFields) {
     val allGendersRadioButtons = mapOf(
         Male to maleRadioButton,
         Female to femaleRadioButton,

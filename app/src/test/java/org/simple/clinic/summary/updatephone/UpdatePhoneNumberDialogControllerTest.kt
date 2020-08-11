@@ -2,7 +2,9 @@ package org.simple.clinic.summary.updatephone
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -56,6 +58,7 @@ class UpdatePhoneNumberDialogControllerTest {
     setupController(patientUuid = patientUuid)
 
     verify(dialog).preFillPhoneNumber(phoneNumber.number)
+    verifyNoMoreInteractions(dialog)
   }
 
   @Test
@@ -74,7 +77,13 @@ class UpdatePhoneNumberDialogControllerTest {
     setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
+    verify(repository, times(2)).phoneNumber(patientUuid)
     verify(repository).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
+    verifyNoMoreInteractions(repository)
+
+    verify(dialog).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(dialog).dismiss()
+    verifyNoMoreInteractions(dialog)
   }
 
   @Test
@@ -97,6 +106,7 @@ class UpdatePhoneNumberDialogControllerTest {
 
     verify(dialog).preFillPhoneNumber(existingPhoneNumber.number)
     verify(dialog).showPhoneNumberTooShortError()
+    verifyNoMoreInteractions(dialog)
   }
 
   @Test
@@ -119,6 +129,7 @@ class UpdatePhoneNumberDialogControllerTest {
 
     verify(dialog).preFillPhoneNumber(existingPhoneNumber.number)
     verify(dialog).showPhoneNumberTooShortError()
+    verifyNoMoreInteractions(dialog)
   }
 
   @Test
@@ -141,6 +152,7 @@ class UpdatePhoneNumberDialogControllerTest {
 
     verify(dialog).preFillPhoneNumber(existingPhoneNumber.number)
     verify(dialog).showPhoneNumberTooLongError()
+    verifyNoMoreInteractions(dialog)
   }
 
   @Test
@@ -152,7 +164,9 @@ class UpdatePhoneNumberDialogControllerTest {
     setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberCancelClicked)
 
+    verify(repository, times(2)).phoneNumber(patientUuid)
     verify(repository).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber)
+    verifyNoMoreInteractions(repository)
   }
 
   private fun setupController(patientUuid: PatientUuid) {

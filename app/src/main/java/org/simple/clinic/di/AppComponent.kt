@@ -17,6 +17,7 @@ import org.simple.clinic.main.TheActivityComponent
 import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivityComponent
 import org.simple.clinic.setup.SetupActivityComponent
+import org.simple.clinic.signature.SignatureComponent
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncWorker
 import javax.inject.Scope
@@ -44,6 +45,7 @@ interface AppComponent {
   fun alertFacilityChangeComponent(): AlertFacilityChangeComponent.Builder
   fun patientContactBottomSheetComponent(): ContactPatientBottomSheetComponent.Builder
   fun deepLinkComponent(): DeepLinkComponent.Builder
+  fun signatureComponent() : SignatureComponent.Builder
 }
 
 @Scope

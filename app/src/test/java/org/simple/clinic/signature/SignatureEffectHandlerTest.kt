@@ -26,4 +26,15 @@ class SignatureEffectHandlerTest {
     verify(ui).clearSignature()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `close the screen when the signature is saved`() {
+    // when
+    effectHandlerTestCase.dispatch(CloseScreen)
+
+    // then
+    verify(ui).closeScreen()
+    verifyNoMoreInteractions(ui)
+  }
+
 }

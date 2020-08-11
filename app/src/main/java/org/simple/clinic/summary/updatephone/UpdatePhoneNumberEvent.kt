@@ -8,3 +8,5 @@ sealed class UpdatePhoneNumberEvent : UiEvent
 data class PhoneNumberLoaded(val phoneNumber: String) : UpdatePhoneNumberEvent()
 
 data class PhoneNumberValidated(val phoneNumber: String, val result: PhoneNumberValidator.Result) : UpdatePhoneNumberEvent()
+
+object NewPhoneNumberSaved : UpdatePhoneNumberEvent()

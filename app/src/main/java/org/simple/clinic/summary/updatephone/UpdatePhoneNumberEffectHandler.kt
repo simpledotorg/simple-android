@@ -3,6 +3,7 @@ package org.simple.clinic.summary.updatephone
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -31,7 +32,25 @@ class UpdatePhoneNumberEffectHandler @AssistedInject constructor(
       .addConsumer(ShowPhoneNumberTooShortError::class.java, { uiActions.showPhoneNumberTooShortError(it.minimumAllowedNumberLength) }, schedulersProvider.ui())
       .addConsumer(ShowPhoneNumberTooLongError::class.java, { uiActions.showPhoneNumberTooLongError(it.maximumRequiredNumberLength) }, schedulersProvider.ui())
       .addAction(CloseDialog::class.java, uiActions::closeDialog, schedulersProvider.ui())
+      .addTransformer(SaveNewPhoneNumber::class.java, saveNewPhoneNumber())
       .build()
+
+  private fun saveNewPhoneNumber(): ObservableTransformer<SaveNewPhoneNumber, UpdatePhoneNumberEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .switchMap { (patientUuid, newPhoneNumber) ->
+            patientRepository.phoneNumber(patientUuid)
+                .extractIfPresent()
+                .switchMap { existingPhone ->
+                  patientRepository.updatePhoneNumberForPatient(
+                      patientUuid = patientUuid,
+                      phoneNumber = existingPhone.copy(number = newPhoneNumber)
+                  ).andThen(Observable.just(NewPhoneNumberSaved))
+                }
+          }
+    }
+  }
 
   private fun validatePhoneNumber(): ObservableTransformer<ValidatePhoneNumber, UpdatePhoneNumberEvent> {
     return ObservableTransformer { effects ->

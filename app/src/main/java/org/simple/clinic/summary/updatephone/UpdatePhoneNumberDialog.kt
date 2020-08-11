@@ -13,12 +13,14 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
@@ -61,6 +63,9 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
   @Inject
   lateinit var controller: UpdatePhoneNumberDialogController.Factory
 
+  @Inject
+  lateinit var effectHandlerFactory: UpdatePhoneNumberEffectHandler.Factory
+
   private val phoneInputLayout by bindView<TextInputLayout>(R.id.updatephone_phone_inputlayout)
   private val numberEditText by bindView<EditText>(R.id.updatephone_phone)
 
@@ -82,9 +87,28 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
         .share()
   }
 
+  private val delegate by unsafeLazy {
+    val uiRenderer = UpdatePhoneNumberUiRenderer(this)
+
+    MobiusDelegate.forActivity(
+        events = dialogEvents.ofType(),
+        defaultModel = UpdatePhoneNumberModel.create(),
+        init = UpdatePhoneNumberInit(),
+        update = UpdatePhoneNumberUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     TheActivity.component.inject(this)
+    delegate.onRestoreInstanceState(savedInstanceState)
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    delegate.onSaveInstanceState(outState)
+    super.onSaveInstanceState(outState)
   }
 
   @SuppressLint("CheckResult", "InflateParams")
@@ -110,6 +134,12 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
     super.onStart()
     onStarts.onNext(Any())
     numberEditText.showKeyboard()
+    delegate.start()
+  }
+
+  override fun onStop() {
+    delegate.stop()
+    super.onStop()
   }
 
   @SuppressLint("CheckResult")

@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.patient_edit_bp_passport_view.view.*
 import kotlinx.android.synthetic.main.screen_edit_patient.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.di.injector
 import org.simple.clinic.editpatient.EditPatientValidationError.AgeExceedsMaxLimit
 import org.simple.clinic.editpatient.EditPatientValidationError.AgeExceedsMinLimit
 import org.simple.clinic.editpatient.EditPatientValidationError.BothDateOfBirthAndAgeAdsent
@@ -161,7 +162,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
       return
     }
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     delegate.prepare()
 
@@ -583,5 +584,9 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   override fun setBangladeshNationalId(nationalId: String) {
     alternativeIdInputEditText.setTextAndCursor(nationalId)
+  }
+
+  interface Injector {
+    fun inject(target: EditPatientScreen)
   }
 }

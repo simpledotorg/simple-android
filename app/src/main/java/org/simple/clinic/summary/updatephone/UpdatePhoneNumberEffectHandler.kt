@@ -5,11 +5,14 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class UpdatePhoneNumberEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
+    private val validator: PhoneNumberValidator,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: UpdatePhoneNumberUiActions
 ) {
@@ -23,7 +26,16 @@ class UpdatePhoneNumberEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<UpdatePhoneNumberEffect, UpdatePhoneNumberEvent>()
       .addConsumer(PrefillPhoneNumber::class.java, { uiActions.preFillPhoneNumber(it.phoneNumber) }, schedulersProvider.ui())
       .addTransformer(LoadPhoneNumber::class.java, loadPhoneNumber())
+      .addTransformer(ValidatePhoneNumber::class.java, validatePhoneNumber())
       .build()
+
+  private fun validatePhoneNumber(): ObservableTransformer<ValidatePhoneNumber, UpdatePhoneNumberEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .map { it.phoneNumber to validator.validate(number = it.phoneNumber, type = LANDLINE_OR_MOBILE) }
+          .map { (phoneNumber, validationResult) -> PhoneNumberValidated(phoneNumber, validationResult) }
+    }
+  }
 
   private fun loadPhoneNumber(): ObservableTransformer<LoadPhoneNumber, UpdatePhoneNumberEvent> {
     return ObservableTransformer { effects ->

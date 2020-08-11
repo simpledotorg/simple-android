@@ -209,6 +209,7 @@ class UpdatePhoneNumberDialogControllerTest {
 
     val effectHandler = UpdatePhoneNumberEffectHandler(
         patientRepository = repository,
+        validator = validator,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

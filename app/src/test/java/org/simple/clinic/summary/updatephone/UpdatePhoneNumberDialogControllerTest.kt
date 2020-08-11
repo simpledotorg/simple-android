@@ -15,6 +15,7 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -81,7 +82,7 @@ class UpdatePhoneNumberDialogControllerTest {
 
     whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(ValidNumber)
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
-    whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.complete())
+    whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))).thenReturn(Completable.complete())
 
     // when
     setupController(patientUuid = patientUuid)
@@ -89,7 +90,7 @@ class UpdatePhoneNumberDialogControllerTest {
 
     // then
     verify(repository, times(2)).phoneNumber(patientUuid)
-    verify(repository).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
+    verify(repository).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))
     verifyNoMoreInteractions(repository)
 
     verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
@@ -109,14 +110,14 @@ class UpdatePhoneNumberDialogControllerTest {
 
     whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(Blank)
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
-    whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.never())
+    whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))).thenReturn(Completable.never())
 
     // when
     setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
     // then
-    verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
+    verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))
 
     verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
     verify(ui).showPhoneNumberTooShortError()
@@ -135,14 +136,14 @@ class UpdatePhoneNumberDialogControllerTest {
 
     whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(LengthTooShort(6))
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
-    whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.never())
+    whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))).thenReturn(Completable.never())
 
     // when
     setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
     // then
-    verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
+    verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))
 
     verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
     verify(ui).showPhoneNumberTooShortError()
@@ -161,14 +162,14 @@ class UpdatePhoneNumberDialogControllerTest {
 
     whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(LengthTooLong(12))
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
-    whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.never())
+    whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))).thenReturn(Completable.never())
 
     // when
     setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
     // then
-    verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
+    verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))
 
     verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
     verify(ui).showPhoneNumberTooLongError()
@@ -222,5 +223,9 @@ class UpdatePhoneNumberDialogControllerTest {
     )
 
     testFixture.start()
+  }
+
+  fun PatientPhoneNumber.updatePhoneNumber(phoneNumber: String): PatientPhoneNumber {
+    return copy(number = phoneNumber)
   }
 }

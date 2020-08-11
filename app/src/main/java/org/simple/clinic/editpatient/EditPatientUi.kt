@@ -1,5 +1,6 @@
 package org.simple.clinic.editpatient
 
+import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import java.time.LocalDate
@@ -27,4 +28,5 @@ interface EditPatientUi {
   fun showDiscardChangesAlert()
   fun showProgress()
   fun hideProgress()
+  fun setupUi(inputFields: InputFields)
 }

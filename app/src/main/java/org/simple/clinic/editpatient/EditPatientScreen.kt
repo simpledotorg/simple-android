@@ -162,15 +162,19 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
     context.injector<Injector>().inject(this)
 
-    showOrHideInputFields()
-    setInputFieldsHint()
-    showOrHideGenderRadioButtons()
+    setupUi(inputFields)
+  }
+
+  override fun setupUi(inputFields: InputFields) {
+    showOrHideInputFields(inputFields)
+    setInputFieldsHint(inputFields)
+    showOrHideGenderRadioButtons(inputFields)
 
     deletePatient.visibleOrGone(features.isEnabled(DeletePatient))
     deletePatient.setOnClickListener { screenRouter.push(DeletePatientScreenKey(screenKey.patient.uuid)) }
   }
 
-  private fun showOrHideInputFields() {
+  private fun showOrHideInputFields(inputFields: InputFields) {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,
         AgeField::class.java to ageInputLayout,
@@ -192,7 +196,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
   }
 
-  private fun setInputFieldsHint() {
+  private fun setInputFieldsHint(inputFields: InputFields) {
     val allTextInputFields: Map<Class<*>, TextInputLayout> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,
         LandlineOrMobileField::class.java to phoneNumberInputLayout,
@@ -209,7 +213,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
   }
 
-  private fun showOrHideGenderRadioButtons() {
+  private fun showOrHideGenderRadioButtons(inputFields: InputFields) {
     val allGendersRadioButtons = mapOf(
         Male to maleRadioButton,
         Female to femaleRadioButton,

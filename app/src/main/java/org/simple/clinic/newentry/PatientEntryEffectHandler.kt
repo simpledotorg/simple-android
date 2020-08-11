@@ -84,6 +84,7 @@ class PatientEntryEffectHandler @AssistedInject constructor(
         .addConsumer(ShowValidationErrors::class.java, { showValidationErrors(it.errors) }, schedulersProvider.ui())
         .addAction(OpenMedicalHistoryEntryScreen::class.java, ui::openMedicalHistoryEntryScreen, schedulersProvider.ui())
         .addTransformer(LoadInputFields::class.java, loadInputFields())
+        .addConsumer(SetupUi::class.java, { ui.setupUi(it.inputFields) }, schedulersProvider.ui())
         .build()
   }
 

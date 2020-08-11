@@ -3,6 +3,7 @@ package org.simple.clinic.newentry
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -41,6 +42,7 @@ class PatientEntryEffectHandlerTest {
   )
   private val india = TestData.country(isdCode = Country.INDIA)
 
+  private val ui = mock<PatientEntryUi>()
   private val effectHandler = PatientEntryEffectHandler(
       userSession = userSession,
       facilityRepository = facilityRepository,
@@ -49,7 +51,7 @@ class PatientEntryEffectHandlerTest {
       patientRegisteredCount = mock(),
       country = india,
       inputFieldsFactory = inputFieldsFactory,
-      ui = mock(),
+      ui = ui,
       validationActions = validationActions
   )
 
@@ -82,6 +84,22 @@ class PatientEntryEffectHandlerTest {
     // then
     val expectedFields = InputFields(inputFieldsFactory.fieldsFor(india))
     testCase.assertOutgoingEvents(InputFieldsLoaded(expectedFields))
+  }
+
+  @Test
+  fun `when the setup UI effect is received, the UI must be setup with the input fields`() {
+    // given
+    val inputFields = InputFields(inputFieldsFactory.fieldsFor(india))
+
+    // when
+    setupTestCase()
+    testCase.dispatch(SetupUi(inputFields))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(ui).setupUi(inputFields)
+    verifyNoMoreInteractions(ui)
+    verifyZeroInteractions(validationActions)
   }
 
   private fun setupTestCase() {

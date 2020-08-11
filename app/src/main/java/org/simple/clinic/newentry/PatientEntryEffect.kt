@@ -1,5 +1,6 @@
 package org.simple.clinic.newentry
 
+import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientEntryValidationError
 
@@ -22,3 +23,5 @@ data class SavePatient(val entry: OngoingNewPatientEntry) : PatientEntryEffect()
 object OpenMedicalHistoryEntryScreen : PatientEntryEffect()
 
 object LoadInputFields: PatientEntryEffect()
+
+data class SetupUi(val inputFields: InputFields): PatientEntryEffect()

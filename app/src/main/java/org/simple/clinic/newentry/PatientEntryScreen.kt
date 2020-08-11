@@ -30,8 +30,8 @@ import kotlinx.android.synthetic.main.screen_manual_patient_entry.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.di.injector
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.newentry.country.InputFields
@@ -177,7 +177,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
 
     backButton.setOnClickListener { screenRouter.pop() }
 
@@ -587,5 +588,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   override fun enableNextButton() {
     saveButton.setButtonState(ProgressMaterialButton.ButtonState.Enabled)
+  }
+
+  interface Injector {
+    fun inject(target: PatientEntryScreen)
   }
 }

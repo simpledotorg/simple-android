@@ -181,6 +181,10 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
           .clicks()
           .map { UpdatePhoneNumberSaveClicked(number = dialog!!.numberEditText!!.text?.toString().orEmpty()) }
 
+  override fun showBlankPhoneNumberError() {
+    dialog?.phoneInputLayout?.error = getString(R.string.patientsummary_updatephone_error_phonenumber_empty)
+  }
+
   override fun showPhoneNumberTooShortError() {
     dialog!!.phoneInputLayout!!.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_less)
   }

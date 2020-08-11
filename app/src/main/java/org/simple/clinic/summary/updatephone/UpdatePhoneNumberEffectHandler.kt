@@ -27,6 +27,7 @@ class UpdatePhoneNumberEffectHandler @AssistedInject constructor(
       .addConsumer(PrefillPhoneNumber::class.java, { uiActions.preFillPhoneNumber(it.phoneNumber) }, schedulersProvider.ui())
       .addTransformer(LoadPhoneNumber::class.java, loadPhoneNumber())
       .addTransformer(ValidatePhoneNumber::class.java, validatePhoneNumber())
+      .addAction(ShowBlankPhoneNumberError::class.java, uiActions::showBlankPhoneNumberError, schedulersProvider.ui())
       .build()
 
   private fun validatePhoneNumber(): ObservableTransformer<ValidatePhoneNumber, UpdatePhoneNumberEvent> {

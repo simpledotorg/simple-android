@@ -51,7 +51,8 @@ class UpdatePhoneNumberDialogController @AssistedInject constructor(
         .map<UiChange> { (_, result) ->
           when (result) {
             is ValidNumber -> { _: Ui -> }
-            is Blank, is LengthTooShort -> { ui: Ui -> ui.showPhoneNumberTooShortError() }
+            is Blank -> { ui: Ui -> ui.showBlankPhoneNumberError() }
+            is LengthTooShort -> { ui: Ui -> ui.showPhoneNumberTooShortError() }
             is LengthTooLong -> { ui: Ui -> ui.showPhoneNumberTooLongError() }
           }
         }

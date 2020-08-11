@@ -5,7 +5,7 @@ import org.junit.Test
 import org.simple.clinic.newentry.form.ValidationError.MissingValue
 
 class StateFieldTest {
-  private val stateField = StateField(labelResId = 0)
+  private val stateField = StateField(_labelResId = 0)
 
   @Test
   fun `it returns a missing value error when state is empty`() {

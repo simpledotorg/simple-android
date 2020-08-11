@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next Release
+## On Demo
 ### Features
 - Add progress UI for registering a patient
 - Add progress UI when scheduling appointment in `ScheduleAppointmentSheet`
@@ -27,6 +27,7 @@
 - Migrated `HomeScreen` to Mobius
 - Migrated `ScanSimpleIdScreen` to Mobius
 - Migrate `EnterOtpScreen` to Mobius
+- Setup the UI via an effect in `PatientEntryScreen`
 - [In Progress: 06 Aug 2020] Migrate `PatientSearchResultsScreen` to Mobius
 - [In Progress: 10 Aug 2020] Migrate `ConfirmRemoveBloodPressureDialog` to Mobius
 

@@ -5,7 +5,7 @@ import org.junit.Test
 import org.simple.clinic.newentry.form.ValidationError.MissingValue
 
 class ZoneFieldTest {
-  private val zoneField = ZoneField(labelResId = 0)
+  private val zoneField = ZoneField(_labelResId = 0)
 
   @Test
   fun `it returns a missing value error when village or colony is empty`() {

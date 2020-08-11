@@ -16,12 +16,10 @@ import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
-import com.f2prateek.rx.preferences2.Preference
 import com.google.android.material.textfield.TextInputLayout
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxCompoundButton
-import com.jakewharton.rxbinding2.widget.RxRadioGroup
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.widget.checkedChanges
+import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -30,8 +28,7 @@ import kotlinx.android.synthetic.main.screen_manual_patient_entry.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.newentry.country.InputFields
@@ -52,16 +49,13 @@ import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.patient.OngoingNewPatientEntry
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Truss
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton
@@ -79,7 +73,6 @@ import org.simple.clinic.widgets.textChanges
 import org.simple.clinic.widgets.topRelativeTo
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
-import javax.inject.Named
 
 class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientEntryUi, PatientEntryValidationActions {
 
@@ -88,22 +81,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   @Inject
   lateinit var crashReporter: CrashReporter
-
-  @Inject
-  lateinit var userSession: UserSession
-
-  @Inject
-  lateinit var facilityRepository: FacilityRepository
-
-  @Inject
-  lateinit var patientRepository: PatientRepository
-
-  @Inject
-  lateinit var schedulersProvider: SchedulersProvider
-
-  @Inject
-  @Named("number_of_patients_registered")
-  lateinit var patientRegisteredCount: Preference<Int>
 
   @Inject
   lateinit var phoneNumberValidator: PhoneNumberValidator
@@ -115,10 +92,10 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   lateinit var ageValidator: UserInputAgeValidator
 
   @Inject
-  lateinit var inputFields: InputFields
+  lateinit var country: Country
 
   @Inject
-  lateinit var country: Country
+  lateinit var effectHandlerInjectionFactory: PatientEntryEffectHandler.InjectionFactory
 
   // FIXME This is temporally coupled to `scrollToFirstFieldWithError()`.
   private val allTextInputFields: List<EditText> by unsafeLazy {
@@ -150,24 +127,13 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   private val delegate by unsafeLazy {
-    val effectHandler = PatientEntryEffectHandler.create(
-        userSession,
-        facilityRepository,
-        patientRepository,
-        patientRegisteredCount,
-        this,
-        this,
-        schedulersProvider
-    )
-
-    MobiusDelegate(
-        events.ofType(),
-        PatientEntryModel.DEFAULT,
-        PatientEntryInit(),
-        PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator),
-        effectHandler,
-        uiRenderer::render,
-        crashReporter
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = PatientEntryModel.DEFAULT,
+        init = PatientEntryInit(),
+        update = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator),
+        effectHandler = effectHandlerInjectionFactory.create(ui = this, validationActions = this).build(),
+        modelUpdateListener = uiRenderer::render
     )
   }
 
@@ -177,10 +143,13 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
 
     backButton.setOnClickListener { screenRouter.pop() }
+  }
 
+  override fun setupUi(inputFields: InputFields) {
     // Not sure why, but setting android:nextFocusDown in XML isn't working,
     // so doing this manually here.
     dateOfBirthEditText.imeOptions += EditorInfo.IME_ACTION_NEXT
@@ -201,14 +170,12 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     setConsentText()
     setConsentLabelText()
 
-    delegate.prepare()
-
-    showOrHideInputFields()
-    setInputFieldsHint()
-    showOrHideGenderRadioButtons()
+    showOrHideInputFields(inputFields)
+    setInputFieldsHint(inputFields)
+    showOrHideGenderRadioButtons(inputFields)
   }
 
-  private fun showOrHideInputFields() {
+  private fun showOrHideInputFields(inputFields: InputFields) {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,
         AgeField::class.java to ageEditTextInputLayout,
@@ -230,7 +197,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
   }
 
-  private fun setInputFieldsHint() {
+  private fun setInputFieldsHint(inputFields: InputFields) {
     val allTextInputFields: Map<Class<*>, TextInputLayout> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,
         LandlineOrMobileField::class.java to phoneNumberInputLayout,
@@ -247,7 +214,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
   }
 
-  private fun showOrHideGenderRadioButtons() {
+  private fun showOrHideGenderRadioButtons(inputFields: InputFields) {
     val allGendersRadioButtons = mapOf(
         Male to maleRadioButton,
         Female to femaleRadioButton,
@@ -328,7 +295,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         R.id.maleRadioButton to Male,
         R.id.transgenderRadioButton to Transgender)
 
-    return RxRadioGroup.checkedChanges(genderRadioGroup)
+    return genderRadioGroup
+        .checkedChanges()
         .map { checkedId ->
           val gender = radioIdToGenders[checkedId]
           GenderChanged(gender.toOptional())
@@ -336,15 +304,23 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   private fun saveClicks(): Observable<PatientEntryEvent> {
-    val stateImeClicks = RxTextView.editorActions(stateEditText) { it == EditorInfo.IME_ACTION_DONE }
-
-    return RxView.clicks(saveButtonFrame.button)
-        .mergeWith(stateImeClicks)
+    val stateImeClicks = stateEditText
+        .editorActions() { it == EditorInfo.IME_ACTION_DONE }
         .map { SaveClicked }
+
+    val saveButtonClicks = saveButtonFrame
+        .button
+        .clicks()
+        .map { SaveClicked }
+
+    return saveButtonClicks
+        .mergeWith(stateImeClicks)
+        .cast()
   }
 
   private fun consentChanges(): Observable<PatientEntryEvent> =
-      RxCompoundButton.checkedChanges(consentSwitch)
+      consentSwitch
+          .checkedChanges()
           .map { checked -> if (checked) Granted else Denied }
           .map(::ReminderConsentChanged)
 
@@ -587,5 +563,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   override fun enableNextButton() {
     saveButton.setButtonState(ProgressMaterialButton.ButtonState.Enabled)
+  }
+
+  interface Injector {
+    fun inject(target: PatientEntryScreen)
   }
 }

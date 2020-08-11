@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class VillageOrColonyFieldTest {
-  private val villageOrColonyField = VillageOrColonyField(labelResId = 0)
+  private val villageOrColonyField = VillageOrColonyField(_labelResId = 0)
 
   @Test
   fun `it returns a missing value error when village or colony is empty`() {

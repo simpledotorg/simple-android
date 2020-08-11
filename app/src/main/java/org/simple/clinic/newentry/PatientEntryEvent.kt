@@ -1,5 +1,6 @@
 package org.simple.clinic.newentry
 
+import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.ReminderConsent
@@ -68,3 +69,5 @@ data class ReminderConsentChanged(val reminderConsent: ReminderConsent) : Patien
 }
 
 data class AlternativeIdChanged(val identifier: Identifier) : PatientEntryEvent()
+
+data class InputFieldsLoaded(val inputFields: InputFields) : PatientEntryEvent()

@@ -111,10 +111,10 @@ interface TheActivityComponent :
     PatientSearchScreen.Injector,
     ForgotPinConfirmPinScreen.Injector,
     ScanSimpleIdScreen.Injector,
-    HomeScreen.Injector {
+    HomeScreen.Injector,
+    PatientEntryScreen.Injector {
   fun inject(target: TheActivity)
   fun inject(target: AppLockScreen)
-  fun inject(target: PatientEntryScreen)
   fun inject(target: PatientSummaryScreen)
   fun inject(target: FacilityChangeActivity)
   fun inject(target: ConfirmResetPinDialog)

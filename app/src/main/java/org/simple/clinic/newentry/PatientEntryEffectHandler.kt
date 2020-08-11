@@ -2,11 +2,13 @@ package org.simple.clinic.newentry
 
 import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
-import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.Field.Age
 import org.simple.clinic.newentry.Field.ColonyOrVillage
@@ -16,6 +18,8 @@ import org.simple.clinic.newentry.Field.FullName
 import org.simple.clinic.newentry.Field.Gender
 import org.simple.clinic.newentry.Field.PhoneNumber
 import org.simple.clinic.newentry.Field.State
+import org.simple.clinic.newentry.country.InputFields
+import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.PatientEntryValidationError
@@ -38,43 +42,33 @@ import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberLengthTo
 import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberNonNullButBlank
 import org.simple.clinic.patient.PatientEntryValidationError.StateEmpty
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ValueChangedCallback
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import java.util.concurrent.TimeUnit
+import javax.inject.Named
 
-class PatientEntryEffectHandler(
+class PatientEntryEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
-    private val patientRegisteredCount: Preference<Int>,
-    private val ui: PatientEntryUi,
-    private val validationActions: PatientEntryValidationActions,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    private val country: Country,
+    private val inputFieldsFactory: InputFieldsFactory,
+    @Named("number_of_patients_registered") private val patientRegisteredCount: Preference<Int>,
+    @Assisted private val ui: PatientEntryUi,
+    @Assisted private val validationActions: PatientEntryValidationActions
 ) {
-  companion object {
+
+  @AssistedInject.Factory
+  interface InjectionFactory {
     fun create(
-        userSession: UserSession,
-        facilityRepository: FacilityRepository,
-        patientRepository: PatientRepository,
-        patientRegisteredCount: Preference<Int>,
         ui: PatientEntryUi,
-        validationActions: PatientEntryValidationActions,
-        schedulersProvider: SchedulersProvider
-    ): ObservableTransformer<PatientEntryEffect, PatientEntryEvent> {
-      return PatientEntryEffectHandler(
-          userSession,
-          facilityRepository,
-          patientRepository,
-          patientRegisteredCount,
-          ui,
-          validationActions,
-          schedulersProvider
-      ).build()
-    }
+        validationActions: PatientEntryValidationActions
+    ): PatientEntryEffectHandler
   }
 
-  private fun build(): ObservableTransformer<PatientEntryEffect, PatientEntryEvent> {
+  fun build(): ObservableTransformer<PatientEntryEffect, PatientEntryEvent> {
     val showDatePatternInLabelValueChangedCallback = ValueChangedCallback<Boolean>()
 
     return RxMobius
@@ -89,6 +83,8 @@ class PatientEntryEffectHandler(
         .addTransformer(SavePatient::class.java, savePatientTransformer(schedulersProvider.io()))
         .addConsumer(ShowValidationErrors::class.java, { showValidationErrors(it.errors) }, schedulersProvider.ui())
         .addAction(OpenMedicalHistoryEntryScreen::class.java, ui::openMedicalHistoryEntryScreen, schedulersProvider.ui())
+        .addTransformer(LoadInputFields::class.java, loadInputFields())
+        .addConsumer(SetupUi::class.java, { ui.setupUi(it.inputFields) }, schedulersProvider.ui())
         .build()
   }
 
@@ -189,6 +185,15 @@ class PatientEntryEffectHandler(
 
     if (errors.isNotEmpty()) {
       ui.scrollToFirstFieldWithError()
+    }
+  }
+
+  private fun loadInputFields(): ObservableTransformer<LoadInputFields, PatientEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .map { inputFieldsFactory.fieldsFor(country) }
+          .map(::InputFields)
+          .map(::InputFieldsLoaded)
     }
   }
 }

@@ -5,7 +5,7 @@ import org.junit.Test
 import org.simple.clinic.newentry.form.ValidationError.MissingValue
 
 class StreetAddressFieldTest {
-  private val streetAddressField = StreetAddressField(labelResId = 0)
+  private val streetAddressField = StreetAddressField(_labelResId = 0)
 
   @Test
   fun `it returns a missing value error when street address is empty`() {

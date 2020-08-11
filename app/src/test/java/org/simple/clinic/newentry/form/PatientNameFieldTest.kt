@@ -5,7 +5,7 @@ import org.junit.Test
 import org.simple.clinic.newentry.form.ValidationError.MissingValue
 
 class PatientNameFieldTest {
-  private val patientNameField = PatientNameField(labelResId = 0)
+  private val patientNameField = PatientNameField(_labelResId = 0)
 
   @Test
   fun `it returns an empty list when the field is non-empty`() {

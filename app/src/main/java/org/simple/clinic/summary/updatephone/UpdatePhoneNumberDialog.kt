@@ -2,6 +2,7 @@ package org.simple.clinic.summary.updatephone
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,7 +20,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.util.unsafeLazy
@@ -100,9 +101,13 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
     )
   }
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    TheActivity.component.inject(this)
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 
@@ -194,5 +199,9 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
 
   override fun closeDialog() {
     dismiss()
+  }
+
+  interface Injector {
+    fun inject(target: UpdatePhoneNumberDialog)
   }
 }

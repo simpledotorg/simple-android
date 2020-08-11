@@ -16,7 +16,6 @@ import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
-import com.f2prateek.rx.preferences2.Preference
 import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.checkedChanges
@@ -30,7 +29,6 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.injector
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.newentry.country.InputFields
@@ -51,16 +49,13 @@ import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.patient.OngoingNewPatientEntry
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Truss
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton
@@ -78,7 +73,6 @@ import org.simple.clinic.widgets.textChanges
 import org.simple.clinic.widgets.topRelativeTo
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
-import javax.inject.Named
 
 class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientEntryUi, PatientEntryValidationActions {
 
@@ -87,22 +81,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   @Inject
   lateinit var crashReporter: CrashReporter
-
-  @Inject
-  lateinit var userSession: UserSession
-
-  @Inject
-  lateinit var facilityRepository: FacilityRepository
-
-  @Inject
-  lateinit var patientRepository: PatientRepository
-
-  @Inject
-  lateinit var schedulersProvider: SchedulersProvider
-
-  @Inject
-  @Named("number_of_patients_registered")
-  lateinit var patientRegisteredCount: Preference<Int>
 
   @Inject
   lateinit var phoneNumberValidator: PhoneNumberValidator
@@ -118,6 +96,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   @Inject
   lateinit var country: Country
+
+  @Inject
+  lateinit var effectHandlerInjectionFactory: PatientEntryEffectHandler.InjectionFactory
 
   // FIXME This is temporally coupled to `scrollToFirstFieldWithError()`.
   private val allTextInputFields: List<EditText> by unsafeLazy {
@@ -149,22 +130,12 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   private val delegate by unsafeLazy {
-    val effectHandler = PatientEntryEffectHandler.create(
-        userSession,
-        facilityRepository,
-        patientRepository,
-        patientRegisteredCount,
-        this,
-        this,
-        schedulersProvider
-    )
-
     MobiusDelegate.forView(
         events = events.ofType(),
         defaultModel = PatientEntryModel.DEFAULT,
         init = PatientEntryInit(),
         update = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator),
-        effectHandler = effectHandler,
+        effectHandler = effectHandlerInjectionFactory.create(ui = this, validationActions = this).build(),
         modelUpdateListener = uiRenderer::render
     )
   }

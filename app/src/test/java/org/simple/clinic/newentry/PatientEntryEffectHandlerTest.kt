@@ -28,7 +28,7 @@ class PatientEntryEffectHandlerTest {
     whenever(facilityRepository.currentFacility(any<UserSession>())).doReturn(Observable.never())
     whenever(patientRepository.ongoingEntry()).doReturn(Single.never<OngoingNewPatientEntry>())
 
-    val testCase = EffectHandlerTestCase(PatientEntryEffectHandler.create(
+    val testCase = EffectHandlerTestCase(PatientEntryEffectHandler(
         userSession = userSession,
         facilityRepository = facilityRepository,
         patientRepository = patientRepository,
@@ -36,7 +36,7 @@ class PatientEntryEffectHandlerTest {
         ui = mock(),
         validationActions = validationActions,
         schedulersProvider = TrampolineSchedulersProvider()
-    ))
+    ).build())
 
     // when
     testCase.dispatch(HideValidationError(PhoneNumber))

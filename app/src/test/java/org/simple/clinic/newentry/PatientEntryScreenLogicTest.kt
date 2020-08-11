@@ -45,7 +45,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -93,14 +93,14 @@ class PatientEntryScreenLogicTest {
         )))
     whenever(patientRepository.ongoingEntry()).doReturn(Single.never())
 
-    val effectHandler = PatientEntryEffectHandler.create(
-        userSession,
-        facilityRepository,
-        patientRepository,
-        patientRegisteredCount,
-        ui,
-        validationActions,
-        TrampolineSchedulersProvider()
+    val effectHandler = PatientEntryEffectHandler(
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        patientRepository = patientRepository,
+        patientRegisteredCount = patientRegisteredCount,
+        ui = ui,
+        validationActions = validationActions,
+        schedulersProvider = TestSchedulersProvider.trampoline()
     )
 
     fixture = MobiusTestFixture(
@@ -108,7 +108,7 @@ class PatientEntryScreenLogicTest {
         PatientEntryModel.DEFAULT,
         PatientEntryInit(),
         PatientEntryUpdate(numberValidator, dobValidator, ageValidator),
-        effectHandler,
+        effectHandler.build(),
         PatientEntryUiRenderer(ui)::render
     )
 

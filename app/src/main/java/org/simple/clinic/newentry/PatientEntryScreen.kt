@@ -159,14 +159,13 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         schedulersProvider
     )
 
-    MobiusDelegate(
-        events.ofType(),
-        PatientEntryModel.DEFAULT,
-        PatientEntryInit(),
-        PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator),
-        effectHandler,
-        uiRenderer::render,
-        crashReporter
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = PatientEntryModel.DEFAULT,
+        init = PatientEntryInit(),
+        update = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator),
+        effectHandler = effectHandler,
+        modelUpdateListener = uiRenderer::render
     )
   }
 
@@ -200,8 +199,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
     setConsentText()
     setConsentLabelText()
-
-    delegate.prepare()
 
     showOrHideInputFields()
     setInputFieldsHint()

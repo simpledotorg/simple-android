@@ -173,7 +173,7 @@ class UpdatePhoneNumberDialogControllerTest {
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))
 
     verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
-    verify(ui).showPhoneNumberTooLongError()
+    verify(ui).showPhoneNumberTooLongError(12)
     verifyNoMoreInteractions(ui)
   }
 

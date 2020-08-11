@@ -4,4 +4,5 @@ interface UpdatePhoneNumberUiActions {
   fun preFillPhoneNumber(number: String)
   fun showBlankPhoneNumberError()
   fun showPhoneNumberTooShortError(minimumAllowedNumberLength: Int)
+  fun showPhoneNumberTooLongError(maximumRequiredNumberLength: Int)
 }

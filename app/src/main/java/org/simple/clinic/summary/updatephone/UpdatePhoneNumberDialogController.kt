@@ -53,7 +53,7 @@ class UpdatePhoneNumberDialogController @AssistedInject constructor(
             is ValidNumber -> { _: Ui -> }
             is Blank -> { ui: Ui -> ui.showBlankPhoneNumberError() }
             is LengthTooShort -> { ui: Ui -> ui.showPhoneNumberTooShortError(result.minimumAllowedNumberLength) }
-            is LengthTooLong -> { ui: Ui -> ui.showPhoneNumberTooLongError() }
+            is LengthTooLong -> { ui: Ui -> ui.showPhoneNumberTooLongError(result.maximumRequiredNumberLength) }
           }
         }
 

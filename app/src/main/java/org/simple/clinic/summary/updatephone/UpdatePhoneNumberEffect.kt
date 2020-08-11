@@ -13,3 +13,5 @@ data class ValidatePhoneNumber(val phoneNumber: String) : UpdatePhoneNumberEffec
 object ShowBlankPhoneNumberError : UpdatePhoneNumberEffect()
 
 data class ShowPhoneNumberTooShortError(val minimumAllowedNumberLength: Int) : UpdatePhoneNumberEffect()
+
+data class ShowPhoneNumberTooLongError(val maximumRequiredNumberLength: Int) : UpdatePhoneNumberEffect()

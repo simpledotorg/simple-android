@@ -29,6 +29,7 @@ class UpdatePhoneNumberEffectHandler @AssistedInject constructor(
       .addTransformer(ValidatePhoneNumber::class.java, validatePhoneNumber())
       .addAction(ShowBlankPhoneNumberError::class.java, uiActions::showBlankPhoneNumberError, schedulersProvider.ui())
       .addConsumer(ShowPhoneNumberTooShortError::class.java, { uiActions.showPhoneNumberTooShortError(it.minimumAllowedNumberLength) }, schedulersProvider.ui())
+      .addConsumer(ShowPhoneNumberTooLongError::class.java, { uiActions.showPhoneNumberTooLongError(it.maximumRequiredNumberLength) }, schedulersProvider.ui())
       .build()
 
   private fun validatePhoneNumber(): ObservableTransformer<ValidatePhoneNumber, UpdatePhoneNumberEvent> {

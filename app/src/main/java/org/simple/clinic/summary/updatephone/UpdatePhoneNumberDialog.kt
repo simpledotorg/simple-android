@@ -189,8 +189,8 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
     dialog!!.phoneInputLayout!!.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_less, minimumAllowedNumberLength.toString())
   }
 
-  override fun showPhoneNumberTooLongError() {
-    dialog!!.phoneInputLayout!!.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_more)
+  override fun showPhoneNumberTooLongError(maximumRequiredNumberLength: Int) {
+    dialog!!.phoneInputLayout!!.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_more, maximumRequiredNumberLength.toString())
   }
 
   override fun preFillPhoneNumber(number: String) {

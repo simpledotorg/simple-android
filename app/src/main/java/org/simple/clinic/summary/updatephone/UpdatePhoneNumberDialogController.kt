@@ -10,11 +10,6 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.ValidNumber
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 
@@ -36,43 +31,7 @@ class UpdatePhoneNumberDialogController @AssistedInject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.merge(
-        saveUpdatedPhoneNumber(replayedEvents),
-        saveExistingPhoneNumber(replayedEvents))
-  }
-
-  @Suppress("RedundantLambdaArrow")
-  private fun saveUpdatedPhoneNumber(events: Observable<UiEvent>): Observable<UiChange> {
-    val newNumberAndValidationResult = events
-        .ofType<UpdatePhoneNumberSaveClicked>()
-        .map { it.number to validator.validate(it.number, type = LANDLINE_OR_MOBILE) }
-
-    val showValidationError = newNumberAndValidationResult
-        .map<UiChange> { (_, result) ->
-          when (result) {
-            is ValidNumber -> { _: Ui -> }
-            is Blank -> { ui: Ui -> ui.showBlankPhoneNumberError() }
-            is LengthTooShort -> { ui: Ui -> ui.showPhoneNumberTooShortError(result.minimumAllowedNumberLength) }
-            is LengthTooLong -> { ui: Ui -> ui.showPhoneNumberTooLongError(result.maximumRequiredNumberLength) }
-          }
-        }
-
-    val saveNumber = newNumberAndValidationResult
-        .filter { (_, result) -> result == ValidNumber }
-        .flatMap { (newNumber, _) ->
-          repository.phoneNumber(patientUuid)
-              .unwrapJust()
-              .take(1)
-              .flatMapCompletable { existingPhone ->
-                repository.updatePhoneNumberForPatient(
-                    patientUuid = patientUuid,
-                    phoneNumber = existingPhone.copy(number = newNumber)
-                )
-              }
-              .andThen(Observable.just { ui: Ui -> ui.closeDialog() })
-        }
-
-    return saveNumber.mergeWith(showValidationError)
+    return saveExistingPhoneNumber(replayedEvents)
   }
 
   /**

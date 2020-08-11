@@ -1,57 +1,46 @@
 package org.simple.clinic.activity
 
 import com.f2prateek.rx.preferences2.Preference
-import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.check
+import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.activity.ActivityLifecycle.Stopped
-import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
-import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
-import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.main.TheActivityController
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
-import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
-import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
-@RunWith(JUnitParamsRunner::class)
 class TheActivityControllerTest {
 
   @get:Rule
@@ -64,263 +53,252 @@ class TheActivityControllerTest {
   private val patientRepository = mock<PatientRepository>()
   private val lockAfterTimestamp = mock<Preference<Instant>>()
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val userSubject = PublishSubject.create<Optional<User>>()
-  private val userUnauthorizedSubject = PublishSubject.create<Boolean>()
-  private val userDisapprovedSubject = PublishSubject.create<Boolean>()
 
-  private val controller = TheActivityController(
-      userSession = userSession,
-      appLockConfig = Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes))),
-      lockAfterTimestamp = lockAfterTimestamp,
-      patientRepository = patientRepository
-  )
+  private val currentTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+  private val clock = TestUtcClock(currentTimestamp)
 
-  @Before
-  fun setUp() {
-    whenever(userSession.isUserUnauthorized()).thenReturn(userUnauthorizedSubject)
-    whenever(userSession.loggedInUser()).thenReturn(userSubject)
-    whenever(userSession.isUserDisapproved()).thenReturn(userDisapprovedSubject)
+  private lateinit var controllerSubscription: Disposable
 
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(activity) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
   fun `when activity is started and user is logged out then app lock shouldn't be shown`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(false)
 
-    uiEvents.onNext(Started(null))
+    // when
+    setupController()
 
+    // then
     verify(activity, never()).showAppLockScreen()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
-  @Parameters(value = [
-    "NOT_LOGGED_IN|false",
-    "OTP_REQUESTED|true",
-    "LOGGED_IN|true",
-    "RESETTING_PIN|false",
-    "RESET_PIN_REQUESTED|true"
-  ])
-  fun `when activity is started, user is logged in and user was inactive then app lock should be shown`(
-      loggedInStatus: User.LoggedInStatus,
-      shouldShowAppLock: Boolean
-  ) {
+  fun `when activity is started, user has requested an OTP, and user was inactive then app lock should be shown`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
-    whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = loggedInStatus, status = UserStatus.ApprovedForSyncing))))
+    val userStream: Observable<Optional<User>> = Observable.just(Optional.of(TestData.loggedInUser(
+        uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+        loggedInStatus = OTP_REQUESTED,
+        status = UserStatus.ApprovedForSyncing
+    )))
 
-    val lockAfterTime = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(1))
+    val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
-    uiEvents.onNext(Started(null))
+    // when
+    setupController(userStream = userStream)
 
-    if (shouldShowAppLock) {
-      verify(activity).showAppLockScreen()
-    } else {
-      verify(activity, never()).showAppLockScreen()
-    }
+    // then
+    verify(activity).showAppLockScreen()
+    verifyNoMoreInteractions(activity)
+  }
+
+  @Test
+  fun `when activity is started, user is logged in, and user was inactive then app lock should be shown`() {
+    // given
+    whenever(userSession.isUserLoggedIn()).thenReturn(true)
+    val userStream: Observable<Optional<User>> = Observable.just(Optional.of(TestData.loggedInUser(
+        uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+        loggedInStatus = LOGGED_IN,
+        status = UserStatus.ApprovedForSyncing
+    )))
+
+    val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
+    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
+
+    // when
+    setupController(userStream = userStream)
+
+    // then
+    verify(activity).showAppLockScreen()
+    verifyNoMoreInteractions(activity)
+  }
+
+  @Test
+  fun `when activity is started, user has requested a PIN reset, and user was inactive then app lock should be shown`() {
+    // given
+    whenever(userSession.isUserLoggedIn()).thenReturn(true)
+    val userStream: Observable<Optional<User>> = Observable.just(Optional.of(TestData.loggedInUser(
+        uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+        loggedInStatus = RESET_PIN_REQUESTED,
+        status = UserStatus.ApprovedForSyncing
+    )))
+
+    val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
+    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
+
+    // when
+    setupController(userStream = userStream)
+
+    // then
+    verify(activity).showAppLockScreen()
+    verifyNoMoreInteractions(activity)
+  }
+
+  @Test
+  fun `when activity is started, user is not logged in and user was inactive then app lock should not be shown`() {
+    // given
+    whenever(userSession.isUserLoggedIn()).thenReturn(true)
+    whenever(userSession.loggedInUser())
+        .thenReturn(Observable.just(Optional.of(TestData.loggedInUser(
+            uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+            loggedInStatus = NOT_LOGGED_IN,
+            status = UserStatus.ApprovedForSyncing
+        ))))
+
+    val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
+    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
+
+    //when
+    setupController()
+
+    // then
+    verify(activity, never()).showAppLockScreen()
+    verifyNoMoreInteractions(activity)
+  }
+
+  @Test
+  fun `when activity is started, user is resetting the PIN, and user was inactive then app lock should not be shown`() {
+    // given
+    whenever(userSession.isUserLoggedIn()).thenReturn(true)
+    whenever(userSession.loggedInUser())
+        .thenReturn(Observable.just(Optional.of(TestData.loggedInUser(
+            uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+            loggedInStatus = RESETTING_PIN,
+            status = UserStatus.ApprovedForSyncing
+        ))))
+
+    val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
+    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
+
+    // when
+    setupController()
+
+    // then
+    verify(activity, never()).showAppLockScreen()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `when app is stopped and lock timer is unset then the timer should be updated`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(lockAfterTimestamp.get()).thenReturn(Instant.MAX)
     whenever(lockAfterTimestamp.isSet).thenReturn(false)
 
+    // when
+    setupController()
     uiEvents.onNext(Stopped(null))
 
-    verify(lockAfterTimestamp).set(check {
-      // Not the best way, but works.
-      it > Instant.now().minusSeconds(1)
-    })
+    // then
+    verify(lockAfterTimestamp).set(currentTimestamp.plus(lockInMinutes, ChronoUnit.MINUTES))
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `when app is stopped and lock timer is set then the timer should not be updated`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(lockAfterTimestamp.isSet).thenReturn(true)
     whenever(lockAfterTimestamp.get()).thenReturn(Instant.now())
 
+    // when
+    setupController()
     uiEvents.onNext(Stopped(null))
 
+    // then
     verify(lockAfterTimestamp, never()).set(any())
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `when app is started unlocked and lock timer hasn't expired yet then the timer should be unset`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
-    whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = LOGGED_IN, status = UserStatus.ApprovedForSyncing))))
+    val userStream: Observable<Optional<User>> = Observable.just(Optional.of(TestData.loggedInUser(
+        uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+        loggedInStatus = LOGGED_IN,
+        status = UserStatus.ApprovedForSyncing
+    )))
 
     val lockAfterTime = Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(10))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
-    uiEvents.onNext(Started(null))
+    // when
+    setupController(userStream = userStream)
 
+    // then
     verify(lockAfterTimestamp).delete()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
   fun `when app is started locked and lock timer hasn't expired yet then the timer should not be unset`() {
+    // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
 
     val lockAfterTime = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(5))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
-    uiEvents.onNext(Started(null))
+    // when
+    setupController()
 
+    // then
     verify(lockAfterTimestamp, never()).delete()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
-  @Parameters(
-      "OTP_REQUESTED|LOGGED_IN|LOGGED_IN|true",
-      "LOGGED_IN|LOGGED_IN|LOGGED_IN|false"
-  )
-  fun `when a user is verified for login, the logged out alert must be shown`(
-      prevloggedInStatus: User.LoggedInStatus,
-      curLoggedInStatus: User.LoggedInStatus,
-      nextLoggedInStatus: User.LoggedInStatus,
-      shouldShowLoggedOutAlert: Boolean
-  ) {
-    val user = TestData.loggedInUser(status = UserStatus.ApprovedForSyncing, loggedInStatus = prevloggedInStatus)
+  fun `the logged out alert must be shown only at the instant when a user gets verified for login`() {
+    // given
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("bed4a670-7f03-44ab-87ca-f297ca35375a"),
+        status = UserStatus.ApprovedForSyncing,
+        loggedInStatus = OTP_REQUESTED
+    )
+    whenever(lockAfterTimestamp.get()).thenReturn(Instant.MAX)
+
+    val userStream: Observable<Optional<User>> = Observable.just(
+        Optional.of(user),
+        Optional.of(user.copy(loggedInStatus = LOGGED_IN)),
+        Optional.of(user.copy(loggedInStatus = LOGGED_IN))
+    )
+
+    // when
+    setupController(userStream = userStream)
+
+    // then
+    verify(activity).showUserLoggedOutOnOtherDeviceAlert()
+    verifyNoMoreInteractions(activity)
+  }
+
+  @Test
+  fun `the logged out alert must not be shown if the user is already logged in when the screen is opened`() {
+    // given
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("bed4a670-7f03-44ab-87ca-f297ca35375a"),
+        status = UserStatus.ApprovedForSyncing,
+        loggedInStatus = LOGGED_IN
+    )
     whenever(lockAfterTimestamp.get()).thenReturn(Instant.MAX)
     whenever(userSession.loggedInUser()).thenReturn(
         Observable.just(
-            Just(user),
-            Just(user.copy(loggedInStatus = curLoggedInStatus)),
-            Just(user.copy(loggedInStatus = nextLoggedInStatus)))
+            Optional.of(user),
+            Optional.of(user.copy(loggedInStatus = LOGGED_IN)),
+            Optional.of(user.copy(loggedInStatus = LOGGED_IN)))
     )
 
-    uiEvents.onNext(Started(null))
+    // when
+    setupController()
 
-    if (shouldShowLoggedOutAlert) {
-      verify(activity).showUserLoggedOutOnOtherDeviceAlert()
-    } else {
-      verify(activity, never()).showUserLoggedOutOnOtherDeviceAlert()
-    }
-  }
-
-  @Test
-  @Parameters(method = "params for local user initial screen key")
-  fun `when a local user exists, the appropriate initial key must be returned based on the logged in status`(
-      loggedInStatus: User.LoggedInStatus,
-      status: UserStatus,
-      expectedKeyType: Class<FullScreenKey>
-  ) {
-    val user = TestData.loggedInUser(loggedInStatus = loggedInStatus, status = status)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
-
-    assertThat(controller.initialScreenKey()).isInstanceOf(expectedKeyType)
-  }
-
-  @Suppress("Unused")
-  private fun `params for local user initial screen key`(): Array<Array<Any>> {
-    fun testCase(
-        loggedInStatus: User.LoggedInStatus,
-        status: UserStatus,
-        expectedKeyType: Class<*>
-    ): Array<Any> {
-      return arrayOf(loggedInStatus, status, expectedKeyType)
-    }
-
-    return arrayOf(
-        // Waiting for Approval
-        testCase(
-            loggedInStatus = NOT_LOGGED_IN,
-            status = UserStatus.WaitingForApproval,
-            expectedKeyType = RegistrationPhoneScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = OTP_REQUESTED,
-            status = UserStatus.WaitingForApproval,
-            expectedKeyType = HomeScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = RESET_PIN_REQUESTED,
-            status = UserStatus.WaitingForApproval,
-            expectedKeyType = HomeScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = RESETTING_PIN,
-            status = UserStatus.WaitingForApproval,
-            expectedKeyType = ForgotPinCreateNewPinScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = LOGGED_IN,
-            status = UserStatus.WaitingForApproval,
-            expectedKeyType = HomeScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = UNAUTHORIZED,
-            status = UserStatus.WaitingForApproval,
-            expectedKeyType = RegistrationPhoneScreenKey::class.java
-        ),
-        // Approved for syncing
-        testCase(
-            loggedInStatus = NOT_LOGGED_IN,
-            status = UserStatus.ApprovedForSyncing,
-            expectedKeyType = RegistrationPhoneScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = OTP_REQUESTED,
-            status = UserStatus.ApprovedForSyncing,
-            expectedKeyType = HomeScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = RESET_PIN_REQUESTED,
-            status = UserStatus.ApprovedForSyncing,
-            expectedKeyType = HomeScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = RESETTING_PIN,
-            status = UserStatus.ApprovedForSyncing,
-            expectedKeyType = ForgotPinCreateNewPinScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = LOGGED_IN,
-            status = UserStatus.ApprovedForSyncing,
-            expectedKeyType = HomeScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = UNAUTHORIZED,
-            status = UserStatus.ApprovedForSyncing,
-            expectedKeyType = RegistrationPhoneScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = NOT_LOGGED_IN,
-            status = UserStatus.DisapprovedForSyncing,
-            expectedKeyType = AccessDeniedScreenKey::class.java
-        ),
-        // Disapproved for syncing
-        testCase(
-            loggedInStatus = OTP_REQUESTED,
-            status = UserStatus.DisapprovedForSyncing,
-            expectedKeyType = AccessDeniedScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = RESET_PIN_REQUESTED,
-            status = UserStatus.DisapprovedForSyncing,
-            expectedKeyType = AccessDeniedScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = RESETTING_PIN,
-            status = UserStatus.DisapprovedForSyncing,
-            expectedKeyType = AccessDeniedScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = LOGGED_IN,
-            status = UserStatus.DisapprovedForSyncing,
-            expectedKeyType = AccessDeniedScreenKey::class.java
-        ),
-        testCase(
-            loggedInStatus = UNAUTHORIZED,
-            status = UserStatus.DisapprovedForSyncing,
-            expectedKeyType = AccessDeniedScreenKey::class.java
-        )
-    )
+    // then
+    verify(activity, never()).showUserLoggedOutOnOtherDeviceAlert()
+    verifyNoMoreInteractions(activity)
   }
 
   @Test
@@ -338,8 +316,10 @@ class TheActivityControllerTest {
     whenever(lockAfterTimestamp.get()).thenReturn(Instant.now())
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
     whenever(userSession.loggedInUserImmediate()).thenReturn(loggedInUser)
+    val userDisapprovedSubject = PublishSubject.create<Boolean>()
 
     //when
+    setupController(userDisapprovedStream = userDisapprovedSubject)
     userDisapprovedSubject.onNext(true)
 
     //then
@@ -347,7 +327,7 @@ class TheActivityControllerTest {
     verify(activity).showAccessDeniedScreen(fullName)
     verifyNoMoreInteractions(activity)
   }
-  
+
   @Test
   fun `when user has access then the access denied screen should not appear`() {
     //given
@@ -363,68 +343,76 @@ class TheActivityControllerTest {
     whenever(lockAfterTimestamp.get()).thenReturn(Instant.now())
 
     //when
-    uiEvents.onNext(Started(null))
+    setupController()
 
     //then
     verify(activity, never()).showAccessDeniedScreen(fullName)
+    verifyNoMoreInteractions(activity)
     verify(patientRepository, never()).clearPatientData()
   }
 
-
-  data class RedirectToSignInParams(
-      val userUnauthorizedValues: List<Boolean>,
-      val numberOfTimesShouldRedirectToSignIn: Int
-  )
-
   @Test
-  @Parameters(method = "params for redirecting to sign in")
-  fun `whenever the user logged in status becomes unauthorized, the sign in screen must be shown`(testCase: RedirectToSignInParams) {
-    val (userUnauthorizedValues, numberOfTimesShouldRedirectToSignIn) = testCase
-    userUnauthorizedValues.forEach(userUnauthorizedSubject::onNext)
+  fun `the sign in screen must be shown only at the moment where the user gets logged out`() {
+    // given
+    val userUnauthorizedSubject = PublishSubject.create<Boolean>()
 
-    if (numberOfTimesShouldRedirectToSignIn > 0) {
-      verify(activity, times(numberOfTimesShouldRedirectToSignIn)).redirectToLogin()
-    } else {
-      verify(activity, never()).redirectToLogin()
-    }
+    // when
+    setupController(userUnauthorizedStream = userUnauthorizedSubject)
+    userUnauthorizedSubject.onNext(false)
+
+    // then
+    verify(activity, never()).redirectToLogin()
+
+    // when
+    userUnauthorizedSubject.onNext(true)
+
+    // then
+    verify(activity).redirectToLogin()
+
+    clearInvocations(activity)
+
+    // when
+    userUnauthorizedSubject.onNext(true)
+    
+    // then
+    verifyZeroInteractions(activity)
+
+    // when
+    userUnauthorizedSubject.onNext(false)
+
+    // then
+    verifyZeroInteractions(activity)
+
+    // when
+    userUnauthorizedSubject.onNext(true)
+
+    // then
+    verify(activity).redirectToLogin()
+
     verifyNoMoreInteractions(activity)
   }
 
-  @Suppress("Unused")
-  private fun `params for redirecting to sign in`(): List<RedirectToSignInParams> {
-    return listOf(
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(true),
-            numberOfTimesShouldRedirectToSignIn = 1
-        ),
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(false),
-            numberOfTimesShouldRedirectToSignIn = 0
-        ),
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(true, true),
-            numberOfTimesShouldRedirectToSignIn = 1
-        ),
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(true, false, true),
-            numberOfTimesShouldRedirectToSignIn = 2
-        ),
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(false, true, true, false, true),
-            numberOfTimesShouldRedirectToSignIn = 2
-        ),
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(false, false, false, false),
-            numberOfTimesShouldRedirectToSignIn = 0
-        ),
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(true, true, true, true),
-            numberOfTimesShouldRedirectToSignIn = 1
-        ),
-        RedirectToSignInParams(
-            userUnauthorizedValues = listOf(true, false, true, false, true, false),
-            numberOfTimesShouldRedirectToSignIn = 3
-        )
+  private fun setupController(
+      userStream: Observable<Optional<User>> = Observable.just(Optional.empty()),
+      userUnauthorizedStream: Observable<Boolean> = Observable.just(false),
+      userDisapprovedStream: Observable<Boolean> = Observable.just(false)
+  ) {
+    whenever(userSession.isUserUnauthorized()).thenReturn(userUnauthorizedStream)
+    whenever(userSession.loggedInUser()).thenReturn(userStream)
+    whenever(userSession.isUserDisapproved()).thenReturn(userDisapprovedStream)
+
+    val controller = TheActivityController(
+        userSession = userSession,
+        appLockConfig = AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes)),
+        patientRepository = patientRepository,
+        utcClock = clock,
+        lockAfterTimestamp = lockAfterTimestamp
     )
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(activity) }
+
+    uiEvents.onNext(Started(null))
   }
 }

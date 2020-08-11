@@ -4,30 +4,21 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.activity.ActivityLifecycle.Stopped
-import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
-import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
-import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
-import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
-import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
-import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.filterTrue
-import org.simple.clinic.util.toNullable
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import javax.inject.Inject
@@ -38,8 +29,9 @@ typealias UiChange = (Ui) -> Unit
 
 class TheActivityController @Inject constructor(
     private val userSession: UserSession,
-    private val appLockConfig: Single<AppLockConfig>,
+    private val appLockConfig: AppLockConfig,
     private val patientRepository: PatientRepository,
+    private val utcClock: UtcClock,
     @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -68,7 +60,7 @@ class TheActivityController @Inject constructor(
               .take(1)
         }
         .filter { it in showAppLockForUserStates }
-        .map { Instant.now() > lockAfterTimestamp.get() }
+        .map { Instant.now(utcClock) > lockAfterTimestamp.get() }
         .replay()
         .refCount()
 
@@ -91,13 +83,8 @@ class TheActivityController @Inject constructor(
         .ofType<Stopped>()
         .filter { userSession.isUserLoggedIn() }
         .filter { !lockAfterTimestamp.isSet }
-        .flatMap { _ ->
-          appLockConfig
-              .flatMapObservable {
-                lockAfterTimestamp.set(Instant.now().plusMillis(it.lockAfterTimeMillis))
-                Observable.empty<UiChange>()
-              }
-        }
+        .doOnNext { lockAfterTimestamp.set(Instant.now(utcClock).plusMillis(appLockConfig.lockAfterTimeMillis)) }
+        .flatMap { Observable.empty<UiChange>() }
   }
 
   private fun displayUserLoggedOutOnOtherDevice(events: Observable<UiEvent>): Observable<UiChange> {
@@ -105,27 +92,6 @@ class TheActivityController @Inject constructor(
         .flatMap { userSession.loggedInUser() }
         .compose(NewlyVerifiedUser())
         .map { { ui: Ui -> ui.showUserLoggedOutOnOtherDeviceAlert() } }
-  }
-
-  fun initialScreenKey(): FullScreenKey {
-    val localUser = userSession.loggedInUser().blockingFirst().toNullable()
-
-    val userDisapproved = localUser?.status == UserStatus.DisapprovedForSyncing
-
-    val canMoveToHomeScreen = when (localUser?.loggedInStatus) {
-      NOT_LOGGED_IN, RESETTING_PIN, UNAUTHORIZED -> false
-      LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED -> true
-      null -> false
-    }
-
-    return when {
-      canMoveToHomeScreen && !userDisapproved -> HomeScreenKey()
-      userDisapproved -> AccessDeniedScreenKey(localUser?.fullName!!)
-      else -> {
-        return if (localUser?.loggedInStatus == RESETTING_PIN) ForgotPinCreateNewPinScreenKey()
-        else RegistrationPhoneScreenKey()
-      }
-    }
   }
 
   private fun redirectToLoginScreen(): Observable<UiChange> {

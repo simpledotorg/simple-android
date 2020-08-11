@@ -25,7 +25,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.analytics.MockAnalyticsReporter
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
@@ -52,6 +54,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 import java.util.Locale.ENGLISH
 import java.util.UUID
 
@@ -68,16 +71,25 @@ class PatientEntryScreenLogicTest {
   private val userSession = mock<UserSession>()
   private val userClock: UserClock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val dobValidator = UserInputDateValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
-  private val numberValidator = LengthBasedNumberValidator(10,
-      10,
-      6,
-      12)
+  private val numberValidator = LengthBasedNumberValidator(
+      minimumRequiredLengthMobile = 10,
+      maximumAllowedLengthMobile = 10,
+      minimumRequiredLengthLandlinesOrMobile = 6,
+      maximumAllowedLengthLandlinesOrMobile = 12
+  )
   private val patientRegisteredCount = mock<Preference<Int>>()
   private val ageValidator = UserInputAgeValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
 
   private val uiEvents = PublishSubject.create<PatientEntryEvent>()
   private lateinit var fixture: MobiusTestFixture<PatientEntryModel, PatientEntryEvent, PatientEntryEffect>
   private val reporter = MockAnalyticsReporter()
+
+  private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+  private val inputFieldsFactory = InputFieldsFactory(
+      dateTimeFormatter = dateTimeFormatter,
+      today = LocalDate.now(userClock)
+  )
+  private val india = TestData.country(isdCode = Country.INDIA)
 
   private lateinit var errorConsumer: (Throwable) -> Unit
 
@@ -97,10 +109,12 @@ class PatientEntryScreenLogicTest {
         userSession = userSession,
         facilityRepository = facilityRepository,
         patientRepository = patientRepository,
+        schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRegisteredCount = patientRegisteredCount,
+        country = india,
+        inputFieldsFactory = inputFieldsFactory,
         ui = ui,
-        validationActions = validationActions,
-        schedulersProvider = TestSchedulersProvider.trampoline()
+        validationActions = validationActions
     )
 
     fixture = MobiusTestFixture(

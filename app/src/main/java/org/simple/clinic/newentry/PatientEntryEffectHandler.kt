@@ -8,6 +8,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.Field.Age
 import org.simple.clinic.newentry.Field.ColonyOrVillage
@@ -17,6 +18,8 @@ import org.simple.clinic.newentry.Field.FullName
 import org.simple.clinic.newentry.Field.Gender
 import org.simple.clinic.newentry.Field.PhoneNumber
 import org.simple.clinic.newentry.Field.State
+import org.simple.clinic.newentry.country.InputFields
+import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.PatientEntryValidationError
@@ -50,6 +53,8 @@ class PatientEntryEffectHandler @AssistedInject constructor(
     private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
+    private val country: Country,
+    private val inputFieldsFactory: InputFieldsFactory,
     @Named("number_of_patients_registered") private val patientRegisteredCount: Preference<Int>,
     @Assisted private val ui: PatientEntryUi,
     @Assisted private val validationActions: PatientEntryValidationActions
@@ -78,6 +83,7 @@ class PatientEntryEffectHandler @AssistedInject constructor(
         .addTransformer(SavePatient::class.java, savePatientTransformer(schedulersProvider.io()))
         .addConsumer(ShowValidationErrors::class.java, { showValidationErrors(it.errors) }, schedulersProvider.ui())
         .addAction(OpenMedicalHistoryEntryScreen::class.java, ui::openMedicalHistoryEntryScreen, schedulersProvider.ui())
+        .addTransformer(LoadInputFields::class.java, loadInputFields())
         .build()
   }
 
@@ -178,6 +184,15 @@ class PatientEntryEffectHandler @AssistedInject constructor(
 
     if (errors.isNotEmpty()) {
       ui.scrollToFirstFieldWithError()
+    }
+  }
+
+  private fun loadInputFields(): ObservableTransformer<LoadInputFields, PatientEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .map { inputFieldsFactory.fieldsFor(country) }
+          .map(::InputFields)
+          .map(::InputFieldsLoaded)
     }
   }
 }

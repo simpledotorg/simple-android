@@ -20,3 +20,5 @@ data class HideValidationError(val field: Field) : PatientEntryEffect()
 data class SavePatient(val entry: OngoingNewPatientEntry) : PatientEntryEffect()
 
 object OpenMedicalHistoryEntryScreen : PatientEntryEffect()
+
+object LoadInputFields: PatientEntryEffect()

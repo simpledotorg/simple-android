@@ -8,17 +8,13 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
@@ -26,12 +22,10 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.ValidNum
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-@RunWith(JUnitParamsRunner::class)
 class UpdatePhoneNumberDialogControllerTest {
 
   @get:Rule
@@ -84,32 +78,29 @@ class UpdatePhoneNumberDialogControllerTest {
   }
 
   @Test
-  @Parameters(method = "validation errors")
-  fun `when save is clicked, the number should not be saved if it's invalid`(
-      validationError: Result
-  ) {
-    val newNumber = "123"
+  fun `when save is clicked, the number should not be saved if it's blank and an error should be shown`() {
+    val newNumber = ""
     val existingPhoneNumber = TestData.patientPhoneNumber(
-        uuid = UUID.fromString("ab3f84b5-683f-49ae-987a-e319fd1db7d2"),
+        uuid = UUID.fromString("0e4bf753-009b-4cd6-ae30-aa9935bf2ea6"),
         patientUuid = patientUuid,
         number = "1234567890"
     )
 
-    whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(validationError)
+    whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(Blank)
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
-    whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.complete())
+    whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.never())
 
     setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
+
+    verify(dialog).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(dialog).showPhoneNumberTooShortError()
   }
 
   @Test
-  @Parameters(method = "validation errors")
-  fun `when save is clicked, an error should be shown if it's invalid`(
-      validationError: Result
-  ) {
+  fun `when save is clicked, the number should not be saved if it's too short and an error should be shown`() {
     val newNumber = "123"
     val existingPhoneNumber = TestData.patientPhoneNumber(
         uuid = UUID.fromString("0e4bf753-009b-4cd6-ae30-aa9935bf2ea6"),
@@ -117,18 +108,39 @@ class UpdatePhoneNumberDialogControllerTest {
         number = "1234567890"
     )
 
-    whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(validationError)
+    whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(LengthTooShort(6))
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.never())
 
     setupController(patientUuid = patientUuid)
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
-    when (validationError) {
-      Blank, is LengthTooShort -> verify(dialog).showPhoneNumberTooShortError()
-      is LengthTooLong -> verify(dialog).showPhoneNumberTooLongError()
-      ValidNumber -> throw AssertionError()
-    }.exhaustive()
+    verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
+
+    verify(dialog).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(dialog).showPhoneNumberTooShortError()
+  }
+
+  @Test
+  fun `when save is clicked, the number should not be saved if it's too long and an error should be shown`() {
+    val newNumber = "123"
+    val existingPhoneNumber = TestData.patientPhoneNumber(
+        uuid = UUID.fromString("0e4bf753-009b-4cd6-ae30-aa9935bf2ea6"),
+        patientUuid = patientUuid,
+        number = "1234567890"
+    )
+
+    whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(LengthTooLong(12))
+    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
+    whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))).thenReturn(Completable.never())
+
+    setupController(patientUuid = patientUuid)
+    uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
+
+    verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
+
+    verify(dialog).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(dialog).showPhoneNumberTooLongError()
   }
 
   @Test
@@ -142,9 +154,6 @@ class UpdatePhoneNumberDialogControllerTest {
 
     verify(repository).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber)
   }
-
-  @Suppress("unused")
-  private fun `validation errors`() = listOf(Blank, LengthTooShort(6), LengthTooLong(12))
 
   private fun setupController(patientUuid: PatientUuid) {
     val controller = UpdatePhoneNumberDialogController(

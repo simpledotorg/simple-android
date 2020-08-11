@@ -144,14 +144,13 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   private val delegate by unsafeLazy {
     val (patient, address, phoneNumber, bangladeshNationalId) = screenKey
 
-    MobiusDelegate(
-        events,
-        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, bangladeshNationalId, EditPatientState.NOT_SAVING_PATIENT),
-        EditPatientInit(patient, address, phoneNumber, bangladeshNationalId),
-        EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator),
-        effectHandlerFactory.create(this).build(),
-        viewRenderer::render,
-        crashReporter
+    MobiusDelegate.forView(
+        events = events,
+        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, bangladeshNationalId, EditPatientState.NOT_SAVING_PATIENT),
+        init = EditPatientInit(patient, address, phoneNumber, bangladeshNationalId),
+        update = EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = viewRenderer::render
     )
   }
 
@@ -162,8 +161,6 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
 
     context.injector<Injector>().inject(this)
-
-    delegate.prepare()
 
     showOrHideInputFields()
     setInputFieldsHint()

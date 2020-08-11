@@ -7,17 +7,14 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
-import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
-import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding3.view.clicks
-import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.dialog_patientsummary_updatephone.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
@@ -67,9 +64,6 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
 
   @Inject
   lateinit var effectHandlerFactory: UpdatePhoneNumberEffectHandler.Factory
-
-  private val phoneInputLayout by bindView<TextInputLayout>(R.id.updatephone_phone_inputlayout)
-  private val numberEditText by bindView<EditText>(R.id.updatephone_phone)
 
   private val onStarts = PublishSubject.create<Any>()
 
@@ -139,7 +133,7 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
   override fun onStart() {
     super.onStart()
     onStarts.onNext(Any())
-    numberEditText.showKeyboard()
+    dialog!!.numberEditText!!.showKeyboard()
     delegate.start()
   }
 
@@ -184,18 +178,18 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
   private fun saveClicks(saveButton: Button) =
       saveButton
           .clicks()
-          .map { UpdatePhoneNumberSaveClicked(number = numberEditText.text.toString()) }
+          .map { UpdatePhoneNumberSaveClicked(number = dialog!!.numberEditText!!.text?.toString().orEmpty()) }
 
   override fun showPhoneNumberTooShortError() {
-    phoneInputLayout.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_less)
+    dialog!!.phoneInputLayout!!.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_less)
   }
 
   override fun showPhoneNumberTooLongError() {
-    phoneInputLayout.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_more)
+    dialog!!.phoneInputLayout!!.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_more)
   }
 
   override fun preFillPhoneNumber(number: String) {
-    numberEditText.setTextAndCursor(number)
+    dialog!!.numberEditText!!.setTextAndCursor(number)
   }
 
   override fun closeDialog() {

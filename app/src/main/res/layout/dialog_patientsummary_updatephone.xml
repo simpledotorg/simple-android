@@ -6,7 +6,7 @@
   android:paddingEnd="@dimen/spacing_16">
 
   <com.google.android.material.textfield.TextInputLayout
-    android:id="@+id/updatephone_phone_inputlayout"
+    android:id="@+id/phoneInputLayout"
     style="@style/Clinic.V2.TextInputLayout.FilledBox.Dense"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
     android:layout_marginBottom="@dimen/spacing_8">
 
     <com.google.android.material.textfield.TextInputEditText
-      android:id="@+id/updatephone_phone"
+      android:id="@+id/numberEditText"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:hint="@string/patientsummary_updatephone_phone_hint"

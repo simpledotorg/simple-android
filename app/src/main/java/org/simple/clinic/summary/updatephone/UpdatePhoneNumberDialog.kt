@@ -84,11 +84,12 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
   }
 
   private val delegate by unsafeLazy {
+    val patientUuid = arguments!!.getSerializable(KEY_PATIENT_UUID) as PatientUuid
     val uiRenderer = UpdatePhoneNumberUiRenderer(this)
 
     MobiusDelegate.forActivity(
         events = dialogEvents.ofType(),
-        defaultModel = UpdatePhoneNumberModel.create(),
+        defaultModel = UpdatePhoneNumberModel.create(patientUuid),
         init = UpdatePhoneNumberInit(),
         update = UpdatePhoneNumberUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),

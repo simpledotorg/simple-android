@@ -216,7 +216,7 @@ class UpdatePhoneNumberDialogControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = UpdatePhoneNumberModel.create(),
+        defaultModel = UpdatePhoneNumberModel.create(patientUuid),
         init = UpdatePhoneNumberInit(),
         update = UpdatePhoneNumberUpdate(),
         effectHandler = effectHandler.build(),

@@ -2,11 +2,23 @@ package org.simple.clinic.registration.phone.loggedout
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.user.UserSession.LogoutResult
 
 @Parcelize
-class LoggedOutOfDeviceModel : Parcelable {
+data class LoggedOutOfDeviceModel(
+    val logoutResult: LogoutResult?
+) : Parcelable {
 
   companion object {
-    fun create() = LoggedOutOfDeviceModel()
+    fun create() = LoggedOutOfDeviceModel(
+        logoutResult = null
+    )
+  }
+
+  val hasLogoutResult: Boolean
+    get() = logoutResult != null
+
+  fun userLoggedOut(logoutResult: LogoutResult): LoggedOutOfDeviceModel {
+    return copy(logoutResult = logoutResult)
   }
 }

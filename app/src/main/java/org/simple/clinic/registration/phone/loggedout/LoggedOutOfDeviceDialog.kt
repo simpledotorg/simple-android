@@ -1,6 +1,5 @@
 package org.simple.clinic.registration.phone.loggedout
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
@@ -11,16 +10,10 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
-import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
 class LoggedOutOfDeviceDialog : AppCompatDialogFragment(), LoggedOutOfDeviceDialogUi {
@@ -50,29 +43,17 @@ class LoggedOutOfDeviceDialog : AppCompatDialogFragment(), LoggedOutOfDeviceDial
   }
 
   @Inject
-  lateinit var controller: LoggedOutOfDeviceDialogController
-
-  @Inject
   lateinit var effectHandler: LoggedOutOfDeviceEffectHandler
 
   private val okayButton: Button by unsafeLazy {
     (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
   }
 
-  private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
-  private val onStarts = PublishSubject.create<Any>()
-
-  private val events by unsafeLazy {
-    screenCreates()
-        .compose(ReportAnalyticsEvents())
-        .share()
-  }
-
   private val delegate by unsafeLazy {
     val uiRenderer = LoggedOutOfDeviceUiRenderer(this)
 
     MobiusDelegate.forActivity(
-        events = events.ofType(),
+        events = Observable.never(),
         defaultModel = LoggedOutOfDeviceModel.create(),
         init = LoggedOutOfDeviceInit(),
         update = LoggedOutOfDeviceUpdate(),
@@ -96,46 +77,22 @@ class LoggedOutOfDeviceDialog : AppCompatDialogFragment(), LoggedOutOfDeviceDial
     super.onSaveInstanceState(outState)
   }
 
-  @SuppressLint("CheckResult")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val dialog = AlertDialog.Builder(requireContext())
+    return AlertDialog.Builder(requireContext())
         .setTitle(R.string.registration_loggedout_dialog_title)
         .setMessage(R.string.registration_loggedout_dialog_message)
         .setPositiveButton(R.string.registration_loggedout_dialog_confirm, null)
         .create()
-
-    onStarts
-        .take(1)
-        .subscribe { setupDialog() }
-
-    return dialog
   }
-
-  private fun setupDialog() {
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = screenDestroys
-    )
-  }
-
-  private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
 
   override fun onStart() {
     super.onStart()
-    onStarts.onNext(Any())
     delegate.start()
   }
 
   override fun onStop() {
     delegate.stop()
     super.onStop()
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    screenDestroys.onNext(ScreenDestroyed())
   }
 
   override fun enableOkayButton() {

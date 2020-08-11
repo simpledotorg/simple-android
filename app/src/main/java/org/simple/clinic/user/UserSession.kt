@@ -1,10 +1,12 @@
 package org.simple.clinic.user
 
 import android.content.SharedPreferences
+import android.os.Parcelable
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.AppScope
@@ -235,8 +237,12 @@ class UserSession @Inject constructor(
     }
   }
 
-  sealed class LogoutResult {
+  sealed class LogoutResult : Parcelable {
+
+    @Parcelize
     object Success : LogoutResult()
+
+    @Parcelize
     data class Failure(val cause: Throwable) : LogoutResult()
   }
 }

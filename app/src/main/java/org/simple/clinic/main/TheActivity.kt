@@ -9,7 +9,6 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -113,9 +112,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   @Inject
-  lateinit var controller: TheActivityController
-
-  @Inject
   lateinit var locale: Locale
 
   @Inject
@@ -187,13 +183,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
           unauthorizeUser.listen()
       )
     }
-
-    events
-        .startWith(LifecycleEvent.ActivityStarted)
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(lifecycleEvents.ofType<LifecycleEvent.ActivityDestroyed>())
-        .subscribe { uiChange -> uiChange(this) }
 
     if (intent.hasExtra(EXTRA_DEEP_LINK_RESULT)) {
       when (val deepLinkResult = intent.getParcelableExtra<DeepLinkResult>(EXTRA_DEEP_LINK_RESULT)) {

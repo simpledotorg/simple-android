@@ -7,11 +7,11 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-class DateOfBirthField(
+data class DateOfBirthField(
     private val dateTimeFormatter: DateTimeFormatter,
     private val today: LocalDate,
-    labelResId: Int
-) : InputField<String>(labelResId) {
+    private val _labelResId: Int
+) : InputField<String>(_labelResId) {
   override fun validate(value: String): Set<ValidationError> {
     if (value.isBlank()) return setOf(MissingValue)
 

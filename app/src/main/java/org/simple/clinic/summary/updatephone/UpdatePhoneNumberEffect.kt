@@ -11,3 +11,5 @@ data class LoadPhoneNumber(val patientUuid: PatientUuid) : UpdatePhoneNumberEffe
 data class ValidatePhoneNumber(val phoneNumber: String) : UpdatePhoneNumberEffect()
 
 object ShowBlankPhoneNumberError : UpdatePhoneNumberEffect()
+
+data class ShowPhoneNumberTooShortError(val minimumAllowedNumberLength: Int) : UpdatePhoneNumberEffect()

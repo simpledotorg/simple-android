@@ -28,6 +28,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
+import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -73,6 +74,11 @@ class EditPatientScreenSaveTest {
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val generatedPhoneUuid = UUID.fromString("ada3ea24-819b-42e4-ac21-51bcf61cebac")
   private val user = TestData.loggedInUser()
+
+  private val inputFieldsFactory = InputFieldsFactory(
+      dateTimeFormatter = dateOfBirthFormat,
+      today = LocalDate.now(userClock)
+  )
 
   @Test
   fun `when save is clicked, patient name should be validated`() {
@@ -921,7 +927,6 @@ class EditPatientScreenSaveTest {
 
   private fun screenCreated(patient: Patient, address: PatientAddress, phoneNumber: PatientPhoneNumber?) {
     val editPatientEffectHandler = EditPatientEffectHandler(
-        ui = ui,
         userClock = TestUserClock(),
         patientRepository = patientRepository,
         utcClock = utcClock,
@@ -929,19 +934,26 @@ class EditPatientScreenSaveTest {
         country = country,
         uuidGenerator = FakeUuidGenerator.fixed(generatedPhoneUuid),
         currentUser = dagger.Lazy { user },
-        dateOfBirthFormatter = dateOfBirthFormat
+        inputFieldsFactory = inputFieldsFactory,
+        dateOfBirthFormatter = dateOfBirthFormat,
+        ui = ui
     )
 
+    val numberValidator = LengthBasedNumberValidator(
+        minimumRequiredLengthMobile = 10,
+        maximumAllowedLengthMobile = 10,
+        minimumRequiredLengthLandlinesOrMobile = 6,
+        maximumAllowedLengthLandlinesOrMobile = 12
+    )
     val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         events = uiEvents,
         defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT),
         init = EditPatientInit(patient, address, phoneNumber, null),
-        update = EditPatientUpdate(LengthBasedNumberValidator(
-            10,
-            10,
-            6,
-            12
-        ), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
+        update = EditPatientUpdate(
+            numberValidator = numberValidator,
+            dobValidator = UserInputDateValidator(userClock, dateOfBirthFormat),
+            ageValidator = UserInputAgeValidator(userClock, dateOfBirthFormat)
+        ),
         effectHandler = editPatientEffectHandler.build(),
         modelUpdateListener = viewRenderer::render
     )

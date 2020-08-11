@@ -15,8 +15,11 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.newentry.country.InputFields
+import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
@@ -40,7 +43,6 @@ class EditPatientEffectHandlerTest {
   private val userClock = TestUserClock(date)
   private val utcClock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
   private val patientRepository = mock<PatientRepository>()
-  private val country = TestData.country()
   private val dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val saveButtonState = EditPatientState.NOT_SAVING_PATIENT
 
@@ -62,6 +64,14 @@ class EditPatientEffectHandlerTest {
       identifier = Identifier(value = "1234567890abcd", type = BangladeshNationalId)
   )
 
+  private val inputFieldsFactory = InputFieldsFactory(
+      dateTimeFormatter = dateOfBirthFormatter,
+      today = date
+  )
+
+  private val india = TestData.country(isoCountryCode = Country.INDIA)
+  private val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
+
   private val entry = EditablePatientEntry.from(
       patient = patient,
       address = patientAddress,
@@ -78,15 +88,16 @@ class EditPatientEffectHandlerTest {
   private val uuidGenerator = FakeUuidGenerator.fixed(phoneNumberUuid)
 
   private val effectHandler = EditPatientEffectHandler(
-      ui = ui,
       userClock = userClock,
       patientRepository = patientRepository,
       utcClock = utcClock,
       schedulersProvider = TrampolineSchedulersProvider(),
-      country = country,
+      country = india,
       uuidGenerator = uuidGenerator,
       currentUser = Lazy { user },
-      dateOfBirthFormatter = dateOfBirthFormatter
+      inputFieldsFactory = inputFieldsFactory,
+      dateOfBirthFormatter = dateOfBirthFormatter,
+      ui = ui
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -171,7 +182,6 @@ class EditPatientEffectHandlerTest {
   @Test
   fun `adding an id to an empty alternative id should create a new Business id if country has alternative id`() {
     //given
-    val country = TestData.country(isoCountryCode = "BD")
 
     // TODO: 02/06/20 This is nasty, we need to fix the flow for registering patients
     // Tracked in the following tickets:
@@ -180,15 +190,16 @@ class EditPatientEffectHandlerTest {
     val identifierUuid = UUID.fromString("a72c3ada-b071-4818-8f0b-476432338235")
 
     val effectHandler = EditPatientEffectHandler(
-        ui = ui,
         userClock = userClock,
         patientRepository = patientRepository,
         utcClock = utcClock,
         schedulersProvider = TrampolineSchedulersProvider(),
-        country = country,
+        country = bangladesh,
         uuidGenerator = FakeUuidGenerator.fixed(identifierUuid),
         currentUser = dagger.Lazy { user },
-        dateOfBirthFormatter = dateOfBirthFormatter
+        inputFieldsFactory = inputFieldsFactory,
+        dateOfBirthFormatter = dateOfBirthFormatter,
+        ui = ui
     )
 
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -265,6 +276,17 @@ class EditPatientEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(BpPassportsFetched(listOf(bpPassport1, bpPassport2)))
+    verifyZeroInteractions(ui)
+  }
+
+  @Test
+  fun `when the load input fields effect is received, the input fields must be loaded`() {
+    // when
+    testCase.dispatch(LoadInputFields)
+
+    // then
+    val expectedFields = inputFieldsFactory.fieldsFor(india)
+    testCase.assertOutgoingEvents(InputFieldsLoaded(InputFields(expectedFields)))
     verifyZeroInteractions(ui)
   }
 }

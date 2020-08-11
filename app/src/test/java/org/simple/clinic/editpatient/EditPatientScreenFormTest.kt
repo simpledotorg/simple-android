@@ -29,6 +29,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
+import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
@@ -74,6 +75,11 @@ class EditPatientScreenFormTest {
   private val patientRepository: PatientRepository = mock()
   private val country = TestData.country()
   private val user = TestData.loggedInUser()
+
+  private val inputFieldsFactory = InputFieldsFactory(
+      dateTimeFormatter = dateOfBirthFormat,
+      today = LocalDate.now(userClock)
+  )
 
   @Test
   @Parameters(method = "params for hiding errors on text changes")
@@ -798,7 +804,6 @@ class EditPatientScreenFormTest {
 
   private fun screenCreated(patient: Patient, address: PatientAddress, phoneNumber: PatientPhoneNumber?) {
     val editPatientEffectHandler = EditPatientEffectHandler(
-        ui = ui,
         userClock = TestUserClock(),
         patientRepository = patientRepository,
         utcClock = utcClock,
@@ -806,19 +811,26 @@ class EditPatientScreenFormTest {
         country = country,
         uuidGenerator = FakeUuidGenerator.fixed(UUID.fromString("d1593ec2-cf7e-44dd-a057-69f71fb920ee")),
         currentUser = dagger.Lazy { user },
-        dateOfBirthFormatter = dateOfBirthFormat
+        inputFieldsFactory = inputFieldsFactory,
+        dateOfBirthFormatter = dateOfBirthFormat,
+        ui = ui
     )
 
+    val numberValidator = LengthBasedNumberValidator(
+        minimumRequiredLengthMobile = 10,
+        maximumAllowedLengthMobile = 10,
+        minimumRequiredLengthLandlinesOrMobile = 6,
+        maximumAllowedLengthLandlinesOrMobile = 12
+    )
     val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         events = uiEvents,
         defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT),
         init = EditPatientInit(patient, address, phoneNumber, null),
-        update = EditPatientUpdate(LengthBasedNumberValidator(
-            10,
-            10,
-            6,
-            12
-        ), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
+        update = EditPatientUpdate(
+            numberValidator = numberValidator,
+            dobValidator = UserInputDateValidator(userClock, dateOfBirthFormat),
+            ageValidator = UserInputAgeValidator(userClock, dateOfBirthFormat)
+        ),
         effectHandler = editPatientEffectHandler.build(),
         modelUpdateListener = viewRenderer::render
     )

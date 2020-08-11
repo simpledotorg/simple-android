@@ -11,7 +11,7 @@ import org.simple.clinic.newentry.form.ValidationError.MissingValue
 
 @RunWith(JUnitParamsRunner::class)
 class LandlineOrMobileFieldTest {
-  private val landlineOrMobileField = LandlineOrMobileField(labelResId = 0)
+  private val landlineOrMobileField = LandlineOrMobileField(_labelResId = 0)
 
   @Test
   fun `it returns a missing value error when the field is empty`() {

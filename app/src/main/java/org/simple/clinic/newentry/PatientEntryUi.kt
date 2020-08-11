@@ -1,5 +1,6 @@
 package org.simple.clinic.newentry
 
+import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 
@@ -14,4 +15,5 @@ interface PatientEntryUi {
   fun hideIdentifierSection()
   fun nextButtonShowInProgress()
   fun enableNextButton()
+  fun setupUi(inputFields: InputFields)
 }

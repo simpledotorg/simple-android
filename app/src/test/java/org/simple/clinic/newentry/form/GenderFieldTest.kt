@@ -8,7 +8,7 @@ import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 
 class GenderFieldTest {
-  private val genderField = GenderField(labelResId = 0, allowedGenders = setOf(Male, Female, Transgender))
+  private val genderField = GenderField(_labelResId = 0, allowedGenders = setOf(Male, Female, Transgender))
 
   @Test
   fun `it returns a missing value error if gender is absent`() {

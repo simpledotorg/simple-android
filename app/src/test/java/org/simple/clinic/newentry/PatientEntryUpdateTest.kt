@@ -9,6 +9,10 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.MAX_ALLOWED_PATIENT_AGE
 import org.simple.clinic.MIN_ALLOWED_PATIENT_AGE
+import org.simple.clinic.TestData
+import org.simple.clinic.appconfig.Country
+import org.simple.clinic.newentry.country.InputFields
+import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.ReminderConsent.Denied
@@ -24,17 +28,27 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class PatientEntryUpdateTest {
-  private val phoneNumberValidator = LengthBasedNumberValidator(10,
-      10,
-      6,
-      12)
-  private val userClock: UserClock = TestUserClock(LocalDate.parse("2020-01-01"))
+  private val phoneNumberValidator = LengthBasedNumberValidator(
+      minimumRequiredLengthMobile = 10,
+      maximumAllowedLengthMobile = 10,
+      minimumRequiredLengthLandlinesOrMobile = 6,
+      maximumAllowedLengthLandlinesOrMobile = 12
+  )
+
+  private val localDate = LocalDate.parse("2020-01-01")
+  private val userClock: UserClock = TestUserClock(localDate)
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val dobValidator = UserInputDateValidator(userClock, dateOfBirthFormat)
   private val ageValidator = UserInputAgeValidator(userClock, dateOfBirthFormat)
   private val update = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator)
   private val updateSpec = UpdateSpec(update)
   private val defaultModel = PatientEntryModel.DEFAULT
+
+  private val inputFieldsFactory = InputFieldsFactory(
+      dateTimeFormatter = dateOfBirthFormat,
+      today = localDate
+  )
+  private val india = TestData.country(isoCountryCode = Country.INDIA)
 
   @Test
   fun `when the user grants reminder consent, update the model`() {
@@ -415,4 +429,16 @@ class PatientEntryUpdateTest {
         )
   }
 
+  @Test
+  fun `when the input fields are loaded, the UI muse be initialized`() {
+    val inputFields = InputFields(inputFieldsFactory.fieldsFor(india))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(InputFieldsLoaded(inputFields))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SetupUi(inputFields) as PatientEntryEffect)
+        ))
+  }
 }

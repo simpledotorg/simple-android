@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class DistrictFieldTest {
-  private val districtField = DistrictField(labelResId = 0)
+  private val districtField = DistrictField(_labelResId = 0)
 
   @Test
   fun `it returns a missing value error when district is empty`() {

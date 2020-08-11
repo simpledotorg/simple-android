@@ -16,9 +16,11 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.patient.PatientUuid
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -64,6 +66,22 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
 
   private val onStarts = PublishSubject.create<Any>()
 
+  private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
+  private val dialogEvents = PublishSubject.create<UiEvent>()
+  private val events by unsafeLazy {
+    val cancelButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_NEGATIVE)
+    val saveButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
+
+    Observable
+        .merge(
+            dialogCreates(),
+            cancelClicks(cancelButton),
+            saveClicks(saveButton)
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     TheActivity.component.inject(this)
@@ -83,7 +101,7 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
 
     onStarts
         .take(1)
-        .subscribe { setupDialog(RxView.detaches(layout).map { ScreenDestroyed() }) }
+        .subscribe { setupDialog(screenDestroys) }
 
     return dialog
   }
@@ -94,18 +112,25 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
     numberEditText.showKeyboard()
   }
 
+  @SuppressLint("CheckResult")
+  override fun onResume() {
+    super.onResume()
+    events
+        .takeUntil(screenDestroys)
+        .subscribe(dialogEvents::onNext)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    screenDestroys.onNext(ScreenDestroyed())
+  }
+
   private fun setupDialog(screenDestroys: Observable<ScreenDestroyed>) {
-    val cancelButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_NEGATIVE)
-    val saveButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
     val patientUuid = arguments!!.getSerializable(KEY_PATIENT_UUID) as PatientUuid
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            dialogCreates(),
-            cancelClicks(cancelButton),
-            saveClicks(saveButton)
-        ),
+        events = events,
         controller = controller.create(patientUuid),
         screenDestroys = screenDestroys
     )

@@ -208,6 +208,7 @@ class UpdatePhoneNumberDialogControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     val effectHandler = UpdatePhoneNumberEffectHandler(
+        patientRepository = repository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

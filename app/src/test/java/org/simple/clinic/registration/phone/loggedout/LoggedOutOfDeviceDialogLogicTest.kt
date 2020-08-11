@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
+import io.reactivex.functions.Consumer
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -35,17 +36,17 @@ class LoggedOutOfDeviceDialogLogicTest {
 
   @After
   fun tearDown() {
+    RxJavaPlugins.setErrorHandler(null)
     testFixture.dispose()
   }
 
   @Test
   fun `when the dialog is created, the okay button must be disabled`() {
     // given
-    RxJavaPlugins.setErrorHandler(null)
     whenever(userSession.logout()).thenReturn(Single.never())
 
     // when
-    setupController()
+    setupController(errorHandler = null)
 
     // then
     verify(ui).disableOkayButton()
@@ -55,11 +56,10 @@ class LoggedOutOfDeviceDialogLogicTest {
   @Test
   fun `when the logout result completes successfully, the okay button must be enabled`() {
     // given
-    RxJavaPlugins.setErrorHandler(null)
     whenever(userSession.logout()).thenReturn(Single.just(Success))
 
     // when
-    setupController()
+    setupController(errorHandler = null)
 
     // then
     verify(ui).disableOkayButton()
@@ -71,11 +71,10 @@ class LoggedOutOfDeviceDialogLogicTest {
   fun `when the logout fails with runtime exception, then error must be thrown`() {
     // given
     var thrownError: Throwable? = null
-    RxJavaPlugins.setErrorHandler { thrownError = it }
     whenever(userSession.logout()).thenReturn(Single.just(Failure(RuntimeException())))
 
     // when
-    setupController()
+    setupController(errorHandler = Consumer { thrownError = it })
 
     // then
     verify(ui).disableOkayButton()
@@ -88,11 +87,10 @@ class LoggedOutOfDeviceDialogLogicTest {
   fun `when the logout fails with null pointer exception, then error must be thrown`() {
     // given
     var thrownError: Throwable? = null
-    RxJavaPlugins.setErrorHandler { thrownError = it }
     whenever(userSession.logout()).thenReturn(Single.just(Failure(NullPointerException())))
 
     // when
-    setupController()
+    setupController(errorHandler = Consumer { thrownError = it })
 
     // then
     verify(ui).disableOkayButton()
@@ -101,7 +99,9 @@ class LoggedOutOfDeviceDialogLogicTest {
     assertThat(thrownError).isNotNull()
   }
 
-  private fun setupController() {
+  private fun setupController(errorHandler: Consumer<Throwable>?) {
+    RxJavaPlugins.setErrorHandler(errorHandler)
+
     val effectHandler = LoggedOutOfDeviceEffectHandler(
         userSession = userSession,
         schedulersProvider = TestSchedulersProvider.trampoline()

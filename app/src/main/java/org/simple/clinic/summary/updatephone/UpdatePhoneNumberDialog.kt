@@ -12,7 +12,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.textfield.TextInputLayout
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -176,13 +177,13 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
   }
 
   private fun cancelClicks(cancelButton: Button) =
-      RxView
-          .clicks(cancelButton)
+      cancelButton
+          .clicks()
           .map { UpdatePhoneNumberCancelClicked }
 
   private fun saveClicks(saveButton: Button) =
-      RxView
-          .clicks(saveButton)
+      saveButton
+          .clicks()
           .map { UpdatePhoneNumberSaveClicked(number = numberEditText.text.toString()) }
 
   override fun showPhoneNumberTooShortError() {

@@ -2,7 +2,6 @@ package org.simple.clinic.newentry
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -40,7 +39,7 @@ class PatientEntryUpdate(
       is ReminderConsentChanged -> next(model.reminderConsentChanged(event.reminderConsent))
       is SaveClicked -> onSaveClicked(model)
       is PatientEntrySaved -> next(model.buttonStateChanged(ButtonState.SAVED), OpenMedicalHistoryEntryScreen)
-      is InputFieldsLoaded -> noChange()
+      is InputFieldsLoaded -> dispatch(SetupUi(event.inputFields))
     }
   }
 

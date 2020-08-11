@@ -92,9 +92,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   lateinit var ageValidator: UserInputAgeValidator
 
   @Inject
-  lateinit var inputFields: InputFields
-
-  @Inject
   lateinit var country: Country
 
   @Inject
@@ -150,8 +147,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     context.injector<Injector>().inject(this)
 
     backButton.setOnClickListener { screenRouter.pop() }
-
-    setupUi(inputFields)
   }
 
   override fun setupUi(inputFields: InputFields) {

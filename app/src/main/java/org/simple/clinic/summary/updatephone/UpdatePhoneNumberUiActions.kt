@@ -5,4 +5,5 @@ interface UpdatePhoneNumberUiActions {
   fun showBlankPhoneNumberError()
   fun showPhoneNumberTooShortError(minimumAllowedNumberLength: Int)
   fun showPhoneNumberTooLongError(maximumRequiredNumberLength: Int)
+  fun closeDialog()
 }

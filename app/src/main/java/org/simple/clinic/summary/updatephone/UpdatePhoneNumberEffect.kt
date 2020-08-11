@@ -15,3 +15,5 @@ object ShowBlankPhoneNumberError : UpdatePhoneNumberEffect()
 data class ShowPhoneNumberTooShortError(val minimumAllowedNumberLength: Int) : UpdatePhoneNumberEffect()
 
 data class ShowPhoneNumberTooLongError(val maximumRequiredNumberLength: Int) : UpdatePhoneNumberEffect()
+
+object CloseDialog : UpdatePhoneNumberEffect()

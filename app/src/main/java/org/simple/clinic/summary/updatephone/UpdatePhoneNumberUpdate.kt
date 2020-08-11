@@ -13,6 +13,7 @@ class UpdatePhoneNumberUpdate : Update<UpdatePhoneNumberModel, UpdatePhoneNumber
       is PhoneNumberValidated -> phoneNumberValidated(event, model)
       NewPhoneNumberSaved -> dispatch(CloseDialog)
       is UpdatePhoneNumberSaveClicked -> dispatch(ValidatePhoneNumber(event.number))
+      ExistingPhoneNumberSaved -> dispatch(CloseDialog)
     }
   }
 

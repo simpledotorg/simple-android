@@ -33,14 +33,43 @@ class UpdatePhoneNumberEffectHandler @AssistedInject constructor(
       .addConsumer(ShowPhoneNumberTooLongError::class.java, { uiActions.showPhoneNumberTooLongError(it.maximumRequiredNumberLength) }, schedulersProvider.ui())
       .addAction(CloseDialog::class.java, uiActions::closeDialog, schedulersProvider.ui())
       .addTransformer(SaveNewPhoneNumber::class.java, saveNewPhoneNumber())
+      .addTransformer(SaveExistingPhoneNumber::class.java, saveExistingPhoneNumber())
       .build()
+
+  /**
+   * The dialog is never shown again once it's dismissed, until the phone number
+   * is updated again and an appointment is canceled again. In order to identify
+   * if the dialog can be shown, the timestamps of the cancelled appointment and
+   * the phone number are compared.
+   *
+   * As a result, it's necessary to always bump the phone number's update
+   * timestamp even if it wasn't unchanged.
+   */
+  private fun saveExistingPhoneNumber(): ObservableTransformer<SaveExistingPhoneNumber, UpdatePhoneNumberEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .switchMap { (patientUuid) ->
+            patientRepository
+                .phoneNumber(patientUuid)
+                .extractIfPresent()
+                .switchMap { phoneNumber ->
+                  patientRepository.updatePhoneNumberForPatient(
+                      patientUuid = patientUuid,
+                      phoneNumber = phoneNumber
+                  ).andThen(Observable.just(ExistingPhoneNumberSaved))
+                }
+          }
+    }
+  }
 
   private fun saveNewPhoneNumber(): ObservableTransformer<SaveNewPhoneNumber, UpdatePhoneNumberEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
           .switchMap { (patientUuid, newPhoneNumber) ->
-            patientRepository.phoneNumber(patientUuid)
+            patientRepository
+                .phoneNumber(patientUuid)
                 .extractIfPresent()
                 .switchMap { existingPhone ->
                   patientRepository.updatePhoneNumberForPatient(

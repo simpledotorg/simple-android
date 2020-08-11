@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.spotify.mobius.Init
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -24,22 +23,20 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class ConfirmRemoveBloodPressureDialogControllerTest {
+class ConfirmRemoveBloodPressureDialogLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val patientRepository = mock<PatientRepository>()
-  private val ui = mock<ConfirmRemoveBloodPressureDialogUi>()
+  private val uiActions = mock<ConfirmRemoveBloodPressureDialogUiActions>()
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<ConfirmRemoveBloodPressureModel, ConfirmRemoveBloodPressureEvent, ConfirmRemoveBloodPressureEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -64,29 +61,21 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
     // then
     markBloodPressureDeletedCompletable.test().assertComplete()
     updatePatientRecordedAtCompletable.test().assertComplete()
-    verify(ui).closeDialog()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).closeDialog()
+    verifyNoMoreInteractions(uiActions)
   }
 
   private fun setupController(bloodPressureMeasurementUuid: UUID) {
-    val controller = ConfirmRemoveBloodPressureDialogController(
+    val effectHandler = ConfirmRemoveBloodPressureEffectHandler(
         bloodPressureRepository = bloodPressureRepository,
         patientRepository = patientRepository,
-        bloodPressureMeasurementUuid = bloodPressureMeasurementUuid
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
-    val effectHandler = ConfirmRemoveBloodPressureEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = ConfirmRemoveBloodPressureModel.create(),
+        defaultModel = ConfirmRemoveBloodPressureModel.create(bloodPressureMeasurementUuid),
         init = Init { first(it) },
         update = ConfirmRemoveBloodPressureUpdate(),
         effectHandler = effectHandler.build(),

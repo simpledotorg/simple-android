@@ -14,9 +14,9 @@ import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.textfield.TextInputLayout
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxRadioGroup
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.widget.checkedChanges
+import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.patient_edit_bp_passport_view.view.*
@@ -41,7 +41,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenKey
 import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Features
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AgeField
@@ -246,38 +245,38 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   private fun saveClicks(): Observable<EditPatientEvent> {
-    return RxView.clicks(saveButtonFrame.button).map { SaveClicked }
+    return saveButtonFrame.button.clicks().map { SaveClicked }
   }
 
   private fun nameTextChanges(): Observable<EditPatientEvent> {
-    return RxTextView.textChanges(fullNameEditText).map { NameChanged(it.toString()) }
+    return fullNameEditText.textChanges().map { NameChanged(it.toString()) }
   }
 
   private fun phoneNumberTextChanges(): Observable<EditPatientEvent> {
-    return RxTextView.textChanges(phoneNumberEditText).map { PhoneNumberChanged(it.toString()) }
+    return phoneNumberEditText.textChanges().map { PhoneNumberChanged(it.toString()) }
   }
 
   private fun districtTextChanges(): Observable<EditPatientEvent> {
-    return RxTextView.textChanges(districtEditText).map { DistrictChanged(it.toString()) }
+    return districtEditText.textChanges().map { DistrictChanged(it.toString()) }
   }
 
   private fun stateTextChanges(): Observable<EditPatientEvent> {
-    return RxTextView.textChanges(stateEditText).map { StateChanged(it.toString()) }
+    return stateEditText.textChanges().map { StateChanged(it.toString()) }
   }
 
   private fun bangladeshNationalIdChanges(): Observable<EditPatientEvent> {
-    return RxTextView.textChanges(alternativeIdInputEditText).map { AlternativeIdChanged(it.toString()) }
+    return alternativeIdInputEditText.textChanges().map { AlternativeIdChanged(it.toString()) }
   }
 
   private fun colonyTextChanges(): Observable<EditPatientEvent> {
-    return RxTextView.textChanges(colonyOrVillageEditText).map { ColonyOrVillageChanged(it.toString()) }
+    return colonyOrVillageEditText.textChanges().map { ColonyOrVillageChanged(it.toString()) }
   }
 
   private fun backClicks(): Observable<EditPatientEvent> {
-    val hardwareBackKeyClicks = Observable.create<Any> { emitter ->
+    val hardwareBackKeyClicks = Observable.create<BackClicked> { emitter ->
       val interceptor = object : BackPressInterceptor {
         override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
-          emitter.onNext(Any())
+          emitter.onNext(BackClicked)
           callback.markBackPressIntercepted()
         }
       }
@@ -285,9 +284,13 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
       screenRouter.registerBackPressInterceptor(interceptor)
     }
 
-    return RxView.clicks(backButton)
-        .mergeWith(hardwareBackKeyClicks)
+    val backButtonClicks = backButton
+        .clicks()
         .map { BackClicked }
+
+    return backButtonClicks
+        .mergeWith(hardwareBackKeyClicks)
+        .cast()
   }
 
   private fun genderChanges(): Observable<EditPatientEvent> {
@@ -296,7 +299,8 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         R.id.maleRadioButton to Male,
         R.id.transgenderRadioButton to Transgender)
 
-    return RxRadioGroup.checkedChanges(genderRadioGroup)
+    return genderRadioGroup
+        .checkedChanges()
         .filter { it != -1 }
         .map { checkedId ->
           val gender = radioIdToGenders.getValue(checkedId)

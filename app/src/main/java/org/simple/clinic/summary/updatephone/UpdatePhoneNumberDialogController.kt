@@ -16,7 +16,6 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTo
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.ValidNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.unwrapJust
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 
 typealias Ui = UpdatePhoneNumberDialogUi
@@ -38,17 +37,8 @@ class UpdatePhoneNumberDialogController @AssistedInject constructor(
         .replay()
 
     return Observable.merge(
-        preFillExistingNumber(replayedEvents),
         saveUpdatedPhoneNumber(replayedEvents),
         saveExistingPhoneNumber(replayedEvents))
-  }
-
-  private fun preFillExistingNumber(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ScreenCreated>()
-        .flatMap { repository.phoneNumber(patientUuid) }
-        .unwrapJust()
-        .map { { ui: Ui -> ui.preFillPhoneNumber(it.number) } }
   }
 
   @Suppress("RedundantLambdaArrow")

@@ -6,15 +6,16 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.LockAtTime
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.Instant
-import javax.inject.Named
 
 class AppLockEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
-    @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>,
+    @TypedPreference(LockAtTime) private val lockAfterTimestamp: Preference<Instant>,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: AppLockUiActions
 ) {

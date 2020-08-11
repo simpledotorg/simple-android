@@ -18,5 +18,6 @@ class UpdatePhoneNumberEffectHandler @AssistedInject constructor(
 
   fun build(): ObservableTransformer<UpdatePhoneNumberEffect, UpdatePhoneNumberEvent> = RxMobius
       .subtypeEffectHandler<UpdatePhoneNumberEffect, UpdatePhoneNumberEvent>()
+      .addConsumer(PrefillPhoneNumber::class.java, { uiActions.preFillPhoneNumber(it.phoneNumber) }, schedulersProvider.ui())
       .build()
 }

@@ -20,7 +20,7 @@ import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 
-typealias Ui = UpdatePhoneNumberDialog
+typealias Ui = UpdatePhoneNumberDialogUi
 typealias UiChange = (Ui) -> Unit
 
 class UpdatePhoneNumberDialogController @AssistedInject constructor(
@@ -80,7 +80,7 @@ class UpdatePhoneNumberDialogController @AssistedInject constructor(
                     phoneNumber = existingPhone.copy(number = newNumber)
                 )
               }
-              .andThen(Observable.just({ ui: Ui -> ui.dismiss() }))
+              .andThen(Observable.just { ui: Ui -> ui.closeDialog() })
         }
 
     return saveNumber.mergeWith(showValidationError)
@@ -104,7 +104,7 @@ class UpdatePhoneNumberDialogController @AssistedInject constructor(
         .flatMap { phoneNumber ->
           repository
               .updatePhoneNumberForPatient(phoneNumber.patientUuid, phoneNumber)
-              .andThen(Observable.just({ ui: Ui -> ui.dismiss() }))
+              .andThen(Observable.just { ui: Ui -> ui.closeDialog() })
         }
   }
 }

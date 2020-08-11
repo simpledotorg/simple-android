@@ -34,7 +34,7 @@ class UpdatePhoneNumberDialogControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val dialog = mock<UpdatePhoneNumberDialog>()
+  private val ui = mock<UpdatePhoneNumberDialogUi>()
   private val repository = mock<PatientRepository>()
   private val validator = mock<PhoneNumberValidator>()
 
@@ -60,8 +60,8 @@ class UpdatePhoneNumberDialogControllerTest {
     setupController(patientUuid = patientUuid)
 
     // then
-    verify(dialog).preFillPhoneNumber(phoneNumber.number)
-    verifyNoMoreInteractions(dialog)
+    verify(ui).preFillPhoneNumber(phoneNumber.number)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -87,9 +87,9 @@ class UpdatePhoneNumberDialogControllerTest {
     verify(repository).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
     verifyNoMoreInteractions(repository)
 
-    verify(dialog).preFillPhoneNumber(existingPhoneNumber.number)
-    verify(dialog).dismiss()
-    verifyNoMoreInteractions(dialog)
+    verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(ui).closeDialog()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -113,9 +113,9 @@ class UpdatePhoneNumberDialogControllerTest {
     // then
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
 
-    verify(dialog).preFillPhoneNumber(existingPhoneNumber.number)
-    verify(dialog).showPhoneNumberTooShortError()
-    verifyNoMoreInteractions(dialog)
+    verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(ui).showPhoneNumberTooShortError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -139,9 +139,9 @@ class UpdatePhoneNumberDialogControllerTest {
     // then
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
 
-    verify(dialog).preFillPhoneNumber(existingPhoneNumber.number)
-    verify(dialog).showPhoneNumberTooShortError()
-    verifyNoMoreInteractions(dialog)
+    verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(ui).showPhoneNumberTooShortError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -165,9 +165,9 @@ class UpdatePhoneNumberDialogControllerTest {
     // then
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.copy(number = newNumber))
 
-    verify(dialog).preFillPhoneNumber(existingPhoneNumber.number)
-    verify(dialog).showPhoneNumberTooLongError()
-    verifyNoMoreInteractions(dialog)
+    verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(ui).showPhoneNumberTooLongError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -196,7 +196,7 @@ class UpdatePhoneNumberDialogControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(dialog) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
   }

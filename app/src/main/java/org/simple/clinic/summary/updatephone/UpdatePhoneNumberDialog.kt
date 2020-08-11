@@ -26,7 +26,7 @@ import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
+class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDialogUi {
 
   companion object {
     private const val FRAGMENT_TAG = "UpdatePhoneNumberDialog"
@@ -125,15 +125,19 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
           .clicks(saveButton)
           .map { UpdatePhoneNumberSaveClicked(number = numberEditText.text.toString()) }
 
-  fun showPhoneNumberTooShortError() {
+  override fun showPhoneNumberTooShortError() {
     phoneInputLayout.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_less)
   }
 
-  fun showPhoneNumberTooLongError() {
+  override fun showPhoneNumberTooLongError() {
     phoneInputLayout.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_more)
   }
 
-  fun preFillPhoneNumber(number: String) {
+  override fun preFillPhoneNumber(number: String) {
     numberEditText.setTextAndCursor(number)
+  }
+
+  override fun closeDialog() {
+    dismiss()
   }
 }

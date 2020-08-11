@@ -2,11 +2,16 @@ package org.simple.clinic.bp.entry.confirmremovebloodpressure
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import java.util.UUID
 
 @Parcelize
-class ConfirmRemoveBloodPressureModel : Parcelable {
+data class ConfirmRemoveBloodPressureModel(
+    val bloodPressureMeasurementUuid: UUID
+) : Parcelable {
 
   companion object {
-    fun create() = ConfirmRemoveBloodPressureModel()
+    fun create(bloodPressureMeasurementUuid: UUID) = ConfirmRemoveBloodPressureModel(
+        bloodPressureMeasurementUuid = bloodPressureMeasurementUuid
+    )
   }
 }

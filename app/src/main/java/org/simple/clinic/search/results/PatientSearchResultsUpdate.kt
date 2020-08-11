@@ -13,14 +13,7 @@ class PatientSearchResultsUpdate : Update<PatientSearchResultsModel, PatientSear
       event: PatientSearchResultsEvent
   ): Next<PatientSearchResultsModel, PatientSearchResultsEffect> {
     return when (event) {
-      is PatientSearchResultClicked -> {
-        val effect = if (!model.hasAdditionalIdentifier)
-          OpenPatientSummary(event.patientUuid)
-        else
-          OpenLinkIdWithPatientScreen(event.patientUuid, model.additionalIdentifier!!)
-
-        dispatch(effect)
-      }
+      is PatientSearchResultClicked -> searchResultClicked(model, event)
       NewOngoingPatientEntrySaved -> dispatch(OpenPatientEntryScreen)
       is PatientSearchResultRegisterNewPatient -> {
         val ongoingNewPatientEntry = createOngoingEntryFromSearchCriteria(model.searchCriteria)
@@ -28,6 +21,18 @@ class PatientSearchResultsUpdate : Update<PatientSearchResultsModel, PatientSear
         dispatch(SaveNewOngoingPatientEntry(ongoingNewPatientEntry))
       }
     }
+  }
+
+  private fun searchResultClicked(
+      model: PatientSearchResultsModel,
+      event: PatientSearchResultClicked
+  ): Next<PatientSearchResultsModel, PatientSearchResultsEffect> {
+    val effect = if (!model.hasAdditionalIdentifier)
+      OpenPatientSummary(event.patientUuid)
+    else
+      OpenLinkIdWithPatientScreen(event.patientUuid, model.additionalIdentifier!!)
+
+    return dispatch(effect)
   }
 
   private fun createOngoingEntryFromSearchCriteria(

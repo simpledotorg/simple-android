@@ -29,7 +29,7 @@ import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDialogUi {
+class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDialogUi, UpdatePhoneNumberUiActions {
 
   companion object {
     private const val FRAGMENT_TAG = "UpdatePhoneNumberDialog"

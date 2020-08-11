@@ -37,6 +37,7 @@ class UpdatePhoneNumberDialogControllerTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<UpdatePhoneNumberDialogUi>()
+  private val uiActions = mock<UpdatePhoneNumberUiActions>()
   private val repository = mock<PatientRepository>()
   private val validator = LengthBasedNumberValidator(
       minimumRequiredLengthMobile = 6,
@@ -67,8 +68,8 @@ class UpdatePhoneNumberDialogControllerTest {
     setupController(patientUuid = patientUuid)
 
     // then
-    verify(ui).preFillPhoneNumber(phoneNumber.number)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).preFillPhoneNumber(phoneNumber.number)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -93,9 +94,9 @@ class UpdatePhoneNumberDialogControllerTest {
     verify(repository).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))
     verifyNoMoreInteractions(repository)
 
-    verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
-    verify(ui).closeDialog()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(uiActions).closeDialog()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -118,9 +119,9 @@ class UpdatePhoneNumberDialogControllerTest {
     // then
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))
 
-    verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
-    verify(ui).showBlankPhoneNumberError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(uiActions).showBlankPhoneNumberError()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -143,9 +144,9 @@ class UpdatePhoneNumberDialogControllerTest {
     // then
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))
 
-    verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
-    verify(ui).showPhoneNumberTooShortError(6)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(uiActions).showPhoneNumberTooShortError(6)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -168,9 +169,9 @@ class UpdatePhoneNumberDialogControllerTest {
     // then
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))
 
-    verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
-    verify(ui).showPhoneNumberTooLongError(12)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(uiActions).showPhoneNumberTooLongError(12)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -195,7 +196,7 @@ class UpdatePhoneNumberDialogControllerTest {
         patientRepository = repository,
         validator = validator,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
 
     val uiRenderer = UpdatePhoneNumberUiRenderer(ui)

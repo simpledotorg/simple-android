@@ -9,3 +9,5 @@ data class RenderIdentifierText(val identifier: Identifier) : LinkIdWithPatientE
 object CloseSheetWithOutIdLinked : LinkIdWithPatientEffect()
 
 object CloseSheetWithLinkedId : LinkIdWithPatientEffect()
+
+object LoadCurrentUser : LinkIdWithPatientEffect()

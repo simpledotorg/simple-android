@@ -128,6 +128,7 @@ class LinkIdWithPatientViewControllerTest {
         .subscribe { uiChange -> uiChange(ui) }
 
     val effectHandler = LinkIdWithPatientEffectHandler(
+        userSession = userSession,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

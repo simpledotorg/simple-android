@@ -53,15 +53,18 @@ class LinkIdWithPatientViewControllerTest {
 
   @Test
   fun `when the view is created, the identifier must be displayed`() {
+    // when
     setupController()
     uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
 
+    // then
     verify(view).renderIdentifierText(identifier)
     verifyNoMoreInteractions(view)
   }
 
   @Test
   fun `when add is clicked, id should be added to patient and sheet should close`() {
+    // given
     val businessId = TestData.businessId(uuid = identifierUuid, patientUuid = patientUuid, identifier = identifier)
 
     whenever(patientRepository.addIdentifierToPatient(
@@ -71,10 +74,12 @@ class LinkIdWithPatientViewControllerTest {
         assigningUser = user
     )).thenReturn(Single.just(businessId))
 
+    // when
     setupController()
     uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
     uiEvents.onNext(LinkIdWithPatientAddClicked)
 
+    // then
     verify(patientRepository).addIdentifierToPatient(
         uuid = identifierUuid,
         patientUuid = patientUuid,
@@ -89,10 +94,12 @@ class LinkIdWithPatientViewControllerTest {
 
   @Test
   fun `when cancel is clicked, the sheet should close without saving id`() {
+    // when
     setupController()
     uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
     uiEvents.onNext(LinkIdWithPatientCancelClicked)
 
+    // then
     verify(view).renderIdentifierText(identifier)
     verify(view).closeSheetWithoutIdLinked()
     verifyNoMoreInteractions(view)

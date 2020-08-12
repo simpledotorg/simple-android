@@ -7,8 +7,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -42,22 +43,16 @@ class LinkIdWithPatientViewControllerTest {
       uuid = UUID.fromString("5039c37f-3752-4dcb-ad69-0b6e38e02107")
   )
 
-  private val controller = LinkIdWithPatientViewController(
-      patientRepository = patientRepository,
-      userSession = userSession,
-      uuidGenerator = FakeUuidGenerator.fixed(identifierUuid)
-  )
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(view) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
   fun `when the view is created, the identifier must be displayed`() {
+    setupController()
     uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
 
     verify(view).renderIdentifierText(identifier)
@@ -74,6 +69,7 @@ class LinkIdWithPatientViewControllerTest {
         assigningUser = user
     )).thenReturn(Single.just(businessId))
 
+    setupController()
     uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
     uiEvents.onNext(LinkIdWithPatientAddClicked)
 
@@ -88,10 +84,25 @@ class LinkIdWithPatientViewControllerTest {
 
   @Test
   fun `when cancel is clicked, the sheet should close without saving id`() {
+    setupController()
     uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
     uiEvents.onNext(LinkIdWithPatientCancelClicked)
 
     verify(view).closeSheetWithoutIdLinked()
     verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
+  }
+
+  private fun setupController() {
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+
+    val controller = LinkIdWithPatientViewController(
+        patientRepository = patientRepository,
+        userSession = userSession,
+        uuidGenerator = FakeUuidGenerator.fixed(identifierUuid)
+    )
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(view) }
   }
 }

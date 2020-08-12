@@ -6,8 +6,9 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -34,20 +35,17 @@ class AppLockScreenControllerTest {
   )
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  lateinit var controller: AppLockScreenController
 
-  @Before
-  fun setUp() {
-    controller = AppLockScreenController(userSession, facilityRepository, lastUnlockTimestamp)
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
+  private lateinit var controllerSubscription: Disposable
 
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
   fun `when PIN is authenticated, the last-unlock-timestamp should be updated and then the app should be unlocked`() {
+    setupController()
     uiEvents.onNext(AppLockPinAuthenticated())
 
     val inOrder = inOrder(lastUnlockTimestamp, screen)
@@ -59,7 +57,9 @@ class AppLockScreenControllerTest {
   fun `On start, the logged in user's full name should be shown`() {
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.never())
 
+    setupController()
     uiEvents.onNext(AppLockScreenCreated())
+
     verify(screen).setUserFullName(loggedInUser.fullName)
   }
 
@@ -69,14 +69,28 @@ class AppLockScreenControllerTest {
     val facility2 = TestData.facility(name = "facility2")
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility1, facility2))
 
+    setupController()
     uiEvents.onNext(AppLockScreenCreated())
+
     verify(screen).setFacilityName(facility1.name)
     verify(screen).setFacilityName(facility2.name)
   }
 
   @Test
   fun `when forgot pin is clicked then the confirm forgot pin alert must be shown`() {
+    setupController()
     uiEvents.onNext(AppLockForgotPinClicked())
+
     verify(screen).showConfirmResetPinDialog()
+  }
+
+  private fun setupController() {
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
+
+    val controller = AppLockScreenController(userSession, facilityRepository, lastUnlockTimestamp)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

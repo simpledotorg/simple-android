@@ -121,13 +121,15 @@ class LinkIdWithPatientViewLogicTest {
         uiActions = uiActions
     )
 
+    val uiRenderer = LinkIdWithPatientUiRenderer(ui)
+
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = LinkIdWithPatientModel.create(),
         init = Init { first(it) },
         update = LinkIdWithPatientUpdate(),
         effectHandler = effectHandler.build(),
-        modelUpdateListener = { /* no-op */ }
+        modelUpdateListener = uiRenderer::render
     )
 
     testFixture.start()

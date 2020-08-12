@@ -85,11 +85,14 @@ class LinkIdWithPatientView(
   }
 
   private val delegate by unsafeLazy {
+    val uiRenderer = LinkIdWithPatientUiRenderer(this)
+
     MobiusDelegate.forView(
         events = events.ofType(),
         defaultModel = LinkIdWithPatientModel.create(),
         update = LinkIdWithPatientUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build()
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
     )
   }
 

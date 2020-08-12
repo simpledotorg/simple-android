@@ -9,16 +9,15 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.activity.ActivityLifecycle
-import org.simple.clinic.activity.ActivityLifecycle.Destroyed
-import org.simple.clinic.activity.ActivityLifecycle.Started
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.deeplink.DeepLinkResult
 import org.simple.clinic.deeplink.OpenPatientSummary
 import org.simple.clinic.deeplink.ShowNoPatientUuid
@@ -31,6 +30,7 @@ import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockScreenKey
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.ScreenResultBus
@@ -78,7 +78,7 @@ fun initialScreenKey(
   }
 }
 
-class TheActivity : AppCompatActivity() {
+class TheActivity : AppCompatActivity(), TheActivityUi {
 
   companion object {
     private const val EXTRA_DEEP_LINK_RESULT = "deep_link_result"
@@ -115,9 +115,6 @@ class TheActivity : AppCompatActivity() {
   lateinit var controller: TheActivityController
 
   @Inject
-  lateinit var lifecycle: Observable<ActivityLifecycle>
-
-  @Inject
   lateinit var locale: Locale
 
   @Inject
@@ -135,6 +132,11 @@ class TheActivity : AppCompatActivity() {
   @Inject
   lateinit var userSession: UserSession
 
+  @Inject
+  lateinit var effectHandlerFactory: TheActivityEffectHandler.InjectionFactory
+
+  private val lifecycleEvents: Subject<LifecycleEvent> = PublishSubject.create()
+
   private val disposables = CompositeDisposable()
 
   private val screenRouter: ScreenRouter by unsafeLazy {
@@ -142,6 +144,30 @@ class TheActivity : AppCompatActivity() {
   }
 
   private val screenResults: ScreenResultBus = ScreenResultBus()
+
+  private val events by unsafeLazy {
+    lifecycleEvents
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = TheActivityUiRenderer(this)
+
+    MobiusDelegate.forActivity(
+        events = events.ofType(),
+        defaultModel = TheActivityModel.create(),
+        update = TheActivityUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = TheActivityInit(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    delegate.onRestoreInstanceState(savedInstanceState)
+  }
 
   @SuppressLint("CheckResult")
   override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -158,11 +184,11 @@ class TheActivity : AppCompatActivity() {
       )
     }
 
-    lifecycle
-        .startWith(Started(javaClass.simpleName))
+    events
+        .startWith(LifecycleEvent.ActivityStarted)
         .compose(controller)
         .observeOn(mainThread())
-        .takeUntil(lifecycle.ofType<Destroyed>())
+        .takeUntil(lifecycleEvents.ofType<LifecycleEvent.ActivityDestroyed>())
         .subscribe { uiChange -> uiChange(this) }
 
     if (intent.hasExtra(EXTRA_DEEP_LINK_RESULT)) {
@@ -184,6 +210,18 @@ class TheActivity : AppCompatActivity() {
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)
+  }
+
+  override fun onStart() {
+    super.onStart()
+    delegate.start()
+    lifecycleEvents.onNext(LifecycleEvent.ActivityStarted)
+  }
+
+  override fun onStop() {
+    lifecycleEvents.onNext(LifecycleEvent.ActivityStopped)
+    delegate.stop()
+    super.onStop()
   }
 
   private fun wrapContextWithRouter(baseContext: Context): Context {
@@ -239,29 +277,31 @@ class TheActivity : AppCompatActivity() {
     if (features.isEnabled(LogSavedStateSizes)) {
       screenRouter.logSizesOfSavedStates()
     }
+    delegate.onSaveInstanceState(outState)
     super.onSaveInstanceState(outState)
   }
 
   override fun onDestroy() {
     super.onDestroy()
+    lifecycleEvents.onNext(LifecycleEvent.ActivityDestroyed)
     disposables.clear()
   }
 
-  fun showAppLockScreen() {
+  override fun showAppLockScreen() {
     screenRouter.push(AppLockScreenKey())
   }
 
   // This is here because we need to show the same alert in multiple
   // screens when the user gets verified in the background.
-  fun showUserLoggedOutOnOtherDeviceAlert() {
+  override fun showUserLoggedOutOnOtherDeviceAlert() {
     LoggedOutOnOtherDeviceDialog.show(supportFragmentManager)
   }
 
-  fun redirectToLogin() {
+  override fun redirectToLogin() {
     screenRouter.clearHistoryAndPush(RegistrationPhoneScreenKey(), RouterDirection.REPLACE)
   }
 
-  fun showAccessDeniedScreen(fullName: String) {
+  override fun showAccessDeniedScreen(fullName: String) {
     screenRouter.clearHistoryAndPush(AccessDeniedScreenKey(fullName), RouterDirection.REPLACE)
   }
 

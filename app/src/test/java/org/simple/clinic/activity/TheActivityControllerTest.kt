@@ -12,16 +12,24 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.activity.ActivityLifecycle.Started
-import org.simple.clinic.activity.ActivityLifecycle.Stopped
 import org.simple.clinic.login.applock.AppLockConfig
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.main.LifecycleEvent.ActivityStarted
+import org.simple.clinic.main.LifecycleEvent.ActivityStopped
 import org.simple.clinic.main.TheActivityController
+import org.simple.clinic.main.TheActivityEffect
+import org.simple.clinic.main.TheActivityEffectHandler
+import org.simple.clinic.main.TheActivityEvent
+import org.simple.clinic.main.TheActivityInit
+import org.simple.clinic.main.TheActivityModel
+import org.simple.clinic.main.TheActivityUi
+import org.simple.clinic.main.TheActivityUiRenderer
+import org.simple.clinic.main.TheActivityUpdate
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -34,8 +42,10 @@ import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.UUID
@@ -48,7 +58,7 @@ class TheActivityControllerTest {
 
   private val lockInMinutes = 15L
 
-  private val activity = mock<TheActivity>()
+  private val ui = mock<TheActivityUi>()
   private val userSession = mock<UserSession>()
   private val patientRepository = mock<PatientRepository>()
   private val lockAfterTimestamp = mock<Preference<Instant>>()
@@ -58,10 +68,12 @@ class TheActivityControllerTest {
   private val clock = TestUtcClock(currentTimestamp)
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<TheActivityModel, TheActivityEvent, TheActivityEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -73,8 +85,8 @@ class TheActivityControllerTest {
     setupController()
 
     // then
-    verify(activity, never()).showAppLockScreen()
-    verifyNoMoreInteractions(activity)
+    verify(ui, never()).showAppLockScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -94,8 +106,8 @@ class TheActivityControllerTest {
     setupController(userStream = userStream)
 
     // then
-    verify(activity).showAppLockScreen()
-    verifyNoMoreInteractions(activity)
+    verify(ui).showAppLockScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -115,8 +127,8 @@ class TheActivityControllerTest {
     setupController(userStream = userStream)
 
     // then
-    verify(activity).showAppLockScreen()
-    verifyNoMoreInteractions(activity)
+    verify(ui).showAppLockScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -136,8 +148,8 @@ class TheActivityControllerTest {
     setupController(userStream = userStream)
 
     // then
-    verify(activity).showAppLockScreen()
-    verifyNoMoreInteractions(activity)
+    verify(ui).showAppLockScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -158,8 +170,8 @@ class TheActivityControllerTest {
     setupController()
 
     // then
-    verify(activity, never()).showAppLockScreen()
-    verifyNoMoreInteractions(activity)
+    verify(ui, never()).showAppLockScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -180,8 +192,8 @@ class TheActivityControllerTest {
     setupController()
 
     // then
-    verify(activity, never()).showAppLockScreen()
-    verifyNoMoreInteractions(activity)
+    verify(ui, never()).showAppLockScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -193,11 +205,11 @@ class TheActivityControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(Stopped(null))
+    uiEvents.onNext(ActivityStopped)
 
     // then
     verify(lockAfterTimestamp).set(currentTimestamp.plus(lockInMinutes, ChronoUnit.MINUTES))
-    verifyNoMoreInteractions(activity)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -209,11 +221,11 @@ class TheActivityControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(Stopped(null))
+    uiEvents.onNext(ActivityStopped)
 
     // then
     verify(lockAfterTimestamp, never()).set(any())
-    verifyNoMoreInteractions(activity)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -234,7 +246,7 @@ class TheActivityControllerTest {
 
     // then
     verify(lockAfterTimestamp).delete()
-    verifyNoMoreInteractions(activity)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -250,7 +262,7 @@ class TheActivityControllerTest {
 
     // then
     verify(lockAfterTimestamp, never()).delete()
-    verifyNoMoreInteractions(activity)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -273,8 +285,8 @@ class TheActivityControllerTest {
     setupController(userStream = userStream)
 
     // then
-    verify(activity).showUserLoggedOutOnOtherDeviceAlert()
-    verifyNoMoreInteractions(activity)
+    verify(ui).showUserLoggedOutOnOtherDeviceAlert()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -297,8 +309,8 @@ class TheActivityControllerTest {
     setupController()
 
     // then
-    verify(activity, never()).showUserLoggedOutOnOtherDeviceAlert()
-    verifyNoMoreInteractions(activity)
+    verify(ui, never()).showUserLoggedOutOnOtherDeviceAlert()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -324,8 +336,8 @@ class TheActivityControllerTest {
 
     //then
     verify(patientRepository).clearPatientData()
-    verify(activity).showAccessDeniedScreen(fullName)
-    verifyNoMoreInteractions(activity)
+    verify(ui).showAccessDeniedScreen(fullName)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -346,8 +358,8 @@ class TheActivityControllerTest {
     setupController()
 
     //then
-    verify(activity, never()).showAccessDeniedScreen(fullName)
-    verifyNoMoreInteractions(activity)
+    verify(ui, never()).showAccessDeniedScreen(fullName)
+    verifyNoMoreInteractions(ui)
     verify(patientRepository, never()).clearPatientData()
   }
 
@@ -361,35 +373,35 @@ class TheActivityControllerTest {
     userUnauthorizedSubject.onNext(false)
 
     // then
-    verify(activity, never()).redirectToLogin()
+    verify(ui, never()).redirectToLogin()
 
     // when
     userUnauthorizedSubject.onNext(true)
 
     // then
-    verify(activity).redirectToLogin()
+    verify(ui).redirectToLogin()
 
-    clearInvocations(activity)
+    clearInvocations(ui)
 
     // when
     userUnauthorizedSubject.onNext(true)
     
     // then
-    verifyZeroInteractions(activity)
+    verifyZeroInteractions(ui)
 
     // when
     userUnauthorizedSubject.onNext(false)
 
     // then
-    verifyZeroInteractions(activity)
+    verifyZeroInteractions(ui)
 
     // when
     userUnauthorizedSubject.onNext(true)
 
     // then
-    verify(activity).redirectToLogin()
+    verify(ui).redirectToLogin()
 
-    verifyNoMoreInteractions(activity)
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController(
@@ -401,6 +413,22 @@ class TheActivityControllerTest {
     whenever(userSession.loggedInUser()).thenReturn(userStream)
     whenever(userSession.isUserDisapproved()).thenReturn(userDisapprovedStream)
 
+    val effectHandler = TheActivityEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+    val uiRenderer = TheActivityUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = TheActivityModel.create(),
+        update = TheActivityUpdate(),
+        effectHandler = effectHandler.build(),
+        init = TheActivityInit(),
+        modelUpdateListener = uiRenderer::render
+    )
+    testFixture.start()
+
     val controller = TheActivityController(
         userSession = userSession,
         appLockConfig = AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes)),
@@ -411,8 +439,8 @@ class TheActivityControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(activity) }
+        .subscribe { uiChange -> uiChange(ui) }
 
-    uiEvents.onNext(Started(null))
+    uiEvents.onNext(ActivityStarted)
   }
 }

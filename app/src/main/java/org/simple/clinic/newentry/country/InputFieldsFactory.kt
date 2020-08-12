@@ -17,13 +17,26 @@ import org.simple.clinic.newentry.form.ZoneField
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
+import org.simple.clinic.util.UserClock
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
+import javax.inject.Named
 
 class InputFieldsFactory(
     private val dateTimeFormatter: DateTimeFormatter,
     private val today: LocalDate
 ) {
+
+  @Inject
+  constructor(
+      @Named("date_for_user_input") dateTimeFormatter: DateTimeFormatter,
+      userClock: UserClock
+  ) : this(
+      dateTimeFormatter = dateTimeFormatter,
+      today = LocalDate.now(userClock)
+  )
+
   fun fieldsFor(country: Country): List<InputField<*>> {
     return when (country.isoCountryCode) {
       Country.INDIA -> formFieldsForIndia()

@@ -7,7 +7,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import com.jakewharton.rxbinding3.view.clicks
-import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -15,7 +14,6 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.link_id_with_patient_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
@@ -23,7 +21,6 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.animateBottomSheetIn
 import org.simple.clinic.widgets.animateBottomSheetOut
@@ -71,9 +68,6 @@ class LinkIdWithPatientView(
 ) : FrameLayout(context, attributeSet), LinkIdWithPatientViewUi, LinkIdWithPatientUiActions {
 
   @Inject
-  lateinit var controller: LinkIdWithPatientViewController
-
-  @Inject
   lateinit var effectHandlerFactory: LinkIdWithPatientEffectHandler.Factory
 
   val downstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
@@ -88,7 +82,6 @@ class LinkIdWithPatientView(
             downstreamUiEvents
         )
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val delegate by unsafeLazy {
@@ -131,13 +124,6 @@ class LinkIdWithPatientView(
     backgroundView.setOnClickListener {
       // Intentionally done to swallow click events.
     }
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = detaches().map { ScreenDestroyed() }
-    )
   }
 
   private fun viewShows(): Observable<UiEvent> {

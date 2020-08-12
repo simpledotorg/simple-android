@@ -19,6 +19,9 @@ data class LinkIdWithPatientModel(
     )
   }
 
+  val hasIdentifier: Boolean
+    get() = identifier != null
+
   fun linkIdWithPatientViewShown(patientUuid: UUID, identifier: Identifier): LinkIdWithPatientModel {
     return copy(patientUuid = patientUuid, identifier = identifier)
   }

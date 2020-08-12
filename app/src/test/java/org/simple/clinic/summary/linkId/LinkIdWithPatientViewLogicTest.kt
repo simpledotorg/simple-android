@@ -61,7 +61,7 @@ class LinkIdWithPatientViewLogicTest {
     uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
 
     // then
-    verify(uiActions).renderIdentifierText(identifier)
+    verify(ui).renderIdentifierText(identifier)
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -90,7 +90,7 @@ class LinkIdWithPatientViewLogicTest {
         assigningUser = user
     )
 
-    verify(uiActions).renderIdentifierText(identifier)
+    verify(ui).renderIdentifierText(identifier)
     verify(uiActions).closeSheetWithIdLinked()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -103,7 +103,7 @@ class LinkIdWithPatientViewLogicTest {
     uiEvents.onNext(LinkIdWithPatientCancelClicked)
 
     // then
-    verify(uiActions).renderIdentifierText(identifier)
+    verify(ui).renderIdentifierText(identifier)
     verify(uiActions).closeSheetWithoutIdLinked()
     verifyNoMoreInteractions(ui, uiActions)
 

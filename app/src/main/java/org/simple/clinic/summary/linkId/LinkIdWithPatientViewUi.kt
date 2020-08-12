@@ -1,3 +1,7 @@
 package org.simple.clinic.summary.linkId
 
-interface LinkIdWithPatientViewUi
+import org.simple.clinic.patient.businessid.Identifier
+
+interface LinkIdWithPatientViewUi {
+  fun renderIdentifierText(identifier: Identifier)
+}

@@ -24,11 +24,7 @@ class LinkIdWithPatientViewController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable
-        .merge(
-            addIdToPatient(replayedEvents),
-            cancelAddingIdToPatient(replayedEvents)
-        )
+    return addIdToPatient(replayedEvents)
   }
 
   private fun addIdToPatient(events: Observable<UiEvent>): Observable<UiChange> {
@@ -53,11 +49,5 @@ class LinkIdWithPatientViewController @Inject constructor(
               )
               .map { { ui: Ui -> ui.closeSheetWithIdLinked() } }
         }
-  }
-
-  private fun cancelAddingIdToPatient(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<LinkIdWithPatientCancelClicked>()
-        .map { { ui: Ui -> ui.closeSheetWithoutIdLinked() } }
   }
 }

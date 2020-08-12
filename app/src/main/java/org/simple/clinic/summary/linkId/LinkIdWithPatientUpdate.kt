@@ -9,6 +9,7 @@ class LinkIdWithPatientUpdate : Update<LinkIdWithPatientModel, LinkIdWithPatient
   override fun update(model: LinkIdWithPatientModel, event: LinkIdWithPatientEvent): Next<LinkIdWithPatientModel, LinkIdWithPatientEffect> {
     return when (event) {
       is LinkIdWithPatientViewShown -> dispatch(RenderIdentifierText(event.identifier))
+      LinkIdWithPatientCancelClicked -> dispatch(CloseSheetWithOutIdLinked)
     }
   }
 }

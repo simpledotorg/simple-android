@@ -9,3 +9,7 @@ sealed class LinkIdWithPatientEvent : UiEvent
 data class LinkIdWithPatientViewShown(val patientUuid: UUID, val identifier: Identifier) : LinkIdWithPatientEvent() {
   override val analyticsName: String = "LinkIdWithPatient:Sheet Created"
 }
+
+object LinkIdWithPatientCancelClicked : LinkIdWithPatientEvent() {
+  override val analyticsName = "LinkIdWithPatient:Cancel Clicked"
+}

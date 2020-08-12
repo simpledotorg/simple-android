@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -56,6 +57,7 @@ class LinkIdWithPatientViewControllerTest {
     uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
 
     verify(view).renderIdentifierText(identifier)
+    verifyNoMoreInteractions(view)
   }
 
   @Test
@@ -79,7 +81,10 @@ class LinkIdWithPatientViewControllerTest {
         identifier = identifier,
         assigningUser = user
     )
+
+    verify(view).renderIdentifierText(identifier)
     verify(view).closeSheetWithIdLinked()
+    verifyNoMoreInteractions(view)
   }
 
   @Test
@@ -88,7 +93,10 @@ class LinkIdWithPatientViewControllerTest {
     uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
     uiEvents.onNext(LinkIdWithPatientCancelClicked)
 
+    verify(view).renderIdentifierText(identifier)
     verify(view).closeSheetWithoutIdLinked()
+    verifyNoMoreInteractions(view)
+
     verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
   }
 

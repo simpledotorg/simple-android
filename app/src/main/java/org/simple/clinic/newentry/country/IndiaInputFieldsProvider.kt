@@ -1,6 +1,8 @@
 package org.simple.clinic.newentry.country
 
+import dagger.Lazy
 import org.simple.clinic.R
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.newentry.form.AgeField
 import org.simple.clinic.newentry.form.DateOfBirthField
 import org.simple.clinic.newentry.form.DistrictField
@@ -14,10 +16,13 @@ import org.simple.clinic.newentry.form.VillageOrColonyField
 import org.simple.clinic.patient.Gender
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.UUID
 
-class IndiaInputFieldsProvider (
+class IndiaInputFieldsProvider(
     private val dateTimeFormatter: DateTimeFormatter,
-    private val today: LocalDate
+    private val today: LocalDate,
+    private val currentFacility: Lazy<Facility>,
+    private val chennaiFacilityGroupIds: Set<UUID>
 ): InputFieldsProvider {
 
   override fun provide(): List<InputField<*>> {

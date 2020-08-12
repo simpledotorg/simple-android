@@ -1,8 +1,10 @@
 package org.simple.clinic.newentry.country.di
 
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.EthiopiaInputFieldsProvider
 import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
@@ -19,12 +21,13 @@ class InputFieldsFactoryModule {
   fun provideInputFieldsProvider(
       country: Country,
       @Named("date_for_user_input") dateTimeFormatter: DateTimeFormatter,
-      userClock: UserClock
+      userClock: UserClock,
+      currentFacility: Lazy<Facility>
   ): InputFieldsProvider {
     val date = LocalDate.now(userClock)
 
     return when (val isoCountryCode = country.isoCountryCode) {
-      Country.INDIA -> IndiaInputFieldsProvider(dateTimeFormatter, date)
+      Country.INDIA -> IndiaInputFieldsProvider(dateTimeFormatter, date, currentFacility, emptySet())
       Country.BANGLADESH -> BangladeshInputFieldsProvider(dateTimeFormatter, date)
       Country.ETHIOPIA -> EthiopiaInputFieldsProvider(dateTimeFormatter, date)
       else -> throw IllegalArgumentException("Unknown country code: $isoCountryCode")

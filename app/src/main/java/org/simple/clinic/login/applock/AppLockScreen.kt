@@ -1,6 +1,7 @@
 package org.simple.clinic.login.applock
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -16,6 +17,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
@@ -37,6 +39,9 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   @Inject
   lateinit var activity: AppCompatActivity
 
+  @Inject
+  lateinit var effectHandlerFactory: AppLockEffectHandler.Factory
+
   private val facilityTextView by bindView<TextView>(R.id.applock_facility_name)
   private val fullNameTextView by bindView<TextView>(R.id.applock_user_fullname)
   private val logoutButton by bindView<MaterialButton>(R.id.applock_logout)
@@ -52,6 +57,37 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         )
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = AppLockUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = AppLockModel.create(),
+        init = AppLockInit(),
+        update = AppLockUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   override fun onFinishInflate() {

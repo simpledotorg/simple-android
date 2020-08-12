@@ -6,7 +6,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.registration.phone.LengthBasedNumberValidator
@@ -40,13 +40,10 @@ class EditPatientUpdateTest {
         dateOfBirthFormat = dateOfBirthFormat
     )
 
-    val india = TestData.country(isoCountryCode = Country.INDIA)
-
-    val inputFieldsFactory = InputFieldsFactory(
+    val inputFieldsFactory = InputFieldsFactory(IndiaInputFieldsProvider(
         dateTimeFormatter = dateOfBirthFormat,
-        userClock = clock,
-        country = india
-    )
+        today = LocalDate.now(clock)
+    ))
 
     val patientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("f8193c3b-20d3-4fae-be3a-0029969db624"),

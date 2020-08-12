@@ -14,6 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.editpatient.EditPatientState.NOT_SAVING_PATIENT
+import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Patient
@@ -50,11 +51,10 @@ class EditPatientScreenCreatedTest {
   private val country = TestData.country()
   private val user = TestData.loggedInUser()
 
-  private val inputFieldsFactory = InputFieldsFactory(
+  private val inputFieldsFactory = InputFieldsFactory(IndiaInputFieldsProvider(
       dateTimeFormatter = dateOfBirthFormat,
-      userClock = userClock,
-      country = country
-  )
+      today = LocalDate.now(userClock)
+  ))
 
   @Test
   @Parameters(method = "params for prefilling fields on screen created")

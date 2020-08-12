@@ -14,6 +14,7 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.newentry.Field.PhoneNumber
+import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.PatientRepository
@@ -39,11 +40,10 @@ class PatientEntryEffectHandlerTest {
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val india = TestData.country(isoCountryCode = Country.INDIA)
 
-  private val inputFieldsFactory = InputFieldsFactory(
+  private val inputFieldsFactory = InputFieldsFactory(IndiaInputFieldsProvider(
       dateTimeFormatter = dateTimeFormatter,
-      userClock = clock,
-      country = india
-  )
+      today = LocalDate.now(clock)
+  ))
 
   private val ui = mock<PatientEntryUi>()
   private val effectHandler = PatientEntryEffectHandler(

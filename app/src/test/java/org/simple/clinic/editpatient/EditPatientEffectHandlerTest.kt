@@ -18,6 +18,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.PatientRepository
@@ -67,11 +68,10 @@ class EditPatientEffectHandlerTest {
   private val india = TestData.country(isoCountryCode = Country.INDIA)
   private val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
 
-  private val inputFieldsFactory = InputFieldsFactory(
+  private val inputFieldsFactory = InputFieldsFactory(IndiaInputFieldsProvider(
       dateTimeFormatter = dateOfBirthFormatter,
-      userClock = userClock,
-      country = india
-  )
+      today = LocalDate.now(userClock)
+  ))
 
   private val entry = EditablePatientEntry.from(
       patient = patient,

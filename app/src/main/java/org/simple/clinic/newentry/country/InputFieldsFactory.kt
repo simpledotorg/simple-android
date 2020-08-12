@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
-class InputFieldsFactory private constructor(
+class InputFieldsFactory constructor(
     private val inputFieldsProvider: InputFieldsProvider
 ) {
 

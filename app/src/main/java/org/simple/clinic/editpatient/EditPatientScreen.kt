@@ -111,9 +111,6 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   lateinit var effectHandlerFactory: EditPatientEffectHandler.Factory
 
   @Inject
-  lateinit var inputFields: InputFields
-
-  @Inject
   lateinit var features: Features
 
   private val screenKey by unsafeLazy {
@@ -161,8 +158,6 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
 
     context.injector<Injector>().inject(this)
-
-    setupUi(inputFields)
   }
 
   override fun setupUi(inputFields: InputFields) {

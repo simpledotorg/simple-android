@@ -6,7 +6,8 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -135,7 +136,7 @@ class LinkIdWithPatientView(
         ui = this,
         events = events,
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
   }
 
@@ -146,11 +147,11 @@ class LinkIdWithPatientView(
   }
 
   private fun addClicks(): Observable<UiEvent> {
-    return RxView.clicks(addButton).map { LinkIdWithPatientAddClicked }
+    return addButton.clicks().map { LinkIdWithPatientAddClicked }
   }
 
   private fun cancelClicks(): Observable<UiEvent> {
-    return RxView.clicks(cancelButton).map { LinkIdWithPatientCancelClicked }
+    return cancelButton.clicks().map { LinkIdWithPatientCancelClicked }
   }
 
   fun uiEvents(): Observable<UiEvent> = upstreamUiEvents.hide()

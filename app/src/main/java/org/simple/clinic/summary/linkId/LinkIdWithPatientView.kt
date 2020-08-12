@@ -2,24 +2,27 @@ package org.simple.clinic.summary.linkId
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
-import android.widget.Button
 import android.widget.FrameLayout
-import android.widget.TextView
-import com.google.android.material.button.MaterialButton
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.link_id_with_patient_view.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.animateBottomSheetIn
@@ -65,19 +68,55 @@ import javax.inject.Inject
 class LinkIdWithPatientView(
     context: Context,
     attributeSet: AttributeSet
-) : FrameLayout(context, attributeSet) {
+) : FrameLayout(context, attributeSet), LinkIdWithPatientViewUi {
 
   @Inject
   lateinit var controller: LinkIdWithPatientViewController
 
+  @Inject
+  lateinit var effectHandlerFactory: LinkIdWithPatientEffectHandler.Factory
+
   val downstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
   private val upstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
 
-  private val idTextView by bindView<TextView>(R.id.linkidwithpatient_text)
-  private val addButton by bindView<MaterialButton>(R.id.linkidwithpatient_button_add)
-  private val cancelButton by bindView<MaterialButton>(R.id.linkidwithpatient_button_cancel)
-  private val backgroundView by bindView<View>(R.id.linkidwithpatient_background)
-  private val contentContainer by bindView<View>(R.id.linkidwithpatient_content)
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            viewShows(),
+            addClicks(),
+            cancelClicks(),
+            downstreamUiEvents
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val delegate by unsafeLazy {
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = LinkIdWithPatientModel.create(),
+        update = LinkIdWithPatientUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build()
+    )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+  }
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
@@ -87,7 +126,7 @@ class LinkIdWithPatientView(
       return
     }
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     backgroundView.setOnClickListener {
       // Intentionally done to swallow click events.
@@ -95,14 +134,9 @@ class LinkIdWithPatientView(
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            viewShows(),
-            addClicks(),
-            cancelClicks(),
-            downstreamUiEvents
-        ),
+        events = events,
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
   }
 
@@ -113,16 +147,16 @@ class LinkIdWithPatientView(
   }
 
   private fun addClicks(): Observable<UiEvent> {
-    return RxView.clicks(addButton).map { LinkIdWithPatientAddClicked }
+    return addButton.clicks().map { LinkIdWithPatientAddClicked }
   }
 
   private fun cancelClicks(): Observable<UiEvent> {
-    return RxView.clicks(cancelButton).map { LinkIdWithPatientCancelClicked }
+    return cancelButton.clicks().map { LinkIdWithPatientCancelClicked }
   }
 
   fun uiEvents(): Observable<UiEvent> = upstreamUiEvents.hide()
 
-  fun renderIdentifierText(identifier: Identifier) {
+  override fun renderIdentifierText(identifier: Identifier) {
     val identifierType = identifier.displayType(resources)
     val identifierValue = identifier.displayValue()
 
@@ -137,11 +171,11 @@ class LinkIdWithPatientView(
         .build()
   }
 
-  fun closeSheetWithIdLinked() {
+  override fun closeSheetWithIdLinked() {
     upstreamUiEvents.onNext(LinkIdWithPatientLinked)
   }
 
-  fun closeSheetWithoutIdLinked() {
+  override fun closeSheetWithoutIdLinked() {
     upstreamUiEvents.onNext(LinkIdWithPatientCancelled)
   }
 
@@ -159,5 +193,9 @@ class LinkIdWithPatientView(
         contentContainer = contentContainer,
         endAction = runAfter
     )
+  }
+
+  interface Injector {
+    fun inject(target: LinkIdWithPatientView)
   }
 }

@@ -25,24 +25,22 @@ class LinkIdWithPatientViewControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val patientRepository = mock<PatientRepository>()
-
   private val view = mock<LinkIdWithPatientView>()
-
+  private val patientRepository = mock<PatientRepository>()
   private val userSession = mock<UserSession>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private val patientUuid = UUID.fromString("755bfa1a-afa5-4c80-9ec7-57d81dff2ca1")
-
+  private val identifierUuid = UUID.fromString("097a39e5-945f-44de-8293-f75960c0a54e")
   private val identifier = Identifier(
       value = "40269f4d-f177-44a5-9db7-3cb8a7a53b33",
       type = Identifier.IdentifierType.BpPassport
   )
 
-  private val identifierUuid = UUID.fromString("097a39e5-945f-44de-8293-f75960c0a54e")
-
-  private val user = TestData.loggedInUser()
+  private val user = TestData.loggedInUser(
+      uuid = UUID.fromString("5039c37f-3752-4dcb-ad69-0b6e38e02107")
+  )
 
   private val controller = LinkIdWithPatientViewController(
       patientRepository = patientRepository,

@@ -13,7 +13,6 @@ import org.simple.clinic.newentry.country.EthiopiaInputFieldsProvider
 import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsProvider
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.remoteconfig.RemoteConfigService
 import org.simple.clinic.util.UserClock
 import java.time.LocalDate
@@ -30,30 +29,25 @@ class InputFieldsFactoryModule {
       @Named("date_for_user_input") dateTimeFormatter: DateTimeFormatter,
       userClock: UserClock,
       currentFacility: Lazy<Facility>,
-      uuidSetJsonAdapter: JsonAdapter<Set<UUID>>,
-      remoteConfigService: RemoteConfigService,
-      crashReporter: CrashReporter
+      chennaiFacilityGroupIds: Lazy<Set<UUID>>
   ): InputFieldsProvider {
     val date = LocalDate.now(userClock)
 
     return when (val isoCountryCode = country.isoCountryCode) {
-      Country.INDIA -> {
-        val chennaiFacilityGroupIds: Set<UUID> = readChennaiFacilityGroupIds(uuidSetJsonAdapter, remoteConfigService.reader(), crashReporter)
-
-        IndiaInputFieldsProvider(dateTimeFormatter, date, currentFacility, chennaiFacilityGroupIds)
-      }
+      Country.INDIA -> IndiaInputFieldsProvider(dateTimeFormatter, date, currentFacility, chennaiFacilityGroupIds)
       Country.BANGLADESH -> BangladeshInputFieldsProvider(dateTimeFormatter, date)
       Country.ETHIOPIA -> EthiopiaInputFieldsProvider(dateTimeFormatter, date)
       else -> throw IllegalArgumentException("Unknown country code: $isoCountryCode")
     }
   }
 
-  private fun readChennaiFacilityGroupIds(
+  @Provides
+  fun readChennaiFacilityGroupIds(
       uuidSetJsonAdapter: JsonAdapter<Set<UUID>>,
-      remoteConfigReader: ConfigReader,
+      remoteConfigService: RemoteConfigService,
       crashReporter: CrashReporter
   ): Set<UUID> {
-    val chennaiFacilityIdJsonArray = remoteConfigReader.string("chennai_facility_group_ids", "[]")
+    val chennaiFacilityIdJsonArray = remoteConfigService.reader().string("chennai_facility_group_ids", "[]")
 
     return try {
       uuidSetJsonAdapter.fromJson(chennaiFacilityIdJsonArray)!!

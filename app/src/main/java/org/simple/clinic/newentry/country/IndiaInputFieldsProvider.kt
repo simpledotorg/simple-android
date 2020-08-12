@@ -22,7 +22,7 @@ class IndiaInputFieldsProvider(
     private val dateTimeFormatter: DateTimeFormatter,
     private val today: LocalDate,
     private val currentFacility: Lazy<Facility>,
-    private val chennaiFacilityGroupIds: Set<UUID>
+    private val chennaiFacilityGroupIds: Lazy<Set<UUID>>
 ) : InputFieldsProvider {
 
   override fun provide(): List<InputField<*>> {
@@ -42,14 +42,14 @@ class IndiaInputFieldsProvider(
   }
 
   private fun selectStreetAddressLabel(currentFacilityGroupId: UUID?): Int {
-    return if (currentFacilityGroupId in chennaiFacilityGroupIds)
+    return if (currentFacilityGroupId in chennaiFacilityGroupIds.get())
       R.string.patiententry_doornumber_streetname
     else
       R.string.patiententry_street_address
   }
 
   private fun selectVillageOrColonyLabel(currentFacilityGroupId: UUID?): Int {
-    return if (currentFacilityGroupId in chennaiFacilityGroupIds)
+    return if (currentFacilityGroupId in chennaiFacilityGroupIds.get())
       R.string.patiententry_division_area
     else
       R.string.patiententry_village_colony_ward

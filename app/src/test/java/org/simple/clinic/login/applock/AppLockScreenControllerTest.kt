@@ -16,6 +16,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
+import java.util.UUID
 
 class AppLockScreenControllerTest {
 
@@ -27,7 +28,10 @@ class AppLockScreenControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val lastUnlockTimestamp = mock<Preference<Instant>>()
 
-  private val loggedInUser = TestData.loggedInUser(pinDigest = "actual-hash")
+  private val loggedInUser = TestData.loggedInUser(
+      uuid = UUID.fromString("cdb08a78-7bae-44f4-9bb9-40257be58aa4"),
+      pinDigest = "actual-hash"
+  )
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   lateinit var controller: AppLockScreenController

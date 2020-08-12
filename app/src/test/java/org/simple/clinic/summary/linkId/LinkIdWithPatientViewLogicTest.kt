@@ -7,7 +7,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import com.spotify.mobius.Init
-import io.reactivex.Observable
+import dagger.Lazy
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -18,7 +18,6 @@ import org.simple.clinic.TestData
 import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
@@ -34,7 +33,6 @@ class LinkIdWithPatientViewLogicTest {
   private val ui = mock<LinkIdWithPatientViewUi>()
   private val uiActions = mock<LinkIdWithPatientUiActions>()
   private val patientRepository = mock<PatientRepository>()
-  private val userSession = mock<UserSession>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
@@ -113,12 +111,10 @@ class LinkIdWithPatientViewLogicTest {
   }
 
   private fun setupController() {
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
-
     val uuidGenerator = FakeUuidGenerator.fixed(identifierUuid)
 
     val effectHandler = LinkIdWithPatientEffectHandler(
-        userSession = userSession,
+        currentUser = Lazy { user },
         patientRepository = patientRepository,
         uuidGenerator = uuidGenerator,
         schedulersProvider = TestSchedulersProvider.trampoline(),

@@ -14,13 +14,11 @@ class LinkIdWithPatientUpdate : Update<LinkIdWithPatientModel, LinkIdWithPatient
           RenderIdentifierText(event.identifier)
       )
       LinkIdWithPatientCancelClicked -> dispatch(CloseSheetWithOutIdLinked)
-      is CurrentUserLoaded -> dispatch(AddIdentifierToPatient(
-          patientUuid = model.patientUuid!!,
-          identifier = model.identifier!!,
-          user = event.user
-      ))
       IdentifierAddedToPatient -> dispatch(CloseSheetWithLinkedId)
-      LinkIdWithPatientAddClicked -> dispatch(LoadCurrentUser)
+      LinkIdWithPatientAddClicked -> dispatch(AddIdentifierToPatient(
+          patientUuid = model.patientUuid!!,
+          identifier = model.identifier!!
+      ))
     }
   }
 }

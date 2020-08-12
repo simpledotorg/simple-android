@@ -3,14 +3,15 @@ package org.simple.clinic.summary.linkId
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
 
 class LinkIdWithPatientEffectHandler @AssistedInject constructor(
-    private val userSession: UserSession,
+    private val currentUser: Lazy<User>,
     private val patientRepository: PatientRepository,
     private val uuidGenerator: UuidGenerator,
     private val schedulersProvider: SchedulersProvider,
@@ -27,7 +28,6 @@ class LinkIdWithPatientEffectHandler @AssistedInject constructor(
       .addConsumer(RenderIdentifierText::class.java, { uiActions.renderIdentifierText(it.identifier) }, schedulersProvider.ui())
       .addAction(CloseSheetWithOutIdLinked::class.java, uiActions::closeSheetWithoutIdLinked, schedulersProvider.ui())
       .addAction(CloseSheetWithLinkedId::class.java, uiActions::closeSheetWithIdLinked, schedulersProvider.ui())
-      .addTransformer(LoadCurrentUser::class.java, loadCurrentUser())
       .addTransformer(AddIdentifierToPatient::class.java, addIdentifierToPatient())
       .build()
 
@@ -41,19 +41,10 @@ class LinkIdWithPatientEffectHandler @AssistedInject constructor(
                     uuid = uuidGenerator.v4(),
                     patientUuid = it.patientUuid,
                     identifier = it.identifier,
-                    assigningUser = it.user
+                    assigningUser = currentUser.get()
                 )
           }
           .map { IdentifierAddedToPatient }
-    }
-  }
-
-  private fun loadCurrentUser(): ObservableTransformer<LoadCurrentUser, LinkIdWithPatientEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .switchMap { userSession.requireLoggedInUser() }
-          .map(::CurrentUserLoaded)
     }
   }
 }

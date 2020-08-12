@@ -433,7 +433,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the input fields are loaded, the UI muse be initialized`() {
-    val inputFields = InputFields(inputFieldsFactory.fieldsFor(india))
+    val inputFields = InputFields(inputFieldsFactory.provideFields())
 
     updateSpec
         .given(defaultModel)

@@ -70,7 +70,7 @@ class EditPatientUpdateTest {
         ageValidator = ageValidator
     ))
 
-    val inputFields = InputFields(inputFieldsFactory.fieldsFor(india))
+    val inputFields = InputFields(inputFieldsFactory.provideFields())
 
     spec
         .given(model)

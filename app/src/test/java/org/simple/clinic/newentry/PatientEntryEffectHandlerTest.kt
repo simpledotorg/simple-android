@@ -84,14 +84,14 @@ class PatientEntryEffectHandlerTest {
     testCase.dispatch(LoadInputFields)
 
     // then
-    val expectedFields = InputFields(inputFieldsFactory.fieldsFor(india))
+    val expectedFields = InputFields(inputFieldsFactory.provideFields())
     testCase.assertOutgoingEvents(InputFieldsLoaded(expectedFields))
   }
 
   @Test
   fun `when the setup UI effect is received, the UI must be setup with the input fields`() {
     // given
-    val inputFields = InputFields(inputFieldsFactory.fieldsFor(india))
+    val inputFields = InputFields(inputFieldsFactory.provideFields())
 
     // when
     setupTestCase()

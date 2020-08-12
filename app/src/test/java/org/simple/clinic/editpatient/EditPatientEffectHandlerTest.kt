@@ -286,7 +286,7 @@ class EditPatientEffectHandlerTest {
     testCase.dispatch(LoadInputFields)
 
     // then
-    val expectedFields = inputFieldsFactory.fieldsFor(india)
+    val expectedFields = inputFieldsFactory.provideFields()
     testCase.assertOutgoingEvents(InputFieldsLoaded(InputFields(expectedFields)))
     verifyZeroInteractions(ui)
   }
@@ -294,7 +294,7 @@ class EditPatientEffectHandlerTest {
   @Test
   fun `when the setup UI effect is received, the UI must be setup with the input fields`() {
     // given
-    val inputFields = InputFields(inputFieldsFactory.fieldsFor(india))
+    val inputFields = InputFields(inputFieldsFactory.provideFields())
 
     // when
     testCase.dispatch(SetupUi(inputFields))

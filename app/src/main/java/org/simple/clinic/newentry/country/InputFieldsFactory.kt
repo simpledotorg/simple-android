@@ -40,7 +40,7 @@ class InputFieldsFactory(
       country = country
   )
 
-  fun fieldsFor(country: Country): List<InputField<*>> {
+  fun provideFields(): List<InputField<*>> {
     return when (country.isoCountryCode) {
       Country.INDIA -> formFieldsForIndia()
       Country.BANGLADESH -> formFieldsForBangladesh()

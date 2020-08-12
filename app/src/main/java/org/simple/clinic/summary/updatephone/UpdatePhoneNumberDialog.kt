@@ -17,7 +17,6 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.dialog_patientsummary_updatephone.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientUuid
@@ -29,7 +28,7 @@ import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDialogUi {
+class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDialogUi, UpdatePhoneNumberUiActions {
 
   companion object {
     private const val FRAGMENT_TAG = "UpdatePhoneNumberDialog"
@@ -60,12 +59,7 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
   }
 
   @Inject
-  lateinit var controller: UpdatePhoneNumberDialogController.Factory
-
-  @Inject
   lateinit var effectHandlerFactory: UpdatePhoneNumberEffectHandler.Factory
-
-  private val onStarts = PublishSubject.create<Any>()
 
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
   private val dialogEvents = PublishSubject.create<UiEvent>()
@@ -80,15 +74,15 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
             saveClicks(saveButton)
         )
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val delegate by unsafeLazy {
+    val patientUuid = arguments!!.getSerializable(KEY_PATIENT_UUID) as PatientUuid
     val uiRenderer = UpdatePhoneNumberUiRenderer(this)
 
     MobiusDelegate.forActivity(
         events = dialogEvents.ofType(),
-        defaultModel = UpdatePhoneNumberModel.create(),
+        defaultModel = UpdatePhoneNumberModel.create(patientUuid),
         init = UpdatePhoneNumberInit(),
         update = UpdatePhoneNumberUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
@@ -115,24 +109,17 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val layout = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_patientsummary_updatephone, null)
 
-    val dialog = AlertDialog.Builder(requireContext())
+    return AlertDialog.Builder(requireContext())
         .setTitle(R.string.patientsummary_updatephone_dialog_title)
         .setMessage(R.string.patientsummary_updatephone_dialog_message)
         .setView(layout)
         .setPositiveButton(R.string.patientsummary_updatephone_save, null)
         .setNegativeButton(R.string.patientsummary_updatephone_cancel, null)
         .create()
-
-    onStarts
-        .take(1)
-        .subscribe { setupDialog(screenDestroys) }
-
-    return dialog
   }
 
   override fun onStart() {
     super.onStart()
-    onStarts.onNext(Any())
     dialog!!.numberEditText!!.showKeyboard()
     delegate.start()
   }
@@ -155,17 +142,6 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
     screenDestroys.onNext(ScreenDestroyed())
   }
 
-  private fun setupDialog(screenDestroys: Observable<ScreenDestroyed>) {
-    val patientUuid = arguments!!.getSerializable(KEY_PATIENT_UUID) as PatientUuid
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller.create(patientUuid),
-        screenDestroys = screenDestroys
-    )
-  }
-
   private fun dialogCreates(): Observable<UiEvent> {
     return Observable.just(ScreenCreated())
   }
@@ -180,12 +156,16 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
           .clicks()
           .map { UpdatePhoneNumberSaveClicked(number = dialog!!.numberEditText!!.text?.toString().orEmpty()) }
 
-  override fun showPhoneNumberTooShortError() {
-    dialog!!.phoneInputLayout!!.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_less)
+  override fun showBlankPhoneNumberError() {
+    dialog?.phoneInputLayout?.error = getString(R.string.patientsummary_updatephone_error_phonenumber_empty)
   }
 
-  override fun showPhoneNumberTooLongError() {
-    dialog!!.phoneInputLayout!!.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_more)
+  override fun showPhoneNumberTooShortError(minimumAllowedNumberLength: Int) {
+    dialog!!.phoneInputLayout!!.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_less, minimumAllowedNumberLength.toString())
+  }
+
+  override fun showPhoneNumberTooLongError(maximumRequiredNumberLength: Int) {
+    dialog!!.phoneInputLayout!!.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_more, maximumRequiredNumberLength.toString())
   }
 
   override fun preFillPhoneNumber(number: String) {

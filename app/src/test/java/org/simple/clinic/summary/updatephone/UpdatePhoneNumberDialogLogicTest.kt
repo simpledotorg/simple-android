@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -27,18 +26,18 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_O
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class UpdatePhoneNumberDialogControllerTest {
+class UpdatePhoneNumberDialogLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui = mock<UpdatePhoneNumberDialogUi>()
+  private val uiActions = mock<UpdatePhoneNumberUiActions>()
   private val repository = mock<PatientRepository>()
   private val validator = LengthBasedNumberValidator(
       minimumRequiredLengthMobile = 6,
@@ -49,12 +48,10 @@ class UpdatePhoneNumberDialogControllerTest {
 
   private val patientUuid = UUID.fromString("0c1c5a00-2416-4a41-8b9e-8059ac18df5d")
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<UpdatePhoneNumberModel, UpdatePhoneNumberEvent, UpdatePhoneNumberEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -71,8 +68,8 @@ class UpdatePhoneNumberDialogControllerTest {
     setupController(patientUuid = patientUuid)
 
     // then
-    verify(ui).preFillPhoneNumber(phoneNumber.number)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).preFillPhoneNumber(phoneNumber.number)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -97,9 +94,9 @@ class UpdatePhoneNumberDialogControllerTest {
     verify(repository).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))
     verifyNoMoreInteractions(repository)
 
-    verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
-    verify(ui).closeDialog()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(uiActions).closeDialog()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -122,9 +119,9 @@ class UpdatePhoneNumberDialogControllerTest {
     // then
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))
 
-    verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
-    verify(ui).showPhoneNumberTooShortError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(uiActions).showBlankPhoneNumberError()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -147,9 +144,9 @@ class UpdatePhoneNumberDialogControllerTest {
     // then
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))
 
-    verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
-    verify(ui).showPhoneNumberTooShortError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(uiActions).showPhoneNumberTooShortError(6)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -172,9 +169,9 @@ class UpdatePhoneNumberDialogControllerTest {
     // then
     verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))
 
-    verify(ui).preFillPhoneNumber(existingPhoneNumber.number)
-    verify(ui).showPhoneNumberTooLongError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).preFillPhoneNumber(existingPhoneNumber.number)
+    verify(uiActions).showPhoneNumberTooLongError(12)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -195,28 +192,18 @@ class UpdatePhoneNumberDialogControllerTest {
   }
 
   private fun setupController(patientUuid: PatientUuid) {
-    val controller = UpdatePhoneNumberDialogController(
-        patientUuid = patientUuid,
-        repository = repository,
-        validator = validator
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
-    uiEvents.onNext(ScreenCreated())
-
     val effectHandler = UpdatePhoneNumberEffectHandler(
+        patientRepository = repository,
+        validator = validator,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
 
     val uiRenderer = UpdatePhoneNumberUiRenderer(ui)
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = UpdatePhoneNumberModel.create(),
+        defaultModel = UpdatePhoneNumberModel.create(patientUuid),
         init = UpdatePhoneNumberInit(),
         update = UpdatePhoneNumberUpdate(),
         effectHandler = effectHandler.build(),

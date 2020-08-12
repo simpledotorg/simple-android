@@ -7,3 +7,5 @@ sealed class LinkIdWithPatientEffect
 data class RenderIdentifierText(val identifier: Identifier) : LinkIdWithPatientEffect()
 
 object CloseSheetWithOutIdLinked : LinkIdWithPatientEffect()
+
+object CloseSheetWithLinkedId : LinkIdWithPatientEffect()

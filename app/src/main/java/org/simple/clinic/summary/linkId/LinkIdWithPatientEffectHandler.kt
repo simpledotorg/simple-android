@@ -20,5 +20,6 @@ class LinkIdWithPatientEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<LinkIdWithPatientEffect, LinkIdWithPatientEvent>()
       .addConsumer(RenderIdentifierText::class.java, { uiActions.renderIdentifierText(it.identifier) }, schedulersProvider.ui())
       .addAction(CloseSheetWithOutIdLinked::class.java, uiActions::closeSheetWithoutIdLinked, schedulersProvider.ui())
+      .addAction(CloseSheetWithLinkedId::class.java, uiActions::closeSheetWithIdLinked, schedulersProvider.ui())
       .build()
 }

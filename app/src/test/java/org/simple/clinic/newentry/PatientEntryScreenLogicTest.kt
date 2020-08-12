@@ -85,11 +85,13 @@ class PatientEntryScreenLogicTest {
   private val reporter = MockAnalyticsReporter()
 
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+  private val india = TestData.country(isoCountryCode = Country.INDIA)
+
   private val inputFieldsFactory = InputFieldsFactory(
       dateTimeFormatter = dateTimeFormatter,
-      today = LocalDate.now(userClock)
+      today = LocalDate.now(userClock),
+      country = india
   )
-  private val india = TestData.country(isoCountryCode = Country.INDIA)
 
   private lateinit var errorConsumer: (Throwable) -> Unit
 

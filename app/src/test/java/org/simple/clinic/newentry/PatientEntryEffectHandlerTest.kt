@@ -36,11 +36,13 @@ class PatientEntryEffectHandlerTest {
 
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val date = LocalDate.parse("2018-01-01")
+  private val india = TestData.country(isoCountryCode = Country.INDIA)
+
   private val inputFieldsFactory = InputFieldsFactory(
       dateTimeFormatter = dateTimeFormatter,
-      today = date
+      today = date,
+      country = india
   )
-  private val india = TestData.country(isoCountryCode = Country.INDIA)
 
   private val ui = mock<PatientEntryUi>()
   private val effectHandler = PatientEntryEffectHandler(

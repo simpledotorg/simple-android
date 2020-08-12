@@ -25,16 +25,19 @@ import javax.inject.Named
 
 class InputFieldsFactory(
     private val dateTimeFormatter: DateTimeFormatter,
-    private val today: LocalDate
+    private val today: LocalDate,
+    private val country: Country
 ) {
 
   @Inject
   constructor(
       @Named("date_for_user_input") dateTimeFormatter: DateTimeFormatter,
-      userClock: UserClock
+      userClock: UserClock,
+      country: Country
   ) : this(
       dateTimeFormatter = dateTimeFormatter,
-      today = LocalDate.now(userClock)
+      today = LocalDate.now(userClock),
+      country = country
   )
 
   fun fieldsFor(country: Country): List<InputField<*>> {

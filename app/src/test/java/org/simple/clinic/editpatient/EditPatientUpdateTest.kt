@@ -40,12 +40,13 @@ class EditPatientUpdateTest {
         dateOfBirthFormat = dateOfBirthFormat
     )
 
+    val india = TestData.country(isoCountryCode = Country.INDIA)
+
     val inputFieldsFactory = InputFieldsFactory(
         dateTimeFormatter = dateOfBirthFormat,
-        today = LocalDate.now(clock)
+        today = LocalDate.now(clock),
+        country = india
     )
-
-    val india = TestData.country(isoCountryCode = Country.INDIA)
 
     val patientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("f8193c3b-20d3-4fae-be3a-0029969db624"),

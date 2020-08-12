@@ -1,5 +1,6 @@
 package org.simple.clinic.editpatient
 
+import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
@@ -44,3 +45,5 @@ data class SavePatientEffect(
 ) : EditPatientEffect()
 
 object LoadInputFields : EditPatientEffect()
+
+data class SetupUi(val inputFields: InputFields): EditPatientEffect()

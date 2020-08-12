@@ -289,4 +289,18 @@ class EditPatientEffectHandlerTest {
     testCase.assertOutgoingEvents(InputFieldsLoaded(InputFields(expectedFields)))
     verifyZeroInteractions(ui)
   }
+
+  @Test
+  fun `when the setup UI effect is received, the UI must be setup with the input fields`() {
+    // given
+    val inputFields = InputFields(inputFieldsFactory.fieldsFor(india))
+
+    // when
+    testCase.dispatch(SetupUi(inputFields))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(ui).setupUi(inputFields)
+    verifyNoMoreInteractions(ui)
+  }
 }

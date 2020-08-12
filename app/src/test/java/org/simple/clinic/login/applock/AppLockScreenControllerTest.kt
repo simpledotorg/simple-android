@@ -45,15 +45,19 @@ class AppLockScreenControllerTest {
 
   @Test
   fun `when PIN is authenticated, the last-unlock-timestamp should be updated and then the app should be unlocked`() {
+    // given
     val facility = TestData.facility(
         uuid = UUID.fromString("f0e27682-796c-47c9-8187-dbcca66c4273"),
         name = "PHC Obvious"
     )
+
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
 
+    // when
     setupController()
     uiEvents.onNext(AppLockPinAuthenticated())
 
+    // then
     verify(lastUnlockTimestamp).delete()
 
     verify(screen).setUserFullName(loggedInUser.fullName)
@@ -64,14 +68,18 @@ class AppLockScreenControllerTest {
 
   @Test
   fun `On start, the logged in user's full name should be shown`() {
+    // given
     val facility = TestData.facility(
         uuid = UUID.fromString("6dcb2c31-569e-4911-a378-046faa5fa9ff"),
         name = "PHC Obvious"
     )
+
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
 
+    // when
     setupController()
 
+    // then
     verify(screen).setUserFullName(loggedInUser.fullName)
     verify(screen).setFacilityName(facility.name)
     verifyNoMoreInteractions(screen)
@@ -79,12 +87,16 @@ class AppLockScreenControllerTest {
 
   @Test
   fun `On start, the currently selected facility should be shown`() {
+    // given
     val facility1 = TestData.facility(name = "facility1")
     val facility2 = TestData.facility(name = "facility2")
+
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility1, facility2))
 
+    // when
     setupController()
 
+    // then
     verify(screen).setUserFullName(loggedInUser.fullName)
     verify(screen).setFacilityName(facility1.name)
     verify(screen).setFacilityName(facility2.name)
@@ -93,15 +105,19 @@ class AppLockScreenControllerTest {
 
   @Test
   fun `when forgot pin is clicked then the confirm forgot pin alert must be shown`() {
+    // given
     val facility = TestData.facility(
         uuid = UUID.fromString("6dcb2c31-569e-4911-a378-046faa5fa9ff"),
         name = "PHC Obvious"
     )
+
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
 
+    // when
     setupController()
     uiEvents.onNext(AppLockForgotPinClicked())
 
+    // then
     verify(screen).setUserFullName(loggedInUser.fullName)
     verify(screen).setFacilityName(facility.name)
     verify(screen).showConfirmResetPinDialog()

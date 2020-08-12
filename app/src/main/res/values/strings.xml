@@ -196,6 +196,7 @@
   <string name="patientsummary_updatephone_phone_hint">Phone number</string>
   <string name="patientsummary_updatephone_save">Save</string>
   <string name="patientsummary_updatephone_cancel">Skip</string>
+  <string name="patientsummary_updatephone_error_phonenumber_empty" translatable="false">@string/patiententry_error_phonenumber_blank</string>
   <string name="patientsummary_updatephone_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
   <string name="patientsummary_updatephone_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
 

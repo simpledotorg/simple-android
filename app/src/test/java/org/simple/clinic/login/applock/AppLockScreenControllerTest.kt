@@ -1,7 +1,6 @@
 package org.simple.clinic.login.applock
 
 import com.f2prateek.rx.preferences2.Preference
-import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -46,22 +45,35 @@ class AppLockScreenControllerTest {
 
   @Test
   fun `when PIN is authenticated, the last-unlock-timestamp should be updated and then the app should be unlocked`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("f0e27682-796c-47c9-8187-dbcca66c4273"),
+        name = "PHC Obvious"
+    )
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
+
     setupController()
     uiEvents.onNext(AppLockPinAuthenticated())
 
     verify(lastUnlockTimestamp).delete()
+
+    verify(screen).setUserFullName(loggedInUser.fullName)
+    verify(screen).setFacilityName(facility.name)
     verify(screen).restorePreviousScreen()
     verifyNoMoreInteractions(screen)
   }
 
   @Test
   fun `On start, the logged in user's full name should be shown`() {
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.never())
+    val facility = TestData.facility(
+        uuid = UUID.fromString("6dcb2c31-569e-4911-a378-046faa5fa9ff"),
+        name = "PHC Obvious"
+    )
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
 
     setupController()
-    uiEvents.onNext(AppLockScreenCreated())
 
     verify(screen).setUserFullName(loggedInUser.fullName)
+    verify(screen).setFacilityName(facility.name)
     verifyNoMoreInteractions(screen)
   }
 
@@ -72,7 +84,6 @@ class AppLockScreenControllerTest {
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility1, facility2))
 
     setupController()
-    uiEvents.onNext(AppLockScreenCreated())
 
     verify(screen).setUserFullName(loggedInUser.fullName)
     verify(screen).setFacilityName(facility1.name)
@@ -82,9 +93,17 @@ class AppLockScreenControllerTest {
 
   @Test
   fun `when forgot pin is clicked then the confirm forgot pin alert must be shown`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("6dcb2c31-569e-4911-a378-046faa5fa9ff"),
+        name = "PHC Obvious"
+    )
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
+
     setupController()
     uiEvents.onNext(AppLockForgotPinClicked())
 
+    verify(screen).setUserFullName(loggedInUser.fullName)
+    verify(screen).setFacilityName(facility.name)
     verify(screen).showConfirmResetPinDialog()
     verifyNoMoreInteractions(screen)
   }
@@ -97,5 +116,7 @@ class AppLockScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(AppLockScreenCreated())
   }
 }

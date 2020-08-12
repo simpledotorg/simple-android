@@ -4,10 +4,10 @@
 ### Internal
 - Migrated `LoggedOutOfDeviceDialog` to Mobius
 - Setup the UI via an effect in `PatientEntryScreen`
-- [In Progress: 06 Aug 2020] Migrate `PatientSearchResultsScreen` to Mobius
-- [In Progress: 10 Aug 2020] Migrate `ConfirmRemoveBloodPressureDialog` to Mobius
+- Migrated `ConfirmRemoveBloodPressureDialog` to Mobius
 - [In Progress: 11 Aug 2020] Migrate `TheActivity` to Mobius
 - [In Progress: 11 Aug 2020] Migrate `UpdatePhoneNumberDialog` to Mobius
+- [In Progress: 11 Aug 2020] Migrate `PatientSearchResultsScreen` to Mobius
 
 ## On Demo
 ### Features
@@ -36,8 +36,6 @@
 - Migrated `HomeScreen` to Mobius
 - Migrated `ScanSimpleIdScreen` to Mobius
 - Migrate `EnterOtpScreen` to Mobius
-- Migrated `ConfirmRemoveBloodPressureDialog` to Mobius
-- [In Progress: 06 Aug 2020] Migrate `PatientSearchResultsScreen` to Mobius
 
 ### Fixes
 - Fixed issue where recent and overdue patients on home screen would not update after changing facility ([#742](https://app.clubhouse.io/simpledotorg/story/742/home-screen-does-not-update-when-changing-facilities))

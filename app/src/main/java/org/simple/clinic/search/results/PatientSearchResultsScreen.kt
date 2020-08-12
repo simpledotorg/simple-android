@@ -77,7 +77,7 @@ class PatientSearchResultsScreen(
 
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = PatientSearchResultsModel.create(),
+        defaultModel = PatientSearchResultsModel.create(screenKey.criteria),
         update = PatientSearchResultsUpdate(),
         effectHandler = effectHandlerInjectionFactory.create(this).build(),
         init = PatientSearchResultsInit(),

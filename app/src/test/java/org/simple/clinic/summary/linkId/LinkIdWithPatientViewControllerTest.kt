@@ -9,7 +9,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.spotify.mobius.Init
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -49,12 +48,10 @@ class LinkIdWithPatientViewControllerTest {
       uuid = UUID.fromString("5039c37f-3752-4dcb-ad69-0b6e38e02107")
   )
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<LinkIdWithPatientModel, LinkIdWithPatientEvent, LinkIdWithPatientEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -118,15 +115,6 @@ class LinkIdWithPatientViewControllerTest {
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
 
     val uuidGenerator = FakeUuidGenerator.fixed(identifierUuid)
-    val controller = LinkIdWithPatientViewController(
-        patientRepository = patientRepository,
-        userSession = userSession,
-        uuidGenerator = uuidGenerator
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
 
     val effectHandler = LinkIdWithPatientEffectHandler(
         userSession = userSession,

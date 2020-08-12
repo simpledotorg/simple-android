@@ -4,4 +4,5 @@ import org.simple.clinic.patient.businessid.Identifier
 
 interface LinkIdWithPatientUiActions {
   fun renderIdentifierText(identifier: Identifier)
+  fun closeSheetWithoutIdLinked()
 }

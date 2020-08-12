@@ -2,6 +2,7 @@ package org.simple.clinic.summary.linkId
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -17,6 +18,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
@@ -71,6 +73,9 @@ class LinkIdWithPatientView(
   @Inject
   lateinit var controller: LinkIdWithPatientViewController
 
+  @Inject
+  lateinit var effectHandlerFactory: LinkIdWithPatientEffectHandler.Factory
+
   val downstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
   private val upstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
 
@@ -90,6 +95,33 @@ class LinkIdWithPatientView(
         )
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate by unsafeLazy {
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = LinkIdWithPatientModel.create(),
+        update = LinkIdWithPatientUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build()
+    )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   @SuppressLint("CheckResult")

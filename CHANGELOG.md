@@ -4,6 +4,7 @@
 ### Internal
 - Migrated `LoggedOutOfDeviceDialog` to Mobius
 - Setup the UI via an effect in `PatientEntryScreen`
+- Setup the UI via an effect in `EditPatientScreen`
 - Migrated `ConfirmRemoveBloodPressureDialog` to Mobius
 - Migrate `UpdatePhoneNumberDialog` to Mobius
 - [In Progress: 12 Aug 2020] Migrate `TheActivity` to Mobius

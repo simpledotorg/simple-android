@@ -5,9 +5,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.activity.ActivityLifecycle.Started
-import org.simple.clinic.activity.ActivityLifecycle.Stopped
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.NewlyVerifiedUser
@@ -24,7 +21,7 @@ import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
-typealias Ui = TheActivity
+typealias Ui = TheActivityUi
 typealias UiChange = (Ui) -> Unit
 
 class TheActivityController @Inject constructor(
@@ -38,7 +35,7 @@ class TheActivityController @Inject constructor(
   private val showAppLockForUserStates = setOf(OTP_REQUESTED, LOGGED_IN, RESET_PIN_REQUESTED)
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
+    val replayedEvents = events.replay().refCount()
 
     return Observable.mergeArray(
         showAppLock(replayedEvents),
@@ -51,7 +48,7 @@ class TheActivityController @Inject constructor(
 
   private fun showAppLock(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedCanShowAppLock = events
-        .ofType<Started>()
+        .ofType<LifecycleEvent.ActivityStarted>()
         .flatMap {
           userSession.loggedInUser()
               .filterAndUnwrapJust()
@@ -80,7 +77,7 @@ class TheActivityController @Inject constructor(
 
   private fun updateLockTime(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<Stopped>()
+        .ofType<LifecycleEvent.ActivityStopped>()
         .filter { userSession.isUserLoggedIn() }
         .filter { !lockAfterTimestamp.isSet }
         .doOnNext { lockAfterTimestamp.set(Instant.now(utcClock).plusMillis(appLockConfig.lockAfterTimeMillis)) }
@@ -88,7 +85,7 @@ class TheActivityController @Inject constructor(
   }
 
   private fun displayUserLoggedOutOnOtherDevice(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<Started>()
+    return events.ofType<LifecycleEvent.ActivityStarted>()
         .flatMap { userSession.loggedInUser() }
         .compose(NewlyVerifiedUser())
         .map { { ui: Ui -> ui.showUserLoggedOutOnOtherDeviceAlert() } }

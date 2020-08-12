@@ -2,7 +2,6 @@ package org.simple.clinic.login.applock
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -14,6 +13,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.pin_entry_card.view.*
 import kotterknife.bindView
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.BackPressInterceptCallback
@@ -21,6 +21,7 @@ import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.security.pin.PinAuthenticated
 import org.simple.clinic.security.pin.PinEntryCardView
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -41,6 +42,18 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   private val logoutButton by bindView<MaterialButton>(R.id.applock_logout)
   private val pinEntryCardView by bindView<PinEntryCardView>(R.id.applock_pin_entry_card)
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenCreates(),
+            backClicks(),
+            forgotPinClicks(),
+            pinAuthentications()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -50,12 +63,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            screenCreates(),
-            backClicks(),
-            forgotPinClicks(),
-            pinAuthentications()
-        ),
+        events = events,
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

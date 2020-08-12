@@ -6,14 +6,12 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.TextView
-import com.google.android.material.button.MaterialButton
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.link_id_with_patient_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
@@ -79,12 +77,6 @@ class LinkIdWithPatientView(
 
   val downstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
   private val upstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
-
-  private val idTextView by bindView<TextView>(R.id.linkidwithpatient_text)
-  private val addButton by bindView<MaterialButton>(R.id.linkidwithpatient_button_add)
-  private val cancelButton by bindView<MaterialButton>(R.id.linkidwithpatient_button_cancel)
-  private val backgroundView by bindView<View>(R.id.linkidwithpatient_background)
-  private val contentContainer by bindView<View>(R.id.linkidwithpatient_content)
 
   private val events by unsafeLazy {
     Observable

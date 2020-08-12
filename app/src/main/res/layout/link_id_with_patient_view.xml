@@ -6,7 +6,7 @@
   android:layout_height="match_parent">
 
   <View
-    android:id="@+id/linkidwithpatient_background"
+    android:id="@+id/backgroundView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black_opacity_50" />
@@ -16,7 +16,7 @@
       doesn't let us change the radius of specific corners.
    -->
   <androidx.cardview.widget.CardView
-    android:id="@+id/linkidwithpatient_content"
+    android:id="@+id/contentContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
@@ -44,7 +44,7 @@
         tools:ignore="ContentDescription" />
 
       <TextView
-        android:id="@+id/linkidwithpatient_text"
+        android:id="@+id/idTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_8"
@@ -55,12 +55,12 @@
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linkidwithpatient_text"
+        android:layout_below="@id/idTextView"
         android:layout_marginTop="@dimen/spacing_16"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
-          android:id="@+id/linkidwithpatient_button_cancel"
+          android:id="@+id/cancelButton"
           style="@style/Clinic.V2.OutlineButton.Grey1"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
           tools:ignore="ButtonStyle" />
 
         <com.google.android.material.button.MaterialButton
-          android:id="@+id/linkidwithpatient_button_add"
+          android:id="@+id/addButton"
           style="?attr/materialButtonStyle"
           android:layout_width="0dp"
           android:layout_height="wrap_content"

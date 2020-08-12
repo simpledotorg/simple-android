@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.google.android.material.button.MaterialButton
@@ -65,7 +64,7 @@ import javax.inject.Inject
 class LinkIdWithPatientView(
     context: Context,
     attributeSet: AttributeSet
-) : FrameLayout(context, attributeSet) {
+) : FrameLayout(context, attributeSet), LinkIdWithPatientViewUi {
 
   @Inject
   lateinit var controller: LinkIdWithPatientViewController
@@ -122,7 +121,7 @@ class LinkIdWithPatientView(
 
   fun uiEvents(): Observable<UiEvent> = upstreamUiEvents.hide()
 
-  fun renderIdentifierText(identifier: Identifier) {
+  override fun renderIdentifierText(identifier: Identifier) {
     val identifierType = identifier.displayType(resources)
     val identifierValue = identifier.displayValue()
 
@@ -137,11 +136,11 @@ class LinkIdWithPatientView(
         .build()
   }
 
-  fun closeSheetWithIdLinked() {
+  override fun closeSheetWithIdLinked() {
     upstreamUiEvents.onNext(LinkIdWithPatientLinked)
   }
 
-  fun closeSheetWithoutIdLinked() {
+  override fun closeSheetWithoutIdLinked() {
     upstreamUiEvents.onNext(LinkIdWithPatientCancelled)
   }
 

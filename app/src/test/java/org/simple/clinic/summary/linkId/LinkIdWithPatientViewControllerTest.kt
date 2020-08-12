@@ -27,7 +27,7 @@ class LinkIdWithPatientViewControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val view = mock<LinkIdWithPatientView>()
+  private val ui = mock<LinkIdWithPatientViewUi>()
   private val patientRepository = mock<PatientRepository>()
   private val userSession = mock<UserSession>()
 
@@ -58,8 +58,8 @@ class LinkIdWithPatientViewControllerTest {
     uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
 
     // then
-    verify(view).renderIdentifierText(identifier)
-    verifyNoMoreInteractions(view)
+    verify(ui).renderIdentifierText(identifier)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -87,9 +87,9 @@ class LinkIdWithPatientViewControllerTest {
         assigningUser = user
     )
 
-    verify(view).renderIdentifierText(identifier)
-    verify(view).closeSheetWithIdLinked()
-    verifyNoMoreInteractions(view)
+    verify(ui).renderIdentifierText(identifier)
+    verify(ui).closeSheetWithIdLinked()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -100,9 +100,9 @@ class LinkIdWithPatientViewControllerTest {
     uiEvents.onNext(LinkIdWithPatientCancelClicked)
 
     // then
-    verify(view).renderIdentifierText(identifier)
-    verify(view).closeSheetWithoutIdLinked()
-    verifyNoMoreInteractions(view)
+    verify(ui).renderIdentifierText(identifier)
+    verify(ui).closeSheetWithoutIdLinked()
+    verifyNoMoreInteractions(ui)
 
     verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
   }
@@ -118,6 +118,6 @@ class LinkIdWithPatientViewControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(view) }
+        .subscribe { uiChange -> uiChange(ui) }
   }
 }

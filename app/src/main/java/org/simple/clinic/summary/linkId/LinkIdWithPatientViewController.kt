@@ -12,7 +12,7 @@ import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = LinkIdWithPatientView
+typealias Ui = LinkIdWithPatientViewUi
 typealias UiChange = (Ui) -> Unit
 
 class LinkIdWithPatientViewController @Inject constructor(

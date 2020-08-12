@@ -12,6 +12,7 @@ class LinkIdWithPatientUpdate : Update<LinkIdWithPatientModel, LinkIdWithPatient
       is LinkIdWithPatientViewShown -> dispatch(RenderIdentifierText(event.identifier))
       LinkIdWithPatientCancelClicked -> dispatch(CloseSheetWithOutIdLinked)
       is CurrentUserLoaded -> noChange()
+      IdentifierAddedToPatient -> noChange()
     }
   }
 }

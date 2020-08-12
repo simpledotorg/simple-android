@@ -16,3 +16,5 @@ object LinkIdWithPatientCancelClicked : LinkIdWithPatientEvent() {
 }
 
 data class CurrentUserLoaded(val user: User) : LinkIdWithPatientEvent()
+
+object IdentifierAddedToPatient : LinkIdWithPatientEvent()

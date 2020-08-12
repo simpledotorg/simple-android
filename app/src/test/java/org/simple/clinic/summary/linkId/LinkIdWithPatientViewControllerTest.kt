@@ -32,6 +32,7 @@ class LinkIdWithPatientViewControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<LinkIdWithPatientViewUi>()
+  private val uiActions = mock<LinkIdWithPatientUiActions>()
   private val patientRepository = mock<PatientRepository>()
   private val userSession = mock<UserSession>()
 
@@ -62,8 +63,8 @@ class LinkIdWithPatientViewControllerTest {
     uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
 
     // then
-    verify(ui).renderIdentifierText(identifier)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).renderIdentifierText(identifier)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -91,9 +92,9 @@ class LinkIdWithPatientViewControllerTest {
         assigningUser = user
     )
 
-    verify(ui).renderIdentifierText(identifier)
-    verify(ui).closeSheetWithIdLinked()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).renderIdentifierText(identifier)
+    verify(uiActions).closeSheetWithIdLinked()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -104,9 +105,9 @@ class LinkIdWithPatientViewControllerTest {
     uiEvents.onNext(LinkIdWithPatientCancelClicked)
 
     // then
-    verify(ui).renderIdentifierText(identifier)
-    verify(ui).closeSheetWithoutIdLinked()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).renderIdentifierText(identifier)
+    verify(uiActions).closeSheetWithoutIdLinked()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
   }
@@ -121,7 +122,7 @@ class LinkIdWithPatientViewControllerTest {
         patientRepository = patientRepository,
         uuidGenerator = uuidGenerator,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
 
     testFixture = MobiusTestFixture(

@@ -68,7 +68,7 @@ import javax.inject.Inject
 class LinkIdWithPatientView(
     context: Context,
     attributeSet: AttributeSet
-) : FrameLayout(context, attributeSet), LinkIdWithPatientViewUi {
+) : FrameLayout(context, attributeSet), LinkIdWithPatientViewUi, LinkIdWithPatientUiActions {
 
   @Inject
   lateinit var controller: LinkIdWithPatientViewController

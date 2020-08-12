@@ -14,11 +14,13 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.animateBottomSheetIn
@@ -78,6 +80,18 @@ class LinkIdWithPatientView(
   private val backgroundView by bindView<View>(R.id.linkidwithpatient_background)
   private val contentContainer by bindView<View>(R.id.linkidwithpatient_content)
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            viewShows(),
+            addClicks(),
+            cancelClicks(),
+            downstreamUiEvents
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -94,12 +108,7 @@ class LinkIdWithPatientView(
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            viewShows(),
-            addClicks(),
-            cancelClicks(),
-            downstreamUiEvents
-        ),
+        events = events,
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

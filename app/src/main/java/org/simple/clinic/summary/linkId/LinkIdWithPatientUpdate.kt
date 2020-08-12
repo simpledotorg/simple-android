@@ -1,7 +1,6 @@
 package org.simple.clinic.summary.linkId
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -15,8 +14,13 @@ class LinkIdWithPatientUpdate : Update<LinkIdWithPatientModel, LinkIdWithPatient
           RenderIdentifierText(event.identifier)
       )
       LinkIdWithPatientCancelClicked -> dispatch(CloseSheetWithOutIdLinked)
-      is CurrentUserLoaded -> noChange()
-      IdentifierAddedToPatient -> noChange()
+      is CurrentUserLoaded -> dispatch(AddIdentifierToPatient(
+          patientUuid = model.patientUuid!!,
+          identifier = model.identifier!!,
+          user = event.user
+      ))
+      IdentifierAddedToPatient -> dispatch(CloseSheetWithLinkedId)
+      LinkIdWithPatientAddClicked -> dispatch(LoadCurrentUser)
     }
   }
 }

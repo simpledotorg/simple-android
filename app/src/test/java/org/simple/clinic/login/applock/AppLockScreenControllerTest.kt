@@ -4,6 +4,7 @@ import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -48,9 +49,9 @@ class AppLockScreenControllerTest {
     setupController()
     uiEvents.onNext(AppLockPinAuthenticated())
 
-    val inOrder = inOrder(lastUnlockTimestamp, screen)
-    inOrder.verify(lastUnlockTimestamp).delete()
-    inOrder.verify(screen).restorePreviousScreen()
+    verify(lastUnlockTimestamp).delete()
+    verify(screen).restorePreviousScreen()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -61,6 +62,7 @@ class AppLockScreenControllerTest {
     uiEvents.onNext(AppLockScreenCreated())
 
     verify(screen).setUserFullName(loggedInUser.fullName)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -72,8 +74,10 @@ class AppLockScreenControllerTest {
     setupController()
     uiEvents.onNext(AppLockScreenCreated())
 
+    verify(screen).setUserFullName(loggedInUser.fullName)
     verify(screen).setFacilityName(facility1.name)
     verify(screen).setFacilityName(facility2.name)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -82,6 +86,7 @@ class AppLockScreenControllerTest {
     uiEvents.onNext(AppLockForgotPinClicked())
 
     verify(screen).showConfirmResetPinDialog()
+    verifyNoMoreInteractions(screen)
   }
 
   private fun setupController() {

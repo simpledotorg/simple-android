@@ -27,16 +27,8 @@ class LinkIdWithPatientViewController @Inject constructor(
     return Observable
         .merge(
             addIdToPatient(replayedEvents),
-            cancelAddingIdToPatient(replayedEvents),
-            displayIdentifier(replayedEvents)
+            cancelAddingIdToPatient(replayedEvents)
         )
-  }
-
-  private fun displayIdentifier(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<LinkIdWithPatientViewShown>()
-        .map { it.identifier }
-        .map { identifier -> { ui: Ui -> ui.renderIdentifierText(identifier) } }
   }
 
   private fun addIdToPatient(events: Observable<UiEvent>): Observable<UiChange> {

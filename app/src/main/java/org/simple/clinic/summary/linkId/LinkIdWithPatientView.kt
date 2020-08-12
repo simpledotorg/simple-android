@@ -17,6 +17,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.businessid.Identifier
@@ -132,7 +133,7 @@ class LinkIdWithPatientView(
       return
     }
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     backgroundView.setOnClickListener {
       // Intentionally done to swallow click events.
@@ -199,5 +200,9 @@ class LinkIdWithPatientView(
         contentContainer = contentContainer,
         endAction = runAfter
     )
+  }
+
+  interface Injector {
+    fun inject(target: LinkIdWithPatientView)
   }
 }

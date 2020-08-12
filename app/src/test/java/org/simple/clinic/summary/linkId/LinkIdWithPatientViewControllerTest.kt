@@ -6,20 +6,25 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import com.spotify.mobius.Init
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class LinkIdWithPatientViewControllerTest {
@@ -45,10 +50,12 @@ class LinkIdWithPatientViewControllerTest {
   )
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<LinkIdWithPatientModel, LinkIdWithPatientEvent, LinkIdWithPatientEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -119,5 +126,21 @@ class LinkIdWithPatientViewControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
+
+    val effectHandler = LinkIdWithPatientEffectHandler(
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = LinkIdWithPatientModel.create(),
+        init = Init { first(it) },
+        update = LinkIdWithPatientUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = { /* no-op */ }
+    )
+
+    testFixture.start()
   }
 }

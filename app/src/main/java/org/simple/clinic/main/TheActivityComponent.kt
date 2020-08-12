@@ -113,7 +113,8 @@ interface TheActivityComponent :
     ScanSimpleIdScreen.Injector,
     HomeScreen.Injector,
     LoggedOutOfDeviceDialog.Injector,
-    PatientEntryScreen.Injector {
+    PatientEntryScreen.Injector,
+    UpdatePhoneNumberDialog.Injector {
   fun inject(target: TheActivity)
   fun inject(target: AppLockScreen)
   fun inject(target: PatientSummaryScreen)
@@ -121,7 +122,6 @@ interface TheActivityComponent :
   fun inject(target: ConfirmResetPinDialog)
   fun inject(target: NewMedicalHistoryScreen)
   fun inject(target: ConfirmDiscardChangesDialog)
-  fun inject(target: UpdatePhoneNumberDialog)
   fun inject(target: EditMedicinesScreen)
   fun inject(target: QrCodeScannerView_Old)
   fun inject(target: QrCodeScannerView)

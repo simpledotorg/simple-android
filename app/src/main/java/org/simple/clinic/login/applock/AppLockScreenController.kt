@@ -14,7 +14,7 @@ import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
-typealias Ui = AppLockScreen
+typealias Ui = AppLockScreenUi
 typealias UiChange = (Ui) -> Unit
 
 class AppLockScreenController @Inject constructor(

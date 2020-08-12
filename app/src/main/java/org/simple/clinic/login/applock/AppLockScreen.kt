@@ -25,7 +25,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), AppLockScreenUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -95,23 +95,23 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
           .ofType<PinAuthenticated>()
           .map { AppLockPinAuthenticated() }
 
-  fun setUserFullName(fullName: String) {
+  override fun setUserFullName(fullName: String) {
     fullNameTextView.text = fullName
   }
 
-  fun setFacilityName(facilityName: String) {
+  override fun setFacilityName(facilityName: String) {
     this.facilityTextView.text = facilityName
   }
 
-  fun restorePreviousScreen() {
+  override fun restorePreviousScreen() {
     screenRouter.pop()
   }
 
-  fun exitApp() {
+  override fun exitApp() {
     activity.finish()
   }
 
-  fun showConfirmResetPinDialog() {
+  override fun showConfirmResetPinDialog() {
     ConfirmResetPinDialog.show(activity.supportFragmentManager)
   }
 }

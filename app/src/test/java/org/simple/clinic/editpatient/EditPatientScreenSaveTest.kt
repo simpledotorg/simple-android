@@ -77,7 +77,7 @@ class EditPatientScreenSaveTest {
 
   private val inputFieldsFactory = InputFieldsFactory(
       dateTimeFormatter = dateOfBirthFormat,
-      today = LocalDate.now(userClock),
+      userClock = userClock,
       country = country
   )
 

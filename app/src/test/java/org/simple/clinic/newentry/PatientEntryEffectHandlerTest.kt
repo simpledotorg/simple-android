@@ -18,6 +18,7 @@ import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -35,12 +36,12 @@ class PatientEntryEffectHandlerTest {
   private val entry = TestData.ongoingPatientEntry()
 
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-  private val date = LocalDate.parse("2018-01-01")
+  private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val india = TestData.country(isoCountryCode = Country.INDIA)
 
   private val inputFieldsFactory = InputFieldsFactory(
       dateTimeFormatter = dateTimeFormatter,
-      today = date,
+      userClock = clock,
       country = india
   )
 

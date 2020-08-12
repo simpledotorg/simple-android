@@ -48,7 +48,7 @@ class PatientEntryUpdateTest {
 
   private val inputFieldsFactory = InputFieldsFactory(
       dateTimeFormatter = dateOfBirthFormat,
-      today = localDate,
+      userClock = userClock,
       country = india
   )
 

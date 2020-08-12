@@ -69,7 +69,7 @@ class EditPatientEffectHandlerTest {
 
   private val inputFieldsFactory = InputFieldsFactory(
       dateTimeFormatter = dateOfBirthFormatter,
-      today = date,
+      userClock = userClock,
       country = india
   )
 

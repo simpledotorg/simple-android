@@ -89,7 +89,7 @@ class PatientEntryScreenLogicTest {
 
   private val inputFieldsFactory = InputFieldsFactory(
       dateTimeFormatter = dateTimeFormatter,
-      today = LocalDate.now(userClock),
+      userClock = userClock,
       country = india
   )
 

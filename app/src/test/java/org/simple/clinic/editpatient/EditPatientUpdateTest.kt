@@ -44,7 +44,7 @@ class EditPatientUpdateTest {
 
     val inputFieldsFactory = InputFieldsFactory(
         dateTimeFormatter = dateOfBirthFormat,
-        today = LocalDate.now(clock),
+        userClock = clock,
         country = india
     )
 

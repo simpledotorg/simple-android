@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
-class InputFieldsFactory(
+class InputFieldsFactory private constructor(
     private val dateTimeFormatter: DateTimeFormatter,
     private val today: LocalDate,
     private val country: Country

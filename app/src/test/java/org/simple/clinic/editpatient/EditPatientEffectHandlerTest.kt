@@ -18,6 +18,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.PatientRepository
@@ -64,13 +65,13 @@ class EditPatientEffectHandlerTest {
       identifier = Identifier(value = "1234567890abcd", type = BangladeshNationalId)
   )
 
-  private val inputFieldsFactory = InputFieldsFactory(
-      dateTimeFormatter = dateOfBirthFormatter,
-      today = date
-  )
-
   private val india = TestData.country(isoCountryCode = Country.INDIA)
   private val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
+
+  private val inputFieldsFactory = InputFieldsFactory(IndiaInputFieldsProvider(
+      dateTimeFormatter = dateOfBirthFormatter,
+      today = LocalDate.now(userClock)
+  ))
 
   private val entry = EditablePatientEntry.from(
       patient = patient,
@@ -285,7 +286,7 @@ class EditPatientEffectHandlerTest {
     testCase.dispatch(LoadInputFields)
 
     // then
-    val expectedFields = inputFieldsFactory.fieldsFor(india)
+    val expectedFields = inputFieldsFactory.provideFields()
     testCase.assertOutgoingEvents(InputFieldsLoaded(InputFields(expectedFields)))
     verifyZeroInteractions(ui)
   }
@@ -293,7 +294,7 @@ class EditPatientEffectHandlerTest {
   @Test
   fun `when the setup UI effect is received, the UI must be setup with the input fields`() {
     // given
-    val inputFields = InputFields(inputFieldsFactory.fieldsFor(india))
+    val inputFields = InputFields(inputFieldsFactory.provideFields())
 
     // when
     testCase.dispatch(SetupUi(inputFields))

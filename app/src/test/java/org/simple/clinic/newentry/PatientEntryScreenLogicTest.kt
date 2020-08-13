@@ -27,6 +27,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
@@ -85,11 +86,12 @@ class PatientEntryScreenLogicTest {
   private val reporter = MockAnalyticsReporter()
 
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-  private val inputFieldsFactory = InputFieldsFactory(
+  private val india = TestData.country(isoCountryCode = Country.INDIA)
+
+  private val inputFieldsFactory = InputFieldsFactory(IndiaInputFieldsProvider(
       dateTimeFormatter = dateTimeFormatter,
       today = LocalDate.now(userClock)
-  )
-  private val india = TestData.country(isoCountryCode = Country.INDIA)
+  ))
 
   private lateinit var errorConsumer: (Throwable) -> Unit
 

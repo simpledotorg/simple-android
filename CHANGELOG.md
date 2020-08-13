@@ -7,6 +7,7 @@
 - Setup the UI via an effect in `EditPatientScreen`
 - Migrated `ConfirmRemoveBloodPressureDialog` to Mobius
 - Migrate `UpdatePhoneNumberDialog` to Mobius
+- Separate input fields providers based on country
 - [In Progress: 12 Aug 2020] Migrate `TheActivity` to Mobius
 - [In Progress: 11 Aug 2020] Migrate `PatientSearchResultsScreen` to Mobius
 - [In Progress: 12 Aug 2020] Migrate `LinkIdWithPatientView` to Mobius

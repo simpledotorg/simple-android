@@ -4,19 +4,20 @@ import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.LockAtTime
-import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.Instant
 
 class AppLockEffectHandler @AssistedInject constructor(
-    private val userSession: UserSession,
+    private val currentUser: Lazy<User>,
     private val facilityRepository: FacilityRepository,
-    @TypedPreference(LockAtTime) private val lockAfterTimestamp: Preference<Instant>,
     private val schedulersProvider: SchedulersProvider,
+    @TypedPreference(LockAtTime) private val lockAfterTimestamp: Preference<Instant>,
     @Assisted private val uiActions: AppLockUiActions
 ) {
 
@@ -39,7 +40,7 @@ class AppLockEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .switchMap { userSession.requireLoggedInUser() }
+          .map { currentUser.get() }
           .switchMap { facilityRepository.currentFacility(it) }
           .map(::CurrentFacilityLoaded)
     }
@@ -49,7 +50,7 @@ class AppLockEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .switchMap { userSession.requireLoggedInUser() }
+          .map { currentUser.get() }
           .map(::LoggedInUserLoaded)
     }
   }

@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -15,7 +16,9 @@ import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
 import java.util.UUID
 
@@ -24,7 +27,7 @@ class AppLockScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<AppLockScreen>()
+  private val ui = mock<AppLockScreenUi>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val lastUnlockTimestamp = mock<Preference<Instant>>()
@@ -37,10 +40,12 @@ class AppLockScreenControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<AppLockModel, AppLockEvent, AppLockEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -60,10 +65,10 @@ class AppLockScreenControllerTest {
     // then
     verify(lastUnlockTimestamp).delete()
 
-    verify(screen).setUserFullName(loggedInUser.fullName)
-    verify(screen).setFacilityName(facility.name)
-    verify(screen).restorePreviousScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).setUserFullName(loggedInUser.fullName)
+    verify(ui).setFacilityName(facility.name)
+    verify(ui).restorePreviousScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -80,9 +85,9 @@ class AppLockScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).setUserFullName(loggedInUser.fullName)
-    verify(screen).setFacilityName(facility.name)
-    verifyNoMoreInteractions(screen)
+    verify(ui).setUserFullName(loggedInUser.fullName)
+    verify(ui).setFacilityName(facility.name)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -97,10 +102,10 @@ class AppLockScreenControllerTest {
     setupController()
 
     // then
-    verify(screen).setUserFullName(loggedInUser.fullName)
-    verify(screen).setFacilityName(facility1.name)
-    verify(screen).setFacilityName(facility2.name)
-    verifyNoMoreInteractions(screen)
+    verify(ui).setUserFullName(loggedInUser.fullName)
+    verify(ui).setFacilityName(facility1.name)
+    verify(ui).setFacilityName(facility2.name)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -118,10 +123,10 @@ class AppLockScreenControllerTest {
     uiEvents.onNext(AppLockForgotPinClicked())
 
     // then
-    verify(screen).setUserFullName(loggedInUser.fullName)
-    verify(screen).setFacilityName(facility.name)
-    verify(screen).showConfirmResetPinDialog()
-    verifyNoMoreInteractions(screen)
+    verify(ui).setUserFullName(loggedInUser.fullName)
+    verify(ui).setFacilityName(facility.name)
+    verify(ui).showConfirmResetPinDialog()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
@@ -131,8 +136,26 @@ class AppLockScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(AppLockScreenCreated())
+
+    val effectHandler = AppLockEffectHandler(
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+
+    val uiRenderer = AppLockUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = AppLockModel.create(),
+        init = AppLockInit(),
+        update = AppLockUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
+
+    testFixture.start()
   }
 }

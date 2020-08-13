@@ -117,9 +117,9 @@ interface TheActivityComponent :
     PatientEntryScreen.Injector,
     UpdatePhoneNumberDialog.Injector,
     EditPatientScreen.Injector ,
-    LinkIdWithPatientView.Injector {
+    LinkIdWithPatientView.Injector,
+    AppLockScreen.Injector {
   fun inject(target: TheActivity)
-  fun inject(target: AppLockScreen)
   fun inject(target: PatientSummaryScreen)
   fun inject(target: FacilityChangeActivity)
   fun inject(target: ConfirmResetPinDialog)

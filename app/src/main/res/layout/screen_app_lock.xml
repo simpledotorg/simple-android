@@ -20,7 +20,7 @@
     android:paddingBottom="@dimen/spacing_16">
 
     <TextView
-      android:id="@+id/applock_facility_name"
+      android:id="@+id/facilityTextView"
       style="@style/Clinic.V2.FacilityNameTextView"
       android:layout_gravity="center_horizontal"
       android:layout_marginStart="@dimen/spacing_24"
@@ -34,7 +34,7 @@
       android:gravity="center_vertical">
 
       <TextView
-        android:id="@+id/applock_user_fullname"
+        android:id="@+id/fullNameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -45,7 +45,7 @@
         tools:text="A really long person name" />
 
       <com.google.android.material.button.MaterialButton
-        android:id="@+id/applock_logout"
+        android:id="@+id/logoutButton"
         style="?attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/spacing_24"
@@ -68,11 +68,11 @@
   <View
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:layout_alignTop="@+id/applock_pin_entry_card"
+    android:layout_alignTop="@id/pinEntryCardView"
     android:background="?colorPrimary" />
 
   <org.simple.clinic.security.pin.PinEntryCardView
-    android:id="@+id/applock_pin_entry_card"
+    android:id="@+id/pinEntryCardView"
     style="@style/Clinic.LoginCard"
     android:layout_below="@+id/applock_logo_container"
     app:verificationMethod="local" />

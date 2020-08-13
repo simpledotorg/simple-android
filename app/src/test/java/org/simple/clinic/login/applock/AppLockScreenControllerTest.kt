@@ -60,7 +60,7 @@ class AppLockScreenControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(AppLockPinAuthenticated())
+    uiEvents.onNext(AppLockPinAuthenticated)
 
     // then
     verify(lastUnlockTimestamp).delete()

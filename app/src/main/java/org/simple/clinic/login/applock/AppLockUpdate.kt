@@ -11,6 +11,7 @@ class AppLockUpdate : Update<AppLockModel, AppLockEvent, AppLockEffect> {
       AppLockBackClicked -> dispatch(ExitApp)
       AppLockForgotPinClicked -> dispatch(ShowConfirmResetPinDialog)
       UnlockApp -> dispatch(RestorePreviousScreen)
+      AppLockPinAuthenticated -> dispatch(UnlockOnAuthentication)
     }
   }
 }

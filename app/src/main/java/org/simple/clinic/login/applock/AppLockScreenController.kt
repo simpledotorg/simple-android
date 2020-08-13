@@ -28,8 +28,7 @@ class AppLockScreenController @Inject constructor(
 
     return Observable.mergeArray(
         populateFullName(replayedEvents),
-        populateFacilityName(replayedEvents),
-        unlockOnAuthentication(replayedEvents)
+        populateFacilityName(replayedEvents)
     )
   }
 
@@ -49,18 +48,5 @@ class AppLockScreenController @Inject constructor(
         .take(1)
         .switchMap { loggedInUser -> facilityRepository.currentFacility(loggedInUser) }
         .map { { ui: Ui -> ui.setFacilityName(it.name) } }
-  }
-
-  private fun unlockOnAuthentication(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<AppLockPinAuthenticated>()
-        .doOnNext {
-          // It is important that lockAfterTimestamp is cleared before
-          // the app is unlocked. Otherwise, exiting the lockscreen will
-          // dispose the controller and the timestamp will never get
-          // cleared.
-          lockAfterTimestamp.delete()
-        }
-        .map { { ui: Ui -> ui.restorePreviousScreen() } }
   }
 }

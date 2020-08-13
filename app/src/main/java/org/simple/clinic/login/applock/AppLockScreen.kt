@@ -130,7 +130,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
       pinEntryCardView
           .downstreamUiEvents
           .ofType<PinAuthenticated>()
-          .map { AppLockPinAuthenticated() }
+          .map { AppLockPinAuthenticated }
 
   override fun setUserFullName(fullName: String) {
     fullNameTextView.text = fullName

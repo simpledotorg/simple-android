@@ -10,6 +10,7 @@
 
 ### Changes
 - Updated translations: `ti`
+- Update error message of address fields in `EditPatientScreen`
 
 ### Internal
 - Migrated `LoginPinScreen` to Mobius

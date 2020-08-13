@@ -9,6 +9,7 @@ class AppLockUpdate : Update<AppLockModel, AppLockEvent, AppLockEffect> {
   override fun update(model: AppLockModel, event: AppLockEvent): Next<AppLockModel, AppLockEffect> {
     return when (event) {
       AppLockBackClicked -> dispatch(ExitApp)
+      AppLockForgotPinClicked -> dispatch(ShowConfirmResetPinDialog)
     }
   }
 }

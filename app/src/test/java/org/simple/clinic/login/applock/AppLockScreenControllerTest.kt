@@ -120,7 +120,7 @@ class AppLockScreenControllerTest {
 
     // when
     setupController()
-    uiEvents.onNext(AppLockForgotPinClicked())
+    uiEvents.onNext(AppLockForgotPinClicked)
 
     // then
     verify(ui).setUserFullName(loggedInUser.fullName)

@@ -7,3 +7,7 @@ sealed class AppLockEvent : UiEvent
 object AppLockBackClicked : AppLockEvent() {
   override val analyticsName = "App Lock:Back Clicked"
 }
+
+object AppLockForgotPinClicked : AppLockEvent() {
+  override val analyticsName = "App Lock:Forgot PIN Clicked"
+}

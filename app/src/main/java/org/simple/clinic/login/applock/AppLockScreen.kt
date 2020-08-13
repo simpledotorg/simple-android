@@ -124,7 +124,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
       pinEntryCardView
           .forgotPinButton
           .clicks()
-          .map { AppLockForgotPinClicked() }
+          .map { AppLockForgotPinClicked }
 
   private fun pinAuthentications() =
       pinEntryCardView

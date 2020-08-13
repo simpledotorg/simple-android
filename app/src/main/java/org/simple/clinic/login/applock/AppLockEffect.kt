@@ -7,3 +7,5 @@ object ExitApp : AppLockEffect()
 object ShowConfirmResetPinDialog : AppLockEffect()
 
 object RestorePreviousScreen : AppLockEffect()
+
+object UnlockOnAuthentication : AppLockEffect()

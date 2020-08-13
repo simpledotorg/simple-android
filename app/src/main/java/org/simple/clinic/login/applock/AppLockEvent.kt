@@ -11,3 +11,7 @@ object AppLockBackClicked : AppLockEvent() {
 object AppLockForgotPinClicked : AppLockEvent() {
   override val analyticsName = "App Lock:Forgot PIN Clicked"
 }
+
+object UnlockApp : AppLockEvent() {
+  override val analyticsName = "App Lock:Unlocked"
+}

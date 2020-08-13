@@ -25,7 +25,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), AppLockScreenUi {
+class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), AppLockScreenUi, AppLockUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

@@ -28,6 +28,7 @@ class AppLockScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<AppLockScreenUi>()
+  private val uiActions = mock<AppLockUiActions>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val lastUnlockTimestamp = mock<Preference<Instant>>()
@@ -65,8 +66,8 @@ class AppLockScreenControllerTest {
 
     verify(ui, times(2)).setUserFullName(loggedInUser.fullName)
     verify(ui).setFacilityName(facility.name)
-    verify(ui).restorePreviousScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).restorePreviousScreen()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -85,7 +86,7 @@ class AppLockScreenControllerTest {
     // then
     verify(ui, times(2)).setUserFullName(loggedInUser.fullName)
     verify(ui).setFacilityName(facility.name)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -103,7 +104,7 @@ class AppLockScreenControllerTest {
     verify(ui, times(3)).setUserFullName(loggedInUser.fullName)
     verify(ui).setFacilityName(facility1.name)
     verify(ui).setFacilityName(facility2.name)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -123,8 +124,8 @@ class AppLockScreenControllerTest {
     // then
     verify(ui, times(2)).setUserFullName(loggedInUser.fullName)
     verify(ui).setFacilityName(facility.name)
-    verify(ui).showConfirmResetPinDialog()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showConfirmResetPinDialog()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupController() {
@@ -135,7 +136,7 @@ class AppLockScreenControllerTest {
         facilityRepository = facilityRepository,
         lockAfterTimestamp = lastUnlockTimestamp,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
 
     val uiRenderer = AppLockUiRenderer(ui)

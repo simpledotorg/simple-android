@@ -1,5 +1,6 @@
 package org.simple.clinic.login.applock
 
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.user.User
 import org.simple.clinic.widgets.UiEvent
 
@@ -22,3 +23,5 @@ object AppLockPinAuthenticated : AppLockEvent() {
 }
 
 data class LoggedInUserLoaded(val user: User) : AppLockEvent()
+
+data class CurrentFacilityLoaded(val facility: Facility) : AppLockEvent()

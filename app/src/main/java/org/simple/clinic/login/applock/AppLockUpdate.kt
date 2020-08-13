@@ -14,6 +14,7 @@ class AppLockUpdate : Update<AppLockModel, AppLockEvent, AppLockEffect> {
       UnlockApp -> dispatch(RestorePreviousScreen)
       AppLockPinAuthenticated -> dispatch(UnlockOnAuthentication)
       is LoggedInUserLoaded -> next(model.userLoaded(event.user))
+      is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility))
     }
   }
 }

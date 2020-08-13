@@ -142,6 +142,7 @@ class AppLockScreenControllerTest {
 
     val effectHandler = AppLockEffectHandler(
         userSession = userSession,
+        facilityRepository = facilityRepository,
         lockAfterTimestamp = lastUnlockTimestamp,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui

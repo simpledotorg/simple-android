@@ -11,3 +11,5 @@ object RestorePreviousScreen : AppLockEffect()
 object UnlockOnAuthentication : AppLockEffect()
 
 object LoadLoggedInUser : AppLockEffect()
+
+object LoadCurrentFacility : AppLockEffect()

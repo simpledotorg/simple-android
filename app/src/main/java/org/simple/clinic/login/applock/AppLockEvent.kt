@@ -1,5 +1,6 @@
 package org.simple.clinic.login.applock
 
+import org.simple.clinic.user.User
 import org.simple.clinic.widgets.UiEvent
 
 sealed class AppLockEvent : UiEvent
@@ -19,3 +20,5 @@ object UnlockApp : AppLockEvent() {
 object AppLockPinAuthenticated : AppLockEvent() {
   override val analyticsName = "App Lock:PIN authenticated"
 }
+
+data class LoggedInUserLoaded(val user: User) : AppLockEvent()

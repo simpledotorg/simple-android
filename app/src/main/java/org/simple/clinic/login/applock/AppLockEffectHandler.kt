@@ -5,11 +5,13 @@ import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.Instant
 import javax.inject.Named
 
 class AppLockEffectHandler @AssistedInject constructor(
+    private val userSession: UserSession,
     @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: AppLockUiActions
@@ -26,7 +28,17 @@ class AppLockEffectHandler @AssistedInject constructor(
       .addAction(ShowConfirmResetPinDialog::class.java, uiActions::showConfirmResetPinDialog, schedulersProvider.ui())
       .addAction(RestorePreviousScreen::class.java, uiActions::restorePreviousScreen, schedulersProvider.ui())
       .addTransformer(UnlockOnAuthentication::class.java, unlockOnAuthentication())
+      .addTransformer(LoadLoggedInUser::class.java, loadLoggedInUser())
       .build()
+
+  private fun loadLoggedInUser(): ObservableTransformer<LoadLoggedInUser, AppLockEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .switchMap { userSession.requireLoggedInUser() }
+          .map(::LoggedInUserLoaded)
+    }
+  }
 
   private fun unlockOnAuthentication(): ObservableTransformer<UnlockOnAuthentication, AppLockEvent> {
     return ObservableTransformer { effects ->

@@ -30,6 +30,7 @@
 - Setup the UI via an effect in `PatientEntryScreen`
 - Setup the UI via an effect in `EditPatientScreen`
 - Separate input fields providers based on country
+- Add separate labels for "Street address" and "Village/Colony/Ward" labels in `PatientEntryScreen` and `EditPatientScreen` for Chennai facility groups
 - [In Progress: 06 Aug 2020] Migrate `PatientSearchResultsScreen` to Mobius
 - [In Progress: 10 Aug 2020] Migrate `ConfirmRemoveBloodPressureDialog` to Mobius
 

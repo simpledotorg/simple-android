@@ -9,9 +9,7 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.MAX_ALLOWED_PATIENT_AGE
 import org.simple.clinic.MIN_ALLOWED_PATIENT_AGE
-import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.Country
-import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
+import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Gender
@@ -45,7 +43,7 @@ class PatientEntryUpdateTest {
   private val updateSpec = UpdateSpec(update)
   private val defaultModel = PatientEntryModel.DEFAULT
 
-  private val inputFieldsFactory = InputFieldsFactory(IndiaInputFieldsProvider(
+  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
       dateTimeFormatter = dateOfBirthFormat,
       today = LocalDate.now(userClock)
   ))

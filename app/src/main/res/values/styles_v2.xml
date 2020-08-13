@@ -68,7 +68,7 @@
   <style name="Clinic.V2.TextAppearance" />
 
   <style name="Clinic.V2.TextAppearance.TextInputLayoutError">
-    <item name="android:textSize">@dimen/textsize_12</item>
+    <item name="android:textSize">@dimen/textsize_14</item>
     <item name="android:textColor">@color/red1</item>
     <item name="android:letterSpacing">0.02</item>
   </style>
@@ -371,6 +371,7 @@
   </style>
 
   <style name="Clinic.V2.TextAppearance.Caption.Red1">
+    <item name="android:textSize">@dimen/textsize_14</item>
     <item name="android:textColor">@color/red1</item>
   </style>
 

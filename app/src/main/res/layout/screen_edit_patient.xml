@@ -187,7 +187,7 @@
         android:layout_marginTop="@dimen/spacing_4"
         android:text="@string/patientedit_error_empty_gender"
         android:textColor="@color/textinputlayout_error"
-        android:textSize="@dimen/textsize_12"
+        android:textSize="@dimen/textsize_14"
         android:visibility="gone" />
 
       <com.google.android.material.textfield.TextInputLayout

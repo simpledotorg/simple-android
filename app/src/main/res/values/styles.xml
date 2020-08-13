@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
   <style name="Clinic" />
 
@@ -103,7 +103,7 @@
 
   <style name="Clinic.TextAppearance.TextInputLayoutError">
     <item name="android:textColor">@color/textinputlayout_error</item>
-    <item name="android:textSize">@dimen/textsize_12</item>
+    <item name="android:textSize">@dimen/textsize_14</item>
   </style>
 
   <style name="Clinic.LoginLogoContainer">

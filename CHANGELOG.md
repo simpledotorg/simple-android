@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Changes
+- Increase error text sizes
+
 ### Internal
 - Migrated `LoggedOutOfDeviceDialog` to Mobius
 - Setup the UI via an effect in `PatientEntryScreen`

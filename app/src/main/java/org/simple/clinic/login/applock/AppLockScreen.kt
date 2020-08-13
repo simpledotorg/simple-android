@@ -4,16 +4,13 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.button.MaterialButton
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.pin_entry_card.view.*
-import kotterknife.bindView
-import org.simple.clinic.R
+import kotlinx.android.synthetic.main.screen_app_lock.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
@@ -22,7 +19,6 @@ import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.security.pin.PinAuthenticated
-import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.showKeyboard
@@ -41,11 +37,6 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   @Inject
   lateinit var effectHandlerFactory: AppLockEffectHandler.Factory
-
-  private val facilityTextView by bindView<TextView>(R.id.applock_facility_name)
-  private val fullNameTextView by bindView<TextView>(R.id.applock_user_fullname)
-  private val logoutButton by bindView<MaterialButton>(R.id.applock_logout)
-  private val pinEntryCardView by bindView<PinEntryCardView>(R.id.applock_pin_entry_card)
 
   private val events by unsafeLazy {
     Observable

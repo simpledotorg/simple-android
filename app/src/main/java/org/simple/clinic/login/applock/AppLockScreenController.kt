@@ -4,7 +4,6 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
@@ -26,15 +25,6 @@ class AppLockScreenController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return populateFacilityName(replayedEvents)
-  }
-
-  private fun populateFacilityName(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<AppLockScreenCreated>()
-        .flatMap { userSession.requireLoggedInUser() }
-        .take(1)
-        .switchMap { loggedInUser -> facilityRepository.currentFacility(loggedInUser) }
-        .map { { ui: Ui -> ui.setFacilityName(it.name) } }
+    return Observable.never()
   }
 }

@@ -12,6 +12,10 @@ class AppLockInit : Init<AppLockModel, AppLockEffect> {
       effects.add(LoadLoggedInUser)
     }
 
+    if (model.hasFacility.not()) {
+      effects.add(LoadCurrentFacility)
+    }
+
     return first(model, effects)
   }
 }

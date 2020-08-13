@@ -2,6 +2,7 @@ package org.simple.clinic.login.applock
 
 import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -65,7 +66,7 @@ class AppLockScreenControllerTest {
     // then
     verify(lastUnlockTimestamp).delete()
 
-    verify(ui).setUserFullName(loggedInUser.fullName)
+    verify(ui, times(2)).setUserFullName(loggedInUser.fullName)
     verify(ui).setFacilityName(facility.name)
     verify(ui).restorePreviousScreen()
     verifyNoMoreInteractions(ui)
@@ -85,7 +86,7 @@ class AppLockScreenControllerTest {
     setupController()
 
     // then
-    verify(ui).setUserFullName(loggedInUser.fullName)
+    verify(ui, times(2)).setUserFullName(loggedInUser.fullName)
     verify(ui).setFacilityName(facility.name)
     verifyNoMoreInteractions(ui)
   }
@@ -102,7 +103,7 @@ class AppLockScreenControllerTest {
     setupController()
 
     // then
-    verify(ui).setUserFullName(loggedInUser.fullName)
+    verify(ui, times(3)).setUserFullName(loggedInUser.fullName)
     verify(ui).setFacilityName(facility1.name)
     verify(ui).setFacilityName(facility2.name)
     verifyNoMoreInteractions(ui)
@@ -123,7 +124,7 @@ class AppLockScreenControllerTest {
     uiEvents.onNext(AppLockForgotPinClicked)
 
     // then
-    verify(ui).setUserFullName(loggedInUser.fullName)
+    verify(ui, times(2)).setUserFullName(loggedInUser.fullName)
     verify(ui).setFacilityName(facility.name)
     verify(ui).showConfirmResetPinDialog()
     verifyNoMoreInteractions(ui)

@@ -5,3 +5,5 @@ sealed class AppLockEffect
 object ExitApp : AppLockEffect()
 
 object ShowConfirmResetPinDialog : AppLockEffect()
+
+object RestorePreviousScreen : AppLockEffect()

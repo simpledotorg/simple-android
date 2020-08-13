@@ -19,5 +19,6 @@ class AppLockEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<AppLockEffect, AppLockEvent> = RxMobius
       .subtypeEffectHandler<AppLockEffect, AppLockEvent>()
       .addAction(ExitApp::class.java, uiActions::exitApp, schedulersProvider.ui())
+      .addAction(ShowConfirmResetPinDialog::class.java, uiActions::showConfirmResetPinDialog, schedulersProvider.ui())
       .build()
 }

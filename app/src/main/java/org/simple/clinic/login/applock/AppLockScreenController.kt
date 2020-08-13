@@ -6,7 +6,6 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
@@ -14,7 +13,7 @@ import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
-typealias Ui = AppLockScreen
+typealias Ui = AppLockScreenUi
 typealias UiChange = (Ui) -> Unit
 
 class AppLockScreenController @Inject constructor(
@@ -25,7 +24,6 @@ class AppLockScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(ReportAnalyticsEvents())
         .replay()
 
     return Observable.mergeArray(

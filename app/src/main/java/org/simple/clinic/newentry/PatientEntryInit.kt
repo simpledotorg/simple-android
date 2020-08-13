@@ -6,5 +6,5 @@ import com.spotify.mobius.Init
 
 class PatientEntryInit : Init<PatientEntryModel, PatientEntryEffect> {
   override fun init(model: PatientEntryModel): First<PatientEntryModel, PatientEntryEffect> =
-      first(model, setOf(FetchPatientEntry))
+      first(model, setOf(FetchPatientEntry, LoadInputFields))
 }

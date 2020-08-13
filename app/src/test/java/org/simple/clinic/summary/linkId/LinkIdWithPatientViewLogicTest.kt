@@ -7,9 +7,8 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import com.spotify.mobius.Init
-import io.reactivex.Observable
+import dagger.Lazy
 import io.reactivex.Single
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -19,7 +18,6 @@ import org.simple.clinic.TestData
 import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
@@ -27,14 +25,14 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class LinkIdWithPatientViewControllerTest {
+class LinkIdWithPatientViewLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<LinkIdWithPatientViewUi>()
+  private val uiActions = mock<LinkIdWithPatientUiActions>()
   private val patientRepository = mock<PatientRepository>()
-  private val userSession = mock<UserSession>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
@@ -49,12 +47,10 @@ class LinkIdWithPatientViewControllerTest {
       uuid = UUID.fromString("5039c37f-3752-4dcb-ad69-0b6e38e02107")
   )
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<LinkIdWithPatientModel, LinkIdWithPatientEvent, LinkIdWithPatientEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -66,7 +62,7 @@ class LinkIdWithPatientViewControllerTest {
 
     // then
     verify(ui).renderIdentifierText(identifier)
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -95,8 +91,8 @@ class LinkIdWithPatientViewControllerTest {
     )
 
     verify(ui).renderIdentifierText(identifier)
-    verify(ui).closeSheetWithIdLinked()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).closeSheetWithIdLinked()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -108,33 +104,24 @@ class LinkIdWithPatientViewControllerTest {
 
     // then
     verify(ui).renderIdentifierText(identifier)
-    verify(ui).closeSheetWithoutIdLinked()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).closeSheetWithoutIdLinked()
+    verifyNoMoreInteractions(ui, uiActions)
 
     verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
   }
 
   private fun setupController() {
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
-
     val uuidGenerator = FakeUuidGenerator.fixed(identifierUuid)
-    val controller = LinkIdWithPatientViewController(
-        patientRepository = patientRepository,
-        userSession = userSession,
-        uuidGenerator = uuidGenerator
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
 
     val effectHandler = LinkIdWithPatientEffectHandler(
-        userSession = userSession,
+        currentUser = Lazy { user },
         patientRepository = patientRepository,
         uuidGenerator = uuidGenerator,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = uiActions
     )
+
+    val uiRenderer = LinkIdWithPatientUiRenderer(ui)
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
@@ -142,7 +129,7 @@ class LinkIdWithPatientViewControllerTest {
         init = Init { first(it) },
         update = LinkIdWithPatientUpdate(),
         effectHandler = effectHandler.build(),
-        modelUpdateListener = { /* no-op */ }
+        modelUpdateListener = uiRenderer::render
     )
 
     testFixture.start()

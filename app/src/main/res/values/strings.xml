@@ -75,6 +75,8 @@
   <string name="patiententry_upazila">Upazila</string>
   <string name="patiententry_state">State</string>
   <string name="patiententry_region">Region</string>
+  <string name="patiententry_doornumber_streetname">Door number, street name</string>
+  <string name="patiententry_division_area">Division and area</string>
   <string name="patiententry_save_patient">Next</string>
   <string name="patiententry_error_empty_fullname">Enter patient’s full name</string>
   <string name="patiententry_error_empty_gender">Choose patient’s gender</string>

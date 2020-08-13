@@ -12,6 +12,8 @@ import io.reactivex.Single
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
+import org.simple.clinic.newentry.country.InputFields
+import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.DateOfBirth.Type.EXACT
@@ -39,7 +41,6 @@ import java.util.UUID
 import javax.inject.Named
 
 class EditPatientEffectHandler @AssistedInject constructor(
-    @Assisted private val ui: EditPatientUi,
     private val userClock: UserClock,
     private val patientRepository: PatientRepository,
     private val utcClock: UtcClock,
@@ -47,7 +48,9 @@ class EditPatientEffectHandler @AssistedInject constructor(
     private val country: Country,
     private val uuidGenerator: UuidGenerator,
     private val currentUser: Lazy<User>,
-    @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
+    private val inputFieldsFactory: InputFieldsFactory,
+    @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter,
+    @Assisted private val ui: EditPatientUi
 ) {
 
   @AssistedInject.Factory
@@ -68,6 +71,8 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .addAction(ShowDiscardChangesAlertEffect::class.java, ui::showDiscardChangesAlert, schedulersProvider.ui())
         .addTransformer(FetchBpPassportsEffect::class.java, fetchBpPassports(schedulersProvider.io()))
         .addTransformer(SavePatientEffect::class.java, savePatientTransformer(schedulersProvider.io()))
+        .addTransformer(LoadInputFields::class.java, loadInputFields())
+        .addConsumer(SetupUi::class.java, { ui.setupUi(it.inputFields)}, schedulersProvider.ui())
         .build()
   }
 
@@ -331,4 +336,13 @@ class EditPatientEffectHandler @AssistedInject constructor(
   private fun isAlternativeIdAdded(it: SavePatientEffect) = it.saveAlternativeId == null && it.ongoingEntry.alternativeId.isNotBlank()
 
   private fun isAlternativeIdCleared(it: SavePatientEffect) = it.saveAlternativeId != null && it.ongoingEntry.alternativeId.isBlank()
+
+  private fun loadInputFields(): ObservableTransformer<LoadInputFields, EditPatientEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .map { inputFieldsFactory.fieldsFor(country) }
+          .map(::InputFields)
+          .map(::InputFieldsLoaded)
+    }
+  }
 }

@@ -14,15 +14,16 @@ import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.textfield.TextInputLayout
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxRadioGroup
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.widget.checkedChanges
+import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.patient_edit_bp_passport_view.view.*
 import kotlinx.android.synthetic.main.screen_edit_patient.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.di.injector
 import org.simple.clinic.editpatient.EditPatientValidationError.AgeExceedsMaxLimit
 import org.simple.clinic.editpatient.EditPatientValidationError.AgeExceedsMinLimit
 import org.simple.clinic.editpatient.EditPatientValidationError.BothDateOfBirthAndAgeAdsent
@@ -40,7 +41,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenKey
 import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Features
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AgeField
@@ -111,9 +111,6 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   lateinit var effectHandlerFactory: EditPatientEffectHandler.Factory
 
   @Inject
-  lateinit var inputFields: InputFields
-
-  @Inject
   lateinit var features: Features
 
   private val screenKey by unsafeLazy {
@@ -144,14 +141,13 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   private val delegate by unsafeLazy {
     val (patient, address, phoneNumber, bangladeshNationalId) = screenKey
 
-    MobiusDelegate(
-        events,
-        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, bangladeshNationalId, EditPatientState.NOT_SAVING_PATIENT),
-        EditPatientInit(patient, address, phoneNumber, bangladeshNationalId),
-        EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator),
-        effectHandlerFactory.create(this).build(),
-        viewRenderer::render,
-        crashReporter
+    MobiusDelegate.forView(
+        events = events,
+        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, bangladeshNationalId, EditPatientState.NOT_SAVING_PATIENT),
+        init = EditPatientInit(patient, address, phoneNumber, bangladeshNationalId),
+        update = EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = viewRenderer::render
     )
   }
 
@@ -161,19 +157,19 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
       return
     }
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
+  }
 
-    delegate.prepare()
-
-    showOrHideInputFields()
-    setInputFieldsHint()
-    showOrHideGenderRadioButtons()
+  override fun setupUi(inputFields: InputFields) {
+    showOrHideInputFields(inputFields)
+    setInputFieldsHint(inputFields)
+    showOrHideGenderRadioButtons(inputFields)
 
     deletePatient.visibleOrGone(features.isEnabled(DeletePatient))
     deletePatient.setOnClickListener { screenRouter.push(DeletePatientScreenKey(screenKey.patient.uuid)) }
   }
 
-  private fun showOrHideInputFields() {
+  private fun showOrHideInputFields(inputFields: InputFields) {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,
         AgeField::class.java to ageInputLayout,
@@ -195,7 +191,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
   }
 
-  private fun setInputFieldsHint() {
+  private fun setInputFieldsHint(inputFields: InputFields) {
     val allTextInputFields: Map<Class<*>, TextInputLayout> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,
         LandlineOrMobileField::class.java to phoneNumberInputLayout,
@@ -212,7 +208,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
   }
 
-  private fun showOrHideGenderRadioButtons() {
+  private fun showOrHideGenderRadioButtons(inputFields: InputFields) {
     val allGendersRadioButtons = mapOf(
         Male to maleRadioButton,
         Female to femaleRadioButton,
@@ -245,38 +241,38 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   private fun saveClicks(): Observable<EditPatientEvent> {
-    return RxView.clicks(saveButtonFrame.button).map { SaveClicked }
+    return saveButtonFrame.button.clicks().map { SaveClicked }
   }
 
   private fun nameTextChanges(): Observable<EditPatientEvent> {
-    return RxTextView.textChanges(fullNameEditText).map { NameChanged(it.toString()) }
+    return fullNameEditText.textChanges().map { NameChanged(it.toString()) }
   }
 
   private fun phoneNumberTextChanges(): Observable<EditPatientEvent> {
-    return RxTextView.textChanges(phoneNumberEditText).map { PhoneNumberChanged(it.toString()) }
+    return phoneNumberEditText.textChanges().map { PhoneNumberChanged(it.toString()) }
   }
 
   private fun districtTextChanges(): Observable<EditPatientEvent> {
-    return RxTextView.textChanges(districtEditText).map { DistrictChanged(it.toString()) }
+    return districtEditText.textChanges().map { DistrictChanged(it.toString()) }
   }
 
   private fun stateTextChanges(): Observable<EditPatientEvent> {
-    return RxTextView.textChanges(stateEditText).map { StateChanged(it.toString()) }
+    return stateEditText.textChanges().map { StateChanged(it.toString()) }
   }
 
   private fun bangladeshNationalIdChanges(): Observable<EditPatientEvent> {
-    return RxTextView.textChanges(alternativeIdInputEditText).map { AlternativeIdChanged(it.toString()) }
+    return alternativeIdInputEditText.textChanges().map { AlternativeIdChanged(it.toString()) }
   }
 
   private fun colonyTextChanges(): Observable<EditPatientEvent> {
-    return RxTextView.textChanges(colonyOrVillageEditText).map { ColonyOrVillageChanged(it.toString()) }
+    return colonyOrVillageEditText.textChanges().map { ColonyOrVillageChanged(it.toString()) }
   }
 
   private fun backClicks(): Observable<EditPatientEvent> {
-    val hardwareBackKeyClicks = Observable.create<Any> { emitter ->
+    val hardwareBackKeyClicks = Observable.create<BackClicked> { emitter ->
       val interceptor = object : BackPressInterceptor {
         override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
-          emitter.onNext(Any())
+          emitter.onNext(BackClicked)
           callback.markBackPressIntercepted()
         }
       }
@@ -284,9 +280,13 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
       screenRouter.registerBackPressInterceptor(interceptor)
     }
 
-    return RxView.clicks(backButton)
-        .mergeWith(hardwareBackKeyClicks)
+    val backButtonClicks = backButton
+        .clicks()
         .map { BackClicked }
+
+    return backButtonClicks
+        .mergeWith(hardwareBackKeyClicks)
+        .cast()
   }
 
   private fun genderChanges(): Observable<EditPatientEvent> {
@@ -295,7 +295,8 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         R.id.maleRadioButton to Male,
         R.id.transgenderRadioButton to Transgender)
 
-    return RxRadioGroup.checkedChanges(genderRadioGroup)
+    return genderRadioGroup
+        .checkedChanges()
         .filter { it != -1 }
         .map { checkedId ->
           val gender = radioIdToGenders.getValue(checkedId)
@@ -583,5 +584,9 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   override fun setBangladeshNationalId(nationalId: String) {
     alternativeIdInputEditText.setTextAndCursor(nationalId)
+  }
+
+  interface Injector {
+    fun inject(target: EditPatientScreen)
   }
 }

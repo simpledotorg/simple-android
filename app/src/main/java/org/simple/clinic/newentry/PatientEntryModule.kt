@@ -2,8 +2,6 @@ package org.simple.clinic.newentry
 
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.appconfig.Country
-import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.util.UserClock
 import java.time.LocalDate
@@ -17,8 +15,4 @@ class PatientEntryModule {
       @Named("date_for_user_input") dateTimeFormatter: DateTimeFormatter,
       userClock: UserClock
   ) = InputFieldsFactory(dateTimeFormatter, LocalDate.now(userClock))
-
-  @Provides
-  fun formFields(inputFieldsFactory: InputFieldsFactory, country: Country): InputFields =
-      InputFields(inputFieldsFactory.fieldsFor(country))
 }

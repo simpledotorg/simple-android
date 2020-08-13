@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.pin_entry_card.view.*
 import kotlinx.android.synthetic.main.screen_app_lock.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
@@ -87,7 +87,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     bindUiToController(
         ui = this,
@@ -150,5 +150,9 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   override fun showConfirmResetPinDialog() {
     ConfirmResetPinDialog.show(activity.supportFragmentManager)
+  }
+
+  interface Injector {
+    fun inject(target: AppLockScreen)
   }
 }

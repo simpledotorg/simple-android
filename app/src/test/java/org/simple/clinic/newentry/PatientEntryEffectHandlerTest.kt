@@ -14,10 +14,12 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.newentry.Field.PhoneNumber
+import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -35,12 +37,13 @@ class PatientEntryEffectHandlerTest {
   private val entry = TestData.ongoingPatientEntry()
 
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-  private val date = LocalDate.parse("2018-01-01")
-  private val inputFieldsFactory = InputFieldsFactory(
-      dateTimeFormatter = dateTimeFormatter,
-      today = date
-  )
+  private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val india = TestData.country(isoCountryCode = Country.INDIA)
+
+  private val inputFieldsFactory = InputFieldsFactory(IndiaInputFieldsProvider(
+      dateTimeFormatter = dateTimeFormatter,
+      today = LocalDate.now(clock)
+  ))
 
   private val ui = mock<PatientEntryUi>()
   private val effectHandler = PatientEntryEffectHandler(
@@ -82,14 +85,14 @@ class PatientEntryEffectHandlerTest {
     testCase.dispatch(LoadInputFields)
 
     // then
-    val expectedFields = InputFields(inputFieldsFactory.fieldsFor(india))
+    val expectedFields = InputFields(inputFieldsFactory.provideFields())
     testCase.assertOutgoingEvents(InputFieldsLoaded(expectedFields))
   }
 
   @Test
   fun `when the setup UI effect is received, the UI must be setup with the input fields`() {
     // given
-    val inputFields = InputFields(inputFieldsFactory.fieldsFor(india))
+    val inputFields = InputFields(inputFieldsFactory.provideFields())
 
     // when
     setupTestCase()

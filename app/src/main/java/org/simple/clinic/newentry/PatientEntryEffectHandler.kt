@@ -191,7 +191,7 @@ class PatientEntryEffectHandler @AssistedInject constructor(
   private fun loadInputFields(): ObservableTransformer<LoadInputFields, PatientEntryEvent> {
     return ObservableTransformer { effects ->
       effects
-          .map { inputFieldsFactory.fieldsFor(country) }
+          .map { inputFieldsFactory.provideFields() }
           .map(::InputFields)
           .map(::InputFieldsLoaded)
     }

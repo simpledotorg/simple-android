@@ -340,7 +340,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
   private fun loadInputFields(): ObservableTransformer<LoadInputFields, EditPatientEvent> {
     return ObservableTransformer { effects ->
       effects
-          .map { inputFieldsFactory.fieldsFor(country) }
+          .map { inputFieldsFactory.provideFields() }
           .map(::InputFields)
           .map(::InputFieldsLoaded)
     }

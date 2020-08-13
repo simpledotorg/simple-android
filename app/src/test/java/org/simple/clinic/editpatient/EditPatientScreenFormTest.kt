@@ -29,6 +29,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
+import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
@@ -76,10 +77,10 @@ class EditPatientScreenFormTest {
   private val country = TestData.country()
   private val user = TestData.loggedInUser()
 
-  private val inputFieldsFactory = InputFieldsFactory(
+  private val inputFieldsFactory = InputFieldsFactory(IndiaInputFieldsProvider(
       dateTimeFormatter = dateOfBirthFormat,
       today = LocalDate.now(userClock)
-  )
+  ))
 
   @Test
   @Parameters(method = "params for hiding errors on text changes")

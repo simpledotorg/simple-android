@@ -29,6 +29,7 @@
 - Migrate `EnterOtpScreen` to Mobius
 - Setup the UI via an effect in `PatientEntryScreen`
 - Setup the UI via an effect in `EditPatientScreen`
+- Separate input fields providers based on country
 - [In Progress: 06 Aug 2020] Migrate `PatientSearchResultsScreen` to Mobius
 - [In Progress: 10 Aug 2020] Migrate `ConfirmRemoveBloodPressureDialog` to Mobius
 

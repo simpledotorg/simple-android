@@ -117,10 +117,11 @@ class LinkIdWithPatientViewControllerTest {
   private fun setupController() {
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
 
+    val uuidGenerator = FakeUuidGenerator.fixed(identifierUuid)
     val controller = LinkIdWithPatientViewController(
         patientRepository = patientRepository,
         userSession = userSession,
-        uuidGenerator = FakeUuidGenerator.fixed(identifierUuid)
+        uuidGenerator = uuidGenerator
     )
 
     controllerSubscription = uiEvents
@@ -128,6 +129,9 @@ class LinkIdWithPatientViewControllerTest {
         .subscribe { uiChange -> uiChange(ui) }
 
     val effectHandler = LinkIdWithPatientEffectHandler(
+        userSession = userSession,
+        patientRepository = patientRepository,
+        uuidGenerator = uuidGenerator,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = ui
     )

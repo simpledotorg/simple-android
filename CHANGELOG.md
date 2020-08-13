@@ -3,6 +3,7 @@
 ## Next Release
 ### Changes
 - Increase error text sizes
+- Update error message of address fields in `EditPatientScreen`
 
 ### Internal
 - Migrated `LoggedOutOfDeviceDialog` to Mobius

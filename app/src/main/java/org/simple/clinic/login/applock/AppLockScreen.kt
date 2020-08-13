@@ -111,7 +111,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     return Observable.create { emitter ->
       val interceptor = object : BackPressInterceptor {
         override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
-          emitter.onNext(AppLockBackClicked())
+          emitter.onNext(AppLockBackClicked)
           callback.markBackPressIntercepted()
         }
       }

@@ -30,7 +30,6 @@ class AppLockScreenController @Inject constructor(
         populateFullName(replayedEvents),
         populateFacilityName(replayedEvents),
         unlockOnAuthentication(replayedEvents),
-        exitOnBackClick(replayedEvents),
         showConfirmResetPinDialog(replayedEvents)
     )
   }
@@ -64,12 +63,6 @@ class AppLockScreenController @Inject constructor(
           lockAfterTimestamp.delete()
         }
         .map { { ui: Ui -> ui.restorePreviousScreen() } }
-  }
-
-  private fun exitOnBackClick(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<AppLockBackClicked>()
-        .map { { ui: Ui -> ui.exitApp() } }
   }
 
   private fun showConfirmResetPinDialog(events: Observable<UiEvent>): Observable<UiChange> {

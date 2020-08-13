@@ -26,19 +26,7 @@ class AppLockScreenController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.mergeArray(
-        populateFullName(replayedEvents),
-        populateFacilityName(replayedEvents)
-    )
-  }
-
-  private fun populateFullName(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<AppLockScreenCreated>()
-        .flatMap { userSession.requireLoggedInUser() }
-        .take(1)
-        .map { loggedInUser -> loggedInUser.fullName }
-        .map { { ui: Ui -> ui.setUserFullName(it) } }
+    return populateFacilityName(replayedEvents)
   }
 
   private fun populateFacilityName(events: Observable<UiEvent>): Observable<UiChange> {

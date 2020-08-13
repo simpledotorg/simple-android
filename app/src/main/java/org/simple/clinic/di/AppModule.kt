@@ -18,7 +18,6 @@ import org.simple.clinic.di.network.RetrofitModule
 import org.simple.clinic.facility.change.FacilityChangeModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListenerModule
-import org.simple.clinic.newentry.PatientEntryModule
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.SimpleVideoModule
@@ -76,7 +75,6 @@ import javax.inject.Named
   HttpInterceptorsModule::class,
   RetrofitModule::class,
   ClearPatientDataModule::class,
-  PatientEntryModule::class,
   FlipperModule::class,
   PinVerificationModule::class,
   SessionModule::class,

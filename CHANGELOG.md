@@ -9,6 +9,7 @@
 - [In Progress: 12 Aug 2020] Migrate `TheActivity` to Mobius
 - [In Progress: 11 Aug 2020] Migrate `PatientSearchResultsScreen` to Mobius
 - [In Progress: 12 Aug 2020] Migrate `LinkIdWithPatientView` to Mobius
+- [In Progress: 13 Aug 2020] Migrate `AppLockScreen` to Mobius
 
 ## On Demo
 ### Features

@@ -6,49 +6,40 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class PatientSearchResultsControllerTest {
+class PatientSearchResultsLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
   private val ui: PatientSearchResultsUi = mock()
+  private val uiActions: PatientSearchResultsUiActions = mock()
 
   private val patientRepository: PatientRepository = mock()
-  private val facilityRepository: FacilityRepository = mock()
-  private val userSession: UserSession = mock()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  private val loggedInUser = TestData.loggedInUser(UUID.fromString("e83b9b27-0a05-4750-9ef7-270cda65217b"))
   private val currentFacility = TestData.facility(UUID.fromString("af8e817c-8772-4c84-9f4f-1f331fa0b2a5"))
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<PatientSearchResultsModel, PatientSearchResultsEvent, PatientSearchResultsEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -63,8 +54,8 @@ class PatientSearchResultsControllerTest {
     uiEvents.onNext(PatientSearchResultClicked(patientUuid))
 
     // then
-    verify(ui).openPatientSummaryScreen(patientUuid)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openPatientSummaryScreen(patientUuid)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -79,8 +70,8 @@ class PatientSearchResultsControllerTest {
     uiEvents.onNext(PatientSearchResultClicked(patientUuid))
 
     // then
-    verify(ui).openLinkIdWithPatientScreen(patientUuid, identifier)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openLinkIdWithPatientScreen(patientUuid, identifier)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -98,8 +89,8 @@ class PatientSearchResultsControllerTest {
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(ui).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -120,8 +111,8 @@ class PatientSearchResultsControllerTest {
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(ui).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -139,8 +130,8 @@ class PatientSearchResultsControllerTest {
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(ui).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -161,8 +152,8 @@ class PatientSearchResultsControllerTest {
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(ui).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -180,22 +171,18 @@ class PatientSearchResultsControllerTest {
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(ui).openPatientEntryScreen(currentFacility)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openPatientEntryScreen(currentFacility)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupController(
       searchCriteria: PatientSearchCriteria
   ) {
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(loggedInUser)))
-    whenever(facilityRepository.currentFacility(loggedInUser)) doReturn Observable.just(currentFacility)
-
     val effectHandler = PatientSearchResultsEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         patientRepository = patientRepository,
-        userSession = userSession,
-        facilityRepository = facilityRepository,
-        uiActions = ui
+        currentFacility = dagger.Lazy { currentFacility },
+        uiActions = uiActions
     )
     val uiRenderer = PatientSearchResultsUiRenderer(ui)
 
@@ -208,18 +195,5 @@ class PatientSearchResultsControllerTest {
         init = PatientSearchResultsInit()
     )
     testFixture.start()
-
-    val controller = PatientSearchResultsController(
-        patientRepository = patientRepository,
-        facilityRepository = facilityRepository,
-        userSession = userSession,
-        patientSearchCriteria = searchCriteria
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
-    uiEvents.onNext(PatientSearchResultsScreenCreated())
   }
 }

@@ -11,7 +11,6 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_patient_search_results.view.*
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
@@ -42,13 +41,10 @@ import javax.inject.Inject
 class PatientSearchResultsScreen(
     context: Context,
     attrs: AttributeSet
-) : RelativeLayout(context, attrs), PatientSearchResultsUi {
+) : RelativeLayout(context, attrs), PatientSearchResultsUi, PatientSearchResultsUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
-
-  @Inject
-  lateinit var controllerInjectionFactory: PatientSearchResultsController.InjectionFactory
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -64,7 +60,6 @@ class PatientSearchResultsScreen(
   private val events by unsafeLazy {
     Observable
         .merge(
-            screenCreates(),
             searchResultClicks(),
             registerNewPatientClicks()
         )
@@ -96,20 +91,15 @@ class PatientSearchResultsScreen(
     setupScreen()
 
     val screenDestroys = detaches().map { ScreenDestroyed() }
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controllerInjectionFactory.create(screenKey.criteria),
-        screenDestroys = screenDestroys
-    )
-
     setupAlertResults(screenDestroys)
   }
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     delegate.start()
+    searchResultsView
+        .downstreamUiEvents
+        .onNext(SearchPatientWithCriteria(screenKey.criteria))
   }
 
   override fun onDetachedFromWindow() {
@@ -167,14 +157,6 @@ class PatientSearchResultsScreen(
       is Name -> patientSearchCriteria.patientName
       is PhoneNumber -> patientSearchCriteria.phoneNumber
     }
-  }
-
-  private fun screenCreates(): Observable<UiEvent> {
-    val screenKey = screenRouter.key<PatientSearchResultsScreenKey>(this)
-    searchResultsView
-        .downstreamUiEvents
-        .onNext(SearchPatientWithCriteria(screenKey.criteria))
-    return Observable.just(PatientSearchResultsScreenCreated())
   }
 
   override fun openPatientSummaryScreen(patientUuid: UUID) {

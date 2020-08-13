@@ -6,7 +6,8 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.pin_entry_card.view.*
@@ -92,7 +93,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         ui = this,
         events = events,
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
 
     logoutButton.setOnClickListener {
@@ -120,8 +121,9 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   private fun forgotPinClicks() =
-      RxView
-          .clicks(pinEntryCardView.forgotPinButton)
+      pinEntryCardView
+          .forgotPinButton
+          .clicks()
           .map { AppLockForgotPinClicked() }
 
   private fun pinAuthentications() =

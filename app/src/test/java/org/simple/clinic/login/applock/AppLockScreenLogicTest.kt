@@ -22,7 +22,7 @@ import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
 import java.util.UUID
 
-class AppLockScreenControllerTest {
+class AppLockScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

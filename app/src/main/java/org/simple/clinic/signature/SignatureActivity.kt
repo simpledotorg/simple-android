@@ -5,7 +5,8 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
-import io.reactivex.rxkotlin.ofType
+import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.activity_signature.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
@@ -20,14 +21,19 @@ class SignatureActivity : AppCompatActivity(), SignatureUiActions {
   @Inject
   lateinit var effectHandlerFactory: SignatureEffectHandler.Factory
 
-  private val events by unsafeLazy {
-    savingSignature()
+  private val events: Observable<SignatureEvent> by unsafeLazy {
+    Observable
+        .merge(
+            savingSignature(),
+            clearSignature()
+        )
+        .cast<SignatureEvent>()
   }
 
   private val mobiusDelegate by unsafeLazy {
 
     MobiusDelegate.forActivity(
-        events = events.ofType(),
+        events = events,
         defaultModel = SignatureModel.create(filesDir),
         update = SignatureUpdate(),
         effectHandler = effectHandlerFactory.create(this).build()
@@ -46,9 +52,14 @@ class SignatureActivity : AppCompatActivity(), SignatureUiActions {
         AcceptClicked(bitmap)
       }
 
-  override fun clearSignature() {
+  private fun clearSignature() = clearSignature
+      .clicks()
+      .map { UndoClicked }
+
+  override fun signatureCleared() {
     drawSignatureFrame.clear()
   }
+
 
   override fun closeScreen() {
     finish()

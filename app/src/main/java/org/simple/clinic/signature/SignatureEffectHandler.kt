@@ -23,7 +23,7 @@ class SignatureEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<SignatureEffect,
       SignatureEvent> = RxMobius
       .subtypeEffectHandler<SignatureEffect, SignatureEvent>()
-      .addAction(ClearSignature::class.java, ui::clearSignature, schedulersProvider.ui())
+      .addAction(ClearSignature::class.java, ui::signatureCleared, schedulersProvider.ui())
       .addTransformer(AcceptSignature::class.java, acceptSignature())
       .addAction(CloseScreen::class.java, ui::closeScreen, schedulersProvider.ui())
       .build()

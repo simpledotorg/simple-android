@@ -1,6 +1,6 @@
 package org.simple.clinic.signature
 
 interface SignatureUiActions {
-  fun clearSignature()
+  fun signatureCleared()
   fun closeScreen()
 }

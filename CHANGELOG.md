@@ -19,6 +19,9 @@
 - [In Progress: 12 Aug 2020] Migrate `TheActivity` to Mobius
 - [In Progress: 13 Aug 2020] Migrate `AppLockScreen` to Mobius
 
+### Fixes
+- Fix patient summary not opening on item click in all recent patients screen
+
 ## On Demo
 ### Features
 - Add progress UI for registering a patient

@@ -3,7 +3,6 @@ package org.simple.clinic.recentpatient
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import org.simple.clinic.mobius.ViewRenderer
-import org.simple.clinic.recentpatientsview.RecentPatientItemType
 import org.simple.clinic.util.UserClock
 import java.time.format.DateTimeFormatter
 import javax.inject.Named
@@ -26,7 +25,7 @@ class AllRecentPatientsUiRenderer @AssistedInject constructor(
   }
 
   private fun renderRecentPatients(model: AllRecentPatientsModel) {
-    val recentPatientItems = RecentPatientItemType.create(model.recentPatients!!, userClock, dateFormatter)
+    val recentPatientItems = RecentPatientItem.create(model.recentPatients!!, userClock, dateFormatter)
 
     ui.updateRecentPatients(recentPatientItems)
   }

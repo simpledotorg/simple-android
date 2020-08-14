@@ -56,7 +56,7 @@ class SignatureActivity : AppCompatActivity(), SignatureUiActions {
       .clicks()
       .map { UndoClicked }
 
-  override fun signatureCleared() {
+  override fun clearSignature() {
     drawSignatureFrame.clear()
   }
 

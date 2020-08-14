@@ -16,7 +16,6 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.recentpatientsview.RecentPatientItem
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider

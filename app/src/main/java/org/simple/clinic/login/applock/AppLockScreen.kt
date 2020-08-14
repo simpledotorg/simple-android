@@ -111,7 +111,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     return Observable.create { emitter ->
       val interceptor = object : BackPressInterceptor {
         override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
-          emitter.onNext(AppLockBackClicked())
+          emitter.onNext(AppLockBackClicked)
           callback.markBackPressIntercepted()
         }
       }
@@ -124,13 +124,13 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
       pinEntryCardView
           .forgotPinButton
           .clicks()
-          .map { AppLockForgotPinClicked() }
+          .map { AppLockForgotPinClicked }
 
   private fun pinAuthentications() =
       pinEntryCardView
           .downstreamUiEvents
           .ofType<PinAuthenticated>()
-          .map { AppLockPinAuthenticated() }
+          .map { AppLockPinAuthenticated }
 
   override fun setUserFullName(fullName: String) {
     fullNameTextView.text = fullName

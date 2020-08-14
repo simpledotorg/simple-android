@@ -75,7 +75,8 @@ buildscript {
       appcompat           : '1.2.0-beta01',
       navigation          : '2.3.0',
       lottie              : '3.4.0',
-      desugarJdk          : '1.0.5'
+      desugarJdk          : '1.0.5',
+      signaturePad        : '1.3.1'
   ]
 
   repositories {

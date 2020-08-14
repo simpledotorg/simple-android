@@ -40,4 +40,6 @@
   <color name="settings_divider_background">@color/grey3</color>
 
   <color name="scrim_color">#52000000</color>
+
+  <color name="translucent_background">#33BBFFFF</color>
 </resources>

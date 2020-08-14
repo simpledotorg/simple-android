@@ -360,6 +360,8 @@ dependencies {
   implementation "com.airbnb.android:lottie:$versions.lottie"
 
   coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$versions.desugarJdk"
+
+  implementation "com.github.gcacace:signature-pad:$versions.signaturePad"
 }
 
 // This must always be present at the bottom of this file, as per:

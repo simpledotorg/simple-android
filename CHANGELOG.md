@@ -2,6 +2,7 @@
 
 ## Next Release
 ### Changes
+- Added `SignatureActivity` to accept and save user signature
 - Increase error text sizes
 - Update error message of address fields in `EditPatientScreen`
 

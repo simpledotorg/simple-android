@@ -21,4 +21,11 @@
     <item name="toolbarStyle">@style/Clinic.V2.ToolbarStyle</item>
     <item name="alertDialogTheme">@style/Clinic.V2.DialogStyle</item>
   </style>
+
+
+  <style name="Clinic.V2.Theme.TranslucentBackground">
+    <item name="android:windowBackground">@color/translucent_background</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowTranslucentStatus">true</item>
+  </style>
 </resources>

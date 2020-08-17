@@ -4,24 +4,16 @@
 ### Changes
 - Added `SignatureActivity` to accept and save user signature
 - Increase error text sizes
-- Update error message of address fields in `EditPatientScreen`
 
 ### Internal
 - Migrated `LoggedOutOfDeviceDialog` to Mobius
-- Setup the UI via an effect in `PatientEntryScreen`
-- Setup the UI via an effect in `EditPatientScreen`
 - Migrated `ConfirmRemoveBloodPressureDialog` to Mobius
 - Migrate `UpdatePhoneNumberDialog` to Mobius
-- Separate input fields providers based on country
-- Add separate labels for "Street address" and "Village/Colony/Ward" labels in `PatientEntryScreen` and `EditPatientScreen` for Chennai facility groups
 - Migrated `LinkIdWithPatientView` to Mobius
 - Migrate `PatientSearchResultsScreen` to Mobius
 - [In Progress: 14 Aug 2020] Migrate `TheActivity` to Mobius
 - [In Progress: 13 Aug 2020] Migrate `AppLockScreen` to Mobius
 - [In Progress: 14 Aug 2020] Migrate `PatientSearchView` to Mobius
-
-### Fixes
-- Fix patient summary not opening on item click in all recent patients screen
 
 ## On Demo
 ### Features
@@ -33,6 +25,7 @@
 
 ### Changes
 - Updated translations: `ti`
+- Update error message of address fields in `EditPatientScreen`
 
 ### Internal
 - Migrated `LoginPinScreen` to Mobius
@@ -50,10 +43,15 @@
 - Migrated `HomeScreen` to Mobius
 - Migrated `ScanSimpleIdScreen` to Mobius
 - Migrate `EnterOtpScreen` to Mobius
+- Setup the UI via an effect in `PatientEntryScreen`
+- Setup the UI via an effect in `EditPatientScreen`
+- Separate input fields providers based on country
+- Add separate labels for "Street address" and "Village/Colony/Ward" labels in `PatientEntryScreen` and `EditPatientScreen` for Chennai facility groups
 
 ### Fixes
 - Fixed issue where recent and overdue patients on home screen would not update after changing facility ([#742](https://app.clubhouse.io/simpledotorg/story/742/home-screen-does-not-update-when-changing-facilities))
 - Fixed issue where the app would crash on restoring the home screen state ([#791](https://app.clubhouse.io/simpledotorg/story/791/the-app-crashes-when-navigating-back-to-the-home-screen-from-any-other-screen))
+- Fix patient summary not opening on item click in all recent patients screen
 
 ## 2020-08-03-7364
 ### Features

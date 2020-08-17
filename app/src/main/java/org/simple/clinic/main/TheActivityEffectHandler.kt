@@ -69,12 +69,13 @@ class TheActivityEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulers.io())
           .switchMap { effect ->
-            Observable
-                .fromCallable { userSession.isUserLoggedIn() }
-                .filterTrue()
-                .filter { !lockAfterTimestamp.isSet }
-                .doOnNext { lockAfterTimestamp.set(effect.lockAt) }
-                .flatMap { Observable.empty<TheActivityEvent>() }
+            val shouldUpdateLockTimestamp = userSession.isUserLoggedIn() && !lockAfterTimestamp.isSet
+
+            if (shouldUpdateLockTimestamp) {
+              lockAfterTimestamp.set(effect.lockAt)
+            }
+
+            Observable.empty<TheActivityEvent>()
           }
     }
   }

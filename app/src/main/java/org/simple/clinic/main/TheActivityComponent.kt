@@ -37,6 +37,7 @@ import org.simple.clinic.introvideoscreen.IntroVideoScreenInjector
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.login.pin.LoginPinScreen
+import org.simple.clinic.main.TypedPreference.Type.LockAtTime
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.newentry.country.di.InputFieldsFactoryModule
@@ -74,7 +75,6 @@ import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView_Old
 import java.time.Instant
-import javax.inject.Named
 
 @Subcomponent(modules = [TheActivityModule::class])
 interface TheActivityComponent :
@@ -157,7 +157,7 @@ class TheActivityModule {
   }
 
   @Provides
-  @Named("should_lock_after")
+  @TypedPreference(LockAtTime)
   fun lastAppStopTimestamp(rxSharedPrefs: RxSharedPreferences): Preference<Instant> {
     return rxSharedPrefs.getObject("should_lock_after", Instant.MAX, InstantRxPreferencesConverter())
   }

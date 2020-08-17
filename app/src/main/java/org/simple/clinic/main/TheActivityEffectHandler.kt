@@ -6,6 +6,7 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.main.TypedPreference.Type.LockAtTime
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.UserSession
@@ -13,14 +14,13 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterTrue
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.Instant
-import javax.inject.Named
 
 class TheActivityEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val userSession: UserSession,
     private val utcClock: UtcClock,
     private val patientRepository: PatientRepository,
-    @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>,
+    @TypedPreference(LockAtTime) private val lockAfterTimestamp: Preference<Instant>,
     @Assisted private val uiActions: TheActivityUiActions
 ) {
 

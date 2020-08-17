@@ -7,13 +7,11 @@ import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
-import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.pin_entry_card.view.*
 import kotlinx.android.synthetic.main.screen_app_lock.view.*
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.BackPressInterceptCallback
@@ -21,17 +19,13 @@ import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.security.pin.PinAuthenticated
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), AppLockScreenUi {
+class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), AppLockScreenUi, AppLockUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
-
-  @Inject
-  lateinit var controller: AppLockScreenController
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -42,13 +36,11 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   private val events by unsafeLazy {
     Observable
         .merge(
-            screenCreates(),
             backClicks(),
             forgotPinClicks(),
             pinAuthentications()
         )
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val delegate by unsafeLazy {
@@ -89,13 +81,6 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     }
     context.injector<Injector>().inject(this)
 
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = detaches().map { ScreenDestroyed() }
-    )
-
     logoutButton.setOnClickListener {
       Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show()
     }
@@ -104,8 +89,6 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     // starting, but not when the user comes back from FacilityChangeScreen.
     pinEntryCardView.pinEditText.showKeyboard()
   }
-
-  private fun screenCreates() = Observable.just(AppLockScreenCreated())
 
   private fun backClicks(): Observable<AppLockBackClicked> {
     return Observable.create { emitter ->

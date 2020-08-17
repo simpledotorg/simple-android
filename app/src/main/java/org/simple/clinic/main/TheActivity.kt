@@ -29,6 +29,7 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
+import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.analytics.Analytics
@@ -135,6 +136,9 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   @Inject
   lateinit var effectHandlerFactory: TheActivityEffectHandler.InjectionFactory
 
+  @Inject
+  lateinit var config: AppLockConfig
+
   private val lifecycleEvents: Subject<LifecycleEvent> = PublishSubject.create()
 
   private val disposables = CompositeDisposable()
@@ -157,7 +161,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     MobiusDelegate.forActivity(
         events = events.ofType(),
         defaultModel = TheActivityModel.create(),
-        update = TheActivityUpdate(),
+        update = TheActivityUpdate.create(config),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = TheActivityInit(),
         modelUpdateListener = uiRenderer::render
@@ -219,7 +223,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   override fun onStop() {
-    lifecycleEvents.onNext(LifecycleEvent.ActivityStopped)
+    lifecycleEvents.onNext(LifecycleEvent.ActivityStopped(Instant.now(utcClock)))
     delegate.stop()
     super.onStop()
   }

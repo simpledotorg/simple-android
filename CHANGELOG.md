@@ -16,7 +16,7 @@
 - Add separate labels for "Street address" and "Village/Colony/Ward" labels in `PatientEntryScreen` and `EditPatientScreen` for Chennai facility groups
 - Migrated `LinkIdWithPatientView` to Mobius
 - Migrate `PatientSearchResultsScreen` to Mobius
-- [In Progress: 12 Aug 2020] Migrate `TheActivity` to Mobius
+- [In Progress: 14 Aug 2020] Migrate `TheActivity` to Mobius
 - [In Progress: 13 Aug 2020] Migrate `AppLockScreen` to Mobius
 - [In Progress: 14 Aug 2020] Migrate `PatientSearchView` to Mobius
 

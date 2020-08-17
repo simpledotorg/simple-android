@@ -9,6 +9,7 @@ class DrugDurationUpdate : Update<DrugDurationModel, DrugDurationEvent, DrugDura
   override fun update(model: DrugDurationModel, event: DrugDurationEvent): Next<DrugDurationModel, DrugDurationEffect> {
     return when (event) {
       DurationChanged -> dispatch(HideDurationError)
+      is DrugDurationSaveClicked -> dispatch(ShowBlankDurationError)
     }
   }
 }

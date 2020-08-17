@@ -11,6 +11,7 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
 import java.time.Duration
+import java.time.Instant
 
 private val SHOW_APP_LOCK_FOR_USER_STATES = setOf(
     LoggedInStatus.OTP_REQUESTED,
@@ -33,25 +34,39 @@ class TheActivityUpdate(
       ActivityStarted -> dispatch(LoadAppLockInfo)
       is ActivityStopped -> dispatch(UpdateLockTimestamp(lockAt = event.timestamp.plus(lockScreenAfter)))
       ActivityDestroyed -> noChange()
-      is AppLockInfoLoaded -> {
-        val userOptional = event.user
-
-        if (userOptional.isPresent()) {
-          val hasAppLockTimerExpired = event.currentTimestamp.isAfter(event.lockAtTimestamp)
-          val shouldShowAppLockScreen = shouldShowAppLockScreenForUser(userOptional.get()) && hasAppLockTimerExpired
-
-          val effect = if (shouldShowAppLockScreen) ShowAppLockScreen else ClearLockAfterTimestamp
-
-          dispatch(effect)
-        } else {
-          noChange()
-        }
-      }
+      is AppLockInfoLoaded -> handleScreenLock(event)
       UserWasJustVerified -> dispatch(ShowUserLoggedOutOnOtherDeviceAlert)
       UserWasUnauthorized -> dispatch(RedirectToLoginScreen)
       UserWasDisapproved -> dispatch(ClearPatientData)
       PatientDataCleared -> dispatch(ShowAccessDeniedScreen)
     }
+  }
+
+  private fun handleScreenLock(event: AppLockInfoLoaded): Next<TheActivityModel, TheActivityEffect> {
+    val userOptional = event.user
+
+    return if (userOptional.isPresent()) {
+      val effect = screenLockEffect(
+          currentTimestamp = event.currentTimestamp,
+          lockAtTimestamp = event.lockAtTimestamp,
+          user = userOptional.get()
+      )
+
+      dispatch(effect)
+    } else {
+      noChange()
+    }
+  }
+
+  private fun screenLockEffect(
+      currentTimestamp: Instant,
+      lockAtTimestamp: Instant,
+      user: User
+  ): TheActivityEffect {
+    val hasAppLockTimerExpired = currentTimestamp.isAfter(lockAtTimestamp)
+    val shouldShowAppLockScreen = shouldShowAppLockScreenForUser(user) && hasAppLockTimerExpired
+
+    return if (shouldShowAppLockScreen) ShowAppLockScreen else ClearLockAfterTimestamp
   }
 
   private fun shouldShowAppLockScreenForUser(

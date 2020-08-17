@@ -7,6 +7,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessEffect.GoToHomeScreen
+import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessEffect.GoToPrescriptionScreen
 import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessEffect.LoadPatientDetails
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -26,6 +27,7 @@ class TeleConsultSuccessEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<TeleConsultSuccessEffect, TeleConsultSuccessEvent>()
         .addTransformer(LoadPatientDetails::class.java, loadPatientDetails(schedulersProvider.io()))
         .addAction(GoToHomeScreen::class.java, { uiActions.goToHomeScreen() }, schedulersProvider.ui())
+        .addConsumer(GoToPrescriptionScreen::class.java, { uiActions.goToPrescriptionScreen(it.patient) }, schedulersProvider.ui())
         .build()
   }
 

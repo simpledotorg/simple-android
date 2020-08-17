@@ -2,22 +2,27 @@ package org.simple.clinic.teleconsultlog.success
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessEffect.GoToHomeScreen
 import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessEffect.LoadPatientDetails
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID
 
 class TeleConsultSuccessEffectHandlerTest {
   private val patientRepository = mock<PatientRepository>()
+  private val uiActions = mock<TeleConsultSuccessScreenUiActions>()
   private val patientUuid = UUID.fromString("12111fab-1585-4d8f-982d-d3cd5b48ad1a")
   private val effectHandler = TeleConsultSuccessEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
-      patientRepository = patientRepository
+      patientRepository = patientRepository,
+      uiActions = uiActions
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -37,6 +42,20 @@ class TeleConsultSuccessEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(PatientDetailsLoaded(patient))
+    verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when go to home screen effect is received, then open home screen`() {
+    // when
+    testCase.dispatch(GoToHomeScreen)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).goToHomeScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+
 
 }

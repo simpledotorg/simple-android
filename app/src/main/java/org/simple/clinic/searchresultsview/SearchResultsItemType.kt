@@ -1,26 +1,27 @@
 package org.simple.clinic.searchresultsview
 
 import android.widget.TextView
-import com.xwray.groupie.ViewHolder
+import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
-import org.simple.clinic.summary.GroupieItemWithUiEvents
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
-import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import java.util.UUID
 
-sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieItemWithUiEvents<T>(adapterId) {
+sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Event> {
+
+  sealed class Event {
+    data class ResultClicked(val patientUuid: UUID) : Event()
+  }
 
   companion object {
-    private const val HEADER_NOT_IN_CURRENT_FACILITY = 0L
-    private const val HEADER_NO_PATIENTS_IN_CURRENT_FACILITY = 1L
-
     fun from(
         results: PatientSearchResults
-    ): List<SearchResultsItemType<out ViewHolder>> {
+    ): List<SearchResultsItemType> {
       return when {
         results.hasNoResults -> emptyList()
         else -> generateSearchResultListItems(results)
@@ -29,7 +30,7 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
 
     private fun generateSearchResultListItems(
         results: PatientSearchResults
-    ): List<SearchResultsItemType<ViewHolder>> {
+    ): List<SearchResultsItemType> {
       val currentFacility = results.currentFacility!!
       val itemsInCurrentFacility = SearchResultRow
           .forSearchResults(results.visitedCurrentFacility, currentFacility)
@@ -50,7 +51,7 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
     private fun listItemsForCurrentFacility(
         currentFacility: Facility,
         searchResultRows: List<SearchResultRow>
-    ): List<SearchResultsItemType<ViewHolder>> {
+    ): List<SearchResultsItemType> {
 
       val currentFacilityHeader = InCurrentFacilityHeader(currentFacility.name)
 
@@ -69,7 +70,7 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
 
     private fun listItemsForOtherFacilities(
         searchResultRows: List<SearchResultRow>
-    ): List<SearchResultsItemType<ViewHolder>> {
+    ): List<SearchResultsItemType> {
 
       return if (searchResultRows.isNotEmpty()) {
         listOf(
@@ -82,43 +83,42 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
     }
   }
 
-  override lateinit var uiEvents: Subject<UiEvent>
-
   data class InCurrentFacilityHeader(
-      private val facilityName: String
-  ) : SearchResultsItemType<ViewHolder>(facilityName.hashCode().toLong()) {
+      val facilityName: String
+  ) : SearchResultsItemType() {
 
-    override fun getLayout(): Int = R.layout.list_patient_search_header
+    override fun layoutResId(): Int = R.layout.list_patient_search_header
 
-    override fun bind(viewHolder: ViewHolder, position: Int) {
-      val header = viewHolder.itemView.findViewById<TextView>(R.id.patientsearch_header)
+    override fun render(holder: ViewHolderX, subject: Subject<Event>) {
+      val header = holder.itemView.findViewById<TextView>(R.id.patientsearch_header)
 
-      header.text = viewHolder.itemView.context.getString(R.string.patientsearchresults_current_facility_header, facilityName)
+      header.text = holder.itemView.context.getString(R.string.patientsearchresults_current_facility_header, facilityName)
     }
   }
 
-  object NotInCurrentFacilityHeader : SearchResultsItemType<ViewHolder>(HEADER_NOT_IN_CURRENT_FACILITY) {
+  object NotInCurrentFacilityHeader : SearchResultsItemType() {
 
-    override fun getLayout(): Int = R.layout.list_patient_search_header
+    override fun layoutResId(): Int = R.layout.list_patient_search_header
 
-    override fun bind(viewHolder: ViewHolder, position: Int) {
-      val header = viewHolder.itemView.findViewById<TextView>(R.id.patientsearch_header)
+    override fun render(holder: ViewHolderX, subject: Subject<Event>) {
+      val header = holder.itemView.findViewById<TextView>(R.id.patientsearch_header)
 
-      header.text = viewHolder.itemView.context.getString(R.string.patientsearchresults_other_results_header)
+      header.text = holder.itemView.context.getString(R.string.patientsearchresults_other_results_header)
     }
   }
 
-  object NoPatientsInCurrentFacility : SearchResultsItemType<ViewHolder>(HEADER_NO_PATIENTS_IN_CURRENT_FACILITY) {
-    override fun getLayout(): Int = R.layout.list_patient_search_no_patients
+  object NoPatientsInCurrentFacility : SearchResultsItemType() {
 
-    override fun bind(viewHolder: ViewHolder, position: Int) {
+    override fun layoutResId(): Int = R.layout.list_patient_search_no_patients
+
+    override fun render(holder: ViewHolderX, subject: Subject<Event>) {
     }
   }
 
   data class SearchResultRow(
-      private val searchResultViewModel: PatientSearchResultViewModel,
-      private val currentFacilityUuid: UUID
-  ) : SearchResultsItemType<ViewHolder>(searchResultViewModel.hashCode().toLong()) {
+      val searchResultViewModel: PatientSearchResultViewModel,
+      val currentFacilityUuid: UUID
+  ) : SearchResultsItemType() {
 
     companion object {
       fun forSearchResults(
@@ -144,16 +144,33 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
       }
     }
 
-    override fun getLayout(): Int = R.layout.list_patient_search
+    override fun layoutResId(): Int = R.layout.list_patient_search
 
-    override fun bind(viewHolder: ViewHolder, position: Int) {
-      val patientSearchResultView = viewHolder.itemView.findViewById<PatientSearchResultItemView>(R.id.patientSearchResultView)
+    override fun render(holder: ViewHolderX, subject: Subject<Event>) {
+      val patientSearchResultView = holder.itemView.findViewById<PatientSearchResultItemView>(R.id.patientSearchResultView)
 
       patientSearchResultView.setOnClickListener {
-        uiEvents.onNext(SearchResultClicked(searchResultViewModel.uuid))
+        subject.onNext(Event.ResultClicked(searchResultViewModel.uuid))
       }
 
       patientSearchResultView.render(searchResultViewModel, currentFacilityUuid)
+    }
+  }
+
+  class DiffCallback : DiffUtil.ItemCallback<SearchResultsItemType>() {
+
+    override fun areItemsTheSame(oldItem: SearchResultsItemType, newItem: SearchResultsItemType): Boolean {
+      return when {
+        oldItem is InCurrentFacilityHeader && newItem is InCurrentFacilityHeader -> oldItem.facilityName == newItem.facilityName
+        oldItem is NotInCurrentFacilityHeader && newItem is NotInCurrentFacilityHeader -> true
+        oldItem is NoPatientsInCurrentFacility && newItem is NoPatientsInCurrentFacility -> true
+        oldItem is SearchResultRow && newItem is SearchResultRow -> oldItem.searchResultViewModel.uuid == newItem.searchResultViewModel.uuid
+        else -> false
+      }
+    }
+
+    override fun areContentsTheSame(oldItem: SearchResultsItemType, newItem: SearchResultsItemType): Boolean {
+      return oldItem == newItem
     }
   }
 }

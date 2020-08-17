@@ -118,7 +118,8 @@ interface TheActivityComponent :
     UpdatePhoneNumberDialog.Injector,
     EditPatientScreen.Injector ,
     LinkIdWithPatientView.Injector,
-    AppLockScreen.Injector {
+    AppLockScreen.Injector,
+    PatientSearchView.Injector {
   fun inject(target: TheActivity)
   fun inject(target: PatientSummaryScreen)
   fun inject(target: FacilityChangeActivity)
@@ -129,7 +130,6 @@ interface TheActivityComponent :
   fun inject(target: QrCodeScannerView_Old)
   fun inject(target: QrCodeScannerView)
   fun inject(target: SyncIndicatorView)
-  fun inject(target: PatientSearchView)
   fun inject(target: PatientSearchResultItemView)
   fun inject(target: AllPatientsInFacilityView)
   fun inject(target: ShortCodeSearchResultScreen)

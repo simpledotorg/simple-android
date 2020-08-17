@@ -1,6 +1,7 @@
 package org.simple.clinic.teleconsultlog.drugduration
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
+import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -13,12 +14,13 @@ class DrugDurationUpdateTest {
   @Test
   fun `hide drug duration error when drug duration changes`() {
     val duration = "10"
+    val model = DrugDurationModel.create(duration)
 
     updateSpec
-        .given(DrugDurationModel.create(duration))
-        .whenEvent(DurationChanged)
+        .given(model)
+        .whenEvent(DurationChanged(duration))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.durationChanged(duration)),
             hasEffects(HideDurationError as DrugDurationEffect)
         ))
   }
@@ -29,7 +31,7 @@ class DrugDurationUpdateTest {
 
     updateSpec
         .given(DrugDurationModel.create(duration))
-        .whenEvent(DrugDurationSaveClicked(duration))
+        .whenEvent(DrugDurationSaveClicked)
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowBlankDurationError as DrugDurationEffect)
@@ -42,7 +44,7 @@ class DrugDurationUpdateTest {
 
     updateSpec
         .given(DrugDurationModel.create(duration))
-        .whenEvent(DrugDurationSaveClicked(duration))
+        .whenEvent(DrugDurationSaveClicked)
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SaveDrugDuration(duration.toInt()) as DrugDurationEffect)

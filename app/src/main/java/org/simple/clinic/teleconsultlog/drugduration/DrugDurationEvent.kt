@@ -4,10 +4,10 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class DrugDurationEvent : UiEvent
 
-object DurationChanged : DrugDurationEvent() {
+data class DurationChanged(val duration: String) : DrugDurationEvent() {
   override val analyticsName: String = "Drug Duration:Duration Changed"
 }
 
-data class DrugDurationSaveClicked(val duration: String) : DrugDurationEvent() {
+object DrugDurationSaveClicked : DrugDurationEvent() {
   override val analyticsName: String = "Drug Duration Sheet:Save Clicked"
 }

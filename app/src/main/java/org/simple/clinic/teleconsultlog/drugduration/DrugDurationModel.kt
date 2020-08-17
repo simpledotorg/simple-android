@@ -10,4 +10,8 @@ data class DrugDurationModel(
 
   val hasDuration: Boolean
     get() = duration.isNotBlank()
+
+  fun durationChanged(duration: String): DrugDurationModel {
+    return copy(duration = duration)
+  }
 }

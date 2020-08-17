@@ -1,8 +1,13 @@
 package org.simple.clinic.teleconsultlog.drugduration
 
-class DrugDurationModel {
+data class DrugDurationModel(
+    val duration: String
+) {
 
   companion object {
-    fun create() = DrugDurationModel()
+    fun create(duration: String) = DrugDurationModel(duration)
   }
+
+  val hasDuration: Boolean
+    get() = duration.isNotBlank()
 }

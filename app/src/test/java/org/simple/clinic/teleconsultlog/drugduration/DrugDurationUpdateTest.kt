@@ -12,8 +12,10 @@ class DrugDurationUpdateTest {
 
   @Test
   fun `hide drug duration error when drug duration changes`() {
+    val duration = "10"
+
     updateSpec
-        .given(DrugDurationModel.create())
+        .given(DrugDurationModel.create(duration))
         .whenEvent(DurationChanged)
         .then(assertThatNext(
             hasNoModel(),
@@ -26,7 +28,7 @@ class DrugDurationUpdateTest {
     val duration = ""
 
     updateSpec
-        .given(DrugDurationModel.create())
+        .given(DrugDurationModel.create(duration))
         .whenEvent(DrugDurationSaveClicked(duration))
         .then(assertThatNext(
             hasNoModel(),
@@ -39,7 +41,7 @@ class DrugDurationUpdateTest {
     val duration = "20"
 
     updateSpec
-        .given(DrugDurationModel.create())
+        .given(DrugDurationModel.create(duration))
         .whenEvent(DrugDurationSaveClicked(duration))
         .then(assertThatNext(
             hasNoModel(),

@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Before
@@ -22,7 +23,9 @@ import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class PatientSearchViewControllerTest {
@@ -30,7 +33,7 @@ class PatientSearchViewControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val ui = mock<PatientSearchUi>()
+  private val ui = mock<SearchResultsUi>()
   private val patientRepository = mock<PatientRepository>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
@@ -46,6 +49,7 @@ class PatientSearchViewControllerTest {
   private val phoneNumber: String = "123456"
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<SearchResultsModel, SearchResultsEvent, SearchResultsEffect>
 
   @Before
   fun setUp() {
@@ -58,51 +62,7 @@ class PatientSearchViewControllerTest {
   @After
   fun tearDown() {
     controllerSubscription.dispose()
-  }
-
-  @Test
-  fun `when search result clicked then SearchResultClicked event should be emitted`() {
-    // given
-    val searchResult = TestData.patientSearchResult()
-    val searchResultClicked = SearchResultClicked(searchResult.uuid)
-
-    // when
-    setupController()
-    uiEvents.onNext(searchResultClicked)
-
-    // then
-    verify(ui).searchResultClicked(searchResultClicked)
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when register new patient clicked while searching by name, then RegisterNewPatient event should be emitted`() {
-    // given
-    val criteria = Name(patientName = patientName)
-
-    // when
-    setupController()
-    uiEvents.onNext(SearchPatientWithCriteria(criteria))
-    uiEvents.onNext(RegisterNewPatientClicked)
-
-    // then
-    verify(ui).registerNewPatient(RegisterNewPatient(criteria))
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when register new patient clicked while searching by phone, then RegisterNewPatient event should be emitted`() {
-    // given
-    val criteria = PhoneNumber(phoneNumber = phoneNumber)
-
-    // when
-    setupController()
-    uiEvents.onNext(SearchPatientWithCriteria(criteria))
-    uiEvents.onNext(RegisterNewPatientClicked)
-
-    // then
-    verify(ui).registerNewPatient(RegisterNewPatient(criteria))
-    verifyNoMoreInteractions(ui)
+    testFixture.dispose()
   }
 
   @Test
@@ -226,6 +186,21 @@ class PatientSearchViewControllerTest {
   }
 
   private fun setupController() {
+    val effectHandler = SearchResultsEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline()
+    )
+    val uiRenderer = SearchResultsUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = SearchResultsModel.create(),
+        update = SearchResultsUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render,
+        init = SearchResultsInit()
+    )
+    testFixture.start()
+
     val controller = PatientSearchViewController(
         patientRepository = patientRepository,
         userSession = userSession,

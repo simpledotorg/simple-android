@@ -5,11 +5,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.ViewHolder
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.patient_search_view.view.*
 import kotlinx.android.synthetic.main.screen_shortcode_search_result.view.*
 import org.simple.clinic.R
@@ -21,7 +18,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.searchresultsview.PatientSearchResults
-import org.simple.clinic.searchresultsview.SearchResultClicked
 import org.simple.clinic.searchresultsview.SearchResultsItemType
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -31,6 +27,7 @@ import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
@@ -65,9 +62,7 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
 
   private lateinit var binding: ViewControllerBinding<UiEvent, ShortCodeSearchResultState, ShortCodeSearchResultUi>
 
-  private val adapter = GroupAdapter<ViewHolder>()
-
-  private val downstreamEvents = PublishSubject.create<UiEvent>()
+  private val adapter = ItemAdapter(SearchResultsItemType.DiffCallback())
 
   private lateinit var disposable: Disposable
 
@@ -116,8 +111,9 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
 
   private fun setupClickEvents() {
     newPatientButton.setOnClickListener { binding.onEvent(SearchPatient) }
-    disposable = downstreamEvents
-        .ofType<SearchResultClicked>()
+    disposable = adapter
+        .itemEvents
+        .ofType<SearchResultsItemType.Event.ResultClicked>()
         .map { binding.onEvent(ViewPatient(it.patientUuid)) }
         .subscribe()
   }
@@ -150,10 +146,7 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
   }
 
   override fun showSearchResults(foundPatients: PatientSearchResults) {
-    val items = SearchResultsItemType
-        .from(foundPatients)
-        .onEach { it.uiEvents = downstreamEvents }
-    adapter.update(items)
+    adapter.submitList(SearchResultsItemType.from(foundPatients))
   }
 
   override fun showSearchPatientButton() {

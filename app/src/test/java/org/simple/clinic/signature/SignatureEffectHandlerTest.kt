@@ -23,7 +23,7 @@ class SignatureEffectHandlerTest {
     effectHandlerTestCase.dispatch(ClearSignature)
 
     // then
-    verify(ui).signatureCleared()
+    verify(ui).clearSignature()
     verifyNoMoreInteractions(ui)
   }
 

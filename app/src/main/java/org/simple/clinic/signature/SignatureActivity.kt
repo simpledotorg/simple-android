@@ -24,8 +24,8 @@ class SignatureActivity : AppCompatActivity(), SignatureUiActions {
   private val events: Observable<SignatureEvent> by unsafeLazy {
     Observable
         .merge(
-            savingSignature(),
-            clearSignature()
+            acceptSignatureClicks(),
+            undoClicks()
         )
         .cast<SignatureEvent>()
   }
@@ -45,18 +45,18 @@ class SignatureActivity : AppCompatActivity(), SignatureUiActions {
     setContentView(R.layout.activity_signature)
   }
 
-  private fun savingSignature() = acceptSignature
+  private fun acceptSignatureClicks() = acceptSignature
       .clicks()
       .map {
         val bitmap: Bitmap? = drawSignatureFrame.getTransparentSignatureBitmap(true)
         AcceptClicked(bitmap)
       }
 
-  private fun clearSignature() = clearSignature
+  private fun undoClicks() = clearSignature
       .clicks()
       .map { UndoClicked }
 
-  override fun signatureCleared() {
+  override fun clearSignature() {
     drawSignatureFrame.clear()
   }
 

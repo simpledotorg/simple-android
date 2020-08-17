@@ -20,5 +20,6 @@ class DrugDurationEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<DrugDurationEffect, DrugDurationEvent>()
       .addAction(ShowBlankDurationError::class.java, uiActions::showBlankDurationError, schedulersProvider.ui())
       .addAction(HideDurationError::class.java, uiActions::hideDurationError, schedulersProvider.ui())
+      .addConsumer(SaveDrugDuration::class.java, { uiActions.saveDrugDuration(it.duration) }, schedulersProvider.ui())
       .build()
 }

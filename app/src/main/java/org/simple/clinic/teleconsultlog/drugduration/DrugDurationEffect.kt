@@ -5,3 +5,5 @@ sealed class DrugDurationEffect
 object ShowBlankDurationError : DrugDurationEffect()
 
 object HideDurationError : DrugDurationEffect()
+
+data class SaveDrugDuration(val duration: Int) : DrugDurationEffect()

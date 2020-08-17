@@ -45,4 +45,19 @@ class DrugDurationEffectHandlerTest {
     verify(uiActions).hideDurationError()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when save drug duration effect is received, then save duration and close sheet`() {
+    // given
+    val duration = "20"
+
+    // when
+    effectHandlerTestCase.dispatch(SaveDrugDuration(duration.toInt()))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).saveDrugDuration(duration.toInt())
+    verifyNoMoreInteractions(uiActions)
+  }
 }

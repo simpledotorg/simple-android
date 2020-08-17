@@ -8,7 +8,7 @@ class AppLockUiRenderer(private val ui: AppLockScreenUi) : ViewRenderer<AppLockM
 
   override fun render(model: AppLockModel) {
     if (model.hasUser) {
-      renderUsername(model.user!!)
+      renderUserName(model.user!!)
     }
 
     if (model.hasFacility) {
@@ -16,7 +16,7 @@ class AppLockUiRenderer(private val ui: AppLockScreenUi) : ViewRenderer<AppLockM
     }
   }
 
-  private fun renderUsername(user: User) {
+  private fun renderUserName(user: User) {
     ui.setUserFullName(user.fullName)
   }
 

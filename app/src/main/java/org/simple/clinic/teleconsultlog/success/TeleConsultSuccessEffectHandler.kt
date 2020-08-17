@@ -31,7 +31,7 @@ class TeleConsultSuccessEffectHandler @AssistedInject constructor(
         .build()
   }
 
-  private fun loadPatientDetails(scheduler: Scheduler): ObservableTransformer<TeleConsultSuccessEffect.LoadPatientDetails, TeleConsultSuccessEvent> {
+  private fun loadPatientDetails(scheduler: Scheduler): ObservableTransformer<LoadPatientDetails, TeleConsultSuccessEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)

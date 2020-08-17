@@ -8,10 +8,13 @@ data class TeleConsultSuccessModel(
     val patient: Patient?
 ) {
 
+  val hasPatient: Boolean
+    get() = patient != null
+
   companion object {
     fun create(patientUuid: UUID) = TeleConsultSuccessModel(patientUuid, null)
   }
 
-  fun patientDetailLoaded(patient: Patient): TeleConsultSuccessModel =
+  fun patientDetailLoaded(patient: Patient?): TeleConsultSuccessModel =
       copy(patient = patient)
 }

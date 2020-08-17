@@ -9,6 +9,7 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessEffect.GoToHomeScreen
+import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessEffect.GoToPrescriptionScreen
 import java.util.UUID
 
 class TeleConsultSuccessUpdateTest {
@@ -16,14 +17,16 @@ class TeleConsultSuccessUpdateTest {
   private val updateSpec = UpdateSpec(TeleConsultSuccessUpdate())
   private val patientUuid = UUID.fromString("f2f02504-5d02-4291-a15b-7de095ceebe2")
   private val defaultModel = TeleConsultSuccessModel.create(patientUuid)
+  val patient = TestData.patient(patientUuid)
 
   @Test
   fun `when the patient detail is loaded, then update the UI`() {
     val patient = TestData.patient(patientUuid)
+
     updateSpec
         .given(defaultModel)
         .whenEvents(PatientDetailsLoaded(patient))
-        .then  (
+        .then(
             assertThatNext(
                 hasModel(defaultModel.patientDetailLoaded(patient)),
                 hasNoEffects()
@@ -32,7 +35,7 @@ class TeleConsultSuccessUpdateTest {
   }
 
   @Test
-  fun `when No button is clicked, then go back to home screen`(){
+  fun `when No button is clicked, then go back to home screen`() {
     updateSpec
         .given(defaultModel)
         .whenEvents(NoPrescriptionClicked)
@@ -40,6 +43,35 @@ class TeleConsultSuccessUpdateTest {
             assertThatNext(
                 hasNoModel(),
                 hasEffects(GoToHomeScreen as TeleConsultSuccessEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when Yes button is clicked, then open prescription screen`() {
+    val defaultModel = TeleConsultSuccessModel.create(patientUuid).patientDetailLoaded(patient)
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvents(YesPrescriptionClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(GoToPrescriptionScreen(patient) as TeleConsultSuccessEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when Yes button is clicked and has no patient detail, then update the model`() {
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvents(YesPrescriptionClicked)
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.patientDetailLoaded(null)),
+                hasNoEffects()
             )
         )
   }

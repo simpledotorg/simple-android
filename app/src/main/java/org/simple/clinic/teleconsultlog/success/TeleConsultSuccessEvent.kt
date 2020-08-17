@@ -7,3 +7,5 @@ sealed class TeleConsultSuccessEvent
 data class PatientDetailsLoaded(val patient: Patient) : TeleConsultSuccessEvent()
 
 object NoPrescriptionClicked : TeleConsultSuccessEvent()
+
+object YesPrescriptionClicked : TeleConsultSuccessEvent()

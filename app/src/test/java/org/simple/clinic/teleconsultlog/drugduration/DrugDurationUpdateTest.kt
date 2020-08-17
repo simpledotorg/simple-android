@@ -33,4 +33,17 @@ class DrugDurationUpdateTest {
             hasEffects(ShowBlankDurationError as DrugDurationEffect)
         ))
   }
+
+  @Test
+  fun `save drug duration when drug duration is not empty`() {
+    val duration = "20"
+
+    updateSpec
+        .given(DrugDurationModel.create())
+        .whenEvent(DrugDurationSaveClicked(duration))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SaveDrugDuration(duration.toInt()) as DrugDurationEffect)
+        ))
+  }
 }

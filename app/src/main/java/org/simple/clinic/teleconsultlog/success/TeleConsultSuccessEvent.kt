@@ -5,3 +5,5 @@ import org.simple.clinic.patient.Patient
 sealed class TeleConsultSuccessEvent
 
 data class PatientDetailsLoaded(val patient: Patient) : TeleConsultSuccessEvent()
+
+object NoPrescriptionClicked : TeleConsultSuccessEvent()

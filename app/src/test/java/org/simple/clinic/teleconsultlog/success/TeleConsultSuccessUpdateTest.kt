@@ -1,11 +1,14 @@
 package org.simple.clinic.teleconsultlog.success
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessEffect.GoToHomeScreen
 import java.util.UUID
 
 class TeleConsultSuccessUpdateTest {
@@ -24,6 +27,19 @@ class TeleConsultSuccessUpdateTest {
             assertThatNext(
                 hasModel(defaultModel.patientDetailLoaded(patient)),
                 hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when No button is clicked, then go back to home screen`(){
+    updateSpec
+        .given(defaultModel)
+        .whenEvents(NoPrescriptionClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(GoToHomeScreen as TeleConsultSuccessEffect)
             )
         )
   }

@@ -5,14 +5,12 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -20,9 +18,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.login.applock.AppLockConfig
-import org.simple.clinic.main.LifecycleEvent.ActivityStarted
 import org.simple.clinic.main.LifecycleEvent.ActivityStopped
-import org.simple.clinic.main.TheActivityController
 import org.simple.clinic.main.TheActivityEffect
 import org.simple.clinic.main.TheActivityEffectHandler
 import org.simple.clinic.main.TheActivityEvent
@@ -68,12 +64,10 @@ class TheActivityControllerTest {
   private val currentTimestamp = Instant.parse("2018-01-01T00:00:00Z")
   private val clock = TestUtcClock(currentTimestamp)
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<TheActivityModel, TheActivityEvent, TheActivityEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -109,7 +103,7 @@ class TheActivityControllerTest {
     )
 
     // then
-    verify(ui, times(2)).showAppLockScreen()
+    verify(ui).showAppLockScreen()
     verifyNoMoreInteractions(ui)
   }
 
@@ -132,7 +126,7 @@ class TheActivityControllerTest {
     )
 
     // then
-    verify(ui, times(2)).showAppLockScreen()
+    verify(ui).showAppLockScreen()
     verifyNoMoreInteractions(ui)
   }
 
@@ -155,7 +149,7 @@ class TheActivityControllerTest {
     )
 
     // then
-    verify(ui, times(2)).showAppLockScreen()
+    verify(ui).showAppLockScreen()
     verifyNoMoreInteractions(ui)
   }
 
@@ -247,7 +241,7 @@ class TheActivityControllerTest {
     setupController(userStream = userStream, lockAtTime = lockAfterTime)
 
     // then
-    verify(lockAfterTimestamp, times(2)).delete()
+    verify(lockAfterTimestamp).delete()
     verifyNoMoreInteractions(ui)
   }
 
@@ -436,19 +430,5 @@ class TheActivityControllerTest {
         modelUpdateListener = uiRenderer::render
     )
     testFixture.start()
-
-    val controller = TheActivityController(
-        userSession = userSession,
-        appLockConfig = appLockConfig,
-        patientRepository = patientRepository,
-        utcClock = clock,
-        lockAfterTimestamp = lockAfterTimestamp
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
-    uiEvents.onNext(ActivityStarted)
   }
 }

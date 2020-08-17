@@ -9,7 +9,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 
@@ -48,11 +47,11 @@ class NewlyVerifiedUserTest {
   ) {
     val user = TestData.loggedInUser(loggedInStatus = previousLoggedInStatus2)
 
-    userEmitter.onNext(Just(user))
-    userEmitter.onNext(Just(user.copy(loggedInStatus = previousLoggedInStatus1)))
+    userEmitter.onNext(Optional.of(user))
+    userEmitter.onNext(Optional.of(user.copy(loggedInStatus = previousLoggedInStatus1)))
 
     val expectedUser = user.copy(loggedInStatus = currentLoggedInStatus)
-    userEmitter.onNext(Just(expectedUser))
+    userEmitter.onNext(Optional.of(expectedUser))
 
     if (shouldEmitUser) {
       Truth.assertThat(receivedUsers).isEqualTo(listOf(expectedUser))

@@ -33,4 +33,16 @@ class DrugDurationEffectHandlerTest {
     verify(uiActions).showBlankDurationError()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when hide duration error effect is received, then hide the duration error`() {
+    // when
+    effectHandlerTestCase.dispatch(HideDurationError)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).hideDurationError()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

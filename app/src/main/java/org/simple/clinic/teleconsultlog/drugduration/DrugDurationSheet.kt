@@ -15,7 +15,6 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.InjectorProviderContextWrapper
-import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.teleconsultlog.drugduration.di.DrugDurationComponent
 import org.simple.clinic.util.LocaleOverrideContextWrapper
@@ -36,28 +35,25 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
   lateinit var effectHandlerFactory: DrugDurationEffectHandler.Factory
 
   companion object {
-    private const val EXTRA_DRUG_UUID = "prescribedDrugUuid"
-    private const val EXTRA_DRUG_NAME = "prescribedDrugTitle"
-    private const val EXTRA_DRUG_DOSAGE = "prescribedDrugDosage"
-    private const val EXTRA_DURATION = "drugDuration"
+    private const val EXTRA_DRUG_DURATION = "drugDuration"
     private const val EXTRA_SAVED_DRUG_UUID = "savedDrugUuid"
     private const val EXTRA_SAVED_DURATION = "savedDrugDuration"
 
     fun intent(
         context: Context,
-        drug: PrescribedDrug,
-        drugDuration: String
+        drugDuration: DrugDuration
     ): Intent {
       return Intent(context, DrugDurationSheet::class.java).apply {
-        putExtra(EXTRA_DRUG_UUID, drug.uuid)
-        putExtra(EXTRA_DRUG_NAME, drug.name)
-        putExtra(EXTRA_DRUG_DOSAGE, drug.dosage)
-        putExtra(EXTRA_DURATION, drugDuration)
+        putExtra(EXTRA_DRUG_DURATION, drugDuration)
       }
     }
   }
 
   private lateinit var component: DrugDurationComponent
+
+  private val drugDuration by unsafeLazy {
+    intent.getParcelableExtra<DrugDuration>(EXTRA_DRUG_DURATION)!!
+  }
 
   private val events by unsafeLazy {
     Observable
@@ -69,12 +65,11 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
   }
 
   private val delegate by unsafeLazy {
-    val duration = intent.getStringExtra(EXTRA_DURATION)!!
     val uiRenderer = DrugDurationUiRenderer(this)
 
     MobiusDelegate.forActivity(
         events = events.ofType(),
-        defaultModel = DrugDurationModel.create(duration),
+        defaultModel = DrugDurationModel.create(drugDuration.duration),
         init = DrugDurationInit(),
         update = DrugDurationUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
@@ -97,10 +92,7 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
     setContentView(R.layout.sheet_drug_duration)
     delegate.onRestoreInstanceState(savedInstanceState)
 
-    val drugName = intent.getStringExtra(EXTRA_DRUG_NAME)!!
-    val drugDosage = intent.getStringExtra(EXTRA_DRUG_NAME)!!
-
-    drugDurationTitleTextView.text = getString(R.string.drug_duration_title, drugName, drugDosage)
+    drugDurationTitleTextView.text = getString(R.string.drug_duration_title, drugDuration.name, drugDuration.dosage)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
@@ -150,9 +142,8 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
   }
 
   override fun saveDrugDuration(duration: Int) {
-    val drugUuid = intent.getStringExtra(EXTRA_DRUG_UUID)!!
     val intent = Intent().apply {
-      putExtra(EXTRA_SAVED_DRUG_UUID, drugUuid)
+      putExtra(EXTRA_SAVED_DRUG_UUID, drugDuration.uuid)
       putExtra(EXTRA_SAVED_DURATION, duration)
     }
     setResult(Activity.RESULT_OK, intent)

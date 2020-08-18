@@ -142,6 +142,11 @@
       </intent-filter>
     </activity>
 
+    <activity
+      android:name=".teleconsultlog.drugduration.DrugDurationSheet"
+      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:windowSoftInputMode="adjustResize" />
+
     <receiver
       android:name=".login.OtpSmsReceiver"
       android:exported="true"

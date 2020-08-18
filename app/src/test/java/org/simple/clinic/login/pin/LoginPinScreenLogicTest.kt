@@ -126,7 +126,8 @@ class LoginPinScreenLogicTest {
         updatedAt = updatedAt,
         loggedInStatus = User.LoggedInStatus.OTP_REQUESTED,
         registrationFacilityUuid = registrationFacilityUuid,
-        currentFacilityUuid = registrationFacilityUuid
+        currentFacilityUuid = registrationFacilityUuid,
+        teleconsultPhoneNumber = null
     )
 
     whenever(ongoingLoginEntryRepository.entryImmediate()) doReturn ongoingLoginEntry

@@ -53,7 +53,8 @@ fun LoggedInUserPayload.toUser(loggedInStatus: User.LoggedInStatus): User {
       updatedAt = updatedAt,
       loggedInStatus = loggedInStatus,
       registrationFacilityUuid = registrationFacilityId,
-      currentFacilityUuid = registrationFacilityId
+      currentFacilityUuid = registrationFacilityId,
+      teleconsultPhoneNumber = teleconsultPhoneNumber
   )
 }
 
@@ -66,7 +67,8 @@ fun User.toPayload(registrationFacilityUuid: UUID): LoggedInUserPayload {
       registrationFacilityId = registrationFacilityUuid,
       status = status,
       createdAt = createdAt,
-      updatedAt = updatedAt
+      updatedAt = updatedAt,
+      teleconsultPhoneNumber = teleconsultPhoneNumber
   )
 }
 

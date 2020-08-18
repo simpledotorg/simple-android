@@ -65,10 +65,10 @@ import org.simple.clinic.util.randomGender
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.randomOfEnum
 import org.simple.clinic.util.randomPatientPhoneNumberType
+import java.net.URI
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset.UTC
-import java.net.URI
 import java.util.UUID
 import kotlin.random.nextInt
 
@@ -444,7 +444,8 @@ object TestData {
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       registrationFacilityUuid: UUID = UUID.fromString("fa85410a-54ca-449c-b3d6-7caf9def1474"),
-      currentFacilityUuid: UUID = registrationFacilityUuid
+      currentFacilityUuid: UUID = registrationFacilityUuid,
+      teleconsultPhoneNumber: String = "1111111111"
   ): User {
     return User(
         uuid = uuid,
@@ -456,7 +457,8 @@ object TestData {
         updatedAt = updatedAt,
         loggedInStatus = loggedInStatus,
         registrationFacilityUuid = registrationFacilityUuid,
-        currentFacilityUuid = currentFacilityUuid
+        currentFacilityUuid = currentFacilityUuid,
+        teleconsultPhoneNumber = teleconsultPhoneNumber
     )
   }
 
@@ -941,7 +943,8 @@ object TestData {
       registrationFacilityUuid: UUID = UUID.randomUUID(),
       status: UserStatus = UserStatus.WaitingForApproval,
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      teleconsultPhoneNumber: String = "1111111111"
   ): LoggedInUserPayload {
     return LoggedInUserPayload(
         uuid = uuid,
@@ -951,7 +954,8 @@ object TestData {
         registrationFacilityId = registrationFacilityUuid,
         createdAt = createdAt,
         status = status,
-        updatedAt = updatedAt)
+        updatedAt = updatedAt,
+        teleconsultPhoneNumber = teleconsultPhoneNumber)
   }
 
   fun patientSearchResult(

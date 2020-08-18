@@ -2,7 +2,6 @@ package org.simple.clinic.patient
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -59,14 +58,14 @@ class PartitionSearchResultsByVisitedFacilityTest {
 
     val bloodPressureDao = mock<BloodPressureMeasurement.RoomDao>()
     whenever(bloodPressureDao.patientToFacilityIds(patientUuids))
-        .thenReturn(Flowable.just(listOf(
+        .thenReturn(listOf(
             PatientToFacilityId(patientUuid = patient1InFacilityA.uuid, facilityUuid = facilityA.uuid),
             PatientToFacilityId(patientUuid = patient2InFacilityA.uuid, facilityUuid = facilityA.uuid),
             PatientToFacilityId(patientUuid = patient3InFacilityA.uuid, facilityUuid = facilityA.uuid),
             PatientToFacilityId(patientUuid = patient1InFacilityB.uuid, facilityUuid = facilityB.uuid),
             PatientToFacilityId(patientUuid = patient1InFacilityC.uuid, facilityUuid = facilityC.uuid),
             PatientToFacilityId(patientUuid = patient2InFacilityC.uuid, facilityUuid = facilityC.uuid)
-        )))
+        ))
 
     // when
     val testObserver = Observable.just(patientSearchResults)
@@ -115,12 +114,12 @@ class PartitionSearchResultsByVisitedFacilityTest {
 
     val bloodPressureDao = mock<BloodPressureMeasurement.RoomDao>()
     whenever(bloodPressureDao.patientToFacilityIds(patientUuids))
-        .thenReturn(Flowable.just(listOf(
+        .thenReturn(listOf(
             PatientToFacilityId(patientUuid = patient1InFacilityA.uuid, facilityUuid = facilityA.uuid),
             PatientToFacilityId(patientUuid = patient2InFacilityA.uuid, facilityUuid = facilityA.uuid),
             PatientToFacilityId(patientUuid = patient3InFacilityA.uuid, facilityUuid = facilityA.uuid),
             PatientToFacilityId(patientUuid = patient1InFacilityB.uuid, facilityUuid = facilityB.uuid)
-        )))
+        ))
 
     // when
     val testObserver = Observable.just(patientSearchResults)

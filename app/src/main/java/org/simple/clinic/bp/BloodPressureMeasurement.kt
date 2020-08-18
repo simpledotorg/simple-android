@@ -126,7 +126,7 @@ data class BloodPressureMeasurement(
       FROM bloodpressuremeasurement
       WHERE patientUuid IN (:patientUuids) AND deletedAt IS NULL
       """)
-    fun patientToFacilityIds(patientUuids: List<UUID>): Flowable<List<PatientToFacilityId>>
+    fun patientToFacilityIds(patientUuids: List<UUID>): List<PatientToFacilityId>
 
     @Query("""
         SELECT (

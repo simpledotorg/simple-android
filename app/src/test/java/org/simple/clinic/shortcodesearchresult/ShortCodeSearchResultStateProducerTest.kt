@@ -4,15 +4,14 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.PatientToFacilityId
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.searchresultsview.PatientSearchResults
@@ -76,10 +75,12 @@ class ShortCodeSearchResultStateProducerTest {
 
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(currentFacility))
     whenever(patientRepository.searchByShortCode(shortCode)).thenReturn(Observable.just(patientSearchResults))
-    whenever(bloodPressureDao.patientToFacilityIds(listOf(
-        patientSearchResultsInCurrentFacility.uuid,
-        patientSearchResultInOtherFacility.uuid)))
-        .thenReturn(Flowable.just(patientToFacilityIds))
+    whenever(bloodPressureDao.patientToFacilityIds(
+        listOf(
+            patientSearchResultsInCurrentFacility.uuid,
+            patientSearchResultInOtherFacility.uuid
+        )
+    )).thenReturn(patientToFacilityIds)
 
     val testObserver = uiStates.test()
 

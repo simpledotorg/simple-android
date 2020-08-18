@@ -1,10 +1,6 @@
 package org.simple.clinic.teleconsultlog.drugduration
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-
-@Parcelize
-enum class DrugDurationValidationResult : Parcelable {
+enum class DrugDurationValidationResult {
   NOT_VALIDATED,
   BLANK
 }

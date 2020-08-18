@@ -674,4 +674,12 @@
   <string name="drug_duration_title">%1$s %2$s</string>
   <string name="drugDurationLabel">Days</string>
   <string name="drug_duration_empty_error">Drug duration cannot be blank</string>
+
+  <!-- Teleconsultation success-->
+  <string name="screen_teleconsult_success_add_prescription">Add Prescription?</string>
+  <string name="screen_teleconsult_success_yes">Yes</string>
+  <string name="screen_teleconsult_success_no">No</string>
+  <string name="screen_teleconsult_success_teleconsult_recorded">Teleconsult Recorded</string>
+
+
 </resources>

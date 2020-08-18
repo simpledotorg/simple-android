@@ -680,6 +680,7 @@
   <string name="screen_teleconsult_success_yes">Yes</string>
   <string name="screen_teleconsult_success_no">No</string>
   <string name="screen_teleconsult_success_teleconsult_recorded">Teleconsult Recorded</string>
+  <string name="screen_teleconsult_success_patient_information">%1$s, %2$s, %3$s</string>
 
 
 </resources>

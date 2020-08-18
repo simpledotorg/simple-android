@@ -7,25 +7,33 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_teleconsult_success.view.*
+import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.patient.DateOfBirth
+import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.screen.RouterDirection.BACKWARD
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
 class TeleConsultSuccessScreen(
     context: Context,
     attributeSet: AttributeSet
-) : ConstraintLayout(context, attributeSet), TeleConsultSuccessScreenUiActions {
+) : ConstraintLayout(context, attributeSet), TeleConsultSuccessScreenUiActions, TeleConsultSuccessUi {
 
   @Inject
   lateinit var effectHandler: TeleConsultSuccessEffectHandler.Factory
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var userClock: UserClock
 
   private val events: Observable<TeleConsultSuccessEvent> by unsafeLazy {
     Observable
@@ -35,6 +43,8 @@ class TeleConsultSuccessScreen(
         )
   }
 
+  private val uiRenderer = TeleConsultSuccessUiRenderer(this)
+
   private
   val mobiusDelegate: MobiusDelegate<TeleConsultSuccessModel, TeleConsultSuccessEvent, TeleConsultSuccessEffect> by unsafeLazy {
     val screenKey = screenRouter.key<TeleConsultSuccessScreenKey>(this)
@@ -43,7 +53,8 @@ class TeleConsultSuccessScreen(
         defaultModel = TeleConsultSuccessModel.create(screenKey.patientUuid),
         init = TeleConsultSuccessInit(),
         update = TeleConsultSuccessUpdate(),
-        effectHandler = effectHandler.create(this).build()
+        effectHandler = effectHandler.create(this).build(),
+        modelUpdateListener = uiRenderer::render
     )
   }
 
@@ -93,6 +104,16 @@ class TeleConsultSuccessScreen(
   }
 
   override fun goToPrescriptionScreen(patient: Patient) {
+  }
+
+  override fun showPatientInfo(patient: Patient) {
+    val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
+    val genderInitial: Gender = patient.gender
+    toolbar.title = resources.getString(
+        R.string.screen_teleconsult_success_patient_information,
+        patient.fullName,
+        resources.getString(genderInitial.displayLetterRes),
+        ageValue.toString())
   }
 
   interface Injector {

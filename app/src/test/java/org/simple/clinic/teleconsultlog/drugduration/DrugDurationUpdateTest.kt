@@ -2,10 +2,12 @@ package org.simple.clinic.teleconsultlog.drugduration
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.teleconsultlog.drugduration.DrugDurationValidationResult.BLANK
 
 class DrugDurationUpdateTest {
 
@@ -21,20 +23,21 @@ class DrugDurationUpdateTest {
         .whenEvent(DurationChanged(duration))
         .then(assertThatNext(
             hasModel(model.durationChanged(duration)),
-            hasEffects(HideDurationError as DrugDurationEffect)
+            hasNoEffects()
         ))
   }
 
   @Test
   fun `show drug duration error when drug duration is empty`() {
     val duration = ""
+    val model = DrugDurationModel.create(duration)
 
     updateSpec
-        .given(DrugDurationModel.create(duration))
+        .given(model)
         .whenEvent(DrugDurationSaveClicked)
         .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(ShowBlankDurationError as DrugDurationEffect)
+            hasModel(model.invalid(BLANK)),
+            hasNoEffects()
         ))
   }
 

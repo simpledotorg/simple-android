@@ -27,7 +27,7 @@ import org.simple.clinic.widgets.textChanges
 import java.util.Locale
 import javax.inject.Inject
 
-class DrugDurationSheet : BottomSheetActivity(), DrugDurationUiActions {
+class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiActions {
 
   @Inject
   lateinit var locale: Locale
@@ -70,13 +70,15 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUiActions {
 
   private val delegate by unsafeLazy {
     val duration = intent.getStringExtra(EXTRA_DURATION)!!
+    val uiRenderer = DrugDurationUiRenderer(this)
 
     MobiusDelegate.forActivity(
         events = events.ofType(),
         defaultModel = DrugDurationModel.create(duration),
         init = DrugDurationInit(),
         update = DrugDurationUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build()
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
     )
   }
 

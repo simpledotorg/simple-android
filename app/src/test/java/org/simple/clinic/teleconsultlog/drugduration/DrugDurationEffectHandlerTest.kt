@@ -23,30 +23,6 @@ class DrugDurationEffectHandlerTest {
   }
 
   @Test
-  fun `when show blank duration error effect is received, then show blank duration error`() {
-    // when
-    effectHandlerTestCase.dispatch(ShowBlankDurationError)
-
-    // then
-    effectHandlerTestCase.assertNoOutgoingEvents()
-
-    verify(uiActions).showBlankDurationError()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when hide duration error effect is received, then hide the duration error`() {
-    // when
-    effectHandlerTestCase.dispatch(HideDurationError)
-
-    // then
-    effectHandlerTestCase.assertNoOutgoingEvents()
-
-    verify(uiActions).hideDurationError()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
   fun `when save drug duration effect is received, then save duration and close sheet`() {
     // given
     val duration = "20"

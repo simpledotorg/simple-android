@@ -4,12 +4,15 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.teleconsultlog.drugduration.DrugDurationValidationResult.BLANK
 
 class DrugDurationUpdate : Update<DrugDurationModel, DrugDurationEvent, DrugDurationEffect> {
 
   override fun update(model: DrugDurationModel, event: DrugDurationEvent): Next<DrugDurationModel, DrugDurationEffect> {
     return when (event) {
-      is DurationChanged -> next(model.durationChanged(event.duration), HideDurationError)
+      is DurationChanged -> next(
+          model.durationChanged(event.duration)
+      )
       DrugDurationSaveClicked -> drugDurationSaveClicked(model)
     }
   }
@@ -18,7 +21,7 @@ class DrugDurationUpdate : Update<DrugDurationModel, DrugDurationEvent, DrugDura
     return if (model.hasDuration) {
       dispatch(SaveDrugDuration(model.duration.toInt()))
     } else {
-      dispatch(ShowBlankDurationError)
+      next(model.invalid(BLANK))
     }
   }
 }

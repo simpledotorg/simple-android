@@ -31,7 +31,9 @@ data class OngoingLoginEntry(
 
     val createdAt: Instant? = null,
 
-    val updatedAt: Instant? = null
+    val updatedAt: Instant? = null,
+
+    val teleconsultPhoneNumber: String? = null
 ) : Parcelable {
 
   @Dao

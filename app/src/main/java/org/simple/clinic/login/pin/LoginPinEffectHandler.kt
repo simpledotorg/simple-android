@@ -89,7 +89,7 @@ class LoginPinEffectHandler @AssistedInject constructor(
         loggedInStatus = User.LoggedInStatus.OTP_REQUESTED,
         registrationFacilityUuid = entry.registrationFacilityUuid!!,
         currentFacilityUuid = entry.registrationFacilityUuid,
-        teleconsultPhoneNumber = null
+        teleconsultPhoneNumber = entry.teleconsultPhoneNumber
     )
   }
 }

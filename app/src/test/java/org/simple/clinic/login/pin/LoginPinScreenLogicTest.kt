@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
-import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -107,6 +106,7 @@ class LoginPinScreenLogicTest {
     val status = UserStatus.ApprovedForSyncing
     val createdAt = Instant.parse("2019-07-25T06:01:03.325Z")
     val updatedAt = Instant.parse("2019-07-26T06:01:03.325Z")
+    val teleconsultPhoneNumber = "1111111111"
     val ongoingLoginEntry = ongoingLoginEntry
         .copy(
             pinDigest = pinDigest,
@@ -114,7 +114,8 @@ class LoginPinScreenLogicTest {
             registrationFacilityUuid = registrationFacilityUuid,
             status = status,
             createdAt = createdAt,
-            updatedAt = updatedAt
+            updatedAt = updatedAt,
+            teleconsultPhoneNumber = teleconsultPhoneNumber
         )
     val expectedUser = User(
         uuid = loginUserUuid,
@@ -127,7 +128,7 @@ class LoginPinScreenLogicTest {
         loggedInStatus = User.LoggedInStatus.OTP_REQUESTED,
         registrationFacilityUuid = registrationFacilityUuid,
         currentFacilityUuid = registrationFacilityUuid,
-        teleconsultPhoneNumber = null
+        teleconsultPhoneNumber = teleconsultPhoneNumber
     )
 
     whenever(ongoingLoginEntryRepository.entryImmediate()) doReturn ongoingLoginEntry

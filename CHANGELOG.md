@@ -14,6 +14,8 @@
 - Migrated `TheActivity` to Mobius
 - Migrated `AppLockScreen` to Mobius
 - Migrated `PatientSearchView` to Mobius
+- Added `TeleConsultSuccessScreen` to notify teleconsultation recorded successfully
+
 
 ## On Demo
 ### Features

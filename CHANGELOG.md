@@ -15,7 +15,7 @@
 - Migrated `AppLockScreen` to Mobius
 - Migrated `PatientSearchView` to Mobius
 - Added `TeleConsultSuccessScreen` to notify teleconsultation recorded successfully
-
+- Add `teleconsultPhoneNumber` in `User`, `LoggedInUserPayload` & `OngoingLoginEntry`
 
 ## On Demo
 ### Features

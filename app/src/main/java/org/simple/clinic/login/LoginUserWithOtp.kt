@@ -60,7 +60,8 @@ class LoginUserWithOtp @Inject constructor(
           updatedAt = updatedAt,
           loggedInStatus = User.LoggedInStatus.LOGGED_IN,
           registrationFacilityUuid = payload.registrationFacilityId,
-          currentFacilityUuid = payload.registrationFacilityId
+          currentFacilityUuid = payload.registrationFacilityId,
+          teleconsultPhoneNumber = payload.teleconsultPhoneNumber
       )
     }
   }

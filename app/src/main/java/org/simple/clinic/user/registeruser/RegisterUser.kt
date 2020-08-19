@@ -3,10 +3,10 @@ package org.simple.clinic.user.registeruser
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.login.UsersApi
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
@@ -70,7 +70,8 @@ class RegisterUser @Inject constructor(
           registrationFacilityId = registrationFacilityUuid,
           status = status,
           createdAt = createdAt,
-          updatedAt = updatedAt
+          updatedAt = updatedAt,
+          teleconsultPhoneNumber = user.teleconsultPhoneNumber
       )
     }
   }
@@ -98,7 +99,8 @@ class RegisterUser @Inject constructor(
           updatedAt = updatedAt,
           loggedInStatus = LOGGED_IN,
           registrationFacilityUuid = payload.registrationFacilityId,
-          currentFacilityUuid = payload.registrationFacilityId
+          currentFacilityUuid = payload.registrationFacilityId,
+          teleconsultPhoneNumber = payload.teleconsultPhoneNumber
       )
     }
   }

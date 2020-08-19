@@ -100,7 +100,8 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
         registrationFacilityUuid = userData.registrationFacilityUuid,
         status = userData.status,
         createdAt = userData.createdAt,
-        updatedAt = userData.updatedAt
+        updatedAt = userData.updatedAt,
+        teleconsultPhoneNumber = userData.teleconsultPhoneNumber
     )
   }
 

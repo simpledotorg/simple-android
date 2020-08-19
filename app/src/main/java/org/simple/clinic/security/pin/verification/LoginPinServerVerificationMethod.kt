@@ -5,6 +5,7 @@ import org.simple.clinic.login.activateuser.ActivateUser.Result
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Correct
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Incorrect
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntryRepository
 import org.simple.clinic.user.UserStatus
@@ -38,7 +39,8 @@ class LoginPinServerVerificationMethod @Inject constructor(
       val registrationFacilityUuid: UUID,
       val status: UserStatus,
       val createdAt: Instant,
-      val updatedAt: Instant
+      val updatedAt: Instant,
+      val teleconsultPhoneNumber: String?
   ) {
 
     companion object {
@@ -55,7 +57,8 @@ class LoginPinServerVerificationMethod @Inject constructor(
             registrationFacilityUuid = payload.registrationFacilityId,
             status = payload.status,
             createdAt = payload.createdAt,
-            updatedAt = payload.updatedAt
+            updatedAt = payload.updatedAt,
+            teleconsultPhoneNumber = payload.teleconsultPhoneNumber
         )
       }
     }

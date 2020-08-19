@@ -63,7 +63,9 @@ data class User(
     val registrationFacilityUuid: UUID,
 
     @ColumnInfo(index = true)
-    val currentFacilityUuid: UUID
+    val currentFacilityUuid: UUID,
+
+    val teleconsultPhoneNumber: String?
 ) : Parcelable {
 
   val canSyncData: Boolean

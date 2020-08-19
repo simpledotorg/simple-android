@@ -70,7 +70,8 @@ class UserSession @Inject constructor(
           status = WaitingForApproval,
           loggedInStatus = NOT_LOGGED_IN,
           registrationFacilityUuid = entry.facilityId!!,
-          currentFacilityUuid = entry.facilityId
+          currentFacilityUuid = entry.facilityId,
+          teleconsultPhoneNumber = null
       )
     }
 
@@ -90,7 +91,8 @@ class UserSession @Inject constructor(
           updatedAt = updatedAt,
           loggedInStatus = status,
           registrationFacilityUuid = payload.registrationFacilityId,
-          currentFacilityUuid = payload.registrationFacilityId
+          currentFacilityUuid = payload.registrationFacilityId,
+          teleconsultPhoneNumber = payload.teleconsultPhoneNumber
       )
     }
   }

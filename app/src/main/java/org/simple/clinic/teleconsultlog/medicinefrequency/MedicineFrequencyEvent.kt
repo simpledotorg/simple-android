@@ -1,3 +1,9 @@
 package org.simple.clinic.teleconsultlog.medicinefrequency
 
-sealed class MedicineFrequencyEvent
+import org.simple.clinic.widgets.UiEvent
+
+sealed class MedicineFrequencyEvent : UiEvent
+
+data class SaveMedicineFrequencyClicked(val medicineFrequency: MedicineFrequency) : MedicineFrequencyEvent() {
+  override val analyticsName: String = "Save Medicine Frequency:Save Medicine Frequency Clicked"
+}

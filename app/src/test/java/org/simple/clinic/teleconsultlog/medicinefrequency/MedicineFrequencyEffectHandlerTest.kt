@@ -16,6 +16,7 @@ class MedicineFrequencyEffectHandlerTest {
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
+  private val medicineFrequency = MedicineFrequency.BD
 
   @After
   fun teardown() {
@@ -24,13 +25,23 @@ class MedicineFrequencyEffectHandlerTest {
 
   @Test
   fun `when load default medicine information effect is received, then load medicine frequency`() {
-    val medicineFrequency = MedicineFrequency.BD
     // when
     testCase.dispatch(LoadDefaultMedicineFrequency(medicineFrequency = medicineFrequency))
 
     // then
     testCase.assertNoOutgoingEvents()
     verify(uiActions).setMedicineFrequency(medicineFrequency)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when save medicine frequency effect is received, then save the medicine frequency`() {
+    // when
+    testCase.dispatch(SaveMedicineFrequency(medicineFrequency))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).saveMedicineFrequency(medicineFrequency)
     verifyNoMoreInteractions(uiActions)
   }
 

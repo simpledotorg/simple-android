@@ -20,6 +20,7 @@ class MedicineFrequencyEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<MedicineFrequencyEffect, MedicineFrequencyEvent>()
         .addConsumer(LoadDefaultMedicineFrequency::class.java, { uiActions.setMedicineFrequency(it.medicineFrequency) }, schedulersProvider.ui())
+        .addConsumer(SaveMedicineFrequency::class.java, { uiActions.saveMedicineFrequency(it.medicineFrequency) }, schedulersProvider.ui())
         .build()
   }
 }

@@ -112,6 +112,11 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
+      android:name=".teleconsultlog.medicinefrequency.MedicineFrequencySheet"
+      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:windowSoftInputMode="adjustResize" />
+
+    <activity
       android:name=".deeplink.DeepLinkActivity"
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustResize">

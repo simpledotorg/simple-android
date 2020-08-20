@@ -26,4 +26,13 @@ class PatientSummaryModule {
 
   @Provides
   fun missingPhoneReminderDao(appDatabase: AppDatabase) = appDatabase.missingPhoneReminderDao()
+
+  @Provides
+  fun teleconsultationFacilityDao(appDatabase: AppDatabase) = appDatabase.teleconsultFacilityInfoDao()
+
+  @Provides
+  fun medicalOfficersDao(appDatabase: AppDatabase) = appDatabase.teleconsultMedicalOfficersDao()
+
+  @Provides
+  fun teleconsultationFacilityWithMedicalOfficersDao(appDatabase: AppDatabase) = appDatabase.teleconsultFacilityWithMedicalOfficersDao()
 }

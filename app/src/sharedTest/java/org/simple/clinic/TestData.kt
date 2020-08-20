@@ -55,6 +55,10 @@ import org.simple.clinic.protocol.sync.ProtocolPayload
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultationsResponse
+import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
+import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityInfo
+import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityMedicalOfficersCrossRef
+import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityWithMedicalOfficers
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -1062,4 +1066,52 @@ object TestData {
   ) = TeleconsultPhoneNumber(
       phoneNumber = phoneNumber
   )
+
+  fun medicalOfficer(
+      id: UUID = UUID.randomUUID(),
+      fullName: String = faker.name.name(),
+      phoneNumber: String = faker.phoneNumber.cellPhone()
+  ): MedicalOfficer {
+    return MedicalOfficer(
+        medicalOfficerId = id,
+        fullName = fullName,
+        phoneNumber = phoneNumber
+    )
+  }
+
+  fun teleconsultationFacilityInfo(
+      id: UUID = UUID.randomUUID(),
+      facilityId: UUID = UUID.randomUUID(),
+      createdAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
+      updatedAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
+      deletedAt: Instant? = null
+  ): TeleconsultationFacilityInfo {
+    return TeleconsultationFacilityInfo(
+        teleconsultationFacilityId = id,
+        facilityId = facilityId,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
+    )
+  }
+
+  fun teleconsultationFacilityWithMedicalOfficers(
+      teleconsultationFacilityInfo: TeleconsultationFacilityInfo = teleconsultationFacilityInfo(),
+      medicalOfficers: List<MedicalOfficer> = emptyList()
+  ): TeleconsultationFacilityWithMedicalOfficers {
+    return TeleconsultationFacilityWithMedicalOfficers(
+        teleconsultationFacilityInfo = teleconsultationFacilityInfo,
+        medicalOfficers = medicalOfficers
+    )
+  }
+
+  fun teleconsultationFacilityInfoMedicalOfficersCrossRef(
+      teleconsultationFacilityUuid: UUID = UUID.randomUUID(),
+      medicalOfficerUuid: UUID = UUID.randomUUID()
+  ): TeleconsultationFacilityMedicalOfficersCrossRef {
+    return TeleconsultationFacilityMedicalOfficersCrossRef(
+        teleconsultationFacilityId = teleconsultationFacilityUuid,
+        medicalOfficerId = medicalOfficerUuid
+    )
+  }
 }

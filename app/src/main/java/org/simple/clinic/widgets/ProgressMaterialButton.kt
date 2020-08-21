@@ -3,7 +3,6 @@ package org.simple.clinic.widgets
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.google.android.material.button.MaterialButton
 import org.simple.clinic.R
@@ -22,14 +21,7 @@ class ProgressMaterialButton(
   private var buttonIcon: Drawable? = null
   private var buttonIconGravity: Int
 
-  private var progressDrawable = AnimatedVectorDrawableCompat.create(context, R.drawable.avd_progress)
-
-  private val progressAvdCallback = object : Animatable2Compat.AnimationCallback() {
-    override fun onAnimationEnd(drawable: Drawable?) {
-      super.onAnimationEnd(drawable)
-      progressDrawable?.start()
-    }
-  }
+  private val progressDrawable: AnimatedVectorDrawableCompat = AnimatedVectorDrawableCompat.create(context, R.drawable.avd_progress)!!
 
   init {
     buttonText = text.toString()
@@ -40,21 +32,9 @@ class ProgressMaterialButton(
     buttonState = ButtonState.values()[typeArray.getInt(R.styleable.ProgressMaterialButton_buttonState, 0)]
 
     setButtonState(buttonState)
+    progressDrawable.start()
 
     typeArray.recycle()
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    progressDrawable?.run {
-      registerAnimationCallback(progressAvdCallback)
-      start()
-    }
-  }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    progressDrawable?.unregisterAnimationCallback(progressAvdCallback)
   }
 
   fun setButtonState(buttonState: ButtonState) {

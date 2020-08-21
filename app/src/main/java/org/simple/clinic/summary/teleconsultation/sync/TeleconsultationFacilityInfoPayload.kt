@@ -2,6 +2,7 @@ package org.simple.clinic.summary.teleconsultation.sync
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.simple.clinic.patient.SyncStatus
 import java.time.Instant
 import java.util.UUID
 
@@ -25,4 +26,25 @@ data class TeleconsultationFacilityInfoPayload(
 
     @Json(name = "deleted_at")
     val deletedAt: Instant?
-)
+) {
+
+  fun toTeleconsultInfoWithMedicalOfficersDatabaseModel(): TeleconsultationFacilityWithMedicalOfficers {
+    return TeleconsultationFacilityWithMedicalOfficers(
+        teleconsultationFacilityInfo = TeleconsultationFacilityInfo(
+            teleconsultationFacilityId = id,
+            facilityId = facilityId,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            deletedAt = deletedAt,
+            syncStatus = SyncStatus.DONE
+        ),
+        medicalOfficers = medicalOfficers.map {
+          MedicalOfficer(
+              medicalOfficerId = it.id,
+              fullName = it.fullName,
+              phoneNumber = it.phoneNumber
+          )
+        }
+    )
+  }
+}

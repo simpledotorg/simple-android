@@ -1084,14 +1084,16 @@ object TestData {
       facilityId: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
       updatedAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
   ): TeleconsultationFacilityInfo {
     return TeleconsultationFacilityInfo(
         teleconsultationFacilityId = id,
         facilityId = facilityId,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+        syncStatus = syncStatus
     )
   }
 

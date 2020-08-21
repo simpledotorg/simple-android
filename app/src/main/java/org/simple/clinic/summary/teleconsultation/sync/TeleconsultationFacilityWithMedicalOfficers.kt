@@ -45,7 +45,7 @@ data class TeleconsultationFacilityWithMedicalOfficers(
 
     @Transaction
     @Query("SELECT * FROM TeleconsultationFacilityInfo WHERE deletedAt IS NULL")
-    fun getAll(): List<TeleconsultationFacilityWithMedicalOfficers>?
+    fun getAll(): List<TeleconsultationFacilityWithMedicalOfficers>
 
     @Query("DELETE FROM TeleconsultationFacilityMedicalOfficersCrossRef")
     fun clear()

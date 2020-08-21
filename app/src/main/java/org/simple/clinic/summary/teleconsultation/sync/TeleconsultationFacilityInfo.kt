@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import org.simple.clinic.patient.SyncStatus
 import java.time.Instant
 import java.util.UUID
 
@@ -20,7 +21,9 @@ data class TeleconsultationFacilityInfo(
 
     val updatedAt: Instant,
 
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    val syncStatus: SyncStatus
 ) {
 
   @Dao
@@ -31,5 +34,23 @@ data class TeleconsultationFacilityInfo(
 
     @Query("DELETE FROM TeleconsultationFacilityInfo")
     fun clear()
+
+    @Query("SELECT COUNT(teleconsultationFacilityId) FROM TeleconsultationFacilityInfo")
+    fun count(): Int
+
+    @Query("SELECT COUNT(teleconsultationFacilityId) FROM TeleconsultationFacilityInfo WHERE syncStatus = :syncStatus")
+    fun count(syncStatus: SyncStatus): Int
+
+    @Query("SELECT * FROM TeleconsultationFacilityInfo WHERE teleconsultationFacilityId = :id")
+    fun getOne(id: UUID): TeleconsultationFacilityInfo?
+
+    @Query("UPDATE TeleconsultationFacilityInfo SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
+    fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
+
+    @Query("UPDATE TeleconsultationFacilityInfo SET syncStatus = :newStatus WHERE teleconsultationFacilityId IN (:uuids)")
+    fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
+
+    @Query("SELECT * FROM TeleconsultationFacilityInfo WHERE syncStatus = :syncStatus")
+    fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultationFacilityInfo>
   }
 }

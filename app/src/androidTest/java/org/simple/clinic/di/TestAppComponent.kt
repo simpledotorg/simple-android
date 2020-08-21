@@ -39,6 +39,7 @@ import org.simple.clinic.storage.migrations.Migration57AndroidTest
 import org.simple.clinic.storage.migrations.Migration58AndroidTest
 import org.simple.clinic.storage.migrations.Migration59AndroidTest
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepositoryAndroidTest
+import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepositoryAndroidTest
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityWithMedicalOfficersTest
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.RegisterUserServerIntegrationTest
@@ -96,4 +97,5 @@ interface TestAppComponent {
   fun inject(target: BloodSugarHistoryListItemDataSourceTest)
   fun inject(target: OverdueAppointmentRowDataSourceTest)
   fun inject(target: TeleconsultationFacilityWithMedicalOfficersTest)
+  fun inject(target: TeleconsultationFacilityRepositoryAndroidTest)
 }

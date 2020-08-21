@@ -56,7 +56,9 @@ import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultationsResponse
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
+import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficerPayload
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityInfo
+import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityInfoPayload
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityMedicalOfficersCrossRef
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityWithMedicalOfficers
 import org.simple.clinic.user.LoggedInUserPayload
@@ -1114,6 +1116,36 @@ object TestData {
     return TeleconsultationFacilityMedicalOfficersCrossRef(
         teleconsultationFacilityId = teleconsultationFacilityUuid,
         medicalOfficerId = medicalOfficerUuid
+    )
+  }
+
+  fun medicalOfficerPayload(
+      id: UUID = UUID.randomUUID(),
+      fullName: String = faker.name.name(),
+      phoneNumber: String = faker.phoneNumber.cellPhone()
+  ): MedicalOfficerPayload {
+    return MedicalOfficerPayload(
+        id = id,
+        fullName = fullName,
+        phoneNumber = phoneNumber
+    )
+  }
+
+  fun teleconsultationFacilityInfoPayload(
+      id: UUID = UUID.randomUUID(),
+      facilityId: UUID = UUID.randomUUID(),
+      medicalOfficersPayload: List<MedicalOfficerPayload> = emptyList(),
+      createdAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
+      updatedAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
+      deletedAt: Instant? = null,
+  ): TeleconsultationFacilityInfoPayload {
+    return TeleconsultationFacilityInfoPayload(
+        id = id,
+        facilityId = facilityId,
+        medicalOfficers = medicalOfficersPayload,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
     )
   }
 }

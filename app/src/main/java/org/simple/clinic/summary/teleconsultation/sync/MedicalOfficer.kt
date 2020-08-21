@@ -18,6 +18,14 @@ data class MedicalOfficer(
     val phoneNumber: String
 ) {
 
+  fun toPayload(): MedicalOfficerPayload {
+    return MedicalOfficerPayload(
+        id = medicalOfficerId,
+        fullName = fullName,
+        phoneNumber = phoneNumber
+    )
+  }
+
   @Dao
   interface RoomDao {
 

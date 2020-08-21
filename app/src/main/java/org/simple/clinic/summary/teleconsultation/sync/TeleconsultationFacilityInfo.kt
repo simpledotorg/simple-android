@@ -26,6 +26,17 @@ data class TeleconsultationFacilityInfo(
     val syncStatus: SyncStatus
 ) {
 
+  fun toPayload(medicalOfficers: List<MedicalOfficer>): TeleconsultationFacilityInfoPayload {
+    return TeleconsultationFacilityInfoPayload(
+        id = teleconsultationFacilityId,
+        facilityId = facilityId,
+        medicalOfficers = medicalOfficers.map { it.toPayload() },
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
+    )
+  }
+
   @Dao
   interface RoomDao {
 

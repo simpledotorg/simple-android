@@ -160,6 +160,23 @@ data class User(
         INNER JOIN LoggedInUser ON LoggedInUser.currentFacilityUuid = F.uuid
         WHERE LoggedInUser.uuid = :userUuid
       """
+
+      @Language("RoomSql")
+      private const val CURRENT_FACILITY_QUERY_WITHOUT_USER = """
+        SELECT 
+         F.uuid, F.name, F.facilityType,
+         F.streetAddress, F.villageOrColony, F.district,
+         F.state, F.country, F.pinCode,
+         F.protocolUuid, F.groupUuid,
+         F.location_latitude, F.location_longitude,
+         F.createdAt, F.updatedAt, F.deletedAt,
+         F.syncStatus,
+         F.config_diabetesManagementEnabled,
+         F.config_teleconsultationEnabled
+        FROM Facility F
+        INNER JOIN LoggedInUser ON LoggedInUser.currentFacilityUuid = F.uuid
+        LIMIT 1
+      """
     }
 
     @Query("SELECT * FROM LoggedInUser LIMIT 1")
@@ -183,8 +200,8 @@ data class User(
     @Query("UPDATE LoggedInUser SET currentFacilityUuid = :facilityUuid")
     abstract fun setCurrentFacility(facilityUuid: UUID): Int
 
-    @Query(CURRENT_FACILITY_QUERY)
-    abstract fun currentFacility(userUuid: UUID): Flowable<Facility>
+    @Query(CURRENT_FACILITY_QUERY_WITHOUT_USER)
+    abstract fun currentFacility(): Flowable<Facility>
 
     @Query(CURRENT_FACILITY_QUERY)
     abstract fun currentFacilityImmediate(userUuid: UUID): Facility?

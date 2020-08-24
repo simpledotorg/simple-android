@@ -24,10 +24,7 @@ class SessionModule {
   fun currentFacilityNotifications(appDatabase: AppDatabase): Observable<Facility> {
     return appDatabase
         .userDao()
-        .user()
-        .filter { it.isNotEmpty() }
-        .map { it.first().uuid }
-        .switchMap(appDatabase.userDao()::currentFacility)
+        .currentFacility()
         .toObservable()
   }
 }

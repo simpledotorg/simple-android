@@ -16,8 +16,7 @@ class SessionModule {
 
   @Provides
   fun currentFacility(appDatabase: AppDatabase): Facility {
-    val user = appDatabase.userDao().userImmediate()!!
-    return appDatabase.userDao().currentFacilityImmediate(user.uuid)!!
+    return appDatabase.userDao().currentFacilityImmediate()!!
   }
 
   @Provides

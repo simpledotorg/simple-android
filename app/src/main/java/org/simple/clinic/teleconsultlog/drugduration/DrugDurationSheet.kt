@@ -70,7 +70,6 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
     MobiusDelegate.forActivity(
         events = events.ofType(),
         defaultModel = DrugDurationModel.create(drugDuration.duration),
-        init = DrugDurationInit(),
         update = DrugDurationUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render

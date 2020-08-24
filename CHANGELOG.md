@@ -1,6 +1,10 @@
 # CHANGELOG
 
 ## Next Release
+### Internal
+- [In Progress: 24 Aug 2020] Add support for sending teleconsult request via SMS
+
+## On Demo
 ### Changes
 - Added `SignatureActivity` to accept and save user signature
 - Increase error text sizes
@@ -17,7 +21,6 @@
 - Migrated `PatientSearchView` to Mobius
 - Added `TeleConsultSuccessScreen` to notify teleconsultation recorded successfully
 - Add `teleconsultPhoneNumber` in `User`, `LoggedInUserPayload` & `OngoingLoginEntry`
-- [In Progress: 24 Aug 2020] Add support for sending teleconsult request via SMS
 
 ## 2020-08-24-7397
 ### Fixes

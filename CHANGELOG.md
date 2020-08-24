@@ -19,6 +19,7 @@
 
 ### Fixes
 - Fixed native crash on Android 9 with animated vector drawables ([#364](https://app.clubhouse.io/simpledotorg/story/364/fix-vectordrawable-native-crash))
+- Fixed crash on putting the app in the background during registration facility selection ([#1030](https://app.clubhouse.io/simpledotorg/story/1030/app-crashes-during-registration-when-it-is-backgrounded))
 
 ## On Demo
 ### Features

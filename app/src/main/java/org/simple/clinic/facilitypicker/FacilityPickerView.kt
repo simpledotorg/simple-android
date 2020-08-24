@@ -74,6 +74,8 @@ class FacilityPickerView(
     // Hiding the keyboard without adding a post{} block doesn't seem to work.
     post { hideKeyboard() }
     hideKeyboardOnListScroll()
+
+    isSaveEnabled = false
   }
 
   private val events: Observable<FacilityPickerEvent> by unsafeLazy {

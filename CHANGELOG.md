@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Changes
+- Update error message of address fields in `PatientEntryScreen`
+
 ### Internal
 - [In Progress: 24 Aug 2020] Add support for sending teleconsult request via SMS
 - Use UiRenderer for setting drug duration in `DrugDurationSheet`

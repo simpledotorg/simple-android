@@ -14,4 +14,8 @@ data class MedicineFrequencyModel(
     )
   }
 
+  fun medicineFrequencyChanged(medicineFrequency: MedicineFrequency): MedicineFrequencyModel {
+    return copy(medicineFrequency = medicineFrequency)
+  }
+
 }

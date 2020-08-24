@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.widget.checkedChanges
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -37,6 +38,13 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
 
   private lateinit var component: MedicineFrequencyComponent
 
+  private val radioIdToMedicineFrequency = mapOf(
+      R.id.medicineFrequencyOdRadioButton to OD,
+      R.id.medicineFrequencyBdRadioButton to BD,
+      R.id.medicineFrequencyTdsRadioButton to TDS,
+      R.id.medicineFrequencyQdsRadioButton to QDS
+  )
+
   companion object {
     private const val DRUG_DURATION = "drugDuration"
     private const val MEDICINE_FREQUENCY = "medicineFrequency"
@@ -63,7 +71,11 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
   }
 
   private val events by unsafeLazy {
-    saveClicks()
+    Observable
+        .merge(
+            saveClicks(),
+            medicineFrequencyChanges()
+        )
         .compose(ReportAnalyticsEvents())
   }
 
@@ -83,13 +95,17 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
     medicineFrequencyTitleTextView.text = getString(R.string.drug_duration_title, drugDuration.name, drugDuration.dosage)
   }
 
+  private fun medicineFrequencyChanges(): Observable<MedicineFrequencyChanged> {
+    return medicineFrequencyRadioGroup
+        .checkedChanges()
+        .filter { it != -1 }
+        .map { checkedId ->
+          val medicineFrequency = radioIdToMedicineFrequency.getValue(checkedId)
+          MedicineFrequencyChanged(medicineFrequency)
+        }
+  }
+
   private fun saveClicks(): Observable<MedicineFrequencyEvent> {
-    val radioIdToMedicineFrequency = mapOf(
-        R.id.medicineFrequencyOdRadioButton to OD,
-        R.id.medicineFrequencyBdRadioButton to BD,
-        R.id.medicineFrequencyTdsRadioButton to TDS,
-        R.id.medicineFrequencyQdsRadioButton to QDS
-    )
     return saveMedicineFrequencyButton
         .clicks()
         .map {

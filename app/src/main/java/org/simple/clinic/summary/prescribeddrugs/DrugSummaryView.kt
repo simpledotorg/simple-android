@@ -24,15 +24,15 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.DRUGS_REQCODE_ALERT_FACILITY_CHANGE
+import org.simple.clinic.summary.PatientSummaryChildView
+import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.visibleOrGone
@@ -44,7 +44,7 @@ import javax.inject.Named
 class DrugSummaryView(
     context: Context,
     attributeSet: AttributeSet
-) : CardView(context, attributeSet), DrugSummaryUi, DrugSummaryUiActions {
+) : CardView(context, attributeSet), DrugSummaryUi, DrugSummaryUiActions, PatientSummaryChildView {
 
   @Inject
   @Named("full_date")
@@ -64,6 +64,8 @@ class DrugSummaryView(
 
   @Inject
   lateinit var effectHandlerFactory: DrugSummaryEffectHandler.Factory
+
+  private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val screenKey by unsafeLazy {
     screenRouter.key<PatientSummaryScreenKey>(this)
@@ -85,7 +87,10 @@ class DrugSummaryView(
         init = DrugSummaryInit(),
         update = DrugSummaryUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
+        modelUpdateListener = { model ->
+          modelUpdateCallback?.invoke(model)
+          uiRenderer.render(model)
+        }
     )
   }
 
@@ -151,6 +156,10 @@ class DrugSummaryView(
     )
 
     activity.startActivityForResult(alertFacilityChangeIntent, DRUGS_REQCODE_ALERT_FACILITY_CHANGE)
+  }
+
+  override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
+    modelUpdateCallback = callback
   }
 
   private fun bind(

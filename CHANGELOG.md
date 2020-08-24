@@ -4,6 +4,7 @@
 ### Changes
 - Added `SignatureActivity` to accept and save user signature
 - Increase error text sizes
+- Improved the user experience of loading the patient summary screen
 
 ### Internal
 - Migrated `LoggedOutOfDeviceDialog` to Mobius

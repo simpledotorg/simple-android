@@ -73,7 +73,7 @@ import javax.inject.Named
 class PatientSummaryScreen(
     context: Context,
     attrs: AttributeSet
-) : RelativeLayout(context, attrs), PatientSummaryScreenUi, PatientSummaryUiActions {
+) : RelativeLayout(context, attrs), PatientSummaryScreenUi, PatientSummaryUiActions, PatientSummaryChildView {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -96,6 +96,8 @@ class PatientSummaryScreen(
 
   @Inject
   lateinit var whatsAppMessageSender: WhatsAppMessageSender
+
+  private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val snackbarActionClicks = PublishSubject.create<PatientSummaryEvent>()
   private val events: Observable<PatientSummaryEvent> by unsafeLazy {
@@ -130,7 +132,10 @@ class PatientSummaryScreen(
         init = PatientSummaryInit(),
         update = PatientSummaryUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = viewRenderer::render
+        modelUpdateListener = { model ->
+          modelUpdateCallback?.invoke(model)
+          viewRenderer.render(model)
+        }
     )
   }
   private val teleconsultationErrorSnackbar by unsafeLazy {
@@ -501,6 +506,10 @@ class PatientSummaryScreen(
 
   override fun hideAssignedFacilityView() {
     assignedFacilityView.visibility = View.GONE
+  }
+
+  override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
+    modelUpdateCallback = callback
   }
 }
 

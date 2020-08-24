@@ -40,7 +40,7 @@
 - Fixed issue where the app would crash on restoring the home screen state ([#791](https://app.clubhouse.io/simpledotorg/story/791/the-app-crashes-when-navigating-back-to-the-home-screen-from-any-other-screen))
 - Fix patient summary not opening on item click in all recent patients screen ([#960](https://app.clubhouse.io/simpledotorg/story/960/can-t-get-to-patient-summary-from-recent-patient-list))
 - Fixed native crash on Android 9 with animated vector drawables ([#364](https://app.clubhouse.io/simpledotorg/story/364/fix-vectordrawable-native-crash))
-
+- Fixed crash on putting the app in the background during registration facility selection ([#1030](https://app.clubhouse.io/simpledotorg/story/1030/app-crashes-during-registration-when-it-is-backgrounded))
 
 ## 2020-08-03-7364
 ### Features

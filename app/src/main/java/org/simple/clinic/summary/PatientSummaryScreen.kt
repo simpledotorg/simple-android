@@ -54,8 +54,8 @@ import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.WhatsAppMessageSender
 import org.simple.clinic.util.extractSuccessful
+import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState

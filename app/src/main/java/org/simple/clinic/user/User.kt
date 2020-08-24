@@ -189,7 +189,7 @@ data class User(
     @Query(CURRENT_FACILITY_QUERY)
     abstract fun currentFacilityImmediate(): Facility?
 
-    @Query("SELECT currentFacilityUuid FROM LoggedInUser WHERE uuid = :userUuid")
-    abstract fun currentFacilityUuid(userUuid: UUID): UUID?
+    @Query("SELECT currentFacilityUuid FROM LoggedInUser LIMIT 1")
+    abstract fun currentFacilityUuid(): UUID?
   }
 }

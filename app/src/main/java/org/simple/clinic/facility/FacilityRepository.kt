@@ -80,7 +80,7 @@ class FacilityRepository @Inject constructor(
   }
 
   fun currentFacilityUuid(user: User): UUID? {
-    return userDao.currentFacilityUuid(user.uuid)
+    return userDao.currentFacilityUuid()
   }
 
   override fun mergeWithLocalData(payloads: List<FacilityPayload>): Completable {

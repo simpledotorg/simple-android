@@ -170,6 +170,39 @@ class PatientSummaryScreen(
 
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
     alertFacilityChangeSheetClosed(screenDestroys)
+    setupChildViewVisibility(screenDestroys)
+  }
+
+  @SuppressLint("CheckResult")
+  private fun setupChildViewVisibility(
+      screenDestroys: Observable<ScreenDestroyed>
+  ) {
+    val modelUpdates: List<Observable<PatientSummaryChildModel>> =
+        listOf(
+            this,
+            drugSummaryView,
+            bloodPressureSummaryView,
+            bloodSugarSummaryView,
+            assignedFacilityView,
+            medicalHistorySummaryView
+        ).map(::createSummaryChildModelStream)
+
+    Observable
+        .combineLatest(modelUpdates) { models -> models.map { it as PatientSummaryChildModel } }
+        .filter { models -> models.all(PatientSummaryChildModel::readyToRender) }
+        .take(1)
+        .takeUntil(screenDestroys)
+        .subscribe { summaryViewsContainer.visibility = VISIBLE }
+  }
+
+  private fun createSummaryChildModelStream(
+      summaryChildView: PatientSummaryChildView
+  ): Observable<PatientSummaryChildModel> {
+    return Observable.create { emitter ->
+      summaryChildView.registerSummaryModelUpdateCallback(emitter::onNext)
+
+      emitter.setCancellable { summaryChildView.registerSummaryModelUpdateCallback(null) }
+    }
   }
 
   override fun onAttachedToWindow() {

@@ -114,7 +114,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_above="@+id/doneButtonFrame"
-    android:layout_below="@+id/patientsummary_header">
+    android:layout_below="@+id/patientsummary_header"
+    android:visibility="invisible"
+    tools:visibility="visible">
 
     <LinearLayout
       android:layout_width="match_parent"

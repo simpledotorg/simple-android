@@ -19,6 +19,5 @@ class DrugDurationEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<DrugDurationEffect, DrugDurationEvent> = RxMobius
       .subtypeEffectHandler<DrugDurationEffect, DrugDurationEvent>()
       .addConsumer(SaveDrugDuration::class.java, { uiActions.saveDrugDuration(it.duration) }, schedulersProvider.ui())
-      .addConsumer(SetDrugDuration::class.java, { uiActions.setDrugDuration(it.duration) }, schedulersProvider.ui())
       .build()
 }

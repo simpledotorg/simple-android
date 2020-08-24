@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.jakewharton.rxbinding3.view.clicks
@@ -20,12 +19,17 @@ import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
 import org.simple.clinic.summary.ASSIGNED_FACILITY_SELECTION
+import org.simple.clinic.summary.PatientSummaryChildView
+import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
-class AssignedFacilityView(context: Context, attrs: AttributeSet) : CardView(context, attrs), AssignedFacilityUi, UiActions {
+class AssignedFacilityView(
+    context: Context,
+    attrs: AttributeSet
+) : CardView(context, attrs), AssignedFacilityUi, UiActions, PatientSummaryChildView {
 
   init {
     inflate(context, R.layout.patientsummary_assigned_facility_content, this)
@@ -39,6 +43,8 @@ class AssignedFacilityView(context: Context, attrs: AttributeSet) : CardView(con
 
   @Inject
   lateinit var effectHandlerFactory: AssignedFacilityEffectHandler.Factory
+
+  private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val events by unsafeLazy {
     Observable
@@ -59,7 +65,10 @@ class AssignedFacilityView(context: Context, attrs: AttributeSet) : CardView(con
         update = AssignedFacilityUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = AssignedFacilityInit(),
-        modelUpdateListener = uiRenderer::render
+        modelUpdateListener = { model ->
+          modelUpdateCallback?.invoke(model)
+          uiRenderer.render(model)
+        }
     )
   }
 
@@ -97,6 +106,10 @@ class AssignedFacilityView(context: Context, attrs: AttributeSet) : CardView(con
 
   override fun renderAssignedFacilityName(facilityName: String) {
     assignedFacilityTextView.text = facilityName
+  }
+
+  override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
+    modelUpdateCallback = callback
   }
 
   private fun changeButtonClicks(): Observable<AssignedFacilityEvent> {

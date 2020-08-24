@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.summary.PatientSummaryChildModel
 import java.util.UUID
 
 @Parcelize
@@ -12,7 +13,7 @@ data class BloodPressureSummaryViewModel(
     val latestBloodPressuresToDisplay: List<BloodPressureMeasurement>?,
     val totalRecordedBloodPressureCount: Int?,
     val facility: Facility?
-) : Parcelable {
+) : Parcelable, PatientSummaryChildModel {
   companion object {
     fun create(patientUuid: UUID) = BloodPressureSummaryViewModel(patientUuid, null, null, null)
   }
@@ -25,6 +26,10 @@ data class BloodPressureSummaryViewModel(
 
   val isDiabetesManagementEnabled: Boolean
     get() = facility!!.config.diabetesManagementEnabled
+
+  override fun readyToRender(): Boolean {
+    return hasLoadedCountOfBloodSugars && latestBloodPressuresToDisplay != null
+  }
 
   fun bloodPressuresLoaded(bloodPressures: List<BloodPressureMeasurement>): BloodPressureSummaryViewModel =
       copy(latestBloodPressuresToDisplay = bloodPressures)

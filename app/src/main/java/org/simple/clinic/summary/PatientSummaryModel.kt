@@ -17,7 +17,7 @@ data class PatientSummaryModel(
     val linkIdWithPatientViewShown: Boolean,
     val teleconsultInfo: TeleconsultInfo?,
     val userLoggedInStatus: User.LoggedInStatus?
-) : Parcelable {
+) : Parcelable, PatientSummaryChildModel {
 
   companion object {
     fun from(openIntention: OpenIntention, patientUuid: UUID): PatientSummaryModel {
@@ -57,6 +57,10 @@ data class PatientSummaryModel(
 
   val hasAssignedFacility: Boolean
     get() = patientSummaryProfile?.patient?.assignedFacilityId != null
+
+  override fun readyToRender(): Boolean {
+    return hasLoadedPatientSummaryProfile && hasLoadedCurrentFacility
+  }
 
   fun patientSummaryProfileLoaded(patientSummaryProfile: PatientSummaryProfile): PatientSummaryModel {
     return copy(patientSummaryProfile = patientSummaryProfile)

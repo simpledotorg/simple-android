@@ -22,11 +22,11 @@ class TeleconsultationMessageBuilder @Inject constructor(
 
   fun message(patientTeleconsultationInfo: PatientTeleconsultationInfo): String {
     val message = StringBuilder("*${patientTeleconsultationInfo.facility.name}* teleconsult request for:")
-        .appendln("")
-        .appendln("")
-        .appendln("*Patient record*:")
-        .appendln("https://app.simple.org/patient/${patientTeleconsultationInfo.patientUuid}")
-        .appendln("")
+        .appendLine("")
+        .appendLine("")
+        .appendLine("*Patient record*:")
+        .appendLine("https://app.simple.org/patient/${patientTeleconsultationInfo.patientUuid}")
+        .appendLine("")
 
     addDiagnosisSectionToMessage(patientTeleconsultationInfo, message)
     addBloodPressuresSectionToMessage(patientTeleconsultationInfo, message)
@@ -34,8 +34,8 @@ class TeleconsultationMessageBuilder @Inject constructor(
     addPrescriptionsSectionToMessage(patientTeleconsultationInfo, message)
 
     if (patientTeleconsultationInfo.bpPassport.isNullOrBlank().not()) {
-      message.appendln("*BP Passport*: ${patientTeleconsultationInfo.bpPassport}")
-          .appendln("")
+      message.appendLine("*BP Passport*: ${patientTeleconsultationInfo.bpPassport}")
+          .appendLine("")
     }
 
     return message.toString()
@@ -48,9 +48,9 @@ class TeleconsultationMessageBuilder @Inject constructor(
     if (patientTeleconsultationInfo.prescriptions.isNotEmpty()) {
       val medicines = patientTeleconsultationInfo
           .prescriptions.joinToString(separator = LINE_BREAK) { "${it.name} ${it.dosage}" }
-      message.appendln("*Current medicines*:")
-          .appendln(medicines)
-          .appendln("")
+      message.appendLine("*Current medicines*:")
+          .appendLine(medicines)
+          .appendLine("")
     }
   }
 
@@ -72,9 +72,9 @@ class TeleconsultationMessageBuilder @Inject constructor(
       val bloodSugarsTitle = resources
           .getQuantityString(R.plurals.patientsummary_contact_doctor_patient_info_blood_sugars, bloodSugarsSize, bloodSugarsSize.toString())
 
-      message.appendln(bloodSugarsTitle)
-          .appendln(bloodSugars)
-          .appendln("")
+      message.appendLine(bloodSugarsTitle)
+          .appendLine(bloodSugars)
+          .appendLine("")
     }
   }
 
@@ -92,9 +92,9 @@ class TeleconsultationMessageBuilder @Inject constructor(
       val bloodPressuresTitle = resources
           .getQuantityString(R.plurals.patientsummary_contact_doctor_patient_info_bps, bloodPressuresSize, bloodPressuresSize.toString())
 
-      message.appendln(bloodPressuresTitle)
-          .appendln(bloodPressures)
-          .appendln("")
+      message.appendLine(bloodPressuresTitle)
+          .appendLine(bloodPressures)
+          .appendLine("")
     }
   }
 
@@ -106,18 +106,18 @@ class TeleconsultationMessageBuilder @Inject constructor(
     val diagnosedWithDiabetes = patientTeleconsultationInfo.medicalHistory.diagnosedWithDiabetes
 
     if (diagnosedWithHypertension.isAnswered || diagnosedWithDiabetes.isAnswered) {
-      message.appendln(resources.getString(R.string.patientsummary_contact_doctor_diagnosis))
+      message.appendLine(resources.getString(R.string.patientsummary_contact_doctor_diagnosis))
     }
 
     if (diagnosedWithHypertension.isAnswered) {
-      message.appendln("$hyperTensionTitle ${textForDiagnosisAnswer(diagnosedWithHypertension)}")
+      message.appendLine("$hyperTensionTitle ${textForDiagnosisAnswer(diagnosedWithHypertension)}")
     }
 
     if (diagnosedWithDiabetes.isAnswered) {
-      message.appendln("$diabetesTitle ${textForDiagnosisAnswer(diagnosedWithDiabetes)}")
+      message.appendLine("$diabetesTitle ${textForDiagnosisAnswer(diagnosedWithDiabetes)}")
     }
 
-    message.appendln("")
+    message.appendLine("")
   }
 
   private fun textForDiagnosisAnswer(answer: Answer): String {

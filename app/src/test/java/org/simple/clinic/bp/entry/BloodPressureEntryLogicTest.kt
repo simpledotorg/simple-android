@@ -98,7 +98,7 @@ class BloodPressureEntrySheetLogicTest {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
     whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(user))
-    whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(facility))
+    whenever(facilityRepository.currentFacility()).doReturn(Observable.just(facility))
   }
 
   @Test
@@ -909,7 +909,7 @@ class BloodPressureEntrySheetLogicTest {
     val differentFacility = TestData.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
 
     whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(userFromDifferentFacility))
-    whenever(facilityRepository.currentFacility(userFromDifferentFacility)).doReturn(Observable.just(differentFacility))
+    whenever(facilityRepository.currentFacility()).doReturn(Observable.just(differentFacility))
 
     val oldCreatedAt = Instant.parse("1990-01-13T00:00:00Z")
     val patientUuid = UUID.fromString("af92b081-0131-4f91-9c28-98da5737945b")
@@ -969,7 +969,7 @@ class BloodPressureEntrySheetLogicTest {
     val differentFacility = TestData.facility(uuid = UUID.fromString("d9ea6458-fbe2-4d59-b1ac-7dc77b234486"))
 
     whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(userFromDifferentFacility))
-    whenever(facilityRepository.currentFacility(userFromDifferentFacility)).doReturn(Observable.just(differentFacility))
+    whenever(facilityRepository.currentFacility()).doReturn(Observable.just(differentFacility))
 
     val systolic = 120.toString()
     val diastolic = 110.toString()

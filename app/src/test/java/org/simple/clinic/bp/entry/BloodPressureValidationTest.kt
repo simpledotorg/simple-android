@@ -73,7 +73,7 @@ class BloodPressureValidationTest {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
     whenever(userSession.requireLoggedInUser()).doReturn(userSubject)
-    whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(facility))
+    whenever(facilityRepository.currentFacility()).doReturn(Observable.just(facility))
 
     userSubject.onNext(user)
   }

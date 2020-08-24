@@ -11,7 +11,6 @@ import org.simple.clinic.plumbing.BaseUiStateProducer
 import org.simple.clinic.searchresultsview.PartitionSearchResultsByVisitedFacility
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 
@@ -52,10 +51,7 @@ class ShortCodeSearchResultStateProducer(
           state.noMatchingPatients()
         }
 
-    val currentFacilityStream = userSession
-        .loggedInUser()
-        .unwrapJust()
-        .flatMap(facilityRepository::currentFacility)
+    val currentFacilityStream = facilityRepository.currentFacility()
 
     val matchingPatients = shortCodeSearchResults
         .filter { it.isNotEmpty() }

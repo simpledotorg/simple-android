@@ -83,7 +83,7 @@ class FacilityRepositoryAndroidTest {
     repository.setCurrentFacility(facility3).blockingAwait()
     repository.setCurrentFacility(facility4).blockingAwait()
 
-    val currentFacility = repository.currentFacility(user).blockingFirst()
+    val currentFacility = repository.currentFacility().blockingFirst()
     assertThat(currentFacility).isEqualTo(facility4)
     // Regression to verify that the user's registration facility does not get overriden when changing current facility
     assertThat(userDao.userImmediate()!!.registrationFacilityUuid).isEqualTo(facility1.uuid)

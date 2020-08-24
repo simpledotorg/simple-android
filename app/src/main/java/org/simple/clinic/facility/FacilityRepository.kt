@@ -9,7 +9,6 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toOptional
 import java.util.UUID
@@ -46,7 +45,7 @@ class FacilityRepository @Inject constructor(
       }
     }
 
-    return currentFacility(user)
+    return currentFacility()
         .switchMap { current ->
           when {
             current.groupUuid == null -> filteredByName()
@@ -63,15 +62,7 @@ class FacilityRepository @Inject constructor(
     return Completable.fromAction { userDao.setCurrentFacility(facilityUuid) }
   }
 
-  @Deprecated(
-      message = "Use currentFacility(User) instead",
-      replaceWith = ReplaceWith("userSession.requireLoggedInUser().switchMap { currentFacility(it) }"))
-  fun currentFacility(userSession: UserSession): Observable<Facility> {
-    return userSession.requireLoggedInUser()
-        .switchMap { currentFacility(it) }
-  }
-
-  fun currentFacility(user: User): Observable<Facility> {
+  fun currentFacility(): Observable<Facility> {
     return userDao.currentFacility().toObservable()
   }
 

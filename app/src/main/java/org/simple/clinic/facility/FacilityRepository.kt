@@ -28,7 +28,7 @@ class FacilityRepository @Inject constructor(
     }
   }
 
-  fun facilitiesInCurrentGroup(searchQuery: String = "", user: User): Observable<List<Facility>> {
+  fun facilitiesInCurrentGroup(searchQuery: String = ""): Observable<List<Facility>> {
     val filteredByName = {
       if (searchQuery.isBlank()) {
         facilityDao.all().toObservable()

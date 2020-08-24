@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import dagger.Lazy
 import io.reactivex.Observable
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -18,13 +17,10 @@ class FacilityPickerEffectHandlerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val uiActions = mock<FacilityPickerUiActions>()
 
-  private val user = TestData.loggedInUser(uuid = UUID.fromString("5ce27605-4f45-4327-8a05-ddc87021c46e"))
-
   private val effectHandler = FacilityPickerEffectHandler(
       schedulers = TestSchedulersProvider.trampoline(),
       screenLocationUpdates = mock(),
       facilityRepository = facilityRepository,
-      currentUser = Lazy { user },
       uiActions = uiActions
   )
 
@@ -56,7 +52,7 @@ class FacilityPickerEffectHandlerTest {
         TestData.facility(uuid = UUID.fromString("42a32bd5-eb86-438f-97cf-37870f8c6049"), name = "CHC Nilenso")
     )
     val searchQuery = "HC"
-    whenever(facilityRepository.facilitiesInCurrentGroup(searchQuery, user)) doReturn Observable.just(facilities)
+    whenever(facilityRepository.facilitiesInCurrentGroup(searchQuery)) doReturn Observable.just(facilities)
 
     // when
     testCase.dispatch(LoadFacilitiesInCurrentGroup(searchQuery))

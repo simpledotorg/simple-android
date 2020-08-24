@@ -154,7 +154,7 @@ class FacilityRepositoryAndroidTest {
 
     associateCurrentFacilityToUser(facilitiesInGroup1.first())
 
-    val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "", user = user).blockingFirst()
+    val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "").blockingFirst()
     assertThat(filteredFacilities).isEqualTo(facilitiesInGroup1)
   }
 
@@ -196,7 +196,7 @@ class FacilityRepositoryAndroidTest {
 
     associateCurrentFacilityToUser(facilitiesInGroup2.first())
 
-    val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "hac", user = user).blockingFirst()
+    val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "hac").blockingFirst()
     assertThat(filteredFacilities).isEqualTo(listOf(facility2))
   }
 
@@ -229,7 +229,7 @@ class FacilityRepositoryAndroidTest {
 
     associateCurrentFacilityToUser(group1Facility)
 
-    val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "fac", user = user).blockingFirst()
+    val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "fac").blockingFirst()
     assertThat(filteredFacilities).isEqualTo(listOf(group1Facility))
   }
 

@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import dagger.Lazy
 import io.reactivex.Completable
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -15,26 +14,22 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
 
 class ConfirmFacilityChangeEffectHandlerTest {
 
-  private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val reportsRepository = mock<ReportsRepository>()
   private val reportsSync = mock<ReportsSync>()
   private val uiActions = mock<ConfirmFacilityChangeUiActions>()
   private val isFacilitySwitchedPreference = mock<Preference<Boolean>>()
-  private val loggedInUser = TestData.loggedInUser(UUID.fromString("7d8dce15-701b-4cf9-8dee-e003c51ccde9"))
 
   private val effectHandler = ConfirmFacilityChangeEffectHandler(
       facilityRepository,
       reportsRepository,
       reportsSync,
       TrampolineSchedulersProvider(),
-      Lazy { loggedInUser },
       uiActions,
       isFacilitySwitchedPreference
   )
@@ -45,8 +40,7 @@ class ConfirmFacilityChangeEffectHandlerTest {
     //given
     val facility = TestData.facility(UUID.fromString("98a260cb-45b1-46f7-a7ca-d217a27c43c0"))
 
-    whenever(userSession.loggedInUserImmediate()) doReturn loggedInUser
-    whenever(facilityRepository.setCurrentFacility(loggedInUser, facility)) doReturn Completable.complete()
+    whenever(facilityRepository.setCurrentFacility(facility)) doReturn Completable.complete()
     whenever(reportsRepository.deleteReports()) doReturn Completable.complete()
     whenever(reportsSync.sync()) doReturn Completable.complete()
 

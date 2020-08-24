@@ -55,11 +55,11 @@ class FacilityRepository @Inject constructor(
         }
   }
 
-  fun setCurrentFacility(user: User, facility: Facility): Completable {
-    return setCurrentFacility(user, facility.uuid)
+  fun setCurrentFacility(facility: Facility): Completable {
+    return setCurrentFacility(facility.uuid)
   }
 
-  fun setCurrentFacility(user: User, facilityUuid: UUID): Completable {
+  fun setCurrentFacility(facilityUuid: UUID): Completable {
     return Completable.fromAction { userDao.setCurrentFacility(facilityUuid) }
   }
 

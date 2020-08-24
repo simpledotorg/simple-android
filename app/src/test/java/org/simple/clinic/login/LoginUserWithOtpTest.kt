@@ -81,7 +81,7 @@ class LoginUserWithOtpTest {
   fun `when the login call is successful, the access token must be saved`() {
     // given
     whenever(usersApi.login(loginRequest)) doReturn Single.just(loginResponse)
-    whenever(facilityRepository.setCurrentFacility(loggedInUserPayload.toUser(LOGGED_IN), facilityUuid)) doReturn Completable.complete()
+    whenever(facilityRepository.setCurrentFacility(facilityUuid)) doReturn Completable.complete()
 
     // when
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
@@ -96,7 +96,7 @@ class LoginUserWithOtpTest {
     // given
     whenever(usersApi.login(loginRequest)) doReturn Single.just(loginResponse)
     val user = loggedInUserPayload.toUser(LOGGED_IN)
-    whenever(facilityRepository.setCurrentFacility(user, facilityUuid)) doReturn Completable.complete()
+    whenever(facilityRepository.setCurrentFacility(facilityUuid)) doReturn Completable.complete()
 
     // when
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
@@ -111,7 +111,7 @@ class LoginUserWithOtpTest {
     // given
     whenever(usersApi.login(loginRequest)) doReturn Single.just(loginResponse)
     val user = loggedInUserPayload.toUser(LOGGED_IN)
-    whenever(facilityRepository.setCurrentFacility(user, facilityUuid)) doReturn Completable.complete()
+    whenever(facilityRepository.setCurrentFacility(facilityUuid)) doReturn Completable.complete()
 
     // when
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()

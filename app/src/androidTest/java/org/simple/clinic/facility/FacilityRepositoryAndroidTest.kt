@@ -80,8 +80,8 @@ class FacilityRepositoryAndroidTest {
     userDao.createOrUpdate(user)
 
     val facilityIds = facilities.map { it.uuid }
-    repository.setCurrentFacility(user, facility3).blockingAwait()
-    repository.setCurrentFacility(user, facility4).blockingAwait()
+    repository.setCurrentFacility(facility3).blockingAwait()
+    repository.setCurrentFacility(facility4).blockingAwait()
 
     val currentFacility = repository.currentFacility(user).blockingFirst()
     assertThat(currentFacility).isEqualTo(facility4)
@@ -103,8 +103,8 @@ class FacilityRepositoryAndroidTest {
     )
     userDao.createOrUpdate(user)
 
-    repository.setCurrentFacility(user, facility2)
-        .andThen(repository.setCurrentFacility(user, facility3))
+    repository.setCurrentFacility(facility2)
+        .andThen(repository.setCurrentFacility(facility3))
         .blockingAwait()
 
     assertThat(repository.currentFacilityImmediate(user)).isEqualTo(facility3)
@@ -152,14 +152,14 @@ class FacilityRepositoryAndroidTest {
     )
     userDao.createOrUpdate(user)
 
-    associateCurrentFacilityToUser(user, facilitiesInGroup1.first())
+    associateCurrentFacilityToUser(facilitiesInGroup1.first())
 
     val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "", user = user).blockingFirst()
     assertThat(filteredFacilities).isEqualTo(facilitiesInGroup1)
   }
 
-  private fun associateCurrentFacilityToUser(user: User, facility: Facility) {
-    repository.setCurrentFacility(user, facility).blockingAwait()
+  private fun associateCurrentFacilityToUser(facility: Facility) {
+    repository.setCurrentFacility(facility).blockingAwait()
   }
 
   @Test
@@ -194,7 +194,7 @@ class FacilityRepositoryAndroidTest {
     )
     userDao.createOrUpdate(user)
 
-    associateCurrentFacilityToUser(user, facilitiesInGroup2.first())
+    associateCurrentFacilityToUser(facilitiesInGroup2.first())
 
     val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "hac", user = user).blockingFirst()
     assertThat(filteredFacilities).isEqualTo(listOf(facility2))
@@ -227,7 +227,7 @@ class FacilityRepositoryAndroidTest {
     )
     userDao.createOrUpdate(user)
 
-    associateCurrentFacilityToUser(user, group1Facility)
+    associateCurrentFacilityToUser(group1Facility)
 
     val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "fac", user = user).blockingFirst()
     assertThat(filteredFacilities).isEqualTo(listOf(group1Facility))
@@ -252,7 +252,7 @@ class FacilityRepositoryAndroidTest {
     )
     userDao.createOrUpdate(user)
 
-    associateCurrentFacilityToUser(user, facility1)
+    associateCurrentFacilityToUser(facility1)
 
     val currentFacility = repository.currentFacilityImmediate(user)
     assertThat(currentFacility).isEqualTo(facility1)

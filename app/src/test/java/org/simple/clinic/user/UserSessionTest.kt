@@ -84,7 +84,7 @@ class UserSessionTest {
   fun setUp() {
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.never())
     whenever(appDatabase.userDao()).thenReturn(userDao)
-    whenever(facilityRepository.setCurrentFacility(any(), any<UUID>())).thenReturn(Completable.never())
+    whenever(facilityRepository.setCurrentFacility(any<UUID>())).thenReturn(Completable.never())
     whenever(ongoingLoginEntryRepository.entry()).thenReturn(Single.never())
     whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.never())
     whenever(userDao.user()).thenReturn(Flowable.never())

@@ -1,4 +1,4 @@
-package org.simple.clinic.summary.teleconsultation
+package org.simple.clinic.summary.teleconsultation.messagebuilder
 
 import android.content.res.Resources
 import org.simple.clinic.R
@@ -10,23 +10,27 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
-class TeleconsultationMessageBuilder @Inject constructor(
+class LongTeleconsultMessageBuilder @Inject constructor(
     private val resources: Resources,
     private val userClock: UserClock,
     @Named("full_date") private val dateFormatter: DateTimeFormatter
-) {
+) : TeleconsultationMessageBuilder {
 
   companion object {
     private const val LINE_BREAK = "\n"
   }
 
-  fun message(patientTeleconsultationInfo: PatientTeleconsultationInfo): String {
+  /**
+   * We are not translating the message because we don't know the preferred language
+   * for the recipient.
+   */
+  override fun message(patientTeleconsultationInfo: PatientTeleconsultationInfo): String {
     val message = StringBuilder("*${patientTeleconsultationInfo.facility.name}* teleconsult request for:")
-        .appendln("")
-        .appendln("")
-        .appendln("*Patient record*:")
-        .appendln("https://app.simple.org/patient/${patientTeleconsultationInfo.patientUuid}")
-        .appendln("")
+        .appendLine("")
+        .appendLine("")
+        .appendLine("*Patient record*:")
+        .appendLine("https://app.simple.org/patient/${patientTeleconsultationInfo.patientUuid}")
+        .appendLine("")
 
     addDiagnosisSectionToMessage(patientTeleconsultationInfo, message)
     addBloodPressuresSectionToMessage(patientTeleconsultationInfo, message)
@@ -34,8 +38,8 @@ class TeleconsultationMessageBuilder @Inject constructor(
     addPrescriptionsSectionToMessage(patientTeleconsultationInfo, message)
 
     if (patientTeleconsultationInfo.bpPassport.isNullOrBlank().not()) {
-      message.appendln("*BP Passport*: ${patientTeleconsultationInfo.bpPassport}")
-          .appendln("")
+      message.appendLine("*BP Passport*: ${patientTeleconsultationInfo.bpPassport}")
+          .appendLine("")
     }
 
     return message.toString()
@@ -48,9 +52,9 @@ class TeleconsultationMessageBuilder @Inject constructor(
     if (patientTeleconsultationInfo.prescriptions.isNotEmpty()) {
       val medicines = patientTeleconsultationInfo
           .prescriptions.joinToString(separator = LINE_BREAK) { "${it.name} ${it.dosage}" }
-      message.appendln("*Current medicines*:")
-          .appendln(medicines)
-          .appendln("")
+      message.appendLine("*Current medicines*:")
+          .appendLine(medicines)
+          .appendLine("")
     }
   }
 
@@ -72,9 +76,9 @@ class TeleconsultationMessageBuilder @Inject constructor(
       val bloodSugarsTitle = resources
           .getQuantityString(R.plurals.patientsummary_contact_doctor_patient_info_blood_sugars, bloodSugarsSize, bloodSugarsSize.toString())
 
-      message.appendln(bloodSugarsTitle)
-          .appendln(bloodSugars)
-          .appendln("")
+      message.appendLine(bloodSugarsTitle)
+          .appendLine(bloodSugars)
+          .appendLine("")
     }
   }
 
@@ -92,9 +96,9 @@ class TeleconsultationMessageBuilder @Inject constructor(
       val bloodPressuresTitle = resources
           .getQuantityString(R.plurals.patientsummary_contact_doctor_patient_info_bps, bloodPressuresSize, bloodPressuresSize.toString())
 
-      message.appendln(bloodPressuresTitle)
-          .appendln(bloodPressures)
-          .appendln("")
+      message.appendLine(bloodPressuresTitle)
+          .appendLine(bloodPressures)
+          .appendLine("")
     }
   }
 
@@ -106,18 +110,18 @@ class TeleconsultationMessageBuilder @Inject constructor(
     val diagnosedWithDiabetes = patientTeleconsultationInfo.medicalHistory.diagnosedWithDiabetes
 
     if (diagnosedWithHypertension.isAnswered || diagnosedWithDiabetes.isAnswered) {
-      message.appendln(resources.getString(R.string.patientsummary_contact_doctor_diagnosis))
+      message.appendLine(resources.getString(R.string.patientsummary_contact_doctor_diagnosis))
     }
 
     if (diagnosedWithHypertension.isAnswered) {
-      message.appendln("$hyperTensionTitle ${textForDiagnosisAnswer(diagnosedWithHypertension)}")
+      message.appendLine("$hyperTensionTitle ${textForDiagnosisAnswer(diagnosedWithHypertension)}")
     }
 
     if (diagnosedWithDiabetes.isAnswered) {
-      message.appendln("$diabetesTitle ${textForDiagnosisAnswer(diagnosedWithDiabetes)}")
+      message.appendLine("$diabetesTitle ${textForDiagnosisAnswer(diagnosedWithDiabetes)}")
     }
 
-    message.appendln("")
+    message.appendLine("")
   }
 
   private fun textForDiagnosisAnswer(answer: Answer): String {

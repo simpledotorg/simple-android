@@ -47,15 +47,15 @@ import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
-import org.simple.clinic.summary.teleconsultation.TeleconsultationMessageBuilder
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
+import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.WhatsAppMessageSender
 import org.simple.clinic.util.extractSuccessful
+import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState
@@ -92,7 +92,7 @@ class PatientSummaryScreen(
   lateinit var effectHandlerFactory: PatientSummaryEffectHandler.Factory
 
   @Inject
-  lateinit var teleconsultationMessageBuilder: TeleconsultationMessageBuilder
+  lateinit var longTeleconsultMessageBuilder: LongTeleconsultMessageBuilder
 
   @Inject
   lateinit var whatsAppMessageSender: WhatsAppMessageSender
@@ -498,7 +498,7 @@ class PatientSummaryScreen(
   }
 
   override fun contactDoctor(patientTeleconsultationInfo: PatientTeleconsultationInfo, teleconsultationPhoneNumber: String) {
-    val message = teleconsultationMessageBuilder.message(patientTeleconsultationInfo)
+    val message = longTeleconsultMessageBuilder.message(patientTeleconsultationInfo)
     whatsAppMessageSender.send(teleconsultationPhoneNumber, message)
   }
 

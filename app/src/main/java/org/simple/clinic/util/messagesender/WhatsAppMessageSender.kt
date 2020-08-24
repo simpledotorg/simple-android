@@ -1,4 +1,4 @@
-package org.simple.clinic.util
+package org.simple.clinic.util.messagesender
 
 import android.content.Intent
 import android.net.Uri
@@ -8,9 +8,9 @@ import javax.inject.Inject
 
 class WhatsAppMessageSender @Inject constructor(
     private val activity: AppCompatActivity
-) {
+) : MessageSender {
 
-  fun send(phoneNumber: String, message: String) {
+  override fun send(phoneNumber: String, message: String) {
     val whatsAppPhoneNumber = phoneNumber.filter { it.isDigit() }
     val encodedMessage = URLEncoder.encode(message, "UTF-8")
     val intent = Intent().apply {

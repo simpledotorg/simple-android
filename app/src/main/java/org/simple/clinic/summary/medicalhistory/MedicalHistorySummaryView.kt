@@ -22,6 +22,8 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.summary.PatientSummaryChildView
+import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
@@ -31,7 +33,7 @@ import javax.inject.Inject
 class MedicalHistorySummaryView(
     context: Context,
     attributeSet: AttributeSet
-) : FrameLayout(context, attributeSet), MedicalHistorySummaryUi {
+) : FrameLayout(context, attributeSet), MedicalHistorySummaryUi, PatientSummaryChildView {
 
   private val internalEvents = PublishSubject.create<MedicalHistorySummaryEvent>()
 
@@ -44,6 +46,8 @@ class MedicalHistorySummaryView(
   init {
     LayoutInflater.from(context).inflate(R.layout.medicalhistory_summary_view, this, true)
   }
+
+  private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val screenKey by unsafeLazy { screenRouter.key<PatientSummaryScreenKey>(this) }
 
@@ -65,7 +69,10 @@ class MedicalHistorySummaryView(
         update = MedicalHistorySummaryUpdate(),
         init = MedicalHistorySummaryInit(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
+        modelUpdateListener = { model ->
+          modelUpdateCallback?.invoke(model)
+          uiRenderer.render(model)
+        }
     )
   }
 
@@ -137,6 +144,10 @@ class MedicalHistorySummaryView(
 
   override fun hideDiagnosisError() {
     diagnosisRequiredError.visibility = GONE
+  }
+
+  override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
+    modelUpdateCallback = callback
   }
 
   fun showDiagnosisError() {

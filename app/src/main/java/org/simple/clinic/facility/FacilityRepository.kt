@@ -70,7 +70,7 @@ class FacilityRepository @Inject constructor(
     return userDao.currentFacilityImmediate()
   }
 
-  fun currentFacilityUuid(user: User): UUID? {
+  fun currentFacilityUuid(): UUID? {
     return userDao.currentFacilityUuid()
   }
 

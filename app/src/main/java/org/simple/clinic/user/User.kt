@@ -180,8 +180,8 @@ data class User(
     @Query("SELECT COUNT(uuid) FROM LoggedInUser")
     abstract fun userCount(): Single<Int>
 
-    @Query("UPDATE LoggedInUser SET currentFacilityUuid = :facilityUuid WHERE uuid = :userUuid")
-    abstract fun setCurrentFacility(userUuid: UUID, facilityUuid: UUID): Int
+    @Query("UPDATE LoggedInUser SET currentFacilityUuid = :facilityUuid")
+    abstract fun setCurrentFacility(facilityUuid: UUID): Int
 
     @Query(CURRENT_FACILITY_QUERY)
     abstract fun currentFacility(userUuid: UUID): Flowable<Facility>

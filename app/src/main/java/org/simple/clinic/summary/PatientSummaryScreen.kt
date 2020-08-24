@@ -192,7 +192,10 @@ class PatientSummaryScreen(
         .filter { models -> models.all(PatientSummaryChildModel::readyToRender) }
         .take(1)
         .takeUntil(screenDestroys)
-        .subscribe { summaryViewsContainer.visibility = VISIBLE }
+        .subscribe {
+          summaryLoadingProgressBar.visibility = GONE
+          summaryViewsContainer.visibility = VISIBLE
+        }
   }
 
   private fun createSummaryChildModelStream(

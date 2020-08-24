@@ -107,7 +107,7 @@ class FacilityRepositoryAndroidTest {
         .andThen(repository.setCurrentFacility(facility3))
         .blockingAwait()
 
-    assertThat(repository.currentFacilityImmediate(user)).isEqualTo(facility3)
+    assertThat(repository.currentFacilityImmediate()).isEqualTo(facility3)
   }
 
   @Test
@@ -254,7 +254,7 @@ class FacilityRepositoryAndroidTest {
 
     associateCurrentFacilityToUser(facility1)
 
-    val currentFacility = repository.currentFacilityImmediate(user)
+    val currentFacility = repository.currentFacilityImmediate()
     assertThat(currentFacility).isEqualTo(facility1)
   }
 }

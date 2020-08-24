@@ -85,7 +85,7 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
     return Completable.fromAction {
 
       val currentUser = user.get()
-      val currentFacility = facilityRepository.currentFacilityImmediate(currentUser)!!
+      val currentFacility = facilityRepository.currentFacilityImmediate()!!
       val otherFacility = anyFacilityExceptCurrent(currentUser, currentFacility)
 
       val records = generateRecords(recordsToGenerate, currentFacility, otherFacility, currentUser)

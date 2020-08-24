@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next Release
+## On Demo
 ### Changes
 - Added `SignatureActivity` to accept and save user signature
 - Increase error text sizes

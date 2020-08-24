@@ -17,11 +17,12 @@
 - Added `TeleConsultSuccessScreen` to notify teleconsultation recorded successfully
 - Add `teleconsultPhoneNumber` in `User`, `LoggedInUserPayload` & `OngoingLoginEntry`
 
+## 2020-08-24-7397
 ### Fixes
 - Fixed native crash on Android 9 with animated vector drawables ([#364](https://app.clubhouse.io/simpledotorg/story/364/fix-vectordrawable-native-crash))
 - Fixed crash on putting the app in the background during registration facility selection ([#1030](https://app.clubhouse.io/simpledotorg/story/1030/app-crashes-during-registration-when-it-is-backgrounded))
 
-## On Demo
+## 2020-08-18-7386
 ### Features
 - Add progress UI for registering a patient
 - Add progress UI when scheduling appointment in `ScheduleAppointmentSheet`

@@ -1,4 +1,4 @@
-package org.simple.clinic.summary.teleconsultation
+package org.simple.clinic.summary.teleconsultation.messagebuilder
 
 import android.content.res.Resources
 import org.simple.clinic.R
@@ -10,17 +10,21 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
-class TeleconsultationMessageBuilder @Inject constructor(
+class LongTeleconsultMessageBuilder @Inject constructor(
     private val resources: Resources,
     private val userClock: UserClock,
     @Named("full_date") private val dateFormatter: DateTimeFormatter
-) {
+) : TeleconsultationMessageBuilder {
 
   companion object {
     private const val LINE_BREAK = "\n"
   }
 
-  fun message(patientTeleconsultationInfo: PatientTeleconsultationInfo): String {
+  /**
+   * We are not translating the message because we don't know the preferred language
+   * for the recipient.
+   */
+  override fun message(patientTeleconsultationInfo: PatientTeleconsultationInfo): String {
     val message = StringBuilder("*${patientTeleconsultationInfo.facility.name}* teleconsult request for:")
         .appendLine("")
         .appendLine("")

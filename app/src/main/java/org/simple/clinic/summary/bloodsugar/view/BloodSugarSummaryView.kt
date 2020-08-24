@@ -35,6 +35,8 @@ import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.BLOOD_SUGAR_REQCODE_ALERT_FACILITY_CHANGE
+import org.simple.clinic.summary.PatientSummaryChildView
+import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.summary.TYPE_PICKER_SHEET
 import org.simple.clinic.summary.bloodsugar.BloodSugarClicked
@@ -69,7 +71,7 @@ import javax.inject.Named
 class BloodSugarSummaryView(
     context: Context,
     attributes: AttributeSet
-) : CardView(context, attributes), BloodSugarSummaryViewUi, UiActions {
+) : CardView(context, attributes), BloodSugarSummaryViewUi, UiActions, PatientSummaryChildView {
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -115,6 +117,8 @@ class BloodSugarSummaryView(
 
   private val viewEvents = PublishSubject.create<BloodSugarSummaryViewEvent>()
 
+  private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
+
   private val events: Observable<BloodSugarSummaryViewEvent> by unsafeLazy {
     Observable
         .merge(
@@ -134,7 +138,10 @@ class BloodSugarSummaryView(
         init = BloodSugarSummaryViewInit(),
         update = BloodSugarSummaryViewUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render,
+        modelUpdateListener = { model ->
+          modelUpdateCallback?.invoke(model)
+          uiRenderer.render(model)
+        },
         crashReporter = crashReporter
     )
   }
@@ -217,6 +224,10 @@ class BloodSugarSummaryView(
   override fun openBloodSugarUpdateSheet(bloodSugarMeasurementUuid: UUID, measurementType: BloodSugarMeasurementType) {
     val intent = BloodSugarEntrySheet.intentForUpdateBloodSugar(context, bloodSugarMeasurementUuid, measurementType)
     context.startActivity(intent)
+  }
+
+  override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
+    modelUpdateCallback = callback
   }
 
   @SuppressLint("CheckResult")

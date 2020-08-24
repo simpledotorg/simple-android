@@ -3,13 +3,14 @@ package org.simple.clinic.summary.prescribeddrugs
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.summary.PatientSummaryChildModel
 import java.util.UUID
 
 @Parcelize
 data class DrugSummaryModel(
     val patientUuid: UUID,
     val prescribedDrugs: List<PrescribedDrug>?
-) : Parcelable {
+) : Parcelable, PatientSummaryChildModel {
 
   companion object {
     fun create(patientUuid: UUID) = DrugSummaryModel(
@@ -20,6 +21,10 @@ data class DrugSummaryModel(
 
   val hasPrescribedDrugs: Boolean
     get() = prescribedDrugs != null
+
+  override fun readyToRender(): Boolean {
+    return hasPrescribedDrugs
+  }
 
   fun prescribedDrugsLoaded(prescribedDrugs: List<PrescribedDrug>): DrugSummaryModel {
     return copy(prescribedDrugs = prescribedDrugs)

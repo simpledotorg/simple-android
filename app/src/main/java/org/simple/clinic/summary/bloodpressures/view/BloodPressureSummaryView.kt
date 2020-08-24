@@ -29,7 +29,9 @@ import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.BP_REQCODE_ALERT_FACILITY_CHANGE
+import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryConfig
+import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.summary.SUMMARY_REQCODE_BP_ENTRY
 import org.simple.clinic.summary.bloodpressures.AddNewBloodPressureClicked
@@ -64,7 +66,7 @@ private typealias BpRecorded = () -> Unit
 class BloodPressureSummaryView(
     context: Context,
     attrs: AttributeSet
-) : CardView(context, attrs), BloodPressureSummaryViewUi, BloodPressureSummaryViewUiActions {
+) : CardView(context, attrs), BloodPressureSummaryViewUi, BloodPressureSummaryViewUiActions, PatientSummaryChildView {
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -100,6 +102,8 @@ class BloodPressureSummaryView(
 
   private val viewEvents = PublishSubject.create<BloodPressureSummaryViewEvent>()
 
+  private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
+
   private val events: Observable<BloodPressureSummaryViewEvent> by unsafeLazy {
     Observable
         .merge(
@@ -123,7 +127,10 @@ class BloodPressureSummaryView(
         init = BloodPressureSummaryViewInit(bloodPressureSummaryConfig),
         update = BloodPressureSummaryViewUpdate(bloodPressureSummaryConfig),
         effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render,
+        modelUpdateListener = { model ->
+          modelUpdateCallback?.invoke(model)
+          uiRenderer.render(model)
+        },
         crashReporter = crashReporter
     )
   }
@@ -212,6 +219,10 @@ class BloodPressureSummaryView(
 
   override fun showBloodPressureHistoryScreen(patientUuid: UUID) {
     screenRouter.push(BloodPressureHistoryScreenKey(patientUuid))
+  }
+
+  override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
+    modelUpdateCallback = callback
   }
 
   @SuppressLint("CheckResult")

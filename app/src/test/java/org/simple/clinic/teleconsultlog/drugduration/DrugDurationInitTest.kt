@@ -1,7 +1,7 @@
 package org.simple.clinic.teleconsultlog.drugduration
 
-import com.spotify.mobius.test.FirstMatchers.hasEffects
 import com.spotify.mobius.test.FirstMatchers.hasModel
+import com.spotify.mobius.test.FirstMatchers.hasNoEffects
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
@@ -18,7 +18,7 @@ class DrugDurationInitTest {
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
-            hasEffects(SetDrugDuration(duration) as DrugDurationEffect)
+            hasNoEffects()
         ))
   }
 }

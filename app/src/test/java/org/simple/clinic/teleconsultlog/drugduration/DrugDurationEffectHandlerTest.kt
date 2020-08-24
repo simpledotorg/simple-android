@@ -36,19 +36,4 @@ class DrugDurationEffectHandlerTest {
     verify(uiActions).saveDrugDuration(duration.toInt())
     verifyNoMoreInteractions(uiActions)
   }
-
-  @Test
-  fun `when set drug duration effect is received, then set drug duration`() {
-    // given
-    val duration = "10"
-
-    // when
-    effectHandlerTestCase.dispatch(SetDrugDuration(duration))
-
-    // then
-    effectHandlerTestCase.assertNoOutgoingEvents()
-
-    verify(uiActions).setDrugDuration(duration)
-    verifyNoMoreInteractions(uiActions)
-  }
 }

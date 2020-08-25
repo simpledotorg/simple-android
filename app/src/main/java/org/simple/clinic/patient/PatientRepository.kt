@@ -492,7 +492,7 @@ class PatientRepository @Inject constructor(
 
   fun clearPatientData(): Completable {
     return Completable
-        .fromCallable { database.clearPatientData() }
+        .fromCallable { database.clearAppData() }
         .andThen(reportsRepository.deleteReports())
   }
 

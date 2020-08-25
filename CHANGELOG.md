@@ -9,6 +9,7 @@
 - [In Progress: 24 Aug 2020] Add support for sending teleconsult request via SMS
 - Use UiRenderer for setting drug duration in `DrugDurationSheet`
 - Change `HomeScreen` to save and restore the state correctly
+- Add teleconsultation facility sync
 
 ## On Demo
 ### Changes

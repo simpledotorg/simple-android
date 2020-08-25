@@ -26,11 +26,9 @@ import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncModule
 import org.simple.clinic.protocol.ProtocolModule
 import org.simple.clinic.protocol.sync.ProtocolSync
-import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.remoteconfig.RemoteConfigSync
 import org.simple.clinic.reports.ReportsModule
 import org.simple.clinic.reports.ReportsSync
-import java.util.Locale
 import javax.inject.Named
 
 @Module(includes = [
@@ -86,41 +84,5 @@ class SyncModule {
         prescriptionSyncRepository,
         bloodSugarRepository
     )
-  }
-}
-
-data class SyncModuleConfig(
-    val frequentSyncBatchSize: BatchSize,
-    val dailySyncBatchSize: BatchSize
-) {
-
-  companion object {
-
-    fun read(reader: ConfigReader): SyncModuleConfig {
-      val frequentConfigString = reader.string("syncmodule_frequentsync_batchsize", default = "large")
-
-      val frequentBatchSize = when (frequentConfigString.toLowerCase(Locale.ROOT)) {
-        "verysmall" -> BatchSize.VERY_SMALL
-        "small" -> BatchSize.SMALL
-        "medium" -> BatchSize.MEDIUM
-        "large" -> BatchSize.LARGE
-        else -> BatchSize.MEDIUM
-      }
-
-      val dailyConfigString = reader.string("syncmodule_dailysync_batchsize", default = "large")
-
-      val dailyBatchSize = when (dailyConfigString.toLowerCase(Locale.ROOT)) {
-        "verysmall" -> BatchSize.VERY_SMALL
-        "small" -> BatchSize.SMALL
-        "medium" -> BatchSize.MEDIUM
-        "large" -> BatchSize.LARGE
-        else -> BatchSize.MEDIUM
-      }
-
-      return SyncModuleConfig(
-          frequentSyncBatchSize = frequentBatchSize,
-          dailySyncBatchSize = dailyBatchSize
-      )
-    }
   }
 }

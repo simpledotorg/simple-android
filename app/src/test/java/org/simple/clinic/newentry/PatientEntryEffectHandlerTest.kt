@@ -10,7 +10,6 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.newentry.Field.PhoneNumber
@@ -38,7 +37,6 @@ class PatientEntryEffectHandlerTest {
 
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
-  private val india = TestData.country(isoCountryCode = Country.INDIA)
 
   private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
       dateTimeFormatter = dateTimeFormatter,
@@ -47,12 +45,10 @@ class PatientEntryEffectHandlerTest {
 
   private val ui = mock<PatientEntryUi>()
   private val effectHandler = PatientEntryEffectHandler(
-      userSession = userSession,
       facilityRepository = facilityRepository,
       patientRepository = patientRepository,
       schedulersProvider = TrampolineSchedulersProvider(),
       patientRegisteredCount = mock(),
-      country = india,
       inputFieldsFactory = inputFieldsFactory,
       ui = ui,
       validationActions = validationActions
@@ -106,7 +102,7 @@ class PatientEntryEffectHandlerTest {
   }
 
   private fun setupTestCase() {
-    whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(facility))
+    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(entry))
 
     testCase = EffectHandlerTestCase(effectHandler.build())

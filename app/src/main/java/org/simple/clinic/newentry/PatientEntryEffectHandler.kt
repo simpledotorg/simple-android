@@ -49,11 +49,9 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 import javax.inject.Named
 
 class PatientEntryEffectHandler @AssistedInject constructor(
-    private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
-    private val country: Country,
     private val inputFieldsFactory: InputFieldsFactory,
     @Named("number_of_patients_registered") private val patientRegisteredCount: Preference<Int>,
     @Assisted private val ui: PatientEntryUi,
@@ -93,7 +91,7 @@ class PatientEntryEffectHandler @AssistedInject constructor(
       val getPatientEntryAndFacility = Singles
           .zip(
               patientRepository.ongoingEntry(),
-              facilityRepository.currentFacility(userSession).firstOrError()
+              facilityRepository.currentFacility().firstOrError()
           )
 
       fetchPatientEntries

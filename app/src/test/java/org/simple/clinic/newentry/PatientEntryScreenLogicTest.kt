@@ -25,10 +25,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.analytics.MockAnalyticsReporter
-import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
-import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
@@ -87,7 +85,6 @@ class PatientEntryScreenLogicTest {
   private val reporter = MockAnalyticsReporter()
 
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-  private val india = TestData.country(isoCountryCode = Country.INDIA)
 
   private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
       dateTimeFormatter = dateTimeFormatter,
@@ -98,7 +95,7 @@ class PatientEntryScreenLogicTest {
 
   @Before
   fun setUp() {
-    whenever(facilityRepository.currentFacility(userSession))
+    whenever(facilityRepository.currentFacility())
         .doReturn(Observable.just(TestData.facility(
             uuid = UUID.fromString("563c12be-fe24-4e19-a02a-dd87c18ff767"),
             villageOrColony = "village",
@@ -109,12 +106,10 @@ class PatientEntryScreenLogicTest {
     whenever(patientRepository.ongoingEntry()).doReturn(Single.never())
 
     val effectHandler = PatientEntryEffectHandler(
-        userSession = userSession,
         facilityRepository = facilityRepository,
         patientRepository = patientRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRegisteredCount = patientRegisteredCount,
-        country = india,
         inputFieldsFactory = inputFieldsFactory,
         ui = ui,
         validationActions = validationActions

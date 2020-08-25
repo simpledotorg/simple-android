@@ -232,7 +232,7 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
         .requireLoggedInUser()
         .flatMap { user ->
           facilityRepository
-              .currentFacility(user)
+              .currentFacility()
               .map { facility -> user to facility }
         }
         .firstOrError()

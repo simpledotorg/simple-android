@@ -210,7 +210,7 @@ class EditPatientEffectHandlerTest {
     whenever(patientRepository.updateAddressForPatient(patient.uuid, patientAddress)) doReturn Completable.complete()
     whenever(patientRepository.updatePhoneNumberForPatient(patient.uuid, phoneNumber)) doReturn Completable.complete()
     whenever(patientRepository.saveBusinessId(bangladeshNationalId)) doReturn Completable.complete()
-    whenever(facilityRepository.currentFacility(user)) doReturn (Observable.just(facility))
+    whenever(facilityRepository.currentFacility()) doReturn (Observable.just(facility))
     whenever(patientRepository.addIdentifierToPatient(
         uuid = identifierUuid,
         patientUuid = patient.uuid,

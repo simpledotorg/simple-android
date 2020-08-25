@@ -3,12 +3,13 @@
 ## Next Release
 ### Changes
 - Update error message of address fields in `PatientEntryScreen`
-- Improved the user experience of loading the patient summary screen
 
 ### Internal
 - [In Progress: 24 Aug 2020] Add support for sending teleconsult request via SMS
 - Use UiRenderer for setting drug duration in `DrugDurationSheet`
 - Change `HomeScreen` to save and restore the state correctly
+- Improved the user experience of loading the patient summary screen
+- Optimized fetching of current facility by removing the unnecessary `User` parameter
 - Add teleconsultation facility sync
 
 ## On Demo

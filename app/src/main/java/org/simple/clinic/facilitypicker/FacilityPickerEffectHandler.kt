@@ -3,18 +3,15 @@ package org.simple.clinic.facilitypicker
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.location.ScreenLocationUpdates
-import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class FacilityPickerEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val screenLocationUpdates: ScreenLocationUpdates,
     private val facilityRepository: FacilityRepository,
-    private val currentUser: Lazy<User>,
     @Assisted private val uiActions: FacilityPickerUiActions
 ) {
 
@@ -81,7 +78,7 @@ class FacilityPickerEffectHandler @AssistedInject constructor(
           .observeOn(schedulers.io())
           .switchMap { effect ->
             facilityRepository
-                .facilitiesInCurrentGroup(effect.query, currentUser.get())
+                .facilitiesInCurrentGroup(effect.query)
                 .map { FacilitiesFetched(query = effect.query, facilities = it) }
           }
     }

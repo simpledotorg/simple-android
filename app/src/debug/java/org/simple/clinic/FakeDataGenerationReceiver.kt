@@ -85,8 +85,8 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
     return Completable.fromAction {
 
       val currentUser = user.get()
-      val currentFacility = facilityRepository.currentFacilityImmediate(currentUser)!!
-      val otherFacility = anyFacilityExceptCurrent(currentUser, currentFacility)
+      val currentFacility = facilityRepository.currentFacilityImmediate()!!
+      val otherFacility = anyFacilityExceptCurrent(currentFacility)
 
       val records = generateRecords(recordsToGenerate, currentFacility, otherFacility, currentUser)
 
@@ -102,11 +102,10 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
   }
 
   private fun anyFacilityExceptCurrent(
-      user: User,
       currentFacility: Facility
   ): Facility {
     return facilityRepository
-        .facilitiesInCurrentGroup(user = user)
+        .facilitiesInCurrentGroup()
         .map { allFacilities -> allFacilities.first { it.uuid != currentFacility.uuid } }
         .blockingFirst()
   }

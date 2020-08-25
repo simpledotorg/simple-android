@@ -421,7 +421,7 @@ class PatientRepositoryAndroidTest {
   fun deleted_blood_pressures_should_be_excluded_when_searching_for_patients() {
     // given
     val now = Instant.now(clock)
-    val currentFacility = facilityRepository.currentFacility(loggedInUser).blockingFirst()
+    val currentFacility = facilityRepository.currentFacility().blockingFirst()
 
     fun createPatientProfile(
         patientUuid: UUID,

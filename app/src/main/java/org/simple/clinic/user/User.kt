@@ -158,7 +158,7 @@ data class User(
          F.config_teleconsultationEnabled
         FROM Facility F
         INNER JOIN LoggedInUser ON LoggedInUser.currentFacilityUuid = F.uuid
-        WHERE LoggedInUser.uuid = :userUuid
+        LIMIT 1
       """
     }
 
@@ -180,16 +180,16 @@ data class User(
     @Query("SELECT COUNT(uuid) FROM LoggedInUser")
     abstract fun userCount(): Single<Int>
 
-    @Query("UPDATE LoggedInUser SET currentFacilityUuid = :facilityUuid WHERE uuid = :userUuid")
-    abstract fun setCurrentFacility(userUuid: UUID, facilityUuid: UUID): Int
+    @Query("UPDATE LoggedInUser SET currentFacilityUuid = :facilityUuid")
+    abstract fun setCurrentFacility(facilityUuid: UUID): Int
 
     @Query(CURRENT_FACILITY_QUERY)
-    abstract fun currentFacility(userUuid: UUID): Flowable<Facility>
+    abstract fun currentFacility(): Flowable<Facility>
 
     @Query(CURRENT_FACILITY_QUERY)
-    abstract fun currentFacilityImmediate(userUuid: UUID): Facility?
+    abstract fun currentFacilityImmediate(): Facility?
 
-    @Query("SELECT currentFacilityUuid FROM LoggedInUser WHERE uuid = :userUuid")
-    abstract fun currentFacilityUuid(userUuid: UUID): UUID?
+    @Query("SELECT currentFacilityUuid FROM LoggedInUser LIMIT 1")
+    abstract fun currentFacilityUuid(): UUID?
   }
 }

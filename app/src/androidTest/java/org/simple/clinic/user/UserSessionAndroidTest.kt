@@ -70,7 +70,7 @@ class UserSessionAndroidTest {
     assertThat(loggedInUser.status).isEqualTo(UserStatus.WaitingForApproval)
 
     val currentFacility = facilityRepository
-        .currentFacility(user)
+        .currentFacility()
         .blockingFirst()
     assertThat(currentFacility.uuid).isEqualTo(facility.uuid)
   }

@@ -84,7 +84,7 @@ class PatientRepositoryTest {
         schedulersProvider = schedulersProvider,
         dateOfBirthFormat = dateOfBirthFormat)
 
-    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
+    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))
     whenever(bloodPressureMeasurementDao.patientToFacilityIds(any())).thenReturn(emptyList())
     whenever(database.bloodPressureDao()).thenReturn(bloodPressureMeasurementDao)
   }

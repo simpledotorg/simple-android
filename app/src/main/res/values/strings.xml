@@ -230,6 +230,7 @@
   </plurals>
   <string name="patientsummary_teleconsult_network_error">Cannot connect due to poor internet</string>
   <string name="patientsummary_teleconsult_network_error_retry">Retry</string>
+  <string name="patientsummary_log_teleconsult">Log Teleconsult</string>
 
   <string name="patientsummary_registered_faciliy_title">Registered</string>
   <string name="patientsummary_registered_facility">%1$s at %2$s</string>

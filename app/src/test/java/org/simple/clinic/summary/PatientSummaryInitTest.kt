@@ -65,7 +65,7 @@ class PatientSummaryInitTest {
   }
 
   @Test
-  fun `when the screen is restored and current facility is already loaded and teleconsultation is enabled and user is logged in, then fetch teleconsultation info if it's not already fetched`() {
+  fun `when the screen is restored and current facility is already loaded and teleconsultation is enabled and user is logged in and open intention is not teleconsult log deeplink, then fetch teleconsultation info if it's not already fetched`() {
     val addressUuid = UUID.fromString("27f25667-44de-4717-b235-f75f5456af1d")
 
     val profile = PatientSummaryProfile(

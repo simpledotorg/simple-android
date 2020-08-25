@@ -72,7 +72,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
         .userLoggedInStatusLoaded(event.user.loggedInStatus)
         .currentFacilityLoaded(event.facility)
 
-    return if (updatedModel.isTeleconsultationEnabled && updatedModel.isUserLoggedIn) {
+    return if (updatedModel.isTeleconsultationEnabled && updatedModel.isUserLoggedIn && updatedModel.isTeleconsultLogDeepLink.not()) {
       next(
           updatedModel.fetchingTeleconsultationInfo(),
           FetchTeleconsultationInfo(event.facility.uuid)

@@ -11,7 +11,7 @@ import java.util.UUID
 
 class DeepLinkUpdateTest {
 
-  private val defaultModel = DeepLinkModel.default(null)
+  private val defaultModel = DeepLinkModel.default(null, null)
   private val updateSpec = UpdateSpec(DeepLinkUpdate())
   private val patientUuid = UUID.fromString("f88cc05b-620a-490a-92f3-1c0c43fb76ab")
 
@@ -64,7 +64,7 @@ class DeepLinkUpdateTest {
         uuid = UUID.fromString("fa0dfb7b-a0ea-425a-987d-2056f1a9e93b"),
         loggedInStatus = User.LoggedInStatus.LOGGED_IN
     )
-    val model = DeepLinkModel.default(patientUuid)
+    val model = DeepLinkModel.default(patientUuid, null)
 
     updateSpec
         .given(model)

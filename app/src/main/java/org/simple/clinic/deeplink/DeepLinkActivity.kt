@@ -24,6 +24,7 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
 
   companion object {
     private const val PATIENT_UUID_QUERY_KEY = "p"
+    private const val TELECONSULT_RECORD_ID_QUERY_KEY = "r"
   }
 
   @Inject
@@ -32,10 +33,21 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
   @Inject
   lateinit var locale: Locale
 
+  private val deepLinkData by unsafeLazy {
+    intent.data
+  }
+
+  private val hasDeepLinkQueryParameters by unsafeLazy {
+    deepLinkData?.queryParameterNames.isNullOrEmpty().not()
+  }
+
   private val delegate: MobiusDelegate<DeepLinkModel, DeepLinkEvent, DeepLinkEffect> by unsafeLazy {
     MobiusDelegate.forActivity(
         events = Observable.empty(),
-        defaultModel = DeepLinkModel.default(patientUuid()),
+        defaultModel = DeepLinkModel.default(
+            patientUuid = patientUuid(),
+            teleconsultRecordId = teleconsultRecordId()
+        ),
         update = DeepLinkUpdate(),
         init = DeepLinkInit(),
         effectHandler = effectHandler.create(this).build()
@@ -43,16 +55,23 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
   }
 
   private fun patientUuid(): UUID? {
-    val deepLinkData = intent.data
-    val hasArguments = deepLinkData?.queryParameterNames.isNullOrEmpty().not()
-
-    val patientIdString = if (hasArguments) {
+    val patientIdString = if (hasDeepLinkQueryParameters) {
       deepLinkData?.getQueryParameter(PATIENT_UUID_QUERY_KEY)
     } else {
       deepLinkData?.lastPathSegment
     }
 
     return patientIdString?.asUuid()
+  }
+
+  private fun teleconsultRecordId(): UUID? {
+    val teleconsultRecordIdString = if (hasDeepLinkQueryParameters) {
+      deepLinkData?.getQueryParameter(TELECONSULT_RECORD_ID_QUERY_KEY)
+    } else {
+      null
+    }
+
+    return teleconsultRecordIdString?.asUuid()
   }
 
   private lateinit var component: DeepLinkComponent

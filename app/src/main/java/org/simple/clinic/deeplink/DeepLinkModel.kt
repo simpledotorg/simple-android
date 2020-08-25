@@ -6,10 +6,14 @@ import java.util.UUID
 
 @Parcelize
 data class DeepLinkModel(
-    val patientUuid: UUID?
+    val patientUuid: UUID?,
+    val teleconsultRecordId: UUID?
 ) : Parcelable {
 
   companion object {
-    fun default(patientUuid: UUID?) = DeepLinkModel(patientUuid = patientUuid)
+    fun default(patientUuid: UUID?, teleconsultRecordId: UUID?) = DeepLinkModel(
+        patientUuid = patientUuid,
+        teleconsultRecordId = teleconsultRecordId
+    )
   }
 }

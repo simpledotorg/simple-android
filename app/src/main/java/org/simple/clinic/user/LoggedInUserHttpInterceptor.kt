@@ -22,7 +22,7 @@ class LoggedInUserHttpInterceptor @Inject constructor(
 
     var facilityUuid: UUID? = null
     if (user != null) {
-      facilityUuid = facilityRepository.currentFacilityUuid(user)
+      facilityUuid = facilityRepository.currentFacilityUuid()
     }
 
     return if (user != null && accessToken.isNullOrBlank().not() && facilityUuid != null) {

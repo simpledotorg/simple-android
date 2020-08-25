@@ -60,7 +60,7 @@ class ResetUserPinTest {
     val updatedUser = currentUser.afterPinResetRequested(newPinDigest)
 
     whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
-    whenever(facilityRepository.setCurrentFacility(updatedUser, facilityUuid)) doReturn Completable.complete()
+    whenever(facilityRepository.setCurrentFacility(facilityUuid)) doReturn Completable.complete()
 
     whenever(loginApi.resetPin(ResetPinRequest(newPinDigest))) doReturn Single.just(ForgotPinResponse(
         accessToken = "",
@@ -98,7 +98,7 @@ class ResetUserPinTest {
     val updatedAccessToken = "new_access_token"
 
     whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
-    whenever(facilityRepository.setCurrentFacility(updatedUser, facilityUuid)) doReturn Completable.complete()
+    whenever(facilityRepository.setCurrentFacility(facilityUuid)) doReturn Completable.complete()
 
     val response = ForgotPinResponse(
         loggedInUser = updatedUser.toPayload(facilityUuid),
@@ -114,7 +114,7 @@ class ResetUserPinTest {
   @Test
   fun `whenever the forgot pin api succeeds, the logged in users password digest and logged in status must be updated`() {
     whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
-    whenever(facilityRepository.setCurrentFacility(updatedUser, facilityUuid)) doReturn Completable.complete()
+    whenever(facilityRepository.setCurrentFacility(facilityUuid)) doReturn Completable.complete()
 
     val response = ForgotPinResponse(
         loggedInUser = updatedUser.toPayload(facilityUuid),
@@ -130,7 +130,7 @@ class ResetUserPinTest {
   @Test
   fun `when the reset PIN call succeeds, the success result must be returned`() {
     // given
-    whenever(facilityRepository.setCurrentFacility(updatedUser, facilityUuid)) doReturn Completable.complete()
+    whenever(facilityRepository.setCurrentFacility(facilityUuid)) doReturn Completable.complete()
     whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
 
     val response = ForgotPinResponse(

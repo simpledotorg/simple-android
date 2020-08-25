@@ -7,33 +7,29 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchResult
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 object AllPatientsInFacilityEffectHandler {
   fun createEffectHandler(
-      userSession: UserSession,
       facilityRepository: FacilityRepository,
       patientRepository: PatientRepository,
       schedulersProvider: SchedulersProvider
   ): ObservableTransformer<AllPatientsInFacilityEffect, AllPatientsInFacilityEvent> {
     return RxMobius
         .subtypeEffectHandler<AllPatientsInFacilityEffect, AllPatientsInFacilityEvent>()
-        .addTransformer(FetchFacilityEffect::class.java, fetchFacilityEffectHandler(userSession, facilityRepository, schedulersProvider))
+        .addTransformer(FetchFacilityEffect::class.java, fetchFacilityEffectHandler(facilityRepository, schedulersProvider))
         .addTransformer(FetchPatientsEffect::class.java, fetchPatientsEffectHandler(patientRepository, schedulersProvider))
         .build()
   }
 
   private fun fetchFacilityEffectHandler(
-      userSession: UserSession,
       facilityRepository: FacilityRepository,
       schedulersProvider: SchedulersProvider
   ): (Observable<FetchFacilityEffect>) -> Observable<AllPatientsInFacilityEvent> {
     return {
-      userSession
-          .requireLoggedInUser()
+      facilityRepository
+          .currentFacility()
           .subscribeOn(schedulersProvider.io())
-          .switchMap { user -> facilityRepository.currentFacility(user).subscribeOn(schedulersProvider.io()) }
           .map(::FacilityFetchedEvent)
     }
   }

@@ -9,7 +9,6 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toOptional
 import java.util.UUID
@@ -29,7 +28,7 @@ class FacilityRepository @Inject constructor(
     }
   }
 
-  fun facilitiesInCurrentGroup(searchQuery: String = "", user: User): Observable<List<Facility>> {
+  fun facilitiesInCurrentGroup(searchQuery: String = ""): Observable<List<Facility>> {
     val filteredByName = {
       if (searchQuery.isBlank()) {
         facilityDao.all().toObservable()
@@ -46,7 +45,7 @@ class FacilityRepository @Inject constructor(
       }
     }
 
-    return currentFacility(user)
+    return currentFacility()
         .switchMap { current ->
           when {
             current.groupUuid == null -> filteredByName()
@@ -55,32 +54,24 @@ class FacilityRepository @Inject constructor(
         }
   }
 
-  fun setCurrentFacility(user: User, facility: Facility): Completable {
-    return setCurrentFacility(user, facility.uuid)
+  fun setCurrentFacility(facility: Facility): Completable {
+    return setCurrentFacility(facility.uuid)
   }
 
-  fun setCurrentFacility(user: User, facilityUuid: UUID): Completable {
-    return Completable.fromAction { userDao.setCurrentFacility(user.uuid, facilityUuid) }
+  fun setCurrentFacility(facilityUuid: UUID): Completable {
+    return Completable.fromAction { userDao.setCurrentFacility(facilityUuid) }
   }
 
-  @Deprecated(
-      message = "Use currentFacility(User) instead",
-      replaceWith = ReplaceWith("userSession.requireLoggedInUser().switchMap { currentFacility(it) }"))
-  fun currentFacility(userSession: UserSession): Observable<Facility> {
-    return userSession.requireLoggedInUser()
-        .switchMap { currentFacility(it) }
+  fun currentFacility(): Observable<Facility> {
+    return userDao.currentFacility().toObservable()
   }
 
-  fun currentFacility(user: User): Observable<Facility> {
-    return userDao.currentFacility(user.uuid).toObservable()
+  fun currentFacilityImmediate(): Facility? {
+    return userDao.currentFacilityImmediate()
   }
 
-  fun currentFacilityImmediate(user: User): Facility? {
-    return userDao.currentFacilityImmediate(user.uuid)
-  }
-
-  fun currentFacilityUuid(user: User): UUID? {
-    return userDao.currentFacilityUuid(user.uuid)
+  fun currentFacilityUuid(): UUID? {
+    return userDao.currentFacilityUuid()
   }
 
   override fun mergeWithLocalData(payloads: List<FacilityPayload>): Completable {

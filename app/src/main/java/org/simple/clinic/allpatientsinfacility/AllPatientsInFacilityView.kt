@@ -13,14 +13,13 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.view_allpatientsinfacility.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.SearchResultClicked
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
@@ -38,9 +37,6 @@ class AllPatientsInFacilityView(
 
   @Inject
   lateinit var locale: Locale
-
-  @Inject
-  lateinit var userSession: UserSession
 
   @Inject
   lateinit var facilityRepository: FacilityRepository
@@ -62,7 +58,7 @@ class AllPatientsInFacilityView(
 
   private val delegate by unsafeLazy {
     val effectHandler = AllPatientsInFacilityEffectHandler
-        .createEffectHandler(userSession, facilityRepository, patientRepository, schedulersProvider)
+        .createEffectHandler(facilityRepository, patientRepository, schedulersProvider)
 
     MobiusDelegate(
         Observable.never(),

@@ -90,7 +90,7 @@ class RegisterUserServerIntegrationTest {
 
     val savedUser = userSession.loggedInUserImmediate()!!
     assertThat(savedUser.uuid).isEqualTo(registerUserWithId)
-    assertThat(facilityRepository.currentFacility(savedUser).blockingFirst()).isEqualTo(registerFacility)
+    assertThat(facilityRepository.currentFacility().blockingFirst()).isEqualTo(registerFacility)
   }
 
   private fun fetchOneFacility(): Facility {

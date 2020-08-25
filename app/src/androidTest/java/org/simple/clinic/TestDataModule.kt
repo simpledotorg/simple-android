@@ -26,9 +26,8 @@ class TestDataModule {
 
   @Provides
   fun provideTestFacility(
-      user: User,
       facilityRepository: FacilityRepository
   ): Facility {
-    return facilityRepository.currentFacilityImmediate(user)!!
+    return facilityRepository.currentFacilityImmediate()!!
   }
 }

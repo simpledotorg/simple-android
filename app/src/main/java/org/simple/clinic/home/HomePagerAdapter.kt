@@ -11,7 +11,7 @@ class HomePagerAdapter(private val context: Context) : PagerAdapter() {
   override fun instantiateItem(container: ViewGroup, position: Int): Any {
     val inflater = LayoutInflater.from(container.context)
 
-    val screenForTab = inflater.inflate(HomeTab.values()[position].key, container, false)
+    val screenForTab = inflater.inflate(HomeTab.values()[position].key.layoutRes(), container, false)
     container.addView(screenForTab)
 
     return screenForTab

@@ -30,6 +30,10 @@ import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.storage.text.TextRecord
 import org.simple.clinic.summary.addphone.MissingPhoneReminder
+import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
+import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityInfo
+import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityMedicalOfficersCrossRef
+import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityWithMedicalOfficers
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
@@ -54,13 +58,16 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       BusinessId::class,
       MissingPhoneReminder::class,
       BloodSugarMeasurement::class,
-      TextRecord::class
+      TextRecord::class,
+      TeleconsultationFacilityInfo::class,
+      MedicalOfficer::class,
+      TeleconsultationFacilityMedicalOfficersCrossRef::class
     ],
     views = [
       OverdueAppointment::class,
       PatientSearchResult::class
     ],
-    version = 71,
+    version = 72,
     exportSchema = true
 )
 @TypeConverters(
@@ -124,7 +131,13 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun textRecordDao(): TextRecord.RoomDao
 
-  fun clearPatientData() {
+  abstract fun teleconsultFacilityInfoDao(): TeleconsultationFacilityInfo.RoomDao
+
+  abstract fun teleconsultMedicalOfficersDao(): MedicalOfficer.RoomDao
+
+  abstract fun teleconsultFacilityWithMedicalOfficersDao(): TeleconsultationFacilityWithMedicalOfficers.RoomDao
+
+  fun clearAppData() {
     runInTransaction {
       patientDao().clear()
       phoneNumberDao().clear()
@@ -134,6 +147,9 @@ abstract class AppDatabase : RoomDatabase() {
       appointmentDao().clear()
       medicalHistoryDao().clear()
       bloodSugarDao().clear()
+      teleconsultFacilityInfoDao().clear()
+      teleconsultMedicalOfficersDao().clear()
+      teleconsultFacilityWithMedicalOfficersDao().clear()
     }
   }
 }

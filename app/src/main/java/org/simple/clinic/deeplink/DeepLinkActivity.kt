@@ -37,7 +37,7 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
     intent.data
   }
 
-  private val hasDeepLinkQueryParameters by unsafeLazy {
+  private val isLogTeleconsultDeepLink by unsafeLazy {
     deepLinkData?.queryParameterNames.isNullOrEmpty().not()
   }
 
@@ -46,7 +46,8 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
         events = Observable.empty(),
         defaultModel = DeepLinkModel.default(
             patientUuid = patientUuid(),
-            teleconsultRecordId = teleconsultRecordId()
+            teleconsultRecordId = teleconsultRecordId(),
+            isLogTeleconsultDeepLink = isLogTeleconsultDeepLink
         ),
         update = DeepLinkUpdate(),
         init = DeepLinkInit(),
@@ -55,7 +56,7 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
   }
 
   private fun patientUuid(): UUID? {
-    val patientIdString = if (hasDeepLinkQueryParameters) {
+    val patientIdString = if (isLogTeleconsultDeepLink) {
       deepLinkData?.getQueryParameter(PATIENT_UUID_QUERY_KEY)
     } else {
       deepLinkData?.lastPathSegment
@@ -65,7 +66,7 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
   }
 
   private fun teleconsultRecordId(): UUID? {
-    val teleconsultRecordIdString = if (hasDeepLinkQueryParameters) {
+    val teleconsultRecordIdString = if (isLogTeleconsultDeepLink) {
       deepLinkData?.getQueryParameter(TELECONSULT_RECORD_ID_QUERY_KEY)
     } else {
       null

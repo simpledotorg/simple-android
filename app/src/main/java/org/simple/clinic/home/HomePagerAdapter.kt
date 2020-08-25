@@ -4,13 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
-import androidx.annotation.StringRes
 import androidx.viewpager.widget.PagerAdapter
-import org.simple.clinic.R
-import org.simple.clinic.home.overdue.OverdueScreenKey
-import org.simple.clinic.home.patients.PatientsTabScreenKey
-import org.simple.clinic.home.report.ReportsScreenKey
 
 class HomePagerAdapter(private val context: Context) : PagerAdapter() {
 
@@ -32,13 +26,4 @@ class HomePagerAdapter(private val context: Context) : PagerAdapter() {
   override fun getCount() = HomeTab.values().size
 
   override fun isViewFromObject(view: View, viewKey: Any) = view === viewKey
-}
-
-enum class HomeTab(@LayoutRes val key: Int, @StringRes val title: Int) {
-
-  PATIENTS(PatientsTabScreenKey().layoutRes(), R.string.tab_patient),
-
-  OVERDUE(OverdueScreenKey().layoutRes(), R.string.tab_overdue),
-
-  REPORTS(ReportsScreenKey().layoutRes(), R.string.tab_progress)
 }

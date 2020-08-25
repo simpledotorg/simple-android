@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayoutMediator
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_home.view.*
@@ -33,6 +34,8 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
   @Inject
   lateinit var effectHandlerFactory: HomeScreenEffectHandler.Factory
+
+  private val tabs = listOf(PATIENTS, OVERDUE, REPORTS)
 
   private val events by unsafeLazy {
     facilitySelectionClicks()
@@ -84,8 +87,10 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     // Keyboard stays open after login finishes, not sure why.
     homeScreenRootLayout.hideKeyboard()
 
-    viewPager.adapter = HomePagerAdapter(context, listOf(PATIENTS, OVERDUE, REPORTS))
-    homeTabLayout.setupWithViewPager(viewPager)
+    viewPager.adapter = HomeScreenTabPagerAdapter(activity, tabs)
+    TabLayoutMediator(homeTabLayout, viewPager) { tab, position ->
+      tab.text = resources.getString(tabs[position].title)
+    }.attach()
 
     // The WebView in "Progress" tab is expensive to load. Pre-instantiating
     // it when the app starts reduces its time-to-display.
@@ -126,7 +131,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   }
 
   override fun showOverdueAppointmentCount(count: Int) {
-    val overdueTabIndex = HomeTab.values().indexOf(OVERDUE)
+    val overdueTabIndex = tabs.indexOf(OVERDUE)
     val overdueTab = homeTabLayout.getTabAt(overdueTabIndex)
 
     overdueTab?.run {
@@ -140,7 +145,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   }
 
   override fun removeOverdueAppointmentCount() {
-    val overdueTabIndex = HomeTab.values().indexOf(OVERDUE)
+    val overdueTabIndex = tabs.indexOf(OVERDUE)
     val overdueTab = homeTabLayout.getTabAt(overdueTabIndex)
 
     overdueTab?.removeBadge()

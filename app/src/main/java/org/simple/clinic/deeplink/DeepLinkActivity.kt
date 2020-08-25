@@ -13,6 +13,7 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.setup.SetupActivity
 import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.asUuid
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import java.util.Locale
@@ -21,6 +22,10 @@ import javax.inject.Inject
 
 class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
 
+  companion object {
+    private const val PATIENT_UUID_QUERY_KEY = "p"
+  }
+
   @Inject
   lateinit var effectHandler: DeepLinkEffectHandler.Factory
 
@@ -28,19 +33,26 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
   lateinit var locale: Locale
 
   private val delegate: MobiusDelegate<DeepLinkModel, DeepLinkEvent, DeepLinkEffect> by unsafeLazy {
-    val patientUuid = try {
-      UUID.fromString(intent.data?.lastPathSegment)
-    } catch (e: IllegalArgumentException) {
-      null
-    }
-
     MobiusDelegate.forActivity(
         events = Observable.empty(),
-        defaultModel = DeepLinkModel.default(patientUuid),
+        defaultModel = DeepLinkModel.default(patientUuid()),
         update = DeepLinkUpdate(),
         init = DeepLinkInit(),
         effectHandler = effectHandler.create(this).build()
     )
+  }
+
+  private fun patientUuid(): UUID? {
+    val deepLinkData = intent.data
+    val hasArguments = deepLinkData?.queryParameterNames.isNullOrEmpty().not()
+
+    val patientIdString = if (hasArguments) {
+      deepLinkData?.getQueryParameter(PATIENT_UUID_QUERY_KEY)
+    } else {
+      deepLinkData?.lastPathSegment
+    }
+
+    return patientIdString?.asUuid()
   }
 
   private lateinit var component: DeepLinkComponent

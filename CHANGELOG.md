@@ -11,6 +11,7 @@
 - Improved the user experience of loading the patient summary screen
 - Optimized fetching of current facility by removing the unnecessary `User` parameter
 - Add teleconsultation facility sync
+- Added `MedicineFrequencyBottomSheet` to update medicine frequency
 
 ## On Demo
 ### Changes

@@ -13,6 +13,8 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.home.HomeTab.OVERDUE
+import org.simple.clinic.home.HomeTab.PATIENTS
+import org.simple.clinic.home.HomeTab.REPORTS
 import org.simple.clinic.home.help.HelpScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
@@ -82,7 +84,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     // Keyboard stays open after login finishes, not sure why.
     homeScreenRootLayout.hideKeyboard()
 
-    viewPager.adapter = HomePagerAdapter(context)
+    viewPager.adapter = HomePagerAdapter(context, listOf(PATIENTS, OVERDUE, REPORTS))
     homeTabLayout.setupWithViewPager(viewPager)
 
     // The WebView in "Progress" tab is expensive to load. Pre-instantiating

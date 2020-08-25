@@ -3,7 +3,6 @@ package org.simple.clinic.remoteconfig
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
@@ -28,7 +27,8 @@ class RemoteConfigSync @Inject constructor(
   override fun syncConfig(): Single<SyncConfig> {
     return Single.just(SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
-        batchSize = BatchSize.SMALL,
-        syncGroup = SyncGroup.FREQUENT))
+        batchSize = 0, // Unused for remote config sync
+        syncGroup = SyncGroup.FREQUENT
+    ))
   }
 }

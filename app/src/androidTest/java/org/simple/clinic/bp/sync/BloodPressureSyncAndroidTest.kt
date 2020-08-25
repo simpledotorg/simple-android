@@ -13,7 +13,6 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
-import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
@@ -50,7 +49,7 @@ class BloodPressureSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodPressur
 
   private val configProvider = Single.just(SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
-      batchSize = BatchSize.VERY_SMALL,
+      batchSize = 10,
       syncGroup = SyncGroup.FREQUENT))
 
   @get:Rule
@@ -84,5 +83,5 @@ class BloodPressureSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodPressur
 
   override fun pushNetworkCall(payloads: List<BloodPressureMeasurementPayload>) = syncApi.push(BloodPressurePushRequest(payloads))
 
-  override fun batchSize(): BatchSize = configProvider.blockingGet().batchSize
+  override fun batchSize(): Int = configProvider.blockingGet().batchSize
 }

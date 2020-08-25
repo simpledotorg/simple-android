@@ -14,7 +14,6 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
-import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
@@ -52,7 +51,7 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
 
   private val configProvider = Single.just(SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
-      batchSize = BatchSize.VERY_SMALL,
+      batchSize = 10,
       syncGroup = SyncGroup.FREQUENT))
 
   private val currentFacilityUuid: UUID
@@ -94,5 +93,5 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
 
   override fun pushNetworkCall(payloads: List<PrescribedDrugPayload>) = syncApi.push(PrescriptionPushRequest(payloads))
 
-  override fun batchSize(): BatchSize = configProvider.blockingGet().batchSize
+  override fun batchSize(): Int = configProvider.blockingGet().batchSize
 }

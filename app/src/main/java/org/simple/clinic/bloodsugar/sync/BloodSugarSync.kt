@@ -41,7 +41,7 @@ class BloodSugarSync @Inject constructor(
 
   override fun pull(): Completable {
     return syncConfig()
-        .map { it.batchSize.numberOfRecords }
+        .map { it.batchSize }
         .flatMapCompletable { batchSize ->
           syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it) }
         }

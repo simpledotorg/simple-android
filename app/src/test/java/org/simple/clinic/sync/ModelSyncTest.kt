@@ -33,7 +33,7 @@ class ModelSyncTest {
 
   val syncConfig = SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
-      batchSize = BatchSize.VERY_SMALL,
+      batchSize = 10,
       syncGroup = SyncGroup.FREQUENT
   )
 

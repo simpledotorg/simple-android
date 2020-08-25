@@ -17,7 +17,6 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
-import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
@@ -49,7 +48,7 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
 
   private val configProvider = Single.just(SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
-      batchSize = BatchSize.VERY_SMALL,
+      batchSize = 10,
       syncGroup = SyncGroup.FREQUENT))
 
   private val registerPatientRule = RegisterPatientRule(patientUuid = UUID.randomUUID())
@@ -99,5 +98,5 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
     return syncApi.push(request)
   }
 
-  override fun batchSize(): BatchSize = configProvider.blockingGet().batchSize
+  override fun batchSize(): Int = configProvider.blockingGet().batchSize
 }

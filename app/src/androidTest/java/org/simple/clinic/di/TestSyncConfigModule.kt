@@ -2,7 +2,6 @@ package org.simple.clinic.di
 
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
@@ -16,7 +15,7 @@ class TestSyncConfigModule {
   fun frequentSyncConfig(): SyncConfig {
     return SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
-        batchSize = BatchSize.VERY_SMALL,
+        batchSize = 10,
         syncGroup = SyncGroup.FREQUENT
     )
   }
@@ -26,7 +25,7 @@ class TestSyncConfigModule {
   fun dailySyncConfig(): SyncConfig {
     return SyncConfig(
         syncInterval = SyncInterval.DAILY,
-        batchSize = BatchSize.VERY_SMALL,
+        batchSize = 10,
         syncGroup = SyncGroup.DAILY
     )
   }

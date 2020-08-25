@@ -18,8 +18,6 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
@@ -137,7 +135,7 @@ class ForgotPinConfirmPinScreen(
   }
 
   override fun goToHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.FORWARD)
+    screenRouter.clearHistoryAndPush(HomeScreenKey, RouterDirection.FORWARD)
   }
 
   private fun showError(@StringRes errorMessageResId: Int) {

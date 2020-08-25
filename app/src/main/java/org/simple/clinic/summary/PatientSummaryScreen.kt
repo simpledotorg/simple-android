@@ -442,7 +442,7 @@ class PatientSummaryScreen(
   }
 
   override fun goToHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreenKey(), direction = BACKWARD)
+    screenRouter.clearHistoryAndPush(HomeScreenKey, direction = BACKWARD)
   }
 
   override fun showUpdatePhoneDialog(patientUuid: UUID) {

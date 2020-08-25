@@ -128,7 +128,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   }
 
   override fun openHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.REPLACE)
+    screenRouter.clearHistoryAndPush(HomeScreenKey, RouterDirection.REPLACE)
   }
 
   override fun goBackToRegistrationScreen() {

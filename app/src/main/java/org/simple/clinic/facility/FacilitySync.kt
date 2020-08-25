@@ -27,9 +27,9 @@ class FacilitySync @Inject constructor(
 
   override fun pull(): Completable {
     return syncConfig()
-        .map { it.batchSize }
+        .map { it.batchSize.numberOfRecords }
         .flatMapCompletable { batchSize ->
-          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize.numberOfRecords, it) }
+          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it) }
         }
   }
 

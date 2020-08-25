@@ -82,7 +82,7 @@ class RegistrationLoadingScreen(
       .doAfterNext { showLoader() }
 
   override fun openHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.FORWARD)
+    screenRouter.clearHistoryAndPush(HomeScreenKey, RouterDirection.FORWARD)
   }
 
   override fun showNetworkError() {

@@ -6,7 +6,7 @@ import org.simple.clinic.R
 import org.simple.clinic.router.screen.FullScreenKey
 
 @Parcelize
-class HomeScreenKey : FullScreenKey {
+object HomeScreenKey : FullScreenKey {
 
   @IgnoredOnParcel
   override val analyticsName = "Home"

@@ -25,7 +25,7 @@ class HelpSync @Inject constructor(
           .help()
           .flatMapCompletable(syncRepository::updateHelp)
 
-  override fun syncConfig() = Single.just(config)
+  override fun syncConfig(): SyncConfig = config
 
   fun pullWithResult(): Single<HelpPullResult> {
     return pull()

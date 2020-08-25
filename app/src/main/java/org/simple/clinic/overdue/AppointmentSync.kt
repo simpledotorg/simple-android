@@ -38,14 +38,14 @@ class AppointmentSync @Inject constructor(
   override fun push() = syncCoordinator.push(repository) { api.push(toRequest(it)) }
 
   override fun pull(): Completable {
-    return syncConfig()
-        .map { it.batchSize }
+    return Single
+        .fromCallable { config.batchSize }
         .flatMapCompletable { batchSize ->
           syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it) }
         }
   }
 
-  override fun syncConfig() = Single.just(config)
+  override fun syncConfig(): SyncConfig = config
 
   private fun toRequest(appointments: List<Appointment>): AppointmentPushRequest {
     val payloads = appointments

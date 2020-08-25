@@ -18,8 +18,9 @@ class SyncScheduler @Inject constructor(
 ) {
 
   fun schedule(): Completable {
-    return Observable.fromIterable(syncs)
-        .flatMapSingle { it.syncConfig() }
+    return Observable
+        .fromIterable(syncs)
+        .map { it.syncConfig() }
         .distinct { it.syncGroup }
         .map { config -> createWorkRequest(config) to config.syncGroup.name }
         .toList()

@@ -3,7 +3,6 @@ package org.simple.clinic.sync
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
-import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import org.junit.Rule
@@ -82,11 +81,11 @@ class DataSyncTest {
     sync3Consumer.assertInvoked()
   }
 
-  fun createSyncConfig(syncGroup: SyncGroup) =
-      Single.just(SyncConfig(
-          syncInterval = SyncInterval.FREQUENT,
-          batchSize = 10,
-          syncGroup = syncGroup))
+  fun createSyncConfig(syncGroup: SyncGroup) = SyncConfig(
+      syncInterval = SyncInterval.FREQUENT,
+      batchSize = 10,
+      syncGroup = syncGroup
+  )
 
 
   @Test
@@ -98,7 +97,7 @@ class DataSyncTest {
           batchSize = 10,
           syncGroup = syncGroup)
       whenever(modelSync.sync()).thenReturn(syncOperation)
-      whenever(modelSync.syncConfig()).thenReturn(Single.just(syncConfig))
+      whenever(modelSync.syncConfig()).thenReturn(syncConfig)
 
       return modelSync
     }
@@ -137,7 +136,7 @@ class DataSyncTest {
           batchSize = 10,
           syncGroup = syncGroup)
       whenever(modelSync.sync()).thenReturn(syncOperation)
-      whenever(modelSync.syncConfig()).thenReturn(Single.just(syncConfig))
+      whenever(modelSync.syncConfig()).thenReturn(syncConfig)
 
       return modelSync
     }

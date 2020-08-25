@@ -1,7 +1,6 @@
 package org.simple.clinic.reports
 
 import io.reactivex.Completable
-import io.reactivex.Single
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.user.UserSession
@@ -37,5 +36,5 @@ class ReportsSync @Inject constructor(
           .userAnalytics()
           .flatMapCompletable(reportsRepository::updateReports)
 
-  override fun syncConfig() = Single.just(config)
+  override fun syncConfig(): SyncConfig = config
 }

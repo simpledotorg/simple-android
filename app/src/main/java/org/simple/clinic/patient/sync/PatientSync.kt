@@ -41,14 +41,14 @@ class PatientSync @Inject constructor(
   override fun push() = syncCoordinator.push(repository, pushNetworkCall = { api.push(toRequest(it)) })
 
   override fun pull(): Completable {
-    return syncConfig()
-        .map { it.batchSize }
+    return Single
+        .fromCallable { config.batchSize }
         .flatMapCompletable { batchSize ->
           syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it) }
         }
   }
 
-  override fun syncConfig() = Single.just(config)
+  override fun syncConfig(): SyncConfig = config
 
   private fun toRequest(patients: List<PatientProfile>): PatientPushRequest {
     return PatientPushRequest(

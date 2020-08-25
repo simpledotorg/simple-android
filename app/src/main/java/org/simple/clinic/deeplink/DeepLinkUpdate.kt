@@ -10,7 +10,7 @@ class DeepLinkUpdate : Update<DeepLinkModel, DeepLinkEvent, DeepLinkEffect> {
   override fun update(model: DeepLinkModel, event: DeepLinkEvent): Next<DeepLinkModel, DeepLinkEffect> {
     return when (event) {
       is UserFetched -> userFetched(model, event)
-      is PatientFetched -> patientFetched(event)
+      is PatientFetched -> patientFetched(event, model)
     }
   }
 
@@ -34,14 +34,22 @@ class DeepLinkUpdate : Update<DeepLinkModel, DeepLinkEvent, DeepLinkEffect> {
   }
 
   private fun patientFetched(
-      event: PatientFetched
+      event: PatientFetched,
+      model: DeepLinkModel
   ): Next<DeepLinkModel, DeepLinkEffect> {
-    val patient = event.patient
-    val effect = if (patient != null) {
-      NavigateToPatientSummary(patient.uuid)
+    val effect = if (event.patient != null) {
+      navigateToPatientSummary(model)
     } else {
       ShowPatientDoesNotExist
     }
     return dispatch(effect)
+  }
+
+  private fun navigateToPatientSummary(model: DeepLinkModel): DeepLinkEffect {
+    return if (model.isLogTeleconsultDeepLink) {
+      NavigateToPatientSummaryWithTeleconsultLog(model.patientUuid!!, model.teleconsultRecordId)
+    } else {
+      NavigateToPatientSummary(model.patientUuid!!)
+    }
   }
 }

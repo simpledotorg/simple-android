@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingStart="@dimen/spacing_16"
+  android:paddingEnd="@dimen/spacing_16"
+  android:paddingBottom="@dimen/spacing_16">
+
+  <TextView
+    android:id="@+id/medicineFrequencyTitleTextView"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    app:layout_constraintBottom_toTopOf="@+id/medicineFrequencyRadioGroup"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="Medicine, 10mg" />
+
+  <RadioGroup
+    android:id="@+id/medicineFrequencyRadioGroup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_16"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/medicineFrequencyTitleTextView">
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+      android:id="@+id/medicineFrequencyOdRadioButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/spacing_16"
+      android:text="@string/sheet_medicine_frequency_od"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+      android:textColor="@drawable/radio_button_selected" />
+
+    <View
+      android:id="@+id/medicineFrequencyOdDivider"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/spacing_1"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:background="@color/grey4" />
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+      android:id="@+id/medicineFrequencyBdRadioButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:padding="@dimen/spacing_16"
+      android:text="@string/sheet_medicine_frequency_bd"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+      android:textColor="@drawable/radio_button_selected" />
+
+    <View
+      android:id="@+id/medicineFrequencyBdDivider"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/spacing_1"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:background="@color/grey4" />
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+      android:id="@+id/medicineFrequencyTdsRadioButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:padding="@dimen/spacing_16"
+      android:text="@string/sheet_medicine_frequency_tds"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+      android:textColor="@drawable/radio_button_selected" />
+
+    <View
+      android:id="@+id/medicineFrequencyTdsDivider"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/spacing_1"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:background="@color/grey4" />
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+      android:id="@+id/medicineFrequencyQdsRadioButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:padding="@dimen/spacing_16"
+      android:text="@string/sheet_medicine_frequency_qds"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+      android:textColor="@drawable/radio_button_selected" />
+
+  </RadioGroup>
+
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/saveMedicineFrequencyButton"
+    style="?attr/materialButtonStyle"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:text="@string/sheet_medicine_frequency_save"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/medicineFrequencyRadioGroup" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

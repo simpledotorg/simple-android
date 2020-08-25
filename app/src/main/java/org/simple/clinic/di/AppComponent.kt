@@ -21,6 +21,7 @@ import org.simple.clinic.signature.SignatureComponent
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncWorker
 import org.simple.clinic.teleconsultlog.drugduration.di.DrugDurationComponent
+import org.simple.clinic.teleconsultlog.medicinefrequency.di.MedicineFrequencyComponent
 import javax.inject.Scope
 
 @AppScope
@@ -48,6 +49,7 @@ interface AppComponent {
   fun deepLinkComponent(): DeepLinkComponent.Builder
   fun signatureComponent(): SignatureComponent.Builder
   fun drugDurationComponent(): DrugDurationComponent.Builder
+  fun medicineFrequencyComponent(): MedicineFrequencyComponent.Builder
 }
 
 @Scope

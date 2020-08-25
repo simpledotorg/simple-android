@@ -146,7 +146,7 @@ class PatientSummaryScreen(
           }, 100)
         }
         .setActionTextColor(ContextCompat.getColor(context, R.color.green2))
-        .setAnchorView(R.id.doneButtonFrame)
+        .setAnchorView(R.id.buttonFrame)
   }
 
   override fun onSaveInstanceState(): Parcelable {

@@ -124,4 +124,25 @@ class DeepLinkEffectHandlerTest {
 
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when navigate to patient summary with teleconsult log effect is received, then navigate to patient summary screen with teleconsult log`() {
+    // given
+    val patientUuid = UUID.fromString("4db4acb9-5b0e-459f-b81d-650938029666")
+    val teleconsultRecordId = UUID.fromString("b42fea8a-7357-4f4c-b365-fc9dfd0e80df")
+    val patient = TestData.patient(
+        uuid = patientUuid
+    )
+
+    whenever(patientRepository.patientImmediate(patientUuid)) doReturn patient
+
+    // when
+    testCase.dispatch(NavigateToPatientSummaryWithTeleconsultLog(patientUuid, teleconsultRecordId))
+
+    // then
+    verify(uiActions).navigateToPatientSummaryWithTeleconsultLog(patientUuid, teleconsultRecordId)
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
 }

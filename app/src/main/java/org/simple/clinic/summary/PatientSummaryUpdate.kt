@@ -10,6 +10,7 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
+import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import java.util.UUID
@@ -170,7 +171,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val shouldShowScheduleAppointmentSheet = if (countOfRecordedMeasurements == 0) false else hasPatientDataChanged
     val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && diagnosisRecorded.not() && isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
-    val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient
+    val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient || openIntention is ViewExistingPatientWithTeleconsultLog
 
     val effect = when {
       shouldShowDiagnosisError -> ShowDiagnosisError
@@ -216,6 +217,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       BACK_CLICK -> when (model.openIntention) {
         ViewExistingPatient -> GoBackToPreviousScreen
         ViewNewPatient, is LinkIdWithPatient -> GoToHomeScreen
+        is ViewExistingPatientWithTeleconsultLog -> GoToHomeScreen
       }
       DONE_CLICK -> GoToHomeScreen
     }

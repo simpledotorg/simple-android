@@ -217,7 +217,7 @@
       app:iconGravity="textStart" />
 
     <org.simple.clinic.widgets.ProgressMaterialButton
-      android:id="@+id/contactDoctorButton"
+      android:id="@+id/doctorButton"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_8"

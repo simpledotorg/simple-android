@@ -248,7 +248,7 @@ class PatientSummaryScreen(
 
   private fun doneClicks() = doneButton.clicks().map { PatientSummaryDoneClicked(screenKey.patientUuid) }
 
-  private fun contactDoctorClicks() = contactDoctorButton.clicks().map { ContactDoctorClicked }
+  private fun contactDoctorClicks() = doctorButton.clicks().map { ContactDoctorClicked }
 
   private fun backClicks(): Observable<UiEvent> {
     val hardwareBackKeyClicks = Observable.create<Unit> { emitter ->
@@ -511,15 +511,15 @@ class PatientSummaryScreen(
   }
 
   override fun enableContactDoctorButton() {
-    contactDoctorButton.setButtonState(ButtonState.Enabled)
+    doctorButton.setButtonState(ButtonState.Enabled)
   }
 
   override fun disableContactDoctorButton() {
-    contactDoctorButton.setButtonState(ButtonState.Disabled)
+    doctorButton.setButtonState(ButtonState.Disabled)
   }
 
   override fun fetchingTeleconsultInfo() {
-    contactDoctorButton.setButtonState(ButtonState.InProgress)
+    doctorButton.setButtonState(ButtonState.InProgress)
   }
 
   override fun showTeleconsultInfoError() {
@@ -529,11 +529,11 @@ class PatientSummaryScreen(
   }
 
   override fun showContactDoctorButton() {
-    contactDoctorButton.visibility = View.VISIBLE
+    doctorButton.visibility = View.VISIBLE
   }
 
   override fun hideContactDoctorButton() {
-    contactDoctorButton.visibility = View.GONE
+    doctorButton.visibility = View.GONE
   }
 
   override fun showAssignedFacilityView() {

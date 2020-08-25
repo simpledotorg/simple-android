@@ -17,25 +17,35 @@ class TeleconsultationFacilityRepository @Inject constructor(
 
   override fun save(records: List<TeleconsultationFacilityWithMedicalOfficers>): Completable {
     return Completable.fromAction {
-      appDatabase
-          .teleconsultFacilityInfoDao()
-          .save(records.map { it.teleconsultationFacilityInfo })
-
-      appDatabase
-          .teleconsultMedicalOfficersDao()
-          .save(records.flatMap { it.medicalOfficers })
-
-      appDatabase
-          .teleconsultFacilityWithMedicalOfficersDao()
-          .save(records.flatMap { (teleconsultInfo, medicalOfficers) ->
-            medicalOfficers.map {
-              TeleconsultationFacilityMedicalOfficersCrossRef(
-                  teleconsultInfo.facilityId,
-                  it.medicalOfficerId
-              )
-            }
-          })
+      saveTeleconsultFacilityInfo(records)
+      saveTeleconsultMedicalOfficers(records)
+      saveTeleconsultMedicalOfficersCrossRef(records)
     }
+  }
+
+  private fun saveTeleconsultMedicalOfficersCrossRef(records: List<TeleconsultationFacilityWithMedicalOfficers>) {
+    appDatabase
+        .teleconsultFacilityWithMedicalOfficersDao()
+        .save(records.flatMap { (teleconsultInfo, medicalOfficers) ->
+          medicalOfficers.map {
+            TeleconsultationFacilityMedicalOfficersCrossRef(
+                teleconsultInfo.facilityId,
+                it.medicalOfficerId
+            )
+          }
+        })
+  }
+
+  private fun saveTeleconsultMedicalOfficers(records: List<TeleconsultationFacilityWithMedicalOfficers>) {
+    appDatabase
+        .teleconsultMedicalOfficersDao()
+        .save(records.flatMap { it.medicalOfficers })
+  }
+
+  private fun saveTeleconsultFacilityInfo(records: List<TeleconsultationFacilityWithMedicalOfficers>) {
+    appDatabase
+        .teleconsultFacilityInfoDao()
+        .save(records.map { it.teleconsultationFacilityInfo })
   }
 
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<TeleconsultationFacilityWithMedicalOfficers>> {

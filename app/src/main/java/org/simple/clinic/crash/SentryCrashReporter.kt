@@ -45,8 +45,8 @@ class SentryCrashReporter @Inject constructor(
             { Sentry.getContext().addTag("userUuid", it.toString()) },
             { report(it) })
 
-    loggedInUserStream
-        .flatMap { facilityRepository.currentFacility(it) }
+    facilityRepository
+        .currentFacility()
         .map { it.uuid }
         .subscribe(
             { Sentry.getContext().addTag("facilityUuid", it.toString()) },

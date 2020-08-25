@@ -10,10 +10,10 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.login.UsersApi
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
@@ -46,7 +46,7 @@ class RegisterUserTest {
     val payload = user.toPayload(facilityUuid)
     val savedUser = user.copy(loggedInStatus = LOGGED_IN)
     whenever(usersApi.createUser(RegistrationRequest(payload))) doReturn Single.just(RegistrationResponse("accessToken", payload))
-    whenever(facilityRepository.setCurrentFacility(savedUser, facilityUuid)) doReturn Completable.complete()
+    whenever(facilityRepository.setCurrentFacility(facilityUuid)) doReturn Completable.complete()
 
     val reporter = MockAnalyticsReporter()
     Analytics.addReporter(reporter)

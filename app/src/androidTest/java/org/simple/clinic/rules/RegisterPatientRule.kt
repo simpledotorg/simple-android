@@ -38,8 +38,7 @@ class RegisterPatientRule(val patientUuid: UUID) : TestRule {
    * a blood pressure for the patient at the facility.
    **/
   private fun registerPatient() {
-    val registeredFacilityUuid = facilityRepository
-        .currentFacilityUuid(userSession.loggedInUserImmediate()!!)!!
+    val registeredFacilityUuid = facilityRepository.currentFacilityUuid()!!
 
     val patientPayload = testData.patientPayload(uuid = patientUuid)
     val patientPushRequest = PatientPushRequest(listOf(patientPayload))

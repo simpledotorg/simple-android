@@ -43,7 +43,7 @@ class LoginUserWithOtp @Inject constructor(
 
     return Completable
         .fromAction { userDao.createOrUpdate(user) }
-        .andThen(facilityRepository.setCurrentFacility(user, facilityUuid))
+        .andThen(facilityRepository.setCurrentFacility(facilityUuid))
         .andThen(Completable.fromAction { accessTokenPreference.set(Just(response.accessToken)) })
         .andThen(Single.just(user))
   }

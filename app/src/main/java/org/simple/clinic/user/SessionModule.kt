@@ -16,18 +16,14 @@ class SessionModule {
 
   @Provides
   fun currentFacility(appDatabase: AppDatabase): Facility {
-    val user = appDatabase.userDao().userImmediate()!!
-    return appDatabase.userDao().currentFacilityImmediate(user.uuid)!!
+    return appDatabase.userDao().currentFacilityImmediate()!!
   }
 
   @Provides
   fun currentFacilityNotifications(appDatabase: AppDatabase): Observable<Facility> {
     return appDatabase
         .userDao()
-        .user()
-        .filter { it.isNotEmpty() }
-        .map { it.first().uuid }
-        .switchMap(appDatabase.userDao()::currentFacility)
+        .currentFacility()
         .toObservable()
   }
 }

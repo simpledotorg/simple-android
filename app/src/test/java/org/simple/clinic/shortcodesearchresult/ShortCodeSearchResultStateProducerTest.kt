@@ -49,7 +49,7 @@ class ShortCodeSearchResultStateProducerTest {
   @Before
   fun setup() {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(currentFacility))
+    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(currentFacility))
 
     uiStates = uiEventsSubject
         .compose(uiStateProducer)
@@ -73,7 +73,7 @@ class ShortCodeSearchResultStateProducerTest {
         PatientToFacilityId(patientSearchResultInOtherFacility.uuid, otherFacility.uuid)
     )
 
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(currentFacility))
+    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(currentFacility))
     whenever(patientRepository.searchByShortCode(shortCode)).thenReturn(Observable.just(patientSearchResults))
     whenever(bloodPressureDao.patientToFacilityIds(
         listOf(

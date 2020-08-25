@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -42,8 +41,6 @@ class FacilityPickerLogicTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val listItemBuilder = FacilityListItemBuilder(DistanceCalculator())
   private val screenLocationUpdates = mock<ScreenLocationUpdates>()
-
-  private val user = TestData.loggedInUser(uuid = UUID.fromString("5ce27605-4f45-4327-8a05-ddc87021c46e"))
 
   private lateinit var testFixture: MobiusTestFixture<FacilityPickerModel, FacilityPickerEvent, FacilityPickerEffect>
 
@@ -251,7 +248,6 @@ class FacilityPickerLogicTest {
         schedulers = TestSchedulersProvider.trampoline(),
         screenLocationUpdates = screenLocationUpdates,
         facilityRepository = facilityRepository,
-        currentUser = Lazy { user },
         uiActions = uiActions
     )
     val uiRenderer = FacilityPickerUiRenderer(listItemBuilder, config, ui)

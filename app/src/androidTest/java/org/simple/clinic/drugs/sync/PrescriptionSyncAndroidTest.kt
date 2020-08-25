@@ -18,7 +18,6 @@ import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
-import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Rules
@@ -56,11 +55,8 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
       batchSize = BatchSize.VERY_SMALL,
       syncGroup = SyncGroup.FREQUENT))
 
-  private val user: User
-    get() = userSession.loggedInUserImmediate()!!
-
   private val currentFacilityUuid: UUID
-    get() = facilityRepository.currentFacilityUuid(user)!!
+    get() = facilityRepository.currentFacilityUuid()!!
 
   private val registerPatientRule = RegisterPatientRule(UUID.randomUUID())
 

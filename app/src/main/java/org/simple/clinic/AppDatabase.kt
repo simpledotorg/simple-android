@@ -137,7 +137,7 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun teleconsultFacilityWithMedicalOfficersDao(): TeleconsultationFacilityWithMedicalOfficers.RoomDao
 
-  fun clearPatientData() {
+  fun clearAppData() {
     runInTransaction {
       patientDao().clear()
       phoneNumberDao().clear()

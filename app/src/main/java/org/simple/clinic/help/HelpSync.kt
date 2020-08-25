@@ -11,7 +11,7 @@ import javax.inject.Named
 class HelpSync @Inject constructor(
     private val syncApi: HelpApi,
     private val syncRepository: HelpRepository,
-    @Named("sync_config_daily") private val configProvider: Single<SyncConfig>
+    @Named("sync_config_daily") private val config: SyncConfig
 ) : ModelSync {
 
   override val name: String = "Help"
@@ -25,7 +25,7 @@ class HelpSync @Inject constructor(
           .help()
           .flatMapCompletable(syncRepository::updateHelp)
 
-  override fun syncConfig() = configProvider
+  override fun syncConfig() = Single.just(config)
 
   fun pullWithResult(): Single<HelpPullResult> {
     return pull()

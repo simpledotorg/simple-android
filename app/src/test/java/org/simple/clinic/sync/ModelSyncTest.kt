@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Rule
@@ -32,12 +31,11 @@ class ModelSyncTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  val syncConfigProvider = Single.fromCallable {
-    SyncConfig(
-        syncInterval = SyncInterval.FREQUENT,
-        batchSize = BatchSize.VERY_SMALL,
-        syncGroup = SyncGroup.FREQUENT)
-  }
+  val syncConfig = SyncConfig(
+      syncInterval = SyncInterval.FREQUENT,
+      batchSize = BatchSize.VERY_SMALL,
+      syncGroup = SyncGroup.FREQUENT
+  )
 
   @Suppress("Unused")
   private fun `sync models that both push and pull`(): List<List<Any>> {
@@ -50,7 +48,7 @@ class ModelSyncTest {
                   api = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider
+                  config = syncConfig
               )
             },
             setOf(PUSH, PULL)),
@@ -62,7 +60,7 @@ class ModelSyncTest {
                   repository = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             setOf(PUSH, PULL)),
         listOf<Any>(
@@ -73,7 +71,7 @@ class ModelSyncTest {
                   repository = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             setOf(PUSH, PULL)),
         listOf<Any>(
@@ -84,7 +82,7 @@ class ModelSyncTest {
                   api = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             setOf(PUSH, PULL)),
         listOf<Any>(
@@ -95,7 +93,7 @@ class ModelSyncTest {
                   api = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             setOf(PUSH, PULL)),
         listOf<Any>(
@@ -105,7 +103,7 @@ class ModelSyncTest {
                   repository = mock(),
                   api = mock(),
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             setOf(PULL)),
         listOf<Any>(
@@ -115,7 +113,7 @@ class ModelSyncTest {
                   repository = mock(),
                   api = mock(),
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             setOf(PULL)
         )
@@ -226,7 +224,7 @@ class ModelSyncTest {
                   api = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider
+                  config = syncConfig
               )
             },
             shouldPushHappen = false),
@@ -238,7 +236,7 @@ class ModelSyncTest {
                   repository = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             shouldPushHappen = false),
         testCase(
@@ -249,7 +247,7 @@ class ModelSyncTest {
                   repository = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             shouldPushHappen = false),
         testCase(
@@ -260,7 +258,7 @@ class ModelSyncTest {
                   api = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             shouldPushHappen = false),
         testCase(
@@ -271,7 +269,7 @@ class ModelSyncTest {
                   api = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             shouldPushHappen = false),
         testCase(
@@ -281,7 +279,7 @@ class ModelSyncTest {
                   repository = mock(),
                   api = mock(),
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             shouldPushHappen = false),
         testCase(
@@ -291,7 +289,7 @@ class ModelSyncTest {
                   repository = mock(),
                   api = mock(),
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             shouldPushHappen = false
         )
@@ -344,7 +342,7 @@ class ModelSyncTest {
                   api = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider
+                  config = syncConfig
               )
             },
             shouldPullHappen = false),
@@ -356,7 +354,7 @@ class ModelSyncTest {
                   repository = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             shouldPullHappen = false),
         testCase(
@@ -367,7 +365,7 @@ class ModelSyncTest {
                   repository = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             shouldPullHappen = false),
         testCase(
@@ -378,7 +376,7 @@ class ModelSyncTest {
                   api = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             shouldPullHappen = false),
         testCase(
@@ -389,7 +387,7 @@ class ModelSyncTest {
                   api = mock(),
                   userSession = userSession,
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             shouldPullHappen = false),
         testCase(
@@ -399,7 +397,7 @@ class ModelSyncTest {
                   repository = mock(),
                   api = mock(),
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             shouldPullHappen = true),
         testCase(
@@ -409,7 +407,7 @@ class ModelSyncTest {
                   repository = mock(),
                   api = mock(),
                   lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
+                  config = syncConfig)
             },
             shouldPullHappen = true
         )

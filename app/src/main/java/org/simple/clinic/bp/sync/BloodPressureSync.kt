@@ -19,7 +19,7 @@ class BloodPressureSync @Inject constructor(
     private val repository: BloodPressureRepository,
     private val userSession: UserSession,
     @Named("last_bp_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    @Named("sync_config_frequent") private val configProvider: Single<SyncConfig>
+    @Named("sync_config_frequent") private val config: SyncConfig
 ) : ModelSync {
 
   private fun canSyncData() = userSession.canSyncData().firstOrError()
@@ -40,14 +40,14 @@ class BloodPressureSync @Inject constructor(
   override fun push() = syncCoordinator.push(repository) { api.push(toRequest(it)) }
 
   override fun pull(): Completable {
-    return configProvider
+    return syncConfig()
         .map { it.batchSize }
         .flatMapCompletable { batchSize ->
           syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize.numberOfRecords, it) }
         }
   }
 
-  override fun syncConfig() = configProvider
+  override fun syncConfig() = Single.just(config)
 
   private fun toRequest(measurements: List<BloodPressureMeasurement>): BloodPressurePushRequest {
     val payloads = measurements.map { it.toPayload() }

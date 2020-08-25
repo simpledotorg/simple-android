@@ -2,7 +2,6 @@ package org.simple.clinic.sync
 
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Single
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.di.BloodSugarModule
 import org.simple.clinic.bloodsugar.sync.BloodSugarSync
@@ -49,26 +48,22 @@ class SyncModule {
 
   @Provides
   @Named("sync_config_frequent")
-  fun frequentSyncConfig(syncModuleConfig: SyncModuleConfig): Single<SyncConfig> {
-    return Single.fromCallable {
-      SyncConfig(
-          syncInterval = SyncInterval.FREQUENT,
-          batchSize = syncModuleConfig.frequentSyncBatchSize,
-          syncGroup = SyncGroup.FREQUENT
-      )
-    }
+  fun frequentSyncConfig(syncModuleConfig: SyncModuleConfig): SyncConfig {
+    return SyncConfig(
+        syncInterval = SyncInterval.FREQUENT,
+        batchSize = syncModuleConfig.frequentSyncBatchSize,
+        syncGroup = SyncGroup.FREQUENT
+    )
   }
 
   @Provides
   @Named("sync_config_daily")
-  fun dailySyncConfig(syncModuleConfig: SyncModuleConfig): Single<SyncConfig> {
-    return Single.fromCallable {
-      SyncConfig(
-          syncInterval = SyncInterval.DAILY,
-          batchSize = syncModuleConfig.dailySyncBatchSize,
-          syncGroup = SyncGroup.DAILY
-      )
-    }
+  fun dailySyncConfig(syncModuleConfig: SyncModuleConfig): SyncConfig {
+    return SyncConfig(
+        syncInterval = SyncInterval.DAILY,
+        batchSize = syncModuleConfig.dailySyncBatchSize,
+        syncGroup = SyncGroup.DAILY
+    )
   }
 
   @Provides

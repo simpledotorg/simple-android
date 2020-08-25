@@ -12,7 +12,7 @@ class ReportsSync @Inject constructor(
     private val reportsApi: ReportsApi,
     private val reportsRepository: ReportsRepository,
     private val userSession: UserSession,
-    @Named("sync_config_frequent") private val configProvider: Single<SyncConfig>
+    @Named("sync_config_frequent") private val config: SyncConfig
 ) : ModelSync {
 
   private fun canSyncData() = userSession.canSyncData().firstOrError()
@@ -37,5 +37,5 @@ class ReportsSync @Inject constructor(
           .userAnalytics()
           .flatMapCompletable(reportsRepository::updateReports)
 
-  override fun syncConfig() = configProvider
+  override fun syncConfig() = Single.just(config)
 }

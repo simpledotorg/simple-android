@@ -871,7 +871,7 @@ object TestData {
 
   fun bloodSugarMeasurement(
       uuid: UUID = UUID.randomUUID(),
-      reading: BloodSugarReading = BloodSugarReading(faker.number.between(30, 1000).toString(), Random),
+      reading: BloodSugarReading = BloodSugarReading(faker.number.decimal(2, 1), Random),
       patientUuid: UUID = UUID.randomUUID(),
       recordedAt: Instant = Instant.now(),
       userUuid: UUID = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),

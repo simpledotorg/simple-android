@@ -18,7 +18,7 @@ class MedicineFrequencyUpdateTest {
   fun `when save button is clicked, then save the medicine frequency`() {
     updateSpec
         .given(model)
-        .whenEvents(SaveMedicineFrequencyClicked(currentMedicineFrequency))
+        .whenEvents(SaveMedicineFrequencyClicked)
         .then(
             assertThatNext(
                 hasNoModel(),

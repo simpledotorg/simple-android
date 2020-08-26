@@ -20,7 +20,7 @@ class MedicineFrequencyInitTest {
         .then {
           assertThatFirst(
               hasModel(model),
-              hasEffects(LoadDefaultMedicineFrequency(medicineFrequency))
+              hasEffects(SetMedicineFrequency(medicineFrequency))
           )
         }
   }

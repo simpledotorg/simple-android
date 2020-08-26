@@ -108,11 +108,7 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
   private fun saveClicks(): Observable<MedicineFrequencyEvent> {
     return saveMedicineFrequencyButton
         .clicks()
-        .map {
-          val medicineFrequency = radioIdToMedicineFrequency
-              .getValue(medicineFrequencyRadioGroup.checkedRadioButtonId)
-          SaveMedicineFrequencyClicked(medicineFrequency)
-        }
+        .map { SaveMedicineFrequencyClicked }
   }
 
   override fun setMedicineFrequency(medicineFrequency: MedicineFrequency) {

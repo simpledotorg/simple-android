@@ -42,6 +42,7 @@ import org.simple.clinic.summary.addphone.MissingPhoneReminderRepositoryAndroidT
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepositoryAndroidTest
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityWithMedicalOfficersTest
 import org.simple.clinic.sync.BloodPressureSyncIntegrationTest
+import org.simple.clinic.sync.MedicalHistorySyncIntegrationTest
 import org.simple.clinic.sync.PatientSyncIntegrationTest
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.RegisterUserServerIntegrationTest
@@ -102,4 +103,5 @@ interface TestAppComponent {
   fun inject(target: TeleconsultationFacilityRepositoryAndroidTest)
   fun inject(target: PatientSyncIntegrationTest)
   fun inject(target: BloodPressureSyncIntegrationTest)
+  fun inject(target: MedicalHistorySyncIntegrationTest)
 }

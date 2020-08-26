@@ -24,7 +24,7 @@ class TestRetrofitModule {
       appInfoHttpInterceptor: AppInfoHttpInterceptor
   ): List<Interceptor> {
     val loggingInterceptor = HttpLoggingInterceptor().apply {
-      level = HttpLoggingInterceptor.Level.BASIC
+      level = HttpLoggingInterceptor.Level.BODY
     }
 
     return listOf(loggedInInterceptor, appInfoHttpInterceptor, loggingInterceptor)

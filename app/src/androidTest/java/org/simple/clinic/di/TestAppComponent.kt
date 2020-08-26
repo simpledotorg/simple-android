@@ -15,7 +15,6 @@ import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
 import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
 import org.simple.clinic.drugs.sync.PrescriptionSyncAndroidTest
 import org.simple.clinic.facility.FacilityRepositoryAndroidTest
-import org.simple.clinic.sync.HelpSyncIntegrationTest
 import org.simple.clinic.home.overdue.OverdueAppointmentRowDataSourceTest
 import org.simple.clinic.login.LoginUserWithOtpServerIntegrationTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
@@ -27,7 +26,6 @@ import org.simple.clinic.patient.PatientSyncAndroidTest
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapterAndroidTest
 import org.simple.clinic.protocolv2.ProtocolRepositoryAndroidTest
 import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
-import org.simple.clinic.sync.ReportsSyncIntegrationTest
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
@@ -44,9 +42,12 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityW
 import org.simple.clinic.sync.AppointmentSyncIntegrationTest
 import org.simple.clinic.sync.BloodPressureSyncIntegrationTest
 import org.simple.clinic.sync.BloodSugarSyncIntegrationTest
+import org.simple.clinic.sync.HelpSyncIntegrationTest
 import org.simple.clinic.sync.MedicalHistorySyncIntegrationTest
 import org.simple.clinic.sync.PatientSyncIntegrationTest
 import org.simple.clinic.sync.PrescriptionSyncIntegrationTest
+import org.simple.clinic.sync.ProtocolSyncIntegrationTest
+import org.simple.clinic.sync.ReportsSyncIntegrationTest
 import org.simple.clinic.sync.TeleconsultationSyncIntegrationTest
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.RegisterUserServerIntegrationTest
@@ -112,4 +113,5 @@ interface TestAppComponent {
   fun inject(target: PrescriptionSyncIntegrationTest)
   fun inject(target: BloodSugarSyncIntegrationTest)
   fun inject(target: TeleconsultationSyncIntegrationTest)
+  fun inject(target: ProtocolSyncIntegrationTest)
 }

@@ -60,5 +60,8 @@ data class Protocol(
 
     @Query("SELECT * FROM Protocol WHERE uuid = :uuid")
     fun protocolStream(uuid: UUID): Observable<Protocol>
+
+    @Query("DELETE FROM Protocol")
+    fun clear()
   }
 }

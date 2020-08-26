@@ -10,7 +10,7 @@
 - Change `HomeScreen` to save and restore the state correctly
 - Improved the user experience of loading the patient summary screen
 - Optimized fetching of current facility by removing the unnecessary `User` parameter
-- Add teleconsultation facility sync
+- Add teleconsultation facility sync (Disabled for now until API endpoint is live: ETA 04-09-2020)
 - Added `MedicineFrequencyBottomSheet` to update medicine frequency
 
 ## On Demo

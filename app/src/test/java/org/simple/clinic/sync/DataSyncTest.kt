@@ -3,10 +3,9 @@ package org.simple.clinic.sync
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
-import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
 import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 
@@ -23,17 +22,14 @@ class DataSyncTest {
     val modelSync2 = mock<ModelSync>()
     val modelSync3 = mock<ModelSync>()
 
-    val (sync1Completable, sync1Consumer) = Completable.complete().subscriptionTest()
     whenever(modelSync1.syncConfig()).thenReturn(createSyncConfig(SyncGroup.DAILY))
-    whenever(modelSync1.sync()).thenReturn(sync1Completable)
+    whenever(modelSync1.sync()).thenReturn(Completable.complete())
 
-    val (sync2Completable, sync2Consumer) = Completable.complete().subscriptionTest()
     whenever(modelSync2.syncConfig()).thenReturn(createSyncConfig(SyncGroup.DAILY))
-    whenever(modelSync2.sync()).thenReturn(sync2Completable)
+    whenever(modelSync2.sync()).thenReturn(Completable.complete())
 
-    val (sync3Completable, sync3Consumer) = Completable.complete().subscriptionTest()
     whenever(modelSync3.syncConfig()).thenReturn(createSyncConfig(SyncGroup.FREQUENT))
-    whenever(modelSync3.sync()).thenReturn(sync3Completable)
+    whenever(modelSync3.sync()).thenReturn(Completable.complete())
 
     val dataSync = DataSync(
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
@@ -41,31 +37,38 @@ class DataSyncTest {
         schedulersProvider = schedulersProvider
     )
 
-    dataSync.syncTheWorld().blockingAwait()
+    val syncErrors = dataSync
+        .streamSyncErrors()
+        .test()
 
-    sync1Consumer.assertInvoked()
-    sync2Consumer.assertInvoked()
-    sync3Consumer.assertInvoked()
+    dataSync
+        .syncTheWorld()
+        .test()
+        .assertNoErrors()
+        .assertComplete()
+        .dispose()
+
+    syncErrors
+        .assertNoErrors()
+        .dispose()
   }
 
   @Test
   fun `when syncing everything, if any of the syncs throws an error, the other syncs must not be affected`() {
     val modelSync1 = mock<ModelSync>()
-    val (sync1Completable, sync1Consumer) = Completable.complete().subscriptionTest()
     whenever(modelSync1.syncConfig()).thenReturn(createSyncConfig(SyncGroup.DAILY))
-    whenever(modelSync1.sync()).thenReturn(sync1Completable)
+    whenever(modelSync1.sync()).thenReturn(Completable.complete())
     whenever(modelSync1.name).thenReturn("sync1")
 
     val modelSync2 = mock<ModelSync>()
-    val sync2Completable = Completable.error(RuntimeException("TEST"))
     whenever(modelSync2.syncConfig()).thenReturn(createSyncConfig(SyncGroup.DAILY))
-    whenever(modelSync2.sync()).thenReturn(sync2Completable)
+    val runtimeException = RuntimeException("TEST")
+    whenever(modelSync2.sync()).thenReturn(Completable.error(runtimeException))
     whenever(modelSync2.name).thenReturn("sync2")
 
     val modelSync3 = mock<ModelSync>()
-    val (sync3Completable, sync3Consumer) = Completable.complete().subscriptionTest()
     whenever(modelSync3.syncConfig()).thenReturn(createSyncConfig(SyncGroup.FREQUENT))
-    whenever(modelSync3.sync()).thenReturn(sync3Completable)
+    whenever(modelSync3.sync()).thenReturn(Completable.complete())
     whenever(modelSync3.name).thenReturn("sync3")
 
     val dataSync = DataSync(
@@ -74,19 +77,28 @@ class DataSyncTest {
         schedulersProvider = schedulersProvider
     )
 
-    dataSync.syncTheWorld().blockingAwait()
+    val syncErrors = dataSync
+        .streamSyncErrors()
+        .test()
+        .assertNoErrors()
 
-    sync1Consumer.assertInvoked()
-    sync1Completable.test().assertNoErrors()
-    sync3Consumer.assertInvoked()
+    dataSync
+        .syncTheWorld()
+        .test()
+        .assertNoErrors()
+        .assertComplete()
+        .dispose()
+
+    syncErrors
+        .assertValue(ResolvedError.Unexpected(runtimeException))
+        .dispose()
   }
 
-  fun createSyncConfig(syncGroup: SyncGroup) = SyncConfig(
+  private fun createSyncConfig(syncGroup: SyncGroup) = SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
       batchSize = 10,
       syncGroup = syncGroup
   )
-
 
   @Test
   fun `when syncing a particular group, only the syncs which are a part of that group must be synced`() {
@@ -102,17 +114,10 @@ class DataSyncTest {
       return modelSync
     }
 
-    val (sync1Completable, sync1Consumer) = Completable.complete().subscriptionTest()
-    val modelSync1 = createModelSync(syncGroup = SyncGroup.FREQUENT, syncOperation = sync1Completable)
-
-    val (sync2Completable, sync2Consumer) = Completable.complete().subscriptionTest()
-    val modelSync2 = createModelSync(syncGroup = SyncGroup.DAILY, syncOperation = sync2Completable)
-
-    val (sync3Completable, sync3Consumer) = Completable.complete().subscriptionTest()
-    val modelSync3 = createModelSync(syncGroup = SyncGroup.DAILY, syncOperation = sync3Completable)
-
-    val (sync4Completable, sync4Consumer) = Completable.complete().subscriptionTest()
-    val modelSync4 = createModelSync(syncGroup = SyncGroup.FREQUENT, syncOperation = sync4Completable)
+    val modelSync1 = createModelSync(syncGroup = SyncGroup.FREQUENT, syncOperation = Completable.complete())
+    val modelSync2 = createModelSync(syncGroup = SyncGroup.DAILY, syncOperation = Completable.error(RuntimeException()))
+    val modelSync3 = createModelSync(syncGroup = SyncGroup.DAILY, syncOperation = Completable.error(RuntimeException()))
+    val modelSync4 = createModelSync(syncGroup = SyncGroup.FREQUENT, syncOperation = Completable.complete())
 
     val dataSync = DataSync(
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3, modelSync4),
@@ -120,11 +125,20 @@ class DataSyncTest {
         schedulersProvider = schedulersProvider
     )
 
-    dataSync.sync(SyncGroup.FREQUENT).blockingAwait()
-    sync1Consumer.assertInvoked()
-    sync2Consumer.assertNotInvoked()
-    sync3Consumer.assertNotInvoked()
-    sync4Consumer.assertInvoked()
+    val syncErrors = dataSync
+        .streamSyncErrors()
+        .test()
+
+    dataSync
+        .sync(SyncGroup.FREQUENT)
+        .test()
+        .assertNoErrors()
+        .assertComplete()
+        .dispose()
+
+    syncErrors
+        .assertNoErrors()
+        .dispose()
   }
 
   @Test
@@ -141,16 +155,18 @@ class DataSyncTest {
       return modelSync
     }
 
-    val (sync1Completable, sync1Consumer) = Completable.complete().subscriptionTest()
-    val modelSync1 = createModelSync(syncGroup = SyncGroup.FREQUENT, syncOperation = sync1Completable)
+    val modelSync1 = createModelSync(syncGroup = SyncGroup.FREQUENT, syncOperation = Completable.complete())
+    whenever(modelSync1.name).thenReturn("sync1")
 
-    val sync2Completable = Completable.error(RuntimeException("TEST"))
-    val modelSync2 = createModelSync(syncGroup = SyncGroup.DAILY, syncOperation = sync2Completable)
+    val runtimeException = RuntimeException("TEST")
+    val modelSync2 = createModelSync(syncGroup = SyncGroup.FREQUENT, syncOperation = Completable.error(runtimeException))
+    whenever(modelSync2.name).thenReturn("sync2")
 
     val modelSync3 = createModelSync(syncGroup = SyncGroup.DAILY, syncOperation = Completable.complete())
+    whenever(modelSync3.name).thenReturn("sync3")
 
-    val (sync4Completable, sync4Consumer) = Completable.complete().subscriptionTest()
-    val modelSync4 = createModelSync(syncGroup = SyncGroup.FREQUENT, syncOperation = sync4Completable)
+    val modelSync4 = createModelSync(syncGroup = SyncGroup.FREQUENT, syncOperation = Completable.complete())
+    whenever(modelSync4.name).thenReturn("sync4")
 
     val dataSync = DataSync(
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3, modelSync4),
@@ -158,34 +174,20 @@ class DataSyncTest {
         schedulersProvider = schedulersProvider
     )
 
-    dataSync.sync(SyncGroup.FREQUENT).blockingAwait()
-    sync1Consumer.assertInvoked()
-    sync4Consumer.assertInvoked()
-  }
+    val syncErrors = dataSync
+        .streamSyncErrors()
+        .test()
+        .assertNoErrors()
 
-  inner class TestDisposableConsumer : Consumer<Disposable> {
+    dataSync
+        .sync(SyncGroup.FREQUENT)
+        .test()
+        .assertNoErrors()
+        .assertComplete()
+        .dispose()
 
-    private var invoked: Boolean = false
-
-    override fun accept(t: Disposable?) {
-      invoked = true
-    }
-
-    fun assertInvoked() {
-      if (!invoked) {
-        throw AssertionError("NOT INVOKED!")
-      }
-    }
-
-    fun assertNotInvoked() {
-      if (invoked) {
-        throw AssertionError("INVOKED!")
-      }
-    }
-  }
-
-  private fun Completable.subscriptionTest(): Pair<Completable, DataSyncTest.TestDisposableConsumer> {
-    val consumer = TestDisposableConsumer()
-    return this.doOnSubscribe(consumer) to consumer
+    syncErrors
+        .assertValue(ResolvedError.Unexpected(runtimeException))
+        .dispose()
   }
 }

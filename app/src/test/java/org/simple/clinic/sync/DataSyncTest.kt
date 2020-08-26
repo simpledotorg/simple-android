@@ -1,7 +1,6 @@
 package org.simple.clinic.sync
 
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import org.junit.Rule
 import org.junit.Test
@@ -18,18 +17,20 @@ class DataSyncTest {
 
   @Test
   fun `when syncing everything, all the model syncs should be invoked`() {
-    val modelSync1 = mock<ModelSync>()
-    val modelSync2 = mock<ModelSync>()
-    val modelSync3 = mock<ModelSync>()
+    val modelSync1 = FakeModelSync(
+        _name = "sync1",
+        config = createSyncConfig(SyncGroup.DAILY)
+    )
 
-    whenever(modelSync1.syncConfig()).thenReturn(createSyncConfig(SyncGroup.DAILY))
-    whenever(modelSync1.sync()).thenReturn(Completable.complete())
+    val modelSync2 = FakeModelSync(
+        _name = "sync2",
+        config = createSyncConfig(SyncGroup.DAILY)
+    )
 
-    whenever(modelSync2.syncConfig()).thenReturn(createSyncConfig(SyncGroup.DAILY))
-    whenever(modelSync2.sync()).thenReturn(Completable.complete())
-
-    whenever(modelSync3.syncConfig()).thenReturn(createSyncConfig(SyncGroup.FREQUENT))
-    whenever(modelSync3.sync()).thenReturn(Completable.complete())
+    val modelSync3 = FakeModelSync(
+        _name = "sync3",
+        config = createSyncConfig(SyncGroup.FREQUENT)
+    )
 
     val dataSync = DataSync(
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
@@ -55,21 +56,22 @@ class DataSyncTest {
 
   @Test
   fun `when syncing everything, if any of the syncs throws an error, the other syncs must not be affected`() {
-    val modelSync1 = mock<ModelSync>()
-    whenever(modelSync1.syncConfig()).thenReturn(createSyncConfig(SyncGroup.DAILY))
-    whenever(modelSync1.sync()).thenReturn(Completable.complete())
-    whenever(modelSync1.name).thenReturn("sync1")
+    val modelSync1 = FakeModelSync(
+        _name = "sync1",
+        config = createSyncConfig(SyncGroup.DAILY)
+    )
 
-    val modelSync2 = mock<ModelSync>()
-    whenever(modelSync2.syncConfig()).thenReturn(createSyncConfig(SyncGroup.DAILY))
     val runtimeException = RuntimeException("TEST")
-    whenever(modelSync2.sync()).thenReturn(Completable.error(runtimeException))
-    whenever(modelSync2.name).thenReturn("sync2")
+    val modelSync2 = FakeModelSync(
+        _name = "sync2",
+        config = createSyncConfig(SyncGroup.DAILY),
+        pullError = runtimeException
+    )
 
-    val modelSync3 = mock<ModelSync>()
-    whenever(modelSync3.syncConfig()).thenReturn(createSyncConfig(SyncGroup.FREQUENT))
-    whenever(modelSync3.sync()).thenReturn(Completable.complete())
-    whenever(modelSync3.name).thenReturn("sync3")
+    val modelSync3 = FakeModelSync(
+        _name = "sync3",
+        config = createSyncConfig(SyncGroup.FREQUENT)
+    )
 
     val dataSync = DataSync(
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
@@ -102,22 +104,24 @@ class DataSyncTest {
 
   @Test
   fun `when syncing a particular group, only the syncs which are a part of that group must be synced`() {
-    fun createModelSync(syncGroup: SyncGroup, syncOperation: Completable): ModelSync {
-      val modelSync = mock<ModelSync>()
-      val syncConfig = SyncConfig(
-          syncInterval = SyncInterval.FREQUENT,
-          batchSize = 10,
-          syncGroup = syncGroup)
-      whenever(modelSync.sync()).thenReturn(syncOperation)
-      whenever(modelSync.syncConfig()).thenReturn(syncConfig)
-
-      return modelSync
-    }
-
-    val modelSync1 = createModelSync(syncGroup = SyncGroup.FREQUENT, syncOperation = Completable.complete())
-    val modelSync2 = createModelSync(syncGroup = SyncGroup.DAILY, syncOperation = Completable.error(RuntimeException()))
-    val modelSync3 = createModelSync(syncGroup = SyncGroup.DAILY, syncOperation = Completable.error(RuntimeException()))
-    val modelSync4 = createModelSync(syncGroup = SyncGroup.FREQUENT, syncOperation = Completable.complete())
+    val modelSync1 = FakeModelSync(
+        _name = "sync1",
+        config = createSyncConfig(SyncGroup.FREQUENT)
+    )
+    val modelSync2 = FakeModelSync(
+        _name = "sync2",
+        config = createSyncConfig(SyncGroup.DAILY),
+        pushError = RuntimeException()
+    )
+    val modelSync3 = FakeModelSync(
+        _name = "sync3",
+        config = createSyncConfig(SyncGroup.DAILY),
+        pullError = RuntimeException()
+    )
+    val modelSync4 = FakeModelSync(
+        _name = "sync4",
+        config = createSyncConfig(SyncGroup.FREQUENT)
+    )
 
     val dataSync = DataSync(
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3, modelSync4),
@@ -143,30 +147,27 @@ class DataSyncTest {
 
   @Test
   fun `when syncing a particular group, errors in syncing any should not affect another syncs`() {
-    fun createModelSync(syncGroup: SyncGroup, syncOperation: Completable): ModelSync {
-      val modelSync = mock<ModelSync>()
-      val syncConfig = SyncConfig(
-          syncInterval = SyncInterval.FREQUENT,
-          batchSize = 10,
-          syncGroup = syncGroup)
-      whenever(modelSync.sync()).thenReturn(syncOperation)
-      whenever(modelSync.syncConfig()).thenReturn(syncConfig)
-
-      return modelSync
-    }
-
-    val modelSync1 = createModelSync(syncGroup = SyncGroup.FREQUENT, syncOperation = Completable.complete())
-    whenever(modelSync1.name).thenReturn("sync1")
+    val modelSync1 = FakeModelSync(
+        _name = "sync1",
+        config = createSyncConfig(SyncGroup.FREQUENT)
+    )
 
     val runtimeException = RuntimeException("TEST")
-    val modelSync2 = createModelSync(syncGroup = SyncGroup.FREQUENT, syncOperation = Completable.error(runtimeException))
-    whenever(modelSync2.name).thenReturn("sync2")
+    val modelSync2 = FakeModelSync(
+        _name = "sync2",
+        config = createSyncConfig(SyncGroup.DAILY),
+        pushError = runtimeException
+    )
 
-    val modelSync3 = createModelSync(syncGroup = SyncGroup.DAILY, syncOperation = Completable.complete())
-    whenever(modelSync3.name).thenReturn("sync3")
+    val modelSync3 = FakeModelSync(
+        _name = "sync3",
+        config = createSyncConfig(SyncGroup.DAILY),
+    )
 
-    val modelSync4 = createModelSync(syncGroup = SyncGroup.FREQUENT, syncOperation = Completable.complete())
-    whenever(modelSync4.name).thenReturn("sync4")
+    val modelSync4 = FakeModelSync(
+        _name = "sync4",
+        config = createSyncConfig(SyncGroup.FREQUENT)
+    )
 
     val dataSync = DataSync(
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3, modelSync4),
@@ -180,7 +181,7 @@ class DataSyncTest {
         .assertNoErrors()
 
     dataSync
-        .sync(SyncGroup.FREQUENT)
+        .sync(SyncGroup.DAILY)
         .test()
         .assertNoErrors()
         .assertComplete()
@@ -189,5 +190,25 @@ class DataSyncTest {
     syncErrors
         .assertValue(ResolvedError.Unexpected(runtimeException))
         .dispose()
+  }
+
+  private class FakeModelSync(
+      _name: String,
+      private val config: SyncConfig,
+      private val pushError: Throwable? = null,
+      private val pullError: Throwable? = null,
+  ) : ModelSync {
+
+    override val name: String = _name
+
+    override fun sync(): Completable {
+      return Completable.mergeArrayDelayError(push(), pull())
+    }
+
+    override fun push(): Completable = if (pushError == null) Completable.complete() else Completable.error(pushError)
+
+    override fun pull(): Completable = if (pullError == null) Completable.complete() else Completable.error(pullError)
+
+    override fun syncConfig(): SyncConfig = config
   }
 }

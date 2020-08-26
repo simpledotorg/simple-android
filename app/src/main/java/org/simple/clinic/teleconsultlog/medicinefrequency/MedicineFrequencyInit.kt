@@ -6,7 +6,7 @@ import com.spotify.mobius.Init
 class MedicineFrequencyInit : Init<MedicineFrequencyModel, MedicineFrequencyEffect> {
   override fun init(model: MedicineFrequencyModel): First<MedicineFrequencyModel, MedicineFrequencyEffect> {
     val effects = mutableSetOf<MedicineFrequencyEffect>()
-    effects.add(LoadDefaultMedicineFrequency(model.medicineFrequency))
+    effects.add(SetMedicineFrequency(model.medicineFrequency))
 
     return First.first(model, effects)
   }

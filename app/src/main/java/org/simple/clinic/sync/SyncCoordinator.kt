@@ -2,11 +2,10 @@ package org.simple.clinic.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.toNullable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -50,16 +49,20 @@ class SyncCoordinator @Inject constructor() {
       batchSize: Int,
       pullNetworkCall: (String?) -> Single<out DataPullResponse<P>>
   ): Completable {
-    return lastPullToken.asObservable()
-        .take(1)
-        .flatMapSingle { (lastPull) -> pullNetworkCall(lastPull) }
-        .flatMap { response ->
-          repository.mergeWithLocalData(response.payloads)
-              .andThen(Completable.fromAction { lastPullToken.set(Just(response.processToken)) })
-              .andThen(Observable.just(response))
-        }
-        .repeat()
-        .takeWhile { response -> response.payloads.size >= batchSize }
-        .ignoreElements()
+    return Completable.fromAction {
+
+      var hasFetchedAllData = false
+
+      while (!hasFetchedAllData) {
+        val processToken = lastPullToken.get().toNullable()
+
+        val response = pullNetworkCall(processToken).blockingGet()
+
+        repository.mergeWithLocalData(response.payloads).blockingAwait()
+        lastPullToken.set(Optional.of(response.processToken))
+
+        hasFetchedAllData = response.payloads.size < batchSize
+      }
+    }
   }
 }

@@ -12,6 +12,7 @@
 - Optimized fetching of current facility by removing the unnecessary `User` parameter
 - Add teleconsultation facility sync (Disabled for now until API endpoint is live: ETA 04-09-2020)
 - Added `MedicineFrequencyBottomSheet` to update medicine frequency
+- Clean up sync tests
 
 ## On Demo
 ### Changes

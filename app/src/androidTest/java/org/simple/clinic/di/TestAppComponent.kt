@@ -27,7 +27,7 @@ import org.simple.clinic.patient.PatientSyncAndroidTest
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapterAndroidTest
 import org.simple.clinic.protocolv2.ProtocolRepositoryAndroidTest
 import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
-import org.simple.clinic.reports.ReportsSyncAndroidTest
+import org.simple.clinic.sync.ReportsSyncIntegrationTest
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
@@ -86,7 +86,7 @@ interface TestAppComponent {
   fun inject(target: ProtocolRepositoryAndroidTest)
   fun inject(target: RegisterPatientRule)
   fun inject(target: DatabaseMigrationAndroidTest)
-  fun inject(target: ReportsSyncAndroidTest)
+  fun inject(target: ReportsSyncIntegrationTest)
   fun inject(target: MissingPhoneReminderRepositoryAndroidTest)
   fun inject(target: BusinessIdMetaDataAdapterAndroidTest)
   fun inject(target: HelpSyncAndroidTest)

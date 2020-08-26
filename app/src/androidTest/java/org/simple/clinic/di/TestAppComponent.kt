@@ -15,7 +15,7 @@ import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
 import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
 import org.simple.clinic.drugs.sync.PrescriptionSyncAndroidTest
 import org.simple.clinic.facility.FacilityRepositoryAndroidTest
-import org.simple.clinic.help.HelpSyncAndroidTest
+import org.simple.clinic.sync.HelpSyncIntegrationTest
 import org.simple.clinic.home.overdue.OverdueAppointmentRowDataSourceTest
 import org.simple.clinic.login.LoginUserWithOtpServerIntegrationTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
@@ -89,7 +89,7 @@ interface TestAppComponent {
   fun inject(target: ReportsSyncIntegrationTest)
   fun inject(target: MissingPhoneReminderRepositoryAndroidTest)
   fun inject(target: BusinessIdMetaDataAdapterAndroidTest)
-  fun inject(target: HelpSyncAndroidTest)
+  fun inject(target: HelpSyncIntegrationTest)
   fun inject(target: ServerAuthenticationRule)
   fun inject(target: RegisterUserServerIntegrationTest)
   fun inject(target: SelectedCountryPersistenceAndroidTest)

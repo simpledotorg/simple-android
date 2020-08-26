@@ -1,4 +1,4 @@
-package org.simple.clinic.help
+package org.simple.clinic.sync
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
@@ -7,14 +7,16 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.help.HelpRepository
 import org.simple.clinic.help.HelpRepository.Companion.HELP_KEY
+import org.simple.clinic.help.HelpSync
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.storage.text.TextStore
 import org.simple.clinic.util.Rules
 import javax.inject.Inject
 
 
-class HelpSyncAndroidTest {
+class HelpSyncIntegrationTest {
 
   @Inject
   lateinit var helpRepository: HelpRepository

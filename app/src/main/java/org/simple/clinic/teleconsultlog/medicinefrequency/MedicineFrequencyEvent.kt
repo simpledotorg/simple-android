@@ -9,5 +9,5 @@ data class MedicineFrequencyChanged(val medicineFrequency: MedicineFrequency) : 
 }
 
 data class SaveMedicineFrequencyClicked(val medicineFrequency: MedicineFrequency) : MedicineFrequencyEvent() {
-  override val analyticsName: String = "Save Medicine Frequency:Save Medicine Frequency Clicked"
+  override val analyticsName: String = "Save Medicine Frequency:Save Clicked"
 }

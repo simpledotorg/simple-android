@@ -32,7 +32,6 @@ import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.remoteconfig.RemoteConfigSync
 import org.simple.clinic.reports.ReportsModule
 import org.simple.clinic.reports.ReportsSync
-import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationSync
 import java.util.Locale
 import javax.inject.Named
 
@@ -84,14 +83,13 @@ class SyncModule {
       reportsSync: ReportsSync,
       remoteConfigSync: RemoteConfigSync,
       helpSync: HelpSync,
-      bloodSugarSync: BloodSugarSync,
-      teleconsultationSync: TeleconsultationSync
+      bloodSugarSync: BloodSugarSync
   ): ArrayList<ModelSync> {
     return arrayListOf(
         facilitySync, protocolSync, patientSync,
         bloodPressureSync, medicalHistorySync, appointmentSync,
         prescriptionSync, reportsSync, remoteConfigSync, helpSync,
-        bloodSugarSync, teleconsultationSync
+        bloodSugarSync
     )
   }
 

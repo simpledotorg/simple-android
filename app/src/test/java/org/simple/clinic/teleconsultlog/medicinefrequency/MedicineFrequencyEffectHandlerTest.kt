@@ -26,7 +26,7 @@ class MedicineFrequencyEffectHandlerTest {
   @Test
   fun `when load default medicine information effect is received, then load medicine frequency`() {
     // when
-    testCase.dispatch(LoadDefaultMedicineFrequency(medicineFrequency = medicineFrequency))
+    testCase.dispatch(SetMedicineFrequency(medicineFrequency = medicineFrequency))
 
     // then
     testCase.assertNoOutgoingEvents()

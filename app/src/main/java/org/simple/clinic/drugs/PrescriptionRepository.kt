@@ -8,7 +8,6 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UtcClock
@@ -102,13 +101,11 @@ class PrescriptionRepository @Inject constructor(
   }
 
   override fun mergeWithLocalData(payloads: List<PrescribedDrugPayload>) {
+    val dirtyRecords = dao.recordIdsWithSyncStatus(SyncStatus.PENDING)
+
     val payloadsToSave = payloads
-        .filter { payload ->
-          val localCopy = dao.getOne(payload.uuid)
-          localCopy?.syncStatus.canBeOverriddenByServerCopy()
-        }
+        .filterNot { it.uuid in dirtyRecords }
         .map { it.toDatabaseModel(SyncStatus.DONE) }
-        .toList()
 
     dao.save(payloadsToSave)
   }
@@ -137,5 +134,4 @@ class PrescriptionRepository @Inject constructor(
         .count(SyncStatus.PENDING)
         .toObservable()
   }
-
 }

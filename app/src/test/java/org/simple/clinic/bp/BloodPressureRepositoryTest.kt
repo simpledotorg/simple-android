@@ -1,16 +1,10 @@
 package org.simple.clinic.bp
 
-import com.nhaarman.mockitokotlin2.argThat
-import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.RxErrorsRule
@@ -18,7 +12,6 @@ import org.simple.clinic.util.TestUtcClock
 import java.time.Instant
 import java.util.UUID
 
-@RunWith(JUnitParamsRunner::class)
 class BloodPressureRepositoryTest {
 
   @get:Rule
@@ -65,29 +58,5 @@ class BloodPressureRepositoryTest {
             deletedAt = null
         )
     ))
-  }
-
-  @Test
-  @Parameters(value = [
-    "PENDING, false",
-    "INVALID, true",
-    "DONE, true"])
-  fun `when merging measurements with server records, ignore records that already exist locally and are syncing or pending-sync`(
-      syncStatusOfLocalCopy: SyncStatus,
-      serverRecordExpectedToBeSaved: Boolean
-  ) {
-    val bpUuid = UUID.randomUUID()
-
-    val localCopy = TestData.bloodPressureMeasurement(bpUuid, syncStatus = syncStatusOfLocalCopy)
-    whenever(dao.getOne(bpUuid)).doReturn(localCopy)
-
-    val serverBp = TestData.bloodPressureMeasurement(bpUuid, syncStatus = SyncStatus.DONE).toPayload()
-    repository.mergeWithLocalData(listOf(serverBp))
-
-    if (serverRecordExpectedToBeSaved) {
-      verify(dao).save(argThat { isNotEmpty() })
-    } else {
-      verify(dao).save(argThat { isEmpty() })
-    }
   }
 }

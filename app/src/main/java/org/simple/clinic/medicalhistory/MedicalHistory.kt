@@ -77,6 +77,9 @@ data class MedicalHistory(
     @Query("SELECT * FROM MedicalHistory WHERE uuid = :id LIMIT 1")
     fun getOne(id: UUID): MedicalHistory?
 
+    @Query("SELECT uuid FROM MedicalHistory WHERE syncStatus = :syncStatus")
+    fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(history: MedicalHistory)
 

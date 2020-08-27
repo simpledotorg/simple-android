@@ -58,6 +58,9 @@ data class Protocol(
     @Query("SELECT * FROM Protocol WHERE uuid = :uuid")
     fun getOne(uuid: UUID): Protocol?
 
+    @Query("SELECT uuid FROM Protocol WHERE syncStatus = :syncStatus")
+    fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
+
     @Query("SELECT * FROM Protocol WHERE uuid = :uuid")
     fun protocolStream(uuid: UUID): Observable<Protocol>
 

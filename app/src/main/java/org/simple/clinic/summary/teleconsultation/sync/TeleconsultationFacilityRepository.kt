@@ -5,7 +5,6 @@ import io.reactivex.Observable
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.SyncStatus.PENDING
-import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import java.util.UUID
 import javax.inject.Inject
@@ -69,12 +68,11 @@ class TeleconsultationFacilityRepository @Inject constructor(
   }
 
   override fun mergeWithLocalData(payloads: List<TeleconsultationFacilityInfoPayload>) {
+    val dirtyRecords = appDatabase.teleconsultFacilityInfoDao().recordIdsWithSyncStatus(PENDING)
+
     val payloadsToSave = payloads
-        .filter { payload ->
-          appDatabase.teleconsultFacilityInfoDao().getOne(payload.id)?.syncStatus.canBeOverriddenByServerCopy()
-        }
+        .filterNot { it.id in dirtyRecords }
         .map { it.toTeleconsultInfoWithMedicalOfficersDatabaseModel() }
-        .toList()
 
     saveRecords(payloadsToSave)
   }

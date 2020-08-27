@@ -145,6 +145,9 @@ data class Appointment(
     @Query("SELECT * FROM Appointment WHERE uuid = :id")
     fun getOne(id: UUID): Appointment?
 
+    @Query("SELECT uuid FROM Appointment WHERE syncStatus = :syncStatus")
+    fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(appointments: List<Appointment>)
 

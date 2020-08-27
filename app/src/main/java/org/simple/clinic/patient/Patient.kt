@@ -93,6 +93,9 @@ data class Patient(
     @Query("SELECT * FROM patient WHERE uuid = :uuid")
     abstract fun getOne(uuid: UUID): Patient?
 
+    @Query("SELECT uuid FROM Patient WHERE syncStatus = :syncStatus")
+    abstract fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
+
     // Only if Room supported custom adapters, we wouldn't need both getOne() and patient().
     @Query("SELECT * FROM patient WHERE uuid = :uuid")
     abstract fun patient(uuid: UUID): Flowable<List<Patient>>

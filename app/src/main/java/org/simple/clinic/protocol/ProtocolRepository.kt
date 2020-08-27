@@ -5,7 +5,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.protocol.sync.ProtocolPayload
 import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.sync.SynceableRepository
@@ -55,14 +54,13 @@ class ProtocolRepository @Inject constructor(
   }
 
   override fun mergeWithLocalData(payloads: List<ProtocolPayload>) {
-    val protocolDrugsWithDosage = payloads
-        .filter { payload ->
-          val protocolFromDb = appDatabase.protocolDao().getOne(payload.uuid)
-          protocolFromDb?.syncStatus.canBeOverriddenByServerCopy()
-        }
+    val dirtyRecords = appDatabase.protocolDao().recordIdsWithSyncStatus(SyncStatus.PENDING)
+
+    val payloadsToSave = payloads
+        .filterNot { it.uuid in dirtyRecords }
         .map(::payloadToProtocolAndDrugs)
 
-    return saveRecords(protocolDrugsWithDosage)
+    saveRecords(payloadsToSave)
   }
 
   override fun recordCount(): Observable<Int> {

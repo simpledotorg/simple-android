@@ -10,7 +10,6 @@ import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UserClock
@@ -192,15 +191,13 @@ class AppointmentRepository @Inject constructor(
   }
 
   override fun mergeWithLocalData(payloads: List<AppointmentPayload>) {
-    val newOrUpdatedAppointments = payloads
-        .filter { payload ->
-          val localCopy = appointmentDao.getOne(payload.uuid)
-          localCopy?.syncStatus.canBeOverriddenByServerCopy()
-        }
-        .map { toDatabaseModel(it, SyncStatus.DONE) }
-        .toList()
+    val dirtyRecords = appointmentDao.recordIdsWithSyncStatus(SyncStatus.PENDING)
 
-    appointmentDao.save(newOrUpdatedAppointments)
+    val payloadsToSave = payloads
+        .filterNot { it.uuid in dirtyRecords }
+        .map { toDatabaseModel(it, SyncStatus.DONE) }
+
+    appointmentDao.save(payloadsToSave)
   }
 
   private fun toDatabaseModel(payload: AppointmentPayload, syncStatus: SyncStatus): Appointment {

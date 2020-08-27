@@ -8,9 +8,7 @@ import org.simple.clinic.bloodsugar.sync.BloodSugarMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
-import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
@@ -93,13 +91,11 @@ class BloodSugarRepository @Inject constructor(
   }
 
   override fun mergeWithLocalData(payloads: List<BloodSugarMeasurementPayload>) {
+    val dirtyRecords = dao.recordIdsWithSyncStatus(PENDING)
+
     val payloadsToSave = payloads
-        .filter { payload ->
-          val localCopy = dao.getOne(payload.uuid)
-          localCopy?.syncStatus.canBeOverriddenByServerCopy()
-        }
-        .map { it.toDatabaseModel(DONE) }
-        .toList()
+        .filterNot { it.uuid in dirtyRecords }
+        .map { it.toDatabaseModel(SyncStatus.DONE) }
 
     dao.save(payloadsToSave)
   }

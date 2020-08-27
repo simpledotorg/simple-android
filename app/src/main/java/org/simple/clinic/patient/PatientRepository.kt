@@ -183,12 +183,11 @@ class PatientRepository @Inject constructor(
   }
 
   override fun mergeWithLocalData(payloads: List<PatientPayload>) {
+    val dirtyRecords = database.patientDao().recordIdsWithSyncStatus(PENDING)
+
     val payloadsToSave = payloads
-        .filter { payload ->
-          database.patientDao().getOne(payload.uuid)?.syncStatus.canBeOverriddenByServerCopy()
-        }
+        .filterNot { it.uuid in dirtyRecords }
         .map(::payloadToPatientProfile)
-        .toList()
 
     saveRecords(payloadsToSave)
   }

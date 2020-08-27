@@ -81,6 +81,9 @@ data class BloodPressureMeasurement(
     @Query("SELECT * FROM bloodpressuremeasurement WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): BloodPressureMeasurement?
 
+    @Query("SELECT uuid FROM bloodpressuremeasurement WHERE syncStatus = :syncStatus")
+    fun recordIdsWithStatus(syncStatus: SyncStatus): List<UUID>
+
     @Query("SELECT * FROM bloodpressuremeasurement WHERE uuid = :uuid")
     fun bloodPressure(uuid: UUID): Flowable<BloodPressureMeasurement>
 

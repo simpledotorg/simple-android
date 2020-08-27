@@ -4,7 +4,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
@@ -73,13 +72,11 @@ class FacilityRepository @Inject constructor(
   }
 
   override fun mergeWithLocalData(payloads: List<FacilityPayload>) {
+    val dirtyRecords = facilityDao.recordIdsWithSyncStatus(SyncStatus.PENDING)
+
     val payloadsToSave = payloads
-        .filter { payload ->
-          val localCopy = facilityDao.getOne(payload.uuid)
-          localCopy?.syncStatus.canBeOverriddenByServerCopy()
-        }
+        .filterNot { it.uuid in dirtyRecords }
         .map { it.toDatabaseModel(SyncStatus.DONE) }
-        .toList()
 
     facilityDao.save(payloadsToSave)
   }

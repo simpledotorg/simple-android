@@ -87,6 +87,9 @@ data class PrescribedDrug(
     @Query("SELECT * FROM prescribeddrug WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): PrescribedDrug?
 
+    @Query("SELECT uuid FROM prescribeddrug WHERE syncStatus = :syncStatus")
+    fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
+
     @Query("SELECT COUNT(*) FROM prescribeddrug")
     fun count(): Flowable<Int>
 

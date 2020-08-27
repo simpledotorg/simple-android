@@ -8,7 +8,6 @@ import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UtcClock
@@ -87,13 +86,11 @@ class BloodPressureRepository @Inject constructor(
   }
 
   override fun mergeWithLocalData(payloads: List<BloodPressureMeasurementPayload>) {
+    val dirtyRecords = dao.recordIdsWithStatus(SyncStatus.PENDING)
+
     val payloadsToSave = payloads
-        .filter { payload ->
-          val localCopy = dao.getOne(payload.uuid)
-          localCopy?.syncStatus.canBeOverriddenByServerCopy()
-        }
+        .filterNot { it.uuid in dirtyRecords }
         .map { it.toDatabaseModel(SyncStatus.DONE) }
-        .toList()
 
     dao.save(payloadsToSave)
   }
@@ -143,5 +140,4 @@ class BloodPressureRepository @Inject constructor(
         .count(SyncStatus.PENDING)
         .toObservable()
   }
-
 }

@@ -79,6 +79,9 @@ data class Facility(
     @Query("SELECT * FROM facility WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): Facility?
 
+    @Query("SELECT uuid FROM facility WHERE syncStatus = :syncStatus")
+    fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
+
     @Query("SELECT * FROM facility WHERE deletedAt IS NULL ORDER BY name ASC")
     fun all(): Flowable<List<Facility>>
 

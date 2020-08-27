@@ -100,6 +100,9 @@ data class BloodSugarMeasurement(
     @Query("SELECT * FROM BloodSugarMeasurements WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): BloodSugarMeasurement?
 
+    @Query("SELECT uuid FROM BloodSugarMeasurements WHERE syncStatus = :syncStatus")
+    fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
+
     @Query("SELECT COUNT(uuid) FROM BloodSugarMeasurements")
     fun count(): Flowable<Int>
 

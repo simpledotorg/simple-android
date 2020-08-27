@@ -6,7 +6,6 @@ import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UtcClock
 import java.time.Instant
@@ -125,15 +124,13 @@ class MedicalHistoryRepository @Inject constructor(
   }
 
   override fun mergeWithLocalData(payloads: List<MedicalHistoryPayload>) {
-    val newOrUpdatedHistories = payloads
-        .filter { payload: MedicalHistoryPayload ->
-          val localCopy = dao.getOne(payload.uuid)
-          localCopy?.syncStatus.canBeOverriddenByServerCopy()
-        }
-        .map { toDatabaseModel(it, SyncStatus.DONE) }
-        .toList()
+    val dirtyRecords = dao.recordIdsWithSyncStatus(SyncStatus.PENDING)
 
-    dao.save(newOrUpdatedHistories)
+    val payloadsToSave = payloads
+        .filterNot { it.uuid in dirtyRecords }
+        .map { toDatabaseModel(it, SyncStatus.DONE) }
+
+    dao.save(payloadsToSave)
   }
 
   override fun recordCount(): Observable<Int> {
@@ -163,5 +160,4 @@ class MedicalHistoryRepository @Inject constructor(
         .count(SyncStatus.PENDING)
         .toObservable()
   }
-
 }

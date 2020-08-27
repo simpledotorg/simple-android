@@ -8,9 +8,6 @@ import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.SyncAnalyticsEvent
-import org.simple.clinic.platform.analytics.SyncAnalyticsEvent.Completed
-import org.simple.clinic.platform.analytics.SyncAnalyticsEvent.Failed
-import org.simple.clinic.platform.analytics.SyncAnalyticsEvent.Started
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ErrorResolver
@@ -60,20 +57,21 @@ class DataSync @Inject constructor(
             user.isPresent() && user.get().canSyncData
           } else true
         }
-        .map { (_, modelSync) ->
-          val syncName = modelSync.name
-
-          modelSync
-              .sync()
-              .doOnSubscribe { reportSyncEvent(syncName, Started) }
-              .doOnComplete { reportSyncEvent(syncName, Completed) }
-              .doOnError { reportSyncEvent(syncName, Failed) }
-        }
+        .map { (_, modelSync) -> modelSync }
         .toList()
+        .map(::modelSyncsToCompletables)
         .flatMapCompletable { runAndSwallowErrors(it, syncGroup) }
         .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
   }
 
+  private fun modelSyncsToCompletables(modelSyncs: List<ModelSync>): List<Completable> {
+    val allPushes = modelSyncs.map { Completable.fromAction(it::push) }
+    val allPulls = modelSyncs.map { Completable.fromAction(it::pull) }
+
+    return allPushes + allPulls
+  }
+
+  // TODO (vs) 27/08/20: Report sync events in a later commit
   private fun reportSyncEvent(name: String, event: SyncAnalyticsEvent) {
     Timber.tag("Sync").i("Started sync: $name")
     Analytics.reportSyncEvent(name, event)

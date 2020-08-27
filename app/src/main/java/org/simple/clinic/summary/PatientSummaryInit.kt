@@ -15,7 +15,7 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
       effects.add(LoadCurrentUserAndFacility)
     }
 
-    if (model.canCheckTeleconsultationInfo) {
+    if (model.canCheckTeleconsultationInfo && model.isTeleconsultLogDeepLink.not()) {
       effectForTeleconsultInfoState(model, effects)
     }
 

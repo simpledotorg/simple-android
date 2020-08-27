@@ -11,7 +11,7 @@ import java.util.UUID
 
 class DeepLinkUpdateTest {
 
-  private val defaultModel = DeepLinkModel.default(null)
+  private val defaultModel = DeepLinkModel.default(null, null, false)
   private val updateSpec = UpdateSpec(DeepLinkUpdate())
   private val patientUuid = UUID.fromString("f88cc05b-620a-490a-92f3-1c0c43fb76ab")
 
@@ -64,7 +64,7 @@ class DeepLinkUpdateTest {
         uuid = UUID.fromString("fa0dfb7b-a0ea-425a-987d-2056f1a9e93b"),
         loggedInStatus = User.LoggedInStatus.LOGGED_IN
     )
-    val model = DeepLinkModel.default(patientUuid)
+    val model = DeepLinkModel.default(patientUuid, null, false)
 
     updateSpec
         .given(model)
@@ -80,13 +80,39 @@ class DeepLinkUpdateTest {
     val patient = TestData.patient(
         uuid = patientUuid
     )
+    val model = DeepLinkModel.default(
+        patientUuid = patientUuid,
+        teleconsultRecordId = null,
+        isLogTeleconsultDeepLink = false
+    )
 
     updateSpec
-        .given(defaultModel)
+        .given(model)
         .whenEvent(PatientFetched(patient))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(NavigateToPatientSummary(patientUuid) as DeepLinkEffect)
+        ))
+  }
+
+  @Test
+  fun `if patient exists and deep link is teleconsult log deep link, then navigate to patient summary with teleconsult log`() {
+    val patient = TestData.patient(
+        uuid = patientUuid
+    )
+    val teleconsultRecordId = UUID.fromString("cec5c691-6623-465d-8d86-27cce2e5acbc")
+    val model = DeepLinkModel.default(
+        patientUuid = patientUuid,
+        teleconsultRecordId = teleconsultRecordId,
+        isLogTeleconsultDeepLink = true
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientFetched(patient))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(NavigateToPatientSummaryWithTeleconsultLog(patientUuid, teleconsultRecordId) as DeepLinkEffect)
         ))
   }
 

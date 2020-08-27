@@ -3,6 +3,7 @@ package org.simple.clinic.summary
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import org.simple.clinic.user.User
 import java.util.UUID
@@ -57,6 +58,9 @@ data class PatientSummaryModel(
 
   val hasAssignedFacility: Boolean
     get() = patientSummaryProfile?.patient?.assignedFacilityId != null
+
+  val isTeleconsultLogDeepLink: Boolean
+    get() = openIntention is ViewExistingPatientWithTeleconsultLog
 
   override fun readyToRender(): Boolean {
     return hasLoadedPatientSummaryProfile && hasLoadedCurrentFacility

@@ -19,6 +19,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.deeplink.DeepLinkResult
 import org.simple.clinic.deeplink.OpenPatientSummary
+import org.simple.clinic.deeplink.OpenPatientSummaryWithTeleconsultLog
 import org.simple.clinic.deeplink.ShowNoPatientUuid
 import org.simple.clinic.deeplink.ShowPatientNotFound
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
@@ -91,6 +92,13 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
       return Intent(context, TheActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         putExtra(EXTRA_DEEP_LINK_RESULT, OpenPatientSummary(patientUuid))
+      }
+    }
+
+    fun intentForOpenPatientSummaryWithTeleconsultLog(context: Context, patientUuid: UUID, teleconsultRecordId: UUID?): Intent {
+      return Intent(context, TheActivity::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        putExtra(EXTRA_DEEP_LINK_RESULT, OpenPatientSummaryWithTeleconsultLog(patientUuid, teleconsultRecordId))
       }
     }
 
@@ -185,11 +193,16 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     }
 
     if (intent.hasExtra(EXTRA_DEEP_LINK_RESULT)) {
-      when (val deepLinkResult = intent.getParcelableExtra<DeepLinkResult>(EXTRA_DEEP_LINK_RESULT)) {
-        is OpenPatientSummary -> showPatientSummaryForDeepLink(deepLinkResult)
-        is ShowPatientNotFound -> showPatientNotFoundErrorDialog()
-        is ShowNoPatientUuid -> showNoPatientUuidErrorDialog()
-      }
+      handleDeepLinkResult()
+    }
+  }
+
+  private fun handleDeepLinkResult() {
+    when (val deepLinkResult = intent.getParcelableExtra<DeepLinkResult>(EXTRA_DEEP_LINK_RESULT)) {
+      is OpenPatientSummary -> showPatientSummaryForDeepLink(deepLinkResult)
+      is ShowPatientNotFound -> showPatientNotFoundErrorDialog()
+      is ShowNoPatientUuid -> showNoPatientUuidErrorDialog()
+      is OpenPatientSummaryWithTeleconsultLog -> showPatientSummaryWithTeleconsultLogForDeepLink(deepLinkResult)
     }
   }
 
@@ -303,6 +316,15 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
         .push(PatientSummaryScreenKey(
             patientUuid = deepLinkResult.patientUuid,
             intention = OpenIntention.ViewExistingPatient,
+            screenCreatedTimestamp = Instant.now(utcClock)
+        ))
+  }
+
+  private fun showPatientSummaryWithTeleconsultLogForDeepLink(deepLinkResult: OpenPatientSummaryWithTeleconsultLog) {
+    screenRouter
+        .push(PatientSummaryScreenKey(
+            patientUuid = deepLinkResult.patientUuid,
+            intention = OpenIntention.ViewExistingPatientWithTeleconsultLog(deepLinkResult.teleconsultRecordId),
             screenCreatedTimestamp = Instant.now(utcClock)
         ))
   }

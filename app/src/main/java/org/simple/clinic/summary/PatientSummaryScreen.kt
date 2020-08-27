@@ -43,6 +43,7 @@ import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection.BACKWARD
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
+import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
@@ -59,6 +60,7 @@ import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState
+import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -146,7 +148,7 @@ class PatientSummaryScreen(
           }, 100)
         }
         .setActionTextColor(ContextCompat.getColor(context, R.color.green2))
-        .setAnchorView(R.id.doneButtonFrame)
+        .setAnchorView(R.id.buttonFrame)
   }
 
   override fun onSaveInstanceState(): Parcelable {
@@ -171,6 +173,16 @@ class PatientSummaryScreen(
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
     alertFacilityChangeSheetClosed(screenDestroys)
     setupChildViewVisibility(screenDestroys)
+
+    when (screenKey.intention) {
+      is ViewExistingPatientWithTeleconsultLog -> {
+        doctorButton.setButtonState(Enabled)
+        doctorButton.icon = null
+        doctorButton.text = context.getString(R.string.patientsummary_log_teleconsult)
+        doneButton.visibility = View.GONE
+        buttonFrame.setBackgroundColor(ContextCompat.getColor(context, R.color.green3))
+      }
+    }
   }
 
   @SuppressLint("CheckResult")
@@ -248,7 +260,7 @@ class PatientSummaryScreen(
 
   private fun doneClicks() = doneButton.clicks().map { PatientSummaryDoneClicked(screenKey.patientUuid) }
 
-  private fun contactDoctorClicks() = contactDoctorButton.clicks().map { ContactDoctorClicked }
+  private fun contactDoctorClicks() = doctorButton.clicks().map { ContactDoctorClicked }
 
   private fun backClicks(): Observable<UiEvent> {
     val hardwareBackKeyClicks = Observable.create<Unit> { emitter ->
@@ -511,15 +523,15 @@ class PatientSummaryScreen(
   }
 
   override fun enableContactDoctorButton() {
-    contactDoctorButton.setButtonState(ButtonState.Enabled)
+    doctorButton.setButtonState(Enabled)
   }
 
   override fun disableContactDoctorButton() {
-    contactDoctorButton.setButtonState(ButtonState.Disabled)
+    doctorButton.setButtonState(ButtonState.Disabled)
   }
 
   override fun fetchingTeleconsultInfo() {
-    contactDoctorButton.setButtonState(ButtonState.InProgress)
+    doctorButton.setButtonState(ButtonState.InProgress)
   }
 
   override fun showTeleconsultInfoError() {
@@ -529,11 +541,11 @@ class PatientSummaryScreen(
   }
 
   override fun showContactDoctorButton() {
-    contactDoctorButton.visibility = View.VISIBLE
+    doctorButton.visibility = View.VISIBLE
   }
 
   override fun hideContactDoctorButton() {
-    contactDoctorButton.visibility = View.GONE
+    doctorButton.visibility = View.GONE
   }
 
   override fun showAssignedFacilityView() {

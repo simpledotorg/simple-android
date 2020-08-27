@@ -72,7 +72,11 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
         .userLoggedInStatusLoaded(event.user.loggedInStatus)
         .currentFacilityLoaded(event.facility)
 
-    return if (updatedModel.isTeleconsultationEnabled && updatedModel.isUserLoggedIn && updatedModel.isTeleconsultLogDeepLink.not()) {
+    val canFetchTeleconsultInfo = updatedModel.isTeleconsultationEnabled &&
+        updatedModel.isUserLoggedIn &&
+        updatedModel.isTeleconsultLogDeepLink.not()
+
+    return if (canFetchTeleconsultInfo) {
       next(
           updatedModel.fetchingTeleconsultationInfo(),
           FetchTeleconsultationInfo(event.facility.uuid)
@@ -214,14 +218,18 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       appointmentScheduledFrom: AppointmentSheetOpenedFrom
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val effect = when (appointmentScheduledFrom) {
-      BACK_CLICK -> when (model.openIntention) {
-        ViewExistingPatient -> GoBackToPreviousScreen
-        ViewNewPatient, is LinkIdWithPatient -> GoToHomeScreen
-        is ViewExistingPatientWithTeleconsultLog -> GoToHomeScreen
-      }
+      BACK_CLICK -> handleBackClick(model)
       DONE_CLICK -> GoToHomeScreen
     }
 
     return dispatch(effect)
+  }
+
+  private fun handleBackClick(model: PatientSummaryModel): PatientSummaryEffect {
+    return when (model.openIntention) {
+      ViewExistingPatient -> GoBackToPreviousScreen
+      ViewNewPatient, is LinkIdWithPatient -> GoToHomeScreen
+      is ViewExistingPatientWithTeleconsultLog -> GoToHomeScreen
+    }
   }
 }

@@ -193,12 +193,16 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     }
 
     if (intent.hasExtra(EXTRA_DEEP_LINK_RESULT)) {
-      when (val deepLinkResult = intent.getParcelableExtra<DeepLinkResult>(EXTRA_DEEP_LINK_RESULT)) {
-        is OpenPatientSummary -> showPatientSummaryForDeepLink(deepLinkResult)
-        is ShowPatientNotFound -> showPatientNotFoundErrorDialog()
-        is ShowNoPatientUuid -> showNoPatientUuidErrorDialog()
-        is OpenPatientSummaryWithTeleconsultLog -> showPatientSummaryWithTeleconsultLogForDeepLink(deepLinkResult)
-      }
+      handleDeepLinkResult()
+    }
+  }
+
+  private fun handleDeepLinkResult() {
+    when (val deepLinkResult = intent.getParcelableExtra<DeepLinkResult>(EXTRA_DEEP_LINK_RESULT)) {
+      is OpenPatientSummary -> showPatientSummaryForDeepLink(deepLinkResult)
+      is ShowPatientNotFound -> showPatientNotFoundErrorDialog()
+      is ShowNoPatientUuid -> showNoPatientUuidErrorDialog()
+      is OpenPatientSummaryWithTeleconsultLog -> showPatientSummaryWithTeleconsultLogForDeepLink(deepLinkResult)
     }
   }
 

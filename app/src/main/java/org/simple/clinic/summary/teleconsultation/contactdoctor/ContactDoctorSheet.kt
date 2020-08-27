@@ -15,11 +15,11 @@ import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.dp
 import javax.inject.Inject
 
-class ContactDoctorSheet_New : BottomSheetActivity(), ContactDoctorUi {
+class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi {
 
   companion object {
     fun intent(context: Context): Intent {
-      return Intent(context, ContactDoctorSheet_New::class.java)
+      return Intent(context, ContactDoctorSheet::class.java)
     }
   }
 

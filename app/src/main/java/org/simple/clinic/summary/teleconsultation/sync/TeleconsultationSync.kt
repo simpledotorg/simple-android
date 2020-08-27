@@ -45,7 +45,7 @@ class TeleconsultationSync @Inject constructor(
     return Single
         .fromCallable { config.batchSize }
         .flatMapCompletable { batchSize ->
-          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it) }
+          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
         }
   }
 

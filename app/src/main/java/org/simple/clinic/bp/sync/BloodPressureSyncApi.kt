@@ -1,6 +1,5 @@
 package org.simple.clinic.bp.sync
 
-import io.reactivex.Single
 import org.simple.clinic.sync.DataPushResponse
 import retrofit2.Call
 import retrofit2.http.Body
@@ -21,5 +20,5 @@ interface BloodPressureSyncApi {
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("process_token") lastPullToken: String? = null
-  ): Single<BloodPressurePullResponse>
+  ): Call<BloodPressurePullResponse>
 }

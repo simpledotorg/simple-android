@@ -179,15 +179,16 @@ class AppointmentRepository @Inject constructor(
     return appointmentDao.recordsWithSyncStatus(syncStatus)
   }
 
-  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
-    return Completable.fromAction { appointmentDao.updateSyncStatus(from, to) }
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
+    appointmentDao.updateSyncStatus(from, to)
   }
 
-  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
     if (ids.isEmpty()) {
       throw AssertionError()
     }
-    return Completable.fromAction { appointmentDao.updateSyncStatus(ids, to) }
+
+    appointmentDao.updateSyncStatus(ids, to)
   }
 
   override fun mergeWithLocalData(payloads: List<AppointmentPayload>): Completable {

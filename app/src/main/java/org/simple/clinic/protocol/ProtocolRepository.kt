@@ -44,12 +44,12 @@ class ProtocolRepository @Inject constructor(
     return drugsForProtocol.map { (protocol, drugs) -> ProtocolAndProtocolDrugs(protocol, drugs) }
   }
 
-  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
-    return Completable.fromAction { protocolDao.updateSyncStatus(oldStatus = from, newStatus = to) }
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
+    protocolDao.updateSyncStatus(oldStatus = from, newStatus = to)
   }
 
-  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
-    return Completable.fromAction { protocolDao.updateSyncStatus(uuids = ids, newStatus = to) }
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
+    protocolDao.updateSyncStatus(uuids = ids, newStatus = to)
   }
 
   override fun mergeWithLocalData(payloads: List<ProtocolPayload>): Completable {

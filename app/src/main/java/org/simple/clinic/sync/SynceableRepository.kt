@@ -15,9 +15,9 @@ interface SynceableRepository<T, P> {
 
   fun recordsWithSyncStatus(syncStatus: SyncStatus): List<T>
 
-  fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable
+  fun setSyncStatus(from: SyncStatus, to: SyncStatus)
 
-  fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable
+  fun setSyncStatus(ids: List<UUID>, to: SyncStatus)
 
   fun mergeWithLocalData(payloads: List<P>): Completable
 

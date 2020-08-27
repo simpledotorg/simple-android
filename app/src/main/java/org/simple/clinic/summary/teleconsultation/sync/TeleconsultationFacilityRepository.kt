@@ -59,16 +59,12 @@ class TeleconsultationFacilityRepository @Inject constructor(
         }
   }
 
-  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
-    return Completable.fromAction {
-      appDatabase.teleconsultFacilityInfoDao().updateSyncStatus(from, to)
-    }
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
+    appDatabase.teleconsultFacilityInfoDao().updateSyncStatus(from, to)
   }
 
-  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
-    return Completable.fromAction {
-      appDatabase.teleconsultFacilityInfoDao().updateSyncStatus(ids, to)
-    }
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
+    appDatabase.teleconsultFacilityInfoDao().updateSyncStatus(ids, to)
   }
 
   override fun mergeWithLocalData(payloads: List<TeleconsultationFacilityInfoPayload>): Completable {

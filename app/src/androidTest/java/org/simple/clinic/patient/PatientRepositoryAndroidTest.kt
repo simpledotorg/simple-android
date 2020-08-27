@@ -2265,7 +2265,7 @@ class PatientRepositoryAndroidTest {
     assertThat(patientRepository.hasPatientChangedSince(patientUuid, patientUpdatedAt)).isFalse()
     assertThat(patientRepository.hasPatientChangedSince(patientUuid, oneSecondAfterPatientUpdated)).isFalse()
 
-    patientRepository.setSyncStatus(listOf(patientUuid), DONE).blockingAwait()
+    patientRepository.setSyncStatus(listOf(patientUuid), DONE)
 
     assertThat(patientRepository.hasPatientChangedSince(patientUuid, patientUpdatedAt)).isFalse()
     assertThat(patientRepository.hasPatientChangedSince(patientUuid, oneSecondAfterPatientUpdated)).isFalse()

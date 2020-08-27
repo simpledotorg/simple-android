@@ -20,13 +20,13 @@ class SyncCoordinator @Inject constructor() {
 
           if (pendingSyncRecords.isNotEmpty()) {
             val response = pushNetworkCall(pendingSyncRecords)
-            repository.setSyncStatus(SyncStatus.PENDING, SyncStatus.DONE).blockingAwait()
+            repository.setSyncStatus(SyncStatus.PENDING, SyncStatus.DONE)
 
             val validationErrors = response.validationErrors
             val recordIdsWithErrors = validationErrors.map { it.uuid }
             if (recordIdsWithErrors.isNotEmpty()) {
               logValidationErrorsIfAny(pendingSyncRecords, validationErrors)
-              repository.setSyncStatus(recordIdsWithErrors, SyncStatus.INVALID).blockingAwait()
+              repository.setSyncStatus(recordIdsWithErrors, SyncStatus.INVALID)
             }
           }
         }

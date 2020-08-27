@@ -75,19 +75,16 @@ class BloodPressureRepository @Inject constructor(
     return dao.withSyncStatus(syncStatus)
   }
 
-  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
-    return Completable.fromAction {
-      dao.updateSyncStatus(oldStatus = from, newStatus = to)
-    }
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
+    dao.updateSyncStatus(oldStatus = from, newStatus = to)
   }
 
-  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
     if (ids.isEmpty()) {
       throw AssertionError()
     }
-    return Completable.fromAction {
-      dao.updateSyncStatus(uuids = ids, newStatus = to)
-    }
+
+    dao.updateSyncStatus(uuids = ids, newStatus = to)
   }
 
   override fun mergeWithLocalData(payloads: List<BloodPressureMeasurementPayload>): Completable {

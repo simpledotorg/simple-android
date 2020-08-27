@@ -2,11 +2,9 @@ package org.simple.clinic.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -50,8 +48,6 @@ class SyncCoordinatorTest {
   @Test
   fun `if there are validation errors in push, then the failing records should be marked as invalid`() {
     whenever(repository.recordsWithSyncStatus(SyncStatus.PENDING)).thenReturn(listOf(1, 2, 3))
-    whenever(repository.setSyncStatus(any<SyncStatus>(), any())).thenReturn(Completable.complete())
-    whenever(repository.setSyncStatus(any<List<UUID>>(), any())).thenReturn(Completable.complete())
 
     val validationErrors = listOf(
         ValidationErrors(uuid = UUID.randomUUID(), schemaErrorMessages = listOf("error-1")),

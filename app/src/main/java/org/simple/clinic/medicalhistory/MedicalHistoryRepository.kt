@@ -112,15 +112,16 @@ class MedicalHistoryRepository @Inject constructor(
     return dao.recordsWithSyncStatus(syncStatus)
   }
 
-  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
-    return Completable.fromAction { dao.updateSyncStatus(from, to) }
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
+    dao.updateSyncStatus(from, to)
   }
 
-  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
     if (ids.isEmpty()) {
       throw AssertionError()
     }
-    return Completable.fromAction { dao.updateSyncStatus(ids, to) }
+
+    dao.updateSyncStatus(ids, to)
   }
 
   override fun mergeWithLocalData(payloads: List<MedicalHistoryPayload>): Completable {

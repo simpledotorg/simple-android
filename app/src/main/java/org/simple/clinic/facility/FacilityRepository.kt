@@ -93,16 +93,16 @@ class FacilityRepository @Inject constructor(
     return facilityDao.withSyncStatus(syncStatus)
   }
 
-  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
-    return Completable.fromAction { facilityDao.updateSyncStatus(oldStatus = from, newStatus = to) }
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
+    facilityDao.updateSyncStatus(oldStatus = from, newStatus = to)
   }
 
-  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
     if (ids.isEmpty()) {
       throw AssertionError("IDs must not be empty!")
     }
 
-    return Completable.fromAction { facilityDao.updateSyncStatus(uuids = ids, newStatus = to) }
+    facilityDao.updateSyncStatus(uuids = ids, newStatus = to)
   }
 
   override fun recordCount(): Observable<Int> {

@@ -168,12 +168,12 @@ class PatientRepository @Inject constructor(
     return database.patientDao().recordsWithSyncStatus(syncStatus)
   }
 
-  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
-    return Completable.fromAction { database.patientDao().updateSyncStatus(from, to) }
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
+    database.patientDao().updateSyncStatus(from, to)
   }
 
-  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
-    return Completable.fromAction { database.patientDao().updateSyncStatus(ids, to) }
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
+    database.patientDao().updateSyncStatus(ids, to)
   }
 
   override fun recordCount(): Observable<Int> {
@@ -381,13 +381,13 @@ class PatientRepository @Inject constructor(
         .fromAction {
           val updatedPatientAddress = patientAddress.copy(updatedAt = Instant.now(utcClock))
           database.addressDao().save(updatedPatientAddress)
+          setSyncStatus(listOf(patientUuid), PENDING)
         }
-        .andThen(setSyncStatus(listOf(patientUuid), PENDING))
   }
 
   fun updatePhoneNumberForPatient(patientUuid: UUID, phoneNumber: PatientPhoneNumber): Completable {
     return savePhoneNumber(phoneNumber.copy(updatedAt = Instant.now(utcClock)))
-        .andThen(setSyncStatus(listOf(patientUuid), PENDING))
+        .andThen(Completable.fromAction { setSyncStatus(listOf(patientUuid), PENDING) })
   }
 
   fun createPhoneNumberForPatient(
@@ -412,7 +412,7 @@ class PatientRepository @Inject constructor(
           )
         }
         .flatMapCompletable(this::savePhoneNumber)
-        .andThen(setSyncStatus(listOf(patientUuid), PENDING))
+        .andThen(Completable.fromAction { setSyncStatus(listOf(patientUuid), PENDING) })
   }
 
   private fun convertToDate(dateOfBirth: String?): LocalDate? {
@@ -534,7 +534,7 @@ class PatientRepository @Inject constructor(
 
     return businessIdStream
         .flatMap { businessId -> saveBusinessId(businessId).toSingleDefault(businessId) }
-        .flatMap { businessId -> setSyncStatus(listOf(patientUuid), PENDING).toSingleDefault(businessId) }
+        .doOnSuccess { setSyncStatus(listOf(patientUuid), PENDING) }
   }
 
   fun saveBusinessId(businessId: BusinessId): Completable {

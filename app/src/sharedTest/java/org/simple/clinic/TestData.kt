@@ -93,8 +93,9 @@ object TestData {
       patientName: String = faker.name.name(),
       patientPhoneNumber: String? = if (generatePhoneNumber) faker.phoneNumber.phoneNumber() else null,
       businessId: BusinessId? = if (generateBusinessId) businessId(patientUuid = patientUuid) else null,
-      dateOfBirth: LocalDate? = LocalDate.parse("1980-01-01"),
-      age: Age? = Age(value = kotlin.random.Random.nextInt(30..100), updatedAt = Instant.parse("2018-01-01T00:00:00Z")),
+      generateDateOfBirth: Boolean = faker.bool.bool(),
+      dateOfBirth: LocalDate? = if (generateDateOfBirth) LocalDate.parse("1980-01-01") else null,
+      age: Age? = if (!generateDateOfBirth) Age(value = kotlin.random.Random.nextInt(30..100), updatedAt = Instant.parse("2018-01-01T00:00:00Z")) else null,
       gender: Gender = randomGender(),
       patientDeletedReason: DeletedReason? = null,
       patientCreatedAt: Instant = Instant.now(),
@@ -104,7 +105,7 @@ object TestData {
       patientAssignedFacilityId: UUID? = null
   ): PatientProfile {
     val phoneNumbers = if (!patientPhoneNumber.isNullOrBlank()) {
-      listOf(patientPhoneNumber(patientUuid = patientUuid, number = patientPhoneNumber))
+      listOf(patientPhoneNumber(patientUuid = patientUuid, number = patientPhoneNumber, phoneType = PatientPhoneNumberType.Mobile))
     } else {
       emptyList()
     }
@@ -870,7 +871,7 @@ object TestData {
 
   fun bloodSugarMeasurement(
       uuid: UUID = UUID.randomUUID(),
-      reading: BloodSugarReading = BloodSugarReading(faker.number.between(30, 1000).toString(), Random),
+      reading: BloodSugarReading = BloodSugarReading(faker.number.decimal(2, 1), Random),
       patientUuid: UUID = UUID.randomUUID(),
       recordedAt: Instant = Instant.now(),
       userUuid: UUID = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),

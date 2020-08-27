@@ -24,11 +24,15 @@ class TeleconsultationSync @Inject constructor(
   override val requiresSyncApprovedUser = true
 
   override fun sync(): Completable {
-    return Completable.mergeArrayDelayError(push(), pull())
+    return Completable
+        .mergeArrayDelayError(
+            Completable.fromAction { push() },
+            pull()
+        )
   }
 
-  override fun push(): Completable {
-    return Completable.complete()
+  override fun push() {
+    /* Nothing to do here */
   }
 
   override fun pull(): Completable {

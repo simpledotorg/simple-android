@@ -680,10 +680,16 @@ class DataSyncTest {
     override val requiresSyncApprovedUser: Boolean = _requiresSyncApprovedUser
 
     override fun sync(): Completable {
-      return Completable.mergeArrayDelayError(push(), pull())
+      return Completable
+          .mergeArrayDelayError(
+              Completable.fromAction { push() },
+              pull()
+          )
     }
 
-    override fun push(): Completable = if (pushError == null) Completable.complete() else Completable.error(pushError)
+    override fun push() {
+      if (pushError != null) throw pushError
+    }
 
     override fun pull(): Completable = if (pullError == null) Completable.complete() else Completable.error(pullError)
 

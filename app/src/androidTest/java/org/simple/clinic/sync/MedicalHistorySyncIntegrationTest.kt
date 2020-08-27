@@ -109,7 +109,7 @@ class MedicalHistorySyncIntegrationTest {
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(totalNumberOfRecords)
 
     // when
-    sync.push().blockingAwait()
+    sync.push()
     clearMedicalHistoryData()
     sync.pull().blockingAwait()
 
@@ -132,7 +132,7 @@ class MedicalHistorySyncIntegrationTest {
     assertThat(records).containsNoDuplicates()
 
     repository.save(records).blockingAwait()
-    sync.push().blockingAwait()
+    sync.push()
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(0)
 
     val modifiedRecord = records[1].hadHeartAttack()

@@ -106,7 +106,7 @@ class BloodSugarSyncIntegrationTest {
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(totalNumberOfRecords)
 
     // when
-    sync.push().blockingAwait()
+    sync.push()
     clearBloodSugarData()
     sync.pull().blockingAwait()
 
@@ -130,7 +130,7 @@ class BloodSugarSyncIntegrationTest {
     assertThat(records).containsNoDuplicates()
 
     repository.save(records).blockingAwait()
-    sync.push().blockingAwait()
+    sync.push()
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(0)
 
     val modifiedRecord = records[1].withReading("42")

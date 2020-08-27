@@ -23,9 +23,15 @@ class FacilitySync @Inject constructor(
 
   override val requiresSyncApprovedUser = false
 
-  override fun sync() = pull()
+  override fun sync() = Completable
+      .mergeArrayDelayError(
+          Completable.fromAction { push() },
+          pull()
+      )
 
-  override fun push(): Completable = Completable.complete()
+  override fun push() {
+    /* Nothing to do here */
+  }
 
   override fun pull(): Completable {
     return Completable.fromAction {

@@ -21,9 +21,15 @@ class AppointmentSync @Inject constructor(
 
   override val requiresSyncApprovedUser = true
 
-  override fun sync(): Completable = Completable.mergeArrayDelayError(push(), pull())
+  override fun sync(): Completable = Completable
+      .mergeArrayDelayError(
+          Completable.fromAction { push() },
+          pull()
+      )
 
-  override fun push() = Completable.fromAction { syncCoordinator.push(repository) { api.push(toRequest(it)).execute().body()!! } }
+  override fun push() {
+    syncCoordinator.push(repository) { api.push(toRequest(it)).execute().body()!! }
+  }
 
   override fun pull(): Completable {
     return Completable.fromAction {

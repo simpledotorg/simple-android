@@ -25,7 +25,9 @@ class ProtocolSync @Inject constructor(
 
   override fun sync(): Completable = pull()
 
-  override fun push(): Completable = Completable.complete()
+  override fun push() {
+    /* Nothing to do here */
+  }
 
   override fun pull(): Completable {
     return Completable.fromAction {

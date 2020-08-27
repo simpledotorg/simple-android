@@ -7,7 +7,7 @@ interface ModelSync {
   val requiresSyncApprovedUser: Boolean
 
   fun sync(): Completable
-  fun push(): Completable
+  fun push()
   fun pull(): Completable
   fun syncConfig(): SyncConfig
 }

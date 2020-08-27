@@ -103,7 +103,7 @@ class AppointmentSyncIntegrationTest {
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(totalNumberOfRecords)
 
     // when
-    sync.push().blockingAwait()
+    sync.push()
     clearAppointmentData()
     sync.pull().blockingAwait()
 
@@ -126,7 +126,7 @@ class AppointmentSyncIntegrationTest {
     assertThat(records).containsNoDuplicates()
 
     repository.save(records).blockingAwait()
-    sync.push().blockingAwait()
+    sync.push()
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(0)
 
     val modifiedRecord = records[1].agreedToVisit()

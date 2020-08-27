@@ -106,7 +106,7 @@ class PatientSyncIntegrationTest {
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(totalNumberOfRecords)
 
     // when
-    patientSync.push().blockingAwait()
+    patientSync.push()
     clearPatientData()
     patientSync.pull().blockingAwait()
 
@@ -130,7 +130,7 @@ class PatientSyncIntegrationTest {
     assertThat(records).containsNoDuplicates()
 
     repository.save(records).blockingAwait()
-    patientSync.push().blockingAwait()
+    patientSync.push()
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(0)
 
     val modifiedRecord = records[1].withName("Anish Acharya")

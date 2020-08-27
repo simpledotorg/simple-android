@@ -16,7 +16,7 @@ class SyncCoordinator @Inject constructor() {
   ): Completable {
     return Completable
         .fromAction {
-          val pendingSyncRecords = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+          val pendingSyncRecords = repository.recordsWithSyncStatus(SyncStatus.PENDING)
 
           if (pendingSyncRecords.isNotEmpty()) {
             val response = pushNetworkCall(pendingSyncRecords)

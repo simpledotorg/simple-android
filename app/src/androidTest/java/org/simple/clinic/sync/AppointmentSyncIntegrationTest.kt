@@ -110,7 +110,7 @@ class AppointmentSyncIntegrationTest {
 
     // then
     val expectedPulledRecords = records.map { it.syncCompleted() }
-    val pulledRecords = repository.recordsWithSyncStatus(SyncStatus.DONE).blockingGet()
+    val pulledRecords = repository.recordsWithSyncStatus(SyncStatus.DONE)
 
     assertThat(pulledRecords).containsAtLeastElementsIn(expectedPulledRecords)
   }
@@ -142,8 +142,8 @@ class AppointmentSyncIntegrationTest {
         .map { it.syncCompleted() }
         .filterNot { it.patientUuid == modifiedRecord.patientUuid }
 
-    val savedRecords = repository.recordsWithSyncStatus(SyncStatus.DONE).blockingGet()
-    val pendingSyncRecords = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    val savedRecords = repository.recordsWithSyncStatus(SyncStatus.DONE)
+    val pendingSyncRecords = repository.recordsWithSyncStatus(SyncStatus.PENDING)
 
     assertThat(savedRecords).containsAtLeastElementsIn(expectedSavedRecords)
     assertThat(pendingSyncRecords).containsExactly(modifiedRecord)

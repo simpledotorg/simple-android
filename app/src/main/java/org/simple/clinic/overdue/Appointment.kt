@@ -134,7 +134,7 @@ data class Appointment(
   interface RoomDao {
 
     @Query("SELECT * FROM Appointment WHERE syncStatus = :status")
-    fun recordsWithSyncStatus(status: SyncStatus): Flowable<List<Appointment>>
+    fun recordsWithSyncStatus(status: SyncStatus): List<Appointment>
 
     @Query("UPDATE Appointment SET syncStatus = :to WHERE syncStatus = :from")
     fun updateSyncStatus(from: SyncStatus, to: SyncStatus)

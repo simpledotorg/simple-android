@@ -3,7 +3,6 @@ package org.simple.clinic.protocol
 import androidx.annotation.VisibleForTesting
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
@@ -34,15 +33,15 @@ class ProtocolRepository @Inject constructor(
     }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<ProtocolAndProtocolDrugs>> {
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<ProtocolAndProtocolDrugs> {
     val protocolDao = appDatabase.protocolDao()
     val protocolDrugDao = appDatabase.protocolDrugDao()
 
-    return protocolDao
+    val drugsForProtocol = protocolDao
         .withSyncStatus(syncStatus)
-        .map { protocols -> protocols.associateBy({ it }, { protocolDrugDao.drugsForProtocolUuid(it.uuid) }) }
-        .map { drugsForProtocol -> drugsForProtocol.map { (protocol, drugs) -> ProtocolAndProtocolDrugs(protocol, drugs) } }
-        .firstOrError()
+        .associateBy({ it }, { protocolDrugDao.drugsForProtocolUuid(it.uuid) })
+
+    return drugsForProtocol.map { (protocol, drugs) -> ProtocolAndProtocolDrugs(protocol, drugs) }
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {

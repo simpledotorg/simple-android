@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
-import io.reactivex.Single
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -36,7 +35,7 @@ class SyncCoordinatorTest {
 
   @Test
   fun `when pending sync records are empty, then the push network call should not be made`() {
-    whenever(repository.recordsWithSyncStatus(SyncStatus.PENDING)).thenReturn(Single.just(emptyList()))
+    whenever(repository.recordsWithSyncStatus(SyncStatus.PENDING)).thenReturn(emptyList())
 
     var networkCallMade = false
 
@@ -50,7 +49,7 @@ class SyncCoordinatorTest {
 
   @Test
   fun `if there are validation errors in push, then the failing records should be marked as invalid`() {
-    whenever(repository.recordsWithSyncStatus(SyncStatus.PENDING)).thenReturn(Single.just(listOf(1, 2, 3)))
+    whenever(repository.recordsWithSyncStatus(SyncStatus.PENDING)).thenReturn(listOf(1, 2, 3))
     whenever(repository.setSyncStatus(any<SyncStatus>(), any())).thenReturn(Completable.complete())
     whenever(repository.setSyncStatus(any<List<UUID>>(), any())).thenReturn(Completable.complete())
 

@@ -94,7 +94,7 @@ class TeleconsultationSyncIntegrationTest {
     sync.pull().blockingAwait()
 
     // then
-    val pulledRecords = repository.recordsWithSyncStatus(SyncStatus.DONE).blockingGet()
+    val pulledRecords = repository.recordsWithSyncStatus(SyncStatus.DONE)
 
     assertThat(pulledRecords).isNotEmpty()
   }

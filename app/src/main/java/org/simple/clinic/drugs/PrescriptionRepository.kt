@@ -86,10 +86,8 @@ class PrescriptionRepository @Inject constructor(
     }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<PrescribedDrug>> {
-    return dao
-        .withSyncStatus(syncStatus)
-        .firstOrError()
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PrescribedDrug> {
+    return dao.withSyncStatus(syncStatus)
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {

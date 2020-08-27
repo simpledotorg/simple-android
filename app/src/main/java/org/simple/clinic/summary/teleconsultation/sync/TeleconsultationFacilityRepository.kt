@@ -48,17 +48,15 @@ class TeleconsultationFacilityRepository @Inject constructor(
         .save(records.map { it.teleconsultationFacilityInfo })
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<TeleconsultationFacilityWithMedicalOfficers>> {
-    return Single.fromCallable {
-      appDatabase
-          .teleconsultFacilityInfoDao()
-          .recordsWithSyncStatus(syncStatus)
-          .map {
-            appDatabase
-                .teleconsultFacilityWithMedicalOfficersDao()
-                .getOne(it.facilityId)!!
-          }
-    }
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultationFacilityWithMedicalOfficers> {
+    return appDatabase
+        .teleconsultFacilityInfoDao()
+        .recordsWithSyncStatus(syncStatus)
+        .map {
+          appDatabase
+              .teleconsultFacilityWithMedicalOfficersDao()
+              .getOne(it.facilityId)!!
+        }
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {

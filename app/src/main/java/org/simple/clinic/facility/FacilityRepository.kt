@@ -2,7 +2,6 @@ package org.simple.clinic.facility
 
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.patient.SyncStatus
@@ -90,8 +89,8 @@ class FacilityRepository @Inject constructor(
     return Completable.fromAction { facilityDao.save(records) }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<Facility>> {
-    return facilityDao.withSyncStatus(syncStatus).firstOrError()
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<Facility> {
+    return facilityDao.withSyncStatus(syncStatus)
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {

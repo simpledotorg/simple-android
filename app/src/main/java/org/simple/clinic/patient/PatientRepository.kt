@@ -164,10 +164,8 @@ class PatientRepository @Inject constructor(
         )
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<PatientProfile>> {
-    return database.patientDao()
-        .recordsWithSyncStatus(syncStatus)
-        .firstOrError()
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PatientProfile> {
+    return database.patientDao().recordsWithSyncStatus(syncStatus)
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {

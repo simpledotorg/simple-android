@@ -3,7 +3,6 @@ package org.simple.clinic.overdue
 import androidx.paging.PositionalDataSource
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.Appointment.AppointmentType
@@ -176,8 +175,8 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<Appointment>> {
-    return appointmentDao.recordsWithSyncStatus(syncStatus).firstOrError()
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<Appointment> {
+    return appointmentDao.recordsWithSyncStatus(syncStatus)
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {

@@ -67,7 +67,7 @@ data class BloodPressureMeasurement(
   interface RoomDao {
 
     @Query("SELECT * FROM bloodpressuremeasurement WHERE syncStatus = :status")
-    fun withSyncStatus(status: SyncStatus): Flowable<List<BloodPressureMeasurement>>
+    fun withSyncStatus(status: SyncStatus): List<BloodPressureMeasurement>
 
     @Query("UPDATE bloodpressuremeasurement SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)

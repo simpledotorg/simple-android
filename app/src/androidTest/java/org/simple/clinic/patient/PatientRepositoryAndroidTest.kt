@@ -3520,7 +3520,7 @@ class PatientRepositoryAndroidTest {
     }
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
-    val patients = patientRepository.recordsWithSyncStatus(PENDING).blockingGet()
+    val patients = patientRepository.recordsWithSyncStatus(PENDING)
     assertThat(patients.size).isEqualTo(1)
 
     assertThat(patients.first().address.streetAddress).isEqualTo(streetAddress)
@@ -3558,7 +3558,7 @@ class PatientRepositoryAndroidTest {
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
     // when
-    val patients = patientRepository.recordsWithSyncStatus(PENDING).blockingGet()
+    val patients = patientRepository.recordsWithSyncStatus(PENDING)
     assertThat(patients.first()).isEqualTo(patientProfile)
   }
 

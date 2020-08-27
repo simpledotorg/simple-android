@@ -2,7 +2,6 @@ package org.simple.clinic.medicalhistory
 
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientUuid
@@ -109,8 +108,8 @@ class MedicalHistoryRepository @Inject constructor(
     }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<MedicalHistory>> {
-    return dao.recordsWithSyncStatus(syncStatus).firstOrError()
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<MedicalHistory> {
+    return dao.recordsWithSyncStatus(syncStatus)
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {

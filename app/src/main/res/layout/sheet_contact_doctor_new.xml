@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <TextView
+    android:id="@+id/contactDoctorSheetTitle"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_24"
+    android:text="@string/contactdoctor_new_title"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/contactDoctorSheetSubtitleTextView"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginTop="@dimen/spacing_8"
+    android:layout_marginEnd="@dimen/spacing_24"
+    android:text="@string/contactdoctor_new_subtitle"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/contactDoctorSheetTitle" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/doctorsRecyclerView"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_8"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/contactDoctorSheetSubtitleTextView"
+    tools:itemCount="3"
+    tools:listitem="@layout/list_contact_doctor" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

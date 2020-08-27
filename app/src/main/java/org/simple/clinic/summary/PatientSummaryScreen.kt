@@ -48,7 +48,7 @@ import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
-import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
+import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet_Old
 import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Truss
@@ -226,7 +226,7 @@ class PatientSummaryScreen(
         .streamScreenResults()
         .ofType<ActivityResult>()
         .extractSuccessful(CONTACT_DOCTOR_SHEET) { intent ->
-          val teleconsultPhoneNumberString = ContactDoctorSheet.readPhoneNumberExtra(intent)
+          val teleconsultPhoneNumberString = ContactDoctorSheet_Old.readPhoneNumberExtra(intent)
           val teleconsultPhoneNumber = TeleconsultPhoneNumber(teleconsultPhoneNumberString)
 
           ContactDoctorPhoneNumberSelected(teleconsultPhoneNumber)
@@ -506,7 +506,7 @@ class PatientSummaryScreen(
       facility: Facility,
       phoneNumbers: List<TeleconsultPhoneNumber>
   ) {
-    val intent = ContactDoctorSheet.intent(context, facility, phoneNumbers)
+    val intent = ContactDoctorSheet_Old.intent(context, facility, phoneNumbers)
     activity.startActivityForResult(intent, CONTACT_DOCTOR_SHEET)
   }
 

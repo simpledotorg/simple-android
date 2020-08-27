@@ -39,7 +39,7 @@ class MedicalHistorySync @Inject constructor(
           }
 
   override fun push(): Completable {
-    return syncCoordinator.push(repository, pushNetworkCall = { api.push(toRequest(it)) })
+    return syncCoordinator.push(repository, pushNetworkCall = { api.push(toRequest(it)).execute().body()!! })
   }
 
   override fun pull(): Completable {

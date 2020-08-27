@@ -38,7 +38,7 @@ class PatientSync @Inject constructor(
             }
           }
 
-  override fun push() = syncCoordinator.push(repository, pushNetworkCall = { api.push(toRequest(it)) })
+  override fun push() = syncCoordinator.push(repository, pushNetworkCall = { api.push(toRequest(it)).execute().body()!! })
 
   override fun pull(): Completable {
     return Single

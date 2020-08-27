@@ -42,7 +42,7 @@ class SyncCoordinatorTest {
 
     syncCoordinator.push(repository) {
       networkCallMade = true
-      Single.just(DataPushResponse(emptyList()))
+      DataPushResponse(emptyList())
     }.blockingAwait()
 
     assertThat(networkCallMade).isFalse()
@@ -60,7 +60,7 @@ class SyncCoordinatorTest {
     )
 
     syncCoordinator.push(repository) {
-      Single.just(DataPushResponse(validationErrors))
+      DataPushResponse(validationErrors)
     }.blockingAwait()
 
     verify(repository).setSyncStatus(validationErrors.map { it.uuid }, SyncStatus.INVALID)

@@ -49,9 +49,11 @@ class RegisterPatientRule(val patientUuid: UUID) : TestRule {
 
     patientSyncApi
         .push(patientPushRequest)
-        .concatWith(bloodPressureSyncApi.push(bloodPressurePushRequest))
-        .ignoreElements()
-        .blockingAwait()
+        .execute()
+
+    bloodPressureSyncApi
+        .push(bloodPressurePushRequest)
+        .execute()
   }
 
   override fun apply(base: Statement, description: Description): Statement {

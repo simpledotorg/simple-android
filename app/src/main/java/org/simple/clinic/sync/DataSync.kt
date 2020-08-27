@@ -117,23 +117,25 @@ class DataSync(
     val allPushes = modelSyncs.map { sync ->
       Completable
           .fromAction(sync::push)
-          .doOnSubscribe { Timber.tag("SYNC-PERF").d("[${Thread.currentThread().name}] Subscribe:Push:${sync.name}") }
-          .doOnComplete { Timber.tag("SYNC-PERF").d("[${Thread.currentThread().name}] Complete:Push:${sync.name}") }
+          .doOnSubscribe { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Started) }
+          .doOnComplete { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Completed) }
+          .doOnError { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Failed) }
     }
     val allPulls = modelSyncs.map { sync ->
       Completable
           .fromAction(sync::pull)
-          .doOnSubscribe { Timber.tag("SYNC-PERF").d("[${Thread.currentThread().name}] Subscribe:Pull:${sync.name}") }
-          .doOnComplete { Timber.tag("SYNC-PERF").d("[${Thread.currentThread().name}] Complete:Pull:${sync.name}") }
+          .doOnSubscribe { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Started) }
+          .doOnComplete { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Completed) }
+          .doOnError { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Failed) }
     }
 
     return allPushes + allPulls
   }
 
-  // TODO (vs) 27/08/20: Report sync events in a later commit
-  private fun reportSyncEvent(name: String, event: SyncAnalyticsEvent) {
-    Timber.tag("Sync").i("Started sync: $name")
-    Analytics.reportSyncEvent(name, event)
+  private fun reportSyncEvent(name: String, type: String, event: SyncAnalyticsEvent) {
+    val analyticsName = "$type:$name" // Ex: "Push:Patients"
+    Timber.tag("Sync").i("$analyticsName:${event.name}") // Ex: "Push:Patients:Started"
+    Analytics.reportSyncEvent(analyticsName, event)
   }
 
   fun fireAndForgetSync(syncGroup: SyncGroup) {

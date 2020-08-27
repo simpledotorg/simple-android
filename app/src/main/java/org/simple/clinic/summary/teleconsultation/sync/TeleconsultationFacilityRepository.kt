@@ -2,7 +2,6 @@ package org.simple.clinic.summary.teleconsultation.sync
 
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.SyncStatus.PENDING
@@ -16,11 +15,13 @@ class TeleconsultationFacilityRepository @Inject constructor(
 ) : SynceableRepository<TeleconsultationFacilityWithMedicalOfficers, TeleconsultationFacilityInfoPayload> {
 
   override fun save(records: List<TeleconsultationFacilityWithMedicalOfficers>): Completable {
-    return Completable.fromAction {
-      saveTeleconsultFacilityInfo(records)
-      saveTeleconsultMedicalOfficers(records)
-      saveTeleconsultMedicalOfficersCrossRef(records)
-    }
+    return Completable.fromAction { saveRecords(records) }
+  }
+
+  private fun saveRecords(records: List<TeleconsultationFacilityWithMedicalOfficers>) {
+    saveTeleconsultFacilityInfo(records)
+    saveTeleconsultMedicalOfficers(records)
+    saveTeleconsultMedicalOfficersCrossRef(records)
   }
 
   private fun saveTeleconsultMedicalOfficersCrossRef(records: List<TeleconsultationFacilityWithMedicalOfficers>) {
@@ -67,15 +68,15 @@ class TeleconsultationFacilityRepository @Inject constructor(
     appDatabase.teleconsultFacilityInfoDao().updateSyncStatus(ids, to)
   }
 
-  override fun mergeWithLocalData(payloads: List<TeleconsultationFacilityInfoPayload>): Completable {
-    return Single.fromCallable {
-      payloads.asSequence()
-          .filter { payload ->
-            appDatabase.teleconsultFacilityInfoDao().getOne(payload.id)?.syncStatus.canBeOverriddenByServerCopy()
-          }
-          .map { it.toTeleconsultInfoWithMedicalOfficersDatabaseModel() }
-          .toList()
-    }.flatMapCompletable(::save)
+  override fun mergeWithLocalData(payloads: List<TeleconsultationFacilityInfoPayload>) {
+    val payloadsToSave = payloads
+        .filter { payload ->
+          appDatabase.teleconsultFacilityInfoDao().getOne(payload.id)?.syncStatus.canBeOverriddenByServerCopy()
+        }
+        .map { it.toTeleconsultInfoWithMedicalOfficersDatabaseModel() }
+        .toList()
+
+    saveRecords(payloadsToSave)
   }
 
   override fun recordCount(): Observable<Int> {

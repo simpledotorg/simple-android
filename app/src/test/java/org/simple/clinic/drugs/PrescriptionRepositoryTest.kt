@@ -43,7 +43,7 @@ class PrescriptionRepositoryTest {
     whenever(dao.getOne(prescriptionUuid)).thenReturn(localCopy)
 
     val serverBp = TestData.prescription(prescriptionUuid, syncStatus = SyncStatus.DONE).toPayload()
-    repository.mergeWithLocalData(listOf(serverBp)).blockingAwait()
+    repository.mergeWithLocalData(listOf(serverBp))
 
     if (serverRecordExpectedToBeSaved) {
       verify(dao).save(argThat { isNotEmpty() })

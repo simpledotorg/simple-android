@@ -182,39 +182,41 @@ class PatientRepository @Inject constructor(
         .toObservable()
   }
 
-  override fun mergeWithLocalData(payloads: List<PatientPayload>): Completable {
-    return Single.fromCallable {
-      payloads.asSequence()
-          .filter { payload ->
-            database.patientDao().getOne(payload.uuid)?.syncStatus.canBeOverriddenByServerCopy()
-          }
-          .map(::payloadToPatientProfile)
-          .toList()
-    }.flatMapCompletable(::save)
+  override fun mergeWithLocalData(payloads: List<PatientPayload>) {
+    val payloadsToSave = payloads
+        .filter { payload ->
+          database.patientDao().getOne(payload.uuid)?.syncStatus.canBeOverriddenByServerCopy()
+        }
+        .map(::payloadToPatientProfile)
+        .toList()
+
+    saveRecords(payloadsToSave)
   }
 
   override fun save(records: List<PatientProfile>): Completable {
-    return Completable.fromAction {
-      database
-          .addressDao()
-          .save(records.map { it.address })
+    return Completable.fromAction { saveRecords(records) }
+  }
 
-      database
-          .patientDao()
-          .save(records.map { it.patient })
+  private fun saveRecords(records: List<PatientProfile>) {
+    database
+        .addressDao()
+        .save(records.map { it.address })
 
-      database
-          .phoneNumberDao()
-          .save(records
-              .filter { it.phoneNumbers.isNotEmpty() }
-              .flatMap { it.phoneNumbers })
+    database
+        .patientDao()
+        .save(records.map { it.patient })
 
-      database
-          .businessIdDao()
-          .save(records
-              .filter { it.businessIds.isNotEmpty() }
-              .flatMap { it.businessIds })
-    }
+    database
+        .phoneNumberDao()
+        .save(records
+            .filter { it.phoneNumbers.isNotEmpty() }
+            .flatMap { it.phoneNumbers })
+
+    database
+        .businessIdDao()
+        .save(records
+            .filter { it.businessIds.isNotEmpty() }
+            .flatMap { it.businessIds })
   }
 
   private fun payloadToPatientProfile(patientPayload: PatientPayload): PatientProfile {

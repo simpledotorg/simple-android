@@ -19,7 +19,7 @@ interface SynceableRepository<T, P> {
 
   fun setSyncStatus(ids: List<UUID>, to: SyncStatus)
 
-  fun mergeWithLocalData(payloads: List<P>): Completable
+  fun mergeWithLocalData(payloads: List<P>)
 
   fun recordCount(): Observable<Int>
 

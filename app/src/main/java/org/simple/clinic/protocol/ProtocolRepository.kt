@@ -23,13 +23,15 @@ class ProtocolRepository @Inject constructor(
   private val protocolDrugsDao = appDatabase.protocolDrugDao()
 
   override fun save(records: List<ProtocolAndProtocolDrugs>): Completable {
-    return Completable.fromAction {
-      appDatabase.openHelper.writableDatabase.inTransaction {
-        protocolDao.save(records.map { it.protocol })
-        protocolDrugsDao.save(records
-            .filter { it.drugs.isNotEmpty() }
-            .flatMap { it.drugs })
-      }
+    return Completable.fromAction { saveRecords(records) }
+  }
+
+  private fun saveRecords(records: List<ProtocolAndProtocolDrugs>) {
+    appDatabase.openHelper.writableDatabase.inTransaction {
+      protocolDao.save(records.map { it.protocol })
+      protocolDrugsDao.save(records
+          .filter { it.drugs.isNotEmpty() }
+          .flatMap { it.drugs })
     }
   }
 
@@ -52,7 +54,7 @@ class ProtocolRepository @Inject constructor(
     protocolDao.updateSyncStatus(uuids = ids, newStatus = to)
   }
 
-  override fun mergeWithLocalData(payloads: List<ProtocolPayload>): Completable {
+  override fun mergeWithLocalData(payloads: List<ProtocolPayload>) {
     val protocolDrugsWithDosage = payloads
         .filter { payload ->
           val protocolFromDb = appDatabase.protocolDao().getOne(payload.uuid)
@@ -60,7 +62,7 @@ class ProtocolRepository @Inject constructor(
         }
         .map(::payloadToProtocolAndDrugs)
 
-    return save(protocolDrugsWithDosage)
+    return saveRecords(protocolDrugsWithDosage)
   }
 
   override fun recordCount(): Observable<Int> {

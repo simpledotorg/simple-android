@@ -2,7 +2,6 @@ package org.simple.clinic.facility
 
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
@@ -73,16 +72,16 @@ class FacilityRepository @Inject constructor(
     return userDao.currentFacilityUuid()
   }
 
-  override fun mergeWithLocalData(payloads: List<FacilityPayload>): Completable {
-    return payloads
-        .toObservable()
+  override fun mergeWithLocalData(payloads: List<FacilityPayload>) {
+    val payloadsToSave = payloads
         .filter { payload ->
           val localCopy = facilityDao.getOne(payload.uuid)
           localCopy?.syncStatus.canBeOverriddenByServerCopy()
         }
         .map { it.toDatabaseModel(SyncStatus.DONE) }
         .toList()
-        .flatMapCompletable { Completable.fromAction { facilityDao.save(it) } }
+
+    facilityDao.save(payloadsToSave)
   }
 
   override fun save(records: List<Facility>): Completable {

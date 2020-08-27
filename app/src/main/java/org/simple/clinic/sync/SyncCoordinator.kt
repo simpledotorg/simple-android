@@ -57,7 +57,7 @@ class SyncCoordinator @Inject constructor() {
 
         val response = pullNetworkCall(processToken)
 
-        repository.mergeWithLocalData(response.payloads).blockingAwait()
+        repository.mergeWithLocalData(response.payloads)
         lastPullToken.set(Optional.of(response.processToken))
 
         hasFetchedAllData = response.payloads.size < batchSize

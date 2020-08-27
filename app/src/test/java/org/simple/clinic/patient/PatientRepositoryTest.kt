@@ -136,7 +136,7 @@ class PatientRepositoryTest {
         assignedFacilityId = null
     )
 
-    repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
+    repository.mergeWithLocalData(listOf(serverPatientWithoutPhone))
 
     if (serverRecordExpectedToBeSaved) {
       verify(patientDao).save(argThat<List<Patient>> { isNotEmpty() })
@@ -196,7 +196,7 @@ class PatientRepositoryTest {
         assignedFacilityId = null
     )
 
-    repository.mergeWithLocalData(listOf(serverPatientWithPhone)).blockingAwait()
+    repository.mergeWithLocalData(listOf(serverPatientWithPhone))
 
     if (serverRecordExpectedToBeSaved) {
       verify(patientAddressDao).save(argThat<List<PatientAddress>> { isNotEmpty() })

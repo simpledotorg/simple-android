@@ -82,7 +82,7 @@ class BloodPressureRepositoryTest {
     whenever(dao.getOne(bpUuid)).doReturn(localCopy)
 
     val serverBp = TestData.bloodPressureMeasurement(bpUuid, syncStatus = SyncStatus.DONE).toPayload()
-    repository.mergeWithLocalData(listOf(serverBp)).blockingAwait()
+    repository.mergeWithLocalData(listOf(serverBp))
 
     if (serverRecordExpectedToBeSaved) {
       verify(dao).save(argThat { isNotEmpty() })

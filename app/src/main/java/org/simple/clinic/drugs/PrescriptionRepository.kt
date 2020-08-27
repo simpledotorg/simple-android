@@ -3,7 +3,6 @@ package org.simple.clinic.drugs
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
@@ -102,16 +101,16 @@ class PrescriptionRepository @Inject constructor(
     dao.updateSyncStatus(uuids = ids, newStatus = to)
   }
 
-  override fun mergeWithLocalData(payloads: List<PrescribedDrugPayload>): Completable {
-    return payloads
-        .toObservable()
+  override fun mergeWithLocalData(payloads: List<PrescribedDrugPayload>) {
+    val payloadsToSave = payloads
         .filter { payload ->
           val localCopy = dao.getOne(payload.uuid)
           localCopy?.syncStatus.canBeOverriddenByServerCopy()
         }
         .map { it.toDatabaseModel(SyncStatus.DONE) }
         .toList()
-        .flatMapCompletable { Completable.fromAction { dao.save(it) } }
+
+    dao.save(payloadsToSave)
   }
 
   override fun recordCount(): Observable<Int> {

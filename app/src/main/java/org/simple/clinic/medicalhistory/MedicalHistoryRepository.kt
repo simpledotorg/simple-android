@@ -124,7 +124,7 @@ class MedicalHistoryRepository @Inject constructor(
     dao.updateSyncStatus(ids, to)
   }
 
-  override fun mergeWithLocalData(payloads: List<MedicalHistoryPayload>): Completable {
+  override fun mergeWithLocalData(payloads: List<MedicalHistoryPayload>) {
     val newOrUpdatedHistories = payloads
         .filter { payload: MedicalHistoryPayload ->
           val localCopy = dao.getOne(payload.uuid)
@@ -133,7 +133,7 @@ class MedicalHistoryRepository @Inject constructor(
         .map { toDatabaseModel(it, SyncStatus.DONE) }
         .toList()
 
-    return Completable.fromAction { dao.save(newOrUpdatedHistories) }
+    dao.save(newOrUpdatedHistories)
   }
 
   override fun recordCount(): Observable<Int> {

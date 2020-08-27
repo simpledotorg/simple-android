@@ -191,9 +191,8 @@ class AppointmentRepository @Inject constructor(
     appointmentDao.updateSyncStatus(ids, to)
   }
 
-  override fun mergeWithLocalData(payloads: List<AppointmentPayload>): Completable {
+  override fun mergeWithLocalData(payloads: List<AppointmentPayload>) {
     val newOrUpdatedAppointments = payloads
-        .asSequence()
         .filter { payload ->
           val localCopy = appointmentDao.getOne(payload.uuid)
           localCopy?.syncStatus.canBeOverriddenByServerCopy()
@@ -201,7 +200,7 @@ class AppointmentRepository @Inject constructor(
         .map { toDatabaseModel(it, SyncStatus.DONE) }
         .toList()
 
-    return Completable.fromAction { appointmentDao.save(newOrUpdatedAppointments) }
+    appointmentDao.save(newOrUpdatedAppointments)
   }
 
   private fun toDatabaseModel(payload: AppointmentPayload, syncStatus: SyncStatus): Appointment {

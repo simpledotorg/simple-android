@@ -4,7 +4,6 @@ import androidx.paging.DataSource
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
@@ -87,16 +86,16 @@ class BloodPressureRepository @Inject constructor(
     dao.updateSyncStatus(uuids = ids, newStatus = to)
   }
 
-  override fun mergeWithLocalData(payloads: List<BloodPressureMeasurementPayload>): Completable {
-    return payloads
-        .toObservable()
+  override fun mergeWithLocalData(payloads: List<BloodPressureMeasurementPayload>) {
+    val payloadsToSave = payloads
         .filter { payload ->
           val localCopy = dao.getOne(payload.uuid)
           localCopy?.syncStatus.canBeOverriddenByServerCopy()
         }
         .map { it.toDatabaseModel(SyncStatus.DONE) }
         .toList()
-        .flatMapCompletable { Completable.fromAction { dao.save(it) } }
+
+    dao.save(payloadsToSave)
   }
 
   override fun recordCount(): Observable<Int> {

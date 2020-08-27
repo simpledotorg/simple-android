@@ -55,7 +55,8 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock(),
         schedulersProvider = schedulersProvider,
-        userSession = userSession
+        userSession = userSession,
+        syncScheduler = schedulersProvider.io()
     )
 
     val syncErrors = dataSync
@@ -98,7 +99,8 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock(),
         schedulersProvider = schedulersProvider,
-        userSession = userSession
+        userSession = userSession,
+        syncScheduler = schedulersProvider.io()
     )
 
     val syncErrors = dataSync
@@ -144,7 +146,8 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3, modelSync4),
         crashReporter = mock(),
         schedulersProvider = schedulersProvider,
-        userSession = userSession
+        userSession = userSession,
+        syncScheduler = schedulersProvider.io()
     )
 
     val syncErrors = dataSync
@@ -192,7 +195,8 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3, modelSync4),
         crashReporter = mock(),
         schedulersProvider = schedulersProvider,
-        userSession = userSession
+        userSession = userSession,
+        syncScheduler = schedulersProvider.io()
     )
 
     val syncErrors = dataSync
@@ -237,7 +241,8 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock(),
         schedulersProvider = schedulersProvider,
-        userSession = userSession
+        userSession = userSession,
+        syncScheduler = schedulersProvider.io()
     )
 
     val syncErrors = dataSync
@@ -288,7 +293,8 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock(),
         schedulersProvider = schedulersProvider,
-        userSession = userSession
+        userSession = userSession,
+        syncScheduler = schedulersProvider.io()
     )
 
     val syncErrors = dataSync
@@ -339,7 +345,8 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock(),
         schedulersProvider = schedulersProvider,
-        userSession = userSession
+        userSession = userSession,
+        syncScheduler = schedulersProvider.io()
     )
 
     val syncErrors = dataSync
@@ -390,7 +397,8 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock(),
         schedulersProvider = schedulersProvider,
-        userSession = userSession
+        userSession = userSession,
+        syncScheduler = schedulersProvider.io()
     )
 
     val syncErrors = dataSync
@@ -441,7 +449,8 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock(),
         schedulersProvider = schedulersProvider,
-        userSession = userSession
+        userSession = userSession,
+        syncScheduler = schedulersProvider.io()
     )
 
     val syncErrors = dataSync
@@ -492,7 +501,8 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock(),
         schedulersProvider = schedulersProvider,
-        userSession = userSession
+        userSession = userSession,
+        syncScheduler = schedulersProvider.io()
     )
 
     val syncErrors = dataSync
@@ -544,7 +554,8 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock(),
         schedulersProvider = schedulersProvider,
-        userSession = userSession
+        userSession = userSession,
+        syncScheduler = schedulersProvider.io()
     )
 
     val syncErrors = dataSync
@@ -595,7 +606,8 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock(),
         schedulersProvider = schedulersProvider,
-        userSession = userSession
+        userSession = userSession,
+        syncScheduler = schedulersProvider.io()
     )
 
     val syncErrors = dataSync
@@ -646,7 +658,8 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock(),
         schedulersProvider = schedulersProvider,
-        userSession = userSession
+        userSession = userSession,
+        syncScheduler = schedulersProvider.io()
     )
 
     val syncErrors = dataSync

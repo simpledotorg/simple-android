@@ -43,13 +43,8 @@ class DataSync @Inject constructor(
   fun sync(syncGroup: SyncGroup): Completable {
     return Observable
         .fromIterable(modelSyncs)
-        .flatMapSingle { modelSync ->
-          modelSync
-              .syncConfig()
-              .map { config -> config to modelSync }
-        }
-        .filter { (config, _) -> config.syncGroup == syncGroup }
-        .map { (_, modelSync) ->
+        .filter { it.syncConfig().syncGroup == syncGroup }
+        .map { modelSync ->
           val syncName = modelSync.name
 
           modelSync

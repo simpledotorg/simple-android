@@ -8,26 +8,18 @@ import org.simple.clinic.TestDataModule
 import org.simple.clinic.appconfig.SelectedCountryPersistenceAndroidTest
 import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceTest
 import org.simple.clinic.bloodsugar.BloodSugarRepositoryAndroidTest
-import org.simple.clinic.bloodsugar.sync.BloodSugarSyncAndroidTest
 import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceTest
 import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
-import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
 import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
-import org.simple.clinic.drugs.sync.PrescriptionSyncAndroidTest
 import org.simple.clinic.facility.FacilityRepositoryAndroidTest
-import org.simple.clinic.help.HelpSyncAndroidTest
 import org.simple.clinic.home.overdue.OverdueAppointmentRowDataSourceTest
 import org.simple.clinic.login.LoginUserWithOtpServerIntegrationTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
-import org.simple.clinic.medicalhistory.MedicalHistorySyncAndroidTest
 import org.simple.clinic.overdue.AppointmentRepositoryAndroidTest
-import org.simple.clinic.overdue.AppointmentSyncAndroidTest
 import org.simple.clinic.patient.PatientRepositoryAndroidTest
-import org.simple.clinic.patient.PatientSyncAndroidTest
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapterAndroidTest
 import org.simple.clinic.protocolv2.ProtocolRepositoryAndroidTest
 import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
-import org.simple.clinic.reports.ReportsSyncAndroidTest
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
@@ -41,6 +33,16 @@ import org.simple.clinic.storage.migrations.Migration59AndroidTest
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepositoryAndroidTest
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepositoryAndroidTest
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityWithMedicalOfficersTest
+import org.simple.clinic.sync.AppointmentSyncIntegrationTest
+import org.simple.clinic.sync.BloodPressureSyncIntegrationTest
+import org.simple.clinic.sync.BloodSugarSyncIntegrationTest
+import org.simple.clinic.sync.HelpSyncIntegrationTest
+import org.simple.clinic.sync.MedicalHistorySyncIntegrationTest
+import org.simple.clinic.sync.PatientSyncIntegrationTest
+import org.simple.clinic.sync.PrescriptionSyncIntegrationTest
+import org.simple.clinic.sync.ProtocolSyncIntegrationTest
+import org.simple.clinic.sync.ReportsSyncIntegrationTest
+import org.simple.clinic.sync.TeleconsultationSyncIntegrationTest
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.RegisterUserServerIntegrationTest
 import org.simple.clinic.user.UserDaoAndroidTest
@@ -58,20 +60,14 @@ interface TestAppComponent {
 
   fun inject(target: TestClinicApp)
   fun inject(target: UserSessionAndroidTest)
-  fun inject(target: PrescriptionSyncAndroidTest)
-  fun inject(target: BloodPressureSyncAndroidTest)
-  fun inject(target: BloodSugarSyncAndroidTest)
   fun inject(target: ProtocolSyncAndroidTest)
   fun inject(target: PatientRepositoryAndroidTest)
   fun inject(target: PrescriptionRepositoryAndroidTest)
   fun inject(target: FacilityRepositoryAndroidTest)
   fun inject(target: UserDaoAndroidTest)
-  fun inject(target: AppointmentSyncAndroidTest)
   fun inject(target: AppointmentRepositoryAndroidTest)
   fun inject(target: LocalAuthenticationRule)
-  fun inject(target: MedicalHistorySyncAndroidTest)
   fun inject(target: MedicalHistoryRepositoryAndroidTest)
-  fun inject(target: PatientSyncAndroidTest)
   fun inject(target: BloodPressureRepositoryAndroidTest)
   fun inject(target: OngoingLoginEntryRepositoryTest)
   fun inject(target: BruteForceProtectionAndroidTest)
@@ -79,10 +75,10 @@ interface TestAppComponent {
   fun inject(target: ProtocolRepositoryAndroidTest)
   fun inject(target: RegisterPatientRule)
   fun inject(target: DatabaseMigrationAndroidTest)
-  fun inject(target: ReportsSyncAndroidTest)
+  fun inject(target: ReportsSyncIntegrationTest)
   fun inject(target: MissingPhoneReminderRepositoryAndroidTest)
   fun inject(target: BusinessIdMetaDataAdapterAndroidTest)
-  fun inject(target: HelpSyncAndroidTest)
+  fun inject(target: HelpSyncIntegrationTest)
   fun inject(target: ServerAuthenticationRule)
   fun inject(target: RegisterUserServerIntegrationTest)
   fun inject(target: SelectedCountryPersistenceAndroidTest)
@@ -98,4 +94,12 @@ interface TestAppComponent {
   fun inject(target: OverdueAppointmentRowDataSourceTest)
   fun inject(target: TeleconsultationFacilityWithMedicalOfficersTest)
   fun inject(target: TeleconsultationFacilityRepositoryAndroidTest)
+  fun inject(target: PatientSyncIntegrationTest)
+  fun inject(target: BloodPressureSyncIntegrationTest)
+  fun inject(target: MedicalHistorySyncIntegrationTest)
+  fun inject(target: AppointmentSyncIntegrationTest)
+  fun inject(target: PrescriptionSyncIntegrationTest)
+  fun inject(target: BloodSugarSyncIntegrationTest)
+  fun inject(target: TeleconsultationSyncIntegrationTest)
+  fun inject(target: ProtocolSyncIntegrationTest)
 }

@@ -19,7 +19,7 @@ class TeleconsultationSync @Inject constructor(
     private val api: TeleconsultFacilityInfoApi,
     private val userSession: UserSession,
     @TypedPreference(LastTeleconsultationFacilityPullToken) private val lastPullToken: Preference<Optional<String>>,
-    @Named("sync_config_daily") private val configProvider: Single<SyncConfig>
+    @Named("sync_config_daily") private val config: SyncConfig
 ) : ModelSync {
 
   private fun canSyncData() = userSession.canSyncData().firstOrError()
@@ -42,12 +42,12 @@ class TeleconsultationSync @Inject constructor(
   }
 
   override fun pull(): Completable {
-    return configProvider
-        .map { it.batchSize }
+    return Single
+        .fromCallable { config.batchSize }
         .flatMapCompletable { batchSize ->
-          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize.numberOfRecords, it) }
+          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it) }
         }
   }
 
-  override fun syncConfig() = configProvider
+  override fun syncConfig() = config
 }

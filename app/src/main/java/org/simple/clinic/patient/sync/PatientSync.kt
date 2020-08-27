@@ -2,7 +2,6 @@ package org.simple.clinic.patient.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
-import io.reactivex.Single
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
@@ -41,11 +40,10 @@ class PatientSync @Inject constructor(
   override fun push() = Completable.fromAction { syncCoordinator.push(repository, pushNetworkCall = { api.push(toRequest(it)).execute().body()!! }) }
 
   override fun pull(): Completable {
-    return Single
-        .fromCallable { config.batchSize }
-        .flatMapCompletable { batchSize ->
-          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
-        }
+    return Completable.fromAction {
+      val batchSize = config.batchSize
+      syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
+    }
   }
 
   override fun syncConfig(): SyncConfig = config

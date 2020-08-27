@@ -2,7 +2,6 @@ package org.simple.clinic.medicalhistory.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
-import io.reactivex.Single
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
@@ -43,11 +42,10 @@ class MedicalHistorySync @Inject constructor(
   }
 
   override fun pull(): Completable {
-    return Single
-        .fromCallable { config.batchSize }
-        .flatMapCompletable { batchSize ->
-          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
-        }
+    return Completable.fromAction {
+      val batchSize = config.batchSize
+      syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
+    }
   }
 
   override fun syncConfig(): SyncConfig = config

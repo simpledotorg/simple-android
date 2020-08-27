@@ -2,7 +2,6 @@ package org.simple.clinic.overdue
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
-import io.reactivex.Single
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
@@ -38,11 +37,10 @@ class AppointmentSync @Inject constructor(
   override fun push() = Completable.fromAction { syncCoordinator.push(repository) { api.push(toRequest(it)).execute().body()!! } }
 
   override fun pull(): Completable {
-    return Single
-        .fromCallable { config.batchSize }
-        .flatMapCompletable { batchSize ->
-          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
-        }
+    return Completable.fromAction {
+      val batchSize = config.batchSize
+      syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
+    }
   }
 
   override fun syncConfig(): SyncConfig = config

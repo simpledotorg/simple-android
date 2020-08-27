@@ -2,7 +2,6 @@ package org.simple.clinic.protocol.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
-import io.reactivex.Single
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.protocol.ProtocolSyncApi
 import org.simple.clinic.sync.ModelSync
@@ -27,11 +26,10 @@ class ProtocolSync @Inject constructor(
   override fun push(): Completable = Completable.complete()
 
   override fun pull(): Completable {
-    return Single
-        .fromCallable { config.batchSize }
-        .flatMapCompletable { batchSize ->
-          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
-        }
+    return Completable.fromAction {
+      val batchSize = config.batchSize
+      syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
+    }
   }
 
   override fun syncConfig(): SyncConfig = config

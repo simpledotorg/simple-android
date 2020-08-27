@@ -1,7 +1,6 @@
 package org.simple.clinic.sync
 
 import com.f2prateek.rx.preferences2.Preference
-import io.reactivex.Completable
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toNullable
@@ -44,21 +43,18 @@ class SyncCoordinator @Inject constructor() {
       lastPullToken: Preference<Optional<String>>,
       batchSize: Int,
       pullNetworkCall: (String?) -> DataPullResponse<P>
-  ): Completable {
-    return Completable.fromAction {
+  ) {
+    var hasFetchedAllData = false
 
-      var hasFetchedAllData = false
+    while (!hasFetchedAllData) {
+      val processToken = lastPullToken.get().toNullable()
 
-      while (!hasFetchedAllData) {
-        val processToken = lastPullToken.get().toNullable()
+      val response = pullNetworkCall(processToken)
 
-        val response = pullNetworkCall(processToken)
+      repository.mergeWithLocalData(response.payloads)
+      lastPullToken.set(Optional.of(response.processToken))
 
-        repository.mergeWithLocalData(response.payloads)
-        lastPullToken.set(Optional.of(response.processToken))
-
-        hasFetchedAllData = response.payloads.size < batchSize
-      }
+      hasFetchedAllData = response.payloads.size < batchSize
     }
   }
 }

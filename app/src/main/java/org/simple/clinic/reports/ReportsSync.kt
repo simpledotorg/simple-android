@@ -18,6 +18,8 @@ class ReportsSync @Inject constructor(
 
   override val name: String = "Reports"
 
+  override val requiresSyncApprovedUser = true
+
   override fun sync(): Completable =
       canSyncData()
           .flatMapCompletable { canSync ->

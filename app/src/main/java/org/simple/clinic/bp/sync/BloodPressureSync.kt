@@ -25,6 +25,8 @@ class BloodPressureSync @Inject constructor(
 
   override val name: String = "Blood Pressure"
 
+  override val requiresSyncApprovedUser = true
+
   override fun sync(): Completable =
       canSyncData()
           .flatMapCompletable { canSync ->

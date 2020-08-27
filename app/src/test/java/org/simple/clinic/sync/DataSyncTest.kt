@@ -200,12 +200,15 @@ class DataSyncTest {
 
   private class FakeModelSync(
       _name: String,
+      _requiresSyncApprovedUser: Boolean = false,
       private val config: SyncConfig,
       private val pushError: Throwable? = null,
       private val pullError: Throwable? = null,
   ) : ModelSync {
 
     override val name: String = _name
+
+    override val requiresSyncApprovedUser: Boolean = _requiresSyncApprovedUser
 
     override fun sync(): Completable {
       return Completable.mergeArrayDelayError(push(), pull())

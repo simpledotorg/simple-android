@@ -23,6 +23,8 @@ class AppointmentSync @Inject constructor(
 
   override val name: String = "Appointment"
 
+  override val requiresSyncApprovedUser = true
+
   override fun sync(): Completable =
       canSyncData()
           .flatMapCompletable { canSync ->

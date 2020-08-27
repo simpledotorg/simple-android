@@ -26,6 +26,8 @@ class PatientSync @Inject constructor(
 
   override val name: String = "Patient"
 
+  override val requiresSyncApprovedUser = true
+
   override fun sync(): Completable =
       canSyncData()
           .flatMapCompletable { canSync ->

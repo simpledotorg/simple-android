@@ -21,6 +21,8 @@ class FacilitySync @Inject constructor(
 
   override val name: String = "Facility"
 
+  override val requiresSyncApprovedUser = false
+
   override fun sync() = pull()
 
   override fun push(): Completable = Completable.complete()

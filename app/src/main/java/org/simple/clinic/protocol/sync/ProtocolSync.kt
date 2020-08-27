@@ -21,6 +21,8 @@ class ProtocolSync @Inject constructor(
 
   override val name: String = "Protocol"
 
+  override val requiresSyncApprovedUser = false
+
   override fun sync(): Completable = pull()
 
   override fun push(): Completable = Completable.complete()

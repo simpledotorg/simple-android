@@ -25,6 +25,8 @@ class TeleconsultationSync @Inject constructor(
 
   override val name: String = "TeleconsultationFacilityInfo"
 
+  override val requiresSyncApprovedUser = true
+
   override fun sync(): Completable {
     return canSyncData()
         .flatMapCompletable { canSync ->

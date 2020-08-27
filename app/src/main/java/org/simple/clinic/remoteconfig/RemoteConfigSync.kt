@@ -15,6 +15,8 @@ class RemoteConfigSync @Inject constructor(
 
   override val name: String = "Remote Config"
 
+  override val requiresSyncApprovedUser = false
+
   override fun sync(): Completable = pull()
 
   override fun push(): Completable = Completable.complete()

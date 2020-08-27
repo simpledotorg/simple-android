@@ -649,6 +649,8 @@
   <!-- Contact doctor sheet -->
   <string name="contactdoctor_title">Doctors</string>
   <string name="contactdoctor_subtitle">Assigned to %1$s</string>
+  <string name="contactdoctor_new_title">Doctors available</string>
+  <string name="contactdoctor_new_subtitle">Use WhatsApp if possible</string>
 
   <!-- Intro Video Screen -->
   <string name="screenintrovideo_how_to_use_simple_app">How to use Simple app</string>

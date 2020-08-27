@@ -1,14 +1,17 @@
 package org.simple.clinic.summary.teleconsultation.sync
 
+import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import kotlinx.android.parcel.Parcelize
 import java.util.UUID
 
 @Entity
+@Parcelize
 data class MedicalOfficer(
     @PrimaryKey
     val medicalOfficerId: UUID,
@@ -16,7 +19,7 @@ data class MedicalOfficer(
     val fullName: String,
 
     val phoneNumber: String
-) {
+) : Parcelable {
 
   fun toPayload(): MedicalOfficerPayload {
     return MedicalOfficerPayload(

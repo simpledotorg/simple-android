@@ -6,9 +6,8 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.scheduler.SchedulersProvider
-import java.time.Duration
 import timber.log.Timber
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
@@ -17,7 +16,6 @@ class SyncAndClearPatientData @Inject constructor(
     private val dataSync: DataSync,
     private val bruteForceProtection: BruteForceProtection,
     private val patientRepository: PatientRepository,
-    private val schedulersProvider: SchedulersProvider,
     @Named("clear_patient_data_sync_retry_count") private val syncRetryCount: Int,
     @Named("clear_patient_data_sync_timeout") private val syncTimeout: Duration,
     @Named("last_patient_pull_token") private val patientSyncPullToken: Preference<Optional<String>>,
@@ -33,7 +31,6 @@ class SyncAndClearPatientData @Inject constructor(
 
     return dataSync
         .syncTheWorld()
-        .subscribeOn(schedulersProvider.io())
         .retry(syncRetryCount.toLong())
         .timeout(syncTimeout.seconds, TimeUnit.SECONDS)
         .onErrorComplete()

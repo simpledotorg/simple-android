@@ -30,9 +30,6 @@ class SyncDataOnApproval @Inject constructor(
         .filter { (previousStatus, currentStatus) -> currentStatus == ApprovedForSyncing && previousStatus != ApprovedForSyncing }
         .map { Unit }
 
-    return syncSignal
-        .observeOn(schedulersProvider.io())
-        .flatMapCompletable { dataSync.syncTheWorld() }
-        .subscribe()
+    return syncSignal.subscribe { dataSync.fireAndForgetSync() }
   }
 }

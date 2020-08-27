@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.sync.DataSync
 import javax.inject.Inject
 
@@ -55,8 +54,6 @@ class DebugNotificationActionReceiver : BroadcastReceiver() {
   override fun onReceive(context: Context?, intent: Intent?) {
     DebugClinicApp.appComponent().inject(this)
 
-    dataSync.syncTheWorld()
-        .subscribeOn(io())
-        .subscribe()
+    dataSync.fireAndForgetSync()
   }
 }

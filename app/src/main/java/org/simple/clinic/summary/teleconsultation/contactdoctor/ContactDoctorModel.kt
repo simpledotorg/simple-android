@@ -12,6 +12,9 @@ data class ContactDoctorModel(
     )
   }
 
+  val hasMedicalOfficers: Boolean
+    get() = medicalOfficers != null
+
   fun medicalOfficersLoaded(medicalOfficers: List<MedicalOfficer>): ContactDoctorModel {
     return copy(medicalOfficers = medicalOfficers)
   }

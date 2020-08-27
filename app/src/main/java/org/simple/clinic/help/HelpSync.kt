@@ -29,11 +29,8 @@ class HelpSync @Inject constructor(
   }
 
   override fun pull() {
-    // TODO (vs) 27/08/20: Make this a sync call
-    syncApi
-        .help()
-        .flatMapCompletable(syncRepository::updateHelp)
-        .blockingAwait()
+    val helpText = syncApi.help().execute().body()!!
+    syncRepository.updateHelp(helpText)
   }
 
   override fun syncConfig(): SyncConfig = config

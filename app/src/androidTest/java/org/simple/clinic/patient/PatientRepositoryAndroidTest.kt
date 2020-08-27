@@ -550,7 +550,7 @@ class PatientRepositoryAndroidTest {
     appointmentRepository.mergeWithLocalData(appointmentPayloads)
     medicalHistoryRepository.mergeWithLocalData(medicalHistoryPayloads)
 
-    reportsRepository.updateReports("test reports!").blockingAwait()
+    reportsRepository.updateReports("test reports!")
 
     // We need to ensure that ONLY the tables related to the patient get cleared,
     // and the ones referring to the user must be left untouched

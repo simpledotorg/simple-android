@@ -27,10 +27,9 @@ class ReportsSync @Inject constructor(
   }
 
   override fun pull() {
-    reportsApi
-        .userAnalytics()
-        .flatMapCompletable(reportsRepository::updateReports)
-        .blockingAwait()
+    val reportsText = reportsApi.userAnalytics().execute().body()!!
+
+    reportsRepository.updateReports(reportsText)
   }
 
   override fun syncConfig(): SyncConfig = config

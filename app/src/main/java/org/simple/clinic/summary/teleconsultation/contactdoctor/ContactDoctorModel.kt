@@ -1,10 +1,13 @@
 package org.simple.clinic.summary.teleconsultation.contactdoctor
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 
+@Parcelize
 data class ContactDoctorModel(
     val medicalOfficers: List<MedicalOfficer>?
-) {
+) : Parcelable {
 
   companion object {
     fun create() = ContactDoctorModel(

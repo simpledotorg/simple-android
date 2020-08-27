@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.sheet_contact_doctor.*
+import kotlinx.android.synthetic.main.sheet_contact_doctor_old.*
 import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
@@ -16,7 +16,7 @@ import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.dp
 
-class ContactDoctorSheet : BottomSheetActivity() {
+class ContactDoctorSheet_Old : BottomSheetActivity() {
 
   companion object {
     private const val EXTRA_FACILITY_NAME = "facility_name"
@@ -32,7 +32,7 @@ class ContactDoctorSheet : BottomSheetActivity() {
         addAll(teleconsultationPhoneNumbers)
       }
 
-      return Intent(context, ContactDoctorSheet::class.java).apply {
+      return Intent(context, ContactDoctorSheet_Old::class.java).apply {
         putExtra(EXTRA_FACILITY_NAME, facility.name)
         putParcelableArrayListExtra(EXTRA_PHONE_NUMBERS, phoneNumbersArrayList)
       }
@@ -56,7 +56,7 @@ class ContactDoctorSheet : BottomSheetActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.sheet_contact_doctor)
+    setContentView(R.layout.sheet_contact_doctor_old)
 
     contactDoctorSheetSubtitleTextView.text = getString(R.string.contactdoctor_subtitle, facilityName)
     phoneNumbersRecyclerView.adapter = itemAdapter

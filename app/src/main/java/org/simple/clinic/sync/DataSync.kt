@@ -2,6 +2,8 @@ package org.simple.clinic.sync
 
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.platform.analytics.Analytics
@@ -10,6 +12,7 @@ import org.simple.clinic.platform.analytics.SyncAnalyticsEvent.Completed
 import org.simple.clinic.platform.analytics.SyncAnalyticsEvent.Failed
 import org.simple.clinic.platform.analytics.SyncAnalyticsEvent.Started
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.ResolvedError.NetworkRelated
@@ -18,6 +21,7 @@ import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.util.toOptional
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -25,7 +29,8 @@ import javax.inject.Inject
 class DataSync @Inject constructor(
     private val modelSyncs: ArrayList<ModelSync>,
     private val crashReporter: CrashReporter,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    private val userSession: UserSession
 ) {
 
   private val syncProgress = PublishSubject.create<SyncGroupResult>()
@@ -41,10 +46,21 @@ class DataSync @Inject constructor(
   }
 
   fun sync(syncGroup: SyncGroup): Completable {
-    return Observable
-        .fromIterable(modelSyncs)
-        .filter { it.syncConfig().syncGroup == syncGroup }
-        .map { modelSync ->
+    val syncsInGroup = modelSyncs.filter { it.syncConfig().syncGroup == syncGroup }
+
+    return Single
+        .fromCallable { userSession.loggedInUserImmediate().toOptional() }
+        .flatMapObservable { user ->
+          syncsInGroup
+              .toObservable()
+              .map { user to it }
+        }
+        .filter { (user, modelSync) ->
+          if (modelSync.requiresSyncApprovedUser) {
+            user.isPresent() && user.get().canSyncData
+          } else true
+        }
+        .map { (_, modelSync) ->
           val syncName = modelSync.name
 
           modelSync

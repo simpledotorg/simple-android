@@ -20,7 +20,7 @@ class PatientSync @Inject constructor(
     private val api: PatientSyncApi,
     private val userSession: UserSession,
     @Named("last_patient_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    @Named("sync_config_frequent") private val configProvider: Single<SyncConfig>
+    @Named("sync_config_frequent") private val config: SyncConfig
 ) : ModelSync {
 
   private fun canSyncData() = userSession.canSyncData().firstOrError()
@@ -41,14 +41,14 @@ class PatientSync @Inject constructor(
   override fun push() = syncCoordinator.push(repository, pushNetworkCall = { api.push(toRequest(it)) })
 
   override fun pull(): Completable {
-    return configProvider
-        .map { it.batchSize }
+    return Single
+        .fromCallable { config.batchSize }
         .flatMapCompletable { batchSize ->
-          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize.numberOfRecords, it) }
+          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it) }
         }
   }
 
-  override fun syncConfig() = configProvider
+  override fun syncConfig(): SyncConfig = config
 
   private fun toRequest(patients: List<PatientProfile>): PatientPushRequest {
     return PatientPushRequest(

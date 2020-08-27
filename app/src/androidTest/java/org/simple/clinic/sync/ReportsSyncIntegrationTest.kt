@@ -1,4 +1,4 @@
-package org.simple.clinic.reports
+package org.simple.clinic.sync
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
@@ -7,14 +7,16 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsRepository.Companion.REPORTS_KEY
+import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.storage.text.TextStore
 import org.simple.clinic.util.Rules
 import javax.inject.Inject
 
 
-class ReportsSyncAndroidTest {
+class ReportsSyncIntegrationTest {
 
   @Inject
   lateinit var reportsRepository: ReportsRepository

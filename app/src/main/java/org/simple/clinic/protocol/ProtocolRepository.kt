@@ -35,9 +35,14 @@ class ProtocolRepository @Inject constructor(
   }
 
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<ProtocolAndProtocolDrugs>> {
-    return Single.fromCallable {
-      emptyList<ProtocolAndProtocolDrugs>()
-    }
+    val protocolDao = appDatabase.protocolDao()
+    val protocolDrugDao = appDatabase.protocolDrugDao()
+
+    return protocolDao
+        .withSyncStatus(syncStatus)
+        .map { protocols -> protocols.associateBy({ it }, { protocolDrugDao.drugsForProtocolUuid(it.uuid) }) }
+        .map { drugsForProtocol -> drugsForProtocol.map { (protocol, drugs) -> ProtocolAndProtocolDrugs(protocol, drugs) } }
+        .firstOrError()
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {

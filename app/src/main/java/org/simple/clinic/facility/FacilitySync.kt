@@ -16,7 +16,7 @@ class FacilitySync @Inject constructor(
     private val repository: FacilityRepository,
     private val api: FacilitySyncApi,
     @Named("last_facility_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    @Named("sync_config_daily") private val configProvider: Single<SyncConfig>
+    @Named("sync_config_daily") private val config: SyncConfig
 ) : ModelSync {
 
   override val name: String = "Facility"
@@ -26,14 +26,14 @@ class FacilitySync @Inject constructor(
   override fun push(): Completable = Completable.complete()
 
   override fun pull(): Completable {
-    return configProvider
-        .map { it.batchSize }
+    return Single
+        .fromCallable { config.batchSize }
         .flatMapCompletable { batchSize ->
-          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize.numberOfRecords, it) }
+          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it) }
         }
   }
 
-  override fun syncConfig() = configProvider
+  override fun syncConfig(): SyncConfig = config
 
   fun pullWithResult(): Single<FacilityPullResult> {
     return pull()

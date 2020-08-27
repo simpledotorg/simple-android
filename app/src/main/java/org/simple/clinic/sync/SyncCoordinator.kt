@@ -43,7 +43,7 @@ class SyncCoordinator @Inject constructor() {
   fun <T : Any, P> pull(
       repository: SynceableRepository<T, P>,
       lastPullToken: Preference<Optional<String>>,
-      batchSize: BatchSize,
+      batchSize: Int,
       pullNetworkCall: (String?) -> Single<out DataPullResponse<P>>
   ): Completable {
     return lastPullToken.asObservable()
@@ -55,7 +55,7 @@ class SyncCoordinator @Inject constructor() {
               .andThen(Observable.just(response))
         }
         .repeat()
-        .takeWhile { response -> response.payloads.size >= batchSize.numberOfRecords }
+        .takeWhile { response -> response.payloads.size >= batchSize }
         .ignoreElements()
   }
 }

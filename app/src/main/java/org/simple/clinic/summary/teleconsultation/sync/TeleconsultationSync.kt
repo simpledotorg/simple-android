@@ -7,7 +7,6 @@ import org.simple.clinic.main.TypedPreference.Type.LastTeleconsultationFacilityP
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
@@ -16,26 +15,16 @@ class TeleconsultationSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: TeleconsultationFacilityRepository,
     private val api: TeleconsultFacilityInfoApi,
-    private val userSession: UserSession,
     @TypedPreference(LastTeleconsultationFacilityPullToken) private val lastPullToken: Preference<Optional<String>>,
     @Named("sync_config_daily") private val config: SyncConfig
 ) : ModelSync {
-
-  private fun canSyncData() = userSession.canSyncData().firstOrError()
 
   override val name: String = "TeleconsultationFacilityInfo"
 
   override val requiresSyncApprovedUser = true
 
   override fun sync(): Completable {
-    return canSyncData()
-        .flatMapCompletable { canSync ->
-          if (canSync) {
-            Completable.mergeArrayDelayError(push(), pull())
-          } else {
-            Completable.complete()
-          }
-        }
+    return Completable.mergeArrayDelayError(push(), pull())
   }
 
   override fun push(): Completable {

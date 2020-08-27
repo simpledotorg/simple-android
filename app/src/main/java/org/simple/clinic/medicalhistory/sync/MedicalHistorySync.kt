@@ -8,7 +8,6 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
@@ -17,27 +16,15 @@ class MedicalHistorySync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: MedicalHistoryRepository,
     private val api: MedicalHistorySyncApi,
-    private val userSession: UserSession,
     @Named("last_medicalhistory_pull_token") private val lastPullToken: Preference<Optional<String>>,
     @Named("sync_config_frequent") private val config: SyncConfig
 ) : ModelSync {
-
-  private fun canSyncData() = userSession.canSyncData().firstOrError()
 
   override val name: String = "Medical History"
 
   override val requiresSyncApprovedUser = true
 
-  override fun sync(): Completable =
-      canSyncData()
-          .flatMapCompletable { canSync ->
-            if (canSync) {
-              Completable.mergeArrayDelayError(push(), pull())
-
-            } else {
-              Completable.complete()
-            }
-          }
+  override fun sync(): Completable = Completable.mergeArrayDelayError(push(), pull())
 
   override fun push(): Completable {
     return Completable.fromAction { syncCoordinator.push(repository, pushNetworkCall = { api.push(toRequest(it)).execute().body()!! }) }

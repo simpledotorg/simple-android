@@ -7,7 +7,6 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
@@ -16,27 +15,15 @@ class BloodPressureSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val api: BloodPressureSyncApi,
     private val repository: BloodPressureRepository,
-    private val userSession: UserSession,
     @Named("last_bp_pull_token") private val lastPullToken: Preference<Optional<String>>,
     @Named("sync_config_frequent") private val config: SyncConfig
 ) : ModelSync {
-
-  private fun canSyncData() = userSession.canSyncData().firstOrError()
 
   override val name: String = "Blood Pressure"
 
   override val requiresSyncApprovedUser = true
 
-  override fun sync(): Completable =
-      canSyncData()
-          .flatMapCompletable { canSync ->
-            if (canSync) {
-              Completable.mergeArrayDelayError(push(), pull())
-
-            } else {
-              Completable.complete()
-            }
-          }
+  override fun sync(): Completable = Completable.mergeArrayDelayError(push(), pull())
 
   override fun push() = Completable.fromAction { syncCoordinator.push(repository) { api.push(toRequest(it)).execute().body()!! } }
 

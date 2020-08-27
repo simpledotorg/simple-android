@@ -68,9 +68,8 @@ class BloodSugarSyncIntegrationTest {
 
     sync = BloodSugarSync(
         syncCoordinator = SyncCoordinator(),
-        repository = repository,
         api = syncApi,
-        userSession = userSession,
+        repository = repository,
         lastPullToken = lastPullToken,
         config = config
     )

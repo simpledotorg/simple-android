@@ -66,9 +66,8 @@ class PrescriptionSyncIntegrationTest {
 
     sync = PrescriptionSync(
         syncCoordinator = SyncCoordinator(),
-        repository = repository,
         api = syncApi,
-        userSession = userSession,
+        repository = repository,
         lastPullToken = lastPullToken,
         config = config
     )

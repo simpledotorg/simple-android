@@ -68,7 +68,6 @@ class AppointmentSyncIntegrationTest {
         syncCoordinator = SyncCoordinator(),
         repository = repository,
         api = syncApi,
-        userSession = userSession,
         lastPullToken = lastPullToken,
         config = config
     )

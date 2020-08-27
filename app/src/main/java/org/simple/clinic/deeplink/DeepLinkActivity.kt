@@ -13,6 +13,7 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.setup.SetupActivity
 import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.asUuid
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import java.util.Locale
@@ -21,26 +22,57 @@ import javax.inject.Inject
 
 class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
 
+  companion object {
+    private const val PATIENT_UUID_QUERY_KEY = "p"
+    private const val TELECONSULT_RECORD_ID_QUERY_KEY = "r"
+  }
+
   @Inject
   lateinit var effectHandler: DeepLinkEffectHandler.Factory
 
   @Inject
   lateinit var locale: Locale
 
-  private val delegate: MobiusDelegate<DeepLinkModel, DeepLinkEvent, DeepLinkEffect> by unsafeLazy {
-    val patientUuid = try {
-      UUID.fromString(intent.data?.lastPathSegment)
-    } catch (e: IllegalArgumentException) {
-      null
-    }
+  private val deepLinkData by unsafeLazy {
+    intent.data
+  }
 
+  private val isLogTeleconsultDeepLink by unsafeLazy {
+    deepLinkData?.queryParameterNames.isNullOrEmpty().not()
+  }
+
+  private val delegate: MobiusDelegate<DeepLinkModel, DeepLinkEvent, DeepLinkEffect> by unsafeLazy {
     MobiusDelegate.forActivity(
         events = Observable.empty(),
-        defaultModel = DeepLinkModel.default(patientUuid),
+        defaultModel = DeepLinkModel.default(
+            patientUuid = patientUuid(),
+            teleconsultRecordId = teleconsultRecordId(),
+            isLogTeleconsultDeepLink = isLogTeleconsultDeepLink
+        ),
         update = DeepLinkUpdate(),
         init = DeepLinkInit(),
         effectHandler = effectHandler.create(this).build()
     )
+  }
+
+  private fun patientUuid(): UUID? {
+    val patientIdString = if (isLogTeleconsultDeepLink) {
+      deepLinkData?.getQueryParameter(PATIENT_UUID_QUERY_KEY)
+    } else {
+      deepLinkData?.lastPathSegment
+    }
+
+    return patientIdString?.asUuid()
+  }
+
+  private fun teleconsultRecordId(): UUID? {
+    val teleconsultRecordIdString = if (isLogTeleconsultDeepLink) {
+      deepLinkData?.getQueryParameter(TELECONSULT_RECORD_ID_QUERY_KEY)
+    } else {
+      null
+    }
+
+    return teleconsultRecordIdString?.asUuid()
   }
 
   private lateinit var component: DeepLinkComponent
@@ -95,6 +127,12 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
 
   override fun navigateToPatientSummary(patientUuid: UUID) {
     val intent = TheActivity.intentForOpenPatientSummary(this, patientUuid)
+    startActivity(intent)
+    finish()
+  }
+
+  override fun navigateToPatientSummaryWithTeleconsultLog(patientUuid: UUID, teleconsultRecordId: UUID?) {
+    val intent = TheActivity.intentForOpenPatientSummaryWithTeleconsultLog(this, patientUuid, teleconsultRecordId)
     startActivity(intent)
     finish()
   }

@@ -10,6 +10,7 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
+import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import java.util.UUID
@@ -71,7 +72,11 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
         .userLoggedInStatusLoaded(event.user.loggedInStatus)
         .currentFacilityLoaded(event.facility)
 
-    return if (updatedModel.isTeleconsultationEnabled && updatedModel.isUserLoggedIn) {
+    val canFetchTeleconsultInfo = updatedModel.isTeleconsultationEnabled &&
+        updatedModel.isUserLoggedIn &&
+        updatedModel.isTeleconsultLogDeepLink.not()
+
+    return if (canFetchTeleconsultInfo) {
       next(
           updatedModel.fetchingTeleconsultationInfo(),
           FetchTeleconsultationInfo(event.facility.uuid)
@@ -170,7 +175,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val shouldShowScheduleAppointmentSheet = if (countOfRecordedMeasurements == 0) false else hasPatientDataChanged
     val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && diagnosisRecorded.not() && isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
-    val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient
+    val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient || openIntention is ViewExistingPatientWithTeleconsultLog
 
     val effect = when {
       shouldShowDiagnosisError -> ShowDiagnosisError
@@ -213,13 +218,18 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       appointmentScheduledFrom: AppointmentSheetOpenedFrom
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val effect = when (appointmentScheduledFrom) {
-      BACK_CLICK -> when (model.openIntention) {
-        ViewExistingPatient -> GoBackToPreviousScreen
-        ViewNewPatient, is LinkIdWithPatient -> GoToHomeScreen
-      }
+      BACK_CLICK -> handleBackClick(model)
       DONE_CLICK -> GoToHomeScreen
     }
 
     return dispatch(effect)
+  }
+
+  private fun handleBackClick(model: PatientSummaryModel): PatientSummaryEffect {
+    return when (model.openIntention) {
+      ViewExistingPatient -> GoBackToPreviousScreen
+      ViewNewPatient, is LinkIdWithPatient -> GoToHomeScreen
+      is ViewExistingPatientWithTeleconsultLog -> GoToHomeScreen
+    }
   }
 }

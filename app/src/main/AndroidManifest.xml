@@ -130,6 +130,11 @@
           android:host="app.simple.org"
           android:pathPrefix="/patient"
           android:scheme="https" />
+
+        <data
+          android:host="app.simple.org"
+          android:pathPrefix="/consult"
+          android:scheme="https" />
       </intent-filter>
     </activity>
 

@@ -747,7 +747,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when current user and facility is loaded, user is logged in and teleconsultation is enabled, then fetch teleconsultation info`() {
+  fun `when current user and facility is loaded, user is logged in and teleconsultation is enabled and open intention is not teleconsult log deep link, then fetch teleconsultation info`() {
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("1a004469-cd65-4f43-910c-7f4cb2127c86"),
         loggedInStatus = User.LoggedInStatus.LOGGED_IN

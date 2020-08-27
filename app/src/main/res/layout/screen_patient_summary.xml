@@ -113,7 +113,7 @@
     android:id="@+id/summaryLoadingProgressBar"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_above="@+id/doneButtonFrame"
+    android:layout_above="@+id/buttonFrame"
     android:layout_below="@+id/patientsummary_header"
     android:layout_centerInParent="true"
     android:visibility="visible"
@@ -123,7 +123,7 @@
     android:id="@+id/summaryViewsContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_above="@+id/doneButtonFrame"
+    android:layout_above="@+id/buttonFrame"
     android:layout_below="@+id/patientsummary_header"
     android:visibility="invisible"
     tools:visibility="visible">
@@ -194,7 +194,7 @@
   </androidx.core.widget.NestedScrollView>
 
   <LinearLayout
-    android:id="@+id/doneButtonFrame"
+    android:id="@+id/buttonFrame"
     style="@style/Clinic.V2.BottomAlignedButtonFrame"
     android:background="@color/blue2"
     android:clipChildren="false"
@@ -217,7 +217,7 @@
       app:iconGravity="textStart" />
 
     <org.simple.clinic.widgets.ProgressMaterialButton
-      android:id="@+id/contactDoctorButton"
+      android:id="@+id/doctorButton"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_8"

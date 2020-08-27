@@ -27,6 +27,12 @@ class DeepLinkEffectHandler @AssistedInject constructor(
       .addAction(NavigateToSetupActivity::class.java, { uiActions.navigateToSetupActivity() }, schedulerProvider.ui())
       .addTransformer(FetchPatient::class.java, fetchPatient())
       .addConsumer(NavigateToPatientSummary::class.java, { uiActions.navigateToPatientSummary(it.patientUuid) }, schedulerProvider.ui())
+      .addConsumer(NavigateToPatientSummaryWithTeleconsultLog::class.java, {
+        uiActions.navigateToPatientSummaryWithTeleconsultLog(
+            it.patientUuid,
+            it.teleconsultRecordId
+        )
+      }, schedulerProvider.ui())
       .addAction(ShowPatientDoesNotExist::class.java, { uiActions.showPatientDoesNotExist() }, schedulerProvider.ui())
       .addAction(ShowNoPatientUuidError::class.java, { uiActions.showNoPatientUuidError() }, schedulerProvider.ui())
       .build()

@@ -24,18 +24,16 @@ class AppointmentSync @Inject constructor(
   override fun sync(): Completable = Completable
       .mergeArrayDelayError(
           Completable.fromAction { push() },
-          pull()
+          Completable.fromAction { pull() }
       )
 
   override fun push() {
     syncCoordinator.push(repository) { api.push(toRequest(it)).execute().body()!! }
   }
 
-  override fun pull(): Completable {
-    return Completable.fromAction {
-      val batchSize = config.batchSize
-      syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
-    }
+  override fun pull() {
+    val batchSize = config.batchSize
+    syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
   }
 
   override fun syncConfig(): SyncConfig = config

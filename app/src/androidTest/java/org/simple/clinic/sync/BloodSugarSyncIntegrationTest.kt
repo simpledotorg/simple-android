@@ -108,7 +108,7 @@ class BloodSugarSyncIntegrationTest {
     // when
     sync.push()
     clearBloodSugarData()
-    sync.pull().blockingAwait()
+    sync.pull()
 
     // then
     val expectedPulledRecords = records.map { it.syncCompleted() }
@@ -138,7 +138,7 @@ class BloodSugarSyncIntegrationTest {
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(1)
 
     // when
-    sync.pull().blockingAwait()
+    sync.pull()
 
     // then
     val expectedSavedRecords = records

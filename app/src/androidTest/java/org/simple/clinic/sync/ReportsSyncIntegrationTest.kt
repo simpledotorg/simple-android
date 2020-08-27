@@ -47,10 +47,7 @@ class ReportsSyncIntegrationTest {
     textStore.delete(REPORTS_KEY)
     assertThat(textStore.get(REPORTS_KEY)).isNull()
 
-    reportsSync
-        .pull()
-        .test()
-        .assertNoErrors()
+    reportsSync.pull()
 
     assertThat(textStore.get(REPORTS_KEY)).isNotEmpty()
   }

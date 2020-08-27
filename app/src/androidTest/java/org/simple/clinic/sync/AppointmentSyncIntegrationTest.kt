@@ -105,7 +105,7 @@ class AppointmentSyncIntegrationTest {
     // when
     sync.push()
     clearAppointmentData()
-    sync.pull().blockingAwait()
+    sync.pull()
 
     // then
     val expectedPulledRecords = records.map { it.syncCompleted() }
@@ -134,7 +134,7 @@ class AppointmentSyncIntegrationTest {
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(1)
 
     // when
-    sync.pull().blockingAwait()
+    sync.pull()
 
     // then
     val expectedSavedRecords = records

@@ -108,7 +108,7 @@ class PatientSyncIntegrationTest {
     // when
     patientSync.push()
     clearPatientData()
-    patientSync.pull().blockingAwait()
+    patientSync.pull()
 
     // then
     val expectedPulledRecords = records.map { it.syncCompleted() }
@@ -138,7 +138,7 @@ class PatientSyncIntegrationTest {
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(1)
 
     // when
-    patientSync.pull().blockingAwait()
+    patientSync.pull()
 
     // then
     val expectedSavedRecords = records

@@ -26,24 +26,23 @@ class FacilitySync @Inject constructor(
   override fun sync() = Completable
       .mergeArrayDelayError(
           Completable.fromAction { push() },
-          pull()
+          Completable.fromAction { pull() }
       )
 
   override fun push() {
     /* Nothing to do here */
   }
 
-  override fun pull(): Completable {
-    return Completable.fromAction {
-      val batchSize = config.batchSize
-      syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
-    }
+  override fun pull() {
+    val batchSize = config.batchSize
+    syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
   }
 
   override fun syncConfig(): SyncConfig = config
 
   fun pullWithResult(): Single<FacilityPullResult> {
-    return pull()
+    return Completable
+        .fromAction { pull() }
         .toSingleDefault(FacilityPullResult.Success as FacilityPullResult)
         .onErrorReturn { e ->
           when (e) {

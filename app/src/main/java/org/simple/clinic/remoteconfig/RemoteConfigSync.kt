@@ -1,7 +1,6 @@
 package org.simple.clinic.remoteconfig
 
 import io.reactivex.Completable
-import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
@@ -9,7 +8,6 @@ import org.simple.clinic.sync.SyncInterval
 import javax.inject.Inject
 
 class RemoteConfigSync @Inject constructor(
-    private val crashReporter: CrashReporter,
     private val remoteConfigService: RemoteConfigService
 ) : ModelSync {
 
@@ -17,14 +15,15 @@ class RemoteConfigSync @Inject constructor(
 
   override val requiresSyncApprovedUser = false
 
-  override fun sync(): Completable = pull()
+  override fun sync(): Completable = Completable.fromAction { pull() }
 
   override fun push() {
     /* Nothing to do here */
   }
 
-  override fun pull(): Completable {
-    return remoteConfigService.update()
+  override fun pull() {
+    // TODO (vs) 27/08/20: Make this a sync call
+    remoteConfigService.update().blockingAwait()
   }
 
   override fun syncConfig(): SyncConfig {

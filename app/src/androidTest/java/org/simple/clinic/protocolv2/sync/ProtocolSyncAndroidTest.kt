@@ -48,8 +48,6 @@ class ProtocolSyncAndroidTest {
     lastPullToken.set(None())
 
     sync.pull()
-        .test()
-        .assertNoErrors()
 
     val count = appDatabase.protocolDao().count().blockingFirst()
     assertThat(count).isAtLeast(1)

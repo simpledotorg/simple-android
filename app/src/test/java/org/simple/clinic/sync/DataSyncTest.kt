@@ -683,7 +683,7 @@ class DataSyncTest {
       return Completable
           .mergeArrayDelayError(
               Completable.fromAction { push() },
-              pull()
+              Completable.fromAction { pull() }
           )
     }
 
@@ -691,7 +691,9 @@ class DataSyncTest {
       if (pushError != null) throw pushError
     }
 
-    override fun pull(): Completable = if (pullError == null) Completable.complete() else Completable.error(pullError)
+    override fun pull() {
+      if (pullError != null) throw pullError
+    }
 
     override fun syncConfig(): SyncConfig = config
   }

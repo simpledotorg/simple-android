@@ -27,7 +27,7 @@ class TeleconsultationSync @Inject constructor(
     return Completable
         .mergeArrayDelayError(
             Completable.fromAction { push() },
-            pull()
+            Completable.fromAction { pull() }
         )
   }
 
@@ -35,11 +35,9 @@ class TeleconsultationSync @Inject constructor(
     /* Nothing to do here */
   }
 
-  override fun pull(): Completable {
-    return Completable.fromAction {
-      val batchSize = config.batchSize
-      syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
-    }
+  override fun pull() {
+    val batchSize = config.batchSize
+    syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
   }
 
   override fun syncConfig() = config

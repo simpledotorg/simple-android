@@ -21,22 +21,26 @@ class HelpSync @Inject constructor(
   override fun sync(): Completable = Completable
       .mergeArrayDelayError(
           Completable.fromAction { push() },
-          pull()
+          Completable.fromAction { pull() }
       )
 
   override fun push() {
     /* Nothing to do here */
   }
 
-  override fun pull(): Completable =
-      syncApi
-          .help()
-          .flatMapCompletable(syncRepository::updateHelp)
+  override fun pull() {
+    // TODO (vs) 27/08/20: Make this a sync call
+    syncApi
+        .help()
+        .flatMapCompletable(syncRepository::updateHelp)
+        .blockingAwait()
+  }
 
   override fun syncConfig(): SyncConfig = config
 
   fun pullWithResult(): Single<HelpPullResult> {
-    return pull()
+    return Completable
+        .fromAction { pull() }
         .toSingleDefault(HelpPullResult.Success as HelpPullResult)
         .onErrorReturn { cause ->
           when (cause) {

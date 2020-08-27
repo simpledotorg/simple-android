@@ -19,17 +19,19 @@ class ReportsSync @Inject constructor(
   override fun sync(): Completable = Completable
       .mergeArrayDelayError(
           Completable.fromAction { push() },
-          pull()
+          Completable.fromAction { pull() }
       )
 
   override fun push() {
     /* Nothing to do here */
   }
 
-  override fun pull(): Completable =
-      reportsApi
-          .userAnalytics()
-          .flatMapCompletable(reportsRepository::updateReports)
+  override fun pull() {
+    reportsApi
+        .userAnalytics()
+        .flatMapCompletable(reportsRepository::updateReports)
+        .blockingAwait()
+  }
 
   override fun syncConfig(): SyncConfig = config
 }

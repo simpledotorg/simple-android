@@ -8,6 +8,6 @@ interface ModelSync {
 
   fun sync(): Completable
   fun push()
-  fun pull(): Completable
+  fun pull()
   fun syncConfig(): SyncConfig
 }

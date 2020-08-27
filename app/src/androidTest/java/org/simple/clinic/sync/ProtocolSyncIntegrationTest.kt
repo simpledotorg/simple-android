@@ -85,7 +85,7 @@ class ProtocolSyncIntegrationTest {
   fun syncing_records_should_work_as_expected() {
     // when
     assertThat(repository.recordCount().blockingFirst()).isEqualTo(0)
-    sync.pull().blockingAwait()
+    sync.pull()
 
     // then
     val pulledRecords = repository.recordsWithSyncStatus(SyncStatus.DONE)

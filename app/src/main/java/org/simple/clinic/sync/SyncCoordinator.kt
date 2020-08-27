@@ -13,23 +13,20 @@ class SyncCoordinator @Inject constructor() {
   fun <T : Any, P> push(
       repository: SynceableRepository<T, P>,
       pushNetworkCall: (List<T>) -> DataPushResponse
-  ): Completable {
-    return Completable
-        .fromAction {
-          val pendingSyncRecords = repository.recordsWithSyncStatus(SyncStatus.PENDING)
+  ) {
+    val pendingSyncRecords = repository.recordsWithSyncStatus(SyncStatus.PENDING)
 
-          if (pendingSyncRecords.isNotEmpty()) {
-            val response = pushNetworkCall(pendingSyncRecords)
-            repository.setSyncStatus(SyncStatus.PENDING, SyncStatus.DONE)
+    if (pendingSyncRecords.isNotEmpty()) {
+      val response = pushNetworkCall(pendingSyncRecords)
+      repository.setSyncStatus(SyncStatus.PENDING, SyncStatus.DONE)
 
-            val validationErrors = response.validationErrors
-            val recordIdsWithErrors = validationErrors.map { it.uuid }
-            if (recordIdsWithErrors.isNotEmpty()) {
-              logValidationErrorsIfAny(pendingSyncRecords, validationErrors)
-              repository.setSyncStatus(recordIdsWithErrors, SyncStatus.INVALID)
-            }
-          }
-        }
+      val validationErrors = response.validationErrors
+      val recordIdsWithErrors = validationErrors.map { it.uuid }
+      if (recordIdsWithErrors.isNotEmpty()) {
+        logValidationErrorsIfAny(pendingSyncRecords, validationErrors)
+        repository.setSyncStatus(recordIdsWithErrors, SyncStatus.INVALID)
+      }
+    }
   }
 
   private fun <T : Any> logValidationErrorsIfAny(

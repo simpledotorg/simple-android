@@ -37,7 +37,7 @@ class BloodSugarSync @Inject constructor(
             }
           }
 
-  override fun push() = syncCoordinator.push(repository) { api.push(toRequest(it)).execute().body()!! }
+  override fun push() = Completable.fromAction { syncCoordinator.push(repository) { api.push(toRequest(it)).execute().body()!! } }
 
   override fun pull(): Completable {
     return Single

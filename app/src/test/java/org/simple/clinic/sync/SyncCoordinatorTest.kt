@@ -49,12 +49,6 @@ class SyncCoordinatorTest {
   }
 
   @Test
-  fun `when a push succeeds then any records that were created or updated during the push started should not get marked as synced`() {
-    // TODO: This is tricky to test since it involves concurrency. See if we can change how
-    // the sync itself happens so that this case does not get triggered.
-  }
-
-  @Test
   fun `if there are validation errors in push, then the failing records should be marked as invalid`() {
     whenever(repository.recordsWithSyncStatus(SyncStatus.PENDING)).thenReturn(Single.just(listOf(1, 2, 3)))
     whenever(repository.setSyncStatus(any<SyncStatus>(), any())).thenReturn(Completable.complete())

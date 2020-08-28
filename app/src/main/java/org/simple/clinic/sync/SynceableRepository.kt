@@ -2,7 +2,6 @@ package org.simple.clinic.sync
 
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.simple.clinic.patient.SyncStatus
 import java.util.UUID
 
@@ -14,13 +13,13 @@ interface SynceableRepository<T, P> {
 
   fun save(records: List<T>): Completable
 
-  fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<T>>
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<T>
 
-  fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable
+  fun setSyncStatus(from: SyncStatus, to: SyncStatus)
 
-  fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable
+  fun setSyncStatus(ids: List<UUID>, to: SyncStatus)
 
-  fun mergeWithLocalData(payloads: List<P>): Completable
+  fun mergeWithLocalData(payloads: List<P>)
 
   fun recordCount(): Observable<Int>
 

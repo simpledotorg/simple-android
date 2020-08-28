@@ -15,7 +15,6 @@ import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.time.Duration
 import java.io.IOException
 import java.net.SocketTimeoutException
@@ -148,7 +147,6 @@ class SyncAndClearPatientDataTest {
         dataSync = dataSync,
         bruteForceProtection = bruteForceProtection,
         patientRepository = patientRepository,
-        schedulersProvider = TrampolineSchedulersProvider(),
         syncRetryCount = syncRetryCount,
         syncTimeout = Duration.ofSeconds(1),
         patientSyncPullToken = patientPullToken,

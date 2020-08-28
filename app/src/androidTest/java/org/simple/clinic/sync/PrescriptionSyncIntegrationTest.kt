@@ -66,9 +66,8 @@ class PrescriptionSyncIntegrationTest {
 
     sync = PrescriptionSync(
         syncCoordinator = SyncCoordinator(),
-        repository = repository,
         api = syncApi,
-        userSession = userSession,
+        repository = repository,
         lastPullToken = lastPullToken,
         config = config
     )
@@ -104,13 +103,13 @@ class PrescriptionSyncIntegrationTest {
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(totalNumberOfRecords)
 
     // when
-    sync.push().blockingAwait()
+    sync.push()
     clearPrescriptionData()
-    sync.pull().blockingAwait()
+    sync.pull()
 
     // then
     val expectedPulledRecords = records.map { it.syncCompleted() }
-    val pulledRecords = repository.recordsWithSyncStatus(SyncStatus.DONE).blockingGet()
+    val pulledRecords = repository.recordsWithSyncStatus(SyncStatus.DONE)
 
     assertThat(pulledRecords).containsAtLeastElementsIn(expectedPulledRecords)
   }
@@ -127,7 +126,7 @@ class PrescriptionSyncIntegrationTest {
     assertThat(records).containsNoDuplicates()
 
     repository.save(records).blockingAwait()
-    sync.push().blockingAwait()
+    sync.push()
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(0)
 
     val modifiedRecord = records[1].dosageChanged("Over 9000mg")
@@ -135,15 +134,15 @@ class PrescriptionSyncIntegrationTest {
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(1)
 
     // when
-    sync.pull().blockingAwait()
+    sync.pull()
 
     // then
     val expectedSavedRecords = records
         .map { it.syncCompleted() }
         .filterNot { it.patientUuid == modifiedRecord.patientUuid }
 
-    val savedRecords = repository.recordsWithSyncStatus(SyncStatus.DONE).blockingGet()
-    val pendingSyncRecords = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    val savedRecords = repository.recordsWithSyncStatus(SyncStatus.DONE)
+    val pendingSyncRecords = repository.recordsWithSyncStatus(SyncStatus.PENDING)
 
     assertThat(savedRecords).containsAtLeastElementsIn(expectedSavedRecords)
     assertThat(pendingSyncRecords).containsExactly(modifiedRecord)

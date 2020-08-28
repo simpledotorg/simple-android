@@ -16,19 +16,28 @@ class HelpSync @Inject constructor(
 
   override val name: String = "Help"
 
-  override fun sync(): Completable = Completable.mergeArrayDelayError(push(), pull())
+  override val requiresSyncApprovedUser = false
 
-  override fun push(): Completable = Completable.complete()
+  override fun sync(): Completable = Completable
+      .mergeArrayDelayError(
+          Completable.fromAction { push() },
+          Completable.fromAction { pull() }
+      )
 
-  override fun pull(): Completable =
-      syncApi
-          .help()
-          .flatMapCompletable(syncRepository::updateHelp)
+  override fun push() {
+    /* Nothing to do here */
+  }
+
+  override fun pull() {
+    val helpText = syncApi.help().execute().body()!!
+    syncRepository.updateHelp(helpText)
+  }
 
   override fun syncConfig(): SyncConfig = config
 
   fun pullWithResult(): Single<HelpPullResult> {
-    return pull()
+    return Completable
+        .fromAction { pull() }
         .toSingleDefault(HelpPullResult.Success as HelpPullResult)
         .onErrorReturn { cause ->
           when (cause) {

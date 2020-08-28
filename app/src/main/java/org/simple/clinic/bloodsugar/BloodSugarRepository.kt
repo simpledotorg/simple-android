@@ -4,14 +4,11 @@ import androidx.paging.DataSource
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.bloodsugar.sync.BloodSugarMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
-import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
@@ -77,34 +74,30 @@ class BloodSugarRepository @Inject constructor(
   override fun save(records: List<BloodSugarMeasurement>): Completable =
       Completable.fromAction { dao.save(records) }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<BloodSugarMeasurement>> {
-    return dao.withSyncStatus(syncStatus).firstOrError()
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<BloodSugarMeasurement> {
+    return dao.withSyncStatus(syncStatus)
   }
 
-  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable =
-      Completable.fromAction {
-        dao.updateSyncStatus(oldStatus = from, newStatus = to)
-      }
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
+    dao.updateSyncStatus(oldStatus = from, newStatus = to)
+  }
 
-  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
     if (ids.isEmpty()) {
       throw AssertionError()
     }
-    return Completable.fromAction {
-      dao.updateSyncStatus(uuids = ids, newStatus = to)
-    }
+
+    dao.updateSyncStatus(uuids = ids, newStatus = to)
   }
 
-  override fun mergeWithLocalData(payloads: List<BloodSugarMeasurementPayload>): Completable {
-    return payloads
-        .toObservable()
-        .filter { payload ->
-          val localCopy = dao.getOne(payload.uuid)
-          localCopy?.syncStatus.canBeOverriddenByServerCopy()
-        }
-        .map { it.toDatabaseModel(DONE) }
-        .toList()
-        .flatMapCompletable { Completable.fromAction { dao.save(it) } }
+  override fun mergeWithLocalData(payloads: List<BloodSugarMeasurementPayload>) {
+    val dirtyRecords = dao.recordIdsWithSyncStatus(PENDING)
+
+    val payloadsToSave = payloads
+        .filterNot { it.uuid in dirtyRecords }
+        .map { it.toDatabaseModel(SyncStatus.DONE) }
+
+    dao.save(payloadsToSave)
   }
 
   override fun recordCount(): Observable<Int> =

@@ -1,7 +1,6 @@
 package org.simple.clinic.help
 
 import androidx.annotation.VisibleForTesting
-import io.reactivex.Completable
 import io.reactivex.Observable
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.storage.text.TextStore
@@ -22,7 +21,7 @@ class HelpRepository @Inject constructor(
     return textStore.getAsStream(HELP_KEY)
   }
 
-  fun updateHelp(helpContent: String): Completable {
-    return Completable.fromCallable { textStore.put(HELP_KEY, helpContent) }
+  fun updateHelp(helpContent: String) {
+    textStore.put(HELP_KEY, helpContent)
   }
 }

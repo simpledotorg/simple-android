@@ -3,10 +3,8 @@ package org.simple.clinic.protocol
 import androidx.annotation.VisibleForTesting
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.protocol.sync.ProtocolPayload
 import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.sync.SynceableRepository
@@ -24,44 +22,45 @@ class ProtocolRepository @Inject constructor(
   private val protocolDrugsDao = appDatabase.protocolDrugDao()
 
   override fun save(records: List<ProtocolAndProtocolDrugs>): Completable {
-    return Completable.fromAction {
-      appDatabase.openHelper.writableDatabase.inTransaction {
-        protocolDao.save(records.map { it.protocol })
-        protocolDrugsDao.save(records
-            .filter { it.drugs.isNotEmpty() }
-            .flatMap { it.drugs })
-      }
+    return Completable.fromAction { saveRecords(records) }
+  }
+
+  private fun saveRecords(records: List<ProtocolAndProtocolDrugs>) {
+    appDatabase.openHelper.writableDatabase.inTransaction {
+      protocolDao.save(records.map { it.protocol })
+      protocolDrugsDao.save(records
+          .filter { it.drugs.isNotEmpty() }
+          .flatMap { it.drugs })
     }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<ProtocolAndProtocolDrugs>> {
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<ProtocolAndProtocolDrugs> {
     val protocolDao = appDatabase.protocolDao()
     val protocolDrugDao = appDatabase.protocolDrugDao()
 
-    return protocolDao
+    val drugsForProtocol = protocolDao
         .withSyncStatus(syncStatus)
-        .map { protocols -> protocols.associateBy({ it }, { protocolDrugDao.drugsForProtocolUuid(it.uuid) }) }
-        .map { drugsForProtocol -> drugsForProtocol.map { (protocol, drugs) -> ProtocolAndProtocolDrugs(protocol, drugs) } }
-        .firstOrError()
+        .associateBy({ it }, { protocolDrugDao.drugsForProtocolUuid(it.uuid) })
+
+    return drugsForProtocol.map { (protocol, drugs) -> ProtocolAndProtocolDrugs(protocol, drugs) }
   }
 
-  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
-    return Completable.fromAction { protocolDao.updateSyncStatus(oldStatus = from, newStatus = to) }
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
+    protocolDao.updateSyncStatus(oldStatus = from, newStatus = to)
   }
 
-  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
-    return Completable.fromAction { protocolDao.updateSyncStatus(uuids = ids, newStatus = to) }
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
+    protocolDao.updateSyncStatus(uuids = ids, newStatus = to)
   }
 
-  override fun mergeWithLocalData(payloads: List<ProtocolPayload>): Completable {
-    val protocolDrugsWithDosage = payloads
-        .filter { payload ->
-          val protocolFromDb = appDatabase.protocolDao().getOne(payload.uuid)
-          protocolFromDb?.syncStatus.canBeOverriddenByServerCopy()
-        }
+  override fun mergeWithLocalData(payloads: List<ProtocolPayload>) {
+    val dirtyRecords = appDatabase.protocolDao().recordIdsWithSyncStatus(SyncStatus.PENDING)
+
+    val payloadsToSave = payloads
+        .filterNot { it.uuid in dirtyRecords }
         .map(::payloadToProtocolAndDrugs)
 
-    return save(protocolDrugsWithDosage)
+    saveRecords(payloadsToSave)
   }
 
   override fun recordCount(): Observable<Int> {

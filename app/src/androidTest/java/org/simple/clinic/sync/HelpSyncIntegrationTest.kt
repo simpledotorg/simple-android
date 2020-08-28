@@ -47,10 +47,7 @@ class HelpSyncIntegrationTest {
     textStore.delete(HELP_KEY)
     assertThat(textStore.get(HELP_KEY)).isNull()
 
-    helpSync
-        .pull()
-        .test()
-        .assertNoErrors()
+    helpSync.pull()
 
     assertThat(textStore.get(HELP_KEY)).isNotEmpty()
   }

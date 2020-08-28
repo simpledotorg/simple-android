@@ -2,11 +2,9 @@ package org.simple.clinic.summary.teleconsultation.sync
 
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.SyncStatus.PENDING
-import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import java.util.UUID
 import javax.inject.Inject
@@ -16,11 +14,13 @@ class TeleconsultationFacilityRepository @Inject constructor(
 ) : SynceableRepository<TeleconsultationFacilityWithMedicalOfficers, TeleconsultationFacilityInfoPayload> {
 
   override fun save(records: List<TeleconsultationFacilityWithMedicalOfficers>): Completable {
-    return Completable.fromAction {
-      saveTeleconsultFacilityInfo(records)
-      saveTeleconsultMedicalOfficers(records)
-      saveTeleconsultMedicalOfficersCrossRef(records)
-    }
+    return Completable.fromAction { saveRecords(records) }
+  }
+
+  private fun saveRecords(records: List<TeleconsultationFacilityWithMedicalOfficers>) {
+    saveTeleconsultFacilityInfo(records)
+    saveTeleconsultMedicalOfficers(records)
+    saveTeleconsultMedicalOfficersCrossRef(records)
   }
 
   private fun saveTeleconsultMedicalOfficersCrossRef(records: List<TeleconsultationFacilityWithMedicalOfficers>) {
@@ -48,40 +48,33 @@ class TeleconsultationFacilityRepository @Inject constructor(
         .save(records.map { it.teleconsultationFacilityInfo })
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<TeleconsultationFacilityWithMedicalOfficers>> {
-    return Single.fromCallable {
-      appDatabase
-          .teleconsultFacilityInfoDao()
-          .recordsWithSyncStatus(syncStatus)
-          .map {
-            appDatabase
-                .teleconsultFacilityWithMedicalOfficersDao()
-                .getOne(it.facilityId)!!
-          }
-    }
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultationFacilityWithMedicalOfficers> {
+    return appDatabase
+        .teleconsultFacilityInfoDao()
+        .recordsWithSyncStatus(syncStatus)
+        .map {
+          appDatabase
+              .teleconsultFacilityWithMedicalOfficersDao()
+              .getOne(it.facilityId)!!
+        }
   }
 
-  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
-    return Completable.fromAction {
-      appDatabase.teleconsultFacilityInfoDao().updateSyncStatus(from, to)
-    }
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
+    appDatabase.teleconsultFacilityInfoDao().updateSyncStatus(from, to)
   }
 
-  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
-    return Completable.fromAction {
-      appDatabase.teleconsultFacilityInfoDao().updateSyncStatus(ids, to)
-    }
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
+    appDatabase.teleconsultFacilityInfoDao().updateSyncStatus(ids, to)
   }
 
-  override fun mergeWithLocalData(payloads: List<TeleconsultationFacilityInfoPayload>): Completable {
-    return Single.fromCallable {
-      payloads.asSequence()
-          .filter { payload ->
-            appDatabase.teleconsultFacilityInfoDao().getOne(payload.id)?.syncStatus.canBeOverriddenByServerCopy()
-          }
-          .map { it.toTeleconsultInfoWithMedicalOfficersDatabaseModel() }
-          .toList()
-    }.flatMapCompletable(::save)
+  override fun mergeWithLocalData(payloads: List<TeleconsultationFacilityInfoPayload>) {
+    val dirtyRecords = appDatabase.teleconsultFacilityInfoDao().recordIdsWithSyncStatus(PENDING)
+
+    val payloadsToSave = payloads
+        .filterNot { it.id in dirtyRecords }
+        .map { it.toTeleconsultInfoWithMedicalOfficersDatabaseModel() }
+
+    saveRecords(payloadsToSave)
   }
 
   override fun recordCount(): Observable<Int> {

@@ -3,14 +3,13 @@ package org.simple.clinic.user
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Single
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.TestData
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.analytics.MockAnalyticsReporter.Event
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -21,10 +20,10 @@ import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus.PENDING
+import org.simple.clinic.platform.analytics.Analytics
 import java.time.Duration
 import java.time.Instant
 
@@ -51,11 +50,11 @@ class ReportPendingRecordsToAnalyticsTest {
   fun setUp() {
     Analytics.addReporter(reporter)
 
-    whenever(patientRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(emptyList()))
-    whenever(bloodPressureRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(emptyList()))
-    whenever(appointmentRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(emptyList()))
-    whenever(prescriptionRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(emptyList()))
-    whenever(medicalHistoryRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(emptyList()))
+    whenever(patientRepository.recordsWithSyncStatus(PENDING)).thenReturn(emptyList())
+    whenever(bloodPressureRepository.recordsWithSyncStatus(PENDING)).thenReturn(emptyList())
+    whenever(appointmentRepository.recordsWithSyncStatus(PENDING)).thenReturn(emptyList())
+    whenever(prescriptionRepository.recordsWithSyncStatus(PENDING)).thenReturn(emptyList())
+    whenever(medicalHistoryRepository.recordsWithSyncStatus(PENDING)).thenReturn(emptyList())
   }
 
   @After
@@ -72,7 +71,7 @@ class ReportPendingRecordsToAnalyticsTest {
         patientRecord(now),
         patientRecord(now)
     )
-    whenever(patientRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(patientRecords))
+    whenever(patientRepository.recordsWithSyncStatus(PENDING)).thenReturn(patientRecords)
 
     reportPendingRecordsToAnalytics.report().blockingAwait()
 
@@ -98,7 +97,7 @@ class ReportPendingRecordsToAnalyticsTest {
         TestData.bloodPressureMeasurement(updatedAt = now),
         TestData.bloodPressureMeasurement(updatedAt = now)
     )
-    whenever(bloodPressureRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(bpRecords))
+    whenever(bloodPressureRepository.recordsWithSyncStatus(PENDING)).thenReturn(bpRecords)
 
     reportPendingRecordsToAnalytics.report().blockingAwait()
 
@@ -123,7 +122,7 @@ class ReportPendingRecordsToAnalyticsTest {
         TestData.appointment(updatedAt = now),
         TestData.appointment(updatedAt = now)
     )
-    whenever(appointmentRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(appointmentRecords))
+    whenever(appointmentRepository.recordsWithSyncStatus(PENDING)).thenReturn(appointmentRecords)
 
     reportPendingRecordsToAnalytics.report().blockingAwait()
 
@@ -146,7 +145,7 @@ class ReportPendingRecordsToAnalyticsTest {
         TestData.prescription(updatedAt = now),
         TestData.prescription(updatedAt = now)
     )
-    whenever(prescriptionRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(prescribedDrugRecords))
+    whenever(prescriptionRepository.recordsWithSyncStatus(PENDING)).thenReturn(prescribedDrugRecords)
 
     reportPendingRecordsToAnalytics.report().blockingAwait()
 
@@ -173,7 +172,7 @@ class ReportPendingRecordsToAnalyticsTest {
         TestData.medicalHistory(updatedAt = now),
         TestData.medicalHistory(updatedAt = now)
     )
-    whenever(medicalHistoryRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(medicalHistoryRecords))
+    whenever(medicalHistoryRepository.recordsWithSyncStatus(PENDING)).thenReturn(medicalHistoryRecords)
 
     reportPendingRecordsToAnalytics.report().blockingAwait()
 
@@ -206,11 +205,11 @@ class ReportPendingRecordsToAnalyticsTest {
       medicalHistoryRecords: List<MedicalHistory>,
       expectedSince: Instant
   ) {
-    whenever(patientRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(patientRecords))
-    whenever(bloodPressureRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(bpRecords))
-    whenever(appointmentRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(appointmentRecords))
-    whenever(prescriptionRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(prescribedDrugRecords))
-    whenever(medicalHistoryRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(medicalHistoryRecords))
+    whenever(patientRepository.recordsWithSyncStatus(PENDING)).thenReturn(patientRecords)
+    whenever(bloodPressureRepository.recordsWithSyncStatus(PENDING)).thenReturn(bpRecords)
+    whenever(appointmentRepository.recordsWithSyncStatus(PENDING)).thenReturn(appointmentRecords)
+    whenever(prescriptionRepository.recordsWithSyncStatus(PENDING)).thenReturn(prescribedDrugRecords)
+    whenever(medicalHistoryRepository.recordsWithSyncStatus(PENDING)).thenReturn(medicalHistoryRecords)
 
     reportPendingRecordsToAnalytics.report().blockingAwait()
 

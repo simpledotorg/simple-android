@@ -2,7 +2,6 @@ package org.simple.clinic.patient
 
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -28,12 +27,9 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchResult.PatientNameAndId
-import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.filter.SearchPatientByName
-import org.simple.clinic.patient.sync.PatientPayload
-import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
@@ -92,122 +88,6 @@ class PatientRepositoryTest {
   @After
   fun tearDown() {
     Analytics.clearReporters()
-  }
-
-  @Test
-  @Parameters(value = [
-    "PENDING, false",
-    "INVALID, true",
-    "DONE, true"])
-  fun `when merging patients with server records, ignore records that already exist locally and are syncing or pending-sync`(
-      syncStatusOfLocalCopy: SyncStatus,
-      serverRecordExpectedToBeSaved: Boolean
-  ) {
-    whenever(database.patientDao()).thenReturn(patientDao)
-    whenever(database.addressDao()).thenReturn(patientAddressDao)
-    whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
-    whenever(database.businessIdDao()).thenReturn(businessIdDao)
-
-    val patientUuid = UUID.randomUUID()
-    val addressUuid = UUID.randomUUID()
-
-    val localPatientCopy = TestData.patient(uuid = patientUuid, addressUuid = addressUuid, syncStatus = syncStatusOfLocalCopy)
-    whenever(patientDao.getOne(patientUuid)).thenReturn(localPatientCopy)
-
-    val serverAddress = TestData.patientAddress(uuid = addressUuid).toPayload()
-    val serverPatientWithoutPhone = PatientPayload(
-        uuid = patientUuid,
-        fullName = "name",
-        gender = mock(),
-        dateOfBirth = mock(),
-        age = 0,
-        ageUpdatedAt = mock(),
-        status = PatientStatus.Active,
-        createdAt = mock(),
-        updatedAt = mock(),
-        deletedAt = null,
-        address = serverAddress,
-        phoneNumbers = null,
-        businessIds = emptyList(),
-        recordedAt = mock(),
-        reminderConsent = Granted,
-        deletedReason = null,
-        registeredFacilityId = null,
-        assignedFacilityId = null
-    )
-
-    repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
-
-    if (serverRecordExpectedToBeSaved) {
-      verify(patientDao).save(argThat<List<Patient>> { isNotEmpty() })
-      verify(patientAddressDao).save(argThat<List<PatientAddress>> { isNotEmpty() })
-    } else {
-      verify(patientDao).save(argThat<List<Patient>> { isEmpty() })
-      verify(patientAddressDao).save(argThat<List<PatientAddress>> { isEmpty() })
-    }
-  }
-
-  @Test
-  @Parameters(value = [
-    "PENDING, false",
-    "INVALID, true",
-    "DONE, true"])
-  fun `that already exist locally and are syncing or pending-sync`(
-      syncStatusOfLocalCopy: SyncStatus,
-      serverRecordExpectedToBeSaved: Boolean
-  ) {
-    whenever(database.patientDao()).thenReturn(patientDao)
-    whenever(database.addressDao()).thenReturn(patientAddressDao)
-    whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
-    whenever(database.businessIdDao()).thenReturn(businessIdDao)
-
-    val patientUuid = UUID.randomUUID()
-    val addressUuid = UUID.randomUUID()
-
-    val localPatientCopy = TestData.patient(uuid = patientUuid, addressUuid = addressUuid, syncStatus = syncStatusOfLocalCopy)
-    whenever(patientDao.getOne(patientUuid)).thenReturn(localPatientCopy)
-
-    val serverAddress = TestData.patientAddress(uuid = addressUuid).toPayload()
-    val serverPatientWithPhone = PatientPayload(
-        uuid = patientUuid,
-        fullName = "name",
-        gender = mock(),
-        dateOfBirth = mock(),
-        age = 0,
-        ageUpdatedAt = mock(),
-        status = PatientStatus.Active,
-        createdAt = mock(),
-        updatedAt = mock(),
-        deletedAt = null,
-        address = serverAddress,
-        phoneNumbers = listOf(PatientPhoneNumberPayload(
-            uuid = UUID.randomUUID(),
-            number = "1232",
-            type = mock(),
-            active = false,
-            createdAt = mock(),
-            updatedAt = mock(),
-            deletedAt = mock())),
-        businessIds = emptyList(),
-        recordedAt = mock(),
-        reminderConsent = Granted,
-        deletedReason = null,
-        registeredFacilityId = null,
-        assignedFacilityId = null
-    )
-
-    repository.mergeWithLocalData(listOf(serverPatientWithPhone)).blockingAwait()
-
-    if (serverRecordExpectedToBeSaved) {
-      verify(patientAddressDao).save(argThat<List<PatientAddress>> { isNotEmpty() })
-      verify(patientDao).save(argThat<List<Patient>> { isNotEmpty() })
-      verify(patientPhoneNumberDao).save(argThat { isNotEmpty() })
-
-    } else {
-      verify(patientAddressDao).save(argThat<List<PatientAddress>> { isEmpty() })
-      verify(patientDao).save(argThat<List<Patient>> { isEmpty() })
-      verify(patientPhoneNumberDao).save(emptyList())
-    }
   }
 
   @Test

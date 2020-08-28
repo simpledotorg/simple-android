@@ -43,7 +43,6 @@ import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection.BACKWARD
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
-import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
@@ -173,16 +172,6 @@ class PatientSummaryScreen(
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
     alertFacilityChangeSheetClosed(screenDestroys)
     setupChildViewVisibility(screenDestroys)
-
-    when (screenKey.intention) {
-      is ViewExistingPatientWithTeleconsultLog -> {
-        doctorButton.setButtonState(Enabled)
-        doctorButton.icon = null
-        doctorButton.text = context.getString(R.string.patientsummary_log_teleconsult)
-        doneButton.visibility = View.GONE
-        buttonFrame.setBackgroundColor(ContextCompat.getColor(context, R.color.green3))
-      }
-    }
   }
 
   @SuppressLint("CheckResult")
@@ -558,6 +547,15 @@ class PatientSummaryScreen(
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
     modelUpdateCallback = callback
+  }
+
+  override fun hideDoneButton() {
+    doneButton.visibility = View.GONE
+  }
+
+  override fun showTeleconsultLogButton() {
+    logTeleconsultButton.visibility = View.VISIBLE
+    buttonFrame.setBackgroundColor(ContextCompat.getColor(context, R.color.green3))
   }
 }
 

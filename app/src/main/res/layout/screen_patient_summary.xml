@@ -231,6 +231,17 @@
       app:icon="@drawable/ic_whatsapp"
       app:iconTint="@android:color/white" />
 
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/logTeleconsultButton"
+      style="?attr/materialButtonStyle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_marginEnd="@dimen/spacing_8"
+      android:text="@string/patientsummary_log_teleconsult"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+      android:visibility="gone" />
+
   </LinearLayout>
 
   <org.simple.clinic.summary.linkId.LinkIdWithPatientView

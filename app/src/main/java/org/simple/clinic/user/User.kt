@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Insert
@@ -12,6 +13,8 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -69,7 +72,10 @@ data class User(
     @ColumnInfo(index = true)
     val currentFacilityUuid: UUID,
 
-    val teleconsultPhoneNumber: String?
+    val teleconsultPhoneNumber: String?,
+
+    @Embedded(prefix = "capability_")
+    val capabilities: Capabilities? // Update this to not null when API is finalized
 ) : Parcelable {
 
   val canSyncData: Boolean
@@ -145,8 +151,12 @@ data class User(
 
   }
 
+  @JsonClass(generateAdapter = true)
   @Parcelize
-  data class Capabilities(val canTeleconsult: CapabilityStatus) : Parcelable
+  data class Capabilities(
+      @Json(name = "can_teleconsult")
+      val canTeleconsult: CapabilityStatus
+  ) : Parcelable
 
   sealed class CapabilityStatus : Parcelable {
 

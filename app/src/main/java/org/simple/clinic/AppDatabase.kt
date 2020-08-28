@@ -101,7 +101,7 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
     MedicineFrequency.RoomTypeConverter::class,
     TeleconsultationType.RoomTypeConverter::class,
     RoomTypeConverter::class,
-    User.CapabilityStatus.TypeAdapter::class
+    User.CapabilityStatus.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

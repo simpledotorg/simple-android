@@ -81,7 +81,8 @@ class RefreshCurrentUser @Inject constructor(
           loggedInStatus = loggedInStatus,
           registrationFacilityUuid = payload.registrationFacilityId,
           currentFacilityUuid = storedUser.currentFacilityUuid,
-          teleconsultPhoneNumber = payload.teleconsultPhoneNumber
+          teleconsultPhoneNumber = payload.teleconsultPhoneNumber,
+          capabilities = payload.capabilities
       )
     }
   }

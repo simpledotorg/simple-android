@@ -31,6 +31,20 @@ class PatientSummaryViewRenderer(
   }
 
   private fun setupUiForTeleconsult(model: PatientSummaryModel) {
+    if (model.openIntention is OpenIntention.ViewExistingPatientWithTeleconsultLog) {
+      renderMedicalOfficerView()
+    } else {
+      renderUserView(model)
+    }
+  }
+
+  private fun renderMedicalOfficerView() {
+    ui.hideContactDoctorButton()
+    ui.hideDoneButton()
+    ui.showTeleconsultLogButton()
+  }
+
+  private fun renderUserView(model: PatientSummaryModel) {
     if (model.isTeleconsultationEnabled && model.isUserLoggedIn) {
       renderContactDoctorButton(model)
     } else {

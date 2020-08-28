@@ -12,4 +12,6 @@ interface PatientSummaryScreenUi {
   fun fetchingTeleconsultInfo()
   fun showAssignedFacilityView()
   fun hideAssignedFacilityView()
+  fun hideDoneButton()
+  fun showTeleconsultLogButton()
 }

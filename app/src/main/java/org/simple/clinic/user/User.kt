@@ -10,6 +10,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.TypeConverter
+import com.squareup.moshi.FromJson
+import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
 import io.reactivex.Single
 import kotlinx.android.parcel.Parcelize
@@ -17,6 +20,7 @@ import org.intellij.lang.annotations.Language
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.room.RoomEnumTypeConverter
+import org.simple.clinic.util.room.SafeEnumTypeAdapter
 import java.time.Instant
 import java.util.UUID
 
@@ -138,6 +142,48 @@ data class User(
     UNAUTHORIZED;
 
     class RoomTypeConverter : RoomEnumTypeConverter<LoggedInStatus>(LoggedInStatus::class.java)
+
+  }
+
+  @Parcelize
+  data class Capabilities(val canTeleconsult: CapabilityStatus) : Parcelable
+
+  sealed class CapabilityStatus : Parcelable {
+
+    @Parcelize
+    object Yes : CapabilityStatus()
+
+    @Parcelize
+    object No : CapabilityStatus()
+
+    @Parcelize
+    data class Unknown(val actual: String) : CapabilityStatus()
+
+    object TypeAdapter : SafeEnumTypeAdapter<CapabilityStatus>(
+        knownMappings = mapOf(
+            Yes to "yes",
+            No to "no"
+        ),
+        unknownStringToEnumConverter = { Unknown(it) },
+        unknownEnumToStringConverter = { (it as Unknown).actual }
+    )
+
+    class RoomTypeConverter {
+
+      @TypeConverter
+      fun toEnum(value: String?) = TypeAdapter.toEnum(value)
+
+      @TypeConverter
+      fun fromEnum(anEnum: CapabilityStatus?) = TypeAdapter.fromEnum(anEnum)
+    }
+
+    class MoshiTypeAdapter {
+      @FromJson
+      fun toEnum(value: String?) = TypeAdapter.toEnum(value)
+
+      @ToJson
+      fun fromEnum(anEnum: CapabilityStatus?) = TypeAdapter.fromEnum(anEnum)
+    }
   }
 
   @Dao

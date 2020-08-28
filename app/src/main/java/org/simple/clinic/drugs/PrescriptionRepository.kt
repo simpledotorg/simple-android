@@ -66,7 +66,10 @@ class PrescriptionRepository @Inject constructor(
               syncStatus = SyncStatus.PENDING,
               createdAt = now,
               updatedAt = now,
-              deletedAt = null)
+              deletedAt = null,
+              frequency = null,
+              durationInDays = null
+          )
         }
         .flatMapCompletable { save(listOf(it)) }
   }

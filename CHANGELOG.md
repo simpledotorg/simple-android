@@ -6,6 +6,7 @@
 
 ### Internal
 - [In Progress: 27 Aug 2020] Add support for sending teleconsult request via SMS
+- Add `Capabilities` to User
 
 ## On Demo
 ### Changes

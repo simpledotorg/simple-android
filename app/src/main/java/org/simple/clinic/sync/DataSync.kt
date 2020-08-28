@@ -114,22 +114,26 @@ class DataSync(
   }
 
   private fun modelSyncsToCompletables(modelSyncs: List<ModelSync>): List<Completable> {
-    val allPushes = modelSyncs.map { sync ->
-      Completable
-          .fromAction(sync::push)
-          .doOnSubscribe { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Started) }
-          .doOnComplete { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Completed) }
-          .doOnError { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Failed) }
-    }
-    val allPulls = modelSyncs.map { sync ->
-      Completable
-          .fromAction(sync::pull)
-          .doOnSubscribe { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Started) }
-          .doOnComplete { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Completed) }
-          .doOnError { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Failed) }
-    }
+    val allPushes = modelSyncs.map(::generatePushOperationForSync)
+    val allPulls = modelSyncs.map(::generatePullOperationForSync)
 
     return allPushes + allPulls
+  }
+
+  private fun generatePullOperationForSync(sync: ModelSync): Completable {
+    return Completable
+        .fromAction(sync::pull)
+        .doOnSubscribe { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Started) }
+        .doOnComplete { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Completed) }
+        .doOnError { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Failed) }
+  }
+
+  private fun generatePushOperationForSync(sync: ModelSync): Completable {
+    return Completable
+        .fromAction(sync::push)
+        .doOnSubscribe { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Started) }
+        .doOnComplete { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Completed) }
+        .doOnError { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Failed) }
   }
 
   private fun reportSyncEvent(name: String, type: String, event: SyncAnalyticsEvent) {

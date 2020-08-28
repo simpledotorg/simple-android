@@ -20,21 +20,21 @@ class SyncCoordinator @Inject constructor() {
       repository.setSyncStatus(SyncStatus.PENDING, SyncStatus.DONE)
 
       val validationErrors = response.validationErrors
-      val recordIdsWithErrors = validationErrors.map { it.uuid }
-      if (recordIdsWithErrors.isNotEmpty()) {
-        logValidationErrorsIfAny(pendingSyncRecords, validationErrors)
-        repository.setSyncStatus(recordIdsWithErrors, SyncStatus.INVALID)
-      }
+      handleValidationErrors(validationErrors, pendingSyncRecords, repository)
     }
   }
 
-  private fun <T : Any> logValidationErrorsIfAny(
-      records: List<T>,
-      validationErrors: List<ValidationErrors>
+  private fun <P, T : Any> handleValidationErrors(
+      validationErrors: List<ValidationErrors>,
+      pendingSyncRecords: List<T>,
+      repository: SynceableRepository<T, P>
   ) {
-    if (validationErrors.isNotEmpty()) {
-      val recordType = records.first().javaClass.simpleName
-      Timber.e("Server sent validation errors when syncing $recordType : ${validationErrors}")
+    val recordIdsWithErrors = validationErrors.map { it.uuid }
+    if (recordIdsWithErrors.isNotEmpty()) {
+      val recordType = pendingSyncRecords.first().javaClass.simpleName
+      Timber.e("Server sent validation errors when syncing $recordType : $validationErrors")
+
+      repository.setSyncStatus(recordIdsWithErrors, SyncStatus.INVALID)
     }
   }
 

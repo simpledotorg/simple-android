@@ -89,7 +89,7 @@ data class BloodSugarMeasurement(
     fun allBloodSugarsDataSource(patientUuid: UUID): DataSource.Factory<Int, BloodSugarMeasurement>
 
     @Query("SELECT * FROM BloodSugarMeasurements WHERE syncStatus = :status")
-    fun withSyncStatus(status: SyncStatus): Flowable<List<BloodSugarMeasurement>>
+    fun withSyncStatus(status: SyncStatus): List<BloodSugarMeasurement>
 
     @Query("UPDATE BloodSugarMeasurements SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
@@ -99,6 +99,9 @@ data class BloodSugarMeasurement(
 
     @Query("SELECT * FROM BloodSugarMeasurements WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): BloodSugarMeasurement?
+
+    @Query("SELECT uuid FROM BloodSugarMeasurements WHERE syncStatus = :syncStatus")
+    fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
 
     @Query("SELECT COUNT(uuid) FROM BloodSugarMeasurements")
     fun count(): Flowable<Int>

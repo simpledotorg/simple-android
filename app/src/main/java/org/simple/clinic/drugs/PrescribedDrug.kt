@@ -67,7 +67,7 @@ data class PrescribedDrug(
   interface RoomDao {
 
     @Query("SELECT * FROM prescribeddrug WHERE syncStatus = :status")
-    fun withSyncStatus(status: SyncStatus): Flowable<List<PrescribedDrug>>
+    fun withSyncStatus(status: SyncStatus): List<PrescribedDrug>
 
     @Query("UPDATE prescribeddrug SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
@@ -86,6 +86,9 @@ data class PrescribedDrug(
 
     @Query("SELECT * FROM prescribeddrug WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): PrescribedDrug?
+
+    @Query("SELECT uuid FROM prescribeddrug WHERE syncStatus = :syncStatus")
+    fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
 
     @Query("SELECT COUNT(*) FROM prescribeddrug")
     fun count(): Flowable<Int>

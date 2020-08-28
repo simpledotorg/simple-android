@@ -2,11 +2,8 @@ package org.simple.clinic.facility
 
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
@@ -74,36 +71,34 @@ class FacilityRepository @Inject constructor(
     return userDao.currentFacilityUuid()
   }
 
-  override fun mergeWithLocalData(payloads: List<FacilityPayload>): Completable {
-    return payloads
-        .toObservable()
-        .filter { payload ->
-          val localCopy = facilityDao.getOne(payload.uuid)
-          localCopy?.syncStatus.canBeOverriddenByServerCopy()
-        }
+  override fun mergeWithLocalData(payloads: List<FacilityPayload>) {
+    val dirtyRecords = facilityDao.recordIdsWithSyncStatus(SyncStatus.PENDING)
+
+    val payloadsToSave = payloads
+        .filterNot { it.uuid in dirtyRecords }
         .map { it.toDatabaseModel(SyncStatus.DONE) }
-        .toList()
-        .flatMapCompletable { Completable.fromAction { facilityDao.save(it) } }
+
+    facilityDao.save(payloadsToSave)
   }
 
   override fun save(records: List<Facility>): Completable {
     return Completable.fromAction { facilityDao.save(records) }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<Facility>> {
-    return facilityDao.withSyncStatus(syncStatus).firstOrError()
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<Facility> {
+    return facilityDao.withSyncStatus(syncStatus)
   }
 
-  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
-    return Completable.fromAction { facilityDao.updateSyncStatus(oldStatus = from, newStatus = to) }
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
+    facilityDao.updateSyncStatus(oldStatus = from, newStatus = to)
   }
 
-  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
     if (ids.isEmpty()) {
       throw AssertionError("IDs must not be empty!")
     }
 
-    return Completable.fromAction { facilityDao.updateSyncStatus(uuids = ids, newStatus = to) }
+    facilityDao.updateSyncStatus(uuids = ids, newStatus = to)
   }
 
   override fun recordCount(): Observable<Int> {

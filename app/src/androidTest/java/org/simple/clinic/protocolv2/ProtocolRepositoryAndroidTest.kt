@@ -134,7 +134,7 @@ class ProtocolRepositoryAndroidTest {
     val drug2 = drugPayload2.toDatabaseModel(order = 1)
     val drug3 = drugPayload3.toDatabaseModel(order = 2)
 
-    protocolRepository.mergeWithLocalData(listOf(protocolPayload)).blockingAwait()
+    protocolRepository.mergeWithLocalData(listOf(protocolPayload))
 
     val drugsForProtocol = protocolRepository.drugsForProtocolOrDefault(protocolUuid)
     assertThat(drugsForProtocol).containsAtLeast(

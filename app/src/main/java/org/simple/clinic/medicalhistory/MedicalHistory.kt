@@ -66,7 +66,7 @@ data class MedicalHistory(
   interface RoomDao {
 
     @Query("SELECT * FROM MedicalHistory WHERE syncStatus = :status")
-    fun recordsWithSyncStatus(status: SyncStatus): Flowable<List<MedicalHistory>>
+    fun recordsWithSyncStatus(status: SyncStatus): List<MedicalHistory>
 
     @Query("UPDATE MedicalHistory SET syncStatus = :to WHERE syncStatus = :from")
     fun updateSyncStatus(from: SyncStatus, to: SyncStatus)
@@ -76,6 +76,9 @@ data class MedicalHistory(
 
     @Query("SELECT * FROM MedicalHistory WHERE uuid = :id LIMIT 1")
     fun getOne(id: UUID): MedicalHistory?
+
+    @Query("SELECT uuid FROM MedicalHistory WHERE syncStatus = :syncStatus")
+    fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(history: MedicalHistory)

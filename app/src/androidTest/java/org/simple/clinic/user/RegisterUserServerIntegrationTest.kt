@@ -2,6 +2,7 @@ package org.simple.clinic.user
 
 import android.content.SharedPreferences
 import com.google.common.truth.Truth.assertThat
+import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -94,7 +95,8 @@ class RegisterUserServerIntegrationTest {
   }
 
   private fun fetchOneFacility(): Facility {
-    return facilityApi.pull(1)
+    return Single
+        .fromCallable { facilityApi.pull(1).execute().body()!! }
         .map { it.payloads }
         .map { facilities -> facilities.map { it.toDatabaseModel(SyncStatus.DONE) } }
         .blockingGet()

@@ -41,10 +41,10 @@ import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import java.net.SocketTimeoutException
 import java.time.Instant
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-import java.net.SocketTimeoutException
 import java.util.UUID
 
 class PatientsLogicTest {
@@ -661,7 +661,6 @@ class PatientsLogicTest {
       appUpdateStream: Observable<AppUpdateState>
   ) {
     whenever(userSession.loggedInUser()).doReturn(userStream)
-    whenever(userSession.canSyncData()).doReturn(userStream.map { if (it is Just) it.value.canSyncData else false })
     whenever(refreshCurrentUser.refresh()).doReturn(refreshCurrentUserCompletable)
     whenever(checkAppUpdate.listen()).doReturn(appUpdateStream)
     whenever(numberOfPatientsRegisteredPreference.get()).doReturn(numberOfPatientsRegistered)

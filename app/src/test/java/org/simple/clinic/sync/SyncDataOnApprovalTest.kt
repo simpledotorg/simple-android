@@ -7,13 +7,9 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
-import io.reactivex.internal.schedulers.TrampolineScheduler
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
@@ -54,7 +50,7 @@ class SyncDataOnApprovalTest {
     verifyZeroInteractions(dataSync)
 
     userSubject.onNext(user.withStatus(ApprovedForSyncing, clock).toOptional())
-    verify(dataSync).syncTheWorld()
+    verify(dataSync).fireAndForgetSync()
     verifyNoMoreInteractions(dataSync)
     clearInvocations(dataSync)
 
@@ -65,7 +61,7 @@ class SyncDataOnApprovalTest {
     verifyZeroInteractions(dataSync)
 
     userSubject.onNext(user.withStatus(ApprovedForSyncing, clock).toOptional())
-    verify(dataSync).syncTheWorld()
+    verify(dataSync).fireAndForgetSync()
     verifyNoMoreInteractions(dataSync)
   }
 

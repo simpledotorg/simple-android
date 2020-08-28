@@ -1,8 +1,7 @@
 package org.simple.clinic.user
 
 import io.reactivex.Completable
-import io.reactivex.rxkotlin.Singles
-import org.simple.clinic.platform.analytics.Analytics
+import io.reactivex.Single
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescribedDrug
@@ -14,6 +13,7 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus.PENDING
+import org.simple.clinic.platform.analytics.Analytics
 import java.time.Instant
 import javax.inject.Inject
 
@@ -25,20 +25,14 @@ class ReportPendingRecordsToAnalytics @Inject constructor(
     private val medicalHistoryRepository: MedicalHistoryRepository
 ) {
   fun report(): Completable {
-    return Singles
-        .zip(
-            patientRepository.recordsWithSyncStatus(PENDING),
-            bloodPressureRepository.recordsWithSyncStatus(PENDING),
-            appointmentRepository.recordsWithSyncStatus(PENDING),
-            prescriptionRepository.recordsWithSyncStatus(PENDING),
-            medicalHistoryRepository.recordsWithSyncStatus(PENDING)
-        ) { patientRecords, bpRecords, appointmentRecords, prescribedDrugRecords, medicalHistoryRecords ->
+    return Single
+        .fromCallable {
           PendingRecords(
-              pendingPatientRecords = patientRecords,
-              pendingBpRecords = bpRecords,
-              pendingAppointmentRecords = appointmentRecords,
-              pendingPrescribedDrugRecords = prescribedDrugRecords,
-              pendingMedicalHistoryRecords = medicalHistoryRecords
+              pendingPatientRecords = patientRepository.recordsWithSyncStatus(PENDING),
+              pendingBpRecords = bloodPressureRepository.recordsWithSyncStatus(PENDING),
+              pendingAppointmentRecords = appointmentRepository.recordsWithSyncStatus(PENDING),
+              pendingPrescribedDrugRecords = prescriptionRepository.recordsWithSyncStatus(PENDING),
+              pendingMedicalHistoryRecords = medicalHistoryRepository.recordsWithSyncStatus(PENDING)
           )
         }
         .filter { pendingRecords -> pendingRecords.hasPendingRecords }

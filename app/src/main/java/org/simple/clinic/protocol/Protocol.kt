@@ -41,7 +41,7 @@ data class Protocol(
     fun save(protocol: List<Protocol>)
 
     @Query("SELECT * FROM Protocol WHERE syncStatus = :status")
-    fun withSyncStatus(status: SyncStatus): Flowable<List<Protocol>>
+    fun withSyncStatus(status: SyncStatus): List<Protocol>
 
     @Query("UPDATE Protocol SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
@@ -57,6 +57,9 @@ data class Protocol(
 
     @Query("SELECT * FROM Protocol WHERE uuid = :uuid")
     fun getOne(uuid: UUID): Protocol?
+
+    @Query("SELECT uuid FROM Protocol WHERE syncStatus = :syncStatus")
+    fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
 
     @Query("SELECT * FROM Protocol WHERE uuid = :uuid")
     fun protocolStream(uuid: UUID): Observable<Protocol>

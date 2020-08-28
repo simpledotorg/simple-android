@@ -2,7 +2,6 @@ package org.simple.clinic.patient
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.Completable
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -520,7 +519,7 @@ class PatientRepositoryAndroidTest {
   fun when_the_patient_data_is_cleared_all_patient_data_must_be_cleared() {
     val facilityPayloads = listOf(testData.facilityPayload())
     val facilityUuid = facilityPayloads.first().uuid
-    facilityRepository.mergeWithLocalData(facilityPayloads).blockingAwait()
+    facilityRepository.mergeWithLocalData(facilityPayloads)
 
     val user = testData.loggedInUser(
         uuid = UUID.fromString("763f291f-9995-4e42-b76c-a73fb8a79932"),
@@ -544,16 +543,14 @@ class PatientRepositoryAndroidTest {
     val appointmentUuid = appointmentPayloads.first().uuid
     val medicalHistoryPayloads = rangeOfRecords.map { testData.medicalHistoryPayload(patientUuid = patientUuid) }
 
-    Completable.mergeArray(
-        patientRepository.mergeWithLocalData(patientPayloads),
-        bloodPressureRepository.mergeWithLocalData(bloodPressurePayloads),
-        bloodSugarRepository.mergeWithLocalData(bloodSugarPayloads),
-        prescriptionRepository.mergeWithLocalData(prescriptionPayloads),
-        appointmentRepository.mergeWithLocalData(appointmentPayloads),
-        medicalHistoryRepository.mergeWithLocalData(medicalHistoryPayloads)
-    ).blockingAwait()
+    patientRepository.mergeWithLocalData(patientPayloads)
+    bloodPressureRepository.mergeWithLocalData(bloodPressurePayloads)
+    bloodSugarRepository.mergeWithLocalData(bloodSugarPayloads)
+    prescriptionRepository.mergeWithLocalData(prescriptionPayloads)
+    appointmentRepository.mergeWithLocalData(appointmentPayloads)
+    medicalHistoryRepository.mergeWithLocalData(medicalHistoryPayloads)
 
-    reportsRepository.updateReports("test reports!").blockingAwait()
+    reportsRepository.updateReports("test reports!")
 
     // We need to ensure that ONLY the tables related to the patient get cleared,
     // and the ones referring to the user must be left untouched
@@ -735,11 +732,11 @@ class PatientRepositoryAndroidTest {
     val patientUuid = UUID.fromString("0da97c1d-2da6-46b1-b253-63cac28f39d5")
     val initialNumber = testData.phoneNumberPayload(number = "123")
     val initialPatient = testData.patientPayload(uuid = patientUuid, phoneNumbers = listOf(initialNumber))
-    patientRepository.mergeWithLocalData(listOf(initialPatient)).blockingAwait()
+    patientRepository.mergeWithLocalData(listOf(initialPatient))
 
     val updatedNumber = initialNumber.copy(number = "456")
     val updatedPatient = initialPatient.copy(phoneNumbers = listOf(updatedNumber))
-    patientRepository.mergeWithLocalData(listOf(updatedPatient)).blockingAwait()
+    patientRepository.mergeWithLocalData(listOf(updatedPatient))
 
     assertThat(database.phoneNumberDao().count()).isEqualTo(1)
 
@@ -758,7 +755,7 @@ class PatientRepositoryAndroidTest {
     val patientUuid = UUID.fromString("7df86eed-a86c-4b26-81cf-e303c8a6027b")
     val initialAddress = testData.addressPayload(district = "Gotham")
     val initialPatient = testData.patientPayload(uuid = patientUuid, address = initialAddress)
-    patientRepository.mergeWithLocalData(listOf(initialPatient)).blockingAwait()
+    patientRepository.mergeWithLocalData(listOf(initialPatient))
 
     assertThat(database.addressDao().count()).isEqualTo(1)
     assertThat(database.patientDao().patientCount().blockingFirst()).isEqualTo(1)
@@ -785,7 +782,7 @@ class PatientRepositoryAndroidTest {
         fullName = "Scarecrow",
         address = address,
         phoneNumbers = listOf(number))
-    patientRepository.mergeWithLocalData(listOf(initialPatient)).blockingAwait()
+    patientRepository.mergeWithLocalData(listOf(initialPatient))
 
     assertThat(database.phoneNumberDao().count()).isEqualTo(1)
     assertThat(database.addressDao().count()).isEqualTo(1)
@@ -2265,7 +2262,7 @@ class PatientRepositoryAndroidTest {
     assertThat(patientRepository.hasPatientChangedSince(patientUuid, patientUpdatedAt)).isFalse()
     assertThat(patientRepository.hasPatientChangedSince(patientUuid, oneSecondAfterPatientUpdated)).isFalse()
 
-    patientRepository.setSyncStatus(listOf(patientUuid), DONE).blockingAwait()
+    patientRepository.setSyncStatus(listOf(patientUuid), DONE)
 
     assertThat(patientRepository.hasPatientChangedSince(patientUuid, patientUpdatedAt)).isFalse()
     assertThat(patientRepository.hasPatientChangedSince(patientUuid, oneSecondAfterPatientUpdated)).isFalse()
@@ -3520,7 +3517,7 @@ class PatientRepositoryAndroidTest {
     }
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
-    val patients = patientRepository.recordsWithSyncStatus(PENDING).blockingGet()
+    val patients = patientRepository.recordsWithSyncStatus(PENDING)
     assertThat(patients.size).isEqualTo(1)
 
     assertThat(patients.first().address.streetAddress).isEqualTo(streetAddress)
@@ -3558,7 +3555,7 @@ class PatientRepositoryAndroidTest {
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
     // when
-    val patients = patientRepository.recordsWithSyncStatus(PENDING).blockingGet()
+    val patients = patientRepository.recordsWithSyncStatus(PENDING)
     assertThat(patients.first()).isEqualTo(patientProfile)
   }
 

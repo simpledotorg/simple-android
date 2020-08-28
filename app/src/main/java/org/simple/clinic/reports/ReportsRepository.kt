@@ -22,8 +22,8 @@ class ReportsRepository @Inject constructor(
     return textStore.getAsStream(REPORTS_KEY)
   }
 
-  fun updateReports(reportContent: String): Completable {
-    return Completable.fromCallable { textStore.put(REPORTS_KEY, reportContent) }
+  fun updateReports(reportContent: String) {
+    textStore.put(REPORTS_KEY, reportContent)
   }
 
   fun deleteReports(): Completable {

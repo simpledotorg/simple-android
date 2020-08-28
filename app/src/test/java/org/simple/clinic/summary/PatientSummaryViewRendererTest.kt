@@ -273,4 +273,26 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideAssignedFacilityView()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when open intention is view existing patient with teleconsultation log, then show teleconsult log button`() {
+    // given
+    val patientUuid = UUID.fromString("66bc73a4-29a1-4b07-8be1-9223dc5d7cbb")
+    val model = PatientSummaryModel.from(
+        openIntention = OpenIntention.ViewExistingPatientWithTeleconsultLog(
+            teleconsultRecordId = UUID.fromString("726fc0e5-9638-4ce2-a8ca-c14bc72852b5")
+        ),
+        patientUuid = patientUuid
+    ).currentFacilityLoaded(facilityWithTeleconsultationEnabled)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showDiabetesView()
+    verify(ui).hideContactDoctorButton()
+    verify(ui).hideDoneButton()
+    verify(ui).showTeleconsultLogButton()
+    verifyNoMoreInteractions(ui)
+  }
 }

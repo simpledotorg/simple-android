@@ -7,6 +7,7 @@
 - Add teleconsultation facility sync (Disabled for now until API endpoint is live: ETA 04-09-2020)
 - Added `MedicineFrequencyBottomSheet` to update medicine frequency
 - Add support for the teleconsultation record deeplink
+- Add `frequency` & `durationInDays` to `PrescribedDrug`
 
 ## On Demo
 ### Changes

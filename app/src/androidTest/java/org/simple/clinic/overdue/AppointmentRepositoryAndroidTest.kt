@@ -2580,7 +2580,7 @@ class AppointmentRepositoryAndroidTest {
   }
 
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {
-    appointmentRepository.setSyncStatus(appointmentUuids.toList(), DONE).blockingAwait()
+    appointmentRepository.setSyncStatus(appointmentUuids.toList(), DONE)
   }
 
   private fun getAppointmentByUuid(appointmentUuid: UUID): Appointment {

@@ -3,7 +3,6 @@ package org.simple.clinic.overdue
 import androidx.paging.PositionalDataSource
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.Appointment.AppointmentType
@@ -11,7 +10,6 @@ import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UserClock
@@ -176,32 +174,30 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<Appointment>> {
-    return appointmentDao.recordsWithSyncStatus(syncStatus).firstOrError()
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<Appointment> {
+    return appointmentDao.recordsWithSyncStatus(syncStatus)
   }
 
-  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
-    return Completable.fromAction { appointmentDao.updateSyncStatus(from, to) }
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
+    appointmentDao.updateSyncStatus(from, to)
   }
 
-  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
     if (ids.isEmpty()) {
       throw AssertionError()
     }
-    return Completable.fromAction { appointmentDao.updateSyncStatus(ids, to) }
+
+    appointmentDao.updateSyncStatus(ids, to)
   }
 
-  override fun mergeWithLocalData(payloads: List<AppointmentPayload>): Completable {
-    val newOrUpdatedAppointments = payloads
-        .asSequence()
-        .filter { payload ->
-          val localCopy = appointmentDao.getOne(payload.uuid)
-          localCopy?.syncStatus.canBeOverriddenByServerCopy()
-        }
-        .map { toDatabaseModel(it, SyncStatus.DONE) }
-        .toList()
+  override fun mergeWithLocalData(payloads: List<AppointmentPayload>) {
+    val dirtyRecords = appointmentDao.recordIdsWithSyncStatus(SyncStatus.PENDING)
 
-    return Completable.fromAction { appointmentDao.save(newOrUpdatedAppointments) }
+    val payloadsToSave = payloads
+        .filterNot { it.uuid in dirtyRecords }
+        .map { toDatabaseModel(it, SyncStatus.DONE) }
+
+    appointmentDao.save(payloadsToSave)
   }
 
   private fun toDatabaseModel(payload: AppointmentPayload, syncStatus: SyncStatus): Appointment {

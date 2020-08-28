@@ -2,12 +2,9 @@ package org.simple.clinic.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
-import io.reactivex.Single
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -36,29 +33,21 @@ class SyncCoordinatorTest {
 
   @Test
   fun `when pending sync records are empty, then the push network call should not be made`() {
-    whenever(repository.recordsWithSyncStatus(SyncStatus.PENDING)).thenReturn(Single.just(emptyList()))
+    whenever(repository.recordsWithSyncStatus(SyncStatus.PENDING)).thenReturn(emptyList())
 
     var networkCallMade = false
 
     syncCoordinator.push(repository) {
       networkCallMade = true
-      Single.just(DataPushResponse(emptyList()))
-    }.blockingAwait()
+      DataPushResponse(emptyList())
+    }
 
     assertThat(networkCallMade).isFalse()
   }
 
   @Test
-  fun `when a push succeeds then any records that were created or updated during the push started should not get marked as synced`() {
-    // TODO: This is tricky to test since it involves concurrency. See if we can change how
-    // the sync itself happens so that this case does not get triggered.
-  }
-
-  @Test
   fun `if there are validation errors in push, then the failing records should be marked as invalid`() {
-    whenever(repository.recordsWithSyncStatus(SyncStatus.PENDING)).thenReturn(Single.just(listOf(1, 2, 3)))
-    whenever(repository.setSyncStatus(any<SyncStatus>(), any())).thenReturn(Completable.complete())
-    whenever(repository.setSyncStatus(any<List<UUID>>(), any())).thenReturn(Completable.complete())
+    whenever(repository.recordsWithSyncStatus(SyncStatus.PENDING)).thenReturn(listOf(1, 2, 3))
 
     val validationErrors = listOf(
         ValidationErrors(uuid = UUID.randomUUID(), schemaErrorMessages = listOf("error-1")),
@@ -66,8 +55,8 @@ class SyncCoordinatorTest {
     )
 
     syncCoordinator.push(repository) {
-      Single.just(DataPushResponse(validationErrors))
-    }.blockingAwait()
+      DataPushResponse(validationErrors)
+    }
 
     verify(repository).setSyncStatus(validationErrors.map { it.uuid }, SyncStatus.INVALID)
   }

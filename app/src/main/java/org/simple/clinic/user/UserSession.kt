@@ -202,11 +202,6 @@ class UserSession @Inject constructor(
     return accessTokenPreference.get()
   }
 
-  fun canSyncData(): Observable<Boolean> {
-    return loggedInUser()
-        .map { (user) -> user?.canSyncData ?: false }
-  }
-
   fun unauthorize(): Completable {
     return loggedInUser()
         .filterAndUnwrapJust()

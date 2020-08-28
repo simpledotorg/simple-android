@@ -2,12 +2,10 @@ package org.simple.clinic.medicalhistory
 
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UtcClock
 import java.time.Instant
@@ -109,31 +107,30 @@ class MedicalHistoryRepository @Inject constructor(
     }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<MedicalHistory>> {
-    return dao.recordsWithSyncStatus(syncStatus).firstOrError()
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<MedicalHistory> {
+    return dao.recordsWithSyncStatus(syncStatus)
   }
 
-  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
-    return Completable.fromAction { dao.updateSyncStatus(from, to) }
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
+    dao.updateSyncStatus(from, to)
   }
 
-  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
     if (ids.isEmpty()) {
       throw AssertionError()
     }
-    return Completable.fromAction { dao.updateSyncStatus(ids, to) }
+
+    dao.updateSyncStatus(ids, to)
   }
 
-  override fun mergeWithLocalData(payloads: List<MedicalHistoryPayload>): Completable {
-    val newOrUpdatedHistories = payloads
-        .filter { payload: MedicalHistoryPayload ->
-          val localCopy = dao.getOne(payload.uuid)
-          localCopy?.syncStatus.canBeOverriddenByServerCopy()
-        }
-        .map { toDatabaseModel(it, SyncStatus.DONE) }
-        .toList()
+  override fun mergeWithLocalData(payloads: List<MedicalHistoryPayload>) {
+    val dirtyRecords = dao.recordIdsWithSyncStatus(SyncStatus.PENDING)
 
-    return Completable.fromAction { dao.save(newOrUpdatedHistories) }
+    val payloadsToSave = payloads
+        .filterNot { it.uuid in dirtyRecords }
+        .map { toDatabaseModel(it, SyncStatus.DONE) }
+
+    dao.save(payloadsToSave)
   }
 
   override fun recordCount(): Observable<Int> {
@@ -163,5 +160,4 @@ class MedicalHistoryRepository @Inject constructor(
         .count(SyncStatus.PENDING)
         .toObservable()
   }
-
 }

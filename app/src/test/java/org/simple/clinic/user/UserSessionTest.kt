@@ -10,11 +10,9 @@ import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
@@ -38,12 +36,8 @@ import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import org.simple.clinic.user.UserStatus.ApprovedForSyncing
-import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
-import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.assertLatestValue
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -96,76 +90,6 @@ class UserSessionTest {
   fun tearDown() {
     reporter.clear()
     Analytics.clearReporters()
-  }
-
-  @Test
-  fun `user approved for syncing changes should be notified correctly`() {
-    fun createUser(loggedInStatus: User.LoggedInStatus, userStatus: UserStatus): List<User> {
-      return listOf(TestData.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus))
-    }
-
-    val userSubject = PublishSubject.create<List<User>>()
-    whenever(userDao.user())
-        .thenReturn(userSubject.toFlowable(BackpressureStrategy.BUFFER))
-
-    val observer = userSession.canSyncData().test()
-
-    userSubject.apply {
-      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = WaitingForApproval))
-      observer.assertLatestValue(false)
-
-      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = ApprovedForSyncing))
-      observer.assertLatestValue(true)
-
-      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = DisapprovedForSyncing))
-      observer.assertLatestValue(false)
-
-      onNext(createUser(loggedInStatus = NOT_LOGGED_IN, userStatus = WaitingForApproval))
-      observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = NOT_LOGGED_IN, userStatus = ApprovedForSyncing))
-      observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = NOT_LOGGED_IN, userStatus = DisapprovedForSyncing))
-      observer.assertLatestValue(false)
-
-      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = ApprovedForSyncing))
-      observer.assertLatestValue(true)
-
-      onNext(createUser(loggedInStatus = OTP_REQUESTED, userStatus = WaitingForApproval))
-      observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = OTP_REQUESTED, userStatus = ApprovedForSyncing))
-      observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = OTP_REQUESTED, userStatus = DisapprovedForSyncing))
-      observer.assertLatestValue(false)
-
-      onNext(emptyList())
-      observer.assertLatestValue(false)
-
-      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = ApprovedForSyncing))
-      observer.assertLatestValue(true)
-
-      onNext(createUser(loggedInStatus = RESETTING_PIN, userStatus = WaitingForApproval))
-      observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = RESETTING_PIN, userStatus = ApprovedForSyncing))
-      observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = RESETTING_PIN, userStatus = DisapprovedForSyncing))
-      observer.assertLatestValue(false)
-
-      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = ApprovedForSyncing))
-      observer.assertLatestValue(true)
-
-      onNext(createUser(loggedInStatus = RESET_PIN_REQUESTED, userStatus = WaitingForApproval))
-      observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = RESET_PIN_REQUESTED, userStatus = ApprovedForSyncing))
-      observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = RESET_PIN_REQUESTED, userStatus = DisapprovedForSyncing))
-      observer.assertLatestValue(false)
-
-      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = ApprovedForSyncing))
-      observer.assertLatestValue(true)
-
-      onNext(emptyList())
-      observer.assertLatestValue(false)
-    }
   }
 
   @Test

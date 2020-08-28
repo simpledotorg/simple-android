@@ -14,6 +14,7 @@
 - Added `MedicineFrequencyBottomSheet` to update medicine frequency
 - Clean up sync tests
 - Add support for the teleconsultation record deeplink
+- Change syncs to happen on a fixed pool of threads
 
 ## On Demo
 ### Changes

@@ -55,6 +55,9 @@ data class TeleconsultationFacilityInfo(
     @Query("SELECT * FROM TeleconsultationFacilityInfo WHERE teleconsultationFacilityId = :id")
     fun getOne(id: UUID): TeleconsultationFacilityInfo?
 
+    @Query("SELECT teleconsultationFacilityId FROM TeleconsultationFacilityInfo WHERE syncStatus = :syncStatus")
+    fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
+
     @Query("UPDATE TeleconsultationFacilityInfo SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 

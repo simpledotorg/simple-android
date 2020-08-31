@@ -364,6 +364,8 @@ dependencies {
   implementation "com.github.gcacace:signature-pad:$versions.signaturePad"
 
   implementation "androidx.viewpager2:viewpager2:$versions.viewpager2"
+
+  lintChecks project(path: ':lint')
 }
 
 // This must always be present at the bottom of this file, as per:

@@ -117,6 +117,7 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
       BD -> R.id.medicineFrequencyBdRadioButton
       TDS -> R.id.medicineFrequencyTdsRadioButton
       QDS -> R.id.medicineFrequencyQdsRadioButton
+      is MedicineFrequency.Unknown -> -1 // Don't check any radio button
     }
     medicineFrequencyRadioGroup.check(id)
   }

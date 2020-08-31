@@ -4,6 +4,7 @@
 ### Changes
 - Added `SignatureActivity` to accept and save user signature
 - Increase error text sizes
+- Update error message of address fields in `PatientEntryScreen`
 
 ### Internal
 - Migrated `LoggedOutOfDeviceDialog` to Mobius
@@ -16,6 +17,11 @@
 - Migrated `PatientSearchView` to Mobius
 - Added `TeleConsultSuccessScreen` to notify teleconsultation recorded successfully
 - Add `teleconsultPhoneNumber` in `User`, `LoggedInUserPayload` & `OngoingLoginEntry`
+- Change `HomeScreen` to save and restore the state correctly
+- Improved the user experience of loading the patient summary screen
+- Optimized fetching of current facility by removing the unnecessary `User` parameter
+- Clean up sync tests
+- Change syncs to happen on a fixed pool of threads
 
 ## 2020-08-24-7397
 ### Fixes

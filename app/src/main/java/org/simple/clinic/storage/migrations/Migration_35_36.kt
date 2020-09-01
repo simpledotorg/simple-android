@@ -2,18 +2,24 @@ package org.simple.clinic.storage.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import org.simple.clinic.storage.inTransaction
 import javax.inject.Inject
 
 @Suppress("ClassName")
 class Migration_35_36 @Inject constructor() : Migration(35, 36) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
-    migratePrescribedDrugs(database)
-    migrateAppointments(database)
-    migrateMedicalHistories(database)
-    migratePatientAddress(database)
-    migratePatientPhoneNumber(database)
-    migrateBusinessIds(database)
+    database.execSQL("PRAGMA foreign_keys = OFF")
+    database.inTransaction {
+      migratePrescribedDrugs(database)
+      migrateAppointments(database)
+      migrateMedicalHistories(database)
+      migratePatientAddress(database)
+      migratePatientPhoneNumber(database)
+      migrateBusinessIds(database)
+      database.execSQL("PRAGMA foreign_key_check")
+    }
+    database.execSQL("PRAGMA foreign_keys = ON")
   }
 
   private fun migratePrescribedDrugs(database: SupportSQLiteDatabase) {
@@ -117,6 +123,8 @@ class Migration_35_36 @Inject constructor() : Migration(35, 36) {
   }
 
   private fun migratePatientAddress(database: SupportSQLiteDatabase) {
+    database.execSQL(""" PRAGMA legacy_alter_table = ON """)
+    database.execSQL(""" DROP INDEX "index_Patient_addressUuid" """)
     database.execSQL("""ALTER TABLE "PatientAddress" RENAME TO "PatientAddress_V35" """)
     database.execSQL("""
       CREATE TABLE IF NOT EXISTS "PatientAddress" (
@@ -139,6 +147,9 @@ class Migration_35_36 @Inject constructor() : Migration(35, 36) {
     """)
 
     database.execSQL("""DROP TABLE "PatientAddress_V35" """)
+
+    database.execSQL(""" CREATE INDEX "index_Patient_addressUuid" ON "Patient" ("addressUuid") """)
+    database.execSQL(""" PRAGMA legacy_alter_table = OFF """)
   }
 
   private fun migratePatientPhoneNumber(database: SupportSQLiteDatabase) {

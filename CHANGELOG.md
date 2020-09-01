@@ -8,6 +8,7 @@
 - Added `MedicineFrequencyBottomSheet` to update medicine frequency
 - Add support for the teleconsultation record deeplink
 - Add `frequency` & `durationInDays` to `PrescribedDrug`
+- Add `ImageSrcDetector` lint for warning when using `ImageView#src`
 
 ## On Demo
 ### Changes

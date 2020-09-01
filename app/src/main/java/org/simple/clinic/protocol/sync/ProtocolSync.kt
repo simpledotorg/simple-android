@@ -8,6 +8,7 @@ import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.read
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -31,7 +32,7 @@ class ProtocolSync @Inject constructor(
 
   override fun pull() {
     val batchSize = config.batchSize
-    syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().body()!! }
+    syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().read()!! }
   }
 
   override fun syncConfig(): SyncConfig = config

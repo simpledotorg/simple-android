@@ -35,6 +35,9 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityI
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityMedicalOfficersCrossRef
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityWithMedicalOfficers
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordPrescribedDrug
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
@@ -62,7 +65,9 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       TextRecord::class,
       TeleconsultationFacilityInfo::class,
       MedicalOfficer::class,
-      TeleconsultationFacilityMedicalOfficersCrossRef::class
+      TeleconsultationFacilityMedicalOfficersCrossRef::class,
+      TeleconsultRecord::class,
+      TeleconsultRecordPrescribedDrug::class
     ],
     views = [
       OverdueAppointment::class,
@@ -91,7 +96,8 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
     ReminderConsent.RoomTypeConverter::class,
     BloodSugarMeasurementType.RoomTypeConverter::class,
     DeletedReason.RoomTypeConverter::class,
-    MedicineFrequency.RoomTypeConverter::class
+    MedicineFrequency.RoomTypeConverter::class,
+    TeleconsultationType.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -139,6 +145,10 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun teleconsultFacilityWithMedicalOfficersDao(): TeleconsultationFacilityWithMedicalOfficers.RoomDao
 
+  abstract fun teleconsultRecordDao(): TeleconsultRecord.RoomDao
+
+  abstract fun teleconsultRecordPrescribedDrugDao(): TeleconsultRecordPrescribedDrug.RoomDao
+
   fun clearAppData() {
     runInTransaction {
       patientDao().clear()
@@ -152,6 +162,8 @@ abstract class AppDatabase : RoomDatabase() {
       teleconsultFacilityInfoDao().clear()
       teleconsultMedicalOfficersDao().clear()
       teleconsultFacilityWithMedicalOfficersDao().clear()
+      teleconsultRecordDao().clear()
+      teleconsultRecordPrescribedDrugDao().clear()
     }
   }
 }

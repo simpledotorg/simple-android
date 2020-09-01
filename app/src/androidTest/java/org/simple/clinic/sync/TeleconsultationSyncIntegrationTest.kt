@@ -1,6 +1,5 @@
 package org.simple.clinic.sync
 
-import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before
@@ -10,15 +9,12 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.main.TypedPreference
-import org.simple.clinic.main.TypedPreference.Type.LastTeleconsultationFacilityPullToken
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultFacilityInfoApi
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationSync
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Rules
 import javax.inject.Inject
 
@@ -30,10 +26,6 @@ class TeleconsultationSyncIntegrationTest {
 
   @Inject
   lateinit var repository: TeleconsultationFacilityRepository
-
-  @Inject
-  @TypedPreference(LastTeleconsultationFacilityPullToken)
-  lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject
   lateinit var syncApi: TeleconsultFacilityInfoApi
@@ -62,10 +54,8 @@ class TeleconsultationSyncIntegrationTest {
     resetLocalData()
 
     sync = TeleconsultationSync(
-        syncCoordinator = SyncCoordinator(),
         repository = repository,
         api = syncApi,
-        lastPullToken = lastPullToken,
         config = config
     )
   }
@@ -77,7 +67,6 @@ class TeleconsultationSyncIntegrationTest {
 
   private fun resetLocalData() {
     clearTeleconsultFacilityData()
-    lastPullToken.delete()
   }
 
   private fun clearTeleconsultFacilityData() {

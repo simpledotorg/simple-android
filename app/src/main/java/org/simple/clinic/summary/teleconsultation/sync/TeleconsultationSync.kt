@@ -1,22 +1,15 @@
 package org.simple.clinic.summary.teleconsultation.sync
 
-import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
-import org.simple.clinic.main.TypedPreference
-import org.simple.clinic.main.TypedPreference.Type.LastTeleconsultationFacilityPullToken
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
-import org.simple.clinic.sync.SyncCoordinator
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.read
 import javax.inject.Inject
 import javax.inject.Named
 
 class TeleconsultationSync @Inject constructor(
-    private val syncCoordinator: SyncCoordinator,
     private val repository: TeleconsultationFacilityRepository,
     private val api: TeleconsultFacilityInfoApi,
-    @TypedPreference(LastTeleconsultationFacilityPullToken) private val lastPullToken: Preference<Optional<String>>,
     @Named("sync_config_daily") private val config: SyncConfig
 ) : ModelSync {
 
@@ -37,8 +30,8 @@ class TeleconsultationSync @Inject constructor(
   }
 
   override fun pull() {
-    val batchSize = config.batchSize
-    syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().read()!! }
+    val teleconsultationInfoPullResponse = api.pull().execute().read()!!
+    repository.mergeWithLocalData(teleconsultationInfoPullResponse.payloads)
   }
 
   override fun syncConfig() = config

@@ -17,13 +17,12 @@ class ImageSrcDetector : ResourceXmlDetector() {
     const val IMAGE_VIEW = "ImageView"
     const val ATTR_SRC = "src"
 
-    private const val ImageSrcIssueId = "ImageSrcIssueId"
-    private const val ImageSrcIssueDescription = "Please use `app:srcCompat` when setting an image resource"
+    private const val ImageSrcExplanation = "Please use `app:srcCompat` instead of `android:src` when setting an image resource"
 
     val ImageSrcIssue = Issue.create(
-        id = ImageSrcIssueId,
-        briefDescription = ImageSrcIssueDescription,
-        explanation = ImageSrcIssueDescription,
+        id = "ImageViewSrc",
+        briefDescription = "ImageView should not use `android:src`",
+        explanation = ImageSrcExplanation,
         category = Category.CORRECTNESS,
         severity = Severity.WARNING,
         implementation = Implementation(
@@ -47,7 +46,7 @@ class ImageSrcDetector : ResourceXmlDetector() {
         ImageSrcIssue,
         element,
         context.getLocation(element),
-        ImageSrcIssueDescription
+        ImageSrcExplanation
     )
   }
 }

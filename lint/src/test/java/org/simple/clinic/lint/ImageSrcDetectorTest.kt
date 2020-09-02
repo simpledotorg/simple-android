@@ -19,10 +19,10 @@ class ImageSrcDetectorTest : LintDetectorTest() {
         )
         .run()
         .expect("""
-          res/layout/image_view.xml:1: Warning: Please use app:srcCompat when setting an image resource [ImageSrcIssueId]
-          <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-          ^
-          0 errors, 1 warnings
+          res/layout/image_view.xml:4: Error: Please use app:srcCompat instead of android:src when setting an image resource [ImageViewSrc]
+              android:src="@drawable/ic_done"/>
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          1 errors, 0 warnings
         """)
   }
 

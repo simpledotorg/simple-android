@@ -23,7 +23,9 @@ data class AssignedFacilityModel(
     get() = assignedFacility != null
 
   override fun readyToRender(): Boolean {
-    return hasAssignedFacility
+    // We don't need to care about this since the parent view
+    // hides this view if there is no assigned facility.
+    return true
   }
 
   fun assignedFacilityUpdated(facility: Facility?): AssignedFacilityModel {

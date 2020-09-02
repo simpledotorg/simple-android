@@ -1,10 +1,10 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord
 
-import org.simple.clinic.medicalhistory.Answer
+import java.time.Instant
 
 data class TeleconsultRecordInfo(
 
-    val recordedAt: String,
+    val recordedAt: Instant,
 
     val teleconsultationType: TeleconsultationType,
 

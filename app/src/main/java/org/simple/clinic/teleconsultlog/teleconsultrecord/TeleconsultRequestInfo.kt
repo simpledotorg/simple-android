@@ -1,5 +1,6 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord
 
+import java.time.Instant
 import java.util.UUID
 
 data class TeleconsultRequestInfo(
@@ -7,5 +8,5 @@ data class TeleconsultRequestInfo(
 
     val facilityId: UUID,
 
-    val requestedAt: String
+    val requestedAt: Instant
 )

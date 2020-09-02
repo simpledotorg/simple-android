@@ -2,13 +2,13 @@ package org.simple.clinic.teleconsultlog.teleconsultrecord
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.simple.clinic.medicalhistory.Answer
+import java.time.Instant
 import java.util.UUID
 
 @JsonClass(generateAdapter = true)
 data class TeleconsultRecordInfoPayload(
     @Json(name = "recorded_at")
-    val recordedAt: String,
+    val recordedAt: Instant,
 
     @Json(name = "teleconsultation_type")
     val teleconsultationType: TeleconsultationType,
@@ -19,7 +19,7 @@ data class TeleconsultRecordInfoPayload(
     @Json(name = "patient_consented")
     val patientConsented: Answer,
 
-    @Json(name = "medical_officier_number")
+    @Json(name = "medical_officer_number")
     val medicalOfficerNumber: String,
 
     @Json(name = "prescription_drugs")

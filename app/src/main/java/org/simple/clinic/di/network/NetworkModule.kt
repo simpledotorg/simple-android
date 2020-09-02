@@ -54,6 +54,7 @@ class NetworkModule {
         .add(BloodSugarMeasurementType.MoshiTypeAdapter())
         .add(DeletedReason.MoshiTypeConverter())
         .add(MedicineFrequency.MoshiTypeConverter())
+        .add(Answer.MoshiTypeAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

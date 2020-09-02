@@ -26,11 +26,7 @@ data class TeleconsultRecord(
     @Embedded(prefix = "record_")
     val teleconsultRecordInfo: TeleconsultRecordInfo?,
 
-    val createdAt: String,
-
-    val updatedAt: String,
-
-    val deletedAt: String?
+    val timestamp: Timestamps
 ) {
 
   @Dao

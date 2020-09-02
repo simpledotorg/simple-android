@@ -30,7 +30,7 @@ data class TeleconsultRecord(
 
     val updatedAt: String,
 
-    val deletedAt: String
+    val deletedAt: String?
 ) {
 
   @Dao

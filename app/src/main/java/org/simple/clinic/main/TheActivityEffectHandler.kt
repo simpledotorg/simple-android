@@ -1,12 +1,10 @@
 package org.simple.clinic.main
 
-import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.main.TypedPreference.Type.LockAtTime
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.user.NewlyVerifiedUser
@@ -21,8 +19,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
     private val utcClock: UtcClock,
     private val patientRepository: PatientRepository,
-    @TypedPreference(LockAtTime) private val lockAfterTimestamp: Preference<Instant>,
-    private val lockAfterTimestampValue: MemoryValue<Instant>,
+    private val lockAfterTimestamp: MemoryValue<Instant>,
     @Assisted private val uiActions: TheActivityUiActions
 ) {
 
@@ -35,7 +32,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<TheActivityEffect, TheActivityEvent>()
         .addTransformer(LoadAppLockInfo::class.java, loadShowAppLockInto())
-        .addAction(ClearLockAfterTimestamp::class.java, { lockAfterTimestamp.delete() }, schedulers.io())
+        .addAction(ClearLockAfterTimestamp::class.java, lockAfterTimestamp::clear)
         .addAction(ShowAppLockScreen::class.java, uiActions::showAppLockScreen, schedulers.ui())
         .addTransformer(UpdateLockTimestamp::class.java, updateAppLockTime())
         .addTransformer(ListenForUserVerifications::class.java, listenForUserVerifications())
@@ -71,13 +68,13 @@ class TheActivityEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulers.io())
           .switchMap { effect ->
-            val shouldUpdateLockTimestamp = userSession.isUserLoggedIn() && !lockAfterTimestamp.isSet
+            val shouldUpdateLockTimestamp = userSession.isUserLoggedIn() && !lockAfterTimestamp.hasValue
 
             if (shouldUpdateLockTimestamp) {
               lockAfterTimestamp.set(effect.lockAt)
             }
 
-            Observable.empty<TheActivityEvent>()
+            Observable.empty()
           }
     }
   }

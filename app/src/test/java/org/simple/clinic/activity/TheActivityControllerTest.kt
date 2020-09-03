@@ -1,7 +1,6 @@
 package org.simple.clinic.activity
 
-import com.f2prateek.rx.preferences2.Preference
-import com.nhaarman.mockitokotlin2.any
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -59,8 +58,6 @@ class TheActivityControllerTest {
   private val ui = mock<TheActivityUi>()
   private val userSession = mock<UserSession>()
   private val patientRepository = mock<PatientRepository>()
-  private val lockAfterTimestamp = mock<Preference<Instant>>()
-  private val lockAfterTimestampValue = MemoryValue(Instant.MAX)
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private val currentTimestamp = Instant.parse("2018-01-01T00:00:00Z")
@@ -200,30 +197,34 @@ class TheActivityControllerTest {
   @Test
   fun `when app is stopped and lock timer is unset then the timer should be updated`() {
     // given
+    val lockAfterTimestamp = MemoryValue(Instant.MAX)
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
-    whenever(lockAfterTimestamp.isSet).thenReturn(false)
 
     // when
-    setupController()
+    setupController(lockAfterTimestamp = lockAfterTimestamp)
     uiEvents.onNext(ActivityStopped(currentTimestamp))
 
     // then
-    verify(lockAfterTimestamp).set(currentTimestamp.plus(lockInMinutes, ChronoUnit.MINUTES))
+    assertThat(lockAfterTimestamp.get()).isEqualTo(currentTimestamp.plus(lockInMinutes, ChronoUnit.MINUTES))
     verifyNoMoreInteractions(ui)
   }
 
   @Test
   fun `when app is stopped and lock timer is set then the timer should not be updated`() {
     // given
+    val currentLockAfterTime = currentTimestamp.minusSeconds(1)
+    val lockAfterTimestamp = MemoryValue(
+        defaultValue = Instant.MAX,
+        currentValue = currentLockAfterTime
+    )
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
-    whenever(lockAfterTimestamp.isSet).thenReturn(true)
 
     // when
-    setupController(lockAtTime = Instant.now(clock))
+    setupController(lockAfterTimestamp = lockAfterTimestamp)
     uiEvents.onNext(ActivityStopped(currentTimestamp))
 
     // then
-    verify(lockAfterTimestamp, never()).set(any())
+    assertThat(lockAfterTimestamp.get()).isEqualTo(currentLockAfterTime)
     verifyNoMoreInteractions(ui)
   }
 
@@ -237,13 +238,16 @@ class TheActivityControllerTest {
         status = UserStatus.ApprovedForSyncing
     )))
 
-    val lockAfterTime = Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(10))
+    val lockAfterTimestamp = MemoryValue(
+        defaultValue = Instant.MAX,
+        currentValue = Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(10))
+    )
 
     // when
-    setupController(userStream = userStream, lockAtTime = lockAfterTime)
+    setupController(userStream = userStream, lockAfterTimestamp = lockAfterTimestamp)
 
     // then
-    verify(lockAfterTimestamp).delete()
+    assertThat(lockAfterTimestamp.hasValue).isFalse()
     verifyNoMoreInteractions(ui)
   }
 
@@ -251,14 +255,16 @@ class TheActivityControllerTest {
   fun `when app is started locked and lock timer hasn't expired yet then the timer should not be unset`() {
     // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
-
-    val lockAfterTime = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(5))
+    val lockAfterTimestamp = MemoryValue(
+        defaultValue = Instant.MAX,
+        currentValue = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(5))
+    )
 
     // when
-    setupController(lockAtTime = lockAfterTime)
+    setupController(lockAfterTimestamp = lockAfterTimestamp)
 
     // then
-    verify(lockAfterTimestamp, never()).delete()
+    assertThat(lockAfterTimestamp.hasValue).isTrue()
     verifyNoMoreInteractions(ui)
   }
 
@@ -406,9 +412,22 @@ class TheActivityControllerTest {
       userDisapprovedStream: Observable<Boolean> = Observable.just(false),
       lockAtTime: Instant = Instant.MAX
   ) {
+    setupController(
+        userStream = userStream,
+        userUnauthorizedStream = userUnauthorizedStream,
+        userDisapprovedStream = userDisapprovedStream,
+        lockAfterTimestamp = MemoryValue(lockAtTime)
+    )
+  }
+
+  private fun setupController(
+      userStream: Observable<Optional<User>> = Observable.just(Optional.empty()),
+      userUnauthorizedStream: Observable<Boolean> = Observable.just(false),
+      userDisapprovedStream: Observable<Boolean> = Observable.just(false),
+      lockAfterTimestamp: MemoryValue<Instant>
+  ) {
     val appLockConfig = AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes))
 
-    whenever(lockAfterTimestamp.get()).thenReturn(lockAtTime)
     whenever(userSession.isUserUnauthorized()).thenReturn(userUnauthorizedStream)
     whenever(userSession.loggedInUser()).thenReturn(userStream)
     whenever(userSession.isUserDisapproved()).thenReturn(userDisapprovedStream)
@@ -419,7 +438,6 @@ class TheActivityControllerTest {
         utcClock = clock,
         patientRepository = patientRepository,
         lockAfterTimestamp = lockAfterTimestamp,
-        lockAfterTimestampValue = lockAfterTimestampValue,
         uiActions = ui
     )
     val uiRenderer = TheActivityUiRenderer(ui)

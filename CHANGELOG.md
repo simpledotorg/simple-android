@@ -6,6 +6,10 @@
 - Increase error text sizes
 - Update error message of address fields in `PatientEntryScreen`
 
+### Fixes
+- Fixed issue where patient details would not load for patients without an assigned facility ([#1127](https://app.clubhouse.io/simpledotorg/story/1127/patient-details-screen-does-not-load-for-patients-who-don-t-have-an-assigned-facility))
+- Add a default RxJava error handler to ignore some classes of errors safely
+
 ### Internal
 - Migrated `LoggedOutOfDeviceDialog` to Mobius
 - Migrated `ConfirmRemoveBloodPressureDialog` to Mobius

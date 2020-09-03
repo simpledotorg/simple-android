@@ -2,15 +2,24 @@ package org.simple.clinic.teleconsultlog.teleconsultrecord
 
 import androidx.room.Dao
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
-import androidx.room.PrimaryKey
 import androidx.room.Query
 import java.util.UUID
 
-@Entity
+@Entity(
+    primaryKeys = ["teleconsultRecordId", "prescribedDrugUuid"],
+    foreignKeys = [
+      ForeignKey(
+          entity = TeleconsultRecord::class,
+          parentColumns = ["id"],
+          childColumns = ["teleconsultRecordId"],
+          onDelete = ForeignKey.CASCADE
+      )
+    ]
+)
 data class TeleconsultRecordPrescribedDrug(
-    @PrimaryKey
     val teleconsultRecordId: UUID,
     val prescribedDrugUuid: UUID
 ) {

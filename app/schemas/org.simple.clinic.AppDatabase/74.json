@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 74,
-    "identityHash": "2fe0d7ce7fa0baa597ae4d838a8fb98b",
+    "identityHash": "bd7f7b030c0234e25c0591118955446c",
     "entities": [
       {
         "tableName": "Patient",
@@ -1479,7 +1479,7 @@
       },
       {
         "tableName": "TeleconsultRecord",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `patientId` TEXT NOT NULL, `medicalOfficerId` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, `request_requesterId` TEXT, `request_facilityId` TEXT, `request_requestedAt` TEXT, `record_recordedAt` TEXT, `record_teleconsultationType` TEXT, `record_patientTookMedicines` TEXT, `record_patientConsented` TEXT, `record_medicalOfficerNumber` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `patientId` TEXT NOT NULL, `medicalOfficerId` TEXT NOT NULL, `request_requesterId` TEXT, `request_facilityId` TEXT, `request_requestedAt` TEXT, `record_recordedAt` TEXT, `record_teleconsultationType` TEXT, `record_patientTookMedicines` TEXT, `record_patientConsented` TEXT, `record_medicalOfficerNumber` TEXT, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -1498,24 +1498,6 @@
             "columnName": "medicalOfficerId",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "createdAt",
-            "columnName": "createdAt",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "updatedAt",
-            "columnName": "updatedAt",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "deletedAt",
-            "columnName": "deletedAt",
-            "affinity": "TEXT",
-            "notNull": false
           },
           {
             "fieldPath": "teleconsultRequestInfo.requesterId",
@@ -1564,6 +1546,24 @@
             "columnName": "record_medicalOfficerNumber",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "timestamp.createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp.updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp.deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -1577,7 +1577,7 @@
       },
       {
         "tableName": "TeleconsultRecordPrescribedDrug",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`teleconsultRecordId` TEXT NOT NULL, `prescribedDrugUuid` TEXT NOT NULL, PRIMARY KEY(`teleconsultRecordId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`teleconsultRecordId` TEXT NOT NULL, `prescribedDrugUuid` TEXT NOT NULL, PRIMARY KEY(`teleconsultRecordId`, `prescribedDrugUuid`), FOREIGN KEY(`teleconsultRecordId`) REFERENCES `TeleconsultRecord`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "teleconsultRecordId",
@@ -1594,12 +1594,25 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "teleconsultRecordId"
+            "teleconsultRecordId",
+            "prescribedDrugUuid"
           ],
           "autoGenerate": false
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "TeleconsultRecord",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "teleconsultRecordId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [
@@ -1614,7 +1627,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2fe0d7ce7fa0baa597ae4d838a8fb98b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bd7f7b030c0234e25c0591118955446c')"
     ]
   }
 }

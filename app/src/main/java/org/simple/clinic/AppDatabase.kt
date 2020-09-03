@@ -36,6 +36,7 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityM
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityWithMedicalOfficers
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.teleconsultrecord.*
+import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.*
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordPrescribedDrug
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
@@ -99,7 +100,7 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
     DeletedReason.RoomTypeConverter::class,
     MedicineFrequency.RoomTypeConverter::class,
     TeleconsultationType.RoomTypeConverter::class,
-    Answer.RoomTypeConverter::class
+    RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

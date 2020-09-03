@@ -15,9 +15,6 @@ class Migration_74 @Inject constructor() : Migration(73, 74) {
             "id" TEXT NOT NULL,
             "patientId" TEXT NOT NULL, 
             "medicalOfficerId" TEXT NOT NULL,
-            "createdAt" TEXT NOT NULL,
-            "updatedAt" TEXT NOT NULL,
-            "deletedAt" TEXT,
             "request_requesterId" TEXT,
             "request_facilityId" TEXT, 
             "request_requestedAt" TEXT,
@@ -26,6 +23,9 @@ class Migration_74 @Inject constructor() : Migration(73, 74) {
             "record_patientTookMedicines" TEXT,
             "record_patientConsented" TEXT,
             "record_medicalOfficerNumber" TEXT,
+             "createdAt" TEXT NOT NULL,
+             "updatedAt" TEXT NOT NULL,
+             "deletedAt" TEXT,
              PRIMARY KEY("id")
             )
           """)
@@ -35,7 +35,8 @@ class Migration_74 @Inject constructor() : Migration(73, 74) {
             CREATE TABLE IF NOT EXISTS "TeleconsultRecordPrescribedDrug" (
              "teleconsultRecordId" TEXT NOT NULL,
              "prescribedDrugUuid" TEXT NOT NULL,
-             PRIMARY KEY("teleconsultRecordId")
+             PRIMARY KEY("teleconsultRecordId", "prescribedDrugUuid"),
+             FOREIGN KEY("teleconsultRecordId") REFERENCES "TeleconsultRecord"("id") ON DELETE CASCADE
             )
           """)
     }

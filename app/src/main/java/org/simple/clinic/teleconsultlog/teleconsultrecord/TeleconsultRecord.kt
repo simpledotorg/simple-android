@@ -3,12 +3,13 @@ package org.simple.clinic.teleconsultlog.teleconsultrecord
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.PrimaryKey
 import androidx.room.Query
-import androidx.room.Relation
-import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.storage.Timestamps
 import java.util.UUID
 
 @Entity
@@ -26,6 +27,7 @@ data class TeleconsultRecord(
     @Embedded(prefix = "record_")
     val teleconsultRecordInfo: TeleconsultRecordInfo?,
 
+    @Embedded
     val timestamp: Timestamps
 ) {
 

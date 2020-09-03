@@ -8,6 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.main.TypedPreference.Type.LockAtTime
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
@@ -21,6 +22,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
     private val utcClock: UtcClock,
     private val patientRepository: PatientRepository,
     @TypedPreference(LockAtTime) private val lockAfterTimestamp: Preference<Instant>,
+    private val lockAfterTimestampValue: MemoryValue<Instant>,
     @Assisted private val uiActions: TheActivityUiActions
 ) {
 

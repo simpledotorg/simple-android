@@ -5,13 +5,13 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import dagger.Lazy
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
@@ -27,6 +27,7 @@ class AppLockScreenLogicTest {
   private val ui = mock<AppLockScreenUi>()
   private val uiActions = mock<AppLockUiActions>()
   private val lastUnlockTimestamp = mock<Preference<Instant>>()
+  private val lockAfterTimestampValue = MemoryValue(Instant.MAX)
 
   private val loggedInUser = TestData.loggedInUser(
       uuid = UUID.fromString("cdb08a78-7bae-44f4-9bb9-40257be58aa4"),
@@ -104,10 +105,11 @@ class AppLockScreenLogicTest {
 
   private fun setupController() {
     val effectHandler = AppLockEffectHandler(
-        currentUser = Lazy { loggedInUser },
-        currentFacility = Lazy { facility },
-        lockAfterTimestamp = lastUnlockTimestamp,
+        currentUser = { loggedInUser },
+        currentFacility = { facility },
         schedulersProvider = TestSchedulersProvider.trampoline(),
+        lockAfterTimestamp = lastUnlockTimestamp,
+        lockAfterTimestampValue = lockAfterTimestampValue,
         uiActions = uiActions
     )
 

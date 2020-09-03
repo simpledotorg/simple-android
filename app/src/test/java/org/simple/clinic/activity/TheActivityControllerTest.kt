@@ -28,6 +28,7 @@ import org.simple.clinic.main.TheActivityUi
 import org.simple.clinic.main.TheActivityUiRenderer
 import org.simple.clinic.main.TheActivityUpdate
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
@@ -59,6 +60,7 @@ class TheActivityControllerTest {
   private val userSession = mock<UserSession>()
   private val patientRepository = mock<PatientRepository>()
   private val lockAfterTimestamp = mock<Preference<Instant>>()
+  private val lockAfterTimestampValue = MemoryValue(Instant.MAX)
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private val currentTimestamp = Instant.parse("2018-01-01T00:00:00Z")
@@ -417,6 +419,7 @@ class TheActivityControllerTest {
         utcClock = clock,
         patientRepository = patientRepository,
         lockAfterTimestamp = lockAfterTimestamp,
+        lockAfterTimestampValue = lockAfterTimestampValue,
         uiActions = ui
     )
     val uiRenderer = TheActivityUiRenderer(ui)

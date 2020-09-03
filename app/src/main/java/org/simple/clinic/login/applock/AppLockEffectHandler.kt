@@ -9,6 +9,7 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.LockAtTime
+import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.Instant
@@ -18,6 +19,7 @@ class AppLockEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val schedulersProvider: SchedulersProvider,
     @TypedPreference(LockAtTime) private val lockAfterTimestamp: Preference<Instant>,
+    private val lockAfterTimestampValue: MemoryValue<Instant>,
     @Assisted private val uiActions: AppLockUiActions
 ) {
 

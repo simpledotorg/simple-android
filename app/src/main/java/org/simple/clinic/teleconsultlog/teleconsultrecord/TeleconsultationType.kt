@@ -7,11 +7,23 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
 sealed class TeleconsultationType {
 
-  object Audio : TeleconsultationType()
+  object Audio : TeleconsultationType() {
+    override fun toString(): String {
+      return "Audio"
+    }
+  }
 
-  object Video : TeleconsultationType()
+  object Video : TeleconsultationType() {
+    override fun toString(): String {
+      return "Video"
+    }
+  }
 
-  object Message : TeleconsultationType()
+  object Message : TeleconsultationType() {
+    override fun toString(): String {
+      return "Message"
+    }
+  }
 
   data class Unknown(val actualValue: String) : TeleconsultationType()
 

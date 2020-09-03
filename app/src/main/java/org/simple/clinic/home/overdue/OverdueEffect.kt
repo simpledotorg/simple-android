@@ -14,3 +14,5 @@ data class LoadOverdueAppointments(
 ) : OverdueEffect()
 
 data class OpenContactPatientScreen(val patientUuid: UUID) : OverdueEffect()
+
+data class OpenPatientSummary(val patientUuid: UUID) : OverdueEffect()

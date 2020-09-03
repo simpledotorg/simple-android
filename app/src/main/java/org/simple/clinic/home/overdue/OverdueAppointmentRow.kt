@@ -100,6 +100,10 @@ data class OverdueAppointmentRow(
     holder.callButton.setOnClickListener {
       eventSubject.onNext(CallPatientClicked(patientUuid))
     }
+
+    holder.patientNameTextView.setOnClickListener {
+      eventSubject.onNext(PatientNameClicked(patientUuid))
+    }
   }
 
   @SuppressLint("SetTextI18n")
@@ -133,7 +137,7 @@ data class OverdueAppointmentRow(
     holder.diagnosisLabelContainer.visibleOrGone(showDiagnosisLabel)
     holder.diagnosisTextView.text = diagnosisText(context)
 
-    val showTransferLabel  = isAppointmentAtAssignedFacility.not()
+    val showTransferLabel = isAppointmentAtAssignedFacility.not()
     holder.patientTransferredContainer.visibleOrGone(showTransferLabel)
     holder.patientTransferredTextView.text = appointmentFacilityName
   }

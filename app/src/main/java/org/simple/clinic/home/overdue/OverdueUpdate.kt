@@ -14,6 +14,7 @@ class OverdueUpdate(
     return when (event) {
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility), LoadOverdueAppointments(date, event.facility))
       is CallPatientClicked -> dispatch(OpenContactPatientScreen(event.patientUuid))
+      is PatientNameClicked -> dispatch(OpenPatientSummary(event.patientUuid))
     }
   }
 }

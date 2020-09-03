@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Changes
+- Open patient summary screen when patient name is clicked in overdue
+
 ### Internal
 - [In Progress: 27 Aug 2020] Add support for sending teleconsult request via SMS
 - Use UiRenderer for setting drug duration in `DrugDurationSheet`

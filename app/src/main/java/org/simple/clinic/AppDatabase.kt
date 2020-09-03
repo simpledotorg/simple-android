@@ -152,6 +152,8 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun teleconsultRecordPrescribedDrugDao(): TeleconsultRecordPrescribedDrug.RoomDao
 
+  abstract fun teleconsultRecordWithPrescribedDrugDao(): TeleconsultRecordWithPrescribedDrugs.RoomDao
+
   fun clearAppData() {
     runInTransaction {
       patientDao().clear()

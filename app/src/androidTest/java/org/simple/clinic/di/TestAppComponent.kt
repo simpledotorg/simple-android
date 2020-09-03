@@ -43,6 +43,7 @@ import org.simple.clinic.sync.PrescriptionSyncIntegrationTest
 import org.simple.clinic.sync.ProtocolSyncIntegrationTest
 import org.simple.clinic.sync.ReportsSyncIntegrationTest
 import org.simple.clinic.sync.TeleconsultationSyncIntegrationTest
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordTest
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.RegisterUserServerIntegrationTest
 import org.simple.clinic.user.UserDaoAndroidTest
@@ -102,4 +103,5 @@ interface TestAppComponent {
   fun inject(target: BloodSugarSyncIntegrationTest)
   fun inject(target: TeleconsultationSyncIntegrationTest)
   fun inject(target: ProtocolSyncIntegrationTest)
+  fun inject(target: TeleconsultRecordTest)
 }

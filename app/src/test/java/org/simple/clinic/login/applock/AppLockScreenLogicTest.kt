@@ -1,6 +1,6 @@
 package org.simple.clinic.login.applock
 
-import com.f2prateek.rx.preferences2.Preference
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -26,7 +26,6 @@ class AppLockScreenLogicTest {
 
   private val ui = mock<AppLockScreenUi>()
   private val uiActions = mock<AppLockUiActions>()
-  private val lastUnlockTimestamp = mock<Preference<Instant>>()
   private val lockAfterTimestampValue = MemoryValue(Instant.MAX)
 
   private val loggedInUser = TestData.loggedInUser(
@@ -49,13 +48,15 @@ class AppLockScreenLogicTest {
 
   @Test
   fun `when PIN is authenticated, the last-unlock-timestamp should be updated and then the app should be unlocked`() {
+    // given
+    lockAfterTimestampValue.set(Instant.parse("2018-01-01T00:00:00Z"))
+
     // when
     setupController()
     uiEvents.onNext(AppLockPinAuthenticated)
 
     // then
-    verify(lastUnlockTimestamp).delete()
-
+    assertThat(lockAfterTimestampValue.hasValue).isFalse()
     verify(ui, times(2)).setUserFullName(loggedInUser.fullName)
     verify(ui).setFacilityName(facility.name)
     verify(uiActions).restorePreviousScreen()
@@ -108,7 +109,6 @@ class AppLockScreenLogicTest {
         currentUser = { loggedInUser },
         currentFacility = { facility },
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        lockAfterTimestamp = lastUnlockTimestamp,
         lockAfterTimestampValue = lockAfterTimestampValue,
         uiActions = uiActions
     )

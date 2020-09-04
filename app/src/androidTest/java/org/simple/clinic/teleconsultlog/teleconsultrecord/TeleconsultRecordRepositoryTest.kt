@@ -55,12 +55,9 @@ class TeleconsultRecordRepositoryTest {
 
     teleconsultRecordRepository.createTeleconsultRecord(
         teleconsultRecordId = teleconsultRecordId,
-        teleconsultationType = Audio,
-        patientConsented = Yes,
-        patientTookMedicine = Yes,
         patientUuid = patientUuid,
         medicalOfficerId = medicalOfficerUuid,
-        medicalOfficerRegistrationId = medicalOfficerRegistrationId
+        teleconsultRecordInfo = teleconsultRecordInfo
     )
 
     // when

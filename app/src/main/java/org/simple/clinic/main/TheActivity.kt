@@ -169,7 +169,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     MobiusDelegate.forActivity(
         events = events.ofType(),
         defaultModel = TheActivityModel.create(),
-        update = TheActivityUpdate.create(config),
+        update = TheActivityUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = TheActivityInit(),
         modelUpdateListener = uiRenderer::render

@@ -17,7 +17,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.login.applock.AppLockConfig
-import org.simple.clinic.main.LifecycleEvent.ActivityStopped
 import org.simple.clinic.main.TheActivityEffect
 import org.simple.clinic.main.TheActivityEffectHandler
 import org.simple.clinic.main.TheActivityEvent
@@ -44,7 +43,6 @@ import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
-import java.time.temporal.ChronoUnit
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
@@ -191,40 +189,6 @@ class TheActivityControllerTest {
 
     // then
     verify(ui, never()).showAppLockScreen()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when app is stopped and lock timer is unset then the timer should be updated`() {
-    // given
-    val lockAfterTimestamp = MemoryValue(Instant.MAX)
-    whenever(userSession.isUserLoggedIn()).thenReturn(true)
-
-    // when
-    setupController(lockAfterTimestamp = lockAfterTimestamp)
-    uiEvents.onNext(ActivityStopped(currentTimestamp))
-
-    // then
-    assertThat(lockAfterTimestamp.get()).isEqualTo(currentTimestamp.plus(lockInMinutes, ChronoUnit.MINUTES))
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when app is stopped and lock timer is set then the timer should not be updated`() {
-    // given
-    val currentLockAfterTime = currentTimestamp.minusSeconds(1)
-    val lockAfterTimestamp = MemoryValue(
-        defaultValue = Instant.MAX,
-        currentValue = currentLockAfterTime
-    )
-    whenever(userSession.isUserLoggedIn()).thenReturn(true)
-
-    // when
-    setupController(lockAfterTimestamp = lockAfterTimestamp)
-    uiEvents.onNext(ActivityStopped(currentTimestamp))
-
-    // then
-    assertThat(lockAfterTimestamp.get()).isEqualTo(currentLockAfterTime)
     verifyNoMoreInteractions(ui)
   }
 
@@ -426,8 +390,6 @@ class TheActivityControllerTest {
       userDisapprovedStream: Observable<Boolean> = Observable.just(false),
       lockAfterTimestamp: MemoryValue<Instant>
   ) {
-    val appLockConfig = AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes))
-
     whenever(userSession.isUserUnauthorized()).thenReturn(userUnauthorizedStream)
     whenever(userSession.loggedInUser()).thenReturn(userStream)
     whenever(userSession.isUserDisapproved()).thenReturn(userDisapprovedStream)
@@ -445,7 +407,7 @@ class TheActivityControllerTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = TheActivityModel.create(),
-        update = TheActivityUpdate.create(appLockConfig),
+        update = TheActivityUpdate(),
         effectHandler = effectHandler.build(),
         init = TheActivityInit(),
         modelUpdateListener = uiRenderer::render

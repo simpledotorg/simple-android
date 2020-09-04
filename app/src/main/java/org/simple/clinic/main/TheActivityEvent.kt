@@ -9,7 +9,6 @@ sealed class TheActivityEvent : UiEvent
 
 sealed class LifecycleEvent : TheActivityEvent() {
   object ActivityStarted : LifecycleEvent()
-  data class ActivityStopped(val timestamp: Instant) : LifecycleEvent()
   object ActivityDestroyed : LifecycleEvent()
 }
 

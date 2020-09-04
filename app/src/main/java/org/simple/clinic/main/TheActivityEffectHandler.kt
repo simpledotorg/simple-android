@@ -34,7 +34,6 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .addTransformer(LoadAppLockInfo::class.java, loadShowAppLockInto())
         .addAction(ClearLockAfterTimestamp::class.java, lockAfterTimestamp::clear)
         .addAction(ShowAppLockScreen::class.java, uiActions::showAppLockScreen, schedulers.ui())
-        .addTransformer(UpdateLockTimestamp::class.java, updateAppLockTime())
         .addTransformer(ListenForUserVerifications::class.java, listenForUserVerifications())
         .addAction(ShowUserLoggedOutOnOtherDeviceAlert::class.java, uiActions::showUserLoggedOutOnOtherDeviceAlert, schedulers.ui())
         .addTransformer(ListenForUserUnauthorizations::class.java, listenForUserUnauthorizations())
@@ -59,22 +58,6 @@ class TheActivityEffectHandler @AssistedInject constructor(
                       lockAtTimestamp = lockAfterTimestamp.get()
                   )
                 }
-          }
-    }
-  }
-
-  private fun updateAppLockTime(): ObservableTransformer<UpdateLockTimestamp, TheActivityEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulers.io())
-          .switchMap { effect ->
-            val shouldUpdateLockTimestamp = userSession.isUserLoggedIn() && !lockAfterTimestamp.hasValue
-
-            if (shouldUpdateLockTimestamp) {
-              lockAfterTimestamp.set(effect.lockAt)
-            }
-
-            Observable.empty()
           }
     }
   }

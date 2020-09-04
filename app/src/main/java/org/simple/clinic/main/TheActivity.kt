@@ -42,6 +42,7 @@ import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.SyncSetup
@@ -143,6 +144,9 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   @Inject
   lateinit var config: AppLockConfig
 
+  @Inject
+  lateinit var unlockAfterTimestamp: MemoryValue<Instant>
+
   private val lifecycleEvents: Subject<LifecycleEvent> = PublishSubject.create()
 
   private val disposables = CompositeDisposable()
@@ -225,7 +229,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   override fun onStop() {
-    lifecycleEvents.onNext(LifecycleEvent.ActivityStopped(Instant.now(utcClock)))
+    unlockAfterTimestamp.set(Instant.now(utcClock).plusMillis(config.lockAfterTimeMillis))
     delegate.stop()
     super.onStop()
   }

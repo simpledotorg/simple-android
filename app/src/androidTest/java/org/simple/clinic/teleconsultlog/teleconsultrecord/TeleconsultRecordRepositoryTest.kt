@@ -28,7 +28,7 @@ class TeleconsultRecordRepositoryTest {
   }
 
   @Test
-  fun creating_teleconsult_record_should_work_as_expected() {
+  fun creating_teleconsult_record_for_MO_should_work_as_expected() {
     // given
     val teleconsultRecordId = UUID.fromString("700ee55d-7f49-4bda-9a4a-c5ce903ce485")
     val patientUuid = UUID.fromString("3c00cdf9-4304-4dc7-8d32-6fbd5cd8f14d")
@@ -53,7 +53,7 @@ class TeleconsultRecordRepositoryTest {
         deletedAt = null
     )
 
-    teleconsultRecordRepository.createTeleconsultRecord(
+    teleconsultRecordRepository.createTeleconsultRecordForMO(
         teleconsultRecordId = teleconsultRecordId,
         patientUuid = patientUuid,
         medicalOfficerId = medicalOfficerUuid,

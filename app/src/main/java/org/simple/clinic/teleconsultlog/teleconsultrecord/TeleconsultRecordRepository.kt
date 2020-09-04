@@ -15,7 +15,7 @@ class TeleconsultRecordRepository @Inject constructor(
     return teleconsultRecordWithPrescribedDrugsDao.getPrescribedUuidForTeleconsultRecordUuid(teleconsultRecordId)
   }
 
-  fun createTeleconsultRecordForMO(
+  fun createTeleconsultRecordForMedicalOfficer(
       teleconsultRecordId: UUID,
       patientUuid: UUID,
       medicalOfficerId: UUID,

@@ -1205,7 +1205,7 @@ object TestData {
       teleconsultationType: TeleconsultationType.Audio,
       patientTookMedicines: Yes,
       patientConsented: No,
-      medicalOfficerNumber: String = "22222222"
+      medicalOfficerNumber: String? = "22222222"
   ): TeleconsultRecordInfo {
     return TeleconsultRecordInfo(
         recordedAt = recordedAt,

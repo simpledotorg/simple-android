@@ -12,5 +12,5 @@ data class TeleconsultRecordInfo(
 
     val patientConsented: Answer,
 
-    val medicalOfficerNumber: String
+    val medicalOfficerNumber: String?
 )

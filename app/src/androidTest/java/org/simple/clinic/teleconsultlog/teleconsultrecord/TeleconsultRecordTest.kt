@@ -66,7 +66,7 @@ class TeleconsultRecordTest {
         requestedAt = Instant.parse("2020-09-02T00:00:00Z"),
     )
 
-    val teleconsultRecord1 = TestData.teleconsultationRecordInfo(
+    val teleconsultRecord1 = TestData.teleconsultRecord(
         id = teleconsultRecordId1,
         patientId = patientId,
         medicalOfficerId = medicalOffcerId,
@@ -79,7 +79,7 @@ class TeleconsultRecordTest {
         )
     )
 
-    val teleconsultRecord2 = TestData.teleconsultationRecordInfo(
+    val teleconsultRecord2 = TestData.teleconsultRecord(
         id = teleconsultRecordId2,
         patientId = patientId,
         medicalOfficerId = medicalOffcerId,

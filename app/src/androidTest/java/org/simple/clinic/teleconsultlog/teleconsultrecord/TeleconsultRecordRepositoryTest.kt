@@ -53,7 +53,7 @@ class TeleconsultRecordRepositoryTest {
         deletedAt = null
     )
 
-    teleconsultRecordRepository.createTeleconsultRecordForMO(
+    teleconsultRecordRepository.createTeleconsultRecordForMedicalOfficer(
         teleconsultRecordId = teleconsultRecordId,
         patientUuid = patientUuid,
         medicalOfficerId = medicalOfficerUuid,

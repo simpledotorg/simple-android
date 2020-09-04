@@ -75,7 +75,8 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
             OngoingLoginEntry(
                 uuid = it.userUuid,
                 phoneNumber = it.number,
-                status = it.status
+                status = it.status,
+                capabilities = null
             )
           }
           .flatMapSingle {

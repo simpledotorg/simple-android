@@ -90,7 +90,7 @@ class LoginPinEffectHandler @AssistedInject constructor(
         registrationFacilityUuid = entry.registrationFacilityUuid!!,
         currentFacilityUuid = entry.registrationFacilityUuid,
         teleconsultPhoneNumber = entry.teleconsultPhoneNumber,
-        capabilities = null
+        capabilities = entry.capabilities
     )
   }
 }

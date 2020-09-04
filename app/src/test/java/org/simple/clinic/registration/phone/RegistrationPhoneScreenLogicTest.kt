@@ -206,7 +206,8 @@ class RegistrationPhoneScreenLogicTest {
         registrationFacilityUuid = null,
         status = userStatus,
         createdAt = null,
-        updatedAt = null
+        updatedAt = null,
+        capabilities = null
     )
 
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)

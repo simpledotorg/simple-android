@@ -78,13 +78,15 @@ import org.simple.clinic.util.randomGender
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.randomOfEnum
 import org.simple.clinic.util.randomPatientPhoneNumberType
+import org.simple.clinic.util.randomTeleconsultRecordAnswer
+import org.simple.clinic.util.randomTeleconsultationType
 import java.net.URI
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset.UTC
 import java.util.UUID
 import kotlin.random.nextInt
-import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer as TeleconsultrecordAnswer
+import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer as TeleconsultRecordAnswer
 
 object TestData {
 
@@ -1201,9 +1203,9 @@ object TestData {
 
   fun teleconsultRecordInfo(
       recordedAt: Instant = Instant.parse("2020-09-03T00:00:00Z"),
-      teleconsultationType: TeleconsultationType = TeleconsultationType.random(),
-      patientTookMedicines: TeleconsultrecordAnswer = TeleconsultrecordAnswer.random(),
-      patientConsented: TeleconsultrecordAnswer = TeleconsultrecordAnswer.random(),
+      teleconsultationType: TeleconsultationType = randomTeleconsultationType(),
+      patientTookMedicines: TeleconsultRecordAnswer = randomTeleconsultRecordAnswer(),
+      patientConsented: TeleconsultRecordAnswer = randomTeleconsultRecordAnswer(),
       medicalOfficerNumber: String? = "22222222"
   ): TeleconsultRecordInfo {
     return TeleconsultRecordInfo(

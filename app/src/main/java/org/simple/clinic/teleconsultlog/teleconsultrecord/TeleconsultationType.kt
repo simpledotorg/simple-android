@@ -1,6 +1,5 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord
 
-import androidx.annotation.VisibleForTesting
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
@@ -54,10 +53,5 @@ sealed class TeleconsultationType {
 
     @ToJson
     fun toJson(type: TeleconsultationType?): String? = TypeAdapter.fromEnum(type)
-  }
-
-  companion object {
-    @VisibleForTesting
-    fun random(): TeleconsultationType = TypeAdapter.knownMappings.keys.shuffled().first()
   }
 }

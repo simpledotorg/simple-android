@@ -16,7 +16,6 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.main.TheActivityEffect
 import org.simple.clinic.main.TheActivityEffectHandler
 import org.simple.clinic.main.TheActivityEvent
@@ -42,6 +41,7 @@ import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import java.time.Duration
 import java.time.Instant
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -203,8 +203,8 @@ class TheActivityControllerTest {
     )))
 
     val lockAfterTimestamp = MemoryValue(
-        defaultValue = Instant.MAX,
-        currentValue = Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(10))
+        defaultValue = Optional.empty(),
+        currentValue = Optional.of(Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(10)))
     )
 
     // when
@@ -220,8 +220,8 @@ class TheActivityControllerTest {
     // given
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     val lockAfterTimestamp = MemoryValue(
-        defaultValue = Instant.MAX,
-        currentValue = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(5))
+        defaultValue = Optional.empty(),
+        currentValue = Optional.of(Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(5)))
     )
 
     // when
@@ -248,7 +248,10 @@ class TheActivityControllerTest {
     )
 
     // when
-    setupController(userStream = userStream)
+    setupController(
+        userStream = userStream,
+         lockAtTime = currentTimestamp.plus(Duration.ofMinutes(lockInMinutes))
+    )
 
     // then
     verify(ui).showUserLoggedOutOnOtherDeviceAlert()
@@ -374,13 +377,13 @@ class TheActivityControllerTest {
       userStream: Observable<Optional<User>> = Observable.just(Optional.empty()),
       userUnauthorizedStream: Observable<Boolean> = Observable.just(false),
       userDisapprovedStream: Observable<Boolean> = Observable.just(false),
-      lockAtTime: Instant = Instant.MAX
+      lockAtTime: Instant? = null
   ) {
     setupController(
         userStream = userStream,
         userUnauthorizedStream = userUnauthorizedStream,
         userDisapprovedStream = userDisapprovedStream,
-        lockAfterTimestamp = MemoryValue(lockAtTime)
+        lockAfterTimestamp = MemoryValue(Optional.ofNullable(lockAtTime))
     )
   }
 
@@ -388,7 +391,7 @@ class TheActivityControllerTest {
       userStream: Observable<Optional<User>> = Observable.just(Optional.empty()),
       userUnauthorizedStream: Observable<Boolean> = Observable.just(false),
       userDisapprovedStream: Observable<Boolean> = Observable.just(false),
-      lockAfterTimestamp: MemoryValue<Instant>
+      lockAfterTimestamp: MemoryValue<Optional<Instant>>
   ) {
     whenever(userSession.isUserUnauthorized()).thenReturn(userUnauthorizedStream)
     whenever(userSession.loggedInUser()).thenReturn(userStream)

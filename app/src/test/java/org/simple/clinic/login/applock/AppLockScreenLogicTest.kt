@@ -12,6 +12,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.storage.MemoryValue
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
@@ -26,7 +27,7 @@ class AppLockScreenLogicTest {
 
   private val ui = mock<AppLockScreenUi>()
   private val uiActions = mock<AppLockUiActions>()
-  private val lockAfterTimestampValue = MemoryValue(Instant.MAX)
+  private val lockAfterTimestampValue = MemoryValue(Optional.empty<Instant>())
 
   private val loggedInUser = TestData.loggedInUser(
       uuid = UUID.fromString("cdb08a78-7bae-44f4-9bb9-40257be58aa4"),
@@ -49,7 +50,7 @@ class AppLockScreenLogicTest {
   @Test
   fun `when PIN is authenticated, the last-unlock-timestamp should be updated and then the app should be unlocked`() {
     // given
-    lockAfterTimestampValue.set(Instant.parse("2018-01-01T00:00:00Z"))
+    lockAfterTimestampValue.set(Optional.of(Instant.parse("2018-01-01T00:00:00Z")))
 
     // when
     setupController()

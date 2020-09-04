@@ -9,6 +9,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterTrue
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -19,7 +20,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
     private val utcClock: UtcClock,
     private val patientRepository: PatientRepository,
-    private val lockAfterTimestamp: MemoryValue<Instant>,
+    private val lockAfterTimestamp: MemoryValue<Optional<Instant>>,
     @Assisted private val uiActions: TheActivityUiActions
 ) {
 

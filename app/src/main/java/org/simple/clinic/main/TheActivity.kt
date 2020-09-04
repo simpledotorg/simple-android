@@ -51,6 +51,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.unsafeLazy
@@ -145,7 +146,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   lateinit var config: AppLockConfig
 
   @Inject
-  lateinit var unlockAfterTimestamp: MemoryValue<Instant>
+  lateinit var unlockAfterTimestamp: MemoryValue<Optional<Instant>>
 
   private val lifecycleEvents: Subject<LifecycleEvent> = PublishSubject.create()
 
@@ -229,7 +230,9 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   override fun onStop() {
-    unlockAfterTimestamp.set(Instant.now(utcClock).plusMillis(config.lockAfterTimeMillis))
+    val lockAfterTimestamp = Instant.now(utcClock).plusMillis(config.lockAfterTimeMillis)
+    unlockAfterTimestamp.set(Optional.of(lockAfterTimestamp))
+
     delegate.stop()
     super.onStop()
   }

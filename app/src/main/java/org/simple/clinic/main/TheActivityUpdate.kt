@@ -8,6 +8,7 @@ import org.simple.clinic.main.LifecycleEvent.ActivityStarted
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
+import org.simple.clinic.util.Optional
 import java.time.Instant
 
 private val SHOW_APP_LOCK_FOR_USER_STATES = setOf(
@@ -48,10 +49,13 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
 
   private fun screenLockEffect(
       currentTimestamp: Instant,
-      lockAtTimestamp: Instant,
+      lockAtTimestamp: Optional<Instant>,
       user: User
   ): TheActivityEffect {
-    val hasAppLockTimerExpired = currentTimestamp.isAfter(lockAtTimestamp)
+    val hasAppLockTimerExpired = lockAtTimestamp
+        .map(currentTimestamp::isAfter)
+        .orElse(true) // Handle the case where the app is opened after a cold start
+
     val shouldShowAppLockScreen = shouldShowAppLockScreenForUser(user) && hasAppLockTimerExpired
 
     return if (shouldShowAppLockScreen) ShowAppLockScreen else ClearLockAfterTimestamp

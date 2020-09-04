@@ -5,6 +5,7 @@ import dagger.Provides
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.storage.MemoryValue
+import org.simple.clinic.util.Optional
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 
@@ -18,7 +19,7 @@ class AppLockConfigModule {
 
   @Provides
   @AppScope
-  fun provideAppLockAfterTimestamp(): MemoryValue<Instant> {
-    return MemoryValue(defaultValue = Instant.MAX)
+  fun provideAppLockAfterTimestamp(): MemoryValue<Optional<Instant>> {
+    return MemoryValue(defaultValue = Optional.empty())
   }
 }

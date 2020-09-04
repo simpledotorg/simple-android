@@ -15,7 +15,7 @@ sealed class LifecycleEvent : TheActivityEvent() {
 data class AppLockInfoLoaded(
     val user: Optional<User>,
     val currentTimestamp: Instant,
-    val lockAtTimestamp: Instant
+    val lockAtTimestamp: Optional<Instant>
 ) : TheActivityEvent()
 
 object UserWasJustVerified : TheActivityEvent()

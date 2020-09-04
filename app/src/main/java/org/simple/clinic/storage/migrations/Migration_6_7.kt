@@ -10,8 +10,12 @@ import javax.inject.Inject
  */
 @Suppress("ClassName")
 class Migration_6_7 @Inject constructor() : Migration(6, 7) {
+
   override fun migrate(database: SupportSQLiteDatabase) {
+    database.execSQL("PRAGMA foreign_keys = OFF")
     database.inTransaction {
+      database.execSQL("PRAGMA legacy_alter_table = ON")
+
       database.execSQL("""
       CREATE TABLE IF NOT EXISTS `LoggedInUserFacilityMapping` (
           `userUuid` TEXT NOT NULL,
@@ -51,6 +55,10 @@ class Migration_6_7 @Inject constructor() : Migration(6, 7) {
       FROM `LoggedInUser_v6`
       """)
       database.execSQL("DROP TABLE `LoggedInUser_v6`")
+
+      database.execSQL("PRAGMA legacy_alter_table = OFF")
+      database.execSQL("PRAGMA foreign_key_check")
     }
+    database.execSQL("PRAGMA foreign_keys = ON")
   }
 }

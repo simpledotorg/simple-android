@@ -62,8 +62,6 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityI
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityMedicalOfficersCrossRef
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityWithMedicalOfficers
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
-import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.No
-import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordPrescribedDrug
@@ -80,12 +78,15 @@ import org.simple.clinic.util.randomGender
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.randomOfEnum
 import org.simple.clinic.util.randomPatientPhoneNumberType
+import org.simple.clinic.util.randomTeleconsultRecordAnswer
+import org.simple.clinic.util.randomTeleconsultationType
 import java.net.URI
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset.UTC
 import java.util.UUID
 import kotlin.random.nextInt
+import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer as TeleconsultRecordAnswer
 
 object TestData {
 
@@ -1169,7 +1170,7 @@ object TestData {
     )
   }
 
-  fun teleconsultationRecordInfo(
+  fun teleconsultRecord(
       id: UUID = UUID.randomUUID(),
       patientId: UUID = UUID.randomUUID(),
       medicalOfficerId: UUID = UUID.randomUUID(),
@@ -1202,10 +1203,10 @@ object TestData {
 
   fun teleconsultRecordInfo(
       recordedAt: Instant = Instant.parse("2020-09-03T00:00:00Z"),
-      teleconsultationType: TeleconsultationType.Audio,
-      patientTookMedicines: Yes,
-      patientConsented: No,
-      medicalOfficerNumber: String = "22222222"
+      teleconsultationType: TeleconsultationType = randomTeleconsultationType(),
+      patientTookMedicines: TeleconsultRecordAnswer = randomTeleconsultRecordAnswer(),
+      patientConsented: TeleconsultRecordAnswer = randomTeleconsultRecordAnswer(),
+      medicalOfficerNumber: String? = "22222222"
   ): TeleconsultRecordInfo {
     return TeleconsultRecordInfo(
         recordedAt = recordedAt,
@@ -1229,9 +1230,9 @@ object TestData {
   }
 
   fun teleconsultRecordWithPrescribedDrugs(
-      teleconsultRecord : TeleconsultRecord,
-      prescribedDrugs : List<TeleconsultRecordPrescribedDrug> = emptyList()
-  ) : TeleconsultRecordWithPrescribedDrugs {
+      teleconsultRecord: TeleconsultRecord,
+      prescribedDrugs: List<TeleconsultRecordPrescribedDrug> = emptyList()
+  ): TeleconsultRecordWithPrescribedDrugs {
     return TeleconsultRecordWithPrescribedDrugs(
         teleconsultRecord = teleconsultRecord,
         prescribedDrugs = prescribedDrugs

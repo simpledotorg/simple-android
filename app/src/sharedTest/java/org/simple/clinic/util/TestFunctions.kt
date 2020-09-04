@@ -8,14 +8,16 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumberType
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
-import java.time.Duration
 import retrofit2.HttpException
 import retrofit2.Response
+import java.time.Duration
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
+import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer as TeleconsultrecordAnswer
 
 fun <T> TestObserver<T>.assertLatestValue(value: T) {
   @Suppress("UnstableApiUsage")
@@ -36,6 +38,14 @@ fun randomDeletedReason(): DeletedReason {
 
 fun randomPatientPhoneNumberType(): PatientPhoneNumberType {
   return PatientPhoneNumberType.TypeAdapter.knownMappings.keys.shuffled().first()
+}
+
+fun randomTeleconsultRecordAnswer(): TeleconsultrecordAnswer {
+  return TeleconsultrecordAnswer.TypeAdapter.knownMappings.keys.shuffled().first()
+}
+
+fun randomTeleconsultationType(): TeleconsultationType {
+  return TeleconsultationType.TypeAdapter.knownMappings.keys.shuffled().first()
 }
 
 fun TestScheduler.advanceTimeBy(duration: Duration) {

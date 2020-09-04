@@ -62,6 +62,14 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityI
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityMedicalOfficersCrossRef
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityWithMedicalOfficers
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
+import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.No
+import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordPrescribedDrug
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordWithPrescribedDrugs
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRequestInfo
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -1158,6 +1166,75 @@ object TestData {
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt
+    )
+  }
+
+  fun teleconsultationRecordInfo(
+      id: UUID = UUID.randomUUID(),
+      patientId: UUID = UUID.randomUUID(),
+      medicalOfficerId: UUID = UUID.randomUUID(),
+      teleconsultRequestInfo: TeleconsultRequestInfo?,
+      teleconsultRecordInfo: TeleconsultRecordInfo?,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null,
+      timestamps: Timestamps = Timestamps(createdAt, updatedAt, deletedAt),
+  ): TeleconsultRecord {
+    return TeleconsultRecord(
+        id = id,
+        patientId = patientId,
+        medicalOfficerId = medicalOfficerId,
+        teleconsultRequestInfo = teleconsultRequestInfo,
+        teleconsultRecordInfo = teleconsultRecordInfo,
+        timestamp = timestamps
+    )
+  }
+
+  fun teleconsultationRecordPrescribedDrug(
+      teleconsultRecordId: UUID = UUID.randomUUID(),
+      prescribedDrugUuid: UUID = UUID.randomUUID(),
+  ): TeleconsultRecordPrescribedDrug {
+    return TeleconsultRecordPrescribedDrug(
+        teleconsultRecordId = teleconsultRecordId,
+        prescribedDrugUuid = prescribedDrugUuid
+    )
+  }
+
+  fun teleconsultRecordInfo(
+      recordedAt: Instant = Instant.parse("2020-09-03T00:00:00Z"),
+      teleconsultationType: TeleconsultationType.Audio,
+      patientTookMedicines: Yes,
+      patientConsented: No,
+      medicalOfficerNumber: String = "22222222"
+  ): TeleconsultRecordInfo {
+    return TeleconsultRecordInfo(
+        recordedAt = recordedAt,
+        teleconsultationType = teleconsultationType,
+        patientTookMedicines = patientTookMedicines,
+        patientConsented = patientConsented,
+        medicalOfficerNumber = medicalOfficerNumber
+    )
+  }
+
+  fun teleconsultRequestInfo(
+      requesterId: UUID = UUID.randomUUID(),
+      facilityId: UUID = UUID.randomUUID(),
+      requestedAt: Instant = Instant.parse("2020-09-02T00:00:00Z"),
+  ): TeleconsultRequestInfo {
+    return TeleconsultRequestInfo(
+        requesterId = requesterId,
+        facilityId = facilityId,
+        requestedAt = requestedAt
+    )
+  }
+
+  fun teleconsultRecordWithPrescribedDrugs(
+      teleconsultRecord : TeleconsultRecord,
+      prescribedDrugs : List<TeleconsultRecordPrescribedDrug> = emptyList()
+  ) : TeleconsultRecordWithPrescribedDrugs {
+    return TeleconsultRecordWithPrescribedDrugs(
+        teleconsultRecord = teleconsultRecord,
+        prescribedDrugs = prescribedDrugs
     )
   }
 }

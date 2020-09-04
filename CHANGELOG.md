@@ -12,6 +12,7 @@
 - Add support for the teleconsultation record deeplink
 - Add `frequency` & `durationInDays` to `PrescribedDrug`
 - Add `ImageSrcDetector` lint for warning when using `ImageView#src`
+- Add `TeleconsultRecord` and `TeleconsultRecordPayload`
 
 ### Fixes
 - Fixed issue where patient details would not load for patients without an assigned facility ([#1127](https://app.clubhouse.io/simpledotorg/story/1127/patient-details-screen-does-not-load-for-patients-who-don-t-have-an-assigned-facility))

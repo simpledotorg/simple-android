@@ -1071,7 +1071,9 @@ object TestData {
       registrationFacilityUuid = registrationFacilityUuid,
       status = status,
       createdAt = createdAt,
-      updatedAt = updatedAt
+      updatedAt = updatedAt,
+      capabilities = null,
+      teleconsultPhoneNumber = "+919995558883"
   )
 
   fun facilityTeleconsultationsResponse(

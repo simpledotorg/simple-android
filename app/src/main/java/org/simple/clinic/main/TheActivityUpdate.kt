@@ -3,14 +3,10 @@ package org.simple.clinic.main
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
-import org.simple.clinic.login.applock.AppLockConfig
-import org.simple.clinic.main.LifecycleEvent.ActivityDestroyed
-import org.simple.clinic.main.LifecycleEvent.ActivityStarted
-import org.simple.clinic.main.LifecycleEvent.ActivityStopped
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
-import java.time.Duration
+import org.simple.clinic.util.Optional
 import java.time.Instant
 
 private val SHOW_APP_LOCK_FOR_USER_STATES = setOf(
@@ -19,21 +15,10 @@ private val SHOW_APP_LOCK_FOR_USER_STATES = setOf(
     LoggedInStatus.RESET_PIN_REQUESTED
 )
 
-class TheActivityUpdate(
-    private val lockScreenAfter: Duration
-) : Update<TheActivityModel, TheActivityEvent, TheActivityEffect> {
-
-  companion object {
-    fun create(appLockConfig: AppLockConfig) = TheActivityUpdate(
-        lockScreenAfter = Duration.ofMillis(appLockConfig.lockAfterTimeMillis)
-    )
-  }
+class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivityEffect> {
 
   override fun update(model: TheActivityModel, event: TheActivityEvent): Next<TheActivityModel, TheActivityEffect> {
     return when (event) {
-      ActivityStarted -> dispatch(LoadAppLockInfo)
-      is ActivityStopped -> dispatch(UpdateLockTimestamp(lockAt = event.timestamp.plus(lockScreenAfter)))
-      ActivityDestroyed -> noChange()
       is AppLockInfoLoaded -> handleScreenLock(event)
       UserWasJustVerified -> dispatch(ShowUserLoggedOutOnOtherDeviceAlert)
       UserWasUnauthorized -> dispatch(RedirectToLoginScreen)
@@ -60,10 +45,13 @@ class TheActivityUpdate(
 
   private fun screenLockEffect(
       currentTimestamp: Instant,
-      lockAtTimestamp: Instant,
+      lockAtTimestamp: Optional<Instant>,
       user: User
   ): TheActivityEffect {
-    val hasAppLockTimerExpired = currentTimestamp.isAfter(lockAtTimestamp)
+    val hasAppLockTimerExpired = lockAtTimestamp
+        .map(currentTimestamp::isAfter)
+        .orElse(true) // Handle the case where the app is opened after a cold start
+
     val shouldShowAppLockScreen = shouldShowAppLockScreenForUser(user) && hasAppLockTimerExpired
 
     return if (shouldShowAppLockScreen) ShowAppLockScreen else ClearLockAfterTimestamp

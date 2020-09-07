@@ -10,6 +10,7 @@ import com.f2prateek.rx.preferences2.Preference
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.appconfig.AppConfigModule
+import org.simple.clinic.appconfig.AppLockModule
 import org.simple.clinic.appupdate.AppUpdateModule
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.di.network.HttpInterceptorsModule
@@ -80,7 +81,8 @@ import javax.inject.Named
   PinVerificationModule::class,
   SessionModule::class,
   UuidGeneratorModule::class,
-  SyncConfigModule::class
+  SyncConfigModule::class,
+  AppLockModule::class
 ])
 class AppModule(private val appContext: Application) {
 

@@ -6,6 +6,5 @@ import javax.inject.Qualifier
 annotation class TypedPreference(val value: Type) {
 
   enum class Type {
-    LockAtTime
   }
 }

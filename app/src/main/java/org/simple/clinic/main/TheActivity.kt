@@ -9,14 +9,11 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.ofType
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.deeplink.DeepLinkResult
 import org.simple.clinic.deeplink.OpenPatientSummary
 import org.simple.clinic.deeplink.OpenPatientSummaryWithTeleconsultLog
@@ -42,6 +39,7 @@ import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.SyncSetup
@@ -50,6 +48,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.unsafeLazy
@@ -143,7 +142,8 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   @Inject
   lateinit var config: AppLockConfig
 
-  private val lifecycleEvents: Subject<LifecycleEvent> = PublishSubject.create()
+  @Inject
+  lateinit var unlockAfterTimestamp: MemoryValue<Optional<Instant>>
 
   private val disposables = CompositeDisposable()
 
@@ -153,19 +153,13 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   private val screenResults: ScreenResultBus = ScreenResultBus()
 
-  private val events by unsafeLazy {
-    lifecycleEvents
-        .compose(ReportAnalyticsEvents())
-        .share()
-  }
-
   private val delegate by unsafeLazy {
     val uiRenderer = TheActivityUiRenderer(this)
 
     MobiusDelegate.forActivity(
-        events = events.ofType(),
+        events = Observable.never(),
         defaultModel = TheActivityModel.create(),
-        update = TheActivityUpdate.create(config),
+        update = TheActivityUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = TheActivityInit(),
         modelUpdateListener = uiRenderer::render
@@ -221,11 +215,12 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   override fun onStart() {
     super.onStart()
     delegate.start()
-    lifecycleEvents.onNext(LifecycleEvent.ActivityStarted)
   }
 
   override fun onStop() {
-    lifecycleEvents.onNext(LifecycleEvent.ActivityStopped(Instant.now(utcClock)))
+    val lockAfterTimestamp = Instant.now(utcClock).plusMillis(config.lockAfterTimeMillis)
+    unlockAfterTimestamp.set(Optional.of(lockAfterTimestamp))
+
     delegate.stop()
     super.onStop()
   }
@@ -289,12 +284,11 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   override fun onDestroy() {
     super.onDestroy()
-    lifecycleEvents.onNext(LifecycleEvent.ActivityDestroyed)
     disposables.clear()
   }
 
   override fun showAppLockScreen() {
-    screenRouter.push(AppLockScreenKey())
+    screenRouter.push(AppLockScreenKey)
   }
 
   // This is here because we need to show the same alert in multiple

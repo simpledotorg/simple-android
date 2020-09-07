@@ -15,7 +15,7 @@ import org.simple.clinic.util.preference.StringPreferenceConverter
 import retrofit2.Retrofit
 import javax.inject.Named
 
-@Module(includes = [AppLockConfigModule::class])
+@Module
 class LoginModule {
 
   @Provides

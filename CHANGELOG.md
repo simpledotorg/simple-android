@@ -17,6 +17,7 @@
 - Add `ImageSrcDetector` lint for warning when using `ImageView#src`
 - Add `TeleconsultRecord` and `TeleconsultRecordPayload`
 - Bumped internal SQLite version to 3.32.2
+- Change saving of app lock timestamp to an in-memory value
 
 ## 2020-09-03-7417
 ### Fixes

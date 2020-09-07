@@ -3,8 +3,6 @@ package org.simple.clinic.main
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
-import org.simple.clinic.main.LifecycleEvent.ActivityDestroyed
-import org.simple.clinic.main.LifecycleEvent.ActivityStarted
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
@@ -21,8 +19,6 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
 
   override fun update(model: TheActivityModel, event: TheActivityEvent): Next<TheActivityModel, TheActivityEffect> {
     return when (event) {
-      ActivityStarted -> dispatch(LoadAppLockInfo)
-      ActivityDestroyed -> noChange()
       is AppLockInfoLoaded -> handleScreenLock(event)
       UserWasJustVerified -> dispatch(ShowUserLoggedOutOnOtherDeviceAlert)
       UserWasUnauthorized -> dispatch(RedirectToLoginScreen)

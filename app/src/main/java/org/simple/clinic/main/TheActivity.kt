@@ -9,14 +9,11 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.ofType
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.deeplink.DeepLinkResult
 import org.simple.clinic.deeplink.OpenPatientSummary
 import org.simple.clinic.deeplink.OpenPatientSummaryWithTeleconsultLog
@@ -148,8 +145,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   @Inject
   lateinit var unlockAfterTimestamp: MemoryValue<Optional<Instant>>
 
-  private val lifecycleEvents: Subject<LifecycleEvent> = PublishSubject.create()
-
   private val disposables = CompositeDisposable()
 
   private val screenRouter: ScreenRouter by unsafeLazy {
@@ -158,17 +153,11 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   private val screenResults: ScreenResultBus = ScreenResultBus()
 
-  private val events by unsafeLazy {
-    lifecycleEvents
-        .compose(ReportAnalyticsEvents())
-        .share()
-  }
-
   private val delegate by unsafeLazy {
     val uiRenderer = TheActivityUiRenderer(this)
 
     MobiusDelegate.forActivity(
-        events = events.ofType(),
+        events = Observable.never(),
         defaultModel = TheActivityModel.create(),
         update = TheActivityUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
@@ -226,7 +215,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   override fun onStart() {
     super.onStart()
     delegate.start()
-    lifecycleEvents.onNext(LifecycleEvent.ActivityStarted)
   }
 
   override fun onStop() {
@@ -296,7 +284,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   override fun onDestroy() {
     super.onDestroy()
-    lifecycleEvents.onNext(LifecycleEvent.ActivityDestroyed)
     disposables.clear()
   }
 

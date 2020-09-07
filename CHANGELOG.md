@@ -2,7 +2,7 @@
 
 ## Next Release
 ### Features
-- [In Progress: 04 Sep 2020] Add `TeleconsultRecordScreen`
+- [In Progress: 07 Sep 2020] Add `TeleconsultRecordScreen`
 
 ### Changes
 - Open patient summary screen when patient name is clicked in overdue

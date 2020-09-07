@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Query
 import androidx.room.Relation
+import androidx.room.Transaction
 import java.util.UUID
 
 data class TeleconsultRecordWithPrescribedDrugs(
@@ -21,6 +22,7 @@ data class TeleconsultRecordWithPrescribedDrugs(
   @Dao
   interface RoomDao {
 
+    @Transaction
     @Query("SELECT * FROM TeleconsultRecord WHERE id = :teleconsultRecordUuid")
     fun getPrescribedUuidForTeleconsultRecordUuid(teleconsultRecordUuid: UUID): TeleconsultRecordWithPrescribedDrugs
   }

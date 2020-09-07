@@ -7,3 +7,5 @@ sealed class TeleconsultRecordEffect
 object GoBack : TeleconsultRecordEffect()
 
 data class NavigateToTeleconsultSuccess(val teleconsultRecordId: UUID) : TeleconsultRecordEffect()
+
+data class LoadTeleconsultRecordWithPrescribedDrugs(val teleconsultRecordId: UUID) : TeleconsultRecordEffect()

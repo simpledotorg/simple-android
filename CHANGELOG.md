@@ -18,6 +18,7 @@
 - Add `TeleconsultRecord` and `TeleconsultRecordPayload`
 - Bumped internal SQLite version to 3.32.2
 - Change saving of app lock timestamp to an in-memory value
+- Pin the number of threads used for running queries in Room based on the SQLite connection pool size
 
 ## 2020-09-03-7417
 ### Fixes

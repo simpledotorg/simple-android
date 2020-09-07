@@ -19,37 +19,17 @@ import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
+import org.simple.clinic.util.ThreadPools
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import timber.log.Timber
-import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.ThreadFactory
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 private fun createScheduler(workers: Int): Scheduler {
-  val executor = ThreadPoolExecutor(
-      workers, // number of threads to keep alive always
-      workers, // max number of threads in the pool
-      1L, // time to keep non-core threads alive before shutting down
-      TimeUnit.SECONDS,
-      LinkedBlockingQueue(), // Queue for receiving work
-      SyncThreadFactory()
-  )
+  val executor = ThreadPools.create(workers, workers, "sync-thread")
 
   return Schedulers.from(executor)
-}
-
-private class SyncThreadFactory: ThreadFactory {
-
-  private val threadCounter = AtomicInteger(1)
-
-  override fun newThread(job: Runnable): Thread {
-    return Thread(job, "sync-thread-${threadCounter.getAndIncrement()}")
-  }
 }
 
 @AppScope

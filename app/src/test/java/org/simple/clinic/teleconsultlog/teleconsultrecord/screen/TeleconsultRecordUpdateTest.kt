@@ -11,8 +11,9 @@ import java.util.UUID
 
 class TeleconsultRecordUpdateTest {
 
+  private val teleconsultRecordId = UUID.fromString("39c41027-6c4d-4c53-a9b4-b1371746f859")
   private val updateSpec = UpdateSpec(TeleconsultRecordUpdate())
-  private val defaultModel = TeleconsultRecordModel.create()
+  private val defaultModel = TeleconsultRecordModel.create(teleconsultRecordId)
 
   @Test
   fun `when back is clicked, then navigate to previous screen`() {
@@ -40,7 +41,7 @@ class TeleconsultRecordUpdateTest {
   fun `update model, when teleconsult record already exists`() {
     val teleconsultRecordWithPrescribedDrugs = TestData.teleconsultRecordWithPrescribedDrugs(
         teleconsultRecord = TestData.teleconsultRecord(
-            id = UUID.fromString("4dfd6385-5628-4956-aeb9-0b6dda06ea10"),
+            id = teleconsultRecordId,
             teleconsultRecordInfo = TestData.teleconsultRecordInfo()
         ),
         prescribedDrugs = emptyList()

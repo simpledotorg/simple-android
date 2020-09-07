@@ -8,14 +8,28 @@ import org.junit.Test
 
 class TeleconsultRecordUpdateTest {
 
+  private val updateSpec = UpdateSpec(TeleconsultRecordUpdate())
+  private val defaultModel = TeleconsultRecordModel.create()
+
   @Test
   fun `when back is clicked, then navigate to previous screen`() {
-    UpdateSpec(TeleconsultRecordUpdate())
-        .given(TeleconsultRecordModel.create())
+    updateSpec
+        .given(defaultModel)
         .whenEvent(BackClicked)
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(GoBack)
+        ))
+  }
+
+  @Test
+  fun `when teleconsult record is created, then navigate to teleconsult success screen`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(TeleconsultRecordCreated)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(NavigateToTeleconsultSuccess)
         ))
   }
 }

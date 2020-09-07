@@ -7,3 +7,5 @@ sealed class TeleconsultRecordEvent
 object BackClicked : TeleconsultRecordEvent()
 
 data class TeleconsultRecordWithPrescribedDrugsLoaded(val teleconsultRecordWithPrescribedDrugs: TeleconsultRecordWithPrescribedDrugs?) : TeleconsultRecordEvent()
+
+object TeleconsultRecordCreated : TeleconsultRecordEvent()

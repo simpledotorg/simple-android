@@ -58,12 +58,12 @@ class TeleconsultRecordEffectHandlerTest {
   @Test
   fun `when navigate to teleconsult success screen effect is received, then navigate to teleconsult success screen`() {
     // when
-    effectHandlerTestCase.dispatch(NavigateToTeleconsultSuccess(teleconsultRecordId))
+    effectHandlerTestCase.dispatch(NavigateToTeleconsultSuccess)
 
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
 
-    verify(uiActions).navigateToTeleconsultSuccessScreen(teleconsultRecordId)
+    verify(uiActions).navigateToTeleconsultSuccessScreen()
     verifyNoMoreInteractions(uiActions)
   }
 

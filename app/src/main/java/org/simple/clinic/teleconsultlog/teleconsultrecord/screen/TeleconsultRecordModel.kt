@@ -1,9 +1,31 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
-class TeleconsultRecordModel {
+import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer
+import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Audio
+
+data class TeleconsultRecordModel(
+    val teleconsultationType: TeleconsultationType,
+    val patientTookMedicines: Answer,
+    val patientConsented: Answer
+) {
 
   companion object {
 
-    fun create() = TeleconsultRecordModel()
+    fun create() = TeleconsultRecordModel(
+        teleconsultationType = Audio,
+        patientTookMedicines = Yes,
+        patientConsented = Yes
+    )
+  }
+
+  fun teleconsultRecordLoaded(teleconsultRecordInfo: TeleconsultRecordInfo): TeleconsultRecordModel {
+    return copy(
+        teleconsultationType = teleconsultRecordInfo.teleconsultationType,
+        patientTookMedicines = teleconsultRecordInfo.patientTookMedicines,
+        patientConsented = teleconsultRecordInfo.patientConsented
+    )
   }
 }

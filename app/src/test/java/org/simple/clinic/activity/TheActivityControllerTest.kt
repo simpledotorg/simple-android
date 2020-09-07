@@ -70,9 +70,6 @@ class TheActivityControllerTest {
 
   @Test
   fun `when activity is started and user is logged out then app lock shouldn't be shown`() {
-    // given
-    whenever(userSession.isUserLoggedIn()).thenReturn(false)
-
     // when
     setupController()
 
@@ -84,20 +81,15 @@ class TheActivityControllerTest {
   @Test
   fun `when activity is started, user has requested an OTP, and user was inactive then app lock should be shown`() {
     // given
-    whenever(userSession.isUserLoggedIn()).thenReturn(true)
-    val userStream: Observable<Optional<User>> = Observable.just(Optional.of(TestData.loggedInUser(
+    whenever(userSession.loggedInUserImmediate()).thenReturn(TestData.loggedInUser(
         uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
         loggedInStatus = OTP_REQUESTED,
         status = UserStatus.ApprovedForSyncing
-    )))
-
+    ))
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
 
     // when
-    setupController(
-        userStream = userStream,
-        lockAtTime = lockAfterTime
-    )
+    setupController(lockAtTime = lockAfterTime)
 
     // then
     verify(ui).showAppLockScreen()
@@ -107,20 +99,16 @@ class TheActivityControllerTest {
   @Test
   fun `when activity is started, user is logged in, and user was inactive then app lock should be shown`() {
     // given
-    whenever(userSession.isUserLoggedIn()).thenReturn(true)
-    val userStream: Observable<Optional<User>> = Observable.just(Optional.of(TestData.loggedInUser(
+    whenever(userSession.loggedInUserImmediate()).thenReturn(TestData.loggedInUser(
         uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
         loggedInStatus = LOGGED_IN,
         status = UserStatus.ApprovedForSyncing
-    )))
+    ))
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
 
     // when
-    setupController(
-        userStream = userStream,
-        lockAtTime = lockAfterTime
-    )
+    setupController(lockAtTime = lockAfterTime)
 
     // then
     verify(ui).showAppLockScreen()
@@ -130,20 +118,15 @@ class TheActivityControllerTest {
   @Test
   fun `when activity is started, user has requested a PIN reset, and user was inactive then app lock should be shown`() {
     // given
-    whenever(userSession.isUserLoggedIn()).thenReturn(true)
-    val userStream: Observable<Optional<User>> = Observable.just(Optional.of(TestData.loggedInUser(
+    whenever(userSession.loggedInUserImmediate()).thenReturn(TestData.loggedInUser(
         uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
         loggedInStatus = RESET_PIN_REQUESTED,
         status = UserStatus.ApprovedForSyncing
-    )))
-
+    ))
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
 
     // when
-    setupController(
-        userStream = userStream,
-        lockAtTime = lockAfterTime
-    )
+    setupController(lockAtTime = lockAfterTime)
 
     // then
     verify(ui).showAppLockScreen()
@@ -153,13 +136,11 @@ class TheActivityControllerTest {
   @Test
   fun `when activity is started, user is not logged in and user was inactive then app lock should not be shown`() {
     // given
-    whenever(userSession.isUserLoggedIn()).thenReturn(true)
-    whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(Optional.of(TestData.loggedInUser(
-            uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
-            loggedInStatus = NOT_LOGGED_IN,
-            status = UserStatus.ApprovedForSyncing
-        ))))
+    whenever(userSession.loggedInUserImmediate()).thenReturn(TestData.loggedInUser(
+        uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+        loggedInStatus = NOT_LOGGED_IN,
+        status = UserStatus.ApprovedForSyncing
+    ))
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
 
@@ -174,13 +155,11 @@ class TheActivityControllerTest {
   @Test
   fun `when activity is started, user is resetting the PIN, and user was inactive then app lock should not be shown`() {
     // given
-    whenever(userSession.isUserLoggedIn()).thenReturn(true)
-    whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(Optional.of(TestData.loggedInUser(
-            uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
-            loggedInStatus = RESETTING_PIN,
-            status = UserStatus.ApprovedForSyncing
-        ))))
+    whenever(userSession.loggedInUserImmediate()).thenReturn(TestData.loggedInUser(
+        uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+        loggedInStatus = RESETTING_PIN,
+        status = UserStatus.ApprovedForSyncing
+    ))
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
 
@@ -195,12 +174,11 @@ class TheActivityControllerTest {
   @Test
   fun `when app is started unlocked and lock timer hasn't expired yet then the timer should be unset`() {
     // given
-    whenever(userSession.isUserLoggedIn()).thenReturn(true)
-    val userStream: Observable<Optional<User>> = Observable.just(Optional.of(TestData.loggedInUser(
+    whenever(userSession.loggedInUserImmediate()).thenReturn(TestData.loggedInUser(
         uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
         loggedInStatus = LOGGED_IN,
         status = UserStatus.ApprovedForSyncing
-    )))
+    ))
 
     val lockAfterTimestamp = MemoryValue(
         defaultValue = Optional.empty(),
@@ -208,7 +186,7 @@ class TheActivityControllerTest {
     )
 
     // when
-    setupController(userStream = userStream, lockAfterTimestamp = lockAfterTimestamp)
+    setupController(lockAfterTimestamp = lockAfterTimestamp)
 
     // then
     assertThat(lockAfterTimestamp.hasValue).isFalse()
@@ -218,7 +196,6 @@ class TheActivityControllerTest {
   @Test
   fun `when app is started locked and lock timer hasn't expired yet then the timer should not be unset`() {
     // given
-    whenever(userSession.isUserLoggedIn()).thenReturn(true)
     val lockAfterTimestamp = MemoryValue(
         defaultValue = Optional.empty(),
         currentValue = Optional.of(Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(5)))
@@ -250,7 +227,7 @@ class TheActivityControllerTest {
     // when
     setupController(
         userStream = userStream,
-         lockAtTime = currentTimestamp.plus(Duration.ofMinutes(lockInMinutes))
+        lockAtTime = currentTimestamp.plus(Duration.ofMinutes(lockInMinutes))
     )
 
     // then
@@ -292,7 +269,6 @@ class TheActivityControllerTest {
         loggedInStatus = LOGGED_IN
     )
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
-    whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
     whenever(userSession.loggedInUserImmediate()).thenReturn(loggedInUser)
     val userDisapprovedSubject = PublishSubject.create<Boolean>()
@@ -321,7 +297,6 @@ class TheActivityControllerTest {
         loggedInStatus = LOGGED_IN
     )
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
-    whenever(userSession.isUserLoggedIn()).thenReturn(true)
 
     //when
     setupController(lockAtTime = Instant.now(clock))
@@ -354,7 +329,7 @@ class TheActivityControllerTest {
 
     // when
     userUnauthorizedSubject.onNext(true)
-    
+
     // then
     verifyZeroInteractions(ui)
 

@@ -13,6 +13,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterTrue
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.util.toOptional
 import java.time.Instant
 
 class TheActivityEffectHandler @AssistedInject constructor(
@@ -48,17 +49,14 @@ class TheActivityEffectHandler @AssistedInject constructor(
   private fun loadShowAppLockInto(): ObservableTransformer<LoadAppLockInfo, TheActivityEvent> {
     return ObservableTransformer { effects ->
       effects
-          .switchMap {
-            userSession
-                .loggedInUser()
-                .subscribeOn(schedulers.io())
-                .map {
-                  AppLockInfoLoaded(
-                      user = it,
-                      currentTimestamp = Instant.now(utcClock),
-                      lockAtTimestamp = lockAfterTimestamp.get()
-                  )
-                }
+          .observeOn(schedulers.io())
+          .map { userSession.loggedInUserImmediate().toOptional() }
+          .map {
+            AppLockInfoLoaded(
+                user = it,
+                currentTimestamp = Instant.now(utcClock),
+                lockAtTimestamp = lockAfterTimestamp.get()
+            )
           }
     }
   }

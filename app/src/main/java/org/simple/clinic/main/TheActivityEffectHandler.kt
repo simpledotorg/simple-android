@@ -1,18 +1,19 @@
 package org.simple.clinic.main
 
-import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.main.TypedPreference.Type.LockAtTime
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterTrue
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.util.toOptional
 import java.time.Instant
 
 class TheActivityEffectHandler @AssistedInject constructor(
@@ -20,7 +21,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
     private val utcClock: UtcClock,
     private val patientRepository: PatientRepository,
-    @TypedPreference(LockAtTime) private val lockAfterTimestamp: Preference<Instant>,
+    private val lockAfterTimestamp: MemoryValue<Optional<Instant>>,
     @Assisted private val uiActions: TheActivityUiActions
 ) {
 
@@ -33,9 +34,8 @@ class TheActivityEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<TheActivityEffect, TheActivityEvent>()
         .addTransformer(LoadAppLockInfo::class.java, loadShowAppLockInto())
-        .addAction(ClearLockAfterTimestamp::class.java, { lockAfterTimestamp.delete() }, schedulers.io())
+        .addAction(ClearLockAfterTimestamp::class.java, lockAfterTimestamp::clear)
         .addAction(ShowAppLockScreen::class.java, uiActions::showAppLockScreen, schedulers.ui())
-        .addTransformer(UpdateLockTimestamp::class.java, updateAppLockTime())
         .addTransformer(ListenForUserVerifications::class.java, listenForUserVerifications())
         .addAction(ShowUserLoggedOutOnOtherDeviceAlert::class.java, uiActions::showUserLoggedOutOnOtherDeviceAlert, schedulers.ui())
         .addTransformer(ListenForUserUnauthorizations::class.java, listenForUserUnauthorizations())
@@ -49,33 +49,14 @@ class TheActivityEffectHandler @AssistedInject constructor(
   private fun loadShowAppLockInto(): ObservableTransformer<LoadAppLockInfo, TheActivityEvent> {
     return ObservableTransformer { effects ->
       effects
-          .switchMap {
-            userSession
-                .loggedInUser()
-                .subscribeOn(schedulers.io())
-                .map {
-                  AppLockInfoLoaded(
-                      user = it,
-                      currentTimestamp = Instant.now(utcClock),
-                      lockAtTimestamp = lockAfterTimestamp.get()
-                  )
-                }
-          }
-    }
-  }
-
-  private fun updateAppLockTime(): ObservableTransformer<UpdateLockTimestamp, TheActivityEvent> {
-    return ObservableTransformer { effects ->
-      effects
           .observeOn(schedulers.io())
-          .switchMap { effect ->
-            val shouldUpdateLockTimestamp = userSession.isUserLoggedIn() && !lockAfterTimestamp.isSet
-
-            if (shouldUpdateLockTimestamp) {
-              lockAfterTimestamp.set(effect.lockAt)
-            }
-
-            Observable.empty<TheActivityEvent>()
+          .map { userSession.loggedInUserImmediate().toOptional() }
+          .map {
+            AppLockInfoLoaded(
+                user = it,
+                currentTimestamp = Instant.now(utcClock),
+                lockAtTimestamp = lockAfterTimestamp.get()
+            )
           }
     }
   }

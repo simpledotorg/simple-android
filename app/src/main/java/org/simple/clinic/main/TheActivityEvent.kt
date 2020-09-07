@@ -7,16 +7,10 @@ import java.time.Instant
 
 sealed class TheActivityEvent : UiEvent
 
-sealed class LifecycleEvent : TheActivityEvent() {
-  object ActivityStarted : LifecycleEvent()
-  data class ActivityStopped(val timestamp: Instant) : LifecycleEvent()
-  object ActivityDestroyed : LifecycleEvent()
-}
-
 data class AppLockInfoLoaded(
     val user: Optional<User>,
     val currentTimestamp: Instant,
-    val lockAtTimestamp: Instant
+    val lockAtTimestamp: Optional<Instant>
 ) : TheActivityEvent()
 
 object UserWasJustVerified : TheActivityEvent()

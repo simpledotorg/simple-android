@@ -11,7 +11,7 @@ class TeleconsultRecordUpdate : Update<TeleconsultRecordModel, TeleconsultRecord
     return when (event) {
       BackClicked -> dispatch(GoBack)
       is TeleconsultRecordWithPrescribedDrugsLoaded -> noChange()
-      TeleconsultRecordCreated -> noChange()
+      TeleconsultRecordCreated -> dispatch(NavigateToTeleconsultSuccess)
     }
   }
 }

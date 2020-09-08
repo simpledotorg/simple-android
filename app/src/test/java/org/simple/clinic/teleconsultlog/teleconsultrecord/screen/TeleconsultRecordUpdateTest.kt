@@ -11,9 +11,10 @@ import java.util.UUID
 
 class TeleconsultRecordUpdateTest {
 
+  private val patientUuid = UUID.fromString("297fa0ea-5c20-4772-9bf8-7f42749dfedc")
   private val teleconsultRecordId = UUID.fromString("39c41027-6c4d-4c53-a9b4-b1371746f859")
   private val updateSpec = UpdateSpec(TeleconsultRecordUpdate())
-  private val defaultModel = TeleconsultRecordModel.create(teleconsultRecordId)
+  private val defaultModel = TeleconsultRecordModel.create(patientUuid, teleconsultRecordId)
 
   @Test
   fun `when back is clicked, then navigate to previous screen`() {

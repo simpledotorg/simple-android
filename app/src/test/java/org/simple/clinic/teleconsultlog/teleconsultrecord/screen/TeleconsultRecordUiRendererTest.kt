@@ -24,6 +24,7 @@ class TeleconsultRecordUiRendererTest {
     )
     val model = TeleconsultRecordModel
         .create(
+            patientUuid = UUID.fromString("b1de3894-1efd-44c1-b24e-7eb876517eff"),
             teleconsultRecordId = UUID.fromString("79986364-2fe9-4c74-8607-7b5ff3766bb7")
         )
         .teleconsultRecordLoaded(teleconsultRecordInfo)

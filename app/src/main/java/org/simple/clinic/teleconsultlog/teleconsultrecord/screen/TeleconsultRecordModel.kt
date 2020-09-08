@@ -8,6 +8,7 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.A
 import java.util.UUID
 
 data class TeleconsultRecordModel(
+    val patientUuid: UUID,
     val teleconsultRecordId: UUID,
     val teleconsultationType: TeleconsultationType,
     val patientTookMedicines: Answer,
@@ -16,7 +17,8 @@ data class TeleconsultRecordModel(
 
   companion object {
 
-    fun create(teleconsultRecordId: UUID) = TeleconsultRecordModel(
+    fun create(patientUuid: UUID, teleconsultRecordId: UUID) = TeleconsultRecordModel(
+        patientUuid = patientUuid,
         teleconsultRecordId = teleconsultRecordId,
         teleconsultationType = Audio,
         patientTookMedicines = Yes,

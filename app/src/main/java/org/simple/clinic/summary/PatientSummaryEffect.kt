@@ -72,3 +72,8 @@ data class OpenSelectDoctorSheet(
     val facility: Facility,
     val phoneNumbers: List<TeleconsultPhoneNumber>
 ) : PatientSummaryEffect()
+
+data class NavigateToTeleconsultRecordScreen(
+    val patientUuid: UUID,
+    val teleconsultRecordId: UUID
+) : PatientSummaryEffect()

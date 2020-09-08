@@ -51,6 +51,7 @@ import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet_Old
 import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
+import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreenKey
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
@@ -556,6 +557,10 @@ class PatientSummaryScreen(
   override fun showTeleconsultLogButton() {
     logTeleconsultButton.visibility = View.VISIBLE
     buttonFrame.setBackgroundColor(ContextCompat.getColor(context, R.color.green3))
+  }
+
+  override fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID) {
+    screenRouter.push(TeleconsultRecordScreenKey(patientUuid, teleconsultRecordId))
   }
 }
 

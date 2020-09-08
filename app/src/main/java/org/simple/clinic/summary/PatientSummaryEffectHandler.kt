@@ -90,6 +90,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(FetchTeleconsultationInfo::class.java, fetchFacilityTeleconsultationInfo())
         .addAction(ShowTeleconsultInfoError::class.java, { uiActions.showTeleconsultInfoError() }, schedulersProvider.ui())
         .addConsumer(OpenSelectDoctorSheet::class.java, { uiActions.openContactDoctorSheet(it.facility, it.phoneNumbers) }, schedulersProvider.ui())
+        .addConsumer(NavigateToTeleconsultRecordScreen::class.java, { uiActions.navigateToTeleconsultRecordScreen(it.patientUuid, it.teleconsultRecordId) }, schedulersProvider.ui())
         .build()
   }
 

@@ -94,7 +94,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
       }
     }
 
-    fun intentForOpenPatientSummaryWithTeleconsultLog(context: Context, patientUuid: UUID, teleconsultRecordId: UUID?): Intent {
+    fun intentForOpenPatientSummaryWithTeleconsultLog(context: Context, patientUuid: UUID, teleconsultRecordId: UUID): Intent {
       return Intent(context, TheActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         putExtra(EXTRA_DEEP_LINK_RESULT, OpenPatientSummaryWithTeleconsultLog(patientUuid, teleconsultRecordId))

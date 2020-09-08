@@ -80,7 +80,7 @@ class Migration75AndroidTest : BaseDatabaseMigrationTest(74, 75) {
         "loggedInStatus" to "LOGGED_IN",
         "registrationFacilityUuid" to facilityUuid,
         "currentFacilityUuid" to facilityUuid,
-        "teleconsultPhoneNumber" to "85459839458"
+        "teleconsultPhoneNumber" to "1111111111"
     ))
 
     after.query(""" SELECT * FROM LoggedInUser """).use { cursor ->
@@ -96,7 +96,7 @@ class Migration75AndroidTest : BaseDatabaseMigrationTest(74, 75) {
           "loggedInStatus" to "LOGGED_IN",
           "registrationFacilityUuid" to facilityUuid,
           "currentFacilityUuid" to facilityUuid,
-          "teleconsultPhoneNumber" to "85459839458",
+          "teleconsultPhoneNumber" to "1111111111",
           "capability_canTeleconsult" to null
       ))
     }

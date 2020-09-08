@@ -1061,7 +1061,9 @@ object TestData {
       registrationFacilityUuid: UUID? = UUID.fromString("d91fb2ba-9c87-4de0-b425-eea44457c746"),
       status: UserStatus? = UserStatus.ApprovedForSyncing,
       createdAt: Instant? = Instant.parse("2018-01-01T00:00:00Z"),
-      updatedAt: Instant? = Instant.parse("2018-01-01T00:00:00Z")
+      updatedAt: Instant? = Instant.parse("2018-01-01T00:00:00Z"),
+      teleconsultPhoneNumber: String = "+911111111111",
+      capabilities: User.Capabilities? = null
   ) = OngoingLoginEntry(
       uuid = uuid,
       phoneNumber = phoneNumber,
@@ -1072,8 +1074,8 @@ object TestData {
       status = status,
       createdAt = createdAt,
       updatedAt = updatedAt,
-      capabilities = null,
-      teleconsultPhoneNumber = "+919995558883"
+      capabilities = capabilities,
+      teleconsultPhoneNumber = teleconsultPhoneNumber
   )
 
   fun facilityTeleconsultationsResponse(

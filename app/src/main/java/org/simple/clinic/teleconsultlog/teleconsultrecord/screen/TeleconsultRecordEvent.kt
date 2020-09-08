@@ -1,5 +1,6 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
+import org.simple.clinic.patient.Patient
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordWithPrescribedDrugs
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
@@ -22,3 +23,7 @@ data class DoneClicked(
 ) : TeleconsultRecordEvent() {
   override val analyticsName: String = "Teleconsult Record:Done Clicked"
 }
+
+data class PatientDetailsLoaded(
+    val patient: Patient
+) : TeleconsultRecordEvent()

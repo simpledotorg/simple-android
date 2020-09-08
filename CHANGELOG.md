@@ -4,11 +4,14 @@
 ### Features
 - [In Progress: 07 Sep 2020] Add `TeleconsultRecordScreen`
 
+### Internal
+- [In Progress: 27 Aug 2020] Add support for sending teleconsult request via SMS
+
+## On Demo
 ### Changes
 - Open patient summary screen when patient name is clicked in overdue
 
 ### Internal
-- [In Progress: 27 Aug 2020] Add support for sending teleconsult request via SMS
 - Use UiRenderer for setting drug duration in `DrugDurationSheet`
 - Add teleconsultation facility sync (Disabled for now until API endpoint is live: ETA 04-09-2020)
 - Added `MedicineFrequencyBottomSheet` to update medicine frequency

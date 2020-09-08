@@ -64,8 +64,10 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map { teleconsultRecordRepository.getTeleconsultRecordWithPrescribedDrugs(it.teleconsultRecordId) }
-          .map(::TeleconsultRecordWithPrescribedDrugsLoaded)
+          .map {
+            val teleconsultRecordWithPrescribedDrugs = teleconsultRecordRepository.getTeleconsultRecordWithPrescribedDrugs(it.teleconsultRecordId)
+            TeleconsultRecordWithPrescribedDrugsLoaded(teleconsultRecordWithPrescribedDrugs)
+          }
     }
   }
 }

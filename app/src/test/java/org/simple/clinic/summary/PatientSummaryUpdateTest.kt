@@ -794,6 +794,28 @@ class PatientSummaryUpdateTest {
         )
   }
 
+  @Test
+  fun `when log teleconsult is clicked, then navigate to teleconsult record screen`() {
+    val teleconsultRecordId = UUID.fromString("bc2545e7-de84-4aac-9c25-fc2a40cd96c6")
+    val model = PatientSummaryModel.from(
+        openIntention = OpenIntention.ViewExistingPatientWithTeleconsultLog(teleconsultRecordId),
+        patientUuid = patientUuid
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(LogTeleconsultClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(NavigateToTeleconsultRecordScreen(
+                    patientUuid,
+                    teleconsultRecordId
+                ) as PatientSummaryEffect)
+            )
+        )
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

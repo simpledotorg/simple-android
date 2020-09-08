@@ -115,7 +115,8 @@ class PatientSummaryScreen(
             phoneNumberClicks(),
             contactDoctorClicks(),
             snackbarActionClicks,
-            teleconsultPhoneNumberSelected()
+            teleconsultPhoneNumberSelected(),
+            logTeleconsultClicks()
         )
         .compose(ReportAnalyticsEvents())
         .cast<PatientSummaryEvent>()
@@ -251,6 +252,8 @@ class PatientSummaryScreen(
   private fun doneClicks() = doneButton.clicks().map { PatientSummaryDoneClicked(screenKey.patientUuid) }
 
   private fun contactDoctorClicks() = doctorButton.clicks().map { ContactDoctorClicked }
+
+  private fun logTeleconsultClicks() = logTeleconsultButton.clicks().map { LogTeleconsultClicked }
 
   private fun backClicks(): Observable<UiEvent> {
     val hardwareBackKeyClicks = Observable.create<Unit> { emitter ->

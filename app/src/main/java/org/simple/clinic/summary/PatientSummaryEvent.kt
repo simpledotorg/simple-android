@@ -78,3 +78,5 @@ object RetryFetchTeleconsultInfo : PatientSummaryEvent()
 data class ContactDoctorPhoneNumberSelected(
     val phoneNumber: TeleconsultPhoneNumber
 ) : PatientSummaryEvent()
+
+object LogTeleconsultClicked : PatientSummaryEvent()

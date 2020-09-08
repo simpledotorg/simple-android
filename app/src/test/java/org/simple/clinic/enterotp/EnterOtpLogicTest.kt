@@ -73,7 +73,8 @@ class EnterOtpLogicTest {
       registrationFacilityUuid = registrationFacilityUuid,
       status = user.status,
       createdAt = user.createdAt,
-      updatedAt = user.updatedAt
+      updatedAt = user.updatedAt,
+      capabilities = user.capabilities
   )
   private val userPayload = TestData.loggedInUserPayload(
       uuid = loggedInUserUuid,

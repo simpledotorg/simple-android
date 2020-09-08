@@ -39,7 +39,7 @@ class OngoingLoginEntryRepositoryTest {
     val phone = "998877665"
     val pin = "9090"
 
-    repository.saveLoginEntry(OngoingLoginEntry(uuid = userId, phoneNumber = phone, pin = pin)).blockingAwait()
+    repository.saveLoginEntry(OngoingLoginEntry(uuid = userId, phoneNumber = phone, pin = pin,capabilities = null)).blockingAwait()
 
     val savedEntry = repository.entry().blockingGet()
     savedEntry.apply {

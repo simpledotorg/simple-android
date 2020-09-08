@@ -8,6 +8,7 @@ import org.simple.clinic.security.pin.verification.PinVerificationMethod.Verific
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntryRepository
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import java.time.Instant
 import java.util.UUID
@@ -40,7 +41,8 @@ class LoginPinServerVerificationMethod @Inject constructor(
       val status: UserStatus,
       val createdAt: Instant,
       val updatedAt: Instant,
-      val teleconsultPhoneNumber: String?
+      val teleconsultPhoneNumber: String?,
+      val capabilities: User.Capabilities?
   ) {
 
     companion object {
@@ -58,7 +60,8 @@ class LoginPinServerVerificationMethod @Inject constructor(
             status = payload.status,
             createdAt = payload.createdAt,
             updatedAt = payload.updatedAt,
-            teleconsultPhoneNumber = payload.teleconsultPhoneNumber
+            teleconsultPhoneNumber = payload.teleconsultPhoneNumber,
+            capabilities = payload.capabilities
         )
       }
     }

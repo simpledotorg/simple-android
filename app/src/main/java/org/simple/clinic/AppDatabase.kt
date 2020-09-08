@@ -75,7 +75,7 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       OverdueAppointment::class,
       PatientSearchResult::class
     ],
-    version = 74,
+    version = 75,
     exportSchema = true
 )
 @TypeConverters(
@@ -100,7 +100,8 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
     DeletedReason.RoomTypeConverter::class,
     MedicineFrequency.RoomTypeConverter::class,
     TeleconsultationType.RoomTypeConverter::class,
-    RoomTypeConverter::class
+    RoomTypeConverter::class,
+    User.CapabilityStatus.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

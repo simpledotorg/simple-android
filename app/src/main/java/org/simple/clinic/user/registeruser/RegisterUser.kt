@@ -71,7 +71,8 @@ class RegisterUser @Inject constructor(
           status = status,
           createdAt = createdAt,
           updatedAt = updatedAt,
-          teleconsultPhoneNumber = user.teleconsultPhoneNumber
+          teleconsultPhoneNumber = user.teleconsultPhoneNumber,
+          capabilities = user.capabilities
       )
     }
   }
@@ -100,7 +101,8 @@ class RegisterUser @Inject constructor(
           loggedInStatus = LOGGED_IN,
           registrationFacilityUuid = payload.registrationFacilityId,
           currentFacilityUuid = payload.registrationFacilityId,
-          teleconsultPhoneNumber = payload.teleconsultPhoneNumber
+          teleconsultPhoneNumber = payload.teleconsultPhoneNumber,
+          capabilities = payload.capabilities
       )
     }
   }

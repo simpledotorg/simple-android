@@ -19,6 +19,7 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.remoteconfig.ConfigReader
+import org.simple.clinic.user.User
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.*
 import org.simple.clinic.user.UserStatus
@@ -54,6 +55,7 @@ class NetworkModule {
         .add(URIMoshiAdapter())
         .add(BloodSugarMeasurementType.MoshiTypeAdapter())
         .add(DeletedReason.MoshiTypeConverter())
+        .add(User.CapabilityStatus.MoshiTypeAdapter())
         .add(MedicineFrequency.MoshiTypeConverter())
         .add(MoshiTypeAdapter())
         .build()

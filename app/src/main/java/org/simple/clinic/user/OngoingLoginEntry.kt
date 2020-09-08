@@ -2,6 +2,7 @@ package org.simple.clinic.user
 
 import android.os.Parcelable
 import androidx.room.Dao
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -33,7 +34,10 @@ data class OngoingLoginEntry(
 
     val updatedAt: Instant? = null,
 
-    val teleconsultPhoneNumber: String? = null
+    val teleconsultPhoneNumber: String? = null,
+
+    @Embedded(prefix = "capability_")
+    val capabilities: User.Capabilities?
 ) : Parcelable {
 
   @Dao

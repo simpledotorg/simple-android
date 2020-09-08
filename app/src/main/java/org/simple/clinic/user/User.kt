@@ -161,10 +161,18 @@ data class User(
   sealed class CapabilityStatus : Parcelable {
 
     @Parcelize
-    object Yes : CapabilityStatus()
+    object Yes : CapabilityStatus() {
+      override fun toString(): String {
+        return "yes"
+      }
+    }
 
     @Parcelize
-    object No : CapabilityStatus()
+    object No : CapabilityStatus() {
+      override fun toString(): String {
+        return "no"
+      }
+    }
 
     @Parcelize
     data class Unknown(val actual: String) : CapabilityStatus()

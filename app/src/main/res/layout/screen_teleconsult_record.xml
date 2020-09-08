@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    tools:title="Anish Acharya, M, 47" />
+
+  <TextView
+    android:id="@+id/teleconsultRecordTitleTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:text="@string/screen_teleconsult_record"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Tag.Grey1"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+  <androidx.cardview.widget.CardView
+    android:id="@+id/teleconsultationTypeCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_8"
+    android:layout_marginTop="@dimen/spacing_12"
+    android:layout_marginEnd="@dimen/spacing_8"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/teleconsultRecordTitleTextView">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <TextView
+        android:id="@+id/teleconsultTypeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:text="@string/screen_teleconsult_record_type"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Emphasis.Grey0" />
+
+      <RadioGroup
+        android:id="@+id/teleconsultTypeRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:layout_marginBottom="@dimen/spacing_8"
+        android:paddingStart="@dimen/spacing_8"
+        android:paddingEnd="@dimen/spacing_16"
+        tools:checkedButton="@id/teleconsultTypeAudioRadioButton">
+
+        <RadioButton
+          android:id="@+id/teleconsultTypeAudioRadioButton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingStart="@dimen/spacing_8"
+          android:paddingEnd="@dimen/spacing_0"
+          android:text="@string/screen_teleconsult_record_type_audio"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0" />
+
+        <RadioButton
+          android:id="@+id/teleconsultTypeVideoRadioButton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingStart="@dimen/spacing_8"
+          android:paddingEnd="@dimen/spacing_0"
+          android:text="@string/screen_teleconsult_record_type_video"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0" />
+
+        <RadioButton
+          android:id="@+id/teleconsultTypeMessageRadioButton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingStart="@dimen/spacing_8"
+          android:paddingEnd="@dimen/spacing_0"
+          android:text="@string/screen_teleconsult_record_type_message"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0" />
+
+      </RadioGroup>
+
+    </LinearLayout>
+
+  </androidx.cardview.widget.CardView>
+
+  <androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_8"
+    android:layout_marginTop="@dimen/spacing_8"
+    android:layout_marginEnd="@dimen/spacing_8"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/teleconsultationTypeCardView">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:paddingStart="@dimen/spacing_8"
+      android:paddingTop="@dimen/spacing_16"
+      android:paddingEnd="@dimen/spacing_16"
+      android:paddingBottom="@dimen/spacing_16">
+
+      <CheckBox
+        android:id="@+id/patientTookMedicineCheckBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/spacing_8"
+        android:paddingEnd="@dimen/spacing_0"
+        android:text="@string/screen_teleconsult_record_patient_took_medicine"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+        tools:checked="true" />
+
+      <CheckBox
+        android:id="@+id/patientConsentedCheckBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:paddingStart="@dimen/spacing_8"
+        android:paddingEnd="@dimen/spacing_0"
+        android:text="@string/screen_teleconsult_record_patient_consented"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+        tools:checked="true" />
+
+    </LinearLayout>
+
+  </androidx.cardview.widget.CardView>
+
+  <FrameLayout
+    android:id="@+id/buttonFrame"
+    style="@style/Clinic.V2.BottomAlignedButtonFrame"
+    android:background="@color/blue2"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:paddingTop="@dimen/spacing_8"
+    android:paddingBottom="@dimen/spacing_8"
+    app:layout_constraintBottom_toBottomOf="parent">
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/doneButton"
+      style="?attr/materialButtonStyle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_4"
+      android:layout_marginEnd="@dimen/spacing_4"
+      android:text="@string/screen_teleconsult_record_done"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+      app:icon="@drawable/ic_done_24dp"
+      app:iconGravity="textStart" />
+
+  </FrameLayout>
+
+</org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreen>

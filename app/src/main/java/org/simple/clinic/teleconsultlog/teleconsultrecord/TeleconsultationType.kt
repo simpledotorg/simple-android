@@ -1,30 +1,36 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord
 
+import android.os.Parcelable
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
-sealed class TeleconsultationType {
+sealed class TeleconsultationType : Parcelable {
 
+  @Parcelize
   object Audio : TeleconsultationType() {
     override fun toString(): String {
       return "Audio"
     }
   }
 
+  @Parcelize
   object Video : TeleconsultationType() {
     override fun toString(): String {
       return "Video"
     }
   }
 
+  @Parcelize
   object Message : TeleconsultationType() {
     override fun toString(): String {
       return "Message"
     }
   }
 
+  @Parcelize
   data class Unknown(val actualValue: String) : TeleconsultationType()
 
   object TypeAdapter : SafeEnumTypeAdapter<TeleconsultationType>(

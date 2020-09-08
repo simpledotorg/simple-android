@@ -1,5 +1,7 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
@@ -7,13 +9,14 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Audio
 import java.util.UUID
 
+@Parcelize
 data class TeleconsultRecordModel(
     val patientUuid: UUID,
     val teleconsultRecordId: UUID,
     val teleconsultationType: TeleconsultationType,
     val patientTookMedicines: Answer,
     val patientConsented: Answer
-) {
+) : Parcelable {
 
   companion object {
 

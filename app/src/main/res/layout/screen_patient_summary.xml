@@ -239,6 +239,7 @@
       android:layout_marginStart="@dimen/spacing_8"
       android:layout_marginEnd="@dimen/spacing_8"
       android:text="@string/patientsummary_log_teleconsult"
+      app:backgroundTint="@color/green1"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       android:visibility="gone" />
 

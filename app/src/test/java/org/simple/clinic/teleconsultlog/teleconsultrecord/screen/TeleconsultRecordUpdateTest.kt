@@ -7,6 +7,8 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Audio
 import java.util.UUID
 
 class TeleconsultRecordUpdateTest {
@@ -54,6 +56,27 @@ class TeleconsultRecordUpdateTest {
         .whenEvent(TeleconsultRecordWithPrescribedDrugsLoaded(teleconsultRecordWithPrescribedDrugs))
         .then(assertThatNext(
             hasModel(defaultModel.teleconsultRecordLoaded(teleconsultRecordInfo))
+        ))
+  }
+
+  @Test
+  fun `when done is clicked, then create the teleconsult record`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DoneClicked(
+            teleconsultationType = Audio,
+            patientTookMedicines = Yes,
+            patientConsented = Yes
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CreateTeleconsultRecord(
+                patientUuid = patientUuid,
+                teleconsultRecordId = teleconsultRecordId,
+                teleconsultationType = Audio,
+                patientTookMedicine = Yes,
+                patientConsented = Yes
+            ))
         ))
   }
 }

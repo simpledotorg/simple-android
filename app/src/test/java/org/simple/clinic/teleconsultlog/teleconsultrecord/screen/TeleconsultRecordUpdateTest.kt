@@ -2,6 +2,7 @@ package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -77,6 +78,20 @@ class TeleconsultRecordUpdateTest {
                 patientTookMedicine = Yes,
                 patientConsented = Yes
             ))
+        ))
+  }
+
+  @Test
+  fun `when patient details are loaded, then update the model`() {
+    val patient = TestData.patient(
+        uuid = patientUuid
+    )
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientDetailsLoaded(patient))
+        .then(assertThatNext(
+            hasModel(defaultModel.patientLoaded(patient)),
+            hasNoEffects()
         ))
   }
 }

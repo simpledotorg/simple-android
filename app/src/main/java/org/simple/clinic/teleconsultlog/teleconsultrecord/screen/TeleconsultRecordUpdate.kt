@@ -20,7 +20,7 @@ class TeleconsultRecordUpdate : Update<TeleconsultRecordModel, TeleconsultRecord
           patientTookMedicine = event.patientTookMedicines,
           patientConsented = event.patientConsented
       ))
-      is PatientDetailsLoaded -> noChange()
+      is PatientDetailsLoaded -> next(model.patientLoaded(event.patient))
     }
   }
 

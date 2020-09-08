@@ -12,6 +12,9 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.patient.DateOfBirth
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessScreenKey
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer
@@ -21,6 +24,7 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Audio
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Message
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Video
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -35,6 +39,9 @@ class TeleconsultRecordScreen(
 
   @Inject
   lateinit var effectHandlerFactory: TeleconsultRecordEffectHandler.Factory
+
+  @Inject
+  lateinit var userClock: UserClock
 
   private val radioIdToTeleconsultationType = mapOf(
       R.id.teleconsultTypeAudioRadioButton to Audio,
@@ -91,6 +98,17 @@ class TeleconsultRecordScreen(
 
     context.injector<Injector>().inject(this)
     backClicks()
+  }
+
+  override fun renderPatientDetails(patient: Patient) {
+    val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
+    val patientGender = patient.gender
+    toolbar.title = context.getString(
+        R.string.screen_teleconsult_record_patient_details,
+        patient.fullName,
+        context.getString(patientGender.displayLetterRes),
+        ageValue.toString()
+    )
   }
 
   override fun setTeleconsultationType(teleconsultationType: TeleconsultationType) {

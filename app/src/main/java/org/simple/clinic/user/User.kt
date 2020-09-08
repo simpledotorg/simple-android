@@ -4,12 +4,18 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.TypeConverter
+import com.squareup.moshi.FromJson
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
 import io.reactivex.Single
 import kotlinx.android.parcel.Parcelize
@@ -17,6 +23,7 @@ import org.intellij.lang.annotations.Language
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.room.RoomEnumTypeConverter
+import org.simple.clinic.util.room.SafeEnumTypeAdapter
 import java.time.Instant
 import java.util.UUID
 
@@ -65,7 +72,10 @@ data class User(
     @ColumnInfo(index = true)
     val currentFacilityUuid: UUID,
 
-    val teleconsultPhoneNumber: String?
+    val teleconsultPhoneNumber: String?,
+
+    @Embedded(prefix = "capability_")
+    val capabilities: Capabilities? // Update this to not null when API is finalized
 ) : Parcelable {
 
   val canSyncData: Boolean
@@ -138,6 +148,60 @@ data class User(
     UNAUTHORIZED;
 
     class RoomTypeConverter : RoomEnumTypeConverter<LoggedInStatus>(LoggedInStatus::class.java)
+
+  }
+
+  @JsonClass(generateAdapter = true)
+  @Parcelize
+  data class Capabilities(
+      @Json(name = "can_teleconsult")
+      val canTeleconsult: CapabilityStatus
+  ) : Parcelable
+
+  sealed class CapabilityStatus : Parcelable {
+
+    @Parcelize
+    object Yes : CapabilityStatus() {
+      override fun toString(): String {
+        return "yes"
+      }
+    }
+
+    @Parcelize
+    object No : CapabilityStatus() {
+      override fun toString(): String {
+        return "no"
+      }
+    }
+
+    @Parcelize
+    data class Unknown(val actual: String) : CapabilityStatus()
+
+    object TypeAdapter : SafeEnumTypeAdapter<CapabilityStatus>(
+        knownMappings = mapOf(
+            Yes to "yes",
+            No to "no"
+        ),
+        unknownStringToEnumConverter = { Unknown(it) },
+        unknownEnumToStringConverter = { (it as Unknown).actual }
+    )
+
+    class RoomTypeConverter {
+
+      @TypeConverter
+      fun toEnum(value: String?) = TypeAdapter.toEnum(value)
+
+      @TypeConverter
+      fun fromEnum(anEnum: CapabilityStatus?) = TypeAdapter.fromEnum(anEnum)
+    }
+
+    class MoshiTypeAdapter {
+      @FromJson
+      fun toEnum(value: String?) = TypeAdapter.toEnum(value)
+
+      @ToJson
+      fun fromEnum(anEnum: CapabilityStatus?) = TypeAdapter.fromEnum(anEnum)
+    }
   }
 
   @Dao

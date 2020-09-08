@@ -33,5 +33,8 @@ data class LoggedInUserPayload(
     val updatedAt: Instant,
 
     @Json(name = "teleconsult_phone_number")
-    val teleconsultPhoneNumber: String?
+    val teleconsultPhoneNumber: String?,
+
+    @Json(name = "capabilities")
+    val capabilities : User.Capabilities?
 )

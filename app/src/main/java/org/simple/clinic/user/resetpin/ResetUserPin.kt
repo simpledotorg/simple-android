@@ -72,7 +72,8 @@ class ResetUserPin @Inject constructor(
           loggedInStatus = RESET_PIN_REQUESTED,
           registrationFacilityUuid = registrationFacilityId,
           currentFacilityUuid = registrationFacilityId,
-          teleconsultPhoneNumber = teleconsultPhoneNumber
+          teleconsultPhoneNumber = teleconsultPhoneNumber,
+          capabilities = capabilities
       )
     }
   }

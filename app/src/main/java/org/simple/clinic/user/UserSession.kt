@@ -71,7 +71,8 @@ class UserSession @Inject constructor(
           loggedInStatus = NOT_LOGGED_IN,
           registrationFacilityUuid = entry.facilityId!!,
           currentFacilityUuid = entry.facilityId,
-          teleconsultPhoneNumber = null
+          teleconsultPhoneNumber = null,
+          capabilities = null
       )
     }
 
@@ -92,7 +93,8 @@ class UserSession @Inject constructor(
           loggedInStatus = status,
           registrationFacilityUuid = payload.registrationFacilityId,
           currentFacilityUuid = payload.registrationFacilityId,
-          teleconsultPhoneNumber = payload.teleconsultPhoneNumber
+          teleconsultPhoneNumber = payload.teleconsultPhoneNumber,
+          capabilities = payload.capabilities
       )
     }
   }

@@ -27,3 +27,9 @@ data class DoneClicked(
 data class PatientDetailsLoaded(
     val patient: Patient
 ) : TeleconsultRecordEvent()
+
+data class TeleconsultRecordValidated(
+    val teleconsultRecordExists: Boolean
+) : TeleconsultRecordEvent() {
+  override val analyticsName: String = "Teleconsult Record:Validated"
+}

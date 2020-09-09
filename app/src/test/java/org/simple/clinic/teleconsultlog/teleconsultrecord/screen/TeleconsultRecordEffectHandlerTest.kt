@@ -164,4 +164,26 @@ class TeleconsultRecordEffectHandlerTest {
     verify(uiActions).showTeleconsultNotRecordedWarning()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when validate teleconsult record effect is received, then check if the teleconsult record exists`() {
+    // given
+    val teleconsultRecordId = UUID.fromString("9b0cf077-ef4a-449a-9588-db115dc7eb7c")
+    val teleconsultRecordWithPrescribedDrugs = TestData.teleconsultRecordWithPrescribedDrugs(
+        teleconsultRecord = TestData.teleconsultRecord(
+            id = teleconsultRecordId
+        ),
+        prescribedDrugs = emptyList()
+    )
+
+    whenever(teleconsultRecordRepository.getTeleconsultRecordWithPrescribedDrugs(teleconsultRecordId)) doReturn teleconsultRecordWithPrescribedDrugs
+
+    // when
+    effectHandlerTestCase.dispatch(ValidateTeleconsultRecord(teleconsultRecordId))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(TeleconsultRecordValidated(true))
+
+    verifyZeroInteractions(uiActions)
+  }
 }

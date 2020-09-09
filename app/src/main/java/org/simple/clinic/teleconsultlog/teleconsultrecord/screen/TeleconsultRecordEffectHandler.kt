@@ -35,7 +35,19 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
         .addTransformer(CreateTeleconsultRecord::class.java, createTeleconsultRecord())
         .addTransformer(LoadPatientDetails::class.java, loadPatientDetails())
         .addAction(ShowTeleconsultNotRecordedWarning::class.java, uiActions::showTeleconsultNotRecordedWarning, schedulersProvider.ui())
+        .addTransformer(ValidateTeleconsultRecord::class.java, validateTeleconsultRecord())
         .build()
+  }
+
+  private fun validateTeleconsultRecord(): ObservableTransformer<ValidateTeleconsultRecord, TeleconsultRecordEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val teleconsultRecordWithPrescribedDrugs = teleconsultRecordRepository.getTeleconsultRecordWithPrescribedDrugs(it.teleconsultRecordId)
+            TeleconsultRecordValidated(teleconsultRecordWithPrescribedDrugs != null)
+          }
+    }
   }
 
   private fun loadPatientDetails(): ObservableTransformer<LoadPatientDetails, TeleconsultRecordEvent> {

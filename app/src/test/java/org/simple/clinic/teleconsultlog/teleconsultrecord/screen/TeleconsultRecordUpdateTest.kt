@@ -26,7 +26,7 @@ class TeleconsultRecordUpdateTest {
         .whenEvent(BackClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(GoBack)
+            hasEffects(ValidateTeleconsultRecord(teleconsultRecordId))
         ))
   }
 

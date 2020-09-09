@@ -70,15 +70,18 @@
   <string name="patiententry_upazila">Uppaazilaa</string>
   <string name="patiententry_state">Naannoo</string>
   <string name="patiententry_region">Naanoo</string>
+  <string name="patiententry_doornumber_streetname">Lakkoofsa balbala. maqaa daandii</string>
+  <string name="patiententry_division_area">Qooddii fii naannoo</string>
   <string name="patiententry_save_patient">Kan itti aanu</string>
   <string name="patiententry_error_empty_fullname">Maqaa dhukkubsataa guutuu galchi</string>
   <string name="patiententry_error_empty_gender">Saala dhukkubsataa filadhu</string>
-  <string name="patiententry_error_empty_colony_or_village">Araddaa/Gooxii/Qe’ee</string>
-  <string name="patiententry_error_empty_district">Ganda dhukkubsataa galchi</string>
-  <string name="patiententry_error_state_empty">Naannoo dhukkubsataa galchi</string>
+  <string name="patiententry_error_empty_colony_or_village">barbaadamaadha</string>
+  <string name="patiententry_error_empty_district">barbaadamaadha</string>
+  <string name="patiententry_error_state_empty">barbaadamaadha</string>
   <string name="patiententry_error_both_dateofbirth_and_age_empty">Umrii dhukkubsataa galchi</string>
   <string name="patiententry_error_invalid_dateofbirth">Guyyaa dhalootaa dhukkubsataa galchi akka GG/JJ/WWWW tti</string>
   <string name="patiententry_error_dateofbirth_is_in_future">Guyyaa dhaloota dhukkubsataa sirreessi</string>
+  <string name="patiententry_error_phonenumber_blank">Lakkoofsi bilbilaa duwwaa ta\'uu hin danda\'u</string>
   <string name="patiententry_error_phonenumber_length_less">Lakkoofsi bilbilaa dijitii %1$sgadi ta\'uu hin danda\'u</string>
   <string name="patiententry_error_phonenumber_length_more">Lakkoofsi bilbilaa dijitii %1$sol ta\'uu hin danda\'u</string>
   <string name="patiententry_identifier">Paaspoortii BP</string>
@@ -174,6 +177,10 @@
   <string name="patientsummary_contact_doctor">Dooktara</string>
   <string name="patientsummary_teleconsult_network_error">Sababa hanqina interneetiitiin quunnamuu hin dandeenye.</string>
   <string name="patientsummary_teleconsult_network_error_retry">irra deebi’aa yaalaa</string>
+  <string name="patientsummary_log_teleconsult">Teleconsult seeni</string>
+
+  <string name="patientsummary_registered_faciliy_title">Galmaa\'eera</string>
+  <string name="patientsummary_registered_facility">%1$skan %2$s</string>
 
   <string name="bloodpressuresummaryview_see_all_button">Hundaa ilaali</string>
 
@@ -248,12 +255,6 @@
   <string name="registrationlocation_permission_rationale_title">Kilinikii kee saffisaan aragadhu</string>
   <string name="registrationlocation_allow_access">Argannaa teessoo hayyami</string>
 
-  <string name="facilitypicker_screen_title">Kilinikii kee filadhu</string>
-  <string name="facilitypicker_search_hint">Kilinikii kee barbaadi</string>
-  <!-- Street, District, State -->
-  <string name="facilitypicker_header_suggested_facilities">Kilinikiiwwan eeraman</string>
-  <string name="facilitypicker_header_all_facilities">Kilinikiiwwan hunda</string>
-
   <!-- Onboarding -->
   <string name="onboarding_get_started">Jalqabi</string>
   <string name="screenonboarding_intro_1">Barbaadi \&amp; argadhu \ndhukkubsattoota kumaatamoota \n wajjiin</string>
@@ -281,6 +282,7 @@
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">Daawwatameera</string>
   <string name="overduelist_high_risk">Saaxilbahii ol aanaa</string>
+  <string name="overduelist_transferred">Dabarfameera gara</string>
 
   <!-- Facility change -->
 
@@ -451,9 +453,9 @@
   <string name="bloodsugarentry_month">Ji’a</string>
   <string name="bloodsugarentry_year">Waggaa</string>
   <string name="bloodsugarentry_error_lower_limit">Gatiin 30 mg/dL gadi ta’uu hin danda’u</string>
-  <string name="bloodsugarentry_error_lower_limit_hba1c">Hammichi 3%% gadi ta’uu hin danda’u</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">Bu\'aan 3\u0025 ta\'uu hin danda\'u</string>
   <string name="bloodsugarentry_error_higher_limit">Hammichi 1000 mg/dl ol ta’uu hin danda’u</string>
-  <string name="bloodsugarentry_error_higher_limit_hba1c">Hammichi 25%% ol ta’uu hin danda’u</string>
+  <string name="bloodsugarentry_error_higher_limit_hba1c">Hammi 25\u0025 ol ta\'uu hin danda\'u</string>
   <string name="bloodsugarentry_error_empty">Hammichi duwwaa ta’uu hin danda’u</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">Guyyaa sirrii GG/JJ/WWWW keessatti galchi</string>
   <string name="bloodsugarentry_error_date_is_in_future">Guyyaan gara fuulduraa ta’uu hin danda’u</string>
@@ -570,9 +572,44 @@
   <!-- Contact doctor sheet -->
   <string name="contactdoctor_title">Dooktaroota</string>
   <string name="contactdoctor_subtitle">Gara %1$s qajeelfame</string>
+  <string name="contactdoctor_new_title">Haakimoonni jiru</string>
+  <string name="contactdoctor_new_subtitle">Danda\'ama taanan WhatsApp fayyadami</string>
 
   <!-- Intro Video Screen -->
   <string name="screenintrovideo_how_to_use_simple_app">Appii Simple akkamitti fayyadamuu danda’a</string>
   <string name="screenintrovideo_watch_video">Viidiyoo daawwadhu</string>
   <string name="screenintrovideo_skip">Irra utaali</string>
+
+  <!-- Assigned Facility -->
+  <string name="assigned_facility_view_title">Iddoo filatama</string>
+  <string name="assigned_facility_view_change">Jijjiiri</string>
+
+  <!-- Facility Picker -->
+  <string name="facilitypicker_screen_title">Kilinikii kee filadhu</string>
+  <string name="facilitypicker_search_hint">Kilinikii kee barbaadi</string>
+  <!-- Street, District, State -->
+  <string name="facilitypicker_header_suggested_facilities">Kilinikiiwwan eeraman</string>
+  <string name="facilitypicker_header_all_facilities">Kilinikiiwwan hunda</string>
+
+  <!--  TeleMedicine User Signature-->
+  <string name="screen_signature_sign_in_this_box">Sanduuqa kana keessatti mallatteessi</string>
+
+  <!-- Drug Duration -->
+  <string name="drug_duration_title">%1$s %2$s</string>
+  <string name="drugDurationLabel">Guyyoota</string>
+  <string name="drug_duration_empty_error">Yeroon dawaa fudhannaa duwwaa ta\'uu hin danda\'u</string>
+
+  <!-- Teleconsultation success-->
+  <string name="screen_teleconsult_success_add_prescription">Ajaja ida\'i?</string>
+  <string name="screen_teleconsult_success_yes">Eeyyee</string>
+  <string name="screen_teleconsult_success_no">Lakki</string>
+  <string name="screen_teleconsult_success_teleconsult_recorded">Teleconsult galmeeffameera</string>
+  <string name="screen_teleconsult_success_patient_information">%1$s, %2$s, %3$s</string>
+  <string name="sheet_medicine_frequency_od">OD</string>
+  <string name="sheet_medicine_frequency_bd">BD</string>
+  <string name="sheet_medicine_frequency_tds">TDS</string>
+  <string name="sheet_medicine_frequency_qds">QDS</string>
+  <string name="sheet_medicine_frequency_save">Ol kaa’i</string>
+
+
 </resources>

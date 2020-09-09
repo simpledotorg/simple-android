@@ -68,6 +68,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
 
     val screenDestroys = detaches().map { ScreenDestroyed() }
     setupScreen(screenDestroys)
+    isSaveEnabled = false
   }
 
   override fun onAttachedToWindow() {

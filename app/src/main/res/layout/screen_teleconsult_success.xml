@@ -17,77 +17,67 @@
     app:titleTextAppearance="@style/Clinic.V2.TextAppearance.H6.White100"
     tools:title="Anish Acharya, M, 43" />
 
-  <ImageView
-    android:id="@+id/imageView"
-    android:layout_width="130dp"
-    android:layout_height="130dp"
-    app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.5"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/toolbar"
-    app:layout_constraintVertical_bias="0.2"
-    app:srcCompat="@drawable/ic_check_circle"
-    tools:ignore="ContentDescription" />
-
   <TextView
-    android:id="@+id/textView"
+    android:id="@+id/teleconsultRecordSuccessTextView"
     style="@style/Clinic.LoginPinLabel"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_16"
+    android:drawablePadding="@dimen/spacing_8"
     android:text="@string/screen_teleconsult_success_teleconsult_recorded"
+    app:drawableTopCompat="@drawable/ic_check_circle"
+    app:layout_constraintBottom_toTopOf="@id/addPrescriptionCardView"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/imageView" />
+    app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-  <TextView
-    android:id="@+id/prescriptionTextView"
-    style="@style/Clinic.LoginPinLabel"
+  <com.google.android.material.card.MaterialCardView
+    android:id="@+id/addPrescriptionCardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal"
-    android:background="@color/white"
-    android:padding="@dimen/spacing_16"
-    android:text="@string/screen_teleconsult_success_add_prescription"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
-    app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/textView"
-    app:layout_constraintVertical_bias="1" />
-
-  <LinearLayout
-    android:id="@+id/linearLayout2"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="vertical"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent">
+    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Clinic.V2.TeleconsultSuccessCardView">
 
-    <com.google.android.material.button.MaterialButton
-      android:id="@+id/prescriptionYesButton"
-      style="@style/Clinic.V2.MaterialButton.Blue1"
+    <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="@dimen/spacing_16"
-      android:layout_marginRight="@dimen/spacing_16"
-      android:layout_marginBottom="@dimen/spacing_16"
-      android:text="@string/screen_teleconsult_success_yes"
-      android:textAllCaps="true" />
+      android:orientation="vertical"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent">
 
-    <com.google.android.material.button.MaterialButton
-      android:id="@+id/prescriptionNoButton"
-      style="@style/Clinic.V2.MaterialButton.Blue2"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginLeft="@dimen/spacing_16"
-      android:layout_marginRight="@dimen/spacing_16"
-      android:layout_marginBottom="@dimen/spacing_16"
-      android:text="@string/screen_teleconsult_success_no"
-      android:textAllCaps="true" />
-  </LinearLayout>
+      <TextView
+        android:id="@+id/prescriptionTextView"
+        style="@style/Clinic.LoginPinLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="@dimen/spacing_24"
+        android:text="@string/screen_teleconsult_success_add_prescription"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/prescriptionYesButton"
+        style="@style/Clinic.V2.MaterialButton.Blue1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:layout_marginBottom="@dimen/spacing_16"
+        android:text="@string/screen_teleconsult_success_yes" />
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/prescriptionNoButton"
+        style="@style/Clinic.V2.MaterialButton.Blue2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:layout_marginBottom="@dimen/spacing_16"
+        android:text="@string/screen_teleconsult_success_no" />
+
+    </LinearLayout>
+
+  </com.google.android.material.card.MaterialCardView>
 
 </org.simple.clinic.teleconsultlog.success.TeleConsultSuccessScreen>

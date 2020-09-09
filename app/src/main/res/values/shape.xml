@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="ShapeAppearanceOverlay.Clinic.V2.TeleconsultSuccessCardView" parent="">
+    <item name="cornerFamily">rounded</item>
+    <item name="cornerSizeTopLeft">@dimen/spacing_4</item>
+    <item name="cornerSizeTopRight">@dimen/spacing_4</item>
+    <item name="cornerSizeBottomLeft">@dimen/spacing_0</item>
+    <item name="cornerSizeBottomRight">@dimen/spacing_0</item>
+  </style>
+</resources>

@@ -29,7 +29,7 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
 
   fun build(): ObservableTransformer<TeleconsultRecordEffect, TeleconsultRecordEvent> {
     return RxMobius.subtypeEffectHandler<TeleconsultRecordEffect, TeleconsultRecordEvent>()
-        .addAction(GoBack::class.java, uiActions::goBackToPreviousScreen)
+        .addAction(GoBack::class.java, uiActions::goBackToPreviousScreen, schedulersProvider.ui())
         .addAction(NavigateToTeleconsultSuccess::class.java, { uiActions.navigateToTeleconsultSuccessScreen() }, schedulersProvider.ui())
         .addTransformer(LoadTeleconsultRecordWithPrescribedDrugs::class.java, loadTeleconsultRecordWithPrescribedDrugs())
         .addTransformer(CreateTeleconsultRecord::class.java, createTeleconsultRecord())

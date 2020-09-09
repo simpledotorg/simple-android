@@ -8,6 +8,7 @@
 - [In Progress: 27 Aug 2020] Add support for sending teleconsult request via SMS
 - Add `Capabilities` to User
 - Disable state saving and restoration for the search results view
+- Add `OverdueAppointment_Materialized` as a database table to replace the `OverdueAppointment` view
 
 ## On Demo
 ### Changes

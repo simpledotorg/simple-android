@@ -13,6 +13,7 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.overdue.OverdueAppointment_New
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -35,10 +36,10 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityI
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityMedicalOfficersCrossRef
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityWithMedicalOfficers
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
-import org.simple.clinic.teleconsultlog.teleconsultrecord.*
-import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.*
+import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.RoomTypeConverter
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordPrescribedDrug
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordWithPrescribedDrugs
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User
@@ -69,13 +70,14 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       MedicalOfficer::class,
       TeleconsultationFacilityMedicalOfficersCrossRef::class,
       TeleconsultRecord::class,
-      TeleconsultRecordPrescribedDrug::class
+      TeleconsultRecordPrescribedDrug::class,
+      OverdueAppointment_New::class
     ],
     views = [
       OverdueAppointment::class,
       PatientSearchResult::class
     ],
-    version = 75,
+    version = 76,
     exportSchema = true
 )
 @TypeConverters(

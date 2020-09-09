@@ -152,4 +152,16 @@ class TeleconsultRecordEffectHandlerTest {
 
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when show teleconsult not recorded warning effect is received, then show the teleconsult not recorded warning`() {
+    // when
+    effectHandlerTestCase.dispatch(ShowTeleconsultNotRecordedWarning)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showTeleconsultNotRecordedWarning()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

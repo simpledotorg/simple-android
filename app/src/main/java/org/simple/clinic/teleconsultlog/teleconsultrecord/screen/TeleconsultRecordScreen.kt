@@ -3,6 +3,7 @@ package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
@@ -45,6 +46,9 @@ class TeleconsultRecordScreen(
 
   @Inject
   lateinit var userClock: UserClock
+
+  @Inject
+  lateinit var activity: AppCompatActivity
 
   private val radioIdToTeleconsultationType = mapOf(
       R.id.teleconsultTypeAudioRadioButton to Audio,
@@ -144,6 +148,10 @@ class TeleconsultRecordScreen(
         patientUuid = screenKey.patientUuid,
         teleconsultRecordId = screenKey.teleconsultRecordId
     ))
+  }
+
+  override fun showTeleconsultNotRecordedWarning() {
+    TeleconsultNotRecordedDialog.show(activity.supportFragmentManager)
   }
 
   private fun doneClicks(): Observable<UiEvent> {

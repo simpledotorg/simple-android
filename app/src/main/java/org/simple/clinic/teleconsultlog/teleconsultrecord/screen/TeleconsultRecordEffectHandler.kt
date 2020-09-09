@@ -34,6 +34,7 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
         .addTransformer(LoadTeleconsultRecordWithPrescribedDrugs::class.java, loadTeleconsultRecordWithPrescribedDrugs())
         .addTransformer(CreateTeleconsultRecord::class.java, createTeleconsultRecord())
         .addTransformer(LoadPatientDetails::class.java, loadPatientDetails())
+        .addAction(ShowTeleconsultNotRecordedWarning::class.java, uiActions::showTeleconsultNotRecordedWarning, schedulersProvider.ui())
         .build()
   }
 

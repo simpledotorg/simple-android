@@ -700,4 +700,8 @@
   <string name="screen_teleconsult_record_patient_consented">Patient gave consent for teleconsultation </string>
   <string name="screen_teleconsult_record_done">Done</string>
   <string name="screen_teleconsult_record_patient_details" translatable="false">%1$s, %2$s, %3$s</string>
+  <string name="teleconsultnotrecordeddialog_title">Teleconsult not recorded</string>
+  <string name="teleconsultnotrecordeddialog_body">Are you sure you want to cancel?</string>
+  <string name="teleconsultnotrecordeddialog_positive_button_text">Yes</string>
+  <string name="teleconsultnotrecordeddialog_negative_button_text">No</string>
 </resources>

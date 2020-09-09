@@ -30,7 +30,8 @@ class DeepLinkUpdateTest {
   fun `if there is a logged in user and patient uuid is null, then show no patient error`() {
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("dc0a9d11-aee4-4792-820f-c5cb66ae5e47"),
-        loggedInStatus = User.LoggedInStatus.LOGGED_IN
+        loggedInStatus = User.LoggedInStatus.LOGGED_IN,
+        capabilities = User.Capabilities(User.CapabilityStatus.Yes)
     )
 
     updateSpec
@@ -62,7 +63,8 @@ class DeepLinkUpdateTest {
   fun `if user is logged in and patient uuid is not null, then fetch patient`() {
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("fa0dfb7b-a0ea-425a-987d-2056f1a9e93b"),
-        loggedInStatus = User.LoggedInStatus.LOGGED_IN
+        loggedInStatus = User.LoggedInStatus.LOGGED_IN,
+        capabilities = User.Capabilities(User.CapabilityStatus.Yes)
     )
     val model = DeepLinkModel.default(patientUuid, null, false)
 
@@ -72,6 +74,24 @@ class DeepLinkUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(FetchPatient(patientUuid) as DeepLinkEffect)
+        ))
+  }
+
+  @Test
+  fun `if user is logged in and user does not have capabilities, then show user is not authorised to teleconsult log`(){
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("ce7af001-5b38-4f4b-9d7c-62af2a47643e"),
+        loggedInStatus = User.LoggedInStatus.LOGGED_IN,
+        capabilities = User.Capabilities(User.CapabilityStatus.No)
+    )
+    val model = DeepLinkModel.default(patientUuid, null, false)
+
+    updateSpec
+        .given(model)
+        .whenEvent(UserFetched(user))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowTeleconsultLogNotAllowed as DeepLinkEffect)
         ))
   }
 

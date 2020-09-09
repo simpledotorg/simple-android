@@ -94,4 +94,15 @@ class TeleconsultRecordUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when teleconsult record doesn't exist, then show warning dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(TeleconsultRecordValidated(false))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowTeleconsultNotRecordedWarning)
+        ))
+  }
 }

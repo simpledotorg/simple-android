@@ -70,12 +70,14 @@
   <string name="patiententry_upazila">ታሕተዋይ ምምሕዳር</string>
   <string name="patiententry_state">ክልል</string>
   <string name="patiententry_region">ክልል</string>
+  <string name="patiententry_doornumber_streetname">ቁጽሪ ገዛ፣ ናይ ጎዳና ስም</string>
+  <string name="patiententry_division_area">ናይ መኽፈሊ ቦታ</string>
   <string name="patiententry_save_patient">ዝቕፅል</string>
   <string name="patiententry_error_empty_fullname">ሙሉእ ሽም ተሓካሚ ኣእትው/ዊ</string>
   <string name="patiententry_error_empty_gender">ፆታ ተሓካሚ ምረፅ</string>
-  <string name="patiententry_error_empty_colony_or_village">ናይ ተሓካሚ ጣብያ ኣእትው/ዊ</string>
-  <string name="patiententry_error_empty_district">ናይ ተሓካሚ ወረዳ ኣእትው/ዊ</string>
-  <string name="patiententry_error_state_empty">ናይ ተሓካሚ ክልል ኣእትው/ዊ</string>
+  <string name="patiententry_error_empty_colony_or_village">ዘድሊ</string>
+  <string name="patiententry_error_empty_district">ዘድሊ</string>
+  <string name="patiententry_error_state_empty">ዘድሊ</string>
   <string name="patiententry_error_both_dateofbirth_and_age_empty">ናይ ተሓካሚ ዕድመ ኣእትው/ዊ</string>
   <string name="patiententry_error_invalid_dateofbirth">ናይ ተሓካሚ ዕለተ ትውልዲ ብ ዕ/ወ/ዓ.ም መሰረት ኣእትው/ዊ</string>
   <string name="patiententry_error_dateofbirth_is_in_future">ናይ ተሓካሚ ዕለተ ትውልዲ ኣዓሪ/ዪ</string>
@@ -175,9 +177,10 @@
   <string name="patientsummary_contact_doctor">ሓኪም</string>
   <string name="patientsummary_teleconsult_network_error">ብምኽኒያት ድኹም ኢንተርኔት ርክብ ምግባር ኣይተኽኣለን</string>
   <string name="patientsummary_teleconsult_network_error_retry">ደጊምካ ፈትን</string>
+  <string name="patientsummary_log_teleconsult">ናብ Teleconsult እተው</string>
 
   <string name="patientsummary_registered_faciliy_title">ዝተመዝገበ</string>
-  <string name="patientsummary_registered_facility">%1$s at %2$s</string>
+  <string name="patientsummary_registered_facility">%1$s at%2$s</string>
 
   <string name="bloodpressuresummaryview_see_all_button">ኩሉ ርኣይ</string>
 
@@ -568,6 +571,8 @@
   <!-- Contact doctor sheet -->
   <string name="contactdoctor_title">ሓካይም</string>
   <string name="contactdoctor_subtitle">ዝተመደቦ ናብ %1$s</string>
+  <string name="contactdoctor_new_title">ዶክተራት ኣለዉ</string>
+  <string name="contactdoctor_new_subtitle">እንተተኻኢሉ WhatsApp ተተቐም</string>
 
   <!-- Intro Video Screen -->
   <string name="screenintrovideo_how_to_use_simple_app">Simple መተግበሪ ከመይ ጌርካ ትጥቀመሉ</string>
@@ -584,4 +589,26 @@
   <!-- Street, District, State -->
   <string name="facilitypicker_header_suggested_facilities">ከም ሓሳብ ዝቐረቡ ሕክምናታት</string>
   <string name="facilitypicker_header_all_facilities">ኩሎም ሕክምናታት</string>
+
+  <!--  TeleMedicine User Signature-->
+  <string name="screen_signature_sign_in_this_box">ኣብዚ ሳጹን ፈርም</string>
+
+  <!-- Drug Duration -->
+  <string name="drug_duration_title">%1$s %2$s</string>
+  <string name="drugDurationLabel">መዓልታት</string>
+  <string name="drug_duration_empty_error">ናይ መድሃኒት ዕለት ባዶ ክኸውን ኣይክእልን</string>
+
+  <!-- Teleconsultation success-->
+  <string name="screen_teleconsult_success_add_prescription">ናይ መድሃኒት ትእዛዝ የእቱ</string>
+  <string name="screen_teleconsult_success_yes">እወ</string>
+  <string name="screen_teleconsult_success_no">ኣይፋሉን</string>
+  <string name="screen_teleconsult_success_teleconsult_recorded">Teleconsult ተቐዲሑ ኣሎ</string>
+  <string name="screen_teleconsult_success_patient_information">%1$s,%2$s,%3$s</string>
+  <string name="sheet_medicine_frequency_od">OD</string>
+  <string name="sheet_medicine_frequency_bd">BD</string>
+  <string name="sheet_medicine_frequency_tds">TDS</string>
+  <string name="sheet_medicine_frequency_qds">QDS</string>
+  <string name="sheet_medicine_frequency_save">ምዕቃብ</string>
+
+
 </resources>

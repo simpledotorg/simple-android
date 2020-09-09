@@ -1,0 +1,614 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="app_name">சிம்பிள்</string>
+
+  <!-- Common -->
+  <string name="gender_female">பெண்</string>
+  <string name="gender_male">ஆண்</string>
+  <string name="gender_transgender">திருநங்கை</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_male_letter">ஆ</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_female_letter">பெ</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_trans_letter">தி</string>
+  <string name="api_unexpected_error">எதுவோ தவறாக உள்ளது. மீண்டும் முயலவும்.</string>
+  <string name="api_network_error">இணைய இணைப்பு இல்லை</string>
+  <string name="api_server_error">சேவையகத்தில் பிழை ஏற்பட்டுள்ளது! தயவுசெய்து சிறிது நேரம் கழித்து மீண்டும் முயலவும்.</string>
+
+  <!-- Country names -->
+  <string name="country_india">இந்தியா</string>
+  <string name="country_bangladesh">வங்காளதேசம்</string>
+  <string name="country_ethiopia">எத்தியோப்பியா</string>
+
+  <!-- Home -->
+  <string name="home_help">உதவி</string>
+  <string name="home_settings">அமைப்புகள்</string>
+
+  <!--Business id Identifier -->
+  <string name="identifiertype_bp_passport">பிபி கடவுச்சீட்டு</string>
+  <string name="identifiertype_bangladesh_national_id">தேசிய ஐடி எண்</string>
+  <string name="identifiertype_ethiopia_medical_record_number">மருத்துவப் பதிவு எண்</string>
+  <string name="identifiertype_unknown">ஐடி</string>
+
+  <!-- Patient search -->
+  <string name="patientsearch_search">அடுத்து</string>
+  <string name="patientsearch_error_empty_fullname">நோயாளியின் பெயர் அல்லது தொலைபேசி எண்ணை எழுதவும்</string>
+  <string name="patientsearch_hint">பெயர் அல்லது தொலைபேசி எண்</string>
+
+  <!-- Patient search results -->
+  <string name="patientsearchresults_empty_state">இந்த பெயரில் எந்த நோயாளியும் பதிவு செய்யப்படவில்லை</string>
+  <string name="patientsearchresults_register_patient_rationale">இந்தப் பட்டியலில் நோயாளியின் விவரங்களைக் கண்டறிய முடியவில்லையா?</string>
+  <string name="patientsearchresults_register_patient_rationale_for_empty_state">நோயாளி பதிவு செய்யப்படவில்லை</string>
+  <string name="patientsearchresults_register_patient">புதிய நோயாளியாகப் பதிவு செய்யவும்</string>
+  <string name="patientsearchresults_register_patient_for_empty_state">நோயாளியைப் பதிவு செய்யவும்</string>
+  <string name="patientsearchresults_item_last_seen">வந்துள்ளார்</string>
+  <string name="patientsearchresults_current_facility_header">%s அன்று வந்துள்ளார்</string>
+  <string name="patientsearchresults_other_results_header">பிற முடிவுகள்</string>
+  <string name="patientsearchresults_no_patients_match">இந்த பெயரில் எந்த நோயாளியும் பதிவு செய்யப்படவில்லை</string>
+  <string name="patientsearchresults_item_phone_number">தொலைபேசி</string>
+  <string name="patientsearchresults_item_birthdate">பிறந்த தேதி</string>
+
+  <!-- Manual patient entry -->
+  <string name="patiententry_contentdescription_up_button">தேடுவதற்கு, முந்தைய திரைக்குத் திரும்பிச் செல்லவும்</string>
+  <string name="patiententry_full_name">நோயாளியின் பெயர்</string>
+  <string name="patiententry_phone_number">தொலைபேசி எண்</string>
+  <string name="patiententry_bangladesh_national_id">தேசிய ஐடி எண்</string>
+  <string name="patiententry_ethiopia_medical_record_number">மருத்துவப் பதிவு எண்</string>
+  <string name="patiententry_date_of_birth_unfocused">பிறந்த தேதி</string>
+  <string name="patiententry_date_of_birth_focused">பிறந்த தேதி: DD/MM/YYYY</string>
+  <string name="patiententry_dateofbirth_and_age_separator">அல்லது</string>
+  <string name="patiententry_age">வயது</string>
+  <string name="patiententry_street_address">வீட்டு முகவரி</string>
+  <string name="patiententry_street_house_road_number">வீடு மற்றும் தெரு எண்</string>
+  <string name="patiententry_village_colony_ward">கிராமம் / காலனி / வார்டு</string>
+  <string name="patiententry_village_ward">கிராமம் / வார்டு</string>
+  <string name="patiententry_kebele">கேபிலே</string>
+  <string name="patiententry_zone">யூனியன்</string>
+  <string name="patiententry_district">மாவட்டம்</string>
+  <string name="patiententry_woreda">வோர்டா</string>
+  <string name="patiententry_upazila">துணை மாவட்டம்</string>
+  <string name="patiententry_state">மாநிலம்</string>
+  <string name="patiententry_region">வட்டாரம்</string>
+  <string name="patiententry_doornumber_streetname">கதவு எண், தெரு பெயர்</string>
+  <string name="patiententry_division_area">பிரிவு மற்றும் பகுதி</string>
+  <string name="patiententry_save_patient">அடுத்து</string>
+  <string name="patiententry_error_empty_fullname">நோயாளியின் பெயரை எழுதவும்</string>
+  <string name="patiententry_error_empty_gender">நோயாளியின் பாலினத்தைத் தேர்வுசெய்யவும்</string>
+  <string name="patiententry_error_empty_colony_or_village">தேவை</string>
+  <string name="patiententry_error_empty_district">தேவை</string>
+  <string name="patiententry_error_state_empty">தேவை</string>
+  <string name="patiententry_error_both_dateofbirth_and_age_empty">நோயாளியின் வயதை எழுதவும்</string>
+  <string name="patiententry_error_invalid_dateofbirth">DD/MM/YYYY முறையில் நோயாளியின் பிறந்ததேதியை எழுதவும்</string>
+  <string name="patiententry_error_dateofbirth_is_in_future">நோயாளியின் பிறந்ததேதியைச் சரிசெய்யவும்</string>
+  <string name="patiententry_error_phonenumber_blank">தொலைபேசி எண் காலியாக இருக்கக் கூடாது</string>
+  <string name="patiententry_error_phonenumber_length_less">தொலைபேசி எண் %1$s இலக்கங்களுக்குள் இருக்கக்கூடாது</string>
+  <string name="patiententry_error_phonenumber_length_more">தொலைபேசி எண் %1$s இலக்கங்களுக்கு மேல் இருக்கக்கூடாது</string>
+  <string name="patiententry_identifier">பிபி கடவுச்சீட்டு</string>
+  <string name="patiententry_consent_header">சம்மதம் அளித்தல்:\u0020</string>
+  <string name="patiententry_consent_first_para">கீழே தொடுவதன் மூலம், நீங்கள் இங்கு எழுதி எடுக்கும் எந்தவொரு நோயாளியின் தரவுக்கும் பொருத்தமான தகவல்களைத் தெரிவித்து ஒப்புதல் பெறப்பட்டுள்ளது என்பதை உறுதிப்படுத்துகிறீர்கள். அதாவது, நீங்கள் அவர்களின் தனிப்பட்ட தகவல் விவரங்களைச் செயலியில் எழுதுகிறீர்கள் என்பது நோயாளி அல்லது சட்டப்பூர்வப் பாதுகாவலருக்குத் தெரியும் என்றும், என்ன தகவல்கள் சேகரிக்கப்படுகின்றன என்பதை அவர் புரிந்து கொண்டுள்ளார் என்றும், மேலும் செயலியில் வழங்கப்பட்டுள்ள தொலைபேசி எண்ணைப் பயன்படுத்தி எஸ்எம்எஸ், WhatsApp அல்லது பிற முறைகள் வழியாக அவர்களை நாம் தொடர்பு கொள்ளக்கூடும் என்றும் அவர் அறிந்துள்ளார் என்பதாகும்.</string>
+  <string name="patiententry_consent_second_para">உங்களின் அனுமதி பெற்ற எவரும் அல்லது நீங்கள் பணிபுரியும் மருத்துவமனை, நீங்கள் இங்கு எழுதும் நோயாளியின் தரவு மற்றும் தகவல்களை அணுக முடியும். செயலியைப் பயன்படுத்துவதன் மூலம், இந்தச் செயலி மூலம் பெறப்படும் தரவை யார் அணுகலாம் என்பதை நோயாளி அல்லது சட்டப்பூர்வப் பாதுகாவலர் புரிந்துகொண்டு அந்த அணுகலை ஒப்புக்கொள்கிறார் என்பதை உறுதிப்படுத்துகிறீர்கள்.</string>
+  <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / எஸ்எம்எஸ் நினைவூட்டல்கள்</string>
+  <string name="patiententry_consent_sms_reminders">எஸ்எம்எஸ் நினைவூட்டிகள்</string>
+  <string name="patiententry_age_exceeds_max_limit_error">வயது 120-க்கும் மேல் இருக்கக்கூடாது</string>
+  <string name="patiententry_age_exceeds_min_limit_error">வயது 0 ஆக இருக்கக்கூடாது</string>
+
+  <string name="patientedit_save_patient">சேமிக்கவும்</string>
+  <string name="patientedit_bp_passports_label">பிபி கடவுச்சீட்டுகள்</string>
+  <string name="patientedit_confirm_discard_title">மாற்றங்களை ஏற்றுக்கொள்ளலாமா ?</string>
+  <string name="patientedit_confirm_discard_ok">ஏற்றுக்கொள்ள வேண்டாம்</string>
+  <string name="patientedit_confirm_discard_cancel">ரத்து செய்யவும்</string>
+  <string name="patientedit_delete_patient">நீக்கவும்</string>
+
+  <!-- Home: Tabs -->
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="tab_patient">நோயாளிகள்</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_overdue">குறித்த தேதிக்குள் வராதவர்கள்</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_progress">அளவு எடுக்கப்படுகிறது</string>
+
+  <string name="home_search_patient_name_phone">நோயாளியின் பெயரை எழுதவும்</string>
+  <string name="patients_user_awaiting_approval_title">அனுமதிக்காகக் காத்திருக்கிறது</string>
+  <string name="patients_user_awaiting_approval_message">அனுமதிக்கப்பட்டதும், உங்கள் கிளினிக்கிலிருந்து நோயாளியின் பதிவு விவரங்களை நீங்கள் அணுகலாம்.</string>
+  <string name="patients_user_approved_title">நீங்கள் அனுமதிக்கப்பட்டுள்ளீர்கள்!</string>
+  <string name="patients_awaiting_sms_verification_title">எஸ்எம்எஸ் சரிபார்ப்பிற்காகக் காத்திருக்கிறது</string>
+  <string name="patients_user_approved_message">உங்கள் கிளினிக்கிலிருந்தே எல்லா நோயாளித் தகவல்களையும் இப்போது நீங்கள் பார்க்கலாம்</string>
+  <string name="patients_awaiting_sms_verification_message">சரிபார்க்கப்பட்டதும், உங்கள் கிளினிக் மூலம் நோயாளியின் பதிவு விவரங்களை நீங்கள் பார்க்கலாம்.</string>
+  <string name="patients_dismiss_user_approved_status">தெரிந்துகொண்டேன்</string>
+  <string name="patients_enter_code">குறியீட்டை எழுதவும்</string>
+  <string name="patients_you_are_now_logged_in">வெற்றிகரமாகச் சரிபார்க்கப்பட்டது! நோயாளியின் பதிவு விவரங்கள் இப்போது தெரியும்.</string>
+  <string name="patients_loggedoutalert_title">ஒரு சமயத்தில் ஒரே ஒரு சாதனத்தில் மட்டுமே உள்நுழையலாம்</string>
+  <string name="patients_loggedoutalert_message">உங்கள் முந்தைய சாதனத்திலிருந்து வெளியேறியுள்ளீர்கள்.</string>
+  <string name="patients_loggedoutalert_dismiss">தெரிந்துகொண்டேன்</string>
+  <string name="patients_scan_simple_card">பிபி கடவுச்சீட்டை ஸ்கேன் செய்யவும்</string>
+  <string name="patients_recentpatients_title">ரீசெண்ட்</string>
+  <string name="patients_recentpatients_no_recent_patients">சமீபத்திய நோயாளிகள் இல்லை</string>
+  <string name="patients_recentpatients_see_all">எல்லாவற்றையும் பார்க்கவும்</string>
+  <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+
+  <!-- Blood pressure entry -->
+  <string name="bloodpressureentry_sheet_title_enter_blood_pressure">இரத்த அழுத்தம்</string>
+  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">இரத்த அழுத்தத்தைத் திருத்தவும்</string>
+  <string name="bloodpressureentry_sheet_title_enter_date">அளவு எடுக்கும் தேதி</string>
+  <string name="bloodpressureentry_remove">அகற்றவும்</string>
+  <string name="bloodpressureentry_systolic">சிஸ்டாலிக்</string>
+  <string name="bloodpressureentry_diastolic">டயஸ்டாலிக்</string>
+  <string name="bloodpressureentry_day">நாள்</string>
+  <string name="bloodpressureentry_month">மாதம்</string>
+  <string name="bloodpressureentry_year">வருடம்</string>
+  <string name="bloodpressureentry_error_systolic_more">சிஸ்டாலிக் அளவு, டயஸ்டாலிக்கிற்கும் மேல் இருக்க வேண்டும்</string>
+  <string name="bloodpressureentry_error_systolic_70">சிஸ்டாலிக் அளவு 70-க்கும் குறைவாக இருக்கக்கூடாது</string>
+  <string name="bloodpressureentry_error_systolic_300">சிஸ்டாலிக் அளவு 300-க்கும் அதிகமாக இருக்கக்கூடாது</string>
+  <string name="bloodpressureentry_error_diastolic_40">டயஸ்டாலிக் அளவு 40-க்கும் குறைவாக இருக்கக்கூடாது</string>
+  <string name="bloodpressureentry_error_diastolic_180">டயஸ்டாலிக் அளவு 180-க்கும் அதிகமாக இருக்கக்கூடாது</string>
+  <string name="bloodpressureentry_error_systolic_empty">சிஸ்டாலிக் மற்றும் டயஸ்டாலிக் அழுத்த அளவுகளை எழுதவும்</string>
+  <string name="bloodpressureentry_error_diastolic_empty">சிஸ்டாலிக் மற்றும் டயஸ்டாலிக் அழுத்த அளவுகளை எழுதவும்</string>
+  <string name="bloodpressureentry_error_date_invalid_pattern">DD/MM/YYYY என்ற வடிவத்தில் சரியான தேதியை எழுதவும்</string>
+  <string name="bloodpressureentry_error_date_is_in_future">தேதி, எதிர்காலத்தில் இருக்கக்கூடாது</string>
+  <string name="bloodpressureentry_remove_bp_title">பிபி-ஐ அகற்றவும்</string>
+  <string name="bloodpressureentry_remove_bp_message">இந்த இரத்த அழுத்தப் பதிவை அகற்ற விரும்புகிறீர்களா?</string>
+  <string name="bloodpressureentry_remove_bp_confirm">அகற்றவும்</string>
+  <string name="bloodpressureentry_remove_bp_cancel">ரத்து செய்யவும்</string>
+
+  <!-- Patient summary -->
+  <string name="patientsummary_contentdescription_up_button">முந்தைய பக்கத்திற்குத் திரும்பிச் செல்லவும்</string>
+  <string name="patientsummary_prescriptions_add">மருந்துகள்</string>
+  <string name="patientsummary_prescriptions_update">மருந்துகளின் விவரத்தைத் திருத்தி எழுதவும்</string>
+  <string name="patientsummary_bp_add_new">இரத்த அழுத்தம்</string>
+  <string name="patientsummary_finish_saving_patient">சேமிக்கவும்</string>
+  <string name="patientsummary_bp_none_added">இரத்த அழுத்த அளவுகள் சேர்க்கப்படவில்லை</string>
+  <string name="patientsummary_edit">திருத்தவும்</string>
+
+  <string name="patientsummary_updatephone_dialog_title">தொலைபேசி எண்ணைப் புதுப்பிக்கவும்</string>
+  <string name="patientsummary_updatephone_dialog_message">நோயாளியின் தொலைபேசி எண் முன்பு தவறானதாகக் குறிக்கப்பட்டிருந்தது</string>
+  <string name="patientsummary_updatephone_phone_hint">தொலைபேசி எண்</string>
+  <string name="patientsummary_updatephone_save">சேமிக்கவும்</string>
+  <string name="patientsummary_updatephone_cancel">தவிர்க்கவும்</string>
+  <string name="patientsummary_addphone_dialog_title">தொலைபேசி எண்ணைப் புதுப்பிக்கவும்</string>
+  <string name="patientsummary_addphone_dialog_message">தொலைபேசி</string>
+  <string name="patientsummary_addphone_phone_hint">தொலைபேசி எண்</string>
+  <string name="patientsummary_addphone_save">சேமிக்கவும்</string>
+  <string name="patientsummary_addphone_cancel">தவிர்க்கவும்</string>
+  <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
+  <string name="patientsummary_bangladesh_national_id">ஐடி</string>
+
+  <string name="patientsummary_contact_doctor">மருத்துவர்</string>
+  <string name="patientsummary_teleconsult_network_error">மெதுவான இணைய இணைப்பு காரணமாக இணைக்க முடியவில்லை</string>
+  <string name="patientsummary_teleconsult_network_error_retry">மீண்டும் முயலவும்</string>
+  <string name="patientsummary_log_teleconsult">தொலைபேசி ஆலோசனைக்குப் பதிவுசெய்க</string>
+
+  <string name="patientsummary_registered_faciliy_title">பதிவுசெய்யப்பட்டது</string>
+  <string name="patientsummary_registered_facility">%2$s-இல் %1$s</string>
+
+  <string name="bloodpressuresummaryview_see_all_button">எல்லாம் காட்டு</string>
+
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_low">குறைவு</string>
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_high">அதிகம்</string>
+
+  <string name="bloodsugar_level_low">குறைவு</string>
+  <string name="bloodsugar_level_high">அதிகம்</string>
+
+  <string name="timestamp_today">இன்று</string>
+  <string name="timestamp_yesterday">நேற்று</string>
+  <!--suppress PluralsCandidate -->
+  <string name="timestamp_days_ago">%s நாட்களுக்கு முன்பு</string>
+
+  <!-- Prescribed drugs -->
+  <string name="patient_prescribeddrugs_screen_title">பிபி மருந்துகள்</string>
+  <string name="patient_prescribeddrugs_add_custom_prescription">மற்றொரு மருந்தைச் சேர்க்கவும்</string>
+
+  <string name="customprescription_enter_medicine">மருந்தை எழுதவும்</string>
+  <string name="customprescription_edit_medicine">மருந்தைத் திருத்தவும்</string>
+  <string name="customprescription_save_drug">சேமிக்கவும்</string>
+  <string name="customprescription_drug_name_hint">மருந்தின் பெயர்</string>
+  <string name="customprescription_drug_dosage_hint">அளவு</string>
+
+  <string name="customprescription_delete_title">மருந்தை அகற்றவும்</string>
+  <string name="customprescription_delete_message">இந்த மருந்தை அகற்ற விரும்புகிறீர்களா?</string>
+  <string name="customprescription_delete_confirm">அகற்றவும்</string>
+  <string name="customprescription_delete_cancel">ரத்து செய்யவும்</string>
+
+  <!-- Login -->
+  <string name="loginpin_go_back">தொலைபேசி எண் திரைக்குச் செல்லவும்</string>
+
+  <!-- App lock -->
+  <string name="applock_logout">நீங்கள் இல்லையா?</string>
+  <string name="applock_reset_pin_alert_title">பாதுகாப்பு PIN-ஐ மீட்டமைக்கவா?</string>
+  <string name="applock_reset_pin_alert_message">உங்கள் பாதுகாப்பு PIN-ஐ மீட்டமைக்க விரும்புகிறீர்களா?</string>
+  <string name="applock_reset_pin_alert_confirm">மீட்டமைக்கவும்</string>
+  <string name="applock_reset_pin_alert_cancel">ரத்து செய்யவும்</string>
+
+  <!-- PIN entry -->
+  <string name="pinentry_forgotpin">PIN-ஐ மறந்துவிட்டீர்களா?</string>
+  <string name="pinentry_error_incorrect_pin_on_first_attempt">அசல் PIN உடன் இந்த PIN பொருந்தவில்லை</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">தவறான PIN, %s முயற்சிகள் மீதமுள்ளன</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">%s தவறான முயற்சிகளை மேற்கொண்டுள்ளீர்கள்</string>
+  <string name="pinentry_pin_number_hint">உங்கள் பாதுகாப்பு PIN</string>
+  <string name="pinentry_bruteforcelock_timer_label">இதற்குப் பிறகு முயலவும்</string>
+  <!-- minutes:seconds -->
+
+  <!-- Registration -->
+  <string name="registrationphone_phone_number_label">உங்கள் தொலைபேசி எண்</string>
+  <string name="registrationphone_error_invalid_number">தொலைபேசி எண்ணைச் சரிபார்க்கவும். இது மிகவும் சிறியதைப் போலத் தெரிகிறது.</string>
+  <string name="registration_loggedout_dialog_title">வெளியேறிவிட்டீர்கள்</string>
+  <string name="registration_loggedout_dialog_message">தொடர, மீண்டும் லாக்இன் செய்யவும்</string>
+  <string name="registration_loggedout_dialog_confirm">சரி</string>
+  <string name="registrationname_name_label">உங்கள் பெயரைக் கூறவும்</string>
+  <string name="registrationname_error_empty_name">உங்கள் பெயரை எழுதவும்</string>
+
+  <string name="registrationpin_pin_label">உங்கள் பாதுகாப்பு PIN-ஐ உருவாக்கவும்</string>
+  <string name="registrationpin_pin_hint">உங்கள் PIN-ஐ நினைவில்கொள்ளவும், பிறகு அது தேவைப்படலாம்</string>
+  <string name="registrationpin_error_incomplete_pin">PIN மிகவும் சிறியது. 4 எண்களை எழுதவும்.</string>
+
+  <string name="registrationconfirmpin_confirm_pin_label">மீண்டும் பாதுகாப்பு PIN-ஐ எழுதவும்</string>
+  <string name="registrationconfirmpin_error_pin_mismatch">அசல் PIN உடன் இந்த PIN பொருந்தவில்லை</string>
+  <string name="registrationconfirmpin_reset_pin">PIN-ஐ மீட்டமை</string>
+
+  <string name="registrationlocation_screen_title">இருப்பிட அணுகல்</string>
+  <string name="registrationlocation_skip_permission">தவிர்க்கவும்</string>
+  <string name="registrationlocation_permission_rationale_description">உங்கள் கிளினிக்கைக் கண்டறிய உங்கள் இருப்பிடம் உதவும்</string>
+  <string name="registrationlocation_permission_rationale_title">உங்கள் கிளினிக்கை வேகமாகக் கண்டறியவும்</string>
+  <string name="registrationlocation_allow_access">இருப்பிட அணுகலை அனுமதிக்கவும்</string>
+
+  <!-- Onboarding -->
+  <string name="onboarding_get_started">தொடங்குங்கள்</string>
+  <string name="screenonboarding_intro_1">உயர் இரத்த அழுத்தத்தால் பாதிக்கப்பட்ட \nஆயிரக்கணக்கான நோயாளிகளைத் \nதேடி</string>
+  <string name="screenonboarding_intro_1_hypertension">கண்டுபிடிக்கவும்</string>
+  <string name="screenonboarding_intro_2">இரத்த அழுத்த அளவுகள் \n</string>
+  <string name="screenonboarding_intro_2_bp">&amp; மருந்துகளின் \n</string>
+  <string name="screenonboarding_intro_2_and">பதிவுகளைப்</string>
+  <string name="screenonboarding_intro_2_medicines">பராமரிக்கவும்</string>
+  <string name="screenonboarding_intro_3">நோயாளிகள் மீண்டும்</string>
+  <string name="screenonboarding_intro_3_reminder">\nவருவதற்கு நினைவூட்டி</string>
+  <string name="screenonboarding_intro_3_visits">\nசெய்திகளைப் பெறுவார்கள்</string>
+
+  <!-- Overdue List -->
+  <string name="overdue_no_patients">குறித்த தேதிக்குள் வராதவர்கள் இல்லை</string>
+  <string name="overdue_empty_desc">மீண்டும் இரத்த அழுத்த ரீடிங் எடுப்பதற்காகத் திட்டமிடப்பட்ட தேதியைத் தவறவிட்ட நோயாளிகளை நீங்கள் அழைக்க முடியும்.</string>
+  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_diagnosis_diabetes">நீரிழிவு</string>
+  <string name="overdue_list_item_diagnosis_hypertension">உயர் இரத்த அழுத்தம்</string>
+  <string name="overdue_list_item_diagnosis_none">ஏதுமில்லை</string>
+  <plurals name="overdue_list_item_appointment_overdue_days">
+    <item quantity="one">குறித்த நாளை விட %s நாள் அதிகம்</item>
+    <item quantity="other">குறித்த நாளை விட %s நாட்கள் அதிகம்</item>
+  </plurals>
+  <string name="overduelist_diagnosis_label">Dx</string>
+  <string name="overduelist_visited">வந்துள்ளார்</string>
+  <string name="overduelist_high_risk">அதிக ஆபத்து</string>
+  <string name="overduelist_transferred">இதற்குப் பரிமாற்றவும்</string>
+
+  <!-- Facility change -->
+
+  <!-- Enter OTP -->
+  <string name="enterotp_check_sms_sent_to">இதற்கு அனுப்பிய எஸ்எம்எஸ்-ஐப் பார்க்கவும்</string>
+  <string name="enterotp_enter_verification_code">சரிபார்ப்புக் குறியீட்டை எழுதவும்</string>
+  <string name="enterotp_incorrect_code">தவறான குறியீட்டை எழுதினீர்கள், மீண்டும் முயலவும்</string>
+  <string name="enterotp_resend_sms">SMS மீண்டும் அனுப்பவும்</string>
+  <string name="enterotp_sms_sent">புதிய சரிபார்ப்பு எஸ்எம்எஸ் அனுப்பப்பட்டது</string>
+
+  <!-- Schedule appointment -->
+  <string name="scheduleappointment_next_visit_in">அடுத்து வர வேண்டிய நாள்</string>
+  <string name="scheduleappointment_not_now">இப்போது வேண்டாம்</string>
+  <string name="scheduleappointment_done">முடிந்தது</string>
+  <plurals name="scheduleappointment_appointment_in_days">
+    <item quantity="one">%s நாள்</item>
+    <item quantity="other">%s நாட்கள்</item>
+  </plurals>
+  <plurals name="scheduleappointment_appointment_in_weeks">
+    <item quantity="one">%s வாரம்</item>
+    <item quantity="other">%s வாரங்கள்</item>
+  </plurals>
+  <plurals name="scheduleappointment_appointment_in_months">
+    <item quantity="one">%s மாதம்</item>
+    <item quantity="other">%s மாதங்கள்</item>
+  </plurals>
+
+  <!-- Forgot PIN -->
+  <string name="forgotpin_create_new_pin">புதிய பாதுகாப்பு PIN-ஐ உருவாக்கவும்</string>
+  <string name="forgotpin_create_new_pin_invalid_pin">PIN மிகவும் சிறியது. 4 எண்களை எழுதவும்.</string>
+  <string name="forgotpin_confirm_pin">மீண்டும் பாதுகாப்பு PIN-ஐ எழுதவும்</string>
+  <string name="forgotpin_confirm_pin_message">இதை உறுதிசெய்ய, உங்கள் PIN-ஐ மீண்டும் எழுதவும்</string>
+  <string name="forgotpin_error_pin_mismatch">அசல் PIN உடன் இந்த PIN பொருந்தவில்லை</string>
+
+  <!-- Reports -->
+  <string name="reports_come_back_later">பின்னர் மீண்டும் வரவும்</string>
+  <string name="reports_you_will_be_able_to_see">உங்கள் கிளினிக்கிற்கான உயர் இரத்த அழுத்த அறிக்கைகளை இங்கே காணலாம்.</string>
+
+  <!-- Medical History -->
+  <!--suppress UnusedResources used in enum -->
+  <string name="medicalhistory_question_heartattack">மாரடைப்பு</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_stroke">பக்கவாதம்</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_kidney">சிறுநீரக நோய்</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_diagnosed_with_hypertension">உயர் இரத்த அழுத்தம்</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_diabetes">நீரிழிவு</string>
+  <string name="newmedicalhistory_next">அடுத்து</string>
+  <string name="newmedicalhistory_yes">ஆம்</string>
+  <string name="newmedicalhistory_no">இல்லை</string>
+  <string name="newmedicalhistory_history">வரலாறு</string>
+  <string name="newmedicalhistory_diagnosis">நோய் கண்டறிதல் (அவசிய விவரம்)</string>
+  <string name="newmedicalhistory_diagnosis_required_error">நோய் கண்டறிதல் விவரத்தைத் தேர்ந்தெடுக்கவும்</string>
+
+  <!--Prescribed Drug with Dosages Sheet-->
+  <string name="prescribed_drugs_dosage_none">ஏதுமில்லை</string>
+  <string name="prescribed_drug_with_dosages_sheet_drug_name">%s அளவு</string>
+
+  <!--Scan Simple ID-->
+  <string name="scansimpleid_title">கார்டு ஐடி-ஐ ஸ்கேன் செய்யவும்</string>
+  <string name="scansimpleid_shortcode_error_empty">பிபி கடவுச்சீட்டு எண்ணை எழுதவும்</string>
+  <string name="scansimpleid_shortcode_error_not_required_length">பிபி கடவுச்சீட்டு எண் 7 இலக்கங்களுக்குள் இருக்க வேண்டும்</string>
+  <string name="scansimpleid_type_bp_passport_number">அல்லது பிபி கடவுச்சீட்டு எண்ணை எழுதவும்</string>
+
+  <!--- Sync Indicator-->
+  <string name="syncindicator_status_pending">ஒத்திசைவு நிலுவையில்</string>
+  <string name="syncindicator_status_failed">ஒத்திசைவு தோல்வி</string>
+  <string name="syncindicator_status_syncing">ஒத்திசைக்கிறது…</string>
+  <string name="syncindicator_status_synced_just_now">சற்றுமுன் ஒத்திசைக்கப்பட்டது</string>
+  <string name="syncindicator_status_synced_min_ago">%s நிமி முன் ஒத்திசைக்கப்பட்டது</string>
+  <string name="syncindicator_dialog_error_network">நோயாளியின் பதிவு விவரங்களை ஒத்திசைக்க, உங்களிடம் இணைய இணைப்பு உள்ளதை உறுதிப்படுத்திக் கொள்ளவும்.</string>
+  <string name="syncindicator_dialog_button_text">சரி</string>
+  <string name="syncindicator_dialog_error_server">ஒத்திசைவுச் சேவைகள் தற்போது வேலை செய்யவில்லை. பின்னர் மீண்டும் முயலவும் அல்லது உங்கள் மேற்பார்வையாளரைத் தொடர்பு கொள்ளவும்.</string>
+
+  <!-- Help Screen -->
+  <string name="help_title">உதவி</string>
+  <string name="help_no_connection">இணைய இணைப்பு இல்லை</string>
+  <string name="help_something_went_wrong">எதுவோ தவறாக உள்ளது</string>
+  <string name="help_try_again">மீண்டும் முயலவும்</string>
+
+  <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_add">அடுத்து</string>
+  <string name="linkidwithpatient_button_cancel">ரத்து செய்யவும்</string>
+  <string name="linkidwithpatient_add_id_text">%1$s\u0020</string>
+  <string name="linkidwithpatient_to_patient_text">\u0020-ஐ \u00A0நோயாளி விவரத்தில் சேர்க்கலாமா?</string>
+
+  <!-- Add ID to Patient: Search -->
+
+  <!-- Recent Patients -->
+  <string name="recent_patients_toolbar_title">ரீசெண்ட்</string>
+
+  <!-- Recent Patients Item View -->
+  <string name="recent_patients_itemview_last_seen">கடைசியாகப் பார்த்தது:\u0020</string>
+  <string name="recent_patients_itemview_new_registration">புதிய பதிவு</string>
+
+  <!-- Add ID to Patient: Search Results-->
+
+  <!-- App update : Dialog -->
+  <string name="appupdatedialog_title">செயலியைப் புதுப்பிக்கவும்</string>
+  <string name="appupdatedialog_body">சிம்பிள் செயலியைப் புதுப்பிப்பதற்கு, பிளே ஸ்டோருக்குச் செல்வீர்கள்</string>
+  <string name="appupdatedialog_positive_button_text">புதுப்பிக்கவும்</string>
+  <string name="appupdatedialog_negative_button_text">இப்போது வேண்டாம்</string>
+
+  <!-- All Patients In Facility View-->
+  <string name="allpatientsinfacility_nopatients_message">உங்கள் மையத்தில் பதிவு செய்துள்ள அனைத்து நோயாளிகளையும் இங்கே காணலாம்.</string>
+  <string name="allpatientsinfacility_nopatients_title">%1$s என்பதில் நோயாளிகள் இல்லை</string>
+  <string name="allpatientsinfacility_foundpatients_header">எல்லா நோயாளிகளும்: %1$s</string>
+
+  <!--Registration loader screen -->
+  <string name="registrationloader_error_unexpected_title">எதுவோ தவறாக உள்ளது</string>
+  <string name="registrationloader_error_unexpected_message">சிறிது நேரம் கழித்து மீண்டும் முயலவும் அல்லது உங்கள் மேற்பார்வையாளரைத் தொடர்பு கொண்டு கேட்கவும்.</string>
+  <string name="registrationloader_error_internet_connection_title">இணைய இணைப்பு இல்லை</string>
+  <!--suppress UnusedResources -->
+  <string name="registrationloader_retry">மீண்டும் முயலவும்</string>
+
+  <!-- Short code search -->
+  <string name="shortcodesearchresult_enter_patient_name_button">நோயாளியின் பெயரை எழுதவும்</string>
+
+  <!-- Simple video -->
+  <string name="simple_video_watch_video">வீடியோ பார்க்கவும்</string>
+  <string name="simple_video_how_to_use_the_simple_app">சிம்பிள் செயலியை எவ்வாறு பயன்படுத்துவது</string>
+  <string name="simple_video_duration">%s நிமிடங்கள்</string>
+
+  <!-- Settings -->
+  <string name="settings_title">அமைப்புகள்</string>
+  <string name="settings_user_name_icon_content">அமைப்புகள் பயனர் பெயர் ஐகான்</string>
+  <string name="settings_user_phone_icon_content">அமைப்புகள் பயனர் தொலைபேசி எண் ஐகான்</string>
+  <string name="settings_current_language_icon_content">அமைப்புகள் தற்போதைய மொழி ஐகான்</string>
+  <string name="settings_app_version_icon_content">அமைப்புகள் செயலிப் பதிப்பு ஐகான்</string>
+  <string name="settings_name">பெயர்</string>
+  <string name="settings_number">தொலைபேசி எண்</string>
+  <string name="settings_language">மொழி</string>
+  <string name="settings_change">மாற்றவும்</string>
+  <string name="settings_language_hint">மொழியைத் தேர்ந்தெடுக்கவும்</string>
+  <string name="settings_software">மென்பொருள்</string>
+  <string name="settings_update">புதுப்பிக்கவும்</string>
+  <string name="settings_software_version">பதிப்பு %1$s</string>
+
+  <!-- Change language screen -->
+  <string name="changelanguage_title">உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்</string>
+  <string name="changelanguage_done">முடிந்தது</string>
+
+  <!-- Placeholder -->
+  <string name="placeholder_loading_title">காத்திருக்கவும்…</string>
+  <string name="placeholder_loading_message">தரவுத்தளம் பராமரிப்பில் உள்ளது. இதற்கு ஒரு நிமிடம் மட்டுமே ஆகும்.</string>
+
+  <!-- Select Country Screen -->
+  <string name="selectcountry_logo_contentdescription">சிம்பிள் லோகோ</string>
+  <string name="selectcountry_next">அடுத்து</string>
+  <string name="selectcountry_title">உங்கள் நாட்டின் பெயரைத் தேர்ந்தெடுக்கவும்</string>
+  <string name="selectcountry_networkerror">இணைய இணைப்பு இல்லை!</string>
+  <string name="selectcountry_servererror">சேவையகத்தில் பிழை ஏற்பட்டுள்ளது! தயவுசெய்து சிறிது நேரம் கழித்து மீண்டும் முயலவும்!</string>
+  <string name="selectcountry_genericerror">எதுவோ தவறாக உள்ளது! தயவுசெய்து சிறிது நேரம் கழித்து மீண்டும் முயலவும்!</string>
+  <string name="selectcountry_retry">மீண்டும் முயலவும்</string>
+  <string name="scheduleappointment_at">மணி</string>
+  <string name="scheduleappointment_change">மாற்றவும்</string>
+
+  <!-- BloodSugar type picker -->
+  <string name="bloodsugartype_picker_title">அளவைத் தேர்வு செய்யவும்</string>
+  <string name="bloodsugartype_picker_desc">உறுதியாகத் தெரியவில்லை எனில் ‘RBS’ என்று தேர்வு செய்யவும்.</string>
+  <string name="bloodsugartype_rbs">சீரற்ற இரத்தச் சர்க்கரை அளவு (RBS)</string>
+  <string name="bloodsugartype_fbs">உணவுக்கு முன் இரத்தச் சர்க்கரை அளவு (FBS)</string>
+  <string name="bloodsugartype_ppbs">உணவருந்திய பின் இரத்தச் சர்க்கரை அளவு (PPBS)</string>
+  <string name="bloodsugarentry_sheet_title_enter_date">அளவு எடுக்கும் தேதி</string>
+  <string name="bloodsugarentry_day">நாள்</string>
+  <string name="bloodsugarentry_month">மாதம்</string>
+  <string name="bloodsugarentry_year">வருடம்</string>
+  <string name="bloodsugarentry_error_lower_limit">அளவு 30 மிகி/டிஎல்-க்கும் குறைவாக இருக்கக்கூடாது</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">மதிப்பு 3\u0025-க்கும் குறைவாக இருக்கக்கூடாது</string>
+  <string name="bloodsugarentry_error_higher_limit">அளவு 1000 மிகி/டிஎல்-க்கும் அதிகமாக இருக்கக்கூடாது</string>
+  <string name="bloodsugarentry_error_higher_limit_hba1c">மதிப்பு 25\u0025-க்கும் அதிகமாக இருக்கக்கூடாது</string>
+  <string name="bloodsugarentry_error_empty">மதிப்பு காலியாக இருக்கக்கூடாது</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YYYY என்ற வடிவத்தில் சரியான தேதியை எழுதவும்</string>
+  <string name="bloodsugarentry_error_date_is_in_future">தேதி, எதிர்காலத்தில் இருக்கக்கூடாது</string>
+  <string name="bloodsugarentry_random_title">சீரற்ற இரத்தச் சர்க்கரை அளவு</string>
+  <string name="bloodsugarentry_post_prandial_title">உணவருந்திய பின் இரத்தச் சர்க்கரை அளவு</string>
+  <string name="bloodsugarentry_fasting_title">உணவுக்கு முன் இரத்தச் சர்க்கரை அளவு</string>
+  <string name="bloodsugarentry_remove">அகற்றவும்</string>
+  <string name="bloodsugarentry_edit_random_title">சீரற்ற இரத்தச் சர்க்கரை அளவைத் திருத்தி எழுதவும்</string>
+  <string name="bloodsugarentry_edit_post_prandial_title">உணவருந்திய பின் இரத்தச் சர்க்கரை அளவைத் திருத்தி எழுதவும்</string>
+  <string name="bloodsugarentry_edit_fasting_title">உணவுக்கு முந்தைய இரத்தச் சர்க்கரை அளவைத் திருத்தி எழுதவும்</string>
+  <string name="bloodsugarentry_edit_hba1c_title">HbA1c-ஐத் திருத்தி எழுதவும்</string>
+
+  <!-- Confirm remove blood sugar dialog -->
+  <string name="bloodsugarentry_remove_blood_sugar_title">இரத்தச் சர்க்கரை அளவை அகற்றவும்</string>
+  <string name="bloodsugarentry_remove_blood_sugar_message">இந்த இரத்தச் சர்க்கரை பதிவை அகற்ற விரும்புகிறீர்களா?</string>
+  <string name="bloodsugarentry_remove_blood_sugar_confirm">அகற்றவும்</string>
+  <string name="bloodsugarentry_remove_blood_sugar_cancel">ரத்து செய்யவும்</string>
+
+  <!-- Blood Sugar Summary view -->
+  <string name="bloodsugarsummaryview_no_blood_sugars">இரத்தச் சர்க்கரை அளவுகள் சேர்க்கப்படவில்லை</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">நீரிழிவு</string>
+  <!-- Blood Pressure History screen -->
+  <string name="bloodpressurehistory_add_bp_button">இரத்த அழுத்தம்</string>
+  <string name="bloodpressurehistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
+  <!-- Blood Sugar History screen -->
+  <string name="bloodsugarhistory_add_blood_sugar_button">நீரிழிவு</string>
+  <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
+  <!-- Summary CV History view -->
+  <string name="medicalhistorysummaryview_history">வரலாறு</string>
+  <string name="medicalhistorysummaryview_diagnosis">நோய் கண்டறிதல் (அவசிய விவரம்)</string>
+
+  <!-- Summary prescriptions view -->
+  <string name="drugsummaryview_no_medicines">மருந்து விவரங்கள் சேர்க்கப்படவில்லை</string>
+
+  <!-- Access Denied screen -->
+  <string name="accessdeniedscreen_title_access_denied">அணுகல் மறுக்கப்பட்டது</string>
+  <string name="accessdeniedscreen_description">சிம்பிள் செயலிக்கான அணுகல் மறுக்கப்பட்டது. இது பிழையாக ஏற்பட்டதாக நீங்கள் நினைத்தால் உங்கள் மேற்பார்வையாளரைத் தொடர்பு கொள்ளவும்.\n\nஉங்கள் அணுகல் மீட்டமைக்கப்பட்டால், சிம்பிள் செயலியை நீக்கி, பிளே ஸ்டோரிலிருந்து நிறுவவும்.</string>
+
+  <!-- Confirm Facility change sheet -->
+  <string name="confirmfacilitychange_title">மையத்தை மாற்றவும்</string>
+  <string name="confirmfacilitychange_negative_button">ரத்து செய்யவும்</string>
+  <string name="confirmfacilitychange_positive_button">ஆம்</string>
+  <string name="confirmfacilitychange_facility_name">%s?</string>
+
+  <!-- Registration Confirm Facility Change Sheet -->
+  <string name="registrationconfirmfacility_title">நீங்கள் இங்கு உள்ளீர்களா?</string>
+  <string name="registrationconfirmfacility_positive_button">ஆம்</string>
+  <string name="registrationconfirmfacility_negative_button">ரத்து செய்யவும்</string>
+
+  <!-- Alert facility change -->
+  <string name="alertfacilitychange_title">நீங்கள் இங்கு உள்ளீர்களா</string>
+  <string name="alertfacilitychange_yes_button">ஆம்</string>
+  <string name="alertfacilitychange_change_button">மாற்றவும்</string>
+  <string name="alertfacilitychange_facility_name">%s?</string>
+
+  <!-- Prescribed Drug Summary -->
+  <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
+
+  <!-- Contact patient -->
+  <string name="contactpatient_agreed_to_visit">\&quot;வருவதற்கு ஒப்புக்கொண்டார்\&quot; என நோயாளியைக் குறிக்கவும்</string>
+  <string name="contactpatient_remind_call_later">பின்னர் அழைக்க நினைவூட்டவும்…</string>
+  <string name="contactpatient_remove_from_list">குறித்த தேதியில் வாராதவர்கள் பட்டியலிலிருந்து அகற்றவும்…</string>
+  <string name="contactpatient_result_of_call">அழைப்பின் முடிவு</string>
+  <string name="contactpatient_call_normal">இயல்பு</string>
+  <string name="contactpatient_call_secure">பாதுகாப்பானது</string>
+  <string name="contactpatient_help_text">பாதுகாப்பான அழைப்புகள் உங்கள் எண்ணை மறைத்துவிடும், இந்த அழைப்புகள் இலவசம்</string>
+  <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
+  <string name="contactpatient_call_later_in">பின்னர் அழைக்கவும்</string>
+  <string name="contactpatient_done">முடிந்தது</string>
+  <plurals name="contactpatient_days">
+    <item quantity="one">%s நாள்</item>
+    <item quantity="other">%s நாட்கள்</item>
+  </plurals>
+  <plurals name="contactpatient_weeks">
+    <item quantity="one">%s வாரம்</item>
+    <item quantity="other">%s வாரங்கள்</item>
+  </plurals>
+  <plurals name="contactpatient_months">
+    <item quantity="one">%s மாதம்</item>
+    <item quantity="other">%s மாதங்கள்</item>
+  </plurals>
+  <string name="contactpatient_select_a_reason">காரணத்தைத் தேர்ந்தெடுக்கவும்</string>
+  <string name="contactpatient_patient_already_visited">நோயாளி ஏற்கனவே வந்து ரீடிங் பதிவுசெய்துள்ளார்</string>
+  <string name="contactpatient_patient_is_not_responding">நோயாளி பதிலளிக்கவில்லை</string>
+  <string name="contactpatient_invalid_phone_number">தொலைபேசி எண் வேலை செய்யவில்லை</string>
+  <string name="contactpatient_public_hospital_transfer">மற்றொரு பொதுச் சுகாதார மையத்திற்கு மாறிச் சென்றுள்ளார்</string>
+  <string name="contactpatient_moved_to_private">தனியார் மருத்துவரிடம் மாறிச் சென்றுள்ளார்</string>
+  <string name="contactpatient_patient_died">இறந்துவிட்டார்</string>
+  <string name="contactpatient_other_reason">வேறு காரணம்</string>
+
+  <!-- Deep link -->
+  <string name="deeplink_patient_profile_not_found">நோயாளியின் சுயவிவரம் கிடைக்கவில்லை</string>
+  <string name="deeplink_patient_profile_not_found_desc">உங்கள் இணையத்தைச் சரிபார்த்து, நோயாளிகளை ஒத்திசைக்கவும்</string>
+  <string name="deeplink_patient_profile_not_found_positive_action">சரி</string>
+  <string name="deeplink_no_patient">நோயாளியின் விவரம் கிடைக்கவில்லை</string>
+  <string name="deeplink_no_patient_desc">தொலைபேசி வழி மருத்துவ ஆலோசனையைத் தொடங்கி, நோயாளியின் தகவல்களைச் சுகாதாரப் பணியாளரிடம் கேளுங்கள்</string>
+  <string name="deeplink_no_patient_positive_action">சரி</string>
+
+  <!-- Delete patient -->
+  <string name="deletepatient_select_a_reason">காரணத்தைத் தேர்ந்தெடுக்கவும்</string>
+  <string name="deletereason_duplicate_patient">இந்த நோயாளி விவரம் ஏற்கனவே உள்ளது</string>
+  <string name="deletereason_accidental_registration">நோயாளி தவறுதலாகப் பதிவு செய்யப்பட்டுள்ளார்</string>
+  <string name="deletereason_died">இறந்துவிட்டார்</string>
+  <string name="deletereason_confirm_title">நோயாளி விவரத்தை நீக்கவா?</string>
+  <string name="deletereason_confirm_message">இது %1$s-ஐ அகற்றும்</string>
+  <string name="deletereason_confirm_positive">நீக்கவும்</string>
+  <string name="deletereason_confirm_negative">ரத்து செய்யவும்</string>
+
+  <!-- Splash screen -->
+  <string name="screensplash_next">அடுத்து</string>
+
+  <!-- Contact doctor sheet -->
+  <string name="contactdoctor_title">மருத்துவர்கள்</string>
+  <string name="contactdoctor_subtitle">%1$s-க்கு ஒதுக்கப்பட்டது</string>
+  <string name="contactdoctor_new_title">மருத்துவர் இருக்கிறார்</string>
+  <string name="contactdoctor_new_subtitle">இயன்றால், WhatsApp பயன்படுத்துக</string>
+
+  <!-- Intro Video Screen -->
+  <string name="screenintrovideo_how_to_use_simple_app">சிம்பிள் செயலியை எவ்வாறு பயன்படுத்துவது</string>
+  <string name="screenintrovideo_watch_video">வீடியோ பார்க்கவும்</string>
+  <string name="screenintrovideo_skip">தவிர்க்கவும்</string>
+
+  <!-- Assigned Facility -->
+  <string name="assigned_facility_view_title">விரும்பும் வசதி</string>
+  <string name="assigned_facility_view_change">மாற்றவும்</string>
+
+  <!-- Facility Picker -->
+  <string name="facilitypicker_screen_title">உங்கள் கிளினிக்கைத் தேர்ந்தெடுக்கவும்</string>
+  <string name="facilitypicker_search_hint">உங்கள் கிளினிக்கைத் தேடவும்</string>
+  <!-- Street, District, State -->
+  <string name="facilitypicker_header_suggested_facilities">பரிந்துரைக்கப்படும் கிளினிக்குகள்</string>
+  <string name="facilitypicker_header_all_facilities">எல்லாக் கிளினிக்குகள்</string>
+
+  <!--  TeleMedicine User Signature-->
+  <string name="screen_signature_sign_in_this_box">இந்தப் பெட்டியில் கையொப்பமிடுக</string>
+
+  <!-- Drug Duration -->
+  <string name="drug_duration_title">%1$s %2$s</string>
+  <string name="drugDurationLabel">நாட்கள்</string>
+  <string name="drug_duration_empty_error">மருந்தின் காலஅளவு காலியாக இருக்கக் கூடாது</string>
+
+  <!-- Teleconsultation success-->
+  <string name="screen_teleconsult_success_add_prescription">மருந்துசீட்டைச் சேர்க்கவா?</string>
+  <string name="screen_teleconsult_success_yes">ஆம்</string>
+  <string name="screen_teleconsult_success_no">இல்லை</string>
+  <string name="screen_teleconsult_success_teleconsult_recorded">தொலைபேசி ஆலோசனை பதிவுசெய்யப்பட்டது</string>
+  <string name="screen_teleconsult_success_patient_information">%1$s, %2$s, %3$s</string>
+  <string name="sheet_medicine_frequency_od">OD</string>
+  <string name="sheet_medicine_frequency_bd">BD</string>
+  <string name="sheet_medicine_frequency_tds">TDS</string>
+  <string name="sheet_medicine_frequency_qds">QDS</string>
+  <string name="sheet_medicine_frequency_save">சேமிக்கவும்</string>
+
+
+</resources>

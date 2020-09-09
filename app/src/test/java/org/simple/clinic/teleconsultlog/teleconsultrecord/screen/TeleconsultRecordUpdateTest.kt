@@ -105,4 +105,15 @@ class TeleconsultRecordUpdateTest {
             hasEffects(ShowTeleconsultNotRecordedWarning)
         ))
   }
+
+  @Test
+  fun `when teleconsult record exists, then go back to previous screen`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(TeleconsultRecordValidated(true))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoBack)
+        ))
+  }
 }

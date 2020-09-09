@@ -27,7 +27,7 @@ class TeleconsultRecordUpdate : Update<TeleconsultRecordModel, TeleconsultRecord
 
   private fun teleconsultRecordValidated(event: TeleconsultRecordValidated): Next<TeleconsultRecordModel, TeleconsultRecordEffect> {
     return if (event.teleconsultRecordExists) {
-      noChange()
+      dispatch(GoBack)
     } else {
       dispatch(ShowTeleconsultNotRecordedWarning)
     }

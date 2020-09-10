@@ -29,12 +29,25 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
 
   fun build(): ObservableTransformer<TeleconsultRecordEffect, TeleconsultRecordEvent> {
     return RxMobius.subtypeEffectHandler<TeleconsultRecordEffect, TeleconsultRecordEvent>()
-        .addAction(GoBack::class.java, uiActions::goBackToPreviousScreen)
+        .addAction(GoBack::class.java, uiActions::goBackToPreviousScreen, schedulersProvider.ui())
         .addAction(NavigateToTeleconsultSuccess::class.java, { uiActions.navigateToTeleconsultSuccessScreen() }, schedulersProvider.ui())
         .addTransformer(LoadTeleconsultRecordWithPrescribedDrugs::class.java, loadTeleconsultRecordWithPrescribedDrugs())
         .addTransformer(CreateTeleconsultRecord::class.java, createTeleconsultRecord())
         .addTransformer(LoadPatientDetails::class.java, loadPatientDetails())
+        .addAction(ShowTeleconsultNotRecordedWarning::class.java, uiActions::showTeleconsultNotRecordedWarning, schedulersProvider.ui())
+        .addTransformer(ValidateTeleconsultRecord::class.java, validateTeleconsultRecord())
         .build()
+  }
+
+  private fun validateTeleconsultRecord(): ObservableTransformer<ValidateTeleconsultRecord, TeleconsultRecordEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val teleconsultRecordWithPrescribedDrugs = teleconsultRecordRepository.getTeleconsultRecordWithPrescribedDrugs(it.teleconsultRecordId)
+            TeleconsultRecordValidated(teleconsultRecordWithPrescribedDrugs != null)
+          }
+    }
   }
 
   private fun loadPatientDetails(): ObservableTransformer<LoadPatientDetails, TeleconsultRecordEvent> {

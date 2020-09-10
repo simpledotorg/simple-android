@@ -2,7 +2,7 @@
 
 ## Next Release
 ### Features
-- [In Progress: 08 Sep 2020] Add `TeleconsultRecordScreen`
+- Add `TeleconsultRecordScreen`
 
 ### Internal
 - [In Progress: 27 Aug 2020] Add support for sending teleconsult request via SMS

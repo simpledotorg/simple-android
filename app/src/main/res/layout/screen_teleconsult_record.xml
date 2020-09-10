@@ -21,6 +21,7 @@
     android:layout_marginTop="@dimen/spacing_16"
     android:layout_marginEnd="@dimen/spacing_16"
     android:text="@string/screen_teleconsult_record"
+    android:textAllCaps="true"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Tag.Grey1"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"

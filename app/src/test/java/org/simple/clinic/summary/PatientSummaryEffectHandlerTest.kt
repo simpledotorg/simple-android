@@ -558,4 +558,21 @@ class PatientSummaryEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when open teleconsult record screen effect is received, then open the teleconsult record screen`() {
+    // given
+    val teleconsultRecordId = UUID.fromString("4d317b9a-9db4-4477-b022-360701db0ddb")
+
+    // when
+    testCase.dispatch(NavigateToTeleconsultRecordScreen(
+        patientUuid = patientUuid,
+        teleconsultRecordId = teleconsultRecordId
+    ))
+
+    // then
+    verify(uiActions).navigateToTeleconsultRecordScreen(patientUuid, teleconsultRecordId)
+    verifyNoMoreInteractions(uiActions)
+    testCase.assertNoOutgoingEvents()
+  }
 }

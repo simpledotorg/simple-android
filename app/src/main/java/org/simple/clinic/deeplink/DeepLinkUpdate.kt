@@ -47,7 +47,7 @@ class DeepLinkUpdate : Update<DeepLinkModel, DeepLinkEvent, DeepLinkEffect> {
 
   private fun navigateToPatientSummary(model: DeepLinkModel): DeepLinkEffect {
     return if (model.isLogTeleconsultDeepLink) {
-      NavigateToPatientSummaryWithTeleconsultLog(model.patientUuid!!, model.teleconsultRecordId)
+      NavigateToPatientSummaryWithTeleconsultLog(model.patientUuid!!, model.teleconsultRecordId!!)
     } else {
       NavigateToPatientSummary(model.patientUuid!!)
     }

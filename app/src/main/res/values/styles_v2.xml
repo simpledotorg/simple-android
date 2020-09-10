@@ -279,6 +279,16 @@
     <item name="android:textColor">@color/grey2</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Tag">
+    <item name="fontFamily">sans-serif-medium</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:lineSpacingExtra">4sp</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Tag.Grey1">
+    <item name="android:textColor">@color/grey1</item>
+  </style>
+
   <style name="Clinic.V2.CardView">
     <item name="android:stateListAnimator" tools:ignore="NewApi">@animator/raise_card_on_press</item>
     <item name="cardCornerRadius">4dp</item>

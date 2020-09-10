@@ -51,6 +51,7 @@ import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet_Old
 import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
+import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreenKey
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
@@ -114,7 +115,8 @@ class PatientSummaryScreen(
             phoneNumberClicks(),
             contactDoctorClicks(),
             snackbarActionClicks,
-            teleconsultPhoneNumberSelected()
+            teleconsultPhoneNumberSelected(),
+            logTeleconsultClicks()
         )
         .compose(ReportAnalyticsEvents())
         .cast<PatientSummaryEvent>()
@@ -250,6 +252,8 @@ class PatientSummaryScreen(
   private fun doneClicks() = doneButton.clicks().map { PatientSummaryDoneClicked(screenKey.patientUuid) }
 
   private fun contactDoctorClicks() = doctorButton.clicks().map { ContactDoctorClicked }
+
+  private fun logTeleconsultClicks() = logTeleconsultButton.clicks().map { LogTeleconsultClicked }
 
   private fun backClicks(): Observable<UiEvent> {
     val hardwareBackKeyClicks = Observable.create<Unit> { emitter ->
@@ -556,6 +560,10 @@ class PatientSummaryScreen(
   override fun showTeleconsultLogButton() {
     logTeleconsultButton.visibility = View.VISIBLE
     buttonFrame.setBackgroundColor(ContextCompat.getColor(context, R.color.green3))
+  }
+
+  override fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID) {
+    screenRouter.push(TeleconsultRecordScreenKey(patientUuid, teleconsultRecordId))
   }
 }
 

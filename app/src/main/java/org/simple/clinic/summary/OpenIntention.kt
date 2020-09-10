@@ -25,7 +25,7 @@ sealed class OpenIntention : Parcelable {
   }
 
   @Parcelize
-  data class ViewExistingPatientWithTeleconsultLog(val teleconsultRecordId: UUID?) : OpenIntention() {
+  data class ViewExistingPatientWithTeleconsultLog(val teleconsultRecordId: UUID) : OpenIntention() {
     override fun analyticsName() = "DEEP_LINK_TELECONSULT_LOG"
   }
 }

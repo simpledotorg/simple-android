@@ -13,6 +13,14 @@ class TeleconsultRecordUpdate : Update<TeleconsultRecordModel, TeleconsultRecord
       BackClicked -> dispatch(GoBack)
       is TeleconsultRecordWithPrescribedDrugsLoaded -> teleconsultRecordWithPrescribedDrugsLoaded(model, event)
       TeleconsultRecordCreated -> dispatch(NavigateToTeleconsultSuccess)
+      is DoneClicked -> dispatch(CreateTeleconsultRecord(
+          patientUuid = model.patientUuid,
+          teleconsultRecordId = model.teleconsultRecordId,
+          teleconsultationType = event.teleconsultationType,
+          patientTookMedicine = event.patientTookMedicines,
+          patientConsented = event.patientConsented
+      ))
+      is PatientDetailsLoaded -> next(model.patientLoaded(event.patient))
     }
   }
 

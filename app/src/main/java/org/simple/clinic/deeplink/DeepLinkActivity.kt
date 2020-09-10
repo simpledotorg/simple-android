@@ -131,7 +131,7 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
     finish()
   }
 
-  override fun navigateToPatientSummaryWithTeleconsultLog(patientUuid: UUID, teleconsultRecordId: UUID?) {
+  override fun navigateToPatientSummaryWithTeleconsultLog(patientUuid: UUID, teleconsultRecordId: UUID) {
     val intent = TheActivity.intentForOpenPatientSummaryWithTeleconsultLog(this, patientUuid, teleconsultRecordId)
     startActivity(intent)
     finish()

@@ -12,7 +12,7 @@ class TeleconsultRecordRepository @Inject constructor(
 ) {
 
   fun getTeleconsultRecordWithPrescribedDrugs(teleconsultRecordId: UUID): TeleconsultRecordWithPrescribedDrugs? {
-    return teleconsultRecordWithPrescribedDrugsDao.getPrescribedUuidForTeleconsultRecordUuid(teleconsultRecordId)
+    return teleconsultRecordWithPrescribedDrugsDao.getCompleteTeleconsultLog(teleconsultRecordId)
   }
 
   fun createTeleconsultRecordForMedicalOfficer(

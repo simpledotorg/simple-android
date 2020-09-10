@@ -1,4 +1,4 @@
-package org.simple.clinic.teleconsultlog.success
+package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
 import android.os.Parcelable
 import kotlinx.android.parcel.IgnoredOnParcel
@@ -8,14 +8,15 @@ import org.simple.clinic.router.screen.FullScreenKey
 import java.util.UUID
 
 @Parcelize
-data class TeleConsultSuccessScreenKey(
+data class TeleconsultRecordScreenKey(
     val patientUuid: UUID,
     val teleconsultRecordId: UUID
-) : Parcelable, FullScreenKey {
+) : FullScreenKey, Parcelable {
+
   @IgnoredOnParcel
-  override val analyticsName: String = "TeleConsultation Success"
+  override val analyticsName: String = "Teleconsult Record Screen"
 
   override fun layoutRes(): Int {
-    return R.layout.screen_teleconsult_success
+    return R.layout.screen_teleconsult_record
   }
 }

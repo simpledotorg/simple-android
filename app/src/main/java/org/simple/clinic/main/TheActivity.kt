@@ -351,9 +351,9 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   private fun showTeleconsultNotAllowedErrorDialog() {
     AlertDialog.Builder(this, R.style.Clinic_V2_DialogStyle)
-        .setTitle("You are not authorised to log teleconsult")
-        .setMessage("Please check with your supervisor")
-        .setPositiveButton("Okay", null)
+        .setTitle(R.string.deeplink_medical_officer_not_authorised_to_log_teleconsult)
+        .setMessage(R.string.deeplink_please_check_with_your_supervisor)
+        .setPositiveButton(R.string.deeplink_okay_positive_action, null)
         .show()
   }
 }

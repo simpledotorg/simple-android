@@ -704,4 +704,9 @@
   <string name="teleconsultnotrecordeddialog_body">Are you sure you want to cancel?</string>
   <string name="teleconsultnotrecordeddialog_positive_button_text">Yes</string>
   <string name="teleconsultnotrecordeddialog_negative_button_text">No</string>
+
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">You are not authorised to log teleconsult</string>
+  <string name="deeplink_please_check_with_your_supervisor">Please check with your supervisor</string>
+  <string name="deeplink_okay_positive_action">Okay</string>
 </resources>

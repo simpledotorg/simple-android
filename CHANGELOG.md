@@ -9,6 +9,9 @@
 - Add `Capabilities` to User
 - Disable state saving and restoration for the search results view
 
+### Changes
+- Updated translations for: `om-ET`
+
 ## On Demo
 ### Changes
 - Open patient summary screen when patient name is clicked in overdue

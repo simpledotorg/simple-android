@@ -24,6 +24,6 @@ data class TeleconsultRecordWithPrescribedDrugs(
 
     @Transaction
     @Query("SELECT * FROM TeleconsultRecord WHERE id = :teleconsultRecordUuid")
-    fun getPrescribedUuidForTeleconsultRecordUuid(teleconsultRecordUuid: UUID): TeleconsultRecordWithPrescribedDrugs?
+    fun getCompleteTeleconsultLog(teleconsultRecordUuid: UUID): TeleconsultRecordWithPrescribedDrugs?
   }
 }

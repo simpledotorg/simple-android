@@ -10,7 +10,7 @@
 - Disable state saving and restoration for the search results view
 
 ### Changes
-- Updated translations for: `om-ET`, `ta-IN`
+- Updated translations for: `om-ET`, `ta-IN`, `bn-BD`
 
 ## On Demo
 ### Changes

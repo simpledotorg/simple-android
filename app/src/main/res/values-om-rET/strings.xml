@@ -611,5 +611,17 @@
   <string name="sheet_medicine_frequency_qds">QDS</string>
   <string name="sheet_medicine_frequency_save">Ol kaa’i</string>
 
-
+  <!-- Teleconsult Record Screen -->
+  <string name="screen_teleconsult_record">Teleconsult waraabbamee jira</string>
+  <string name="screen_teleconsult_record_type">Gosa Teleconsultation</string>
+  <string name="screen_teleconsult_record_type_audio">Bilbila sagalee</string>
+  <string name="screen_teleconsult_record_type_video">Bilbila suur-sagalee</string>
+  <string name="screen_teleconsult_record_type_message">Erga</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">Dhukkubsattoota dawaa dhiibbaa dhiigaa fii sukkaaraa dhaabbiidhan fudhachaa jira</string>
+  <string name="screen_teleconsult_record_patient_consented">Dhukkubsataan teleconsultation dhaaf hayyama isaa kenneera</string>
+  <string name="screen_teleconsult_record_done">Taasifameera</string>
+  <string name="teleconsultnotrecordeddialog_title">Teleconsult hin waraabbamne</string>
+  <string name="teleconsultnotrecordeddialog_body">Dhugumatti addaan kutuu barbaaddaa?</string>
+  <string name="teleconsultnotrecordeddialog_positive_button_text">Eeyyee</string>
+  <string name="teleconsultnotrecordeddialog_negative_button_text">Lakki</string>
 </resources>

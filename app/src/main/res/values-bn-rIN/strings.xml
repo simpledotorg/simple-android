@@ -70,15 +70,18 @@
   <string name="patiententry_upazila">উপজেলা</string>
   <string name="patiententry_state">Sub District</string>
   <string name="patiententry_region">অঞ্চল</string>
+  <string name="patiententry_doornumber_streetname">বাড়ির নম্বর, রাস্তার নাম</string>
+  <string name="patiententry_division_area">ডিভিসন এবং এলাকা</string>
   <string name="patiententry_save_patient">পরবর্তী</string>
   <string name="patiententry_error_empty_fullname">রোগীর পুরো নাম লিখুন</string>
   <string name="patiententry_error_empty_gender">রোগীর লিঙ্গ নির্ধারণ করুন</string>
-  <string name="patiententry_error_empty_colony_or_village">কলোনি / গ্রাম / ওয়ার্ড লিখুন</string>
-  <string name="patiententry_error_empty_district">রোগীর বাড়ি যে জেলাতে তা লিখুন</string>
-  <string name="patiententry_error_state_empty">রোগীর বাড়ি যে রাজ্যে তা লিখুন</string>
+  <string name="patiententry_error_empty_colony_or_village">আবশ্যিক</string>
+  <string name="patiententry_error_empty_district">আবশ্যিক</string>
+  <string name="patiententry_error_state_empty">আবশ্যিক</string>
   <string name="patiententry_error_both_dateofbirth_and_age_empty">রোগীর বয়স লিখুন</string>
   <string name="patiententry_error_invalid_dateofbirth">DD/MM/YYYY এ রোগীর জন্ম তারিখ লিখুন</string>
   <string name="patiententry_error_dateofbirth_is_in_future">রোগীর জন্ম তারিখ ঠিক করুন</string>
+  <string name="patiententry_error_phonenumber_blank">ফোন নম্বর খালি রাখা যাবে না</string>
   <string name="patiententry_error_phonenumber_length_less">ফোন নম্বর %1$s সংখ্যার কম হতে পারে না</string>
   <string name="patiententry_error_phonenumber_length_more">ফোন নম্বর %1$s সংখ্যার বেশি হতে পারে না</string>
   <string name="patiententry_identifier">বিপি পাসপোর্ট</string>
@@ -174,6 +177,10 @@
   <string name="patientsummary_contact_doctor">ডাক্তার</string>
   <string name="patientsummary_teleconsult_network_error">দুর্বল ইন্টারনেটের কারণে সংযোগ করতে পারছে না</string>
   <string name="patientsummary_teleconsult_network_error_retry">আবার চেষ্টা করুন</string>
+  <string name="patientsummary_log_teleconsult">লগ টেলিকনসাল্ট</string>
+
+  <string name="patientsummary_registered_faciliy_title">নিবন্ধীত</string>
+  <string name="patientsummary_registered_facility">%1$s এ %2$s</string>
 
   <string name="bloodpressuresummaryview_see_all_button">সবাইকে দেখুন</string>
 
@@ -247,13 +254,8 @@
   <string name="registrationlocation_permission_rationale_description">আপনার অবস্থান আমাদেরকে আপনার ক্লিনিক খুঁজে বের করতে সাহায্য করবে</string>
   <string name="registrationlocation_permission_rationale_title">আপনার ক্লিনিকটি আরো দ্রুত খুঁজে বের করুন</string>
   <string name="registrationlocation_allow_access">আপনার অবস্থান খুঁজে পাওয়ার সম্মতি দিন</string>
-  <string name="facilitypicker_screen_title">আপনার ক্লিনিক নির্বাচন করুন</string>
-  <string name="facilitypicker_search_hint">আপনার ক্লিনিক অনুসন্ধান করুন</string>
 
   <!-- Onboarding -->
-  <!-- Overdue List -->
-  <string name="facilitypicker_header_suggested_facilities">সম্ভাব্য ক্লিনিক গুলি</string>
-  <string name="facilitypicker_header_all_facilities">সকল ক্লিনিকসমূহ</string>
   <string name="onboarding_get_started">শুরু করুন</string>
   <string name="screenonboarding_intro_1">এটি \দিয়ে \nকয়েক হাজার রোগীকে খুঁজুন \nও পান</string>
   <string name="screenonboarding_intro_1_hypertension">\ হাইপারটেনশন</string>
@@ -279,8 +281,10 @@
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">সাক্ষাৎ করেছেন</string>
   <string name="overduelist_high_risk">অতিরিক্ত ঝুঁকিসম্পন্ন</string>
+  <string name="overduelist_transferred">যাকে ট্রান্সফার করা হয়েছে</string>
 
   <!-- Facility change -->
+
   <!-- Enter OTP -->
   <string name="enterotp_check_sms_sent_to">এসএমএস পাঠানো হয়েছে কিনা পরীক্ষা করে দেখুন</string>
   <string name="enterotp_enter_verification_code">আপনার যাচাইকরণ কোডটি লিখুন</string>
@@ -448,9 +452,9 @@
   <string name="bloodsugarentry_month">মাস</string>
   <string name="bloodsugarentry_year">বছর</string>
   <string name="bloodsugarentry_error_lower_limit">মান 30 মিগ্রা/ডেসিলির কম হতে পারবে না</string>
-  <string name="bloodsugarentry_error_lower_limit_hba1c">মান 3%-এর কম হতে পারবে না</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">মান 3\u0025-এর কম হতে পারবে না</string>
   <string name="bloodsugarentry_error_higher_limit">মান 1000 মিগ্রা/ডেসিলির বেশি হতে পারবে না</string>
-  <string name="bloodsugarentry_error_higher_limit_hba1c">মান 25%-এর বেশি হতে পারবে না</string>
+  <string name="bloodsugarentry_error_higher_limit_hba1c">মান 25\u0025-এর বেশি হতে পারবে না</string>
   <string name="bloodsugarentry_error_empty">মান খালি রাখা যাবে না</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YY-তে একটি বৈধ তারিখ লিখুন</string>
   <string name="bloodsugarentry_error_date_is_in_future">তারিখটি ভবিষ্যতের হতে পারে না</string>
@@ -567,9 +571,44 @@
   <!-- Contact doctor sheet -->
   <string name="contactdoctor_title">চিকিৎসকগণ</string>
   <string name="contactdoctor_subtitle">%1$s-এ অ্যাসাইন করা হয়েছিল</string>
+  <string name="contactdoctor_new_title">ডাক্তার উপলব্ধ</string>
+  <string name="contactdoctor_new_subtitle">সম্ভব হলে WhatsApp ব্যবহার করুন</string>
 
   <!-- Intro Video Screen -->
   <string name="screenintrovideo_how_to_use_simple_app">সিম্পিল অ্যাপটি কীভাবে ব্যবহার করবেন</string>
   <string name="screenintrovideo_watch_video">ভিডিও দেখুন</string>
   <string name="screenintrovideo_skip">ছেড়ে যান/ পরেরটায় যান</string>
+
+  <!-- Assigned Facility -->
+  <string name="assigned_facility_view_title">পছন্দসই ফেসিলিটি</string>
+  <string name="assigned_facility_view_change">পরিবর্তন</string>
+
+  <!-- Facility Picker -->
+  <string name="facilitypicker_screen_title">আপনার ক্লিনিক বাছাই করুন</string>
+  <string name="facilitypicker_search_hint">আপনার ক্লিনিক অনুসন্ধান করুন</string>
+  <!-- Street, District, State -->
+  <string name="facilitypicker_header_suggested_facilities">সম্ভাব্য ক্লিনিক গুলি</string>
+  <string name="facilitypicker_header_all_facilities">সকল ক্লিনিকসমূহ</string>
+
+  <!--  TeleMedicine User Signature-->
+  <string name="screen_signature_sign_in_this_box">এই বক্সে স্বাক্ষর করুন</string>
+
+  <!-- Drug Duration -->
+  <string name="drug_duration_title">%1$s %2$s</string>
+  <string name="drugDurationLabel">দিন</string>
+  <string name="drug_duration_empty_error">ওষুধের মেয়াদ খালি রাখা যাবে না</string>
+
+  <!-- Teleconsultation success-->
+  <string name="screen_teleconsult_success_add_prescription">প্রেসক্রিপশন যোগ করবেন?</string>
+  <string name="screen_teleconsult_success_yes">হ্যাঁ</string>
+  <string name="screen_teleconsult_success_no">না</string>
+  <string name="screen_teleconsult_success_teleconsult_recorded">টেলিকনসাল্ট রেকর্ড করা হয়েছে</string>
+  <string name="screen_teleconsult_success_patient_information">%1$s, %2$s, %3$s</string>
+  <string name="sheet_medicine_frequency_od">OD</string>
+  <string name="sheet_medicine_frequency_bd">BD</string>
+  <string name="sheet_medicine_frequency_tds">TDS</string>
+  <string name="sheet_medicine_frequency_qds">QDS</string>
+  <string name="sheet_medicine_frequency_save">সংরক্ষণ করুন</string>
+
+
 </resources>

@@ -26,7 +26,7 @@ class TeleconsultRecordUpdateTest {
         .whenEvent(BackClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(GoBack)
+            hasEffects(ValidateTeleconsultRecord(teleconsultRecordId))
         ))
   }
 
@@ -92,6 +92,28 @@ class TeleconsultRecordUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.patientLoaded(patient)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when teleconsult record doesn't exist, then show warning dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(TeleconsultRecordValidated(false))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowTeleconsultNotRecordedWarning)
+        ))
+  }
+
+  @Test
+  fun `when teleconsult record exists, then go back to previous screen`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(TeleconsultRecordValidated(true))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoBack)
         ))
   }
 }

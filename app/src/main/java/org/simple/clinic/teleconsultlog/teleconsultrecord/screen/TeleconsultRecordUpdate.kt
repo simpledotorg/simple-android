@@ -10,7 +10,7 @@ class TeleconsultRecordUpdate : Update<TeleconsultRecordModel, TeleconsultRecord
 
   override fun update(model: TeleconsultRecordModel, event: TeleconsultRecordEvent): Next<TeleconsultRecordModel, TeleconsultRecordEffect> {
     return when (event) {
-      BackClicked -> dispatch(GoBack)
+      BackClicked -> dispatch(ValidateTeleconsultRecord(model.teleconsultRecordId))
       is TeleconsultRecordWithPrescribedDrugsLoaded -> teleconsultRecordWithPrescribedDrugsLoaded(model, event)
       TeleconsultRecordCreated -> dispatch(NavigateToTeleconsultSuccess)
       is DoneClicked -> dispatch(CreateTeleconsultRecord(
@@ -21,6 +21,15 @@ class TeleconsultRecordUpdate : Update<TeleconsultRecordModel, TeleconsultRecord
           patientConsented = event.patientConsented
       ))
       is PatientDetailsLoaded -> next(model.patientLoaded(event.patient))
+      is TeleconsultRecordValidated -> teleconsultRecordValidated(event)
+    }
+  }
+
+  private fun teleconsultRecordValidated(event: TeleconsultRecordValidated): Next<TeleconsultRecordModel, TeleconsultRecordEffect> {
+    return if (event.teleconsultRecordExists) {
+      dispatch(GoBack)
+    } else {
+      dispatch(ShowTeleconsultNotRecordedWarning)
     }
   }
 

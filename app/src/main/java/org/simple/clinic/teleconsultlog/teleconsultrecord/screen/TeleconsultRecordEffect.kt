@@ -21,3 +21,7 @@ data class CreateTeleconsultRecord(
 ) : TeleconsultRecordEffect()
 
 data class LoadPatientDetails(val patientUuid: UUID) : TeleconsultRecordEffect()
+
+object ShowTeleconsultNotRecordedWarning : TeleconsultRecordEffect()
+
+data class ValidateTeleconsultRecord(val teleconsultRecordId: UUID) : TeleconsultRecordEffect()

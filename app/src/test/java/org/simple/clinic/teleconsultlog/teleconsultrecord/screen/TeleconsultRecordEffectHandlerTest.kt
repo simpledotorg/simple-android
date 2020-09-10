@@ -1,6 +1,5 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
-import com.nhaarman.mockitokotlin2.doNothing
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -11,6 +10,7 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Audio
@@ -27,11 +27,13 @@ class TeleconsultRecordEffectHandlerTest {
   )
   private val utcClock = TestUtcClock(instant = Instant.parse("2018-01-01T00:00:00Z"))
   private val teleconsultRecordRepository = mock<TeleconsultRecordRepository>()
+  private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<UiActions>()
 
   private val effectHandler = TeleconsultRecordEffectHandler(
       user = { user },
       teleconsultRecordRepository = teleconsultRecordRepository,
+      patientRepository = patientRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       utcClock = utcClock,
       uiActions = uiActions
@@ -127,6 +129,26 @@ class TeleconsultRecordEffectHandlerTest {
         teleconsultRecordInfo = teleconsultRecord.teleconsultRecordInfo!!
     )
     verifyNoMoreInteractions(teleconsultRecordRepository)
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load patient details effect is received, then load the patient details`() {
+    // given
+    val patientUuid = UUID.fromString("faacb4f7-50c9-480d-b154-6314a5e67d63")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        fullName = "Peter Parker"
+    )
+
+    whenever(patientRepository.patientImmediate(patientUuid)) doReturn patient
+
+    // when
+    effectHandlerTestCase.dispatch(LoadPatientDetails(patientUuid))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(PatientDetailsLoaded(patient))
 
     verifyZeroInteractions(uiActions)
   }

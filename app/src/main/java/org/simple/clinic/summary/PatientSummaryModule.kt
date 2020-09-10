@@ -8,11 +8,12 @@ import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewConfig
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfigModule
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultFacilityInfoApi
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordModule
 import retrofit2.Retrofit
 import retrofit2.create
 import javax.inject.Named
 
-@Module(includes = [BloodSugarSummaryConfigModule::class])
+@Module(includes = [BloodSugarSummaryConfigModule::class, TeleconsultRecordModule::class])
 class PatientSummaryModule {
 
   @Provides

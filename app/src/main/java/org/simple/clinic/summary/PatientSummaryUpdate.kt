@@ -54,7 +54,16 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is FetchedTeleconsultationInfo -> fetchedTeleconsultationInfo(model, event)
       RetryFetchTeleconsultInfo -> retryFetchTeleconsultInfo(model)
       is ContactDoctorPhoneNumberSelected -> contactDoctorPhoneNumberSelected(model, event)
+      LogTeleconsultClicked -> logTeleconsultClicked(model)
     }
+  }
+
+  private fun logTeleconsultClicked(model: PatientSummaryModel): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val openIntention = model.openIntention as ViewExistingPatientWithTeleconsultLog
+    return dispatch(NavigateToTeleconsultRecordScreen(
+        patientUuid = model.patientUuid,
+        teleconsultRecordId = openIntention.teleconsultRecordId
+    ))
   }
 
   private fun retryFetchTeleconsultInfo(model: PatientSummaryModel): Next<PatientSummaryModel, PatientSummaryEffect> {

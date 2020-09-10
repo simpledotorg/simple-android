@@ -29,4 +29,5 @@ interface PatientSummaryUiActions {
       facility: Facility,
       phoneNumbers: List<TeleconsultPhoneNumber>
   )
+  fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID)
 }

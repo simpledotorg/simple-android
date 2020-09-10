@@ -19,3 +19,5 @@ data class CreateTeleconsultRecord(
     val patientTookMedicine: Answer,
     val patientConsented: Answer
 ) : TeleconsultRecordEffect()
+
+data class LoadPatientDetails(val patientUuid: UUID) : TeleconsultRecordEffect()

@@ -12,7 +12,6 @@ import org.simple.clinic.storage.migrations.RoomMigrationsModule
 import org.simple.clinic.storage.text.TextRecord
 import org.simple.clinic.storage.text.TextStoreModule
 import org.simple.clinic.summary.PatientSummaryModule
-import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordModule
 import org.simple.clinic.user.User
 
 @Module(includes = [
@@ -20,8 +19,7 @@ import org.simple.clinic.user.User
   SharedPreferencesModule::class,
   PatientModule::class,
   PatientSummaryModule::class,
-  TextStoreModule::class,
-  TeleconsultRecordModule::class
+  TextStoreModule::class
 ])
 class TestStorageModule {
 

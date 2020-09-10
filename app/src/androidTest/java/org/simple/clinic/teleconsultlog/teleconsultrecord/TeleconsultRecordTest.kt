@@ -120,7 +120,7 @@ class TeleconsultRecordTest {
 
     // when
     val teleconsultRecordWithPrescribedDrugs = teleconsultRecordWithPrescribedDrugs
-        .getPrescribedUuidForTeleconsultRecordUuid(teleconsultRecordId1)
+        .getCompleteTeleconsultLog(teleconsultRecordId1)
 
     // then
     assertThat(teleconsultRecordWithPrescribedDrugs).isEqualTo(TestData.teleconsultRecordWithPrescribedDrugs(

@@ -5,6 +5,7 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
 import org.simple.clinic.user.User
@@ -15,6 +16,7 @@ import java.time.Instant
 class TeleconsultRecordEffectHandler @AssistedInject constructor(
     private val user: Lazy<User>,
     private val teleconsultRecordRepository: TeleconsultRecordRepository,
+    private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
     private val utcClock: UtcClock,
     @Assisted private val uiActions: UiActions
@@ -31,7 +33,17 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
         .addAction(NavigateToTeleconsultSuccess::class.java, { uiActions.navigateToTeleconsultSuccessScreen() }, schedulersProvider.ui())
         .addTransformer(LoadTeleconsultRecordWithPrescribedDrugs::class.java, loadTeleconsultRecordWithPrescribedDrugs())
         .addTransformer(CreateTeleconsultRecord::class.java, createTeleconsultRecord())
+        .addTransformer(LoadPatientDetails::class.java, loadPatientDetails())
         .build()
+  }
+
+  private fun loadPatientDetails(): ObservableTransformer<LoadPatientDetails, TeleconsultRecordEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { patientRepository.patientImmediate(it.patientUuid) }
+          .map(::PatientDetailsLoaded)
+    }
   }
 
   private fun createTeleconsultRecord(): ObservableTransformer<CreateTeleconsultRecord, TeleconsultRecordEvent> {
@@ -64,8 +76,10 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map { teleconsultRecordRepository.getTeleconsultRecordWithPrescribedDrugs(it.teleconsultRecordId) }
-          .map(::TeleconsultRecordWithPrescribedDrugsLoaded)
+          .map {
+            val teleconsultRecordWithPrescribedDrugs = teleconsultRecordRepository.getTeleconsultRecordWithPrescribedDrugs(it.teleconsultRecordId)
+            TeleconsultRecordWithPrescribedDrugsLoaded(teleconsultRecordWithPrescribedDrugs)
+          }
     }
   }
 }

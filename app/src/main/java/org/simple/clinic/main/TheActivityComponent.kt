@@ -68,6 +68,7 @@ import org.simple.clinic.summary.prescribeddrugs.DrugSummaryViewInjector
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessScreen
+import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreen
 import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView_Old
@@ -116,7 +117,8 @@ interface TheActivityComponent :
     LinkIdWithPatientView.Injector,
     AppLockScreen.Injector,
     PatientSearchView.Injector,
-    TeleConsultSuccessScreen.Injector {
+    TeleConsultSuccessScreen.Injector,
+    TeleconsultRecordScreen.Injector {
   fun inject(target: TheActivity)
   fun inject(target: PatientSummaryScreen)
   fun inject(target: FacilityChangeActivity)

@@ -690,5 +690,14 @@
   <string name="sheet_medicine_frequency_qds">QDS</string>
   <string name="sheet_medicine_frequency_save">Save</string>
 
-
+  <!-- Teleconsult Record Screen -->
+  <string name="screen_teleconsult_record">TELECONSULT RECORD</string>
+  <string name="screen_teleconsult_record_type">Teleconsultation Type</string>
+  <string name="screen_teleconsult_record_type_audio">Audio call</string>
+  <string name="screen_teleconsult_record_type_video">Video call</string>
+  <string name="screen_teleconsult_record_type_message">Message</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">Patient is taking anti-hypertensive and anti-diabetic medicines regularly</string>
+  <string name="screen_teleconsult_record_patient_consented">Patient gave consent for teleconsultation </string>
+  <string name="screen_teleconsult_record_done">Done</string>
+  <string name="screen_teleconsult_record_patient_details" translatable="false">%1$s, %2$s, %3$s</string>
 </resources>

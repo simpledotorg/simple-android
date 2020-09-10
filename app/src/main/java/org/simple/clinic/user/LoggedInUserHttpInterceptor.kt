@@ -1,6 +1,5 @@
 package org.simple.clinic.user
 
-import dagger.Lazy
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -8,15 +7,14 @@ import org.simple.clinic.util.toNullable
 import javax.inject.Inject
 
 class LoggedInUserHttpInterceptor @Inject constructor(
-    // TODO(vs): 2019-11-12 Fix this when creating multiple dagger scopes
-    private val userSession: Lazy<UserSession>
+    private val userSession: UserSession
 ) : Interceptor {
 
   override fun intercept(chain: Interceptor.Chain?): Response {
     val originalRequest = chain!!.request()
 
-    val user = userSession.get().loggedInUserImmediate()
-    val accessToken = userSession.get().accessToken().toNullable()
+    val user = userSession.loggedInUserImmediate()
+    val accessToken = userSession.accessToken().toNullable()
 
     return if (user != null && accessToken.isNullOrBlank().not()) {
       chain.proceed(addHeaders(originalRequest, accessToken!!, user))

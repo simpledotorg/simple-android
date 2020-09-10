@@ -8,6 +8,7 @@
 - [In Progress: 27 Aug 2020] Add support for sending teleconsult request via SMS
 - Add `Capabilities` to User
 - Disable state saving and restoration for the search results view
+- Stop querying for redundant facility in `LoggedInUserHttpInterceptor`
 
 ### Changes
 - Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`

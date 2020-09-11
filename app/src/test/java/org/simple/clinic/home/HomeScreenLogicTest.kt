@@ -2,7 +2,6 @@ package org.simple.clinic.home
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -62,10 +61,8 @@ class HomeScreenLogicTest {
     setupController(Observable.just(facility1, facility2))
 
     // then
-    verify(ui, times(2)).setFacility("CHC Buchho")
-    verify(ui, times(2)).setFacility("CHC Nathana")
-    verify(ui, times(2)).showOverdueAppointmentCount(3)
-    verify(ui).removeOverdueAppointmentCount()
+    verify(ui).setFacility("CHC Buchho")
+    verify(ui).setFacility("CHC Nathana")
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -85,8 +82,7 @@ class HomeScreenLogicTest {
     uiEvents.onNext(HomeFacilitySelectionClicked)
 
     // then
-    verify(ui, times(2)).setFacility("CHC Buchho")
-    verify(ui).removeOverdueAppointmentCount()
+    verify(ui).setFacility("CHC Buchho")
     verify(uiActions).openFacilitySelection()
     verifyNoMoreInteractions(ui, uiActions)
   }

@@ -11,7 +11,7 @@
 - Stop querying for redundant facility in `LoggedInUserHttpInterceptor`
 
 ### Changes
-- Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`
+- Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`, `ti-ET`
 
 ## On Demo
 ### Changes

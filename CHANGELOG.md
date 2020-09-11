@@ -25,6 +25,9 @@
 - Disable state saving and restoration for the search results view
 - Stop querying for redundant facility in `LoggedInUserHttpInterceptor`
 
+### Changes
+- Stop loading count of overdue items on the home screen
+
 ## 2020-09-03-7417
 ### Fixes
 - Add a default RxJava error handler to ignore some classes of errors safely

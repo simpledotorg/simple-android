@@ -50,7 +50,7 @@ class TeleConsultSuccessScreen(
     val screenKey = screenRouter.key<TeleConsultSuccessScreenKey>(this)
     MobiusDelegate.forView(
         events = events,
-        defaultModel = TeleConsultSuccessModel.create(screenKey.patientUuid),
+        defaultModel = TeleConsultSuccessModel.create(screenKey.patientUuid, screenKey.teleconsultRecordId),
         init = TeleConsultSuccessInit(),
         update = TeleConsultSuccessUpdate(),
         effectHandler = effectHandler.create(this).build(),

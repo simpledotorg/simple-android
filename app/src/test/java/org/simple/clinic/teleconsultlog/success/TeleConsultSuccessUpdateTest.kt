@@ -16,7 +16,8 @@ class TeleConsultSuccessUpdateTest {
 
   private val updateSpec = UpdateSpec(TeleConsultSuccessUpdate())
   private val patientUuid = UUID.fromString("f2f02504-5d02-4291-a15b-7de095ceebe2")
-  private val defaultModel = TeleConsultSuccessModel.create(patientUuid)
+  private val teleconsultRecordId = UUID.fromString("24c3fca4-4c94-438c-886c-c201c83c84e9")
+  private val defaultModel = TeleConsultSuccessModel.create(patientUuid, teleconsultRecordId)
   val patient = TestData.patient(patientUuid)
 
   @Test
@@ -49,7 +50,7 @@ class TeleConsultSuccessUpdateTest {
 
   @Test
   fun `when Yes button is clicked, then open prescription screen`() {
-    val defaultModel = TeleConsultSuccessModel.create(patientUuid).patientDetailLoaded(patient)
+    val defaultModel = TeleConsultSuccessModel.create(patientUuid, teleconsultRecordId).patientDetailLoaded(patient)
 
     updateSpec
         .given(defaultModel)

@@ -8,6 +8,7 @@ import javax.inject.Inject
 class TeleconsultRecordRepository @Inject constructor(
     private val teleconsultRecordDao: TeleconsultRecord.RoomDao,
     private val teleconsultRecordWithPrescribedDrugsDao: TeleconsultRecordWithPrescribedDrugs.RoomDao,
+    private val teleconsultPrescribedDrugDao: TeleconsultRecordPrescribedDrug.RoomDao,
     private val utcClock: UtcClock
 ) {
 
@@ -31,5 +32,18 @@ class TeleconsultRecordRepository @Inject constructor(
     )
 
     teleconsultRecordDao.save(listOf(teleconsultRecord))
+  }
+
+  fun saveTeleconsultPrescribedDrug(
+      teleconsultRecordId: UUID,
+      prescribedDrugsUuids: List<UUID>
+  ) {
+    val teleconsultPrescribedDrugs = prescribedDrugsUuids.map { drugUuid ->
+      TeleconsultRecordPrescribedDrug(
+          teleconsultRecordId = teleconsultRecordId,
+          prescribedDrugUuid = drugUuid
+      )
+    }
+    teleconsultPrescribedDrugDao.save(teleconsultPrescribedDrugs)
   }
 }

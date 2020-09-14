@@ -16,6 +16,9 @@ data class TeleconsultPrescriptionModel(
     )
   }
 
+  val hasPatient: Boolean
+    get() = patient != null
+
   fun patientLoaded(patient: Patient): TeleconsultPrescriptionModel {
     return copy(patient = patient)
   }

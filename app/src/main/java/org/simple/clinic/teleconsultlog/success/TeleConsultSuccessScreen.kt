@@ -17,6 +17,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.screen.RouterDirection.BACKWARD
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
@@ -45,8 +46,7 @@ class TeleConsultSuccessScreen(
 
   private val uiRenderer = TeleConsultSuccessUiRenderer(this)
 
-  private
-  val mobiusDelegate: MobiusDelegate<TeleConsultSuccessModel, TeleConsultSuccessEvent, TeleConsultSuccessEffect> by unsafeLazy {
+  private val mobiusDelegate: MobiusDelegate<TeleConsultSuccessModel, TeleConsultSuccessEvent, TeleConsultSuccessEffect> by unsafeLazy {
     val screenKey = screenRouter.key<TeleConsultSuccessScreenKey>(this)
     MobiusDelegate.forView(
         events = events,
@@ -104,6 +104,7 @@ class TeleConsultSuccessScreen(
   }
 
   override fun goToPrescriptionScreen(patient: Patient) {
+    screenRouter.push(TeleconsultPrescriptionScreenKey(patientUuid = patient.uuid))
   }
 
   override fun showPatientInfo(patient: Patient) {

@@ -2,6 +2,9 @@ package org.simple.clinic.teleconsultlog.prescription
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
@@ -13,10 +16,12 @@ import java.util.UUID
 
 class TeleconsultPrescriptionEffectHandlerTest {
 
+  private val uiActions = mock<TeleconsultPrescriptionUiActions>()
   private val patientRepository = mock<PatientRepository>()
   private val effectHandler = TeleconsultPrescriptionEffectHandler(
       patientRepository = patientRepository,
-      schedulersProvider = TestSchedulersProvider.trampoline()
+      schedulersProvider = TestSchedulersProvider.trampoline(),
+      uiActions = uiActions
   )
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler.build())
 
@@ -40,5 +45,19 @@ class TeleconsultPrescriptionEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(PatientDetailsLoaded(patient))
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when go back effect is received, then go back to previous screen`() {
+    // when
+    effectHandlerTestCase.dispatch(GoBack)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).goBackToPreviousScreen()
+    verifyNoMoreInteractions(uiActions)
   }
 }

@@ -21,7 +21,7 @@ data class DoneClicked(
     val patientTookMedicines: Answer,
     val patientConsented: Answer
 ) : TeleconsultRecordEvent() {
-  override val analyticsName: String = "Teleconsult Record:Done Clicked"
+  override val analyticsName: String = "Teleconsult Record:Done Clicked with Teleconsultation Type: $teleconsultationType"
 }
 
 data class PatientDetailsLoaded(

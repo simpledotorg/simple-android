@@ -9,6 +9,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
@@ -28,12 +29,14 @@ class TeleconsultRecordEffectHandlerTest {
   private val utcClock = TestUtcClock(instant = Instant.parse("2018-01-01T00:00:00Z"))
   private val teleconsultRecordRepository = mock<TeleconsultRecordRepository>()
   private val patientRepository = mock<PatientRepository>()
+  private val prescriptionRepository = mock<PrescriptionRepository>()
   private val uiActions = mock<UiActions>()
 
   private val effectHandler = TeleconsultRecordEffectHandler(
       user = { user },
       teleconsultRecordRepository = teleconsultRecordRepository,
       patientRepository = patientRepository,
+      prescriptionRepository = prescriptionRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       utcClock = utcClock,
       uiActions = uiActions
@@ -109,6 +112,12 @@ class TeleconsultRecordEffectHandlerTest {
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock)
     )
+    val prescribedDrugsUuidForPatient = listOf(
+        UUID.fromString("416951f7-013f-4b62-b0d6-7f97137f22a9"),
+        UUID.fromString("35bc2785-05f2-469f-8bb3-59f5e65fa45c")
+    )
+
+    whenever(prescriptionRepository.prescribedDrugsUuidForPatient(patientUuid)) doReturn prescribedDrugsUuidForPatient
 
     // when
     effectHandlerTestCase.dispatch(CreateTeleconsultRecord(
@@ -128,6 +137,7 @@ class TeleconsultRecordEffectHandlerTest {
         medicalOfficerId = teleconsultRecord.medicalOfficerId,
         teleconsultRecordInfo = teleconsultRecord.teleconsultRecordInfo!!
     )
+    verify(teleconsultRecordRepository).saveTeleconsultPrescribedDrug(teleconsultRecordId, prescribedDrugsUuidForPatient)
     verifyNoMoreInteractions(teleconsultRecordRepository)
 
     verifyZeroInteractions(uiActions)

@@ -5,6 +5,7 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
@@ -17,6 +18,7 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
     private val user: Lazy<User>,
     private val teleconsultRecordRepository: TeleconsultRecordRepository,
     private val patientRepository: PatientRepository,
+    private val prescriptionRepository: PrescriptionRepository,
     private val schedulersProvider: SchedulersProvider,
     private val utcClock: UtcClock,
     @Assisted private val uiActions: UiActions
@@ -71,8 +73,16 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
                 teleconsultRecordInfo = createTeleconsultRecordInfo(effect)
             )
           }
+          .doOnNext { effect ->
+            saveTeleconsultPrescriptionDrugs(effect)
+          }
           .map { TeleconsultRecordCreated }
     }
+  }
+
+  private fun saveTeleconsultPrescriptionDrugs(effect: CreateTeleconsultRecord) {
+    val prescriptionDrugsUuidForPatient = prescriptionRepository.prescribedDrugsUuidForPatient(effect.patientUuid)
+    teleconsultRecordRepository.saveTeleconsultPrescribedDrug(effect.teleconsultRecordId, prescriptionDrugsUuidForPatient)
   }
 
   private fun createTeleconsultRecordInfo(it: CreateTeleconsultRecord): TeleconsultRecordInfo {

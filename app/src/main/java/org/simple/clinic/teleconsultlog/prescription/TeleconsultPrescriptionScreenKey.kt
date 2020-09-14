@@ -8,7 +8,8 @@ import java.util.UUID
 
 @Parcelize
 data class TeleconsultPrescriptionScreenKey(
-    val patientUuid: UUID
+    val patientUuid: UUID,
+    val teleconsultRecordId: UUID
 ) : FullScreenKey {
 
   @IgnoredOnParcel

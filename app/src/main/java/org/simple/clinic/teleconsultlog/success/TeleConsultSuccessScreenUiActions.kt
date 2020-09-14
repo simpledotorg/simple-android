@@ -4,5 +4,5 @@ import java.util.UUID
 
 interface TeleConsultSuccessScreenUiActions {
   fun goToHomeScreen()
-  fun goToPrescriptionScreen(patientUuid: UUID)
+  fun goToPrescriptionScreen(patientUuid: UUID, teleconsultRecordId: UUID)
 }

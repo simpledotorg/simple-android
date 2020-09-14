@@ -104,7 +104,7 @@ class TeleConsultSuccessScreen(
     screenRouter.clearHistoryAndPush(HomeScreenKey, direction = BACKWARD)
   }
 
-  override fun goToPrescriptionScreen(patientUuid: UUID) {
+  override fun goToPrescriptionScreen(patientUuid: UUID, teleconsultRecordId: UUID) {
     screenRouter.push(TeleconsultPrescriptionScreenKey(patientUuid = patientUuid))
   }
 

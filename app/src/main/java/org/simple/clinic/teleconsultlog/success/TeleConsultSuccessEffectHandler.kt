@@ -27,7 +27,7 @@ class TeleConsultSuccessEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<TeleConsultSuccessEffect, TeleConsultSuccessEvent>()
         .addTransformer(LoadPatientDetails::class.java, loadPatientDetails(schedulersProvider.io()))
         .addAction(GoToHomeScreen::class.java, { uiActions.goToHomeScreen() }, schedulersProvider.ui())
-        .addConsumer(GoToPrescriptionScreen::class.java, { uiActions.goToPrescriptionScreen(it.patient.uuid) }, schedulersProvider.ui())
+        .addConsumer(GoToPrescriptionScreen::class.java, { uiActions.goToPrescriptionScreen(it.patientUuid, it.teleconsultRecordId) }, schedulersProvider.ui())
         .build()
   }
 

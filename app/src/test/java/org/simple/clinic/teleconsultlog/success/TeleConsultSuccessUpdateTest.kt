@@ -58,7 +58,7 @@ class TeleConsultSuccessUpdateTest {
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(GoToPrescriptionScreen(patient) as TeleConsultSuccessEffect)
+                hasEffects(GoToPrescriptionScreen(patientUuid, teleconsultRecordId) as TeleConsultSuccessEffect)
             )
         )
   }

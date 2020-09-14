@@ -20,6 +20,7 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
+import java.util.UUID
 import javax.inject.Inject
 
 class TeleConsultSuccessScreen(
@@ -103,8 +104,8 @@ class TeleConsultSuccessScreen(
     screenRouter.clearHistoryAndPush(HomeScreenKey, direction = BACKWARD)
   }
 
-  override fun goToPrescriptionScreen(patient: Patient) {
-    screenRouter.push(TeleconsultPrescriptionScreenKey(patientUuid = patient.uuid))
+  override fun goToPrescriptionScreen(patientUuid: UUID) {
+    screenRouter.push(TeleconsultPrescriptionScreenKey(patientUuid = patientUuid))
   }
 
   override fun showPatientInfo(patient: Patient) {

@@ -64,7 +64,7 @@ class TeleConsultSuccessEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).goToPrescriptionScreen(patient = patient)
+    verify(uiActions).goToPrescriptionScreen(patientUuid = patientUuid)
     verifyNoMoreInteractions(uiActions)
   }
 }

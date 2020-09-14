@@ -14,8 +14,6 @@ import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUtcClock
-import java.time.Duration
-import java.time.Instant
 import java.time.LocalDate
 import java.time.Month
 import java.util.UUID
@@ -128,5 +126,38 @@ class PrescriptionRepositoryAndroidTest {
 
     val storedPrescription = database.prescriptionDao().getOne(correctedPrescription.uuid)!!
     assertThat(storedPrescription.name).isEqualTo(correctedPrescription.name)
+  }
+
+  @Test
+  fun getting_prescribed_drugs_uuid_for_patient_should_work_correctly() {
+    // given
+    val patient1Uuid = UUID.fromString("a1b8d50c-1d7b-4428-9b3c-3507cd7b723d")
+    val patient2Uuid = UUID.fromString("c4b21e94-079b-49db-b70c-5b4d500d6cae")
+
+    val prescribedDrug1Uuid = UUID.fromString("a6269313-90f0-47be-b23d-615d2ee0956a")
+    val prescribedDrug1 = TestData.prescription(
+        uuid = prescribedDrug1Uuid,
+        patientUuid = patient1Uuid
+    )
+
+    val prescribedDrug2Uuid = UUID.fromString("cfcb33d1-7fac-40fa-a335-39f5f3099fe0")
+    val prescribedDrug2 = TestData.prescription(
+        uuid = prescribedDrug2Uuid,
+        patientUuid = patient1Uuid
+    )
+
+    val prescribedDrug3Uuid = UUID.fromString("6fe649ef-9edb-450f-9037-1bb5d3a0420b")
+    val prescribedDrug3 = TestData.prescription(
+        uuid = prescribedDrug3Uuid,
+        patientUuid = patient2Uuid
+    )
+
+    repository.save(listOf(prescribedDrug1, prescribedDrug2, prescribedDrug3)).blockingAwait()
+
+    // when
+    val prescribedDrugsUuidForPatient = repository.prescribedDrugsUuidForPatient(patient1Uuid)
+
+    // then
+    assertThat(prescribedDrugsUuidForPatient).isEqualTo(listOf(prescribedDrug1Uuid, prescribedDrug2Uuid))
   }
 }

@@ -134,5 +134,8 @@ data class PrescribedDrug(
         instantToCompare: Instant,
         pendingStatus: SyncStatus
     ): Boolean
+
+    @Query("SELECT uuid FROM PrescribedDrug WHERE patientUuid = :patientUuid")
+    fun prescribedDrugsUuidForPatient(patientUuid: UUID): List<UUID>
   }
 }

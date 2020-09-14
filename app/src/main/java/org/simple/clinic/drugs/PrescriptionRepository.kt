@@ -137,4 +137,8 @@ class PrescriptionRepository @Inject constructor(
         .count(SyncStatus.PENDING)
         .toObservable()
   }
+
+  fun prescribedDrugsUuidForPatient(patientUuid: UUID): List<UUID> {
+    return dao.prescribedDrugsUuidForPatient(patientUuid)
+  }
 }

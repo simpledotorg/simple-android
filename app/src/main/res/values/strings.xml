@@ -712,4 +712,7 @@
 
   <!-- Teleconsult Prescription Screen -->
   <string name="screen_teleconsult_prescription_patient_details" translatable="false">%1$s, %2$s, %3$s</string>
+
+  <!-- Teleconsult Patient Info View -->
+  <string name="view_teleconsult_patient_info" translatable="false">%1$s, %2$s, %3$s</string>
 </resources>

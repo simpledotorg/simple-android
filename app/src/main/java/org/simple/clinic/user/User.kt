@@ -93,6 +93,9 @@ data class User(
   val isNotDisapprovedForSyncing: Boolean
     get() = status != UserStatus.DisapprovedForSyncing
 
+  val isUserLoggedIn: Boolean
+    get() = loggedInStatus == LoggedInStatus.LOGGED_IN
+
   fun withStatus(status: UserStatus, clock: UtcClock): User {
     return copy(status = status, updatedAt = Instant.now(clock))
   }

@@ -8,4 +8,5 @@ interface DeepLinkUiActions {
   fun navigateToPatientSummaryWithTeleconsultLog(patientUuid: UUID, teleconsultRecordId: UUID)
   fun showPatientDoesNotExist()
   fun showNoPatientUuidError()
+  fun showTeleconsultLogNotAllowed()
 }

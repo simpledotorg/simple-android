@@ -18,3 +18,5 @@ object ShowPatientDoesNotExist : DeepLinkEffect()
 
 // We will show this error when patient uuid is null
 object ShowNoPatientUuidError : DeepLinkEffect()
+
+object ShowTeleconsultLogNotAllowed : DeepLinkEffect()

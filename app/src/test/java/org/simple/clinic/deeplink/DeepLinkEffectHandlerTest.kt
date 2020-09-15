@@ -51,6 +51,18 @@ class DeepLinkEffectHandlerTest {
   }
 
   @Test
+  fun `when teleconsult log not allowed effect is received, then show teleconsult not allowed`(){
+    // given
+    testCase.dispatch(ShowTeleconsultLogNotAllowed)
+
+    // then
+    verify(uiActions).showTeleconsultLogNotAllowed()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
   fun `when navigate to setup effect is received, then navigate to setup activity`() {
     // when
     testCase.dispatch(NavigateToSetupActivity)

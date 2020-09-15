@@ -148,4 +148,10 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
     startActivity(intent)
     finish()
   }
+
+  override fun showTeleconsultLogNotAllowed() {
+    val intent = TheActivity.intentForShowTeleconsultNotAllowedError(this)
+    startActivity(intent)
+    finish()
+  }
 }

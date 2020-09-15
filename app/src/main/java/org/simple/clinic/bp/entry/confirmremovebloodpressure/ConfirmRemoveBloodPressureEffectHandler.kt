@@ -33,9 +33,9 @@ class ConfirmRemoveBloodPressureEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .switchMap { bloodPressureRepository.measurement(it.bloodPressureMeasurementUuid) }
-          .doOnNext { bloodPressureRepository.markBloodPressureAsDeleted(it) }
           .switchMap { bloodPressureMeasurement ->
-            patientRepository.updateRecordedAt(bloodPressureMeasurement.patientUuid)
+            bloodPressureRepository.markBloodPressureAsDeleted(bloodPressureMeasurement)
+                .andThen(patientRepository.updateRecordedAt(bloodPressureMeasurement.patientUuid))
                 .andThen(Observable.just(BloodPressureDeleted))
           }
     }

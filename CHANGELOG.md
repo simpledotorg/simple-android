@@ -28,6 +28,9 @@
 ### Changes
 - Stop loading count of overdue items on the home screen
 
+### Fixes
+- Fixed BloodPressure removal not working
+
 ## 2020-09-03-7417
 ### Fixes
 - Add a default RxJava error handler to ignore some classes of errors safely

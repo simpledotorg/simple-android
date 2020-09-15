@@ -364,5 +364,16 @@ data class Patient(
         LEFT JOIN BusinessId BI ON BI.patientUuid == P.uuid
       """
     }
+
+    // This depends on the foreign key references between address, patient
+    // phone numbers, and business IDs to cascade the deletes.
+    @Query("""
+      DELETE FROM PatientAddress
+      WHERE uuid IN (
+        SELECT addressUuid FROM Patient
+        WHERE deletedAt IS NOT NULL AND syncStatus = 'DONE'
+      )
+    """)
+    abstract fun purgeDeleted()
   }
 }

@@ -4,7 +4,7 @@
 ### Features
 - Add `TeleconsultRecordScreen`
 - Show `TeleconsultLogNotAllowed` dialog when Medical officer is not allowed to teleconsult
-- [In Progress: 14 Sep 2020] Add `TeleconsultPrescriptionScreen`
+- [In Progress: 15 Sep 2020] Add `TeleconsultPrescriptionScreen`
 
 ### Internal
 - [In Progress: 27 Aug 2020] Add support for sending teleconsult request via SMS

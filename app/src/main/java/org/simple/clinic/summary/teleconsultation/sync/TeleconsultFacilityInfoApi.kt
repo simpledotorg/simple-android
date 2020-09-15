@@ -6,6 +6,6 @@ import retrofit2.http.Headers
 
 interface TeleconsultFacilityInfoApi {
   @Headers(value = ["X-RESYNC-TOKEN: 1"])
-  @GET("v4/teleconsultation_medical_officers/sync")
+  @GET("v4/facility_medical_officers/sync")
   fun pull(): Call<TeleconsultFacilityInfoPullResponse>
 }

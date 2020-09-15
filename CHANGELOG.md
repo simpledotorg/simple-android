@@ -15,6 +15,9 @@
 - Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`, `ti-ET`
 - Stop loading count of overdue items on the home screen
 
+### Fixes
+- Fixed BloodPressure removal not working
+
 ## On Demo
 ### Changes
 - Open patient summary screen when patient name is clicked in overdue

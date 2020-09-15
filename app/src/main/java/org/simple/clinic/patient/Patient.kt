@@ -385,5 +385,15 @@ data class Patient(
       )
     """)
     abstract fun purgeDeletedPhoneNumbers()
+
+    @Query("""
+      DELETE FROM BusinessId
+      WHERE uuid IN (
+        SELECT BI.uuid FROM BusinessId BI
+        INNER JOIN Patient P ON P.uuid == BI.patientUuid
+        WHERE P.syncStatus == 'DONE' AND BI.deletedAt IS NOT NULL
+      )
+    """)
+    abstract fun purgeDeletedBusinessIds()
   }
 }

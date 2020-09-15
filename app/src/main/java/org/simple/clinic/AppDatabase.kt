@@ -178,6 +178,7 @@ abstract class AppDatabase : RoomDatabase() {
       with(patientDao()) {
         purgeDeleted()
         purgeDeletedPhoneNumbers()
+        purgeDeletedBusinessIds()
       }
     }
   }

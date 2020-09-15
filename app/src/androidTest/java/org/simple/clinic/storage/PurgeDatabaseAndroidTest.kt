@@ -124,4 +124,48 @@ class PurgeDatabaseAndroidTest {
     assertThat(phoneNumberDao.phoneNumber(notSyncedPatientProfile.patientUuid).blockingFirst()).containsExactly(deletedButUnsyncedPhoneNumber)
   }
 
+  @Test
+  fun purging_the_database_should_delete_soft_deleted_business_ids() {
+    // given
+    val syncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.DONE
+    )
+    val notSyncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.PENDING
+    )
+    val deletedBusinessId = TestData.businessId(
+        uuid = UUID.fromString("805b93ac-c53f-4a66-b845-e3c458fa0aa6"),
+        patientUuid = syncedPatientProfile.patientUuid,
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val notDeletedBusinessId = TestData.businessId(
+        uuid = UUID.fromString("3b0b66de-8760-4415-9edc-fc8d684c4e12"),
+        patientUuid = syncedPatientProfile.patientUuid,
+        deletedAt = null
+    )
+    val deletedButUnsyncedBusinessId = TestData.businessId(
+        uuid = UUID.fromString("5e7a68fe-c5b6-4e2f-b668-9226c7123421"),
+        patientUuid = notSyncedPatientProfile.patientUuid,
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    patientAddressDao.save(listOf(syncedPatientProfile.address, notSyncedPatientProfile.address))
+    patientDao.save(listOf(syncedPatientProfile.patient, notSyncedPatientProfile.patient))
+    businessIdDao.save(listOf(deletedBusinessId, notDeletedBusinessId, deletedButUnsyncedBusinessId))
+
+    assertThat(businessIdDao.get(deletedBusinessId.uuid)).isEqualTo(deletedBusinessId)
+    assertThat(businessIdDao.get(notDeletedBusinessId.uuid)).isEqualTo(notDeletedBusinessId)
+    assertThat(businessIdDao.get(deletedButUnsyncedBusinessId.uuid)).isEqualTo(deletedButUnsyncedBusinessId)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(businessIdDao.get(deletedBusinessId.uuid)).isNull()
+    assertThat(businessIdDao.get(notDeletedBusinessId.uuid)).isEqualTo(notDeletedBusinessId)
+    assertThat(businessIdDao.get(deletedButUnsyncedBusinessId.uuid)).isEqualTo(deletedButUnsyncedBusinessId)
+  }
 }

@@ -9,6 +9,7 @@
 - Add `Capabilities` to User
 - Disable state saving and restoration for the search results view
 - Stop querying for redundant facility in `LoggedInUserHttpInterceptor`
+- Change `TeleconsultFacilityInfoApi` endpoint
 
 ### Changes
 - Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`, `ti-ET`

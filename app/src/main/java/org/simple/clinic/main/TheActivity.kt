@@ -19,6 +19,7 @@ import org.simple.clinic.deeplink.OpenPatientSummary
 import org.simple.clinic.deeplink.OpenPatientSummaryWithTeleconsultLog
 import org.simple.clinic.deeplink.ShowNoPatientUuid
 import org.simple.clinic.deeplink.ShowPatientNotFound
+import org.simple.clinic.deeplink.ShowTeleconsultNotAllowed
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Feature.LogSavedStateSizes
@@ -115,6 +116,13 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
       }
     }
 
+    fun intentForShowTeleconsultNotAllowedError(context: Context): Intent {
+      return Intent(context, TheActivity::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        putExtra(EXTRA_DEEP_LINK_RESULT, ShowTeleconsultNotAllowed)
+      }
+    }
+
     lateinit var component: TheActivityComponent
   }
 
@@ -197,6 +205,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
       is ShowPatientNotFound -> showPatientNotFoundErrorDialog()
       is ShowNoPatientUuid -> showNoPatientUuidErrorDialog()
       is OpenPatientSummaryWithTeleconsultLog -> showPatientSummaryWithTeleconsultLogForDeepLink(deepLinkResult)
+      is ShowTeleconsultNotAllowed -> showTeleconsultNotAllowedErrorDialog()
     }
   }
 
@@ -336,6 +345,15 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
         .setTitle(R.string.deeplink_no_patient)
         .setMessage(R.string.deeplink_no_patient_desc)
         .setPositiveButton(R.string.deeplink_no_patient_positive_action, null)
+        .show()
+  }
+
+
+  private fun showTeleconsultNotAllowedErrorDialog() {
+    AlertDialog.Builder(this, R.style.Clinic_V2_DialogStyle)
+        .setTitle(R.string.deeplink_medical_officer_not_authorised_to_log_teleconsult)
+        .setMessage(R.string.deeplink_please_check_with_your_supervisor)
+        .setPositiveButton(R.string.deeplink_okay_positive_action, null)
         .show()
   }
 }

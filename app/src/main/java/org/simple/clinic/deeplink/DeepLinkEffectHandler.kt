@@ -35,6 +35,7 @@ class DeepLinkEffectHandler @AssistedInject constructor(
       }, schedulerProvider.ui())
       .addAction(ShowPatientDoesNotExist::class.java, { uiActions.showPatientDoesNotExist() }, schedulerProvider.ui())
       .addAction(ShowNoPatientUuidError::class.java, { uiActions.showNoPatientUuidError() }, schedulerProvider.ui())
+      .addAction(ShowTeleconsultLogNotAllowed::class.java, { uiActions.showTeleconsultLogNotAllowed() }, schedulerProvider.ui())
       .build()
 
   private fun fetchUser(): ObservableTransformer<FetchUser, DeepLinkEvent> {

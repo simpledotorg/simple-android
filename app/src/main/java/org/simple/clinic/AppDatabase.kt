@@ -174,6 +174,11 @@ abstract class AppDatabase : RoomDatabase() {
   }
 
   fun purge() {
-    patientDao().purgeDeleted()
+    runInTransaction {
+      with(patientDao()) {
+        purgeDeleted()
+        purgeDeletedPhoneNumbers()
+      }
+    }
   }
 }

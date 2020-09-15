@@ -80,4 +80,48 @@ class PurgeDatabaseAndroidTest {
     assertThat(patientDao.patientProfileImmediate(notDeletedPatientProfile.patientUuid)).isEqualTo(notDeletedPatientProfile)
     assertThat(patientDao.patientProfileImmediate(deletedButUnsyncedPatientProfile.patientUuid)).isEqualTo(deletedButUnsyncedPatientProfile)
   }
+
+  @Test
+  fun purging_the_database_should_delete_soft_deleted_phonenumbers() {
+    // given
+    val syncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
+        generatePhoneNumber = false,
+        syncStatus = SyncStatus.DONE
+    )
+    val notSyncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
+        generatePhoneNumber = false,
+        syncStatus = SyncStatus.PENDING
+    )
+    val deletedPhoneNumber = TestData.patientPhoneNumber(
+        uuid = UUID.fromString("805b93ac-c53f-4a66-b845-e3c458fa0aa6"),
+        patientUuid = syncedPatientProfile.patientUuid,
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val notDeletedPhoneNumber = TestData.patientPhoneNumber(
+        uuid = UUID.fromString("3b0b66de-8760-4415-9edc-fc8d684c4e12"),
+        patientUuid = syncedPatientProfile.patientUuid,
+        deletedAt = null
+    )
+    val deletedButUnsyncedPhoneNumber = TestData.patientPhoneNumber(
+        uuid = UUID.fromString("5e7a68fe-c5b6-4e2f-b668-9226c7123421"),
+        patientUuid = notSyncedPatientProfile.patientUuid,
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    patientAddressDao.save(listOf(syncedPatientProfile.address, notSyncedPatientProfile.address))
+    patientDao.save(listOf(syncedPatientProfile.patient, notSyncedPatientProfile.patient))
+    phoneNumberDao.save(listOf(deletedPhoneNumber, notDeletedPhoneNumber, deletedButUnsyncedPhoneNumber))
+
+    assertThat(phoneNumberDao.phoneNumber(syncedPatientProfile.patientUuid).blockingFirst()).containsExactly(deletedPhoneNumber, notDeletedPhoneNumber)
+    assertThat(phoneNumberDao.phoneNumber(notSyncedPatientProfile.patientUuid).blockingFirst()).containsExactly(deletedButUnsyncedPhoneNumber)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(phoneNumberDao.phoneNumber(syncedPatientProfile.patientUuid).blockingFirst()).containsExactly(notDeletedPhoneNumber)
+    assertThat(phoneNumberDao.phoneNumber(notSyncedPatientProfile.patientUuid).blockingFirst()).containsExactly(deletedButUnsyncedPhoneNumber)
+  }
+
 }

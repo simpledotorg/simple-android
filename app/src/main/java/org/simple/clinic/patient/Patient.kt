@@ -371,9 +371,19 @@ data class Patient(
       DELETE FROM PatientAddress
       WHERE uuid IN (
         SELECT addressUuid FROM Patient
-        WHERE deletedAt IS NOT NULL AND syncStatus = 'DONE'
+        WHERE deletedAt IS NOT NULL AND syncStatus == 'DONE'
       )
     """)
     abstract fun purgeDeleted()
+
+    @Query("""
+      DELETE FROM PatientPhoneNumber
+      WHERE uuid IN (
+        SELECT PPN.uuid FROM PatientPhoneNumber PPN
+        INNER JOIN Patient P ON P.uuid == PPN.patientUuid
+        WHERE P.syncStatus == 'DONE' AND PPN.deletedAt IS NOT NULL
+      )
+    """)
+    abstract fun purgeDeletedPhoneNumbers()
   }
 }

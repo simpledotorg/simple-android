@@ -33,6 +33,19 @@ data class TeleconsultRecord(
     val syncStatus: SyncStatus
 ) {
 
+  fun toPayload(): TeleconsultRecordPayload {
+    return TeleconsultRecordPayload(
+        id = id,
+        patientId = patientId,
+        medicalOfficerId = medicalOfficerId,
+        teleconsultRequestInfo = null,
+        teleconsultRecordInfo = null,
+        createdAt = timestamp.createdAt,
+        updatedAt = timestamp.updatedAt,
+        deletedAt = timestamp.deletedAt
+    )
+  }
+
   @Dao
   interface RoomDao {
 

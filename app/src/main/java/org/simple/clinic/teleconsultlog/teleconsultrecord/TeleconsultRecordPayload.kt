@@ -30,5 +30,5 @@ data class TeleconsultRecordPayload(
     val updatedAt: Instant,
 
     @Json(name = "deleted_at")
-    val deletedAt: Instant
+    val deletedAt: Instant?
 )

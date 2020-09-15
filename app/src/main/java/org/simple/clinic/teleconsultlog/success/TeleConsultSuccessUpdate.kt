@@ -20,7 +20,7 @@ class TeleConsultSuccessUpdate : Update<TeleConsultSuccessModel, TeleConsultSucc
       model: TeleConsultSuccessModel
   ): Next<TeleConsultSuccessModel, TeleConsultSuccessEffect> {
     return if (model.hasPatient)
-      dispatch(GoToPrescriptionScreen(model.patient!!))
+      dispatch(GoToPrescriptionScreen(model.patientUuid, model.teleconsultRecordId))
     else
       next(model.patientDetailLoaded(null))
   }

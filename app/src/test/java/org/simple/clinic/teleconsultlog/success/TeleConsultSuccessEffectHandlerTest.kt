@@ -20,7 +20,8 @@ class TeleConsultSuccessEffectHandlerTest {
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<TeleConsultSuccessScreenUiActions>()
   private val patientUuid = UUID.fromString("12111fab-1585-4d8f-982d-d3cd5b48ad1a")
-  val patient = TestData.patient(uuid = patientUuid)
+  private val teleconsultRecordId = UUID.fromString("13dcd7dc-129b-4436-8bcc-39b318e10f59")
+  private val patient = TestData.patient(uuid = patientUuid)
   private val effectHandler = TeleConsultSuccessEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
@@ -60,11 +61,11 @@ class TeleConsultSuccessEffectHandlerTest {
   @Test
   fun `when go to prescription effect is received, then open prescription screen`() {
     // when
-    testCase.dispatch(GoToPrescriptionScreen(patient))
+    testCase.dispatch(GoToPrescriptionScreen(patientUuid, teleconsultRecordId))
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).goToPrescriptionScreen(patient = patient)
+    verify(uiActions).goToPrescriptionScreen(patientUuid = patientUuid, teleconsultRecordId = teleconsultRecordId)
     verifyNoMoreInteractions(uiActions)
   }
 }

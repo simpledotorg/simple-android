@@ -19,6 +19,9 @@ data class TeleconsultPatientInfoModel(
     )
   }
 
+  val hasPatientProfile: Boolean
+    get() = patientProfile != null
+
   fun patientProfileLoaded(patientProfile: PatientProfile): TeleconsultPatientInfoModel {
     return copy(patientProfile = patientProfile)
   }

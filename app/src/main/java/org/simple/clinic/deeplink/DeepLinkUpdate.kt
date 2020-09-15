@@ -18,23 +18,23 @@ class DeepLinkUpdate : Update<DeepLinkModel, DeepLinkEvent, DeepLinkEffect> {
       model: DeepLinkModel,
       event: UserFetched
   ): Next<DeepLinkModel, DeepLinkEffect> {
-    return if (event.user?.loggedInStatus == User.LoggedInStatus.LOGGED_IN) {
-      checkIfMedicalOfficerHasCapabilitiesToTeleconsult(model, event)
+    return if (event.user?.isUserLoggedIn == true) {
+      showLogTeleconsultScreen(model, event)
     } else {
       dispatch(NavigateToSetupActivity)
     }
   }
 
-  private fun checkIfMedicalOfficerHasCapabilitiesToTeleconsult(model: DeepLinkModel, event: UserFetched): Next<DeepLinkModel, DeepLinkEffect> {
+  private fun showLogTeleconsultScreen(model: DeepLinkModel, event: UserFetched): Next<DeepLinkModel, DeepLinkEffect> {
     val effect = if (event.user?.capabilities?.canTeleconsult == User.CapabilityStatus.Yes) {
-      checkIfPatientIsNotNull(model)
+      fetchPatientDetails(model)
     } else {
       ShowTeleconsultLogNotAllowed
     }
     return dispatch(effect)
   }
 
-  private fun checkIfPatientIsNotNull(model: DeepLinkModel): DeepLinkEffect {
+  private fun fetchPatientDetails(model: DeepLinkModel): DeepLinkEffect {
     return if (model.patientUuid != null) {
       FetchPatient(model.patientUuid)
     } else {

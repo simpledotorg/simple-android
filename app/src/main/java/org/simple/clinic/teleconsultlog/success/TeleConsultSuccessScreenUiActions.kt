@@ -1,8 +1,8 @@
 package org.simple.clinic.teleconsultlog.success
 
-import org.simple.clinic.patient.Patient
+import java.util.UUID
 
 interface TeleConsultSuccessScreenUiActions {
   fun goToHomeScreen()
-  fun goToPrescriptionScreen(patient: Patient)
+  fun goToPrescriptionScreen(patientUuid: UUID, teleconsultRecordId: UUID)
 }

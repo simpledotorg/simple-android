@@ -8,6 +8,7 @@ import java.util.UUID
 @Parcelize
 data class TeleConsultSuccessModel(
     val patientUuid: UUID,
+    val teleconsultRecordId: UUID,
     val patient: Patient?
 ) : Parcelable {
 
@@ -15,7 +16,10 @@ data class TeleConsultSuccessModel(
     get() = patient != null
 
   companion object {
-    fun create(patientUuid: UUID) = TeleConsultSuccessModel(patientUuid, null)
+    fun create(patientUuid: UUID, teleconsultRecordId: UUID) = TeleConsultSuccessModel(
+        patientUuid = patientUuid,
+        teleconsultRecordId = teleconsultRecordId, patient = null
+    )
   }
 
   fun patientDetailLoaded(patient: Patient?): TeleConsultSuccessModel =

@@ -1,6 +1,5 @@
 package org.simple.clinic.teleconsultlog.success
 
-import org.simple.clinic.patient.Patient
 import java.util.UUID
 
 sealed class TeleConsultSuccessEffect {
@@ -9,5 +8,5 @@ sealed class TeleConsultSuccessEffect {
 
   object GoToHomeScreen : TeleConsultSuccessEffect()
 
-  data class GoToPrescriptionScreen(val patient: Patient) : TeleConsultSuccessEffect()
+  data class GoToPrescriptionScreen(val patientUuid: UUID, val teleconsultRecordId: UUID) : TeleConsultSuccessEffect()
 }

@@ -709,4 +709,7 @@
   <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">You are not authorised to log teleconsult</string>
   <string name="deeplink_please_check_with_your_supervisor">Please check with your supervisor</string>
   <string name="deeplink_okay_positive_action">Okay</string>
+
+  <!-- Teleconsult Prescription Screen -->
+  <string name="screen_teleconsult_prescription_patient_details" translatable="false">%1$s, %2$s, %3$s</string>
 </resources>

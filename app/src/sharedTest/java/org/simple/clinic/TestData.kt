@@ -1190,6 +1190,7 @@ object TestData {
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
       timestamps: Timestamps = Timestamps(createdAt, updatedAt, deletedAt),
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
   ): TeleconsultRecord {
     return TeleconsultRecord(
         id = id,
@@ -1197,7 +1198,8 @@ object TestData {
         medicalOfficerId = medicalOfficerId,
         teleconsultRequestInfo = teleconsultRequestInfo,
         teleconsultRecordInfo = teleconsultRecordInfo,
-        timestamp = timestamps
+        timestamp = timestamps,
+        syncStatus = syncStatus
     )
   }
 

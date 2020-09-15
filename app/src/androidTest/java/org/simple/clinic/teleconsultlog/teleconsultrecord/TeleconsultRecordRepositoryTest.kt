@@ -6,6 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Audio
@@ -61,7 +62,8 @@ class TeleconsultRecordRepositoryTest {
         teleconsultRecordInfo = teleconsultRecordInfo,
         createdAt = Instant.now(testUtcClock),
         updatedAt = Instant.now(testUtcClock),
-        deletedAt = null
+        deletedAt = null,
+        syncStatus = SyncStatus.PENDING
     )
 
     teleconsultRecordRepository.createTeleconsultRecordForMedicalOfficer(
@@ -95,7 +97,8 @@ class TeleconsultRecordRepositoryTest {
             createdAt = Instant.now(testUtcClock),
             updatedAt = Instant.now(testUtcClock),
             deletedAt = null
-        )
+        ),
+        syncStatus = SyncStatus.PENDING
     )
 
     teleconsultRecordRepository.createTeleconsultRecordForMedicalOfficer(

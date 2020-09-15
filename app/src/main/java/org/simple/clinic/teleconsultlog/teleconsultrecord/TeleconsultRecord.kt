@@ -7,6 +7,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import io.reactivex.Flowable
+import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
 import java.util.UUID
 
@@ -26,7 +28,9 @@ data class TeleconsultRecord(
     val teleconsultRecordInfo: TeleconsultRecordInfo?,
 
     @Embedded
-    val timestamp: Timestamps
+    val timestamp: Timestamps,
+
+    val syncStatus: SyncStatus
 ) {
 
   @Dao
@@ -37,6 +41,24 @@ data class TeleconsultRecord(
 
     @Query("DELETE FROM TeleconsultRecord")
     fun clear()
+
+    @Query("SELECT * FROM TeleconsultRecord WHERE syncStatus = :syncStatus")
+    fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultRecord>
+
+    @Query("SELECT COUNT(id) FROM TeleconsultRecord")
+    fun count(): Flowable<Int>
+
+    @Query("UPDATE TeleconsultRecord SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
+    fun updateSyncStates(oldStatus: SyncStatus, newStatus: SyncStatus)
+
+    @Query("UPDATE TeleconsultRecord SET syncStatus = :newStatus WHERE id in (:uuids) ")
+    fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
+
+    @Query("SELECT COUNT(id) FROM TeleconsultRecord WHERE syncStatus = :syncStatus")
+    fun count(syncStatus: SyncStatus): Flowable<Int>
+
+    @Query("SELECT id FROM TeleconsultRecord WHERE syncStatus = :syncStatus")
+    fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
 
   }
 }

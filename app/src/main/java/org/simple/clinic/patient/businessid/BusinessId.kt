@@ -146,6 +146,9 @@ data class BusinessId(
 
     @Query("SELECT * FROM BusinessId WHERE identifierType = :identifierType")
     fun allBusinessIdsWithType(identifierType: IdentifierType): Single<List<BusinessId>>
+
+    @Query("SELECT * FROM BusinessId WHERE uuid = :uuid")
+    fun get(uuid: UUID): BusinessId?
   }
 }
 

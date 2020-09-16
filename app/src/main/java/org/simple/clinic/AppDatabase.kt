@@ -35,10 +35,10 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityI
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityMedicalOfficersCrossRef
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityWithMedicalOfficers
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
-import org.simple.clinic.teleconsultlog.teleconsultrecord.*
-import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.*
+import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.RoomTypeConverter
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordPrescribedDrug
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordWithPrescribedDrugs
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User
@@ -170,6 +170,16 @@ abstract class AppDatabase : RoomDatabase() {
       teleconsultFacilityWithMedicalOfficersDao().clear()
       teleconsultRecordDao().clear()
       teleconsultRecordPrescribedDrugDao().clear()
+    }
+  }
+
+  fun purge() {
+    runInTransaction {
+      with(patientDao()) {
+        purgeDeleted()
+        purgeDeletedPhoneNumbers()
+        purgeDeletedBusinessIds()
+      }
     }
   }
 }

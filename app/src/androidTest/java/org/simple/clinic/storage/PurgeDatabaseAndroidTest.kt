@@ -168,4 +168,38 @@ class PurgeDatabaseAndroidTest {
     assertThat(businessIdDao.get(notDeletedBusinessId.uuid)).isEqualTo(notDeletedBusinessId)
     assertThat(businessIdDao.get(deletedButUnsyncedBusinessId.uuid)).isEqualTo(deletedButUnsyncedBusinessId)
   }
+
+  @Test
+  fun purging_the_database_should_delete_soft_deleted_blood_pressure_measurements() {
+    // given
+    val deletedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE
+    )
+    val deletedButUnsyncedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = SyncStatus.PENDING
+    )
+
+    bloodPressureDao.save(listOf(deletedBloodPressureMeasurement, deletedButUnsyncedBloodPressureMeasurement, notDeletedBloodPressureMeasurement))
+
+    assertThat(bloodPressureDao.getOne(deletedBloodPressureMeasurement.uuid)).isEqualTo(deletedBloodPressureMeasurement)
+    assertThat(bloodPressureDao.getOne(notDeletedBloodPressureMeasurement.uuid)).isEqualTo(notDeletedBloodPressureMeasurement)
+    assertThat(bloodPressureDao.getOne(deletedButUnsyncedBloodPressureMeasurement.uuid)).isEqualTo(deletedButUnsyncedBloodPressureMeasurement)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(bloodPressureDao.getOne(deletedBloodPressureMeasurement.uuid)).isNull()
+    assertThat(bloodPressureDao.getOne(notDeletedBloodPressureMeasurement.uuid)).isEqualTo(notDeletedBloodPressureMeasurement)
+    assertThat(bloodPressureDao.getOne(deletedButUnsyncedBloodPressureMeasurement.uuid)).isEqualTo(deletedButUnsyncedBloodPressureMeasurement)
+  }
 }

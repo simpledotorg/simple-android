@@ -180,6 +180,7 @@ abstract class AppDatabase : RoomDatabase() {
         purgeDeletedPhoneNumbers()
         purgeDeletedBusinessIds()
       }
+      bloodPressureDao().purgeDeleted()
     }
   }
 }

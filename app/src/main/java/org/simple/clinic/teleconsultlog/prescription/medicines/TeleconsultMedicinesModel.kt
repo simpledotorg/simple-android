@@ -16,6 +16,9 @@ data class TeleconsultMedicinesModel(
     )
   }
 
+  val hasMedicines: Boolean
+    get() = medicines != null
+
   fun medicinesLoaded(medicines: List<PrescribedDrug>): TeleconsultMedicinesModel {
     return copy(medicines = medicines)
   }

@@ -47,6 +47,7 @@ import org.simple.clinic.sync.ReportsSyncIntegrationTest
 import org.simple.clinic.sync.TeleconsultationSyncIntegrationTest
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepositoryAndroidTest
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepositoryTest
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordSyncIntegrationTest
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordTest
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.RegisterUserServerIntegrationTest
@@ -112,4 +113,5 @@ interface TestAppComponent {
   fun inject(target: PurgeDatabaseAndroidTest)
   fun inject(target: SignatureRepositoryAndroidTest)
   fun inject(target: TeleconsultRecordRepositoryAndroidTest)
+  fun inject(target: TeleconsultRecordSyncIntegrationTest)
 }

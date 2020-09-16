@@ -10,5 +10,5 @@ interface TeleconsultRecordApi {
   @POST("v4/teleconsultations/sync")
   fun push(
       @Body body: TeleconsultPushRequest
-  ) : Call<DataPushResponse>
+  ): Call<DataPushResponse>
 }

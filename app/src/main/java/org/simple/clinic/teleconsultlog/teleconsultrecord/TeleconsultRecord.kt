@@ -35,12 +35,33 @@ data class TeleconsultRecord(
 ) {
 
   fun toPayload(): TeleconsultRecordPayload {
+
+    val teleconsultRequestInfoPayload = if (teleconsultRequestInfo != null) {
+      TeleconsultRequestInfoPayload(
+          requesterId = teleconsultRequestInfo.requesterId,
+          facilityId = teleconsultRequestInfo.facilityId,
+          requestedAt = teleconsultRequestInfo.requestedAt
+      )
+    } else {
+      null
+    }
+    val teleconsultRecordInfoPayload = if (teleconsultRecordInfo != null) {
+      TeleconsultRecordInfoPayload(
+          recordedAt = teleconsultRecordInfo.recordedAt,
+          teleconsultationType = teleconsultRecordInfo.teleconsultationType,
+          patientTookMedicines = teleconsultRecordInfo.patientTookMedicines,
+          patientConsented = teleconsultRecordInfo.patientConsented,
+          medicalOfficerNumber = teleconsultRecordInfo.medicalOfficerNumber.toString(),
+      )
+    } else {
+      null
+    }
     return TeleconsultRecordPayload(
         id = id,
         patientId = patientId,
         medicalOfficerId = medicalOfficerId,
-        teleconsultRequestInfo = null,
-        teleconsultRecordInfo = null,
+        teleconsultRequestInfo = teleconsultRequestInfoPayload,
+        teleconsultRecordInfo = teleconsultRecordInfoPayload,
         createdAt = timestamp.createdAt,
         updatedAt = timestamp.updatedAt,
         deletedAt = timestamp.deletedAt
@@ -60,7 +81,7 @@ data class TeleconsultRecord(
     fun getAll(): List<TeleconsultRecord>
 
     @Query("SELECT * FROM TeleconsultRecord WHERE id = :teleconsultRecordId")
-    fun getCompleteTeleconsultLog(teleconsultRecordId: UUID) : TeleconsultRecord
+    fun getCompleteTeleconsultLog(teleconsultRecordId: UUID): TeleconsultRecord
 
     @Query("UPDATE TeleconsultRecord SET record_medicalOfficerNumber = :medicalOfficerNumber, updatedAt = :updatedAt WHERE id = :teleconsultRecordId")
     fun updateMedicalRegistrationId(teleconsultRecordId: UUID, medicalOfficerNumber: String, updatedAt: Instant)

@@ -25,7 +25,15 @@ class TeleconsultMedicinesEffectHandler @AssistedInject constructor(
         .addConsumer(OpenEditMedicines::class.java, { uiActions.openEditMedicines(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(OpenDrugDurationSheet::class.java, { uiActions.openDrugDurationSheet(it.prescription) }, schedulersProvider.ui())
         .addConsumer(OpenDrugFrequencySheet::class.java, { uiActions.openDrugFrequencySheet(it.prescription) }, schedulersProvider.ui())
+        .addConsumer(UpdateDrugDuration::class.java, { updateDrugDuration(it) }, schedulersProvider.io())
         .build()
+  }
+
+  private fun updateDrugDuration(updateDrugDuration: UpdateDrugDuration) {
+    prescriptionRepository.updateDrugDuration(
+        id = updateDrugDuration.prescribedDrugUuid,
+        duration = updateDrugDuration.duration
+    )
   }
 
   private fun loadPatientMedicines(): ObservableTransformer<LoadPatientMedicines, TeleconsultMedicinesEvent> {

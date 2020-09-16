@@ -46,4 +46,17 @@ class TeleconsultMedicinesUiRendererTest {
     verify(ui).renderMedicines(medicines)
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when there are no medicines for the patient, then show no medicines`() {
+    // given
+    val noMedicinesModel = model.medicinesLoaded(emptyList())
+
+    // when
+    uiRenderer.render(noMedicinesModel)
+
+    // then
+    verify(ui).showNoMedicines()
+    verifyNoMoreInteractions(ui)
+  }
 }

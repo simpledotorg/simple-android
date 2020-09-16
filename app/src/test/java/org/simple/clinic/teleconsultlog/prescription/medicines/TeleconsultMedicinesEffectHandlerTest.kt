@@ -11,6 +11,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.Duration
 import java.util.UUID
@@ -120,6 +121,24 @@ class TeleconsultMedicinesEffectHandlerTest {
     verifyZeroInteractions(uiActions)
 
     verify(prescriptionRepository).updateDrugDuration(prescribedDrugUuid, duration)
+    verifyNoMoreInteractions(prescriptionRepository)
+  }
+
+  @Test
+  fun `when update drug frequency is received, then update the drug frequency`() {
+    // given
+    val prescribedDrugUuid = UUID.fromString("d0b94422-9a0c-4b25-8664-20a99441a012")
+    val drugFrequency = MedicineFrequency.TDS
+
+    // when
+    effectHandlerTestCase.dispatch(UpdateDrugFrequency(prescribedDrugUuid, drugFrequency))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verifyZeroInteractions(uiActions)
+
+    verify(prescriptionRepository).updateDrugFrequency(prescribedDrugUuid, drugFrequency)
     verifyNoMoreInteractions(prescriptionRepository)
   }
 }

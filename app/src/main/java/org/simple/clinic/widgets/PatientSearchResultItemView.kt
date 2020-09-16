@@ -91,15 +91,7 @@ class PatientSearchResultItemView(
   }
 
   private fun renderPatientAddress(address: PatientAddress) {
-    val addressFields = listOf(
-        address.streetAddress,
-        address.colonyOrVillage,
-        address.district,
-        address.state,
-        address.zone
-    ).filterNot { it.isNullOrBlank() }
-
-    addressLabel.text = addressFields.joinToString()
+    addressLabel.text = address.completeAddress
   }
 
   private fun renderPatientNameAgeAndGender(fullName: String, gender: Gender, dateOfBirth: DateOfBirth) {

@@ -360,15 +360,7 @@ class PatientSummaryScreen(
   }
 
   private fun displayPatientAddress(address: PatientAddress) {
-    val addressFields = listOf(
-        address.streetAddress,
-        address.colonyOrVillage,
-        address.district,
-        address.state,
-        address.zone
-    ).filterNot { it.isNullOrBlank() }
-
-    addressTextView.text = addressFields.joinToString()
+    addressTextView.text = address.completeAddress
   }
 
   private fun displayPhoneNumber(phoneNumber: PatientPhoneNumber?) {

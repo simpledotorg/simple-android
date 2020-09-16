@@ -36,6 +36,17 @@ data class PatientAddress(
 
     val deletedAt: Instant?
 ) : Parcelable {
+
+  val completeAddress: String
+    get() = listOf(
+        streetAddress,
+        colonyOrVillage,
+        district,
+        state,
+        zone
+    ).filterNot { it.isNullOrBlank() }
+        .joinToString()
+
   fun withLocality(
       colonyOrVillage: String,
       district: String,

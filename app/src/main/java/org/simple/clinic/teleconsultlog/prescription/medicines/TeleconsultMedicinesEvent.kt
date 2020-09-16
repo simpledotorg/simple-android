@@ -7,3 +7,5 @@ sealed class TeleconsultMedicinesEvent
 data class PatientMedicinesLoaded(val medicines: List<PrescribedDrug>) : TeleconsultMedicinesEvent()
 
 object EditMedicinesClicked : TeleconsultMedicinesEvent()
+
+data class DrugDurationClicked(val prescription: PrescribedDrug) : TeleconsultMedicinesEvent()

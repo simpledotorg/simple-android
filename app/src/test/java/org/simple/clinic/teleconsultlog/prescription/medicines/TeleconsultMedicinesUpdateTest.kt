@@ -48,4 +48,19 @@ class TeleconsultMedicinesUpdateTest {
             hasEffects(OpenEditMedicines(patientUuid))
         ))
   }
+
+  @Test
+  fun `when drug duration is clicked, then open drug duration sheet`() {
+    val prescription = TestData.prescription(
+        uuid = UUID.fromString("b9c52365-2782-4c03-95ac-1c508a11a510")
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(DrugDurationClicked(prescription))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenDrugDurationSheet(prescription))
+        ))
+  }
 }

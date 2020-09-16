@@ -14,6 +14,7 @@ class TeleconsultMedicinesUpdate : Update<TeleconsultMedicinesModel, Teleconsult
     return when (event) {
       is PatientMedicinesLoaded -> next(model.medicinesLoaded(event.medicines))
       EditMedicinesClicked -> dispatch(OpenEditMedicines(model.patientUuid))
+      is DrugDurationClicked -> dispatch(OpenDrugDurationSheet(event.prescription))
     }
   }
 }

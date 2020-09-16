@@ -17,6 +17,7 @@
   - Record new blood pressure measurement
   - Update existing blood pressure measurement
 - Change registration and current facility ID columns to regular columns without foreign keys in `User`
+- Add teleconsult record sync
 
 ## 2020-09-15-7432
 ### Features

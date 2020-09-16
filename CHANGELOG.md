@@ -18,10 +18,7 @@
 - Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`, `ti-ET`
 - Stop loading count of overdue items on the home screen
 
-### Fixes
-- Fixed BloodPressure removal not working
-
-## On Demo
+## 2020-09-14-7432
 ### Changes
 - Open patient summary screen when patient name is clicked in overdue
 
@@ -36,6 +33,9 @@
 - Bumped internal SQLite version to 3.32.2
 - Change saving of app lock timestamp to an in-memory value
 - Pin the number of threads used for running queries in Room based on the SQLite connection pool size
+
+### Fixes
+- Fixed BloodPressure removal not working
 
 ## 2020-09-03-7417
 ### Fixes

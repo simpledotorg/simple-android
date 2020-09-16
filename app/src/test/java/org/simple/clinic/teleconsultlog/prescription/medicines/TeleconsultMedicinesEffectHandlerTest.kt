@@ -67,4 +67,22 @@ class TeleconsultMedicinesEffectHandlerTest {
     verify(uiActions).openEditMedicines(patientUuid)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when open drug duration sheet effect is received, then open drug duration sheet`() {
+    // given
+    val prescription = TestData.prescription(
+        uuid = UUID.fromString("288a87b4-5835-4b4e-b9ed-abad3d8b590c"),
+        name = "Taco 10mg"
+    )
+
+    // when
+    effectHandlerTestCase.dispatch(OpenDrugDurationSheet(prescription))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openDrugDurationSheet(prescription)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

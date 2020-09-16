@@ -15,6 +15,7 @@ class TeleconsultMedicinesUpdate : Update<TeleconsultMedicinesModel, Teleconsult
       is PatientMedicinesLoaded -> next(model.medicinesLoaded(event.medicines))
       EditMedicinesClicked -> dispatch(OpenEditMedicines(model.patientUuid))
       is DrugDurationClicked -> dispatch(OpenDrugDurationSheet(event.prescription))
+      is DrugFrequencyClicked -> dispatch(OpenDrugFrequencySheet(event.prescription))
     }
   }
 }

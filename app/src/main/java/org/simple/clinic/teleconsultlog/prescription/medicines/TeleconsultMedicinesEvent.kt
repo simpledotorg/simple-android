@@ -9,3 +9,5 @@ data class PatientMedicinesLoaded(val medicines: List<PrescribedDrug>) : Telecon
 object EditMedicinesClicked : TeleconsultMedicinesEvent()
 
 data class DrugDurationClicked(val prescription: PrescribedDrug) : TeleconsultMedicinesEvent()
+
+data class DrugFrequencyClicked(val prescription: PrescribedDrug) : TeleconsultMedicinesEvent()

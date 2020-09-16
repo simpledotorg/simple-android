@@ -63,4 +63,19 @@ class TeleconsultMedicinesUpdateTest {
             hasEffects(OpenDrugDurationSheet(prescription))
         ))
   }
+
+  @Test
+  fun `when drug frequency is clicked, then open drug frequency sheet`() {
+    val prescription = TestData.prescription(
+        uuid = UUID.fromString("b9c52365-2782-4c03-95ac-1c508a11a510")
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(DrugFrequencyClicked(prescription))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenDrugFrequencySheet(prescription))
+        ))
+  }
 }

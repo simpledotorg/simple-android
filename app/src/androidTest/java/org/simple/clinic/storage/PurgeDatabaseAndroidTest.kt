@@ -236,4 +236,38 @@ class PurgeDatabaseAndroidTest {
     assertThat(bloodSugarDao.getOne(notDeletedBloodSugarMeasurement.uuid)).isEqualTo(notDeletedBloodSugarMeasurement)
     assertThat(bloodSugarDao.getOne(deletedButUnsyncedBloodSugarMeasurement.uuid)).isEqualTo(deletedButUnsyncedBloodSugarMeasurement)
   }
+
+  @Test
+  fun purging_the_database_should_delete_soft_deleted_prescriptions() {
+    // given
+    val deletedPrescription = TestData.prescription(
+        uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
+        isDeleted = true,
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedPrescription = TestData.prescription(
+        uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
+        isDeleted = false,
+        syncStatus = SyncStatus.DONE
+    )
+    val deletedButUnsyncedPrescripion = TestData.prescription(
+        uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
+        isDeleted = true,
+        syncStatus = SyncStatus.PENDING
+    )
+
+    prescribedDrugsDao.save(listOf(deletedPrescription, deletedButUnsyncedPrescripion, notDeletedPrescription))
+
+    assertThat(prescribedDrugsDao.getOne(deletedPrescription.uuid)).isEqualTo(deletedPrescription)
+    assertThat(prescribedDrugsDao.getOne(notDeletedPrescription.uuid)).isEqualTo(notDeletedPrescription)
+    assertThat(prescribedDrugsDao.getOne(deletedButUnsyncedPrescripion.uuid)).isEqualTo(deletedButUnsyncedPrescripion)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(prescribedDrugsDao.getOne(deletedPrescription.uuid)).isNull()
+    assertThat(prescribedDrugsDao.getOne(notDeletedPrescription.uuid)).isEqualTo(notDeletedPrescription)
+    assertThat(prescribedDrugsDao.getOne(deletedButUnsyncedPrescripion.uuid)).isEqualTo(deletedButUnsyncedPrescripion)
+  }
 }

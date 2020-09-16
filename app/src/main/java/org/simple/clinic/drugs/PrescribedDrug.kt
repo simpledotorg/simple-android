@@ -134,5 +134,11 @@ data class PrescribedDrug(
         instantToCompare: Instant,
         pendingStatus: SyncStatus
     ): Boolean
+
+    @Query("""
+      DELETE FROM PrescribedDrug
+      WHERE isDeleted = 1 AND syncStatus == 'DONE'
+    """)
+    fun purgeDeleted()
   }
 }

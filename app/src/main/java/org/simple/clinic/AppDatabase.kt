@@ -182,6 +182,7 @@ abstract class AppDatabase : RoomDatabase() {
       }
       bloodPressureDao().purgeDeleted()
       bloodSugarDao().purgeDeleted()
+      prescriptionDao().purgeDeleted()
     }
   }
 }

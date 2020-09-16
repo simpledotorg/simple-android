@@ -24,6 +24,7 @@ class TeleconsultMedicinesEffectHandler @AssistedInject constructor(
         .addTransformer(LoadPatientMedicines::class.java, loadPatientMedicines())
         .addConsumer(OpenEditMedicines::class.java, { uiActions.openEditMedicines(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(OpenDrugDurationSheet::class.java, { uiActions.openDrugDurationSheet(it.prescription) }, schedulersProvider.ui())
+        .addConsumer(OpenDrugFrequencySheet::class.java, { uiActions.openDrugFrequencySheet(it.prescription) }, schedulersProvider.ui())
         .build()
   }
 

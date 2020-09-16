@@ -6,4 +6,5 @@ import java.util.UUID
 interface TeleconsultMedicinesUiActions {
   fun openEditMedicines(patientUuid: UUID)
   fun openDrugDurationSheet(prescription: PrescribedDrug)
+  fun openDrugFrequencySheet(prescription: PrescribedDrug)
 }

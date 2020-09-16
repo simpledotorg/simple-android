@@ -85,4 +85,22 @@ class TeleconsultMedicinesEffectHandlerTest {
     verify(uiActions).openDrugDurationSheet(prescription)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when open drug frequency sheet effect is received, then open drug frequency sheet`() {
+    // given
+    val prescription = TestData.prescription(
+        uuid = UUID.fromString("b02ddda0-9044-4500-8d68-bd9465e8ee58"),
+        name = "Amlodipine"
+    )
+
+    // when
+    effectHandlerTestCase.dispatch(OpenDrugFrequencySheet(prescription))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openDrugFrequencySheet(prescription)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

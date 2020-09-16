@@ -10,3 +10,5 @@ data class LoadPatientMedicines(val patientUuid: UUID) : TeleconsultMedicinesEff
 data class OpenEditMedicines(val patientUuid: UUID) : TeleconsultMedicinesEffect()
 
 data class OpenDrugDurationSheet(val prescription: PrescribedDrug) : TeleconsultMedicinesEffect()
+
+data class OpenDrugFrequencySheet(val prescription: PrescribedDrug) : TeleconsultMedicinesEffect()

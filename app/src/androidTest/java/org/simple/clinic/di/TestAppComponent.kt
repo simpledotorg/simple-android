@@ -25,6 +25,7 @@ import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
 import org.simple.clinic.storage.DaoWithUpsertAndroidTest
+import org.simple.clinic.storage.PurgeDatabaseAndroidTest
 import org.simple.clinic.storage.migrations.BaseDatabaseMigrationTest
 import org.simple.clinic.storage.migrations.DatabaseMigrationAndroidTest
 import org.simple.clinic.storage.migrations.Migration57AndroidTest
@@ -106,4 +107,5 @@ interface TestAppComponent {
   fun inject(target: ProtocolSyncIntegrationTest)
   fun inject(target: TeleconsultRecordTest)
   fun inject(target: TeleconsultRecordRepositoryTest)
+  fun inject(target: PurgeDatabaseAndroidTest)
 }

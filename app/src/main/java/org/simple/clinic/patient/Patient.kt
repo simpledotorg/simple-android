@@ -364,5 +364,36 @@ data class Patient(
         LEFT JOIN BusinessId BI ON BI.patientUuid == P.uuid
       """
     }
+
+    // This depends on the foreign key references between address, patient
+    // phone numbers, and business IDs to cascade the deletes.
+    @Query("""
+      DELETE FROM PatientAddress
+      WHERE uuid IN (
+        SELECT addressUuid FROM Patient
+        WHERE deletedAt IS NOT NULL AND syncStatus == 'DONE'
+      )
+    """)
+    abstract fun purgeDeleted()
+
+    @Query("""
+      DELETE FROM PatientPhoneNumber
+      WHERE uuid IN (
+        SELECT PPN.uuid FROM PatientPhoneNumber PPN
+        INNER JOIN Patient P ON P.uuid == PPN.patientUuid
+        WHERE P.syncStatus == 'DONE' AND PPN.deletedAt IS NOT NULL
+      )
+    """)
+    abstract fun purgeDeletedPhoneNumbers()
+
+    @Query("""
+      DELETE FROM BusinessId
+      WHERE uuid IN (
+        SELECT BI.uuid FROM BusinessId BI
+        INNER JOIN Patient P ON P.uuid == BI.patientUuid
+        WHERE P.syncStatus == 'DONE' AND BI.deletedAt IS NOT NULL
+      )
+    """)
+    abstract fun purgeDeletedBusinessIds()
   }
 }

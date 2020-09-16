@@ -12,7 +12,7 @@
 - Disable state saving and restoration for the search results view
 - Stop querying for redundant facility in `LoggedInUserHttpInterceptor`
 - Change `TeleconsultFacilityInfoApi` endpoint
-- [In Progress: 15 Sep 2020] Add recurring task to purge unused data from the database
+- Add methods to purge soft-deleted records from the database
 
 ### Changes
 - Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`, `ti-ET`

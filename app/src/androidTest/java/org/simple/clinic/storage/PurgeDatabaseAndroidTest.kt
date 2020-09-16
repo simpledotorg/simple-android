@@ -168,4 +168,174 @@ class PurgeDatabaseAndroidTest {
     assertThat(businessIdDao.get(notDeletedBusinessId.uuid)).isEqualTo(notDeletedBusinessId)
     assertThat(businessIdDao.get(deletedButUnsyncedBusinessId.uuid)).isEqualTo(deletedButUnsyncedBusinessId)
   }
+
+  @Test
+  fun purging_the_database_should_delete_soft_deleted_blood_pressure_measurements() {
+    // given
+    val deletedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE
+    )
+    val deletedButUnsyncedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = SyncStatus.PENDING
+    )
+
+    bloodPressureDao.save(listOf(deletedBloodPressureMeasurement, deletedButUnsyncedBloodPressureMeasurement, notDeletedBloodPressureMeasurement))
+
+    assertThat(bloodPressureDao.getOne(deletedBloodPressureMeasurement.uuid)).isEqualTo(deletedBloodPressureMeasurement)
+    assertThat(bloodPressureDao.getOne(notDeletedBloodPressureMeasurement.uuid)).isEqualTo(notDeletedBloodPressureMeasurement)
+    assertThat(bloodPressureDao.getOne(deletedButUnsyncedBloodPressureMeasurement.uuid)).isEqualTo(deletedButUnsyncedBloodPressureMeasurement)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(bloodPressureDao.getOne(deletedBloodPressureMeasurement.uuid)).isNull()
+    assertThat(bloodPressureDao.getOne(notDeletedBloodPressureMeasurement.uuid)).isEqualTo(notDeletedBloodPressureMeasurement)
+    assertThat(bloodPressureDao.getOne(deletedButUnsyncedBloodPressureMeasurement.uuid)).isEqualTo(deletedButUnsyncedBloodPressureMeasurement)
+  }
+
+  @Test
+  fun purging_the_database_should_delete_soft_deleted_blood_sugar_measurements() {
+    // given
+    val deletedBloodSugarMeasurement = TestData.bloodSugarMeasurement(
+        uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedBloodSugarMeasurement = TestData.bloodSugarMeasurement(
+        uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE
+    )
+    val deletedButUnsyncedBloodSugarMeasurement = TestData.bloodSugarMeasurement(
+        uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = SyncStatus.PENDING
+    )
+
+    bloodSugarDao.save(listOf(deletedBloodSugarMeasurement, deletedButUnsyncedBloodSugarMeasurement, notDeletedBloodSugarMeasurement))
+
+    assertThat(bloodSugarDao.getOne(deletedBloodSugarMeasurement.uuid)).isEqualTo(deletedBloodSugarMeasurement)
+    assertThat(bloodSugarDao.getOne(notDeletedBloodSugarMeasurement.uuid)).isEqualTo(notDeletedBloodSugarMeasurement)
+    assertThat(bloodSugarDao.getOne(deletedButUnsyncedBloodSugarMeasurement.uuid)).isEqualTo(deletedButUnsyncedBloodSugarMeasurement)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(bloodSugarDao.getOne(deletedBloodSugarMeasurement.uuid)).isNull()
+    assertThat(bloodSugarDao.getOne(notDeletedBloodSugarMeasurement.uuid)).isEqualTo(notDeletedBloodSugarMeasurement)
+    assertThat(bloodSugarDao.getOne(deletedButUnsyncedBloodSugarMeasurement.uuid)).isEqualTo(deletedButUnsyncedBloodSugarMeasurement)
+  }
+
+  @Test
+  fun purging_the_database_should_delete_soft_deleted_prescriptions() {
+    // given
+    val deletedPrescription = TestData.prescription(
+        uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
+        isDeleted = true,
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedPrescription = TestData.prescription(
+        uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
+        isDeleted = false,
+        syncStatus = SyncStatus.DONE
+    )
+    val deletedButUnsyncedPrescripion = TestData.prescription(
+        uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
+        isDeleted = true,
+        syncStatus = SyncStatus.PENDING
+    )
+
+    prescribedDrugsDao.save(listOf(deletedPrescription, deletedButUnsyncedPrescripion, notDeletedPrescription))
+
+    assertThat(prescribedDrugsDao.getOne(deletedPrescription.uuid)).isEqualTo(deletedPrescription)
+    assertThat(prescribedDrugsDao.getOne(notDeletedPrescription.uuid)).isEqualTo(notDeletedPrescription)
+    assertThat(prescribedDrugsDao.getOne(deletedButUnsyncedPrescripion.uuid)).isEqualTo(deletedButUnsyncedPrescripion)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(prescribedDrugsDao.getOne(deletedPrescription.uuid)).isNull()
+    assertThat(prescribedDrugsDao.getOne(notDeletedPrescription.uuid)).isEqualTo(notDeletedPrescription)
+    assertThat(prescribedDrugsDao.getOne(deletedButUnsyncedPrescripion.uuid)).isEqualTo(deletedButUnsyncedPrescripion)
+  }
+
+  @Test
+  fun purging_the_database_should_delete_soft_deleted_appointments() {
+    // given
+    val deletedAppointment = TestData.appointment(
+        uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedAppointment = TestData.appointment(
+        uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE
+    )
+    val deletedButUnsyncedAppointment = TestData.appointment(
+        uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = SyncStatus.PENDING
+    )
+
+    appointmentDao.save(listOf(deletedAppointment, deletedButUnsyncedAppointment, notDeletedAppointment))
+
+    assertThat(appointmentDao.getOne(deletedAppointment.uuid)).isEqualTo(deletedAppointment)
+    assertThat(appointmentDao.getOne(notDeletedAppointment.uuid)).isEqualTo(notDeletedAppointment)
+    assertThat(appointmentDao.getOne(deletedButUnsyncedAppointment.uuid)).isEqualTo(deletedButUnsyncedAppointment)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(appointmentDao.getOne(deletedAppointment.uuid)).isNull()
+    assertThat(appointmentDao.getOne(notDeletedAppointment.uuid)).isEqualTo(notDeletedAppointment)
+    assertThat(appointmentDao.getOne(deletedButUnsyncedAppointment.uuid)).isEqualTo(deletedButUnsyncedAppointment)
+  }
+
+  @Test
+  fun purging_the_database_should_delete_soft_deleted_medical_histories() {
+    // given
+    val deletedMedicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedMedicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE
+    )
+    val deletedButUnsyncedMedicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = SyncStatus.PENDING
+    )
+
+    medicalHistoryDao.save(listOf(deletedMedicalHistory, deletedButUnsyncedMedicalHistory, notDeletedMedicalHistory))
+
+    assertThat(medicalHistoryDao.getOne(deletedMedicalHistory.uuid)).isEqualTo(deletedMedicalHistory)
+    assertThat(medicalHistoryDao.getOne(notDeletedMedicalHistory.uuid)).isEqualTo(notDeletedMedicalHistory)
+    assertThat(medicalHistoryDao.getOne(deletedButUnsyncedMedicalHistory.uuid)).isEqualTo(deletedButUnsyncedMedicalHistory)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(medicalHistoryDao.getOne(deletedMedicalHistory.uuid)).isNull()
+    assertThat(medicalHistoryDao.getOne(notDeletedMedicalHistory.uuid)).isEqualTo(notDeletedMedicalHistory)
+    assertThat(medicalHistoryDao.getOne(deletedButUnsyncedMedicalHistory.uuid)).isEqualTo(deletedButUnsyncedMedicalHistory)
+  }
 }

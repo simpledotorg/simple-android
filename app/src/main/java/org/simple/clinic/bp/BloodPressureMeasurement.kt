@@ -160,5 +160,11 @@ data class BloodPressureMeasurement(
       ORDER BY recordedAt DESC
     """)
     fun allBloodPressuresDataSource(patientUuid: UUID): DataSource.Factory<Int, BloodPressureMeasurement>
+
+    @Query("""
+      DELETE FROM BloodPressureMeasurement
+      WHERE deletedAt IS NOT NULL AND syncStatus == 'DONE'
+    """)
+    fun purgeDeleted()
   }
 }

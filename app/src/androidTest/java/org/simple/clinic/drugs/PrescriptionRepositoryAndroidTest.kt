@@ -11,6 +11,8 @@ import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.BD
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.OD
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUtcClock
@@ -156,6 +158,38 @@ class PrescriptionRepositoryAndroidTest {
     // then
     val expectedPrescribedDrug = prescribedDrug.copy(
         durationInDays = 20,
+        updatedAt = prescribedDrug.updatedAt.plus(durationToAdvanceBy),
+        syncStatus = SyncStatus.PENDING
+    )
+    assertThat(database.prescriptionDao().getOne(prescribedDrug.uuid)).isEqualTo(expectedPrescribedDrug)
+  }
+
+  @Test
+  fun updating_prescribed_drug_frequency_should_work_correctly() {
+    // given
+    val durationToAdvanceBy = Duration.ofMinutes(10)
+    val prescribedDrug = TestData.prescription(
+        uuid = UUID.fromString("2f9daf84-50fa-4955-ab18-ea48d8fc9fe1"),
+        name = "Taco",
+        frequency = OD,
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock),
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE
+    )
+
+    database.prescriptionDao().save(listOf(prescribedDrug))
+
+    // when
+    clock.advanceBy(durationToAdvanceBy)
+    repository.updateDrugFrequency(
+        id = prescribedDrug.uuid,
+        drugFrequency = BD
+    )
+
+    // then
+    val expectedPrescribedDrug = prescribedDrug.copy(
+        frequency = BD,
         updatedAt = prescribedDrug.updatedAt.plus(durationToAdvanceBy),
         syncStatus = SyncStatus.PENDING
     )

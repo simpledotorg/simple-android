@@ -104,15 +104,7 @@ class TeleconsultPatientInfoView constructor(
   }
 
   private fun displayPatientAddress(address: PatientAddress) {
-    val addressFields = listOf(
-        address.streetAddress,
-        address.colonyOrVillage,
-        address.district,
-        address.state,
-        address.zone
-    ).filterNot { it.isNullOrBlank() }
-
-    patientAddressTextView.text = addressFields.joinToString()
+    patientAddressTextView.text = address.completeAddress
   }
 
   override fun renderPrescriptionDate(prescriptionDate: LocalDate) {

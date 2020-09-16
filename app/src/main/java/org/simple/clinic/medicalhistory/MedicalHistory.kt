@@ -132,5 +132,11 @@ data class MedicalHistory(
         instantToCompare: Instant,
         pendingStatus: SyncStatus
     ): Boolean
+
+    @Query("""
+      DELETE FROM MedicalHistory
+      WHERE deletedAt IS NOT NULL AND syncStatus == 'DONE'
+    """)
+    fun purgeDeleted()
   }
 }

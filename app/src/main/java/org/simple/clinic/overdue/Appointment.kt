@@ -243,5 +243,11 @@ data class Appointment(
         newUpdatedAt: Instant,
         createdBefore: Instant
     )
+
+    @Query("""
+      DELETE FROM Appointment
+      WHERE deletedAt IS NOT NULL AND syncStatus == 'DONE'
+    """)
+    fun purgeDeleted()
   }
 }

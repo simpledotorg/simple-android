@@ -129,4 +129,36 @@ class PrescriptionRepositoryAndroidTest {
     val storedPrescription = database.prescriptionDao().getOne(correctedPrescription.uuid)!!
     assertThat(storedPrescription.name).isEqualTo(correctedPrescription.name)
   }
+
+  @Test
+  fun updating_prescribed_drug_duration_should_work_correctly() {
+    // given
+    val durationToAdvanceBy = Duration.ofMinutes(10)
+    val prescribedDrug = TestData.prescription(
+        uuid = UUID.fromString("c4b74e2b-2ea3-4c4d-a6ab-8e93faa66159"),
+        name = "Taco",
+        durationInDays = 30,
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock),
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE
+    )
+
+    database.prescriptionDao().save(listOf(prescribedDrug))
+
+    // when
+    clock.advanceBy(durationToAdvanceBy)
+    repository.updateDrugDuration(
+        id = prescribedDrug.uuid,
+        duration = Duration.ofDays(20)
+    )
+
+    // then
+    val expectedPrescribedDrug = prescribedDrug.copy(
+        durationInDays = 20,
+        updatedAt = prescribedDrug.updatedAt.plus(durationToAdvanceBy),
+        syncStatus = SyncStatus.PENDING
+    )
+    assertThat(database.prescriptionDao().getOne(prescribedDrug.uuid)).isEqualTo(expectedPrescribedDrug)
+  }
 }

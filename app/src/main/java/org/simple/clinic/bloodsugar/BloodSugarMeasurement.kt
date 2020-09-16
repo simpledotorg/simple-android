@@ -141,5 +141,11 @@ data class BloodSugarMeasurement(
 
     @Query("DELETE FROM BloodSugarMeasurements")
     fun clear()
+
+    @Query("""
+      DELETE FROM BloodSugarMeasurements
+      WHERE deletedAt IS NOT NULL AND syncStatus == 'DONE'
+    """)
+    fun purgeDeleted()
   }
 }

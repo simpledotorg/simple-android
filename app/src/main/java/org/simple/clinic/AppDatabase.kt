@@ -181,6 +181,7 @@ abstract class AppDatabase : RoomDatabase() {
         purgeDeletedBusinessIds()
       }
       bloodPressureDao().purgeDeleted()
+      bloodSugarDao().purgeDeleted()
     }
   }
 }

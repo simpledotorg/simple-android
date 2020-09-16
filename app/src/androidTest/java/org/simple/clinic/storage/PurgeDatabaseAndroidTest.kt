@@ -270,4 +270,38 @@ class PurgeDatabaseAndroidTest {
     assertThat(prescribedDrugsDao.getOne(notDeletedPrescription.uuid)).isEqualTo(notDeletedPrescription)
     assertThat(prescribedDrugsDao.getOne(deletedButUnsyncedPrescripion.uuid)).isEqualTo(deletedButUnsyncedPrescripion)
   }
+
+  @Test
+  fun purging_the_database_should_delete_soft_deleted_appointments() {
+    // given
+    val deletedAppointment = TestData.appointment(
+        uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedAppointment = TestData.appointment(
+        uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE
+    )
+    val deletedButUnsyncedAppointment = TestData.appointment(
+        uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = SyncStatus.PENDING
+    )
+
+    appointmentDao.save(listOf(deletedAppointment, deletedButUnsyncedAppointment, notDeletedAppointment))
+
+    assertThat(appointmentDao.getOne(deletedAppointment.uuid)).isEqualTo(deletedAppointment)
+    assertThat(appointmentDao.getOne(notDeletedAppointment.uuid)).isEqualTo(notDeletedAppointment)
+    assertThat(appointmentDao.getOne(deletedButUnsyncedAppointment.uuid)).isEqualTo(deletedButUnsyncedAppointment)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(appointmentDao.getOne(deletedAppointment.uuid)).isNull()
+    assertThat(appointmentDao.getOne(notDeletedAppointment.uuid)).isEqualTo(notDeletedAppointment)
+    assertThat(appointmentDao.getOne(deletedButUnsyncedAppointment.uuid)).isEqualTo(deletedButUnsyncedAppointment)
+  }
 }

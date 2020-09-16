@@ -15,7 +15,6 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.teleconsultlog.drugduration.DrugDuration
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.BD
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.OD
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.QDS
@@ -46,28 +45,21 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
   )
 
   companion object {
-    private const val DRUG_DURATION = "drugDuration"
     private const val MEDICINE_FREQUENCY = "medicineFrequency"
     private const val SAVED_MEDICINE_FREQUENCY = "savedmedicineFrequency"
 
     fun intent(
         context: Context,
-        drugDuration: DrugDuration,
-        medicineFrequency: MedicineFrequency
+        medicineFrequencySheetExtra: MedicineFrequencySheetExtra
     ): Intent {
       return Intent(context, MedicineFrequencySheet::class.java).apply {
-        putExtra(DRUG_DURATION, drugDuration)
-        putExtra(MEDICINE_FREQUENCY, medicineFrequency)
+        putExtra(MEDICINE_FREQUENCY, medicineFrequencySheetExtra)
       }
     }
   }
 
-  private val drugDuration by unsafeLazy {
-    intent.getParcelableExtra<DrugDuration>(DRUG_DURATION)!!
-  }
-
-  private val medicineFrequency by unsafeLazy {
-    intent.getSerializableExtra(MEDICINE_FREQUENCY)
+  private val medicineFrequencyExtra by unsafeLazy {
+    intent.getParcelableExtra<MedicineFrequencySheetExtra>(MEDICINE_FREQUENCY)
   }
 
   private val events by unsafeLazy {
@@ -82,7 +74,7 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
   private val delegate by unsafeLazy {
     MobiusDelegate.forActivity(
         events = events.ofType(),
-        defaultModel = MedicineFrequencyModel.create(medicineFrequency = medicineFrequency as MedicineFrequency),
+        defaultModel = MedicineFrequencyModel.create(medicineFrequency = medicineFrequencyExtra.medicineFrequency),
         init = MedicineFrequencyInit(),
         update = MedicineFrequencyUpdate(),
         effectHandler = effectHandlerFactory.create(this).build()
@@ -92,7 +84,7 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_medicine_frequency)
-    medicineFrequencyTitleTextView.text = getString(R.string.drug_duration_title, drugDuration.name, drugDuration.dosage)
+    medicineFrequencyTitleTextView.text = getString(R.string.drug_duration_title, medicineFrequencyExtra.name, medicineFrequencyExtra.dosage)
   }
 
   private fun medicineFrequencyChanges(): Observable<MedicineFrequencyChanged> {

@@ -184,6 +184,7 @@ abstract class AppDatabase : RoomDatabase() {
       bloodSugarDao().purgeDeleted()
       prescriptionDao().purgeDeleted()
       appointmentDao().purgeDeleted()
+      medicalHistoryDao().purgeDeleted()
     }
   }
 }

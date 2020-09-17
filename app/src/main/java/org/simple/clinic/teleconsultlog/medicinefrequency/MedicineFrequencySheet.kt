@@ -46,7 +46,8 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
 
   companion object {
     private const val MEDICINE_FREQUENCY = "medicineFrequency"
-    private const val SAVED_MEDICINE_FREQUENCY = "savedmedicineFrequency"
+    private const val EXTRA_SAVED_MEDICINE_UUID = "savedMedicineUuid"
+    private const val EXTRA_SAVED_MEDICINE_FREQUENCY = "savedMedicineFrequency"
 
     fun intent(
         context: Context,
@@ -116,7 +117,8 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
 
   override fun saveMedicineFrequency(medicineFrequency: MedicineFrequency) {
     val intent = Intent().apply {
-      putExtra(SAVED_MEDICINE_FREQUENCY, medicineFrequency)
+      putExtra(EXTRA_SAVED_MEDICINE_UUID, medicineFrequencyExtra.uuid)
+      putExtra(EXTRA_SAVED_MEDICINE_FREQUENCY, medicineFrequency)
     }
     setResult(Activity.RESULT_OK, intent)
     finish()

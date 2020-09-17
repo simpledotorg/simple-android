@@ -10,6 +10,8 @@ import io.reactivex.Single
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
@@ -18,7 +20,7 @@ import org.simple.clinic.util.toOptional
 import javax.inject.Named
 
 class SetupActivityEffectHandler @AssistedInject constructor(
-    @Named("onboarding_complete") private val onboardingCompletePreference: Preference<Boolean>,
+    @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,
     @Assisted private val uiActions: UiActions,
     private val userDao: User.RoomDao,
     private val appConfigRepository: AppConfigRepository,

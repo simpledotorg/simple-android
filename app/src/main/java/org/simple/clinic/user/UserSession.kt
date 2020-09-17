@@ -11,6 +11,8 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -37,7 +39,7 @@ class UserSession @Inject constructor(
     private val reportPendingRecords: ReportPendingRecordsToAnalytics,
     private val selectedCountryPreference: Preference<Optional<Country>>,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
-    @Named("onboarding_complete") private val onboardingComplete: Preference<Boolean>
+    @TypedPreference(OnboardingComplete) private val onboardingComplete: Preference<Boolean>
 ) {
 
   @Deprecated(message = "Use OngoingLoginEntryRepository directly.")

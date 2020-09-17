@@ -20,14 +20,14 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 
 class SetupActivityEffectHandler @AssistedInject constructor(
-    @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,
     @Assisted private val uiActions: UiActions,
     private val userDao: User.RoomDao,
     private val appConfigRepository: AppConfigRepository,
-    @TypedPreference(FallbackCountry) private val fallbackCountry: Country,
     private val schedulersProvider: SchedulersProvider,
     private val appDatabase: AppDatabase,
-    private val crashReporter: CrashReporter
+    private val crashReporter: CrashReporter,
+    @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,
+    @TypedPreference(FallbackCountry) private val fallbackCountry: Country
 ) {
 
   @AssistedInject.Factory

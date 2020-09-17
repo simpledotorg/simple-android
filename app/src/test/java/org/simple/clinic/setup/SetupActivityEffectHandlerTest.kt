@@ -32,14 +32,14 @@ class SetupActivityEffectHandlerTest {
   private val crashReporter = mock<CrashReporter>()
 
   private val effectHandler = SetupActivityEffectHandler(
-      onboardingCompletePreference = onboardingCompletePreference,
       uiActions = uiActions,
       userDao = userDao,
       appConfigRepository = appConfigRepository,
-      fallbackCountry = fallbackCountry,
       schedulersProvider = TrampolineSchedulersProvider(),
       appDatabase = appDatabase,
-      crashReporter = crashReporter
+      crashReporter = crashReporter,
+      onboardingCompletePreference = onboardingCompletePreference,
+      fallbackCountry = fallbackCountry
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)

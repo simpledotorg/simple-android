@@ -14,4 +14,6 @@ data class UserDetailsFetched(
 
 object DatabaseInitialized : SetupActivityEvent()
 
-object FallbackCountrySetAsSelected: SetupActivityEvent()
+object FallbackCountrySetAsSelected : SetupActivityEvent()
+
+object DatabaseMaintenanceCompleted : SetupActivityEvent()

@@ -11,9 +11,10 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.TestData
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -27,14 +28,18 @@ class SetupActivityEffectHandlerTest {
   private val userDao = mock<User.RoomDao>()
   private val appConfigRepository = mock<AppConfigRepository>()
   private val fallbackCountry = TestData.country()
+  private val appDatabase = mock<org.simple.clinic.AppDatabase>()
+  private val crashReporter = mock<CrashReporter>()
 
   private val effectHandler = SetupActivityEffectHandler(
-      onboardingCompletePreference,
-      uiActions,
-      userDao,
-      appConfigRepository,
-      fallbackCountry,
-      TrampolineSchedulersProvider()
+      onboardingCompletePreference = onboardingCompletePreference,
+      uiActions = uiActions,
+      userDao = userDao,
+      appConfigRepository = appConfigRepository,
+      fallbackCountry = fallbackCountry,
+      schedulersProvider = TrampolineSchedulersProvider(),
+      appDatabase = appDatabase,
+      crashReporter = crashReporter
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -123,6 +128,17 @@ class SetupActivityEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(FallbackCountrySetAsSelected)
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the run database maintenance effect is received, the database must be pruned`() {
+    // when
+    testCase.dispatch(RunDatabaseMaintenance)
+
+    // then
+    verify(appDatabase).prune(crashReporter)
+    testCase.assertOutgoingEvents(DatabaseMaintenanceCompleted)
     verifyZeroInteractions(uiActions)
   }
 }

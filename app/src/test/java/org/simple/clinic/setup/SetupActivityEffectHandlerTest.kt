@@ -18,6 +18,7 @@ import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import java.time.Instant
@@ -33,6 +34,7 @@ class SetupActivityEffectHandlerTest {
   private val appDatabase = mock<org.simple.clinic.AppDatabase>()
   private val crashReporter = mock<CrashReporter>()
   private val databaseMaintenanceRunAtPreference = mock<Preference<Optional<Instant>>>()
+  private val clock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
 
   private val effectHandler = SetupActivityEffectHandler(
       uiActions = uiActions,
@@ -41,6 +43,7 @@ class SetupActivityEffectHandlerTest {
       schedulersProvider = TrampolineSchedulersProvider(),
       appDatabase = appDatabase,
       crashReporter = crashReporter,
+      clock = clock,
       onboardingCompletePreference = onboardingCompletePreference,
       fallbackCountry = fallbackCountry,
       databaseMaintenanceRunAt = databaseMaintenanceRunAtPreference
@@ -142,6 +145,7 @@ class SetupActivityEffectHandlerTest {
 
     // then
     verify(appDatabase).prune(crashReporter)
+    verify(databaseMaintenanceRunAtPreference).set(Optional.of(Instant.now(clock)))
     testCase.assertOutgoingEvents(DatabaseMaintenanceCompleted)
     verifyZeroInteractions(uiActions)
   }

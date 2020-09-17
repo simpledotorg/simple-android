@@ -17,6 +17,7 @@ import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import java.time.Instant
@@ -28,6 +29,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val appDatabase: AppDatabase,
     private val crashReporter: CrashReporter,
+    private val clock: UtcClock,
     @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,
     @TypedPreference(FallbackCountry) private val fallbackCountry: Country,
     @TypedPreference(DatabaseMaintenanceRunAt) private val databaseMaintenanceRunAt: Preference<Optional<Instant>>
@@ -105,6 +107,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .doOnNext { appDatabase.prune(crashReporter) }
+          .doOnNext { databaseMaintenanceRunAt.set(Optional.of(Instant.now(clock))) }
           .map { DatabaseMaintenanceCompleted }
     }
   }

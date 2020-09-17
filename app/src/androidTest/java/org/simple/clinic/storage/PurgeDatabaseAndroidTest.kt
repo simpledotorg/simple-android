@@ -6,6 +6,7 @@ import org.junit.Test
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.SyncStatus
 import java.time.Instant
 import java.util.UUID
@@ -277,17 +278,20 @@ class PurgeDatabaseAndroidTest {
     val deletedAppointment = TestData.appointment(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
         deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        status = Appointment.Status.Scheduled
     )
     val notDeletedAppointment = TestData.appointment(
         uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
         deletedAt = null,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        status = Appointment.Status.Scheduled
     )
     val deletedButUnsyncedAppointment = TestData.appointment(
         uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
         deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        status = Appointment.Status.Scheduled
     )
 
     appointmentDao.save(listOf(deletedAppointment, deletedButUnsyncedAppointment, notDeletedAppointment))
@@ -337,5 +341,73 @@ class PurgeDatabaseAndroidTest {
     assertThat(medicalHistoryDao.getOne(deletedMedicalHistory.uuid)).isNull()
     assertThat(medicalHistoryDao.getOne(notDeletedMedicalHistory.uuid)).isEqualTo(notDeletedMedicalHistory)
     assertThat(medicalHistoryDao.getOne(deletedButUnsyncedMedicalHistory.uuid)).isEqualTo(deletedButUnsyncedMedicalHistory)
+  }
+
+  @Test
+  fun purging_the_database_should_delete_cancelled_and_visited_appointments() {
+    // given
+    val scheduledAppointment = TestData.appointment(
+        uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE,
+        status = Appointment.Status.Scheduled
+    )
+    val cancelledAppointment = TestData.appointment(
+        uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE,
+        status = Appointment.Status.Cancelled
+    )
+    val cancelledButUnsyncedAppointment = TestData.appointment(
+        uuid = UUID.fromString("e17b4fed-a2cd-453d-b717-d60ca184892b"),
+        deletedAt = null,
+        syncStatus = SyncStatus.PENDING,
+        status = Appointment.Status.Cancelled
+    )
+    val visitedAppointment = TestData.appointment(
+        uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE,
+        status = Appointment.Status.Visited
+    )
+    val visitedButUnsyncedAppointment = TestData.appointment(
+        uuid = UUID.fromString("927b08d3-b19e-4231-8d0b-dcf28e240474"),
+        deletedAt = null,
+        syncStatus = SyncStatus.PENDING,
+        status = Appointment.Status.Visited
+    )
+    val appointmentWithUnknownStatus = TestData.appointment(
+        uuid = UUID.fromString("a89a3a34-8395-4a55-89b6-562146369ad1"),
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE,
+        status = Appointment.Status.Unknown("rescheduled")
+    )
+
+    appointmentDao.save(listOf(
+        scheduledAppointment,
+        visitedAppointment,
+        cancelledAppointment,
+        visitedButUnsyncedAppointment,
+        cancelledButUnsyncedAppointment,
+        appointmentWithUnknownStatus
+    ))
+
+    assertThat(appointmentDao.getOne(scheduledAppointment.uuid)).isEqualTo(scheduledAppointment)
+    assertThat(appointmentDao.getOne(cancelledAppointment.uuid)).isEqualTo(cancelledAppointment)
+    assertThat(appointmentDao.getOne(cancelledButUnsyncedAppointment.uuid)).isEqualTo(cancelledButUnsyncedAppointment)
+    assertThat(appointmentDao.getOne(visitedAppointment.uuid)).isEqualTo(visitedAppointment)
+    assertThat(appointmentDao.getOne(visitedButUnsyncedAppointment.uuid)).isEqualTo(visitedButUnsyncedAppointment)
+    assertThat(appointmentDao.getOne(appointmentWithUnknownStatus.uuid)).isEqualTo(appointmentWithUnknownStatus)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(appointmentDao.getOne(scheduledAppointment.uuid)).isEqualTo(scheduledAppointment)
+    assertThat(appointmentDao.getOne(cancelledAppointment.uuid)).isNull()
+    assertThat(appointmentDao.getOne(visitedAppointment.uuid)).isNull()
+    assertThat(appointmentDao.getOne(cancelledButUnsyncedAppointment.uuid)).isEqualTo(cancelledButUnsyncedAppointment)
+    assertThat(appointmentDao.getOne(visitedButUnsyncedAppointment.uuid)).isEqualTo(visitedButUnsyncedAppointment)
+    assertThat(appointmentDao.getOne(appointmentWithUnknownStatus.uuid)).isEqualTo(appointmentWithUnknownStatus)
   }
 }

@@ -249,5 +249,11 @@ data class Appointment(
       WHERE deletedAt IS NOT NULL AND syncStatus == 'DONE'
     """)
     fun purgeDeleted()
+
+    @Query("""
+      DELETE FROM Appointment
+      WHERE status IN ('cancelled', 'visited') AND syncStatus == 'DONE'
+    """)
+    fun purgeUnusedAppointments()
   }
 }

@@ -1,7 +1,6 @@
 package org.simple.clinic.setup
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.mobius.dispatch
@@ -11,6 +10,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.isEmpty
 import org.simple.clinic.util.isNotEmpty
 import java.time.Duration
+import java.time.Instant
 
 class SetupActivityUpdate(
     private val databaseMaintenanceInterval: Duration
@@ -31,8 +31,33 @@ class SetupActivityUpdate(
       is DatabaseInitialized -> dispatch(FetchDatabaseMaintenanceLastRunAtTime)
       is FallbackCountrySetAsSelected -> dispatch(GoToMainActivity)
       is DatabaseMaintenanceCompleted -> dispatch(FetchUserDetails)
-      else -> noChange()
+      is DatabaseMaintenanceLastRunAtTimeLoaded -> runDatabaseMaintenanceIfRequired(event, model)
     }
+  }
+
+  private fun runDatabaseMaintenanceIfRequired(
+      event: DatabaseMaintenanceLastRunAtTimeLoaded,
+      model: SetupActivityModel
+  ): Next<SetupActivityModel, SetupActivityEffect> {
+    val lastDatabaseMaintenanceRunAt = event.runAt
+
+    val effect = lastDatabaseMaintenanceRunAt
+        .map { lastRunAt -> effectForRunningDatabaseMaintenance(lastRunAt, model) }
+        .orElse(RunDatabaseMaintenance)
+
+    return dispatch(effect)
+  }
+
+  private fun effectForRunningDatabaseMaintenance(
+      lastRunAt: Instant,
+      model: SetupActivityModel
+  ): SetupActivityEffect {
+    val shouldRunDatabaseMaintenance = Duration.between(lastRunAt, model.screenOpenedAt) > databaseMaintenanceInterval
+
+    return if (shouldRunDatabaseMaintenance)
+      RunDatabaseMaintenance
+    else
+      FetchUserDetails
   }
 
   private fun goToNextScreenEffect(

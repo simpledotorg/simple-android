@@ -11,6 +11,7 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
@@ -18,7 +19,7 @@ import java.util.UUID
 
 class SetupActivityUpdateTest {
 
-  private val databaseMaintenanceInterval = Duration.ZERO
+  private val databaseMaintenanceInterval = Duration.ofDays(1)
   private val updateSpec = UpdateSpec(SetupActivityUpdate(databaseMaintenanceInterval))
   private val currentTime = Instant.parse("2018-01-01T00:00:00Z")
   private val clock = TestUtcClock(currentTime)
@@ -124,6 +125,44 @@ class SetupActivityUpdateTest {
             hasEffects(FetchUserDetails)
         ))
   }
+
+  @Test
+  fun `when the database maintenance task has never been run, run the database maintenance task`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DatabaseMaintenanceLastRunAtTimeLoaded(Optional.empty()))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(RunDatabaseMaintenance)
+        ))
+  }
+
+  @Test
+  fun `when the database maintenance task has not been run in a while, run the database maintenance task`() {
+    val lastDatabaseRunTime = currentTime.minus(databaseMaintenanceInterval.plusMillis(1))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DatabaseMaintenanceLastRunAtTimeLoaded(Optional.of(lastDatabaseRunTime)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(RunDatabaseMaintenance)
+        ))
+  }
+
+  @Test
+  fun `when the database maintenance task has been run recently, fetch the user details`() {
+    val lastDatabaseRunTime = currentTime.minus(databaseMaintenanceInterval)
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DatabaseMaintenanceLastRunAtTimeLoaded(Optional.of(lastDatabaseRunTime)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(FetchUserDetails)
+        ))
+  }
+
 
   private fun previouslyLoggedInUserFetched(user: User): UserDetailsFetched {
     return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Just(user), userSelectedCountry = None())

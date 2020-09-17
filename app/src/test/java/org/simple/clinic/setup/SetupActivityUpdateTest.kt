@@ -11,14 +11,18 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
+import java.time.Instant
 import java.util.UUID
 
 class SetupActivityUpdateTest {
 
   private val databaseMaintenanceInterval = Duration.ZERO
   private val updateSpec = UpdateSpec(SetupActivityUpdate(databaseMaintenanceInterval))
-  private val defaultModel = SetupActivityModel.create()
+  private val currentTime = Instant.parse("2018-01-01T00:00:00Z")
+  private val clock = TestUtcClock(currentTime)
+  private val defaultModel = SetupActivityModel.create(clock)
 
   @Test
   fun `if the user has not logged in, the country selection screen must be shown`() {

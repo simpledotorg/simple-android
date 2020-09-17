@@ -5,7 +5,9 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.isNotEmpty
+import java.time.Instant
 
 @Parcelize
 data class SetupActivityModel(
@@ -16,12 +18,17 @@ data class SetupActivityModel(
     // find a better way.
     // TODO(vs): 2019-11-08 Figure out a better way, maybe a separate UI parcelable model for the user?
     val isUserLoggedIn: Boolean?,
-    val hasUserSelectedACountry: Boolean?
+    val hasUserSelectedACountry: Boolean?,
+    val screenOpenedAt: Instant
 ) : Parcelable {
 
   companion object {
-    fun create(): SetupActivityModel {
-      return SetupActivityModel(isUserLoggedIn = null, hasUserSelectedACountry = null)
+    fun create(clock: UtcClock): SetupActivityModel {
+      return SetupActivityModel(
+          isUserLoggedIn = null,
+          hasUserSelectedACountry = null,
+          screenOpenedAt = Instant.now(clock)
+      )
     }
   }
 

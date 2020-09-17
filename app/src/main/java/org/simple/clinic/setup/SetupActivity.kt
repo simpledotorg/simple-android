@@ -19,6 +19,7 @@ import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import java.util.Locale
@@ -37,12 +38,15 @@ class SetupActivity : AppCompatActivity(), UiActions {
   @Inject
   lateinit var config: SetupActivityConfig
 
+  @Inject
+  lateinit var clock: UtcClock
+
   private val screenResults = ScreenResultBus()
 
   private val delegate by unsafeLazy {
     MobiusDelegate.forActivity(
         events = Observable.never(),
-        defaultModel = SetupActivityModel.create(),
+        defaultModel = SetupActivityModel.create(clock),
         update = SetupActivityUpdate(config),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = SetupActivityInit(),

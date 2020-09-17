@@ -16,7 +16,10 @@ import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
 import java.net.URI
 import java.time.Instant
 
-@Module(includes = [AssistedInjectModule::class])
+@Module(includes = [
+  AssistedInjectModule::class,
+  SetupActivityConfigModule::class
+])
 class SetupActivityModule {
 
   @Provides

@@ -11,6 +11,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.DatabaseMaintenanceRunAt
 import org.simple.clinic.main.TypedPreference.Type.FallbackCountry
 import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.platform.crash.CrashReporter
@@ -18,6 +19,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
+import java.time.Instant
 
 class SetupActivityEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: UiActions,
@@ -27,7 +29,8 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     private val appDatabase: AppDatabase,
     private val crashReporter: CrashReporter,
     @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,
-    @TypedPreference(FallbackCountry) private val fallbackCountry: Country
+    @TypedPreference(FallbackCountry) private val fallbackCountry: Country,
+    @TypedPreference(DatabaseMaintenanceRunAt) private val databaseMaintenanceRunAt: Preference<Optional<Instant>>
 ) {
 
   @AssistedInject.Factory
@@ -56,6 +59,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
         .addAction(ShowCountrySelectionScreen::class.java, uiActions::showCountrySelectionScreen, schedulersProvider.ui())
         .addTransformer(SetFallbackCountryAsCurrentCountry::class.java, setFallbackCountryAsSelected(schedulersProvider.io()))
         .addTransformer(RunDatabaseMaintenance::class.java, runDatabaseMaintenance())
+        .addTransformer(FetchDatabaseMaintenanceLastRunAtTime::class.java, loadLastDatabaseMaintenanceTime())
         .build()
   }
 
@@ -102,6 +106,15 @@ class SetupActivityEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .doOnNext { appDatabase.prune(crashReporter) }
           .map { DatabaseMaintenanceCompleted }
+    }
+  }
+
+  private fun loadLastDatabaseMaintenanceTime(): ObservableTransformer<FetchDatabaseMaintenanceLastRunAtTime, SetupActivityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { databaseMaintenanceRunAt.get() }
+          .map(::DatabaseMaintenanceLastRunAtTimeLoaded)
     }
   }
 }

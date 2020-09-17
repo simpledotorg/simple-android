@@ -17,8 +17,10 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
+import java.time.Instant
 import java.util.UUID
 
 class SetupActivityEffectHandlerTest {
@@ -30,6 +32,7 @@ class SetupActivityEffectHandlerTest {
   private val fallbackCountry = TestData.country()
   private val appDatabase = mock<org.simple.clinic.AppDatabase>()
   private val crashReporter = mock<CrashReporter>()
+  private val databaseMaintenanceRunAtPreference = mock<Preference<Optional<Instant>>>()
 
   private val effectHandler = SetupActivityEffectHandler(
       uiActions = uiActions,
@@ -39,7 +42,8 @@ class SetupActivityEffectHandlerTest {
       appDatabase = appDatabase,
       crashReporter = crashReporter,
       onboardingCompletePreference = onboardingCompletePreference,
-      fallbackCountry = fallbackCountry
+      fallbackCountry = fallbackCountry,
+      databaseMaintenanceRunAt = databaseMaintenanceRunAtPreference
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -139,6 +143,20 @@ class SetupActivityEffectHandlerTest {
     // then
     verify(appDatabase).prune(crashReporter)
     testCase.assertOutgoingEvents(DatabaseMaintenanceCompleted)
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the load database maintenance last run at time effect is received, the last run timestamp must be loaded`() {
+    // given
+    val databaseMaintenanceLastRunAt = Optional.of(Instant.parse("2018-01-01T00:00:00Z"))
+    whenever(databaseMaintenanceRunAtPreference.get()).thenReturn(databaseMaintenanceLastRunAt)
+
+    // when
+    testCase.dispatch(FetchDatabaseMaintenanceLastRunAtTime)
+
+    // then
+    testCase.assertOutgoingEvents(DatabaseMaintenanceLastRunAtTimeLoaded(databaseMaintenanceLastRunAt))
     verifyZeroInteractions(uiActions)
   }
 }

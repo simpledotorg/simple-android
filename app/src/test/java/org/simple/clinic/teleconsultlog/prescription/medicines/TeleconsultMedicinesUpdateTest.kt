@@ -8,6 +8,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.time.Duration
 import java.util.UUID
 
@@ -91,6 +92,20 @@ class TeleconsultMedicinesUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(UpdateDrugDuration(prescriptionUuid, duration))
+        ))
+  }
+
+  @Test
+  fun `when drug frequency is changed, then update drug frequency`() {
+    val prescriptionUuid = UUID.fromString("320ca8fe-88b7-44ea-b1b6-d35cfaa27730")
+    val frequency = MedicineFrequency.TDS
+
+    updateSpec
+        .given(model)
+        .whenEvent(DrugFrequencyChanged(prescriptionUuid, frequency))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(UpdateDrugFrequency(prescriptionUuid, frequency))
         ))
   }
 }

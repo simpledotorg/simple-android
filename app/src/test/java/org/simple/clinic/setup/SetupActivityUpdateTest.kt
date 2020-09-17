@@ -114,6 +114,17 @@ class SetupActivityUpdateTest {
         ))
   }
 
+  @Test
+  fun `when the database maintenance is completed, fetch the user details`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DatabaseMaintenanceCompleted)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(FetchUserDetails)
+        ))
+  }
+
   private fun previouslyLoggedInUserFetched(user: User): UserDetailsFetched {
     return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Just(user), userSelectedCountry = None())
   }

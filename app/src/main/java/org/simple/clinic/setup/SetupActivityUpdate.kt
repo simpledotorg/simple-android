@@ -30,6 +30,7 @@ class SetupActivityUpdate(
       }
       is DatabaseInitialized -> dispatch(FetchUserDetails)
       is FallbackCountrySetAsSelected -> dispatch(GoToMainActivity)
+      is DatabaseMaintenanceCompleted -> dispatch(FetchUserDetails)
       else -> noChange()
     }
   }

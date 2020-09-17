@@ -13,6 +13,7 @@
 - Stop querying for redundant facility in `LoggedInUserHttpInterceptor`
 - Change `TeleconsultFacilityInfoApi` endpoint
 - Add methods to purge soft-deleted records from the database
+- Add method to purge cancelled and visited appointments from the database
 
 ### Changes
 - Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`, `ti-ET`

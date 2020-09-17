@@ -18,6 +18,7 @@
 ### Changes
 - Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`, `ti-ET`
 - Stop loading count of overdue items on the home screen
+- Add ripple on touch for overdue patient name
 
 ## 2020-09-14-7432
 ### Changes

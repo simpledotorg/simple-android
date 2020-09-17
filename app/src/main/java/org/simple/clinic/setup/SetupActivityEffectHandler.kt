@@ -11,20 +11,20 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.FallbackCountry
 import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
-import javax.inject.Named
 
 class SetupActivityEffectHandler @AssistedInject constructor(
     @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,
     @Assisted private val uiActions: UiActions,
     private val userDao: User.RoomDao,
     private val appConfigRepository: AppConfigRepository,
-    @Named("fallback") private val fallbackCountry: Country,
+    @TypedPreference(FallbackCountry) private val fallbackCountry: Country,
     private val schedulersProvider: SchedulersProvider,
     private val appDatabase: AppDatabase,
     private val crashReporter: CrashReporter

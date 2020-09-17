@@ -5,14 +5,15 @@ import dagger.Provides
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.AssistedInjectModule
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.FallbackCountry
 import java.net.URI
-import javax.inject.Named
 
 @Module(includes = [AssistedInjectModule::class])
 class SetupActivityModule {
 
   @Provides
-  @Named("fallback")
+  @TypedPreference(FallbackCountry)
   fun providesFallbackCountry(): Country {
     return Country(
         isoCountryCode = "IN",

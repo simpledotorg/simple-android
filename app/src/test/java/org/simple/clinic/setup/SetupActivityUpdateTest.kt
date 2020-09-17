@@ -51,14 +51,14 @@ class SetupActivityUpdateTest {
   }
 
   @Test
-  fun `when the database completes initialization, the user details must be fetched`() {
+  fun `when the database completes initialization, the last database maintenance run time must be fetched`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(DatabaseInitialized)
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(FetchUserDetails as SetupActivityEffect)
+                hasEffects(FetchDatabaseMaintenanceLastRunAtTime)
             )
         )
   }

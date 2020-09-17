@@ -28,7 +28,7 @@ class SetupActivityUpdate(
 
         next(updatedModel, effect)
       }
-      is DatabaseInitialized -> dispatch(FetchUserDetails)
+      is DatabaseInitialized -> dispatch(FetchDatabaseMaintenanceLastRunAtTime)
       is FallbackCountrySetAsSelected -> dispatch(GoToMainActivity)
       is DatabaseMaintenanceCompleted -> dispatch(FetchUserDetails)
       else -> noChange()

@@ -12,11 +12,12 @@ class SetupActivityInitTest {
   fun `when the screen is created, the database must be initialized`() {
     // given
     val spec = InitSpec(SetupActivityInit())
+    val model = SetupActivityModel.create()
 
     spec
-        .whenInit(SetupActivityModel.SETTING_UP)
+        .whenInit(model)
         .then(assertThatFirst(
-            hasModel(SetupActivityModel.SETTING_UP),
+            hasModel(model),
             hasEffects(InitializeDatabase as SetupActivityEffect)
         ))
   }

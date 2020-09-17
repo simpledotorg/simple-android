@@ -16,7 +16,7 @@ import java.util.UUID
 class SetupActivityUpdateTest {
 
   private val updateSpec = UpdateSpec(SetupActivityUpdate())
-  private val defaultModel = SetupActivityModel.SETTING_UP
+  private val defaultModel = SetupActivityModel.create()
 
   @Test
   fun `if the user has not logged in, the country selection screen must be shown`() {

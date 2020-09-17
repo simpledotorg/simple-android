@@ -20,7 +20,9 @@ data class SetupActivityModel(
 ) : Parcelable {
 
   companion object {
-    val SETTING_UP = SetupActivityModel(isUserLoggedIn = null, hasUserSelectedACountry = null)
+    fun create(): SetupActivityModel {
+      return SetupActivityModel(isUserLoggedIn = null, hasUserSelectedACountry = null)
+    }
   }
 
   fun withLoggedInUser(user: Optional<User>): SetupActivityModel {

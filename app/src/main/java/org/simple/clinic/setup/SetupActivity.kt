@@ -39,7 +39,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
   private val delegate by unsafeLazy {
     MobiusDelegate.forActivity(
         events = Observable.never<SetupActivityEvent>(),
-        defaultModel = SetupActivityModel.SETTING_UP,
+        defaultModel = SetupActivityModel.create(),
         update = SetupActivityUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = SetupActivityInit(),

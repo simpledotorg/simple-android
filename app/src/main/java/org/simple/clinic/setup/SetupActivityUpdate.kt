@@ -10,8 +10,13 @@ import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.isEmpty
 import org.simple.clinic.util.isNotEmpty
+import java.time.Duration
 
-class SetupActivityUpdate : Update<SetupActivityModel, SetupActivityEvent, SetupActivityEffect> {
+class SetupActivityUpdate(
+    private val databaseMaintenanceInterval: Duration
+) : Update<SetupActivityModel, SetupActivityEvent, SetupActivityEffect> {
+
+  constructor(config: SetupActivityConfig): this(databaseMaintenanceInterval = config.databaseMaintenanceTaskInterval)
 
   override fun update(model: SetupActivityModel, event: SetupActivityEvent): Next<SetupActivityModel, SetupActivityEffect> {
     return when (event) {

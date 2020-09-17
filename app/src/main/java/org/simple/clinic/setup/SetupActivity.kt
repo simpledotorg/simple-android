@@ -34,13 +34,16 @@ class SetupActivity : AppCompatActivity(), UiActions {
   @Inject
   lateinit var effectHandlerFactory: SetupActivityEffectHandler.Factory
 
+  @Inject
+  lateinit var config: SetupActivityConfig
+
   private val screenResults = ScreenResultBus()
 
   private val delegate by unsafeLazy {
     MobiusDelegate.forActivity(
-        events = Observable.never<SetupActivityEvent>(),
+        events = Observable.never(),
         defaultModel = SetupActivityModel.create(),
-        update = SetupActivityUpdate(),
+        update = SetupActivityUpdate(config),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = SetupActivityInit(),
         modelUpdateListener = { /* Nothing to do here */ }

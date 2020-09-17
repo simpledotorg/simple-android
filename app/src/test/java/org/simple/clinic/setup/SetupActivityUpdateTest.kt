@@ -11,11 +11,13 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import java.time.Duration
 import java.util.UUID
 
 class SetupActivityUpdateTest {
 
-  private val updateSpec = UpdateSpec(SetupActivityUpdate())
+  private val databaseMaintenanceInterval = Duration.ZERO
+  private val updateSpec = UpdateSpec(SetupActivityUpdate(databaseMaintenanceInterval))
   private val defaultModel = SetupActivityModel.create()
 
   @Test

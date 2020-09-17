@@ -24,6 +24,7 @@ import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.textChanges
 import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 
 class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiActions {
@@ -47,6 +48,12 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
         putExtra(EXTRA_DRUG_DURATION, drugDuration)
       }
     }
+
+    fun readDrugUuidAndDuration(intent: Intent): Pair<UUID, Int> {
+      val uuid = intent.getSerializableExtra(EXTRA_SAVED_DRUG_UUID) as UUID
+      val duration = intent.extras!!.getInt(EXTRA_SAVED_DURATION)
+      return uuid to duration
+    }
   }
 
   private lateinit var component: DrugDurationComponent
@@ -66,6 +73,7 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
 
   private val delegate by unsafeLazy {
     val uiRenderer = DrugDurationUiRenderer(this)
+    val duration = drugDuration.duration ?: "30"
 
     MobiusDelegate.forActivity(
         events = events.ofType(),

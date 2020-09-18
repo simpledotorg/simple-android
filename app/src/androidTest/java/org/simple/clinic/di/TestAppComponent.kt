@@ -24,6 +24,7 @@ import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
+import org.simple.clinic.signature.SignatureRepositoryAndroidTest
 import org.simple.clinic.storage.DaoWithUpsertAndroidTest
 import org.simple.clinic.storage.PurgeDatabaseAndroidTest
 import org.simple.clinic.storage.migrations.BaseDatabaseMigrationTest
@@ -108,4 +109,5 @@ interface TestAppComponent {
   fun inject(target: TeleconsultRecordTest)
   fun inject(target: TeleconsultRecordRepositoryTest)
   fun inject(target: PurgeDatabaseAndroidTest)
+  fun inject(target: SignatureRepositoryAndroidTest)
 }

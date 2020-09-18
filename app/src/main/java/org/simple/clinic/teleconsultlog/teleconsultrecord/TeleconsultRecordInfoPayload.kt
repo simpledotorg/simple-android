@@ -3,7 +3,6 @@ package org.simple.clinic.teleconsultlog.teleconsultrecord
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.time.Instant
-import java.util.UUID
 
 @JsonClass(generateAdapter = true)
 data class TeleconsultRecordInfoPayload(
@@ -20,9 +19,5 @@ data class TeleconsultRecordInfoPayload(
     val patientConsented: Answer,
 
     @Json(name = "medical_officer_number")
-    val medicalOfficerNumber: String,
-
-    @Json(name = "prescription_drugs")
-    val prescriptionDrugs: List<UUID>
-) {
-}
+    val medicalOfficerNumber: String
+)

@@ -1,6 +1,7 @@
 package org.simple.clinic.teleconsultlog.prescription.doctorinfo
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.next
 
@@ -12,6 +13,7 @@ class TeleconsultDoctorInfoUpdate : Update<TeleconsultDoctorInfoModel, Teleconsu
   ): Next<TeleconsultDoctorInfoModel, TeleconsultDoctorInfoEffect> {
     return when (event) {
       is MedicalRegistrationIdLoaded -> medicalRegistrationIdLoaded(model, event)
+      is SignatureBitmapLoaded -> noChange()
     }
   }
 

@@ -7,12 +7,14 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.MedicalRegistrationId
+import org.simple.clinic.signature.SignatureRepository
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class TeleconsultDoctorInfoEffectHandler @AssistedInject constructor(
     @TypedPreference(MedicalRegistrationId) private val medicalRegistrationIdPreference: Preference<Optional<String>>,
+    private val signatureRepository: SignatureRepository,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: TeleconsultDoctorInfoUiActions
 ) {
@@ -27,7 +29,19 @@ class TeleconsultDoctorInfoEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<TeleconsultDoctorInfoEffect, TeleconsultDoctorInfoEvent>()
         .addTransformer(LoadMedicalRegistrationId::class.java, loadMedicalRegistrationId())
         .addConsumer(SetMedicalRegistrationId::class.java, { uiActions.setMedicalRegistrationId(it.medicalRegistrationId) }, schedulersProvider.ui())
+        .addTransformer(LoadSignatureBitmap::class.java, loadSignatureBitmap())
         .build()
+  }
+
+  private fun loadSignatureBitmap(): ObservableTransformer<LoadSignatureBitmap, TeleconsultDoctorInfoEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val signature = signatureRepository.getSignatureBitmap()
+            SignatureBitmapLoaded(signature)
+          }
+    }
   }
 
   private fun loadMedicalRegistrationId(): ObservableTransformer<LoadMedicalRegistrationId, TeleconsultDoctorInfoEvent> {

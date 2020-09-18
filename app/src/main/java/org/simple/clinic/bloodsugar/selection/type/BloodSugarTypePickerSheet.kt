@@ -81,7 +81,7 @@ class BloodSugarTypePickerSheet : BottomSheetActivity() {
     }
 
     fun selectedBloodSugarType(data: Intent): BloodSugarMeasurementType {
-      return data.getParcelableExtra(EXTRA_BLOOD_SUGAR_TYPE) as BloodSugarMeasurementType
+      return data.getParcelableExtra(EXTRA_BLOOD_SUGAR_TYPE)!!
     }
   }
 }

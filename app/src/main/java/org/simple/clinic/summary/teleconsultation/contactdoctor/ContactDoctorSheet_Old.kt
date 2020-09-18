@@ -44,11 +44,11 @@ class ContactDoctorSheet_Old : BottomSheetActivity() {
   }
 
   private val facilityName: String by unsafeLazy {
-    intent.getStringExtra(EXTRA_FACILITY_NAME)
+    intent.getStringExtra(EXTRA_FACILITY_NAME)!!
   }
 
   private val phoneNumbers: ArrayList<TeleconsultPhoneNumber> by unsafeLazy {
-    intent.getParcelableArrayListExtra<TeleconsultPhoneNumber>(EXTRA_PHONE_NUMBERS)
+    intent.getParcelableArrayListExtra(EXTRA_PHONE_NUMBERS)!!
   }
 
   private val itemAdapter = ItemAdapter(PhoneNumberListItem.DiffCallback())

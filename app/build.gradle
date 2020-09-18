@@ -101,6 +101,10 @@ android {
 
   flavorDimensions 'track'
 
+  kotlinOptions {
+    jvmTarget = 1.8
+  }
+
   productFlavors {
     qa {
       dimension 'track'

@@ -30,6 +30,7 @@ class TeleconsultDoctorInfoEffectHandler @AssistedInject constructor(
         .addTransformer(LoadMedicalRegistrationId::class.java, loadMedicalRegistrationId())
         .addConsumer(SetMedicalRegistrationId::class.java, { uiActions.setMedicalRegistrationId(it.medicalRegistrationId) }, schedulersProvider.ui())
         .addTransformer(LoadSignatureBitmap::class.java, loadSignatureBitmap())
+        .addConsumer(SetSignatureBitmap::class.java, { uiActions.setSignatureBitmap(it.bitmap) }, schedulersProvider.ui())
         .build()
   }
 

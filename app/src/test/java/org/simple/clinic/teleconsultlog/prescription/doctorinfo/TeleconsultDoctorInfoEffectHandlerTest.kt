@@ -45,6 +45,8 @@ class TeleconsultDoctorInfoEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(MedicalRegistrationIdLoaded(medicalRegistrationId))
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -75,5 +77,20 @@ class TeleconsultDoctorInfoEffectHandlerTest {
     effectHandlerTestCase.assertOutgoingEvents(SignatureBitmapLoaded(bitmap))
 
     verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when set signature bitmap effect is received, then set signature bitmap`() {
+    // given
+    val bitmap = mock<Bitmap>()
+
+    // when
+    effectHandlerTestCase.dispatch(SetSignatureBitmap(bitmap))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).setSignatureBitmap(bitmap)
+    verifyNoMoreInteractions(uiActions)
   }
 }

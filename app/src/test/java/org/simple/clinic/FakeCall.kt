@@ -3,15 +3,17 @@ package org.simple.clinic
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.ResponseBody
+import okio.Timeout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.concurrent.TimeUnit
 
 class FakeCall<T> private constructor(
     private val responseData: Pair<Int, T>? = null,
     private val responseErrorData: Triple<MediaType, Int, String>? = null,
     private val responseFailure: Throwable? = null
-): Call<T> {
+) : Call<T> {
 
   private var executed = false
 
@@ -71,5 +73,11 @@ class FakeCall<T> private constructor(
 
   override fun request(): Request {
     throw UnsupportedOperationException()
+  }
+
+  override fun timeout(): Timeout {
+    return Timeout().apply {
+      timeout(60, TimeUnit.SECONDS)
+    }
   }
 }

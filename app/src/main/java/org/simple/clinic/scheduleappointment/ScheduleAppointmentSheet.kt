@@ -57,7 +57,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
     }
 
     fun <T : Parcelable> readExtra(intent: Intent): T? {
-      return intent.getParcelableExtra(KEY_EXTRA) as T
+      return intent.getParcelableExtra<T>(KEY_EXTRA)!!
     }
   }
 

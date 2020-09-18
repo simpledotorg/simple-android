@@ -1,7 +1,7 @@
 buildscript {
   ext.versions = [
       minSdk              : 21,
-      compileSdk          : 29,
+      compileSdk          : 30,
       kotlin              : '1.4.10',
       supportLib          : '1.0.0',
       recyclerView        : '1.0.0',
@@ -16,7 +16,7 @@ buildscript {
       kotterKnife         : 'e157638df1',
       coreTesting         : '2.0.0',
       moshi               : '1.9.2',
-      retrofit            : '2.7.1',
+      retrofit            : '2.9.0',
       sentry              : '1.7.22',
       slf4j               : '1.7.25',
       groupie             : '2.3.0',

@@ -8,14 +8,29 @@ import org.junit.Test
 
 class TeleconsultDoctorInfoInitTest {
 
+  val model = TeleconsultDoctorInfoModel.create()
+  private val initSpec = InitSpec(TeleconsultDoctorInfoInit())
+
   @Test
   fun `when screen is created, then load initial data`() {
-    val model = TeleconsultDoctorInfoModel.create()
-    InitSpec(TeleconsultDoctorInfoInit())
+    initSpec
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
             hasEffects(LoadMedicalRegistrationId)
+        ))
+  }
+
+  @Test
+  fun `when screen is restored and medical registration is loaded, then set medical registration id`() {
+    val medicalRegistrationId = "1234567890"
+    val medicalRegistrationIdModel = model.medicalRegistrationIdLoaded(medicalRegistrationId)
+
+    initSpec
+        .whenInit(medicalRegistrationIdModel)
+        .then(assertThatFirst(
+            hasModel(medicalRegistrationIdModel),
+            hasEffects(SetMedicalRegistrationId(medicalRegistrationId))
         ))
   }
 }

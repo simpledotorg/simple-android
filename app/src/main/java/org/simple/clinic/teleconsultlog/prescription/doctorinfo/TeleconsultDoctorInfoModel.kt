@@ -1,7 +1,7 @@
 package org.simple.clinic.teleconsultlog.prescription.doctorinfo
 
 data class TeleconsultDoctorInfoModel(
-    private val medicalRegistrationId: String?
+    val medicalRegistrationId: String?
 ) {
 
   companion object {
@@ -10,6 +10,9 @@ data class TeleconsultDoctorInfoModel(
         medicalRegistrationId = null
     )
   }
+
+  val hasMedicalRegistrationId: Boolean
+    get() = medicalRegistrationId != null
 
   fun medicalRegistrationIdLoaded(medicalRegistrationId: String): TeleconsultDoctorInfoModel {
     return copy(medicalRegistrationId = medicalRegistrationId)

@@ -7,7 +7,7 @@ import com.spotify.mobius.Init
 class TeleconsultDoctorInfoInit : Init<TeleconsultDoctorInfoModel, TeleconsultDoctorInfoEffect> {
 
   override fun init(model: TeleconsultDoctorInfoModel): First<TeleconsultDoctorInfoModel, TeleconsultDoctorInfoEffect> {
-    val effects = mutableSetOf<TeleconsultDoctorInfoEffect>()
+    val effects = mutableSetOf<TeleconsultDoctorInfoEffect>(LoadSignatureBitmap)
     if (model.hasMedicalRegistrationId) {
       effects.add(SetMedicalRegistrationId(model.medicalRegistrationId!!))
     } else {

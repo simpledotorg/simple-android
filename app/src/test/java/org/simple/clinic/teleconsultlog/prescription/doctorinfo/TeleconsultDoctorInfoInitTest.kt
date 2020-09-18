@@ -17,7 +17,7 @@ class TeleconsultDoctorInfoInitTest {
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
-            hasEffects(LoadMedicalRegistrationId)
+            hasEffects(LoadSignatureBitmap, LoadMedicalRegistrationId)
         ))
   }
 
@@ -30,7 +30,7 @@ class TeleconsultDoctorInfoInitTest {
         .whenInit(medicalRegistrationIdModel)
         .then(assertThatFirst(
             hasModel(medicalRegistrationIdModel),
-            hasEffects(SetMedicalRegistrationId(medicalRegistrationId))
+            hasEffects(LoadSignatureBitmap, SetMedicalRegistrationId(medicalRegistrationId))
         ))
   }
 }

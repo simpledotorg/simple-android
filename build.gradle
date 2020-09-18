@@ -1,7 +1,7 @@
 buildscript {
   ext.versions = [
       minSdk              : 21,
-      compileSdk          : 29,
+      compileSdk          : 30,
       kotlin              : '1.4.10',
       supportLib          : '1.0.0',
       recyclerView        : '1.0.0',

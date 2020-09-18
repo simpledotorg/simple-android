@@ -33,7 +33,7 @@ class ConfirmFacilitySheet : BottomSheetActivity() {
   }
 
   private val facilityName: String by unsafeLazy {
-    intent.getStringExtra(EXTRA_FACILITY_NAME)
+    intent.getStringExtra(EXTRA_FACILITY_NAME)!!
   }
 
   private val facilityUuid: UUID by unsafeLazy {

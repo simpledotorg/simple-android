@@ -46,7 +46,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
   private val openAs by unsafeLazy {
-    intent.getParcelableExtra(KEY_OPEN_AS) as OpenAs
+    intent.getParcelableExtra<OpenAs>(KEY_OPEN_AS)!!
   }
 
   private val events by unsafeLazy {

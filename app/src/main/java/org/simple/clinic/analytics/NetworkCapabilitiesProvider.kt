@@ -26,6 +26,6 @@ class NetworkCapabilitiesProvider @Inject constructor(private val application: A
   private fun findCurrentActiveNetworkV21(connectivityManager: ConnectivityManager): Network? {
     return connectivityManager
         .allNetworks
-        .find { connectivityManager.getNetworkInfo(it).isConnected }
+        .find { connectivityManager.getNetworkInfo(it)?.isConnected ?: false }
   }
 }

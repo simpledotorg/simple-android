@@ -59,7 +59,7 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
   }
 
   private val medicineFrequencyExtra by unsafeLazy {
-    intent.getParcelableExtra<MedicineFrequencySheetExtra>(MEDICINE_FREQUENCY)
+    intent.getParcelableExtra<MedicineFrequencySheetExtra>(MEDICINE_FREQUENCY)!!
   }
 
   private val events by unsafeLazy {

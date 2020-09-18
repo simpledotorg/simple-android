@@ -11,7 +11,6 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.sheet_alert_facility_change.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.util.LocaleOverrideContextWrapper
@@ -52,7 +51,7 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
     }
 
     fun <T : Parcelable> readContinuationExtra(intent: Intent): T {
-      return intent.getParcelableExtra(EXTRA_CONTINUE_TO) as T
+      return intent.getParcelableExtra<T>(EXTRA_CONTINUE_TO)!!
     }
   }
 
@@ -61,7 +60,7 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
   }
 
   private val continuation by unsafeLazy {
-    intent.getParcelableExtra(CONTINUE_TO) as Continuation
+    intent.getParcelableExtra<Continuation>(CONTINUE_TO)!!
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {

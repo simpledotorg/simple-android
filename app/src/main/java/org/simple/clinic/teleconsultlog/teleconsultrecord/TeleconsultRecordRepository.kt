@@ -12,8 +12,7 @@ import javax.inject.Inject
 class TeleconsultRecordRepository @Inject constructor(
     private val teleconsultRecordDao: TeleconsultRecord.RoomDao,
     private val teleconsultRecordWithPrescribedDrugsDao: TeleconsultRecordWithPrescribedDrugs.RoomDao,
-    private val utcClock: UtcClock,
-    private val teleconsultRecordPrescribedDrugDao: TeleconsultRecordPrescribedDrug.RoomDao
+    private val utcClock: UtcClock
 ) : SynceableRepository<TeleconsultRecord, TeleconsultRecordPayload> {
 
   fun getTeleconsultRecordWithPrescribedDrugs(teleconsultRecordId: UUID): TeleconsultRecordWithPrescribedDrugs? {
@@ -70,10 +69,6 @@ class TeleconsultRecordRepository @Inject constructor(
     return teleconsultRecordDao
         .count(SyncStatus.PENDING)
         .toObservable()
-  }
-
-  fun saveTeleconsultRecordWithPrescribedDrug(teleconsultRecordPrescribedDrugs: List<TeleconsultRecordPrescribedDrug>) {
-    teleconsultRecordPrescribedDrugDao.save(teleconsultRecordPrescribedDrugs)
   }
 
   fun clear() {

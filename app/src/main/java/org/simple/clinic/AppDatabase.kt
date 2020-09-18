@@ -39,7 +39,6 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityW
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.RoomTypeConverter
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
-import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordPrescribedDrug
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordWithPrescribedDrugs
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.user.OngoingLoginEntry
@@ -70,8 +69,7 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       TeleconsultationFacilityInfo::class,
       MedicalOfficer::class,
       TeleconsultationFacilityMedicalOfficersCrossRef::class,
-      TeleconsultRecord::class,
-      TeleconsultRecordPrescribedDrug::class
+      TeleconsultRecord::class
     ],
     views = [
       OverdueAppointment::class,
@@ -153,8 +151,6 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun teleconsultRecordDao(): TeleconsultRecord.RoomDao
 
-  abstract fun teleconsultRecordPrescribedDrugDao(): TeleconsultRecordPrescribedDrug.RoomDao
-
   abstract fun teleconsultRecordWithPrescribedDrugDao(): TeleconsultRecordWithPrescribedDrugs.RoomDao
 
   fun clearAppData() {
@@ -171,7 +167,6 @@ abstract class AppDatabase : RoomDatabase() {
       teleconsultMedicalOfficersDao().clear()
       teleconsultFacilityWithMedicalOfficersDao().clear()
       teleconsultRecordDao().clear()
-      teleconsultRecordPrescribedDrugDao().clear()
     }
   }
 

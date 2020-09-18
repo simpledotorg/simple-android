@@ -64,7 +64,6 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityW
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
-import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordPrescribedDrug
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordWithPrescribedDrugs
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRequestInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
@@ -1199,16 +1198,6 @@ object TestData {
         teleconsultRecordInfo = teleconsultRecordInfo,
         timestamp = timestamps,
         syncStatus = syncStatus
-    )
-  }
-
-  fun teleconsultationRecordPrescribedDrug(
-      teleconsultRecordId: UUID = UUID.randomUUID(),
-      prescribedDrugUuid: UUID = UUID.randomUUID(),
-  ): TeleconsultRecordPrescribedDrug {
-    return TeleconsultRecordPrescribedDrug(
-        teleconsultRecordId = teleconsultRecordId,
-        prescribedDrugUuid = prescribedDrugUuid
     )
   }
 

@@ -45,8 +45,6 @@ class TeleconsultRecordRepositoryAndroidTest {
     val updatedAt = date.toUtcInstant(userClock)
     val deletedAt = null
     val timestamps = Timestamps(createdAt, updatedAt, deletedAt)
-    val prescribedDrugUuid = UUID.fromString("a6e44fdd-d029-47b0-9964-2ad4747166ec")
-    val prescribedDrugUuid2 = UUID.fromString("4904369e-c425-4098-bde1-560e09eb4383")
 
     val teleconsultRecord1 = TestData.teleconsultRecord(
         id = teleconsultRecordId1,
@@ -92,34 +90,12 @@ class TeleconsultRecordRepositoryAndroidTest {
 
     repository.save(listOfTeleconsultRecords).blockingAwait()
 
-    val teleconsultRecordPrescribedDrug1 = TestData.teleconsultationRecordPrescribedDrug(
-        teleconsultRecordId = teleconsultRecordId1,
-        prescribedDrugUuid = prescribedDrugUuid,
-    )
-
-    val teleconsultRecordPrescribedDrug2 = TestData.teleconsultationRecordPrescribedDrug(
-        teleconsultRecordId = teleconsultRecordId1,
-        prescribedDrugUuid = prescribedDrugUuid2,
-    )
-
-    val expectedTeleconsultRecordPrescribedDrugList = listOf(
-        teleconsultRecordPrescribedDrug2,
-        teleconsultRecordPrescribedDrug1
-    )
-
-    repository.saveTeleconsultRecordWithPrescribedDrug(
-        expectedTeleconsultRecordPrescribedDrugList
-    )
-
     // when
     val getTeleconsultRecordWithPrescribedDrug = repository
         .getTeleconsultRecordWithPrescribedDrugs(teleconsultRecordId1)
 
     // then
     assertThat(getTeleconsultRecordWithPrescribedDrug)
-        .isEqualTo(TestData.teleconsultRecordWithPrescribedDrugs(
-            teleconsultRecord1,
-            expectedTeleconsultRecordPrescribedDrugList
-        ))
+        .isEqualTo()
   }
 }

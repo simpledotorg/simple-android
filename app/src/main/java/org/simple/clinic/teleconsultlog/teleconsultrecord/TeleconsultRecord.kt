@@ -95,5 +95,8 @@ data class TeleconsultRecord(
     @Query("SELECT id FROM TeleconsultRecord WHERE syncStatus = :syncStatus")
     fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
 
+    @Query("SELECT * FROM TeleconsultRecord")
+    fun getAll() : List<TeleconsultRecord>
+
   }
 }

@@ -48,7 +48,7 @@ class TeleconsultMedicinesEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map { prescriptionRepository.newestPrescriptionsForPatientImmediate(it.patientUuid) }
+          .switchMap { prescriptionRepository.newestPrescriptionsForPatient(it.patientUuid) }
           .map(::PatientMedicinesLoaded)
     }
   }

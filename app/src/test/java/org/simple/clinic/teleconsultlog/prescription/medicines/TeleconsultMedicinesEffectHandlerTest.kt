@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -48,7 +49,7 @@ class TeleconsultMedicinesEffectHandlerTest {
         )
     )
 
-    whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn medicines
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)) doReturn Observable.just(medicines)
 
     // when
     effectHandlerTestCase.dispatch(LoadPatientMedicines(patientUuid))

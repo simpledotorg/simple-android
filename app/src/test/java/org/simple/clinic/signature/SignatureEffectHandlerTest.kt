@@ -8,11 +8,12 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 
 class SignatureEffectHandlerTest {
-  private val ui = mock<SignatureUiActions>()
 
+  private val uiActions = mock<SignatureUiActions>()
   private val effectHandler = SignatureEffectHandler(
-      ui = ui,
-      schedulersProvider = TestSchedulersProvider.trampoline()
+      schedulersProvider = TestSchedulersProvider.trampoline(),
+      signatureRepository = mock(),
+      uiActions = uiActions
   ).build()
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
@@ -23,8 +24,8 @@ class SignatureEffectHandlerTest {
     effectHandlerTestCase.dispatch(ClearSignature)
 
     // then
-    verify(ui).clearSignature()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).clearSignature()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -33,8 +34,8 @@ class SignatureEffectHandlerTest {
     effectHandlerTestCase.dispatch(CloseScreen)
 
     // then
-    verify(ui).closeScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).closeScreen()
+    verifyNoMoreInteractions(uiActions)
   }
 
 }

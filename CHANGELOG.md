@@ -22,7 +22,7 @@
 - Stop loading count of overdue items on the home screen
 - Add ripple on touch for overdue patient name
 
-## 2020-09-14-7432
+## 2020-09-15-7432
 ### Changes
 - Open patient summary screen when patient name is clicked in overdue
 

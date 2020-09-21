@@ -182,7 +182,7 @@ class TeleconsultMedicinesView(
     return screenRouter.streamScreenResults()
         .ofType<ActivityResult>()
         .extractSuccessful(DRUG_FREQUENCY_SHEET) { intent ->
-          MedicineFrequencySheet.readUuidAndFrequency(intent)
+          MedicineFrequencySheet.readSavedDrugFrequency(intent)
         }
         .map { (uuid, frequency) -> DrugFrequencyChanged(uuid, frequency) }
   }

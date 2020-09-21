@@ -59,11 +59,14 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
       }
     }
 
-    fun readUuidAndFrequency(intent: Intent): Pair<UUID, MedicineFrequency> {
+    fun readSavedDrugFrequency(intent: Intent): SavedDrugFrequency {
       val uuid = intent.getSerializableExtra(EXTRA_SAVED_MEDICINE_UUID) as UUID
       val medicineFrequency = intent.getParcelableExtra<MedicineFrequency>(EXTRA_SAVED_MEDICINE_FREQUENCY)!!
 
-      return uuid to medicineFrequency
+      return SavedDrugFrequency(
+          drugUuid = uuid,
+          frequency = medicineFrequency
+      )
     }
   }
 

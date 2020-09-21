@@ -46,6 +46,9 @@ class TeleconsultMedicinesView(
   @Inject
   lateinit var activity: AppCompatActivity
 
+  @Inject
+  lateinit var teleconsultMedicinesConfig: TeleconsultMedicinesConfig
+
   companion object {
     private const val DRUG_FREQUENCY_SHEET = 1
     private const val DRUG_DURATION_SHEET = 2
@@ -61,11 +64,12 @@ class TeleconsultMedicinesView(
 
   private val events by unsafeLazy {
     Observable
-        .merge(
+        .mergeArray(
             editClicks(),
             drugDurationChanges(),
             drugFrequencyChanges(),
-            itemAdapterClicks()
+            drugDurationClicks(),
+            drugFrequencyClicks()
         )
         .compose(ReportAnalyticsEvents())
   }
@@ -116,7 +120,11 @@ class TeleconsultMedicinesView(
     emptyMedicinesTextView.visibility = GONE
     medicinesRecyclerView.visibility = VISIBLE
 
-    teleconsultMedicinesAdapter.submitList(TeleconsultMedicineItem.from(medicines))
+    teleconsultMedicinesAdapter.submitList(TeleconsultMedicineItem.from(
+        medicines = medicines,
+        defaultDuration = teleconsultMedicinesConfig.defaultDuration,
+        defaultFrequency = teleconsultMedicinesConfig.defaultFrequency
+    ))
   }
 
   override fun showNoMedicines() {
@@ -129,26 +137,28 @@ class TeleconsultMedicinesView(
   }
 
   override fun openDrugDurationSheet(prescription: PrescribedDrug) {
+    val durationInDays = prescription.durationInDays?.toString() ?: teleconsultMedicinesConfig.defaultDuration.toDays().toString()
     val intent = DrugDurationSheet.intent(
         context = context,
         drugDuration = DrugDuration(
             uuid = prescription.uuid,
             name = prescription.name,
             dosage = prescription.dosage,
-            duration = prescription.durationInDays?.toString()
+            duration = durationInDays
         )
     )
     activity.startActivityForResult(intent, DRUG_DURATION_SHEET)
   }
 
   override fun openDrugFrequencySheet(prescription: PrescribedDrug) {
+    val frequency = prescription.frequency ?: teleconsultMedicinesConfig.defaultFrequency
     val intent = MedicineFrequencySheet.intent(
         context = context,
         medicineFrequencySheetExtra = MedicineFrequencySheetExtra(
             uuid = prescription.uuid,
             name = prescription.name,
             dosage = prescription.dosage,
-            medicineFrequency = prescription.frequency
+            medicineFrequency = frequency
         )
     )
     activity.startActivityForResult(intent, DRUG_FREQUENCY_SHEET)
@@ -178,8 +188,20 @@ class TeleconsultMedicinesView(
         .map { (uuid, frequency) -> DrugFrequencyChanged(uuid, frequency) }
   }
 
-  private fun itemAdapterClicks(): Observable<UiEvent> {
+  private fun drugDurationClicks(): Observable<UiEvent> {
     return teleconsultMedicinesAdapter.itemEvents
+        .ofType<DrugDurationButtonClicked>()
+        .map {
+          DrugDurationClicked(it.prescribedDrug)
+        }
+  }
+
+  private fun drugFrequencyClicks(): Observable<UiEvent> {
+    return teleconsultMedicinesAdapter.itemEvents
+        .ofType<DrugFrequencyButtonClicked>()
+        .map {
+          DrugFrequencyClicked(it.prescribedDrug)
+        }
   }
 
   interface Injector {

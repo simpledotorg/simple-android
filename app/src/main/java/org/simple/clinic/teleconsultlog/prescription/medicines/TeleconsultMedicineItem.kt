@@ -7,27 +7,36 @@ import org.simple.clinic.R
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.widgets.ItemAdapter
-import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
+import java.time.Duration
 
 data class TeleconsultMedicineItem(
-    val prescribedDrug: PrescribedDrug
-) : ItemAdapter.Item<UiEvent> {
+    val prescribedDrug: PrescribedDrug,
+    val defaultDuration: Duration,
+    val defaultFrequency: MedicineFrequency
+) : ItemAdapter.Item<TeleconsultMedicineItemEvent> {
 
   companion object {
 
-    fun from(medicines: List<PrescribedDrug>): List<TeleconsultMedicineItem> {
+    fun from(
+        medicines: List<PrescribedDrug>,
+        defaultDuration: Duration,
+        defaultFrequency: MedicineFrequency
+    ): List<TeleconsultMedicineItem> {
       return medicines
-          .map(::TeleconsultMedicineItem)
+          .map { prescribedDrug ->
+            TeleconsultMedicineItem(
+                prescribedDrug = prescribedDrug,
+                defaultDuration = defaultDuration,
+                defaultFrequency = defaultFrequency
+            )
+          }
     }
   }
 
-  private val defaultMedicineDurationInDays = 30
-  private val defaultMedicineFrequency = MedicineFrequency.OD
-
   override fun layoutResId(): Int = R.layout.list_item_teleconsult_medicine
 
-  override fun render(holder: ViewHolderX, subject: Subject<UiEvent>) {
+  override fun render(holder: ViewHolderX, subject: Subject<TeleconsultMedicineItemEvent>) {
     val context = holder.itemView.context
     holder.medicineNameTextView.text = context.getString(
         R.string.list_item_teleconsult_medicines_name,
@@ -35,10 +44,10 @@ data class TeleconsultMedicineItem(
         prescribedDrug.dosage
     )
 
-    val frequency = prescribedDrug.frequency ?: defaultMedicineFrequency
+    val frequency = prescribedDrug.frequency ?: defaultFrequency
     holder.medicineFrequencyButton.text = frequency.toString()
 
-    val durationInDays = prescribedDrug.durationInDays ?: defaultMedicineDurationInDays
+    val durationInDays = prescribedDrug.durationInDays ?: defaultDuration.toDays().toInt()
     holder.medicineDurationButton.text = context.resources.getQuantityString(
         R.plurals.list_item_teleconsult_medicine_duration,
         durationInDays,
@@ -46,11 +55,11 @@ data class TeleconsultMedicineItem(
     )
 
     holder.medicineFrequencyButton.setOnClickListener {
-      subject.onNext(DrugFrequencyClicked(prescribedDrug))
+      subject.onNext(DrugFrequencyButtonClicked(prescribedDrug))
     }
 
     holder.medicineDurationButton.setOnClickListener {
-      subject.onNext(DrugDurationClicked(prescribedDrug))
+      subject.onNext(DrugDurationButtonClicked(prescribedDrug))
     }
   }
 }

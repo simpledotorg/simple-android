@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next Release
+## On Demo
 ### Features
 - Add `TeleconsultRecordScreen`
 - Show `TeleconsultLogNotAllowed` dialog when Medical officer is not allowed to teleconsult
@@ -9,8 +9,6 @@
 ### Internal
 - [In Progress: 27 Aug 2020] Add support for sending teleconsult request via SMS
 - Add `Capabilities` to User
-- Disable state saving and restoration for the search results view
-- Stop querying for redundant facility in `LoggedInUserHttpInterceptor`
 - Change `TeleconsultFacilityInfoApi` endpoint
 - Add methods to purge soft-deleted records from the database
 - Add method to purge cancelled and visited appointments from the database
@@ -19,12 +17,12 @@
 
 ### Changes
 - Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`, `ti-ET`
-- Stop loading count of overdue items on the home screen
 - Add ripple on touch for overdue patient name
 
 ## 2020-09-15-7432
 ### Changes
 - Open patient summary screen when patient name is clicked in overdue
+- Stop loading count of overdue items on the home screen
 
 ### Internal
 - Use UiRenderer for setting drug duration in `DrugDurationSheet`
@@ -37,6 +35,8 @@
 - Bumped internal SQLite version to 3.32.2
 - Change saving of app lock timestamp to an in-memory value
 - Pin the number of threads used for running queries in Room based on the SQLite connection pool size
+- Disable state saving and restoration for the search results view
+- Stop querying for redundant facility in `LoggedInUserHttpInterceptor`
 
 ### Fixes
 - Fixed BloodPressure removal not working

@@ -90,6 +90,5 @@ class TeleconsultRecordSyncIntegrationTest {
 
   private fun clearTeleconsultRecordData() {
     appDatabase.teleconsultRecordDao().clear()
-    appDatabase.teleconsultRecordPrescribedDrugDao().clear()
   }
 }

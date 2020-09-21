@@ -31,7 +31,7 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
     return RxMobius.subtypeEffectHandler<TeleconsultRecordEffect, TeleconsultRecordEvent>()
         .addAction(GoBack::class.java, uiActions::goBackToPreviousScreen, schedulersProvider.ui())
         .addAction(NavigateToTeleconsultSuccess::class.java, { uiActions.navigateToTeleconsultSuccessScreen() }, schedulersProvider.ui())
-        .addTransformer(LoadTeleconsultRecordWithPrescribedDrugs::class.java, loadTeleconsultRecordWithPrescribedDrugs())
+        .addTransformer(LoadTeleconsultRecord::class.java, loadTeleconsultRecordDetails())
         .addTransformer(CreateTeleconsultRecord::class.java, createTeleconsultRecord())
         .addTransformer(LoadPatientDetails::class.java, loadPatientDetails())
         .addAction(ShowTeleconsultNotRecordedWarning::class.java, uiActions::showTeleconsultNotRecordedWarning, schedulersProvider.ui())
@@ -44,7 +44,7 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .map {
-            val teleconsultRecordWithPrescribedDrugs = teleconsultRecordRepository.getTeleconsultRecordWithPrescribedDrugs(it.teleconsultRecordId)
+            val teleconsultRecordWithPrescribedDrugs = teleconsultRecordRepository.getTeleconsultRecord(it.teleconsultRecordId)
             TeleconsultRecordValidated(teleconsultRecordWithPrescribedDrugs != null)
           }
     }
@@ -85,13 +85,13 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
     )
   }
 
-  private fun loadTeleconsultRecordWithPrescribedDrugs(): ObservableTransformer<LoadTeleconsultRecordWithPrescribedDrugs, TeleconsultRecordEvent> {
+  private fun loadTeleconsultRecordDetails(): ObservableTransformer<LoadTeleconsultRecord, TeleconsultRecordEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
           .map {
-            val teleconsultRecordWithPrescribedDrugs = teleconsultRecordRepository.getTeleconsultRecordWithPrescribedDrugs(it.teleconsultRecordId)
-            TeleconsultRecordWithPrescribedDrugsLoaded(teleconsultRecordWithPrescribedDrugs)
+            val teleconsultRecord = teleconsultRecordRepository.getTeleconsultRecord(it.teleconsultRecordId)
+            TeleconsultRecordLoaded(teleconsultRecord)
           }
     }
   }

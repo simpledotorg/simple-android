@@ -10,7 +10,7 @@ object GoBack : TeleconsultRecordEffect()
 
 object NavigateToTeleconsultSuccess : TeleconsultRecordEffect()
 
-data class LoadTeleconsultRecordWithPrescribedDrugs(val teleconsultRecordId: UUID) : TeleconsultRecordEffect()
+data class LoadTeleconsultRecord(val teleconsultRecordId: UUID) : TeleconsultRecordEffect()
 
 data class CreateTeleconsultRecord(
     val teleconsultRecordId: UUID,

@@ -20,7 +20,7 @@ class TeleconsultRecordInitTest {
         .whenInit(defaultModel)
         .then(assertThatFirst(
             hasModel(defaultModel),
-            hasEffects(LoadPatientDetails(patientUuid), LoadTeleconsultRecordWithPrescribedDrugs(teleconsultRecordId))
+            hasEffects(LoadPatientDetails(patientUuid), LoadTeleconsultRecord(teleconsultRecordId))
         ))
   }
 
@@ -30,7 +30,7 @@ class TeleconsultRecordInitTest {
         .whenInit(defaultModel)
         .then(assertThatFirst(
             hasModel(defaultModel),
-            hasEffects(LoadTeleconsultRecordWithPrescribedDrugs(teleconsultRecordId))
+            hasEffects(LoadTeleconsultRecord(teleconsultRecordId))
         ))
   }
 }

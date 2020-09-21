@@ -98,5 +98,7 @@ data class TeleconsultRecord(
     @Query("SELECT * FROM TeleconsultRecord")
     fun getAll() : List<TeleconsultRecord>
 
+    @Query("SELECT * FROM TeleconsultRecord WHERE id =:teleconsultRecordId")
+    fun getCompleteTeleconsultLog(teleconsultRecordId: UUID) : TeleconsultRecord
   }
 }

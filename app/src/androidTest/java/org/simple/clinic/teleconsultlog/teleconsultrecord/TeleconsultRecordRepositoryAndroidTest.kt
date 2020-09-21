@@ -33,7 +33,7 @@ class TeleconsultRecordRepositoryAndroidTest {
   }
 
   @Test
-  fun saving_teleconsult_records_with_prescribed_drugs_should_work_properly() {
+  fun saving_teleconsult_records_should_work_properly() {
     // given
     val teleconsultRecordId1 = UUID.fromString("7631538a-7510-4147-b239-1c56c7d2ef70")
     val teleconsultRecordId2 = UUID.fromString("9ee0bc81-26e6-4ced-9b33-fa76a0a995e3")
@@ -91,11 +91,11 @@ class TeleconsultRecordRepositoryAndroidTest {
     repository.save(listOfTeleconsultRecords).blockingAwait()
 
     // when
-    val getTeleconsultRecordWithPrescribedDrug = repository
-        .getTeleconsultRecordWithPrescribedDrugs(teleconsultRecordId1)
+    val getTeleconsultRecordDetails = repository
+        .getTeleconsultRecord(teleconsultRecordId1)
 
     // then
-    assertThat(getTeleconsultRecordWithPrescribedDrug)
-        .isEqualTo()
+    assertThat(getTeleconsultRecordDetails)
+        .isEqualTo(teleconsultRecord1)
   }
 }

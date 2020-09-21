@@ -1,5 +1,6 @@
 package org.simple.clinic
 
+import androidx.annotation.VisibleForTesting
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -26,6 +27,7 @@ import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.storage.text.TextRecord
@@ -173,6 +175,21 @@ abstract class AppDatabase : RoomDatabase() {
     }
   }
 
+  fun prune(
+      crashReporter: CrashReporter
+  ) {
+    purge()
+    try {
+      vacuumDatabase()
+    } catch (e: Exception) {
+      // Vacuuming is an optimization that's unlikely to fail. But if it
+      // does, we can ignore it and just report the exception and let
+      // the original sqlite file continue to be used.
+      crashReporter.report(e)
+    }
+  }
+
+  @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   fun purge() {
     runInTransaction {
       with(patientDao()) {
@@ -189,6 +206,17 @@ abstract class AppDatabase : RoomDatabase() {
         purgeDeleted()
         purgeUnusedAppointments()
       }
+    }
+  }
+
+  private fun vacuumDatabase() {
+    val db = openHelper.writableDatabase
+
+    // Transfer everything from the write ahead log to the main database
+    // file before running a vacuum.
+    db.query("PRAGMA wal_checkpoint(FULL)").close()
+    if (!db.inTransaction()) {
+      db.execSQL("VACUUM")
     }
   }
 }

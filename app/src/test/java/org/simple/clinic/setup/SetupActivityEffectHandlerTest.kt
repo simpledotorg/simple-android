@@ -11,13 +11,17 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.TestData
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.Optional
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
+import java.time.Instant
 import java.util.UUID
 
 class SetupActivityEffectHandlerTest {
@@ -27,14 +31,22 @@ class SetupActivityEffectHandlerTest {
   private val userDao = mock<User.RoomDao>()
   private val appConfigRepository = mock<AppConfigRepository>()
   private val fallbackCountry = TestData.country()
+  private val appDatabase = mock<org.simple.clinic.AppDatabase>()
+  private val crashReporter = mock<CrashReporter>()
+  private val databaseMaintenanceRunAtPreference = mock<Preference<Optional<Instant>>>()
+  private val clock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
 
   private val effectHandler = SetupActivityEffectHandler(
-      onboardingCompletePreference,
-      uiActions,
-      userDao,
-      appConfigRepository,
-      fallbackCountry,
-      TrampolineSchedulersProvider()
+      uiActions = uiActions,
+      userDao = userDao,
+      appConfigRepository = appConfigRepository,
+      schedulersProvider = TrampolineSchedulersProvider(),
+      appDatabase = appDatabase,
+      crashReporter = crashReporter,
+      clock = clock,
+      onboardingCompletePreference = onboardingCompletePreference,
+      fallbackCountry = fallbackCountry,
+      databaseMaintenanceRunAt = databaseMaintenanceRunAtPreference
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -123,6 +135,32 @@ class SetupActivityEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(FallbackCountrySetAsSelected)
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the run database maintenance effect is received, the database must be pruned`() {
+    // when
+    testCase.dispatch(RunDatabaseMaintenance)
+
+    // then
+    verify(appDatabase).prune(crashReporter)
+    verify(databaseMaintenanceRunAtPreference).set(Optional.of(Instant.now(clock)))
+    testCase.assertOutgoingEvents(DatabaseMaintenanceCompleted)
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the load database maintenance last run at time effect is received, the last run timestamp must be loaded`() {
+    // given
+    val databaseMaintenanceLastRunAt = Optional.of(Instant.parse("2018-01-01T00:00:00Z"))
+    whenever(databaseMaintenanceRunAtPreference.get()).thenReturn(databaseMaintenanceLastRunAt)
+
+    // when
+    testCase.dispatch(FetchDatabaseMaintenanceLastRunAtTime)
+
+    // then
+    testCase.assertOutgoingEvents(DatabaseMaintenanceLastRunAtTimeLoaded(databaseMaintenanceLastRunAt))
     verifyZeroInteractions(uiActions)
   }
 }

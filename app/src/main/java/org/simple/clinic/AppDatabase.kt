@@ -39,7 +39,6 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityW
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.RoomTypeConverter
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
-import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordWithPrescribedDrugs
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User
@@ -150,8 +149,6 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun teleconsultFacilityWithMedicalOfficersDao(): TeleconsultationFacilityWithMedicalOfficers.RoomDao
 
   abstract fun teleconsultRecordDao(): TeleconsultRecord.RoomDao
-
-  abstract fun teleconsultRecordWithPrescribedDrugDao(): TeleconsultRecordWithPrescribedDrugs.RoomDao
 
   fun clearAppData() {
     runInTransaction {

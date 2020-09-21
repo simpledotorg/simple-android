@@ -9,6 +9,4 @@ class TeleconsultRecordModule {
   @Provides
   fun teleconsultRecordDao(appDatabase: AppDatabase) = appDatabase.teleconsultRecordDao()
 
-  @Provides
-  fun teleconsultRecordWithPrescribedDrugDao(appDatabase: AppDatabase) = appDatabase.teleconsultRecordWithPrescribedDrugDao()
 }

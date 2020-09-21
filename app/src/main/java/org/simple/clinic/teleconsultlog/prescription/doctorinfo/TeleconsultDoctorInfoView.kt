@@ -5,9 +5,11 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.view_teleconsult_doctor_info.view.*
 import org.simple.clinic.R
@@ -42,7 +44,7 @@ class TeleconsultDoctorInfoView(
         .merge(
             instructionChanges(),
             medicalRegistrationIdChanges(),
-            addSignatureClicks()
+            signatureClicks()
         )
         .compose(ReportAnalyticsEvents())
   }
@@ -89,7 +91,9 @@ class TeleconsultDoctorInfoView(
   }
 
   override fun setSignatureBitmap(bitmap: Bitmap) {
-
+    signatureContainer.visibility = View.VISIBLE
+    addSignatureButton.visibility = View.GONE
+    signatureImageView.setImageBitmap(bitmap)
   }
 
   override fun renderDoctorAcknowledgement(user: User) {
@@ -112,10 +116,11 @@ class TeleconsultDoctorInfoView(
         .textChanges { MedicalRegistrationIdChanged(it) }
   }
 
-  private fun addSignatureClicks(): Observable<UiEvent> {
-    return addSignatureButton
-        .clicks()
-        .map { AddSignatureClicked }
+  private fun signatureClicks(): Observable<UiEvent> {
+    val clicksFromButton = addSignatureButton.clicks().map { AddSignatureClicked }
+    val clicksFromContainer = signatureContainer.clicks().map { AddSignatureClicked }
+
+    return clicksFromButton.mergeWith(clicksFromContainer).cast()
   }
 
   interface Injector {

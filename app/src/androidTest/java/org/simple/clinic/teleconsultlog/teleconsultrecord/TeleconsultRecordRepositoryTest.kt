@@ -61,9 +61,9 @@ class TeleconsultRecordRepositoryTest {
     )
 
     // when
-    val teleconsultRecordWithPrescribedDrugs = teleconsultRecordRepository.getTeleconsultRecordWithPrescribedDrugs(teleconsultRecordId)
+    val teleconsultRecordDetails = teleconsultRecordRepository.getTeleconsultRecord(teleconsultRecordId)
 
     // then
-    assertThat(teleconsultRecordWithPrescribedDrugs!!.teleconsultRecord).isEqualTo(teleconsultRecord)
+    assertThat(teleconsultRecordDetails).isEqualTo(teleconsultRecord)
   }
 }

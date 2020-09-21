@@ -10,7 +10,9 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.sync.SynceableRepository
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.UtcClock
+import java.time.Duration
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -136,5 +138,23 @@ class PrescriptionRepository @Inject constructor(
     return dao
         .count(SyncStatus.PENDING)
         .toObservable()
+  }
+
+  fun updateDrugDuration(id: UUID, duration: Duration) {
+    dao.updateDrugDuration(
+        id = id,
+        durationInDays = duration.toDays().toInt(),
+        updatedAt = Instant.now(utcClock),
+        syncStatus = SyncStatus.PENDING
+    )
+  }
+
+  fun updateDrugFrequency(id: UUID, drugFrequency: MedicineFrequency) {
+    dao.updateDrugFrequenecy(
+        id = id,
+        drugFrequency = drugFrequency,
+        updatedAt = Instant.now(utcClock),
+        syncStatus = SyncStatus.PENDING
+    )
   }
 }

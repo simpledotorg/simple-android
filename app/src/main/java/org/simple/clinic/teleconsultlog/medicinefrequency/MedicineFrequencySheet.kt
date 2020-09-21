@@ -25,6 +25,7 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 
 class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiActions {
@@ -46,7 +47,8 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
 
   companion object {
     private const val MEDICINE_FREQUENCY = "medicineFrequency"
-    private const val SAVED_MEDICINE_FREQUENCY = "savedmedicineFrequency"
+    private const val EXTRA_SAVED_MEDICINE_UUID = "savedMedicineUuid"
+    private const val EXTRA_SAVED_MEDICINE_FREQUENCY = "savedMedicineFrequency"
 
     fun intent(
         context: Context,
@@ -55,6 +57,16 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
       return Intent(context, MedicineFrequencySheet::class.java).apply {
         putExtra(MEDICINE_FREQUENCY, medicineFrequencySheetExtra)
       }
+    }
+
+    fun readSavedDrugFrequency(intent: Intent): SavedDrugFrequency {
+      val uuid = intent.getSerializableExtra(EXTRA_SAVED_MEDICINE_UUID) as UUID
+      val medicineFrequency = intent.getParcelableExtra<MedicineFrequency>(EXTRA_SAVED_MEDICINE_FREQUENCY)!!
+
+      return SavedDrugFrequency(
+          drugUuid = uuid,
+          frequency = medicineFrequency
+      )
     }
   }
 
@@ -116,7 +128,8 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
 
   override fun saveMedicineFrequency(medicineFrequency: MedicineFrequency) {
     val intent = Intent().apply {
-      putExtra(SAVED_MEDICINE_FREQUENCY, medicineFrequency)
+      putExtra(EXTRA_SAVED_MEDICINE_UUID, medicineFrequencyExtra.uuid)
+      putExtra(EXTRA_SAVED_MEDICINE_FREQUENCY, medicineFrequency)
     }
     setResult(Activity.RESULT_OK, intent)
     finish()

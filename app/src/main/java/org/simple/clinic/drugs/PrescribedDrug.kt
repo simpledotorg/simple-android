@@ -140,5 +140,11 @@ data class PrescribedDrug(
       WHERE isDeleted = 1 AND syncStatus == 'DONE'
     """)
     fun purgeDeleted()
+
+    @Query("UPDATE PrescribedDrug SET durationInDays = :durationInDays, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid = :id")
+    fun updateDrugDuration(id: UUID, durationInDays: Int, updatedAt: Instant, syncStatus: SyncStatus)
+
+    @Query("UPDATE PrescribedDrug SET frequency = :drugFrequency, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid = :id")
+    fun updateDrugFrequenecy(id: UUID, drugFrequency: MedicineFrequency, updatedAt: Instant, syncStatus: SyncStatus)
   }
 }

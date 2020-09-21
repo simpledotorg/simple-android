@@ -12,10 +12,7 @@ class TeleconsultRecordModule {
   fun teleconsultRecordDao(appDatabase: AppDatabase) = appDatabase.teleconsultRecordDao()
 
   @Provides
-  fun teleconsultRecordWithPrescribedDrugDao(appDatabase: AppDatabase) = appDatabase.teleconsultRecordWithPrescribedDrugDao()
-
-  @Provides
-  fun teleconsultRecordSyncApi(@Named("for_country") retrofit: Retrofit) : TeleconsultRecordApi {
+  fun teleconsultRecordSyncApi(@Named("for_country") retrofit: Retrofit): TeleconsultRecordApi {
     return retrofit.create(TeleconsultRecordApi::class.java)
   }
 }

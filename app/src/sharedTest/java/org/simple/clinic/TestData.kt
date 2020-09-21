@@ -64,7 +64,6 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityW
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
-import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordWithPrescribedDrugs
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRequestInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.user.LoggedInUserPayload
@@ -1226,16 +1225,6 @@ object TestData {
         requesterId = requesterId,
         facilityId = facilityId,
         requestedAt = requestedAt
-    )
-  }
-
-  fun teleconsultRecordWithPrescribedDrugs(
-      teleconsultRecord: TeleconsultRecord,
-      prescribedDrugs: List<TeleconsultRecordPrescribedDrug> = emptyList()
-  ): TeleconsultRecordWithPrescribedDrugs {
-    return TeleconsultRecordWithPrescribedDrugs(
-        teleconsultRecord = teleconsultRecord,
-        prescribedDrugs = prescribedDrugs
     )
   }
 }

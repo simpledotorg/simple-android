@@ -7,21 +7,32 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
+import org.simple.clinic.AppDatabase
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.DatabaseMaintenanceRunAt
+import org.simple.clinic.main.TypedPreference.Type.FallbackCountry
+import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
-import javax.inject.Named
+import java.time.Instant
 
 class SetupActivityEffectHandler @AssistedInject constructor(
-    @Named("onboarding_complete") private val onboardingCompletePreference: Preference<Boolean>,
     @Assisted private val uiActions: UiActions,
     private val userDao: User.RoomDao,
     private val appConfigRepository: AppConfigRepository,
-    @Named("fallback") private val fallbackCountry: Country,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    private val appDatabase: AppDatabase,
+    private val crashReporter: CrashReporter,
+    private val clock: UtcClock,
+    @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,
+    @TypedPreference(FallbackCountry) private val fallbackCountry: Country,
+    @TypedPreference(DatabaseMaintenanceRunAt) private val databaseMaintenanceRunAt: Preference<Optional<Instant>>
 ) {
 
   @AssistedInject.Factory
@@ -49,6 +60,8 @@ class SetupActivityEffectHandler @AssistedInject constructor(
         .addTransformer(InitializeDatabase::class.java, initializeDatabase(schedulersProvider.io()))
         .addAction(ShowCountrySelectionScreen::class.java, uiActions::showCountrySelectionScreen, schedulersProvider.ui())
         .addTransformer(SetFallbackCountryAsCurrentCountry::class.java, setFallbackCountryAsSelected(schedulersProvider.io()))
+        .addTransformer(RunDatabaseMaintenance::class.java, runDatabaseMaintenance())
+        .addTransformer(FetchDatabaseMaintenanceLastRunAtTime::class.java, loadLastDatabaseMaintenanceTime())
         .build()
   }
 
@@ -86,6 +99,25 @@ class SetupActivityEffectHandler @AssistedInject constructor(
             .subscribeOn(scheduler)
             .toSingleDefault(FallbackCountrySetAsSelected)
       }
+    }
+  }
+
+  private fun runDatabaseMaintenance(): ObservableTransformer<RunDatabaseMaintenance, SetupActivityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .doOnNext { appDatabase.prune(crashReporter) }
+          .doOnNext { databaseMaintenanceRunAt.set(Optional.of(Instant.now(clock))) }
+          .map { DatabaseMaintenanceCompleted }
+    }
+  }
+
+  private fun loadLastDatabaseMaintenanceTime(): ObservableTransformer<FetchDatabaseMaintenanceLastRunAtTime, SetupActivityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { databaseMaintenanceRunAt.get() }
+          .map(::DatabaseMaintenanceLastRunAtTimeLoaded)
     }
   }
 }

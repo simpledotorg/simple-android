@@ -15,6 +15,7 @@
 - Add methods to purge soft-deleted records from the database
 - Add method to purge cancelled and visited appointments from the database
 - Bump target SDK version to 30
+- Add weekly recurring task to run maintenance tasks on the database
 
 ### Changes
 - Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`, `ti-ET`

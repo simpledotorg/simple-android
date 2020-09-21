@@ -111,4 +111,16 @@ class TeleconsultDoctorInfoEffectHandlerTest {
 
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when show add signature dialog effect is received, then show signature dialog`() {
+    // when
+    effectHandlerTestCase.dispatch(ShowAddSignatureDialog)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showAddSignatureDialog()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

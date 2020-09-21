@@ -1,6 +1,7 @@
 package org.simple.clinic.teleconsultlog.prescription.doctorinfo
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Parcelable
 import android.util.AttributeSet
@@ -13,6 +14,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.signature.SignatureActivity
 import org.simple.clinic.user.User
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
@@ -91,6 +93,11 @@ class TeleconsultDoctorInfoView(
   override fun renderDoctorAcknowledgement(user: User) {
     val acknowledgementString = context.getString(R.string.view_teleconsult_doctor_info_acknowledgement, user.fullName)
     acknowledgementTextView.text = acknowledgementString
+  }
+
+  override fun showAddSignatureDialog() {
+    val intent = Intent(context, SignatureActivity::class.java)
+    context.startActivity(intent)
   }
 
   private fun instructionChanges(): Observable<UiEvent> {

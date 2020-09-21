@@ -1,13 +1,15 @@
 package org.simple.clinic.teleconsultlog.prescription.doctorinfo
 
-import org.simple.clinic.patient.Patient
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.user.User
 
+@Parcelize
 data class TeleconsultDoctorInfoModel(
     val medicalRegistrationId: String?,
     val instructions: String?,
     val user: User?
-) {
+) : Parcelable {
 
   companion object {
 

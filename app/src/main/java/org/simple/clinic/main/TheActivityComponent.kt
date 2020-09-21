@@ -68,6 +68,7 @@ import org.simple.clinic.summary.prescribeddrugs.DrugSummaryViewInjector
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreen
+import org.simple.clinic.teleconsultlog.prescription.doctorinfo.TeleconsultDoctorInfoView
 import org.simple.clinic.teleconsultlog.prescription.medicines.TeleconsultMedicinesView
 import org.simple.clinic.teleconsultlog.prescription.patientinfo.TeleconsultPatientInfoView
 import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessScreen
@@ -126,7 +127,8 @@ interface TheActivityComponent :
     TeleconsultNotRecordedDialog.Injector,
     TeleconsultPrescriptionScreen.Injector,
     TeleconsultPatientInfoView.Injector,
-    TeleconsultMedicinesView.Injector {
+    TeleconsultMedicinesView.Injector,
+    TeleconsultDoctorInfoView.Injector {
   fun inject(target: TheActivity)
   fun inject(target: PatientSummaryScreen)
   fun inject(target: FacilityChangeActivity)

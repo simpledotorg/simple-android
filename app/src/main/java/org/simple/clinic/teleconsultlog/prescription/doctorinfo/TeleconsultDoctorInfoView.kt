@@ -14,6 +14,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.view_teleconsult_doctor_info.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
@@ -35,16 +36,20 @@ class TeleconsultDoctorInfoView(
   @Inject
   lateinit var effectHandlerFactory: TeleconsultDoctorInfoEffectHandler.Factory
 
+  @Inject
+  lateinit var lifecycle: Observable<ActivityLifecycle>
+
   init {
     inflate(context, R.layout.view_teleconsult_doctor_info, this)
   }
 
   private val events by unsafeLazy {
     Observable
-        .merge(
+        .mergeArray(
             instructionChanges(),
             medicalRegistrationIdChanges(),
-            signatureClicks()
+            signatureClicks(),
+            activityResumes()
         )
         .compose(ReportAnalyticsEvents())
   }
@@ -121,6 +126,17 @@ class TeleconsultDoctorInfoView(
     val clicksFromContainer = signatureContainer.clicks().map { AddSignatureClicked }
 
     return clicksFromButton.mergeWith(clicksFromContainer).cast()
+  }
+
+  /**
+   * We are doing this to load the bitmap once it's added
+   * in `SignatureActivity` since init functions are not triggered
+   * on Activity resumed.
+   */
+  private fun activityResumes(): Observable<UiEvent> {
+    return lifecycle
+        .ofType<ActivityLifecycle.Resumed>()
+        .map { ActivityResumed }
   }
 
   interface Injector {

@@ -97,4 +97,15 @@ class TeleconsultDoctorInfoUpdateTest {
             hasEffects(ShowAddSignatureDialog)
         ))
   }
+
+  @Test
+  fun `when activity is resumed, then load the signature`() {
+    updateSpec
+        .given(model)
+        .whenEvent(ActivityResumed)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadSignatureBitmap)
+        ))
+  }
 }

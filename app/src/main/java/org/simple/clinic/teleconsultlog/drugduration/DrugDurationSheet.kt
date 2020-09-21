@@ -23,6 +23,7 @@ import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.textChanges
+import java.time.Duration
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
@@ -49,10 +50,14 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
       }
     }
 
-    fun readDrugUuidAndDuration(intent: Intent): Pair<UUID, Int> {
+    fun readSavedDrugDuration(intent: Intent): SavedDrugDuration {
       val uuid = intent.getSerializableExtra(EXTRA_SAVED_DRUG_UUID) as UUID
       val duration = intent.extras!!.getInt(EXTRA_SAVED_DURATION)
-      return uuid to duration
+
+      return SavedDrugDuration(
+          drugUuid = uuid,
+          duration = Duration.ofDays(duration.toLong())
+      )
     }
   }
 

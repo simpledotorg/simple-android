@@ -28,7 +28,6 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
-import java.time.Duration
 import java.util.UUID
 import javax.inject.Inject
 
@@ -174,9 +173,9 @@ class TeleconsultMedicinesView(
     return screenRouter.streamScreenResults()
         .ofType<ActivityResult>()
         .extractSuccessful(DRUG_DURATION_SHEET) { intent ->
-          DrugDurationSheet.readDrugUuidAndDuration(intent)
+          DrugDurationSheet.readSavedDrugDuration(intent)
         }
-        .map { (uuid, duration) -> DrugDurationChanged(uuid, Duration.ofDays(duration.toLong())) }
+        .map { (uuid, duration) -> DrugDurationChanged(uuid, duration) }
   }
 
   private fun drugFrequencyChanges(): Observable<UiEvent> {

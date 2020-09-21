@@ -15,6 +15,7 @@
 - Bump target SDK version to 30
 - Add weekly recurring task to run maintenance tasks on the database
 - Add teleconsult record sync (Disabled for now until API endpoint is live)
+- Remove `PrescribedDrugs` from `TeleconsultRecord`
 
 ### Changes
 - Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`, `ti-ET`

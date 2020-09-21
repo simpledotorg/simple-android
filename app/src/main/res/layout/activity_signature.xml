@@ -2,16 +2,19 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/signatureRoot"
+  style="@style/Clinic.V2.Theme.TranslucentBackground"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   tools:context="org.simple.clinic.signature.SignatureActivity">
 
   <RelativeLayout
     android:id="@+id/relativeLayout"
-    android:layout_width="0dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/spacing_16"
     android:background="@color/white"
+    android:elevation="@dimen/spacing_8"
     android:paddingTop="@dimen/spacing_16"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
@@ -75,4 +78,5 @@
     </LinearLayout>
 
   </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

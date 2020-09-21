@@ -44,6 +44,8 @@ class SignatureActivity : AppCompatActivity(), SignatureUiActions {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_signature)
+
+    signatureRoot.setOnClickListener { finish() }
   }
 
   private fun acceptSignatureClicks() = acceptSignature

@@ -22,10 +22,25 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-    <org.simple.clinic.teleconsultlog.prescription.patientinfo.TeleconsultPatientInfoView
-      android:id="@+id/teleconsultPrescriptionPatientInfoView"
+    <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content" />
+      android:layout_height="match_parent"
+      android:clipChildren="false"
+      android:clipToPadding="false"
+      android:orientation="vertical">
+
+      <org.simple.clinic.teleconsultlog.prescription.patientinfo.TeleconsultPatientInfoView
+        android:id="@+id/teleconsultPrescriptionPatientInfoView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+      <org.simple.clinic.teleconsultlog.prescription.medicines.TeleconsultMedicinesView
+        android:id="@+id/teleconsultPrescriptionMedicinesView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8" />
+
+    </LinearLayout>
 
   </androidx.core.widget.NestedScrollView>
 

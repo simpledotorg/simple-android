@@ -25,14 +25,30 @@ class TeleconsultMedicinesEffectHandler @AssistedInject constructor(
         .addConsumer(OpenEditMedicines::class.java, { uiActions.openEditMedicines(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(OpenDrugDurationSheet::class.java, { uiActions.openDrugDurationSheet(it.prescription) }, schedulersProvider.ui())
         .addConsumer(OpenDrugFrequencySheet::class.java, { uiActions.openDrugFrequencySheet(it.prescription) }, schedulersProvider.ui())
+        .addConsumer(UpdateDrugDuration::class.java, { updateDrugDuration(it) }, schedulersProvider.io())
+        .addConsumer(UpdateDrugFrequency::class.java, { updateDrugFrequency(it) }, schedulersProvider.io())
         .build()
+  }
+
+  private fun updateDrugFrequency(updateDrugFrequency: UpdateDrugFrequency) {
+    prescriptionRepository.updateDrugFrequency(
+        id = updateDrugFrequency.prescribedDrugUuid,
+        drugFrequency = updateDrugFrequency.drugFrequency
+    )
+  }
+
+  private fun updateDrugDuration(updateDrugDuration: UpdateDrugDuration) {
+    prescriptionRepository.updateDrugDuration(
+        id = updateDrugDuration.prescribedDrugUuid,
+        duration = updateDrugDuration.duration
+    )
   }
 
   private fun loadPatientMedicines(): ObservableTransformer<LoadPatientMedicines, TeleconsultMedicinesEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map { prescriptionRepository.newestPrescriptionsForPatientImmediate(it.patientUuid) }
+          .switchMap { prescriptionRepository.newestPrescriptionsForPatient(it.patientUuid) }
           .map(::PatientMedicinesLoaded)
     }
   }

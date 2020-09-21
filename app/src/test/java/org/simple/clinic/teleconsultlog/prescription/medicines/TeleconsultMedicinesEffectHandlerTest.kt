@@ -6,12 +6,15 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import java.time.Duration
 import java.util.UUID
 
 class TeleconsultMedicinesEffectHandlerTest {
@@ -46,7 +49,7 @@ class TeleconsultMedicinesEffectHandlerTest {
         )
     )
 
-    whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn medicines
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)) doReturn Observable.just(medicines)
 
     // when
     effectHandlerTestCase.dispatch(LoadPatientMedicines(patientUuid))
@@ -102,5 +105,41 @@ class TeleconsultMedicinesEffectHandlerTest {
 
     verify(uiActions).openDrugFrequencySheet(prescription)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when update drug duration effect is received, then update the drug duration`() {
+    // given
+    val prescribedDrugUuid = UUID.fromString("b330e7e1-fb2a-4bcb-bd33-22ae42ef8812")
+    val duration = Duration.ofDays(25)
+
+    // when
+    effectHandlerTestCase.dispatch(UpdateDrugDuration(prescribedDrugUuid, duration))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verifyZeroInteractions(uiActions)
+
+    verify(prescriptionRepository).updateDrugDuration(prescribedDrugUuid, duration)
+    verifyNoMoreInteractions(prescriptionRepository)
+  }
+
+  @Test
+  fun `when update drug frequency is received, then update the drug frequency`() {
+    // given
+    val prescribedDrugUuid = UUID.fromString("d0b94422-9a0c-4b25-8664-20a99441a012")
+    val drugFrequency = MedicineFrequency.TDS
+
+    // when
+    effectHandlerTestCase.dispatch(UpdateDrugFrequency(prescribedDrugUuid, drugFrequency))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verifyZeroInteractions(uiActions)
+
+    verify(prescriptionRepository).updateDrugFrequency(prescribedDrugUuid, drugFrequency)
+    verifyNoMoreInteractions(prescriptionRepository)
   }
 }

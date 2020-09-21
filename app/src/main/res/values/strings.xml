@@ -715,4 +715,13 @@
 
   <!-- Teleconsult Patient Info View -->
   <string name="view_teleconsult_patient_info" translatable="false">%1$s, %2$s, %3$s</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">Medicines</string>
+  <string name="view_teleconsult_medicines_edit">Edit</string>
+  <string name="list_item_teleconsult_medicines_name" translatable="false">%1$s %2$s</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="one">%1$s day</item>
+    <item quantity="other">%1$s days</item>
+  </plurals>
 </resources>

@@ -1,13 +1,15 @@
 package org.simple.clinic.teleconsultlog.prescription.doctorinfo
 
 data class TeleconsultDoctorInfoModel(
-    val medicalRegistrationId: String?
+    val medicalRegistrationId: String?,
+    val instructions: String?
 ) {
 
   companion object {
 
     fun create() = TeleconsultDoctorInfoModel(
-        medicalRegistrationId = null
+        medicalRegistrationId = null,
+        instructions = null
     )
   }
 

@@ -2,7 +2,7 @@ package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer
-import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordWithPrescribedDrugs
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.widgets.UiEvent
 
@@ -12,7 +12,7 @@ object BackClicked : TeleconsultRecordEvent() {
   override val analyticsName: String = "Teleconsult Record:Back Clicked"
 }
 
-data class TeleconsultRecordWithPrescribedDrugsLoaded(val teleconsultRecordWithPrescribedDrugs: TeleconsultRecordWithPrescribedDrugs?) : TeleconsultRecordEvent()
+data class TeleconsultRecordLoaded(val teleconsultRecord: TeleconsultRecord?) : TeleconsultRecordEvent()
 
 object TeleconsultRecordCreated : TeleconsultRecordEvent()
 

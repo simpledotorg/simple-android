@@ -14,6 +14,10 @@ class TeleconsultDoctorInfoInit : Init<TeleconsultDoctorInfoModel, TeleconsultDo
       effects.add(LoadMedicalRegistrationId)
     }
 
+    if (model.hasUser.not()) {
+      effects.add(LoadCurrentUser)
+    }
+
     return first(model, effects)
   }
 }

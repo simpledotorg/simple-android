@@ -21,6 +21,9 @@ data class TeleconsultDoctorInfoModel(
   val hasMedicalRegistrationId: Boolean
     get() = medicalRegistrationId != null
 
+  val hasUser: Boolean
+    get() = user != null
+
   fun medicalRegistrationIdLoaded(medicalRegistrationId: String): TeleconsultDoctorInfoModel {
     return copy(medicalRegistrationId = medicalRegistrationId)
   }

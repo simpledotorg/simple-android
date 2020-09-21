@@ -19,4 +19,8 @@ data class TeleconsultDoctorInfoModel(
   fun medicalRegistrationIdLoaded(medicalRegistrationId: String): TeleconsultDoctorInfoModel {
     return copy(medicalRegistrationId = medicalRegistrationId)
   }
+
+  fun medicalInstructionsChanged(instructions: String): TeleconsultDoctorInfoModel {
+    return copy(instructions = instructions)
+  }
 }

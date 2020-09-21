@@ -56,4 +56,17 @@ class TeleconsultDoctorInfoUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when instructions changes, then update the model`() {
+    val instructions = "This is a medical instructions given by doctor"
+
+    updateSpec
+        .given(model)
+        .whenEvent(MedicalInstructionsChanged(instructions))
+        .then(assertThatNext(
+            hasModel(model.medicalInstructionsChanged(instructions)),
+            hasNoEffects()
+        ))
+  }
 }

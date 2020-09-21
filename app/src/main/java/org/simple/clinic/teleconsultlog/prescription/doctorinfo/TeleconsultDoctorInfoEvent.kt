@@ -9,3 +9,5 @@ data class MedicalRegistrationIdLoaded(val medicalRegistrationId: String) : Tele
 data class SignatureBitmapLoaded(val signatureBitmap: Bitmap?) : TeleconsultDoctorInfoEvent()
 
 data class MedicalRegistrationIdChanged(val medicalRegistrationId: String) : TeleconsultDoctorInfoEvent()
+
+data class MedicalInstructionsChanged(val instructions: String) : TeleconsultDoctorInfoEvent()

@@ -15,6 +15,7 @@ class TeleconsultDoctorInfoUpdate : Update<TeleconsultDoctorInfoModel, Teleconsu
     return when (event) {
       is MedicalRegistrationIdLoaded -> medicalRegistrationIdLoaded(model, event)
       is SignatureBitmapLoaded -> signatureLoaded(event)
+      is MedicalRegistrationIdChanged -> next(model.medicalRegistrationIdLoaded(event.medicalRegistrationId))
     }
   }
 

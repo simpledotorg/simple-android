@@ -9,6 +9,8 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.TestData
+import java.util.UUID
 
 class TeleconsultDoctorInfoUpdateTest {
 
@@ -66,6 +68,21 @@ class TeleconsultDoctorInfoUpdateTest {
         .whenEvent(MedicalInstructionsChanged(instructions))
         .then(assertThatNext(
             hasModel(model.medicalInstructionsChanged(instructions)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when current user is loaded, then update the model`() {
+    val currentUser = TestData.loggedInUser(
+        uuid = UUID.fromString("6dedf026-c0ca-4977-8785-6a8833a19964")
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(CurrentUserLoaded(currentUser))
+        .then(assertThatNext(
+            hasModel(model.currentUserLoaded(currentUser)),
             hasNoEffects()
         ))
   }

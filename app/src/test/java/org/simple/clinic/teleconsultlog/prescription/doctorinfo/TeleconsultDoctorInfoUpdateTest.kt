@@ -86,4 +86,15 @@ class TeleconsultDoctorInfoUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when add signature button is clicked, then show the add signature dialog`() {
+    updateSpec
+        .given(model)
+        .whenEvent(AddSignatureClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowAddSignatureDialog)
+        ))
+  }
 }

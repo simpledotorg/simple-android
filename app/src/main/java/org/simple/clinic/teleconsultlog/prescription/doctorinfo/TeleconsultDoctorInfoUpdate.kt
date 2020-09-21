@@ -18,6 +18,7 @@ class TeleconsultDoctorInfoUpdate : Update<TeleconsultDoctorInfoModel, Teleconsu
       is MedicalRegistrationIdChanged -> next(model.medicalRegistrationIdLoaded(event.medicalRegistrationId))
       is MedicalInstructionsChanged -> next(model.medicalInstructionsChanged(event.instructions))
       is CurrentUserLoaded -> next(model.currentUserLoaded(event.user))
+      AddSignatureClicked -> dispatch(ShowAddSignatureDialog)
     }
   }
 

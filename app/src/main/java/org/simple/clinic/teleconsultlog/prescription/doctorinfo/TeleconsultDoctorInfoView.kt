@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.view_teleconsult_doctor_info.view.*
@@ -40,7 +41,8 @@ class TeleconsultDoctorInfoView(
     Observable
         .merge(
             instructionChanges(),
-            medicalRegistrationIdChanges()
+            medicalRegistrationIdChanges(),
+            addSignatureClicks()
         )
         .compose(ReportAnalyticsEvents())
   }
@@ -108,6 +110,12 @@ class TeleconsultDoctorInfoView(
   private fun medicalRegistrationIdChanges(): Observable<UiEvent> {
     return medicalRegistrationIdEditText
         .textChanges { MedicalRegistrationIdChanged(it) }
+  }
+
+  private fun addSignatureClicks(): Observable<UiEvent> {
+    return addSignatureButton
+        .clicks()
+        .map { AddSignatureClicked }
   }
 
   interface Injector {

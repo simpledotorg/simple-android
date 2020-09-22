@@ -1,8 +1,6 @@
 package org.simple.clinic.teleconsultlog.drugduration
 
 import org.simple.clinic.mobius.ViewRenderer
-import org.simple.clinic.teleconsultlog.drugduration.DrugDurationValidationResult.BLANK
-import org.simple.clinic.teleconsultlog.drugduration.DrugDurationValidationResult.NOT_VALIDATED
 import org.simple.clinic.util.ValueChangedCallback
 
 class DrugDurationUiRenderer(private val ui: DrugDurationUi) : ViewRenderer<DrugDurationModel> {
@@ -12,6 +10,8 @@ class DrugDurationUiRenderer(private val ui: DrugDurationUi) : ViewRenderer<Drug
   override fun render(model: DrugDurationModel) {
     if (model.hasValidationResult) {
       renderValidationResult(model.validationResult!!)
+    } else {
+      ui.hideDurationError()
     }
 
     renderDrugDuration(model)
@@ -23,8 +23,7 @@ class DrugDurationUiRenderer(private val ui: DrugDurationUi) : ViewRenderer<Drug
 
   private fun renderValidationResult(validationResult: DrugDurationValidationResult) {
     when (validationResult) {
-      NOT_VALIDATED -> ui.hideDurationError()
-      BLANK -> ui.showBlankDurationError()
+      Blank -> ui.showBlankDurationError()
     }
   }
 }

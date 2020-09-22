@@ -7,7 +7,6 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.teleconsultlog.drugduration.DrugDurationValidationResult.BLANK
 
 class DrugDurationUpdateTest {
 
@@ -36,7 +35,7 @@ class DrugDurationUpdateTest {
         .given(model)
         .whenEvent(DrugDurationSaveClicked)
         .then(assertThatNext(
-            hasModel(model.invalid(BLANK)),
+            hasModel(model.durationInvalid(Blank)),
             hasNoEffects()
         ))
   }

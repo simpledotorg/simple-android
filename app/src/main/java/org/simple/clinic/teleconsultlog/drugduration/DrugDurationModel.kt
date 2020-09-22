@@ -2,7 +2,6 @@ package org.simple.clinic.teleconsultlog.drugduration
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.teleconsultlog.drugduration.DrugDurationValidationResult.NOT_VALIDATED
 
 @Parcelize
 data class DrugDurationModel(
@@ -13,7 +12,7 @@ data class DrugDurationModel(
   companion object {
     fun create(duration: String) = DrugDurationModel(
         duration = duration,
-        validationResult = NOT_VALIDATED
+        validationResult = null
     )
   }
 
@@ -24,10 +23,10 @@ data class DrugDurationModel(
     get() = validationResult != null
 
   fun durationChanged(duration: String): DrugDurationModel {
-    return copy(duration = duration, validationResult = NOT_VALIDATED)
+    return copy(duration = duration, validationResult = null)
   }
 
-  fun invalid(result: DrugDurationValidationResult): DrugDurationModel {
+  fun durationInvalid(result: DrugDurationValidationResult): DrugDurationModel {
     return copy(validationResult = result)
   }
 }

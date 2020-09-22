@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
-import org.simple.clinic.teleconsultlog.drugduration.DrugDurationValidationResult.BLANK
 
 class DrugDurationUiRendererTest {
 
@@ -33,7 +32,7 @@ class DrugDurationUiRendererTest {
     // given
     val duration = ""
     val model = DrugDurationModel.create(duration)
-        .invalid(BLANK)
+        .durationInvalid(Blank)
 
     // when
     uiRenderer.render(model)

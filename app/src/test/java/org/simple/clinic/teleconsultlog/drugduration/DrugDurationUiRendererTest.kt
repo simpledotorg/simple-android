@@ -40,4 +40,19 @@ class DrugDurationUiRendererTest {
     verify(ui).showBlankDurationError()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when drug duration validation result is max duration, then show max duration error`() {
+    // given
+    val duration = "1001"
+    val model = DrugDurationModel.create(duration)
+        .durationInvalid(MaxDrugDuration)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showMaxDrugDurationError(1000)
+    verifyNoMoreInteractions(ui)
+  }
 }

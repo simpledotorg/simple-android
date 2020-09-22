@@ -60,6 +60,9 @@ class SignatureActivity : AppCompatActivity(), SignatureUiActions {
     drawSignatureFrame.clear()
   }
 
+  override fun setSignatureBitmap(signatureBitmap: Bitmap) {
+    drawSignatureFrame.signatureBitmap = signatureBitmap
+  }
 
   override fun closeScreen() {
     finish()

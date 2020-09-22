@@ -58,4 +58,19 @@ class SignatureEffectHandlerTest {
 
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when set signature bitmap effect is received, then set signature bitmap`() {
+    // given
+    val signatureBitmap = mock<Bitmap>()
+
+    // when
+    effectHandlerTestCase.dispatch(SetSignatureBitmap(signatureBitmap))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).setSignatureBitmap(signatureBitmap)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

@@ -130,6 +130,10 @@ The code styles which the project uses have been exported as an IntelliJ code st
 1. In the file picker, navigate to  `<project>/quality/code-style.xml`.
 1. Import the `Simple` scheme into the IDE and set it as the project code style.
 
+## Tooling
+
+An Android Studio plugin that provides some quality of life improvements like live templates can be found [HERE](https://github.com/simpledotorg/simple-android-idea-plugin).
+
 ## Build and deploy Simple Server
 
 Simple Server is in a separate repository, and you should follow the [instructions there](https://github.com/simpledotorg/simple-server/blob/master/README.md).

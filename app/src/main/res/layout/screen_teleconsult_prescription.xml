@@ -40,6 +40,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8" />
 
+      <org.simple.clinic.teleconsultlog.prescription.doctorinfo.TeleconsultDoctorInfoView
+        android:id="@+id/teleconsultPrescriptionDoctorInfoView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8" />
+
     </LinearLayout>
 
   </androidx.core.widget.NestedScrollView>

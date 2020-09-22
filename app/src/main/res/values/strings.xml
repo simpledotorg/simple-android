@@ -724,4 +724,10 @@
     <item quantity="one">%1$s day</item>
     <item quantity="other">%1$s days</item>
   </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">Instructions for patient</string>
+  <string name="view_teleconsult_doctor_info_registration_id">Medical registration ID</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">By signing this prescription I acknowledge that I am %1$s</string>
+  <string name="view_teleconsult_doctor_info_add_signature">Add Signature</string>
 </resources>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/spacing_16">
+
+    <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/instructionsInputLayout"
+      style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="@string/view_teleconsult_doctor_info_instructions"
+      app:boxStrokeColor="@color/blue1"
+      app:hintTextColor="@color/blue1"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+      <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/instructionsEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/medicalRegistrationIdLayout"
+      style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_16"
+      android:hint="@string/view_teleconsult_doctor_info_registration_id"
+      app:boxStrokeColor="@color/blue1"
+      app:hintTextColor="@color/blue1"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/instructionsInputLayout">
+
+      <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/medicalRegistrationIdEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/addSignatureButton"
+      style="@style/Clinic.V2.OutlineButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_16"
+      android:text="@string/view_teleconsult_doctor_info_add_signature"
+      app:layout_constraintTop_toBottomOf="@id/medicalRegistrationIdLayout"
+      app:strokeColor="@color/grey2" />
+
+    <TextView
+      android:id="@+id/acknowledgementTextView"
+      style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_8"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/addSignatureButton"
+      tools:text="By signing this prescription I acknowledge that I am Dr. Manjeet Kaur." />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

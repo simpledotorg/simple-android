@@ -4,8 +4,11 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import javax.inject.Inject
 
-class DrugDurationUpdate : Update<DrugDurationModel, DrugDurationEvent, DrugDurationEffect> {
+class DrugDurationUpdate @Inject constructor(
+    private val validator: DrugDurationValidator
+) : Update<DrugDurationModel, DrugDurationEvent, DrugDurationEffect> {
 
   override fun update(model: DrugDurationModel, event: DrugDurationEvent): Next<DrugDurationModel, DrugDurationEffect> {
     return when (event) {
@@ -17,10 +20,10 @@ class DrugDurationUpdate : Update<DrugDurationModel, DrugDurationEvent, DrugDura
   }
 
   private fun drugDurationSaveClicked(model: DrugDurationModel): Next<DrugDurationModel, DrugDurationEffect> {
-    return if (model.hasDuration) {
-      dispatch(SaveDrugDuration(model.duration.toInt()))
-    } else {
-      next(model.durationInvalid(Blank))
+    return when (val result = validator.validate(model.duration)) {
+      Blank -> next(model.durationInvalid(result))
+      is MaxDrugDuration -> next(model.durationInvalid(result))
+      Valid -> dispatch(SaveDrugDuration(model.duration.toInt()))
     }
   }
 }

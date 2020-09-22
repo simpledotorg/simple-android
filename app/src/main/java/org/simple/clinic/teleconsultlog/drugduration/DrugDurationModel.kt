@@ -16,9 +16,6 @@ data class DrugDurationModel(
     )
   }
 
-  val hasDuration: Boolean
-    get() = duration.isNotBlank()
-
   val hasValidationResult: Boolean
     get() = validationResult != null
 

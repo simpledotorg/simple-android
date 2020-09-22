@@ -34,6 +34,9 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
   lateinit var locale: Locale
 
   @Inject
+  lateinit var drugDurationUpdate: DrugDurationUpdate
+
+  @Inject
   lateinit var effectHandlerFactory: DrugDurationEffectHandler.Factory
 
   companion object {
@@ -83,7 +86,7 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
         events = events.ofType(),
         defaultModel = DrugDurationModel.create(drugDuration.duration),
         init = DrugDurationInit(),
-        update = DrugDurationUpdate(),
+        update = drugDurationUpdate,
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render
     )

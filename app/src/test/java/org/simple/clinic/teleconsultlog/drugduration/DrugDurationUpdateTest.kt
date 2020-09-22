@@ -7,10 +7,15 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import java.time.Duration
 
 class DrugDurationUpdateTest {
 
-  private val updateSpec = UpdateSpec(DrugDurationUpdate())
+  private val config = DrugDurationConfig(
+      maxAllowedDuration = Duration.ofDays(1000)
+  )
+  private val validator = DrugDurationValidator(config)
+  private val updateSpec = UpdateSpec(DrugDurationUpdate(validator))
 
   @Test
   fun `hide drug duration error when drug duration changes`() {
@@ -27,7 +32,7 @@ class DrugDurationUpdateTest {
   }
 
   @Test
-  fun `show drug duration error when drug duration is empty`() {
+  fun `show drug duration error when drug duration is blank`() {
     val duration = ""
     val model = DrugDurationModel.create(duration)
 
@@ -36,6 +41,20 @@ class DrugDurationUpdateTest {
         .whenEvent(DrugDurationSaveClicked)
         .then(assertThatNext(
             hasModel(model.durationInvalid(Blank)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `show drug duration error when drug duration is more than max allowed drug duration`() {
+    val duration = "1001"
+    val model = DrugDurationModel.create(duration)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DrugDurationSaveClicked)
+        .then(assertThatNext(
+            hasModel(model.durationInvalid(MaxDrugDuration(1000))),
             hasNoEffects()
         ))
   }

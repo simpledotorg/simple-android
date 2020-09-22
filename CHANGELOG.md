@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Next Release
+### Internal
+- Integrated Firebase Performance Monitoring
+
 ## On Demo
 ### Features
 - Add `TeleconsultRecordScreen`

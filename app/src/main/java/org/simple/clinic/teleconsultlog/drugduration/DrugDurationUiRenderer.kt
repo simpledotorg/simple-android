@@ -15,6 +15,7 @@ class DrugDurationUiRenderer(private val ui: DrugDurationUi) : ViewRenderer<Drug
   private fun renderValidationResult(validationResult: DrugDurationValidationResult) {
     when (validationResult) {
       Blank -> ui.showBlankDurationError()
+      is MaxDrugDuration -> ui.showMaxDrugDurationError(validationResult.maxDuration)
     }
   }
 }

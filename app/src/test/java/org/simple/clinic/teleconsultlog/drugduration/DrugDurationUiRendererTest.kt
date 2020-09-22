@@ -46,7 +46,7 @@ class DrugDurationUiRendererTest {
     // given
     val duration = "1001"
     val model = DrugDurationModel.create(duration)
-        .durationInvalid(MaxDrugDuration)
+        .durationInvalid(MaxDrugDuration(1000))
 
     // when
     uiRenderer.render(model)

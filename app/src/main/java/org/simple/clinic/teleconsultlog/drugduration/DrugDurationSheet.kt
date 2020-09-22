@@ -151,6 +151,11 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
     drugDurationErrorTextView.visibility = View.VISIBLE
   }
 
+  override fun showMaxDrugDurationError(maxAllowedDurationInDays: Int) {
+    drugDurationErrorTextView.text = getString(R.string.drug_duration_max_error, maxAllowedDurationInDays.toString())
+    drugDurationErrorTextView.visibility = View.VISIBLE
+  }
+
   override fun hideDurationError() {
     drugDurationErrorTextView.text = null
     drugDurationErrorTextView.visibility = View.GONE

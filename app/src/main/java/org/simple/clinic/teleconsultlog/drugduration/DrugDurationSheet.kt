@@ -165,4 +165,8 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
   override fun setDrugDuration(duration: String?) {
     drugDurationEditText.setTextAndCursor(duration)
   }
+
+  override fun prefillDrugDuration(duration: String) {
+    drugDurationEditText.setTextAndCursor(duration)
+  }
 }

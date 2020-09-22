@@ -27,7 +27,8 @@
       android:layout_height="match_parent"
       android:clipChildren="false"
       android:clipToPadding="false"
-      android:orientation="vertical">
+      android:orientation="vertical"
+      android:paddingBottom="@dimen/spacing_72">
 
       <org.simple.clinic.teleconsultlog.prescription.patientinfo.TeleconsultPatientInfoView
         android:id="@+id/teleconsultPrescriptionPatientInfoView"
@@ -49,5 +50,28 @@
     </LinearLayout>
 
   </androidx.core.widget.NestedScrollView>
+
+  <FrameLayout
+    android:id="@+id/buttonFrame"
+    style="@style/Clinic.V2.BottomAlignedButtonFrame"
+    android:background="@color/blue2"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/spacing_8"
+    android:paddingBottom="@dimen/spacing_8"
+    app:layout_constraintBottom_toBottomOf="parent">
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/nextButton"
+      style="?attr/materialButtonStyle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_marginEnd="@dimen/spacing_8"
+      android:text="@string/screen_teleconsult_prescription_next"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+
+  </FrameLayout>
 
 </org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreen>

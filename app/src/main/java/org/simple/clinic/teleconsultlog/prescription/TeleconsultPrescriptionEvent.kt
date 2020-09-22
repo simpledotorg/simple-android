@@ -17,3 +17,7 @@ data class DataForNextClickLoaded(
     val medicalRegistrationId: String,
     val signatureBitmap: Bitmap?
 ) : TeleconsultPrescriptionEvent()
+
+data class NextButtonClicked(val medicalInstructions: String, val medicalRegistrationId: String) : TeleconsultPrescriptionEvent() {
+  override val analyticsName: String = "Teleconsult Prescription:Next Clicked"
+}

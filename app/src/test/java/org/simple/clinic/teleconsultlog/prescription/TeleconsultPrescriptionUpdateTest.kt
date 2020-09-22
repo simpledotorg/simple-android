@@ -59,4 +59,22 @@ class TeleconsultPrescriptionUpdateTest {
             hasEffects(ShowSignatureRequiredError)
         ))
   }
+
+  @Test
+  fun `when next button is clicked, then load data for next click`() {
+    val medicalInstructions = "This is a medical instructions"
+    val medicalRegistrationId = "ABC12345"
+
+    updateSpec
+        .given(model)
+        .whenEvent(NextButtonClicked(medicalInstructions, medicalRegistrationId))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadDataForNextClick(
+                teleconsultRecordId = teleconsultRecordId,
+                medicalInstructions = medicalInstructions,
+                medicalRegistrationId = medicalRegistrationId
+            ))
+        ))
+  }
 }

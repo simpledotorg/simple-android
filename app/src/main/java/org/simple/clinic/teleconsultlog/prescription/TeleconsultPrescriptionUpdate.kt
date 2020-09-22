@@ -16,6 +16,11 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
       is PatientDetailsLoaded -> next(model.patientLoaded(event.patient))
       BackClicked -> dispatch(GoBack)
       is DataForNextClickLoaded -> dataForNextClickLoaded(event)
+      is NextButtonClicked -> dispatch(LoadDataForNextClick(
+          teleconsultRecordId = model.teleconsultRecordId,
+          medicalInstructions = event.medicalInstructions,
+          medicalRegistrationId = event.medicalRegistrationId
+      ))
     }
   }
 

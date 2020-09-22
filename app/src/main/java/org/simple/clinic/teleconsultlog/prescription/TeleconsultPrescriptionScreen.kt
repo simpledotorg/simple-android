@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
+import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_teleconsult_prescription.view.*
@@ -40,7 +41,11 @@ class TeleconsultPrescriptionScreen constructor(
   }
 
   private val events by unsafeLazy {
-    backClicks()
+    Observable
+        .merge(
+            backClicks(),
+            nextClicks()
+        )
         .compose(ReportAnalyticsEvents())
   }
 
@@ -104,6 +109,20 @@ class TeleconsultPrescriptionScreen constructor(
     return toolbar
         .navigationClicks()
         .map { BackClicked }
+  }
+
+  private fun nextClicks(): Observable<UiEvent> {
+    return nextButton
+        .clicks()
+        .map {
+          val medicalInstructions = teleconsultPrescriptionDoctorInfoView.medicalInstructions
+          val medicalRegistrationId = teleconsultPrescriptionDoctorInfoView.medicalRegistrationId
+
+          NextButtonClicked(
+              medicalInstructions = medicalInstructions,
+              medicalRegistrationId = medicalRegistrationId
+          )
+        }
   }
 
   interface Injector {

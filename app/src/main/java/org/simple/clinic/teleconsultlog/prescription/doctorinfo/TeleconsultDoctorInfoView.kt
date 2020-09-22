@@ -67,6 +67,12 @@ class TeleconsultDoctorInfoView(
     )
   }
 
+  val medicalInstructions: String
+    get() = delegate.currentModel.instructions.orEmpty()
+
+  val medicalRegistrationId: String
+    get() = delegate.currentModel.medicalRegistrationId.orEmpty()
+
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     delegate.start()

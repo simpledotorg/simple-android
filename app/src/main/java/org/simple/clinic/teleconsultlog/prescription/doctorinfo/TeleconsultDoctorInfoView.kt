@@ -98,6 +98,7 @@ class TeleconsultDoctorInfoView(
   override fun setSignatureBitmap(bitmap: Bitmap) {
     signatureContainer.visibility = View.VISIBLE
     addSignatureButton.visibility = View.GONE
+    signatureErrorTextView.visibility = View.GONE
     signatureImageView.setImageBitmap(bitmap)
   }
 
@@ -137,6 +138,10 @@ class TeleconsultDoctorInfoView(
     return lifecycle
         .ofType<ActivityLifecycle.Resumed>()
         .map { ActivityResumed }
+  }
+
+  fun showSignatureError() {
+    signatureErrorTextView.visibility = View.VISIBLE
   }
 
   interface Injector {

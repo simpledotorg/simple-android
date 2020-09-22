@@ -81,12 +81,25 @@
       app:layout_constraintTop_toBottomOf="@id/medicalRegistrationIdLayout"
       app:strokeColor="@color/grey2" />
 
+    <TextView
+      android:id="@+id/signatureErrorTextView"
+      style="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_16"
+      android:layout_marginTop="@dimen/spacing_4"
+      android:text="@string/view_teleconsult_doctor_info_signature_error"
+      android:visibility="gone"
+      app:layout_constraintStart_toStartOf="@id/addSignatureButton"
+      app:layout_constraintTop_toBottomOf="@id/addSignatureButton"
+      tools:visibility="visible" />
+
     <androidx.constraintlayout.widget.Barrier
       android:id="@+id/signatureBarrier"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       app:barrierDirection="bottom"
-      app:constraint_referenced_ids="addSignatureButton, signatureContainer"
+      app:constraint_referenced_ids="addSignatureButton, signatureContainer, signatureErrorTextView"
       app:layout_constraintTop_toBottomOf="@id/addSignatureButton" />
 
     <TextView

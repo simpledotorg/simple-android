@@ -730,4 +730,5 @@
   <string name="view_teleconsult_doctor_info_registration_id">Medical registration ID</string>
   <string name="view_teleconsult_doctor_info_acknowledgement">By signing this prescription I acknowledge that I am %1$s</string>
   <string name="view_teleconsult_doctor_info_add_signature">Add Signature</string>
+  <string name="view_teleconsult_doctor_info_signature_error">Add Signature</string>
 </resources>

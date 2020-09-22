@@ -60,4 +60,16 @@ class TeleconsultPrescriptionEffectHandlerTest {
     verify(uiActions).goBackToPreviousScreen()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show signature effect is received, then show signature error`() {
+    // when
+    effectHandlerTestCase.dispatch(ShowSignatureRequiredError)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showSignatureRequiredError()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

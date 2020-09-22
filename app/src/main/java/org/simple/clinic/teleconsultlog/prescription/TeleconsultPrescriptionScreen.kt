@@ -96,6 +96,10 @@ class TeleconsultPrescriptionScreen constructor(
     screenRouter.pop()
   }
 
+  override fun showSignatureRequiredError() {
+    teleconsultPrescriptionDoctorInfoView.showSignatureError()
+  }
+
   private fun backClicks(): Observable<UiEvent> {
     return toolbar
         .navigationClicks()

@@ -23,6 +23,7 @@ class TeleconsultPrescriptionEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<TeleconsultPrescriptionEffect, TeleconsultPrescriptionEvent>()
         .addTransformer(LoadPatientDetails::class.java, loadPatientDetails())
         .addAction(GoBack::class.java, uiActions::goBackToPreviousScreen, schedulersProvider.ui())
+        .addAction(ShowSignatureRequiredError::class.java, uiActions::showSignatureRequiredError, schedulersProvider.ui())
         .build()
   }
 

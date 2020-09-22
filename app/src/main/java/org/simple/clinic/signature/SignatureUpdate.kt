@@ -11,7 +11,7 @@ class SignatureUpdate : Update<SignatureModel, SignatureEvent, SignatureEffect> 
   ): Next<SignatureModel, SignatureEffect> {
     return when (event) {
       is UndoClicked -> dispatch(ClearSignature)
-      is AcceptClicked -> dispatch(AcceptSignature(event.bitmap, model.internalStoragePath))
+      is AcceptClicked -> dispatch(AcceptSignature(event.bitmap))
       is SignatureAccepted -> dispatch(CloseScreen)
     }
   }

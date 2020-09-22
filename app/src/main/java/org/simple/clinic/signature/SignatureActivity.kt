@@ -34,7 +34,7 @@ class SignatureActivity : AppCompatActivity(), SignatureUiActions {
 
     MobiusDelegate.forActivity(
         events = events,
-        defaultModel = SignatureModel.create(filesDir),
+        defaultModel = SignatureModel.create(),
         update = SignatureUpdate(),
         effectHandler = effectHandlerFactory.create(this).build()
     )

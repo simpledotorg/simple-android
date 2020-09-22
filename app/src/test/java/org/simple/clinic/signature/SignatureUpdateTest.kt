@@ -7,13 +7,11 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import java.io.File
 
 class SignatureUpdateTest {
 
   private val bitmap = mock<Bitmap>()
-  private val filePath = mock<File>()
-  private val model = SignatureModel.create(filePath)
+  private val model = SignatureModel.create()
   private val updateSpec = UpdateSpec(SignatureUpdate())
 
   @Test
@@ -37,7 +35,7 @@ class SignatureUpdateTest {
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(AcceptSignature(bitmap, filePath) as SignatureEffect)
+                hasEffects(AcceptSignature(bitmap) as SignatureEffect)
             )
         )
   }
@@ -54,5 +52,4 @@ class SignatureUpdateTest {
             )
         )
   }
-
 }

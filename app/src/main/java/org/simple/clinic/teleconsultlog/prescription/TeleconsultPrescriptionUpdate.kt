@@ -15,7 +15,15 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
     return when (event) {
       is PatientDetailsLoaded -> next(model.patientLoaded(event.patient))
       BackClicked -> dispatch(GoBack)
-      is DataForNextClickLoaded -> noChange()
+      is DataForNextClickLoaded -> dataForNextClickLoaded(event)
+    }
+  }
+
+  private fun dataForNextClickLoaded(event: DataForNextClickLoaded): Next<TeleconsultPrescriptionModel, TeleconsultPrescriptionEffect> {
+    return if (event.signatureBitmap == null) {
+      dispatch(ShowSignatureRequiredError)
+    } else {
+      noChange()
     }
   }
 }

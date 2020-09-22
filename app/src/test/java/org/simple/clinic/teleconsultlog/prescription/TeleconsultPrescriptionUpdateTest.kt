@@ -40,4 +40,22 @@ class TeleconsultPrescriptionUpdateTest {
             hasEffects(GoBack)
         ))
   }
+
+  @Test
+  fun `when signature is not added then show signature error`() {
+    val medicalInstructions = "This is a medical instructions"
+    val medicalRegistrationId = "ABC12345"
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForNextClickLoaded(
+            medicalInstructions = medicalInstructions,
+            medicalRegistrationId = medicalRegistrationId,
+            signatureBitmap = null
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowSignatureRequiredError)
+        ))
+  }
 }

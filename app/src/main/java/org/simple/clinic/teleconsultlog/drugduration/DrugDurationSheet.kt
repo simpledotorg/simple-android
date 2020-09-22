@@ -78,11 +78,11 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
 
   private val delegate by unsafeLazy {
     val uiRenderer = DrugDurationUiRenderer(this)
-    val duration = drugDuration.duration ?: "30"
 
     MobiusDelegate.forActivity(
         events = events.ofType(),
         defaultModel = DrugDurationModel.create(drugDuration.duration),
+        init = DrugDurationInit(),
         update = DrugDurationUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render

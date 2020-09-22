@@ -27,6 +27,7 @@
 ### Changes
 - Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`, `ti-ET`
 - Add ripple on touch for overdue patient name
+- Set drug duration max limit
 
 ## 2020-09-15-7432
 ### Changes

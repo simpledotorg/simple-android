@@ -6,6 +6,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.sentry.android.gradle'
+apply plugin: 'com.google.firebase.firebase-perf'
 
 apply from: "../quality/install-git-hook.gradle"
 
@@ -267,6 +268,7 @@ dependencies {
   implementation "androidx.room:room-rxjava2:$versions.room"
   implementation "com.google.android.gms:play-services-location:$versions.playServicesLocation"
   implementation "com.google.firebase:firebase-config:$versions.firebaseConfig"
+  implementation "com.google.firebase:firebase-perf:$versions.firebasePerformance"
 
   implementation "androidx.camera:camera-core:$versions.camerax"
   implementation "androidx.camera:camera-camera2:$versions.camerax"

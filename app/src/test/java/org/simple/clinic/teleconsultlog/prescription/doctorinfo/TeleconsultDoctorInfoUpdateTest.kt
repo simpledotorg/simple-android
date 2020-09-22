@@ -44,6 +44,17 @@ class TeleconsultDoctorInfoUpdateTest {
   }
 
   @Test
+  fun `when there is no signature bitmap, then show add signature button`() {
+    updateSpec
+        .given(model)
+        .whenEvent(SignatureBitmapLoaded(null))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowAddSignatureButton)
+        ))
+  }
+
+  @Test
   fun `when medical registration id changes, then update the model`() {
     val oldMedicalRegistrationId = "1234567890"
     val newMedicalRegistrationId = "0987654321"

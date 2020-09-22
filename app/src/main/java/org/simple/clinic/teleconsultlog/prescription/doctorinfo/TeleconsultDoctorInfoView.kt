@@ -108,6 +108,13 @@ class TeleconsultDoctorInfoView(
     signatureImageView.setImageBitmap(bitmap)
   }
 
+  override fun showAddSignatureButton() {
+    addSignatureButton.visibility = View.VISIBLE
+    signatureContainer.visibility = View.GONE
+    signatureErrorTextView.visibility = View.GONE
+    signatureImageView.setImageBitmap(null)
+  }
+
   override fun renderDoctorAcknowledgement(user: User) {
     val acknowledgementString = context.getString(R.string.view_teleconsult_doctor_info_acknowledgement, user.fullName)
     acknowledgementTextView.text = acknowledgementString

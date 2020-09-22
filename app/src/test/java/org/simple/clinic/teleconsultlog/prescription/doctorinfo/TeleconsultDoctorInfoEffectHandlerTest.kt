@@ -102,6 +102,18 @@ class TeleconsultDoctorInfoEffectHandlerTest {
   }
 
   @Test
+  fun `when show add signature button effect is received, then show add signature button`() {
+    // when
+    effectHandlerTestCase.dispatch(ShowAddSignatureButton)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showAddSignatureButton()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
   fun `when load current user effect is received, then load the current user`() {
     // when
     effectHandlerTestCase.dispatch(LoadCurrentUser)

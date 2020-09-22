@@ -11,7 +11,7 @@ class DrugDurationUiRendererTest {
   private val uiRenderer = DrugDurationUiRenderer(ui)
 
   @Test
-  fun `when drug duration validation result is not validated, then hide error`() {
+  fun `when drug duration is changed, then hide error`() {
     // given
     val initialDuration = ""
     val duration = "10"
@@ -22,7 +22,6 @@ class DrugDurationUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).setDrugDuration(duration)
     verify(ui).hideDurationError()
     verifyNoMoreInteractions(ui)
   }
@@ -38,23 +37,7 @@ class DrugDurationUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).setDrugDuration(duration)
     verify(ui).showBlankDurationError()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `render drug duration`() {
-    // give
-    val duration = "20"
-    val model = DrugDurationModel.create(duration)
-
-    // when
-    uiRenderer.render(model)
-
-    // then
-    verify(ui).setDrugDuration(duration)
-    verify(ui).hideDurationError()
     verifyNoMoreInteractions(ui)
   }
 }

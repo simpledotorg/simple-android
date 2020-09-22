@@ -12,8 +12,9 @@ import java.util.UUID
 
 class TeleconsultPrescriptionUpdateTest {
 
+  private val teleconsultRecordId = UUID.fromString("572be681-770c-41cf-8d4d-4df988e34e72")
   private val patientUuid = UUID.fromString("11c91ee8-2165-4429-962b-70c4951eddd0")
-  private val model = TeleconsultPrescriptionModel.create(patientUuid)
+  private val model = TeleconsultPrescriptionModel.create(teleconsultRecordId, patientUuid)
 
   private val updateSpec = UpdateSpec(TeleconsultPrescriptionUpdate())
 

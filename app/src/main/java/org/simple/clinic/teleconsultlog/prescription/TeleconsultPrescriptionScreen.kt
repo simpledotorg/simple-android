@@ -49,7 +49,7 @@ class TeleconsultPrescriptionScreen constructor(
 
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = TeleconsultPrescriptionModel.create(screenKey.patientUuid),
+        defaultModel = TeleconsultPrescriptionModel.create(screenKey.teleconsultRecordId, screenKey.patientUuid),
         init = TeleconsultPrescriptionInit(),
         update = TeleconsultPrescriptionUpdate(),
         effectHandler = effectHandler.create(this).build(),

@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next Release
+## On Demo
 ### Features
 - Add `TeleconsultRecordScreen`
 - Show `TeleconsultLogNotAllowed` dialog when Medical officer is not allowed to teleconsult
@@ -16,6 +16,7 @@
 - Add method to purge cancelled and visited appointments from the database
 - Bump target SDK version to 30
 - Add weekly recurring task to run maintenance tasks on the database
+- Integrated Firebase Performance Monitoring
 
 ### Changes
 - Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`, `ti-ET`

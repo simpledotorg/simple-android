@@ -31,10 +31,10 @@ class SignatureActivity : AppCompatActivity(), SignatureUiActions {
   }
 
   private val mobiusDelegate by unsafeLazy {
-
     MobiusDelegate.forActivity(
         events = events,
         defaultModel = SignatureModel.create(),
+        init = SignatureInit(),
         update = SignatureUpdate(),
         effectHandler = effectHandlerFactory.create(this).build()
     )

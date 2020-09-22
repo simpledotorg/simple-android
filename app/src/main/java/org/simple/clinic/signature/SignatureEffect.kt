@@ -9,3 +9,5 @@ object ClearSignature : SignatureEffect()
 data class AcceptSignature(val bitmap: Bitmap?) : SignatureEffect()
 
 object CloseScreen : SignatureEffect()
+
+object LoadSignatureBitmap : SignatureEffect()

@@ -11,3 +11,5 @@ data class AcceptClicked(
 ) : SignatureEvent()
 
 object SignatureAccepted : SignatureEvent()
+
+data class SignatureBitmapLoaded(val bitmap: Bitmap?) : SignatureEvent()

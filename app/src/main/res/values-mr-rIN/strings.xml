@@ -610,5 +610,36 @@
   <string name="sheet_medicine_frequency_qds">QDS</string>
   <string name="sheet_medicine_frequency_save">जतन करा</string>
 
+  <!-- Teleconsult Record Screen -->
+  <string name="screen_teleconsult_record">टेलिकंसल्‍ट रेकॉर्ड</string>
+  <string name="screen_teleconsult_record_type">टेलिकंसल्‍ट प्रकार</string>
+  <string name="screen_teleconsult_record_type_audio">ऑडिओ कॉल</string>
+  <string name="screen_teleconsult_record_type_video">व्हिडिओ कॉल</string>
+  <string name="screen_teleconsult_record_type_message">संदेश</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">रुग्‍ण अतिरक्‍तदाब-रोधी आणि मधुमेह-रोधी औषधे नियमितपणे घेतात</string>
+  <string name="screen_teleconsult_record_patient_consented">रुग्‍णाने टेलिकंसल्‍टेशनसाठी संमती दिली</string>
+  <string name="screen_teleconsult_record_done">पूर्ण झाले</string>
+  <string name="teleconsultnotrecordeddialog_title">टेलिकंसल्‍ट रेकॉर्ड केले नाही</string>
+  <string name="teleconsultnotrecordeddialog_body">आपण रद्द करू इच्छित असल्‍याची आपल्‍याला खात्री आहे?</string>
+  <string name="teleconsultnotrecordeddialog_positive_button_text">होय</string>
+  <string name="teleconsultnotrecordeddialog_negative_button_text">नाही</string>
 
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">आपण टेलिकंसल्‍ट लॉग करण्‍यासाठी अधिकृत नाही</string>
+  <string name="deeplink_please_check_with_your_supervisor">कृपया आपल्‍या पर्यवेक्षकाकडे तपासा</string>
+  <string name="deeplink_okay_positive_action">ठीक आहे</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">औषधे</string>
+  <string name="view_teleconsult_medicines_edit">संपादित करा</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="one">%1$s दिवस</item>
+    <item quantity="other">%1$s दिवस</item>
+  </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">रुग्‍णासाठी सूचना</string>
+  <string name="view_teleconsult_doctor_info_registration_id">वैद्यकीय नोंदणी ID</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">या निर्देशपत्रावर स्‍वाक्षरी करून, मी %1$s असल्‍याचे कबूल करता</string>
+  <string name="view_teleconsult_doctor_info_add_signature">स्‍वाक्षरी जोडा</string>
 </resources>

@@ -6,10 +6,9 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySyncApi
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
 import org.simple.clinic.util.preference.StringPreferenceConverter
+import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit
 import javax.inject.Named
 
@@ -29,6 +28,6 @@ class MedicalHistoryModule {
   @Provides
   @Named("last_medicalhistory_pull_token")
   fun lastPullTokenV2(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_medicalhistory_pull_token_v2", None(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getOptional("last_medicalhistory_pull_token_v2", StringPreferenceConverter())
   }
 }

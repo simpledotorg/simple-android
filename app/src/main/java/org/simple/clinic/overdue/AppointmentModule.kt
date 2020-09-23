@@ -9,12 +9,11 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Months
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
 import org.simple.clinic.util.preference.StringPreferenceConverter
-import java.time.Period
+import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit
+import java.time.Period
 import javax.inject.Named
 
 @Module
@@ -49,7 +48,7 @@ class AppointmentModule {
   @Provides
   @Named("last_appointment_pull_token")
   fun lastPullTokenV3(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_appointment_pull_token_v3", None(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getOptional("last_appointment_pull_token_v3", StringPreferenceConverter())
   }
 
   private fun scheduleAppointmentDays(): List<TimeToAppointment> {

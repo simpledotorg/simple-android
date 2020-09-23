@@ -6,10 +6,9 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.drugs.sync.PrescriptionSyncApi
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
 import org.simple.clinic.util.preference.StringPreferenceConverter
+import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit
 import javax.inject.Named
 
@@ -29,6 +28,6 @@ class PrescriptionModule {
   @Provides
   @Named("last_prescription_pull_token")
   fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_prescription_pull_token_v2", None(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getOptional("last_prescription_pull_token_v2", StringPreferenceConverter())
   }
 }

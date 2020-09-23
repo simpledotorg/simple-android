@@ -70,7 +70,8 @@ class PrescriptionRepository @Inject constructor(
               updatedAt = now,
               deletedAt = null,
               frequency = null,
-              durationInDays = null
+              durationInDays = null,
+              teleconsultationId = null
           )
         }
         .flatMapCompletable { save(listOf(it)) }

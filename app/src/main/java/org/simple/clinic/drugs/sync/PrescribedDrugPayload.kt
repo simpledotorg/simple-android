@@ -48,7 +48,10 @@ data class PrescribedDrugPayload(
     val frequency: MedicineFrequency?,
 
     @Json(name = "duration_in_days")
-    val durationInDays: Int?
+    val durationInDays: Int?,
+
+    @Json(name = "teleconsultation_id")
+    val teleconsultationId: UUID?
 ) {
 
   fun toDatabaseModel(syncStatus: SyncStatus): PrescribedDrug {
@@ -66,7 +69,8 @@ data class PrescribedDrugPayload(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         frequency = frequency,
-        durationInDays = durationInDays
+        durationInDays = durationInDays,
+        teleconsultationId = teleconsultationId
     )
   }
 }

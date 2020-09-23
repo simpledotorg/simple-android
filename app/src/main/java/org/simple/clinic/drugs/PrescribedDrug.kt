@@ -50,7 +50,9 @@ data class PrescribedDrug(
 
     val frequency: MedicineFrequency?,
 
-    val durationInDays: Int?
+    val durationInDays: Int?,
+
+    val teleconsultationId: UUID?
 ) : Parcelable {
 
   fun toPayload(): PrescribedDrugPayload {
@@ -67,7 +69,8 @@ data class PrescribedDrug(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         frequency = frequency,
-        durationInDays = durationInDays
+        durationInDays = durationInDays,
+        teleconsultationId = teleconsultationId
     )
   }
 

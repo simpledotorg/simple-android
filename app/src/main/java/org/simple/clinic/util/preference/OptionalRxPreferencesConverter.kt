@@ -5,7 +5,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 
-class OptionalRxPreferencesConverter<T : Any>(private val valueConverter: Preference.Converter<T>) : Preference.Converter<Optional<T>> {
+class OptionalRxPreferencesConverter<T>(private val valueConverter: Preference.Converter<T>) : Preference.Converter<Optional<T>> {
 
   override fun deserialize(serialized: String): Optional<T> {
     return when {

@@ -12,7 +12,7 @@ import org.simple.clinic.main.TypedPreference.Type.DatabaseMaintenanceRunAt
 import org.simple.clinic.main.TypedPreference.Type.FallbackCountry
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.preference.InstantRxPreferencesConverter
-import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
+import org.simple.clinic.util.preference.getOptional
 import java.net.URI
 import java.time.Instant
 
@@ -38,10 +38,6 @@ class SetupActivityModule {
   fun providesDatabaseMaintenanceRunAt(
       rxSharedPreferences: RxSharedPreferences
   ): Preference<Optional<Instant>> {
-    return rxSharedPreferences.getObject(
-        "database_maintenance_run_at",
-        Optional.empty(),
-        OptionalRxPreferencesConverter(InstantRxPreferencesConverter())
-    )
+    return rxSharedPreferences.getOptional("database_maintenance_run_at", InstantRxPreferencesConverter())
   }
 }

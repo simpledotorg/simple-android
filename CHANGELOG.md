@@ -4,6 +4,7 @@
 ### Internal
 - Integrated Firebase Performance Monitoring
 - Remove `PrescribedDrugs` from `TeleconsultRecord`
+- Create Kotlin extension for saving Optional preferences
 
 ## On Demo
 ### Features

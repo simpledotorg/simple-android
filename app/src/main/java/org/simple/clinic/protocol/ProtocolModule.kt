@@ -5,10 +5,9 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
 import org.simple.clinic.util.preference.StringPreferenceConverter
+import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit
 import javax.inject.Named
 
@@ -33,6 +32,6 @@ class ProtocolModule {
   @Provides
   @Named("last_protocol_pull_token")
   fun lastPullToken(rxSharedPreferences: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPreferences.getObject("last_protocol_pull_timestamp", None(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPreferences.getOptional("last_protocol_pull_timestamp", StringPreferenceConverter())
   }
 }

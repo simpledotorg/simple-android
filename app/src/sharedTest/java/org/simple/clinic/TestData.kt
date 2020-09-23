@@ -64,8 +64,6 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityW
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
-import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordPrescribedDrug
-import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordWithPrescribedDrugs
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRequestInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.user.LoggedInUserPayload
@@ -1200,16 +1198,6 @@ object TestData {
     )
   }
 
-  fun teleconsultationRecordPrescribedDrug(
-      teleconsultRecordId: UUID = UUID.randomUUID(),
-      prescribedDrugUuid: UUID = UUID.randomUUID(),
-  ): TeleconsultRecordPrescribedDrug {
-    return TeleconsultRecordPrescribedDrug(
-        teleconsultRecordId = teleconsultRecordId,
-        prescribedDrugUuid = prescribedDrugUuid
-    )
-  }
-
   fun teleconsultRecordInfo(
       recordedAt: Instant = Instant.parse("2020-09-03T00:00:00Z"),
       teleconsultationType: TeleconsultationType = randomTeleconsultationType(),
@@ -1235,16 +1223,6 @@ object TestData {
         requesterId = requesterId,
         facilityId = facilityId,
         requestedAt = requestedAt
-    )
-  }
-
-  fun teleconsultRecordWithPrescribedDrugs(
-      teleconsultRecord: TeleconsultRecord,
-      prescribedDrugs: List<TeleconsultRecordPrescribedDrug> = emptyList()
-  ): TeleconsultRecordWithPrescribedDrugs {
-    return TeleconsultRecordWithPrescribedDrugs(
-        teleconsultRecord = teleconsultRecord,
-        prescribedDrugs = prescribedDrugs
     )
   }
 }

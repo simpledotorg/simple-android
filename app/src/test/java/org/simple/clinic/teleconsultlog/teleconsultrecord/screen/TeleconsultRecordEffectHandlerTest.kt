@@ -70,22 +70,19 @@ class TeleconsultRecordEffectHandlerTest {
   }
 
   @Test
-  fun `when load teleconsult record with prescribed drugs effect is received, then load the teleconsult record with prescribed drugs`() {
+  fun `when load teleconsult record effect is received, then load the teleconsult record`() {
     // given
-    val teleconsultRecordWithPrescribedDrugs = TestData.teleconsultRecordWithPrescribedDrugs(
-        teleconsultRecord = TestData.teleconsultRecord(
-            id = teleconsultRecordId
-        ),
-        prescribedDrugs = emptyList()
+    val teleconsultRecord = TestData.teleconsultRecord(
+        id = teleconsultRecordId
     )
 
-    whenever(teleconsultRecordRepository.getTeleconsultRecordWithPrescribedDrugs(teleconsultRecordId)) doReturn teleconsultRecordWithPrescribedDrugs
+    whenever(teleconsultRecordRepository.getTeleconsultRecord(teleconsultRecordId)) doReturn teleconsultRecord
 
     // when
-    effectHandlerTestCase.dispatch(LoadTeleconsultRecordWithPrescribedDrugs(teleconsultRecordId))
+    effectHandlerTestCase.dispatch(LoadTeleconsultRecord(teleconsultRecordId))
 
     // then
-    effectHandlerTestCase.assertOutgoingEvents(TeleconsultRecordWithPrescribedDrugsLoaded(teleconsultRecordWithPrescribedDrugs))
+    effectHandlerTestCase.assertOutgoingEvents(TeleconsultRecordLoaded(teleconsultRecord))
 
     verifyZeroInteractions(uiActions)
   }
@@ -169,14 +166,11 @@ class TeleconsultRecordEffectHandlerTest {
   fun `when validate teleconsult record effect is received, then check if the teleconsult record exists`() {
     // given
     val teleconsultRecordId = UUID.fromString("9b0cf077-ef4a-449a-9588-db115dc7eb7c")
-    val teleconsultRecordWithPrescribedDrugs = TestData.teleconsultRecordWithPrescribedDrugs(
-        teleconsultRecord = TestData.teleconsultRecord(
-            id = teleconsultRecordId
-        ),
-        prescribedDrugs = emptyList()
+    val teleconsultRecord = TestData.teleconsultRecord(
+        id = teleconsultRecordId
     )
 
-    whenever(teleconsultRecordRepository.getTeleconsultRecordWithPrescribedDrugs(teleconsultRecordId)) doReturn teleconsultRecordWithPrescribedDrugs
+    whenever(teleconsultRecordRepository.getTeleconsultRecord(teleconsultRecordId)) doReturn teleconsultRecord
 
     // when
     effectHandlerTestCase.dispatch(ValidateTeleconsultRecord(teleconsultRecordId))

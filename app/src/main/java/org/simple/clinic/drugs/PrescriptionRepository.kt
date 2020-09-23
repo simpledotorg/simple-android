@@ -9,6 +9,7 @@ import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.protocol.ProtocolDrug
+import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.UtcClock
@@ -66,9 +67,7 @@ class PrescriptionRepository @Inject constructor(
               patientUuid = patientUuid,
               facilityUuid = facility.uuid,
               syncStatus = SyncStatus.PENDING,
-              createdAt = now,
-              updatedAt = now,
-              deletedAt = null,
+              timestamps = Timestamps(now, now, null),
               frequency = null,
               durationInDays = null,
               teleconsultationId = null

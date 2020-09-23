@@ -555,6 +555,7 @@ object TestData {
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
+      timestamps: Timestamps = Timestamps(createdAt, updatedAt, deletedAt),
       frequency: MedicineFrequency? = null,
       durationInDays: Int? = null,
       teleconsultationId: UUID? = null
@@ -569,9 +570,7 @@ object TestData {
         patientUuid = patientUuid,
         facilityUuid = facilityUuid,
         syncStatus = syncStatus,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt,
+        timestamps = timestamps,
         frequency = frequency,
         durationInDays = durationInDays,
         teleconsultationId = teleconsultationId

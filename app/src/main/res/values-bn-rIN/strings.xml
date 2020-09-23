@@ -602,7 +602,7 @@
   <string name="screen_teleconsult_success_add_prescription">প্রেসক্রিপশন যোগ করবেন?</string>
   <string name="screen_teleconsult_success_yes">হ্যাঁ</string>
   <string name="screen_teleconsult_success_no">না</string>
-  <string name="screen_teleconsult_success_teleconsult_recorded">টেলিকনসাল্ট রেকর্ড করা হয়েছে</string>
+  <string name="screen_teleconsult_success_teleconsult_recorded">টেলিফোনে পরামর্শের রেকর্ড</string>
   <string name="screen_teleconsult_success_patient_information">%1$s, %2$s, %3$s</string>
   <string name="sheet_medicine_frequency_od">OD</string>
   <string name="sheet_medicine_frequency_bd">BD</string>

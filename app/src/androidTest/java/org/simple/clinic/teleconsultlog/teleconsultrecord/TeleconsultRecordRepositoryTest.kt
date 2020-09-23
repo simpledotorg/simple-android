@@ -1,6 +1,7 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord
 
 import com.google.common.truth.Truth.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
@@ -23,10 +24,18 @@ class TeleconsultRecordRepositoryTest {
   @Inject
   lateinit var teleconsultRecordRepository: TeleconsultRecordRepository
 
+  @Inject
+  lateinit var appDatabase: org.simple.clinic.AppDatabase
+
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
     testUtcClock.setDate(LocalDate.parse("2018-01-01"))
+  }
+
+  @After
+  fun tearDown() {
+    appDatabase.clearAllTables()
   }
 
   @Test

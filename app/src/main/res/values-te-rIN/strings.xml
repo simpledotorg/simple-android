@@ -351,7 +351,7 @@
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">సింక్ పెండింగ్‌లో ఉంది</string>
   <string name="syncindicator_status_failed">సింక్ విఫలమైంది</string>
-  <string name="syncindicator_status_syncing">సింక్ చేస్తోంది…</string>
+  <string name="syncindicator_status_syncing">సింక్ చేస్తోంది...</string>
   <string name="syncindicator_status_synced_just_now">ఇప్పుడే సింక్ అయింది</string>
   <string name="syncindicator_status_synced_min_ago">%s నిమి క్రితం సింక్ చేసారు</string>
   <string name="syncindicator_dialog_error_network">రోగి రికార్డ్‌లను సింక్ చేయడం కోసం మీ వద్ద పని చేస్తున్న ఇంటర్నెట్ కనెక్షన్ ఉండాలి.</string>
@@ -427,7 +427,7 @@
   <string name="changelanguage_done">పూర్తయింది</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">ఆగండి…</string>
+  <string name="placeholder_loading_title">ఆగండి...</string>
   <string name="placeholder_loading_message">డేటా నిర్వహణ జరుగుతోంది. నిమిషంలో అయిపోతుంది.</string>
 
   <!-- Select Country Screen -->
@@ -516,9 +516,9 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">రోగి \"సందర్శించడానికి అంగీకరించారు\" అని గుర్తుపెట్టండి</string>
-  <string name="contactpatient_remind_call_later">కాల్ చేయాలని తర్వాత గుర్తు చేయండి…</string>
-  <string name="contactpatient_remove_from_list">గడువు దాటిన జాబితా నుండి తీసివేయి…</string>
+  <string name="contactpatient_agreed_to_visit">రోగి \&quot;సందర్శించడానికి అంగీకరించారు\&quot; అని గుర్తుపెట్టండి</string>
+  <string name="contactpatient_remind_call_later">కాల్ చేయాలని తర్వాత గుర్తు చేయండి...</string>
+  <string name="contactpatient_remove_from_list">గడువు దాటిన జాబితా నుండి తీసివేయి...</string>
   <string name="contactpatient_result_of_call">కాల్ ఫలితం</string>
   <string name="contactpatient_call_normal">సాధారణం</string>
   <string name="contactpatient_call_secure">సురక్షితం</string>
@@ -610,5 +610,36 @@
   <string name="sheet_medicine_frequency_qds">QDS</string>
   <string name="sheet_medicine_frequency_save">సేవ్ చేయి</string>
 
+  <!-- Teleconsult Record Screen -->
+  <string name="screen_teleconsult_record">టెలికన్సల్ట్ రికార్డ్</string>
+  <string name="screen_teleconsult_record_type">టెలికాన్సల్టేషన్ రకం</string>
+  <string name="screen_teleconsult_record_type_audio">ఆడియో కాల్</string>
+  <string name="screen_teleconsult_record_type_video">వీడియో కాల్</string>
+  <string name="screen_teleconsult_record_type_message">సందేశం</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">రోగి యాంటీ-హైపర్‌టెంన్సీవ్ మరియు యాంటీ-డయాబెటిక్ మందులను క్రమం తప్పకుండా తీసుకుంటున్నారు</string>
+  <string name="screen_teleconsult_record_patient_consented">Patient gave consent for teleconsultation </string>
+  <string name="screen_teleconsult_record_done">పూర్తయింది</string>
+  <string name="teleconsultnotrecordeddialog_title">టెలికన్సల్ట్ రికార్డ్ చేయబడలేదు</string>
+  <string name="teleconsultnotrecordeddialog_body">మీరు ఖచ్చితంగా తొలగించాలనుకుంటున్నారా?</string>
+  <string name="teleconsultnotrecordeddialog_positive_button_text">అవును</string>
+  <string name="teleconsultnotrecordeddialog_negative_button_text">కాదు</string>
 
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">మీకు టెలికన్సల్ట్‌లోకి లాగిన్ చేయడానికి అధికారం లేదు</string>
+  <string name="deeplink_please_check_with_your_supervisor">దయచేసి మీ పర్యవేక్షకునితో తనిఖీ చేయండి</string>
+  <string name="deeplink_okay_positive_action">సరే</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">మందులు</string>
+  <string name="view_teleconsult_medicines_edit">సవరించు</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="one">%1$s రోజు</item>
+    <item quantity="other">%1$s రోజులు</item>
+  </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">రోగి కోసం సూచనలు</string>
+  <string name="view_teleconsult_doctor_info_registration_id">వైద్య రిజిస్ట్రేషన్ ID</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">ఈ మందుచీటిపై సంతకం చేయడం ద్వారా, నేను %1$s అని అంగీకరిస్తున్నాను</string>
+  <string name="view_teleconsult_doctor_info_add_signature">సంతకం చేయండి</string>
 </resources>

@@ -15,4 +15,13 @@ data class MedicalOfficerPayload(
 
     @Json(name = "teleconsultation_phone_number")
     val phoneNumber: String
-)
+) {
+
+  fun toDatabaseModel(): MedicalOfficer {
+    return MedicalOfficer(
+        medicalOfficerId = id,
+        fullName = fullName,
+        phoneNumber = phoneNumber
+    )
+  }
+}

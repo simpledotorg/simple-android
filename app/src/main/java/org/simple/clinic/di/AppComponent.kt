@@ -18,6 +18,7 @@ import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponen
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivityComponent
 import org.simple.clinic.setup.SetupActivityComponent
 import org.simple.clinic.signature.SignatureComponent
+import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorComponent
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncWorker
 import org.simple.clinic.teleconsultlog.drugduration.di.DrugDurationComponent
@@ -50,6 +51,7 @@ interface AppComponent {
   fun signatureComponent(): SignatureComponent.Builder
   fun drugDurationComponent(): DrugDurationComponent.Builder
   fun medicineFrequencyComponent(): MedicineFrequencyComponent.Builder
+  fun contactDoctorComponent(): ContactDoctorComponent.Builder
 }
 
 @Scope

@@ -8,10 +8,9 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.security.BCryptPasswordHasher
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.OngoingLoginEntry
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
 import org.simple.clinic.util.preference.StringPreferenceConverter
+import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit
 import javax.inject.Named
 
@@ -26,7 +25,7 @@ class LoginModule {
   @Provides
   @Named("preference_access_token")
   fun accessTokenForLoggedInUser(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("access_token", None(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getOptional("access_token", StringPreferenceConverter())
   }
 
   @Provides

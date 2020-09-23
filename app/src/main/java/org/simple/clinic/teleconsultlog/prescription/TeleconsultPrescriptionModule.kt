@@ -9,8 +9,8 @@ import org.simple.clinic.main.TypedPreference.Type.MedicalRegistrationId
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.prescription.medicines.TeleconsultMedicinesConfig
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
 import org.simple.clinic.util.preference.StringPreferenceConverter
+import org.simple.clinic.util.preference.getOptional
 import java.time.Duration
 
 @Module
@@ -19,7 +19,7 @@ object TeleconsultPrescriptionModule {
   @Provides
   @TypedPreference(MedicalRegistrationId)
   fun providesMedicalRegistrationId(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("medical_registration_id", Optional.empty(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getOptional("medical_registration_id", StringPreferenceConverter())
   }
 
   @Provides

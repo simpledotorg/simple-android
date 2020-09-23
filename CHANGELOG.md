@@ -6,6 +6,9 @@
 - Remove `PrescribedDrugs` from `TeleconsultRecord`
 - Create Kotlin extension for saving Optional preferences
 
+### Changes
+- Updated translations: `bn-BD`, `bn-IN`
+
 ## On Demo
 ### Features
 - Add `TeleconsultRecordScreen`

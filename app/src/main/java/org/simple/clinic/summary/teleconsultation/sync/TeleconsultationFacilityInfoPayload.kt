@@ -38,13 +38,7 @@ data class TeleconsultationFacilityInfoPayload(
             deletedAt = deletedAt,
             syncStatus = SyncStatus.DONE
         ),
-        medicalOfficers = medicalOfficers.map {
-          MedicalOfficer(
-              medicalOfficerId = it.id,
-              fullName = it.fullName,
-              phoneNumber = it.phoneNumber
-          )
-        }
+        medicalOfficers = medicalOfficers.map { it.toDatabaseModel() }
     )
   }
 }

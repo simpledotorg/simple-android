@@ -166,12 +166,9 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
       bloodPressureMeasurement: BloodPressureMeasurement
   ): Single<BloodPressureSaved> {
     val entryDate = createNewBpEntry.userEnteredDate.toUtcInstant(userClock)
-    val compareAndUpdateRecordedAt = patientRepository
-        .compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, entryDate)
-
     return appointmentsRepository
         .markAppointmentsCreatedBeforeTodayAsVisited(bloodPressureMeasurement.patientUuid)
-        .andThen(compareAndUpdateRecordedAt)
+        .doOnComplete { patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, entryDate) }
         .toSingleDefault(BloodPressureSaved(createNewBpEntry.wasDateChanged))
   }
 
@@ -205,12 +202,9 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
   private fun storeUpdateBloodPressureMeasurement(
       bloodPressureMeasurement: BloodPressureMeasurement
   ): Completable {
-    val compareAndUpdateRecordedAt = patientRepository
-        .compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, bloodPressureMeasurement.recordedAt)
-
     return bloodPressureRepository
         .updateMeasurement(bloodPressureMeasurement)
-        .andThen(compareAndUpdateRecordedAt)
+        .doOnComplete { patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, bloodPressureMeasurement.recordedAt) }
   }
 
   private fun updateBloodPressureMeasurementValues(

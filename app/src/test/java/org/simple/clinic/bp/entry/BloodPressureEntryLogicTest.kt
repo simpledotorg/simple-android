@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.reset
@@ -14,7 +13,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -321,7 +319,6 @@ class BloodPressureEntrySheetLogicTest {
   fun `when save is clicked for a new BP, date entry is active and input is valid then a BP measurement should be saved`() {
     val inputDate = LocalDate.of(1990, 2, 13)
     val entryDateAsInstant = inputDate.toUtcInstant(testUserClock)
-    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
     whenever(bloodPressureRepository.saveMeasurementBlocking(
         patientUuid = patientUuid,
         reading = BloodPressureReading(130, 110),
@@ -376,7 +373,6 @@ class BloodPressureEntrySheetLogicTest {
         uuid = measurementUuid)).doReturn(TestData.bloodPressureMeasurement())
     whenever(bloodPressureRepository.measurement(existingBp.uuid)).doReturn(Observable.just(existingBp))
     whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
-    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
 
     sheetCreatedForUpdate(existingBp.uuid)
     uiEvents.run {
@@ -808,7 +804,6 @@ class BloodPressureEntrySheetLogicTest {
         recordedAt = entryDateAsInstant,
         uuid = measurementUuid)).doReturn(TestData.bloodPressureMeasurement(patientUuid = patientUuid))
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
-    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
 
     sheetCreatedForNew(patientUuid)
     with(uiEvents) {
@@ -853,7 +848,6 @@ class BloodPressureEntrySheetLogicTest {
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(existingBp))
 
     whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
-    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
 
     sheetCreatedForUpdate(existingBp.uuid)
     with(uiEvents) {
@@ -912,7 +906,6 @@ class BloodPressureEntrySheetLogicTest {
 
     whenever(bloodPressureRepository.measurement(existingBp.uuid)).doReturn(Observable.just(existingBp))
     whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
-    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
 
     sheetCreatedForUpdate(existingBp.uuid, userFromDifferentFacility, differentFacility)
     uiEvents.run {
@@ -985,7 +978,6 @@ class BloodPressureEntrySheetLogicTest {
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(existingBp))
 
     whenever(bloodPressureRepository.updateMeasurement(updatedBp)).doReturn(Completable.complete())
-    whenever(patientRepository.compareAndUpdateRecordedAt(eq(patientUuid), any())).doReturn(Completable.complete())
 
     sheetCreatedForUpdate(existingBp.uuid, userFromDifferentFacility, differentFacility)
     with(uiEvents) {

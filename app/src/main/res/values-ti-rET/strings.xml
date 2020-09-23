@@ -623,4 +623,23 @@
   <string name="teleconsultnotrecordeddialog_body">ንምስራዝ ርግፀኛ ዲኻ/ኺ?</string>
   <string name="teleconsultnotrecordeddialog_positive_button_text">እወ</string>
   <string name="teleconsultnotrecordeddialog_negative_button_text">ኣይፋሉን</string>
+
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">ናብ ቴለኮንሰልት ንኽትእቱ ፍቓድ የብልካን</string>
+  <string name="deeplink_please_check_with_your_supervisor">ብኽብረትካ ምስ ተቖጻጻሪኻ ኣረጋግጽ</string>
+  <string name="deeplink_okay_positive_action">እሺ</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">መድሓኒታት</string>
+  <string name="view_teleconsult_medicines_edit">ምእራም</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="one">%1$s መዓልታት</item>
+    <item quantity="other">%1$s መዓልታት</item>
+  </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">መምርሒታት ንተሓከምቲ</string>
+  <string name="view_teleconsult_doctor_info_registration_id">ናይ ሜዲካል ምዝገባ መለለዪ መንነት ID</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">ነዚ ናይ መድሃኒት መአዘዚ ብምፍራ ኣነ ኣፍልጦ ዝህብ ኣነ %1$s</string>
+  <string name="view_teleconsult_doctor_info_add_signature">ፌርማ ግበር</string>
 </resources>

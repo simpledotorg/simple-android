@@ -146,12 +146,6 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun userAndCurrentFacility(): Pair<User, Facility> {
-    val user = currentUser.get()
-    val facility = currentFacility.get()
-    return user to facility
-  }
-
   private fun storeNewBloodSugarMeasurement(
       user: User,
       currentFacility: Facility,

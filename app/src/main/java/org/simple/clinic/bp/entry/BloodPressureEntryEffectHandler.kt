@@ -3,12 +3,12 @@ package org.simple.clinic.bp.entry
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
@@ -22,11 +22,9 @@ import org.simple.clinic.bp.ValidationResult.ErrorSystolicTooHigh
 import org.simple.clinic.bp.ValidationResult.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.PrefillDate.PrefillSpecificDate
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -42,14 +40,14 @@ import java.util.UUID
 
 class BloodPressureEntryEffectHandler @AssistedInject constructor(
     @Assisted private val ui: BloodPressureEntryUi,
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
     private val bloodPressureRepository: BloodPressureRepository,
     private val appointmentsRepository: AppointmentRepository,
     private val userClock: UserClock,
     private val schedulersProvider: SchedulersProvider,
-    private val uuidGenerator: UuidGenerator
+    private val uuidGenerator: UuidGenerator,
+    private val currentUser: Lazy<User>,
+    private val currentFacility: Lazy<Facility>
 ) {
 
   @AssistedInject.Factory
@@ -149,9 +147,12 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
   private fun createNewBpEntryTransformer(): ObservableTransformer<CreateNewBpEntry, BloodPressureEntryEvent> {
     return ObservableTransformer { createNewBpEntries ->
       createNewBpEntries
+          .observeOn(schedulersProvider.io())
           .flatMapSingle { createNewBpEntry ->
-            userAndCurrentFacility()
-                .flatMap { (user, facility) -> storeNewBloodPressureMeasurement(user, facility, createNewBpEntry) }
+            val user = currentUser.get()
+            val facility = currentFacility.get()
+
+            storeNewBloodPressureMeasurement(user, facility, createNewBpEntry)
                 .flatMap { updateAppointmentsAsVisited(createNewBpEntry, it) }
           }
           .compose(reportAnalyticsEvents)
@@ -193,9 +194,9 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
       updateBpEntry: UpdateBpEntry
   ): Single<BloodPressureMeasurement> {
     return getExistingBloodPressureMeasurement(updateBpEntry.bpUuid)
-        .zipWith(userAndCurrentFacility())
-        .map { (existingBloodPressureMeasurement, userFacilityPair) ->
-          val (user, facility) = userFacilityPair
+        .map { existingBloodPressureMeasurement ->
+          val user = currentUser.get()
+          val facility = currentFacility.get()
           updateBloodPressureMeasurementValues(existingBloodPressureMeasurement, user.uuid, facility.uuid, updateBpEntry)
         }
   }
@@ -225,17 +226,6 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
         reading = reading,
         recordedAt = parsedDateFromForm.toUtcInstant(userClock)
     )
-  }
-
-  private fun userAndCurrentFacility(): Single<Pair<User, Facility>> {
-    return userSession
-        .requireLoggedInUser()
-        .flatMap { user ->
-          facilityRepository
-              .currentFacility()
-              .map { facility -> user to facility }
-        }
-        .firstOrError()
   }
 
   private fun storeNewBloodPressureMeasurement(

@@ -3,7 +3,6 @@ package org.simple.clinic.bp
 import androidx.paging.DataSource
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
@@ -21,37 +20,36 @@ class BloodPressureRepository @Inject constructor(
     private val utcClock: UtcClock
 ) : SynceableRepository<BloodPressureMeasurement, BloodPressureMeasurementPayload> {
 
-  fun saveMeasurement(
+  fun saveMeasurementBlocking(
       patientUuid: UUID,
       reading: BloodPressureReading,
       loggedInUser: User,
       currentFacility: Facility,
-      recordedAt: Instant = Instant.now(utcClock),
+      recordedAt: Instant,
       uuid: UUID
-  ): Single<BloodPressureMeasurement> {
+  ): BloodPressureMeasurement {
     if (reading.systolic < 0 || reading.diastolic < 0) {
       throw AssertionError("Cannot have negative BP readings.")
     }
 
     val now = Instant.now(utcClock)
-    return Single
-        .just(
-            BloodPressureMeasurement(
-                uuid = uuid,
-                reading = reading,
-                syncStatus = SyncStatus.PENDING,
-                userUuid = loggedInUser.uuid,
-                facilityUuid = currentFacility.uuid,
-                patientUuid = patientUuid,
-                createdAt = now,
-                updatedAt = now,
-                deletedAt = null,
-                recordedAt = recordedAt
-            )
-        )
-        .flatMap {
-          save(listOf(it)).toSingleDefault(it)
-        }
+
+    val bloodPressureMeasurement = BloodPressureMeasurement(
+        uuid = uuid,
+        reading = reading,
+        syncStatus = SyncStatus.PENDING,
+        userUuid = loggedInUser.uuid,
+        facilityUuid = currentFacility.uuid,
+        patientUuid = patientUuid,
+        createdAt = now,
+        updatedAt = now,
+        deletedAt = null,
+        recordedAt = recordedAt
+    )
+
+    dao.save(listOf(bloodPressureMeasurement))
+
+    return bloodPressureMeasurement
   }
 
   override fun save(records: List<BloodPressureMeasurement>): Completable {

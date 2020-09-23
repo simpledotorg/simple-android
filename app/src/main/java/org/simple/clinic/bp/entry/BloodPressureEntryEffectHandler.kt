@@ -152,7 +152,8 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
             val user = currentUser.get()
             val facility = currentFacility.get()
 
-            storeNewBloodPressureMeasurement(user, facility, createNewBpEntry)
+            Single
+                .fromCallable { storeNewBloodPressureMeasurement(user, facility, createNewBpEntry) }
                 .flatMap { updateAppointmentsAsVisited(createNewBpEntry, it) }
           }
           .compose(reportAnalyticsEvents)
@@ -232,16 +233,15 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
       user: User,
       currentFacility: Facility,
       entry: CreateNewBpEntry
-  ): Single<BloodPressureMeasurement> {
+  ): BloodPressureMeasurement {
     val (patientUuid, reading, date, _) = entry
-    return bloodPressureRepository.saveMeasurement(
-        uuid = uuidGenerator.v4(),
+    return bloodPressureRepository.saveMeasurementBlocking(
         patientUuid = patientUuid,
         reading = reading,
         loggedInUser = user,
         currentFacility = currentFacility,
-        recordedAt = date.toUtcInstant(userClock)
-    )
+        recordedAt = date.toUtcInstant(userClock),
+        uuid = uuidGenerator.v4())
   }
 
   private fun getExistingBloodPressureMeasurement(bpUuid: UUID): Single<BloodPressureMeasurement> =

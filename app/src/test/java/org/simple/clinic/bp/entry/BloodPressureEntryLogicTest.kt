@@ -171,7 +171,7 @@ class BloodPressureEntrySheetLogicTest {
     uiEvents.onNext(DiastolicChanged(diastolic))
     uiEvents.onNext(SaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurementBlocking(any(), any(), any(), any(), any(), any())
     verify(ui, never()).setBpSavedResultAndFinish()
   }
 
@@ -300,7 +300,7 @@ class BloodPressureEntrySheetLogicTest {
     uiEvents.onNext(SaveClicked)
 
     when (openAs) {
-      is New -> verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
+      is New -> verify(bloodPressureRepository, never()).saveMeasurementBlocking(any(), any(), any(), any(), any(), any())
       is Update -> verify(bloodPressureRepository, never()).updateMeasurement(any())
       else -> throw AssertionError()
     }
@@ -322,14 +322,13 @@ class BloodPressureEntrySheetLogicTest {
     val inputDate = LocalDate.of(1990, 2, 13)
     val entryDateAsInstant = inputDate.toUtcInstant(testUserClock)
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
-    whenever(bloodPressureRepository.saveMeasurement(
-        uuid = measurementUuid,
+    whenever(bloodPressureRepository.saveMeasurementBlocking(
         patientUuid = patientUuid,
         reading = BloodPressureReading(130, 110),
         loggedInUser = user,
         currentFacility = facility,
-        recordedAt = entryDateAsInstant
-    )).doReturn(Single.just(TestData.bloodPressureMeasurement(patientUuid = patientUuid)))
+        recordedAt = entryDateAsInstant,
+        uuid = measurementUuid)).doReturn(TestData.bloodPressureMeasurement(patientUuid = patientUuid))
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
 
     sheetCreatedForNew(patientUuid)
@@ -368,14 +367,13 @@ class BloodPressureEntrySheetLogicTest {
 
     val newInputDate = LocalDate.of(1991, 2, 14)
     val newInputDateAsInstant = newInputDate.toUtcInstant(testUserClock)
-    whenever(bloodPressureRepository.saveMeasurement(
-        uuid = measurementUuid,
+    whenever(bloodPressureRepository.saveMeasurementBlocking(
         patientUuid = patientUuid,
         reading = BloodPressureReading(120, 110),
         loggedInUser = user,
         currentFacility = facility,
-        recordedAt = newInputDateAsInstant
-    )).doReturn(Single.just(TestData.bloodPressureMeasurement()))
+        recordedAt = newInputDateAsInstant,
+        uuid = measurementUuid)).doReturn(TestData.bloodPressureMeasurement())
     whenever(bloodPressureRepository.measurement(existingBp.uuid)).doReturn(Observable.just(existingBp))
     whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
@@ -404,7 +402,7 @@ class BloodPressureEntrySheetLogicTest {
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
     verify(patientRepository).compareAndUpdateRecordedAt(updatedBp.patientUuid, updatedBp.recordedAt)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurementBlocking(any(), any(), any(), any(), any(), any())
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
     verify(ui).setBpSavedResultAndFinish()
   }
@@ -431,7 +429,7 @@ class BloodPressureEntrySheetLogicTest {
       onNext(SaveClicked)
     }
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurementBlocking(any(), any(), any(), any(), any(), any())
     verify(bloodPressureRepository, never()).updateMeasurement(any())
     verify(ui, never()).setBpSavedResultAndFinish()
 
@@ -802,14 +800,13 @@ class BloodPressureEntrySheetLogicTest {
     val inputDate = LocalDate.of(1916, 5, 10)
     val entryDateAsInstant = inputDate.toUtcInstant(testUserClock)
 
-    whenever(bloodPressureRepository.saveMeasurement(
-        uuid = measurementUuid,
+    whenever(bloodPressureRepository.saveMeasurementBlocking(
         patientUuid = patientUuid,
         reading = BloodPressureReading(systolic, diastolic),
         loggedInUser = user,
         currentFacility = facility,
-        recordedAt = entryDateAsInstant
-    )).doReturn(Single.just(TestData.bloodPressureMeasurement(patientUuid = patientUuid)))
+        recordedAt = entryDateAsInstant,
+        uuid = measurementUuid)).doReturn(TestData.bloodPressureMeasurement(patientUuid = patientUuid))
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
 
@@ -880,7 +877,7 @@ class BloodPressureEntrySheetLogicTest {
     )
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurementBlocking(any(), any(), any(), any(), any(), any())
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
 
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
@@ -945,7 +942,7 @@ class BloodPressureEntrySheetLogicTest {
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
     verify(patientRepository).compareAndUpdateRecordedAt(updatedBp.patientUuid, updatedBp.recordedAt)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurementBlocking(any(), any(), any(), any(), any(), any())
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
     verify(ui).setBpSavedResultAndFinish()
   }
@@ -1006,7 +1003,7 @@ class BloodPressureEntrySheetLogicTest {
     val entryDateAsInstant = newInputDate.toUtcInstant(testUserClock)
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurementBlocking(any(), any(), any(), any(), any(), any())
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
 
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)

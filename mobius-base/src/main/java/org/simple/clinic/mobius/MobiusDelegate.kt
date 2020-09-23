@@ -112,7 +112,6 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
         .eventSources(additionalEventSources)
   }
 
-  @Deprecated(message = "Added to aid refactoring to Mobius. Do not use anywhere else.")
   val currentModel: M
     get() = controller.model
 

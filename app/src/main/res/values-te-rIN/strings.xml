@@ -610,5 +610,36 @@
   <string name="sheet_medicine_frequency_qds">QDS</string>
   <string name="sheet_medicine_frequency_save">సేవ్ చేయి</string>
 
+  <!-- Teleconsult Record Screen -->
+  <string name="screen_teleconsult_record">టెలికన్సల్ట్ రికార్డ్</string>
+  <string name="screen_teleconsult_record_type">టెలికాన్సల్టేషన్ రకం</string>
+  <string name="screen_teleconsult_record_type_audio">ఆడియో కాల్</string>
+  <string name="screen_teleconsult_record_type_video">వీడియో కాల్</string>
+  <string name="screen_teleconsult_record_type_message">సందేశం</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">రోగి యాంటీ-హైపర్‌టెంన్సీవ్ మరియు యాంటీ-డయాబెటిక్ మందులను క్రమం తప్పకుండా తీసుకుంటున్నారు</string>
+  <string name="screen_teleconsult_record_patient_consented">రోగి టెలికాన్సల్టేషన్ కోసం సమ్మతించారు </string>
+  <string name="screen_teleconsult_record_done">పూర్తయింది</string>
+  <string name="teleconsultnotrecordeddialog_title">టెలికన్సల్ట్ రికార్డ్ చేయబడలేదు</string>
+  <string name="teleconsultnotrecordeddialog_body">మీరు ఖచ్చితంగా తొలగించాలనుకుంటున్నారా?</string>
+  <string name="teleconsultnotrecordeddialog_positive_button_text">అవును</string>
+  <string name="teleconsultnotrecordeddialog_negative_button_text">కాదు</string>
 
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">మీకు టెలికన్సల్ట్‌లోకి లాగిన్ చేయడానికి అధికారం లేదు</string>
+  <string name="deeplink_please_check_with_your_supervisor">దయచేసి మీ పర్యవేక్షకునితో తనిఖీ చేయండి</string>
+  <string name="deeplink_okay_positive_action">సరే</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">మందులు</string>
+  <string name="view_teleconsult_medicines_edit">సవరించు</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="one">%1$s రోజు</item>
+    <item quantity="other">%1$s రోజులు</item>
+  </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">రోగి కోసం సూచనలు</string>
+  <string name="view_teleconsult_doctor_info_registration_id">వైద్య రిజిస్ట్రేషన్ ID</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">ఈ మందుచీటిపై సంతకం చేయడం ద్వారా, నేను %1$s అని అంగీకరిస్తున్నాను</string>
+  <string name="view_teleconsult_doctor_info_add_signature">సంతకం చేయండి</string>
 </resources>

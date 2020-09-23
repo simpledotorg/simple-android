@@ -20,7 +20,7 @@ class BloodPressureRepository @Inject constructor(
     private val utcClock: UtcClock
 ) : SynceableRepository<BloodPressureMeasurement, BloodPressureMeasurementPayload> {
 
-  fun saveMeasurementBlocking(
+  fun saveMeasurement(
       patientUuid: UUID,
       reading: BloodPressureReading,
       loggedInUser: User,

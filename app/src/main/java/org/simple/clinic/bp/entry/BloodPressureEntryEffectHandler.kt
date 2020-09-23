@@ -229,7 +229,7 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
       entry: CreateNewBpEntry
   ): BloodPressureMeasurement {
     val (patientUuid, reading, date, _) = entry
-    return bloodPressureRepository.saveMeasurementBlocking(
+    return bloodPressureRepository.saveMeasurement(
         patientUuid = patientUuid,
         reading = reading,
         loggedInUser = user,

@@ -60,7 +60,7 @@ class BloodPressureRepositoryAndroidTest {
     clock.advanceBy(oneWeek)
 
     val savedBloodPressure = repository
-        .saveMeasurementBlocking(patientUuid = UUID.fromString("a0d7f00b-9d2a-4594-b2e0-9f12285b8f03"),
+        .saveMeasurement(patientUuid = UUID.fromString("a0d7f00b-9d2a-4594-b2e0-9f12285b8f03"),
             reading = BloodPressureReading(120, 80),
             loggedInUser = user,
             currentFacility = facility,

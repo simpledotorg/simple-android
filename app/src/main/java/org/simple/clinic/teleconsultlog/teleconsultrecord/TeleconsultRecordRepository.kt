@@ -7,12 +7,11 @@ import javax.inject.Inject
 
 class TeleconsultRecordRepository @Inject constructor(
     private val teleconsultRecordDao: TeleconsultRecord.RoomDao,
-    private val teleconsultRecordWithPrescribedDrugsDao: TeleconsultRecordWithPrescribedDrugs.RoomDao,
     private val utcClock: UtcClock
 ) {
 
-  fun getTeleconsultRecordWithPrescribedDrugs(teleconsultRecordId: UUID): TeleconsultRecordWithPrescribedDrugs? {
-    return teleconsultRecordWithPrescribedDrugsDao.getCompleteTeleconsultLog(teleconsultRecordId)
+  fun getTeleconsultRecord(teleconsultRecordId: UUID): TeleconsultRecord? {
+    return teleconsultRecordDao.getCompleteTeleconsultLog(teleconsultRecordId)
   }
 
   fun createTeleconsultRecordForMedicalOfficer(

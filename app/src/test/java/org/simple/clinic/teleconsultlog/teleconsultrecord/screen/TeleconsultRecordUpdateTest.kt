@@ -43,18 +43,15 @@ class TeleconsultRecordUpdateTest {
 
   @Test
   fun `update model, when teleconsult record already exists`() {
-    val teleconsultRecordWithPrescribedDrugs = TestData.teleconsultRecordWithPrescribedDrugs(
-        teleconsultRecord = TestData.teleconsultRecord(
-            id = teleconsultRecordId,
-            teleconsultRecordInfo = TestData.teleconsultRecordInfo()
-        ),
-        prescribedDrugs = emptyList()
+    val teleconsultRecord = TestData.teleconsultRecord(
+        id = teleconsultRecordId,
+        teleconsultRecordInfo = TestData.teleconsultRecordInfo()
     )
-    val teleconsultRecordInfo = teleconsultRecordWithPrescribedDrugs.teleconsultRecord.teleconsultRecordInfo!!
+    val teleconsultRecordInfo = teleconsultRecord.teleconsultRecordInfo!!
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(TeleconsultRecordWithPrescribedDrugsLoaded(teleconsultRecordWithPrescribedDrugs))
+        .whenEvent(TeleconsultRecordLoaded(teleconsultRecord))
         .then(assertThatNext(
             hasModel(defaultModel.teleconsultRecordLoaded(teleconsultRecordInfo))
         ))

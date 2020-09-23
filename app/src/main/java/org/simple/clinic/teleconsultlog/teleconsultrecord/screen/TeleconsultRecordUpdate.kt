@@ -11,7 +11,7 @@ class TeleconsultRecordUpdate : Update<TeleconsultRecordModel, TeleconsultRecord
   override fun update(model: TeleconsultRecordModel, event: TeleconsultRecordEvent): Next<TeleconsultRecordModel, TeleconsultRecordEffect> {
     return when (event) {
       BackClicked -> dispatch(ValidateTeleconsultRecord(model.teleconsultRecordId))
-      is TeleconsultRecordWithPrescribedDrugsLoaded -> teleconsultRecordWithPrescribedDrugsLoaded(model, event)
+      is TeleconsultRecordLoaded -> teleconsultRecordLoaded(model, event)
       TeleconsultRecordCreated -> dispatch(NavigateToTeleconsultSuccess)
       is DoneClicked -> dispatch(CreateTeleconsultRecord(
           patientUuid = model.patientUuid,
@@ -33,11 +33,11 @@ class TeleconsultRecordUpdate : Update<TeleconsultRecordModel, TeleconsultRecord
     }
   }
 
-  private fun teleconsultRecordWithPrescribedDrugsLoaded(
+  private fun teleconsultRecordLoaded(
       model: TeleconsultRecordModel,
-      event: TeleconsultRecordWithPrescribedDrugsLoaded
+      event: TeleconsultRecordLoaded
   ): Next<TeleconsultRecordModel, TeleconsultRecordEffect> {
-    val teleconsultRecordInfo = event.teleconsultRecordWithPrescribedDrugs?.teleconsultRecord?.teleconsultRecordInfo
+    val teleconsultRecordInfo = event.teleconsultRecord?.teleconsultRecordInfo
     return if (teleconsultRecordInfo != null) {
       next(model.teleconsultRecordLoaded(teleconsultRecordInfo))
     } else {

@@ -19,12 +19,6 @@ class TeleconsultRecordTest {
   @Inject
   lateinit var teleconsultRecordDao: TeleconsultRecord.RoomDao
 
-  @Inject
-  lateinit var teleconsultRecordPrescribedDrugDao: TeleconsultRecordPrescribedDrug.RoomDao
-
-  @Inject
-  lateinit var teleconsultRecordWithPrescribedDrugs: TeleconsultRecordWithPrescribedDrugs.RoomDao
-
   private val userClock = TestUserClock()
 
   @Before
@@ -35,22 +29,20 @@ class TeleconsultRecordTest {
   @After
   fun tearDown() {
     teleconsultRecordDao.clear()
-    teleconsultRecordPrescribedDrugDao.clear()
   }
 
   @Test
-  fun teleconsultation_records_with_prescribed_drugs_should_be_fetched_correctly() {
+  fun teleconsultation_records_should_be_fetched_correctly() {
 
     // given
-    val teleconsultRecordId1 = UUID.fromString("9ee0bc81-26e6-4ced-9b33-fa76a0a995e3")
+    val teleconsultRecordId1 = UUID.fromString("700ee55d-7f49-4bda-9a4a-c5ce903ce485")
     val teleconsultRecordId2 = UUID.fromString("f1ad859f-d076-4bae-b0f2-3fb23c60d880")
-    val patientId = UUID.fromString("a706dfbf-315a-4201-be42-10b784c6d0b4")
-    val medicalOffcerId = UUID.fromString("97c558bb-df4e-4c7a-a5ac-df2520ccd4b1")
+    val patientUuid1 = UUID.fromString("3c00cdf9-4304-4dc7-8d32-6fbd5cd8f14d")
+    val patientUuid2 = UUID.fromString("a706dfbf-315a-4201-be42-10b784c6d0b4")
+    val medicalOfficerUuid = UUID.fromString("7142092e-24b1-4757-b7b6-a00fbd60332b")
     val facilityId = UUID.fromString("f12c2316-85e4-466e-9c92-efa52605c6b9")
     val requesterId = UUID.fromString("7a131902-c214-4aa9-800f-201513d77fd7")
     val date = LocalDate.parse("2020-09-03")
-    val prescribedDrugUuid = UUID.fromString("a6e44fdd-d029-47b0-9964-2ad4747166ec")
-    val prescribedDrugUuid2 = UUID.fromString("4904369e-c425-4098-bde1-560e09eb4383")
 
     val teleconsultRecordInfo = TestData.teleconsultRecordInfo(
         recordedAt = Instant.parse("2020-09-03T00:00:00Z"),
@@ -68,8 +60,8 @@ class TeleconsultRecordTest {
 
     val teleconsultRecord1 = TestData.teleconsultRecord(
         id = teleconsultRecordId1,
-        patientId = patientId,
-        medicalOfficerId = medicalOffcerId,
+        patientId = patientUuid1,
+        medicalOfficerId = medicalOfficerUuid,
         teleconsultRecordInfo = teleconsultRecordInfo,
         teleconsultRequestInfo = teleconsultRequestInfo,
         timestamps = Timestamps(
@@ -81,8 +73,8 @@ class TeleconsultRecordTest {
 
     val teleconsultRecord2 = TestData.teleconsultRecord(
         id = teleconsultRecordId2,
-        patientId = patientId,
-        medicalOfficerId = medicalOffcerId,
+        patientId = patientUuid2,
+        medicalOfficerId = medicalOfficerUuid,
         teleconsultRecordInfo = teleconsultRecordInfo,
         teleconsultRequestInfo = teleconsultRequestInfo,
         timestamps = Timestamps(
@@ -92,39 +84,19 @@ class TeleconsultRecordTest {
         )
     )
 
+    val expectedTeleconsultRecordList = listOf(
+        teleconsultRecord1,
+        teleconsultRecord2
+    )
+
     teleconsultRecordDao.save(
-        listOf(
-            teleconsultRecord1,
-            teleconsultRecord2
-        )
-    )
-
-    val teleconsultRecordPrescribedDrug1 = TestData.teleconsultationRecordPrescribedDrug(
-        teleconsultRecordId = teleconsultRecordId1,
-        prescribedDrugUuid = prescribedDrugUuid,
-    )
-
-    val teleconsultRecordPrescribedDrug2 = TestData.teleconsultationRecordPrescribedDrug(
-        teleconsultRecordId = teleconsultRecordId1,
-        prescribedDrugUuid = prescribedDrugUuid2,
-    )
-
-    val expectedTeleconsultRecordPrescribedDrugList = listOf(
-        teleconsultRecordPrescribedDrug2,
-        teleconsultRecordPrescribedDrug1
-    )
-
-    teleconsultRecordPrescribedDrugDao.save(
-        expectedTeleconsultRecordPrescribedDrugList
+        expectedTeleconsultRecordList
     )
 
     // when
-    val teleconsultRecordWithPrescribedDrugs = teleconsultRecordWithPrescribedDrugs
-        .getCompleteTeleconsultLog(teleconsultRecordId1)
+    val teleconsultRecordReceived =  teleconsultRecordDao.getAll()
 
     // then
-    assertThat(teleconsultRecordWithPrescribedDrugs).isEqualTo(TestData.teleconsultRecordWithPrescribedDrugs(
-        teleconsultRecord1,
-        expectedTeleconsultRecordPrescribedDrugList))
+    assertThat(teleconsultRecordReceived).isEqualTo(expectedTeleconsultRecordList)
   }
 }

@@ -3,6 +3,7 @@
 ## Next Release
 ### Internal
 - Integrated Firebase Performance Monitoring
+- Remove `PrescribedDrugs` from `TeleconsultRecord`
 
 ## On Demo
 ### Features

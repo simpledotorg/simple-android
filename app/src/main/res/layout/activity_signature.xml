@@ -3,80 +3,95 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/signatureRoot"
-  style="@style/Clinic.V2.Theme.TranslucentBackground"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   tools:context="org.simple.clinic.signature.SignatureActivity">
 
-  <RelativeLayout
-    android:id="@+id/relativeLayout"
+  <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/spacing_16"
-    android:background="@color/white"
-    android:elevation="@dimen/spacing_8"
-    android:paddingTop="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
-    <LinearLayout
-      android:id="@+id/linearLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
-      android:layout_height="300dp"
-      android:layout_margin="@dimen/spacing_16"
-      android:layout_marginBottom="@dimen/spacing_24"
-      android:background="@drawable/background_signature"
-      android:orientation="vertical">
+      android:layout_height="wrap_content">
 
       <com.github.gcacace.signaturepad.views.SignaturePad
         android:id="@+id/drawSignatureFrame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_32"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:layout_marginBottom="@dimen/spacing_48"
+        android:background="@drawable/background_signature"
         android:saveEnabled="false"
+        app:layout_constraintBottom_toTopOf="@id/buttonsBarrier"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"
         app:penColor="@color/black" />
 
-    </LinearLayout>
+      <TextView
+        android:id="@+id/text_sign_header"
+        style="@style/Clinic.V2.TextAppearance.H6.Grey0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/spacing_24"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:background="@color/white"
+        android:paddingStart="@dimen/spacing_4"
+        android:paddingEnd="@dimen/spacing_4"
+        android:text="@string/screen_signature_sign_in_this_box"
+        app:layout_constraintEnd_toEndOf="@id/drawSignatureFrame"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@+id/drawSignatureFrame"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-      android:id="@+id/text_sign_header"
-      style="@style/Clinic.V2.TextAppearance.H6.Grey0"
-      android:layout_width="wrap_content"
-      android:layout_height="28dp"
-      android:layout_alignParentTop="true"
-      android:layout_marginStart="@dimen/spacing_40"
-      android:background="@color/white"
-      android:paddingStart="@dimen/spacing_4"
-      android:paddingEnd="@dimen/spacing_4"
-      android:text="@string/screen_signature_sign_in_this_box" />
-
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@+id/linearLayout"
-      android:layout_marginTop="@dimen/spacing_8"
-      android:layout_marginBottom="@dimen/spacing_16"
-      android:orientation="horizontal">
+      <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/buttonsBarrier"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="acceptSignature, clearSignature" />
 
       <ImageView
         android:id="@+id/clearSignature"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginBottom="@dimen/spacing_40"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/acceptSignature"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_signature_undo"
         tools:ignore="ContentDescription" />
 
       <ImageView
         android:id="@+id/acceptSignature"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginStart="@dimen/spacing_56"
+        android:layout_marginBottom="@dimen/spacing_40"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/clearSignature"
         app:srcCompat="@drawable/ic_signature_accept"
         tools:ignore="ContentDescription" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-  </RelativeLayout>
+  </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

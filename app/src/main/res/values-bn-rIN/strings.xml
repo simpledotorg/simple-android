@@ -610,5 +610,36 @@
   <string name="sheet_medicine_frequency_qds">QDS</string>
   <string name="sheet_medicine_frequency_save">সংরক্ষণ করুন</string>
 
+  <!-- Teleconsult Record Screen -->
+  <string name="screen_teleconsult_record">টেলিফোনে পরামর্শের রেকর্ড</string>
+  <string name="screen_teleconsult_record_type">টেলিফোনে পরামর্শের ধরণ</string>
+  <string name="screen_teleconsult_record_type_audio">অডিও কল</string>
+  <string name="screen_teleconsult_record_type_video">ভিডিও কল</string>
+  <string name="screen_teleconsult_record_type_message">বার্তা</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">রোগী অ্যান্টি-হাইপারসেনসিটিভ ও অ্যান্টি ডায়াবেটিক ওষুধ নিয়মিত সেবন করছে</string>
+  <string name="screen_teleconsult_record_patient_consented">রোগী টেলিফোনে পরামর্শের সম্মতি দিয়েছে</string>
+  <string name="screen_teleconsult_record_done">সম্পন্ন</string>
+  <string name="teleconsultnotrecordeddialog_title">টেলিফোনে পরামর্শ রেকর্ড করা হয়নি</string>
+  <string name="teleconsultnotrecordeddialog_body">আপনি কি বাতিল করতে চাওয়ার বিষয়ে নিশ্চিত?</string>
+  <string name="teleconsultnotrecordeddialog_positive_button_text">হ্যাঁ</string>
+  <string name="teleconsultnotrecordeddialog_negative_button_text">না</string>
 
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">আপনি টেলিফোনে পরামর্শ লগ করার জন্য অনুমোদিত নন</string>
+  <string name="deeplink_please_check_with_your_supervisor">অনুগ্রহ করে আপনার সুপারভাইজারের সাথে চেক করুন</string>
+  <string name="deeplink_okay_positive_action">ঠিক আছে</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">ওষুধগুলো যোগ করুন</string>
+  <string name="view_teleconsult_medicines_edit">সম্পাদনা করুন</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="one">%1$s দিন</item>
+    <item quantity="other">%1$s দিন</item>
+  </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">রোগীর জন্য নির্দেশিকা</string>
+  <string name="view_teleconsult_doctor_info_registration_id">মেডিক্যাল নিবন্ধন ID</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">এই প্রেসক্রিপশনে স্বাক্ষর করে আমি স্বীকার করছি যে আমি %1$s</string>
+  <string name="view_teleconsult_doctor_info_add_signature">স্বাক্ষর যোগ করুন</string>
 </resources>

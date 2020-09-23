@@ -516,7 +516,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">\"வருவதற்கு ஒப்புக்கொண்டார்\" என நோயாளியைக் குறிக்கவும்</string>
+  <string name="contactpatient_agreed_to_visit">\&quot;வருவதற்கு ஒப்புக்கொண்டார்\&quot; என நோயாளியைக் குறிக்கவும்</string>
   <string name="contactpatient_remind_call_later">பின்னர் அழைக்க நினைவூட்டவும்…</string>
   <string name="contactpatient_remove_from_list">குறித்த தேதியில் வாராதவர்கள் பட்டியலிலிருந்து அகற்றவும்…</string>
   <string name="contactpatient_result_of_call">அழைப்பின் முடிவு</string>
@@ -610,5 +610,36 @@
   <string name="sheet_medicine_frequency_qds">QDS</string>
   <string name="sheet_medicine_frequency_save">சேமிக்கவும்</string>
 
+  <!-- Teleconsult Record Screen -->
+  <string name="screen_teleconsult_record">தொலைபேசி ஆலோசனை பதிவு</string>
+  <string name="screen_teleconsult_record_type">தொலைபேசி ஆலோசனை வகை</string>
+  <string name="screen_teleconsult_record_type_audio">ஆடியோ அழைப்பு</string>
+  <string name="screen_teleconsult_record_type_video">வீடியோ அழைப்பு</string>
+  <string name="screen_teleconsult_record_type_message">குறுஞ்செய்தி</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">நோயாளி உயர் இரத்த அழுத்தம் மற்றும் நீரிழிவுத் தடுப்பு மருந்துகளைத் தவறாமல் உட்கொள்கிறார்</string>
+  <string name="screen_teleconsult_record_patient_consented">தொலைபேசி ஆலோசனைக்கு நோயாளிஒப்புதல் அளித்தார்</string>
+  <string name="screen_teleconsult_record_done">முடிந்தது</string>
+  <string name="teleconsultnotrecordeddialog_title">தொலைபேசி ஆலோசனை பதிவுசெய்யப்படவில்லை</string>
+  <string name="teleconsultnotrecordeddialog_body">ரத்து செய்ய விரும்புகிறீர்களா?</string>
+  <string name="teleconsultnotrecordeddialog_positive_button_text">ஆம்</string>
+  <string name="teleconsultnotrecordeddialog_negative_button_text">இல்லை</string>
 
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">தொலைபேசி ஆலோசனையைப் பதிவு செய்ய உங்களுக்கு அனுமதி இல்லை</string>
+  <string name="deeplink_please_check_with_your_supervisor">உங்கள் மேற்பார்வையாளருடன் ஆலோசனை செய்யவும்</string>
+  <string name="deeplink_okay_positive_action">சரி</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">மருந்துகள்</string>
+  <string name="view_teleconsult_medicines_edit">திருத்தவும்</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="one">%1$s நாள்</item>
+    <item quantity="other">%1$s நாட்கள்</item>
+  </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">நோயாளிக்கான வழிமுறைகள்</string>
+  <string name="view_teleconsult_doctor_info_registration_id">மருத்துவப் பதிவு ID</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">இந்த மருந்துச் சீட்டில் கையொப்பமிடுவதன் மூலம் நான் %1$s என்பதை ஒப்புக்கொள்கிறேன்</string>
+  <string name="view_teleconsult_doctor_info_add_signature">கையொப்பத்தைச் சேர்</string>
 </resources>

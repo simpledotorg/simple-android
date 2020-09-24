@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
-class LongTeleconsultMessageBuilder @Inject constructor(
+class LongTeleconsultMessageBuilder_Old @Inject constructor(
     private val resources: Resources,
     private val userClock: UserClock,
     @Named("full_date") private val dateFormatter: DateTimeFormatter

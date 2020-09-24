@@ -4,6 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.time.Instant
 import java.util.UUID
@@ -48,7 +49,10 @@ data class PrescribedDrugPayload(
     val frequency: MedicineFrequency?,
 
     @Json(name = "duration_in_days")
-    val durationInDays: Int?
+    val durationInDays: Int?,
+
+    @Json(name = "teleconsultation_id")
+    val teleconsultationId: UUID?
 ) {
 
   fun toDatabaseModel(syncStatus: SyncStatus): PrescribedDrug {
@@ -62,11 +66,10 @@ data class PrescribedDrugPayload(
         patientUuid = patientId,
         facilityUuid = facilityId,
         syncStatus = syncStatus,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt,
+        timestamps = Timestamps(createdAt, updatedAt, deletedAt),
         frequency = frequency,
-        durationInDays = durationInDays
+        durationInDays = durationInDays,
+        teleconsultationId = teleconsultationId
     )
   }
 }

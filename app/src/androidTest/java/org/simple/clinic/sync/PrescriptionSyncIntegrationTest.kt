@@ -154,7 +154,7 @@ class PrescriptionSyncIntegrationTest {
     return copy(
         dosage = dosage,
         syncStatus = SyncStatus.PENDING,
-        updatedAt = updatedAt.plusMillis(1)
+        timestamps = timestamps.copy(updatedAt = updatedAt.plusMillis(1))
     )
   }
 }

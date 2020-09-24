@@ -326,7 +326,6 @@ class BloodPressureEntrySheetLogicTest {
         currentFacility = facility,
         recordedAt = entryDateAsInstant,
         uuid = measurementUuid)).doReturn(TestData.bloodPressureMeasurement(patientUuid = patientUuid))
-    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
 
     sheetCreatedForNew(patientUuid)
     uiEvents.run {
@@ -803,7 +802,6 @@ class BloodPressureEntrySheetLogicTest {
         currentFacility = facility,
         recordedAt = entryDateAsInstant,
         uuid = measurementUuid)).doReturn(TestData.bloodPressureMeasurement(patientUuid = patientUuid))
-    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
 
     sheetCreatedForNew(patientUuid)
     with(uiEvents) {
@@ -844,7 +842,6 @@ class BloodPressureEntrySheetLogicTest {
 
     val newInputDate = LocalDate.of(1991, 2, 14)
 
-    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(existingBp))
 
     whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
@@ -974,7 +971,6 @@ class BloodPressureEntrySheetLogicTest {
         recordedAt = newInputDateAsInstant
     )
 
-    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(existingBp))
 
     whenever(bloodPressureRepository.updateMeasurement(updatedBp)).doReturn(Completable.complete())

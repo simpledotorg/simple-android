@@ -255,12 +255,12 @@ class BloodSugarEntryEffectHandlerTest {
         recordedAt = date.toUtcInstant(userClock),
         uuid = measurementUuid
     )).doReturn(Single.just(bloodSugar))
-    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(bloodSugar.patientUuid)).doReturn(Completable.complete())
 
     // when
     testCase.dispatch(createNewBloodSugarEntry)
 
     // then
+    verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(bloodSugar.patientUuid)
     verify(patientRepository).compareAndUpdateRecordedAt(bloodSugar.patientUuid, date.toUtcInstant(userClock))
     testCase.assertOutgoingEvents(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
     verifyZeroInteractions(ui)
@@ -287,12 +287,12 @@ class BloodSugarEntryEffectHandlerTest {
         recordedAt = date.toUtcInstant(userClock),
         uuid = measurementUuid
     )).doReturn(Single.just(bloodSugar))
-    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(bloodSugar.patientUuid)).doReturn(Completable.complete())
 
     // when
     testCase.dispatch(createNewBloodSugarEntry)
 
     // then
+    verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(bloodSugar.patientUuid)
     verify(patientRepository).compareAndUpdateRecordedAt(bloodSugar.patientUuid, date.toUtcInstant(userClock))
     testCase.assertOutgoingEvents(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
     verifyZeroInteractions(ui)

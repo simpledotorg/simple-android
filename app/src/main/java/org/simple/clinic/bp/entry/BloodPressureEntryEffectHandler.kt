@@ -166,10 +166,11 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
       bloodPressureMeasurement: BloodPressureMeasurement
   ): Single<BloodPressureSaved> {
     val entryDate = createNewBpEntry.userEnteredDate.toUtcInstant(userClock)
-    return appointmentsRepository
-        .markAppointmentsCreatedBeforeTodayAsVisited(bloodPressureMeasurement.patientUuid)
-        .doOnComplete { patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, entryDate) }
-        .toSingleDefault(BloodPressureSaved(createNewBpEntry.wasDateChanged))
+
+    appointmentsRepository.markAppointmentsCreatedBeforeTodayAsVisited(bloodPressureMeasurement.patientUuid)
+    patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, entryDate)
+
+    return Single.just(BloodPressureSaved(createNewBpEntry.wasDateChanged))
   }
 
   private fun updateBpEntryTransformer(): ObservableTransformer<UpdateBpEntry, BloodPressureEntryEvent> {

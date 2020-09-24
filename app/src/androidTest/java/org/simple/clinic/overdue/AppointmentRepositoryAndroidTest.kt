@@ -1041,7 +1041,7 @@ class AppointmentRepositoryAndroidTest {
 
     // then
     clock.advanceBy(Duration.ofHours(1))
-    appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid).blockingAwait()
+    appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)
     assertThat(getAppointmentByUuid(firstAppointmentUuid)).isEqualTo(firstAppointmentBeforeMarkingAsCreatedOnCurrentDay)
 
     // then
@@ -1059,7 +1059,7 @@ class AppointmentRepositoryAndroidTest {
         )))
 
     val secondAppointmentBeforeMarkingAsCreatedOnNextDay = getAppointmentByUuid(secondAppointmentUuid)
-    appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid).blockingAwait()
+    appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)
 
     val firstAppointmentAfterMarkingAsCreatedOnNextDay = getAppointmentByUuid(firstAppointmentUuid)
 

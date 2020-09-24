@@ -36,13 +36,12 @@ class BloodPressureRepositoryTest {
     val bpUuid = UUID.fromString("6d1b8875-c659-4dbd-a5c9-d642e0960504")
     val reading = BloodPressureReading(120, 65)
     repository.saveMeasurement(
-        uuid = bpUuid,
         patientUuid = patientUuid,
         reading = reading,
         loggedInUser = loggedInUser,
         currentFacility = facility,
-        recordedAt = Instant.now(testClock)
-    ).subscribe()
+        recordedAt = Instant.now(testClock),
+        uuid = bpUuid)
 
     verify(dao).save(listOf(
         BloodPressureMeasurement(

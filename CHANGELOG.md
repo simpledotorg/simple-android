@@ -8,6 +8,7 @@
 - Integrated Firebase Performance Monitoring
 - Remove `PrescribedDrugs` from `TeleconsultRecord`
 - Create Kotlin extension for saving Optional preferences
+- Modify `PrescribedDrug` to include `teleconsultation_id`
 
 ## On Demo
 ### Features

@@ -4,7 +4,6 @@ import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
-import io.reactivex.Completable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.cast
@@ -182,10 +181,8 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
 
             updatedBp to updateBpEntry.wasDateChanged
           }
-          .flatMapSingle { (bloodPressureMeasurement, wasDateChanged) ->
-            storeUpdateBloodPressureMeasurement(bloodPressureMeasurement)
-                .toSingleDefault(BloodPressureSaved(wasDateChanged))
-          }
+          .doOnNext { (bloodPressureMeasurement, _) -> storeUpdateBloodPressureMeasurement(bloodPressureMeasurement) }
+          .map { (_, wasDateChanged) -> BloodPressureSaved(wasDateChanged) }
           .compose(reportAnalyticsEvents)
           .cast()
     }
@@ -210,10 +207,9 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
 
   private fun storeUpdateBloodPressureMeasurement(
       bloodPressureMeasurement: BloodPressureMeasurement
-  ): Completable {
-    return bloodPressureRepository
-        .updateMeasurement(bloodPressureMeasurement)
-        .doOnComplete { patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, bloodPressureMeasurement.recordedAt) }
+  ) {
+    bloodPressureRepository.updateMeasurement(bloodPressureMeasurement)
+    patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, bloodPressureMeasurement.recordedAt)
   }
 
   private fun updateBloodPressureMeasurementValues(

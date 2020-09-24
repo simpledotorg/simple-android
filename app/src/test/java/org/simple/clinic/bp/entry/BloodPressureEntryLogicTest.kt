@@ -11,7 +11,6 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -374,7 +373,6 @@ class BloodPressureEntrySheetLogicTest {
         recordedAt = newInputDateAsInstant,
         uuid = measurementUuid)).doReturn(TestData.bloodPressureMeasurement())
     whenever(bloodPressureRepository.measurementImmediate(existingBp.uuid)).doReturn(existingBp)
-    whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
 
     sheetCreatedForUpdate(existingBp.uuid)
     uiEvents.run {
@@ -849,8 +847,6 @@ class BloodPressureEntrySheetLogicTest {
 
     whenever(bloodPressureRepository.measurementImmediate(any())).doReturn(existingBp)
 
-    whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
-
     sheetCreatedForUpdate(existingBp.uuid)
     with(uiEvents) {
       onNext(ScreenChanged(BP_ENTRY))
@@ -907,7 +903,6 @@ class BloodPressureEntrySheetLogicTest {
     )
 
     whenever(bloodPressureRepository.measurementImmediate(existingBp.uuid)).doReturn(existingBp)
-    whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
 
     sheetCreatedForUpdate(existingBp.uuid, userFromDifferentFacility, differentFacility)
     uiEvents.run {
@@ -977,8 +972,6 @@ class BloodPressureEntrySheetLogicTest {
     )
 
     whenever(bloodPressureRepository.measurementImmediate(any())).doReturn(existingBp)
-
-    whenever(bloodPressureRepository.updateMeasurement(updatedBp)).doReturn(Completable.complete())
 
     sheetCreatedForUpdate(existingBp.uuid, userFromDifferentFacility, differentFacility)
     with(uiEvents) {

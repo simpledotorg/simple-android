@@ -3,6 +3,7 @@ package org.simple.clinic.summary.teleconsultation.messagebuilder
 import android.content.res.Resources
 import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.summary.PatientTeleconsultationInfoLong
 import org.simple.clinic.summary.PatientTeleconsultationInfo
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
@@ -25,20 +26,21 @@ class LongTeleconsultMessageBuilder_Old @Inject constructor(
    * for the recipient.
    */
   override fun message(patientTeleconsultationInfo: PatientTeleconsultationInfo): String {
-    val message = StringBuilder("*${patientTeleconsultationInfo.facility.name}* teleconsult request for:")
+    val longPatientTeleconsultationInfo = patientTeleconsultationInfo as PatientTeleconsultationInfoLong
+    val message = StringBuilder("*${longPatientTeleconsultationInfo.facility.name}* teleconsult request for:")
         .appendLine("")
         .appendLine("")
         .appendLine("*Patient record*:")
-        .appendLine("https://app.simple.org/patient/${patientTeleconsultationInfo.patientUuid}")
+        .appendLine("https://app.simple.org/patient/${longPatientTeleconsultationInfo.patientUuid}")
         .appendLine("")
 
-    addDiagnosisSectionToMessage(patientTeleconsultationInfo, message)
-    addBloodPressuresSectionToMessage(patientTeleconsultationInfo, message)
-    addBloodSugarsSectionToMessage(patientTeleconsultationInfo, message)
-    addPrescriptionsSectionToMessage(patientTeleconsultationInfo, message)
+    addDiagnosisSectionToMessage(longPatientTeleconsultationInfo, message)
+    addBloodPressuresSectionToMessage(longPatientTeleconsultationInfo, message)
+    addBloodSugarsSectionToMessage(longPatientTeleconsultationInfo, message)
+    addPrescriptionsSectionToMessage(longPatientTeleconsultationInfo, message)
 
-    if (patientTeleconsultationInfo.bpPassport.isNullOrBlank().not()) {
-      message.appendLine("*BP Passport*: ${patientTeleconsultationInfo.bpPassport}")
+    if (longPatientTeleconsultationInfo.bpPassport.isNullOrBlank().not()) {
+      message.appendLine("*BP Passport*: ${longPatientTeleconsultationInfo.bpPassport}")
           .appendLine("")
     }
 
@@ -46,7 +48,7 @@ class LongTeleconsultMessageBuilder_Old @Inject constructor(
   }
 
   private fun addPrescriptionsSectionToMessage(
-      patientTeleconsultationInfo: PatientTeleconsultationInfo,
+      patientTeleconsultationInfo: PatientTeleconsultationInfoLong,
       message: StringBuilder
   ) {
     if (patientTeleconsultationInfo.prescriptions.isNotEmpty()) {
@@ -59,7 +61,7 @@ class LongTeleconsultMessageBuilder_Old @Inject constructor(
   }
 
   private fun addBloodSugarsSectionToMessage(
-      patientTeleconsultationInfo: PatientTeleconsultationInfo,
+      patientTeleconsultationInfo: PatientTeleconsultationInfoLong,
       message: StringBuilder
   ) {
     if (patientTeleconsultationInfo.bloodSugars.isNotEmpty()) {
@@ -83,7 +85,7 @@ class LongTeleconsultMessageBuilder_Old @Inject constructor(
   }
 
   private fun addBloodPressuresSectionToMessage(
-      patientTeleconsultationInfo: PatientTeleconsultationInfo,
+      patientTeleconsultationInfo: PatientTeleconsultationInfoLong,
       message: StringBuilder
   ) {
     if (patientTeleconsultationInfo.bloodPressures.isNotEmpty()) {
@@ -102,7 +104,7 @@ class LongTeleconsultMessageBuilder_Old @Inject constructor(
     }
   }
 
-  private fun addDiagnosisSectionToMessage(patientTeleconsultationInfo: PatientTeleconsultationInfo, message: StringBuilder) {
+  private fun addDiagnosisSectionToMessage(patientTeleconsultationInfo: PatientTeleconsultationInfoLong, message: StringBuilder) {
     val hyperTensionTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_hypertension)
     val diabetesTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_diabetes)
 

@@ -603,7 +603,7 @@ class PatientSummaryUpdateTest {
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .fetchedTeleconsultationInfo(teleconsultInfo)
 
-    val patientInformation = PatientTeleconsultationInfo(
+    val patientInformation = PatientTeleconsultationInfoLong(
         patientUuid = patientUuid,
         bpPassport = "123 456",
         facility = TestData.facility(uuid = UUID.fromString("b1e1dde7-a279-4239-833a-c0af70a3c8a2")),

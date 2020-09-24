@@ -396,7 +396,7 @@ class PatientSummaryEffectHandlerTest {
         hasDiabetes = Answer.No
     )
 
-    val patientInformation = PatientTeleconsultationInfo(
+    val patientInformation = PatientTeleconsultationInfoLong(
         patientUuid = patientUuid,
         bpPassport = bpPassport.identifier.displayValue(),
         facility = facility,
@@ -470,7 +470,7 @@ class PatientSummaryEffectHandlerTest {
         hasDiabetes = Answer.No
     )
 
-    val patientInformation = PatientTeleconsultationInfo(
+    val patientInformation = PatientTeleconsultationInfoLong(
         patientUuid = patientUuid,
         bpPassport = bpPassport.identifier.displayValue(),
         facility = facility,

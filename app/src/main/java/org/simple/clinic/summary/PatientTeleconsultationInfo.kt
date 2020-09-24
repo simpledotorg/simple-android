@@ -7,7 +7,9 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.MedicalHistory
 import java.util.UUID
 
-data class PatientTeleconsultationInfo(
+sealed class PatientTeleconsultationInfo
+
+data class PatientTeleconsultationInfoLong(
     val patientUuid: UUID,
     val bpPassport: String?,
     val facility: Facility,
@@ -15,4 +17,9 @@ data class PatientTeleconsultationInfo(
     val bloodSugars: List<BloodSugarMeasurement>,
     val prescriptions: List<PrescribedDrug>,
     val medicalHistory: MedicalHistory
-)
+) : PatientTeleconsultationInfo()
+
+data class PatientTeleconsultationInfoShort(
+    val patientUuid: UUID,
+    val teleconsultationId: UUID
+) : PatientTeleconsultationInfo()

@@ -288,7 +288,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 patientUuid = patientUuid
             )
 
-            it.doctorPhoneNumber to PatientTeleconsultationInfo(
+            it.doctorPhoneNumber to PatientTeleconsultationInfoLong(
                 patientUuid,
                 it.bpPassport?.identifier?.displayValue(),
                 it.currentFacility!!,

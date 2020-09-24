@@ -460,24 +460,15 @@ class PatientRepository @Inject constructor(
     return database.phoneNumberDao().latestPhoneNumber(patientUuid).toOptional()
   }
 
-  fun compareAndUpdateRecordedAt(patientUuid: UUID, instantToCompare: Instant): Completable {
-    return Completable.fromAction {
-      database.patientDao().compareAndUpdateRecordedAt(
-          patientUuid = patientUuid,
-          instantToCompare = instantToCompare,
-          pendingStatus = PENDING,
-          updatedAt = Instant.now(utcClock)
-      )
-    }
-  }
-
-  fun compareAndUpdateRecordedAtImmediate(patientUuid: UUID, instantToCompare: Instant) {
-    return database.patientDao().compareAndUpdateRecordedAt(
-        patientUuid = patientUuid,
-        instantToCompare = instantToCompare,
-        pendingStatus = PENDING,
-        updatedAt = Instant.now(utcClock)
-    )
+  fun compareAndUpdateRecordedAt(patientUuid: UUID, instantToCompare: Instant) {
+    return database
+        .patientDao()
+        .compareAndUpdateRecordedAt(
+            patientUuid = patientUuid,
+            instantToCompare = instantToCompare,
+            pendingStatus = PENDING,
+            updatedAt = Instant.now(utcClock)
+        )
   }
 
   fun updateRecordedAt(patientUuid: UUID): Completable {

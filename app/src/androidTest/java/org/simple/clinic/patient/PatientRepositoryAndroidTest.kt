@@ -2112,8 +2112,8 @@ class PatientRepositoryAndroidTest {
 
     patientRepository.save(listOf(patientProfile1, patientProfile2)).blockingAwait()
 
-    patientRepository.compareAndUpdateRecordedAt(patientUuid1, instantToCompare1).blockingAwait()
-    patientRepository.compareAndUpdateRecordedAt(patientUuid2, instantToCompare2).blockingAwait()
+    patientRepository.compareAndUpdateRecordedAt(patientUuid1, instantToCompare1)
+    patientRepository.compareAndUpdateRecordedAt(patientUuid2, instantToCompare2)
 
     val patient1 = patientRepository.patient(patientUuid1).blockingFirst().toNullable()!!
     val patient2 = patientRepository.patient(patientUuid2).blockingFirst().toNullable()!!
@@ -2154,8 +2154,8 @@ class PatientRepositoryAndroidTest {
 
     patientRepository.save(listOf(patientProfile1, patientProfile2)).blockingAwait()
 
-    patientRepository.compareAndUpdateRecordedAtImmediate(patientUuid1, instantToCompare1)
-    patientRepository.compareAndUpdateRecordedAtImmediate(patientUuid2, instantToCompare2)
+    patientRepository.compareAndUpdateRecordedAt(patientUuid1, instantToCompare1)
+    patientRepository.compareAndUpdateRecordedAt(patientUuid2, instantToCompare2)
 
     val patient1 = patientRepository.patient(patientUuid1).blockingFirst().toNullable()!!
     val patient2 = patientRepository.patient(patientUuid2).blockingFirst().toNullable()!!

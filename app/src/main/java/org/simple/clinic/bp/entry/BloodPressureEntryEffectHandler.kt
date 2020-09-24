@@ -148,29 +148,29 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { createNewBpEntries ->
       createNewBpEntries
           .observeOn(schedulersProvider.io())
-          .flatMapSingle { createNewBpEntry ->
+          .map { createNewBpEntry ->
             val user = currentUser.get()
             val facility = currentFacility.get()
 
-            Single
-                .fromCallable { storeNewBloodPressureMeasurement(user, facility, createNewBpEntry) }
-                .flatMap { updateAppointmentsAsVisited(createNewBpEntry, it) }
+            createNewBloodPressureMeasurement(user, facility, createNewBpEntry)
+
+            BloodPressureSaved(createNewBpEntry.wasDateChanged)
           }
           .compose(reportAnalyticsEvents)
           .cast()
     }
   }
 
-  private fun updateAppointmentsAsVisited(
-      createNewBpEntry: CreateNewBpEntry,
-      bloodPressureMeasurement: BloodPressureMeasurement
-  ): Single<BloodPressureSaved> {
+  private fun createNewBloodPressureMeasurement(
+      user: User,
+      facility: Facility,
+      createNewBpEntry: CreateNewBpEntry
+  ) {
+    val createdBloodPressureMeasurement = storeNewBloodPressureMeasurement(user, facility, createNewBpEntry)
+
     val entryDate = createNewBpEntry.userEnteredDate.toUtcInstant(userClock)
-
-    appointmentsRepository.markAppointmentsCreatedBeforeTodayAsVisited(bloodPressureMeasurement.patientUuid)
-    patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, entryDate)
-
-    return Single.just(BloodPressureSaved(createNewBpEntry.wasDateChanged))
+    appointmentsRepository.markAppointmentsCreatedBeforeTodayAsVisited(createdBloodPressureMeasurement.patientUuid)
+    patientRepository.compareAndUpdateRecordedAt(createdBloodPressureMeasurement.patientUuid, entryDate)
   }
 
   private fun updateBpEntryTransformer(): ObservableTransformer<UpdateBpEntry, BloodPressureEntryEvent> {

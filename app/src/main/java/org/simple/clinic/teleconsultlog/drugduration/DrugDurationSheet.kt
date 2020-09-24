@@ -34,6 +34,9 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
   lateinit var locale: Locale
 
   @Inject
+  lateinit var drugDurationUpdate: DrugDurationUpdate
+
+  @Inject
   lateinit var effectHandlerFactory: DrugDurationEffectHandler.Factory
 
   companion object {
@@ -78,12 +81,12 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
 
   private val delegate by unsafeLazy {
     val uiRenderer = DrugDurationUiRenderer(this)
-    val duration = drugDuration.duration ?: "30"
 
     MobiusDelegate.forActivity(
         events = events.ofType(),
         defaultModel = DrugDurationModel.create(drugDuration.duration),
-        update = DrugDurationUpdate(),
+        init = DrugDurationInit(),
+        update = drugDurationUpdate,
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render
     )
@@ -148,6 +151,11 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
     drugDurationErrorTextView.visibility = View.VISIBLE
   }
 
+  override fun showMaxDrugDurationError(maxAllowedDurationInDays: Int) {
+    drugDurationErrorTextView.text = getString(R.string.drug_duration_max_error, maxAllowedDurationInDays.toString())
+    drugDurationErrorTextView.visibility = View.VISIBLE
+  }
+
   override fun hideDurationError() {
     drugDurationErrorTextView.text = null
     drugDurationErrorTextView.visibility = View.GONE
@@ -162,7 +170,7 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
     finish()
   }
 
-  override fun setDrugDuration(duration: String?) {
+  override fun prefillDrugDuration(duration: String) {
     drugDurationEditText.setTextAndCursor(duration)
   }
 }

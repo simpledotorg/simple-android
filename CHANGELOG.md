@@ -4,6 +4,9 @@
 ## Features
 - [In Progress: 22 Sep 2020] Add `TeleconsultPrescriptionScreen`
 
+## Changes
+- Updated translations: `bn-IN`
+
 ### Internal
 - Integrated Firebase Performance Monitoring
 - Remove `PrescribedDrugs` from `TeleconsultRecord`

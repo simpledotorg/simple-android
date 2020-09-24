@@ -427,7 +427,7 @@
   <string name="changelanguage_done">पूरा हुआ</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">कृपया प्रतीक्षा करें…</string>
+  <string name="placeholder_loading_title">कृपया प्रतीक्षा करें...</string>
   <string name="placeholder_loading_message">डेटाबेस रखरखाव प्रगति में है। इसमें सिर्फ़ एक मिनट लगेगा।</string>
 
   <!-- Select Country Screen -->
@@ -516,7 +516,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">रोगी को \"मुलाकात के लिए सहमत\" के रूप में चिन्हित करें</string>
+  <string name="contactpatient_agreed_to_visit">रोगी को \&quot;मुलाकात के लिए सहमत\&quot; के रूप में चिन्हित करें</string>
   <string name="contactpatient_remind_call_later">बाद में कॉल करना याद दिलाएं…</string>
   <string name="contactpatient_remove_from_list">अतिदेय सूची से हटाएं…</string>
   <string name="contactpatient_result_of_call">कॉल का परिणाम</string>
@@ -610,5 +610,39 @@
   <string name="sheet_medicine_frequency_qds">QDS</string>
   <string name="sheet_medicine_frequency_save">सहेजें</string>
 
+  <!-- Teleconsult Record Screen -->
+  <string name="screen_teleconsult_record">टेलीकंसल्ट के रिकॉर्ड</string>
+  <string name="screen_teleconsult_record_type">टेलीकंसल्टेशन के प्रकार</string>
+  <string name="screen_teleconsult_record_type_audio">ऑडियो कॉल</string>
+  <string name="screen_teleconsult_record_type_video">वीडियो कॉल</string>
+  <string name="screen_teleconsult_record_type_message">संदेश</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">मरीज़ नियमित तौर पर एंटी-हाईपरटेंसिव और एंटी-डायबेटिक दवाईयां ले रहे हैं</string>
+  <string name="screen_teleconsult_record_patient_consented">मरीज़ ने टेलीकंसल्टेशन के लिए मंज़ूरी दी</string>
+  <string name="screen_teleconsult_record_done">पूरा हुआ</string>
+  <string name="teleconsultnotrecordeddialog_title">टेलीकंसल्ट रिकॉर्ड नहीं हुआ</string>
+  <string name="teleconsultnotrecordeddialog_body">क्या आप निःसंदेह रद्द करना चाहते हैं?</string>
+  <string name="teleconsultnotrecordeddialog_positive_button_text">हाँ</string>
+  <string name="teleconsultnotrecordeddialog_negative_button_text">नहीं</string>
 
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">आप टेलीकंसल्ट को लॉग करने के लिए अधिकृत नहीं हैं</string>
+  <string name="deeplink_please_check_with_your_supervisor">अपने निरीक्षक से सलाह लें</string>
+  <string name="deeplink_okay_positive_action">ठीक है</string>
+
+  <string name="screen_teleconsult_prescription_next">आगे</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">दवाएं</string>
+  <string name="view_teleconsult_medicines_edit">संपादन करें</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="one">%1$s दिन</item>
+    <item quantity="other">%1$s दिन</item>
+  </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">मरीज़ के लिए निर्देश</string>
+  <string name="view_teleconsult_doctor_info_registration_id">चिकित्सा पंजीकरण ID</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">इस प्रिस्क्रिप्शन पर हस्ताक्षर करके मैं यह स्वीकारता हूं कि मैं %1$s हूं</string>
+  <string name="view_teleconsult_doctor_info_add_signature">हस्ताक्षर जोड़ें</string>
+  <string name="view_teleconsult_doctor_info_signature_error">हस्ताक्षर जोड़ें</string>
 </resources>

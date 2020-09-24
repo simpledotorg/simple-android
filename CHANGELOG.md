@@ -2,7 +2,7 @@
 
 ## Next Release
 ## Features
-- [In Progress: 22 Sep 2020] Add `TeleconsultPrescriptionScreen`
+- Add `TeleconsultPrescriptionScreen`
 
 ## Changes
 - Updated translations: `bn-IN`, `ti-ET`, `bn-BD`, `ta-IN`, `pa-IN`, `kn-IN`

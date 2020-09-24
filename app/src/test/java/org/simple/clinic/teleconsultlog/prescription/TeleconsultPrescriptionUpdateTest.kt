@@ -12,8 +12,9 @@ import java.util.UUID
 
 class TeleconsultPrescriptionUpdateTest {
 
+  private val teleconsultRecordId = UUID.fromString("572be681-770c-41cf-8d4d-4df988e34e72")
   private val patientUuid = UUID.fromString("11c91ee8-2165-4429-962b-70c4951eddd0")
-  private val model = TeleconsultPrescriptionModel.create(patientUuid)
+  private val model = TeleconsultPrescriptionModel.create(teleconsultRecordId, patientUuid)
 
   private val updateSpec = UpdateSpec(TeleconsultPrescriptionUpdate())
 
@@ -38,6 +39,42 @@ class TeleconsultPrescriptionUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(GoBack)
+        ))
+  }
+
+  @Test
+  fun `when signature is not added then show signature error`() {
+    val medicalInstructions = "This is a medical instructions"
+    val medicalRegistrationId = "ABC12345"
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForNextClickLoaded(
+            medicalInstructions = medicalInstructions,
+            medicalRegistrationId = medicalRegistrationId,
+            signatureBitmap = null
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowSignatureRequiredError)
+        ))
+  }
+
+  @Test
+  fun `when next button is clicked, then load data for next click`() {
+    val medicalInstructions = "This is a medical instructions"
+    val medicalRegistrationId = "ABC12345"
+
+    updateSpec
+        .given(model)
+        .whenEvent(NextButtonClicked(medicalInstructions, medicalRegistrationId))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadDataForNextClick(
+                teleconsultRecordId = teleconsultRecordId,
+                medicalInstructions = medicalInstructions,
+                medicalRegistrationId = medicalRegistrationId
+            ))
         ))
   }
 }

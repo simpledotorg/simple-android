@@ -11,8 +11,9 @@ import java.util.UUID
 
 class TeleconsultPrescriptionInitTest {
 
+  private val teleconsultRecordId = UUID.fromString("38c95d84-8d5d-44c8-a084-63dbe1be89a1")
   private val patientUuid = UUID.fromString("cda5707d-4bb5-499d-92da-a135ea420905")
-  private val model = TeleconsultPrescriptionModel.create(patientUuid = patientUuid)
+  private val model = TeleconsultPrescriptionModel.create(teleconsultRecordId = teleconsultRecordId, patientUuid = patientUuid)
 
   private val initSpec = InitSpec(TeleconsultPrescriptionInit())
 

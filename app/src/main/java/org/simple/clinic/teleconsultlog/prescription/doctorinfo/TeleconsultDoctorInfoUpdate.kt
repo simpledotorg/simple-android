@@ -1,7 +1,6 @@
 package org.simple.clinic.teleconsultlog.prescription.doctorinfo
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -18,6 +17,8 @@ class TeleconsultDoctorInfoUpdate : Update<TeleconsultDoctorInfoModel, Teleconsu
       is MedicalRegistrationIdChanged -> next(model.medicalRegistrationIdLoaded(event.medicalRegistrationId))
       is MedicalInstructionsChanged -> next(model.medicalInstructionsChanged(event.instructions))
       is CurrentUserLoaded -> next(model.currentUserLoaded(event.user))
+      AddSignatureClicked -> dispatch(ShowAddSignatureDialog)
+      ActivityResumed -> dispatch(LoadSignatureBitmap)
     }
   }
 
@@ -25,7 +26,7 @@ class TeleconsultDoctorInfoUpdate : Update<TeleconsultDoctorInfoModel, Teleconsu
     return if (event.signatureBitmap != null) {
       dispatch(SetSignatureBitmap(event.signatureBitmap))
     } else {
-      noChange()
+      dispatch(ShowAddSignatureButton)
     }
   }
 

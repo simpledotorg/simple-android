@@ -7,13 +7,15 @@ import java.util.UUID
 
 @Parcelize
 data class TeleconsultPrescriptionModel(
+    val teleconsultRecordId: UUID,
     val patientUuid: UUID,
     val patient: Patient?
 ) : Parcelable {
 
   companion object {
 
-    fun create(patientUuid: UUID) = TeleconsultPrescriptionModel(
+    fun create(teleconsultRecordId: UUID, patientUuid: UUID) = TeleconsultPrescriptionModel(
+        teleconsultRecordId = teleconsultRecordId,
         patientUuid = patientUuid,
         patient = null
     )

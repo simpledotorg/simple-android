@@ -1,13 +1,16 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord
 
 import com.google.common.truth.Truth.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Audio
 import org.simple.clinic.util.TestUtcClock
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
@@ -21,10 +24,18 @@ class TeleconsultRecordRepositoryTest {
   @Inject
   lateinit var teleconsultRecordRepository: TeleconsultRecordRepository
 
+  @Inject
+  lateinit var appDatabase: org.simple.clinic.AppDatabase
+
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
     testUtcClock.setDate(LocalDate.parse("2018-01-01"))
+  }
+
+  @After
+  fun tearDown() {
+    appDatabase.clearAllTables()
   }
 
   @Test
@@ -65,5 +76,48 @@ class TeleconsultRecordRepositoryTest {
 
     // then
     assertThat(teleconsultRecordDetails).isEqualTo(teleconsultRecord)
+  }
+
+  @Test
+  fun updating_the_medical_officer_number_should_work_correctly() {
+    // given
+    val medicalOfficerNumber = "ABC123455"
+    val teleconsultRecord = TestData.teleconsultRecord(
+        id = UUID.fromString("9e22cb89-ce9f-4bc2-bc07-b69482508411"),
+        teleconsultRecordInfo = TestData.teleconsultRecordInfo(
+            recordedAt = Instant.now(testUtcClock),
+            teleconsultationType = Audio,
+            patientTookMedicines = Yes,
+            patientConsented = Yes,
+            medicalOfficerNumber = null
+        ),
+        timestamps = Timestamps(
+            createdAt = Instant.now(testUtcClock),
+            updatedAt = Instant.now(testUtcClock),
+            deletedAt = null
+        )
+    )
+
+    teleconsultRecordRepository.createTeleconsultRecordForMedicalOfficer(
+        teleconsultRecordId = teleconsultRecord.id,
+        patientUuid = teleconsultRecord.patientId,
+        medicalOfficerId = teleconsultRecord.medicalOfficerId,
+        teleconsultRecordInfo = teleconsultRecord.teleconsultRecordInfo!!
+    )
+
+    // when
+    testUtcClock.advanceBy(Duration.ofMinutes(2))
+    teleconsultRecordRepository.updateMedicalRegistrationId(
+        teleconsultRecordId = teleconsultRecord.id,
+        medicalOfficerNumber = medicalOfficerNumber
+    )
+
+    // then
+    val expectedTeleconsultRecord = teleconsultRecord.copy(
+        teleconsultRecordInfo = teleconsultRecord.teleconsultRecordInfo!!.copy(medicalOfficerNumber = medicalOfficerNumber),
+        timestamp = teleconsultRecord.timestamp.copy(updatedAt = teleconsultRecord.timestamp.updatedAt.plus(Duration.ofMinutes(2)))
+    )
+    assertThat(teleconsultRecordRepository.getTeleconsultRecord(teleconsultRecord.id))
+        .isEqualTo(expectedTeleconsultRecord)
   }
 }

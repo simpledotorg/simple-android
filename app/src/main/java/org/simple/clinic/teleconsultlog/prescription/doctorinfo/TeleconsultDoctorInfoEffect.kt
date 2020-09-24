@@ -13,3 +13,7 @@ object LoadSignatureBitmap : TeleconsultDoctorInfoEffect()
 data class SetSignatureBitmap(val bitmap: Bitmap) : TeleconsultDoctorInfoEffect()
 
 object LoadCurrentUser : TeleconsultDoctorInfoEffect()
+
+object ShowAddSignatureDialog : TeleconsultDoctorInfoEffect()
+
+object ShowAddSignatureButton : TeleconsultDoctorInfoEffect()

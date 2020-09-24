@@ -1,5 +1,7 @@
 package org.simple.clinic.teleconsultlog.prescription
 
+import android.graphics.Bitmap
+import com.nhaarman.mockitokotlin2.mock
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
@@ -90,6 +92,30 @@ class TeleconsultPrescriptionUpdateTest {
             hasEffects(OpenSharePrescriptionScreen(
                 teleconsultRecordId = teleconsultRecordId,
                 medicalInstructions = medicalInstructions
+            ))
+        ))
+  }
+
+  @Test
+  fun `when data for next click is loaded, then create prescription`() {
+    val medicalInstructions = "This is a medical instructions"
+    val medicalRegistrationId = "ABC12345"
+    val bitmap = mock<Bitmap>()
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForNextClickLoaded(
+            medicalInstructions = medicalInstructions,
+            medicalRegistrationId = medicalRegistrationId,
+            signatureBitmap = bitmap
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CreatePrescription(
+                patientUuid = patientUuid,
+                teleconsultRecordId = teleconsultRecordId,
+                medicalInstructions = medicalInstructions,
+                medicalRegistrationId = medicalRegistrationId
             ))
         ))
   }

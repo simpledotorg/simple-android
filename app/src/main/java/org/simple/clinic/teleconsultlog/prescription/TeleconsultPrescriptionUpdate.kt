@@ -1,7 +1,6 @@
 package org.simple.clinic.teleconsultlog.prescription
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -15,7 +14,7 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
     return when (event) {
       is PatientDetailsLoaded -> next(model.patientLoaded(event.patient))
       BackClicked -> dispatch(GoBack)
-      is DataForNextClickLoaded -> dataForNextClickLoaded(event)
+      is DataForNextClickLoaded -> dataForNextClickLoaded(model, event)
       is NextButtonClicked -> dispatch(LoadDataForNextClick(
           teleconsultRecordId = model.teleconsultRecordId,
           medicalInstructions = event.medicalInstructions,
@@ -28,11 +27,19 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
     }
   }
 
-  private fun dataForNextClickLoaded(event: DataForNextClickLoaded): Next<TeleconsultPrescriptionModel, TeleconsultPrescriptionEffect> {
+  private fun dataForNextClickLoaded(
+      model: TeleconsultPrescriptionModel,
+      event: DataForNextClickLoaded
+  ): Next<TeleconsultPrescriptionModel, TeleconsultPrescriptionEffect> {
     return if (event.signatureBitmap == null) {
       dispatch(ShowSignatureRequiredError)
     } else {
-      noChange()
+      dispatch(CreatePrescription(
+          patientUuid = model.patientUuid,
+          teleconsultRecordId = model.teleconsultRecordId,
+          medicalInstructions = event.medicalInstructions,
+          medicalRegistrationId = event.medicalRegistrationId
+      ))
     }
   }
 }

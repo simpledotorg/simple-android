@@ -9,7 +9,7 @@ import java.util.UUID
 
 sealed class PatientTeleconsultationInfo
 
-data class PatientTeleconsultationInfoLong(
+data class PatientTeleconsultationInfoLong_Old(
     val patientUuid: UUID,
     val bpPassport: String?,
     val facility: Facility,

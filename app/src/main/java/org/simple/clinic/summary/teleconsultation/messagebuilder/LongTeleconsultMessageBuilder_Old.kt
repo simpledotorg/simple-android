@@ -3,8 +3,8 @@ package org.simple.clinic.summary.teleconsultation.messagebuilder
 import android.content.res.Resources
 import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.summary.PatientTeleconsultationInfoLong
 import org.simple.clinic.summary.PatientTeleconsultationInfo
+import org.simple.clinic.summary.PatientTeleconsultationInfoLong_Old
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
 import java.time.format.DateTimeFormatter
@@ -26,21 +26,21 @@ class LongTeleconsultMessageBuilder_Old @Inject constructor(
    * for the recipient.
    */
   override fun message(patientTeleconsultationInfo: PatientTeleconsultationInfo): String {
-    val longPatientTeleconsultationInfo = patientTeleconsultationInfo as PatientTeleconsultationInfoLong
-    val message = StringBuilder("*${longPatientTeleconsultationInfo.facility.name}* teleconsult request for:")
+    val patientTeleconsultationInfoLong = patientTeleconsultationInfo as PatientTeleconsultationInfoLong_Old
+    val message = StringBuilder("*${patientTeleconsultationInfoLong.facility.name}* teleconsult request for:")
         .appendLine("")
         .appendLine("")
         .appendLine("*Patient record*:")
-        .appendLine("https://app.simple.org/patient/${longPatientTeleconsultationInfo.patientUuid}")
+        .appendLine("https://app.simple.org/patient/${patientTeleconsultationInfoLong.patientUuid}")
         .appendLine("")
 
-    addDiagnosisSectionToMessage(longPatientTeleconsultationInfo, message)
-    addBloodPressuresSectionToMessage(longPatientTeleconsultationInfo, message)
-    addBloodSugarsSectionToMessage(longPatientTeleconsultationInfo, message)
-    addPrescriptionsSectionToMessage(longPatientTeleconsultationInfo, message)
+    addDiagnosisSectionToMessage(patientTeleconsultationInfoLong, message)
+    addBloodPressuresSectionToMessage(patientTeleconsultationInfoLong, message)
+    addBloodSugarsSectionToMessage(patientTeleconsultationInfoLong, message)
+    addPrescriptionsSectionToMessage(patientTeleconsultationInfoLong, message)
 
-    if (longPatientTeleconsultationInfo.bpPassport.isNullOrBlank().not()) {
-      message.appendLine("*BP Passport*: ${longPatientTeleconsultationInfo.bpPassport}")
+    if (patientTeleconsultationInfoLong.bpPassport.isNullOrBlank().not()) {
+      message.appendLine("*BP Passport*: ${patientTeleconsultationInfoLong.bpPassport}")
           .appendLine("")
     }
 
@@ -48,7 +48,7 @@ class LongTeleconsultMessageBuilder_Old @Inject constructor(
   }
 
   private fun addPrescriptionsSectionToMessage(
-      patientTeleconsultationInfo: PatientTeleconsultationInfoLong,
+      patientTeleconsultationInfo: PatientTeleconsultationInfoLong_Old,
       message: StringBuilder
   ) {
     if (patientTeleconsultationInfo.prescriptions.isNotEmpty()) {
@@ -61,7 +61,7 @@ class LongTeleconsultMessageBuilder_Old @Inject constructor(
   }
 
   private fun addBloodSugarsSectionToMessage(
-      patientTeleconsultationInfo: PatientTeleconsultationInfoLong,
+      patientTeleconsultationInfo: PatientTeleconsultationInfoLong_Old,
       message: StringBuilder
   ) {
     if (patientTeleconsultationInfo.bloodSugars.isNotEmpty()) {
@@ -85,7 +85,7 @@ class LongTeleconsultMessageBuilder_Old @Inject constructor(
   }
 
   private fun addBloodPressuresSectionToMessage(
-      patientTeleconsultationInfo: PatientTeleconsultationInfoLong,
+      patientTeleconsultationInfo: PatientTeleconsultationInfoLong_Old,
       message: StringBuilder
   ) {
     if (patientTeleconsultationInfo.bloodPressures.isNotEmpty()) {
@@ -104,7 +104,7 @@ class LongTeleconsultMessageBuilder_Old @Inject constructor(
     }
   }
 
-  private fun addDiagnosisSectionToMessage(patientTeleconsultationInfo: PatientTeleconsultationInfoLong, message: StringBuilder) {
+  private fun addDiagnosisSectionToMessage(patientTeleconsultationInfo: PatientTeleconsultationInfoLong_Old, message: StringBuilder) {
     val hyperTensionTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_hypertension)
     val diabetesTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_diabetes)
 

@@ -516,9 +516,9 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">ರೋಗಿಯನ್ನು \"ಭೇಟಿಮಾಡಲು ಒಪ್ಪಿದ್ದಾರೆ\" ಎಂದು ಗುರುತಿಸಿ</string>
-  <string name="contactpatient_remind_call_later">ನಂತರ ಕರೆ ಮಾಡಲು ನೆನಪಿಸಿ…</string>
-  <string name="contactpatient_remove_from_list">ಬಾಕಿ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಿ…</string>
+  <string name="contactpatient_agreed_to_visit">ರೋಗಿಯನ್ನು \&quot;ಭೇಟಿಮಾಡಲು ಒಪ್ಪಿದ್ದಾರೆ\&quot; ಎಂದು ಗುರುತಿಸಿ</string>
+  <string name="contactpatient_remind_call_later">ನಂತರ ಕರೆ ಮಾಡಲು ನೆನಪಿಸಿ...</string>
+  <string name="contactpatient_remove_from_list">ಬಾಕಿ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಿ...</string>
   <string name="contactpatient_result_of_call">ಕರೆಯ ಫಲಿತಾಂಶ</string>
   <string name="contactpatient_call_normal">ಸಾಮಾನ್ಯ</string>
   <string name="contactpatient_call_secure">ಸುರಕ್ಷಿತ</string>
@@ -610,5 +610,39 @@
   <string name="sheet_medicine_frequency_qds">QDS</string>
   <string name="sheet_medicine_frequency_save">ಉಳಿಸಿ</string>
 
+  <!-- Teleconsult Record Screen -->
+  <string name="screen_teleconsult_record">ಟೆಲೆಕನ್ಸಲ್ಟ್ ರೆಕಾರ್ಡ್</string>
+  <string name="screen_teleconsult_record_type">ಟೆಲೆಕನ್ಸಲ್ಟೇಶನ್ ಪ್ರಕಾರ</string>
+  <string name="screen_teleconsult_record_type_audio">ಆಡಿಯೋ ಕರೆ</string>
+  <string name="screen_teleconsult_record_type_video">ವೀಡಿಯೋ ಕರೆ</string>
+  <string name="screen_teleconsult_record_type_message">ಸಂದೇಶ</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">ರೋಗಿಯು ನಿಯಮಿತವಾಗಿ ಹೈಪರ್‌ಟೆನ್ಸಿವ್ ಪ್ರತಿರೋಧಕ ಮತ್ತು ಡಯಾಬಿಟಿಕ್ ಪ್ರತಿರೋಧಕ ಔಷಧಿಗಳನ್ನು ತೆಗೆದುಕೊಳ್ಳುತ್ತಿದ್ದಾರೆ</string>
+  <string name="screen_teleconsult_record_patient_consented">ಟೆಲೆಕನ್ಸಲ್ಟೇಶನ್‌ಗೆ ರೋಗಿಯು ಸಮ್ಮತಿ ನೀಡಿದ್ದಾರೆ</string>
+  <string name="screen_teleconsult_record_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
+  <string name="teleconsultnotrecordeddialog_title">ಟೆಲೆಕನ್ಸಲ್ಟ್ ರೆಕಾರ್ಡ್ ಮಾಡಲಾಗಿಲ್ಲ</string>
+  <string name="teleconsultnotrecordeddialog_body">ನೀವು ಖಚಿತವಾಗಿ ರದ್ದುಗೊಳಿಸಲು ಬಯಸುವಿರಾ?</string>
+  <string name="teleconsultnotrecordeddialog_positive_button_text">ಹೌದು</string>
+  <string name="teleconsultnotrecordeddialog_negative_button_text">ಇಲ್ಲ</string>
 
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">ಟೆಲೆಕನ್ಸಲ್ಟ್ ಲಾಗ್ ಮಾಡಲು ನೀವು ಅಧಿಕಾರ ಹೊಂದಿಲ್ಲ</string>
+  <string name="deeplink_please_check_with_your_supervisor">ದಯವಿಟ್ಟು ನಿಮ್ಮ ಸೂಪರ್‌ವೈಸರ್ ಅವರೊಂದಿಗೆ ಪರಿಶೀಲಿಸಿ</string>
+  <string name="deeplink_okay_positive_action">ಸರಿ</string>
+
+  <string name="screen_teleconsult_prescription_next">ಮುಂದಿನ</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">ಔಷಧಗಳು</string>
+  <string name="view_teleconsult_medicines_edit">ಸಂಪಾದಿಸಿ</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="one">%1$s ದಿನ</item>
+    <item quantity="other">%1$s ದಿನಗಳು</item>
+  </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">ರೋಗಿಗೆ ಸೂಚನೆಗಳು</string>
+  <string name="view_teleconsult_doctor_info_registration_id">ವೈದ್ಯಕೀಯ ನೋಂದಣಿ ID</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">ಈ ಪ್ರಿಸ್ಕ್ರಿಪ್ಶನ್‌ಗೆ ಸಹಿ ಮಾಡುವ ಮೂಲಕ ನಾನು %1$s ಎಂಬುದಾಗಿ ಒಪ್ಪಿಕೊಳ್ಳುತ್ತೇನೆ</string>
+  <string name="view_teleconsult_doctor_info_add_signature">ಸಹಿಯನ್ನು ಸೇರಿಸಿ</string>
+  <string name="view_teleconsult_doctor_info_signature_error">ಸಹಿಯನ್ನು ಸೇರಿಸಿ</string>
 </resources>

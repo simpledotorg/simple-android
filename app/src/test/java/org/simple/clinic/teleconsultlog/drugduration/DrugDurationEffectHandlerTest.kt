@@ -36,4 +36,17 @@ class DrugDurationEffectHandlerTest {
     verify(uiActions).saveDrugDuration(duration.toInt())
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when prefill drug duration effect is received, then prefill drug duration`() {
+    // given
+    val duration = "35"
+
+    // when
+    effectHandlerTestCase.dispatch(PrefillDrugDuration(duration))
+
+    // then
+    verify(uiActions).prefillDrugDuration(duration)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

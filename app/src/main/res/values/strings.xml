@@ -677,6 +677,7 @@
   <string name="drug_duration_title">%1$s %2$s</string>
   <string name="drugDurationLabel">Days</string>
   <string name="drug_duration_empty_error">Drug duration cannot be blank</string>
+  <string name="drug_duration_max_error">Drug duration cannot be more than %1$s days</string>
 
   <!-- Teleconsultation success-->
   <string name="screen_teleconsult_success_add_prescription">Add Prescription?</string>

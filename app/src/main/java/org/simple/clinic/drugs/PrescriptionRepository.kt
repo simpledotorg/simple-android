@@ -157,4 +157,13 @@ class PrescriptionRepository @Inject constructor(
         syncStatus = SyncStatus.PENDING
     )
   }
+
+  fun addTeleconsultationIdToDrugs(prescribedDrugs: List<PrescribedDrug>, teleconsultationId: UUID) {
+    dao.addTeleconsultationIdToDrugs(
+        drugUuids = prescribedDrugs.map { it.uuid },
+        teleconsultationId = teleconsultationId,
+        updatedAt = Instant.now(utcClock),
+        syncStatus = SyncStatus.PENDING
+    )
+  }
 }

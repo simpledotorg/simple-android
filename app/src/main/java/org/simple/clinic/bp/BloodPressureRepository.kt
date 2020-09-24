@@ -109,6 +109,8 @@ class BloodPressureRepository @Inject constructor(
 
   fun measurement(uuid: UUID): Observable<BloodPressureMeasurement> = dao.bloodPressure(uuid).toObservable()
 
+  fun measurementImmediate(uuid: UUID): BloodPressureMeasurement = dao.bloodPressureImmediate(uuid)
+
   fun markBloodPressureAsDeleted(bloodPressureMeasurement: BloodPressureMeasurement): Completable {
     return Completable.fromAction {
       val now = Instant.now(utcClock)

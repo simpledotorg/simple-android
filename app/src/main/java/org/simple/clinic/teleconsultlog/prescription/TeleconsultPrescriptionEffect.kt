@@ -22,3 +22,8 @@ data class CreatePrescription(
     val medicalInstructions: String,
     val medicalRegistrationId: String
 ) : TeleconsultPrescriptionEffect()
+
+data class OpenSharePrescriptionScreen(
+    val teleconsultRecordId: UUID,
+    val medicalInstructions: String
+) : TeleconsultPrescriptionEffect()

@@ -38,6 +38,9 @@ class TeleconsultPrescriptionEffectHandler @AssistedInject constructor(
         .addAction(ShowSignatureRequiredError::class.java, uiActions::showSignatureRequiredError, schedulersProvider.ui())
         .addTransformer(LoadDataForNextClick::class.java, loadDataForNextClick())
         .addTransformer(CreatePrescription::class.java, createPrescription())
+        .addConsumer(OpenSharePrescriptionScreen::class.java, {
+          uiActions.openSharePrescriptionScreen(it.teleconsultRecordId, it.medicalInstructions)
+        }, schedulersProvider.ui())
         .build()
   }
 

@@ -19,6 +19,17 @@ data class PatientTeleconsultationInfoLong_Old(
     val medicalHistory: MedicalHistory
 ) : PatientTeleconsultationInfo()
 
+data class PatientTeleconsultationInfoLong(
+    val patientUuid: UUID,
+    val teleconsultationId: UUID,
+    val bpPassport: String?,
+    val facility: Facility,
+    val bloodPressures: List<BloodPressureMeasurement>,
+    val bloodSugars: List<BloodSugarMeasurement>,
+    val prescriptions: List<PrescribedDrug>,
+    val medicalHistory: MedicalHistory
+) : PatientTeleconsultationInfo()
+
 data class PatientTeleconsultationInfoShort(
     val patientUuid: UUID,
     val teleconsultationId: UUID

@@ -22,7 +22,6 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-@Ignore("API endpoints are not yet ready")
 class TeleconsultRecordSyncIntegrationTest {
 
   @Inject

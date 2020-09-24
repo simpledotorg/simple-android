@@ -8,7 +8,6 @@ import org.simple.clinic.util.read
 import javax.inject.Inject
 import javax.inject.Named
 
-// not adding in the SyncModule yet, as we do not have the server ready.
 class TeleconsultRecordSync @Inject constructor(
     private val teleconsultRecordApi: TeleconsultRecordApi,
     private val teleconsultRecordRepository: TeleconsultRecordRepository,

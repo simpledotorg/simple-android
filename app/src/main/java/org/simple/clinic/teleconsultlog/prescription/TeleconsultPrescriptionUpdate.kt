@@ -21,6 +21,7 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
           medicalInstructions = event.medicalInstructions,
           medicalRegistrationId = event.medicalRegistrationId
       ))
+      is PrescriptionCreated -> noChange()
     }
   }
 

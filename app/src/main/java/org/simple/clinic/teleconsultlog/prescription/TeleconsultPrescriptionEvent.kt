@@ -21,3 +21,7 @@ data class DataForNextClickLoaded(
 data class NextButtonClicked(val medicalInstructions: String, val medicalRegistrationId: String) : TeleconsultPrescriptionEvent() {
   override val analyticsName: String = "Teleconsult Prescription:Next Clicked"
 }
+
+data class PrescriptionCreated(
+    val medicalInstructions: String
+) : TeleconsultPrescriptionEvent()

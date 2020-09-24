@@ -610,5 +610,39 @@
   <string name="sheet_medicine_frequency_qds">QDS</string>
   <string name="sheet_medicine_frequency_save">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
 
+  <!-- Teleconsult Record Screen -->
+  <string name="screen_teleconsult_record">ਟੈਲੀਕੰਸਲਟ ਰਿਕਾਰਡ</string>
+  <string name="screen_teleconsult_record_type">ਟੈਲੀਕੰਸਲਟ ਟਾਈਪ</string>
+  <string name="screen_teleconsult_record_type_audio">ਆਡੀਓ ਕਾਲ</string>
+  <string name="screen_teleconsult_record_type_video">ਵੀਡੀਓ ਕਾਲ</string>
+  <string name="screen_teleconsult_record_type_message">ਸੰਦੇਸ਼</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">ਮਰੀਜ਼ ਨਿਯਮਿਤ ਤੌਰ \'ਤੇ ਐਂਟੀ-ਹਾਈਪਰਟੈਂਸਿਵ ਅਤੇ ਐਂਟੀ-ਡਾਇਬਿਟਿਕ ਦਵਾਈਆਂ ਲੈ ਰਿਹਾ ਹੈ</string>
+  <string name="screen_teleconsult_record_patient_consented">ਮਰੀਜ਼ ਨੇ ਟੈਲੀਕੰਸਲਟੇਸ਼ਨ ਲਈ ਸਹਿਮਤੀ ਦੇ ਦਿੱਤੀ ਹੈ</string>
+  <string name="screen_teleconsult_record_done">ਹੋ ਗਿਆ</string>
+  <string name="teleconsultnotrecordeddialog_title">ਟੈਲੀਕੰਸਲਟ ਰਿਕਾਰਡ ਨਹੀਂ ਕੀਤਾ ਗਿਆ</string>
+  <string name="teleconsultnotrecordeddialog_body">ਕੀ ਤੁਸੀਂ ਵਾਕਈ ਰੱਦ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
+  <string name="teleconsultnotrecordeddialog_positive_button_text">ਹਾਂ</string>
+  <string name="teleconsultnotrecordeddialog_negative_button_text">ਨਹੀਂ</string>
 
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">ਤੁਸੀਂ ਟੈਲੀਕੰਸਲਟ ਨੂੰ ਲਾਗ ਕਰਨ ਲਈ ਅਧਿਕਾਰਤ ਨਹੀਂ ਹੋ</string>
+  <string name="deeplink_please_check_with_your_supervisor">ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਤੋਂ ਪੁੱਛੋ</string>
+  <string name="deeplink_okay_positive_action">ਠੀਕ ਹੈ</string>
+
+  <string name="screen_teleconsult_prescription_next">ਅਗਲਾ</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">ਦਵਾਈਆਂ</string>
+  <string name="view_teleconsult_medicines_edit">ਸੰਪਾਦਨ ਕਰੋ</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="one">%1$s ਦਿਨ</item>
+    <item quantity="other">%1$s ਦਿਨ</item>
+  </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">ਮਰੀਜ ਲਈ ਹਿਦਾਇਤਾਂ</string>
+  <string name="view_teleconsult_doctor_info_registration_id">ਮੇਡੀਕਲ ਰਜਿਸਟ੍ਰੇਸ਼ਨ ID</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">ਇਸ ਪ੍ਰਿਸਕ੍ਰਿਪਸ਼ਨ ਤੇ ਦਸਤਖਤ ਕਰਕੇ ਮੈਂ ਸਵੀਕਾਰ ਕਰਦਾ ਹਾਂ ਕਿ ਮੈਂ %1$s ਹਾਂ</string>
+  <string name="view_teleconsult_doctor_info_add_signature">ਦਸਤਖਤ ਕਰੋ</string>
+  <string name="view_teleconsult_doctor_info_signature_error">ਦਸਤਖਤ ਕਰੋ</string>
 </resources>

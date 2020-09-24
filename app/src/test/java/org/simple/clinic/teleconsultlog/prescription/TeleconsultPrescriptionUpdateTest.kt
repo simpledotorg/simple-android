@@ -77,4 +77,20 @@ class TeleconsultPrescriptionUpdateTest {
             ))
         ))
   }
+
+  @Test
+  fun `when prescription is created, then open share prescription screen`() {
+    val medicalInstructions = "This is a medical instructions"
+
+    updateSpec
+        .given(model)
+        .whenEvent(PrescriptionCreated(medicalInstructions))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenSharePrescriptionScreen(
+                teleconsultRecordId = teleconsultRecordId,
+                medicalInstructions = medicalInstructions
+            ))
+        ))
+  }
 }

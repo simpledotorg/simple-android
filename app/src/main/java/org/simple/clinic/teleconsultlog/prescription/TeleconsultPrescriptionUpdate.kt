@@ -21,7 +21,10 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
           medicalInstructions = event.medicalInstructions,
           medicalRegistrationId = event.medicalRegistrationId
       ))
-      is PrescriptionCreated -> noChange()
+      is PrescriptionCreated -> dispatch(OpenSharePrescriptionScreen(
+          teleconsultRecordId = model.teleconsultRecordId,
+          medicalInstructions = event.medicalInstructions
+      ))
     }
   }
 

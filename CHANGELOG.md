@@ -5,7 +5,7 @@
 - [In Progress: 22 Sep 2020] Add `TeleconsultPrescriptionScreen`
 
 ## Changes
-- Updated translations: `bn-IN`
+- Updated translations: `bn-IN`, `ti-ET`
 
 ### Internal
 - Integrated Firebase Performance Monitoring

@@ -20,6 +20,8 @@ data class MedicalInstructionsChanged(val instructions: String) : TeleconsultDoc
 
 data class CurrentUserLoaded(val user: User) : TeleconsultDoctorInfoEvent()
 
-object AddSignatureClicked : TeleconsultDoctorInfoEvent()
+object AddSignatureClicked : TeleconsultDoctorInfoEvent() {
+  override val analyticsName: String = "Teleconsult Doctor Info:Add Signature Clicked"
+}
 
 object ActivityResumed : TeleconsultDoctorInfoEvent()

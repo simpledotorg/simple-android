@@ -1,7 +1,6 @@
 package org.simple.clinic.teleconsultlog.prescription.doctorinfo
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Parcelable
 import android.util.AttributeSet
@@ -121,7 +120,7 @@ class TeleconsultDoctorInfoView(
   }
 
   override fun showAddSignatureDialog() {
-    val intent = Intent(context, SignatureActivity::class.java)
+    val intent = SignatureActivity.intent(context)
     context.startActivity(intent)
   }
 

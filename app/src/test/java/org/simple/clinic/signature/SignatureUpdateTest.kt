@@ -4,16 +4,15 @@ import android.graphics.Bitmap
 import com.nhaarman.mockitokotlin2.mock
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
+import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import java.io.File
 
 class SignatureUpdateTest {
 
   private val bitmap = mock<Bitmap>()
-  private val filePath = mock<File>()
-  private val model = SignatureModel.create(filePath)
+  private val model = SignatureModel.create()
   private val updateSpec = UpdateSpec(SignatureUpdate())
 
   @Test
@@ -37,7 +36,7 @@ class SignatureUpdateTest {
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(AcceptSignature(bitmap, filePath) as SignatureEffect)
+                hasEffects(AcceptSignature(bitmap) as SignatureEffect)
             )
         )
   }
@@ -55,4 +54,28 @@ class SignatureUpdateTest {
         )
   }
 
+  @Test
+  fun `when signature is loaded, then set signature`() {
+    val bitmap = mock<Bitmap>()
+
+    updateSpec
+        .given(model)
+        .whenEvents(SignatureBitmapLoaded(bitmap))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(SetSignatureBitmap(bitmap) as SignatureEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when no signature is loaded, then do nothing`() {
+    updateSpec
+        .given(model)
+        .whenEvents(SignatureBitmapLoaded(null))
+        .then(
+            assertThatNext(hasNothing())
+        )
+  }
 }

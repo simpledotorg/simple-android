@@ -143,20 +143,9 @@
       </intent-filter>
     </activity>
 
-    <activity android:name=".signature.SignatureActivity"
-      android:theme="@style/Clinic.V2.Theme.TranslucentBackground">
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-
-        <category android:name="android.intent.category.BROWSABLE" />
-        <category android:name="android.intent.category.DEFAULT" />
-
-        <data
-          android:host="app.simple.org"
-          android:pathPrefix="/hidden/teleconsult/signature"
-          android:scheme="https" />
-      </intent-filter>
-    </activity>
+    <activity
+      android:name=".signature.SignatureActivity"
+      android:theme="@style/Clinic.V2.Theme.TranslucentBackground" />
 
     <activity
       android:name=".teleconsultlog.drugduration.DrugDurationSheet"

@@ -1,6 +1,7 @@
 package org.simple.clinic.signature
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,13 @@ import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
 class SignatureActivity : AppCompatActivity(), SignatureUiActions {
+
+  companion object {
+
+    fun intent(context: Context): Intent {
+      return Intent(context, SignatureActivity::class.java)
+    }
+  }
 
   private lateinit var component: SignatureComponent
 

@@ -14,10 +14,11 @@ class TeleconsultPrescriptionUiRendererTest {
     // given
     val ui = mock<TeleconsultPrescriptionUi>()
     val uiRenderer = TeleconsultPrescriptionUiRenderer(ui)
+    val teleconsultRecordId = UUID.fromString("c3e5dcd9-6443-4c0d-9d70-cac0a9221ebf")
     val patientUuid = UUID.fromString("76066faf-b1a2-4a15-8134-31c722ad11c5")
     val patient = TestData.patient(uuid = patientUuid)
     val model = TeleconsultPrescriptionModel
-        .create(patientUuid = patientUuid)
+        .create(teleconsultRecordId = teleconsultRecordId, patientUuid = patientUuid)
         .patientLoaded(patient = patient)
 
     // when

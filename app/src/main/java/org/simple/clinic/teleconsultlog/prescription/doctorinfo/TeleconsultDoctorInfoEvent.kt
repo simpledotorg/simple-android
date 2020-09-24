@@ -19,3 +19,7 @@ data class MedicalInstructionsChanged(val instructions: String) : TeleconsultDoc
 }
 
 data class CurrentUserLoaded(val user: User) : TeleconsultDoctorInfoEvent()
+
+object AddSignatureClicked : TeleconsultDoctorInfoEvent()
+
+object ActivityResumed : TeleconsultDoctorInfoEvent()

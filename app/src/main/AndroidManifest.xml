@@ -143,7 +143,8 @@
       </intent-filter>
     </activity>
 
-    <activity android:name=".signature.SignatureActivity">
+    <activity android:name=".signature.SignatureActivity"
+      android:theme="@style/Clinic.V2.Theme.TranslucentBackground">
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
 

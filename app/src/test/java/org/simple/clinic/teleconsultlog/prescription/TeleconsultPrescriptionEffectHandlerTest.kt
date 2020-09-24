@@ -1,5 +1,6 @@
 package org.simple.clinic.teleconsultlog.prescription
 
+import android.graphics.Bitmap
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -11,6 +12,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.signature.SignatureRepository
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID
 
@@ -18,8 +20,10 @@ class TeleconsultPrescriptionEffectHandlerTest {
 
   private val uiActions = mock<TeleconsultPrescriptionUiActions>()
   private val patientRepository = mock<PatientRepository>()
+  private val signatureRepository = mock<SignatureRepository>()
   private val effectHandler = TeleconsultPrescriptionEffectHandler(
       patientRepository = patientRepository,
+      signatureRepository = signatureRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       uiActions = uiActions
   )
@@ -59,5 +63,41 @@ class TeleconsultPrescriptionEffectHandlerTest {
 
     verify(uiActions).goBackToPreviousScreen()
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when show signature effect is received, then show signature error`() {
+    // when
+    effectHandlerTestCase.dispatch(ShowSignatureRequiredError)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showSignatureRequiredError()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load data for next clicked is received, then load data`() {
+    // given
+    val teleconsultRecordId = UUID.fromString("b38e1672-c75e-4cbc-a723-f1952687703d")
+    val medicalRegistrationId = "ABC123456"
+    val instructions = "This is a medical instruction"
+
+    val bitmap = mock<Bitmap>()
+
+    whenever(signatureRepository.getSignatureBitmap()) doReturn bitmap
+
+    // when
+    effectHandlerTestCase.dispatch(LoadDataForNextClick(teleconsultRecordId, instructions, medicalRegistrationId))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(DataForNextClickLoaded(
+        medicalInstructions = instructions,
+        medicalRegistrationId = medicalRegistrationId,
+        signatureBitmap = bitmap
+    ))
+
+    verifyZeroInteractions(uiActions)
   }
 }

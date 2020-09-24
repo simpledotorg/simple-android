@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import org.simple.clinic.storage.Timestamps
+import java.time.Instant
 import java.util.UUID
 
 @Entity
@@ -43,5 +44,8 @@ data class TeleconsultRecord(
 
     @Query("SELECT * FROM TeleconsultRecord WHERE id = :teleconsultRecordId")
     fun getCompleteTeleconsultLog(teleconsultRecordId: UUID) : TeleconsultRecord
+
+    @Query("UPDATE TeleconsultRecord SET record_medicalOfficerNumber = :medicalOfficerNumber, updatedAt = :updatedAt WHERE id = :teleconsultRecordId")
+    fun updateMedicalRegistrationId(teleconsultRecordId: UUID, medicalOfficerNumber: String, updatedAt: Instant)
   }
 }

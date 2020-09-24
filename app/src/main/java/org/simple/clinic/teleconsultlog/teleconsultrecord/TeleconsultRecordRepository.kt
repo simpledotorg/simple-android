@@ -2,6 +2,7 @@ package org.simple.clinic.teleconsultlog.teleconsultrecord
 
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.util.UtcClock
+import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
@@ -30,5 +31,13 @@ class TeleconsultRecordRepository @Inject constructor(
     )
 
     teleconsultRecordDao.save(listOf(teleconsultRecord))
+  }
+
+  fun updateMedicalRegistrationId(teleconsultRecordId: UUID, medicalOfficerNumber: String) {
+    teleconsultRecordDao.updateMedicalRegistrationId(
+        teleconsultRecordId = teleconsultRecordId,
+        medicalOfficerNumber = medicalOfficerNumber,
+        updatedAt = Instant.now(utcClock)
+    )
   }
 }

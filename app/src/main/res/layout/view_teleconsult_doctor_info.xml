@@ -49,6 +49,28 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <FrameLayout
+      android:id="@+id/signatureContainer"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/spacing_48"
+      android:layout_marginTop="@dimen/spacing_16"
+      android:background="@drawable/background_signature"
+      android:clickable="true"
+      android:focusable="true"
+      android:foreground="?attr/selectableItemBackground"
+      android:paddingTop="@dimen/spacing_4"
+      android:paddingBottom="@dimen/spacing_4"
+      android:visibility="gone"
+      app:layout_constraintTop_toBottomOf="@id/medicalRegistrationIdLayout">
+
+      <ImageView
+        android:id="@+id/signatureImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="ContentDescription" />
+
+    </FrameLayout>
+
     <com.google.android.material.button.MaterialButton
       android:id="@+id/addSignatureButton"
       style="@style/Clinic.V2.OutlineButton"
@@ -60,6 +82,27 @@
       app:strokeColor="@color/grey2" />
 
     <TextView
+      android:id="@+id/signatureErrorTextView"
+      style="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_16"
+      android:layout_marginTop="@dimen/spacing_4"
+      android:text="@string/view_teleconsult_doctor_info_signature_error"
+      android:visibility="gone"
+      app:layout_constraintStart_toStartOf="@id/addSignatureButton"
+      app:layout_constraintTop_toBottomOf="@id/addSignatureButton"
+      tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.Barrier
+      android:id="@+id/signatureBarrier"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:barrierDirection="bottom"
+      app:constraint_referenced_ids="addSignatureButton, signatureContainer, signatureErrorTextView"
+      app:layout_constraintTop_toBottomOf="@id/addSignatureButton" />
+
+    <TextView
       android:id="@+id/acknowledgementTextView"
       style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
       android:layout_width="match_parent"
@@ -67,7 +110,7 @@
       android:layout_marginTop="@dimen/spacing_8"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/addSignatureButton"
+      app:layout_constraintTop_toBottomOf="@id/signatureBarrier"
       tools:text="By signing this prescription I acknowledge that I am Dr. Manjeet Kaur." />
 
   </androidx.constraintlayout.widget.ConstraintLayout>

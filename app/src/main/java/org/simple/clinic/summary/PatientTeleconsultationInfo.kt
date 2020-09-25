@@ -27,7 +27,9 @@ data class PatientTeleconsultationInfoLong(
     val bloodPressures: List<BloodPressureMeasurement>,
     val bloodSugars: List<BloodSugarMeasurement>,
     val prescriptions: List<PrescribedDrug>,
-    val medicalHistory: MedicalHistory
+    val medicalHistory: MedicalHistory,
+    val nursePhoneNumber: String?,
+    val doctorPhoneNumber: String
 ) : PatientTeleconsultationInfo()
 
 data class PatientTeleconsultationInfoShort(

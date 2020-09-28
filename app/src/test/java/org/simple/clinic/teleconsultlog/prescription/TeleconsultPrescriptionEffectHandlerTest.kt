@@ -21,7 +21,6 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepos
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
 
@@ -112,7 +111,7 @@ class TeleconsultPrescriptionEffectHandlerTest {
     effectHandlerTestCase.assertOutgoingEvents(DataForNextClickLoaded(
         medicalInstructions = instructions,
         medicalRegistrationId = medicalRegistrationId,
-        signatureBitmap = bitmap
+        hasSignatureBitmap = true
     ))
 
     verifyZeroInteractions(uiActions)

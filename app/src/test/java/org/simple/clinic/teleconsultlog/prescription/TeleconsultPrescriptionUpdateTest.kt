@@ -54,7 +54,7 @@ class TeleconsultPrescriptionUpdateTest {
         .whenEvent(DataForNextClickLoaded(
             medicalInstructions = medicalInstructions,
             medicalRegistrationId = medicalRegistrationId,
-            signatureBitmap = null
+            hasSignatureBitmap = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -100,14 +100,13 @@ class TeleconsultPrescriptionUpdateTest {
   fun `when data for next click is loaded, then create prescription`() {
     val medicalInstructions = "This is a medical instructions"
     val medicalRegistrationId = "ABC12345"
-    val bitmap = mock<Bitmap>()
 
     updateSpec
         .given(model)
         .whenEvent(DataForNextClickLoaded(
             medicalInstructions = medicalInstructions,
             medicalRegistrationId = medicalRegistrationId,
-            signatureBitmap = bitmap
+            hasSignatureBitmap = true
         ))
         .then(assertThatNext(
             hasNoModel(),

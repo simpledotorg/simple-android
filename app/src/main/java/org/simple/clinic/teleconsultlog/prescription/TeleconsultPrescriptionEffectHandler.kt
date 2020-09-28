@@ -70,7 +70,11 @@ class TeleconsultPrescriptionEffectHandler @AssistedInject constructor(
           .subscribeOn(schedulersProvider.io())
           .map {
             val bitmap = signatureRepository.getSignatureBitmap()
-            DataForNextClickLoaded(it.medicalInstructions, it.medicalRegistrationId, bitmap)
+            DataForNextClickLoaded(
+                medicalInstructions = it.medicalInstructions,
+                medicalRegistrationId = it.medicalRegistrationId,
+                hasSignatureBitmap = bitmap != null
+            )
           }
     }
   }

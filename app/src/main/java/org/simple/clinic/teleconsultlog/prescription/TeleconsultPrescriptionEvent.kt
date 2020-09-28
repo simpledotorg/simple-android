@@ -1,6 +1,5 @@
 package org.simple.clinic.teleconsultlog.prescription
 
-import android.graphics.Bitmap
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.widgets.UiEvent
 
@@ -15,7 +14,7 @@ object BackClicked : TeleconsultPrescriptionEvent() {
 data class DataForNextClickLoaded(
     val medicalInstructions: String,
     val medicalRegistrationId: String,
-    val signatureBitmap: Bitmap?
+    val hasSignatureBitmap: Boolean
 ) : TeleconsultPrescriptionEvent()
 
 data class NextButtonClicked(val medicalInstructions: String, val medicalRegistrationId: String) : TeleconsultPrescriptionEvent() {

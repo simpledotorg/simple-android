@@ -31,15 +31,15 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
       model: TeleconsultPrescriptionModel,
       event: DataForNextClickLoaded
   ): Next<TeleconsultPrescriptionModel, TeleconsultPrescriptionEffect> {
-    return if (event.signatureBitmap == null) {
-      dispatch(ShowSignatureRequiredError)
-    } else {
+    return if (event.hasSignatureBitmap) {
       dispatch(CreatePrescription(
           patientUuid = model.patientUuid,
           teleconsultRecordId = model.teleconsultRecordId,
           medicalInstructions = event.medicalInstructions,
           medicalRegistrationId = event.medicalRegistrationId
       ))
+    } else {
+      dispatch(ShowSignatureRequiredError)
     }
   }
 }

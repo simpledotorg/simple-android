@@ -54,7 +54,8 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
   private fun syncFacilities(): ObservableTransformer<SyncFacilities, RegistrationPhoneEvent> {
     return ObservableTransformer { effects ->
       effects
-          .switchMapSingle { facilitySync.pullWithResult().subscribeOn(schedulers.io()) }
+          .observeOn(schedulers.io())
+          .map { facilitySync.pullWithResult() }
           .map { FacilitiesSynced.fromFacilityPullResult(it) }
     }
   }

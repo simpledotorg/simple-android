@@ -37,7 +37,7 @@ class TeleconsultPrescriptionEffectHandler @AssistedInject constructor(
         .addAction(GoBack::class.java, uiActions::goBackToPreviousScreen, schedulersProvider.ui())
         .addAction(ShowSignatureRequiredError::class.java, uiActions::showSignatureRequiredError, schedulersProvider.ui())
         .addTransformer(LoadDataForNextClick::class.java, loadDataForNextClick())
-        .addTransformer(AddTeleconsultIdToPrescribedDrugs::class.java, createPrescription())
+        .addTransformer(AddTeleconsultIdToPrescribedDrugs::class.java, addTeleconsultIdToPrescribedDrugs())
         .addConsumer(OpenSharePrescriptionScreen::class.java, {
           uiActions.openSharePrescriptionScreen(it.teleconsultRecordId, it.medicalInstructions)
         }, schedulersProvider.ui())
@@ -50,7 +50,7 @@ class TeleconsultPrescriptionEffectHandler @AssistedInject constructor(
         .build()
   }
 
-  private fun createPrescription(): ObservableTransformer<AddTeleconsultIdToPrescribedDrugs, TeleconsultPrescriptionEvent> {
+  private fun addTeleconsultIdToPrescribedDrugs(): ObservableTransformer<AddTeleconsultIdToPrescribedDrugs, TeleconsultPrescriptionEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())

@@ -117,8 +117,7 @@ class TeleconsultPrescriptionUpdateTest {
                 AddTeleconsultIdToPrescribedDrugs(
                     patientUuid = patientUuid,
                     teleconsultRecordId = teleconsultRecordId,
-                    medicalInstructions = medicalInstructions,
-                    medicalRegistrationId = medicalRegistrationId
+                    medicalInstructions = medicalInstructions
                 )
             )
         ))

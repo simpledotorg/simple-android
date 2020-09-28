@@ -41,8 +41,7 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
           AddTeleconsultIdToPrescribedDrugs(
               patientUuid = model.patientUuid,
               teleconsultRecordId = model.teleconsultRecordId,
-              medicalInstructions = event.medicalInstructions,
-              medicalRegistrationId = event.medicalRegistrationId
+              medicalInstructions = event.medicalInstructions
           )
       )
     } else {

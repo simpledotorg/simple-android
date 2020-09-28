@@ -1,7 +1,5 @@
 package org.simple.clinic.teleconsultlog.prescription
 
-import android.graphics.Bitmap
-import com.nhaarman.mockitokotlin2.mock
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
@@ -110,12 +108,15 @@ class TeleconsultPrescriptionUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CreatePrescription(
-                patientUuid = patientUuid,
-                teleconsultRecordId = teleconsultRecordId,
-                medicalInstructions = medicalInstructions,
-                medicalRegistrationId = medicalRegistrationId
-            ))
+            hasEffects(
+                SaveMedicalRegistrationId(medicalRegistrationId = medicalRegistrationId),
+                CreatePrescription(
+                    patientUuid = patientUuid,
+                    teleconsultRecordId = teleconsultRecordId,
+                    medicalInstructions = medicalInstructions,
+                    medicalRegistrationId = medicalRegistrationId
+                )
+            )
         ))
   }
 }

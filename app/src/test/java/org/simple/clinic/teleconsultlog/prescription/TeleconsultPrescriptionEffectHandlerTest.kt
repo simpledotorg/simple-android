@@ -141,15 +141,27 @@ class TeleconsultPrescriptionEffectHandlerTest {
     // then
     effectHandlerTestCase.assertOutgoingEvents(PrescriptionCreated(instructions))
 
-    verify(medicalRegistrationIdPreference).set(Optional.of(medicalRegistrationId))
-    verifyNoMoreInteractions(medicalRegistrationIdPreference)
-
     verify(teleconsultRecordRepository).updateMedicalRegistrationId(teleconsultRecordId, medicalRegistrationId)
     verifyNoMoreInteractions(teleconsultRecordRepository)
 
     verify(prescriptionRepository).newestPrescriptionsForPatientImmediate(patientUuid)
     verify(prescriptionRepository).addTeleconsultationIdToDrugs(listOf(prescribedDrug1), teleconsultRecordId)
     verifyNoMoreInteractions(prescriptionRepository)
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when save medical registration id effect is received, then save medical registration id`() {
+    // given
+    val medicalRegistrationId = "ABC123456"
+
+    // when
+    effectHandlerTestCase.dispatch(SaveMedicalRegistrationId(medicalRegistrationId))
+
+    // then
+    verify(medicalRegistrationIdPreference).set(Optional.of(medicalRegistrationId))
+    verifyNoMoreInteractions(medicalRegistrationIdPreference)
 
     verifyZeroInteractions(uiActions)
   }

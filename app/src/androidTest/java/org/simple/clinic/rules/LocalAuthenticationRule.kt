@@ -57,6 +57,6 @@ class LocalAuthenticationRule : TestRule {
         registrationFacilityUuid = registrationFacilityUuid,
         currentFacilityUuid = registrationFacilityUuid
     )
-    userSession.storeUser(user, registrationFacilityUuid).blockingAwait()
+    userSession.storeUser(user).blockingAwait()
   }
 }

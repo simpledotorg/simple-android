@@ -38,6 +38,25 @@ class TeleconsultRecordRepository @Inject constructor(
     teleconsultRecordDao.save(listOf(teleconsultRecord))
   }
 
+  fun createTeleconsultRequestForNurse(
+      teleconsultRecordId: UUID,
+      patientUuid: UUID,
+      medicalOfficerId: UUID,
+      teleconsultRequestInfo: TeleconsultRequestInfo
+  ) {
+    val teleconsultRecord = TeleconsultRecord(
+        id = teleconsultRecordId,
+        patientId = patientUuid,
+        medicalOfficerId = medicalOfficerId,
+        teleconsultRequestInfo = teleconsultRequestInfo,
+        teleconsultRecordInfo = null,
+        timestamp = Timestamps.create(utcClock),
+        syncStatus = SyncStatus.PENDING
+    )
+
+    teleconsultRecordDao.save(listOf(teleconsultRecord))
+  }
+
   fun updateMedicalRegistrationId(teleconsultRecordId: UUID, medicalOfficerNumber: String) {
     teleconsultRecordDao.updateMedicalRegistrationId(
         teleconsultRecordId = teleconsultRecordId,

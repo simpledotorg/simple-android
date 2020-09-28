@@ -124,4 +124,44 @@ class TeleconsultRecordRepositoryTest {
     assertThat(teleconsultRecordRepository.getTeleconsultRecord(teleconsultRecord.id))
         .isEqualTo(expectedTeleconsultRecord)
   }
+
+  @Test
+  fun creating_teleconsult_request_for_nurse_should_work_correctly() {
+    // given
+    val teleconsultRecordId = UUID.fromString("700ee55d-7f49-4bda-9a4a-c5ce903ce485")
+    val patientUuid = UUID.fromString("3c00cdf9-4304-4dc7-8d32-6fbd5cd8f14d")
+    val medicalOfficerUuid = UUID.fromString("7142092e-24b1-4757-b7b6-a00fbd60332b")
+    val nurseId = UUID.fromString("c50367bc-eb28-48c1-add1-789d446fc718")
+    val facilityId = UUID.fromString("85712a0c-760a-4407-b9dc-ecfbdbe4d32d")
+
+    val teleconsultRequestInfo = TestData.teleconsultRequestInfo(
+        requestedAt = Instant.now(testUtcClock),
+        requesterId = nurseId,
+        facilityId = facilityId
+    )
+    val teleconsultRecord = TestData.teleconsultRecord(
+        id = teleconsultRecordId,
+        patientId = patientUuid,
+        medicalOfficerId = medicalOfficerUuid,
+        teleconsultRequestInfo = teleconsultRequestInfo,
+        teleconsultRecordInfo = null,
+        createdAt = Instant.now(testUtcClock),
+        updatedAt = Instant.now(testUtcClock),
+        deletedAt = null,
+        syncStatus = SyncStatus.PENDING
+    )
+
+    teleconsultRecordRepository.createTeleconsultRequestForNurse(
+        teleconsultRecordId = teleconsultRecordId,
+        patientUuid = patientUuid,
+        medicalOfficerId = medicalOfficerUuid,
+        teleconsultRequestInfo = teleconsultRequestInfo
+    )
+
+    // when
+    val teleconsultRecordDetails = teleconsultRecordRepository.getTeleconsultRecord(teleconsultRecordId)
+
+    // then
+    assertThat(teleconsultRecordDetails).isEqualTo(teleconsultRecord)
+  }
 }

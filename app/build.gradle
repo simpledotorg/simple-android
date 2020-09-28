@@ -325,7 +325,6 @@ dependencies {
   implementation "info.debatty:java-string-similarity:$versions.javaStringSimilarity"
   debugImplementation "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary"
 
-  implementation "com.budiyev.android:code-scanner:$versions.codeScanner"
   implementation "com.google.android.play:core:$versions.playCore"
 
   implementation "com.simplecityapps:recyclerview-fastscroll:$versions.fastScroll"

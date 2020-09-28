@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
-import org.simple.clinic.feature.Feature.CameraXQrScanner
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.businessid.Identifier
@@ -36,7 +35,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.qrcodescanner.IQrCodeScannerView
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
-import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView_Old
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -104,11 +102,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     toolBar.setNavigationOnClickListener { screenRouter.pop() }
     setupShortCodeTextField()
 
-    qrCodeScannerView = if (features.isEnabled(CameraXQrScanner)) {
-      QrCodeScannerView(context)
-    } else {
-      QrCodeScannerView_Old(context)
-    }
+    qrCodeScannerView = QrCodeScannerView(context)
 
     qrCodeScannerViewContainer.addView(qrCodeScannerView as View)
   }

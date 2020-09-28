@@ -12,6 +12,7 @@
 - Create Kotlin extension for saving Optional preferences
 - Modify `PrescribedDrug` to include `teleconsultation_id`
 - Change `BloodPressureEntryEffectHandler` create and update measurement flows to be mostly synchronous
+- Remove v1 of the QR code scanning flow
 
 ## On Demo
 ### Features

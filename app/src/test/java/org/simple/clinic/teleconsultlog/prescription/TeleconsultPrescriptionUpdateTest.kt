@@ -52,7 +52,7 @@ class TeleconsultPrescriptionUpdateTest {
         .whenEvent(DataForNextClickLoaded(
             medicalInstructions = medicalInstructions,
             medicalRegistrationId = medicalRegistrationId,
-            signatureBitmap = null
+            hasSignatureBitmap = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -75,6 +75,51 @@ class TeleconsultPrescriptionUpdateTest {
                 medicalInstructions = medicalInstructions,
                 medicalRegistrationId = medicalRegistrationId
             ))
+        ))
+  }
+
+  @Test
+  fun `when teleconsult id is added to prescribed drugs, then open share prescription screen`() {
+    val medicalInstructions = "This is a medical instructions"
+
+    updateSpec
+        .given(model)
+        .whenEvent(TeleconsultIdAddedToPrescribedDrugs(medicalInstructions))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenSharePrescriptionScreen(
+                teleconsultRecordId = teleconsultRecordId,
+                medicalInstructions = medicalInstructions
+            ))
+        ))
+  }
+
+  @Test
+  fun `when data for next click is loaded, then create prescription`() {
+    val medicalInstructions = "This is a medical instructions"
+    val medicalRegistrationId = "ABC12345"
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForNextClickLoaded(
+            medicalInstructions = medicalInstructions,
+            medicalRegistrationId = medicalRegistrationId,
+            hasSignatureBitmap = true
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                SaveMedicalRegistrationId(medicalRegistrationId = medicalRegistrationId),
+                UpdateTeleconsultRecordMedicalRegistrationId(
+                    teleconsultRecordId = teleconsultRecordId,
+                    medicalRegistrationId = medicalRegistrationId
+                ),
+                AddTeleconsultIdToPrescribedDrugs(
+                    patientUuid = patientUuid,
+                    teleconsultRecordId = teleconsultRecordId,
+                    medicalInstructions = medicalInstructions
+                )
+            )
         ))
   }
 }

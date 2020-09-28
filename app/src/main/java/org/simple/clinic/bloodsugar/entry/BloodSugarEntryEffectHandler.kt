@@ -135,6 +135,7 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
   private fun createNewBloodSugarEntryTransformer(): ObservableTransformer<CreateNewBloodSugarEntry, BloodSugarEntryEvent> {
     return ObservableTransformer { createNewBloodSugarEntries ->
       createNewBloodSugarEntries
+          .observeOn(schedulersProvider.io())
           .flatMapSingle { createNewBloodSugarEntry ->
             val user = currentUser.get()
             val facility = currentFacility.get()
@@ -144,12 +145,6 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
           .compose(reportAnalyticsEvents)
           .cast()
     }
-  }
-
-  private fun userAndCurrentFacility(): Pair<User, Facility> {
-    val user = currentUser.get()
-    val facility = currentFacility.get()
-    return user to facility
   }
 
   private fun storeNewBloodSugarMeasurement(
@@ -173,13 +168,11 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
       bloodSugarMeasurement: BloodSugarMeasurement
   ): Single<BloodSugarSaved> {
     val entryDate = createNewBloodSugarEntry.userEnteredDate.toUtcInstant(userClock)
-    val compareAndUpdateRecordedAt = patientRepository
-        .compareAndUpdateRecordedAt(bloodSugarMeasurement.patientUuid, entryDate)
 
-    return appointmentsRepository
-        .markAppointmentsCreatedBeforeTodayAsVisited(bloodSugarMeasurement.patientUuid)
-        .andThen(compareAndUpdateRecordedAt)
-        .toSingleDefault(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
+    appointmentsRepository.markAppointmentsCreatedBeforeTodayAsVisited(bloodSugarMeasurement.patientUuid)
+    patientRepository.compareAndUpdateRecordedAt(bloodSugarMeasurement.patientUuid, entryDate)
+
+    return Single.just(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
   }
 
   private fun updateBloodSugarEntryTransformer(scheduler: Scheduler): ObservableTransformer<UpdateBloodSugarEntry, BloodSugarEntryEvent> {
@@ -212,6 +205,6 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
 
   private fun storeUpdateBloodSugarMeasurement(bloodSugarMeasurement: BloodSugarMeasurement) {
     bloodSugarRepository.updateMeasurement(bloodSugarMeasurement)
-    patientRepository.compareAndUpdateRecordedAtImmediate(bloodSugarMeasurement.patientUuid, bloodSugarMeasurement.recordedAt)
+    patientRepository.compareAndUpdateRecordedAt(bloodSugarMeasurement.patientUuid, bloodSugarMeasurement.recordedAt)
   }
 }

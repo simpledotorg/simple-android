@@ -6,10 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Observable
-import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -22,16 +19,14 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetLogicTest.InvalidDateTestParams
 import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -59,12 +54,13 @@ class BloodPressureValidationMockDateValidatorTest {
 
   private val testUserClock = TestUserClock()
   private val testUtcClock = TestUtcClock()
-  private val userSession = mock<UserSession>()
-
-  private val facilityRepository = mock<FacilityRepository>()
-  private val user = TestData.loggedInUser(uuid = UUID.fromString("1367a583-12b1-48c6-ae9d-fb34f9aac449"))
 
   private val facility = TestData.facility(uuid = UUID.fromString("2a70f82e-92c6-4fce-b60e-6f083a8e725b"))
+  private val user = TestData.loggedInUser(
+      uuid = UUID.fromString("1367a583-12b1-48c6-ae9d-fb34f9aac449"),
+      currentFacilityUuid = facility.uuid,
+      registrationFacilityUuid = facility.uuid
+  )
   private val userSubject = PublishSubject.create<User>()
 
   private val existingBpUuid = UUID.fromString("2c4eccbb-d1bc-4c7c-b1ec-60a13acfeea4")
@@ -74,11 +70,7 @@ class BloodPressureValidationMockDateValidatorTest {
 
   @Before
   fun setUp() {
-    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-
     whenever(dateValidator.dateInUserTimeZone()).doReturn(LocalDate.now(testUtcClock))
-    whenever(userSession.requireLoggedInUser()).doReturn(userSubject)
-    whenever(facilityRepository.currentFacility()).doReturn(Observable.just(facility))
 
     userSubject.onNext(user)
   }
@@ -94,7 +86,9 @@ class BloodPressureValidationMockDateValidatorTest {
     val (openAs, day, month, year, errorResult, uiChangeVerification) = testParams
 
     whenever(dateValidator.validate(any(), any())).doReturn(errorResult)
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
+    if (openAs is Update) {
+      whenever(bloodPressureRepository.measurementImmediate(openAs.bpUuid)).doReturn(TestData.bloodPressureMeasurement(uuid = openAs.bpUuid))
+    }
 
     sheetCreated(openAs)
     uiEvents.run {
@@ -133,8 +127,11 @@ class BloodPressureValidationMockDateValidatorTest {
   ) {
     val (openAs, result) = testParams
 
+    if (openAs is Update) {
+      whenever(bloodPressureRepository.measurementImmediate(openAs.bpUuid)).doReturn(TestData.bloodPressureMeasurement(uuid = openAs.bpUuid))
+    }
+
     whenever(dateValidator.validate(any(), any())).doReturn(result)
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
     sheetCreated(openAs)
     uiEvents.onNext(ScreenChanged(BloodPressureEntrySheet.ScreenType.DATE_ENTRY))
@@ -186,14 +183,14 @@ class BloodPressureValidationMockDateValidatorTest {
   private fun instantiateFixture(openAs: OpenAs) {
     val effectHandler = BloodPressureEntryEffectHandler(
         ui = ui,
-        userSession = userSession,
-        facilityRepository = facilityRepository,
         patientRepository = patientRepository,
         bloodPressureRepository = bloodPressureRepository,
         appointmentsRepository = appointmentRepository,
         userClock = testUserClock,
-        schedulersProvider = TrampolineSchedulersProvider(),
-        uuidGenerator = FakeUuidGenerator.fixed(UUID.fromString("7283abf4-b718-4379-b101-46f011b5536b"))
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        uuidGenerator = FakeUuidGenerator.fixed(UUID.fromString("7283abf4-b718-4379-b101-46f011b5536b")),
+        currentUser = { user },
+        currentFacility = { facility }
     ).build()
 
     fixture = MobiusTestFixture(

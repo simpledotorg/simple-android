@@ -2,6 +2,7 @@ package org.simple.clinic.drugs
 
 import android.os.Parcelable
 import androidx.room.Dao
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.Insert
@@ -12,6 +13,7 @@ import io.reactivex.Flowable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.time.Instant
 import java.util.UUID
@@ -42,16 +44,24 @@ data class PrescribedDrug(
 
     val syncStatus: SyncStatus,
 
-    val createdAt: Instant,
-
-    val updatedAt: Instant,
-
-    val deletedAt: Instant?,
+    @Embedded
+    val timestamps: Timestamps,
 
     val frequency: MedicineFrequency?,
 
-    val durationInDays: Int?
+    val durationInDays: Int?,
+
+    val teleconsultationId: UUID?
 ) : Parcelable {
+
+  val createdAt: Instant
+    get() = timestamps.createdAt
+
+  val updatedAt: Instant
+    get() = timestamps.updatedAt
+
+  val deletedAt: Instant?
+    get() = timestamps.deletedAt
 
   fun toPayload(): PrescribedDrugPayload {
     return PrescribedDrugPayload(
@@ -67,7 +77,8 @@ data class PrescribedDrug(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         frequency = frequency,
-        durationInDays = durationInDays
+        durationInDays = durationInDays,
+        teleconsultationId = teleconsultationId
     )
   }
 

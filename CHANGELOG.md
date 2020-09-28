@@ -4,10 +4,15 @@
 ## Features
 - [In Progress: 22 Sep 2020] Add `TeleconsultPrescriptionScreen`
 
+## Changes
+- Updated translations: `bn-IN`, `ti-ET`
+
 ### Internal
 - Integrated Firebase Performance Monitoring
 - Remove `PrescribedDrugs` from `TeleconsultRecord`
 - Create Kotlin extension for saving Optional preferences
+- Modify `PrescribedDrug` to include `teleconsultation_id`
+- Change `BloodPressureEntryEffectHandler` create and update measurement flows to be mostly synchronous
 
 ## On Demo
 ### Features
@@ -26,6 +31,7 @@
 ### Changes
 - Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`, `ti-ET`
 - Add ripple on touch for overdue patient name
+- Set drug duration max limit
 
 ## 2020-09-15-7432
 ### Changes

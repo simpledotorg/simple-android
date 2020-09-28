@@ -41,5 +41,5 @@
 
   <color name="scrim_color">#52000000</color>
 
-  <color name="translucent_background">#33BBFFFF</color>
+  <color name="translucent_background">#52000000</color>
 </resources>

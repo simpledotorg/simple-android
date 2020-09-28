@@ -60,15 +60,12 @@ class BloodPressureRepositoryAndroidTest {
     clock.advanceBy(oneWeek)
 
     val savedBloodPressure = repository
-        .saveMeasurement(
-            uuid = UUID.fromString("cd2194f6-c662-4814-86fc-a813efb9b006"),
-            patientUuid = UUID.fromString("a0d7f00b-9d2a-4594-b2e0-9f12285b8f03"),
+        .saveMeasurement(patientUuid = UUID.fromString("a0d7f00b-9d2a-4594-b2e0-9f12285b8f03"),
             reading = BloodPressureReading(120, 80),
             loggedInUser = user,
             currentFacility = facility,
-            recordedAt = now
-        )
-        .blockingGet()
+            recordedAt = now,
+            uuid = UUID.fromString("cd2194f6-c662-4814-86fc-a813efb9b006"))
 
     assertThat(savedBloodPressure.recordedAt).isEqualTo(now)
     assertThat(savedBloodPressure.updatedAt).isEqualTo(now.plus(oneWeek))
@@ -89,7 +86,7 @@ class BloodPressureRepositoryAndroidTest {
     clock.advanceBy(durationToAdvanceBy)
     val newReading = BloodPressureReading(130, 90)
 
-    repository.updateMeasurement(bloodPressure.copy(reading = newReading)).blockingAwait()
+    repository.updateMeasurement(bloodPressure.copy(reading = newReading))
 
     val expected = bloodPressure.copy(
         reading = newReading,

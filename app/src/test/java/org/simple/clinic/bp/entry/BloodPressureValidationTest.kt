@@ -6,14 +6,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Observable
-import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,15 +18,12 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -57,26 +50,15 @@ class BloodPressureValidationTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val patientUuid = UUID.fromString("79145baf-7a5c-4442-ab30-2da564a32944")
 
-  private val userSession = mock<UserSession>()
-
-  private val facilityRepository = mock<FacilityRepository>()
-  private val user = TestData.loggedInUser(uuid = UUID.fromString("1367a583-12b1-48c6-ae9d-fb34f9aac449"))
-
   private val facility = TestData.facility(uuid = UUID.fromString("2a70f82e-92c6-4fce-b60e-6f083a8e725b"))
-  private val userSubject = PublishSubject.create<User>()
+  private val user = TestData.loggedInUser(
+      uuid = UUID.fromString("1367a583-12b1-48c6-ae9d-fb34f9aac449"),
+      currentFacilityUuid = facility.uuid,
+      registrationFacilityUuid = facility.uuid
+  )
 
   private val uiRenderer = BloodPressureEntryUiRenderer(ui)
   private lateinit var fixture: MobiusTestFixture<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect>
-
-  @Before
-  fun setUp() {
-    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-
-    whenever(userSession.requireLoggedInUser()).doReturn(userSubject)
-    whenever(facilityRepository.currentFacility()).doReturn(Observable.just(facility))
-
-    userSubject.onNext(user)
-  }
 
   @Test
   @Parameters(method = "params for bp validation errors and expected ui changes")
@@ -123,7 +105,9 @@ class BloodPressureValidationTest {
   ) {
     val (openAs, systolic, diastolic) = testParams
 
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
+    if (openAs is Update) {
+      whenever(bloodPressureRepository.measurementImmediate(openAs.bpUuid)).doReturn(TestData.bloodPressureMeasurement(uuid = openAs.bpUuid))
+    }
 
     sheetCreated(openAs)
     uiEvents.run {
@@ -184,14 +168,14 @@ class BloodPressureValidationTest {
   private fun instantiateFixture(openAs: OpenAs) {
     val effectHandler = BloodPressureEntryEffectHandler(
         ui = ui,
-        userSession = userSession,
-        facilityRepository = facilityRepository,
         patientRepository = patientRepository,
         bloodPressureRepository = bloodPressureRepository,
         appointmentsRepository = appointmentRepository,
         userClock = testUserClock,
-        schedulersProvider = TrampolineSchedulersProvider(),
-        uuidGenerator = FakeUuidGenerator.fixed(UUID.fromString("abb04673-6ec0-4e1a-a4ad-5380e6f7e233"))
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        uuidGenerator = FakeUuidGenerator.fixed(UUID.fromString("abb04673-6ec0-4e1a-a4ad-5380e6f7e233")),
+        currentUser = { user },
+        currentFacility = { facility }
     ).build()
 
     fixture = MobiusTestFixture(

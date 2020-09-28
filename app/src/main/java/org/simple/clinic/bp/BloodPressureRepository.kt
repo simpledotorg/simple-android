@@ -3,7 +3,6 @@ package org.simple.clinic.bp
 import androidx.paging.DataSource
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
@@ -26,47 +25,44 @@ class BloodPressureRepository @Inject constructor(
       reading: BloodPressureReading,
       loggedInUser: User,
       currentFacility: Facility,
-      recordedAt: Instant = Instant.now(utcClock),
+      recordedAt: Instant,
       uuid: UUID
-  ): Single<BloodPressureMeasurement> {
+  ): BloodPressureMeasurement {
     if (reading.systolic < 0 || reading.diastolic < 0) {
       throw AssertionError("Cannot have negative BP readings.")
     }
 
     val now = Instant.now(utcClock)
-    return Single
-        .just(
-            BloodPressureMeasurement(
-                uuid = uuid,
-                reading = reading,
-                syncStatus = SyncStatus.PENDING,
-                userUuid = loggedInUser.uuid,
-                facilityUuid = currentFacility.uuid,
-                patientUuid = patientUuid,
-                createdAt = now,
-                updatedAt = now,
-                deletedAt = null,
-                recordedAt = recordedAt
-            )
-        )
-        .flatMap {
-          save(listOf(it)).toSingleDefault(it)
-        }
+
+    val bloodPressureMeasurement = BloodPressureMeasurement(
+        uuid = uuid,
+        reading = reading,
+        syncStatus = SyncStatus.PENDING,
+        userUuid = loggedInUser.uuid,
+        facilityUuid = currentFacility.uuid,
+        patientUuid = patientUuid,
+        createdAt = now,
+        updatedAt = now,
+        deletedAt = null,
+        recordedAt = recordedAt
+    )
+
+    dao.save(listOf(bloodPressureMeasurement))
+
+    return bloodPressureMeasurement
   }
 
   override fun save(records: List<BloodPressureMeasurement>): Completable {
     return Completable.fromAction { dao.save(records) }
   }
 
-  fun updateMeasurement(measurement: BloodPressureMeasurement): Completable {
-    return Completable.fromAction {
-      val updatedMeasurement = measurement.copy(
-          updatedAt = Instant.now(utcClock),
-          syncStatus = SyncStatus.PENDING
-      )
+  fun updateMeasurement(measurement: BloodPressureMeasurement) {
+    val updatedMeasurement = measurement.copy(
+        updatedAt = Instant.now(utcClock),
+        syncStatus = SyncStatus.PENDING
+    )
 
-      dao.save(listOf(updatedMeasurement))
-    }
+    dao.save(listOf(updatedMeasurement))
   }
 
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<BloodPressureMeasurement> {
@@ -110,6 +106,8 @@ class BloodPressureRepository @Inject constructor(
   }
 
   fun measurement(uuid: UUID): Observable<BloodPressureMeasurement> = dao.bloodPressure(uuid).toObservable()
+
+  fun measurementImmediate(uuid: UUID): BloodPressureMeasurement = dao.bloodPressureImmediate(uuid)
 
   fun markBloodPressureAsDeleted(bloodPressureMeasurement: BloodPressureMeasurement): Completable {
     return Completable.fromAction {

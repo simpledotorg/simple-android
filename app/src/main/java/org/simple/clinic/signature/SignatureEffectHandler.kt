@@ -22,7 +22,20 @@ class SignatureEffectHandler @AssistedInject constructor(
       .addAction(ClearSignature::class.java, uiActions::clearSignature, schedulersProvider.ui())
       .addTransformer(AcceptSignature::class.java, acceptSignature())
       .addAction(CloseScreen::class.java, uiActions::closeScreen, schedulersProvider.ui())
+      .addTransformer(LoadSignatureBitmap::class.java, loadSignatureBitmap())
+      .addConsumer(SetSignatureBitmap::class.java, { uiActions.setSignatureBitmap(it.bitmap) }, schedulersProvider.ui())
       .build()
+
+  private fun loadSignatureBitmap(): ObservableTransformer<LoadSignatureBitmap, SignatureEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val signatureBitmap = signatureRepository.getSignatureBitmap()
+            SignatureBitmapLoaded(signatureBitmap)
+          }
+    }
+  }
 
   private fun acceptSignature(): ObservableTransformer<AcceptSignature, SignatureEvent> {
     return ObservableTransformer { effects ->

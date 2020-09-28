@@ -87,6 +87,9 @@ data class BloodPressureMeasurement(
     @Query("SELECT * FROM bloodpressuremeasurement WHERE uuid = :uuid")
     fun bloodPressure(uuid: UUID): Flowable<BloodPressureMeasurement>
 
+    @Query("SELECT * FROM bloodpressuremeasurement WHERE uuid = :uuid")
+    fun bloodPressureImmediate(uuid: UUID): BloodPressureMeasurement
+
     @Query("SELECT COUNT(uuid) FROM bloodpressuremeasurement")
     fun count(): Flowable<Int>
 

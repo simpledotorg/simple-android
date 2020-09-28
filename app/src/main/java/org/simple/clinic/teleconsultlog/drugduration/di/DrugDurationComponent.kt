@@ -5,7 +5,7 @@ import org.simple.clinic.activity.BindsActivity
 import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.teleconsultlog.drugduration.DrugDurationSheet
 
-@Subcomponent(modules = [AssistedInjectModule::class])
+@Subcomponent(modules = [AssistedInjectModule::class, DrugDurationModule::class])
 interface DrugDurationComponent {
 
   fun inject(target: DrugDurationSheet)

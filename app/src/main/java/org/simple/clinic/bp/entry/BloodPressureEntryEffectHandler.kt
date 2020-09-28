@@ -3,12 +3,10 @@ package org.simple.clinic.bp.entry
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import io.reactivex.Completable
+import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
-import io.reactivex.Single
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
@@ -22,11 +20,9 @@ import org.simple.clinic.bp.ValidationResult.ErrorSystolicTooHigh
 import org.simple.clinic.bp.ValidationResult.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.PrefillDate.PrefillSpecificDate
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -42,14 +38,14 @@ import java.util.UUID
 
 class BloodPressureEntryEffectHandler @AssistedInject constructor(
     @Assisted private val ui: BloodPressureEntryUi,
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
     private val bloodPressureRepository: BloodPressureRepository,
     private val appointmentsRepository: AppointmentRepository,
     private val userClock: UserClock,
     private val schedulersProvider: SchedulersProvider,
-    private val uuidGenerator: UuidGenerator
+    private val uuidGenerator: UuidGenerator,
+    private val currentUser: Lazy<User>,
+    private val currentFacility: Lazy<Facility>
 ) {
 
   @AssistedInject.Factory
@@ -111,7 +107,8 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
   ): ObservableTransformer<FetchBloodPressureMeasurement, BloodPressureEntryEvent> {
     return ObservableTransformer { bloodPressureMeasurements ->
       bloodPressureMeasurements
-          .flatMapSingle { getExistingBloodPressureMeasurement(it.bpUuid).subscribeOn(scheduler) }
+          .observeOn(scheduler)
+          .map { getExistingBloodPressureMeasurement(it.bpUuid) }
           .map { BloodPressureMeasurementFetched(it.reading.systolic, it.reading.diastolic, it.recordedAt) }
     }
   }
@@ -149,41 +146,43 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
   private fun createNewBpEntryTransformer(): ObservableTransformer<CreateNewBpEntry, BloodPressureEntryEvent> {
     return ObservableTransformer { createNewBpEntries ->
       createNewBpEntries
-          .flatMapSingle { createNewBpEntry ->
-            userAndCurrentFacility()
-                .flatMap { (user, facility) -> storeNewBloodPressureMeasurement(user, facility, createNewBpEntry) }
-                .flatMap { updateAppointmentsAsVisited(createNewBpEntry, it) }
+          .observeOn(schedulersProvider.io())
+          .map { createNewBpEntry ->
+            val user = currentUser.get()
+            val facility = currentFacility.get()
+
+            createNewBloodPressureMeasurement(user, facility, createNewBpEntry)
+
+            BloodPressureSaved(createNewBpEntry.wasDateChanged)
           }
           .compose(reportAnalyticsEvents)
           .cast()
     }
   }
 
-  private fun updateAppointmentsAsVisited(
-      createNewBpEntry: CreateNewBpEntry,
-      bloodPressureMeasurement: BloodPressureMeasurement
-  ): Single<BloodPressureSaved> {
-    val entryDate = createNewBpEntry.userEnteredDate.toUtcInstant(userClock)
-    val compareAndUpdateRecordedAt = patientRepository
-        .compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, entryDate)
+  private fun createNewBloodPressureMeasurement(
+      user: User,
+      facility: Facility,
+      createNewBpEntry: CreateNewBpEntry
+  ) {
+    val createdBloodPressureMeasurement = storeNewBloodPressureMeasurement(user, facility, createNewBpEntry)
 
-    return appointmentsRepository
-        .markAppointmentsCreatedBeforeTodayAsVisited(bloodPressureMeasurement.patientUuid)
-        .andThen(compareAndUpdateRecordedAt)
-        .toSingleDefault(BloodPressureSaved(createNewBpEntry.wasDateChanged))
+    val entryDate = createNewBpEntry.userEnteredDate.toUtcInstant(userClock)
+    appointmentsRepository.markAppointmentsCreatedBeforeTodayAsVisited(createdBloodPressureMeasurement.patientUuid)
+    patientRepository.compareAndUpdateRecordedAt(createdBloodPressureMeasurement.patientUuid, entryDate)
   }
 
   private fun updateBpEntryTransformer(): ObservableTransformer<UpdateBpEntry, BloodPressureEntryEvent> {
     return ObservableTransformer { updateBpEntries ->
       updateBpEntries
-          .flatMapSingle { updateBpEntry ->
-            getUpdatedBloodPressureMeasurement(updateBpEntry)
-                .map { bloodPressureMeasurement -> bloodPressureMeasurement to updateBpEntry.wasDateChanged }
+          .observeOn(schedulersProvider.io())
+          .map { updateBpEntry ->
+            val updatedBp = getUpdatedBloodPressureMeasurement(updateBpEntry)
+
+            updatedBp to updateBpEntry.wasDateChanged
           }
-          .flatMapSingle { (bloodPressureMeasurement, wasDateChanged) ->
-            storeUpdateBloodPressureMeasurement(bloodPressureMeasurement)
-                .toSingleDefault(BloodPressureSaved(wasDateChanged))
-          }
+          .doOnNext { (bloodPressureMeasurement, _) -> storeUpdateBloodPressureMeasurement(bloodPressureMeasurement) }
+          .map { (_, wasDateChanged) -> BloodPressureSaved(wasDateChanged) }
           .compose(reportAnalyticsEvents)
           .cast()
     }
@@ -191,24 +190,26 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
 
   private fun getUpdatedBloodPressureMeasurement(
       updateBpEntry: UpdateBpEntry
-  ): Single<BloodPressureMeasurement> {
-    return getExistingBloodPressureMeasurement(updateBpEntry.bpUuid)
-        .zipWith(userAndCurrentFacility())
-        .map { (existingBloodPressureMeasurement, userFacilityPair) ->
-          val (user, facility) = userFacilityPair
-          updateBloodPressureMeasurementValues(existingBloodPressureMeasurement, user.uuid, facility.uuid, updateBpEntry)
-        }
+  ): BloodPressureMeasurement {
+    val storedBloodPressureMeasurement = getExistingBloodPressureMeasurement(updateBpEntry.bpUuid)
+
+    val user = currentUser.get()
+    val facility = currentFacility.get()
+
+    return updateBloodPressureMeasurementValues(
+        existingMeasurement = storedBloodPressureMeasurement,
+        userUuid = user.uuid,
+        facilityUuid = facility.uuid,
+        updateBpEntry = updateBpEntry
+    )
+
   }
 
   private fun storeUpdateBloodPressureMeasurement(
       bloodPressureMeasurement: BloodPressureMeasurement
-  ): Completable {
-    val compareAndUpdateRecordedAt = patientRepository
-        .compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, bloodPressureMeasurement.recordedAt)
-
-    return bloodPressureRepository
-        .updateMeasurement(bloodPressureMeasurement)
-        .andThen(compareAndUpdateRecordedAt)
+  ) {
+    bloodPressureRepository.updateMeasurement(bloodPressureMeasurement)
+    patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, bloodPressureMeasurement.recordedAt)
   }
 
   private fun updateBloodPressureMeasurementValues(
@@ -227,33 +228,20 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
     )
   }
 
-  private fun userAndCurrentFacility(): Single<Pair<User, Facility>> {
-    return userSession
-        .requireLoggedInUser()
-        .flatMap { user ->
-          facilityRepository
-              .currentFacility()
-              .map { facility -> user to facility }
-        }
-        .firstOrError()
-  }
-
   private fun storeNewBloodPressureMeasurement(
       user: User,
       currentFacility: Facility,
       entry: CreateNewBpEntry
-  ): Single<BloodPressureMeasurement> {
+  ): BloodPressureMeasurement {
     val (patientUuid, reading, date, _) = entry
     return bloodPressureRepository.saveMeasurement(
-        uuid = uuidGenerator.v4(),
         patientUuid = patientUuid,
         reading = reading,
         loggedInUser = user,
         currentFacility = currentFacility,
-        recordedAt = date.toUtcInstant(userClock)
-    )
+        recordedAt = date.toUtcInstant(userClock),
+        uuid = uuidGenerator.v4())
   }
 
-  private fun getExistingBloodPressureMeasurement(bpUuid: UUID): Single<BloodPressureMeasurement> =
-      bloodPressureRepository.measurement(bpUuid).firstOrError()
+  private fun getExistingBloodPressureMeasurement(bpUuid: UUID) = bloodPressureRepository.measurementImmediate(bpUuid)
 }

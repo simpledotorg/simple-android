@@ -629,6 +629,8 @@
   <string name="deeplink_please_check_with_your_supervisor">অনুগ্রহ করে আপনার সুপারভাইজারের সাথে চেক করুন</string>
   <string name="deeplink_okay_positive_action">ঠিক আছে</string>
 
+  <string name="screen_teleconsult_prescription_next">পরবর্তী</string>
+
   <!-- Teleconsult Medicines View -->
   <string name="view_teleconsult_medicines">ওষুধগুলো যোগ করুন</string>
   <string name="view_teleconsult_medicines_edit">সম্পাদনা করুন</string>
@@ -642,4 +644,5 @@
   <string name="view_teleconsult_doctor_info_registration_id">মেডিক্যাল নিবন্ধন ID</string>
   <string name="view_teleconsult_doctor_info_acknowledgement">এই প্রেসক্রিপশনে স্বাক্ষর করে আমি স্বীকার করছি যে আমি %1$s</string>
   <string name="view_teleconsult_doctor_info_add_signature">স্বাক্ষর যোগ করুন</string>
+  <string name="view_teleconsult_doctor_info_signature_error">স্বাক্ষর যোগ করুন</string>
 </resources>

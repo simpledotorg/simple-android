@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
-import org.simple.clinic.teleconsultlog.drugduration.DrugDurationValidationResult.BLANK
 
 class DrugDurationUiRendererTest {
 
@@ -12,7 +11,7 @@ class DrugDurationUiRendererTest {
   private val uiRenderer = DrugDurationUiRenderer(ui)
 
   @Test
-  fun `when drug duration validation result is not validated, then hide error`() {
+  fun `when drug duration is changed, then hide error`() {
     // given
     val initialDuration = ""
     val duration = "10"
@@ -23,7 +22,6 @@ class DrugDurationUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).setDrugDuration(duration)
     verify(ui).hideDurationError()
     verifyNoMoreInteractions(ui)
   }
@@ -33,29 +31,28 @@ class DrugDurationUiRendererTest {
     // given
     val duration = ""
     val model = DrugDurationModel.create(duration)
-        .invalid(BLANK)
+        .durationInvalid(Blank)
 
     // when
     uiRenderer.render(model)
 
     // then
-    verify(ui).setDrugDuration(duration)
     verify(ui).showBlankDurationError()
     verifyNoMoreInteractions(ui)
   }
 
   @Test
-  fun `render drug duration`() {
-    // give
-    val duration = "20"
+  fun `when drug duration validation result is max duration, then show max duration error`() {
+    // given
+    val duration = "1001"
     val model = DrugDurationModel.create(duration)
+        .durationInvalid(MaxDrugDuration(1000))
 
     // when
     uiRenderer.render(model)
 
     // then
-    verify(ui).setDrugDuration(duration)
-    verify(ui).hideDurationError()
+    verify(ui).showMaxDrugDurationError(1000)
     verifyNoMoreInteractions(ui)
   }
 }

@@ -555,8 +555,10 @@ object TestData {
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
+      timestamps: Timestamps = Timestamps(createdAt, updatedAt, deletedAt),
       frequency: MedicineFrequency? = null,
-      durationInDays: Int? = null
+      durationInDays: Int? = null,
+      teleconsultationId: UUID? = null
   ): PrescribedDrug {
     return PrescribedDrug(
         uuid = uuid,
@@ -568,11 +570,10 @@ object TestData {
         patientUuid = patientUuid,
         facilityUuid = facilityUuid,
         syncStatus = syncStatus,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt,
+        timestamps = timestamps,
         frequency = frequency,
-        durationInDays = durationInDays
+        durationInDays = durationInDays,
+        teleconsultationId = teleconsultationId
     )
   }
 
@@ -589,7 +590,8 @@ object TestData {
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
       frequency: MedicineFrequency? = null,
-      durationInDays: Int? = null
+      durationInDays: Int? = null,
+      teleconsultationId: UUID? = null
   ): PrescribedDrugPayload {
     return PrescribedDrugPayload(
         uuid = uuid,
@@ -604,7 +606,8 @@ object TestData {
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         frequency = frequency,
-        durationInDays = durationInDays
+        durationInDays = durationInDays,
+        teleconsultationId = teleconsultationId
     )
   }
 

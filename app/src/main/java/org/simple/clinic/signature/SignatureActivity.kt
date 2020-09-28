@@ -1,40 +1,49 @@
 package org.simple.clinic.signature
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.activity_signature.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
 class SignatureActivity : AppCompatActivity(), SignatureUiActions {
 
+  companion object {
+
+    fun intent(context: Context): Intent {
+      return Intent(context, SignatureActivity::class.java)
+    }
+  }
+
   private lateinit var component: SignatureComponent
 
   @Inject
   lateinit var effectHandlerFactory: SignatureEffectHandler.Factory
 
-  private val events: Observable<SignatureEvent> by unsafeLazy {
+  private val events by unsafeLazy {
     Observable
         .merge(
             acceptSignatureClicks(),
             undoClicks()
         )
-        .cast<SignatureEvent>()
+        .compose(ReportAnalyticsEvents())
   }
 
   private val mobiusDelegate by unsafeLazy {
-
     MobiusDelegate.forActivity(
-        events = events,
-        defaultModel = SignatureModel.create(filesDir),
+        events = events.ofType(),
+        defaultModel = SignatureModel.create(),
+        init = SignatureInit(),
         update = SignatureUpdate(),
         effectHandler = effectHandlerFactory.create(this).build()
     )
@@ -43,6 +52,8 @@ class SignatureActivity : AppCompatActivity(), SignatureUiActions {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_signature)
+
+    signatureRoot.setOnClickListener { finish() }
   }
 
   private fun acceptSignatureClicks() = acceptSignature
@@ -60,6 +71,9 @@ class SignatureActivity : AppCompatActivity(), SignatureUiActions {
     drawSignatureFrame.clear()
   }
 
+  override fun setSignatureBitmap(signatureBitmap: Bitmap) {
+    drawSignatureFrame.signatureBitmap = signatureBitmap
+  }
 
   override fun closeScreen() {
     finish()

@@ -13,6 +13,9 @@
 - Modify `PrescribedDrug` to include `teleconsultation_id`
 - Change `BloodPressureEntryEffectHandler` create and update measurement flows to be mostly synchronous
 - Remove v1 of the QR code scanning flow
+- Add custom traces in Firebase Performance Monitoring for the following flows:
+  - Record new blood pressure measurement
+  - Update existing blood pressure measurement
 
 ## 2020-09-15-7432
 ### Features

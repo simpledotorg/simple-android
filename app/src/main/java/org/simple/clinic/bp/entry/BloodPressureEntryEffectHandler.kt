@@ -1,5 +1,6 @@
 package org.simple.clinic.bp.entry
 
+import com.google.firebase.perf.metrics.AddTrace
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -168,8 +169,13 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
     val createdBloodPressureMeasurement = storeNewBloodPressureMeasurement(user, facility, createNewBpEntry)
 
     val entryDate = createNewBpEntry.userEnteredDate.toUtcInstant(userClock)
-    appointmentsRepository.markAppointmentsCreatedBeforeTodayAsVisited(createdBloodPressureMeasurement.patientUuid)
-    patientRepository.compareAndUpdateRecordedAt(createdBloodPressureMeasurement.patientUuid, entryDate)
+    markOlderAppointmentsAsVisited(createdBloodPressureMeasurement)
+    updatePatientRecordedAtDate(createdBloodPressureMeasurement, entryDate)
+  }
+
+  @AddTrace(name = "bpEntry_markAppointmentsVisited")
+  private fun markOlderAppointmentsAsVisited(bloodPressureMeasurement: BloodPressureMeasurement) {
+    appointmentsRepository.markAppointmentsCreatedBeforeTodayAsVisited(bloodPressureMeasurement.patientUuid)
   }
 
   private fun updateBpEntryTransformer(): ObservableTransformer<UpdateBpEntry, BloodPressureEntryEvent> {
@@ -182,6 +188,7 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
             updatedBp to updateBpEntry.wasDateChanged
           }
           .doOnNext { (bloodPressureMeasurement, _) -> storeUpdateBloodPressureMeasurement(bloodPressureMeasurement) }
+          .doOnNext { (bloodPressureMeasurement, _) -> updatePatientRecordedAtDate(bloodPressureMeasurement, bloodPressureMeasurement.recordedAt) }
           .map { (_, wasDateChanged) -> BloodPressureSaved(wasDateChanged) }
           .compose(reportAnalyticsEvents)
           .cast()
@@ -205,11 +212,19 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
 
   }
 
+  @AddTrace(name = "bpEntry_storeUpdatedBp")
   private fun storeUpdateBloodPressureMeasurement(
       bloodPressureMeasurement: BloodPressureMeasurement
   ) {
     bloodPressureRepository.updateMeasurement(bloodPressureMeasurement)
-    patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, bloodPressureMeasurement.recordedAt)
+  }
+
+  @AddTrace(name = "bpEntry_updatePatientRecordedAt")
+  private fun updatePatientRecordedAtDate(
+      bloodPressureMeasurement: BloodPressureMeasurement,
+      entryDate: Instant
+  ) {
+    patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, entryDate)
   }
 
   private fun updateBloodPressureMeasurementValues(
@@ -228,6 +243,7 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
     )
   }
 
+  @AddTrace(name = "bpEntry_storeNewBp")
   private fun storeNewBloodPressureMeasurement(
       user: User,
       currentFacility: Facility,
@@ -243,5 +259,6 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
         uuid = uuidGenerator.v4())
   }
 
+  @AddTrace(name = "bpEntry_getExistingBp")
   private fun getExistingBloodPressureMeasurement(bpUuid: UUID) = bloodPressureRepository.measurementImmediate(bpUuid)
 }

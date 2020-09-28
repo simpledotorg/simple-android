@@ -141,9 +141,6 @@ class TeleconsultPrescriptionEffectHandlerTest {
     // then
     effectHandlerTestCase.assertOutgoingEvents(PrescriptionCreated(instructions))
 
-    verify(teleconsultRecordRepository).updateMedicalRegistrationId(teleconsultRecordId, medicalRegistrationId)
-    verifyNoMoreInteractions(teleconsultRecordRepository)
-
     verify(prescriptionRepository).newestPrescriptionsForPatientImmediate(patientUuid)
     verify(prescriptionRepository).addTeleconsultationIdToDrugs(listOf(prescribedDrug1), teleconsultRecordId)
     verifyNoMoreInteractions(prescriptionRepository)
@@ -162,6 +159,22 @@ class TeleconsultPrescriptionEffectHandlerTest {
     // then
     verify(medicalRegistrationIdPreference).set(Optional.of(medicalRegistrationId))
     verifyNoMoreInteractions(medicalRegistrationIdPreference)
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when update teleconsult record medical registration if effect is received, then update the teleconsult record medical registration id`() {
+    // given
+    val teleconsultRecordId = UUID.fromString("9b704cfe-5d31-411d-ae3f-e1b3b29e45d9")
+    val medicalRegistrationId = "ABC123456"
+
+    // when
+    effectHandlerTestCase.dispatch(UpdateTeleconsultRecordMedicalRegistrationId(teleconsultRecordId, medicalRegistrationId))
+
+    // then
+    verify(teleconsultRecordRepository).updateMedicalRegistrationId(teleconsultRecordId, medicalRegistrationId)
+    verifyNoMoreInteractions(teleconsultRecordRepository)
 
     verifyZeroInteractions(uiActions)
   }

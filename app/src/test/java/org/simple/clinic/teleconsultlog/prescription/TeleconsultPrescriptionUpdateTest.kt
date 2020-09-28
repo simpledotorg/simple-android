@@ -110,6 +110,10 @@ class TeleconsultPrescriptionUpdateTest {
             hasNoModel(),
             hasEffects(
                 SaveMedicalRegistrationId(medicalRegistrationId = medicalRegistrationId),
+                UpdateTeleconsultRecordMedicalRegistrationId(
+                    teleconsultRecordId = teleconsultRecordId,
+                    medicalRegistrationId = medicalRegistrationId
+                ),
                 CreatePrescription(
                     patientUuid = patientUuid,
                     teleconsultRecordId = teleconsultRecordId,

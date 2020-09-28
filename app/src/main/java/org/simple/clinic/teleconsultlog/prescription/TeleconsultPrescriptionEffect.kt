@@ -29,3 +29,5 @@ data class OpenSharePrescriptionScreen(
 ) : TeleconsultPrescriptionEffect()
 
 data class SaveMedicalRegistrationId(val medicalRegistrationId: String) : TeleconsultPrescriptionEffect()
+
+data class UpdateTeleconsultRecordMedicalRegistrationId(val teleconsultRecordId: UUID, val medicalRegistrationId: String) : TeleconsultPrescriptionEffect()

@@ -44,6 +44,9 @@ class TeleconsultPrescriptionEffectHandler @AssistedInject constructor(
         .addConsumer(SaveMedicalRegistrationId::class.java, {
           medicalRegistrationIdPreference.set(Optional.of(it.medicalRegistrationId))
         }, schedulersProvider.io())
+        .addConsumer(UpdateTeleconsultRecordMedicalRegistrationId::class.java, {
+          teleconsultRecordRepository.updateMedicalRegistrationId(it.teleconsultRecordId, it.medicalRegistrationId)
+        }, schedulersProvider.io())
         .build()
   }
 
@@ -51,7 +54,6 @@ class TeleconsultPrescriptionEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .doOnNext { teleconsultRecordRepository.updateMedicalRegistrationId(it.teleconsultRecordId, it.medicalRegistrationId) }
           .doOnNext { updatePrescribedDrugTeleconsultId(it.patientUuid, it.teleconsultRecordId) }
           .map { PrescriptionCreated(it.medicalInstructions) }
     }

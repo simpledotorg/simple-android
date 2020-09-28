@@ -34,6 +34,10 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
     return if (event.hasSignatureBitmap) {
       dispatch(
           SaveMedicalRegistrationId(medicalRegistrationId = event.medicalRegistrationId),
+          UpdateTeleconsultRecordMedicalRegistrationId(
+              teleconsultRecordId = model.teleconsultRecordId,
+              medicalRegistrationId = event.medicalRegistrationId
+          ),
           CreatePrescription(
               patientUuid = model.patientUuid,
               teleconsultRecordId = model.teleconsultRecordId,

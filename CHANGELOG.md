@@ -5,10 +5,9 @@
 - [In Progress: 22 Sep 2020] Add `TeleconsultPrescriptionScreen`
 
 ## Changes
-- Updated translations: `bn-IN`, `ti-ET`
+- Updated translations: `bn-IN`, `ti-ET`, `bn-BD`, `ta-IN`, `pa-IN`, `kn-IN`
 
 ### Internal
-- Integrated Firebase Performance Monitoring
 - Remove `PrescribedDrugs` from `TeleconsultRecord`
 - Create Kotlin extension for saving Optional preferences
 - Modify `PrescribedDrug` to include `teleconsultation_id`
@@ -27,6 +26,7 @@
 - Add method to purge cancelled and visited appointments from the database
 - Bump target SDK version to 30
 - Add weekly recurring task to run maintenance tasks on the database
+- Integrated Firebase Performance Monitoring
 
 ### Changes
 - Updated translations for: `om-ET`, `ta-IN`, `bn-BD`, `mr-IN`, `hi-IN`, `ti-ET`

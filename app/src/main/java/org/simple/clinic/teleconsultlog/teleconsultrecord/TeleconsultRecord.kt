@@ -34,40 +34,6 @@ data class TeleconsultRecord(
     val syncStatus: SyncStatus
 ) {
 
-  fun toPayload(): TeleconsultRecordPayload {
-
-    val teleconsultRequestInfoPayload = if (teleconsultRequestInfo != null) {
-      TeleconsultRequestInfoPayload(
-          requesterId = teleconsultRequestInfo.requesterId,
-          facilityId = teleconsultRequestInfo.facilityId,
-          requestedAt = teleconsultRequestInfo.requestedAt
-      )
-    } else {
-      null
-    }
-    val teleconsultRecordInfoPayload = if (teleconsultRecordInfo != null) {
-      TeleconsultRecordInfoPayload(
-          recordedAt = teleconsultRecordInfo.recordedAt,
-          teleconsultationType = teleconsultRecordInfo.teleconsultationType,
-          patientTookMedicines = teleconsultRecordInfo.patientTookMedicines,
-          patientConsented = teleconsultRecordInfo.patientConsented,
-          medicalOfficerNumber = teleconsultRecordInfo.medicalOfficerNumber.toString(),
-      )
-    } else {
-      null
-    }
-    return TeleconsultRecordPayload(
-        id = id,
-        patientId = patientId,
-        medicalOfficerId = medicalOfficerId,
-        teleconsultRequestInfo = teleconsultRequestInfoPayload,
-        teleconsultRecordInfo = teleconsultRecordInfoPayload,
-        createdAt = timestamp.createdAt,
-        updatedAt = timestamp.updatedAt,
-        deletedAt = timestamp.deletedAt
-    )
-  }
-
   @Dao
   interface RoomDao {
 

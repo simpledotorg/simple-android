@@ -157,5 +157,8 @@ data class PrescribedDrug(
 
     @Query("UPDATE PrescribedDrug SET frequency = :drugFrequency, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid = :id")
     fun updateDrugFrequenecy(id: UUID, drugFrequency: MedicineFrequency, updatedAt: Instant, syncStatus: SyncStatus)
+
+    @Query("UPDATE PrescribedDrug SET teleconsultationId = :teleconsultationId, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid IN (:drugUuids)")
+    fun addTeleconsultationIdToDrugs(drugUuids: List<UUID>, teleconsultationId: UUID, updatedAt: Instant, syncStatus: SyncStatus)
   }
 }

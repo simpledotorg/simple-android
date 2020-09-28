@@ -20,6 +20,7 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 import javax.inject.Inject
 
 class TeleconsultPrescriptionScreen constructor(
@@ -103,6 +104,10 @@ class TeleconsultPrescriptionScreen constructor(
 
   override fun showSignatureRequiredError() {
     teleconsultPrescriptionDoctorInfoView.showSignatureError()
+  }
+
+  override fun openSharePrescriptionScreen(teleconsultRecordId: UUID, medicalInstructions: String) {
+
   }
 
   private fun backClicks(): Observable<UiEvent> {

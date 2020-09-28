@@ -1,6 +1,7 @@
 package org.simple.clinic.teleconsultlog.prescription
 
 import android.graphics.Bitmap
+import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -10,10 +11,17 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.signature.SignatureRepository
+import org.simple.clinic.storage.Timestamps
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
+import org.simple.clinic.util.Optional
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import java.time.LocalDate
 import java.util.UUID
 
 class TeleconsultPrescriptionEffectHandlerTest {
@@ -21,13 +29,21 @@ class TeleconsultPrescriptionEffectHandlerTest {
   private val uiActions = mock<TeleconsultPrescriptionUiActions>()
   private val patientRepository = mock<PatientRepository>()
   private val signatureRepository = mock<SignatureRepository>()
+  private val teleconsultRecordRepository = mock<TeleconsultRecordRepository>()
+  private val prescriptionRepository = mock<PrescriptionRepository>()
+  private val medicalRegistrationIdPreference = mock<Preference<Optional<String>>>()
   private val effectHandler = TeleconsultPrescriptionEffectHandler(
       patientRepository = patientRepository,
       signatureRepository = signatureRepository,
+      teleconsultRecordRepository = teleconsultRecordRepository,
+      prescriptionRepository = prescriptionRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
+      medicalRegistrationIdPreference = medicalRegistrationIdPreference,
       uiActions = uiActions
   )
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler.build())
+
+  private val testClock = TestUtcClock(LocalDate.parse("2018-01-01"))
 
   @After
   fun tearDown() {
@@ -95,9 +111,86 @@ class TeleconsultPrescriptionEffectHandlerTest {
     effectHandlerTestCase.assertOutgoingEvents(DataForNextClickLoaded(
         medicalInstructions = instructions,
         medicalRegistrationId = medicalRegistrationId,
-        signatureBitmap = bitmap
+        hasSignatureBitmap = true
     ))
 
     verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when add teleconsult id to prescribed drugs effect is received, then add teleconsult id to prescribed drugs`() {
+    // given
+    val patientUuid = UUID.fromString("3b19894c-d0ee-483e-a64b-745cc3d52306")
+    val teleconsultRecordId = UUID.fromString("9b704cfe-5d31-411d-ae3f-e1b3b29e45d9")
+    val instructions = "This is a medical instruction"
+
+    val prescribedDrug1 = TestData.prescription(
+        uuid = UUID.fromString("10eb023a-cd5d-4140-9a7e-0e08ac26f3d7"),
+        name = "Taco",
+        patientUuid = patientUuid,
+        timestamps = Timestamps.create(testClock),
+        syncStatus = SyncStatus.DONE
+    )
+
+    whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn listOf(prescribedDrug1)
+
+    // when
+    effectHandlerTestCase.dispatch(AddTeleconsultIdToPrescribedDrugs(patientUuid, teleconsultRecordId, instructions))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(TeleconsultIdAddedToPrescribedDrugs(instructions))
+
+    verify(prescriptionRepository).newestPrescriptionsForPatientImmediate(patientUuid)
+    verify(prescriptionRepository).addTeleconsultationIdToDrugs(listOf(prescribedDrug1), teleconsultRecordId)
+    verifyNoMoreInteractions(prescriptionRepository)
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when save medical registration id effect is received, then save medical registration id`() {
+    // given
+    val medicalRegistrationId = "ABC123456"
+
+    // when
+    effectHandlerTestCase.dispatch(SaveMedicalRegistrationId(medicalRegistrationId))
+
+    // then
+    verify(medicalRegistrationIdPreference).set(Optional.of(medicalRegistrationId))
+    verifyNoMoreInteractions(medicalRegistrationIdPreference)
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when update teleconsult record medical registration if effect is received, then update the teleconsult record medical registration id`() {
+    // given
+    val teleconsultRecordId = UUID.fromString("9b704cfe-5d31-411d-ae3f-e1b3b29e45d9")
+    val medicalRegistrationId = "ABC123456"
+
+    // when
+    effectHandlerTestCase.dispatch(UpdateTeleconsultRecordMedicalRegistrationId(teleconsultRecordId, medicalRegistrationId))
+
+    // then
+    verify(teleconsultRecordRepository).updateMedicalRegistrationId(teleconsultRecordId, medicalRegistrationId)
+    verifyNoMoreInteractions(teleconsultRecordRepository)
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open share prescription screen effect is received, then open share prescription screen`() {
+    // given
+    val teleconsultRecordId = UUID.fromString("2e9b48fd-786e-425b-8f97-049d59db81ec")
+    val medicalInstructions = "This is a medical instruction"
+
+    // when
+    effectHandlerTestCase.dispatch(OpenSharePrescriptionScreen(teleconsultRecordId, medicalInstructions))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openSharePrescriptionScreen(teleconsultRecordId, medicalInstructions)
+    verifyNoMoreInteractions(uiActions)
   }
 }

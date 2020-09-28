@@ -11,8 +11,6 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -179,7 +177,9 @@ class BloodPressureEntrySheetLogicTest {
       openAs: OpenAs,
       error: ValidationResult
   ) {
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
+    if (openAs is Update) {
+      whenever(bloodPressureRepository.measurementImmediate(openAs.bpUuid)).doReturn(TestData.bloodPressureMeasurement(uuid = openAs.bpUuid))
+    }
 
     sheetCreated(openAs)
     uiEvents.run {
@@ -199,7 +199,7 @@ class BloodPressureEntrySheetLogicTest {
       bloodPressureMeasurement: BloodPressureMeasurement?
   ) {
     if (openAs is Update) {
-      whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bloodPressureMeasurement!!))
+      whenever(bloodPressureRepository.measurementImmediate(any())).doReturn(bloodPressureMeasurement!!)
     }
 
     sheetCreated(openAs)
@@ -230,7 +230,7 @@ class BloodPressureEntrySheetLogicTest {
       openAs: OpenAs,
       shouldShowRemoveBpButton: Boolean
   ) {
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(TestData.bloodPressureMeasurement()))
+    whenever(bloodPressureRepository.measurementImmediate(any())).doReturn(TestData.bloodPressureMeasurement())
 
     sheetCreated(openAs)
 
@@ -254,7 +254,7 @@ class BloodPressureEntrySheetLogicTest {
       openAs: OpenAs,
       showEntryTitle: Boolean
   ) {
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(TestData.bloodPressureMeasurement()))
+    whenever(bloodPressureRepository.measurementImmediate(any())).doReturn(TestData.bloodPressureMeasurement())
 
     sheetCreated(openAs)
 
@@ -275,7 +275,7 @@ class BloodPressureEntrySheetLogicTest {
   @Test
   fun `when the remove button is clicked, the confirmation alert must be shown`() {
     val bloodPressure = TestData.bloodPressureMeasurement()
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bloodPressure))
+    whenever(bloodPressureRepository.measurementImmediate(any())).doReturn(bloodPressure)
 
     sheetCreatedForUpdate(bloodPressure.uuid)
     uiEvents.onNext(RemoveBloodPressureClicked)
@@ -288,7 +288,9 @@ class BloodPressureEntrySheetLogicTest {
   fun `when save is clicked, date entry is active, but input is invalid then BP measurement should not be saved`(
       openAs: OpenAs
   ) {
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
+    if (openAs is Update) {
+      whenever(bloodPressureRepository.measurementImmediate(openAs.bpUuid)).doReturn(TestData.bloodPressureMeasurement(uuid = openAs.bpUuid))
+    }
 
     sheetCreated(openAs)
     uiEvents.onNext(ScreenChanged(DATE_ENTRY))
@@ -326,7 +328,6 @@ class BloodPressureEntrySheetLogicTest {
         currentFacility = facility,
         recordedAt = entryDateAsInstant,
         uuid = measurementUuid)).doReturn(TestData.bloodPressureMeasurement(patientUuid = patientUuid))
-    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
 
     sheetCreatedForNew(patientUuid)
     uiEvents.run {
@@ -371,8 +372,7 @@ class BloodPressureEntrySheetLogicTest {
         currentFacility = facility,
         recordedAt = newInputDateAsInstant,
         uuid = measurementUuid)).doReturn(TestData.bloodPressureMeasurement())
-    whenever(bloodPressureRepository.measurement(existingBp.uuid)).doReturn(Observable.just(existingBp))
-    whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
+    whenever(bloodPressureRepository.measurementImmediate(existingBp.uuid)).doReturn(existingBp)
 
     sheetCreatedForUpdate(existingBp.uuid)
     uiEvents.run {
@@ -410,11 +410,13 @@ class BloodPressureEntrySheetLogicTest {
   ) {
     val (openAs, day, month, year, errorResult, uiChangeVerification) = testParams
 
+    if (openAs is Update) {
+      whenever(bloodPressureRepository.measurementImmediate(openAs.bpUuid)).doReturn(TestData.bloodPressureMeasurement(uuid = openAs.bpUuid))
+    }
+
     // This assertion was written only to stabilize the test by verifying incoming parameters
     assertThat(dateValidator.validate("$day/$month/$year"))
         .isEqualTo(errorResult)
-
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
     sheetCreated(openAs)
     uiEvents.run {
@@ -467,7 +469,9 @@ class BloodPressureEntrySheetLogicTest {
   fun `when BP entry is active, BP readings are valid and next arrow is pressed then date entry should be shown`(
       openAs: OpenAs
   ) {
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
+    if (openAs is Update) {
+      whenever(bloodPressureRepository.measurementImmediate(openAs.bpUuid)).doReturn(TestData.bloodPressureMeasurement(uuid = openAs.bpUuid))
+    }
 
     sheetCreated(openAs)
     uiEvents.run {
@@ -514,8 +518,6 @@ class BloodPressureEntrySheetLogicTest {
 
   @Test
   fun `when BP entry is active and BP readings are invalid and blood pressure date is clicked, then show BP validation errors`() {
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
-
     sheetCreatedForNew(patientUuid)
     uiEvents.run {
       onNext(ScreenChanged(BP_ENTRY))
@@ -547,7 +549,7 @@ class BloodPressureEntrySheetLogicTest {
     val recordedAtDateAsInstant = recordedAtDate.atStartOfDay().toInstant(UTC)
     val existingBp = TestData.bloodPressureMeasurement(recordedAt = recordedAtDateAsInstant)
 
-    whenever(bloodPressureRepository.measurement(existingBp.uuid)).doReturn(Observable.just(existingBp, existingBp))
+    whenever(bloodPressureRepository.measurementImmediate(existingBp.uuid)).doReturn(existingBp)
 
     sheetCreatedForUpdate(existingBp.uuid)
 
@@ -589,7 +591,7 @@ class BloodPressureEntrySheetLogicTest {
   fun `whenever the BP sheet is shown to update an existing BP, then show the BP date`() {
     val bp = TestData.bloodPressureMeasurement(patientUuid = patientUuid)
     val recordedDate = bp.recordedAt.toLocalDateAtZone(testUserClock.zone)
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
+    whenever(bloodPressureRepository.measurementImmediate(any())).doReturn(bp)
 
     sheetCreatedForUpdate(bp.uuid)
     uiEvents.onNext(ScreenChanged(BP_ENTRY))
@@ -689,7 +691,7 @@ class BloodPressureEntrySheetLogicTest {
     val diastolic = 110.toString()
 
     val bp = TestData.bloodPressureMeasurement(patientUuid = patientUuid)
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
+    whenever(bloodPressureRepository.measurementImmediate(any())).doReturn(bp)
 
     sheetCreatedForUpdate(bp.uuid)
     with(uiEvents) {
@@ -716,7 +718,7 @@ class BloodPressureEntrySheetLogicTest {
     val diastolic = 110.toString()
 
     val bp = TestData.bloodPressureMeasurement(patientUuid = patientUuid)
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
+    whenever(bloodPressureRepository.measurementImmediate(any())).doReturn(bp)
 
     sheetCreatedForUpdate(bp.uuid)
     with(uiEvents) {
@@ -803,7 +805,6 @@ class BloodPressureEntrySheetLogicTest {
         currentFacility = facility,
         recordedAt = entryDateAsInstant,
         uuid = measurementUuid)).doReturn(TestData.bloodPressureMeasurement(patientUuid = patientUuid))
-    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
 
     sheetCreatedForNew(patientUuid)
     with(uiEvents) {
@@ -844,10 +845,7 @@ class BloodPressureEntrySheetLogicTest {
 
     val newInputDate = LocalDate.of(1991, 2, 14)
 
-    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(existingBp))
-
-    whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
+    whenever(bloodPressureRepository.measurementImmediate(any())).doReturn(existingBp)
 
     sheetCreatedForUpdate(existingBp.uuid)
     with(uiEvents) {
@@ -904,8 +902,7 @@ class BloodPressureEntrySheetLogicTest {
         recordedAt = oldCreatedAt
     )
 
-    whenever(bloodPressureRepository.measurement(existingBp.uuid)).doReturn(Observable.just(existingBp))
-    whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
+    whenever(bloodPressureRepository.measurementImmediate(existingBp.uuid)).doReturn(existingBp)
 
     sheetCreatedForUpdate(existingBp.uuid, userFromDifferentFacility, differentFacility)
     uiEvents.run {
@@ -974,10 +971,7 @@ class BloodPressureEntrySheetLogicTest {
         recordedAt = newInputDateAsInstant
     )
 
-    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(existingBp))
-
-    whenever(bloodPressureRepository.updateMeasurement(updatedBp)).doReturn(Completable.complete())
+    whenever(bloodPressureRepository.measurementImmediate(any())).doReturn(existingBp)
 
     sheetCreatedForUpdate(existingBp.uuid, userFromDifferentFacility, differentFacility)
     with(uiEvents) {

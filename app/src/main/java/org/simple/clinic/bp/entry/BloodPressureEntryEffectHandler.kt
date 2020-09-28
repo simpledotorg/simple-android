@@ -4,10 +4,8 @@ import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
-import io.reactivex.Completable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
-import io.reactivex.Single
 import io.reactivex.rxkotlin.cast
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -109,7 +107,8 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
   ): ObservableTransformer<FetchBloodPressureMeasurement, BloodPressureEntryEvent> {
     return ObservableTransformer { bloodPressureMeasurements ->
       bloodPressureMeasurements
-          .flatMapSingle { getExistingBloodPressureMeasurement(it.bpUuid).subscribeOn(scheduler) }
+          .observeOn(scheduler)
+          .map { getExistingBloodPressureMeasurement(it.bpUuid) }
           .map { BloodPressureMeasurementFetched(it.reading.systolic, it.reading.diastolic, it.recordedAt) }
     }
   }
@@ -148,41 +147,42 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { createNewBpEntries ->
       createNewBpEntries
           .observeOn(schedulersProvider.io())
-          .flatMapSingle { createNewBpEntry ->
+          .map { createNewBpEntry ->
             val user = currentUser.get()
             val facility = currentFacility.get()
 
-            Single
-                .fromCallable { storeNewBloodPressureMeasurement(user, facility, createNewBpEntry) }
-                .flatMap { updateAppointmentsAsVisited(createNewBpEntry, it) }
+            createNewBloodPressureMeasurement(user, facility, createNewBpEntry)
+
+            BloodPressureSaved(createNewBpEntry.wasDateChanged)
           }
           .compose(reportAnalyticsEvents)
           .cast()
     }
   }
 
-  private fun updateAppointmentsAsVisited(
-      createNewBpEntry: CreateNewBpEntry,
-      bloodPressureMeasurement: BloodPressureMeasurement
-  ): Single<BloodPressureSaved> {
+  private fun createNewBloodPressureMeasurement(
+      user: User,
+      facility: Facility,
+      createNewBpEntry: CreateNewBpEntry
+  ) {
+    val createdBloodPressureMeasurement = storeNewBloodPressureMeasurement(user, facility, createNewBpEntry)
+
     val entryDate = createNewBpEntry.userEnteredDate.toUtcInstant(userClock)
-    return appointmentsRepository
-        .markAppointmentsCreatedBeforeTodayAsVisited(bloodPressureMeasurement.patientUuid)
-        .doOnComplete { patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, entryDate) }
-        .toSingleDefault(BloodPressureSaved(createNewBpEntry.wasDateChanged))
+    appointmentsRepository.markAppointmentsCreatedBeforeTodayAsVisited(createdBloodPressureMeasurement.patientUuid)
+    patientRepository.compareAndUpdateRecordedAt(createdBloodPressureMeasurement.patientUuid, entryDate)
   }
 
   private fun updateBpEntryTransformer(): ObservableTransformer<UpdateBpEntry, BloodPressureEntryEvent> {
     return ObservableTransformer { updateBpEntries ->
       updateBpEntries
-          .flatMapSingle { updateBpEntry ->
-            getUpdatedBloodPressureMeasurement(updateBpEntry)
-                .map { bloodPressureMeasurement -> bloodPressureMeasurement to updateBpEntry.wasDateChanged }
+          .observeOn(schedulersProvider.io())
+          .map { updateBpEntry ->
+            val updatedBp = getUpdatedBloodPressureMeasurement(updateBpEntry)
+
+            updatedBp to updateBpEntry.wasDateChanged
           }
-          .flatMapSingle { (bloodPressureMeasurement, wasDateChanged) ->
-            storeUpdateBloodPressureMeasurement(bloodPressureMeasurement)
-                .toSingleDefault(BloodPressureSaved(wasDateChanged))
-          }
+          .doOnNext { (bloodPressureMeasurement, _) -> storeUpdateBloodPressureMeasurement(bloodPressureMeasurement) }
+          .map { (_, wasDateChanged) -> BloodPressureSaved(wasDateChanged) }
           .compose(reportAnalyticsEvents)
           .cast()
     }
@@ -190,21 +190,26 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
 
   private fun getUpdatedBloodPressureMeasurement(
       updateBpEntry: UpdateBpEntry
-  ): Single<BloodPressureMeasurement> {
-    return getExistingBloodPressureMeasurement(updateBpEntry.bpUuid)
-        .map { existingBloodPressureMeasurement ->
-          val user = currentUser.get()
-          val facility = currentFacility.get()
-          updateBloodPressureMeasurementValues(existingBloodPressureMeasurement, user.uuid, facility.uuid, updateBpEntry)
-        }
+  ): BloodPressureMeasurement {
+    val storedBloodPressureMeasurement = getExistingBloodPressureMeasurement(updateBpEntry.bpUuid)
+
+    val user = currentUser.get()
+    val facility = currentFacility.get()
+
+    return updateBloodPressureMeasurementValues(
+        existingMeasurement = storedBloodPressureMeasurement,
+        userUuid = user.uuid,
+        facilityUuid = facility.uuid,
+        updateBpEntry = updateBpEntry
+    )
+
   }
 
   private fun storeUpdateBloodPressureMeasurement(
       bloodPressureMeasurement: BloodPressureMeasurement
-  ): Completable {
-    return bloodPressureRepository
-        .updateMeasurement(bloodPressureMeasurement)
-        .doOnComplete { patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, bloodPressureMeasurement.recordedAt) }
+  ) {
+    bloodPressureRepository.updateMeasurement(bloodPressureMeasurement)
+    patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, bloodPressureMeasurement.recordedAt)
   }
 
   private fun updateBloodPressureMeasurementValues(
@@ -238,6 +243,5 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
         uuid = uuidGenerator.v4())
   }
 
-  private fun getExistingBloodPressureMeasurement(bpUuid: UUID): Single<BloodPressureMeasurement> =
-      bloodPressureRepository.measurement(bpUuid).firstOrError()
+  private fun getExistingBloodPressureMeasurement(bpUuid: UUID) = bloodPressureRepository.measurementImmediate(bpUuid)
 }

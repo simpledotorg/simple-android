@@ -86,7 +86,7 @@ class BloodPressureRepositoryAndroidTest {
     clock.advanceBy(durationToAdvanceBy)
     val newReading = BloodPressureReading(130, 90)
 
-    repository.updateMeasurement(bloodPressure.copy(reading = newReading)).blockingAwait()
+    repository.updateMeasurement(bloodPressure.copy(reading = newReading))
 
     val expected = bloodPressure.copy(
         reading = newReading,

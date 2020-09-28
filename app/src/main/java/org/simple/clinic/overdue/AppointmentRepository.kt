@@ -156,22 +156,21 @@ class AppointmentRepository @Inject constructor(
     return appointmentDao.lastCreatedAppointmentForPatient(patientUuid).toOptional()
   }
 
-  fun markAppointmentsCreatedBeforeTodayAsVisited(patientUuid: UUID): Completable {
+  fun markAppointmentsCreatedBeforeTodayAsVisited(patientUuid: UUID) {
     val startOfToday = LocalDate
         .now(utcClock)
         .atStartOfDay()
         .toInstant(ZoneOffset.of(utcClock.zone.id))
 
-    return Completable.fromAction {
-      appointmentDao.markAsVisited(
-          patientUuid = patientUuid,
-          updatedStatus = Visited,
-          scheduledStatus = Scheduled,
-          newSyncStatus = SyncStatus.PENDING,
-          newUpdatedAt = Instant.now(utcClock),
-          createdBefore = startOfToday
-      )
-    }
+    appointmentDao.markAsVisited(
+        patientUuid = patientUuid,
+        updatedStatus = Visited,
+        scheduledStatus = Scheduled,
+        newSyncStatus = SyncStatus.PENDING,
+        newUpdatedAt = Instant.now(utcClock),
+        createdBefore = startOfToday
+    )
+
   }
 
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<Appointment> {

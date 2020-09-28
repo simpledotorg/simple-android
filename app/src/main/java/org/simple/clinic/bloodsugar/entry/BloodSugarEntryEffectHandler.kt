@@ -168,10 +168,11 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
       bloodSugarMeasurement: BloodSugarMeasurement
   ): Single<BloodSugarSaved> {
     val entryDate = createNewBloodSugarEntry.userEnteredDate.toUtcInstant(userClock)
-    return appointmentsRepository
-        .markAppointmentsCreatedBeforeTodayAsVisited(bloodSugarMeasurement.patientUuid)
-        .doOnComplete { patientRepository.compareAndUpdateRecordedAt(bloodSugarMeasurement.patientUuid, entryDate) }
-        .toSingleDefault(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
+
+    appointmentsRepository.markAppointmentsCreatedBeforeTodayAsVisited(bloodSugarMeasurement.patientUuid)
+    patientRepository.compareAndUpdateRecordedAt(bloodSugarMeasurement.patientUuid, entryDate)
+
+    return Single.just(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
   }
 
   private fun updateBloodSugarEntryTransformer(scheduler: Scheduler): ObservableTransformer<UpdateBloodSugarEntry, BloodSugarEntryEvent> {

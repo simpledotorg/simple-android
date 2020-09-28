@@ -8,10 +8,10 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
-import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.toUtcInstant
+import org.simple.clinic.util.TestUtcClock
 import java.time.Instant
 import java.time.LocalDate
+import java.time.Month
 import java.util.UUID
 import javax.inject.Inject
 
@@ -20,11 +20,13 @@ class TeleconsultRecordRepositoryAndroidTest {
   @Inject
   lateinit var repository: TeleconsultRecordRepository
 
-  private val userClock = TestUserClock()
+  @Inject
+  lateinit var testUtcClock: TestUtcClock
 
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
+    testUtcClock.setDate(LocalDate.of(2020, Month.SEPTEMBER, 15))
   }
 
   @After
@@ -40,11 +42,7 @@ class TeleconsultRecordRepositoryAndroidTest {
     val teleconsultRecordId3 = UUID.fromString("f1ad859f-d076-4bae-b0f2-3fb23c60d880")
     val patientUuid = UUID.fromString("91f230a6-e67f-428e-95f8-6090415a5c4e")
     val medicalOfficerId = UUID.fromString("5e2a46b8-6d77-47fa-9538-281e4992cb46")
-    val date = LocalDate.parse("2020-09-15")
-    val createdAt = date.toUtcInstant(userClock)
-    val updatedAt = date.toUtcInstant(userClock)
-    val deletedAt = null
-    val timestamps = Timestamps(createdAt, updatedAt, deletedAt)
+    val timestamps = Timestamps.create(testUtcClock)
 
     val teleconsultRecord1 = TestData.teleconsultRecord(
         id = teleconsultRecordId1,
@@ -86,16 +84,16 @@ class TeleconsultRecordRepositoryAndroidTest {
         timestamps = timestamps
     )
 
-    val listOfTeleconsultRecords = listOf(teleconsultRecord1, teleconsultRecord2, teleconsultRecord3)
+    val teleconsultRecords = listOf(teleconsultRecord1, teleconsultRecord2, teleconsultRecord3)
 
-    repository.save(listOfTeleconsultRecords).blockingAwait()
+    repository.save(teleconsultRecords).blockingAwait()
 
     // when
-    val getTeleconsultRecordDetails = repository
+    val teleconsultRecordDetails = repository
         .getTeleconsultRecord(teleconsultRecordId1)
 
     // then
-    assertThat(getTeleconsultRecordDetails)
+    assertThat(teleconsultRecordDetails)
         .isEqualTo(teleconsultRecord1)
   }
 }

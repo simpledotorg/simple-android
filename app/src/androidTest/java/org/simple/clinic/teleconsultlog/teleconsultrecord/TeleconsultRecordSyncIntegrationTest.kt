@@ -3,7 +3,6 @@ package org.simple.clinic.teleconsultlog.teleconsultrecord
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
@@ -18,7 +17,9 @@ import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.util.Rules
-import java.time.Instant
+import org.simple.clinic.util.TestUtcClock
+import java.time.LocalDate
+import java.time.Month
 import java.util.UUID
 import javax.inject.Inject
 
@@ -32,6 +33,9 @@ class TeleconsultRecordSyncIntegrationTest {
 
   @Inject
   lateinit var repository: TeleconsultRecordRepository
+
+  @Inject
+  lateinit var testUtcClock: TestUtcClock
 
   private lateinit var teleconsultRecordSync: TeleconsultRecordSync
 
@@ -50,7 +54,7 @@ class TeleconsultRecordSyncIntegrationTest {
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-
+    testUtcClock.setDate(LocalDate.of(2020, Month.SEPTEMBER, 28))
     resetLocalData()
 
     teleconsultRecordSync = TeleconsultRecordSync(
@@ -78,7 +82,7 @@ class TeleconsultRecordSyncIntegrationTest {
           medicalOfficerId = UUID.fromString("39f4307b-0aef-49d4-9578-371524cd0212"),
           teleconsultRequestInfo = null,
           teleconsultRecordInfo = null,
-          timestamps = Timestamps(createdAt = Instant.now(), Instant.now(), null),
+          timestamps = Timestamps.create(testUtcClock),
           syncStatus = SyncStatus.PENDING
       )
     }

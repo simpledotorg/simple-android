@@ -21,6 +21,6 @@ data class NextButtonClicked(val medicalInstructions: String, val medicalRegistr
   override val analyticsName: String = "Teleconsult Prescription:Next Clicked"
 }
 
-data class PrescriptionCreated(
+data class TeleconsultIdAddedToPrescribedDrugs(
     val medicalInstructions: String
 ) : TeleconsultPrescriptionEvent()

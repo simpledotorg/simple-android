@@ -55,7 +55,7 @@ class TeleconsultPrescriptionEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .doOnNext { updatePrescribedDrugTeleconsultId(it.patientUuid, it.teleconsultRecordId) }
-          .map { PrescriptionCreated(it.medicalInstructions) }
+          .map { TeleconsultIdAddedToPrescribedDrugs(it.medicalInstructions) }
     }
   }
 

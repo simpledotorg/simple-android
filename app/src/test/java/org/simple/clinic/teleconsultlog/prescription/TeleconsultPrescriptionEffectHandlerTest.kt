@@ -138,7 +138,7 @@ class TeleconsultPrescriptionEffectHandlerTest {
     effectHandlerTestCase.dispatch(AddTeleconsultIdToPrescribedDrugs(patientUuid, teleconsultRecordId, instructions))
 
     // then
-    effectHandlerTestCase.assertOutgoingEvents(PrescriptionCreated(instructions))
+    effectHandlerTestCase.assertOutgoingEvents(TeleconsultIdAddedToPrescribedDrugs(instructions))
 
     verify(prescriptionRepository).newestPrescriptionsForPatientImmediate(patientUuid)
     verify(prescriptionRepository).addTeleconsultationIdToDrugs(listOf(prescribedDrug1), teleconsultRecordId)

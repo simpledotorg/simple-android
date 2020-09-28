@@ -14,7 +14,7 @@
 - Change `BloodPressureEntryEffectHandler` create and update measurement flows to be mostly synchronous
 - Remove v1 of the QR code scanning flow
 
-## On Demo
+## 2020-09-15-7432
 ### Features
 - Add `TeleconsultRecordScreen`
 - Show `TeleconsultLogNotAllowed` dialog when Medical officer is not allowed to teleconsult

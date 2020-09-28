@@ -118,7 +118,7 @@ class TeleconsultPrescriptionEffectHandlerTest {
   }
 
   @Test
-  fun `when create prescription effect is received, then create prescription`() {
+  fun `when add teleconsult id to prescribed drugs effect is received, then add teleconsult id to prescribed drugs`() {
     // given
     val patientUuid = UUID.fromString("3b19894c-d0ee-483e-a64b-745cc3d52306")
     val teleconsultRecordId = UUID.fromString("9b704cfe-5d31-411d-ae3f-e1b3b29e45d9")
@@ -136,7 +136,7 @@ class TeleconsultPrescriptionEffectHandlerTest {
     whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn listOf(prescribedDrug1)
 
     // when
-    effectHandlerTestCase.dispatch(CreatePrescription(patientUuid, teleconsultRecordId, instructions, medicalRegistrationId))
+    effectHandlerTestCase.dispatch(AddTeleconsultIdToPrescribedDrugs(patientUuid, teleconsultRecordId, instructions, medicalRegistrationId))
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(PrescriptionCreated(instructions))

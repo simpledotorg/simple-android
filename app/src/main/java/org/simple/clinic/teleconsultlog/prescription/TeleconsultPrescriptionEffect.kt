@@ -16,7 +16,7 @@ data class LoadDataForNextClick(
     val medicalRegistrationId: String
 ) : TeleconsultPrescriptionEffect()
 
-data class CreatePrescription(
+data class AddTeleconsultIdToPrescribedDrugs(
     val patientUuid: UUID,
     val teleconsultRecordId: UUID,
     val medicalInstructions: String,

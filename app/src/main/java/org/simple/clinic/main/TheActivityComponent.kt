@@ -76,7 +76,6 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultNotR
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreen
 import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
-import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView_Old
 
 @Subcomponent(modules = [TheActivityModule::class])
 interface TheActivityComponent :
@@ -136,7 +135,6 @@ interface TheActivityComponent :
   fun inject(target: NewMedicalHistoryScreen)
   fun inject(target: ConfirmDiscardChangesDialog)
   fun inject(target: EditMedicinesScreen)
-  fun inject(target: QrCodeScannerView_Old)
   fun inject(target: QrCodeScannerView)
   fun inject(target: SyncIndicatorView)
   fun inject(target: PatientSearchResultItemView)

@@ -56,15 +56,13 @@ class BloodPressureRepository @Inject constructor(
     return Completable.fromAction { dao.save(records) }
   }
 
-  fun updateMeasurement(measurement: BloodPressureMeasurement): Completable {
-    return Completable.fromAction {
-      val updatedMeasurement = measurement.copy(
-          updatedAt = Instant.now(utcClock),
-          syncStatus = SyncStatus.PENDING
-      )
+  fun updateMeasurement(measurement: BloodPressureMeasurement) {
+    val updatedMeasurement = measurement.copy(
+        updatedAt = Instant.now(utcClock),
+        syncStatus = SyncStatus.PENDING
+    )
 
-      dao.save(listOf(updatedMeasurement))
-    }
+    dao.save(listOf(updatedMeasurement))
   }
 
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<BloodPressureMeasurement> {
@@ -108,6 +106,8 @@ class BloodPressureRepository @Inject constructor(
   }
 
   fun measurement(uuid: UUID): Observable<BloodPressureMeasurement> = dao.bloodPressure(uuid).toObservable()
+
+  fun measurementImmediate(uuid: UUID): BloodPressureMeasurement = dao.bloodPressureImmediate(uuid)
 
   fun markBloodPressureAsDeleted(bloodPressureMeasurement: BloodPressureMeasurement): Completable {
     return Completable.fromAction {

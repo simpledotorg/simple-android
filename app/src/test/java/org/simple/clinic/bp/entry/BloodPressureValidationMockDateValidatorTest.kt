@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -87,7 +86,9 @@ class BloodPressureValidationMockDateValidatorTest {
     val (openAs, day, month, year, errorResult, uiChangeVerification) = testParams
 
     whenever(dateValidator.validate(any(), any())).doReturn(errorResult)
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
+    if (openAs is Update) {
+      whenever(bloodPressureRepository.measurementImmediate(openAs.bpUuid)).doReturn(TestData.bloodPressureMeasurement(uuid = openAs.bpUuid))
+    }
 
     sheetCreated(openAs)
     uiEvents.run {
@@ -126,8 +127,11 @@ class BloodPressureValidationMockDateValidatorTest {
   ) {
     val (openAs, result) = testParams
 
+    if (openAs is Update) {
+      whenever(bloodPressureRepository.measurementImmediate(openAs.bpUuid)).doReturn(TestData.bloodPressureMeasurement(uuid = openAs.bpUuid))
+    }
+
     whenever(dateValidator.validate(any(), any())).doReturn(result)
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
     sheetCreated(openAs)
     uiEvents.onNext(ScreenChanged(BloodPressureEntrySheet.ScreenType.DATE_ENTRY))

@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -106,7 +105,9 @@ class BloodPressureValidationTest {
   ) {
     val (openAs, systolic, diastolic) = testParams
 
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
+    if (openAs is Update) {
+      whenever(bloodPressureRepository.measurementImmediate(openAs.bpUuid)).doReturn(TestData.bloodPressureMeasurement(uuid = openAs.bpUuid))
+    }
 
     sheetCreated(openAs)
     uiEvents.run {

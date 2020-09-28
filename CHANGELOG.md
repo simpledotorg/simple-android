@@ -12,6 +12,7 @@
 - Remove `PrescribedDrugs` from `TeleconsultRecord`
 - Create Kotlin extension for saving Optional preferences
 - Modify `PrescribedDrug` to include `teleconsultation_id`
+- Change `BloodPressureEntryEffectHandler` create and update measurement flows to be mostly synchronous
 
 ## On Demo
 ### Features

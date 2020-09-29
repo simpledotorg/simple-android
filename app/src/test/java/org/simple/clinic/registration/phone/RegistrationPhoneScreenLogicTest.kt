@@ -11,7 +11,6 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -79,7 +78,7 @@ class RegistrationPhoneScreenLogicTest {
     val validNumber = "1234567890"
     val entryWithPhoneNumber = defaultOngoingEntry.withPhoneNumber(validNumber)
 
-    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
+    whenever(facilitySync.pullWithResult()) doReturn FacilityPullResult.Success
     whenever(findUserWithPhoneNumber.find(validNumber)).doReturn(NotFound)
 
     // when
@@ -97,7 +96,7 @@ class RegistrationPhoneScreenLogicTest {
     val invalidNumber = "12345"
     val validNumber = "1234567890"
     val entryWithValidNumber = defaultOngoingEntry.withPhoneNumber(validNumber)
-    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
+    whenever(facilitySync.pullWithResult()) doReturn FacilityPullResult.Success
     whenever(findUserWithPhoneNumber.find(validNumber)) doReturn NotFound
 
     // when
@@ -148,7 +147,7 @@ class RegistrationPhoneScreenLogicTest {
   fun `when proceed is clicked with a valid phone number then a network call should be made to check if the phone number belongs to an existing user`() {
     // given
     val inputNumber = "1234567890"
-    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
+    whenever(facilitySync.pullWithResult()) doReturn FacilityPullResult.Success
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(NetworkError)
 
     // when
@@ -165,7 +164,7 @@ class RegistrationPhoneScreenLogicTest {
   fun `when the network call for checking phone number fails then an error should be shown`() {
     // given
     val inputNumber = "1234567890"
-    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
+    whenever(facilitySync.pullWithResult()) doReturn FacilityPullResult.Success
     whenever(findUserWithPhoneNumber.find(inputNumber))
         .doReturn(UnexpectedError)
         .doReturn(NetworkError)
@@ -210,7 +209,7 @@ class RegistrationPhoneScreenLogicTest {
         capabilities = null
     )
 
-    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
+    whenever(facilitySync.pullWithResult()) doReturn FacilityPullResult.Success
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Found(userUuid, userStatus))
     whenever(userSession.saveOngoingLoginEntry(entryToBeSaved)).doReturn(Completable.complete())
 
@@ -231,7 +230,7 @@ class RegistrationPhoneScreenLogicTest {
     // given
     val inputNumber = "1234567890"
     val userStatus = UserStatus.DisapprovedForSyncing
-    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
+    whenever(facilitySync.pullWithResult()) doReturn FacilityPullResult.Success
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Found(userUuid, userStatus))
 
     // when
@@ -249,7 +248,7 @@ class RegistrationPhoneScreenLogicTest {
   fun `when proceed is clicked then any existing error should be cleared`() {
     // given
     val inputNumber = "1234567890"
-    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
+    whenever(facilitySync.pullWithResult()) doReturn FacilityPullResult.Success
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(NetworkError)
 
     // when
@@ -285,7 +284,7 @@ class RegistrationPhoneScreenLogicTest {
     // given
     val phoneNumber = "1234567890"
     whenever(findUserWithPhoneNumber.find(phoneNumber)) doReturn NetworkError
-    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
+    whenever(facilitySync.pullWithResult()) doReturn FacilityPullResult.Success
 
     // when
     setupController()
@@ -302,7 +301,7 @@ class RegistrationPhoneScreenLogicTest {
     // given
     val phoneNumber = "1234567890"
     whenever(findUserWithPhoneNumber.find(phoneNumber)) doReturn NetworkError
-    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.NetworkError)
+    whenever(facilitySync.pullWithResult()) doReturn FacilityPullResult.NetworkError
 
     // when
     setupController()
@@ -317,7 +316,7 @@ class RegistrationPhoneScreenLogicTest {
   fun `when pulling the facilities fails with a network error, the network error message must be shown`() {
     // given
     val phoneNumber = "1234567890"
-    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.NetworkError)
+    whenever(facilitySync.pullWithResult()) doReturn FacilityPullResult.NetworkError
 
     // when
     setupController()
@@ -335,7 +334,7 @@ class RegistrationPhoneScreenLogicTest {
   fun `when pulling the facilities fails with any other error, the unexpected error message must be shown`() {
     // given
     val phoneNumber = "1234567890"
-    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.UnexpectedError)
+    whenever(facilitySync.pullWithResult()) doReturn FacilityPullResult.UnexpectedError
 
     // when
     setupController()

@@ -1,12 +1,10 @@
 package org.simple.clinic.user
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
@@ -31,21 +29,7 @@ import java.util.UUID
 // Room starts complaining if you try to rename a table which
 // is referenced by another table in a foreign key (technically,
 // SQLite supports renaming tables, but Room complains).
-@Entity(
-    tableName = "LoggedInUser",
-    foreignKeys = [
-      ForeignKey(
-          entity = Facility::class,
-          parentColumns = ["uuid"],
-          childColumns = ["registrationFacilityUuid"]
-      ),
-      ForeignKey(
-          entity = Facility::class,
-          parentColumns = ["uuid"],
-          childColumns = ["currentFacilityUuid"]
-      )
-    ]
-)
+@Entity(tableName = "LoggedInUser")
 @Parcelize
 data class User(
 
@@ -66,10 +50,8 @@ data class User(
 
     val loggedInStatus: LoggedInStatus,
 
-    @ColumnInfo(index = true)
     val registrationFacilityUuid: UUID,
 
-    @ColumnInfo(index = true)
     val currentFacilityUuid: UUID,
 
     val teleconsultPhoneNumber: String?,

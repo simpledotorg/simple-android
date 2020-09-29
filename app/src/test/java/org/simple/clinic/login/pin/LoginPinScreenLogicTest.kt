@@ -137,7 +137,7 @@ class LoginPinScreenLogicTest {
     whenever(ongoingLoginEntryRepository.entryImmediate()) doReturn ongoingLoginEntry
     whenever(ongoingLoginEntryRepository.saveLoginEntry(ongoingLoginEntry))
         .thenReturn(Completable.complete())
-    whenever(userSession.storeUser(expectedUser, registrationFacilityUuid))
+    whenever(userSession.storeUser(expectedUser))
         .thenReturn(Completable.complete())
 
     // when
@@ -149,7 +149,7 @@ class LoginPinScreenLogicTest {
     verify(ongoingLoginEntryRepository).saveLoginEntry(ongoingLoginEntry)
     verifyNoMoreInteractions(ongoingLoginEntryRepository)
 
-    verify(userSession).storeUser(user = expectedUser, facilityUuid = registrationFacilityUuid)
+    verify(userSession).storeUser(user = expectedUser)
     verifyNoMoreInteractions(userSession)
 
     verify(ui, times(2)).showPhoneNumber(phoneNumber)

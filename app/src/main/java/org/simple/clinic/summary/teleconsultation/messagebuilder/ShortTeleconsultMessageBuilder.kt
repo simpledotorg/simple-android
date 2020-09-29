@@ -11,11 +11,12 @@ class ShortTeleconsultMessageBuilder @Inject constructor() : TeleconsultationMes
    * for the recipient.
    */
   override fun message(patientTeleconsultationInfo: PatientTeleconsultationInfo): String {
-    val message = StringBuilder("Teleconsult request")
+    val message = StringBuilder("TELE-CONSULT")
         .appendLine()
         .appendLine()
-        .appendLine("Review patient & log a record:")
-        .appendLine("https://app.simple.org/patient/${patientTeleconsultationInfo.patientUuid}")
+        .appendLine("1. Review patient")
+        .appendLine("2. Create log")
+        .appendLine("https://app.simple.org/consult?r=${patientTeleconsultationInfo.teleconsultRecordId}&p=${patientTeleconsultationInfo.patientUuid}")
         .appendLine()
 
     return message.toString()

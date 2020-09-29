@@ -144,6 +144,13 @@ data class BusinessId(
       """)
     fun latestForPatientByType(patientUuid: UUID, identifierType: IdentifierType): Flowable<List<BusinessId>>
 
+    @Query("""
+      SELECT * FROM BusinessId
+      WHERE patientUuid = :patientUuid AND identifierType = :identifierType AND deletedAt IS NULL
+      ORDER BY createdAt DESC LIMIT 1
+      """)
+    fun latestForPatientByTypeImmediate(patientUuid: UUID, identifierType: IdentifierType): List<BusinessId>
+
     @Query("SELECT * FROM BusinessId WHERE identifierType = :identifierType")
     fun allBusinessIdsWithType(identifierType: IdentifierType): Single<List<BusinessId>>
 

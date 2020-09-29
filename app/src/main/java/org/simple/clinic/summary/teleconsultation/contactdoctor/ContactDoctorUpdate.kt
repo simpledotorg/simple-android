@@ -11,6 +11,7 @@ class ContactDoctorUpdate : Update<ContactDoctorModel, ContactDoctorEvent, Conta
     return when (event) {
       is MedicalOfficersLoaded -> next(model.medicalOfficersLoaded(event.medicalOfficers))
       is TeleconsultRequestCreated -> noChange()
+      is PatientTeleconsultInfoLoaded -> noChange()
     }
   }
 }

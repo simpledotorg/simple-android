@@ -20,6 +20,7 @@
 - Add teleconsult record sync
 - Change `RemoteConfigService` to pull updates synchronously
 - Stop injecting screens in `TheActivity` via the static component
+- Add support for sending teleconsult request via SMS
 
 ### Fixes
 - Fix deeplink screens & warning dialogs displaying again after activity restart.
@@ -31,7 +32,6 @@
 - Show `TeleconsultLogNotAllowed` dialog when Medical officer is not allowed to teleconsult
 
 ### Internal
-- [In Progress: 27 Aug 2020] Add support for sending teleconsult request via SMS
 - Add `Capabilities` to User
 - Change `TeleconsultFacilityInfoApi` endpoint
 - Add methods to purge soft-deleted records from the database

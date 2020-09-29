@@ -49,8 +49,8 @@ data class TeleconsultRecord(
     @Query("SELECT * FROM TeleconsultRecord WHERE id = :teleconsultRecordId")
     fun getCompleteTeleconsultLog(teleconsultRecordId: UUID): TeleconsultRecord
 
-    @Query("UPDATE TeleconsultRecord SET record_medicalOfficerNumber = :medicalOfficerNumber, updatedAt = :updatedAt WHERE id = :teleconsultRecordId")
-    fun updateMedicalRegistrationId(teleconsultRecordId: UUID, medicalOfficerNumber: String, updatedAt: Instant)
+    @Query("UPDATE TeleconsultRecord SET record_medicalOfficerNumber = :medicalOfficerNumber, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE id = :teleconsultRecordId")
+    fun updateMedicalRegistrationId(teleconsultRecordId: UUID, medicalOfficerNumber: String, updatedAt: Instant, syncStatus: SyncStatus)
 
     @Query("SELECT * FROM TeleconsultRecord WHERE syncStatus = :syncStatus")
     fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultRecord>

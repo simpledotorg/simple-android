@@ -42,7 +42,8 @@ class TeleconsultRecordRepository @Inject constructor(
     teleconsultRecordDao.updateMedicalRegistrationId(
         teleconsultRecordId = teleconsultRecordId,
         medicalOfficerNumber = medicalOfficerNumber,
-        updatedAt = Instant.now(utcClock)
+        updatedAt = Instant.now(utcClock),
+        syncStatus = SyncStatus.PENDING
     )
   }
 

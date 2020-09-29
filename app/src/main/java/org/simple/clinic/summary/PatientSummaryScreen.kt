@@ -49,7 +49,7 @@ import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet_Old
-import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder
+import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder_Old
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreenKey
 import org.simple.clinic.util.Truss
@@ -94,7 +94,7 @@ class PatientSummaryScreen(
   lateinit var effectHandlerFactory: PatientSummaryEffectHandler.Factory
 
   @Inject
-  lateinit var longTeleconsultMessageBuilder: LongTeleconsultMessageBuilder
+  lateinit var longTeleconsultMessageBuilder: LongTeleconsultMessageBuilder_Old
 
   @Inject
   lateinit var whatsAppMessageSender: WhatsAppMessageSender

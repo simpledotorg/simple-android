@@ -9,10 +9,13 @@ import java.util.UUID
 
 data class PatientTeleconsultationInfo(
     val patientUuid: UUID,
+    val teleconsultRecordId: UUID?,
     val bpPassport: String?,
     val facility: Facility,
     val bloodPressures: List<BloodPressureMeasurement>,
     val bloodSugars: List<BloodSugarMeasurement>,
     val prescriptions: List<PrescribedDrug>,
-    val medicalHistory: MedicalHistory
+    val medicalHistory: MedicalHistory,
+    val nursePhoneNumber: String?,
+    val doctorPhoneNumber: String?
 )

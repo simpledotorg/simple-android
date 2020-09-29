@@ -605,6 +605,7 @@ class PatientSummaryUpdateTest {
 
     val patientInformation = PatientTeleconsultationInfo(
         patientUuid = patientUuid,
+        teleconsultRecordId = null,
         bpPassport = "123 456",
         facility = TestData.facility(uuid = UUID.fromString("b1e1dde7-a279-4239-833a-c0af70a3c8a2")),
         bloodPressures = listOf(
@@ -618,7 +619,9 @@ class PatientSummaryUpdateTest {
         ),
         medicalHistory = TestData.medicalHistory(
             uuid = UUID.fromString("d3575cf8-bbbb-4f54-bda2-ed84bdce0090")
-        )
+        ),
+        nursePhoneNumber = null,
+        doctorPhoneNumber = null
     )
 
     updateSpec

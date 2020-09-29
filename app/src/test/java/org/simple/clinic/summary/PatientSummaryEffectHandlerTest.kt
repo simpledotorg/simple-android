@@ -398,12 +398,15 @@ class PatientSummaryEffectHandlerTest {
 
     val patientInformation = PatientTeleconsultationInfo(
         patientUuid = patientUuid,
+        teleconsultRecordId = null,
         bpPassport = bpPassport.identifier.displayValue(),
         facility = facility,
         bloodPressures = bloodPressures,
         bloodSugars = bloodSugars,
         prescriptions = prescriptions,
-        medicalHistory = medicalHistory
+        medicalHistory = medicalHistory,
+        nursePhoneNumber = null,
+        doctorPhoneNumber = null
     )
 
     val phoneNumber = TestData.teleconsultPhoneNumber()
@@ -472,12 +475,15 @@ class PatientSummaryEffectHandlerTest {
 
     val patientInformation = PatientTeleconsultationInfo(
         patientUuid = patientUuid,
+        teleconsultRecordId = null,
         bpPassport = bpPassport.identifier.displayValue(),
         facility = facility,
         bloodPressures = bloodPressures,
         bloodSugars = bloodSugars,
         prescriptions = prescriptions,
-        medicalHistory = medicalHistory
+        medicalHistory = medicalHistory,
+        nursePhoneNumber = null,
+        doctorPhoneNumber = null
     )
 
     // when

@@ -30,6 +30,7 @@ import org.simple.clinic.remoteconfig.RemoteConfigSync
 import org.simple.clinic.reports.ReportsModule
 import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationSync
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordSync
 import javax.inject.Named
 
 @Module(includes = [
@@ -58,13 +59,15 @@ class SyncModule {
       remoteConfigSync: RemoteConfigSync,
       helpSync: HelpSync,
       bloodSugarSync: BloodSugarSync,
-      teleconsultationMedicalOfficersSync: TeleconsultationSync
+      teleconsultationMedicalOfficersSync: TeleconsultationSync,
+      teleconsultRecordSync : TeleconsultRecordSync
   ): ArrayList<ModelSync> {
     return arrayListOf(
         facilitySync, protocolSync, patientSync,
         bloodPressureSync, medicalHistorySync, appointmentSync,
         prescriptionSync, reportsSync, remoteConfigSync, helpSync,
-        bloodSugarSync, teleconsultationMedicalOfficersSync
+        bloodSugarSync, teleconsultationMedicalOfficersSync,
+        teleconsultRecordSync
     )
   }
 

@@ -18,6 +18,7 @@
   - Update existing blood pressure measurement
 - Change registration and current facility ID columns to regular columns without foreign keys in `User`
 - Add teleconsult record sync
+- Change `RemoteConfigService` to pull updates synchronously
 
 ### Fixes
 - Fix deeplink screens & warning dialogs displaying again after activity restart.

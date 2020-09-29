@@ -19,13 +19,18 @@ import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.dp
 import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 
 class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi {
 
   companion object {
-    fun intent(context: Context): Intent {
-      return Intent(context, ContactDoctorSheet::class.java)
+    private const val EXTRA_PATIENT_UUID = "patientUuid"
+
+    fun intent(context: Context, patientUuid: UUID): Intent {
+      return Intent(context, ContactDoctorSheet::class.java).apply {
+        putExtra(EXTRA_PATIENT_UUID, patientUuid)
+      }
     }
   }
 
@@ -39,10 +44,11 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi {
 
   private val delegate by unsafeLazy {
     val uiRenderer = ContactDoctorUiRenderer(this)
+    val patientUuid = intent.getSerializableExtra(EXTRA_PATIENT_UUID) as UUID
 
     MobiusDelegate.forActivity(
         events = Observable.never(),
-        defaultModel = ContactDoctorModel.create(),
+        defaultModel = ContactDoctorModel.create(patientUuid),
         init = ContactDoctorInit(),
         update = ContactDoctorUpdate(),
         effectHandler = effectHandler.build(),

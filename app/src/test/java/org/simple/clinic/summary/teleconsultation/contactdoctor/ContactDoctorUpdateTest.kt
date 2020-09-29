@@ -12,6 +12,7 @@ class ContactDoctorUpdateTest {
 
   @Test
   fun `when medical officers are loaded, then update the model`() {
+    val patientUuid = UUID.fromString("ba46b46a-058a-4694-bb02-69aad1694bc7")
     val medicalOfficers = listOf(
         TestData.medicalOfficer(
             id = UUID.fromString("a07e53e8-959b-4d08-bea7-161932ecc0a5"),
@@ -20,7 +21,7 @@ class ContactDoctorUpdateTest {
         )
     )
 
-    val model = ContactDoctorModel.create()
+    val model = ContactDoctorModel.create(patientUuid)
     val updateSpec = UpdateSpec(ContactDoctorUpdate())
 
     updateSpec

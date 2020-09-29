@@ -290,12 +290,15 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
             it.doctorPhoneNumber to PatientTeleconsultationInfo(
                 patientUuid,
+                null,
                 it.bpPassport?.identifier?.displayValue(),
                 it.currentFacility!!,
                 bloodPressures,
                 bloodSugars,
                 prescriptions,
-                medicalHistory
+                medicalHistory,
+                null,
+                null
             )
           }
           .map { (doctorPhoneNumber, patientTeleconsultationInfo) ->

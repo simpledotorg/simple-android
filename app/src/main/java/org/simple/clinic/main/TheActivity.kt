@@ -228,8 +228,10 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   override fun onStop() {
-    val lockAfterTimestamp = Instant.now(utcClock).plusMillis(config.lockAfterTimeMillis)
-    unlockAfterTimestamp.set(Optional.of(lockAfterTimestamp))
+    if (!screenRouter.hasKeyOfType<AppLockScreenKey>()) {
+      val lockAfterTimestamp = Instant.now(utcClock).plusMillis(config.lockAfterTimeMillis)
+      unlockAfterTimestamp.set(Optional.of(lockAfterTimestamp))
+    }
 
     delegate.stop()
     super.onStop()

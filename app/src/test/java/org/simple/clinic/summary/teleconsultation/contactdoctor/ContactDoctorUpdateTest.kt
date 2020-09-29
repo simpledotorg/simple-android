@@ -20,6 +20,10 @@ class ContactDoctorUpdateTest {
   private val model = ContactDoctorModel.create(patientUuid)
   private val updateSpec = UpdateSpec(ContactDoctorUpdate())
 
+  private val teleconsultRecordId = UUID.fromString("edced500-ef21-4749-b2ce-c5ef028edee8")
+  private val medicalOfficerId = UUID.fromString("9ae68a58-43ff-42c3-b998-70b5a7589b9d")
+  private val doctorPhoneNumber = "+911111111111"
+
   @Test
   fun `when medical officers are loaded, then update the model`() {
     val medicalOfficers = listOf(
@@ -41,9 +45,6 @@ class ContactDoctorUpdateTest {
 
   @Test
   fun `when teleconsult request is created, then load patient teleconsult info`() {
-    val teleconsultRecordId = UUID.fromString("64ee25e0-8d32-42f5-b3e9-1a34f80e8e56")
-    val doctorPhoneNumber = "+911111111111"
-
     updateSpec
         .given(model)
         .whenEvent(TeleconsultRequestCreated(
@@ -64,11 +65,9 @@ class ContactDoctorUpdateTest {
 
   @Test
   fun `when patient teleconsult info is loaded, then send teleconsult message`() {
-    val teleconsultRecordId = UUID.fromString("144a31ab-ee5f-4f06-b3e3-3ef26e0a0330")
     val facilityUuid = UUID.fromString("ffae95ae-ae05-4bdc-8103-3ee8e927713c")
     val facility = TestData.facility(uuid = facilityUuid)
     val user = TestData.loggedInUser(uuid = UUID.fromString("a072f41a-9990-400f-b293-b282a6f4b8ff"))
-    val doctorPhoneNumber = "+911111111111"
 
     val bpPassport = TestData.businessId(
         uuid = UUID.fromString("7ebf2c49-8018-41b9-af7c-43afe02483d4"),
@@ -130,6 +129,38 @@ class ContactDoctorUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SendTeleconsultMessage(patientTeleconsultInfo, MessageTarget.SMS))
+        ))
+  }
+
+  @Test
+  fun `when whats app button is clicked, then create teleconsult record`() {
+    updateSpec
+        .given(model)
+        .whenEvent(WhatsAppButtonClicked(medicalOfficerId, doctorPhoneNumber))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CreateTeleconsultRequest(
+                patientUuid = patientUuid,
+                medicalOfficerId = medicalOfficerId,
+                doctorPhoneNumber = doctorPhoneNumber,
+                messageTarget = MessageTarget.WHATSAPP
+            ))
+        ))
+  }
+
+  @Test
+  fun `when sms button is clicked, then create teleconsult record`() {
+    updateSpec
+        .given(model)
+        .whenEvent(SmsButtonClicked(medicalOfficerId, doctorPhoneNumber))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CreateTeleconsultRequest(
+                patientUuid = patientUuid,
+                medicalOfficerId = medicalOfficerId,
+                doctorPhoneNumber = doctorPhoneNumber,
+                messageTarget = MessageTarget.SMS
+            ))
         ))
   }
 }

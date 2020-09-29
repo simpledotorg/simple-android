@@ -5,9 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.sheet_contact_doctor_new.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.summary.PatientTeleconsultationInfo
@@ -22,6 +24,7 @@ import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.dp
 import java.util.Locale
 import java.util.UUID
@@ -59,12 +62,21 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctor
 
   private val itemAdapter = ItemAdapter(DoctorListItem.DiffCallback())
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            whatsAppButtonClicks(),
+            smsButtonClicks()
+        )
+        .compose(ReportAnalyticsEvents())
+  }
+
   private val delegate by unsafeLazy {
     val uiRenderer = ContactDoctorUiRenderer(this)
     val patientUuid = intent.getSerializableExtra(EXTRA_PATIENT_UUID) as UUID
 
     MobiusDelegate.forActivity(
-        events = Observable.never(),
+        events = events.ofType(),
         defaultModel = ContactDoctorModel.create(patientUuid),
         init = ContactDoctorInit(),
         update = ContactDoctorUpdate(),
@@ -133,6 +145,20 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctor
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)
+  }
+
+  private fun whatsAppButtonClicks(): Observable<UiEvent> {
+    return itemAdapter
+        .itemEvents
+        .ofType<DoctorListItem.Event.WhatsAppClicked>()
+        .map { WhatsAppButtonClicked(it.doctorId, it.phoneNumber) }
+  }
+
+  private fun smsButtonClicks(): Observable<UiEvent> {
+    return itemAdapter
+        .itemEvents
+        .ofType<DoctorListItem.Event.SmsClicked>()
+        .map { SmsButtonClicked(it.doctorId, it.phoneNumber) }
   }
 
   private fun setupDiGraph() {

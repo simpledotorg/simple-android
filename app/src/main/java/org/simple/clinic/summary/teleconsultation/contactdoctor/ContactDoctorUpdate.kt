@@ -20,6 +20,18 @@ class ContactDoctorUpdate : Update<ContactDoctorModel, ContactDoctorEvent, Conta
           teleconsultInfo = event.patientTeleconsultInfo,
           messageTarget = event.messageTarget
       ))
+      is WhatsAppButtonClicked -> dispatch(CreateTeleconsultRequest(
+          patientUuid = model.patientUuid,
+          medicalOfficerId = event.medicalOfficerId,
+          doctorPhoneNumber = event.doctorPhoneNumber,
+          messageTarget = MessageTarget.WHATSAPP
+      ))
+      is SmsButtonClicked -> dispatch(CreateTeleconsultRequest(
+          patientUuid = model.patientUuid,
+          medicalOfficerId = event.medicalOfficerId,
+          doctorPhoneNumber = event.doctorPhoneNumber,
+          messageTarget = MessageTarget.SMS
+      ))
     }
   }
 }

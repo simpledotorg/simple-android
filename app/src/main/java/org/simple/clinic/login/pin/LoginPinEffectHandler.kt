@@ -49,8 +49,7 @@ class LoginPinEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .flatMap { (entry) ->
             userSession.storeUser(
-                user = createUserFromLoginEntry(entry),
-                facilityUuid = entry.registrationFacilityUuid!!
+                user = createUserFromLoginEntry(entry)
             ).andThen(Observable.just(UserLoggedIn))
           }
     }

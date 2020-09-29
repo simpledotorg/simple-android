@@ -24,7 +24,6 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestData
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
@@ -47,7 +46,6 @@ class UserSessionTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val accessTokenPref = mock<Preference<Optional<String>>>()
-  private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository = mock<PatientRepository>()
   private val sharedPrefs = mock<SharedPreferences>()
   private val appDatabase = mock<AppDatabase>()
@@ -63,7 +61,6 @@ class UserSessionTest {
   private val userUuid: UUID = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
 
   private val userSession = UserSession(
-      facilityRepository = facilityRepository,
       sharedPreferences = sharedPrefs,
       appDatabase = appDatabase,
       passwordHasher = passwordHasher,
@@ -78,7 +75,6 @@ class UserSessionTest {
   fun setUp() {
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.never())
     whenever(appDatabase.userDao()).thenReturn(userDao)
-    whenever(facilityRepository.setCurrentFacility(any<UUID>())).thenReturn(Completable.never())
     whenever(ongoingLoginEntryRepository.entry()).thenReturn(Single.never())
     whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.never())
     whenever(userDao.user()).thenReturn(Flowable.never())

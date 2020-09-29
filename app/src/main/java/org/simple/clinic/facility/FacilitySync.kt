@@ -2,7 +2,6 @@ package org.simple.clinic.facility
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
-import io.reactivex.Single
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
@@ -41,15 +40,15 @@ class FacilitySync @Inject constructor(
 
   override fun syncConfig(): SyncConfig = config
 
-  fun pullWithResult(): Single<FacilityPullResult> {
-    return Completable
-        .fromAction { pull() }
-        .toSingleDefault(FacilityPullResult.Success as FacilityPullResult)
-        .onErrorReturn { e ->
-          when (e) {
-            is IOException -> FacilityPullResult.NetworkError
-            else -> FacilityPullResult.UnexpectedError
-          }
-        }
+  fun pullWithResult(): FacilityPullResult {
+    return try {
+      pull()
+      FacilityPullResult.Success
+    } catch (e: Exception) {
+      when (e) {
+        is IOException -> FacilityPullResult.NetworkError
+        else -> FacilityPullResult.UnexpectedError
+      }
+    }
   }
 }

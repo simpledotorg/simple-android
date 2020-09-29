@@ -111,9 +111,7 @@ class ServerAuthenticationRule : TestRule {
   }
 
   private fun ensureFacilities() {
-    val result = facilitySync
-        .pullWithResult()
-        .blockingGet()
+    val result = facilitySync.pullWithResult()
 
     assertThat(result).isEqualTo(FacilityPullResult.Success)
   }

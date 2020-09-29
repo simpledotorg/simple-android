@@ -10,7 +10,6 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.AppScope
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.platform.analytics.Analytics
@@ -31,7 +30,6 @@ import javax.inject.Named
 
 @AppScope
 class UserSession @Inject constructor(
-    private val facilityRepository: FacilityRepository,
     private val sharedPreferences: SharedPreferences,
     private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
@@ -78,7 +76,7 @@ class UserSession @Inject constructor(
       )
     }
 
-    return storeUser(user, ongoingRegistrationEntry.facilityId!!)
+    return storeUser(user)
         .doOnSubscribe { Timber.i("Logging in from ongoing registration entry") }
   }
 
@@ -104,16 +102,14 @@ class UserSession @Inject constructor(
   fun storeUserAndAccessToken(userPayload: LoggedInUserPayload, accessToken: String): Completable {
     accessTokenPreference.set(Just(accessToken))
     return storeUser(
-        userFromPayload(userPayload, LOGGED_IN),
-        userPayload.registrationFacilityId
+        userFromPayload(userPayload, LOGGED_IN)
     )
   }
 
-  fun storeUser(user: User, facilityUuid: UUID): Completable {
+  fun storeUser(user: User): Completable {
     return Completable
         .fromAction { appDatabase.userDao().createOrUpdate(user) }
         .doOnSubscribe { Timber.i("Storing user") }
-        .andThen(facilityRepository.setCurrentFacility(facilityUuid = facilityUuid))
         .doOnError { Timber.e(it) }
   }
 

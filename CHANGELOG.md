@@ -16,6 +16,7 @@
 - Add custom traces in Firebase Performance Monitoring for the following flows:
   - Record new blood pressure measurement
   - Update existing blood pressure measurement
+- Change registration and current facility ID columns to regular columns without foreign keys in `User`
 
 ## 2020-09-15-7432
 ### Features

@@ -5,7 +5,7 @@
 - Add `TeleconsultPrescriptionScreen`
 
 ## Changes
-- Updated translations: `bn-IN`, `ti-ET`, `bn-BD`, `ta-IN`, `pa-IN`, `kn-IN`
+- Updated translations: `bn-IN`, `ti-ET`, `bn-BD`, `ta-IN`, `pa-IN`, `kn-IN`, `mr-IN`
 
 ### Internal
 - Remove `PrescribedDrugs` from `TeleconsultRecord`

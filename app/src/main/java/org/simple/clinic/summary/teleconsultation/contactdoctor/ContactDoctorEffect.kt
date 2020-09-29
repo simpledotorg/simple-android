@@ -7,12 +7,18 @@ sealed class ContactDoctorEffect
 
 object LoadMedicalOfficers : ContactDoctorEffect()
 
-data class CreateTeleconsultRequest(val patientUuid: UUID, val medicalOfficerId: UUID, val doctorPhoneNumber: String) : ContactDoctorEffect()
+data class CreateTeleconsultRequest(
+    val patientUuid: UUID,
+    val medicalOfficerId: UUID,
+    val doctorPhoneNumber: String,
+    val messageTarget: MessageTarget
+) : ContactDoctorEffect()
 
 data class LoadPatientTeleconsultInfo(
     val patientUuid: UUID,
     val teleconsultRecordId: UUID,
-    val doctorPhoneNumber: String
+    val doctorPhoneNumber: String,
+    val messageTarget: MessageTarget
 ) : ContactDoctorEffect()
 
 data class SendTeleconsultMessage(val teleconsultInfo: PatientTeleconsultationInfo, val messageTarget: MessageTarget) : ContactDoctorEffect()

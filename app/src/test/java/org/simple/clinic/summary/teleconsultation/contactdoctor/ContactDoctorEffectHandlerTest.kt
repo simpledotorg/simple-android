@@ -119,10 +119,10 @@ class ContactDoctorEffectHandlerTest {
     )
 
     // when
-    effectHandlerTestCase.dispatch(CreateTeleconsultRequest(patientUuid, medicalOfficerId, doctorPhoneNumber))
+    effectHandlerTestCase.dispatch(CreateTeleconsultRequest(patientUuid, medicalOfficerId, doctorPhoneNumber, MessageTarget.SMS))
 
     // then
-    effectHandlerTestCase.assertOutgoingEvents(TeleconsultRequestCreated(teleconsultRecordId, doctorPhoneNumber))
+    effectHandlerTestCase.assertOutgoingEvents(TeleconsultRequestCreated(teleconsultRecordId, doctorPhoneNumber, MessageTarget.SMS))
 
     verify(teleconsultRecordRepository).createTeleconsultRequestForNurse(
         teleconsultRecordId = teleconsultRecordId,
@@ -221,10 +221,10 @@ class ContactDoctorEffectHandlerTest {
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
-    effectHandlerTestCase.dispatch(LoadPatientTeleconsultInfo(patientUuid, teleconsultRecordId, doctorPhoneNumber))
+    effectHandlerTestCase.dispatch(LoadPatientTeleconsultInfo(patientUuid, teleconsultRecordId, doctorPhoneNumber, MessageTarget.SMS))
 
     // then
-    effectHandlerTestCase.assertOutgoingEvents(PatientTeleconsultInfoLoaded(patientTeleconsultInfo))
+    effectHandlerTestCase.assertOutgoingEvents(PatientTeleconsultInfoLoaded(patientTeleconsultInfo, MessageTarget.SMS))
 
     verifyZeroInteractions(uiActions)
   }

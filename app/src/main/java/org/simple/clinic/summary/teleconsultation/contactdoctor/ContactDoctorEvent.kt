@@ -8,6 +8,13 @@ sealed class ContactDoctorEvent
 
 data class MedicalOfficersLoaded(val medicalOfficers: List<MedicalOfficer>) : ContactDoctorEvent()
 
-data class TeleconsultRequestCreated(val teleconsultRecordId: UUID, val doctorPhoneNumber: String) : ContactDoctorEvent()
+data class TeleconsultRequestCreated(
+    val teleconsultRecordId: UUID,
+    val doctorPhoneNumber: String,
+    val messageTarget: MessageTarget
+) : ContactDoctorEvent()
 
-data class PatientTeleconsultInfoLoaded(val patientTeleconsultInfo: PatientTeleconsultationInfo) : ContactDoctorEvent()
+data class PatientTeleconsultInfoLoaded(
+    val patientTeleconsultInfo: PatientTeleconsultationInfo,
+    val messageTarget: MessageTarget
+) : ContactDoctorEvent()

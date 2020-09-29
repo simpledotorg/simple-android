@@ -11,8 +11,12 @@ import org.simple.clinic.R
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.summary.PatientTeleconsultationInfo
+import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder
+import org.simple.clinic.summary.teleconsultation.messagebuilder.ShortTeleconsultMessageBuilder
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.messagesender.SmsMessageSender
+import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
@@ -40,6 +44,18 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctor
 
   @Inject
   lateinit var locale: Locale
+
+  @Inject
+  lateinit var longTeleconsultMessageBuilder: LongTeleconsultMessageBuilder
+
+  @Inject
+  lateinit var shortTeleconsultMessageBuilder: ShortTeleconsultMessageBuilder
+
+  @Inject
+  lateinit var whatsAppMessageSender: WhatsAppMessageSender
+
+  @Inject
+  lateinit var smsMessageSender: SmsMessageSender
 
   private val itemAdapter = ItemAdapter(DoctorListItem.DiffCallback())
 
@@ -92,7 +108,20 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctor
   }
 
   override fun sendTeleconsultMessage(teleconsultInfo: PatientTeleconsultationInfo, messageTarget: MessageTarget) {
+    when (messageTarget) {
+      MessageTarget.WHATSAPP -> sendWhatsAppMessage(teleconsultInfo)
+      MessageTarget.SMS -> sendSmsMessage(teleconsultInfo)
+    }
+  }
 
+  private fun sendWhatsAppMessage(teleconsultInfo: PatientTeleconsultationInfo) {
+    val message = longTeleconsultMessageBuilder.message(teleconsultInfo)
+    whatsAppMessageSender.send(teleconsultInfo.doctorPhoneNumber!!, message)
+  }
+
+  private fun sendSmsMessage(teleconsultInfo: PatientTeleconsultationInfo) {
+    val message = shortTeleconsultMessageBuilder.message(teleconsultInfo)
+    smsMessageSender.send(teleconsultInfo.doctorPhoneNumber!!, message)
   }
 
   override fun attachBaseContext(baseContext: Context) {

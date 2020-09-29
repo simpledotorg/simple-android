@@ -59,34 +59,38 @@ class ContactDoctorEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map { effect ->
-            val patientUuid = effect.patientUuid
-            val bpPassportForPatient = patientRepository.bpPassportForPatient(effect.patientUuid)
-            val bloodPressures = bloodPressureRepository.newestMeasurementsForPatientImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)
-            val prescriptions = prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)
-            val bloodSugars = bloodSugarRepository.latestMeasurementsImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)
-            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
-                defaultHistoryUuid = uuidGenerator.v4(),
-                patientUuid = patientUuid
-            )
-            val facility = currentFacility.get()
-            val userPhoneNumber = currentUser.get().phoneNumber
-
-            PatientTeleconsultationInfo(
-                patientUuid = patientUuid,
-                teleconsultRecordId = effect.teleconsultRecordId,
-                bpPassport = bpPassportForPatient.toNullable()?.identifier?.displayValue(),
-                facility = facility,
-                bloodPressures = bloodPressures,
-                bloodSugars = bloodSugars,
-                prescriptions = prescriptions,
-                medicalHistory = medicalHistory,
-                nursePhoneNumber = userPhoneNumber,
-                doctorPhoneNumber = effect.doctorPhoneNumber
-            )
+          .map(::createPatientTeleconsultInfo)
+          .map { (patientTeleconsultInfo, messageTarget) ->
+            PatientTeleconsultInfoLoaded(patientTeleconsultInfo, messageTarget)
           }
-          .map(::PatientTeleconsultInfoLoaded)
     }
+  }
+
+  private fun createPatientTeleconsultInfo(effect: LoadPatientTeleconsultInfo): Pair<PatientTeleconsultationInfo, MessageTarget> {
+    val patientUuid = effect.patientUuid
+    val bpPassportForPatient = patientRepository.bpPassportForPatient(effect.patientUuid)
+    val bloodPressures = bloodPressureRepository.newestMeasurementsForPatientImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)
+    val prescriptions = prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)
+    val bloodSugars = bloodSugarRepository.latestMeasurementsImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)
+    val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+        defaultHistoryUuid = uuidGenerator.v4(),
+        patientUuid = patientUuid
+    )
+    val facility = currentFacility.get()
+    val userPhoneNumber = currentUser.get().phoneNumber
+
+    return PatientTeleconsultationInfo(
+        patientUuid = patientUuid,
+        teleconsultRecordId = effect.teleconsultRecordId,
+        bpPassport = bpPassportForPatient.toNullable()?.identifier?.displayValue(),
+        facility = facility,
+        bloodPressures = bloodPressures,
+        bloodSugars = bloodSugars,
+        prescriptions = prescriptions,
+        medicalHistory = medicalHistory,
+        nursePhoneNumber = userPhoneNumber,
+        doctorPhoneNumber = effect.doctorPhoneNumber
+    ) to effect.messageTarget
   }
 
   private fun createTeleconsultRequest(): ObservableTransformer<CreateTeleconsultRequest, ContactDoctorEvent> {
@@ -113,7 +117,8 @@ class ContactDoctorEffectHandler @AssistedInject constructor(
           .map { (teleconsultRecordId, effect) ->
             TeleconsultRequestCreated(
                 teleconsultRecordId = teleconsultRecordId,
-                doctorPhoneNumber = effect.doctorPhoneNumber
+                doctorPhoneNumber = effect.doctorPhoneNumber,
+                messageTarget = effect.messageTarget
             )
           }
     }

@@ -1,7 +1,6 @@
 package org.simple.clinic.summary.teleconsultation.contactdoctor
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -14,9 +13,13 @@ class ContactDoctorUpdate : Update<ContactDoctorModel, ContactDoctorEvent, Conta
       is TeleconsultRequestCreated -> dispatch(LoadPatientTeleconsultInfo(
           patientUuid = model.patientUuid,
           teleconsultRecordId = event.teleconsultRecordId,
-          doctorPhoneNumber = event.doctorPhoneNumber
+          doctorPhoneNumber = event.doctorPhoneNumber,
+          messageTarget = event.messageTarget
       ))
-      is PatientTeleconsultInfoLoaded -> noChange()
+      is PatientTeleconsultInfoLoaded -> dispatch(SendTeleconsultMessage(
+          teleconsultInfo = event.patientTeleconsultInfo,
+          messageTarget = event.messageTarget
+      ))
     }
   }
 }

@@ -118,7 +118,8 @@ class TeleconsultRecordRepositoryTest {
     // then
     val expectedTeleconsultRecord = teleconsultRecord.copy(
         teleconsultRecordInfo = teleconsultRecord.teleconsultRecordInfo!!.copy(medicalOfficerNumber = medicalOfficerNumber),
-        timestamp = teleconsultRecord.timestamp.copy(updatedAt = teleconsultRecord.timestamp.updatedAt.plus(Duration.ofMinutes(2)))
+        timestamp = teleconsultRecord.timestamp.copy(updatedAt = teleconsultRecord.timestamp.updatedAt.plus(Duration.ofMinutes(2))),
+        syncStatus = SyncStatus.PENDING
     )
     assertThat(teleconsultRecordRepository.getTeleconsultRecord(teleconsultRecord.id))
         .isEqualTo(expectedTeleconsultRecord)

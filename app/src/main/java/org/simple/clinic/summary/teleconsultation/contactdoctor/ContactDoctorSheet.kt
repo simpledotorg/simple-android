@@ -10,6 +10,7 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.summary.PatientTeleconsultationInfo
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
@@ -22,7 +23,7 @@ import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
-class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi {
+class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctorUiActions {
 
   companion object {
     private const val EXTRA_PATIENT_UUID = "patientUuid"
@@ -35,7 +36,7 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi {
   }
 
   @Inject
-  lateinit var effectHandler: ContactDoctorEffectHandler
+  lateinit var effectHandlerFactory: ContactDoctorEffectHandler.Factory
 
   @Inject
   lateinit var locale: Locale
@@ -51,7 +52,7 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi {
         defaultModel = ContactDoctorModel.create(patientUuid),
         init = ContactDoctorInit(),
         update = ContactDoctorUpdate(),
-        effectHandler = effectHandler.build(),
+        effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render
     )
   }
@@ -88,6 +89,10 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi {
 
   override fun showMedicalOfficers(medicalOfficers: List<MedicalOfficer>) {
     itemAdapter.submitList(DoctorListItem.from(medicalOfficers))
+  }
+
+  override fun sendTeleconsultMessage(teleconsultInfo: PatientTeleconsultationInfo, messageTarget: MessageTarget) {
+
   }
 
   override fun attachBaseContext(baseContext: Context) {

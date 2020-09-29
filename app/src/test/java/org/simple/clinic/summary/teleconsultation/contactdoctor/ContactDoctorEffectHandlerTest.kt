@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
@@ -54,6 +55,7 @@ class ContactDoctorEffectHandlerTest {
       uuid = UUID.fromString("2b7a809c-70de-40d3-a77f-d6bffcba3cfe")
   )
   private val clock = TestUtcClock(LocalDate.parse("2018-01-01"))
+  private val uiActions = mock<ContactDoctorUiActions>()
   private val effectHandler = ContactDoctorEffectHandler(
       currentUser = { user },
       currentFacility = { facility },
@@ -67,7 +69,8 @@ class ContactDoctorEffectHandlerTest {
       patientSummaryConfig = patientSummaryConfig,
       uuidGenerator = uuidGenerator,
       clock = clock,
-      schedulersProvider = TestSchedulersProvider.trampoline()
+      schedulersProvider = TestSchedulersProvider.trampoline(),
+      uiActions = uiActions
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
 
@@ -98,6 +101,8 @@ class ContactDoctorEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(MedicalOfficersLoaded(medicalOfficers))
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -126,6 +131,8 @@ class ContactDoctorEffectHandlerTest {
         teleconsultRequestInfo = teleconsultRequestInfo
     )
     verifyNoMoreInteractions(teleconsultRecordRepository)
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -202,7 +209,8 @@ class ContactDoctorEffectHandlerTest {
         patientSummaryConfig = patientSummaryConfig,
         uuidGenerator = uuidGenerator,
         clock = clock,
-        schedulersProvider = TestSchedulersProvider.trampoline()
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        uiActions = uiActions
     ).build()
     val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
 
@@ -217,5 +225,77 @@ class ContactDoctorEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(PatientTeleconsultInfoLoaded(patientTeleconsultInfo))
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when send teleconsult message effect is received, then send teleconsult message`() {
+    // given
+    val patientUuid = UUID.fromString("71aac9c0-5be6-40f3-a09c-7e68c132bfba")
+    val doctorPhoneNumber = "+911111111111"
+
+    val bpPassport = TestData.businessId(
+        uuid = UUID.fromString("7ebf2c49-8018-41b9-af7c-43afe02483d4"),
+        patientUuid = patientUuid,
+        identifier = Identifier("1234567", Identifier.IdentifierType.BpPassport),
+        metaDataVersion = BusinessId.MetaDataVersion.BpPassportMetaDataV1
+    )
+
+    val bloodPressure1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("ad827cfa-1436-4b98-88be-28831543b9f9"),
+        patientUuid = patientUuid,
+        facilityUuid = facility.uuid
+    )
+    val bloodPressure2 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("95aaf3f5-cafe-4b1f-a91a-14cbae2de12a"),
+        patientUuid = patientUuid,
+        facilityUuid = facility.uuid
+    )
+    val bloodPressures = listOf(bloodPressure1, bloodPressure2)
+
+    val bloodSugar1 = TestData.bloodSugarMeasurement(
+        uuid = UUID.fromString("81dc9be6-481e-4da0-a975-1998f2850562"),
+        patientUuid = patientUuid,
+        facilityUuid = facility.uuid
+    )
+
+    val bloodSugars = listOf(bloodSugar1)
+
+    val prescription = TestData.prescription(
+        uuid = UUID.fromString("38fffa68-bc29-4a67-a6c8-ece61071fe3b"),
+        patientUuid = patientUuid
+    )
+    val prescriptions = listOf(prescription)
+
+    val medicalHistoryUuid = UUID.fromString("4d72f266-0da5-4418-82e7-238f2fcabcb3")
+    val medicalHistory = TestData.medicalHistory(
+        uuid = medicalHistoryUuid,
+        patientUuid = patientUuid,
+        diagnosedWithHypertension = Answer.Yes,
+        hasDiabetes = Answer.No
+    )
+
+    val patientTeleconsultInfo = PatientTeleconsultationInfo(
+        patientUuid = patientUuid,
+        teleconsultRecordId = teleconsultRecordId,
+        bpPassport = bpPassport.identifier.displayValue(),
+        facility = facility,
+        bloodPressures = bloodPressures,
+        bloodSugars = bloodSugars,
+        prescriptions = prescriptions,
+        medicalHistory = medicalHistory,
+        nursePhoneNumber = user.phoneNumber,
+        doctorPhoneNumber = doctorPhoneNumber
+    )
+
+    // when
+    effectHandlerTestCase.dispatch(SendTeleconsultMessage(patientTeleconsultInfo, MessageTarget.SMS))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).sendTeleconsultMessage(patientTeleconsultInfo, MessageTarget.SMS)
+    verifyNoMoreInteractions(uiActions)
   }
 }

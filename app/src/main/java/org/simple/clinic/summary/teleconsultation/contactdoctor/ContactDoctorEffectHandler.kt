@@ -1,6 +1,8 @@
 package org.simple.clinic.summary.teleconsultation.contactdoctor
 
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.bloodsugar.BloodSugarRepository
@@ -20,9 +22,8 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.uuid.UuidGenerator
 import java.time.Instant
-import javax.inject.Inject
 
-class ContactDoctorEffectHandler @Inject constructor(
+class ContactDoctorEffectHandler @AssistedInject constructor(
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
     private val teleconsultationFacilityRepository: TeleconsultationFacilityRepository,
@@ -35,14 +36,23 @@ class ContactDoctorEffectHandler @Inject constructor(
     private val patientSummaryConfig: PatientSummaryConfig,
     private val uuidGenerator: UuidGenerator,
     private val clock: UtcClock,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    @Assisted private val uiActions: ContactDoctorUiActions
 ) {
 
-  fun build() = RxMobius
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(uiActions: ContactDoctorUiActions): ContactDoctorEffectHandler
+  }
+
+  fun build(): ObservableTransformer<ContactDoctorEffect, ContactDoctorEvent> = RxMobius
       .subtypeEffectHandler<ContactDoctorEffect, ContactDoctorEvent>()
       .addTransformer(LoadMedicalOfficers::class.java, loadMedicalOfficers())
       .addTransformer(CreateTeleconsultRequest::class.java, createTeleconsultRequest())
       .addTransformer(LoadPatientTeleconsultInfo::class.java, loadPatientTeleconsultInfo())
+      .addConsumer(SendTeleconsultMessage::class.java, {
+        uiActions.sendTeleconsultMessage(it.teleconsultInfo, it.messageTarget)
+      }, schedulersProvider.ui())
       .build()
 
   private fun loadPatientTeleconsultInfo(): ObservableTransformer<LoadPatientTeleconsultInfo, ContactDoctorEvent> {

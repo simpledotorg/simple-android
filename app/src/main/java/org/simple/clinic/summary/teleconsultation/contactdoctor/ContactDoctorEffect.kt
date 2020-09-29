@@ -1,5 +1,6 @@
 package org.simple.clinic.summary.teleconsultation.contactdoctor
 
+import org.simple.clinic.summary.PatientTeleconsultationInfo
 import java.util.UUID
 
 sealed class ContactDoctorEffect
@@ -13,3 +14,5 @@ data class LoadPatientTeleconsultInfo(
     val teleconsultRecordId: UUID,
     val doctorPhoneNumber: String
 ) : ContactDoctorEffect()
+
+data class SendTeleconsultMessage(val teleconsultInfo: PatientTeleconsultationInfo, val messageTarget: MessageTarget) : ContactDoctorEffect()

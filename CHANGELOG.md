@@ -19,6 +19,9 @@
 - Change registration and current facility ID columns to regular columns without foreign keys in `User`
 - Add teleconsult record sync
 
+### Fixes
+- Fix deeplink screens & warning dialogs displaying again after activity restart. 
+
 ## 2020-09-15-7432
 ### Features
 - Add `TeleconsultRecordScreen`

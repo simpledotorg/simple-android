@@ -207,6 +207,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
       is OpenPatientSummaryWithTeleconsultLog -> showPatientSummaryWithTeleconsultLogForDeepLink(deepLinkResult)
       is ShowTeleconsultNotAllowed -> showTeleconsultNotAllowedErrorDialog()
     }
+    intent.removeExtra(EXTRA_DEEP_LINK_RESULT)
   }
 
   override fun attachBaseContext(baseContext: Context) {

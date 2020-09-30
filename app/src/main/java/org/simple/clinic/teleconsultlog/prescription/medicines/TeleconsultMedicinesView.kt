@@ -176,6 +176,10 @@ class TeleconsultMedicinesView(
     medicinesRequiredErrorTextView.visibility = View.VISIBLE
   }
 
+  override fun hideMedicinesRequiredError() {
+    medicinesRequiredErrorTextView.visibility = View.GONE
+  }
+
   private fun editClicks(): Observable<UiEvent> {
     return medicinesEditButton
         .clicks()

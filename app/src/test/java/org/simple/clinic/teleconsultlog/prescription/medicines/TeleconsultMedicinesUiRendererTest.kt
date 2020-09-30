@@ -45,6 +45,7 @@ class TeleconsultMedicinesUiRendererTest {
     // then
     verify(ui).renderMedicines(medicines)
     verify(ui).showEditButton()
+    verify(ui).hideMedicinesRequiredError()
     verifyNoMoreInteractions(ui)
   }
 

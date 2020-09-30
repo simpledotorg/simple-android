@@ -17,6 +17,7 @@ class TeleconsultMedicinesUiRenderer(
     if (medicines.isNotEmpty()) {
       ui.renderMedicines(medicines)
       ui.showEditButton()
+      ui.hideMedicinesRequiredError()
     } else {
       ui.showNoMedicines()
       ui.showAddButton()

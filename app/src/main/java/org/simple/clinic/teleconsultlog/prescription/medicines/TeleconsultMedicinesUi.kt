@@ -7,4 +7,5 @@ interface TeleconsultMedicinesUi {
   fun showNoMedicines()
   fun showAddButton()
   fun showEditButton()
+  fun hideMedicinesRequiredError()
 }

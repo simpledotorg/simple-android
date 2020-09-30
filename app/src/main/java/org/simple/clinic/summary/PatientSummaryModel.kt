@@ -5,6 +5,7 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
+import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.user.User
 import java.util.UUID
 
@@ -17,7 +18,8 @@ data class PatientSummaryModel(
     val hasCheckedForInvalidPhone: Boolean,
     val linkIdWithPatientViewShown: Boolean,
     val teleconsultInfo: TeleconsultInfo?,
-    val userLoggedInStatus: User.LoggedInStatus?
+    val userLoggedInStatus: User.LoggedInStatus?,
+    val medicalOfficers: List<MedicalOfficer>?
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -30,7 +32,8 @@ data class PatientSummaryModel(
           hasCheckedForInvalidPhone = false,
           linkIdWithPatientViewShown = false,
           teleconsultInfo = null,
-          userLoggedInStatus = null
+          userLoggedInStatus = null,
+          medicalOfficers = null
       )
     }
   }
@@ -96,5 +99,9 @@ data class PatientSummaryModel(
 
   fun userLoggedInStatusLoaded(loggedInStatus: User.LoggedInStatus?): PatientSummaryModel {
     return copy(userLoggedInStatus = loggedInStatus)
+  }
+
+  fun medicalOfficersLoaded(medicalOfficers: List<MedicalOfficer>): PatientSummaryModel {
+    return copy(medicalOfficers = medicalOfficers)
   }
 }

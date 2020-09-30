@@ -819,6 +819,26 @@ class PatientSummaryUpdateTest {
         )
   }
 
+  @Test
+  fun `when medical officers are loaded, then update the model`() {
+    val medicalOfficers = listOf(
+        TestData.medicalOfficer(id = UUID.fromString("14edf8dc-41e6-4c35-954e-233c6853bc87")),
+        TestData.medicalOfficer(id = UUID.fromString("a037fcd9-dab9-4df6-8608-c20e2cd934a3"))
+    )
+    val model = PatientSummaryModel.from(
+        openIntention = ViewExistingPatient,
+        patientUuid = patientUuid
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(MedicalOfficersLoaded(medicalOfficers))
+        .then(assertThatNext(
+            hasModel(model.medicalOfficersLoaded(medicalOfficers)),
+            hasNoEffects()
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

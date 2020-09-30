@@ -6,7 +6,7 @@ import android.view.View
 import androidx.cardview.widget.CardView
 import kotlinx.android.synthetic.main.view_patient_search_result.view.*
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -40,7 +40,8 @@ class PatientSearchResultItemView(
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
   }
 
   fun render(model: PatientSearchResultViewModel, currentFacilityUuid: UUID) {
@@ -113,4 +114,8 @@ class PatientSearchResultItemView(
       val phoneNumber: String?,
       val lastSeen: PatientSearchResult.LastSeen?
   )
+
+  interface Injector {
+    fun inject(target: PatientSearchResultItemView)
+  }
 }

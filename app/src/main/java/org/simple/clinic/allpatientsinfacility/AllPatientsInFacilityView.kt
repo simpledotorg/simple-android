@@ -15,6 +15,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.SearchResultClicked
+import org.simple.clinic.di.injector
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
@@ -77,7 +78,7 @@ class AllPatientsInFacilityView(
       return
     }
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     setupAllPatientsList()
     setupInitialViewVisibility()
@@ -143,5 +144,9 @@ class AllPatientsInFacilityView(
       layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
       adapter = searchResultsAdapter
     }
+  }
+
+  interface Injector {
+    fun inject(target: AllPatientsInFacilityView)
   }
 }

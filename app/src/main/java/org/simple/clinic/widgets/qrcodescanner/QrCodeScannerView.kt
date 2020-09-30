@@ -17,6 +17,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_qrcode_scanner.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.ActivityLifecycle
+import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import java.util.concurrent.Executors
@@ -50,7 +51,8 @@ constructor(
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
 
     qrCodeScannerLifecycle.bindCamera()
 
@@ -126,5 +128,9 @@ constructor(
         .ofType<ActivityLifecycle.Paused>()
         .takeUntil(screenDestroys)
         .subscribe { qrCodeScannerLifecycle.unBindCamera() }
+  }
+
+  interface Injector {
+    fun inject(target: QrCodeScannerView)
   }
 }

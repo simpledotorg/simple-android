@@ -12,8 +12,8 @@ import kotlinx.android.synthetic.main.screen_shortcode_search_result.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ViewControllerBinding
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.di.injector
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreenKey
@@ -73,7 +73,7 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
     }
     hideKeyboard()
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     val screenKey = screenRouter.key<ShortCodeSearchResultScreenKey>(this)
     setupToolBar(screenKey)
@@ -181,5 +181,9 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
   private fun formatShortCodeForDisplay(context: Context, shortCode: String): CharSequence {
     val textSpacingSpan = TextAppearanceWithLetterSpacingSpan(context, R.style.Clinic_V2_TextAppearance_Body0Left_Numeric_White100)
     return formatShortCodeForDisplay(textSpacingSpan, shortCode)
+  }
+
+  interface Injector {
+    fun inject(target: ShortCodeSearchResultScreen)
   }
 }

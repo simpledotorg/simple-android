@@ -11,6 +11,7 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.screen_new_medical_history.view.*
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
@@ -72,7 +73,8 @@ class NewMedicalHistoryScreen(
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
 
     toolbar.setNavigationOnClickListener {
       screenRouter.pop()
@@ -162,5 +164,9 @@ class NewMedicalHistoryScreen(
 
   override fun showDiagnosisRequiredError(showError: Boolean) {
     diagnosisRequiredError.visibility = if (showError) VISIBLE else GONE
+  }
+
+  interface Injector {
+    fun inject(target: NewMedicalHistoryScreen)
   }
 }

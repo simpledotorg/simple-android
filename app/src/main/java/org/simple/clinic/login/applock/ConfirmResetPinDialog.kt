@@ -1,11 +1,13 @@
 package org.simple.clinic.login.applock
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import org.simple.clinic.R
+import org.simple.clinic.di.injector
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.patient.PatientRepository
@@ -32,9 +34,9 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
     }
   }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    TheActivity.component.inject(this)
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -44,5 +46,9 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
         .setPositiveButton(R.string.applock_reset_pin_alert_confirm) { _, _ -> screenRouter.push(ForgotPinCreateNewPinScreenKey()) }
         .setNegativeButton(R.string.applock_reset_pin_alert_cancel, null)
         .create()
+  }
+
+  interface Injector {
+    fun inject(target: ConfirmResetPinDialog)
   }
 }

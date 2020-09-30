@@ -55,6 +55,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       RetryFetchTeleconsultInfo -> retryFetchTeleconsultInfo(model)
       is ContactDoctorPhoneNumberSelected -> contactDoctorPhoneNumberSelected(model, event)
       LogTeleconsultClicked -> logTeleconsultClicked(model)
+      is MedicalOfficersLoaded -> noChange()
     }
   }
 

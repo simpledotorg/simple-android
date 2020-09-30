@@ -22,6 +22,7 @@ import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
+import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.User
@@ -52,6 +53,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
     private val facilityRepository: FacilityRepository,
+    private val teleconsultationFacilityRepository: TeleconsultationFacilityRepository,
     @Assisted private val uiActions: PatientSummaryUiActions
 ) {
 
@@ -91,7 +93,17 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addAction(ShowTeleconsultInfoError::class.java, { uiActions.showTeleconsultInfoError() }, schedulersProvider.ui())
         .addConsumer(OpenSelectDoctorSheet::class.java, { uiActions.openContactDoctorSheet(it.facility, it.phoneNumbers) }, schedulersProvider.ui())
         .addConsumer(NavigateToTeleconsultRecordScreen::class.java, { uiActions.navigateToTeleconsultRecordScreen(it.patientUuid, it.teleconsultRecordId) }, schedulersProvider.ui())
+        .addTransformer(LoadMedicalOfficers::class.java, loadMedicalOfficers())
         .build()
+  }
+
+  private fun loadMedicalOfficers(): ObservableTransformer<LoadMedicalOfficers, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { teleconsultationFacilityRepository.medicalOfficersForFacility(currentFacility.get().uuid) }
+          .map(::MedicalOfficersLoaded)
+    }
   }
 
   private fun loadUserAndCurrentFacility(): ObservableTransformer<LoadCurrentUserAndFacility, PatientSummaryEvent> {

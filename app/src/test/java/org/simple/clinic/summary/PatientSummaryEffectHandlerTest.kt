@@ -30,6 +30,7 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
+import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.util.Just
@@ -53,6 +54,7 @@ class PatientSummaryEffectHandlerTest {
   private val dataSync = mock<DataSync>()
   private val teleconsultationApi = mock<TeleconsultationApi>()
   private val facilityRepository = mock<FacilityRepository>()
+  private val teleconsultFacilityRepository = mock<TeleconsultationFacilityRepository>()
 
   private val patientSummaryConfig = PatientSummaryConfig(
       bpEditableDuration = Duration.ofMinutes(10),
@@ -82,6 +84,7 @@ class PatientSummaryEffectHandlerTest {
       currentFacility = Lazy { facility },
       uuidGenerator = uuidGenerator,
       facilityRepository = facilityRepository,
+      teleconsultationFacilityRepository = teleconsultFacilityRepository,
       uiActions = uiActions
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -122,6 +125,7 @@ class PatientSummaryEffectHandlerTest {
         currentFacility = Lazy { facility },
         uuidGenerator = uuidGenerator,
         facilityRepository = facilityRepository,
+        teleconsultationFacilityRepository = teleconsultFacilityRepository,
         uiActions = uiActions
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -177,6 +181,7 @@ class PatientSummaryEffectHandlerTest {
         currentFacility = Lazy { facility },
         uuidGenerator = uuidGenerator,
         facilityRepository = facilityRepository,
+        teleconsultationFacilityRepository = teleconsultFacilityRepository,
         uiActions = uiActions
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -580,5 +585,23 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).navigateToTeleconsultRecordScreen(patientUuid, teleconsultRecordId)
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when load medical officers effect is received, then load medical officers`() {
+    // given
+    val medicalOfficers = listOf(
+        TestData.medicalOfficer(id = UUID.fromString("7e59677b-568d-4381-8d21-931208088262")),
+        TestData.medicalOfficer(id = UUID.fromString("3ae9c956-5a96-4734-a4d6-c79f341d09a6"))
+    )
+
+    whenever(teleconsultFacilityRepository.medicalOfficersForFacility(facilityId = facility.uuid)) doReturn medicalOfficers
+
+    // when
+    testCase.dispatch(LoadMedicalOfficers)
+
+    // then
+    testCase.assertOutgoingEvents(MedicalOfficersLoaded(medicalOfficers))
+    verifyZeroInteractions(uiActions)
   }
 }

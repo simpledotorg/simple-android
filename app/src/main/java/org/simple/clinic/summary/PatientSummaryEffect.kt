@@ -77,3 +77,5 @@ data class NavigateToTeleconsultRecordScreen(
     val patientUuid: UUID,
     val teleconsultRecordId: UUID
 ) : PatientSummaryEffect()
+
+object LoadMedicalOfficers : PatientSummaryEffect()

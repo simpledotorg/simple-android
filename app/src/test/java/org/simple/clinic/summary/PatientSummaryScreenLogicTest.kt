@@ -250,6 +250,7 @@ class PatientSummaryScreenLogicTest {
         currentFacility = Lazy { facility },
         uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
         facilityRepository = facilityRepository,
+        teleconsultationFacilityRepository = mock(),
         uiActions = uiActions
     )
 

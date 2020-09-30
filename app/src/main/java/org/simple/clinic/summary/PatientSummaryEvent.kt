@@ -3,6 +3,7 @@ package org.simple.clinic.summary
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
+import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.user.User
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
@@ -80,3 +81,5 @@ data class ContactDoctorPhoneNumberSelected(
 ) : PatientSummaryEvent()
 
 object LogTeleconsultClicked : PatientSummaryEvent()
+
+data class MedicalOfficersLoaded(val medicalOfficers: List<MedicalOfficer>) : PatientSummaryEvent()

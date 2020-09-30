@@ -204,13 +204,13 @@
     android:paddingBottom="@dimen/spacing_8">
 
     <com.google.android.material.button.MaterialButton
-      android:id="@+id/doctorButton"
+      android:id="@+id/teleconsultButton"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_8"
       android:layout_marginEnd="@dimen/spacing_8"
       android:layout_weight="1"
-      android:text="@string/patientsummary_contact_doctor"
+      android:text="@string/patientsummary_teleconsult"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       android:visibility="gone"
       app:backgroundTint="@color/green1" />

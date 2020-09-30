@@ -48,7 +48,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).showDiabetesView()
-    verify(ui).hideContactDoctorButton()
+    verify(ui).hideTeleconsultButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -62,7 +62,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).hideDiabetesView()
-    verify(ui).hideContactDoctorButton()
+    verify(ui).hideTeleconsultButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -111,7 +111,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).showDiabetesView()
-    verify(ui).hideContactDoctorButton()
+    verify(ui).hideTeleconsultButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -131,7 +131,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).showDiabetesView()
-    verify(ui).showContactDoctorButton()
+    verify(ui).showTeleconsultButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -147,7 +147,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).showDiabetesView()
-    verify(ui).hideContactDoctorButton()
+    verify(ui).hideTeleconsultButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -236,7 +236,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).showDiabetesView()
-    verify(ui).hideContactDoctorButton()
+    verify(ui).hideTeleconsultButton()
     verify(ui).hideDoneButton()
     verify(ui).showTeleconsultLogButton()
     verifyNoMoreInteractions(ui)

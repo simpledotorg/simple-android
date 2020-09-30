@@ -17,7 +17,8 @@ data class TeleconsultRecordModel(
     val teleconsultRecordId: UUID,
     val teleconsultationType: TeleconsultationType,
     val patientTookMedicines: Answer,
-    val patientConsented: Answer
+    val patientConsented: Answer,
+    val teleconsultRecordCreateState: TeleconsultRecordCreateState?
 ) : Parcelable {
 
   val hasPatient: Boolean
@@ -31,7 +32,8 @@ data class TeleconsultRecordModel(
         teleconsultRecordId = teleconsultRecordId,
         teleconsultationType = Audio,
         patientTookMedicines = Yes,
-        patientConsented = Yes
+        patientConsented = Yes,
+        teleconsultRecordCreateState = null
     )
   }
 

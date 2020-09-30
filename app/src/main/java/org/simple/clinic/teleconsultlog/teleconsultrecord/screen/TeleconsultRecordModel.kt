@@ -8,6 +8,7 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Audio
+import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordCreateState.CREATING_TELECONSULT_RECORD
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordCreateState.NOT_CREATING_TELECONSULT_RECORD
 import java.util.UUID
 
@@ -52,5 +53,9 @@ data class TeleconsultRecordModel(
 
   fun teleconsultRecordCreated(): TeleconsultRecordModel {
     return copy(teleconsultRecordCreateState = NOT_CREATING_TELECONSULT_RECORD)
+  }
+
+  fun creatingTeleconsultRecord(): TeleconsultRecordModel {
+    return copy(teleconsultRecordCreateState = CREATING_TELECONSULT_RECORD)
   }
 }

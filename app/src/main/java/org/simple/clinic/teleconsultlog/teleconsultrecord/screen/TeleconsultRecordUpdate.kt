@@ -13,13 +13,15 @@ class TeleconsultRecordUpdate : Update<TeleconsultRecordModel, TeleconsultRecord
       BackClicked -> dispatch(ValidateTeleconsultRecord(model.teleconsultRecordId))
       is TeleconsultRecordLoaded -> teleconsultRecordLoaded(model, event)
       is TeleconsultRecordCreated -> dispatch(ClonePatientPrescriptions(model.patientUuid, model.teleconsultRecordId))
-      is DoneClicked -> dispatch(CreateTeleconsultRecord(
-          patientUuid = model.patientUuid,
-          teleconsultRecordId = model.teleconsultRecordId,
-          teleconsultationType = event.teleconsultationType,
-          patientTookMedicine = event.patientTookMedicines,
-          patientConsented = event.patientConsented
-      ))
+      is DoneClicked -> next(
+          model.creatingTeleconsultRecord(),
+          CreateTeleconsultRecord(
+              patientUuid = model.patientUuid,
+              teleconsultRecordId = model.teleconsultRecordId,
+              teleconsultationType = event.teleconsultationType,
+              patientTookMedicine = event.patientTookMedicines,
+              patientConsented = event.patientConsented
+          ))
       is PatientDetailsLoaded -> next(model.patientLoaded(event.patient))
       is TeleconsultRecordValidated -> teleconsultRecordValidated(event)
       PatientPrescriptionsCloned -> next(

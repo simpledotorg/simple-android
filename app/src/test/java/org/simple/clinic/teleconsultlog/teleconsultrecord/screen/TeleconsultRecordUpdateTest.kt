@@ -67,7 +67,7 @@ class TeleconsultRecordUpdateTest {
             patientConsented = Yes
         ))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(defaultModel.creatingTeleconsultRecord()),
             hasEffects(CreateTeleconsultRecord(
                 patientUuid = patientUuid,
                 teleconsultRecordId = teleconsultRecordId,

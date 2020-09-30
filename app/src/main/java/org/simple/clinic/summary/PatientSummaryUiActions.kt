@@ -30,4 +30,5 @@ interface PatientSummaryUiActions {
       phoneNumbers: List<TeleconsultPhoneNumber>
   )
   fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID)
+  fun openContactDoctorSheet(patientUuid: UUID)
 }

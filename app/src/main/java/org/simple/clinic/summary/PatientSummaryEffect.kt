@@ -79,3 +79,5 @@ data class NavigateToTeleconsultRecordScreen(
 ) : PatientSummaryEffect()
 
 object LoadMedicalOfficers : PatientSummaryEffect()
+
+data class OpenContactDoctorSheet(val patientUuid: UUID) : PatientSummaryEffect()

@@ -48,6 +48,7 @@ import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
+import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet_Old
 import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder_Old
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
@@ -506,6 +507,11 @@ class PatientSummaryScreen(
   ) {
     val intent = ContactDoctorSheet_Old.intent(context, facility, phoneNumbers)
     activity.startActivityForResult(intent, CONTACT_DOCTOR_SHEET)
+  }
+
+  override fun openContactDoctorSheet(patientUuid: UUID) {
+    val intent = ContactDoctorSheet.intent(context, patientUuid)
+    context.startActivity(intent)
   }
 
   override fun enableContactDoctorButton() {

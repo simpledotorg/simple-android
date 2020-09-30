@@ -604,4 +604,16 @@ class PatientSummaryEffectHandlerTest {
     testCase.assertOutgoingEvents(MedicalOfficersLoaded(medicalOfficers))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when open contact doctor sheet effect is received, then open the contact doctor sheet`() {
+    // when
+    testCase.dispatch(OpenContactDoctorSheet(patientUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openContactDoctorSheet(patientUuid)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

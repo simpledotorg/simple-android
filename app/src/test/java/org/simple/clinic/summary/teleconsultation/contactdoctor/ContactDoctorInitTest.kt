@@ -11,7 +11,8 @@ import java.util.UUID
 
 class ContactDoctorInitTest {
 
-  private val model = ContactDoctorModel.create()
+  private val patientUuid = UUID.fromString("b3a124a8-7cb1-4af3-9ef7-001dfe572f35")
+  private val model = ContactDoctorModel.create(patientUuid)
   private val initSpec = InitSpec(ContactDoctorInit())
 
   @Test

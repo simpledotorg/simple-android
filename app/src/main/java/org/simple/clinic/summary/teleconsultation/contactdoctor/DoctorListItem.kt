@@ -4,8 +4,8 @@ import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.list_contact_doctor.*
 import org.simple.clinic.R
-import org.simple.clinic.summary.teleconsultation.contactdoctor.DoctorListItem.Event.ContactMode.SMS
-import org.simple.clinic.summary.teleconsultation.contactdoctor.DoctorListItem.Event.ContactMode.WhatsApp
+import org.simple.clinic.summary.teleconsultation.contactdoctor.DoctorListItem.Event.SmsClicked
+import org.simple.clinic.summary.teleconsultation.contactdoctor.DoctorListItem.Event.WhatsAppClicked
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
@@ -47,26 +47,23 @@ data class DoctorListItem(
     holder.doctorNumberTextView.text = number
 
     holder.whatsAppDoctorImageView.setOnClickListener {
-      subject.onNext(Event.MessageDoctorClicked(
-          phoneNumber = number,
-          contactMode = WhatsApp
+      subject.onNext(WhatsAppClicked(
+          doctorId = doctorId,
+          phoneNumber = number
       ))
     }
     holder.messageDoctorImageView.setOnClickListener {
-      subject.onNext(Event.MessageDoctorClicked(
-          phoneNumber = number,
-          contactMode = SMS
+      subject.onNext(SmsClicked(
+          doctorId = doctorId,
+          phoneNumber = number
       ))
     }
   }
 
   sealed class Event {
 
-    enum class ContactMode {
-      WhatsApp,
-      SMS
-    }
+    data class WhatsAppClicked(val doctorId: UUID, val phoneNumber: String) : Event()
 
-    data class MessageDoctorClicked(val phoneNumber: String, val contactMode: ContactMode) : Event()
+    data class SmsClicked(val doctorId: UUID, val phoneNumber: String) : Event()
   }
 }

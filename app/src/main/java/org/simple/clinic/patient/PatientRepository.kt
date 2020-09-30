@@ -580,18 +580,12 @@ class PatientRepository @Inject constructor(
 
   }
 
-  fun bpPassportForPatient(patientUuid: UUID): Observable<Optional<BusinessId>> {
-    return database
+  fun bpPassportForPatient(patientUuid: UUID): Optional<BusinessId> {
+    val bpPassportsForPatient = database
         .businessIdDao()
-        .latestForPatientByType(patientUuid, BpPassport)
-        .map { bpPassports ->
-          if (bpPassports.isEmpty()) {
-            None()
-          } else {
-            bpPassports.first().toOptional()
-          }
-        }
-        .toObservable()
+        .latestForPatientByTypeImmediate(patientUuid, BpPassport)
+
+    return bpPassportsForPatient.firstOrNull().toOptional()
   }
 
   fun bangladeshNationalIdForPatient(patientUuid: UUID): Observable<Optional<BusinessId>> {

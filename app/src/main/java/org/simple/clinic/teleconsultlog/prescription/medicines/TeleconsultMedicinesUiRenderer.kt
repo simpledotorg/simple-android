@@ -16,8 +16,10 @@ class TeleconsultMedicinesUiRenderer(
   private fun renderMedicines(medicines: List<PrescribedDrug>) {
     if (medicines.isNotEmpty()) {
       ui.renderMedicines(medicines)
+      ui.showEditButton()
     } else {
       ui.showNoMedicines()
+      ui.showAddButton()
     }
   }
 }

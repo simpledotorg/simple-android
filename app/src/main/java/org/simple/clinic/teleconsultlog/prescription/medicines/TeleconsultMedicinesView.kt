@@ -131,6 +131,14 @@ class TeleconsultMedicinesView(
     medicinesRecyclerView.visibility = GONE
   }
 
+  override fun showAddButton() {
+    medicinesEditButton.text = context.getString(R.string.view_teleconsult_medicines_add)
+  }
+
+  override fun showEditButton() {
+    medicinesEditButton.text = context.getString(R.string.view_teleconsult_medicines_edit)
+  }
+
   override fun openEditMedicines(patientUuid: UUID) {
     screenRouter.push(PrescribedDrugsScreenKey(patientUuid))
   }

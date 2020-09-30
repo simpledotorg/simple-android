@@ -5,4 +5,6 @@ import org.simple.clinic.drugs.PrescribedDrug
 interface TeleconsultMedicinesUi {
   fun renderMedicines(medicines: List<PrescribedDrug>)
   fun showNoMedicines()
+  fun showAddButton()
+  fun showEditButton()
 }

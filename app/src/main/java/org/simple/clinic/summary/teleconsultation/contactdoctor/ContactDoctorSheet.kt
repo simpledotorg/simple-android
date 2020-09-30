@@ -5,47 +5,82 @@ import android.content.Intent
 import android.os.Bundle
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.sheet_contact_doctor_new.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.summary.PatientTeleconsultationInfo
+import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder
+import org.simple.clinic.summary.teleconsultation.messagebuilder.ShortTeleconsultMessageBuilder
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.messagesender.SmsMessageSender
+import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.dp
 import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 
-class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi {
+class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctorUiActions {
 
   companion object {
-    fun intent(context: Context): Intent {
-      return Intent(context, ContactDoctorSheet::class.java)
+    private const val EXTRA_PATIENT_UUID = "patientUuid"
+
+    fun intent(context: Context, patientUuid: UUID): Intent {
+      return Intent(context, ContactDoctorSheet::class.java).apply {
+        putExtra(EXTRA_PATIENT_UUID, patientUuid)
+      }
     }
   }
 
   @Inject
-  lateinit var effectHandler: ContactDoctorEffectHandler
+  lateinit var effectHandlerFactory: ContactDoctorEffectHandler.Factory
 
   @Inject
   lateinit var locale: Locale
 
+  @Inject
+  lateinit var longTeleconsultMessageBuilder: LongTeleconsultMessageBuilder
+
+  @Inject
+  lateinit var shortTeleconsultMessageBuilder: ShortTeleconsultMessageBuilder
+
+  @Inject
+  lateinit var whatsAppMessageSender: WhatsAppMessageSender
+
+  @Inject
+  lateinit var smsMessageSender: SmsMessageSender
+
   private val itemAdapter = ItemAdapter(DoctorListItem.DiffCallback())
+
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            whatsAppButtonClicks(),
+            smsButtonClicks()
+        )
+        .compose(ReportAnalyticsEvents())
+  }
 
   private val delegate by unsafeLazy {
     val uiRenderer = ContactDoctorUiRenderer(this)
+    val patientUuid = intent.getSerializableExtra(EXTRA_PATIENT_UUID) as UUID
 
     MobiusDelegate.forActivity(
-        events = Observable.never(),
-        defaultModel = ContactDoctorModel.create(),
+        events = events.ofType(),
+        defaultModel = ContactDoctorModel.create(patientUuid),
         init = ContactDoctorInit(),
         update = ContactDoctorUpdate(),
-        effectHandler = effectHandler.build(),
+        effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render
     )
   }
@@ -84,6 +119,23 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi {
     itemAdapter.submitList(DoctorListItem.from(medicalOfficers))
   }
 
+  override fun sendTeleconsultMessage(teleconsultInfo: PatientTeleconsultationInfo, messageTarget: MessageTarget) {
+    when (messageTarget) {
+      MessageTarget.WHATSAPP -> sendWhatsAppMessage(teleconsultInfo)
+      MessageTarget.SMS -> sendSmsMessage(teleconsultInfo)
+    }
+  }
+
+  private fun sendWhatsAppMessage(teleconsultInfo: PatientTeleconsultationInfo) {
+    val message = longTeleconsultMessageBuilder.message(teleconsultInfo)
+    whatsAppMessageSender.send(teleconsultInfo.doctorPhoneNumber!!, message)
+  }
+
+  private fun sendSmsMessage(teleconsultInfo: PatientTeleconsultationInfo) {
+    val message = shortTeleconsultMessageBuilder.message(teleconsultInfo)
+    smsMessageSender.send(teleconsultInfo.doctorPhoneNumber!!, message)
+  }
+
   override fun attachBaseContext(baseContext: Context) {
     setupDiGraph()
 
@@ -93,6 +145,20 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi {
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)
+  }
+
+  private fun whatsAppButtonClicks(): Observable<UiEvent> {
+    return itemAdapter
+        .itemEvents
+        .ofType<DoctorListItem.Event.WhatsAppClicked>()
+        .map { WhatsAppButtonClicked(it.doctorId, it.phoneNumber) }
+  }
+
+  private fun smsButtonClicks(): Observable<UiEvent> {
+    return itemAdapter
+        .itemEvents
+        .ofType<DoctorListItem.Event.SmsClicked>()
+        .map { SmsButtonClicked(it.doctorId, it.phoneNumber) }
   }
 
   private fun setupDiGraph() {

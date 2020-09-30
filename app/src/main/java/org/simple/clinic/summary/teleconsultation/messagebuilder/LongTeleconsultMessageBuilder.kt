@@ -4,6 +4,7 @@ import android.content.res.Resources
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.summary.PatientTeleconsultationInfo
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
@@ -33,6 +34,7 @@ class LongTeleconsultMessageBuilder @Inject constructor(
         .appendLine("1️⃣ Review Patient:")
         .appendLine("")
 
+    addDiagnosisSectionToMessage(patientTeleconsultationInfo, message)
     addBpPassportForTeleconsultSectionToMessage(patientTeleconsultationInfo, message)
     addBloodPressuresSectionToMessage(patientTeleconsultationInfo, message)
     addBloodSugarsSectionToMessage(patientTeleconsultationInfo, message)
@@ -45,6 +47,36 @@ class LongTeleconsultMessageBuilder @Inject constructor(
     sectionBreaker(message)
 
     return message.toString()
+  }
+
+  private fun addDiagnosisSectionToMessage(patientTeleconsultationInfo: PatientTeleconsultationInfo, message: StringBuilder) {
+    val hyperTensionTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_hypertension)
+    val diabetesTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_diabetes)
+
+    val diagnosedWithHypertension = patientTeleconsultationInfo.medicalHistory.diagnosedWithHypertension
+    val diagnosedWithDiabetes = patientTeleconsultationInfo.medicalHistory.diagnosedWithDiabetes
+
+    if (diagnosedWithHypertension.isAnswered || diagnosedWithDiabetes.isAnswered) {
+      message.appendLine(resources.getString(R.string.patientsummary_contact_doctor_diagnosis))
+    }
+
+    if (diagnosedWithHypertension.isAnswered) {
+      message.appendLine("$hyperTensionTitle ${textForDiagnosisAnswer(diagnosedWithHypertension)}")
+    }
+
+    if (diagnosedWithDiabetes.isAnswered) {
+      message.appendLine("$diabetesTitle ${textForDiagnosisAnswer(diagnosedWithDiabetes)}")
+    }
+
+    message.appendLine("")
+  }
+
+  private fun textForDiagnosisAnswer(answer: Answer): String {
+    return when (answer) {
+      Answer.Yes -> resources.getString(R.string.patientsummary_contact_doctor_diagnosis_answer_yes)
+      Answer.No -> resources.getString(R.string.patientsummary_contact_doctor_diagnosis_answer_no)
+      else -> ""
+    }
   }
 
   private fun addBpPassportForTeleconsultSectionToMessage(

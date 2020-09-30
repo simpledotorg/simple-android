@@ -65,6 +65,9 @@ data class PatientSummaryModel(
   val isTeleconsultLogDeepLink: Boolean
     get() = openIntention is ViewExistingPatientWithTeleconsultLog
 
+  val hasMedicalOfficers: Boolean
+    get() = medicalOfficers.isNullOrEmpty().not()
+
   override fun readyToRender(): Boolean {
     return hasLoadedPatientSummaryProfile && hasLoadedCurrentFacility
   }

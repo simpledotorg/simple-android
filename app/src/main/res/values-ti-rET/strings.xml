@@ -175,8 +175,6 @@
   <string name="patientsummary_bangladesh_national_id">መለለዪ ቁጽሪ</string>
 
   <string name="patientsummary_contact_doctor">ሓኪም</string>
-  <string name="patientsummary_teleconsult_network_error">ብምኽኒያት ድኹም ኢንተርኔት ርክብ ምግባር ኣይተኽኣለን</string>
-  <string name="patientsummary_teleconsult_network_error_retry">ደጊምካ ፈትን</string>
   <string name="patientsummary_log_teleconsult">ናብ Teleconsult እተው</string>
 
   <string name="patientsummary_registered_faciliy_title">ዝተመዝገበ</string>
@@ -569,8 +567,6 @@
   <string name="screensplash_next">ዝቕፅል</string>
 
   <!-- Contact doctor sheet -->
-  <string name="contactdoctor_title">ሓካይም</string>
-  <string name="contactdoctor_subtitle">ዝተመደቦ ናብ %1$s</string>
   <string name="contactdoctor_new_title">ዶክተራት ኣለዉ</string>
   <string name="contactdoctor_new_subtitle">እንተተኻኢሉ WhatsApp ተተቐም</string>
 

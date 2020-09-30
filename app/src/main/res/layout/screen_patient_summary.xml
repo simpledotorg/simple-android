@@ -216,7 +216,7 @@
       app:icon="@drawable/ic_done_24dp"
       app:iconGravity="textStart" />
 
-    <org.simple.clinic.widgets.ProgressMaterialButton
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/doctorButton"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
@@ -227,7 +227,6 @@
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       android:visibility="gone"
       app:backgroundTint="@color/contact_doctor_button"
-      app:buttonState="in-progress"
       app:icon="@drawable/ic_whatsapp"
       app:iconTint="@android:color/white" />
 
@@ -239,9 +238,9 @@
       android:layout_marginStart="@dimen/spacing_8"
       android:layout_marginEnd="@dimen/spacing_8"
       android:text="@string/patientsummary_log_teleconsult"
-      app:backgroundTint="@color/green1"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
-      android:visibility="gone" />
+      android:visibility="gone"
+      app:backgroundTint="@color/green1" />
 
   </LinearLayout>
 

@@ -4,7 +4,6 @@ import com.spotify.mobius.First
 import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 
 class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
 
@@ -13,10 +12,6 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
 
     if (!model.hasUserLoggedInStatus || !model.hasLoadedCurrentFacility) {
       effects.add(LoadCurrentUserAndFacility)
-    }
-
-    if (model.canCheckTeleconsultationInfo && model.isTeleconsultLogDeepLink.not()) {
-      effectForTeleconsultInfoState(model, effects)
     }
 
     if (!model.hasCheckedForInvalidPhone) {
@@ -28,19 +23,5 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
     }
 
     return first(model, effects)
-  }
-
-  private fun effectForTeleconsultInfoState(
-      model: PatientSummaryModel,
-      effects: MutableSet<PatientSummaryEffect>
-  ) {
-    when (model.teleconsultInfo) {
-      null, is TeleconsultInfo.Fetching -> {
-        effects.add(FetchTeleconsultationInfo(model.currentFacility!!.uuid))
-      }
-      is TeleconsultInfo.NetworkError -> {
-        effects.add(ShowTeleconsultInfoError)
-      }
-    }
   }
 }

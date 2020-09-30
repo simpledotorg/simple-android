@@ -17,8 +17,6 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
-import org.simple.clinic.user.User
 import java.util.UUID
 
 class PatientSummaryUpdateTest {
@@ -593,55 +591,10 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when patient teleconsultation information is loaded, then contact doctor`() {
-    val phoneNumber = TestData.teleconsultPhoneNumber()
-    val phoneNumbers = listOf(phoneNumber)
-    val teleconsultInfo = TeleconsultInfo.Fetched(phoneNumbers)
-    val model = defaultModel
-        .patientSummaryProfileLoaded(patientSummaryProfile)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .fetchedTeleconsultationInfo(teleconsultInfo)
-
-    val patientInformation = PatientTeleconsultationInfo(
-        patientUuid = patientUuid,
-        teleconsultRecordId = null,
-        bpPassport = "123 456",
-        facility = TestData.facility(uuid = UUID.fromString("b1e1dde7-a279-4239-833a-c0af70a3c8a2")),
-        bloodPressures = listOf(
-            TestData.bloodPressureMeasurement(uuid = UUID.fromString("7de25235-8b8f-41bc-b2e6-60db60b60455"))
-        ),
-        bloodSugars = listOf(
-            TestData.bloodSugarMeasurement(uuid = UUID.fromString("22873c50-91fa-4916-8286-4d5c68a007c0"))
-        ),
-        prescriptions = listOf(
-            TestData.prescription(uuid = UUID.fromString("e0cfae5c-36ca-4206-8e6b-11d22693bc64"))
-        ),
-        medicalHistory = TestData.medicalHistory(
-            uuid = UUID.fromString("d3575cf8-bbbb-4f54-bda2-ed84bdce0090")
-        ),
-        nursePhoneNumber = null,
-        doctorPhoneNumber = null
-    )
-
-    updateSpec
-        .given(model)
-        .whenEvent(PatientTeleconsultationInfoLoaded(patientInformation, phoneNumber))
-        .then(
-            assertThatNext(
-                hasNoModel(),
-                hasEffects(ContactDoctor(patientInformation, phoneNumber.phoneNumber) as PatientSummaryEffect)
-            )
-        )
-  }
-
-  @Test
   fun `when contact doctor button is clicked, then open contact doctor sheet`() {
-    val phoneNumber = TestData.teleconsultPhoneNumber()
-    val phoneNumbers = listOf(phoneNumber)
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .fetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumbers))
 
     updateSpec
         .given(model)
@@ -650,107 +603,6 @@ class PatientSummaryUpdateTest {
             assertThatNext(
                 hasNoModel(),
                 hasEffects(OpenContactDoctorSheet(patientUuid) as PatientSummaryEffect)
-            )
-        )
-  }
-
-  @Test
-  fun `when facility teleconsultation info is loaded, then update the UI`() {
-    val phoneNumbers = listOf(TestData.teleconsultPhoneNumber())
-    val model = defaultModel
-        .patientSummaryProfileLoaded(patientSummaryProfile)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-    val teleconsultInfo = TeleconsultInfo.Fetched(phoneNumbers)
-
-    updateSpec
-        .given(model)
-        .whenEvent(FetchedTeleconsultationInfo(teleconsultInfo))
-        .then(
-            assertThatNext(
-                hasModel(model.fetchedTeleconsultationInfo(teleconsultInfo)),
-                hasNoEffects()
-            )
-        )
-  }
-
-  @Test
-  fun `when retry fetching teleconsultation info is clicked, then fetch the teleconsultation info`() {
-    val model = defaultModel
-        .patientSummaryProfileLoaded(patientSummaryProfile)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .fetchedTeleconsultationInfo(TeleconsultInfo.NetworkError)
-
-    updateSpec
-        .given(model)
-        .whenEvent(RetryFetchTeleconsultInfo)
-        .then(
-            assertThatNext(
-                hasModel(model.fetchingTeleconsultationInfo()),
-                hasEffects(FetchTeleconsultationInfo(facilityWithDiabetesManagementEnabled.uuid) as PatientSummaryEffect)
-            )
-        )
-  }
-
-  @Test
-  fun `when fetching teleconsultation info fails with network error, then show teleconsultation info error`() {
-    val model = defaultModel
-        .patientSummaryProfileLoaded(patientSummaryProfile)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-    val teleconsultInfo = TeleconsultInfo.NetworkError
-
-    updateSpec
-        .given(model)
-        .whenEvent(FetchedTeleconsultationInfo(teleconsultInfo))
-        .then(assertThatNext(
-            hasModel(model.failedToFetchTeleconsultationInfo()),
-            hasEffects(ShowTeleconsultInfoError as PatientSummaryEffect)
-        ))
-  }
-
-  @Test
-  fun `when current user and facility is loaded, user is logged in and teleconsultation is enabled and open intention is not teleconsult log deep link, then fetch teleconsultation info`() {
-    val user = TestData.loggedInUser(
-        uuid = UUID.fromString("1a004469-cd65-4f43-910c-7f4cb2127c86"),
-        loggedInStatus = User.LoggedInStatus.LOGGED_IN
-    )
-    val model = defaultModel
-        .patientSummaryProfileLoaded(patientSummaryProfile)
-
-    updateSpec
-        .given(model)
-        .whenEvent(CurrentUserAndFacilityLoaded(user, facilityWithTeleconsultationEnabled))
-        .then(assertThatNext(
-            hasModel(
-                model
-                    .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
-                    .userLoggedInStatusLoaded(user.loggedInStatus)
-                    .fetchingTeleconsultationInfo()
-            ),
-            hasEffects(FetchTeleconsultationInfo(facilityWithTeleconsultationEnabled.uuid) as PatientSummaryEffect)
-        ))
-  }
-
-  @Test
-  fun `when contact doctor phone number is selected, then load patient teleconsultation info`() {
-    val phoneNumber = TestData.teleconsultPhoneNumber()
-    val phoneNumbers = listOf(phoneNumber)
-    val model = defaultModel
-        .patientSummaryProfileLoaded(patientSummaryProfile)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .fetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumbers))
-
-    updateSpec
-        .given(model)
-        .whenEvent(ContactDoctorPhoneNumberSelected(phoneNumber))
-        .then(
-            assertThatNext(
-                hasNoModel(),
-                hasEffects(LoadPatientTeleconsultationInfo(
-                    model.patientUuid,
-                    model.patientSummaryProfile?.bpPassport,
-                    model.currentFacility,
-                    phoneNumber
-                ) as PatientSummaryEffect)
             )
         )
   }

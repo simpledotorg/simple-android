@@ -6,20 +6,13 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewConfig
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfigModule
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultFacilityInfoApi
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordModule
 import retrofit2.Retrofit
-import retrofit2.create
 import javax.inject.Named
 
 @Module(includes = [BloodSugarSummaryConfigModule::class, TeleconsultRecordModule::class])
 class PatientSummaryModule {
-
-  @Provides
-  fun providesTeleconsultaionApi(@Named("for_country") retrofit: Retrofit): TeleconsultationApi {
-    return retrofit.create()
-  }
 
   @Provides
   fun teleconsultationFacilitySyncApi(@Named("for_country") retrofit: Retrofit): TeleconsultFacilityInfoApi {

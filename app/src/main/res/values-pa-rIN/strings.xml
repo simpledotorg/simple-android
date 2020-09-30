@@ -175,8 +175,6 @@
   <string name="patientsummary_bangladesh_national_id">ਆਈਡੀ</string>
 
   <string name="patientsummary_contact_doctor">ਡਾਕਟਰ</string>
-  <string name="patientsummary_teleconsult_network_error">ਖ਼ਰਾਬ ਇੰਟਰਨੈਟ ਦੇ ਕਾਰਨ ਕਨੈਕਟ ਨਹੀਂ ਕਰ ਸਕਦੇ</string>
-  <string name="patientsummary_teleconsult_network_error_retry">ਮੁੜ-ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
   <string name="patientsummary_log_teleconsult">ਟੈਲੀਕੰਸਲਟ ਲਾਗ ਕਰੋ</string>
 
   <string name="patientsummary_registered_faciliy_title">ਰਜਿਸਟਰਡ</string>
@@ -569,8 +567,6 @@
   <string name="screensplash_next">ਅਗਲਾ</string>
 
   <!-- Contact doctor sheet -->
-  <string name="contactdoctor_title">ਡਾਕਟਰਾਂ ਨਾਲ</string>
-  <string name="contactdoctor_subtitle">%1$s ਨੂੰ ਸਪੁਰਦ ਕੀਤਾ ਹੈ</string>
   <string name="contactdoctor_new_title">ਡਾਕਟਰ ਉਪਲਬਧ ਹਨ</string>
   <string name="contactdoctor_new_subtitle">ਜੇ ਸੰਭਵ ਹੋਵੇ ਤਾਂ WhatsApp ਦੀ ਵਰਤੋਂ ਕਰੋ</string>
 

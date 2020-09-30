@@ -175,8 +175,6 @@
   <string name="patientsummary_bangladesh_national_id">መታወቂያ</string>
 
   <string name="patientsummary_contact_doctor">ሐኪም</string>
-  <string name="patientsummary_teleconsult_network_error">በመጥፎ በይነመረብ አማካኝነት ማገናኘት አልተቻለም</string>
-  <string name="patientsummary_teleconsult_network_error_retry">በድጋሚ ይሞክሩ</string>
   <string name="patientsummary_log_teleconsult">Teleconsult ይግቡ</string>
 
   <string name="patientsummary_registered_faciliy_title">የመዝግቧል</string>
@@ -569,8 +567,6 @@
   <string name="screensplash_next">ቀጣይ</string>
 
   <!-- Contact doctor sheet -->
-  <string name="contactdoctor_title">ሐኪሞች</string>
-  <string name="contactdoctor_subtitle">ለ %1$s ተመድቧል</string>
   <string name="contactdoctor_new_title">ሐኪሞች ይገኛሉ</string>
   <string name="contactdoctor_new_subtitle">ከተቻለ ዋትስአፕ ይጠቀሙ</string>
 

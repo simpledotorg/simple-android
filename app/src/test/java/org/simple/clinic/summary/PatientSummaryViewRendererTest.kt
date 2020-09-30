@@ -8,7 +8,6 @@ import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import org.simple.clinic.user.User
 import java.util.UUID
 
@@ -101,31 +100,11 @@ class PatientSummaryViewRendererTest {
   }
 
   @Test
-  fun `when teleconsultation info is loaded, then enable contact doctor button`() {
-    // given
-    val phoneNumber = "+911111111111"
-    val phoneNumbers = listOf(TestData.teleconsultPhoneNumber(phoneNumber))
-    val teleconsultInfo = TeleconsultInfo.Fetched(phoneNumbers)
-    val model = defaultModel
-        .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
-        .fetchedTeleconsultationInfo(teleconsultInfo)
-
-    // when
-    uiRenderer.render(model)
-
-    // then
-    verify(ui).showDiabetesView()
-    verify(ui).hideContactDoctorButton()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
   fun `when there are no medical officers, then hide contact doctor button`() {
     // given
     val model = defaultModel
         .userLoggedInStatusLoaded(User.LoggedInStatus.LOGGED_IN)
         .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
-        .fetchedTeleconsultationInfo(TeleconsultInfo.MissingPhoneNumber)
 
     // when
     uiRenderer.render(model)

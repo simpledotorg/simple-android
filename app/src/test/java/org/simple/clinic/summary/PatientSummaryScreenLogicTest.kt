@@ -34,7 +34,6 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -58,7 +57,6 @@ class PatientSummaryScreenLogicTest {
   private val bpRepository = mock<BloodPressureRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientUuid = UUID.fromString("d2fe1916-b76a-4bb6-b7e5-e107f00c3163")
-  private val teleconsultationApi = mock<TeleconsultationApi>()
   private val user = TestData.loggedInUser(UUID.fromString("3002c0e2-01ce-4053-833c-bc6f3aa3e3d4"))
   private val facility = TestData.facility(uuid = UUID.fromString("b84a6311-6faf-4de3-9336-ccd64de629f9"))
   private val medicalHistoryUuid = UUID.fromString("fe66d59b-b7e9-48f3-b22b-14d55c5532cb")
@@ -245,7 +243,6 @@ class PatientSummaryScreenLogicTest {
         prescriptionRepository = prescriptionRepository,
         country = TestData.country(),
         patientSummaryConfig = patientSummaryConfig,
-        teleconsultationApi = teleconsultationApi,
         currentUser = Lazy { user },
         currentFacility = Lazy { facility },
         uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),

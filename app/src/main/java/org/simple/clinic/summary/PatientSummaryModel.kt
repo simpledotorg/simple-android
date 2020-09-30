@@ -3,8 +3,6 @@ package org.simple.clinic.summary
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.user.User
 import java.util.UUID
@@ -17,7 +15,6 @@ data class PatientSummaryModel(
     val currentFacility: Facility?,
     val hasCheckedForInvalidPhone: Boolean,
     val linkIdWithPatientViewShown: Boolean,
-    val teleconsultInfo: TeleconsultInfo?,
     val userLoggedInStatus: User.LoggedInStatus?,
     val medicalOfficers: List<MedicalOfficer>?
 ) : Parcelable, PatientSummaryChildModel {
@@ -31,7 +28,6 @@ data class PatientSummaryModel(
           currentFacility = null,
           hasCheckedForInvalidPhone = false,
           linkIdWithPatientViewShown = false,
-          teleconsultInfo = null,
           userLoggedInStatus = null,
           medicalOfficers = null
       )
@@ -56,14 +52,8 @@ data class PatientSummaryModel(
   val hasUserLoggedInStatus: Boolean
     get() = userLoggedInStatus != null
 
-  val canCheckTeleconsultationInfo: Boolean
-    get() = hasLoadedCurrentFacility && isTeleconsultationEnabled && isUserLoggedIn
-
   val hasAssignedFacility: Boolean
     get() = patientSummaryProfile?.patient?.assignedFacilityId != null
-
-  val isTeleconsultLogDeepLink: Boolean
-    get() = openIntention is ViewExistingPatientWithTeleconsultLog
 
   val hasMedicalOfficers: Boolean
     get() = medicalOfficers.isNullOrEmpty().not()
@@ -86,18 +76,6 @@ data class PatientSummaryModel(
 
   fun shownLinkIdWithPatientView(): PatientSummaryModel {
     return copy(linkIdWithPatientViewShown = true)
-  }
-
-  fun fetchedTeleconsultationInfo(teleconsultInfo: TeleconsultInfo): PatientSummaryModel {
-    return copy(teleconsultInfo = teleconsultInfo)
-  }
-
-  fun fetchingTeleconsultationInfo(): PatientSummaryModel {
-    return copy(teleconsultInfo = TeleconsultInfo.Fetching)
-  }
-
-  fun failedToFetchTeleconsultationInfo(): PatientSummaryModel {
-    return copy(teleconsultInfo = TeleconsultInfo.NetworkError)
   }
 
   fun userLoggedInStatusLoaded(loggedInStatus: User.LoggedInStatus?): PatientSummaryModel {

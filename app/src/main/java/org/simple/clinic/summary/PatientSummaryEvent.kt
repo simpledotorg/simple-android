@@ -1,8 +1,6 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.user.User
 import org.simple.clinic.widgets.UiEvent
@@ -63,22 +61,9 @@ object ContactPatientClicked : PatientSummaryEvent() {
   override val analyticsName: String = "Patient Summary:Phone Number Clicked"
 }
 
-data class PatientTeleconsultationInfoLoaded(
-    val patientTeleconsultationInfo: PatientTeleconsultationInfo,
-    val doctorPhoneNumber: TeleconsultPhoneNumber
-) : PatientSummaryEvent()
-
 object ContactDoctorClicked : PatientSummaryEvent() {
   override val analyticsName: String = "Patient Summary:Contact Doctor Clicked"
 }
-
-data class FetchedTeleconsultationInfo(val teleconsultInfo: TeleconsultInfo) : PatientSummaryEvent()
-
-object RetryFetchTeleconsultInfo : PatientSummaryEvent()
-
-data class ContactDoctorPhoneNumberSelected(
-    val phoneNumber: TeleconsultPhoneNumber
-) : PatientSummaryEvent()
 
 object LogTeleconsultClicked : PatientSummaryEvent()
 

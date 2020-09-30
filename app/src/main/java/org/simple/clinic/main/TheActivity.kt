@@ -122,8 +122,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
         putExtra(EXTRA_DEEP_LINK_RESULT, ShowTeleconsultNotAllowed)
       }
     }
-
-    lateinit var component: TheActivityComponent
   }
 
   @Inject
@@ -152,6 +150,8 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   @Inject
   lateinit var unlockAfterTimestamp: MemoryValue<Optional<Instant>>
+
+  private lateinit var component: TheActivityComponent
 
   private val disposables = CompositeDisposable()
 

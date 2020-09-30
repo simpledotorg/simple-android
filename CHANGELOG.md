@@ -1,6 +1,10 @@
 # CHANGELOG
 
 ## On Demo
+### Fixes
+- App lock screen does not show if the app is exited and opened again while it is on the lock screen
+
+## 2020-09-28-7446
 ### Features
 - Add `TeleconsultRecordScreen`
 - Show `TeleconsultLogNotAllowed` dialog when Medical officer is not allowed to teleconsult

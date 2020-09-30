@@ -26,6 +26,9 @@ data class TeleconsultRecordModel(
   val hasPatient: Boolean
     get() = patient != null
 
+  val isCreatingTeleconsultRecord: Boolean
+    get() = teleconsultRecordCreateState == CREATING_TELECONSULT_RECORD
+
   companion object {
 
     fun create(patientUuid: UUID, teleconsultRecordId: UUID) = TeleconsultRecordModel(

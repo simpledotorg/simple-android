@@ -16,6 +16,7 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
       BackClicked -> dispatch(GoBack)
       is DataForNextClickLoaded -> dataForNextClickLoaded(model, event)
       is NextButtonClicked -> dispatch(LoadDataForNextClick(
+          patientUuid = model.patientUuid,
           teleconsultRecordId = model.teleconsultRecordId,
           medicalInstructions = event.medicalInstructions,
           medicalRegistrationId = event.medicalRegistrationId
@@ -31,21 +32,27 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
       model: TeleconsultPrescriptionModel,
       event: DataForNextClickLoaded
   ): Next<TeleconsultPrescriptionModel, TeleconsultPrescriptionEffect> {
-    return if (event.hasSignatureBitmap) {
-      dispatch(
-          SaveMedicalRegistrationId(medicalRegistrationId = event.medicalRegistrationId),
-          UpdateTeleconsultRecordMedicalRegistrationId(
-              teleconsultRecordId = model.teleconsultRecordId,
-              medicalRegistrationId = event.medicalRegistrationId
-          ),
-          AddTeleconsultIdToPrescribedDrugs(
-              patientUuid = model.patientUuid,
-              teleconsultRecordId = model.teleconsultRecordId,
-              medicalInstructions = event.medicalInstructions
-          )
-      )
-    } else {
-      dispatch(ShowSignatureRequiredError)
+    return when {
+      event.hasSignatureBitmap.not() -> {
+        dispatch(ShowSignatureRequiredError)
+      }
+      event.hasMedicines.not() -> {
+        dispatch(ShowMedicinesRequiredError)
+      }
+      else -> {
+        dispatch(
+            SaveMedicalRegistrationId(medicalRegistrationId = event.medicalRegistrationId),
+            UpdateTeleconsultRecordMedicalRegistrationId(
+                teleconsultRecordId = model.teleconsultRecordId,
+                medicalRegistrationId = event.medicalRegistrationId
+            ),
+            AddTeleconsultIdToPrescribedDrugs(
+                patientUuid = model.patientUuid,
+                teleconsultRecordId = model.teleconsultRecordId,
+                medicalInstructions = event.medicalInstructions
+            )
+        )
+      }
     }
   }
 }

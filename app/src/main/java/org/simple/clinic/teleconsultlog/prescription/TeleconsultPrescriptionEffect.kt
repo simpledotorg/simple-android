@@ -11,6 +11,7 @@ object GoBack : TeleconsultPrescriptionEffect()
 object ShowSignatureRequiredError : TeleconsultPrescriptionEffect()
 
 data class LoadDataForNextClick(
+    val patientUuid: UUID,
     val teleconsultRecordId: UUID,
     val medicalInstructions: String,
     val medicalRegistrationId: String

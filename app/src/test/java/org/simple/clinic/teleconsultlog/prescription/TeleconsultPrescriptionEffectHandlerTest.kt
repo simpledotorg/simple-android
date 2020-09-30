@@ -96,22 +96,28 @@ class TeleconsultPrescriptionEffectHandlerTest {
   @Test
   fun `when load data for next clicked is received, then load data`() {
     // given
+    val patientUuid = UUID.fromString("2bced41b-0aec-46e2-879d-56ff52fa9c1a")
     val teleconsultRecordId = UUID.fromString("b38e1672-c75e-4cbc-a723-f1952687703d")
     val medicalRegistrationId = "ABC123456"
     val instructions = "This is a medical instruction"
 
     val bitmap = mock<Bitmap>()
+    val patientPrescriptions = listOf(
+        TestData.prescription(uuid = UUID.fromString("ef88ca34-3013-46a0-97e2-7084f3e5e712"))
+    )
 
     whenever(signatureRepository.getSignatureBitmap()) doReturn bitmap
+    whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn patientPrescriptions
 
     // when
-    effectHandlerTestCase.dispatch(LoadDataForNextClick(teleconsultRecordId, instructions, medicalRegistrationId))
+    effectHandlerTestCase.dispatch(LoadDataForNextClick(patientUuid, teleconsultRecordId, instructions, medicalRegistrationId))
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(DataForNextClickLoaded(
         medicalInstructions = instructions,
         medicalRegistrationId = medicalRegistrationId,
-        hasSignatureBitmap = true
+        hasSignatureBitmap = true,
+        hasMedicines = true
     ))
 
     verifyZeroInteractions(uiActions)

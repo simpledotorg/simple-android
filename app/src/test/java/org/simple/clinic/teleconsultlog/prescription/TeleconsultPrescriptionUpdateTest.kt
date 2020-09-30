@@ -52,11 +52,31 @@ class TeleconsultPrescriptionUpdateTest {
         .whenEvent(DataForNextClickLoaded(
             medicalInstructions = medicalInstructions,
             medicalRegistrationId = medicalRegistrationId,
-            hasSignatureBitmap = false
+            hasSignatureBitmap = false,
+            hasMedicines = true
         ))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowSignatureRequiredError)
+        ))
+  }
+
+  @Test
+  fun `when there are no medicines added, then show medicines required error`() {
+    val medicalInstructions = "This is a medical instructions"
+    val medicalRegistrationId = "ABC12345"
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForNextClickLoaded(
+            medicalInstructions = medicalInstructions,
+            medicalRegistrationId = medicalRegistrationId,
+            hasSignatureBitmap = true,
+            hasMedicines = false
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowMedicinesRequiredError)
         ))
   }
 
@@ -71,6 +91,7 @@ class TeleconsultPrescriptionUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(LoadDataForNextClick(
+                patientUuid = patientUuid,
                 teleconsultRecordId = teleconsultRecordId,
                 medicalInstructions = medicalInstructions,
                 medicalRegistrationId = medicalRegistrationId
@@ -104,7 +125,8 @@ class TeleconsultPrescriptionUpdateTest {
         .whenEvent(DataForNextClickLoaded(
             medicalInstructions = medicalInstructions,
             medicalRegistrationId = medicalRegistrationId,
-            hasSignatureBitmap = true
+            hasSignatureBitmap = true,
+            hasMedicines = true
         ))
         .then(assertThatNext(
             hasNoModel(),

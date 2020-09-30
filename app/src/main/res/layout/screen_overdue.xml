@@ -5,13 +5,19 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/overdueRecyclerView"
+  <org.simple.clinic.util.NestedScrollableHost
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:padding="@dimen/spacing_8"
-    android:visibility="gone" />
+    android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/overdueRecyclerView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:clipToPadding="false"
+      android:padding="@dimen/spacing_8"
+      android:visibility="gone" />
+
+  </org.simple.clinic.util.NestedScrollableHost>
 
   <LinearLayout
     android:id="@+id/viewForEmptyList"

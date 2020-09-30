@@ -21,7 +21,6 @@ import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.EditPatientScreen
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenInjector
 import org.simple.clinic.enterotp.EnterOtpScreen
-import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.facilitypicker.FacilityPickerView
 import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
@@ -127,21 +126,20 @@ interface TheActivityComponent :
     TeleconsultPrescriptionScreen.Injector,
     TeleconsultPatientInfoView.Injector,
     TeleconsultMedicinesView.Injector,
-    TeleconsultDoctorInfoView.Injector {
+    TeleconsultDoctorInfoView.Injector,
+    PatientSummaryScreen.Injector,
+    ConfirmResetPinDialog.Injector,
+    NewMedicalHistoryScreen.Injector,
+    ConfirmDiscardChangesDialog.Injector,
+    EditMedicinesScreen.Injector,
+    QrCodeScannerView.Injector,
+    SyncIndicatorView.Injector,
+    PatientSearchResultItemView.Injector,
+    AllPatientsInFacilityView.Injector,
+    ShortCodeSearchResultScreen.Injector,
+    SettingsScreen.Injector,
+    ChangeLanguageScreen.Injector {
   fun inject(target: TheActivity)
-  fun inject(target: PatientSummaryScreen)
-  fun inject(target: FacilityChangeActivity)
-  fun inject(target: ConfirmResetPinDialog)
-  fun inject(target: NewMedicalHistoryScreen)
-  fun inject(target: ConfirmDiscardChangesDialog)
-  fun inject(target: EditMedicinesScreen)
-  fun inject(target: QrCodeScannerView)
-  fun inject(target: SyncIndicatorView)
-  fun inject(target: PatientSearchResultItemView)
-  fun inject(target: AllPatientsInFacilityView)
-  fun inject(target: ShortCodeSearchResultScreen)
-  fun inject(target: SettingsScreen)
-  fun inject(target: ChangeLanguageScreen)
 
   @Subcomponent.Builder
   interface Builder : BindsActivity<Builder>, BindsScreenRouter<Builder> {

@@ -19,12 +19,13 @@
 - Change registration and current facility ID columns to regular columns without foreign keys in `User`
 - Add teleconsult record sync
 - Change `RemoteConfigService` to pull updates synchronously
+- Stop injecting screens in `TheActivity` via the static component
 
 ### Fixes
 - Fix deeplink screens & warning dialogs displaying again after activity restart.
 - App lock screen does not show if the app is exited and opened again while it is on the lock screen
 
-## 2020-09-15-7432
+## 2020-09-28-7446
 ### Features
 - Add `TeleconsultRecordScreen`
 - Show `TeleconsultLogNotAllowed` dialog when Medical officer is not allowed to teleconsult

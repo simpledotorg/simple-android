@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.screen_settings.view.*
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreenKey
@@ -61,7 +61,7 @@ class SettingsScreen(
       return
     }
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     toolbar.setNavigationOnClickListener { screenRouter.pop() }
 
@@ -122,5 +122,9 @@ class SettingsScreen(
       data = Uri.parse("https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}")
     }
     context.startActivity(intent)
+  }
+
+  interface Injector {
+    fun inject(target: SettingsScreen)
   }
 }

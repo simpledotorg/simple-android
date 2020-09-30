@@ -20,6 +20,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.EditMedicinesEffect
 import org.simple.clinic.drugs.EditMedicinesEffectHandler
 import org.simple.clinic.drugs.EditMedicinesEvent
@@ -88,7 +89,8 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
 
     toolbar.setNavigationOnClickListener { screenRouter.pop() }
     recyclerView.layoutManager = LinearLayoutManager(context)
@@ -159,5 +161,9 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
 
   override fun showUpdateCustomPrescriptionSheet(prescribedDrug: PrescribedDrug) {
     activity.startActivity(CustomPrescriptionEntrySheet.intentForUpdatingPrescription(context, prescribedDrug.patientUuid, prescribedDrug.uuid))
+  }
+
+  interface Injector {
+    fun inject(target: EditMedicinesScreen)
   }
 }

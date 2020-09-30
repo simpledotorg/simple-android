@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.screen_patient_summary.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
+import org.simple.clinic.di.injector
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
@@ -28,7 +29,6 @@ import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.home.HomeScreenKey
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -166,7 +166,8 @@ class PatientSummaryScreen(
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
 
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()
@@ -556,6 +557,10 @@ class PatientSummaryScreen(
 
   override fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID) {
     screenRouter.push(TeleconsultRecordScreenKey(patientUuid, teleconsultRecordId))
+  }
+
+  interface Injector {
+    fun inject(target: PatientSummaryScreen)
   }
 }
 

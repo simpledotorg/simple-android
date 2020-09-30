@@ -27,7 +27,8 @@ class PatientSummaryInitTest {
                 hasEffects(
                     LoadPatientSummaryProfile(patientUuid),
                     LoadCurrentUserAndFacility,
-                    CheckForInvalidPhone(patientUuid)
+                    CheckForInvalidPhone(patientUuid),
+                    LoadMedicalOfficers
                 )
             )
         )

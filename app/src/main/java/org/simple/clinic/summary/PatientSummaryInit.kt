@@ -22,6 +22,10 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
       effects.add(ShowLinkIdWithPatientView(model.patientUuid, model.openIntention.identifier))
     }
 
+    if (model.hasMedicalOfficers.not()) {
+      effects.add(LoadMedicalOfficers)
+    }
+
     return first(model, effects)
   }
 }

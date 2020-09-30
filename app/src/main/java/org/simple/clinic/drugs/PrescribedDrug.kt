@@ -160,5 +160,11 @@ data class PrescribedDrug(
 
     @Query("UPDATE PrescribedDrug SET teleconsultationId = :teleconsultationId, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid IN (:drugUuids)")
     fun addTeleconsultationIdToDrugs(drugUuids: List<UUID>, teleconsultationId: UUID, updatedAt: Instant, syncStatus: SyncStatus)
+
+    /**
+     * [deleted] exists only to trigger Room's Boolean type converter.
+     * */
+    @Query("UPDATE PrescribedDrug SET isDeleted = :deleted, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid IN (:prescriptionIds)")
+    fun softDelete(prescriptionIds: List<UUID>, deleted: Boolean, updatedAt: Instant, syncStatus: SyncStatus)
   }
 }

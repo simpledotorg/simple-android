@@ -166,4 +166,13 @@ class PrescriptionRepository @Inject constructor(
         syncStatus = SyncStatus.PENDING
     )
   }
+
+  fun softDeletePrescriptions(prescriptionDrugs: List<PrescribedDrug>) {
+    dao.softDelete(
+        prescriptionIds = prescriptionDrugs.map { it.uuid },
+        deleted = true,
+        updatedAt = Instant.now(utcClock),
+        syncStatus = SyncStatus.PENDING
+    )
+  }
 }

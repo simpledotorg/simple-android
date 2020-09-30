@@ -204,6 +204,18 @@
     android:paddingBottom="@dimen/spacing_8">
 
     <com.google.android.material.button.MaterialButton
+      android:id="@+id/doctorButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_marginEnd="@dimen/spacing_8"
+      android:layout_weight="1"
+      android:text="@string/patientsummary_contact_doctor"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+      android:visibility="gone"
+      app:backgroundTint="@color/green1" />
+
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/doneButton"
       style="?attr/materialButtonStyle"
       android:layout_width="0dp"
@@ -215,20 +227,6 @@
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       app:icon="@drawable/ic_done_24dp"
       app:iconGravity="textStart" />
-
-    <com.google.android.material.button.MaterialButton
-      android:id="@+id/doctorButton"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/spacing_8"
-      android:layout_marginEnd="@dimen/spacing_8"
-      android:layout_weight="1"
-      android:text="@string/patientsummary_contact_doctor"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
-      android:visibility="gone"
-      app:backgroundTint="@color/contact_doctor_button"
-      app:icon="@drawable/ic_whatsapp"
-      app:iconTint="@android:color/white" />
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/logTeleconsultButton"

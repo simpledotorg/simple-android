@@ -13,7 +13,7 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_change_language.view.*
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.Language
@@ -67,7 +67,7 @@ class ChangeLanguageScreen(
       return
     }
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     setupLanguagesList()
     toolbar.setNavigationOnClickListener { screenRouter.pop() }
@@ -131,5 +131,9 @@ class ChangeLanguageScreen(
 
   override fun restartActivity() {
     activity.recreate()
+  }
+
+  interface Injector {
+    fun inject(target: ChangeLanguageScreen)
   }
 }

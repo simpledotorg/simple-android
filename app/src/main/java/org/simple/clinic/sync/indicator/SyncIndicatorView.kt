@@ -15,6 +15,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.sync_indicator.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
@@ -63,7 +64,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
 
     LayoutInflater.from(context).inflate(R.layout.sync_indicator, this, true)
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
   }
 
   override fun onAttachedToWindow() {
@@ -126,5 +127,9 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
       is Unexpected, is Unauthenticated, is ServerError -> context.getString(R.string.syncindicator_dialog_error_server)
     }
     SyncIndicatorFailureDialog.show(fragmentManager = activity.supportFragmentManager, message = message)
+  }
+
+  interface Injector {
+    fun inject(target: SyncIndicatorView)
   }
 }

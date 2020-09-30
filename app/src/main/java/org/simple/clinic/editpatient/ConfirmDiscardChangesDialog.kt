@@ -1,12 +1,13 @@
 package org.simple.clinic.editpatient
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.router.screen.ScreenRouter
 import javax.inject.Inject
 
@@ -22,9 +23,9 @@ class ConfirmDiscardChangesDialog : AppCompatDialogFragment() {
     }
   }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    TheActivity.component.inject(this)
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -35,5 +36,9 @@ class ConfirmDiscardChangesDialog : AppCompatDialogFragment() {
         }
         .setNegativeButton(R.string.patientedit_confirm_discard_cancel, null)
         .create()
+  }
+
+  interface Injector {
+    fun inject(target: ConfirmDiscardChangesDialog)
   }
 }

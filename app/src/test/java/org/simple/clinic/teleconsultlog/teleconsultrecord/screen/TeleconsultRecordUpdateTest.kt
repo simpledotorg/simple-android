@@ -113,4 +113,15 @@ class TeleconsultRecordUpdateTest {
             hasEffects(GoBack)
         ))
   }
+
+  @Test
+  fun `when cloning prescriptions is done, then navigate to teleconsult success screen`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientPrescriptionsCloned)
+        .then(assertThatNext(
+            hasModel(defaultModel.teleconsultRecordCreated()),
+            hasEffects(NavigateToTeleconsultSuccess)
+        ))
+  }
 }

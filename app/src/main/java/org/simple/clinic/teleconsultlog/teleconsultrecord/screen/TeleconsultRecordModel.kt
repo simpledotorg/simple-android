@@ -8,6 +8,7 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Audio
+import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordCreateState.NOT_CREATING_TELECONSULT_RECORD
 import java.util.UUID
 
 @Parcelize
@@ -47,5 +48,9 @@ data class TeleconsultRecordModel(
 
   fun patientLoaded(patient: Patient): TeleconsultRecordModel {
     return copy(patient = patient)
+  }
+
+  fun teleconsultRecordCreated(): TeleconsultRecordModel {
+    return copy(teleconsultRecordCreateState = NOT_CREATING_TELECONSULT_RECORD)
   }
 }

@@ -150,7 +150,11 @@ class ScreenRouter(
     }
   }
 
-  private fun flow(): Flow {
+  inline fun <reified T> hasKeyOfType(): Boolean {
+    return flow().history.any { it is T }
+  }
+
+  fun flow(): Flow {
     try {
       return flowSupplier.get()
     } catch (e: IllegalStateException) {

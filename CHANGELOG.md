@@ -20,7 +20,8 @@
 - Add teleconsult record sync
 
 ### Fixes
-- Fix deeplink screens & warning dialogs displaying again after activity restart. 
+- Fix deeplink screens & warning dialogs displaying again after activity restart.
+- App lock screen does not show if the app is exited and opened again while it is on the lock screen
 
 ## 2020-09-15-7432
 ### Features

@@ -128,7 +128,7 @@ class TeleconsultRecordEffectHandlerTest {
     ))
 
     // then
-    effectHandlerTestCase.assertOutgoingEvents(TeleconsultRecordCreated)
+    effectHandlerTestCase.assertOutgoingEvents(TeleconsultRecordCreated(teleconsultRecordId))
 
     verify(teleconsultRecordRepository).createTeleconsultRecordForMedicalOfficer(
         teleconsultRecordId = teleconsultRecord.id,

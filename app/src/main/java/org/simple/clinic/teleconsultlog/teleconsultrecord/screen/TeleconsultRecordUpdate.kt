@@ -12,7 +12,7 @@ class TeleconsultRecordUpdate : Update<TeleconsultRecordModel, TeleconsultRecord
     return when (event) {
       BackClicked -> dispatch(ValidateTeleconsultRecord(model.teleconsultRecordId))
       is TeleconsultRecordLoaded -> teleconsultRecordLoaded(model, event)
-      TeleconsultRecordCreated -> dispatch(NavigateToTeleconsultSuccess)
+      is TeleconsultRecordCreated -> dispatch(ClonePatientPrescriptions(model.patientUuid, model.teleconsultRecordId))
       is DoneClicked -> dispatch(CreateTeleconsultRecord(
           patientUuid = model.patientUuid,
           teleconsultRecordId = model.teleconsultRecordId,

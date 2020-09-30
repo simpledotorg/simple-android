@@ -78,8 +78,8 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .map {
-            val teleconsultRecordWithPrescribedDrugs = teleconsultRecordRepository.getTeleconsultRecord(it.teleconsultRecordId)
-            TeleconsultRecordValidated(teleconsultRecordWithPrescribedDrugs != null)
+            val teleconsultRecord = teleconsultRecordRepository.getTeleconsultRecord(it.teleconsultRecordId)
+            TeleconsultRecordValidated(teleconsultRecord != null)
           }
     }
   }
@@ -97,15 +97,16 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .doOnNext { effect ->
+          .map { effect ->
             teleconsultRecordRepository.createTeleconsultRecordForMedicalOfficer(
                 teleconsultRecordId = effect.teleconsultRecordId,
                 patientUuid = effect.patientUuid,
                 medicalOfficerId = user.get().uuid,
                 teleconsultRecordInfo = createTeleconsultRecordInfo(effect)
             )
+
+            TeleconsultRecordCreated(effect.teleconsultRecordId)
           }
-          .map { TeleconsultRecordCreated }
     }
   }
 

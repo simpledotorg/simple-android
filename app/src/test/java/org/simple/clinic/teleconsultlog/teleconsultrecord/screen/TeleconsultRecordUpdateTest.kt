@@ -31,13 +31,13 @@ class TeleconsultRecordUpdateTest {
   }
 
   @Test
-  fun `when teleconsult record is created, then navigate to teleconsult success screen`() {
+  fun `when teleconsult record is created, then clone patient prescriptions`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(TeleconsultRecordCreated)
+        .whenEvent(TeleconsultRecordCreated(teleconsultRecordId))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(NavigateToTeleconsultSuccess)
+            hasEffects(ClonePatientPrescriptions(patientUuid, teleconsultRecordId))
         ))
   }
 

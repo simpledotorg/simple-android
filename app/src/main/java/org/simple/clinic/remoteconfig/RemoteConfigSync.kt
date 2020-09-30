@@ -22,8 +22,7 @@ class RemoteConfigSync @Inject constructor(
   }
 
   override fun pull() {
-    // TODO (vs) 27/08/20: Make this a sync call
-    remoteConfigService.update().blockingAwait()
+    remoteConfigService.update()
   }
 
   override fun syncConfig(): SyncConfig {

@@ -33,3 +33,5 @@ data class TeleconsultRecordValidated(
 ) : TeleconsultRecordEvent() {
   override val analyticsName: String = "Teleconsult Record:Validated"
 }
+
+object PatientPrescriptionsCloned : TeleconsultRecordEvent()

@@ -4,21 +4,28 @@ import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 import java.time.Instant
 
 class TeleconsultRecordEffectHandler @AssistedInject constructor(
     private val user: Lazy<User>,
     private val teleconsultRecordRepository: TeleconsultRecordRepository,
     private val patientRepository: PatientRepository,
+    private val prescriptionRepository: PrescriptionRepository,
     private val schedulersProvider: SchedulersProvider,
     private val utcClock: UtcClock,
+    private val uuidGenerator: UuidGenerator,
     @Assisted private val uiActions: UiActions
 ) {
 
@@ -36,7 +43,34 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
         .addTransformer(LoadPatientDetails::class.java, loadPatientDetails())
         .addAction(ShowTeleconsultNotRecordedWarning::class.java, uiActions::showTeleconsultNotRecordedWarning, schedulersProvider.ui())
         .addTransformer(ValidateTeleconsultRecord::class.java, validateTeleconsultRecord())
+        .addTransformer(ClonePatientPrescriptions::class.java, clonePatientPrescriptions())
         .build()
+  }
+
+  private fun clonePatientPrescriptions(): ObservableTransformer<ClonePatientPrescriptions, TeleconsultRecordEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { effect -> prescriptionRepository.newestPrescriptionsForPatientImmediate(effect.patientUuid) to effect }
+          .filter { (prescriptions, _) -> prescriptions.isNotEmpty() }
+          .doOnNext { (prescriptions, _) -> prescriptionRepository.softDeletePrescriptions(prescriptions) }
+          .flatMap { (prescriptions, effect) ->
+            val clonedPrescriptions = prescriptions
+                .map {
+                  it.copy(
+                      uuid = uuidGenerator.v4(),
+                      syncStatus = SyncStatus.PENDING,
+                      timestamps = Timestamps.create(utcClock),
+                      frequency = null,
+                      durationInDays = null,
+                      teleconsultationId = effect.teleconsultRecordId
+                  )
+                }
+
+            prescriptionRepository.save(clonedPrescriptions)
+                .andThen(Observable.just(PatientPrescriptionsCloned))
+          }
+    }
   }
 
   private fun validateTeleconsultRecord(): ObservableTransformer<ValidateTeleconsultRecord, TeleconsultRecordEvent> {

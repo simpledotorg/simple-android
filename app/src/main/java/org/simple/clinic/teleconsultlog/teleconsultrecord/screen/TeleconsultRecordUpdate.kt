@@ -22,6 +22,7 @@ class TeleconsultRecordUpdate : Update<TeleconsultRecordModel, TeleconsultRecord
       ))
       is PatientDetailsLoaded -> next(model.patientLoaded(event.patient))
       is TeleconsultRecordValidated -> teleconsultRecordValidated(event)
+      PatientPrescriptionsCloned -> noChange()
     }
   }
 

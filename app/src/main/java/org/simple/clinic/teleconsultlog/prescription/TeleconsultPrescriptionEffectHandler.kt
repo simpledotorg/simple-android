@@ -47,6 +47,7 @@ class TeleconsultPrescriptionEffectHandler @AssistedInject constructor(
         .addConsumer(UpdateTeleconsultRecordMedicalRegistrationId::class.java, {
           teleconsultRecordRepository.updateMedicalRegistrationId(it.teleconsultRecordId, it.medicalRegistrationId)
         }, schedulersProvider.io())
+        .addAction(ShowMedicinesRequiredError::class.java, uiActions::showMedicinesRequiredError, schedulersProvider.ui())
         .build()
   }
 

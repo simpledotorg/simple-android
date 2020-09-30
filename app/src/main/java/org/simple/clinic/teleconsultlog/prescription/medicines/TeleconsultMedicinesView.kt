@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.view.clicks
@@ -169,6 +170,10 @@ class TeleconsultMedicinesView(
         )
     )
     activity.startActivityForResult(intent, DRUG_FREQUENCY_SHEET)
+  }
+
+  fun showMedicinesRequiredError() {
+    medicinesRequiredErrorTextView.visibility = View.VISIBLE
   }
 
   private fun editClicks(): Observable<UiEvent> {

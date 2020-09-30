@@ -106,6 +106,10 @@ class TeleconsultPrescriptionScreen constructor(
     teleconsultPrescriptionDoctorInfoView.showSignatureError()
   }
 
+  override fun showMedicinesRequiredError() {
+    teleconsultPrescriptionMedicinesView.showMedicinesRequiredError()
+  }
+
   override fun openSharePrescriptionScreen(teleconsultRecordId: UUID, medicalInstructions: String) {
 
   }

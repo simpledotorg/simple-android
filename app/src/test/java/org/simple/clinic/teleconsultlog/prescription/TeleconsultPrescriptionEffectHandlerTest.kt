@@ -193,4 +193,16 @@ class TeleconsultPrescriptionEffectHandlerTest {
     verify(uiActions).openSharePrescriptionScreen(teleconsultRecordId, medicalInstructions)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show medicines required error effect is received, then show the medicines required error`() {
+    // when
+    effectHandlerTestCase.dispatch(ShowMedicinesRequiredError)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showMedicinesRequiredError()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

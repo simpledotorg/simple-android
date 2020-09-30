@@ -4,7 +4,6 @@ import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
-import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -636,7 +635,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when contact doctor button is clicked and only one doctor is available for teleconsultation, then load patient teleconsultation information`() {
+  fun `when contact doctor button is clicked, then open contact doctor sheet`() {
     val phoneNumber = TestData.teleconsultPhoneNumber()
     val phoneNumbers = listOf(phoneNumber)
     val model = defaultModel
@@ -650,49 +649,8 @@ class PatientSummaryUpdateTest {
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(LoadPatientTeleconsultationInfo(
-                    model.patientUuid,
-                    model.patientSummaryProfile?.bpPassport,
-                    model.currentFacility,
-                    phoneNumber
-                ) as PatientSummaryEffect)
+                hasEffects(OpenContactDoctorSheet(patientUuid) as PatientSummaryEffect)
             )
-        )
-  }
-
-  @Test
-  fun `when contact doctor button is clicked and multiple doctors are available for teleconsultation, then open contact doctor sheet`() {
-    val phoneNumber1 = TestData.teleconsultPhoneNumber("+911111111111")
-    val phoneNumber2 = TestData.teleconsultPhoneNumber("+912222222222")
-    val phoneNumbers = listOf(phoneNumber1, phoneNumber2)
-    val model = defaultModel
-        .patientSummaryProfileLoaded(patientSummaryProfile)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .fetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumbers))
-
-    updateSpec
-        .given(model)
-        .whenEvent(ContactDoctorClicked)
-        .then(
-            assertThatNext(
-                hasNoModel(),
-                hasEffects(OpenSelectDoctorSheet(facilityWithDiabetesManagementEnabled, phoneNumbers) as PatientSummaryEffect)
-            )
-        )
-  }
-
-  @Test
-  fun `when tele consult info is not fetched and contact doctor button is clicked, then do nothing`() {
-    val model = defaultModel
-        .patientSummaryProfileLoaded(patientSummaryProfile)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .fetchingTeleconsultationInfo()
-
-    updateSpec
-        .given(model)
-        .whenEvent(ContactDoctorClicked)
-        .then(
-            assertThatNext(hasNothing())
         )
   }
 

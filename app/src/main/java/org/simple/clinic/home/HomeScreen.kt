@@ -91,7 +91,6 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     TabLayoutMediator(homeTabLayout, viewPager) { tab, position ->
       tab.text = resources.getString(tabs[position].title)
     }.attach()
-    viewPager.isUserInputEnabled = false
 
     // The WebView in "Progress" tab is expensive to load. Pre-instantiating
     // it when the app starts reduces its time-to-display.

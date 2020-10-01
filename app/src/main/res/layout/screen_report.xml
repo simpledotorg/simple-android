@@ -6,11 +6,17 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <WebView
-    android:id="@+id/webView"
+  <org.simple.clinic.util.NestedScrollableHost
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:visibility="gone" />
+    android:layout_height="match_parent">
+
+    <WebView
+      android:id="@+id/webView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      tools:visibility="gone" />
+
+  </org.simple.clinic.util.NestedScrollableHost>
 
   <LinearLayout
     android:id="@+id/noReportView"

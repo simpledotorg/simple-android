@@ -87,35 +87,41 @@ class DataSync(
         }
         .map { (_, modelSync) -> modelSync }
         .toList()
-        .map(::modelSyncsToCompletables)
+        .map(::modelSyncsToTasks)
         .flatMapObservable { Observable.fromIterable(it) }
-        .flatMapCompletable { runAndSwallowErrors(it, syncGroup).subscribeOn(syncScheduler) }
+        .flatMapSingle { runAndReportErrors(it).subscribeOn(syncScheduler) }
         .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
         .doOnComplete { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SUCCESS)) }
         .doOnError { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE)) }
+        .toList()
+        .ignoreElement()
   }
 
-  private fun modelSyncsToCompletables(modelSyncs: List<ModelSync>): List<Completable> {
+  private fun modelSyncsToTasks(modelSyncs: List<ModelSync>): List<Single<SyncResult>> {
     val allPushes = modelSyncs.map(::generatePushOperationForSync)
     val allPulls = modelSyncs.map(::generatePullOperationForSync)
 
     return allPushes + allPulls
   }
 
-  private fun generatePullOperationForSync(sync: ModelSync): Completable {
+  private fun generatePullOperationForSync(sync: ModelSync): Single<SyncResult> {
     return Completable
         .fromAction(sync::pull)
+        .toSingleDefault<SyncResult>(SyncResult.Completed(sync))
         .doOnSubscribe { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Started) }
-        .doOnComplete { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Completed) }
+        .doOnSuccess { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Completed) }
         .doOnError { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Failed) }
+        .onErrorReturn { cause -> SyncResult.Failed(sync, cause) }
   }
 
-  private fun generatePushOperationForSync(sync: ModelSync): Completable {
+  private fun generatePushOperationForSync(sync: ModelSync): Single<SyncResult> {
     return Completable
         .fromAction(sync::push)
+        .toSingleDefault<SyncResult>(SyncResult.Completed(sync))
         .doOnSubscribe { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Started) }
-        .doOnComplete { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Completed) }
+        .doOnSuccess { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Completed) }
         .doOnError { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Failed) }
+        .onErrorReturn { cause -> SyncResult.Failed(sync, cause) }
   }
 
   private fun reportSyncEvent(name: String, type: String, event: SyncAnalyticsEvent) {
@@ -124,10 +130,12 @@ class DataSync(
     Analytics.reportSyncEvent(analyticsName, event)
   }
 
-  private fun runAndSwallowErrors(completable: Completable, syncGroup: SyncGroup): Completable {
-    return completable
-        .doOnError(::logError)
-        .onErrorComplete()
+  private fun runAndReportErrors(task: Single<SyncResult>): Single<SyncResult> {
+    return task.doOnSuccess { result ->
+      if(result is SyncResult.Failed) {
+        logError(result.cause)
+      }
+    }
   }
 
   private fun logError(cause: Throwable) {
@@ -168,4 +176,16 @@ class DataSync(
   fun streamSyncErrors(): Observable<ResolvedError> = syncErrors
 
   data class SyncGroupResult(val syncGroup: SyncGroup, val syncProgress: SyncProgress)
+
+  private sealed class SyncResult(val sync: ModelSync) {
+
+    data class Completed(
+        private val _sync: ModelSync
+    ): SyncResult(_sync)
+
+    data class Failed(
+        private val _sync: ModelSync,
+        val cause: Throwable
+    ): SyncResult(_sync)
+  }
 }

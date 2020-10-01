@@ -90,10 +90,20 @@ class DataSync(
         .map(::modelSyncsToTasks)
         .flatMapObservable { Observable.fromIterable(it) }
         .flatMapSingle { runAndReportErrors(it).subscribeOn(syncScheduler) }
-        .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
-        .doOnComplete { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SUCCESS)) }
-        .doOnError { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE)) }
         .toList()
+        .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
+        .doOnSuccess { syncResults ->
+          val firstFailure = syncResults.firstOrNull { it is SyncResult.Failed }
+
+          if(firstFailure != null) {
+            syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE))
+
+            val resolvedError = ErrorResolver.resolve((firstFailure as SyncResult.Failed).cause)
+            syncErrors.onNext(resolvedError)
+          } else {
+            syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SUCCESS))
+          }
+        }
         .ignoreElement()
   }
 
@@ -140,7 +150,6 @@ class DataSync(
 
   private fun logError(cause: Throwable) {
     val resolvedError = ErrorResolver.resolve(cause)
-    syncErrors.onNext(resolvedError)
 
     when (resolvedError) {
       is Unexpected, is ServerError -> {

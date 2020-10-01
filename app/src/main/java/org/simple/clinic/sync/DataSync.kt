@@ -98,7 +98,7 @@ class DataSync(
           if(firstFailure != null) {
             syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE))
 
-            val resolvedError = ErrorResolver.resolve((firstFailure as SyncResult.Failed).cause)
+            val resolvedError = (firstFailure as SyncResult.Failed).error
             syncErrors.onNext(resolvedError)
           } else {
             syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SUCCESS))
@@ -121,7 +121,7 @@ class DataSync(
         .doOnSubscribe { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Started) }
         .doOnSuccess { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Completed) }
         .doOnError { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Failed) }
-        .onErrorReturn { cause -> SyncResult.Failed(sync, cause) }
+        .onErrorReturn { cause -> SyncResult.Failed(sync, ErrorResolver.resolve(cause)) }
   }
 
   private fun generatePushOperationForSync(sync: ModelSync): Single<SyncResult> {
@@ -131,7 +131,7 @@ class DataSync(
         .doOnSubscribe { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Started) }
         .doOnSuccess { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Completed) }
         .doOnError { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Failed) }
-        .onErrorReturn { cause -> SyncResult.Failed(sync, cause) }
+        .onErrorReturn { cause -> SyncResult.Failed(sync, ErrorResolver.resolve(cause)) }
   }
 
   private fun reportSyncEvent(name: String, type: String, event: SyncAnalyticsEvent) {
@@ -143,21 +143,21 @@ class DataSync(
   private fun runAndReportErrors(task: Single<SyncResult>): Single<SyncResult> {
     return task.doOnSuccess { result ->
       if(result is SyncResult.Failed) {
-        logError(result.cause)
+        logError(result.error)
       }
     }
   }
 
-  private fun logError(cause: Throwable) {
-    val resolvedError = ErrorResolver.resolve(cause)
+  private fun logError(resolvedError: ResolvedError) {
+    val actualCause = resolvedError.actualCause
 
     when (resolvedError) {
       is Unexpected, is ServerError -> {
-        Timber.i("(breadcrumb) Reporting to sentry. Error: $cause. Resolved error: $resolvedError")
-        crashReporter.report(resolvedError.actualCause)
-        Timber.e(resolvedError.actualCause)
+        Timber.i("(breadcrumb) Reporting to sentry. Error: ${actualCause}. Resolved error: $resolvedError")
+        crashReporter.report(actualCause)
+        Timber.e(actualCause)
       }
-      is NetworkRelated, is Unauthenticated -> Timber.e(cause)
+      is NetworkRelated, is Unauthenticated -> Timber.e(actualCause)
     }.exhaustive()
   }
 
@@ -194,7 +194,7 @@ class DataSync(
 
     data class Failed(
         private val _sync: ModelSync,
-        val cause: Throwable
+        val error: ResolvedError
     ): SyncResult(_sync)
   }
 }

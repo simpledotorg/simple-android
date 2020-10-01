@@ -27,6 +27,7 @@ class TeleconsultSharePrescriptionUiRendererTest {
 
     // then
     verify(ui).renderPatientDetails(patient = patient)
+    verify(ui).renderPrescriptionDate(prescriptionDate = prescriptionDate)
     verifyNoMoreInteractions(ui)
   }
 

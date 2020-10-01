@@ -8,6 +8,7 @@ class TeleconsultSharePrescriptionUiRenderer(
   override fun render(model: TeleconsultSharePrescriptionModel) {
     if (model.hasPatient) {
       ui.renderPatientDetails(model.patient!!)
+      ui.renderPrescriptionDate(model.prescriptionDate)
     }
   }
 }

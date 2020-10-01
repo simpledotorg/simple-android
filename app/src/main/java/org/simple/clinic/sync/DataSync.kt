@@ -95,18 +95,6 @@ class DataSync(
         .doOnError { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE)) }
   }
 
-
-  @WorkerThread
-  @Throws(IOException::class) // This is only needed so Mockito can generate mocks for this method correctly
-  fun syncTheWorld() {
-    allSyncs().blockingAwait()
-  }
-
-  @WorkerThread
-  fun sync(syncGroup: SyncGroup) {
-    syncsForGroup(syncGroup).blockingAwait()
-  }
-
   private fun modelSyncsToCompletables(modelSyncs: List<ModelSync>): List<Completable> {
     val allPushes = modelSyncs.map(::generatePushOperationForSync)
     val allPulls = modelSyncs.map(::generatePullOperationForSync)
@@ -136,14 +124,6 @@ class DataSync(
     Analytics.reportSyncEvent(analyticsName, event)
   }
 
-  fun fireAndForgetSync(syncGroup: SyncGroup) {
-    syncsForGroup(syncGroup).subscribe()
-  }
-
-  fun fireAndForgetSync() {
-    allSyncs().subscribe()
-  }
-
   private fun runAndSwallowErrors(completable: Completable, syncGroup: SyncGroup): Completable {
     return completable
         .doOnError(::logError)
@@ -164,10 +144,28 @@ class DataSync(
     }.exhaustive()
   }
 
+  @WorkerThread
+  @Throws(IOException::class) // This is only needed so Mockito can generate mocks for this method correctly
+  fun syncTheWorld() {
+    allSyncs().blockingAwait()
+  }
+
+  @WorkerThread
+  fun sync(syncGroup: SyncGroup) {
+    syncsForGroup(syncGroup).blockingAwait()
+  }
+
+  fun fireAndForgetSync() {
+    allSyncs().subscribe()
+  }
+
+  fun fireAndForgetSync(syncGroup: SyncGroup) {
+    syncsForGroup(syncGroup).subscribe()
+  }
+
   fun streamSyncResults(): Observable<SyncGroupResult> = syncProgress
 
   fun streamSyncErrors(): Observable<ResolvedError> = syncErrors
 
   data class SyncGroupResult(val syncGroup: SyncGroup, val syncProgress: SyncProgress)
-
 }

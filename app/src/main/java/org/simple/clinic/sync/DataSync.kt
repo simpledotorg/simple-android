@@ -5,6 +5,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.SingleTransformer
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
@@ -13,8 +14,10 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.SyncAnalyticsEvent
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.remoteconfig.RemoteConfigService
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ErrorResolver
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
@@ -75,25 +78,53 @@ class DataSync(
     return Single
         .fromCallable { userSession.loggedInUserImmediate().toOptional() }
         .subscribeOn(schedulersProvider.io())
-        .flatMapObservable { user ->
-          syncsInGroup
-              .toObservable()
-              .map { user to it }
-        }
-        .filter { (user, modelSync) ->
-          if (modelSync.requiresSyncApprovedUser) {
-            user.isPresent() && user.get().canSyncData
-          } else true
-        }
-        .map { (_, modelSync) -> modelSync }
-        .toList()
-        .map(::modelSyncsToTasks)
-        .flatMapObservable { Observable.fromIterable(it) }
-        .flatMapSingle { runAndReportErrors(it).subscribeOn(syncScheduler) }
-        .toList()
+        .compose(filterSyncsThatRequireAuthentication(syncsInGroup))
+        .compose(prepareTasksFromSyncs())
         .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
         .doOnSuccess { syncResults -> syncCompleted(syncResults, syncGroup) }
         .ignoreElement()
+  }
+
+  private fun filterSyncsThatRequireAuthentication(
+      syncsInGroup: List<ModelSync>
+  ): SingleTransformer<Optional<User>, List<ModelSync>> {
+    return SingleTransformer { userSingle ->
+      userSingle
+          .flatMap { user ->
+            combineSyncsWithCurrentUser(syncsInGroup, user)
+                .filter { (user, modelSync) -> shouldSyncBeRun(modelSync, user) }
+                .map { (_, modelSync) -> modelSync }
+                .toList()
+          }
+    }
+  }
+
+  private fun prepareTasksFromSyncs(): SingleTransformer<List<ModelSync>, List<SyncResult>> {
+    return SingleTransformer { modelSyncs ->
+      modelSyncs
+          .map(::modelSyncsToTasks)
+          .flatMapObservable { Observable.fromIterable(it) }
+          .flatMapSingle { runAndReportErrors(it).subscribeOn(syncScheduler) }
+          .toList()
+    }
+  }
+
+  private fun combineSyncsWithCurrentUser(
+      syncsInGroup: List<ModelSync>,
+      user: Optional<User>
+  ): Observable<Pair<Optional<User>, ModelSync>> {
+    return syncsInGroup
+        .toObservable()
+        .map { user to it }
+  }
+
+  private fun shouldSyncBeRun(
+      modelSync: ModelSync,
+      user: Optional<User>
+  ): Boolean {
+    return if (modelSync.requiresSyncApprovedUser) {
+      user.isPresent() && user.get().canSyncData
+    } else true
   }
 
   private fun syncCompleted(

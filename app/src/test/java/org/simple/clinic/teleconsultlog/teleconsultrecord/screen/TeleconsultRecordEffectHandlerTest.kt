@@ -280,7 +280,7 @@ class TeleconsultRecordEffectHandlerTest {
 
     verify(prescriptionRepository).newestPrescriptionsForPatientImmediate(patientUuid)
     verify(prescriptionRepository).softDeletePrescriptions(prescriptions)
-    verify(prescriptionRepository).save(clonedPrescriptions)
+    verify(prescriptionRepository).saveImmediate(clonedPrescriptions)
     verifyNoMoreInteractions(prescriptionRepository)
 
     verifyZeroInteractions(uiActions)

@@ -6,6 +6,7 @@ import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
@@ -52,21 +53,28 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .map { effect -> prescriptionRepository.newestPrescriptionsForPatientImmediate(effect.patientUuid) to effect }
-          .filter { (prescriptions, _) -> prescriptions.isNotEmpty() }
-          .doOnNext { (prescriptions, _) -> prescriptionRepository.softDeletePrescriptions(prescriptions) }
-          .flatMap { (prescriptions, effect) ->
-            val clonedPrescriptions = prescriptions.map { prescribedDrug ->
-                  prescribedDrug.refillForTeleconsultation(
-                      uuid = uuidGenerator.v4(),
-                      facilityUuid = currentFacility.get().uuid,
-                      teleconsultationId = effect.teleconsultRecordId,
-                      utcClock = utcClock
-                  )
-                }
+          .doOnNext { (prescriptions, effect) -> clonePrescriptions(prescriptions, effect) }
+          .map { PatientPrescriptionsCloned }
+    }
+  }
 
-            prescriptionRepository.save(clonedPrescriptions)
-                .andThen(Observable.just(PatientPrescriptionsCloned))
-          }
+  private fun clonePrescriptions(
+      prescriptions: List<PrescribedDrug>,
+      effect: ClonePatientPrescriptions
+  ) {
+    if (prescriptions.isNotEmpty()) {
+      prescriptionRepository.softDeletePrescriptions(prescriptions)
+
+      val clonedPrescriptions = prescriptions.map { prescribedDrug ->
+        prescribedDrug.refillForTeleconsultation(
+            uuid = uuidGenerator.v4(),
+            facilityUuid = currentFacility.get().uuid,
+            teleconsultationId = effect.teleconsultRecordId,
+            utcClock = utcClock
+        )
+      }
+
+      prescriptionRepository.saveImmediate(clonedPrescriptions)
     }
   }
 

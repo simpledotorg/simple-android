@@ -80,6 +80,10 @@ class PrescriptionRepository @Inject constructor(
     return Completable.fromAction { dao.save(records) }
   }
 
+  fun saveImmediate(records: List<PrescribedDrug>) {
+    return dao.save(records)
+  }
+
   fun softDeletePrescription(prescriptionUuid: UUID): Completable {
     return Completable.fromAction {
       database.runInTransaction {

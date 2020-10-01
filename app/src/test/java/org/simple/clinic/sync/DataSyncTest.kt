@@ -63,12 +63,7 @@ class DataSyncTest {
         .streamSyncErrors()
         .test()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoErrors()
@@ -108,12 +103,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertValue(ResolvedError.Unexpected(runtimeException))
@@ -250,12 +240,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
@@ -302,12 +287,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
@@ -354,12 +334,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
@@ -406,12 +381,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
@@ -458,12 +428,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
@@ -510,12 +475,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
@@ -563,12 +523,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertValue(ResolvedError.Unexpected(exception))
@@ -615,12 +570,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
@@ -667,12 +617,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()

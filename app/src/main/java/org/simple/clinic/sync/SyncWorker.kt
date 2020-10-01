@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import io.reactivex.Completable
 import org.simple.clinic.ClinicApp
 import javax.inject.Inject
 
@@ -33,8 +34,7 @@ class SyncWorker(context: Context, private val workerParams: WorkerParameters) :
     val syncGroup = readSyncGroup(workerParams = workerParams)
 
     val completable = if (syncGroup == NO_GROUP) {
-      dataSync.syncTheWorld()
-
+      Completable.fromAction { dataSync.syncTheWorld() }
     } else {
       dataSync.sync(SyncGroup.valueOf(syncGroup))
     }

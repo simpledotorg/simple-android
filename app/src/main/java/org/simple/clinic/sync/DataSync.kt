@@ -1,5 +1,6 @@
 package org.simple.clinic.sync
 
+import androidx.annotation.WorkerThread
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
@@ -24,6 +25,7 @@ import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 private fun createScheduler(workers: Int): Scheduler {
@@ -59,12 +61,18 @@ class DataSync(
 
   private val syncErrors = PublishSubject.create<ResolvedError>()
 
-  fun syncTheWorld(): Completable {
+  private fun allSyncs(): Completable {
     val syncAllGroups = SyncGroup
         .values()
         .map(this::sync)
 
     return Completable.merge(syncAllGroups)
+  }
+
+  @WorkerThread
+  @Throws(IOException::class) // This is only needed so Mockito can generate mocks for this method correctly
+  fun syncTheWorld() {
+    allSyncs().blockingAwait()
   }
 
   fun sync(syncGroup: SyncGroup): Completable {
@@ -127,7 +135,7 @@ class DataSync(
   }
 
   fun fireAndForgetSync() {
-    syncTheWorld().subscribe()
+    allSyncs().subscribe()
   }
 
   private fun runAndSwallowErrors(completable: Completable, syncGroup: SyncGroup): Completable {

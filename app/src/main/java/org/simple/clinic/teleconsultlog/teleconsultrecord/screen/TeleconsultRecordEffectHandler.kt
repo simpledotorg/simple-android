@@ -7,6 +7,7 @@ import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
@@ -20,6 +21,7 @@ import java.time.Instant
 
 class TeleconsultRecordEffectHandler @AssistedInject constructor(
     private val user: Lazy<User>,
+    private val currentFacility: Lazy<Facility>,
     private val teleconsultRecordRepository: TeleconsultRecordRepository,
     private val patientRepository: PatientRepository,
     private val prescriptionRepository: PrescriptionRepository,
@@ -59,6 +61,7 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
                 .map {
                   it.copy(
                       uuid = uuidGenerator.v4(),
+                      facilityUuid = currentFacility.get().uuid,
                       syncStatus = SyncStatus.PENDING,
                       timestamps = Timestamps.create(utcClock),
                       frequency = null,

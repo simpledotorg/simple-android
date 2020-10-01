@@ -32,6 +32,9 @@ class TeleconsultRecordEffectHandlerTest {
   private val user = TestData.loggedInUser(
       uuid = UUID.fromString("b5a3aabe-ec33-4e0b-a7a9-b2e4bd4c4303")
   )
+  private val facility= TestData.facility(
+      uuid = UUID.fromString("bc578065-8fa2-4a5f-8a1d-1bd5ca014935")
+  )
   private val utcClock = TestUtcClock(instant = Instant.parse("2018-01-01T00:00:00Z"))
   private val teleconsultRecordRepository = mock<TeleconsultRecordRepository>()
   private val patientRepository = mock<PatientRepository>()
@@ -41,6 +44,7 @@ class TeleconsultRecordEffectHandlerTest {
 
   private val effectHandler = TeleconsultRecordEffectHandler(
       user = { user },
+      currentFacility = { facility },
       teleconsultRecordRepository = teleconsultRecordRepository,
       patientRepository = patientRepository,
       prescriptionRepository = prescriptionRepository,
@@ -237,6 +241,7 @@ class TeleconsultRecordEffectHandlerTest {
     val clonedPrescriptions = listOf(
         drug1.copy(
             uuid = clonedDrug1Uuid,
+            facilityUuid = facility.uuid,
             syncStatus = SyncStatus.PENDING,
             timestamps = drug1.timestamps.copy(
                 createdAt = drug1.createdAt.plus(durationToAdvanceBy),
@@ -249,6 +254,7 @@ class TeleconsultRecordEffectHandlerTest {
         ),
         drug2.copy(
             uuid = clonedDrug2Uuid,
+            facilityUuid = facility.uuid,
             syncStatus = SyncStatus.PENDING,
             timestamps = drug2.timestamps.copy(
                 createdAt = drug2.createdAt.plus(durationToAdvanceBy),

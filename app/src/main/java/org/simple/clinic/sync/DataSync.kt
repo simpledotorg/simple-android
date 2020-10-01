@@ -92,19 +92,24 @@ class DataSync(
         .flatMapSingle { runAndReportErrors(it).subscribeOn(syncScheduler) }
         .toList()
         .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
-        .doOnSuccess { syncResults ->
-          val firstFailure = syncResults.firstOrNull { it is SyncResult.Failed }
-
-          if(firstFailure != null) {
-            syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE))
-
-            val resolvedError = (firstFailure as SyncResult.Failed).error
-            syncErrors.onNext(resolvedError)
-          } else {
-            syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SUCCESS))
-          }
-        }
+        .doOnSuccess { syncResults -> syncCompleted(syncResults, syncGroup) }
         .ignoreElement()
+  }
+
+  private fun syncCompleted(
+      syncResults: List<SyncResult>,
+      syncGroup: SyncGroup
+  ) {
+    val firstFailure = syncResults.firstOrNull { it is SyncResult.Failed }
+
+    if (firstFailure != null) {
+      syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE))
+
+      val resolvedError = (firstFailure as SyncResult.Failed).error
+      syncErrors.onNext(resolvedError)
+    } else {
+      syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SUCCESS))
+    }
   }
 
   private fun modelSyncsToTasks(modelSyncs: List<ModelSync>): List<Single<SyncResult>> {

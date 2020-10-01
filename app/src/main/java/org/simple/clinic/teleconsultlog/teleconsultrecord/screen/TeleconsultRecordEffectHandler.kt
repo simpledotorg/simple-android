@@ -9,8 +9,6 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
 import org.simple.clinic.user.User
@@ -57,16 +55,12 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
           .filter { (prescriptions, _) -> prescriptions.isNotEmpty() }
           .doOnNext { (prescriptions, _) -> prescriptionRepository.softDeletePrescriptions(prescriptions) }
           .flatMap { (prescriptions, effect) ->
-            val clonedPrescriptions = prescriptions
-                .map {
-                  it.copy(
+            val clonedPrescriptions = prescriptions.map { prescribedDrug ->
+                  prescribedDrug.refillForTeleconsultation(
                       uuid = uuidGenerator.v4(),
                       facilityUuid = currentFacility.get().uuid,
-                      syncStatus = SyncStatus.PENDING,
-                      timestamps = Timestamps.create(utcClock),
-                      frequency = null,
-                      durationInDays = null,
-                      teleconsultationId = effect.teleconsultRecordId
+                      teleconsultationId = effect.teleconsultRecordId,
+                      utcClock = utcClock
                   )
                 }
 

@@ -15,6 +15,7 @@ import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
+import org.simple.clinic.util.UtcClock
 import java.time.Instant
 import java.util.UUID
 
@@ -78,6 +79,23 @@ data class PrescribedDrug(
         deletedAt = deletedAt,
         frequency = frequency,
         durationInDays = durationInDays,
+        teleconsultationId = teleconsultationId
+    )
+  }
+
+  fun refillForTeleconsultation(
+      uuid: UUID,
+      facilityUuid: UUID,
+      teleconsultationId: UUID,
+      utcClock: UtcClock
+  ): PrescribedDrug {
+    return copy(
+        uuid = uuid,
+        facilityUuid = facilityUuid,
+        syncStatus = SyncStatus.PENDING,
+        timestamps = Timestamps.create(utcClock),
+        frequency = null,
+        durationInDays = null,
         teleconsultationId = teleconsultationId
     )
   }

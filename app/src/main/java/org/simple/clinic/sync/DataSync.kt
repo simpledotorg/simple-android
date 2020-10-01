@@ -64,18 +64,12 @@ class DataSync(
   private fun allSyncs(): Completable {
     val syncAllGroups = SyncGroup
         .values()
-        .map(this::sync)
+        .map(::syncsForGroup)
 
     return Completable.merge(syncAllGroups)
   }
 
-  @WorkerThread
-  @Throws(IOException::class) // This is only needed so Mockito can generate mocks for this method correctly
-  fun syncTheWorld() {
-    allSyncs().blockingAwait()
-  }
-
-  fun sync(syncGroup: SyncGroup): Completable {
+  private fun syncsForGroup(syncGroup: SyncGroup): Completable {
     val syncsInGroup = modelSyncs.filter { it.syncConfig().syncGroup == syncGroup }
 
     return Single
@@ -99,6 +93,18 @@ class DataSync(
         .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
         .doOnComplete { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SUCCESS)) }
         .doOnError { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE)) }
+  }
+
+
+  @WorkerThread
+  @Throws(IOException::class) // This is only needed so Mockito can generate mocks for this method correctly
+  fun syncTheWorld() {
+    allSyncs().blockingAwait()
+  }
+
+  @WorkerThread
+  fun sync(syncGroup: SyncGroup) {
+    syncsForGroup(syncGroup).blockingAwait()
   }
 
   private fun modelSyncsToCompletables(modelSyncs: List<ModelSync>): List<Completable> {
@@ -131,7 +137,7 @@ class DataSync(
   }
 
   fun fireAndForgetSync(syncGroup: SyncGroup) {
-    sync(syncGroup).subscribe()
+    syncsForGroup(syncGroup).subscribe()
   }
 
   fun fireAndForgetSync() {

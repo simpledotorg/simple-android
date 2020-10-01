@@ -144,12 +144,7 @@ class DataSyncTest {
         .streamSyncErrors()
         .test()
 
-    dataSync
-        .sync(SyncGroup.FREQUENT)
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.sync(SyncGroup.FREQUENT)
 
     syncErrors
         .assertNoErrors()
@@ -194,12 +189,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .sync(SyncGroup.DAILY)
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.sync(SyncGroup.DAILY)
 
     syncErrors
         .assertValue(ResolvedError.Unexpected(runtimeException))

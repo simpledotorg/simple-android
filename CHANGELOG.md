@@ -24,8 +24,11 @@
 
 ### Fixes
 - Fix deeplink screens & warning dialogs displaying again after activity restart.
-- App lock screen does not show if the app is exited and opened again while it is on the lock screen
 - Fix home screen tabs swiping
+
+## 2020-10-01-7452
+### Fixes
+- App lock screen does not show if the app is exited and opened again while it is on the lock screen
 
 ## 2020-09-28-7446
 ### Features

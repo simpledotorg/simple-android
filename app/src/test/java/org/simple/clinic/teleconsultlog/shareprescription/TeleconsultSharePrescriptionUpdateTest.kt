@@ -1,7 +1,11 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
+import android.graphics.Bitmap
+import com.nhaarman.mockitokotlin2.mock
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -52,6 +56,20 @@ class TeleconsultSharePrescriptionUpdateTest {
             assertThatNext(
                 hasModel(model.patientMedicinesLoaded(medicines = medicines)),
                 hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when medical officer's signature is loaded, then set the signature bitmap`() {
+    val bitmap = mock<Bitmap>()
+    updateSpec
+        .given(model)
+        .whenEvents(SignatureLoaded(bitmap))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(SetSignature(bitmap))
             )
         )
   }

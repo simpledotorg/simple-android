@@ -1,5 +1,6 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
+import android.graphics.Bitmap
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -9,6 +10,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.signature.SignatureRepository
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID
 
@@ -16,10 +18,12 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
 
   private val patientRepository = mock<PatientRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
+  private val signatureRepository = mock<SignatureRepository>()
   private val effectHandler = TeleconsultSharePrescriptionEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
-      prescriptionRepository = prescriptionRepository
+      prescriptionRepository = prescriptionRepository,
+      signatureRepository = signatureRepository
   )
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler = effectHandler.build())
@@ -70,4 +74,18 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
     // then
     effectHandlerTestCase.assertOutgoingEvents(PatientMedicinesLoaded(medicines))
   }
+
+  @Test
+  fun `when load signature effect is received, then load the signature bitmap`() {
+    // given
+    val signatureBitmap = mock<Bitmap>()
+    whenever(signatureRepository.getSignatureBitmap()) doReturn signatureBitmap
+
+    // when
+    effectHandlerTestCase.dispatch(LoadSignature)
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(SignatureLoaded(bitmap = signatureBitmap))
+  }
+
 }

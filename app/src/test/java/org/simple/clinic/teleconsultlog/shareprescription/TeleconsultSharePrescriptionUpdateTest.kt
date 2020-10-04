@@ -31,4 +31,29 @@ class TeleconsultSharePrescriptionUpdateTest {
         )
   }
 
+  @Test
+  fun `when patient medicines are loaded, then update the model`() {
+    val prescriptionUuid1 = UUID.fromString("76beea9b-74a1-4c10-b9bf-2b0ac7ccce4f")
+    val prescriptionUuid2 = UUID.fromString("12b2cfb1-9af2-440c-90fe-ba475f934138")
+    val medicines = listOf(
+        TestData.prescription(
+            uuid = prescriptionUuid1,
+            patientUuid = patientUuid
+        ),
+        TestData.prescription(
+            uuid = prescriptionUuid2,
+            patientUuid = patientUuid
+        )
+    )
+    updateSpec
+        .given(model)
+        .whenEvents(PatientMedicinesLoaded(medicines = medicines))
+        .then(
+            assertThatNext(
+                hasModel(model.patientMedicinesLoaded(medicines = medicines)),
+                hasNoEffects()
+            )
+        )
+  }
+
 }

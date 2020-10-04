@@ -11,6 +11,7 @@ class TeleconsultSharePrescriptionUpdate : Update<TeleconsultSharePrescriptionMo
   ): Next<TeleconsultSharePrescriptionModel, TeleconsultSharePrescriptionEffect> {
     return when (event) {
       is PatientDetailsLoaded -> next(model.patientLoaded(event.patient))
+      is PatientMedicinesLoaded -> next(model.patientMedicinesLoaded(event.medicines))
     }
   }
 }

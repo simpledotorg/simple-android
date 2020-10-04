@@ -8,8 +8,12 @@ class TeleconsultSharePrescriptionInit : Init<TeleconsultSharePrescriptionModel,
   override fun init(model: TeleconsultSharePrescriptionModel): First<TeleconsultSharePrescriptionModel, TeleconsultSharePrescriptionEffect> {
     val effects = mutableSetOf<TeleconsultSharePrescriptionEffect>()
 
-    if (model.hasPatient.not())
-      effects.add(LoadPatientDetails(model.patientUuid))
+    if (model.hasPatient.not()) {
+      effects.addAll(listOf(
+          LoadPatientDetails(model.patientUuid),
+          LoadPatientMedicines(model.patientUuid)
+      ))
+    }
 
     return First.first(model, effects)
   }

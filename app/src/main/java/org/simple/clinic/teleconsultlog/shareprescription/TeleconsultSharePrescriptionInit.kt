@@ -11,7 +11,8 @@ class TeleconsultSharePrescriptionInit : Init<TeleconsultSharePrescriptionModel,
     if (model.hasPatient.not()) {
       effects.addAll(listOf(
           LoadPatientDetails(model.patientUuid),
-          LoadPatientMedicines(model.patientUuid)
+          LoadPatientMedicines(model.patientUuid),
+          LoadSignature
       ))
     }
 

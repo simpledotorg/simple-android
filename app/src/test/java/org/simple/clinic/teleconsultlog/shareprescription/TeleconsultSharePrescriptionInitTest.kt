@@ -41,4 +41,16 @@ class TeleconsultSharePrescriptionInitTest {
             )
         )
   }
+
+  @Test
+  fun `when the screen is created, then load signature as well`() {
+    initSpec
+        .whenInit(model)
+        .then(
+            assertThatFirst(
+                hasModel(model),
+                hasEffects(LoadSignature)
+            )
+        )
+  }
 }

@@ -3,6 +3,9 @@ package org.simple.clinic.teleconsultlog.shareprescription
 import android.graphics.Bitmap
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
@@ -19,11 +22,13 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
   private val patientRepository = mock<PatientRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val signatureRepository = mock<SignatureRepository>()
+  private val uiActions = mock<TeleconsultSharePrescriptionUiActions>()
   private val effectHandler = TeleconsultSharePrescriptionEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
       prescriptionRepository = prescriptionRepository,
-      signatureRepository = signatureRepository
+      signatureRepository = signatureRepository,
+      uiActions = uiActions
   )
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler = effectHandler.build())
@@ -47,6 +52,7 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(PatientDetailsLoaded(patient))
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -73,6 +79,7 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(PatientMedicinesLoaded(medicines))
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -86,6 +93,22 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(SignatureLoaded(bitmap = signatureBitmap))
+    verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when set the signature effect is received, then set the signature`() {
+    // given
+    val signatureBitmap = mock<Bitmap>()
+
+    // when
+    effectHandlerTestCase.dispatch(SetSignature(signatureBitmap))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).setSignatureBitmap(bitmap = signatureBitmap)
+    verifyNoMoreInteractions(uiActions)
+  }
+
 
 }

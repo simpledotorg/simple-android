@@ -37,6 +37,7 @@ class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
         .addConsumer(SetSignature::class.java, { uiActions.setSignatureBitmap(it.bitmap) }, schedulersProvider.ui())
         .addTransformer(LoadMedicalRegistrationId::class.java, loadMedicalRegistrationID())
         .addConsumer(SetMedicalRegistrationId::class.java, { uiActions.setMedicalRegistrationId(it.medicalRegistrationId) }, schedulersProvider.ui())
+        .addConsumer(GoToHomeScreen::class.java, { uiActions.openHomeScreen() }, schedulersProvider.ui())
         .build()
   }
 

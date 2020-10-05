@@ -139,5 +139,14 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
   }
 
+  @Test
+  fun `when Go to home screen effect is received, then open home screen`() {
+    // when
+    effectHandlerTestCase.dispatch(GoToHomeScreen)
 
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).openHomeScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

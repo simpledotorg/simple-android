@@ -5,4 +5,5 @@ import android.graphics.Bitmap
 interface TeleconsultSharePrescriptionUiActions {
   fun setSignatureBitmap(bitmap: Bitmap)
   fun setMedicalRegistrationId(medicalRegistrationId: String)
+  fun openHomeScreen()
 }

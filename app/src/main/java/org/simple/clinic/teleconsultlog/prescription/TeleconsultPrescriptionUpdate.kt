@@ -1,6 +1,7 @@
 package org.simple.clinic.teleconsultlog.prescription
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.dispatch
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -16,6 +17,7 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
       BackClicked -> dispatch(GoBack)
       is DataForNextClickLoaded -> dataForNextClickLoaded(model, event)
       is NextButtonClicked -> dispatch(LoadDataForNextClick(
+          patientUuid = model.patientUuid,
           teleconsultRecordId = model.teleconsultRecordId,
           medicalInstructions = event.medicalInstructions,
           medicalRegistrationId = event.medicalRegistrationId
@@ -31,21 +33,37 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
       model: TeleconsultPrescriptionModel,
       event: DataForNextClickLoaded
   ): Next<TeleconsultPrescriptionModel, TeleconsultPrescriptionEffect> {
-    return if (event.hasSignatureBitmap) {
-      dispatch(
-          SaveMedicalRegistrationId(medicalRegistrationId = event.medicalRegistrationId),
-          UpdateTeleconsultRecordMedicalRegistrationId(
-              teleconsultRecordId = model.teleconsultRecordId,
-              medicalRegistrationId = event.medicalRegistrationId
-          ),
-          AddTeleconsultIdToPrescribedDrugs(
-              patientUuid = model.patientUuid,
-              teleconsultRecordId = model.teleconsultRecordId,
-              medicalInstructions = event.medicalInstructions
-          )
-      )
-    } else {
-      dispatch(ShowSignatureRequiredError)
+    return when {
+      event.hasSignatureBitmap && event.hasMedicines -> {
+        dispatch(
+            SaveMedicalRegistrationId(medicalRegistrationId = event.medicalRegistrationId),
+            UpdateTeleconsultRecordMedicalRegistrationId(
+                teleconsultRecordId = model.teleconsultRecordId,
+                medicalRegistrationId = event.medicalRegistrationId
+            ),
+            AddTeleconsultIdToPrescribedDrugs(
+                patientUuid = model.patientUuid,
+                teleconsultRecordId = model.teleconsultRecordId,
+                medicalInstructions = event.medicalInstructions
+            )
+        )
+      }
+      else -> {
+        handleErrors(event)
+      }
     }
+  }
+
+  private fun handleErrors(event: DataForNextClickLoaded): Next<TeleconsultPrescriptionModel, TeleconsultPrescriptionEffect> {
+    val effects = mutableSetOf<TeleconsultPrescriptionEffect>()
+    if (event.hasSignatureBitmap.not()) {
+      effects.add(ShowSignatureRequiredError)
+    }
+
+    if (event.hasMedicines.not()) {
+      effects.add(ShowMedicinesRequiredError)
+    }
+
+    return dispatch(effects)
   }
 }

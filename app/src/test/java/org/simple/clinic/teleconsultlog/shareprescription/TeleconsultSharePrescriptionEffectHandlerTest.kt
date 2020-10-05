@@ -26,6 +26,7 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
   private val signatureRepository = mock<SignatureRepository>()
   private val uiActions = mock<TeleconsultSharePrescriptionUiActions>()
   private val medicalRegistrationIdPreference = mock<Preference<Optional<String>>>()
+  private val medicalRegistrationId = "1111111111"
   private val effectHandler = TeleconsultSharePrescriptionEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
@@ -117,7 +118,6 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
   @Test
   fun `when load medical registration Id effect is received, then load the medical registration Id if it exists`() {
     // given
-    val medicalRegistrationId = "1111111111"
     whenever(medicalRegistrationIdPreference.get()) doReturn Optional.of(medicalRegistrationId)
 
     // when
@@ -127,4 +127,17 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
     effectHandlerTestCase.assertOutgoingEvents(MedicalRegistrationIdLoaded(medicalRegistrationId))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when set medical registration Id effect is received, then load the medical registration Id`() {
+    // when
+    effectHandlerTestCase.dispatch(SetMedicalRegistrationId(medicalRegistrationId = medicalRegistrationId))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).setMedicalRegistrationId(medicalRegistrationId)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+
 }

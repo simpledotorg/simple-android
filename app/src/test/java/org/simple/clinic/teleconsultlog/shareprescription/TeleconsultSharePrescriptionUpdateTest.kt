@@ -83,9 +83,9 @@ class TeleconsultSharePrescriptionUpdateTest {
         .whenEvents(MedicalRegistrationIdLoaded(medicalRegistrationId))
         .then(
             assertThatNext(
-                hasModel(model.medicalRegistrationIdLoaded(medicalRegistrationId))
+                hasModel(model.medicalRegistrationIdLoaded(medicalRegistrationId)),
+                hasEffects(SetMedicalRegistrationId(medicalRegistrationId))
             )
         )
   }
-
 }

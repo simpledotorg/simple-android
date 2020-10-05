@@ -14,3 +14,5 @@ object LoadSignature : TeleconsultSharePrescriptionEffect()
 data class SetSignature(val bitmap: Bitmap) : TeleconsultSharePrescriptionEffect()
 
 object LoadMedicalRegistrationId : TeleconsultSharePrescriptionEffect()
+
+data class SetMedicalRegistrationId(val medicalRegistrationId: String) : TeleconsultSharePrescriptionEffect()

@@ -43,6 +43,7 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.user.UnauthorizeUser
 import org.simple.clinic.user.User
@@ -151,6 +152,9 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   @Inject
   lateinit var unlockAfterTimestamp: MemoryValue<Optional<Instant>>
 
+  @Inject
+  lateinit var dataSync: DataSync
+
   private lateinit var component: TheActivityComponent
 
   private val disposables = CompositeDisposable()
@@ -192,6 +196,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
           syncSetup.run(),
           unauthorizeUser.listen()
       )
+      dataSync.fireAndForgetSync()
     }
 
     if (intent.hasExtra(EXTRA_DEEP_LINK_RESULT)) {

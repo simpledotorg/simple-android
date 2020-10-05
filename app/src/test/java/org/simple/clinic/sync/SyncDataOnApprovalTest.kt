@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -40,7 +39,6 @@ class SyncDataOnApprovalTest {
     val user = TestData.loggedInUser(status = previousUserStatus)
     val userSubject = PublishSubject.create<Optional<User>>()
     whenever(userSession.loggedInUser()).thenReturn(userSubject)
-    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())
 
     // when
     syncDataOnApproval.sync()

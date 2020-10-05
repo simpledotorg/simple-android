@@ -32,14 +32,22 @@ class SyncWorker(context: Context, private val workerParams: WorkerParameters) :
     ClinicApp.appComponent.inject(this)
     val syncGroup = readSyncGroup(workerParams = workerParams)
 
-    val completable = if (syncGroup == NO_GROUP) {
-      dataSync.syncTheWorld()
+    try {
+      performSync(syncGroup)
+    } catch (e: Exception) {
+      // Individual syncs report their errors internally so we can just
+      // ignore this caught error. This is a good place for future
+      // improvements like attempting a backoff based retry.
+    }
 
+    return Result.success()
+  }
+
+  private fun performSync(syncGroup: String) {
+    if (syncGroup == NO_GROUP) {
+      dataSync.syncTheWorld()
     } else {
       dataSync.sync(SyncGroup.valueOf(syncGroup))
     }
-
-    completable.blockingAwait()
-    return Result.success()
   }
 }

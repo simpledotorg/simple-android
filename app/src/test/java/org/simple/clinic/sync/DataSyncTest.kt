@@ -9,9 +9,11 @@ import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import java.io.IOException
 import java.util.UUID
 
 class DataSyncTest {
@@ -63,12 +65,7 @@ class DataSyncTest {
         .streamSyncErrors()
         .test()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoErrors()
@@ -108,12 +105,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertValue(ResolvedError.Unexpected(runtimeException))
@@ -154,12 +146,7 @@ class DataSyncTest {
         .streamSyncErrors()
         .test()
 
-    dataSync
-        .sync(SyncGroup.FREQUENT)
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.sync(SyncGroup.FREQUENT)
 
     syncErrors
         .assertNoErrors()
@@ -204,12 +191,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .sync(SyncGroup.DAILY)
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.sync(SyncGroup.DAILY)
 
     syncErrors
         .assertValue(ResolvedError.Unexpected(runtimeException))
@@ -250,12 +232,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
@@ -302,12 +279,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
@@ -354,12 +326,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
@@ -406,12 +373,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
@@ -458,12 +420,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
@@ -510,12 +467,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
@@ -563,12 +515,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertValue(ResolvedError.Unexpected(exception))
@@ -615,12 +562,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
@@ -667,15 +609,66 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync
-        .syncTheWorld()
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-        .dispose()
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertNoValues()
+        .assertNoErrors()
+        .dispose()
+  }
+
+  @Test
+  fun `when syncing a group, if multiple syncs throws an error, the overall sync result must be a failure`() {
+    val modelSync1 = FakeModelSync(
+        _name = "sync1",
+        config = frequentSyncConfig
+    )
+
+    val runtimeException = RuntimeException("TEST")
+    val ioException = IOException("TEST")
+
+    val modelSync2 = FakeModelSync(
+        _name = "sync2",
+        config = frequentSyncConfig,
+        pullError = runtimeException
+    )
+
+    val modelSync3 = FakeModelSync(
+        _name = "sync3",
+        config = frequentSyncConfig,
+        pushError = ioException
+    )
+
+    val dataSync = DataSync(
+        modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
+        crashReporter = mock(),
+        schedulersProvider = schedulersProvider,
+        userSession = userSession,
+        syncScheduler = schedulersProvider.io()
+    )
+
+    val syncErrors = dataSync
+        .streamSyncErrors()
+        .test()
+        .assertNoErrors()
+
+    val syncResults = dataSync
+        .streamSyncResults()
+        .test()
+        .assertNoErrors()
+
+    dataSync.sync(SyncGroup.FREQUENT)
+
+    syncErrors
+        .assertValue(ErrorResolver.resolve(ioException)) // IOException because it is a push error and pushes are executed first
+        .assertNoErrors()
+        .dispose()
+
+    syncResults
+        .assertValues(
+            DataSync.SyncGroupResult(SyncGroup.FREQUENT, SyncProgress.SYNCING),
+            DataSync.SyncGroupResult(SyncGroup.FREQUENT, SyncProgress.FAILURE)
+        )
         .assertNoErrors()
         .dispose()
   }

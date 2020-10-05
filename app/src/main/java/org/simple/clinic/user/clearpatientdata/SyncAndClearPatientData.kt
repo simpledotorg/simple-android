@@ -29,8 +29,8 @@ class SyncAndClearPatientData @Inject constructor(
   fun run(): Completable {
     Timber.i("Syncing and clearing all patient related data")
 
-    return dataSync
-        .syncTheWorld()
+    return Completable
+        .fromAction { dataSync.syncTheWorld() }
         .retry(syncRetryCount.toLong())
         .timeout(syncTimeout.seconds, TimeUnit.SECONDS)
         .onErrorComplete()

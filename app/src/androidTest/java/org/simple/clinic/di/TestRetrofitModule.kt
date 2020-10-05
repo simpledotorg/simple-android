@@ -37,7 +37,7 @@ class TestRetrofitModule {
       moshi: Moshi,
       okHttpClient: OkHttpClient
   ): Retrofit {
-    val baseUrl = BuildConfig.FALLBACK_ENDPOINT
+    val baseUrl = BuildConfig.MANIFEST_ENDPOINT
 
     return Retrofit.Builder()
         .addConverterFactory(ScalarsConverterFactory.create())

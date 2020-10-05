@@ -9,4 +9,6 @@ interface TeleconsultRecordUi {
   fun setPatientTookMedicines(patientTookMedicines: Answer)
   fun setPatientConsented(patientConsented: Answer)
   fun renderPatientDetails(patient: Patient)
+  fun showProgress()
+  fun hideProgress()
 }

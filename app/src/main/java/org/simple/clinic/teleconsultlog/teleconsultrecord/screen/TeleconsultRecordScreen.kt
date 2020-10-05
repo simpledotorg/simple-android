@@ -30,6 +30,8 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.M
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Video
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
+import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -152,6 +154,14 @@ class TeleconsultRecordScreen(
 
   override fun showTeleconsultNotRecordedWarning() {
     TeleconsultNotRecordedDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun hideProgress() {
+    doneButton.setButtonState(Enabled)
+  }
+
+  override fun showProgress() {
+    doneButton.setButtonState(InProgress)
   }
 
   private fun doneClicks(): Observable<UiEvent> {

@@ -80,6 +80,10 @@ class PrescriptionRepository @Inject constructor(
     return Completable.fromAction { dao.save(records) }
   }
 
+  fun saveImmediate(records: List<PrescribedDrug>) {
+    return dao.save(records)
+  }
+
   fun softDeletePrescription(prescriptionUuid: UUID): Completable {
     return Completable.fromAction {
       database.runInTransaction {
@@ -162,6 +166,15 @@ class PrescriptionRepository @Inject constructor(
     dao.addTeleconsultationIdToDrugs(
         drugUuids = prescribedDrugs.map { it.uuid },
         teleconsultationId = teleconsultationId,
+        updatedAt = Instant.now(utcClock),
+        syncStatus = SyncStatus.PENDING
+    )
+  }
+
+  fun softDeletePrescriptions(prescriptionDrugs: List<PrescribedDrug>) {
+    dao.softDelete(
+        prescriptionIds = prescriptionDrugs.map { it.uuid },
+        deleted = true,
         updatedAt = Instant.now(utcClock),
         syncStatus = SyncStatus.PENDING
     )

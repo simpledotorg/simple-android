@@ -1,6 +1,7 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
 import android.graphics.Bitmap
+import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -14,6 +15,7 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.signature.SignatureRepository
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID
 
@@ -23,12 +25,14 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val signatureRepository = mock<SignatureRepository>()
   private val uiActions = mock<TeleconsultSharePrescriptionUiActions>()
+  private val medicalRegistrationIdPreference = mock<Preference<Optional<String>>>()
   private val effectHandler = TeleconsultSharePrescriptionEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
       prescriptionRepository = prescriptionRepository,
       signatureRepository = signatureRepository,
-      uiActions = uiActions
+      uiActions = uiActions,
+      medicalRegistrationId = medicalRegistrationIdPreference
   )
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler = effectHandler.build())
@@ -110,5 +114,17 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
   }
 
+  @Test
+  fun `when load medical registration Id effect is received, then load the medical registration Id if it exists`() {
+    // given
+    val medicalRegistrationId = "1111111111"
+    whenever(medicalRegistrationIdPreference.get()) doReturn Optional.of(medicalRegistrationId)
 
+    // when
+    effectHandlerTestCase.dispatch(LoadMedicalRegistrationId)
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(MedicalRegistrationIdLoaded(medicalRegistrationId))
+    verifyZeroInteractions(uiActions)
+  }
 }

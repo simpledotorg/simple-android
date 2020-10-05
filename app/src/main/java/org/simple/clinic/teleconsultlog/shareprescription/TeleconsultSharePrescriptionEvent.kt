@@ -10,4 +10,6 @@ data class PatientDetailsLoaded(val patient: Patient) : TeleconsultSharePrescrip
 
 data class PatientMedicinesLoaded(val medicines: List<PrescribedDrug>) : TeleconsultSharePrescriptionEvent()
 
-data class SignatureLoaded(val bitmap: Bitmap): TeleconsultSharePrescriptionEvent()
+data class SignatureLoaded(val bitmap: Bitmap) : TeleconsultSharePrescriptionEvent()
+
+data class MedicalRegistrationIdLoaded(val medicalRegistrationId: String) : TeleconsultSharePrescriptionEvent()

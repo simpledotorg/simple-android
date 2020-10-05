@@ -1,12 +1,17 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
+import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.MedicalRegistrationId
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.signature.SignatureRepository
+import org.simple.clinic.util.Optional
+import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
@@ -14,7 +19,8 @@ class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val prescriptionRepository: PrescriptionRepository,
     private val signatureRepository: SignatureRepository,
-    @Assisted private val uiActions: TeleconsultSharePrescriptionUiActions
+    @Assisted private val uiActions: TeleconsultSharePrescriptionUiActions,
+    @TypedPreference(MedicalRegistrationId) private val medicalRegistrationId: Preference<Optional<String>>
 ) {
 
   @AssistedInject.Factory
@@ -29,6 +35,7 @@ class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
         .addTransformer(LoadPatientMedicines::class.java, loadPatientMedicines())
         .addTransformer(LoadSignature::class.java, loadSignature())
         .addConsumer(SetSignature::class.java, { uiActions.setSignatureBitmap(it.bitmap) }, schedulersProvider.ui())
+        .addTransformer(LoadMedicalRegistrationId::class.java, loadMedicalRegistrationID())
         .build()
   }
 
@@ -41,6 +48,15 @@ class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
     }
   }
 
+  private fun loadPatientDetails(): ObservableTransformer<LoadPatientDetails, TeleconsultSharePrescriptionEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { patientRepository.patientImmediate(it.patientUuid) }
+          .map(::PatientDetailsLoaded)
+    }
+  }
+
   private fun loadPatientMedicines(): ObservableTransformer<LoadPatientMedicines, TeleconsultSharePrescriptionEvent> {
     return ObservableTransformer { effects ->
       effects
@@ -50,12 +66,13 @@ class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun loadPatientDetails(): ObservableTransformer<LoadPatientDetails, TeleconsultSharePrescriptionEvent> {
+  private fun loadMedicalRegistrationID(): ObservableTransformer<LoadMedicalRegistrationId, TeleconsultSharePrescriptionEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map { patientRepository.patientImmediate(it.patientUuid) }
-          .map(::PatientDetailsLoaded)
+          .map { medicalRegistrationId.get() }
+          .extractIfPresent()
+          .map(::MedicalRegistrationIdLoaded)
     }
   }
 }

@@ -12,11 +12,11 @@
     layout="@layout/view_allpatientsinfacility"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/toolbar" />
+    android:layout_below="@+id/patientSearchToolbar" />
 
   <!-- This is placed below the all patients view so that the shadow of the toolbar can be cast -->
   <FrameLayout
-    android:id="@id/toolbar"
+    android:id="@+id/patientSearchToolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Next Release
+## Internal
+- Add `syncGroup` property to the `Facility` resource
+
 ## On Demo
 ## Features
 - Add `TeleconsultPrescriptionScreen`

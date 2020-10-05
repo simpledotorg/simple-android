@@ -1,9 +1,11 @@
 package org.simple.clinic.sync
 
+import androidx.annotation.WorkerThread
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.SingleTransformer
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
@@ -12,8 +14,10 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.SyncAnalyticsEvent
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.remoteconfig.RemoteConfigService
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ErrorResolver
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
@@ -24,6 +28,7 @@ import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 private fun createScheduler(workers: Int): Scheduler {
@@ -59,61 +64,110 @@ class DataSync(
 
   private val syncErrors = PublishSubject.create<ResolvedError>()
 
-  fun syncTheWorld(): Completable {
+  private fun allSyncs(): Completable {
     val syncAllGroups = SyncGroup
         .values()
-        .map(this::sync)
+        .map(::syncsForGroup)
 
     return Completable.merge(syncAllGroups)
   }
 
-  fun sync(syncGroup: SyncGroup): Completable {
+  private fun syncsForGroup(syncGroup: SyncGroup): Completable {
     val syncsInGroup = modelSyncs.filter { it.syncConfig().syncGroup == syncGroup }
 
     return Single
         .fromCallable { userSession.loggedInUserImmediate().toOptional() }
         .subscribeOn(schedulersProvider.io())
-        .flatMapObservable { user ->
-          syncsInGroup
-              .toObservable()
-              .map { user to it }
-        }
-        .filter { (user, modelSync) ->
-          if (modelSync.requiresSyncApprovedUser) {
-            user.isPresent() && user.get().canSyncData
-          } else true
-        }
-        .map { (_, modelSync) -> modelSync }
-        .toList()
-        .map(::modelSyncsToCompletables)
-        .flatMapObservable { Observable.fromIterable(it) }
-        .flatMapCompletable { runAndSwallowErrors(it, syncGroup).subscribeOn(syncScheduler) }
+        .compose(filterSyncsThatRequireAuthentication(syncsInGroup))
+        .compose(prepareTasksFromSyncs())
         .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
-        .doOnComplete { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SUCCESS)) }
-        .doOnError { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE)) }
+        .doOnSuccess { syncResults -> syncCompleted(syncResults, syncGroup) }
+        .ignoreElement()
   }
 
-  private fun modelSyncsToCompletables(modelSyncs: List<ModelSync>): List<Completable> {
+  private fun filterSyncsThatRequireAuthentication(
+      syncsInGroup: List<ModelSync>
+  ): SingleTransformer<Optional<User>, List<ModelSync>> {
+    return SingleTransformer { userSingle ->
+      userSingle
+          .flatMap { user ->
+            combineSyncsWithCurrentUser(syncsInGroup, user)
+                .filter { (user, modelSync) -> shouldSyncBeRun(modelSync, user) }
+                .map { (_, modelSync) -> modelSync }
+                .toList()
+          }
+    }
+  }
+
+  private fun prepareTasksFromSyncs(): SingleTransformer<List<ModelSync>, List<SyncResult>> {
+    return SingleTransformer { modelSyncs ->
+      modelSyncs
+          .map(::modelSyncsToTasks)
+          .flatMapObservable { Observable.fromIterable(it) }
+          .flatMapSingle { runAndReportErrors(it).subscribeOn(syncScheduler) }
+          .toList()
+    }
+  }
+
+  private fun combineSyncsWithCurrentUser(
+      syncsInGroup: List<ModelSync>,
+      user: Optional<User>
+  ): Observable<Pair<Optional<User>, ModelSync>> {
+    return syncsInGroup
+        .toObservable()
+        .map { user to it }
+  }
+
+  private fun shouldSyncBeRun(
+      modelSync: ModelSync,
+      user: Optional<User>
+  ): Boolean {
+    return if (modelSync.requiresSyncApprovedUser) {
+      user.isPresent() && user.get().canSyncData
+    } else true
+  }
+
+  private fun syncCompleted(
+      syncResults: List<SyncResult>,
+      syncGroup: SyncGroup
+  ) {
+    val firstFailure = syncResults.firstOrNull { it is SyncResult.Failed }
+
+    if (firstFailure != null) {
+      syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE))
+
+      val resolvedError = (firstFailure as SyncResult.Failed).error
+      syncErrors.onNext(resolvedError)
+    } else {
+      syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SUCCESS))
+    }
+  }
+
+  private fun modelSyncsToTasks(modelSyncs: List<ModelSync>): List<Single<SyncResult>> {
     val allPushes = modelSyncs.map(::generatePushOperationForSync)
     val allPulls = modelSyncs.map(::generatePullOperationForSync)
 
     return allPushes + allPulls
   }
 
-  private fun generatePullOperationForSync(sync: ModelSync): Completable {
+  private fun generatePullOperationForSync(sync: ModelSync): Single<SyncResult> {
     return Completable
         .fromAction(sync::pull)
+        .toSingleDefault<SyncResult>(SyncResult.Completed(sync))
         .doOnSubscribe { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Started) }
-        .doOnComplete { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Completed) }
+        .doOnSuccess { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Completed) }
         .doOnError { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Failed) }
+        .onErrorReturn { cause -> SyncResult.Failed(sync, ErrorResolver.resolve(cause)) }
   }
 
-  private fun generatePushOperationForSync(sync: ModelSync): Completable {
+  private fun generatePushOperationForSync(sync: ModelSync): Single<SyncResult> {
     return Completable
         .fromAction(sync::push)
+        .toSingleDefault<SyncResult>(SyncResult.Completed(sync))
         .doOnSubscribe { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Started) }
-        .doOnComplete { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Completed) }
+        .doOnSuccess { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Completed) }
         .doOnError { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Failed) }
+        .onErrorReturn { cause -> SyncResult.Failed(sync, ErrorResolver.resolve(cause)) }
   }
 
   private fun reportSyncEvent(name: String, type: String, event: SyncAnalyticsEvent) {
@@ -122,32 +176,44 @@ class DataSync(
     Analytics.reportSyncEvent(analyticsName, event)
   }
 
-  fun fireAndForgetSync(syncGroup: SyncGroup) {
-    sync(syncGroup).subscribe()
+  private fun runAndReportErrors(task: Single<SyncResult>): Single<SyncResult> {
+    return task.doOnSuccess { result ->
+      if(result is SyncResult.Failed) {
+        logError(result.error)
+      }
+    }
   }
 
-  fun fireAndForgetSync() {
-    syncTheWorld().subscribe()
-  }
-
-  private fun runAndSwallowErrors(completable: Completable, syncGroup: SyncGroup): Completable {
-    return completable
-        .doOnError(::logError)
-        .onErrorComplete()
-  }
-
-  private fun logError(cause: Throwable) {
-    val resolvedError = ErrorResolver.resolve(cause)
-    syncErrors.onNext(resolvedError)
+  private fun logError(resolvedError: ResolvedError) {
+    val actualCause = resolvedError.actualCause
 
     when (resolvedError) {
       is Unexpected, is ServerError -> {
-        Timber.i("(breadcrumb) Reporting to sentry. Error: $cause. Resolved error: $resolvedError")
-        crashReporter.report(resolvedError.actualCause)
-        Timber.e(resolvedError.actualCause)
+        Timber.i("(breadcrumb) Reporting to sentry. Error: ${actualCause}. Resolved error: $resolvedError")
+        crashReporter.report(actualCause)
+        Timber.e(actualCause)
       }
-      is NetworkRelated, is Unauthenticated -> Timber.e(cause)
+      is NetworkRelated, is Unauthenticated -> Timber.e(actualCause)
     }.exhaustive()
+  }
+
+  @WorkerThread
+  @Throws(IOException::class) // This is only needed so Mockito can generate mocks for this method correctly
+  fun syncTheWorld() {
+    allSyncs().blockingAwait()
+  }
+
+  @WorkerThread
+  fun sync(syncGroup: SyncGroup) {
+    syncsForGroup(syncGroup).blockingAwait()
+  }
+
+  fun fireAndForgetSync() {
+    allSyncs().subscribe()
+  }
+
+  fun fireAndForgetSync(syncGroup: SyncGroup) {
+    syncsForGroup(syncGroup).subscribe()
   }
 
   fun streamSyncResults(): Observable<SyncGroupResult> = syncProgress
@@ -156,4 +222,15 @@ class DataSync(
 
   data class SyncGroupResult(val syncGroup: SyncGroup, val syncProgress: SyncProgress)
 
+  private sealed class SyncResult(val sync: ModelSync) {
+
+    data class Completed(
+        private val _sync: ModelSync
+    ): SyncResult(_sync)
+
+    data class Failed(
+        private val _sync: ModelSync,
+        val error: ResolvedError
+    ): SyncResult(_sync)
+  }
 }

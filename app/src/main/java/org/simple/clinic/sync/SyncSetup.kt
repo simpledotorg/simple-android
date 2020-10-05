@@ -8,7 +8,6 @@ import javax.annotation.CheckReturnValue
 import javax.inject.Inject
 
 class SyncSetup @Inject constructor(
-    private val dataSync: DataSync,
     private val syncScheduler: SyncScheduler,
     private val syncIndicatorStatusCalculator: SyncIndicatorStatusCalculator,
     private val syncProtocolsOnLogin: SyncProtocolsOnLogin,
@@ -22,8 +21,7 @@ class SyncSetup @Inject constructor(
           syncProtocolsOnLogin.listen(),
           dataSyncOnApproval.sync(),
           syncScheduler.schedule().subscribe(),
-          syncIndicatorStatusCalculator.updateSyncResults(),
-          dataSync.syncTheWorld().subscribe()
+          syncIndicatorStatusCalculator.updateSyncResults()
       )
     }
   }

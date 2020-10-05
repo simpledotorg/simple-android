@@ -25,6 +25,7 @@
 ### Fixes
 - Fix deeplink screens & warning dialogs displaying again after activity restart.
 - Fix home screen tabs swiping
+- Fix issue where sync events where being triggered on an individual sync level rather than at a group level
 
 ## 2020-10-01-7452
 ### Fixes

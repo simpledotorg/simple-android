@@ -3,6 +3,7 @@ package org.simple.clinic.user.clearpatientdata
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -15,9 +16,9 @@ import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
-import java.time.Duration
 import java.io.IOException
 import java.net.SocketTimeoutException
+import java.time.Duration
 
 class SyncAndClearPatientDataTest {
 
@@ -34,7 +35,6 @@ class SyncAndClearPatientDataTest {
 
   @Test
   fun `after clearing patient related data during forgot PIN flow, the sync timestamps must be cleared`() {
-    whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
     whenever(patientRepository.clearPatientData()) doReturn Completable.complete()
 
     val user = TestData.loggedInUser()
@@ -57,10 +57,10 @@ class SyncAndClearPatientDataTest {
   @Test
   fun `if the sync fails when resetting PIN, it should be retried and complete if all retries fail`() {
     whenever(patientRepository.clearPatientData()) doReturn Completable.complete()
-    whenever(dataSync.syncTheWorld()).doReturn(
-        Completable.error(RuntimeException()),
-        Completable.error(IOException()),
-        Completable.error(SocketTimeoutException())
+    whenever(dataSync.syncTheWorld()).doThrow(
+        RuntimeException(),
+        IOException(),
+        SocketTimeoutException()
     )
     whenever(bruteForceProtection.resetFailedAttempts()) doReturn Completable.complete()
 
@@ -77,11 +77,12 @@ class SyncAndClearPatientDataTest {
   @Test
   fun `if the sync fails when resetting PIN, it should be retried and complete if any retry succeeds`() {
     whenever(patientRepository.clearPatientData()) doReturn Completable.complete()
-    whenever(dataSync.syncTheWorld()).doReturn(
-        Completable.error(RuntimeException()),
-        Completable.error(IOException()),
-        Completable.complete()
-    )
+    whenever(dataSync.syncTheWorld())
+        .doThrow(
+            RuntimeException(),
+            IOException()
+        )
+        .thenAnswer {  }
     whenever(bruteForceProtection.resetFailedAttempts()) doReturn Completable.complete()
 
     val user = TestData.loggedInUser()
@@ -96,7 +97,6 @@ class SyncAndClearPatientDataTest {
 
   @Test
   fun `if the sync fails when resetting the PIN, it should clear the patient related data`() {
-    whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
     whenever(patientRepository.clearPatientData()) doReturn Completable.complete()
     whenever(bruteForceProtection.resetFailedAttempts()) doReturn Completable.complete()
 
@@ -113,7 +113,6 @@ class SyncAndClearPatientDataTest {
   @Test
   fun `if the sync succeeds when resetting the PIN, it should clear the patient related data`() {
     whenever(patientRepository.clearPatientData()) doReturn Completable.complete()
-    whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
     whenever(bruteForceProtection.resetFailedAttempts()) doReturn Completable.complete()
 
     val user = TestData.loggedInUser()
@@ -129,13 +128,16 @@ class SyncAndClearPatientDataTest {
   @Test
   fun `when performing sync and clear data, the sync must be triggered`() {
     whenever(patientRepository.clearPatientData()) doReturn Completable.complete()
-    whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
     whenever(bruteForceProtection.resetFailedAttempts()) doReturn Completable.complete()
 
     val user = TestData.loggedInUser()
     whenever(userDao.user()) doReturn Flowable.just(listOf(user))
 
-    createTestInstance().run()
+    createTestInstance()
+        .run()
+        .test()
+        .assertNoErrors()
+        .assertComplete()
 
     verify(dataSync).syncTheWorld()
   }

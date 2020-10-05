@@ -88,4 +88,17 @@ class TeleconsultSharePrescriptionUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when done button is clicked, go to home screen`() {
+    updateSpec
+        .given(model)
+        .whenEvents(DoneClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(GoToHomeScreen)
+            )
+        )
+  }
 }

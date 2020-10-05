@@ -59,7 +59,10 @@ data class FacilityPayload(
     val deletedAt: Instant?,
 
     @Json(name = "config")
-    val config: FacilityConfig
+    val config: FacilityConfig,
+
+    @Json(name = "sync_group_id")
+    val syncGroup: String?
 ) {
 
   fun toDatabaseModel(syncStatus: SyncStatus): Facility {
@@ -89,7 +92,7 @@ data class FacilityPayload(
         syncStatus = syncStatus,
         deletedAt = deletedAt,
         config = config,
-        syncGroup = null
+        syncGroup = syncGroup
     )
   }
 }

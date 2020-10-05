@@ -428,7 +428,8 @@ object TestData {
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
-      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false, teleconsultationEnabled = false)
+      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false, teleconsultationEnabled = false),
+      syncGroup: String? = null
   ): FacilityPayload {
     return FacilityPayload(
         uuid = uuid,
@@ -447,7 +448,8 @@ object TestData {
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
-        config = facilityConfig
+        config = facilityConfig,
+        syncGroup = syncGroup
     )
   }
 

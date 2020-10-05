@@ -55,13 +55,27 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/spacing_16"
-      android:layout_marginBottom="@dimen/spacing_16"
       android:gravity="center"
       android:text="@string/drugsummaryview_no_medicines"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
       android:visibility="gone"
-      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintBottom_toTopOf="@id/medicinesRequiredErrorTextView"
       app:layout_constraintTop_toBottomOf="@id/medicinesTitleTextView"
+      app:layout_goneMarginBottom="@dimen/spacing_16"
+      tools:visibility="visible" />
+
+    <TextView
+      android:id="@+id/medicinesRequiredErrorTextView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:layout_marginBottom="@dimen/spacing_16"
+      android:gravity="center"
+      android:text="@string/view_teleconsult_medicines_required_error"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
+      android:visibility="gone"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/emptyMedicinesTextView"
       tools:visibility="visible" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>

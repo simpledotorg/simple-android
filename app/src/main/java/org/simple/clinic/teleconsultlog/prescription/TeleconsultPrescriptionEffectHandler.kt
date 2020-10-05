@@ -47,6 +47,7 @@ class TeleconsultPrescriptionEffectHandler @AssistedInject constructor(
         .addConsumer(UpdateTeleconsultRecordMedicalRegistrationId::class.java, {
           teleconsultRecordRepository.updateMedicalRegistrationId(it.teleconsultRecordId, it.medicalRegistrationId)
         }, schedulersProvider.io())
+        .addAction(ShowMedicinesRequiredError::class.java, uiActions::showMedicinesRequiredError, schedulersProvider.ui())
         .build()
   }
 
@@ -74,10 +75,13 @@ class TeleconsultPrescriptionEffectHandler @AssistedInject constructor(
           .subscribeOn(schedulersProvider.io())
           .map {
             val bitmap = signatureRepository.getSignatureBitmap()
+            val patientPrescriptions = prescriptionRepository.newestPrescriptionsForPatientImmediate(it.patientUuid)
+
             DataForNextClickLoaded(
                 medicalInstructions = it.medicalInstructions,
                 medicalRegistrationId = it.medicalRegistrationId,
-                hasSignatureBitmap = bitmap != null
+                hasSignatureBitmap = bitmap != null,
+                hasMedicines = patientPrescriptions.isNotEmpty()
             )
           }
     }

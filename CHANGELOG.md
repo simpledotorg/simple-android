@@ -3,6 +3,7 @@
 ## Next Release
 ## Internal
 - Add `syncGroup` property to the `Facility` resource
+- Show medicines required error in `TeleconsultPrescriptionScreen`
 
 ## On Demo
 ## Features

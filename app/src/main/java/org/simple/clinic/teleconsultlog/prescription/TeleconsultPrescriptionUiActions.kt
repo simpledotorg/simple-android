@@ -6,4 +6,5 @@ interface TeleconsultPrescriptionUiActions {
   fun goBackToPreviousScreen()
   fun showSignatureRequiredError()
   fun openSharePrescriptionScreen(teleconsultRecordId: UUID, medicalInstructions: String)
+  fun showMedicinesRequiredError()
 }

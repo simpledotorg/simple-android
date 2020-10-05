@@ -720,7 +720,9 @@
 
   <!-- Teleconsult Medicines View -->
   <string name="view_teleconsult_medicines">Medicines</string>
+  <string name="view_teleconsult_medicines_add">Add</string>
   <string name="view_teleconsult_medicines_edit">Edit</string>
+  <string name="view_teleconsult_medicines_required_error">Add at least one medicine</string>
   <string name="list_item_teleconsult_medicines_name" translatable="false">%1$s %2$s</string>
   <plurals name="list_item_teleconsult_medicine_duration">
     <item quantity="one">%1$s day</item>

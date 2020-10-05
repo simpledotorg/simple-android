@@ -14,7 +14,8 @@ object BackClicked : TeleconsultPrescriptionEvent() {
 data class DataForNextClickLoaded(
     val medicalInstructions: String,
     val medicalRegistrationId: String,
-    val hasSignatureBitmap: Boolean
+    val hasSignatureBitmap: Boolean,
+    val hasMedicines: Boolean
 ) : TeleconsultPrescriptionEvent()
 
 data class NextButtonClicked(val medicalInstructions: String, val medicalRegistrationId: String) : TeleconsultPrescriptionEvent() {

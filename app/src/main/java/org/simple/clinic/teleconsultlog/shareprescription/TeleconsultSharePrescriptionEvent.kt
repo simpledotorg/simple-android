@@ -23,12 +23,16 @@ data class DownloadClicked(val bitmap: Bitmap) : TeleconsultSharePrescriptionEve
 
 object PrescriptionImageSaved : TeleconsultSharePrescriptionEvent()
 
-object DoneClicked : TeleconsultSharePrescriptionEvent()
+object DoneClicked : TeleconsultSharePrescriptionEvent() {
+  override val analyticsName: String = "Share Prescription Screen:Done Clicked"
+}
 
 data class PatientProfileLoaded(val patientProfile: PatientProfile) : TeleconsultSharePrescriptionEvent()
 
-data class ShareClicked(val bitmap: Bitmap) : TeleconsultSharePrescriptionEvent()
+data class ShareClicked(val bitmap: Bitmap) : TeleconsultSharePrescriptionEvent() {
+  override val analyticsName: String = "Share Prescription Screen:Share Clicked"
+}
 
-data class PrescriptionSavedForSharing(val fileName : String) : TeleconsultSharePrescriptionEvent()
+data class PrescriptionSavedForSharing(val fileName: String) : TeleconsultSharePrescriptionEvent()
 
 data class SharePrescriptionUri(val imageUri: Uri) : TeleconsultSharePrescriptionEvent()

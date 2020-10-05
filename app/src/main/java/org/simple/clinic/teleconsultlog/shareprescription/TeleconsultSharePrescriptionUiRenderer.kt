@@ -9,7 +9,8 @@ class TeleconsultSharePrescriptionUiRenderer(
     if (model.hasPatient) {
       ui.renderPatientDetails(model.patient!!)
       ui.renderPrescriptionDate(model.prescriptionDate)
-      ui.renderPatientInformation(model.patientProfile!!)
+      if (model.hasPatientProfile)
+        ui.renderPatientInformation(model.patientProfile!!)
     }
   }
 }

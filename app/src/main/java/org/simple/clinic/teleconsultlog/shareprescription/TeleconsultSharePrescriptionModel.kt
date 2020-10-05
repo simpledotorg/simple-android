@@ -1,11 +1,14 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientProfile
 import java.time.LocalDate
 import java.util.UUID
 
+@Parcelize
 data class TeleconsultSharePrescriptionModel(
     val patientUuid: UUID,
     val patient: Patient?,
@@ -13,7 +16,7 @@ data class TeleconsultSharePrescriptionModel(
     val medicines: List<PrescribedDrug>?,
     val medicalRegistrationId: String?,
     val patientProfile: PatientProfile?
-) {
+) : Parcelable {
 
   companion object {
     fun create(patientUuid: UUID, prescriptionDate: LocalDate) = TeleconsultSharePrescriptionModel(

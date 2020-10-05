@@ -8,6 +8,8 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Audio
+import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordCreateState.CREATING_TELECONSULT_RECORD
+import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordCreateState.NOT_CREATING_TELECONSULT_RECORD
 import java.util.UUID
 
 @Parcelize
@@ -17,11 +19,15 @@ data class TeleconsultRecordModel(
     val teleconsultRecordId: UUID,
     val teleconsultationType: TeleconsultationType,
     val patientTookMedicines: Answer,
-    val patientConsented: Answer
+    val patientConsented: Answer,
+    val teleconsultRecordCreateState: TeleconsultRecordCreateState?
 ) : Parcelable {
 
   val hasPatient: Boolean
     get() = patient != null
+
+  val isCreatingTeleconsultRecord: Boolean
+    get() = teleconsultRecordCreateState == CREATING_TELECONSULT_RECORD
 
   companion object {
 
@@ -31,7 +37,8 @@ data class TeleconsultRecordModel(
         teleconsultRecordId = teleconsultRecordId,
         teleconsultationType = Audio,
         patientTookMedicines = Yes,
-        patientConsented = Yes
+        patientConsented = Yes,
+        teleconsultRecordCreateState = null
     )
   }
 
@@ -45,5 +52,13 @@ data class TeleconsultRecordModel(
 
   fun patientLoaded(patient: Patient): TeleconsultRecordModel {
     return copy(patient = patient)
+  }
+
+  fun teleconsultRecordCreated(): TeleconsultRecordModel {
+    return copy(teleconsultRecordCreateState = NOT_CREATING_TELECONSULT_RECORD)
+  }
+
+  fun creatingTeleconsultRecord(): TeleconsultRecordModel {
+    return copy(teleconsultRecordCreateState = CREATING_TELECONSULT_RECORD)
   }
 }

@@ -11,6 +11,15 @@ class TeleconsultRecordUiRenderer(
     ui.setTeleconsultationType(model.teleconsultationType)
     ui.setPatientTookMedicines(model.patientTookMedicines)
     ui.setPatientConsented(model.patientConsented)
+    renderDoneProgress(model)
+  }
+
+  private fun renderDoneProgress(model: TeleconsultRecordModel) {
+    if (model.isCreatingTeleconsultRecord) {
+      ui.showProgress()
+    } else {
+      ui.hideProgress()
+    }
   }
 
   private fun renderPatientDetails(model: TeleconsultRecordModel) {

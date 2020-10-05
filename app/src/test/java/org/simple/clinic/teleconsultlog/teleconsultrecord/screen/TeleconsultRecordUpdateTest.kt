@@ -31,13 +31,13 @@ class TeleconsultRecordUpdateTest {
   }
 
   @Test
-  fun `when teleconsult record is created, then navigate to teleconsult success screen`() {
+  fun `when teleconsult record is created, then clone patient prescriptions`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(TeleconsultRecordCreated)
+        .whenEvent(TeleconsultRecordCreated(teleconsultRecordId))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(NavigateToTeleconsultSuccess)
+            hasEffects(ClonePatientPrescriptions(patientUuid, teleconsultRecordId))
         ))
   }
 
@@ -67,7 +67,7 @@ class TeleconsultRecordUpdateTest {
             patientConsented = Yes
         ))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(defaultModel.creatingTeleconsultRecord()),
             hasEffects(CreateTeleconsultRecord(
                 patientUuid = patientUuid,
                 teleconsultRecordId = teleconsultRecordId,
@@ -111,6 +111,17 @@ class TeleconsultRecordUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(GoBack)
+        ))
+  }
+
+  @Test
+  fun `when cloning prescriptions is done, then navigate to teleconsult success screen`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientPrescriptionsCloned)
+        .then(assertThatNext(
+            hasModel(defaultModel.teleconsultRecordCreated()),
+            hasEffects(NavigateToTeleconsultSuccess)
         ))
   }
 }

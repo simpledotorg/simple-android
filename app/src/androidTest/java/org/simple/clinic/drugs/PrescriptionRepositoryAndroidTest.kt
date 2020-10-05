@@ -257,4 +257,55 @@ class PrescriptionRepositoryAndroidTest {
     assertThat(repository.newestPrescriptionsForPatientImmediate(patient1Uuid)).isEqualTo(expectedPrescribedDrugs)
     assertThat(repository.prescriptionImmediate(prescribedDrug3.uuid)).isEqualTo(prescribedDrug3)
   }
+
+  @Test
+  fun soft_deleting_prescriptions_should_work_correctly() {
+    // given
+    val durationToAdvanceBy = Duration.ofMinutes(20)
+    val patientUuid = UUID.fromString("7437be8d-586b-4a58-9c61-1d54bd485606")
+    val prescribedDrug1 = TestData.prescription(
+        uuid = UUID.fromString("c9f561ee-2d4e-4a3c-a21a-2d68cb11e524"),
+        patientUuid = patientUuid,
+        timestamps = Timestamps.create(clock),
+        syncStatus = SyncStatus.DONE,
+        isDeleted = false
+    )
+
+    val prescribedDrug2 = TestData.prescription(
+        uuid = UUID.fromString("8e5687d9-1aa4-4bc3-898c-7523f093062e"),
+        patientUuid = patientUuid,
+        timestamps = Timestamps.create(clock),
+        syncStatus = SyncStatus.DONE,
+        isDeleted = false
+    )
+
+    val prescribedDrug3 = TestData.prescription(
+        uuid = UUID.fromString("4b1ce9c6-ea8c-46ee-be2c-6f5cd56f6686"),
+        patientUuid = patientUuid,
+        timestamps = Timestamps.create(clock),
+        syncStatus = SyncStatus.DONE,
+        isDeleted = false
+    )
+
+    repository.save(listOf(prescribedDrug1, prescribedDrug2, prescribedDrug3)).blockingAwait()
+
+    // when
+    clock.advanceBy(durationToAdvanceBy)
+    repository.softDeletePrescriptions(listOf(prescribedDrug1, prescribedDrug3))
+
+    // then
+    assertThat(repository.newestPrescriptionsForPatientImmediate(patientUuid))
+        .containsExactly(prescribedDrug2)
+        .inOrder()
+    assertThat(repository.prescriptionImmediate(prescribedDrug1.uuid)).isEqualTo(prescribedDrug1.copy(
+        isDeleted = true,
+        timestamps = prescribedDrug1.timestamps.copy(updatedAt = prescribedDrug1.updatedAt.plus(durationToAdvanceBy)),
+        syncStatus = SyncStatus.PENDING
+    ))
+    assertThat(repository.prescriptionImmediate(prescribedDrug3.uuid)).isEqualTo(prescribedDrug3.copy(
+        isDeleted = true,
+        timestamps = prescribedDrug3.timestamps.copy(updatedAt = prescribedDrug3.updatedAt.plus(durationToAdvanceBy)),
+        syncStatus = SyncStatus.PENDING
+    ))
+  }
 }

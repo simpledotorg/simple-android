@@ -149,7 +149,7 @@
     android:paddingBottom="@dimen/spacing_8"
     app:layout_constraintBottom_toBottomOf="parent">
 
-    <com.google.android.material.button.MaterialButton
+    <org.simple.clinic.widgets.ProgressMaterialButton
       android:id="@+id/doneButton"
       style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
@@ -158,6 +158,7 @@
       android:layout_marginEnd="@dimen/spacing_4"
       android:text="@string/screen_teleconsult_record_done"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+      app:buttonState="in-progress"
       app:icon="@drawable/ic_done_24dp"
       app:iconGravity="textStart" />
 

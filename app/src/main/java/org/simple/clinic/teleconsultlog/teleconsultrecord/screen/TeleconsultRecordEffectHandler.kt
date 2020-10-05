@@ -4,21 +4,29 @@ import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 import java.time.Instant
 
 class TeleconsultRecordEffectHandler @AssistedInject constructor(
     private val user: Lazy<User>,
+    private val currentFacility: Lazy<Facility>,
     private val teleconsultRecordRepository: TeleconsultRecordRepository,
     private val patientRepository: PatientRepository,
+    private val prescriptionRepository: PrescriptionRepository,
     private val schedulersProvider: SchedulersProvider,
     private val utcClock: UtcClock,
+    private val uuidGenerator: UuidGenerator,
     @Assisted private val uiActions: UiActions
 ) {
 
@@ -36,7 +44,38 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
         .addTransformer(LoadPatientDetails::class.java, loadPatientDetails())
         .addAction(ShowTeleconsultNotRecordedWarning::class.java, uiActions::showTeleconsultNotRecordedWarning, schedulersProvider.ui())
         .addTransformer(ValidateTeleconsultRecord::class.java, validateTeleconsultRecord())
+        .addTransformer(ClonePatientPrescriptions::class.java, clonePatientPrescriptions())
         .build()
+  }
+
+  private fun clonePatientPrescriptions(): ObservableTransformer<ClonePatientPrescriptions, TeleconsultRecordEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { effect -> prescriptionRepository.newestPrescriptionsForPatientImmediate(effect.patientUuid) to effect }
+          .doOnNext { (prescriptions, effect) -> clonePrescriptions(prescriptions, effect) }
+          .map { PatientPrescriptionsCloned }
+    }
+  }
+
+  private fun clonePrescriptions(
+      prescriptions: List<PrescribedDrug>,
+      effect: ClonePatientPrescriptions
+  ) {
+    if (prescriptions.isNotEmpty()) {
+      prescriptionRepository.softDeletePrescriptions(prescriptions)
+
+      val clonedPrescriptions = prescriptions.map { prescribedDrug ->
+        prescribedDrug.refillForTeleconsultation(
+            uuid = uuidGenerator.v4(),
+            facilityUuid = currentFacility.get().uuid,
+            teleconsultationId = effect.teleconsultRecordId,
+            utcClock = utcClock
+        )
+      }
+
+      prescriptionRepository.saveImmediate(clonedPrescriptions)
+    }
   }
 
   private fun validateTeleconsultRecord(): ObservableTransformer<ValidateTeleconsultRecord, TeleconsultRecordEvent> {
@@ -44,8 +83,8 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .map {
-            val teleconsultRecordWithPrescribedDrugs = teleconsultRecordRepository.getTeleconsultRecord(it.teleconsultRecordId)
-            TeleconsultRecordValidated(teleconsultRecordWithPrescribedDrugs != null)
+            val teleconsultRecord = teleconsultRecordRepository.getTeleconsultRecord(it.teleconsultRecordId)
+            TeleconsultRecordValidated(teleconsultRecord != null)
           }
     }
   }
@@ -63,15 +102,16 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .doOnNext { effect ->
+          .map { effect ->
             teleconsultRecordRepository.createTeleconsultRecordForMedicalOfficer(
                 teleconsultRecordId = effect.teleconsultRecordId,
                 patientUuid = effect.patientUuid,
                 medicalOfficerId = user.get().uuid,
                 teleconsultRecordInfo = createTeleconsultRecordInfo(effect)
             )
+
+            TeleconsultRecordCreated(effect.teleconsultRecordId)
           }
-          .map { TeleconsultRecordCreated }
     }
   }
 

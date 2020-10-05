@@ -38,6 +38,7 @@ class TeleconsultRecordUiRendererTest {
     verify(ui).setTeleconsultationType(Video)
     verify(ui).setPatientTookMedicines(No)
     verify(ui).setPatientConsented(Yes)
+    verify(ui).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -63,6 +64,51 @@ class TeleconsultRecordUiRendererTest {
     verify(ui).setPatientTookMedicines(Yes)
     verify(ui).setPatientConsented(Yes)
     verify(ui).renderPatientDetails(patient)
+    verify(ui).hideProgress()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the teleconsult record is being created, then show done progress`() {
+    // given
+    val patientUuid = UUID.fromString("822e1457-1c2a-46de-8a07-e8dca3597c50")
+    val model = TeleconsultRecordModel
+        .create(
+            patientUuid = patientUuid,
+            teleconsultRecordId = UUID.fromString("9c6e2931-0f33-4560-92a3-8a08865e8103")
+        )
+        .creatingTeleconsultRecord()
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).setTeleconsultationType(Audio)
+    verify(ui).setPatientTookMedicines(Yes)
+    verify(ui).setPatientConsented(Yes)
+    verify(ui).showProgress()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the teleconsult record is created, then hide the progress`() {
+    // given
+    val patientUuid = UUID.fromString("822e1457-1c2a-46de-8a07-e8dca3597c50")
+    val model = TeleconsultRecordModel
+        .create(
+            patientUuid = patientUuid,
+            teleconsultRecordId = UUID.fromString("9c6e2931-0f33-4560-92a3-8a08865e8103")
+        )
+        .teleconsultRecordCreated()
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).setTeleconsultationType(Audio)
+    verify(ui).setPatientTookMedicines(Yes)
+    verify(ui).setPatientConsented(Yes)
+    verify(ui).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 }

@@ -81,6 +81,25 @@ class TeleconsultPrescriptionUpdateTest {
   }
 
   @Test
+  fun `when there is no signature and medicines added, then show signature required & medicines required error`() {
+    val medicalInstructions = "This is a medical instructions"
+    val medicalRegistrationId = "ABC12345"
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForNextClickLoaded(
+            medicalInstructions = medicalInstructions,
+            medicalRegistrationId = medicalRegistrationId,
+            hasSignatureBitmap = false,
+            hasMedicines = false
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowSignatureRequiredError, ShowMedicinesRequiredError)
+        ))
+  }
+
+  @Test
   fun `when next button is clicked, then load data for next click`() {
     val medicalInstructions = "This is a medical instructions"
     val medicalRegistrationId = "ABC12345"

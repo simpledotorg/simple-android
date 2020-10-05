@@ -1,6 +1,7 @@
 package org.simple.clinic.teleconsultlog.prescription
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.dispatch
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -33,13 +34,7 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
       event: DataForNextClickLoaded
   ): Next<TeleconsultPrescriptionModel, TeleconsultPrescriptionEffect> {
     return when {
-      event.hasSignatureBitmap.not() -> {
-        dispatch(ShowSignatureRequiredError)
-      }
-      event.hasMedicines.not() -> {
-        dispatch(ShowMedicinesRequiredError)
-      }
-      else -> {
+      event.hasSignatureBitmap && event.hasMedicines -> {
         dispatch(
             SaveMedicalRegistrationId(medicalRegistrationId = event.medicalRegistrationId),
             UpdateTeleconsultRecordMedicalRegistrationId(
@@ -53,6 +48,22 @@ class TeleconsultPrescriptionUpdate : Update<TeleconsultPrescriptionModel, Telec
             )
         )
       }
+      else -> {
+        handleErrors(event)
+      }
     }
+  }
+
+  private fun handleErrors(event: DataForNextClickLoaded): Next<TeleconsultPrescriptionModel, TeleconsultPrescriptionEffect> {
+    val effects = mutableSetOf<TeleconsultPrescriptionEffect>()
+    if (event.hasSignatureBitmap.not()) {
+      effects.add(ShowSignatureRequiredError)
+    }
+
+    if (event.hasMedicines.not()) {
+      effects.add(ShowMedicinesRequiredError)
+    }
+
+    return dispatch(effects)
   }
 }

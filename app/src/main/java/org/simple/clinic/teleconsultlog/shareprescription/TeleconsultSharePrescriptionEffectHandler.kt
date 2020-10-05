@@ -20,7 +20,8 @@ class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
     private val prescriptionRepository: PrescriptionRepository,
     private val signatureRepository: SignatureRepository,
     @Assisted private val uiActions: TeleconsultSharePrescriptionUiActions,
-    @TypedPreference(MedicalRegistrationId) private val medicalRegistrationId: Preference<Optional<String>>
+    @TypedPreference(MedicalRegistrationId) private val medicalRegistrationId: Preference<Optional<String>>,
+    private val teleconsultSharePrescriptionRepository: TeleconsultSharePrescriptionRepository
 ) {
 
   @AssistedInject.Factory
@@ -37,6 +38,7 @@ class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
         .addConsumer(SetSignature::class.java, { uiActions.setSignatureBitmap(it.bitmap) }, schedulersProvider.ui())
         .addTransformer(LoadMedicalRegistrationId::class.java, loadMedicalRegistrationID())
         .addConsumer(SetMedicalRegistrationId::class.java, { uiActions.setMedicalRegistrationId(it.medicalRegistrationId) }, schedulersProvider.ui())
+        .addTransformer(SaveBitmapInExternalStorage::class.java, saveBitmapInExternalStorage())
         .addConsumer(GoToHomeScreen::class.java, { uiActions.openHomeScreen() }, schedulersProvider.ui())
         .addTransformer(LoadPatientProfile::class.java, loadPatientProfile())
         .build()
@@ -86,6 +88,17 @@ class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
           .map { medicalRegistrationId.get() }
           .extractIfPresent()
           .map(::MedicalRegistrationIdLoaded)
+    }
+  }
+
+  private fun saveBitmapInExternalStorage(): ObservableTransformer<SaveBitmapInExternalStorage, TeleconsultSharePrescriptionEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { prescriptionAsBitmap ->
+            teleconsultSharePrescriptionRepository.savePrescriptionBitmap(prescriptionAsBitmap.bitmap)
+          }
+          .map { PrescriptionImageSaved }
     }
   }
 }

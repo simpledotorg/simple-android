@@ -75,7 +75,7 @@ class TeleconsultSharePrescriptionUpdateTest {
   }
 
   @Test
-  fun `when medical registration exists and is loaded, then set the medical registration Id`(){
+  fun `when medical registration exists and is loaded, then set the medical registration Id`() {
     val medicalRegistrationId = "1111111111"
 
     updateSpec
@@ -113,5 +113,20 @@ class TeleconsultSharePrescriptionUpdateTest {
             hasModel(model.patientProfileLoaded(patientProfile)),
             hasNoEffects()
         ))
+  }
+
+  @Test
+  fun `when download button is clicked, then download and save the prescription to external storage`() {
+    val bitmap = mock<Bitmap>()
+    updateSpec
+        .given(model)
+        .whenEvents(DownloadClicked(bitmap))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(SaveBitmapInExternalStorage(bitmap))
+            )
+        )
+
   }
 }

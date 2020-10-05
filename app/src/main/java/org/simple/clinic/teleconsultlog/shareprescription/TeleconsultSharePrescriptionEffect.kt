@@ -1,8 +1,7 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
 import android.graphics.Bitmap
-import android.view.View
-import org.simple.clinic.teleconsultlog.prescription.patientinfo.TeleconsultPatientInfoEffect
+import java.time.LocalDate
 import java.util.UUID
 
 sealed class TeleconsultSharePrescriptionEffect
@@ -18,6 +17,8 @@ data class SetSignature(val bitmap: Bitmap) : TeleconsultSharePrescriptionEffect
 object LoadMedicalRegistrationId : TeleconsultSharePrescriptionEffect()
 
 data class SetMedicalRegistrationId(val medicalRegistrationId: String) : TeleconsultSharePrescriptionEffect()
+
+data class SaveBitmapInExternalStorage(val bitmap: Bitmap) : TeleconsultSharePrescriptionEffect()
 
 object GoToHomeScreen : TeleconsultSharePrescriptionEffect()
 

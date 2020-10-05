@@ -27,13 +27,15 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
   private val uiActions = mock<TeleconsultSharePrescriptionUiActions>()
   private val medicalRegistrationIdPreference = mock<Preference<Optional<String>>>()
   private val medicalRegistrationId = "1111111111"
+  private val teleconsultSharePrescriptionRepository = mock<TeleconsultSharePrescriptionRepository>()
   private val effectHandler = TeleconsultSharePrescriptionEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
       prescriptionRepository = prescriptionRepository,
       signatureRepository = signatureRepository,
       uiActions = uiActions,
-      medicalRegistrationId = medicalRegistrationIdPreference
+      medicalRegistrationId = medicalRegistrationIdPreference,
+      teleconsultSharePrescriptionRepository = teleconsultSharePrescriptionRepository
   )
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler = effectHandler.build())
@@ -166,6 +168,20 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(PatientProfileLoaded(patientProfile))
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when save bitmap to external storage effect is received, then store the bitmap`() {
+    // given
+    val prescriptionBitmap = mock<Bitmap>()
+    whenever(teleconsultSharePrescriptionRepository.savePrescriptionBitmap(prescriptionBitmap))
+
+    // when
+    effectHandlerTestCase.dispatch(SaveBitmapInExternalStorage(prescriptionBitmap)) // failing the test here
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(PrescriptionImageSaved)
     verifyZeroInteractions(uiActions)
   }
 }

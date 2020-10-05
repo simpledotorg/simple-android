@@ -74,4 +74,18 @@ class TeleconsultSharePrescriptionUpdateTest {
         )
   }
 
+  @Test
+  fun `when medical registration exists and is loaded, then set the medical registration Id`(){
+    val medicalRegistrationId = "1111111111"
+
+    updateSpec
+        .given(model)
+        .whenEvents(MedicalRegistrationIdLoaded(medicalRegistrationId))
+        .then(
+            assertThatNext(
+                hasModel(model.medicalRegistrationIdLoaded(medicalRegistrationId))
+            )
+        )
+  }
+
 }

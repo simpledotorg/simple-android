@@ -9,7 +9,8 @@ data class TeleconsultSharePrescriptionModel(
     val patientUuid: UUID,
     val patient: Patient?,
     val prescriptionDate: LocalDate,
-    val medicines: List<PrescribedDrug>?
+    val medicines: List<PrescribedDrug>?,
+    val medicalRegistrationId: String?
 ) {
 
   companion object {
@@ -17,7 +18,8 @@ data class TeleconsultSharePrescriptionModel(
         patientUuid = patientUuid,
         patient = null,
         prescriptionDate = prescriptionDate,
-        medicines = null
+        medicines = null,
+        medicalRegistrationId = null
     )
   }
 
@@ -30,5 +32,9 @@ data class TeleconsultSharePrescriptionModel(
 
   fun patientMedicinesLoaded(medicines: List<PrescribedDrug>): TeleconsultSharePrescriptionModel {
     return copy(medicines = medicines)
+  }
+
+  fun medicalRegistrationIdLoaded(medicalRegistrationId: String): TeleconsultSharePrescriptionModel {
+    return copy(medicalRegistrationId = medicalRegistrationId)
   }
 }

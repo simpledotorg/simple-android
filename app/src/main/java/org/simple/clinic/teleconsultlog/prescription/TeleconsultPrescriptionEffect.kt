@@ -11,6 +11,7 @@ object GoBack : TeleconsultPrescriptionEffect()
 object ShowSignatureRequiredError : TeleconsultPrescriptionEffect()
 
 data class LoadDataForNextClick(
+    val patientUuid: UUID,
     val teleconsultRecordId: UUID,
     val medicalInstructions: String,
     val medicalRegistrationId: String
@@ -30,3 +31,5 @@ data class OpenSharePrescriptionScreen(
 data class SaveMedicalRegistrationId(val medicalRegistrationId: String) : TeleconsultPrescriptionEffect()
 
 data class UpdateTeleconsultRecordMedicalRegistrationId(val teleconsultRecordId: UUID, val medicalRegistrationId: String) : TeleconsultPrescriptionEffect()
+
+object ShowMedicinesRequiredError : TeleconsultPrescriptionEffect()

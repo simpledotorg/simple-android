@@ -88,7 +88,8 @@ data class FacilityPayload(
         updatedAt = updatedAt,
         syncStatus = syncStatus,
         deletedAt = deletedAt,
-        config = config
+        config = config,
+        syncGroup = null
     )
   }
 }

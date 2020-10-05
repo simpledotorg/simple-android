@@ -74,7 +74,7 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       OverdueAppointment::class,
       PatientSearchResult::class
     ],
-    version = 79,
+    version = 80,
     exportSchema = true
 )
 @TypeConverters(

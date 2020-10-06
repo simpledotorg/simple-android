@@ -35,6 +35,9 @@ data class TeleconsultSharePrescriptionModel(
   val hasPatientProfile: Boolean
     get() = patientProfile != null
 
+  val hasMedicines: Boolean
+    get() = medicines != null
+
   fun patientProfileLoaded(patientProfile: PatientProfile): TeleconsultSharePrescriptionModel {
     return copy(patientProfile = patientProfile)
   }

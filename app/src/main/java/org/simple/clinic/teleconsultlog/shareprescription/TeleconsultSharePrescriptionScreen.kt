@@ -10,6 +10,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.screen_teleconsult_share_prescription.view
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.DateOfBirth
@@ -27,6 +29,8 @@ import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.DividerItemDecorator
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -79,6 +83,8 @@ class TeleconsultSharePrescriptionScreen constructor(
     )
   }
 
+  private val teleconsultSharePrescriptionMedicinesAdapter = ItemAdapter(TeleconsultSharePrescriptionDiffCallback())
+
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     delegate.start()
@@ -103,6 +109,7 @@ class TeleconsultSharePrescriptionScreen constructor(
     context.injector<Injector>().inject(this)
 
     showMedicalInstructions()
+    medicinesRecyclerView.adapter = teleconsultSharePrescriptionMedicinesAdapter
   }
 
   private fun showMedicalInstructions() {
@@ -170,6 +177,11 @@ class TeleconsultSharePrescriptionScreen constructor(
 
   override fun renderPatientInformation(patientProfile: PatientProfile) {
     patientAddressTextView.text = patientProfile.address.completeAddress
+  }
+
+  override fun renderPatientMedicines(medicines: List<PrescribedDrug>) {
+    teleconsultSharePrescriptionMedicinesAdapter.submitList(
+        TeleconsultSharePrescriptionItem.from(medicines = medicines))
   }
 
   private fun getScaledBitmap(width: Int, height: Int, view: View): Bitmap {

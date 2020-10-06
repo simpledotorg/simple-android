@@ -12,7 +12,6 @@ import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import java.util.UUID
 
 class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
@@ -49,12 +48,9 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       )
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       is ContactPatientClicked -> dispatch(OpenContactPatientScreen(model.patientUuid))
-      is PatientTeleconsultationInfoLoaded -> patientInformationLoaded(event)
-      ContactDoctorClicked -> contactDoctorClicked(model)
-      is FetchedTeleconsultationInfo -> fetchedTeleconsultationInfo(model, event)
-      RetryFetchTeleconsultInfo -> retryFetchTeleconsultInfo(model)
-      is ContactDoctorPhoneNumberSelected -> contactDoctorPhoneNumberSelected(model, event)
+      ContactDoctorClicked -> dispatch(OpenContactDoctorSheet(model.patientUuid))
       LogTeleconsultClicked -> logTeleconsultClicked(model)
+      is MedicalOfficersLoaded -> next(model.medicalOfficersLoaded(event.medicalOfficers))
     }
   }
 
@@ -66,13 +62,6 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     ))
   }
 
-  private fun retryFetchTeleconsultInfo(model: PatientSummaryModel): Next<PatientSummaryModel, PatientSummaryEffect> {
-    return next(
-        model.fetchingTeleconsultationInfo(),
-        FetchTeleconsultationInfo(model.currentFacility!!.uuid)
-    )
-  }
-
   private fun currentUserAndFacilityLoaded(
       model: PatientSummaryModel,
       event: CurrentUserAndFacilityLoaded
@@ -81,76 +70,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
         .userLoggedInStatusLoaded(event.user.loggedInStatus)
         .currentFacilityLoaded(event.facility)
 
-    val canFetchTeleconsultInfo = updatedModel.isTeleconsultationEnabled &&
-        updatedModel.isUserLoggedIn &&
-        updatedModel.isTeleconsultLogDeepLink.not()
-
-    return if (canFetchTeleconsultInfo) {
-      next(
-          updatedModel.fetchingTeleconsultationInfo(),
-          FetchTeleconsultationInfo(event.facility.uuid)
-      )
-    } else {
-      next(updatedModel)
-    }
-  }
-
-  private fun fetchedTeleconsultationInfo(
-      model: PatientSummaryModel,
-      event: FetchedTeleconsultationInfo
-  ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    if (event.teleconsultInfo is TeleconsultInfo.NetworkError) {
-      return next(model.failedToFetchTeleconsultationInfo(), ShowTeleconsultInfoError)
-    }
-
-    return next(model.fetchedTeleconsultationInfo(event.teleconsultInfo))
-  }
-
-  private fun patientInformationLoaded(
-      event: PatientTeleconsultationInfoLoaded
-  ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    return dispatch(ContactDoctor(event.patientTeleconsultationInfo, event.doctorPhoneNumber.phoneNumber))
-  }
-
-  private fun contactDoctorClicked(model: PatientSummaryModel): Next<PatientSummaryModel, PatientSummaryEffect> {
-    return when (val teleconsultInfo = model.teleconsultInfo) {
-      is TeleconsultInfo.Fetched -> {
-        val effect = eventForContactDoctorClicked(teleconsultInfo, model)
-        dispatch(effect)
-      }
-      else -> noChange()
-    }
-  }
-
-  private fun eventForContactDoctorClicked(
-      teleconsultInfo: TeleconsultInfo.Fetched,
-      model: PatientSummaryModel
-  ): PatientSummaryEffect {
-    return if (teleconsultInfo.areMultipleDoctorsAvailable) {
-      OpenSelectDoctorSheet(model.currentFacility!!, teleconsultInfo.doctorsPhoneNumbers)
-    } else {
-      LoadPatientTeleconsultationInfo(
-          model.patientUuid,
-          model.patientSummaryProfile?.bpPassport,
-          model.currentFacility,
-          teleconsultInfo.doctorsPhoneNumbers.first()
-      )
-    }
-  }
-
-  private fun contactDoctorPhoneNumberSelected(
-      model: PatientSummaryModel,
-      event: ContactDoctorPhoneNumberSelected
-  ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    return when (model.teleconsultInfo) {
-      is TeleconsultInfo.Fetched -> dispatch(LoadPatientTeleconsultationInfo(
-          model.patientUuid,
-          model.patientSummaryProfile?.bpPassport,
-          model.currentFacility,
-          event.phoneNumber
-      ) as PatientSummaryEffect)
-      else -> noChange()
-    }
+    return next(updatedModel)
   }
 
   private fun dataForHandlingDoneClickLoaded(

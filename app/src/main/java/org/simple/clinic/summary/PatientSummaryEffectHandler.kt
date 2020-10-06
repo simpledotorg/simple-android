@@ -19,9 +19,7 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
+import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.User
@@ -47,11 +45,11 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val prescriptionRepository: PrescriptionRepository,
     private val country: Country,
     private val patientSummaryConfig: PatientSummaryConfig,
-    private val teleconsultationApi: TeleconsultationApi,
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
     private val facilityRepository: FacilityRepository,
+    private val teleconsultationFacilityRepository: TeleconsultationFacilityRepository,
     @Assisted private val uiActions: PatientSummaryUiActions
 ) {
 
@@ -85,13 +83,19 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addAction(ShowDiagnosisError::class.java, { uiActions.showDiagnosisError() }, schedulersProvider.ui())
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
         .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPatientContactSheet(it.patientUuid) }, schedulersProvider.ui())
-        .addTransformer(LoadPatientTeleconsultationInfo::class.java, fetchPatientTeleconsulationInfo())
-        .addConsumer(ContactDoctor::class.java, { uiActions.contactDoctor(it.patientTeleconsultationInfo, it.teleconsultationPhoneNumber) }, schedulersProvider.ui())
-        .addTransformer(FetchTeleconsultationInfo::class.java, fetchFacilityTeleconsultationInfo())
-        .addAction(ShowTeleconsultInfoError::class.java, { uiActions.showTeleconsultInfoError() }, schedulersProvider.ui())
-        .addConsumer(OpenSelectDoctorSheet::class.java, { uiActions.openContactDoctorSheet(it.facility, it.phoneNumbers) }, schedulersProvider.ui())
         .addConsumer(NavigateToTeleconsultRecordScreen::class.java, { uiActions.navigateToTeleconsultRecordScreen(it.patientUuid, it.teleconsultRecordId) }, schedulersProvider.ui())
+        .addTransformer(LoadMedicalOfficers::class.java, loadMedicalOfficers())
+        .addConsumer(OpenContactDoctorSheet::class.java, { uiActions.openContactDoctorSheet(it.patientUuid) }, schedulersProvider.ui())
         .build()
+  }
+
+  private fun loadMedicalOfficers(): ObservableTransformer<LoadMedicalOfficers, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { teleconsultationFacilityRepository.medicalOfficersForFacility(currentFacility.get().uuid) }
+          .map(::MedicalOfficersLoaded)
+    }
   }
 
   private fun loadUserAndCurrentFacility(): ObservableTransformer<LoadCurrentUserAndFacility, PatientSummaryEvent> {
@@ -272,65 +276,5 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .map(missingPhoneReminderRepository::hasShownReminderForPatient)
           .map(::FetchedHasShownMissingPhoneReminder)
     }
-  }
-
-  private fun fetchPatientTeleconsulationInfo(): ObservableTransformer<LoadPatientTeleconsultationInfo, PatientSummaryEvent> {
-    return ObservableTransformer { loadPatientInformationStream ->
-      loadPatientInformationStream
-          .observeOn(schedulersProvider.io())
-          .map {
-            val patientUuid = it.patientUuid
-            val bloodPressures = bloodPressureRepository.newestMeasurementsForPatientImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)
-            val prescriptions = prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)
-            val bloodSugars = bloodSugarRepository.latestMeasurementsImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)
-            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
-                defaultHistoryUuid = uuidGenerator.v4(),
-                patientUuid = patientUuid
-            )
-
-            it.doctorPhoneNumber to PatientTeleconsultationInfo(
-                patientUuid,
-                null,
-                it.bpPassport?.identifier?.displayValue(),
-                it.currentFacility!!,
-                bloodPressures,
-                bloodSugars,
-                prescriptions,
-                medicalHistory,
-                null,
-                null
-            )
-          }
-          .map { (doctorPhoneNumber, patientTeleconsultationInfo) ->
-            PatientTeleconsultationInfoLoaded(patientTeleconsultationInfo, doctorPhoneNumber)
-          }
-    }
-  }
-
-  private fun fetchFacilityTeleconsultationInfo(): ObservableTransformer<FetchTeleconsultationInfo, PatientSummaryEvent> {
-    return ObservableTransformer { effectStream ->
-      effectStream
-          .observeOn(schedulersProvider.io())
-          .switchMap { fetchPhoneNumber(it.facilityUuid) }
-          .map { teleconsultInfo -> FetchedTeleconsultationInfo(teleconsultInfo) }
-    }
-  }
-
-  private fun fetchPhoneNumber(facilityUuid: UUID): Observable<TeleconsultInfo> {
-    return teleconsultationApi
-        .get(facilityUuid)
-        .map {
-          // TODO (SM): Remove phoneNumber, once API supports multiple phone number implementation
-          val phoneNumber = it.teleconsultationPhoneNumber
-          val phoneNumbers = it.teleconsultationPhoneNumbers
-
-          when {
-            phoneNumber.isNullOrBlank() && phoneNumbers.isNullOrEmpty() -> TeleconsultInfo.MissingPhoneNumber
-            !phoneNumbers.isNullOrEmpty() -> TeleconsultInfo.Fetched(phoneNumbers)
-            else -> TeleconsultInfo.Fetched(listOf(TeleconsultPhoneNumber(phoneNumber!!)))
-          }
-        }
-        .onErrorReturn { TeleconsultInfo.NetworkError }
-        .toObservable()
   }
 }

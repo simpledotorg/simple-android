@@ -228,8 +228,6 @@
     <item quantity="one">*Last %s Blood Sugar reading*:</item>
     <item quantity="other">*Last %s Blood Sugars readings*:</item>
   </plurals>
-  <string name="patientsummary_teleconsult_network_error">Cannot connect due to poor internet</string>
-  <string name="patientsummary_teleconsult_network_error_retry">Retry</string>
   <string name="patientsummary_log_teleconsult">Log Teleconsult</string>
 
   <string name="patientsummary_registered_faciliy_title">Registered</string>
@@ -648,8 +646,6 @@
   <string name="screensplash_next">Next</string>
 
   <!-- Contact doctor sheet -->
-  <string name="contactdoctor_title">Doctors</string>
-  <string name="contactdoctor_subtitle">Assigned to %1$s</string>
   <string name="contactdoctor_new_title">Doctors available</string>
   <string name="contactdoctor_new_subtitle">Use WhatsApp if possible</string>
 

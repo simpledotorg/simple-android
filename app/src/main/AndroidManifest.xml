@@ -107,11 +107,6 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".summary.teleconsultation.contactdoctor.ContactDoctorSheet_Old"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
-      android:windowSoftInputMode="adjustResize" />
-
-    <activity
       android:name=".summary.teleconsultation.contactdoctor.ContactDoctorSheet"
       android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />

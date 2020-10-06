@@ -38,7 +38,18 @@ class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
         .addTransformer(LoadMedicalRegistrationId::class.java, loadMedicalRegistrationID())
         .addConsumer(SetMedicalRegistrationId::class.java, { uiActions.setMedicalRegistrationId(it.medicalRegistrationId) }, schedulersProvider.ui())
         .addConsumer(GoToHomeScreen::class.java, { uiActions.openHomeScreen() }, schedulersProvider.ui())
+        .addTransformer(LoadPatientProfile::class.java, loadPatientProfile())
         .build()
+  }
+
+  private fun loadPatientProfile(): ObservableTransformer<LoadPatientProfile, TeleconsultSharePrescriptionEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { patientRepository.patientProfileImmediate(it.patientUuid) }
+          .extractIfPresent()
+          .map(::PatientProfileLoaded)
+    }
   }
 
   private fun loadSignature(): ObservableTransformer<LoadSignature, TeleconsultSharePrescriptionEvent> {

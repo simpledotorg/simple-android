@@ -3,7 +3,9 @@ package org.simple.clinic.teleconsultlog.shareprescription
 import android.graphics.Bitmap
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionEvent
+import org.simple.clinic.teleconsultlog.prescription.patientinfo.TeleconsultPatientInfoEvent
 import org.simple.clinic.widgets.UiEvent
 
 sealed class TeleconsultSharePrescriptionEvent
@@ -17,3 +19,6 @@ data class SignatureLoaded(val bitmap: Bitmap) : TeleconsultSharePrescriptionEve
 data class MedicalRegistrationIdLoaded(val medicalRegistrationId: String) : TeleconsultSharePrescriptionEvent()
 
 object DoneClicked : TeleconsultSharePrescriptionEvent()
+
+data class PatientProfileLoaded(val patientProfile: PatientProfile) : TeleconsultSharePrescriptionEvent()
+

@@ -149,4 +149,23 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
     verify(uiActions).openHomeScreen()
     verifyNoMoreInteractions(uiActions)
   }
+
+
+  @Test
+  fun `when load patient profile effect is received, then load the patient profile`() {
+    // given
+    val patientUuid = UUID.fromString("55419722-b722-48f4-a2c1-39a8c6e8f390")
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patientUuid
+    )
+
+    whenever(patientRepository.patientProfileImmediate(patientUuid)) doReturn Optional.of(patientProfile)
+
+    // when
+    effectHandlerTestCase.dispatch(LoadPatientProfile(patientUuid))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(PatientProfileLoaded(patientProfile))
+    verifyZeroInteractions(uiActions)
+  }
 }

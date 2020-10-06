@@ -1,7 +1,6 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.mobius.ViewRenderer
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 
 class PatientSummaryViewRenderer(
     private val ui: PatientSummaryScreenUi
@@ -53,11 +52,10 @@ class PatientSummaryViewRenderer(
   }
 
   private fun renderContactDoctorButton(model: PatientSummaryModel) {
-    ui.showContactDoctorButton()
-    when (model.teleconsultInfo) {
-      is TeleconsultInfo.Fetched -> ui.enableContactDoctorButton()
-      is TeleconsultInfo.MissingPhoneNumber, is TeleconsultInfo.NetworkError -> ui.disableContactDoctorButton()
-      is TeleconsultInfo.Fetching -> ui.fetchingTeleconsultInfo()
+    if (model.hasMedicalOfficers) {
+      ui.showContactDoctorButton()
+    } else {
+      ui.hideContactDoctorButton()
     }
   }
 

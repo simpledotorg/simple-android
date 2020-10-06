@@ -137,10 +137,6 @@
     <item name="android:textColor">@color/grey0</item>
   </style>
 
-  <style name="Clinic.V2.TextAppearance.Body1Left.Numeric.Grey1">
-    <item name="android:textColor">@color/grey1</item>
-  </style>
-
   <style name="Clinic.V2.TextAppearance.Body1Center">
     <item name="android:textSize">16sp</item>
     <item name="android:fontFamily">sans-serif</item>

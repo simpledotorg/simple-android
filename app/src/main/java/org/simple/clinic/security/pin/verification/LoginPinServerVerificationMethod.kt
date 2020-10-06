@@ -5,7 +5,6 @@ import org.simple.clinic.login.activateuser.ActivateUser.Result
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Correct
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Incorrect
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntryRepository
 import org.simple.clinic.user.User

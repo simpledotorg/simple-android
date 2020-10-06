@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
@@ -47,8 +46,7 @@ import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
-import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet_Old
+import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
 import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder_Old
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreenKey
@@ -59,8 +57,6 @@ import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState
-import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -115,7 +111,6 @@ class PatientSummaryScreen(
             phoneNumberClicks(),
             contactDoctorClicks(),
             snackbarActionClicks,
-            teleconsultPhoneNumberSelected(),
             logTeleconsultClicks()
         )
         .compose(ReportAnalyticsEvents())
@@ -140,16 +135,6 @@ class PatientSummaryScreen(
           viewRenderer.render(model)
         }
     )
-  }
-  private val teleconsultationErrorSnackbar by unsafeLazy {
-    Snackbar.make(rootLayout, R.string.patientsummary_teleconsult_network_error, Snackbar.LENGTH_INDEFINITE)
-        .setAction(R.string.patientsummary_teleconsult_network_error_retry) {
-          postDelayed({
-            snackbarActionClicks.onNext(RetryFetchTeleconsultInfo)
-          }, 100)
-        }
-        .setActionTextColor(ContextCompat.getColor(context, R.color.green2))
-        .setAnchorView(R.id.buttonFrame)
   }
 
   override fun onSaveInstanceState(): Parcelable {
@@ -218,23 +203,8 @@ class PatientSummaryScreen(
   }
 
   override fun onDetachedFromWindow() {
-    if (teleconsultationErrorSnackbar.isShownOrQueued) {
-      teleconsultationErrorSnackbar.dismiss()
-    }
     mobiusDelegate.stop()
     super.onDetachedFromWindow()
-  }
-
-  private fun teleconsultPhoneNumberSelected(): Observable<PatientSummaryEvent> {
-    return screenRouter
-        .streamScreenResults()
-        .ofType<ActivityResult>()
-        .extractSuccessful(CONTACT_DOCTOR_SHEET) { intent ->
-          val teleconsultPhoneNumberString = ContactDoctorSheet_Old.readPhoneNumberExtra(intent)
-          val teleconsultPhoneNumber = TeleconsultPhoneNumber(teleconsultPhoneNumberString)
-
-          ContactDoctorPhoneNumberSelected(teleconsultPhoneNumber)
-        }
   }
 
   private fun editButtonClicks(): Observable<UiEvent> = editPatientButton.clicks().map { PatientSummaryEditClicked }
@@ -495,35 +465,9 @@ class PatientSummaryScreen(
     activity.startActivity(ContactPatientBottomSheet.intent(activity, patientUuid))
   }
 
-  override fun contactDoctor(patientTeleconsultationInfo: PatientTeleconsultationInfo, teleconsultationPhoneNumber: String) {
-    val message = longTeleconsultMessageBuilder.message(patientTeleconsultationInfo)
-    whatsAppMessageSender.send(teleconsultationPhoneNumber, message)
-  }
-
-  override fun openContactDoctorSheet(
-      facility: Facility,
-      phoneNumbers: List<TeleconsultPhoneNumber>
-  ) {
-    val intent = ContactDoctorSheet_Old.intent(context, facility, phoneNumbers)
-    activity.startActivityForResult(intent, CONTACT_DOCTOR_SHEET)
-  }
-
-  override fun enableContactDoctorButton() {
-    doctorButton.setButtonState(Enabled)
-  }
-
-  override fun disableContactDoctorButton() {
-    doctorButton.setButtonState(ButtonState.Disabled)
-  }
-
-  override fun fetchingTeleconsultInfo() {
-    doctorButton.setButtonState(ButtonState.InProgress)
-  }
-
-  override fun showTeleconsultInfoError() {
-    if (teleconsultationErrorSnackbar.isShown.not()) {
-      teleconsultationErrorSnackbar.show()
-    }
+  override fun openContactDoctorSheet(patientUuid: UUID) {
+    val intent = ContactDoctorSheet.intent(context, patientUuid)
+    context.startActivity(intent)
   }
 
   override fun showContactDoctorButton() {

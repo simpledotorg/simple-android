@@ -175,8 +175,6 @@
   <string name="patientsummary_bangladesh_national_id">ஐடி</string>
 
   <string name="patientsummary_contact_doctor">மருத்துவர்</string>
-  <string name="patientsummary_teleconsult_network_error">மெதுவான இணைய இணைப்பு காரணமாக இணைக்க முடியவில்லை</string>
-  <string name="patientsummary_teleconsult_network_error_retry">மீண்டும் முயலவும்</string>
   <string name="patientsummary_log_teleconsult">தொலைபேசி ஆலோசனைக்குப் பதிவுசெய்க</string>
 
   <string name="patientsummary_registered_faciliy_title">பதிவுசெய்யப்பட்டது</string>
@@ -569,8 +567,6 @@
   <string name="screensplash_next">அடுத்து</string>
 
   <!-- Contact doctor sheet -->
-  <string name="contactdoctor_title">மருத்துவர்கள்</string>
-  <string name="contactdoctor_subtitle">%1$s-க்கு ஒதுக்கப்பட்டது</string>
   <string name="contactdoctor_new_title">மருத்துவர் இருக்கிறார்</string>
   <string name="contactdoctor_new_subtitle">இயன்றால், WhatsApp பயன்படுத்துக</string>
 

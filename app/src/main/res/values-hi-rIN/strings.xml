@@ -175,8 +175,6 @@
   <string name="patientsummary_bangladesh_national_id">आईडी</string>
 
   <string name="patientsummary_contact_doctor">डॉक्टर</string>
-  <string name="patientsummary_teleconsult_network_error">कमजोर इंटरनेट के कारण कनेक्ट नहीं हो सकता</string>
-  <string name="patientsummary_teleconsult_network_error_retry">फिर से कोशिश करें</string>
   <string name="patientsummary_log_teleconsult">टेली कंसल्ट पर लॉग करें</string>
 
   <string name="patientsummary_registered_faciliy_title">पंजीकृत</string>
@@ -569,8 +567,6 @@
   <string name="screensplash_next">आगे</string>
 
   <!-- Contact doctor sheet -->
-  <string name="contactdoctor_title">डॉक्टर</string>
-  <string name="contactdoctor_subtitle">%1$s को असाइन किया गया</string>
   <string name="contactdoctor_new_title">डॉक्टर्स उपलब्ध है</string>
   <string name="contactdoctor_new_subtitle">अगर संभव हो तो WhatsApp का उपयोग करें</string>
 

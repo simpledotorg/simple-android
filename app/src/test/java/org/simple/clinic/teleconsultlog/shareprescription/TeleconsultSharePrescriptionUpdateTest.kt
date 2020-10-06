@@ -101,4 +101,17 @@ class TeleconsultSharePrescriptionUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when patient profile are loaded, then update the model`() {
+    val patientProfile = TestData.patientProfile(patientUuid = patientUuid)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientProfileLoaded(patientProfile))
+        .then(assertThatNext(
+            hasModel(model.patientProfileLoaded(patientProfile)),
+            hasNoEffects()
+        ))
+  }
 }

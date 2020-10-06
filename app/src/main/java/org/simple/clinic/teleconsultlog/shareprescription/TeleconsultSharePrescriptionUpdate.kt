@@ -18,7 +18,7 @@ class TeleconsultSharePrescriptionUpdate : Update<TeleconsultSharePrescriptionMo
       is SignatureLoaded -> dispatch(SetSignature(event.bitmap))
       is MedicalRegistrationIdLoaded -> next(model.medicalRegistrationIdLoaded(event.medicalRegistrationId), SetMedicalRegistrationId(event.medicalRegistrationId))
       is DownloadClicked -> dispatch(SaveBitmapInExternalStorage(event.bitmap))
-      PrescriptionImageSaved -> noChange()
+      PrescriptionImageSaved -> dispatch(GoToHomeScreen)
       DoneClicked -> dispatch(GoToHomeScreen)
       is PatientProfileLoaded -> next(model.patientProfileLoaded(event.patientProfile))
     }

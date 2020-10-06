@@ -127,6 +127,18 @@ class TeleconsultSharePrescriptionUpdateTest {
                 hasEffects(SaveBitmapInExternalStorage(bitmap))
             )
         )
+  }
 
+  @Test
+  fun `when the prescription is downloaded and saved, go to home screen`() {
+    updateSpec
+        .given(model)
+        .whenEvents(PrescriptionImageSaved)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(GoToHomeScreen)
+            )
+        )
   }
 }

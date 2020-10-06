@@ -21,6 +21,9 @@ class TeleconsultSharePrescriptionUiRendererTest {
     val model = TeleconsultSharePrescriptionModel
         .create(patientUuid = patientUuid, prescriptionDate = prescriptionDate)
         .patientLoaded(patient = patient)
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patientUuid
+    )
 
     // when
     uiRenderer.render(model)
@@ -28,7 +31,7 @@ class TeleconsultSharePrescriptionUiRendererTest {
     // then
     verify(ui).renderPatientDetails(patient = patient)
     verify(ui).renderPrescriptionDate(prescriptionDate = prescriptionDate)
+    verify(ui).renderPatientInformation(patientProfile)
     verifyNoMoreInteractions(ui)
   }
-
 }

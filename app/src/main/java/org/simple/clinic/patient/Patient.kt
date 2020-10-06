@@ -197,6 +197,9 @@ data class Patient(
     @Query("$patientProfileQuery WHERE P.uuid == :patientUuid")
     protected abstract fun loadPatientQueryModelsForPatientUuidImmediate(patientUuid: UUID): List<PatientQueryModel>
 
+    @Query(patientProfileQuery)
+    protected abstract fun loadAllPatientQueryModels(): List<PatientQueryModel>
+
     @Query("""
       UPDATE Patient
       SET
@@ -244,6 +247,12 @@ data class Patient(
       val patientQueryModels = loadPatientQueryModelsForPatientUuidImmediate(patientUuid)
 
       return if (patientQueryModels.isNotEmpty()) queryModelsToPatientProfiles(patientQueryModels).first() else null
+    }
+
+    fun allPatientProfiles(): List<PatientProfile> {
+      val patientQueryModels = loadAllPatientQueryModels()
+
+      return queryModelsToPatientProfiles(patientQueryModels)
     }
 
     private fun queryModelsToPatientProfiles(patientQueryModels: List<PatientQueryModel>): List<PatientProfile> {

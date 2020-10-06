@@ -6,7 +6,7 @@ import android.os.Bundle
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.sheet_contact_doctor_new.*
+import kotlinx.android.synthetic.main.sheet_contact_doctor.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -104,7 +104,7 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctor
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.sheet_contact_doctor_new)
+    setContentView(R.layout.sheet_contact_doctor)
     delegate.onRestoreInstanceState(savedInstanceState)
 
     doctorsRecyclerView.adapter = itemAdapter

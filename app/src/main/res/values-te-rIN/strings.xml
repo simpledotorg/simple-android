@@ -175,8 +175,6 @@
   <string name="patientsummary_bangladesh_national_id">ఐడి</string>
 
   <string name="patientsummary_contact_doctor">వైద్యుడు</string>
-  <string name="patientsummary_teleconsult_network_error">ఇంటర్నెట్ కనెక్షన్ బలహీనంగా ఉన్నందున కనెక్ట్ చేయలేరు</string>
-  <string name="patientsummary_teleconsult_network_error_retry">తిరిగి ప్రయత్నించు</string>
   <string name="patientsummary_log_teleconsult">లాగ్ టెలికన్సల్ట్</string>
 
   <string name="patientsummary_registered_faciliy_title">రిజిస్టర్ చేయబడింది</string>
@@ -569,8 +567,6 @@
   <string name="screensplash_next">తదుపరి</string>
 
   <!-- Contact doctor sheet -->
-  <string name="contactdoctor_title">వైద్యులు</string>
-  <string name="contactdoctor_subtitle">%1$sకు కేటాయించబడ్డారు</string>
   <string name="contactdoctor_new_title">వైద్యులు అందుబాటులో ఉన్నారు</string>
   <string name="contactdoctor_new_subtitle">వీలైత్ WhatsAppని ఉపయోగించండి</string>
 

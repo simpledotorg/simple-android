@@ -175,8 +175,6 @@
   <string name="patientsummary_bangladesh_national_id">ID</string>
 
   <string name="patientsummary_contact_doctor">Dooktara</string>
-  <string name="patientsummary_teleconsult_network_error">Sababa hanqina interneetiitiin quunnamuu hin dandeenye.</string>
-  <string name="patientsummary_teleconsult_network_error_retry">irra deebi’aa yaalaa</string>
   <string name="patientsummary_log_teleconsult">Teleconsult seeni</string>
 
   <string name="patientsummary_registered_faciliy_title">Galmaa\'eera</string>
@@ -570,8 +568,6 @@
   <string name="screensplash_next">Kan itti aanu</string>
 
   <!-- Contact doctor sheet -->
-  <string name="contactdoctor_title">Dooktaroota</string>
-  <string name="contactdoctor_subtitle">Gara %1$s qajeelfame</string>
   <string name="contactdoctor_new_title">Haakimoonni jiru</string>
   <string name="contactdoctor_new_subtitle">Danda\'ama taanan WhatsApp fayyadami</string>
 

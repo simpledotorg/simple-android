@@ -175,8 +175,6 @@
   <string name="patientsummary_bangladesh_national_id">ಐಡಿ</string>
 
   <string name="patientsummary_contact_doctor">ವೈದ್ಯ</string>
-  <string name="patientsummary_teleconsult_network_error">ಕಳಪೆ ಇಂಟರ್ನೆಟ್ ಕಾರಣದಿಂದ ಸಂಪರ್ಕಿಸಲಾಗುವುದಿಲ್ಲ</string>
-  <string name="patientsummary_teleconsult_network_error_retry">ಮರುಪ್ರಯತ್ನಿಸಿ</string>
   <string name="patientsummary_log_teleconsult">ಲಾಗ್ ಟೆಲೆಕನ್ಸಲ್ಟ್</string>
 
   <string name="patientsummary_registered_faciliy_title">ನೋಂದಾಯಿಸಲಾಗಿದೆ</string>
@@ -569,8 +567,6 @@
   <string name="screensplash_next">ಮುಂದಿನ</string>
 
   <!-- Contact doctor sheet -->
-  <string name="contactdoctor_title">ವೈದ್ಯರು</string>
-  <string name="contactdoctor_subtitle">%1$s ಗೆ ನಿಯೋಜಿಸಲಾಗಿದೆ</string>
   <string name="contactdoctor_new_title">ವೈದ್ಯರು ಲಭ್ಯವಿದ್ದಾರೆ</string>
   <string name="contactdoctor_new_subtitle">ಸಾಧ್ಯವಾದರೆ WhatsApp ಬಳಸಿ</string>
 

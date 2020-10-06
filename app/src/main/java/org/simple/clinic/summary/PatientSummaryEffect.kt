@@ -3,7 +3,6 @@ package org.simple.clinic.summary
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import java.time.Instant
 import java.util.UUID
 
@@ -55,25 +54,11 @@ data class FetchHasShownMissingPhoneReminder(val patientUuid: UUID): PatientSumm
 
 data class OpenContactPatientScreen(val patientUuid: UUID): PatientSummaryEffect()
 
-data class LoadPatientTeleconsultationInfo(
-    val patientUuid: UUID,
-    val bpPassport: BusinessId?,
-    val currentFacility: Facility?,
-    val doctorPhoneNumber: TeleconsultPhoneNumber
-) : PatientSummaryEffect()
-
-data class ContactDoctor(val patientTeleconsultationInfo: PatientTeleconsultationInfo, val teleconsultationPhoneNumber: String) : PatientSummaryEffect()
-
-data class FetchTeleconsultationInfo(val facilityUuid: UUID) : PatientSummaryEffect()
-
-object ShowTeleconsultInfoError : PatientSummaryEffect()
-
-data class OpenSelectDoctorSheet(
-    val facility: Facility,
-    val phoneNumbers: List<TeleconsultPhoneNumber>
-) : PatientSummaryEffect()
-
 data class NavigateToTeleconsultRecordScreen(
     val patientUuid: UUID,
     val teleconsultRecordId: UUID
 ) : PatientSummaryEffect()
+
+object LoadMedicalOfficers : PatientSummaryEffect()
+
+data class OpenContactDoctorSheet(val patientUuid: UUID) : PatientSummaryEffect()

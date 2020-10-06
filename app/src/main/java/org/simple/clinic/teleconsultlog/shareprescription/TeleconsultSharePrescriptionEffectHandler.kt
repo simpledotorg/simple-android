@@ -39,9 +39,32 @@ class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
         .addTransformer(LoadMedicalRegistrationId::class.java, loadMedicalRegistrationID())
         .addConsumer(SetMedicalRegistrationId::class.java, { uiActions.setMedicalRegistrationId(it.medicalRegistrationId) }, schedulersProvider.ui())
         .addTransformer(SaveBitmapInExternalStorage::class.java, saveBitmapInExternalStorage())
-        .addConsumer(GoToHomeScreen::class.java, { uiActions.openHomeScreen() }, schedulersProvider.ui())
+        .addAction(GoToHomeScreen::class.java, { uiActions.openHomeScreen() }, schedulersProvider.ui())
         .addTransformer(LoadPatientProfile::class.java, loadPatientProfile())
+        .addTransformer(SharePrescriptionAsImage::class.java, saveBitmapInExternalStorageForSharing())
+        .addTransformer(RetrievePrescriptionImageUri::class.java, loadPrescriptionImageUri())
+        .addConsumer(OpenSharingDialog::class.java, { uiActions.sharePrescriptionAsImage(it.imageUri) }, schedulersProvider.ui())
         .build()
+  }
+
+  private fun loadPrescriptionImageUri(): ObservableTransformer<RetrievePrescriptionImageUri, TeleconsultSharePrescriptionEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { teleconsultSharePrescriptionRepository.sharePrescription(it.fileName) }
+          .map(::SharePrescriptionUri)
+    }
+  }
+
+  private fun saveBitmapInExternalStorageForSharing(): ObservableTransformer<SharePrescriptionAsImage, TeleconsultSharePrescriptionEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { prescriptionAsBitmap ->
+            teleconsultSharePrescriptionRepository.savePrescriptionBitmap(prescriptionAsBitmap.bitmap)
+          }
+          .map(::PrescriptionSavedForSharing)
+    }
   }
 
   private fun loadPatientProfile(): ObservableTransformer<LoadPatientProfile, TeleconsultSharePrescriptionEvent> {

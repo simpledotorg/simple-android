@@ -1,6 +1,7 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
 import android.graphics.Bitmap
+import android.net.Uri
 import com.nhaarman.mockitokotlin2.mock
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
@@ -138,6 +139,51 @@ class TeleconsultSharePrescriptionUpdateTest {
             assertThatNext(
                 hasNoModel(),
                 hasEffects(GoToHomeScreen)
+            )
+        )
+  }
+
+  @Test
+  fun `when share button is clicked, share the prescription`() {
+    val bitmap = mock<Bitmap>()
+
+    updateSpec
+        .given(model)
+        .whenEvents(ShareClicked(bitmap))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(SharePrescriptionAsImage(bitmap))
+            )
+        )
+  }
+
+  @Test
+  fun `when prescription image is downloaded, then retrieve the image for sharing`() {
+    val fileName = "Simple prescription"
+
+    updateSpec
+        .given(model)
+        .whenEvents(PrescriptionSavedForSharing(fileName))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(RetrievePrescriptionImageUri(fileName))
+            )
+        )
+  }
+
+  @Test
+  fun `when prescription image Uri is retrieved, then share prescription image`() {
+    val imageUri = mock<Uri>()
+
+    updateSpec
+        .given(model)
+        .whenEvents(SharePrescriptionUri(imageUri))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenSharingDialog(imageUri))
             )
         )
   }

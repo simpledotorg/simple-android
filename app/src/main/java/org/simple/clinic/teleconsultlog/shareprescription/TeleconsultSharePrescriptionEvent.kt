@@ -1,11 +1,11 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
 import android.graphics.Bitmap
+import android.net.Uri
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.widgets.UiEvent
-import java.time.LocalDate
 
 sealed class TeleconsultSharePrescriptionEvent : UiEvent
 
@@ -27,3 +27,8 @@ object DoneClicked : TeleconsultSharePrescriptionEvent()
 
 data class PatientProfileLoaded(val patientProfile: PatientProfile) : TeleconsultSharePrescriptionEvent()
 
+data class ShareClicked(val bitmap: Bitmap) : TeleconsultSharePrescriptionEvent()
+
+data class PrescriptionSavedForSharing(val fileName : String) : TeleconsultSharePrescriptionEvent()
+
+data class SharePrescriptionUri(val imageUri: Uri) : TeleconsultSharePrescriptionEvent()

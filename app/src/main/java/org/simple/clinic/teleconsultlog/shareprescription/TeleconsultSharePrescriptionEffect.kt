@@ -1,7 +1,7 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
 import android.graphics.Bitmap
-import java.time.LocalDate
+import android.net.Uri
 import java.util.UUID
 
 sealed class TeleconsultSharePrescriptionEffect
@@ -24,3 +24,8 @@ object GoToHomeScreen : TeleconsultSharePrescriptionEffect()
 
 data class LoadPatientProfile(val patientUuid: UUID) : TeleconsultSharePrescriptionEffect()
 
+data class SharePrescriptionAsImage(val bitmap: Bitmap) : TeleconsultSharePrescriptionEffect()
+
+data class RetrievePrescriptionImageUri(val fileName: String) : TeleconsultSharePrescriptionEffect()
+
+data class OpenSharingDialog(val imageUri: Uri) : TeleconsultSharePrescriptionEffect()

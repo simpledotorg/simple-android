@@ -1,6 +1,7 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
 import android.graphics.Bitmap
+import android.net.Uri
 import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -28,6 +29,9 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
   private val medicalRegistrationIdPreference = mock<Preference<Optional<String>>>()
   private val medicalRegistrationId = "1111111111"
   private val teleconsultSharePrescriptionRepository = mock<TeleconsultSharePrescriptionRepository>()
+  private val prescriptionBitmap = mock<Bitmap>()
+  private val fileName = "Simple Prescription"
+  private val imageUri = mock<Uri>()
   private val effectHandler = TeleconsultSharePrescriptionEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
@@ -152,7 +156,6 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
   }
 
-
   @Test
   fun `when load patient profile effect is received, then load the patient profile`() {
     // given
@@ -174,7 +177,6 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
   @Test
   fun `when save bitmap to external storage effect is received, then store the bitmap`() {
     // given
-    val prescriptionBitmap = mock<Bitmap>()
     whenever(teleconsultSharePrescriptionRepository.savePrescriptionBitmap(prescriptionBitmap))
 
     // when
@@ -184,4 +186,43 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
     effectHandlerTestCase.assertOutgoingEvents(PrescriptionImageSaved)
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when share prescription as image effect is received, then share prescription as image`() {
+    // given
+    whenever(teleconsultSharePrescriptionRepository.savePrescriptionBitmap(prescriptionBitmap)) doReturn fileName
+
+    // when
+    effectHandlerTestCase.dispatch(SharePrescriptionAsImage(prescriptionBitmap))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(PrescriptionSavedForSharing(fileName))
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when retrieve image Uri effect is received, then retrieve the image Uri`() {
+    // given
+    whenever(teleconsultSharePrescriptionRepository.sharePrescription(fileName)) doReturn imageUri
+
+    // when
+    effectHandlerTestCase.dispatch(RetrievePrescriptionImageUri(fileName))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(SharePrescriptionUri(imageUri))
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open sharing dialog effect is received, then open the dialog to share the image`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenSharingDialog(imageUri))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).sharePrescriptionAsImage(imageUri)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+
 }

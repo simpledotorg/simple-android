@@ -1,8 +1,10 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
 import android.app.Application
+import android.content.ContentUris
 import android.content.ContentValues
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
@@ -23,7 +25,7 @@ class TeleconsultSharePrescriptionRepository @Inject constructor(
     @DateFormatter(FileDateTime) private val fileDateTimeFormatter: DateTimeFormatter
 ) {
 
-  fun savePrescriptionBitmap(bitmap: Bitmap?) {
+  fun savePrescriptionBitmap(bitmap: Bitmap?) : String {
     val currentDateTime = LocalDateTime.now(userClock)
     val fileDateTime = fileDateTimeFormatter.format(currentDateTime)
     val fileName = "Simple prescription $fileDateTime.png"
@@ -36,6 +38,39 @@ class TeleconsultSharePrescriptionRepository @Inject constructor(
     imageOutputStream.use { outputStream ->
       bitmap?.compress(Bitmap.CompressFormat.PNG, 100, imageOutputStream)
       outputStream?.flush()
+}
+    return fileName
+  }
+
+  fun sharePrescription(fileName: String): Uri? {
+    var contentUri: Uri? = null
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      val prescriptionUri: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+      val projection = arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME)
+      val selection = MediaStore.Images.Media.DISPLAY_NAME
+
+      appContext.contentResolver.query(
+          prescriptionUri,
+          projection,
+           "$selection = '$fileName'",
+          null,
+          null
+      )?.use { cursor ->
+        val columnId = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+
+        if (cursor.moveToNext()) {
+          val id = cursor.getLong(columnId)
+
+          contentUri = ContentUris.withAppendedId(
+              MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+              id
+          )
+        }
+      }
+      return contentUri
+    } else {
+      contentUri = Uri.fromFile(File(Environment.getExternalStorageDirectory().absolutePath + "/Download/" + fileName))
+      return contentUri
     }
   }
 

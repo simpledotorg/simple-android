@@ -26,6 +26,7 @@ import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
 import org.simple.clinic.signature.SignatureRepositoryAndroidTest
 import org.simple.clinic.storage.DaoWithUpsertAndroidTest
+import org.simple.clinic.storage.DeleteSyncGroupDatabaseAndroidTest
 import org.simple.clinic.storage.PurgeDatabaseAndroidTest
 import org.simple.clinic.storage.migrations.BaseDatabaseMigrationTest
 import org.simple.clinic.storage.migrations.DatabaseMigrationAndroidTest
@@ -114,4 +115,5 @@ interface TestAppComponent {
   fun inject(target: SignatureRepositoryAndroidTest)
   fun inject(target: TeleconsultRecordRepositoryAndroidTest)
   fun inject(target: TeleconsultRecordSyncIntegrationTest)
+  fun inject(target: DeleteSyncGroupDatabaseAndroidTest)
 }

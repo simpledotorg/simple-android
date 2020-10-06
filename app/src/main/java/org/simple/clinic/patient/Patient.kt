@@ -404,5 +404,24 @@ data class Patient(
       )
     """)
     abstract fun purgeDeletedBusinessIds()
+
+    // This depends on the foreign key references between address, patient
+    // phone numbers, and business IDs to cascade the deletes.
+    @Query("""
+      DELETE FROM PatientAddress
+      WHERE uuid NOT IN (
+        SELECT DISTINCT P.addressUuid FROM Patient P
+        LEFT JOIN Appointment A ON A.patientUuid == P.uuid
+        WHERE (
+            P.registeredFacilityId IN (:facilityIds) OR
+            P.assignedFacilityId IN (:facilityIds) OR
+            P.syncStatus == 'PENDING'
+        ) OR (
+            A.facilityUuid IN (:facilityIds) AND
+            A.status = 'scheduled'
+        )
+      )
+    """)
+    abstract fun deletePatientsNotInFacilities(facilityIds: List<UUID>)
   }
 }

@@ -12,7 +12,8 @@ class TeleconsultSharePrescriptionInit : Init<TeleconsultSharePrescriptionModel,
       effects.addAll(listOf(
           LoadPatientDetails(model.patientUuid),
           LoadPatientMedicines(model.patientUuid),
-          LoadSignature
+          LoadSignature,
+          LoadPatientProfile(model.patientUuid)
       ))
     }
 

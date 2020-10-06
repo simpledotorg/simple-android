@@ -63,4 +63,14 @@ class TeleconsultSharePrescriptionInitTest {
             hasEffects(LoadPatientProfile(patientUuid))
         ))
   }
+
+  @Test
+  fun `when screen is created, then load medical registration ID`() {
+    initSpec
+        .whenInit(model)
+        .then(assertThatFirst(
+            hasModel(model),
+            hasEffects(LoadMedicalRegistrationId)
+        ))
+  }
 }

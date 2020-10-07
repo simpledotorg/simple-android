@@ -19,18 +19,6 @@ class TeleconsultSharePrescriptionInitTest {
   val initSpec = InitSpec(TeleconsultSharePrescriptionInit())
 
   @Test
-  fun `when screen is created, load the patient details`() {
-    initSpec
-        .whenInit(model)
-        .then(
-            assertThatFirst(
-                hasModel(model),
-                hasEffects(LoadPatientDetails(patientUuid))
-            )
-        )
-  }
-
-  @Test
   fun `when the screen is created, then load the patient medicines`() {
     initSpec
         .whenInit(model)

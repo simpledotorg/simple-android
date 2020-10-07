@@ -9,8 +9,6 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class TeleconsultSharePrescriptionEvent : UiEvent
 
-data class PatientDetailsLoaded(val patient: Patient) : TeleconsultSharePrescriptionEvent()
-
 data class PatientMedicinesLoaded(val medicines: List<PrescribedDrug>) : TeleconsultSharePrescriptionEvent()
 
 data class SignatureLoaded(val bitmap: Bitmap) : TeleconsultSharePrescriptionEvent()

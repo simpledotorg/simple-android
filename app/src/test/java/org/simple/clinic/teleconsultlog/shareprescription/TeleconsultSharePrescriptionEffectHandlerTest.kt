@@ -50,23 +50,6 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
   }
 
   @Test
-  fun `when load patient details effect is received, then load the patient details`() {
-    // given
-    val patientUuid = UUID.fromString("1cfd240c-0a05-41e2-bfa0-b20fe807aca8")
-    val patient = TestData.patient(
-        uuid = patientUuid
-    )
-    whenever(patientRepository.patientImmediate(patientUuid)) doReturn patient
-
-    // when
-    effectHandlerTestCase.dispatch(LoadPatientDetails(patientUuid))
-
-    // then
-    effectHandlerTestCase.assertOutgoingEvents(PatientDetailsLoaded(patient))
-    verifyZeroInteractions(uiActions)
-  }
-
-  @Test
   fun `when load patient medicines effect is received, load the medicines`() {
     // given
     val patientUuid = UUID.fromString("b736a740-f344-4ce1-9b58-ffbc734a1c74")

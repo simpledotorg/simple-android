@@ -13,7 +13,6 @@ class TeleconsultSharePrescriptionUpdate : Update<TeleconsultSharePrescriptionMo
       event: TeleconsultSharePrescriptionEvent
   ): Next<TeleconsultSharePrescriptionModel, TeleconsultSharePrescriptionEffect> {
     return when (event) {
-      is PatientDetailsLoaded -> next(model.patientLoaded(event.patient))
       is PatientMedicinesLoaded -> next(model.patientMedicinesLoaded(event.medicines))
       is SignatureLoaded -> dispatch(SetSignature(event.bitmap))
       is MedicalRegistrationIdLoaded -> next(model.medicalRegistrationIdLoaded(event.medicalRegistrationId), SetMedicalRegistrationId(event.medicalRegistrationId))

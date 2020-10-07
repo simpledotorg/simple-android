@@ -6,7 +6,6 @@ import org.simple.clinic.patient.PatientProfile
 import java.time.LocalDate
 
 interface TeleconsultSharePrescriptionUi {
-  fun renderPatientDetails(patient: Patient)
   fun renderPrescriptionDate(prescriptionDate: LocalDate)
   fun renderPatientInformation(patientProfile: PatientProfile)
   fun renderPatientMedicines(medicines: List<PrescribedDrug>)

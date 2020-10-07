@@ -9,14 +9,11 @@ class TeleconsultSharePrescriptionInit : Init<TeleconsultSharePrescriptionModel,
     val effects = mutableSetOf<TeleconsultSharePrescriptionEffect>()
 
     if (model.hasPatientProfile.not()) {
-      effects.add(LoadPatientProfile(model.patientUuid))
-      if (model.hasPatient.not()) {
-        effects.addAll(listOf(
-            LoadPatientDetails(model.patientUuid),
-            LoadPatientMedicines(model.patientUuid),
-            LoadSignature,
-            LoadMedicalRegistrationId))
-      }
+      effects.addAll(listOf(
+          LoadPatientProfile(model.patientUuid),
+          LoadPatientMedicines(model.patientUuid),
+          LoadSignature,
+          LoadMedicalRegistrationId))
     }
 
     return First.first(model, effects)

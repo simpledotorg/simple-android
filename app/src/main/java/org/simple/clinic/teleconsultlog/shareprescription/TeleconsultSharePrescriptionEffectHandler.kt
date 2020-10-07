@@ -32,7 +32,6 @@ class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<TeleconsultSharePrescriptionEffect, TeleconsultSharePrescriptionEvent> {
     return RxMobius
         .subtypeEffectHandler<TeleconsultSharePrescriptionEffect, TeleconsultSharePrescriptionEvent>()
-        .addTransformer(LoadPatientDetails::class.java, loadPatientDetails())
         .addTransformer(LoadPatientMedicines::class.java, loadPatientMedicines())
         .addTransformer(LoadSignature::class.java, loadSignature())
         .addConsumer(SetSignature::class.java, { uiActions.setSignatureBitmap(it.bitmap) }, schedulersProvider.ui())
@@ -83,15 +82,6 @@ class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .map { signatureRepository.getSignatureBitmap() }
           .map(::SignatureLoaded)
-    }
-  }
-
-  private fun loadPatientDetails(): ObservableTransformer<LoadPatientDetails, TeleconsultSharePrescriptionEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .map { patientRepository.patientImmediate(it.patientUuid) }
-          .map(::PatientDetailsLoaded)
     }
   }
 

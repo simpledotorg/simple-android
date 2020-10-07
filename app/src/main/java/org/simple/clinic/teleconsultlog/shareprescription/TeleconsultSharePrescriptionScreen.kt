@@ -22,7 +22,6 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.DateOfBirth
-import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.screen.RouterDirection
@@ -160,23 +159,20 @@ class TeleconsultSharePrescriptionScreen constructor(
     context.startActivity(Intent.createChooser(sharingIntent, context.getString(R.string.screen_teleconsult_share_prescription_image_using)))
   }
 
-  override fun renderPatientDetails(patient: Patient) {
-    val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
-    val patientGender = patient.gender
-    patientNameTextView.text = context.getString(
-        R.string.screen_teleconsult_share_prescription_patient_details,
-        patient.fullName,
-        context.getString(patientGender.displayLetterRes),
-        ageValue.toString()
-    )
-  }
-
   override fun renderPrescriptionDate(prescriptionDate: LocalDate) {
     prescriptionDateTextView.text = dateFormatter.format(prescriptionDate)
   }
 
   override fun renderPatientInformation(patientProfile: PatientProfile) {
     patientAddressTextView.text = patientProfile.address.completeAddress
+    val ageValue = DateOfBirth.fromPatient(patientProfile.patient, userClock).estimateAge(userClock)
+    val patientGender = patientProfile.patient.gender
+    patientNameTextView.text = context.getString(
+        R.string.screen_teleconsult_share_prescription_patient_details,
+        patientProfile.patient.fullName,
+        context.getString(patientGender.displayLetterRes),
+        ageValue.toString()
+    )
   }
 
   override fun renderPatientMedicines(medicines: List<PrescribedDrug>) {

@@ -117,5 +117,11 @@ data class Facility(
 
     @Query("DELETE FROM Facility")
     fun clear()
+
+    @Query(""" 
+      SELECT uuid FROM Facility
+      WHERE syncGroup = :syncGroup
+    """)
+    fun facilityIdsInSyncGroup(syncGroup: String?): List<UUID>
   }
 }

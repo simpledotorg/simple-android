@@ -211,4 +211,12 @@ abstract class AppDatabase : RoomDatabase() {
       db.execSQL("VACUUM")
     }
   }
+
+  fun deletePatientsNotInFacilitySyncGroup(currentFacility: Facility) {
+    runInTransaction {
+      val facilityIdsInCurrentSyncGroup = facilityDao().facilityIdsInSyncGroup(currentFacility.syncGroup)
+
+      patientDao().deletePatientsNotInFacilities(facilityIdsInCurrentSyncGroup)
+    }
+  }
 }

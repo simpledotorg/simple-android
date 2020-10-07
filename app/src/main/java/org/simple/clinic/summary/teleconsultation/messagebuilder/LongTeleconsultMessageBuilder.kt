@@ -84,7 +84,6 @@ class LongTeleconsultMessageBuilder @Inject constructor(
       message: StringBuilder
   ) {
     if (patientTeleconsultationInfo.bpPassport.isNullOrBlank().not()) {
-      sectionBreaker(message)
 
       message.appendLine("*BP Passport*: ${patientTeleconsultationInfo.bpPassport}")
           .appendLine("")
@@ -112,6 +111,8 @@ class LongTeleconsultMessageBuilder @Inject constructor(
       message: StringBuilder
   ) {
     if (patientTeleconsultationInfo.nursePhoneNumber.isNullOrBlank().not()) {
+      sectionBreaker(message)
+
       message
           .appendLine("2️⃣ *Call for teleconsult*: ${patientTeleconsultationInfo.nursePhoneNumber}")
           .appendLine("")

@@ -97,7 +97,7 @@ class AppModule(private val appContext: Application) {
   fun vibrator() = appContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
   @Provides
-  fun workManager() = WorkManager.getInstance()
+  fun workManager(appContext: Application) = WorkManager.getInstance(appContext)
 
   @Provides
   @AppScope

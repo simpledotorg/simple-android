@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Application
 import androidx.camera.camera2.Camera2Config
 import androidx.camera.core.CameraXConfig
-import androidx.work.Configuration
-import androidx.work.WorkManager
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import org.simple.clinic.activity.CloseActivitiesWhenUserIsUnauthorized
@@ -40,7 +38,6 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
   @SuppressLint("RestrictedApi")
   override fun onCreate() {
     super.onCreate()
-    WorkManager.initialize(this, Configuration.Builder().build())
 
     appComponent = buildDaggerGraph()
     appComponent.inject(this)

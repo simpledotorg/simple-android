@@ -742,5 +742,9 @@ class PatientRepository @Inject constructor(
     )
   }
 
+  fun allPatientProfiles(): List<PatientProfile> {
+    return database.patientDao().allPatientProfiles()
+  }
+
   private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: MetaDataVersion)
 }

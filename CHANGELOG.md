@@ -5,6 +5,7 @@
 - Add `syncGroup` property to the `Facility` resource
 - Show medicines required error in `TeleconsultPrescriptionScreen`
 - Remove `TeleconsultationApi` & load medical officers from `MedicalOfficer` table
+- Remove custom WorkManager initializer
 
 ## On Demo
 ## Features

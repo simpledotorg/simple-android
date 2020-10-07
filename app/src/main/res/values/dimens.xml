@@ -18,7 +18,6 @@
   <dimen name="spacing_48">48dp</dimen>
   <dimen name="spacing_56">56dp</dimen>
   <dimen name="spacing_64">64dp</dimen>
-  <dimen name="spacing_72">72dp</dimen>
   <dimen name="spacing_96">96dp</dimen>
   <dimen name="spacing_128">128dp</dimen>
   <dimen name="spacing_200">200dp</dimen>

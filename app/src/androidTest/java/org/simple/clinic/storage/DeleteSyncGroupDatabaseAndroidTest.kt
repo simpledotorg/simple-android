@@ -27,9 +27,34 @@ class DeleteSyncGroupDatabaseAndroidTest {
 
   private val appointmentDao: Appointment.RoomDao by lazy { database.appointmentDao() }
 
+  private val groupUuid = UUID.fromString("c30b1c77-3b30-413b-8f42-270ae0a6543d")
+  private val currentSyncGroup = "1b247820-c070-40f7-8731-75fe986d0147"
+  private val otherSyncGroup = "49aa2533-54e7-4456-b741-e203f3bf7ce1"
+
+  private val currentFacility = TestData.facility(
+      uuid = UUID.fromString("b141c2f3-a0b7-4bc0-8475-748a6c7a6e41"),
+      name = "PHC Obvious",
+      syncGroup = currentSyncGroup,
+      groupUuid = groupUuid
+  )
+  private val otherFacilityInCurrentSyncGroup = TestData.facility(
+      uuid = UUID.fromString("bfb99432-f4d7-4522-8229-85d9ec94a979"),
+      name = "DH Nilenso",
+      syncGroup = currentSyncGroup,
+      groupUuid = groupUuid
+  )
+  private val facilityInAnotherSyncGroup = TestData.facility(
+      uuid = UUID.fromString("90582970-9aed-46e4-a16b-45671859701a"),
+      name = "CHC RTSL",
+      syncGroup = otherSyncGroup,
+      groupUuid = groupUuid
+  )
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
+
+    facilityDao.save(listOf(currentFacility, otherFacilityInCurrentSyncGroup, facilityInAnotherSyncGroup))
   }
 
   @After
@@ -40,31 +65,6 @@ class DeleteSyncGroupDatabaseAndroidTest {
   @Test
   fun deleting_the_sync_group_data_should_delete_all_patients_not_registered_or_assigned_in_current_sync_group() {
     // given
-    val groupUuid = UUID.fromString("c30b1c77-3b30-413b-8f42-270ae0a6543d")
-    val currentSyncGroup = "1b247820-c070-40f7-8731-75fe986d0147"
-    val otherSyncGroup = "49aa2533-54e7-4456-b741-e203f3bf7ce1"
-
-    val currentFacility = TestData.facility(
-        uuid = UUID.fromString("b141c2f3-a0b7-4bc0-8475-748a6c7a6e41"),
-        name = "PHC Obvious",
-        syncGroup = currentSyncGroup,
-        groupUuid = groupUuid
-    )
-    val otherFacilityInCurrentSyncGroup = TestData.facility(
-        uuid = UUID.fromString("bfb99432-f4d7-4522-8229-85d9ec94a979"),
-        name = "DH Nilenso",
-        syncGroup = currentSyncGroup,
-        groupUuid = groupUuid
-    )
-    val facilityInAnotherSyncGroup = TestData.facility(
-        uuid = UUID.fromString("90582970-9aed-46e4-a16b-45671859701a"),
-        name = "CHC RTSL",
-        syncGroup = otherSyncGroup,
-        groupUuid = groupUuid
-    )
-
-    facilityDao.save(listOf(currentFacility, otherFacilityInCurrentSyncGroup, facilityInAnotherSyncGroup))
-
     val patientRegisteredInCurrentFacility = TestData.patientProfile(
         patientUuid = UUID.fromString("5ee3a570-b561-4b5c-bfd9-d8a680f0a16c"),
         syncStatus = SyncStatus.DONE,
@@ -129,31 +129,6 @@ class DeleteSyncGroupDatabaseAndroidTest {
   @Test
   fun deleting_the_sync_group_data_should_not_delete_patients_having_a_scheduled_appointment_in_the_current_sync_group() {
     // given
-    val groupUuid = UUID.fromString("c30b1c77-3b30-413b-8f42-270ae0a6543d")
-    val currentSyncGroup = "1b247820-c070-40f7-8731-75fe986d0147"
-    val otherSyncGroup = "49aa2533-54e7-4456-b741-e203f3bf7ce1"
-
-    val currentFacility = TestData.facility(
-        uuid = UUID.fromString("b141c2f3-a0b7-4bc0-8475-748a6c7a6e41"),
-        name = "PHC Obvious",
-        syncGroup = currentSyncGroup,
-        groupUuid = groupUuid
-    )
-    val otherFacilityInCurrentSyncGroup = TestData.facility(
-        uuid = UUID.fromString("bfb99432-f4d7-4522-8229-85d9ec94a979"),
-        name = "DH Nilenso",
-        syncGroup = currentSyncGroup,
-        groupUuid = groupUuid
-    )
-    val facilityInAnotherSyncGroup = TestData.facility(
-        uuid = UUID.fromString("90582970-9aed-46e4-a16b-45671859701a"),
-        name = "CHC RTSL",
-        syncGroup = otherSyncGroup,
-        groupUuid = groupUuid
-    )
-
-    facilityDao.save(listOf(currentFacility, otherFacilityInCurrentSyncGroup, facilityInAnotherSyncGroup))
-
     val patientWithScheduledAppointmentInCurrentFacility = TestData.patientProfile(
         patientUuid = UUID.fromString("7f9a581d-8a0c-414b-9b39-c3c3877172fa"),
         syncStatus = SyncStatus.DONE,

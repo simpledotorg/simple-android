@@ -160,11 +160,11 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
   @Test
   fun `when save bitmap to external storage effect is received, then store the bitmap`() {
     // given
-    whenever(teleconsultSharePrescriptionRepository.savePrescriptionBitmap(prescriptionBitmap))
+    whenever(teleconsultSharePrescriptionRepository.savePrescriptionBitmap(prescriptionBitmap)) doReturn fileName
 
     // when
-    effectHandlerTestCase.dispatch(SaveBitmapInExternalStorage(prescriptionBitmap)) // failing the test here
-
+    effectHandlerTestCase.dispatch(SaveBitmapInExternalStorage(prescriptionBitmap))
+    
     // then
     effectHandlerTestCase.assertOutgoingEvents(PrescriptionImageSaved)
     verifyZeroInteractions(uiActions)

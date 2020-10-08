@@ -7,6 +7,7 @@
 - Remove `TeleconsultationApi` & load medical officers from `MedicalOfficer` table
 - Remove custom WorkManager initializer
 - Bump Android Gradle Plugin version to 4.0.2
+- Add method to `AppDatabase` to clear all patient data not in the current sync group
 
 ## On Demo
 ## Features

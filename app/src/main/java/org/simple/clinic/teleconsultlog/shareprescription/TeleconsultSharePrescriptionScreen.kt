@@ -10,6 +10,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
@@ -64,7 +65,8 @@ class TeleconsultSharePrescriptionScreen constructor(
         .merge(
             downloadClicks(),
             shareClicks(),
-            doneClicks()
+            doneClicks(),
+            backClicks()
         )
         .compose(ReportAnalyticsEvents())
   }
@@ -133,6 +135,10 @@ class TeleconsultSharePrescriptionScreen constructor(
       .clicks()
       .map { DoneClicked }
 
+  private fun backClicks() = toolbar
+      .navigationClicks()
+      .map { BackClicked }
+
   override fun setSignatureBitmap(bitmap: Bitmap) {
     signatureImageView.setImageBitmap(bitmap)
   }
@@ -150,6 +156,10 @@ class TeleconsultSharePrescriptionScreen constructor(
 
   override fun sharePrescriptionAsImage(imageUri: Uri) {
     sharePrescription(imageUri)
+  }
+
+  override fun goToPreviousScreen() {
+    screenRouter.pop()
   }
 
   private fun sharePrescription(imageUri: Uri) {

@@ -173,4 +173,17 @@ class TeleconsultSharePrescriptionUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when back button is clicked, go back to previous screen`() {
+    updateSpec
+        .given(model)
+        .whenEvents(BackClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(GoBack)
+            )
+        )
+  }
 }

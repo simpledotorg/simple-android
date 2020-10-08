@@ -23,6 +23,7 @@ class TeleconsultSharePrescriptionUpdate : Update<TeleconsultSharePrescriptionMo
       is ShareClicked -> dispatch(SharePrescriptionAsImage(event.bitmap))
       is PrescriptionSavedForSharing -> dispatch(RetrievePrescriptionImageUri(event.fileName))
       is SharePrescriptionUri -> dispatch(OpenSharingDialog(event.imageUri))
+      BackClicked -> dispatch(GoBack)
     }
   }
 }

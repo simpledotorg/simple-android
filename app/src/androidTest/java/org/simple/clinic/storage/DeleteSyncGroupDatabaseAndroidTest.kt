@@ -27,6 +27,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
   private val bloodPressureMeasurementDao by lazy { database.bloodPressureDao() }
   private val bloodSugarMeasurementDao by lazy { database.bloodSugarDao() }
   private val prescribedDrugDao by lazy { database.prescriptionDao() }
+  private val medicalHistoryDao by lazy { database.medicalHistoryDao() }
 
   private val groupUuid = UUID.fromString("c30b1c77-3b30-413b-8f42-270ae0a6543d")
   private val currentSyncGroup = "1b247820-c070-40f7-8731-75fe986d0147"
@@ -677,5 +678,79 @@ class DeleteSyncGroupDatabaseAndroidTest {
         prescribedDrugsForPatientInOtherFacilityInCurrentSyncGroup +
         unsyncedPrescribedDrugForPatientInOtherSyncGroup
     assertThat(prescribedDrugDao.getAllPrescribedDrugs()).containsExactlyElementsIn(expectedPrescribedDrugs)
+  }
+
+  @Test
+  fun deleting_the_sync_group_data_should_delete_medical_histories_which_do_not_have_a_linked_patient() {
+    // given
+    val patientInCurrentFacility = TestData.patientProfile(
+        patientUuid = UUID.fromString("d1523ba6-bad3-42f2-a920-a503f1a503e3"),
+        patientRegisteredFacilityId = currentFacility.uuid,
+        patientAssignedFacilityId = currentFacility.uuid,
+        syncStatus = SyncStatus.DONE
+    )
+    val patientInOtherFacilityInSyncGroup = TestData.patientProfile(
+        patientUuid = UUID.fromString("cc131584-b88b-42b8-8f4c-29c93021765f"),
+        patientRegisteredFacilityId = otherFacilityInCurrentSyncGroup.uuid,
+        patientAssignedFacilityId = otherFacilityInCurrentSyncGroup.uuid,
+        syncStatus = SyncStatus.DONE
+    )
+    val patientInOtherSyncGroup = TestData.patientProfile(
+        patientUuid = UUID.fromString("5cbe9277-d18a-49ad-a73b-1840a7aba0a9"),
+        patientRegisteredFacilityId = facilityInAnotherSyncGroup.uuid,
+        patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
+        syncStatus = SyncStatus.DONE
+    )
+    patientRepository.save(listOf(
+        patientInCurrentFacility,
+        patientInOtherFacilityInSyncGroup,
+        patientInOtherSyncGroup
+    )).blockingAwait()
+
+    val medicalHistoryPatientInCurrentFacility = listOf(
+        TestData.medicalHistory(
+            uuid = UUID.fromString("a8ad7e61-19d3-4bb0-97bc-3aff2c5b3165"),
+            patientUuid = patientInCurrentFacility.patientUuid,
+            syncStatus = SyncStatus.DONE
+        )
+    )
+
+    val medicalHistoryForPatientInOtherFacilityInCurrentSyncGroup = listOf(
+        TestData.medicalHistory(
+            uuid = UUID.fromString("79c98115-4894-4fb7-8264-fb442a48b225"),
+            patientUuid = patientInOtherFacilityInSyncGroup.patientUuid,
+            syncStatus = SyncStatus.DONE
+        )
+    )
+
+    val unsyncedMedicalHistoryForPatientInOtherSyncGroup = TestData.medicalHistory(
+        uuid = UUID.fromString("ba9b72e9-da63-4d69-a023-0339a274c34e"),
+        patientUuid = patientInOtherSyncGroup.patientUuid,
+        syncStatus = SyncStatus.PENDING
+    )
+    val medicalHistoryForPatientInOtherSyncGroup = listOf(
+        TestData.medicalHistory(
+            uuid = UUID.fromString("75de9139-a7e0-4c55-9cb1-058b76e06da7"),
+            patientUuid = patientInOtherSyncGroup.patientUuid,
+            syncStatus = SyncStatus.DONE
+        ),
+        unsyncedMedicalHistoryForPatientInOtherSyncGroup
+    )
+
+    val allMedicalHistories = medicalHistoryPatientInCurrentFacility +
+        medicalHistoryForPatientInOtherFacilityInCurrentSyncGroup +
+        medicalHistoryForPatientInOtherSyncGroup
+
+    medicalHistoryDao.save(allMedicalHistories)
+    assertThat(medicalHistoryDao.getAllMedicalHistories()).containsExactlyElementsIn(allMedicalHistories)
+
+    // when
+    database.deletePatientsNotInFacilitySyncGroup(currentFacility)
+
+    // then
+    val expectedMedicalHistories = medicalHistoryPatientInCurrentFacility +
+        medicalHistoryForPatientInOtherFacilityInCurrentSyncGroup +
+        unsyncedMedicalHistoryForPatientInOtherSyncGroup
+    assertThat(medicalHistoryDao.getAllMedicalHistories()).containsExactlyElementsIn(expectedMedicalHistories)
   }
 }

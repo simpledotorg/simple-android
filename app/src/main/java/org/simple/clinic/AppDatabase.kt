@@ -221,6 +221,7 @@ abstract class AppDatabase : RoomDatabase() {
       bloodSugarDao().deleteWithoutLinkedPatient()
       appointmentDao().deleteWithoutLinkedPatient()
       prescriptionDao().deleteWithoutLinkedPatient()
+      medicalHistoryDao().deleteWithoutLinkedPatient()
     }
   }
 }

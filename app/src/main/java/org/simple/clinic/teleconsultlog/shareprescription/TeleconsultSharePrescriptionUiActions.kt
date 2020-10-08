@@ -8,4 +8,5 @@ interface TeleconsultSharePrescriptionUiActions {
   fun setMedicalRegistrationId(medicalRegistrationId: String)
   fun openHomeScreen()
   fun sharePrescriptionAsImage(imageUri: Uri)
+  fun goToPreviousScreen()
 }

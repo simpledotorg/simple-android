@@ -207,5 +207,14 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
   }
 
+  @Test
+  fun `when go back effect is received, then go back to previous screen`() {
+    // when
+    effectHandlerTestCase.dispatch(GoBack)
 
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).goToPreviousScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

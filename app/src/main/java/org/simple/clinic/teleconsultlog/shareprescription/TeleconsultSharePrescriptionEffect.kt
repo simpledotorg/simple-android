@@ -27,3 +27,5 @@ data class SharePrescriptionAsImage(val bitmap: Bitmap) : TeleconsultSharePrescr
 data class RetrievePrescriptionImageUri(val fileName: String) : TeleconsultSharePrescriptionEffect()
 
 data class OpenSharingDialog(val imageUri: Uri) : TeleconsultSharePrescriptionEffect()
+
+object GoBack : TeleconsultSharePrescriptionEffect()

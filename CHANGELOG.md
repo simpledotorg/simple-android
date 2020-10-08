@@ -6,6 +6,7 @@
 - Show medicines required error in `TeleconsultPrescriptionScreen`
 - Remove `TeleconsultationApi` & load medical officers from `MedicalOfficer` table
 - Remove custom WorkManager initializer
+- Bump Android Gradle Plugin version to 4.0.2
 
 ## On Demo
 ## Features

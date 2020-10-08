@@ -219,6 +219,7 @@ abstract class AppDatabase : RoomDatabase() {
       patientDao().deletePatientsNotInFacilities(facilityIdsInCurrentSyncGroup)
       bloodPressureDao().deleteWithoutLinkedPatient()
       bloodSugarDao().deleteWithoutLinkedPatient()
+      appointmentDao().deleteWithoutLinkedPatient()
     }
   }
 }

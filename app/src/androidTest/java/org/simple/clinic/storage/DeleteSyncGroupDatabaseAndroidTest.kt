@@ -441,4 +441,126 @@ class DeleteSyncGroupDatabaseAndroidTest {
         unsyncedBloodSugarMeasurementForPatientInOtherSyncGroup
     assertThat(bloodSugarMeasurementDao.getAllBloodSugarMeasurements()).containsExactlyElementsIn(expectedBloodSugarMeasurements)
   }
+
+  @Test
+  fun deleting_the_sync_group_data_should_delete_appointments_which_do_not_have_a_linked_patient() {
+    // given
+    val patientInCurrentFacility = TestData.patientProfile(
+        patientUuid = UUID.fromString("d1523ba6-bad3-42f2-a920-a503f1a503e3"),
+        patientRegisteredFacilityId = currentFacility.uuid,
+        patientAssignedFacilityId = currentFacility.uuid,
+        syncStatus = SyncStatus.DONE
+    )
+    val patientInOtherFacilityInSyncGroup = TestData.patientProfile(
+        patientUuid = UUID.fromString("cc131584-b88b-42b8-8f4c-29c93021765f"),
+        patientRegisteredFacilityId = otherFacilityInCurrentSyncGroup.uuid,
+        patientAssignedFacilityId = otherFacilityInCurrentSyncGroup.uuid,
+        syncStatus = SyncStatus.DONE
+    )
+    val patientInOtherSyncGroup = TestData.patientProfile(
+        patientUuid = UUID.fromString("5cbe9277-d18a-49ad-a73b-1840a7aba0a9"),
+        patientRegisteredFacilityId = facilityInAnotherSyncGroup.uuid,
+        patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
+        syncStatus = SyncStatus.DONE
+    )
+    patientRepository.save(listOf(
+        patientInCurrentFacility,
+        patientInOtherFacilityInSyncGroup,
+        patientInOtherSyncGroup
+    )).blockingAwait()
+
+    val appointmentsForPatientInCurrentFacility = listOf(
+        TestData.appointment(
+            uuid = UUID.fromString("a8ad7e61-19d3-4bb0-97bc-3aff2c5b3165"),
+            patientUuid = patientInCurrentFacility.patientUuid,
+            facilityUuid = currentFacility.uuid,
+            syncStatus = SyncStatus.DONE
+        ),
+        TestData.appointment(
+            uuid = UUID.fromString("6536ca4a-c053-4d12-8fc6-f05dd210c0d2"),
+            patientUuid = patientInCurrentFacility.patientUuid,
+            facilityUuid = otherFacilityInCurrentSyncGroup.uuid,
+            syncStatus = SyncStatus.DONE
+        ),
+        TestData.appointment(
+            uuid = UUID.fromString("222ebe94-dfd3-4632-95a4-4ecde30a8ee9"),
+            patientUuid = patientInCurrentFacility.patientUuid,
+            facilityUuid = facilityInAnotherSyncGroup.uuid,
+            syncStatus = SyncStatus.DONE
+        )
+    )
+
+    val appointmentsForPatientInOtherFacilityInCurrentSyncGroup = listOf(
+        TestData.appointment(
+            uuid = UUID.fromString("79c98115-4894-4fb7-8264-fb442a48b225"),
+            patientUuid = patientInOtherFacilityInSyncGroup.patientUuid,
+            facilityUuid = currentFacility.uuid,
+            syncStatus = SyncStatus.DONE
+        ),
+        TestData.appointment(
+            uuid = UUID.fromString("092de4a7-6493-4313-bfab-6bd2741ec143"),
+            patientUuid = patientInOtherFacilityInSyncGroup.patientUuid,
+            facilityUuid = otherFacilityInCurrentSyncGroup.uuid,
+            syncStatus = SyncStatus.DONE
+        ),
+        TestData.appointment(
+            uuid = UUID.fromString("cae126b9-515d-4056-8262-6d37b4a251e1"),
+            patientUuid = patientInOtherFacilityInSyncGroup.patientUuid,
+            facilityUuid = facilityInAnotherSyncGroup.uuid,
+            syncStatus = SyncStatus.DONE
+        )
+    )
+
+    val unsyncedAppointmentForPatientInOtherSyncGroup = TestData.appointment(
+        uuid = UUID.fromString("ba9b72e9-da63-4d69-a023-0339a274c34e"),
+        patientUuid = patientInOtherSyncGroup.patientUuid,
+        facilityUuid = facilityInAnotherSyncGroup.uuid,
+        status = Appointment.Status.Visited,
+        cancelReason = null,
+        syncStatus = SyncStatus.PENDING
+    )
+    val appointmentsForPatientInOtherSyncGroup = listOf(
+        TestData.appointment(
+            uuid = UUID.fromString("75de9139-a7e0-4c55-9cb1-058b76e06da7"),
+            patientUuid = patientInOtherSyncGroup.patientUuid,
+            facilityUuid = currentFacility.uuid,
+            syncStatus = SyncStatus.DONE,
+            status = Appointment.Status.Visited,
+            cancelReason = null
+        ),
+        TestData.appointment(
+            uuid = UUID.fromString("a3ac1607-fcee-4d8c-b2ea-f6c77b301a33"),
+            patientUuid = patientInOtherSyncGroup.patientUuid,
+            facilityUuid = otherFacilityInCurrentSyncGroup.uuid,
+            syncStatus = SyncStatus.DONE,
+            status = Appointment.Status.Visited,
+            cancelReason = null
+        ),
+        TestData.appointment(
+            uuid = UUID.fromString("2b625418-16b1-46aa-97af-76f9245d9ece"),
+            patientUuid = patientInOtherSyncGroup.patientUuid,
+            facilityUuid = facilityInAnotherSyncGroup.uuid,
+            syncStatus = SyncStatus.DONE,
+            status = Appointment.Status.Visited,
+            cancelReason = null
+        ),
+        unsyncedAppointmentForPatientInOtherSyncGroup
+    )
+
+    val allAppointments = appointmentsForPatientInCurrentFacility +
+        appointmentsForPatientInOtherFacilityInCurrentSyncGroup +
+        appointmentsForPatientInOtherSyncGroup
+
+    appointmentDao.save(allAppointments)
+    assertThat(appointmentDao.getAllAppointments()).containsExactlyElementsIn(allAppointments)
+
+    // when
+    database.deletePatientsNotInFacilitySyncGroup(currentFacility)
+
+    // then
+    val expectedAppointments = appointmentsForPatientInCurrentFacility +
+        appointmentsForPatientInOtherFacilityInCurrentSyncGroup +
+        unsyncedAppointmentForPatientInOtherSyncGroup
+    assertThat(appointmentDao.getAllAppointments()).containsExactlyElementsIn(expectedAppointments)
+  }
 }

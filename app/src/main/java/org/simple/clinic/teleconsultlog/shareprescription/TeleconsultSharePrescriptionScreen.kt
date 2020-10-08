@@ -10,8 +10,8 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -27,6 +27,7 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.teleconsultlog.prescription.medicines.TeleconsultMedicinesConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
@@ -51,6 +52,9 @@ class TeleconsultSharePrescriptionScreen constructor(
 
   @Inject
   lateinit var effectHandler: TeleconsultSharePrescriptionEffectHandler.Factory
+
+  @Inject
+  lateinit var teleconsultMedicinesConfig: TeleconsultMedicinesConfig
 
   @Inject
   @Named("full_date")
@@ -187,7 +191,11 @@ class TeleconsultSharePrescriptionScreen constructor(
 
   override fun renderPatientMedicines(medicines: List<PrescribedDrug>) {
     teleconsultSharePrescriptionMedicinesAdapter.submitList(
-        TeleconsultSharePrescriptionItem.from(medicines = medicines))
+        TeleconsultSharePrescriptionItem.from(
+            medicines = medicines,
+            defaultDuration = teleconsultMedicinesConfig.defaultDuration,
+            defaultFrequency = teleconsultMedicinesConfig.defaultFrequency
+        ))
   }
 
   private fun getScaledBitmap(width: Int, height: Int, view: View): Bitmap {

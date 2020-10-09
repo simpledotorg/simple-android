@@ -33,6 +33,9 @@ data class Country(
       }
     }
 
+  val areWhatsAppRemindersSupported: Boolean
+    get() = isoCountryCode == INDIA
+
   companion object {
     const val INDIA = "IN"
     const val BANGLADESH = "BD"

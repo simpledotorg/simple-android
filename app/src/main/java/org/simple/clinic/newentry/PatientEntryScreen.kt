@@ -240,10 +240,10 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   private fun setConsentLabelText() {
-    val consentLabelTextResId = when (country.isoCountryCode) {
-      Country.BANGLADESH -> R.string.patiententry_consent_sms_reminders
-      else -> R.string.patiententry_consent_whatsapp_sms_reminders
-    }
+    val consentLabelTextResId = if (country.areWhatsAppRemindersSupported)
+      R.string.patiententry_consent_whatsapp_sms_reminders
+    else
+      R.string.patiententry_consent_sms_reminders
     consentLabel.setText(consentLabelTextResId)
   }
 

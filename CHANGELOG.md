@@ -25,6 +25,7 @@
 - Add support for sending teleconsult request via SMS
 - Show medicines required error in `TeleconsultPrescriptionScreen`
 - Remove `TeleconsultationApi` & load medical officers from `MedicalOfficer` table
+- Fix prescribed drug frequency type adapter
 
 ### Fixes
 - Fix deeplink screens & warning dialogs displaying again after activity restart.

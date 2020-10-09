@@ -184,5 +184,19 @@ data class PrescribedDrug(
      * */
     @Query("UPDATE PrescribedDrug SET isDeleted = :deleted, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid IN (:prescriptionIds)")
     fun softDelete(prescriptionIds: List<UUID>, deleted: Boolean, updatedAt: Instant, syncStatus: SyncStatus)
+
+    @Query(""" SELECT * FROM PrescribedDrug """)
+    fun getAllPrescribedDrugs(): List<PrescribedDrug>
+
+    @Query("""
+        DELETE FROM PrescribedDrug
+        WHERE 
+            uuid NOT IN (
+                SELECT PD.uuid FROM PrescribedDrug PD
+                INNER JOIN Patient P ON P.uuid == PD.patientUuid
+            ) AND
+            syncStatus == 'DONE'
+    """)
+    fun deleteWithoutLinkedPatient()
   }
 }

@@ -217,6 +217,7 @@ abstract class AppDatabase : RoomDatabase() {
       val facilityIdsInCurrentSyncGroup = facilityDao().facilityIdsInSyncGroup(currentFacility.syncGroup)
 
       patientDao().deletePatientsNotInFacilities(facilityIdsInCurrentSyncGroup)
+      bloodPressureDao().deleteWithoutLinkedPatient()
     }
   }
 }

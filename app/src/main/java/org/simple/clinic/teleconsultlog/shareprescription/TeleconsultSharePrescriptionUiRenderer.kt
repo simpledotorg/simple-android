@@ -13,8 +13,8 @@ class TeleconsultSharePrescriptionUiRenderer(
     if (model.hasPatientProfile) {
       ui.renderPrescriptionDate(model.prescriptionDate)
       ui.renderPatientInformation(model.patientProfile!!)
-      loadPatientMedicines(model)
     }
+    loadPatientMedicines(model)
   }
 
   private fun loadPatientMedicines(model: TeleconsultSharePrescriptionModel) {

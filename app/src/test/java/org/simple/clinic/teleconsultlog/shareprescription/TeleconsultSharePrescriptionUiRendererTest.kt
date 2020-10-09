@@ -24,6 +24,22 @@ class TeleconsultSharePrescriptionUiRendererTest {
     val patientProfile = TestData.patientProfile(
         patientUuid = patientUuid
     )
+
+    val model = model
+        .patientProfileLoaded(patientProfile)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).renderPatientInformation(patientProfile)
+    verify(ui).renderPrescriptionDate(prescriptionDate = prescriptionDate)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when medicines are loaded, then render the medicines`() {
+    // given
     val medicines = listOf(
         TestData.prescription(
             uuid = UUID.fromString("3b3bc1c4-7e27-4e9f-9ce8-7464a6c8d129")
@@ -32,18 +48,16 @@ class TeleconsultSharePrescriptionUiRendererTest {
             uuid = UUID.fromString("3b3bc1c4-7e27-4e9f-9ce8-7464a6c8d129")
         )
     )
-    val model = model
-        .patientProfileLoaded(patientProfile)
-        .patientMedicinesLoaded(medicines)
 
+    val model = model
+        .patientMedicinesLoaded(medicines)
 
     // when
     uiRenderer.render(model)
 
     // then
-    verify(ui).renderPatientInformation(patientProfile)
-    verify(ui).renderPrescriptionDate(prescriptionDate = prescriptionDate)
     verify(ui).renderPatientMedicines(medicines)
     verifyNoMoreInteractions(ui)
   }
+
 }

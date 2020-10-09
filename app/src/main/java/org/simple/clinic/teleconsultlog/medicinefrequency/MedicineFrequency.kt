@@ -42,10 +42,10 @@ sealed class MedicineFrequency : Parcelable {
 
   object TypeAdapter : SafeEnumTypeAdapter<MedicineFrequency>(
       knownMappings = mapOf(
-          OD to "od",
-          BD to "bd",
-          TDS to "tds",
-          QDS to "qds"
+          OD to "OD",
+          BD to "BD",
+          TDS to "TDS",
+          QDS to "QDS"
       ),
       unknownStringToEnumConverter = { Unknown(it) },
       unknownEnumToStringConverter = { (it as Unknown).actualValue }

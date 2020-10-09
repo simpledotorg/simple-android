@@ -169,5 +169,19 @@ data class BloodPressureMeasurement(
       WHERE deletedAt IS NOT NULL AND syncStatus == 'DONE'
     """)
     fun purgeDeleted()
+
+    @Query("SELECT * FROM BloodPressureMeasurement")
+    fun getAllBloodPressureMeasurements(): List<BloodPressureMeasurement>
+
+    @Query("""
+        DELETE FROM BloodPressureMeasurement
+        WHERE 
+            uuid NOT IN (
+                SELECT BP.uuid FROM BloodPressureMeasurement BP
+                INNER JOIN Patient P ON P.uuid == BP.patientUuid
+            ) AND
+            syncStatus == 'DONE'
+    """)
+    fun deleteWithoutLinkedPatient()
   }
 }

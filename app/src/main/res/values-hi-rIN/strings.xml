@@ -174,7 +174,6 @@
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
   <string name="patientsummary_bangladesh_national_id">आईडी</string>
 
-  <string name="patientsummary_contact_doctor">डॉक्टर</string>
   <string name="patientsummary_log_teleconsult">टेली कंसल्ट पर लॉग करें</string>
 
   <string name="patientsummary_registered_faciliy_title">पंजीकृत</string>

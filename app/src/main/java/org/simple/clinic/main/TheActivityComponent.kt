@@ -70,6 +70,7 @@ import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScre
 import org.simple.clinic.teleconsultlog.prescription.doctorinfo.TeleconsultDoctorInfoView
 import org.simple.clinic.teleconsultlog.prescription.medicines.TeleconsultMedicinesView
 import org.simple.clinic.teleconsultlog.prescription.patientinfo.TeleconsultPatientInfoView
+import org.simple.clinic.teleconsultlog.shareprescription.TeleconsultSharePrescriptionScreen
 import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessScreen
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultNotRecordedDialog
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreen
@@ -138,7 +139,8 @@ interface TheActivityComponent :
     AllPatientsInFacilityView.Injector,
     ShortCodeSearchResultScreen.Injector,
     SettingsScreen.Injector,
-    ChangeLanguageScreen.Injector {
+    ChangeLanguageScreen.Injector,
+    TeleconsultSharePrescriptionScreen.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Builder

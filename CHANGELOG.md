@@ -11,6 +11,7 @@
 
 ## Features
 - Add `TeleconsultSharePrescriptionScreen` 
+- Fix prescribed drug frequency type adapter
 
 ## On Demo
 ## Features

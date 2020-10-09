@@ -17,6 +17,7 @@ import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.teleconsultlog.shareprescription.TeleconsultSharePrescriptionScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
@@ -111,7 +112,8 @@ class TeleconsultPrescriptionScreen constructor(
   }
 
   override fun openSharePrescriptionScreen(teleconsultRecordId: UUID, medicalInstructions: String) {
-
+    // HS update the patientUuid to receive from the overridden function and not from the screenKey
+    screenRouter.push(TeleconsultSharePrescriptionScreenKey(screenKey.patientUuid, medicalInstructions))
   }
 
   private fun backClicks(): Observable<UiEvent> {

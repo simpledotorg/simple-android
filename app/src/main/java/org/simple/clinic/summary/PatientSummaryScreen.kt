@@ -222,7 +222,7 @@ class PatientSummaryScreen(
 
   private fun doneClicks() = doneButton.clicks().map { PatientSummaryDoneClicked(screenKey.patientUuid) }
 
-  private fun contactDoctorClicks() = doctorButton.clicks().map { ContactDoctorClicked }
+  private fun contactDoctorClicks() = teleconsultButton.clicks().map { ContactDoctorClicked }
 
   private fun logTeleconsultClicks() = logTeleconsultButton.clicks().map { LogTeleconsultClicked }
 
@@ -470,12 +470,12 @@ class PatientSummaryScreen(
     context.startActivity(intent)
   }
 
-  override fun showContactDoctorButton() {
-    doctorButton.visibility = View.VISIBLE
+  override fun showTeleconsultButton() {
+    teleconsultButton.visibility = View.VISIBLE
   }
 
-  override fun hideContactDoctorButton() {
-    doctorButton.visibility = View.GONE
+  override fun hideTeleconsultButton() {
+    teleconsultButton.visibility = View.GONE
   }
 
   override fun showAssignedFacilityView() {

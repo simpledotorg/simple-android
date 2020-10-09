@@ -3,6 +3,7 @@
 ## On Demo
 ## Features
 - Add `TeleconsultPrescriptionScreen`
+- Switch the positions of the teleconsultation and Save buttons in the `PatientSummaryScreen`
 
 ## Changes
 - Updated translations: `bn-IN`, `ti-ET`, `bn-BD`, `ta-IN`, `pa-IN`, `kn-IN`, `mr-IN`

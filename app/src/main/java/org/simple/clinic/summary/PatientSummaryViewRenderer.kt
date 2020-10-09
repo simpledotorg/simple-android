@@ -38,24 +38,24 @@ class PatientSummaryViewRenderer(
   }
 
   private fun renderMedicalOfficerView() {
-    ui.hideContactDoctorButton()
+    ui.hideTeleconsultButton()
     ui.hideDoneButton()
     ui.showTeleconsultLogButton()
   }
 
   private fun renderUserView(model: PatientSummaryModel) {
     if (model.isTeleconsultationEnabled && model.isUserLoggedIn) {
-      renderContactDoctorButton(model)
+      renderTeleconsultButton(model)
     } else {
-      ui.hideContactDoctorButton()
+      ui.hideTeleconsultButton()
     }
   }
 
-  private fun renderContactDoctorButton(model: PatientSummaryModel) {
+  private fun renderTeleconsultButton(model: PatientSummaryModel) {
     if (model.hasMedicalOfficers) {
-      ui.showContactDoctorButton()
+      ui.showTeleconsultButton()
     } else {
-      ui.hideContactDoctorButton()
+      ui.hideTeleconsultButton()
     }
   }
 

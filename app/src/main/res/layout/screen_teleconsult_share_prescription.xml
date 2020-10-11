@@ -188,6 +188,7 @@
     style="@style/Clinic.V2.BottomAlignedButtonFrame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/blue2"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:orientation="horizontal"

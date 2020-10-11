@@ -16,9 +16,9 @@
   <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:layout_margin="@dimen/spacing_16"
     android:clipChildren="false"
     android:clipToPadding="false"
+    android:padding="@dimen/spacing_16"
     app:layout_constraintBottom_toTopOf="@+id/buttonFrame"
     app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
@@ -27,8 +27,8 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_24"
       android:layout_marginEnd="@dimen/spacing_24"
-      app:cardCornerRadius="@dimen/spacing_8"
-      app:cardElevation="@dimen/spacing_8"
+      app:cardCornerRadius="@dimen/spacing_4"
+      app:cardElevation="@dimen/spacing_2"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent">
@@ -37,31 +37,27 @@
         android:id="@+id/layoutSharePrescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white100"
         android:padding="@dimen/spacing_16">
 
         <TextView
           android:id="@+id/textTeleconsultPrescription"
+          style="@style/Clinic.V2.TextAppearance.Tag.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/spacing_12"
           android:text="@string/screen_teleconsult_share_prescription_teleconsult_prescription"
           android:textAllCaps="true"
-          android:textColor="@color/grey1"
-          android:textSize="@dimen/textsize_14"
           app:layout_constraintBottom_toTopOf="@+id/patientNameTextView"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintHorizontal_bias="0.0"
+          app:layout_constraintHorizontal_bias="0"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
           android:id="@+id/patientNameTextView"
-          style="@style/Clinic.V2.TextAppearance.Body0Left.Emphasis"
+          style="@style/Clinic.V2.TextAppearance.Body0Left.Emphasis.Grey0"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/spacing_12"
-          android:textColor="@color/grey0"
           app:layout_constraintBottom_toTopOf="@+id/patientAddressTextView"
           app:layout_constraintTop_toBottomOf="@id/textTeleconsultPrescription"
           tools:text="Anish Acharya" />
@@ -88,9 +84,10 @@
 
         <View
           android:id="@+id/sharePrescriptionPatientDetailsDivider"
-          style="@style/Clinic.V2.ListSeparator"
-          android:layout_gravity="bottom"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/spacing_1"
           android:layout_marginTop="@dimen/spacing_12"
+          android:background="@drawable/divider"
           app:layout_constraintBottom_toTopOf="@+id/medicinesTextView"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
@@ -98,7 +95,7 @@
 
         <TextView
           android:id="@+id/medicinesTextView"
-          style="@style/Clinic.V2.TextAppearance.Body0Left.Emphasis"
+          style="@style/Clinic.V2.TextAppearance.Body0Left.Emphasis.Grey0"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/spacing_12"
@@ -112,15 +109,17 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/spacing_8"
+          android:nestedScrollingEnabled="false"
           app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
           app:layout_constraintBottom_toTopOf="@+id/sharePrescriptionMedicinesDivider"
           app:layout_constraintTop_toBottomOf="@+id/medicinesTextView" />
 
         <View
           android:id="@+id/sharePrescriptionMedicinesDivider"
-          style="@style/Clinic.V2.ListSeparator"
-          android:layout_gravity="bottom"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/spacing_1"
           android:layout_marginTop="@dimen/spacing_12"
+          android:background="@drawable/divider"
           app:layout_constraintBottom_toTopOf="@+id/instructionsTextView"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
@@ -128,31 +127,30 @@
 
         <TextView
           android:id="@+id/instructionsTextView"
-          style="@style/Clinic.V2.TextAppearance.Body0Left.Emphasis"
+          style="@style/Clinic.V2.TextAppearance.Body0Left.Emphasis.Grey0"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/spacing_12"
           android:text="@string/screen_teleconsult_share_prescription_instructions"
-          android:textColor="@color/grey0"
           app:layout_constraintBottom_toTopOf="@+id/instructionsForNextVisitTextView"
           app:layout_constraintTop_toBottomOf="@id/sharePrescriptionMedicinesDivider" />
 
         <TextView
           android:id="@+id/instructionsForNextVisitTextView"
-          style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+          style="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/spacing_4"
-          android:lines="1"
+          android:layout_marginTop="@dimen/spacing_8"
           app:layout_constraintBottom_toTopOf="@+id/sharePrescriptionInstructionsDivider"
           app:layout_constraintTop_toBottomOf="@id/instructionsTextView"
           tools:text="Remind to come back in 30 days" />
 
         <View
           android:id="@+id/sharePrescriptionInstructionsDivider"
-          style="@style/Clinic.V2.ListSeparator"
-          android:layout_gravity="bottom"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/spacing_1"
           android:layout_marginTop="@dimen/spacing_12"
+          android:background="@drawable/divider"
           app:layout_constraintBottom_toTopOf="@+id/signatureImageView"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
@@ -160,10 +158,14 @@
 
         <ImageView
           android:id="@+id/signatureImageView"
-          android:layout_width="match_parent"
-          android:layout_height="60dp"
+          android:layout_width="wrap_content"
+          android:layout_height="@dimen/spacing_32"
+          android:layout_marginTop="@dimen/spacing_16"
           app:layout_constraintBottom_toTopOf="@+id/medicalRegistrationIdTextView"
-          app:layout_constraintTop_toBottomOf="@id/sharePrescriptionInstructionsDivider" />
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/sharePrescriptionInstructionsDivider"
+          tools:ignore="ContentDescription" />
 
         <TextView
           android:id="@+id/medicalRegistrationIdTextView"
@@ -189,8 +191,8 @@
     android:clipChildren="false"
     android:clipToPadding="false"
     android:orientation="horizontal"
-    android:paddingTop="@dimen/spacing_8"
-    android:paddingBottom="@dimen/spacing_8"
+    android:paddingTop="@dimen/spacing_16"
+    android:paddingBottom="@dimen/spacing_16"
     app:layout_constraintBottom_toBottomOf="parent">
 
     <com.google.android.material.button.MaterialButton
@@ -199,14 +201,14 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_16"
-      android:layout_marginEnd="@dimen/spacing_16"
+      android:layout_marginEnd="@dimen/spacing_8"
       android:layout_marginBottom="@dimen/spacing_16"
       android:text="@string/screen_teleconsult_share_prescription_download"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       app:icon="@drawable/ic_prescription_download"
       app:iconGravity="textStart"
       app:layout_constraintEnd_toStartOf="@+id/shareButton"
-      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintHorizontal_weight="1"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="@+id/buttonFrame" />
 
@@ -214,10 +216,9 @@
       android:id="@+id/shareButton"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/spacing_16"
+      android:layout_marginStart="@dimen/spacing_8"
       android:layout_marginEnd="@dimen/spacing_16"
       android:layout_marginBottom="@dimen/spacing_16"
-      android:layout_weight="1"
       android:text="@string/screen_teleconsult_share_prescription_share"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       app:backgroundTint="@color/contact_doctor_button"
@@ -225,7 +226,7 @@
       app:iconTint="@android:color/white"
       app:layout_constraintBottom_toTopOf="@+id/doneButton"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintHorizontal_weight="1"
       app:layout_constraintStart_toEndOf="@+id/downloadButton"
       app:layout_constraintTop_toTopOf="@+id/buttonFrame" />
 
@@ -241,6 +242,5 @@
       app:layout_constraintBottom_toBottomOf="@+id/buttonFrame" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </org.simple.clinic.teleconsultlog.shareprescription.TeleconsultSharePrescriptionScreen>

@@ -12,6 +12,7 @@
 - Bump Android Gradle Plugin version to 4.0.2
 - Add method to `AppDatabase` to clear all patient data not in the current sync group
 - Request storage permission when downloading or sharing prescription
+- Fix small UI inconsistencies in share prescription screen
 
 ## Features
 - Add `TeleconsultSharePrescriptionScreen` 

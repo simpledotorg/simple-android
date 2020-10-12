@@ -37,6 +37,7 @@
         android:id="@+id/layoutSharePrescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white100"
         android:padding="@dimen/spacing_16">
 
         <TextView

@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
+import androidx.core.content.FileProvider
 import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.DateFormatter.Type.FileDateTime
 import org.simple.clinic.util.UserClock
@@ -61,7 +62,8 @@ class TeleconsultSharePrescriptionRepository @Inject constructor(
       }
       return contentUri
     } else {
-      contentUri = Uri.fromFile(File(Environment.getExternalStorageDirectory().absolutePath + "/Download/" + fileName))
+      val filePath = File(Environment.getExternalStorageDirectory().absolutePath + Environment.DIRECTORY_DOWNLOADS + fileName)
+      contentUri = FileProvider.getUriForFile(appContext, "${appContext.packageName}.provider", filePath)
       return contentUri
     }
   }

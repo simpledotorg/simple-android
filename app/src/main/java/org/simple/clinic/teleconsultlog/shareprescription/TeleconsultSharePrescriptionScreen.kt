@@ -34,6 +34,8 @@ import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
+import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -218,6 +220,14 @@ class TeleconsultSharePrescriptionScreen constructor(
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
     imageSavedMessageEvents.onNext(ImageSavedMessageShown)
+  }
+
+  override fun showDownloadProgress() {
+    downloadButton.setButtonState(InProgress)
+  }
+
+  override fun hideDownloadProgress() {
+    downloadButton.setButtonState(Enabled)
   }
 
   private fun getScaledBitmap(width: Int, height: Int, view: View): Bitmap {

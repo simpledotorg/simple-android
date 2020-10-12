@@ -205,7 +205,7 @@
     android:paddingBottom="@dimen/spacing_16"
     app:layout_constraintBottom_toBottomOf="parent">
 
-    <com.google.android.material.button.MaterialButton
+    <org.simple.clinic.widgets.ProgressMaterialButton
       android:id="@+id/downloadButton"
       style="?attr/materialButtonStyle"
       android:layout_width="0dp"
@@ -220,6 +220,7 @@
       app:layout_constraintEnd_toStartOf="@+id/shareButton"
       app:layout_constraintHorizontal_weight="1"
       app:layout_constraintStart_toStartOf="parent"
+      app:buttonState="in-progress"
       app:layout_constraintTop_toTopOf="@+id/buttonFrame" />
 
     <com.google.android.material.button.MaterialButton

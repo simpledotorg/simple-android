@@ -10,7 +10,6 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
@@ -28,9 +27,10 @@ import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.teleconsultlog.prescription.medicines.TeleconsultMedicinesConfig
+import org.simple.clinic.util.RequestPermissions
+import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
@@ -60,6 +60,9 @@ class TeleconsultSharePrescriptionScreen constructor(
   @Named("full_date")
   lateinit var dateFormatter: DateTimeFormatter
 
+  @Inject
+  lateinit var runtimePermissions: RuntimePermissions
+
   private val screenKey by unsafeLazy {
     screenRouter.key<TeleconsultSharePrescriptionScreenKey>(this)
   }
@@ -72,6 +75,7 @@ class TeleconsultSharePrescriptionScreen constructor(
             doneClicks(),
             backClicks()
         )
+        .compose(RequestPermissions(runtimePermissions, screenRouter.streamScreenResults().ofType()))
         .compose(ReportAnalyticsEvents())
   }
 

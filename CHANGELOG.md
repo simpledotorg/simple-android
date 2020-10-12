@@ -26,6 +26,7 @@
 - Show medicines required error in `TeleconsultPrescriptionScreen`
 - Remove `TeleconsultationApi` & load medical officers from `MedicalOfficer` table
 - Fix prescribed drug frequency type adapter
+- Request storage permission when downloading or sharing prescription
 
 ### Fixes
 - Fix deeplink screens & warning dialogs displaying again after activity restart.

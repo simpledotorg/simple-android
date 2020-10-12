@@ -122,7 +122,13 @@ class TeleconsultSharePrescriptionScreen constructor(
   }
 
   private fun showMedicalInstructions() {
-    instructionsTextView.text = screenKey.medicalInstructions
+    val medicalInstructions = screenKey.medicalInstructions
+
+    if (medicalInstructions.isNullOrBlank()) {
+      instructionsTextView.text = context.getString(R.string.screen_teleconsult_share_prescription_instructions_empty)
+    } else {
+      instructionsTextView.text = medicalInstructions
+    }
   }
 
   private fun shareClicks(): Observable<UiEvent> = shareButton

@@ -745,4 +745,5 @@
   <string name="list_item_teleconsult_share_prescription_medicines_name" translatable="false">%1$s %2$s, %3$s, %4$s days</string>
   <string name="screen_teleconsult_share_prescription_image_using">Share image using</string>
   <string name="screen_teleconsult_share_prescription_title">Prescription</string>
+  <string name="screen_teleconsult_share_prescription_instructions_empty" translatable="false">-</string>
 </resources>

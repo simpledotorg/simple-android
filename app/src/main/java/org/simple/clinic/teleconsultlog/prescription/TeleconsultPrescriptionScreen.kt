@@ -21,6 +21,7 @@ import org.simple.clinic.teleconsultlog.shareprescription.TeleconsultSharePrescr
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.hideKeyboard
 import java.util.UUID
 import javax.inject.Inject
 
@@ -70,6 +71,7 @@ class TeleconsultPrescriptionScreen constructor(
   }
 
   override fun onDetachedFromWindow() {
+    hideKeyboard()
     delegate.stop()
     super.onDetachedFromWindow()
   }

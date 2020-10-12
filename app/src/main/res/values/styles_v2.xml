@@ -88,6 +88,10 @@
     <item name="android:textColor">@color/blue1</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Body0Left.Emphasis.Grey0">
+    <item name="android:textColor">@color/grey0</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Body0Left.NumericBold">
     <item name="android:letterSpacing">0.11</item>
     <item name="android:textStyle">bold</item>

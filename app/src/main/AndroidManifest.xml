@@ -162,5 +162,15 @@
       android:name="androidx.work.impl.WorkManagerInitializer"
       android:enabled="false"
       android:exported="false" />
+
+    <provider
+      android:name="org.simple.clinic.fileprovider.SimpleFileProvider"
+      android:authorities="${applicationId}.provider"
+      android:exported="false"
+      android:grantUriPermissions="true">
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/provider_paths" />
+    </provider>
   </application>
 </manifest>

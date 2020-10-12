@@ -180,6 +180,7 @@ class TeleconsultSharePrescriptionScreen constructor(
     val sharingIntent = Intent(Intent.ACTION_SEND)
     sharingIntent.type = "image/png"
     sharingIntent.putExtra(Intent.EXTRA_STREAM, imageUri)
+    sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     context.startActivity(Intent.createChooser(sharingIntent, context.getString(R.string.screen_teleconsult_share_prescription_image_using)))
   }
 

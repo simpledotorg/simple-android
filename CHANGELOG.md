@@ -13,6 +13,7 @@
 - Add method to `AppDatabase` to clear all patient data not in the current sync group
 - Request storage permission when downloading or sharing prescription
 - Fix small UI inconsistencies in share prescription screen
+- Hide keyboard when exiting from `TeleconsultPrescriptionScreen`
 
 ## Features
 - Add `TeleconsultSharePrescriptionScreen` 

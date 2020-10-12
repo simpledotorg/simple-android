@@ -122,7 +122,7 @@ class TeleconsultSharePrescriptionScreen constructor(
   }
 
   private fun showMedicalInstructions() {
-    instructionsForNextVisitTextView.text = screenKey.medicalInstructions
+    instructionsTextView.text = screenKey.medicalInstructions
   }
 
   private fun shareClicks(): Observable<UiEvent> = shareButton

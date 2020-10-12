@@ -120,29 +120,29 @@
           android:layout_height="@dimen/spacing_1"
           android:layout_marginTop="@dimen/spacing_12"
           android:background="@drawable/divider"
-          app:layout_constraintBottom_toTopOf="@+id/instructionsTextView"
+          app:layout_constraintBottom_toTopOf="@+id/instructionsHeadingTextView"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@id/medicinesRecyclerView" />
 
         <TextView
-          android:id="@+id/instructionsTextView"
+          android:id="@+id/instructionsHeadingTextView"
           style="@style/Clinic.V2.TextAppearance.Body0Left.Emphasis.Grey0"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/spacing_12"
           android:text="@string/screen_teleconsult_share_prescription_instructions"
-          app:layout_constraintBottom_toTopOf="@+id/instructionsForNextVisitTextView"
+          app:layout_constraintBottom_toTopOf="@+id/instructionsTextView"
           app:layout_constraintTop_toBottomOf="@id/sharePrescriptionMedicinesDivider" />
 
         <TextView
-          android:id="@+id/instructionsForNextVisitTextView"
+          android:id="@+id/instructionsTextView"
           style="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/spacing_8"
           app:layout_constraintBottom_toTopOf="@+id/sharePrescriptionInstructionsDivider"
-          app:layout_constraintTop_toBottomOf="@id/instructionsTextView"
+          app:layout_constraintTop_toBottomOf="@id/instructionsHeadingTextView"
           tools:text="Remind to come back in 30 days" />
 
         <View
@@ -154,7 +154,7 @@
           app:layout_constraintBottom_toTopOf="@+id/signatureImageView"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/instructionsForNextVisitTextView" />
+          app:layout_constraintTop_toBottomOf="@id/instructionsTextView" />
 
         <ImageView
           android:id="@+id/signatureImageView"

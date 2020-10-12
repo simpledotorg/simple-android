@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/medicineDetailTextView"
-  style="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
   android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  app:layout_constraintStart_toStartOf="parent"
-  app:layout_constraintTop_toTopOf="parent"
-  tools:text="Amlodipine" />
+  android:layout_height="wrap_content">
+
+  <TextView
+    android:id="@+id/medicineIconTextView"
+    style="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/list_item_teleconsult_share_prescription_medicines_icon" />
+
+  <TextView
+    android:id="@+id/medicineDetailTextView"
+    style="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_8"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="Amlodipine 10mg, OD, 30 days" />
+
+</LinearLayout>

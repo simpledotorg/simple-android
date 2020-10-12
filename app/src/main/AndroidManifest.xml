@@ -157,5 +157,15 @@
         <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
       </intent-filter>
     </receiver>
+
+    <provider
+      android:name="org.simple.clinic.fileprovider.SimpleFileProvider"
+      android:authorities="${applicationId}.provider"
+      android:exported="false"
+      android:grantUriPermissions="true">
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/provider_paths" />
+    </provider>
   </application>
 </manifest>

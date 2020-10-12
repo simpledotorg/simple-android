@@ -14,6 +14,7 @@
 - Request storage permission when downloading or sharing prescription
 - Fix small UI inconsistencies in share prescription screen
 - Hide keyboard when exiting from `TeleconsultPrescriptionScreen`
+- Add file provider for sharing prescription image below Android 10
 
 ## Features
 - Add `TeleconsultSharePrescriptionScreen` 

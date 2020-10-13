@@ -113,9 +113,8 @@ class TeleconsultPrescriptionScreen constructor(
     teleconsultPrescriptionMedicinesView.showMedicinesRequiredError()
   }
 
-  override fun openSharePrescriptionScreen(teleconsultRecordId: UUID, medicalInstructions: String) {
-    // HS update the patientUuid to receive from the overridden function and not from the screenKey
-    screenRouter.push(TeleconsultSharePrescriptionScreenKey(screenKey.patientUuid, medicalInstructions))
+  override fun openSharePrescriptionScreen(patientUuid: UUID, medicalInstructions: String) {
+    screenRouter.push(TeleconsultSharePrescriptionScreenKey(patientUuid, medicalInstructions))
   }
 
   private fun backClicks(): Observable<UiEvent> {

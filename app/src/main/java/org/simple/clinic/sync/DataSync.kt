@@ -73,7 +73,7 @@ class DataSync(
   }
 
   private fun syncsForGroup(syncTag: SyncTag): Completable {
-    val syncsInGroup = modelSyncs.filter { it.syncConfig().syncTag == syncTag }
+    val syncsInGroup = modelSyncs.filter { it.syncTag() == syncTag }
 
     return Single
         .fromCallable { userSession.loggedInUserImmediate().toOptional() }

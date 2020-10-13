@@ -36,7 +36,7 @@ class HelpSync @Inject constructor(
 
   override fun syncConfig(): SyncConfig = config
 
-  override fun syncTag() = SyncTag.DAILY
+  override fun syncTags() = setOf(SyncTag.DAILY)
 
   fun pullWithResult(): Single<HelpPullResult> {
     return Completable

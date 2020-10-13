@@ -42,7 +42,7 @@ class PrescriptionSync @Inject constructor(
 
   override fun syncConfig(): SyncConfig = config
 
-  override fun syncTag() = SyncTag.FREQUENT
+  override fun syncTags() = setOf(SyncTag.FREQUENT)
 
   private fun toRequest(drugs: List<PrescribedDrug>): PrescriptionPushRequest {
     val payloads = drugs.map { it.toPayload() }

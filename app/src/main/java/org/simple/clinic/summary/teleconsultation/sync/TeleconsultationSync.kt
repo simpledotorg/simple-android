@@ -37,5 +37,5 @@ class TeleconsultationSync @Inject constructor(
 
   override fun syncConfig() = config
 
-  override fun syncTag() = SyncTag.DAILY
+  override fun syncTags() = setOf(SyncTag.DAILY)
 }

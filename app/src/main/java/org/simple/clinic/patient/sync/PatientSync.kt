@@ -43,7 +43,7 @@ class PatientSync @Inject constructor(
 
   override fun syncConfig(): SyncConfig = config
 
-  override fun syncTag() = SyncTag.FREQUENT
+  override fun syncTags() = setOf(SyncTag.FREQUENT)
 
   private fun toRequest(patients: List<PatientProfile>): PatientPushRequest {
     return PatientPushRequest(

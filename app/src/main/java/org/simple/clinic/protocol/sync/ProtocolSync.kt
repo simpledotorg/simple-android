@@ -38,5 +38,5 @@ class ProtocolSync @Inject constructor(
 
   override fun syncConfig(): SyncConfig = config
 
-  override fun syncTag() = SyncTag.DAILY
+  override fun syncTags() = setOf(SyncTag.DAILY)
 }

@@ -721,10 +721,26 @@ class DataSyncTest {
       _name: String,
       _requiresSyncApprovedUser: Boolean = false,
       private val config: SyncConfig,
-      private val syncTag: SyncTag,
+      private val syncTags: Set<SyncTag>,
       private val pushError: Throwable? = null,
       private val pullError: Throwable? = null,
   ) : ModelSync {
+
+    constructor(
+        _name: String,
+        _requiresSyncApprovedUser: Boolean = false,
+        config: SyncConfig,
+        syncTag: SyncTag,
+        pushError: Throwable? = null,
+        pullError: Throwable? = null,
+    ): this(
+        _name = _name,
+        _requiresSyncApprovedUser = _requiresSyncApprovedUser,
+        config = config,
+        syncTags = setOf(syncTag),
+        pushError = pushError,
+        pullError = pullError
+    )
 
     override val name: String = _name
 
@@ -748,6 +764,6 @@ class DataSyncTest {
 
     override fun syncConfig(): SyncConfig = config
 
-    override fun syncTag() = syncTag
+    override fun syncTags() = syncTags
   }
 }

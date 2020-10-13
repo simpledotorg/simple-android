@@ -83,5 +83,5 @@ class TeleconsultRecordSync @Inject constructor(
     }
   }
 
-  override fun syncTag() = SyncTag.FREQUENT
+  override fun syncTags() = setOf(SyncTag.FREQUENT)
 }

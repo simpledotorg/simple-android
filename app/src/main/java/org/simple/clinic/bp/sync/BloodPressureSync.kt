@@ -40,7 +40,7 @@ class BloodPressureSync @Inject constructor(
 
   override fun syncConfig(): SyncConfig = config
 
-  override fun syncTag() = SyncTag.FREQUENT
+  override fun syncTags() = setOf(SyncTag.FREQUENT)
 
   private fun toRequest(measurements: List<BloodPressureMeasurement>): BloodPressurePushRequest {
     val payloads = measurements.map { it.toPayload() }

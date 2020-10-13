@@ -17,5 +17,5 @@ interface ModelSync {
   fun push()
   fun pull()
   fun syncConfig(): SyncConfig
-  fun syncTag(): SyncTag
+  fun syncTags(): Set<SyncTag>
 }

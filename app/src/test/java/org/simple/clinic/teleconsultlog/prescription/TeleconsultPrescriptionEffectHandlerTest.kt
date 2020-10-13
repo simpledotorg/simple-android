@@ -187,16 +187,16 @@ class TeleconsultPrescriptionEffectHandlerTest {
   @Test
   fun `when open share prescription screen effect is received, then open share prescription screen`() {
     // given
-    val teleconsultRecordId = UUID.fromString("2e9b48fd-786e-425b-8f97-049d59db81ec")
+    val patientUuid = UUID.fromString("2e9b48fd-786e-425b-8f97-049d59db81ec")
     val medicalInstructions = "This is a medical instruction"
 
     // when
-    effectHandlerTestCase.dispatch(OpenSharePrescriptionScreen(teleconsultRecordId, medicalInstructions))
+    effectHandlerTestCase.dispatch(OpenSharePrescriptionScreen(patientUuid, medicalInstructions))
 
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
 
-    verify(uiActions).openSharePrescriptionScreen(teleconsultRecordId, medicalInstructions)
+    verify(uiActions).openSharePrescriptionScreen(patientUuid, medicalInstructions)
     verifyNoMoreInteractions(uiActions)
   }
 

@@ -5,6 +5,6 @@ import java.util.UUID
 interface TeleconsultPrescriptionUiActions {
   fun goBackToPreviousScreen()
   fun showSignatureRequiredError()
-  fun openSharePrescriptionScreen(teleconsultRecordId: UUID, medicalInstructions: String)
+  fun openSharePrescriptionScreen(patientUuid: UUID, medicalInstructions: String)
   fun showMedicinesRequiredError()
 }

@@ -39,7 +39,7 @@ class TeleconsultPrescriptionEffectHandler @AssistedInject constructor(
         .addTransformer(LoadDataForNextClick::class.java, loadDataForNextClick())
         .addTransformer(AddTeleconsultIdToPrescribedDrugs::class.java, addTeleconsultIdToPrescribedDrugs())
         .addConsumer(OpenSharePrescriptionScreen::class.java, {
-          uiActions.openSharePrescriptionScreen(it.teleconsultRecordId, it.medicalInstructions)
+          uiActions.openSharePrescriptionScreen(it.patientUuid, it.medicalInstructions)
         }, schedulersProvider.ui())
         .addConsumer(SaveMedicalRegistrationId::class.java, {
           medicalRegistrationIdPreference.set(Optional.of(it.medicalRegistrationId))

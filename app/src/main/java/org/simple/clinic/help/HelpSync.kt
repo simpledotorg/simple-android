@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncTag
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
@@ -34,6 +35,8 @@ class HelpSync @Inject constructor(
   }
 
   override fun syncConfig(): SyncConfig = config
+
+  override fun syncTag() = SyncTag.DAILY
 
   fun pullWithResult(): Single<HelpPullResult> {
     return Completable

@@ -7,6 +7,7 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
+import org.simple.clinic.sync.SyncTag
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.read
 import javax.inject.Inject
@@ -40,6 +41,8 @@ class PrescriptionSync @Inject constructor(
   }
 
   override fun syncConfig(): SyncConfig = config
+
+  override fun syncTag() = SyncTag.FREQUENT
 
   private fun toRequest(drugs: List<PrescribedDrug>): PrescriptionPushRequest {
     val payloads = drugs.map { it.toPayload() }

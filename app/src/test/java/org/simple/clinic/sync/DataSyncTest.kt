@@ -6,6 +6,8 @@ import io.reactivex.Completable
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.sync.SyncTag.DAILY
+import org.simple.clinic.sync.SyncTag.FREQUENT
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
@@ -27,30 +29,33 @@ class DataSyncTest {
   private val frequentSyncConfig = SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
       batchSize = 10,
-      syncTag = SyncTag.FREQUENT
+      syncTag = FREQUENT
   )
 
   private val dailySyncConfig = SyncConfig(
       syncInterval = SyncInterval.DAILY,
       batchSize = 10,
-      syncTag = SyncTag.DAILY
+      syncTag = DAILY
   )
 
   @Test
   fun `when syncing everything, all the model syncs should be invoked`() {
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = dailySyncConfig,
+        syncTag = DAILY
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
-        config = dailySyncConfig
+        config = dailySyncConfig,
+        syncTag = DAILY
     )
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val dataSync = DataSync(
@@ -77,19 +82,22 @@ class DataSyncTest {
   fun `when syncing everything, if any of the syncs throws an error, the other syncs must not be affected`() {
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = dailySyncConfig,
+        syncTag = DAILY
     )
 
     val runtimeException = RuntimeException("TEST")
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         config = dailySyncConfig,
+        syncTag = DAILY,
         pullError = runtimeException
     )
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val dataSync = DataSync(
@@ -117,21 +125,25 @@ class DataSyncTest {
   fun `when syncing a particular group, only the syncs which are a part of that group must be synced`() {
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         config = dailySyncConfig,
+        syncTag = DAILY,
         pushError = RuntimeException()
     )
     val modelSync3 = FakeModelSync(
         _name = "sync3",
         config = dailySyncConfig,
+        syncTag = DAILY,
         pullError = RuntimeException()
     )
     val modelSync4 = FakeModelSync(
         _name = "sync4",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val dataSync = DataSync(
@@ -146,7 +158,7 @@ class DataSyncTest {
         .streamSyncErrors()
         .test()
 
-    dataSync.sync(SyncTag.FREQUENT)
+    dataSync.sync(FREQUENT)
 
     syncErrors
         .assertNoErrors()
@@ -158,24 +170,28 @@ class DataSyncTest {
   fun `when syncing a particular group, errors in syncing any should not affect another syncs`() {
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val runtimeException = RuntimeException("TEST")
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         config = dailySyncConfig,
+        syncTag = DAILY,
         pushError = runtimeException
     )
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
         config = dailySyncConfig,
+        syncTag = DAILY,
     )
 
     val modelSync4 = FakeModelSync(
         _name = "sync4",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val dataSync = DataSync(
@@ -191,7 +207,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync.sync(SyncTag.DAILY)
+    dataSync.sync(DAILY)
 
     syncErrors
         .assertValue(ResolvedError.Unexpected(runtimeException))
@@ -204,19 +220,22 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = dailySyncConfig,
+        syncTag = DAILY
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
         config = dailySyncConfig,
+        syncTag = DAILY,
         pullError = RuntimeException("TEST"),
     )
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val dataSync = DataSync(
@@ -251,19 +270,22 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = dailySyncConfig,
+        syncTag = DAILY
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
         config = dailySyncConfig,
+        syncTag = DAILY,
         pullError = RuntimeException("TEST"),
     )
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val dataSync = DataSync(
@@ -298,19 +320,22 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = dailySyncConfig,
+        syncTag = DAILY
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
         config = dailySyncConfig,
+        syncTag = DAILY,
         pullError = RuntimeException("TEST"),
     )
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val dataSync = DataSync(
@@ -345,19 +370,22 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = dailySyncConfig,
+        syncTag = DAILY
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
         config = dailySyncConfig,
+        syncTag = DAILY,
         pullError = RuntimeException("TEST"),
     )
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val dataSync = DataSync(
@@ -392,19 +420,22 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = dailySyncConfig,
+        syncTag = DAILY
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
         config = dailySyncConfig,
+        syncTag = DAILY,
         pullError = RuntimeException("TEST"),
     )
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val dataSync = DataSync(
@@ -439,19 +470,22 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = dailySyncConfig,
+        syncTag = DAILY
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
         config = dailySyncConfig,
+        syncTag = DAILY,
         pullError = RuntimeException("TEST"),
     )
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val dataSync = DataSync(
@@ -486,7 +520,8 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = dailySyncConfig,
+        syncTag = DAILY
     )
 
     val exception = RuntimeException("TEST")
@@ -494,12 +529,14 @@ class DataSyncTest {
         _name = "sync2",
         _requiresSyncApprovedUser = true,
         config = dailySyncConfig,
+        syncTag = DAILY,
         pullError = exception,
     )
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val dataSync = DataSync(
@@ -534,19 +571,22 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = dailySyncConfig,
+        syncTag = DAILY
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
         config = dailySyncConfig,
+        syncTag = DAILY,
         pullError = RuntimeException("TEST"),
     )
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val dataSync = DataSync(
@@ -581,19 +621,22 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = dailySyncConfig,
+        syncTag = DAILY
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
         config = dailySyncConfig,
+        syncTag = DAILY,
         pullError = RuntimeException("TEST"),
     )
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val dataSync = DataSync(
@@ -621,7 +664,8 @@ class DataSyncTest {
   fun `when syncing a group, if multiple syncs throws an error, the overall sync result must be a failure`() {
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = frequentSyncConfig
+        config = frequentSyncConfig,
+        syncTag = FREQUENT
     )
 
     val runtimeException = RuntimeException("TEST")
@@ -630,12 +674,14 @@ class DataSyncTest {
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         config = frequentSyncConfig,
+        syncTag = FREQUENT,
         pullError = runtimeException
     )
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
         config = frequentSyncConfig,
+        syncTag = FREQUENT,
         pushError = ioException
     )
 
@@ -657,7 +703,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync.sync(SyncTag.FREQUENT)
+    dataSync.sync(FREQUENT)
 
     syncErrors
         .assertValue(ErrorResolver.resolve(ioException)) // IOException because it is a push error and pushes are executed first
@@ -666,8 +712,8 @@ class DataSyncTest {
 
     syncResults
         .assertValues(
-            DataSync.SyncGroupResult(SyncTag.FREQUENT, SyncProgress.SYNCING),
-            DataSync.SyncGroupResult(SyncTag.FREQUENT, SyncProgress.FAILURE)
+            DataSync.SyncGroupResult(FREQUENT, SyncProgress.SYNCING),
+            DataSync.SyncGroupResult(FREQUENT, SyncProgress.FAILURE)
         )
         .assertNoErrors()
         .dispose()
@@ -677,6 +723,7 @@ class DataSyncTest {
       _name: String,
       _requiresSyncApprovedUser: Boolean = false,
       private val config: SyncConfig,
+      private val syncTag: SyncTag,
       private val pushError: Throwable? = null,
       private val pullError: Throwable? = null,
   ) : ModelSync {
@@ -702,5 +749,7 @@ class DataSyncTest {
     }
 
     override fun syncConfig(): SyncConfig = config
+
+    override fun syncTag() = syncTag
   }
 }

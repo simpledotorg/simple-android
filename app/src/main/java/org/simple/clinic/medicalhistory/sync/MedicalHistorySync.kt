@@ -8,6 +8,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
+import org.simple.clinic.sync.SyncTag
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.read
 import javax.inject.Inject
@@ -41,6 +42,8 @@ class MedicalHistorySync @Inject constructor(
   }
 
   override fun syncConfig(): SyncConfig = config
+
+  override fun syncTag() = SyncTag.FREQUENT
 
   private fun toRequest(histories: List<MedicalHistory>): MedicalHistoryPushRequest {
     val payloads = histories

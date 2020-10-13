@@ -3,8 +3,8 @@ package org.simple.clinic.remoteconfig
 import io.reactivex.Completable
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
-import org.simple.clinic.sync.SyncTag
 import org.simple.clinic.sync.SyncInterval
+import org.simple.clinic.sync.SyncTag
 import javax.inject.Inject
 
 class RemoteConfigSync @Inject constructor(
@@ -32,4 +32,6 @@ class RemoteConfigSync @Inject constructor(
         syncTag = SyncTag.FREQUENT
     )
   }
+
+  override fun syncTag() = SyncTag.FREQUENT
 }

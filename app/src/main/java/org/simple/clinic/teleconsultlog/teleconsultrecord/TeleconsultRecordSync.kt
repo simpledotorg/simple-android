@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
+import org.simple.clinic.sync.SyncTag
 import org.simple.clinic.util.read
 import javax.inject.Inject
 import javax.inject.Named
@@ -81,4 +82,6 @@ class TeleconsultRecordSync @Inject constructor(
       null
     }
   }
+
+  override fun syncTag() = SyncTag.FREQUENT
 }

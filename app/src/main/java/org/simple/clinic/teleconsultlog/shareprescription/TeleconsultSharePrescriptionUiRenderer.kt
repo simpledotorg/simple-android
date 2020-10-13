@@ -8,6 +8,14 @@ class TeleconsultSharePrescriptionUiRenderer(
   override fun render(model: TeleconsultSharePrescriptionModel) {
     renderPatientInformation(model)
     downloadButtonVisibility(model)
+    shareButtonVisibility(model)
+  }
+
+  private fun shareButtonVisibility(model: TeleconsultSharePrescriptionModel) {
+    if (model.isPrescriptionSharing)
+      ui.showShareProgress()
+    else
+      ui.hideShareProgress()
   }
 
   private fun downloadButtonVisibility(model: TeleconsultSharePrescriptionModel) {

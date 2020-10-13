@@ -19,9 +19,9 @@ class TeleconsultSharePrescriptionUpdate : Update<TeleconsultSharePrescriptionMo
       PrescriptionImageSaved -> next(model.downloadCompleted(), ShowImageSavedToast)
       DoneClicked -> dispatch(GoToHomeScreen)
       is PatientProfileLoaded -> next(model.patientProfileLoaded(event.patientProfile))
-      is ShareClicked -> dispatch(SharePrescriptionAsImage(event.bitmap))
+      is ShareClicked -> next(model.sharing(), SharePrescriptionAsImage(event.bitmap))
       is PrescriptionSavedForSharing -> dispatch(RetrievePrescriptionImageUri(event.fileName))
-      is SharePrescriptionUri -> dispatch(OpenSharingDialog(event.imageUri))
+      is SharePrescriptionUri -> next(model.sharingCompleted(), OpenSharingDialog(event.imageUri))
       BackClicked -> dispatch(GoBack)
       ImageSavedMessageShown -> dispatch(GoToHomeScreen)
     }

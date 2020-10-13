@@ -18,6 +18,7 @@ class TeleconsultSharePrescriptionUiRendererTest {
   val model = TeleconsultSharePrescriptionModel
       .create(patientUuid = patientUuid, prescriptionDate = prescriptionDate)
 
+
   @Test
   fun `when patient profile details are loaded, then render the patient profile`() {
     // given

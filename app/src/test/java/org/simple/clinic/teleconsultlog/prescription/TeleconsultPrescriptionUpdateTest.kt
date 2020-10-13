@@ -128,7 +128,7 @@ class TeleconsultPrescriptionUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenSharePrescriptionScreen(
-                teleconsultRecordId = teleconsultRecordId,
+                patientUuid = patientUuid,
                 medicalInstructions = medicalInstructions
             ))
         ))

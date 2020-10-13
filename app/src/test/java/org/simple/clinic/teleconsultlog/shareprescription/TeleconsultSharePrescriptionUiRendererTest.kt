@@ -59,5 +59,4 @@ class TeleconsultSharePrescriptionUiRendererTest {
     verify(ui).renderPatientMedicines(medicines)
     verifyNoMoreInteractions(ui)
   }
-
 }

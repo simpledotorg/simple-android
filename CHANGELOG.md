@@ -10,7 +10,7 @@
 - Bump Android Gradle Plugin version to 4.0.2
 - Add method to `AppDatabase` to clear all patient data not in the current sync group
 
-## On Demo
+## 2020-10-13-7476
 ## Features
 - Add `TeleconsultPrescriptionScreen`
 - Add `TeleconsultSharePrescriptionScreen` 

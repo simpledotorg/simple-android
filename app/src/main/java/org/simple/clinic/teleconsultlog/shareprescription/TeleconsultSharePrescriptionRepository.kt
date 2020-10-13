@@ -62,7 +62,7 @@ class TeleconsultSharePrescriptionRepository @Inject constructor(
       }
       return contentUri
     } else {
-      val filePath = File(Environment.getExternalStorageDirectory().absolutePath + Environment.DIRECTORY_DOWNLOADS + fileName)
+      val filePath = File(Environment.getExternalStorageDirectory().absolutePath + "/${Environment.DIRECTORY_DOWNLOADS}/$fileName")
       contentUri = FileProvider.getUriForFile(appContext, "${appContext.packageName}.provider", filePath)
       return contentUri
     }

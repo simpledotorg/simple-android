@@ -35,6 +35,8 @@ class TeleconsultSharePrescriptionUiRendererTest {
     // then
     verify(ui).renderPatientInformation(patientProfile)
     verify(ui).renderPrescriptionDate(prescriptionDate = prescriptionDate)
+    verify(ui).hideDownloadProgress()
+    verify(ui).hideShareProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -58,6 +60,8 @@ class TeleconsultSharePrescriptionUiRendererTest {
 
     // then
     verify(ui).renderPatientMedicines(medicines)
+    verify(ui).hideDownloadProgress()
+    verify(ui).hideShareProgress()
     verifyNoMoreInteractions(ui)
   }
 }

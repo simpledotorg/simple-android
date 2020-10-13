@@ -14,8 +14,7 @@ class SyncConfigModule {
   fun frequentSyncConfig(syncModuleConfig: SyncModuleConfig): SyncConfig {
     return SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
-        batchSize = syncModuleConfig.frequentSyncBatchSize,
-        syncTag = SyncTag.FREQUENT
+        batchSize = syncModuleConfig.frequentSyncBatchSize
     )
   }
 
@@ -24,8 +23,7 @@ class SyncConfigModule {
   fun dailySyncConfig(syncModuleConfig: SyncModuleConfig): SyncConfig {
     return SyncConfig(
         syncInterval = SyncInterval.DAILY,
-        batchSize = syncModuleConfig.dailySyncBatchSize,
-        syncTag = SyncTag.DAILY
+        batchSize = syncModuleConfig.dailySyncBatchSize
     )
   }
 

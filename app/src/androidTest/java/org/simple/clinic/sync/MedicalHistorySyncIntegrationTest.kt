@@ -60,8 +60,7 @@ class MedicalHistorySyncIntegrationTest {
   private val batchSize = 3
   private val config = SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
-      batchSize = batchSize,
-      syncTag = SyncTag.FREQUENT
+      batchSize = batchSize
   )
 
   @Before

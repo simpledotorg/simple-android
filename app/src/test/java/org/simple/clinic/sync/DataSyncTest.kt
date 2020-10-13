@@ -28,14 +28,12 @@ class DataSyncTest {
 
   private val frequentSyncConfig = SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
-      batchSize = 10,
-      syncTag = FREQUENT
+      batchSize = 10
   )
 
   private val dailySyncConfig = SyncConfig(
       syncInterval = SyncInterval.DAILY,
-      batchSize = 10,
-      syncTag = DAILY
+      batchSize = 10
   )
 
   @Test

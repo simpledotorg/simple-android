@@ -11,4 +11,6 @@ interface TeleconsultSharePrescriptionUi {
   fun renderPatientMedicines(medicines: List<PrescribedDrug>)
   fun showDownloadProgress()
   fun hideDownloadProgress()
+  fun showShareProgress()
+  fun hideShareProgress()
 }

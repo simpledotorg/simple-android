@@ -230,6 +230,14 @@ class TeleconsultSharePrescriptionScreen constructor(
     downloadButton.setButtonState(Enabled)
   }
 
+  override fun showShareProgress() {
+    shareButton.setButtonState(InProgress)
+  }
+
+  override fun hideShareProgress() {
+    shareButton.setButtonState(Enabled)
+  }
+
   private fun getScaledBitmap(width: Int, height: Int, view: View): Bitmap {
     val targetWidth = 1500f
     val sourceWidth = width.toFloat()

@@ -15,9 +15,8 @@ import org.junit.runner.RunWith
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.DataSync.SyncGroupResult
 import org.simple.clinic.sync.LastSyncedState
-import org.simple.clinic.sync.SyncGroup
-import org.simple.clinic.sync.SyncGroup.DAILY
-import org.simple.clinic.sync.SyncGroup.FREQUENT
+import org.simple.clinic.sync.SyncTag.DAILY
+import org.simple.clinic.sync.SyncTag.FREQUENT
 import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS

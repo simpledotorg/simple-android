@@ -15,7 +15,7 @@ class SyncConfigModule {
     return SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
         batchSize = syncModuleConfig.frequentSyncBatchSize,
-        syncGroup = SyncGroup.FREQUENT
+        syncTag = SyncTag.FREQUENT
     )
   }
 
@@ -25,7 +25,7 @@ class SyncConfigModule {
     return SyncConfig(
         syncInterval = SyncInterval.DAILY,
         batchSize = syncModuleConfig.dailySyncBatchSize,
-        syncGroup = SyncGroup.DAILY
+        syncTag = SyncTag.DAILY
     )
   }
 

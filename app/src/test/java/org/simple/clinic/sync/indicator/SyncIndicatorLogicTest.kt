@@ -22,7 +22,7 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
-import org.simple.clinic.sync.SyncGroup.FREQUENT
+import org.simple.clinic.sync.SyncTag.FREQUENT
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS
 import org.simple.clinic.sync.SyncProgress.SYNCING

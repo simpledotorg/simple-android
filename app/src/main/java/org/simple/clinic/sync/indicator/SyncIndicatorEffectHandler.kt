@@ -10,7 +10,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.combineLatest
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
-import org.simple.clinic.sync.SyncGroup
+import org.simple.clinic.sync.SyncTag
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.interval
@@ -91,7 +91,7 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
   private fun startDataSync(): ObservableTransformer<InitiateDataSync, SyncIndicatorEvent> {
     return ObservableTransformer { effect ->
       effect
-          .doOnNext { dataSync.fireAndForgetSync(SyncGroup.FREQUENT) }
+          .doOnNext { dataSync.fireAndForgetSync(SyncTag.FREQUENT) }
           // We are listening for errors here after the data sync is initiated.
           // This is applicable for manual sync triggers only.
           .switchMap { dataSync.streamSyncErrors() }

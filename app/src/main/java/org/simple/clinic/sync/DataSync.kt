@@ -65,23 +65,23 @@ class DataSync(
   private val syncErrors = PublishSubject.create<ResolvedError>()
 
   private fun allSyncs(): Completable {
-    val syncAllGroups = SyncGroup
+    val syncAllGroups = SyncTag
         .values()
         .map(::syncsForGroup)
 
     return Completable.merge(syncAllGroups)
   }
 
-  private fun syncsForGroup(syncGroup: SyncGroup): Completable {
-    val syncsInGroup = modelSyncs.filter { it.syncConfig().syncGroup == syncGroup }
+  private fun syncsForGroup(syncTag: SyncTag): Completable {
+    val syncsInGroup = modelSyncs.filter { it.syncConfig().syncTag == syncTag }
 
     return Single
         .fromCallable { userSession.loggedInUserImmediate().toOptional() }
         .subscribeOn(schedulersProvider.io())
         .compose(filterSyncsThatRequireAuthentication(syncsInGroup))
         .compose(prepareTasksFromSyncs())
-        .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
-        .doOnSuccess { syncResults -> syncCompleted(syncResults, syncGroup) }
+        .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncTag, SyncProgress.SYNCING)) }
+        .doOnSuccess { syncResults -> syncCompleted(syncResults, syncTag) }
         .ignoreElement()
   }
 
@@ -129,17 +129,17 @@ class DataSync(
 
   private fun syncCompleted(
       syncResults: List<SyncResult>,
-      syncGroup: SyncGroup
+      syncTag: SyncTag
   ) {
     val firstFailure = syncResults.firstOrNull { it is SyncResult.Failed }
 
     if (firstFailure != null) {
-      syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE))
+      syncProgress.onNext(SyncGroupResult(syncTag, SyncProgress.FAILURE))
 
       val resolvedError = (firstFailure as SyncResult.Failed).error
       syncErrors.onNext(resolvedError)
     } else {
-      syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SUCCESS))
+      syncProgress.onNext(SyncGroupResult(syncTag, SyncProgress.SUCCESS))
     }
   }
 
@@ -204,23 +204,23 @@ class DataSync(
   }
 
   @WorkerThread
-  fun sync(syncGroup: SyncGroup) {
-    syncsForGroup(syncGroup).blockingAwait()
+  fun sync(syncTag: SyncTag) {
+    syncsForGroup(syncTag).blockingAwait()
   }
 
   fun fireAndForgetSync() {
     allSyncs().subscribe()
   }
 
-  fun fireAndForgetSync(syncGroup: SyncGroup) {
-    syncsForGroup(syncGroup).subscribe()
+  fun fireAndForgetSync(syncTag: SyncTag) {
+    syncsForGroup(syncTag).subscribe()
   }
 
   fun streamSyncResults(): Observable<SyncGroupResult> = syncProgress
 
   fun streamSyncErrors(): Observable<ResolvedError> = syncErrors
 
-  data class SyncGroupResult(val syncGroup: SyncGroup, val syncProgress: SyncProgress)
+  data class SyncGroupResult(val syncTag: SyncTag, val syncProgress: SyncProgress)
 
   private sealed class SyncResult(val sync: ModelSync) {
 

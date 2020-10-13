@@ -16,7 +16,7 @@ import org.simple.clinic.settings.ProvidedLanguage
 import org.simple.clinic.settings.SettingsRepository
 import org.simple.clinic.settings.SystemDefaultLanguage
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.sync.SyncGroup
+import org.simple.clinic.sync.SyncTag
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 
 class ChangeLanguageEffectHandlerTest {
@@ -110,7 +110,7 @@ class ChangeLanguageEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(dataSync).fireAndForgetSync(SyncGroup.DAILY)
+    verify(dataSync).fireAndForgetSync(SyncTag.DAILY)
     verifyZeroInteractions(uiActions)
   }
 

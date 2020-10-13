@@ -21,7 +21,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.sync.SyncGroup.FREQUENT
+import org.simple.clinic.sync.SyncTag.FREQUENT
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional

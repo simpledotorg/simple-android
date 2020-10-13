@@ -3,7 +3,7 @@ package org.simple.clinic.di
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.sync.SyncConfig
-import org.simple.clinic.sync.SyncGroup
+import org.simple.clinic.sync.SyncTag
 import org.simple.clinic.sync.SyncInterval
 import javax.inject.Named
 
@@ -16,7 +16,7 @@ class TestSyncConfigModule {
     return SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
         batchSize = 1000,
-        syncGroup = SyncGroup.FREQUENT
+        syncTag = SyncTag.FREQUENT
     )
   }
 
@@ -26,7 +26,7 @@ class TestSyncConfigModule {
     return SyncConfig(
         syncInterval = SyncInterval.DAILY,
         batchSize = 1000,
-        syncGroup = SyncGroup.DAILY
+        syncTag = SyncTag.DAILY
     )
   }
 }

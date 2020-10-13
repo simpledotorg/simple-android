@@ -7,7 +7,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.settings.SettingsRepository
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.sync.SyncGroup.DAILY
+import org.simple.clinic.sync.SyncTag.DAILY
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class ChangeLanguageEffectHandler @AssistedInject constructor(

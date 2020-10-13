@@ -16,7 +16,7 @@ class SyncWorker(context: Context, private val workerParams: WorkerParameters) :
     fun createWorkDataForSyncConfig(syncConfig: SyncConfig): Data {
       return Data
           .Builder()
-          .putString(SYNC_GROUP, syncConfig.syncGroup.name)
+          .putString(SYNC_GROUP, syncConfig.syncTag.name)
           .build()
     }
 
@@ -47,7 +47,7 @@ class SyncWorker(context: Context, private val workerParams: WorkerParameters) :
     if (syncGroup == NO_GROUP) {
       dataSync.syncTheWorld()
     } else {
-      dataSync.sync(SyncGroup.valueOf(syncGroup))
+      dataSync.sync(SyncTag.valueOf(syncGroup))
     }
   }
 }

@@ -14,7 +14,7 @@ import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
-import org.simple.clinic.sync.SyncGroup
+import org.simple.clinic.sync.SyncTag
 import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUtcClock
@@ -48,7 +48,7 @@ class TeleconsultRecordSyncIntegrationTest {
   private val config = SyncConfig(
       syncInterval = SyncInterval.DAILY,
       batchSize = batchSize,
-      syncGroup = SyncGroup.DAILY
+      syncTag = SyncTag.DAILY
   )
 
   @Before

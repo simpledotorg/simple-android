@@ -10,7 +10,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.sync.SyncGroup.FREQUENT
+import org.simple.clinic.sync.SyncTag.FREQUENT
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
 import java.util.UUID

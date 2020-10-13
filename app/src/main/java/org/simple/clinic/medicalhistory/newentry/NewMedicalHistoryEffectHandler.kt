@@ -11,7 +11,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.sync.SyncGroup.FREQUENT
+import org.simple.clinic.sync.SyncTag.FREQUENT
 import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator

@@ -27,13 +27,13 @@ class DataSyncTest {
   private val frequentSyncConfig = SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
       batchSize = 10,
-      syncGroup = SyncGroup.FREQUENT
+      syncTag = SyncTag.FREQUENT
   )
 
   private val dailySyncConfig = SyncConfig(
       syncInterval = SyncInterval.DAILY,
       batchSize = 10,
-      syncGroup = SyncGroup.DAILY
+      syncTag = SyncTag.DAILY
   )
 
   @Test
@@ -146,7 +146,7 @@ class DataSyncTest {
         .streamSyncErrors()
         .test()
 
-    dataSync.sync(SyncGroup.FREQUENT)
+    dataSync.sync(SyncTag.FREQUENT)
 
     syncErrors
         .assertNoErrors()
@@ -191,7 +191,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync.sync(SyncGroup.DAILY)
+    dataSync.sync(SyncTag.DAILY)
 
     syncErrors
         .assertValue(ResolvedError.Unexpected(runtimeException))
@@ -657,7 +657,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync.sync(SyncGroup.FREQUENT)
+    dataSync.sync(SyncTag.FREQUENT)
 
     syncErrors
         .assertValue(ErrorResolver.resolve(ioException)) // IOException because it is a push error and pushes are executed first
@@ -666,8 +666,8 @@ class DataSyncTest {
 
     syncResults
         .assertValues(
-            DataSync.SyncGroupResult(SyncGroup.FREQUENT, SyncProgress.SYNCING),
-            DataSync.SyncGroupResult(SyncGroup.FREQUENT, SyncProgress.FAILURE)
+            DataSync.SyncGroupResult(SyncTag.FREQUENT, SyncProgress.SYNCING),
+            DataSync.SyncGroupResult(SyncTag.FREQUENT, SyncProgress.FAILURE)
         )
         .assertNoErrors()
         .dispose()

@@ -49,7 +49,7 @@ class ProtocolSyncIntegrationTest {
   private val config = SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
       batchSize = batchSize,
-      syncGroup = SyncGroup.FREQUENT
+      syncTag = SyncTag.FREQUENT
   )
 
   @Before

@@ -1,6 +1,6 @@
 package org.simple.clinic.sync
 
-enum class SyncGroup {
+enum class SyncTag {
   FREQUENT,
   DAILY
 }

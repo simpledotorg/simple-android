@@ -21,8 +21,8 @@ class SyncScheduler @Inject constructor(
     return Observable
         .fromIterable(syncs)
         .map { it.syncConfig() }
-        .distinct { it.syncTag }
-        .map { config -> createWorkRequest(config) to config.syncTag.name }
+        .distinct { it.syncInterval }
+        .map { config -> createWorkRequest(config) to config.syncInterval.name }
         .toList()
         .doOnSuccess { cancelPreviouslyScheduledPeriodicWork() }
         .flatMapCompletable(this::scheduleWorkRequests)

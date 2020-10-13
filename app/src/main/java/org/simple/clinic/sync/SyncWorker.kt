@@ -16,7 +16,7 @@ class SyncWorker(context: Context, private val workerParams: WorkerParameters) :
     fun createWorkDataForSyncConfig(syncConfig: SyncConfig): Data {
       return Data
           .Builder()
-          .putString(SYNC_GROUP, syncConfig.syncTag.name)
+          .putString(SYNC_GROUP, syncConfig.syncInterval.name)
           .build()
     }
 

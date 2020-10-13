@@ -6,27 +6,18 @@
 
 ## Internal
 - Add `syncGroup` property to the `Facility` resource
-- Show medicines required error in `TeleconsultPrescriptionScreen`
-- Remove `TeleconsultationApi` & load medical officers from `MedicalOfficer` table
 - Remove custom WorkManager initializer
 - Bump Android Gradle Plugin version to 4.0.2
 - Add method to `AppDatabase` to clear all patient data not in the current sync group
-- Request storage permission when downloading or sharing prescription
-- Fix small UI inconsistencies in share prescription screen
-- Hide keyboard when exiting from `TeleconsultPrescriptionScreen`
-- Add file provider for sharing prescription image below Android 10
-
-## Features
-- Add `TeleconsultSharePrescriptionScreen` 
-- Fix prescribed drug frequency type adapter
 
 ## On Demo
 ## Features
 - Add `TeleconsultPrescriptionScreen`
-- Switch the positions of the teleconsultation and Save buttons in the `PatientSummaryScreen`
+- Add `TeleconsultSharePrescriptionScreen` 
 
 ## Changes
 - Updated translations: `bn-IN`, `ti-ET`, `bn-BD`, `ta-IN`, `pa-IN`, `kn-IN`, `mr-IN`
+- Switch the positions of the teleconsultation and Save buttons in the `PatientSummaryScreen`
 
 ### Internal
 - Remove `PrescribedDrugs` from `TeleconsultRecord`
@@ -42,6 +33,13 @@
 - Change `RemoteConfigService` to pull updates synchronously
 - Stop injecting screens in `TheActivity` via the static component
 - Add support for sending teleconsult request via SMS
+- Show medicines required error in `TeleconsultPrescriptionScreen`
+- Remove `TeleconsultationApi` & load medical officers from `MedicalOfficer` table
+- Fix prescribed drug frequency type adapter
+- Request storage permission when downloading or sharing prescription
+- Fix small UI inconsistencies in share prescription screen
+- Hide keyboard when exiting from `TeleconsultPrescriptionScreen`
+- Add file provider for sharing prescription image below Android 10
 
 ### Fixes
 - Fix deeplink screens & warning dialogs displaying again after activity restart.

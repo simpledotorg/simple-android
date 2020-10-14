@@ -53,12 +53,16 @@ class ProgressMaterialButton(
         icon = buttonIcon
         text = buttonText
         iconGravity = buttonIconGravity
+
+        progressDrawable.stop()
       }
       ButtonState.Disabled -> {
         isEnabled = false
         icon = buttonIcon
         text = buttonText
         iconGravity = buttonIconGravity
+
+        progressDrawable.stop()
       }
     }
     this.buttonState = buttonState

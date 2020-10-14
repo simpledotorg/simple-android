@@ -51,3 +51,5 @@ data class SharePrescriptionUri(val imageUri: Uri) : TeleconsultSharePrescriptio
 object BackClicked : TeleconsultSharePrescriptionEvent() {
   override val analyticsName: String = "Share Prescription Screen:Back Clicked"
 }
+
+object ImageSavedMessageShown : TeleconsultSharePrescriptionEvent()

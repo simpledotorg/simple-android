@@ -9,4 +9,5 @@ interface TeleconsultSharePrescriptionUiActions {
   fun openHomeScreen()
   fun sharePrescriptionAsImage(imageUri: Uri)
   fun goToPreviousScreen()
+  fun showImageSavedToast()
 }

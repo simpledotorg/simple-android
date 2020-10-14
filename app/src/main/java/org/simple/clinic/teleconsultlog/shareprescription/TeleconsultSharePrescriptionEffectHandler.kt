@@ -44,6 +44,7 @@ class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
         .addTransformer(RetrievePrescriptionImageUri::class.java, loadPrescriptionImageUri())
         .addConsumer(OpenSharingDialog::class.java, { uiActions.sharePrescriptionAsImage(it.imageUri) }, schedulersProvider.ui())
         .addAction(GoBack::class.java, { uiActions.goToPreviousScreen() }, schedulersProvider.ui())
+        .addAction(ShowImageSavedToast::class.java, uiActions::showImageSavedToast, schedulersProvider.ui())
         .build()
   }
 

@@ -117,14 +117,14 @@ class TeleconsultSharePrescriptionUpdateTest {
   }
 
   @Test
-  fun `when the prescription is downloaded and saved, go to home screen`() {
+  fun `when the prescription is downloaded and saved, then show image saved toast`() {
     updateSpec
         .given(model)
         .whenEvents(PrescriptionImageSaved)
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(GoToHomeScreen)
+                hasEffects(ShowImageSavedToast)
             )
         )
   }
@@ -185,5 +185,16 @@ class TeleconsultSharePrescriptionUpdateTest {
                 hasEffects(GoBack)
             )
         )
+  }
+
+  @Test
+  fun `when images saved message is shown, then navigate to home screen`() {
+    updateSpec
+        .given(model)
+        .whenEvent(ImageSavedMessageShown)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToHomeScreen)
+        ))
   }
 }

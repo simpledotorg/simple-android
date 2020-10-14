@@ -164,7 +164,7 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
 
     // when
     effectHandlerTestCase.dispatch(SaveBitmapInExternalStorage(prescriptionBitmap))
-    
+
     // then
     effectHandlerTestCase.assertOutgoingEvents(PrescriptionImageSaved)
     verifyZeroInteractions(uiActions)
@@ -215,6 +215,17 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
     verify(uiActions).goToPreviousScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when show image saved toast effect is received, then show image saved toast`() {
+    // when
+    effectHandlerTestCase.dispatch(ShowImageSavedToast)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).showImageSavedToast()
     verifyNoMoreInteractions(uiActions)
   }
 }

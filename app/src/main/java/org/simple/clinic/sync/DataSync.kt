@@ -39,7 +39,7 @@ private fun createScheduler(workers: Int): Scheduler {
 
 @AppScope
 class DataSync(
-    private val modelSyncs: ArrayList<ModelSync>,
+    private val modelSyncs: List<ModelSync>,
     private val crashReporter: CrashReporter,
     private val userSession: UserSession,
     private val schedulersProvider: SchedulersProvider,
@@ -48,7 +48,7 @@ class DataSync(
 
   @Inject
   constructor(
-      modelSyncs: ArrayList<ModelSync>,
+      modelSyncs: List<@JvmSuppressWildcards ModelSync>,
       crashReporter: CrashReporter,
       userSession: UserSession,
       schedulersProvider: SchedulersProvider,

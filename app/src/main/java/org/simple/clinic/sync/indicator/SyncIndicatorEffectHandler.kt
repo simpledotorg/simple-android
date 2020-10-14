@@ -24,7 +24,7 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
     private val syncIndicatorConfig: SyncIndicatorConfig,
     private val schedulersProvider: SchedulersProvider,
     private val dataSync: DataSync,
-    @Named("frequently_syncing_repositories") private val frequentlySyncingRepositories: ArrayList<SynceableRepository<*, *>>,
+    @Named("frequently_syncing_repositories") private val frequentlySyncingRepositories: List<@JvmSuppressWildcards SynceableRepository<*, *>>,
     @Assisted private val uiActions: SyncIndicatorUiActions
 ) {
 

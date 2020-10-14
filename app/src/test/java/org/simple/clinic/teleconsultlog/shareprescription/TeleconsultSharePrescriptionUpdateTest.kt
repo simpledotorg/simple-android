@@ -117,14 +117,14 @@ class TeleconsultSharePrescriptionUpdateTest {
   }
 
   @Test
-  fun `when the prescription is downloaded and saved, go to home screen`() {
+  fun `when the prescription is downloaded and saved, then show image saved toast and go to home screen`() {
     updateSpec
         .given(model)
         .whenEvents(PrescriptionImageSaved)
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(GoToHomeScreen)
+                hasEffects(ShowImageSavedToast, GoToHomeScreen)
             )
         )
   }

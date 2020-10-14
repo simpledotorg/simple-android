@@ -205,7 +205,7 @@
     android:paddingBottom="@dimen/spacing_16"
     app:layout_constraintBottom_toBottomOf="parent">
 
-    <com.google.android.material.button.MaterialButton
+    <org.simple.clinic.widgets.ProgressMaterialButton
       android:id="@+id/downloadButton"
       style="?attr/materialButtonStyle"
       android:layout_width="0dp"
@@ -215,6 +215,7 @@
       android:layout_marginBottom="@dimen/spacing_16"
       android:text="@string/screen_teleconsult_share_prescription_download"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+      app:buttonState="in-progress"
       app:icon="@drawable/ic_prescription_download"
       app:iconGravity="textStart"
       app:layout_constraintEnd_toStartOf="@+id/shareButton"
@@ -222,7 +223,7 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="@+id/buttonFrame" />
 
-    <com.google.android.material.button.MaterialButton
+    <org.simple.clinic.widgets.ProgressMaterialButton
       android:id="@+id/shareButton"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
@@ -232,6 +233,7 @@
       android:text="@string/screen_teleconsult_share_prescription_share"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       app:backgroundTint="@color/contact_doctor_button"
+      app:buttonState="in-progress"
       app:icon="@drawable/ic_whatsapp"
       app:iconTint="@android:color/white"
       app:layout_constraintBottom_toTopOf="@+id/doneButton"

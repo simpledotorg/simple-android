@@ -9,4 +9,8 @@ interface TeleconsultSharePrescriptionUi {
   fun renderPrescriptionDate(prescriptionDate: LocalDate)
   fun renderPatientInformation(patientProfile: PatientProfile)
   fun renderPatientMedicines(medicines: List<PrescribedDrug>)
+  fun showDownloadProgress()
+  fun hideDownloadProgress()
+  fun showShareProgress()
+  fun hideShareProgress()
 }

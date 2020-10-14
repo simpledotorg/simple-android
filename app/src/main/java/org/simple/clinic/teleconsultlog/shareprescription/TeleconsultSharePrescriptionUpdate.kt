@@ -16,13 +16,14 @@ class TeleconsultSharePrescriptionUpdate : Update<TeleconsultSharePrescriptionMo
       is SignatureLoaded -> dispatch(SetSignature(event.bitmap))
       is MedicalRegistrationIdLoaded -> next(model.medicalRegistrationIdLoaded(event.medicalRegistrationId), SetMedicalRegistrationId(event.medicalRegistrationId))
       is DownloadClicked -> dispatch(SaveBitmapInExternalStorage(event.bitmap))
-      PrescriptionImageSaved -> dispatch(ShowImageSavedToast, GoToHomeScreen)
+      PrescriptionImageSaved -> dispatch(ShowImageSavedToast)
       DoneClicked -> dispatch(GoToHomeScreen)
       is PatientProfileLoaded -> next(model.patientProfileLoaded(event.patientProfile))
       is ShareClicked -> dispatch(SharePrescriptionAsImage(event.bitmap))
       is PrescriptionSavedForSharing -> dispatch(RetrievePrescriptionImageUri(event.fileName))
       is SharePrescriptionUri -> dispatch(OpenSharingDialog(event.imageUri))
       BackClicked -> dispatch(GoBack)
+      ImageSavedMessageShown -> dispatch(GoToHomeScreen)
     }
   }
 }

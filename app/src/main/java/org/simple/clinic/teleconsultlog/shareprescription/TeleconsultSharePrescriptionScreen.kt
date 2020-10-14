@@ -15,6 +15,7 @@ import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.screen_teleconsult_share_prescription.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -68,13 +69,15 @@ class TeleconsultSharePrescriptionScreen constructor(
     screenRouter.key<TeleconsultSharePrescriptionScreenKey>(this)
   }
 
+  private val imageSavedMessageEvents = PublishSubject.create<UiEvent>()
   private val events: Observable<UiEvent> by unsafeLazy {
     Observable
-        .merge(
+        .mergeArray(
             downloadClicks(),
             shareClicks(),
             doneClicks(),
-            backClicks()
+            backClicks(),
+            imageSavedMessageEvents
         )
         .compose(RequestPermissions(runtimePermissions, screenRouter.streamScreenResults().ofType()))
         .compose(ReportAnalyticsEvents())
@@ -213,6 +216,8 @@ class TeleconsultSharePrescriptionScreen constructor(
   override fun showImageSavedToast() {
     val message = context.getString(R.string.screen_teleconsult_share_prescription_image_saved)
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+
+    imageSavedMessageEvents.onNext(ImageSavedMessageShown)
   }
 
   private fun getScaledBitmap(width: Int, height: Int, view: View): Bitmap {

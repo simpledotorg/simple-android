@@ -202,10 +202,20 @@ class DataSync(
     }.exhaustive()
   }
 
+  private fun purgeOnCompletedSyncs(): SingleTransformer<List<SyncResult>, List<SyncResult>> {
+    return SingleTransformer { syncResultsStream ->
+      syncResultsStream
+          .doOnSuccess { syncResults -> if (syncResults.haveAllCompleted()) purgeOnSync.purgeUnusedData() }
+    }
+  }
+
   @WorkerThread
   @Throws(IOException::class) // This is only needed so Mockito can generate mocks for this method correctly
   fun syncTheWorld() {
-    allSyncs().ignoreElement().blockingAwait()
+    allSyncs()
+        .compose(purgeOnCompletedSyncs())
+        .ignoreElement()
+        .blockingAwait()
   }
 
   @WorkerThread
@@ -214,7 +224,9 @@ class DataSync(
   }
 
   fun fireAndForgetSync() {
-    allSyncs().subscribe()
+    allSyncs()
+        .compose(purgeOnCompletedSyncs())
+        .subscribe()
   }
 
   fun fireAndForgetSync(syncGroup: SyncGroup) {
@@ -237,5 +249,9 @@ class DataSync(
         private val _sync: ModelSync,
         val error: ResolvedError
     ) : SyncResult(_sync)
+  }
+
+  private fun Iterable<SyncResult>.haveAllCompleted(): Boolean {
+    return all { it is SyncResult.Completed }
   }
 }

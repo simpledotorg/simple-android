@@ -18,6 +18,7 @@ class TeleconsultSharePrescriptionUiRendererTest {
   val model = TeleconsultSharePrescriptionModel
       .create(patientUuid = patientUuid, prescriptionDate = prescriptionDate)
 
+
   @Test
   fun `when patient profile details are loaded, then render the patient profile`() {
     // given
@@ -34,6 +35,8 @@ class TeleconsultSharePrescriptionUiRendererTest {
     // then
     verify(ui).renderPatientInformation(patientProfile)
     verify(ui).renderPrescriptionDate(prescriptionDate = prescriptionDate)
+    verify(ui).hideDownloadProgress()
+    verify(ui).hideShareProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -57,7 +60,68 @@ class TeleconsultSharePrescriptionUiRendererTest {
 
     // then
     verify(ui).renderPatientMedicines(medicines)
+    verify(ui).hideDownloadProgress()
+    verify(ui).hideShareProgress()
     verifyNoMoreInteractions(ui)
   }
 
+  @Test
+  fun `when download button state is in progress, then set the button state as downloading`() {
+    // given
+    val model = model
+        .downloading()
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showDownloadProgress()
+    verify(ui).hideShareProgress()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when share button state is in progress, then set the button state as sharing`() {
+    // given
+    val model = model
+        .sharing()
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showShareProgress()
+    verify(ui).hideDownloadProgress()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when download button state is completed, then set the button state as download completed`() {
+    // given
+    val model = model
+        .downloadCompleted()
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideDownloadProgress()
+    verify(ui).hideShareProgress()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when share button state is completed, then set the button state as share completed`() {
+    // given
+    val model = model
+        .sharingCompleted()
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideShareProgress()
+    verify(ui).hideDownloadProgress()
+    verifyNoMoreInteractions(ui)
+  }
 }

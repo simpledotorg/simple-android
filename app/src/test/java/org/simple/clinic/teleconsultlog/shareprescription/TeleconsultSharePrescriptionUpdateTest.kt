@@ -110,7 +110,7 @@ class TeleconsultSharePrescriptionUpdateTest {
         .whenEvents(DownloadClicked(bitmap))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.downloading()),
                 hasEffects(SaveBitmapInExternalStorage(bitmap))
             )
         )
@@ -123,7 +123,7 @@ class TeleconsultSharePrescriptionUpdateTest {
         .whenEvents(PrescriptionImageSaved)
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.downloadCompleted()),
                 hasEffects(ShowImageSavedToast)
             )
         )
@@ -138,7 +138,7 @@ class TeleconsultSharePrescriptionUpdateTest {
         .whenEvents(ShareClicked(bitmap))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.sharing()),
                 hasEffects(SharePrescriptionAsImage(bitmap))
             )
         )
@@ -168,7 +168,7 @@ class TeleconsultSharePrescriptionUpdateTest {
         .whenEvents(SharePrescriptionUri(imageUri))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.sharingCompleted()),
                 hasEffects(OpenSharingDialog(imageUri))
             )
         )

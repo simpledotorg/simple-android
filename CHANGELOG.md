@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+## Features
+- Update download and share `MaterialButtons` in `TeleconsultSharePrescriptionScreen` to `ProgressMaterialButtons`
+
 ## Changes
 - Made "SMS Reminders" to be the default consent label on the patient screen unless otherwise specified on a country level
 - Show toast message after saving prescription image on device

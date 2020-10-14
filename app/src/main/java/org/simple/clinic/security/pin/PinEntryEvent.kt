@@ -17,3 +17,5 @@ data class PinAuthenticated(val data: Any?) : PinEntryEvent() {
 }
 
 data class PinVerified(val result: PinVerificationMethod.VerificationResult) : PinEntryEvent()
+
+object PinEntryDoneClicked : PinEntryEvent()

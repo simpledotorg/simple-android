@@ -7,10 +7,12 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.cardview.widget.CardView
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
+import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -62,7 +64,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     with(context.obtainStyledAttributes(attrs, R.styleable.PinEntryCardView)) {
       val methodIndex = getInt(R.styleable.PinEntryCardView_verificationMethod, -1)
 
-      if(methodIndex < 0) {
+      if (methodIndex < 0) {
         throw RuntimeException("No verification method defined!")
       }
       method = Method.values()[methodIndex]
@@ -72,7 +74,11 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   }
 
   private val events by unsafeLazy {
-    pinTextChanges()
+    Observable
+        .merge(
+            pinTextChanges(),
+            doneClicks()
+        )
         .compose(ReportAnalyticsEvents())
   }
 
@@ -129,6 +135,10 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
       pinEditText.textChanges()
           .map(CharSequence::toString)
           .map(::PinTextChanged)
+
+  private fun doneClicks() = pinEditText
+      .editorActions { it == EditorInfo.IME_ACTION_DONE }
+      .map { PinEntryDoneClicked }
 
   override fun setPinEntryMode(mode: PinEntryUi.Mode) {
     val transition = AutoTransition()

@@ -34,6 +34,7 @@
         android:id="@+id/pinEditText"
         style="@style/Clinic.StaggeredEditText.Pin"
         android:layout_gravity="center_horizontal"
+        android:imeOptions="actionDone"
         android:maxLength="4" />
 
       <LinearLayout

@@ -1,9 +1,6 @@
 # CHANGELOG
 
 ## Next Release
-## Features
-- Update download and share `MaterialButtons` in `TeleconsultSharePrescriptionScreen` to `ProgressMaterialButtons`
-
 ## Changes
 - Made "SMS Reminders" to be the default consent label on the patient screen unless otherwise specified on a country level
 - Show toast message after saving prescription image on device
@@ -13,6 +10,10 @@
 - Remove custom WorkManager initializer
 - Bump Android Gradle Plugin version to 4.0.2
 - Add method to `AppDatabase` to clear all patient data not in the current sync group
+- Update download and share `MaterialButtons` in `TeleconsultSharePrescriptionScreen` to `ProgressMaterialButtons`
+
+## Fixes
+- Fix app freeze when pressing enter/done with empty pin in lock screen
 
 ## 2020-10-13-7476
 ## Features

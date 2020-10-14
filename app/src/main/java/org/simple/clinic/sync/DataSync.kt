@@ -205,7 +205,11 @@ class DataSync(
   private fun purgeOnCompletedSyncs(): SingleTransformer<List<SyncResult>, List<SyncResult>> {
     return SingleTransformer { syncResultsStream ->
       syncResultsStream
-          .doOnSuccess { syncResults -> if (syncResults.haveAllCompleted()) purgeOnSync.purgeUnusedData() }
+          .doOnSuccess { syncResults ->
+            val shouldDeleteUnnecessaryRecords = syncResults.haveAllCompleted() && userSession.isUserPresentLocally()
+
+            if (shouldDeleteUnnecessaryRecords) purgeOnSync.purgeUnusedData()
+          }
     }
   }
 

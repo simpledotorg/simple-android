@@ -694,6 +694,8 @@ class DataSyncTest {
   @Test
   fun `when syncing a group, the unused data must never be purged`() {
     // given
+    whenever(userSession.isUserPresentLocally()).thenReturn(true)
+
     val modelSync1 = FakeModelSync(
         _name = "sync1",
         config = frequentSyncConfig
@@ -727,8 +729,9 @@ class DataSyncTest {
   }
 
   @Test
-  fun `when syncing everything, the unused data must be purged if all syncs completed successfully`() {
+  fun `when syncing everything and there is a user present locally, the unused data must be purged if all syncs completed successfully`() {
     // given
+    whenever(userSession.isUserPresentLocally()).thenReturn(true)
     val modelSync1 = FakeModelSync(
         _name = "sync1",
         config = frequentSyncConfig
@@ -763,8 +766,46 @@ class DataSyncTest {
   }
 
   @Test
+  fun `when syncing everything and there is no user present locally, the unused data must not be purged even if all syncs completed successfully`() {
+    // given
+    whenever(userSession.isUserPresentLocally()).thenReturn(false)
+    val modelSync1 = FakeModelSync(
+        _name = "sync1",
+        config = frequentSyncConfig
+    )
+
+    val modelSync2 = FakeModelSync(
+        _name = "sync2",
+        config = frequentSyncConfig
+    )
+
+    val modelSync3 = FakeModelSync(
+        _name = "sync3",
+        config = dailySyncConfig
+    )
+
+    val purgeOnSync = mock<PurgeOnSync>()
+    val dataSync = DataSync(
+        modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
+        crashReporter = mock(),
+        userSession = userSession,
+        schedulersProvider = schedulersProvider,
+        syncScheduler = schedulersProvider.io(),
+        purgeOnSync = purgeOnSync
+    )
+
+    // when
+    dataSync.syncTheWorld()
+
+    // then
+    verify(purgeOnSync, never()).purgeUnusedData()
+    verifyNoMoreInteractions(purgeOnSync)
+  }
+
+  @Test
   fun `if a pull operation fails when syncing everything, the unused data must not be purged`() {
     // given
+    whenever(userSession.isUserPresentLocally()).thenReturn(true)
     val modelSync1 = FakeModelSync(
         _name = "sync1",
         config = frequentSyncConfig,
@@ -802,6 +843,7 @@ class DataSyncTest {
   @Test
   fun `if a push operation fails when syncing everything, the unused data must not be purged`() {
     // given
+    whenever(userSession.isUserPresentLocally()).thenReturn(true)
     val modelSync1 = FakeModelSync(
         _name = "sync1",
         config = frequentSyncConfig

@@ -2,6 +2,7 @@ package org.simple.clinic.security.pin
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
+import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -58,5 +59,15 @@ class PinEntryUpdateTest {
                 hasEffects(ShowUnexpectedError, AllowPinEntry)
             )
         )
+  }
+
+  @Test
+  fun `when pin entry done is clicked, then do nothing`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(PinEntryDoneClicked)
+        .then(assertThatNext(
+            hasNothing()
+        ))
   }
 }

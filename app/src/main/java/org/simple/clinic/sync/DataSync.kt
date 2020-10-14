@@ -43,7 +43,8 @@ class DataSync(
     private val crashReporter: CrashReporter,
     private val userSession: UserSession,
     private val schedulersProvider: SchedulersProvider,
-    private val syncScheduler: Scheduler
+    private val syncScheduler: Scheduler,
+    private val purgeOnSync: PurgeOnSync
 ) {
 
   @Inject
@@ -52,13 +53,15 @@ class DataSync(
       crashReporter: CrashReporter,
       userSession: UserSession,
       schedulersProvider: SchedulersProvider,
-      remoteConfigService: RemoteConfigService
+      remoteConfigService: RemoteConfigService,
+      purgeOnSync: PurgeOnSync
   ) : this(
       modelSyncs = modelSyncs,
       crashReporter = crashReporter,
       userSession = userSession,
       schedulersProvider = schedulersProvider,
-      syncScheduler = createScheduler(remoteConfigService.reader().long("max_parallel_syncs", 1L).toInt())
+      syncScheduler = createScheduler(remoteConfigService.reader().long("max_parallel_syncs", 1L).toInt()),
+      purgeOnSync = purgeOnSync
   )
 
   private val syncProgress = PublishSubject.create<SyncGroupResult>()

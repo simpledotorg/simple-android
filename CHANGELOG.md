@@ -4,6 +4,7 @@
 ## Changes
 - Made "SMS Reminders" to be the default consent label on the patient screen unless otherwise specified on a country level
 - Show toast message after saving prescription image on device
+- Fix `ProgressMaterialButton` AVD not animating when initial state is not `in-progress`
 
 ## Internal
 - Add `syncGroup` property to the `Facility` resource

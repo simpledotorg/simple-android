@@ -32,7 +32,6 @@ class ProgressMaterialButton(
     buttonState = ButtonState.values()[typeArray.getInt(R.styleable.ProgressMaterialButton_buttonState, 0)]
 
     setButtonState(buttonState)
-    progressDrawable.start()
 
     typeArray.recycle()
   }
@@ -45,6 +44,8 @@ class ProgressMaterialButton(
         icon = progressDrawable
         text = null
         iconGravity = ICON_GRAVITY_TEXT_START
+
+        progressDrawable.start()
       }
       ButtonState.Enabled -> {
         isEnabled = true
@@ -52,12 +53,16 @@ class ProgressMaterialButton(
         icon = buttonIcon
         text = buttonText
         iconGravity = buttonIconGravity
+
+        progressDrawable.stop()
       }
       ButtonState.Disabled -> {
         isEnabled = false
         icon = buttonIcon
         text = buttonText
         iconGravity = buttonIconGravity
+
+        progressDrawable.stop()
       }
     }
     this.buttonState = buttonState

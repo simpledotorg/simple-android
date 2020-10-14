@@ -37,6 +37,7 @@ class PinEntryUpdate(
         }
       }
       is PinAuthenticated -> noChange()
+      PinEntryDoneClicked -> noChange()
     }
   }
 

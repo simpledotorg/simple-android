@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
@@ -207,6 +208,11 @@ class TeleconsultSharePrescriptionScreen constructor(
             defaultDuration = teleconsultMedicinesConfig.defaultDuration,
             defaultFrequency = teleconsultMedicinesConfig.defaultFrequency
         ))
+  }
+
+  override fun showImageSavedToast() {
+    val message = context.getString(R.string.screen_teleconsult_share_prescription_image_saved)
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
   }
 
   private fun getScaledBitmap(width: Int, height: Int, view: View): Bitmap {

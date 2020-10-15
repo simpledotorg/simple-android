@@ -333,7 +333,6 @@
   <string name="newmedicalhistory_no">না</string>
   <string name="newmedicalhistory_history">ইতিহাস</string>
   <string name="newmedicalhistory_diagnosis">রোগ নির্ণয় (প্রয়োজন)</string>
-  <string name="newmedicalhistory_diagnosis_required_error">অনুগ্রহ করে একটি রোগ নির্ণয় নির্বাচন করুন</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">কিছুই না</string>

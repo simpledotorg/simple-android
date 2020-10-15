@@ -333,7 +333,6 @@
   <string name="newmedicalhistory_no">இல்லை</string>
   <string name="newmedicalhistory_history">வரலாறு</string>
   <string name="newmedicalhistory_diagnosis">நோய் கண்டறிதல் (அவசிய விவரம்)</string>
-  <string name="newmedicalhistory_diagnosis_required_error">நோய் கண்டறிதல் விவரத்தைத் தேர்ந்தெடுக்கவும்</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ஏதுமில்லை</string>

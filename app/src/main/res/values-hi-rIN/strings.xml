@@ -333,7 +333,6 @@
   <string name="newmedicalhistory_no">नहीं</string>
   <string name="newmedicalhistory_history">इतिहास</string>
   <string name="newmedicalhistory_diagnosis">निदान (आवश्यक)</string>
-  <string name="newmedicalhistory_diagnosis_required_error">कृपया निदान चुनें</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">कोई नहीं</string>

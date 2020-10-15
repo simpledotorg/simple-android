@@ -50,16 +50,6 @@
             android:text="@string/newmedicalhistory_diagnosis"
             android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Emphasis.Grey0" />
 
-          <TextView
-            android:id="@+id/diagnosisRequiredError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_4"
-            android:text="@string/newmedicalhistory_diagnosis_required_error"
-            android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Red1"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
           <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
             android:id="@+id/hypertensionDiagnosisView"
             android:layout_width="match_parent"

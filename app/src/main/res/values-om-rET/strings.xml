@@ -334,7 +334,6 @@
   <string name="newmedicalhistory_no">Lakki</string>
   <string name="newmedicalhistory_history">Seenaa</string>
   <string name="newmedicalhistory_diagnosis">Qorannoo (Barbaadameera)</string>
-  <string name="newmedicalhistory_diagnosis_required_error">Maaloo qorannoo filadhu</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">Hin jiru</string>

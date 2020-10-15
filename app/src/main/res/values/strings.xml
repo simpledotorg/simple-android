@@ -394,7 +394,6 @@
   <string name="newmedicalhistory_no">No</string>
   <string name="newmedicalhistory_history">History</string>
   <string name="newmedicalhistory_diagnosis">Diagnosis (Required)</string>
-  <string name="newmedicalhistory_diagnosis_required_error">Please select a diagnosis</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">None</string>

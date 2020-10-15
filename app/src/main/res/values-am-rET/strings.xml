@@ -333,7 +333,6 @@
   <string name="newmedicalhistory_no">አይ</string>
   <string name="newmedicalhistory_history">ታሪክ</string>
   <string name="newmedicalhistory_diagnosis">ምርመራ (አስፈላጊ)</string>
-  <string name="newmedicalhistory_diagnosis_required_error">እባክዎን ምርመራ ይምረጡ</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ምንም</string>

@@ -13,6 +13,7 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 import org.intellij.lang.annotations.Language
+import org.simple.clinic.SQLITE_HOST_PARAMETER_LIMIT
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.businessid.BusinessId
@@ -412,8 +413,11 @@ data class Patient(
     open fun deletePatientsNotInFacilities(facilityIds: List<UUID>) {
       val patientAddressIdsToDelete = patientAddressIdsNotInFacilities(facilityIds)
 
-
-      deleteAllPatientAddresses(patientAddressIdsToDelete)
+      patientAddressIdsToDelete
+          .asSequence()
+          .chunked(SQLITE_HOST_PARAMETER_LIMIT / 10)
+          .onEach(::deleteAllPatientAddresses)
+          .toList()
     }
 
     @Query("""

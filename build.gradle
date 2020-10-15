@@ -38,7 +38,7 @@ buildscript {
       junit                    : '4.12',
       mockitoKotlin            : '2.2.0',
       junitParams              : '1.1.1',
-      sqliteAndroid            : '3.32.2',
+      sqliteAndroid            : '3.32.2', // If you change this, be sure to also update SQLITE_HOST_PARAMETER_LIMIT in Globals.kt
       playServicesAuth         : '16.0.1',
       playServicesVision       : '16.2.0',
       viewPump                 : '2.0.3',

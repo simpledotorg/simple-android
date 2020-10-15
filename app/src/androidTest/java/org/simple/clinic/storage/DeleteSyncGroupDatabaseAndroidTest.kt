@@ -3,13 +3,16 @@ package org.simple.clinic.storage
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.SQLITE_HOST_PARAMETER_LIMIT
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import java.util.UUID
 import javax.inject.Inject
@@ -752,5 +755,38 @@ class DeleteSyncGroupDatabaseAndroidTest {
         medicalHistoryForPatientInOtherFacilityInCurrentSyncGroup +
         unsyncedMedicalHistoryForPatientInOtherSyncGroup
     assertThat(medicalHistoryDao.getAllMedicalHistories()).containsExactlyElementsIn(expectedMedicalHistories)
+  }
+
+  @Test
+  fun deleting_records_should_take_the_max_sqlite_parameter_limit_into_consideration() {
+    // given
+    val numberOfRecords = SQLITE_HOST_PARAMETER_LIMIT + 1
+    val batchSize = numberOfRecords / 10
+    val facilityUuid = facilityInAnotherSyncGroup.uuid
+
+    val patientRecords = (1..numberOfRecords)
+        .asSequence()
+        .chunked(batchSize)
+        .map { recordsInBatch ->
+          (1..recordsInBatch.size).map {
+            TestData.patientProfile(
+                patientRegisteredFacilityId = facilityUuid,
+                patientAssignedFacilityId = facilityUuid,
+                patientStatus = PatientStatus.Active,
+                syncStatus = SyncStatus.DONE
+            )
+          }
+        }
+        .onEach { patientRepository.save(it).blockingAwait() }
+        .flatten()
+        .toList()
+
+    assertThat(patientRepository.allPatientProfiles()).containsExactlyElementsIn(patientRecords)
+
+    // when
+    database.deletePatientsNotInFacilitySyncGroup(currentFacility)
+
+    // then
+    assertThat(patientRepository.allPatientProfiles()).isEmpty()
   }
 }

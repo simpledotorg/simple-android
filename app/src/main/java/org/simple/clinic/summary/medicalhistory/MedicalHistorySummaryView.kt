@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -20,6 +21,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HY
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryChildView
@@ -39,6 +41,9 @@ class MedicalHistorySummaryView(
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var activity: AppCompatActivity
 
   @Inject
   lateinit var effectHandlerFactory: MedicalHistorySummaryEffectHandler.Factory
@@ -151,7 +156,7 @@ class MedicalHistorySummaryView(
   }
 
   fun showDiagnosisError() {
-    diagnosisRequiredError.visibility = VISIBLE
+    SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
   }
 
   private fun answerToggled(question: MedicalHistoryQuestion, answer: Answer) {

@@ -60,7 +60,7 @@ data class Facility(
     @Embedded(prefix = "config_")
     val config: FacilityConfig,
 
-    val syncGroup: String?
+    val syncGroup: String
 ) : Parcelable {
 
   @Dao
@@ -122,6 +122,6 @@ data class Facility(
       SELECT uuid FROM Facility
       WHERE syncGroup = :syncGroup
     """)
-    fun facilityIdsInSyncGroup(syncGroup: String?): List<UUID>
+    fun facilityIdsInSyncGroup(syncGroup: String): List<UUID>
   }
 }

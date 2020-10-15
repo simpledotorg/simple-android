@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -20,6 +21,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DI
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.router.screen.ScreenRouter
@@ -42,6 +44,9 @@ class NewMedicalHistoryScreen(
 
   @Inject
   lateinit var utcClock: UtcClock
+
+  @Inject
+  lateinit var activity: AppCompatActivity
 
   @Inject
   lateinit var effectHandlerFactory: NewMedicalHistoryEffectHandler.Factory
@@ -163,7 +168,8 @@ class NewMedicalHistoryScreen(
   }
 
   override fun showDiagnosisRequiredError(showError: Boolean) {
-    diagnosisRequiredError.visibility = if (showError) VISIBLE else GONE
+    if (showError)
+      SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
   }
 
   interface Injector {

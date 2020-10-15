@@ -92,7 +92,7 @@ data class FacilityPayload(
         syncStatus = syncStatus,
         deletedAt = deletedAt,
         config = config,
-        syncGroup = syncGroup
+        syncGroup = syncGroup.orEmpty()
     )
   }
 }

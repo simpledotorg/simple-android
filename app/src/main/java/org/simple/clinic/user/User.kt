@@ -204,7 +204,8 @@ data class User(
          F.createdAt, F.updatedAt, F.deletedAt,
          F.syncStatus,
          F.config_diabetesManagementEnabled,
-         F.config_teleconsultationEnabled
+         F.config_teleconsultationEnabled,
+         F.syncGroup
         FROM Facility F
         INNER JOIN LoggedInUser ON LoggedInUser.currentFacilityUuid = F.uuid
         LIMIT 1

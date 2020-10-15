@@ -360,7 +360,7 @@ dependencies {
     exclude group: "com.fasterxml.jackson.core", module: "jackson-core"
   }
   runtimeOnly "com.fasterxml.jackson.core:jackson-core:$versions.jackson"
-  runtimeOnly "ch.qos.logback:logback-classic:$versions.logback"
+  implementation "ch.qos.logback:logback-classic:$versions.logback"
 
   implementation "androidx.appcompat:appcompat:$versions.appcompat"
   implementation "com.airbnb.android:lottie:$versions.lottie"

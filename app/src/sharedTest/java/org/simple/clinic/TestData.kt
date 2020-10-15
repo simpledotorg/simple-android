@@ -385,7 +385,7 @@ object TestData {
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       deletedAt: Instant? = null,
       facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false, teleconsultationEnabled = false),
-      syncGroup: String? = null
+      syncGroup: String = ""
   ): Facility {
     return Facility(
         uuid = uuid,

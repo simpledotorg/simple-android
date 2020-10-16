@@ -8,6 +8,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.Transaction
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
@@ -407,21 +408,35 @@ data class Patient(
 
     // This depends on the foreign key references between address, patient
     // phone numbers, and business IDs to cascade the deletes.
+    @Transaction
+    open fun deletePatientsNotInFacilities(facilityIds: List<UUID>) {
+      val patientAddressIdsToDelete = patientAddressIdsNotInFacilities(facilityIds)
+
+
+      deleteAllPatientAddresses(patientAddressIdsToDelete)
+    }
+
     @Query("""
       DELETE FROM PatientAddress
-      WHERE uuid NOT IN (
-        SELECT DISTINCT P.addressUuid FROM Patient P
-        LEFT JOIN Appointment A ON A.patientUuid == P.uuid
-        WHERE (
-            P.registeredFacilityId IN (:facilityIds) OR
-            P.assignedFacilityId IN (:facilityIds) OR
-            P.syncStatus == 'PENDING'
-        ) OR (
-            A.facilityUuid IN (:facilityIds) AND
-            A.status = 'scheduled'
-        )
-      )
+      WHERE uuid IN (:patientAddressIds)
     """)
-    abstract fun deletePatientsNotInFacilities(facilityIds: List<UUID>)
+    protected abstract fun deleteAllPatientAddresses(patientAddressIds: List<UUID>)
+
+    @Query("""
+      SELECT DISTINCT P.addressUuid FROM Patient P
+      LEFT JOIN Appointment A ON A.patientUuid == P.uuid
+      WHERE
+          P.registeredFacilityId NOT IN (:facilityIds) 
+          AND P.assignedFacilityId NOT IN (:facilityIds)
+          AND (
+            A.uuid IS NULL
+            OR (
+              (A.facilityUuid NOT IN (:facilityIds))
+              OR (A.facilityUuid IN (:facilityIds) AND A.status != 'scheduled')
+            )
+          )
+          AND P.syncStatus != 'PENDING'
+    """)
+    protected abstract fun patientAddressIdsNotInFacilities(facilityIds: List<UUID>): List<UUID>
   }
 }

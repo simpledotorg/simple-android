@@ -191,7 +191,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
     )
     val visitedAppointment = TestData.appointment(
         uuid = UUID.fromString("4280ab0c-4c9e-4de1-b01c-966a85ec753e"),
-        patientUuid = patientWithCancelledAppointment.patientUuid,
+        patientUuid = patientWithVisitedAppointment.patientUuid,
         facilityUuid = currentFacility.uuid,
         status = Appointment.Status.Visited,
         cancelReason = null,

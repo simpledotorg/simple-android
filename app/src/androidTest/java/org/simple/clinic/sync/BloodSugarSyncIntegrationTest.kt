@@ -15,6 +15,7 @@ import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.sync.BloodSugarSync
 import org.simple.clinic.bloodsugar.sync.BloodSugarSyncApi
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
@@ -42,10 +43,14 @@ class BloodSugarSyncIntegrationTest {
   @Inject
   lateinit var userSession: UserSession
 
+  private val patientUuid = UUID.fromString("2acc8a43-526d-44c7-a362-3caea8f09dd3")
+
   @get:Rule
   val ruleChain: RuleChain = Rules
       .global()
       .around(ServerAuthenticationRule())
+      // Needed because the server only syncs resources if a patient exists
+      .around(RegisterPatientRule(patientUuid))
 
   private lateinit var sync: BloodSugarSync
 
@@ -97,7 +102,8 @@ class BloodSugarSyncIntegrationTest {
       TestData.bloodSugarMeasurement(
           syncStatus = SyncStatus.PENDING,
           facilityUuid = currentFacilityUuid,
-          userUuid = userUuid
+          userUuid = userUuid,
+          patientUuid = patientUuid
       )
     }
     assertThat(records).containsNoDuplicates()
@@ -124,7 +130,8 @@ class BloodSugarSyncIntegrationTest {
       TestData.bloodSugarMeasurement(
           syncStatus = SyncStatus.PENDING,
           facilityUuid = currentFacilityUuid,
-          userUuid = userUuid
+          userUuid = userUuid,
+          patientUuid = patientUuid
       )
     }
     assertThat(records).containsNoDuplicates()

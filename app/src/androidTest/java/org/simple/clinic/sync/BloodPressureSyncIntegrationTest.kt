@@ -15,6 +15,7 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.bp.sync.BloodPressureSyncApi
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
@@ -42,10 +43,14 @@ class BloodPressureSyncIntegrationTest {
   @Inject
   lateinit var userSession: UserSession
 
+  private val patientUuid = UUID.fromString("cc5b560e-60fe-44fb-882b-1d2408d5eec3")
+
   @get:Rule
   val ruleChain: RuleChain = Rules
       .global()
       .around(ServerAuthenticationRule())
+      // Needed because the server only syncs resources if a patient exists
+      .around(RegisterPatientRule(patientUuid))
 
   private lateinit var sync: BloodPressureSync
 
@@ -97,7 +102,8 @@ class BloodPressureSyncIntegrationTest {
       TestData.bloodPressureMeasurement(
           syncStatus = SyncStatus.PENDING,
           facilityUuid = currentFacilityUuid,
-          userUuid = userUuid
+          userUuid = userUuid,
+          patientUuid = patientUuid
       )
     }
     assertThat(records).containsNoDuplicates()
@@ -124,7 +130,8 @@ class BloodPressureSyncIntegrationTest {
       TestData.bloodPressureMeasurement(
           syncStatus = SyncStatus.PENDING,
           facilityUuid = currentFacilityUuid,
-          userUuid = userUuid
+          userUuid = userUuid,
+          patientUuid = patientUuid
       )
     }
     assertThat(records).containsNoDuplicates()

@@ -9,6 +9,4 @@ data class LoadMedicalHistory(val patientUUID: UUID) : MedicalHistorySummaryEffe
 
 object LoadCurrentFacility : MedicalHistorySummaryEffect()
 
-object HideDiagnosisError : MedicalHistorySummaryEffect()
-
 data class SaveUpdatedMedicalHistory(val medicalHistory: MedicalHistory): MedicalHistorySummaryEffect()

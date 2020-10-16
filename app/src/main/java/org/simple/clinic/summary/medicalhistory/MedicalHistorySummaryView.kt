@@ -46,7 +46,7 @@ class MedicalHistorySummaryView(
   lateinit var activity: AppCompatActivity
 
   @Inject
-  lateinit var effectHandlerFactory: MedicalHistorySummaryEffectHandler.Factory
+  lateinit var effectHandlerFactory: MedicalHistorySummaryEffectHandler
 
   init {
     LayoutInflater.from(context).inflate(R.layout.medicalhistory_summary_view, this, true)
@@ -73,7 +73,7 @@ class MedicalHistorySummaryView(
         defaultModel = MedicalHistorySummaryModel.create(screenKey.patientUuid),
         update = MedicalHistorySummaryUpdate(),
         init = MedicalHistorySummaryInit(),
-        effectHandler = effectHandlerFactory.create(this).build(),
+        effectHandler = effectHandlerFactory.build(),
         modelUpdateListener = { model ->
           modelUpdateCallback?.invoke(model)
           uiRenderer.render(model)
@@ -145,10 +145,6 @@ class MedicalHistorySummaryView(
   override fun hideDiabetesHistorySection() {
     diabetesQuestionView.visibility = GONE
     kidneyDiseaseQuestionView.hideDivider()
-  }
-
-  override fun hideDiagnosisError() {
-    diagnosisRequiredError.visibility = GONE
   }
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {

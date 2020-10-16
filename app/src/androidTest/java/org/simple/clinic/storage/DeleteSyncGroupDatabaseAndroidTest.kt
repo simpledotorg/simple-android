@@ -3,9 +3,9 @@ package org.simple.clinic.storage
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.SQLITE_BATCH_SIZE
 import org.simple.clinic.SQLITE_HOST_PARAMETER_LIMIT
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
@@ -761,12 +761,11 @@ class DeleteSyncGroupDatabaseAndroidTest {
   fun deleting_records_should_take_the_max_sqlite_parameter_limit_into_consideration() {
     // given
     val numberOfRecords = SQLITE_HOST_PARAMETER_LIMIT + 1
-    val batchSize = numberOfRecords / 10
     val facilityUuid = facilityInAnotherSyncGroup.uuid
 
     val patientRecords = (1..numberOfRecords)
         .asSequence()
-        .chunked(batchSize)
+        .chunked(SQLITE_BATCH_SIZE)
         .map { recordsInBatch ->
           (1..recordsInBatch.size).map {
             TestData.patientProfile(

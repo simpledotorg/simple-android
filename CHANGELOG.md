@@ -12,6 +12,7 @@
 - Bump Android Gradle Plugin version to 4.0.2
 - Add method to `AppDatabase` to clear all patient data not in the current sync group
 - Update download and share `MaterialButtons` in `TeleconsultSharePrescriptionScreen` to `ProgressMaterialButtons`
+- Purge unused data after a full sync completes
 
 ## Fixes
 - Fix app freeze when pressing enter/done with empty pin in lock screen

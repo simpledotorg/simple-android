@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class SyncScheduler @Inject constructor(
     private val workManager: WorkManager,
-    private val syncs: ArrayList<ModelSync>
+    private val syncs: List<@JvmSuppressWildcards ModelSync>
 ) {
 
   fun schedule(): Completable {

@@ -61,8 +61,8 @@ class SyncModule {
       bloodSugarSync: BloodSugarSync,
       teleconsultationMedicalOfficersSync: TeleconsultationSync,
       teleconsultRecordSync : TeleconsultRecordSync
-  ): ArrayList<ModelSync> {
-    return arrayListOf(
+  ): List<ModelSync> {
+    return listOf(
         facilitySync, protocolSync, patientSync,
         bloodPressureSync, medicalHistorySync, appointmentSync,
         prescriptionSync, reportsSync, remoteConfigSync, helpSync,
@@ -80,8 +80,8 @@ class SyncModule {
       appointmentSyncRepository: AppointmentRepository,
       prescriptionSyncRepository: PrescriptionRepository,
       bloodSugarRepository: BloodSugarRepository
-  ): ArrayList<SynceableRepository<*, *>> {
-    return arrayListOf(
+  ): List<SynceableRepository<*, *>> {
+    return listOf(
         patientSyncRepository,
         bloodPressureSyncRepository,
         medicalHistorySyncRepository,

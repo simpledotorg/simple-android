@@ -39,40 +39,46 @@ private fun createScheduler(workers: Int): Scheduler {
 
 @AppScope
 class DataSync(
-    private val modelSyncs: ArrayList<ModelSync>,
+    private val modelSyncs: List<ModelSync>,
     private val crashReporter: CrashReporter,
     private val userSession: UserSession,
     private val schedulersProvider: SchedulersProvider,
-    private val syncScheduler: Scheduler
+    private val syncScheduler: Scheduler,
+    private val purgeOnSync: PurgeOnSync
 ) {
 
-  @Inject constructor(
-      modelSyncs: ArrayList<ModelSync>,
+  @Inject
+  constructor(
+      modelSyncs: List<@JvmSuppressWildcards ModelSync>,
       crashReporter: CrashReporter,
       userSession: UserSession,
       schedulersProvider: SchedulersProvider,
-      remoteConfigService: RemoteConfigService
-  ): this(
+      remoteConfigService: RemoteConfigService,
+      purgeOnSync: PurgeOnSync
+  ) : this(
       modelSyncs = modelSyncs,
       crashReporter = crashReporter,
       userSession = userSession,
       schedulersProvider = schedulersProvider,
-      syncScheduler = createScheduler(remoteConfigService.reader().long("max_parallel_syncs", 1L).toInt())
+      syncScheduler = createScheduler(remoteConfigService.reader().long("max_parallel_syncs", 1L).toInt()),
+      purgeOnSync = purgeOnSync
   )
 
   private val syncProgress = PublishSubject.create<SyncGroupResult>()
 
   private val syncErrors = PublishSubject.create<ResolvedError>()
 
-  private fun allSyncs(): Completable {
+  private fun allSyncs(): Single<List<SyncResult>> {
     val syncAllGroups = SyncGroup
         .values()
         .map(::syncsForGroup)
 
-    return Completable.merge(syncAllGroups)
+    return Single
+        .merge(syncAllGroups)
+        .reduce(listOf(), { list, results -> list + results })
   }
 
-  private fun syncsForGroup(syncGroup: SyncGroup): Completable {
+  private fun syncsForGroup(syncGroup: SyncGroup): Single<List<SyncResult>> {
     val syncsInGroup = modelSyncs.filter { it.syncConfig().syncGroup == syncGroup }
 
     return Single
@@ -82,7 +88,6 @@ class DataSync(
         .compose(prepareTasksFromSyncs())
         .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
         .doOnSuccess { syncResults -> syncCompleted(syncResults, syncGroup) }
-        .ignoreElement()
   }
 
   private fun filterSyncsThatRequireAuthentication(
@@ -178,7 +183,7 @@ class DataSync(
 
   private fun runAndReportErrors(task: Single<SyncResult>): Single<SyncResult> {
     return task.doOnSuccess { result ->
-      if(result is SyncResult.Failed) {
+      if (result is SyncResult.Failed) {
         logError(result.error)
       }
     }
@@ -197,19 +202,35 @@ class DataSync(
     }.exhaustive()
   }
 
+  private fun purgeOnCompletedSyncs(): SingleTransformer<List<SyncResult>, List<SyncResult>> {
+    return SingleTransformer { syncResultsStream ->
+      syncResultsStream
+          .doOnSuccess { syncResults ->
+            val shouldDeleteUnnecessaryRecords = syncResults.haveAllCompleted() && userSession.isUserPresentLocally()
+
+            if (shouldDeleteUnnecessaryRecords) purgeOnSync.purgeUnusedData()
+          }
+    }
+  }
+
   @WorkerThread
   @Throws(IOException::class) // This is only needed so Mockito can generate mocks for this method correctly
   fun syncTheWorld() {
-    allSyncs().blockingAwait()
+    allSyncs()
+        .compose(purgeOnCompletedSyncs())
+        .ignoreElement()
+        .blockingAwait()
   }
 
   @WorkerThread
   fun sync(syncGroup: SyncGroup) {
-    syncsForGroup(syncGroup).blockingAwait()
+    syncsForGroup(syncGroup).ignoreElement().blockingAwait()
   }
 
   fun fireAndForgetSync() {
-    allSyncs().subscribe()
+    allSyncs()
+        .compose(purgeOnCompletedSyncs())
+        .subscribe()
   }
 
   fun fireAndForgetSync(syncGroup: SyncGroup) {
@@ -226,11 +247,15 @@ class DataSync(
 
     data class Completed(
         private val _sync: ModelSync
-    ): SyncResult(_sync)
+    ) : SyncResult(_sync)
 
     data class Failed(
         private val _sync: ModelSync,
         val error: ResolvedError
-    ): SyncResult(_sync)
+    ) : SyncResult(_sync)
+  }
+
+  private fun Iterable<SyncResult>.haveAllCompleted(): Boolean {
+    return all { it is SyncResult.Completed }
   }
 }

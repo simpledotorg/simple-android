@@ -59,7 +59,7 @@ class LoginUserWithOtpServerIntegrationTest {
     assertThat(accessToken).isNotNull()
 
     val (loggedInUser) = userSession.loggedInUser().blockingFirst()
-    assertThat(userSession.isUserLoggedIn()).isTrue()
+    assertThat(userSession.isUserPresentLocally()).isTrue()
     assertThat(loggedInUser!!.status).isEqualTo(UserStatus.ApprovedForSyncing)
     assertThat(loggedInUser.loggedInStatus).isEqualTo(User.LoggedInStatus.LOGGED_IN)
   }

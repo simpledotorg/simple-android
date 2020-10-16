@@ -65,7 +65,7 @@ class UserSessionAndroidTest {
     )
     userSession.saveOngoingRegistrationEntryAsUser(ongoingRegistrationEntry, Instant.parse("2018-01-01T00:00:00Z")).blockingAwait()
 
-    assertThat(userSession.isUserLoggedIn()).isTrue()
+    assertThat(userSession.isUserPresentLocally()).isTrue()
     val loggedInUser = userSession.loggedInUser().blockingFirst().get()
     assertThat(loggedInUser.status).isEqualTo(UserStatus.WaitingForApproval)
 
@@ -84,10 +84,10 @@ class UserSessionAndroidTest {
 
   @Test
   fun when_logged_in_user_is_cleared_the_local_saved_user_must_be_removed_from_database() {
-    assertThat(userSession.isUserLoggedIn()).isTrue()
+    assertThat(userSession.isUserPresentLocally()).isTrue()
 
     userSession.clearLoggedInUser().blockingAwait()
-    assertThat(userSession.isUserLoggedIn()).isFalse()
+    assertThat(userSession.isUserPresentLocally()).isFalse()
 
     val user = userSession.loggedInUserImmediate()
     assertThat(user).isNull()

@@ -2,6 +2,7 @@ package org.simple.clinic.user
 
 import android.content.SharedPreferences
 import android.os.Parcelable
+import androidx.annotation.WorkerThread
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -192,10 +193,9 @@ class UserSession @Inject constructor(
   // was causing a deadlock in the Room threads when data sync happened
   fun loggedInUserImmediate() = appDatabase.userDao().userImmediate()
 
-  fun isUserLoggedIn(): Boolean {
-    // TODO: This is bad. Make this function return Single<Boolean> instead.
-    val user = loggedInUser().blockingFirst()
-    return user is Just
+  @WorkerThread
+  fun isUserPresentLocally(): Boolean {
+    return loggedInUserImmediate() != null
   }
 
   fun accessToken(): Optional<String> {

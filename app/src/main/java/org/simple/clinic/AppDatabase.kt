@@ -1,6 +1,7 @@
 package org.simple.clinic
 
 import androidx.annotation.VisibleForTesting
+import androidx.annotation.WorkerThread
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -223,5 +224,17 @@ abstract class AppDatabase : RoomDatabase() {
       prescriptionDao().deleteWithoutLinkedPatient()
       medicalHistoryDao().deleteWithoutLinkedPatient()
     }
+  }
+
+  @WorkerThread
+  fun sizeInBytes(): Long {
+    return openHelper
+        .readableDatabase
+        .query(""" SELECT page_count * page_size as size FROM pragma_page_count(), pragma_page_size() """)
+        .use { cursor ->
+          cursor.moveToFirst()
+
+          cursor.getLong(0)
+        }
   }
 }

@@ -333,7 +333,6 @@
   <string name="newmedicalhistory_no">ኣይፋሉን</string>
   <string name="newmedicalhistory_history">ታሪኽ</string>
   <string name="newmedicalhistory_diagnosis">ምርመራ (ተደልዩ)</string>
-  <string name="newmedicalhistory_diagnosis_required_error">ዓይነት ምርመራ ምረፅ/ፂ</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ዋላ ሓደ የለን</string>

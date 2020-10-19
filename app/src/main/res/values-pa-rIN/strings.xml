@@ -333,7 +333,6 @@
   <string name="newmedicalhistory_no">ਨਹੀਂ</string>
   <string name="newmedicalhistory_history">ਅਤੀਤ</string>
   <string name="newmedicalhistory_diagnosis">ਡਾਇਗਨੋਸਿਸ (ਲੋੜੀਂਦਾ)</string>
-  <string name="newmedicalhistory_diagnosis_required_error">ਕਿਰਪਾ ਕਰਕੇ ਕੋਈ ਡਾਇਗਨੋਸਿਸ ਚੁਣੋ</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ਕੋਈ ਨਹੀਂ</string>

@@ -46,7 +46,7 @@ class MedicalHistorySummaryView(
   lateinit var activity: AppCompatActivity
 
   @Inject
-  lateinit var effectHandlerFactory: MedicalHistorySummaryEffectHandler
+  lateinit var effectHandler: MedicalHistorySummaryEffectHandler
 
   init {
     LayoutInflater.from(context).inflate(R.layout.medicalhistory_summary_view, this, true)
@@ -73,7 +73,7 @@ class MedicalHistorySummaryView(
         defaultModel = MedicalHistorySummaryModel.create(screenKey.patientUuid),
         update = MedicalHistorySummaryUpdate(),
         init = MedicalHistorySummaryInit(),
-        effectHandler = effectHandlerFactory.build(),
+        effectHandler = effectHandler.build(),
         modelUpdateListener = { model ->
           modelUpdateCallback?.invoke(model)
           uiRenderer.render(model)

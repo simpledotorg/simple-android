@@ -15,6 +15,7 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.AppointmentSync
 import org.simple.clinic.overdue.AppointmentSyncApi
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
@@ -42,10 +43,14 @@ class AppointmentSyncIntegrationTest {
   @Inject
   lateinit var userSession: UserSession
 
+  private val patientUuid = UUID.fromString("f12f5be1-16d5-44dd-8f2b-4155ea991904")
+
   @get:Rule
   val ruleChain: RuleChain = Rules
       .global()
       .around(ServerAuthenticationRule())
+      // Needed because the server only syncs resources if a patient exists
+      .around(RegisterPatientRule(patientUuid))
 
   private lateinit var sync: AppointmentSync
 
@@ -94,7 +99,8 @@ class AppointmentSyncIntegrationTest {
     val records = (1..totalNumberOfRecords).map {
       TestData.appointment(
           syncStatus = SyncStatus.PENDING,
-          facilityUuid = currentFacilityUuid
+          facilityUuid = currentFacilityUuid,
+          patientUuid = patientUuid
       )
     }
     assertThat(records).containsNoDuplicates()
@@ -120,7 +126,8 @@ class AppointmentSyncIntegrationTest {
     val records = (1..batchSize).map {
       TestData.appointment(
           syncStatus = SyncStatus.PENDING,
-          facilityUuid = currentFacilityUuid
+          facilityUuid = currentFacilityUuid,
+          patientUuid = patientUuid
       )
     }
     assertThat(records).containsNoDuplicates()

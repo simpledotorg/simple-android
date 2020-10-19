@@ -49,10 +49,7 @@ class MedicalHistorySyncIntegrationTest {
   val ruleChain: RuleChain = Rules
       .global()
       .around(ServerAuthenticationRule())
-      // This is needed because MedicalHistory does not have a direct
-      // connect to the facility so the only way to connect a medical
-      // history to the facility is via the patient to whom the medical
-      // history is associated with.
+      // Needed because the server only syncs resources if a patient exists
       .around(RegisterPatientRule(patientUuid))
 
   private lateinit var sync: MedicalHistorySync

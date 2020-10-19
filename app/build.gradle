@@ -222,8 +222,16 @@ android {
   }
 
   afterEvaluate {
-    tasks.findAll { it.name in ["assembleStagingRelease", "assembleSandboxRelease", "assembleProductionRelease", "assembleSecurityRelease"] }
-        .forEach { it.finalizedBy deleteProguardMappings }
+    def buildTypes = [
+        "assembleStagingRelease",
+        "assembleSandboxRelease",
+        "assembleProductionRelease",
+        "assembleSecurityRelease"
+    ]
+
+    buildTypes.forEach { buildType ->
+      tasks.findByName(buildType).finalizedBy(deleteProguardMappings)
+    }
   }
 }
 
@@ -273,7 +281,7 @@ dependencies {
   implementation "androidx.camera:camera-core:$versions.camerax"
   implementation "androidx.camera:camera-camera2:$versions.camerax"
   implementation "androidx.camera:camera-view:$versions.cameraView"
-  implementation "androidx.camera:camera-lifecycle:$versions.cameraxLifecycle"
+  implementation "androidx.camera:camera-lifecycle:$versions.cameraLifecycle"
 
   implementation "com.google.zxing:core:$versions.zxing"
 

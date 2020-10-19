@@ -15,6 +15,7 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.drugs.sync.PrescriptionSyncApi
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
@@ -42,10 +43,14 @@ class PrescriptionSyncIntegrationTest {
   @Inject
   lateinit var userSession: UserSession
 
+  private val patientUuid = UUID.fromString("49b90530-28e5-43bd-a673-b144a2e90727")
+
   @get:Rule
   val ruleChain: RuleChain = Rules
       .global()
       .around(ServerAuthenticationRule())
+      // Needed because the server only syncs resources if a patient exists
+      .around(RegisterPatientRule(patientUuid))
 
   private lateinit var sync: PrescriptionSync
 
@@ -94,7 +99,8 @@ class PrescriptionSyncIntegrationTest {
     val records = (1..totalNumberOfRecords).map {
       TestData.prescription(
           syncStatus = SyncStatus.PENDING,
-          facilityUuid = currentFacilityUuid
+          facilityUuid = currentFacilityUuid,
+          patientUuid = patientUuid
       )
     }
     assertThat(records).containsNoDuplicates()
@@ -120,7 +126,8 @@ class PrescriptionSyncIntegrationTest {
     val records = (1..batchSize).map {
       TestData.prescription(
           syncStatus = SyncStatus.PENDING,
-          facilityUuid = currentFacilityUuid
+          facilityUuid = currentFacilityUuid,
+          patientUuid = patientUuid
       )
     }
     assertThat(records).containsNoDuplicates()

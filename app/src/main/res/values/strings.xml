@@ -749,6 +749,6 @@
 
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">Diagnosis Required</string>
-  <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Enter a diagnosis for both hypertension and diabetes</string>
+  <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Select a diagnosis for both hypertension and diabetes</string>
   <string name="select_diagnosis_error_ok">OK</string>
 </resources>

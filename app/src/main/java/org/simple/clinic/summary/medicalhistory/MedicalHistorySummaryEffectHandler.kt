@@ -1,8 +1,6 @@
 package org.simple.clinic.summary.medicalhistory
 
 import com.spotify.mobius.rx2.RxMobius
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
@@ -12,27 +10,21 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
 import java.time.Instant
+import javax.inject.Inject
 
-class MedicalHistorySummaryEffectHandler @AssistedInject constructor(
+class MedicalHistorySummaryEffectHandler @Inject constructor(
     private val schedulers: SchedulersProvider,
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val clock: UtcClock,
     private val currentFacility: Lazy<Facility>,
-    private val uuidGenerator: UuidGenerator,
-    @Assisted private val uiActions: MedicalHistorySummaryUiActions
+    private val uuidGenerator: UuidGenerator
 ) {
-
-  @AssistedInject.Factory
-  interface Factory {
-    fun create(uiActions: MedicalHistorySummaryUiActions): MedicalHistorySummaryEffectHandler
-  }
 
   fun build(): ObservableTransformer<MedicalHistorySummaryEffect, MedicalHistorySummaryEvent> {
     return RxMobius
         .subtypeEffectHandler<MedicalHistorySummaryEffect, MedicalHistorySummaryEvent>()
         .addTransformer(LoadMedicalHistory::class.java, loadMedicalHistory())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
-        .addAction(HideDiagnosisError::class.java, uiActions::hideDiagnosisError, schedulers.ui())
         .addConsumer(SaveUpdatedMedicalHistory::class.java, { updateMedicalHistory(it.medicalHistory) }, schedulers.io())
         .build()
   }

@@ -333,7 +333,6 @@
   <string name="newmedicalhistory_no">ಇಲ್ಲ</string>
   <string name="newmedicalhistory_history">ಇತಿಹಾಸ</string>
   <string name="newmedicalhistory_diagnosis">ರೋಗನಿರ್ಣಯ (ಅಗತ್ಯವಿದೆ)</string>
-  <string name="newmedicalhistory_diagnosis_required_error">ದಯವಿಟ್ಟು ರೋಗನಿರ್ಣಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ಯಾವುದೂ ಅಲ್ಲ</string>

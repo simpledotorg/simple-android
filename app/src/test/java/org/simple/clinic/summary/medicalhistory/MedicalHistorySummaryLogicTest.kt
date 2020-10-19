@@ -2,7 +2,6 @@ package org.simple.clinic.summary.medicalhistory
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -162,7 +161,6 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).hideDiagnosisError()
     verifyNoMoreInteractions(ui)
   }
 
@@ -179,7 +177,6 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).hideDiagnosisError()
     verifyNoMoreInteractions(ui)
   }
 
@@ -196,7 +193,6 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui, never()).hideDiagnosisError()
     verifyNoMoreInteractions(ui)
   }
 
@@ -213,7 +209,6 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui, never()).hideDiagnosisError()
     verifyNoMoreInteractions(ui)
   }
 
@@ -230,7 +225,6 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui, never()).hideDiagnosisError()
     verifyNoMoreInteractions(ui)
   }
 
@@ -248,8 +242,7 @@ class MedicalHistorySummaryLogicTest {
         medicalHistoryRepository = medicalHistoryRepository,
         clock = clock,
         currentFacility = Lazy { facility },
-        uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
-        uiActions = ui
+        uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
     )
 
     val uiRenderer = MedicalHistorySummaryUiRenderer(ui)

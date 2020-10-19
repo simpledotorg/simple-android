@@ -333,7 +333,6 @@
   <string name="newmedicalhistory_no">కాదు</string>
   <string name="newmedicalhistory_history">చరిత్ర</string>
   <string name="newmedicalhistory_diagnosis">రోగ నిర్ధారణ (అవసరం)</string>
-  <string name="newmedicalhistory_diagnosis_required_error">దయచేసి రోగ నిర్ధారణని ఎంచుకోండి</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ఏదీ కాదు</string>

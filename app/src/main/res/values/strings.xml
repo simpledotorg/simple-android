@@ -394,7 +394,6 @@
   <string name="newmedicalhistory_no">No</string>
   <string name="newmedicalhistory_history">History</string>
   <string name="newmedicalhistory_diagnosis">Diagnosis (Required)</string>
-  <string name="newmedicalhistory_diagnosis_required_error">Please select a diagnosis</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">None</string>
@@ -747,4 +746,9 @@
   <string name="screen_teleconsult_share_prescription_title">Prescription</string>
   <string name="screen_teleconsult_share_prescription_instructions_empty" translatable="false">-</string>
   <string name="screen_teleconsult_share_prescription_image_saved">Prescription is saved in Downloads</string>
+
+  <!-- Select diagnosis error alert dialog -->
+  <string name="select_diagnosis_error_diagnosis_required">Diagnosis Required</string>
+  <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Enter a diagnosis for both hypertension and diabetes</string>
+  <string name="select_diagnosis_error_ok">OK</string>
 </resources>

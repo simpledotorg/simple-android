@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+## Features
+- Add `SelectDiagnosisErrorDialog` when diagnosis is not selected in `NewMedicalHistoryScreen` and `MedicalHistorySummaryView` 
+
 ## Changes
 - Made "SMS Reminders" to be the default consent label on the patient screen unless otherwise specified on a country level
 - Show toast message after saving prescription image on device

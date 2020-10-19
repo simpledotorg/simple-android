@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.view_qrcode_scanner.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.di.injector
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import java.util.concurrent.Executors
 import javax.inject.Inject
@@ -81,7 +80,7 @@ constructor(
     cameraProvider.unbindAll()
 
     cameraProvider.bindToLifecycle(qrCodeScannerLifecycle, cameraSelector, preview, analyzer)
-    preview.setSurfaceProvider(previewView.createSurfaceProvider())
+    preview.setSurfaceProvider(previewView.surfaceProvider)
   }
 
   override fun onDetachedFromWindow() {

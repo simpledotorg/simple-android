@@ -50,7 +50,7 @@
   <string name="patientsearchresults_item_birthdate">ਜਨਮ ਮਿਤੀ</string>
 
   <!-- Manual patient entry -->
-  <string name="patiententry_contentdescription_up_button">ਖੋਜ \'ਤੇ ਵਾਪਿਸ ਜਾਓ</string>
+  <string name="patiententry_contentdescription_up_button">ਖੋਜ &apos;ਤੇ ਵਾਪਿਸ ਜਾਓ</string>
   <string name="patiententry_full_name">ਮਰੀਜ਼ ਦਾ ਨਾਮ</string>
   <string name="patiententry_phone_number">ਫ਼ੋਨ ਨੰਬਰ</string>
   <string name="patiententry_bangladesh_national_id">ਰਾਸ਼ਟਰੀ ਆਈ ਡੀ ਸੰਖਿਆ</string>
@@ -119,7 +119,7 @@
   <string name="patients_dismiss_user_approved_status">ਸਮਝ ਗਏ</string>
   <string name="patients_enter_code">ਕੋਡ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="patients_you_are_now_logged_in">ਤਸਦੀਕ ਕਰਨਾ ਸਫਲ ਰਿਹਾ! ਮਰੀਜ਼ ਰਿਕਾਰਡ ਹੁਣ ਦਿਖਾਈ ਦਿੰਦੇ ਹਨ।</string>
-  <string name="patients_loggedoutalert_title">ਤੁਹਾਨੂੰ ਇੱਕ ਸਮੇਂ \'ਤੇ ਸਿਰਫ਼ ਇੱਕ ਡਿਵਾਈਸ \'ਤੇ ਲੌਗ ਇਨ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ</string>
+  <string name="patients_loggedoutalert_title">ਤੁਹਾਨੂੰ ਇੱਕ ਸਮੇਂ &apos;ਤੇ ਸਿਰਫ਼ ਇੱਕ ਡਿਵਾਈਸ &apos;ਤੇ ਲੌਗ ਇਨ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ</string>
   <string name="patients_loggedoutalert_message">ਤੁਹਾਨੂੰ ਤੁਹਾਡੇ ਪੁਰਾਣੇ ਡਿਵਾਈਸ ਤੋਂ ਲੌਗ ਆਉਟ ਕੀਤਾ ਗਿਆ ਹੈ।</string>
   <string name="patients_loggedoutalert_dismiss">ਸਮਝ ਗਏ</string>
   <string name="patients_scan_simple_card">ਬੀਪੀ ਪਾਸਪੋਰਟ ਸਕੈਨ ਕਰੋ</string>
@@ -174,6 +174,7 @@
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
   <string name="patientsummary_bangladesh_national_id">ਆਈਡੀ</string>
 
+  <string name="patientsummary_teleconsult">ਟੇਲੀ-ਕਨਸਲਟ</string>
   <string name="patientsummary_log_teleconsult">ਟੈਲੀਕੰਸਲਟ ਲਾਗ ਕਰੋ</string>
 
   <string name="patientsummary_registered_faciliy_title">ਰਜਿਸਟਰਡ</string>
@@ -211,7 +212,7 @@
   <string name="customprescription_delete_cancel">ਰੱਦ ਕਰੋ</string>
 
   <!-- Login -->
-  <string name="loginpin_go_back">ਫ਼ੋਨ ਨੰਬਰ ਸਕ੍ਰੀਨ \'ਤੇ ਵਾਪਿਸ ਜਾਓ</string>
+  <string name="loginpin_go_back">ਫ਼ੋਨ ਨੰਬਰ ਸਕ੍ਰੀਨ &apos;ਤੇ ਵਾਪਿਸ ਜਾਓ</string>
 
   <!-- App lock -->
   <string name="applock_logout">ਕੀ ਤੁਸੀਂ ਨਹੀਂ ਹੋ?</string>
@@ -283,7 +284,7 @@
   <!-- Facility change -->
 
   <!-- Enter OTP -->
-  <string name="enterotp_check_sms_sent_to">ਇਸ \'ਤੇ ਭੇਜੇ ਗਏ SMS ਦੀ ਜਾਂਚ ਕਰੋ</string>
+  <string name="enterotp_check_sms_sent_to">ਇਸ &apos;ਤੇ ਭੇਜੇ ਗਏ SMS ਦੀ ਜਾਂਚ ਕਰੋ</string>
   <string name="enterotp_enter_verification_code">ਤਸਦੀਕੀ ਕੋਡ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="enterotp_incorrect_code">ਗ਼ਲਤ ਕੋਡ, ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
   <string name="enterotp_resend_sms">SMS ਦੁਬਾਰਾ ਭੇਜੋ</string>
@@ -352,7 +353,7 @@
   <string name="syncindicator_status_synced_min_ago">%s ਮਿੰ ਪਹਿਲਾਂ ਸਿੰਕ ਕੀਤਾ</string>
   <string name="syncindicator_dialog_error_network">ਯਕੀਨੀ ਬਣਾਓ ਕਿ ਮਰੀਜ਼ ਦੇ ਰਿਕਾਰਡਾਂ ਨੂੰ ਸਿੰਕ ਕਰਨ ਲਈ ਤੁਹਾਡੇ ਕੋਲ ਕਾਰਜਸ਼ੀਲ ਇੰਟਰਨੈੱਟ ਕਨੈਕਸ਼ਨ ਹੈ।</string>
   <string name="syncindicator_dialog_button_text">ਠੀਕ ਹੈ</string>
-  <string name="syncindicator_dialog_error_server">ਇਸ ਸਮੇਂ \'ਤੇ ਸਿੰਕ ਸਰਵਰ ਡਾਊਨ ਹਨ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਓ।</string>
+  <string name="syncindicator_dialog_error_server">ਇਸ ਸਮੇਂ &apos;ਤੇ ਸਿੰਕ ਸਰਵਰ ਡਾਊਨ ਹਨ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਓ।</string>
 
   <!-- Help Screen -->
   <string name="help_title">ਮਦਦ</string>
@@ -379,13 +380,13 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਕਰੋ</string>
-  <string name="appupdatedialog_body">ਸਿੰਪਲ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਪਲੇ ਸਟੋਰ \'ਤੇ ਲਿਜਾਇਆ ਜਾਵੇਗਾ</string>
+  <string name="appupdatedialog_body">ਸਿੰਪਲ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਪਲੇ ਸਟੋਰ &apos;ਤੇ ਲਿਜਾਇਆ ਜਾਵੇਗਾ</string>
   <string name="appupdatedialog_positive_button_text">ਅੱਪਡੇਟ ਕਰੋ</string>
   <string name="appupdatedialog_negative_button_text">ਹੁਣੇ ਨਹੀਂ</string>
 
   <!-- All Patients In Facility View-->
   <string name="allpatientsinfacility_nopatients_message">ਤੁਸੀਂ ਇੱਥੇ ਆਪਣੀ ਫੈਸਿਲਿਟੀ ਵਿਖੇ ਰਜਿਸਟਰ ਕੀਤੇ ਸਾਰੇ ਮਰੀਜ਼ਾਂ ਨੂੰ ਦੇਖਣ ਦੇ ਯੋਗ ਹੋਵੋਗੇ।</string>
-  <string name="allpatientsinfacility_nopatients_title">%1$s \'ਤੇ ਕੋਈ ਮਰੀਜ਼ ਨਹੀਂ ਹਨ</string>
+  <string name="allpatientsinfacility_nopatients_title">%1$s &apos;ਤੇ ਕੋਈ ਮਰੀਜ਼ ਨਹੀਂ ਹਨ</string>
   <string name="allpatientsinfacility_foundpatients_header">ਸਾਰੇ ਮਰੀਜ਼: %1$s</string>
 
   <!--Registration loader screen -->
@@ -434,7 +435,7 @@
   <string name="selectcountry_servererror">ਸਰਵਰ ਤਰੁੱਟੀ! ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ!</string>
   <string name="selectcountry_genericerror">ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ! ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ!</string>
   <string name="selectcountry_retry">ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
-  <string name="scheduleappointment_at">\'ਤੇ</string>
+  <string name="scheduleappointment_at">&apos;ਤੇ</string>
   <string name="scheduleappointment_change">ਬਦਲੋ</string>
 
   <!-- BloodSugar type picker -->
@@ -512,7 +513,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">ਮਰੀਜ਼ ਨੂੰ \"ਫੇਰੀ ਲਈ ਸਹਿਮਤ ਹੋਏ\" ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕਰੋ</string>
+  <string name="contactpatient_agreed_to_visit">ਮਰੀਜ਼ ਨੂੰ \&quot;ਫੇਰੀ ਲਈ ਸਹਿਮਤ ਹੋਏ\&quot; ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕਰੋ</string>
   <string name="contactpatient_remind_call_later">ਬਾਅਦ ਵਿੱਚ ਕਾਲ ਕਰਨ ਲਈ ਯਾਦ ਕਰਵਾਓ…</string>
   <string name="contactpatient_remove_from_list">ਓਵਰਡਿਊ ਸੂਚੀ ਤੋਂ ਹਟਾਓ…</string>
   <string name="contactpatient_result_of_call">ਕਾਲ ਦੀ ਨਤੀਜਾ</string>
@@ -591,6 +592,7 @@
   <string name="drug_duration_title">%1$s %2$s</string>
   <string name="drugDurationLabel">ਦਿਨ</string>
   <string name="drug_duration_empty_error">ਦਵਾਈ ਦੀ ਮਿਆਦ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="drug_duration_max_error">ਦਵਾਈ ਦੀ ਮਿਆਦ %1$s ਦਿਨਾਂ ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
 
   <!-- Teleconsultation success-->
   <string name="screen_teleconsult_success_add_prescription">ਨਿਰਧਾਰਤ ਦਵਾਈ ਸ਼ਾਮਲ ਕਰੋ?</string>
@@ -627,7 +629,9 @@
 
   <!-- Teleconsult Medicines View -->
   <string name="view_teleconsult_medicines">ਦਵਾਈਆਂ</string>
+  <string name="view_teleconsult_medicines_add">ਜੋੜੋ</string>
   <string name="view_teleconsult_medicines_edit">ਸੰਪਾਦਨ ਕਰੋ</string>
+  <string name="view_teleconsult_medicines_required_error">ਘੱਟੋ ਘੱਟ ਇੱਕ ਦਵਾਈ ਸ਼ਾਮਲ ਕਰੋ</string>
   <plurals name="list_item_teleconsult_medicine_duration">
     <item quantity="one">%1$s ਦਿਨ</item>
     <item quantity="other">%1$s ਦਿਨ</item>
@@ -639,4 +643,22 @@
   <string name="view_teleconsult_doctor_info_acknowledgement">ਇਸ ਪ੍ਰਿਸਕ੍ਰਿਪਸ਼ਨ ਤੇ ਦਸਤਖਤ ਕਰਕੇ ਮੈਂ ਸਵੀਕਾਰ ਕਰਦਾ ਹਾਂ ਕਿ ਮੈਂ %1$s ਹਾਂ</string>
   <string name="view_teleconsult_doctor_info_add_signature">ਦਸਤਖਤ ਕਰੋ</string>
   <string name="view_teleconsult_doctor_info_signature_error">ਦਸਤਖਤ ਕਰੋ</string>
+
+  <!-- Teleconsult share prescription screen -->
+  <string name="screen_teleconsult_share_prescription_teleconsult_prescription">ਟੇਲੀਕਨਸਲਟ ਪ੍ਰਿਸਕ੍ਰਿਪਸ਼ਨ</string>
+  <string name="screen_teleconsult_share_prescription_medicines">ਦਵਾਈਆਂ</string>
+  <string name="screen_teleconsult_share_prescription_instructions">ਹਿਦਾਇਤਾਂ</string>
+  <string name="screen_teleconsult_share_prescription_download">ਡਾਉਨਲੋਡ ਕਰੋ</string>
+  <string name="screen_teleconsult_share_prescription_share">ਸ਼ੇਅਰ ਕਰੋ</string>
+  <string name="screen_teleconsult_share_prescription_done">ਹੋ ਗਿਆ</string>
+  <string name="screen_teleconsult_share_prescription_patient_details">%1$s, %2$s, %3$s</string>
+  <string name="screen_teleconsult_share_prescription_medical_registration_id">ਮੇਡੀਕਲ ਰਜਿਸਟ੍ਰੇਸ਼ਨ ID: %1$s</string>
+  <string name="screen_teleconsult_share_prescription_image_using">ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਚਿੱਤਰ ਸ਼ੇਅਰ ਕਰੋ</string>
+  <string name="screen_teleconsult_share_prescription_title">ਪ੍ਰਿਸਕ੍ਰਿਪਸ਼ਨ</string>
+  <string name="screen_teleconsult_share_prescription_image_saved">ਪ੍ਰਿਸਕ੍ਰਿਪਸ਼ਨ ਨੂੰ ਡਾਉਨਲੋਡ ਵਿੱਚ ਸਹੇਜਿਆ ਗਿਆ</string>
+
+  <!-- Select diagnosis error alert dialog -->
+  <string name="select_diagnosis_error_diagnosis_required">ਡਾਇਗਨੋਸਿਸ ਲੋੜੀਂਦਾ ਹੈ</string>
+  <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">ਹਾਈਪਰਟੈਨਸ਼ਨ ਅਤੇ ਡਾਇਬਿਟੀਜ਼ ਦੋਵਾਂ ਲਈ ਇੱਕ ਨਿਦਾਨ ਦੀ ਚੋਣ ਕਰੋ</string>
+  <string name="select_diagnosis_error_ok">ਠੀਕ ਹੈ</string>
 </resources>

@@ -8,5 +8,7 @@ data class TeleconsultRequestInfo(
 
     val facilityId: UUID,
 
-    val requestedAt: Instant
+    val requestedAt: Instant,
+
+    val requestCompleted: TeleconsultStatus?
 )

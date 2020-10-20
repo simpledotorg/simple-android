@@ -44,6 +44,7 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityW
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.RoomTypeConverter
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultStatus
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User
@@ -79,7 +80,7 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       OverdueAppointment::class,
       PatientSearchResult::class
     ],
-    version = 81,
+    version = 82,
     exportSchema = true
 )
 @TypeConverters(
@@ -105,7 +106,8 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
     MedicineFrequency.RoomTypeConverter::class,
     TeleconsultationType.RoomTypeConverter::class,
     RoomTypeConverter::class,
-    User.CapabilityStatus.RoomTypeConverter::class
+    User.CapabilityStatus.RoomTypeConverter::class,
+    TeleconsultStatus.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

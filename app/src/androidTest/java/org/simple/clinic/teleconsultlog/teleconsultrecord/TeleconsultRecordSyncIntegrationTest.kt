@@ -18,6 +18,7 @@ import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUtcClock
+import java.time.Instant
 import java.time.LocalDate
 import java.time.Month
 import java.util.UUID
@@ -76,12 +77,27 @@ class TeleconsultRecordSyncIntegrationTest {
     val totalNumberOfRecords = batchSize * 2 + 1
     val teleconsultRecordId = UUID.fromString("fa4e8fba-2a88-49ad-b960-e8cd96935fb9")
     val records = (1..totalNumberOfRecords).map {
+      val requestInfo = TestData.teleconsultRequestInfo(
+          requesterId = UUID.fromString("73e28c27-4e79-4409-b2a6-7ac562b0ecd7"),
+          facilityId = UUID.fromString("5fc76656-7e4f-4c85-b981-076bd18c9836"),
+          requestedAt = Instant.now(testUtcClock),
+          requestCompleted = TeleconsultStatus.Yes
+      )
+
+      val recordInfo = TestData.teleconsultRecordInfo(
+          recordedAt = Instant.now(testUtcClock),
+          teleconsultationType = TeleconsultationType.Audio,
+          patientTookMedicines = Answer.Yes,
+          patientConsented = Answer.Yes,
+          medicalOfficerNumber = "+911111111111"
+      )
+
       TestData.teleconsultRecord(
           id = teleconsultRecordId,
           patientId = UUID.fromString("92974564-9194-4a04-b4bd-5ac1fba82e31"),
           medicalOfficerId = UUID.fromString("39f4307b-0aef-49d4-9578-371524cd0212"),
-          teleconsultRequestInfo = null,
-          teleconsultRecordInfo = null,
+          teleconsultRequestInfo = requestInfo,
+          teleconsultRecordInfo = recordInfo,
           timestamps = Timestamps.create(testUtcClock),
           syncStatus = SyncStatus.PENDING
       )

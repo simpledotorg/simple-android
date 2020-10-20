@@ -46,9 +46,9 @@ class TeleconsultRecordSyncIntegrationTest {
 
   private val batchSize = 0
   private val config = SyncConfig(
-      syncInterval = SyncInterval.DAILY,
+      syncInterval = SyncInterval.FREQUENT,
       batchSize = batchSize,
-      syncGroup = SyncGroup.DAILY
+      syncGroup = SyncGroup.FREQUENT
   )
 
   @Before

@@ -174,6 +174,7 @@
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
   <string name="patientsummary_bangladesh_national_id">आयडी</string>
 
+  <string name="patientsummary_teleconsult">टेलि-कन्सल्ट</string>
   <string name="patientsummary_log_teleconsult">टेलिकंसल्‍टचा लॉग ठेवा</string>
 
   <string name="patientsummary_registered_faciliy_title">नोंदणीकृत</string>
@@ -591,6 +592,7 @@
   <string name="drug_duration_title">%1$s %2$s</string>
   <string name="drugDurationLabel">दिवस</string>
   <string name="drug_duration_empty_error">औषध कालावधी रिक्‍त असू शकत नाही</string>
+  <string name="drug_duration_max_error">औषधाचा कालावधी %1$s दिवसांपेक्षा जास्त असू शकत नाही</string>
 
   <!-- Teleconsultation success-->
   <string name="screen_teleconsult_success_add_prescription">औषध सूची जोडायची?</string>
@@ -627,7 +629,9 @@
 
   <!-- Teleconsult Medicines View -->
   <string name="view_teleconsult_medicines">औषधे</string>
+  <string name="view_teleconsult_medicines_add">जोडा</string>
   <string name="view_teleconsult_medicines_edit">संपादित करा</string>
+  <string name="view_teleconsult_medicines_required_error">कमीत कमी एक औषध समाविष्ट करा</string>
   <plurals name="list_item_teleconsult_medicine_duration">
     <item quantity="one">%1$s दिवस</item>
     <item quantity="other">%1$s दिवस</item>
@@ -639,4 +643,22 @@
   <string name="view_teleconsult_doctor_info_acknowledgement">या निर्देशपत्रावर स्‍वाक्षरी करून, मी %1$s असल्‍याचे कबूल करता</string>
   <string name="view_teleconsult_doctor_info_add_signature">स्‍वाक्षरी जोडा</string>
   <string name="view_teleconsult_doctor_info_signature_error">स्‍वाक्षरी जोडा</string>
+
+  <!-- Teleconsult share prescription screen -->
+  <string name="screen_teleconsult_share_prescription_teleconsult_prescription">टेलिकन्सल्ट प्रिस्क्रिप्शन</string>
+  <string name="screen_teleconsult_share_prescription_medicines">औषधे</string>
+  <string name="screen_teleconsult_share_prescription_instructions">सूचना</string>
+  <string name="screen_teleconsult_share_prescription_download">डाउनलोड करा</string>
+  <string name="screen_teleconsult_share_prescription_share">सामायिक करा</string>
+  <string name="screen_teleconsult_share_prescription_done">पूर्ण झाले</string>
+  <string name="screen_teleconsult_share_prescription_patient_details">%1$s, %2$s, %3$s</string>
+  <string name="screen_teleconsult_share_prescription_medical_registration_id">वैद्यकीय नोंदणी ID: %1$s</string>
+  <string name="screen_teleconsult_share_prescription_image_using">वापरून प्रतिमा सामायिक करा</string>
+  <string name="screen_teleconsult_share_prescription_title">प्रिस्क्रिप्शन</string>
+  <string name="screen_teleconsult_share_prescription_image_saved">प्रिस्क्रिप्शन डाउनलोड्समध्ये जतन केले आहे</string>
+
+  <!-- Select diagnosis error alert dialog -->
+  <string name="select_diagnosis_error_diagnosis_required">निदान आवश्यक आहे</string>
+  <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">अतिरक्तदाब आणि मधुमेह या दोन्हीसाठी निदान निवडा</string>
+  <string name="select_diagnosis_error_ok">ठीक आहे</string>
 </resources>

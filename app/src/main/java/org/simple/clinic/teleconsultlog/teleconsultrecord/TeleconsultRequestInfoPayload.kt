@@ -14,5 +14,8 @@ data class TeleconsultRequestInfoPayload(
     val facilityId: UUID,
 
     @Json(name = "requested_at")
-    val requestedAt: Instant
+    val requestedAt: Instant,
+
+    @Json(name = "request_completed")
+    val requestCompleted: TeleconsultStatus?
 )

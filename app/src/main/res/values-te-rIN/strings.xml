@@ -174,6 +174,7 @@
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
   <string name="patientsummary_bangladesh_national_id">ఐడి</string>
 
+  <string name="patientsummary_teleconsult">టెలి-కన్సల్ట్</string>
   <string name="patientsummary_log_teleconsult">లాగ్ టెలికన్సల్ట్</string>
 
   <string name="patientsummary_registered_faciliy_title">రిజిస్టర్ చేయబడింది</string>
@@ -591,6 +592,7 @@
   <string name="drug_duration_title">%1$s %2$s</string>
   <string name="drugDurationLabel">రోజులు</string>
   <string name="drug_duration_empty_error">మందుల కాల వ్యవధి ఖాళీగా ఉండకూడదు</string>
+  <string name="drug_duration_max_error">మందుల కాలవ్యవధి %1$s రోజుల కంటే ఎక్కువగా ఉండకూడదు</string>
 
   <!-- Teleconsultation success-->
   <string name="screen_teleconsult_success_add_prescription">ఔషదపత్రం జోడించాలా?</string>
@@ -627,7 +629,9 @@
 
   <!-- Teleconsult Medicines View -->
   <string name="view_teleconsult_medicines">మందులు</string>
+  <string name="view_teleconsult_medicines_add">జోడించు</string>
   <string name="view_teleconsult_medicines_edit">సవరించు</string>
+  <string name="view_teleconsult_medicines_required_error">కనీసం ఒక ఔషదం జోడించండి</string>
   <plurals name="list_item_teleconsult_medicine_duration">
     <item quantity="one">%1$s రోజు</item>
     <item quantity="other">%1$s రోజులు</item>
@@ -639,4 +643,22 @@
   <string name="view_teleconsult_doctor_info_acknowledgement">ఈ మందుచీటిపై సంతకం చేయడం ద్వారా, నేను %1$s అని అంగీకరిస్తున్నాను</string>
   <string name="view_teleconsult_doctor_info_add_signature">సంతకం చేయండి</string>
   <string name="view_teleconsult_doctor_info_signature_error">సంతకం చేయండి</string>
+
+  <!-- Teleconsult share prescription screen -->
+  <string name="screen_teleconsult_share_prescription_teleconsult_prescription">టెలికన్సల్ట్ ఔషదపత్రం</string>
+  <string name="screen_teleconsult_share_prescription_medicines">మందులు</string>
+  <string name="screen_teleconsult_share_prescription_instructions">సూచనలు</string>
+  <string name="screen_teleconsult_share_prescription_download">డౌన్‌లోడ్ చేయి</string>
+  <string name="screen_teleconsult_share_prescription_share">భాగస్వామ్యం చేయి</string>
+  <string name="screen_teleconsult_share_prescription_done">పూర్తయింది</string>
+  <string name="screen_teleconsult_share_prescription_patient_details">%1$s, %2$s, %3$s</string>
+  <string name="screen_teleconsult_share_prescription_medical_registration_id">వైద్య రిజిస్ట్రేషన్ ID: %1$s</string>
+  <string name="screen_teleconsult_share_prescription_image_using">దీనిని ఉపయోగించి ఇమేజ్ భాగస్వామ్యం చేయి</string>
+  <string name="screen_teleconsult_share_prescription_title">ఔషదపత్రం</string>
+  <string name="screen_teleconsult_share_prescription_image_saved">ఔషదపత్రం డౌన్‌లోడ్‌లలో సేవ్ చేయబడింది</string>
+
+  <!-- Select diagnosis error alert dialog -->
+  <string name="select_diagnosis_error_diagnosis_required">రోగ నిర్ధారణ అవసరం</string>
+  <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">రక్తపోటు మరియు మధుమేహం రెండింటి కోసం రోగ నిర్ధారణను ఎంచుకోండి</string>
+  <string name="select_diagnosis_error_ok">సరే</string>
 </resources>

@@ -224,6 +224,7 @@ abstract class AppDatabase : RoomDatabase() {
   }
 
   fun deletePatientsNotInFacilitySyncGroup(currentFacility: Facility) {
+    val sizeBeforeOptimization = sizeInBytes()
     runInTransaction {
       val facilityIdsInCurrentSyncGroup = facilityDao().facilityIdsInSyncGroup(currentFacility.syncGroup)
 
@@ -234,6 +235,13 @@ abstract class AppDatabase : RoomDatabase() {
       prescriptionDao().deleteWithoutLinkedPatient()
       medicalHistoryDao().deleteWithoutLinkedPatient()
     }
+    val sizeAfterOptimization = sizeInBytes()
+
+    Analytics.reportDatabaseOptimizationEvent(DatabaseOptimizationEvent(
+        sizeBeforeOptimizationBytes = sizeBeforeOptimization,
+        sizeAfterOptimizationBytes = sizeAfterOptimization,
+        type = DatabaseOptimizationEvent.OptimizationType.PurgeFromOtherSyncGroup
+    ))
   }
 
   @WorkerThread

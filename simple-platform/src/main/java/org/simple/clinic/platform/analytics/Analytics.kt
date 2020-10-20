@@ -144,6 +144,18 @@ object Analytics {
     reporters.forEach { it.createEvent("SyncEvent", props) }
   }
 
+  fun reportDatabaseOptimizationEvent(
+      event: DatabaseOptimizationEvent
+  ) {
+    val props = mapOf(
+        "sizeBeforeOptimizationBytes" to event.sizeBeforeOptimizationBytes,
+        "sizeAfterOptimizationBytes" to event.sizeAfterOptimizationBytes,
+        "type" to event.type.analyticsName
+    )
+
+    reporters.forEach { it.createEvent("DatabaseOptimized", props) }
+  }
+
   enum class NetworkTransportType {
     BLUETOOTH,
     CELLULAR,

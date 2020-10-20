@@ -18,6 +18,7 @@
 - Purge unused data after a full sync completes
 - Register patients in sync integration tests
 - Stop registering a blood pressure measurement to associate a patient in tests with a facility
+- Report database optimization events to analytics
 
 ## Fixes
 - Fix app freeze when pressing enter/done with empty pin in lock screen

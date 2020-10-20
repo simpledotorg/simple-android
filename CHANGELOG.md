@@ -1,7 +1,8 @@
 # CHANGELOG
 
 ## Next Release
-
+## Internal
+- Update `TeleconsultRecord` to sync frequently
 
 ## On Demo
 ## Features

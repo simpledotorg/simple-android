@@ -30,6 +30,7 @@ import org.simple.clinic.remoteconfig.RemoteConfigSync
 import org.simple.clinic.reports.ReportsModule
 import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationSync
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordSync
 import javax.inject.Named
 
@@ -79,7 +80,8 @@ class SyncModule {
       medicalHistorySyncRepository: MedicalHistoryRepository,
       appointmentSyncRepository: AppointmentRepository,
       prescriptionSyncRepository: PrescriptionRepository,
-      bloodSugarRepository: BloodSugarRepository
+      bloodSugarRepository: BloodSugarRepository,
+      teleconsultRecordRepository : TeleconsultRecordRepository
   ): List<SynceableRepository<*, *>> {
     return listOf(
         patientSyncRepository,
@@ -87,7 +89,8 @@ class SyncModule {
         medicalHistorySyncRepository,
         appointmentSyncRepository,
         prescriptionSyncRepository,
-        bloodSugarRepository
+        bloodSugarRepository,
+        teleconsultRecordRepository
     )
   }
 }

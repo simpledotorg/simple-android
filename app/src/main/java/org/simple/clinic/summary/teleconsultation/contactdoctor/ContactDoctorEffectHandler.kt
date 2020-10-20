@@ -102,7 +102,8 @@ class ContactDoctorEffectHandler @AssistedInject constructor(
             val teleconsultRequestInfo = TeleconsultRequestInfo(
                 requesterId = currentUser.get().uuid,
                 facilityId = currentFacility.get().uuid,
-                requestedAt = Instant.now(clock)
+                requestedAt = Instant.now(clock),
+                requestCompleted = null
             )
 
             teleconsultRecordRepository.createTeleconsultRequestForNurse(

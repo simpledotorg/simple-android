@@ -63,6 +63,7 @@ import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRequestInfo
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultStatus
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntry
@@ -1204,11 +1205,13 @@ object TestData {
       requesterId: UUID = UUID.randomUUID(),
       facilityId: UUID = UUID.randomUUID(),
       requestedAt: Instant = Instant.parse("2020-09-02T00:00:00Z"),
+      requestCompleted: TeleconsultStatus? = null
   ): TeleconsultRequestInfo {
     return TeleconsultRequestInfo(
         requesterId = requesterId,
         facilityId = facilityId,
-        requestedAt = requestedAt
+        requestedAt = requestedAt,
+        requestCompleted = requestCompleted
     )
   }
 }

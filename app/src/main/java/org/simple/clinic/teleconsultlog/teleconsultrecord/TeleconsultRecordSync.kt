@@ -12,7 +12,7 @@ class TeleconsultRecordSync @Inject constructor(
     private val teleconsultRecordApi: TeleconsultRecordApi,
     private val teleconsultRecordRepository: TeleconsultRecordRepository,
     private val syncCoordinator: SyncCoordinator,
-    @Named("sync_config_daily") private val config: SyncConfig
+    @Named("sync_config_frequent") private val config: SyncConfig
 ) : ModelSync {
 
   override val name: String = "TeleconsultRecord"

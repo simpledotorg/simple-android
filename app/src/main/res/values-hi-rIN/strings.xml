@@ -424,7 +424,7 @@
   <string name="changelanguage_done">पूरा हुआ</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">कृपया प्रतीक्षा करें...</string>
+  <string name="placeholder_loading_title">कृपया प्रतीक्षा करें…</string>
   <string name="placeholder_loading_message">डेटाबेस रखरखाव प्रगति में है। इसमें सिर्फ़ एक मिनट लगेगा।</string>
 
   <!-- Select Country Screen -->
@@ -513,7 +513,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">रोगी को \&quot;मुलाकात के लिए सहमत\&quot; के रूप में चिन्हित करें</string>
+  <string name="contactpatient_agreed_to_visit">रोगी को \"मुलाकात के लिए सहमत\" के रूप में चिन्हित करें</string>
   <string name="contactpatient_remind_call_later">बाद में कॉल करना याद दिलाएं…</string>
   <string name="contactpatient_remove_from_list">अतिदेय सूची से हटाएं…</string>
   <string name="contactpatient_result_of_call">कॉल का परिणाम</string>

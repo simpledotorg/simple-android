@@ -174,6 +174,7 @@
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
   <string name="patientsummary_bangladesh_national_id">आईडी</string>
 
+  <string name="patientsummary_teleconsult">फ़ोन पर राय</string>
   <string name="patientsummary_log_teleconsult">टेली कंसल्ट पर लॉग करें</string>
 
   <string name="patientsummary_registered_faciliy_title">पंजीकृत</string>
@@ -423,7 +424,7 @@
   <string name="changelanguage_done">पूरा हुआ</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">कृपया प्रतीक्षा करें…</string>
+  <string name="placeholder_loading_title">कृपया प्रतीक्षा करें...</string>
   <string name="placeholder_loading_message">डेटाबेस रखरखाव प्रगति में है। इसमें सिर्फ़ एक मिनट लगेगा।</string>
 
   <!-- Select Country Screen -->
@@ -512,7 +513,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">रोगी को \"मुलाकात के लिए सहमत\" के रूप में चिन्हित करें</string>
+  <string name="contactpatient_agreed_to_visit">रोगी को \&quot;मुलाकात के लिए सहमत\&quot; के रूप में चिन्हित करें</string>
   <string name="contactpatient_remind_call_later">बाद में कॉल करना याद दिलाएं…</string>
   <string name="contactpatient_remove_from_list">अतिदेय सूची से हटाएं…</string>
   <string name="contactpatient_result_of_call">कॉल का परिणाम</string>
@@ -591,6 +592,7 @@
   <string name="drug_duration_title">%1$s %2$s</string>
   <string name="drugDurationLabel">दिन</string>
   <string name="drug_duration_empty_error">दवाई की अवधि को खाली नहीं छोड़ा जा सकता है</string>
+  <string name="drug_duration_max_error">दवाई की अवधि %1$s दिन से ज़्यादा की नहीं हो सकती</string>
 
   <!-- Teleconsultation success-->
   <string name="screen_teleconsult_success_add_prescription">निर्देश को जोड़ें?</string>
@@ -610,7 +612,7 @@
   <string name="screen_teleconsult_record_type_audio">ऑडियो कॉल</string>
   <string name="screen_teleconsult_record_type_video">वीडियो कॉल</string>
   <string name="screen_teleconsult_record_type_message">संदेश</string>
-  <string name="screen_teleconsult_record_patient_took_medicine">मरीज़ नियमित तौर पर एंटी-हाईपरटेंसिव और एंटी-डायबेटिक दवाईयां ले रहे हैं</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">मरीज़ नियमित तौर पर एंटी-हाइपरटेंसिव और एंटी-डायबेटिक दवाइयां ले रहे हैं</string>
   <string name="screen_teleconsult_record_patient_consented">मरीज़ ने टेलीकंसल्टेशन के लिए मंज़ूरी दी</string>
   <string name="screen_teleconsult_record_done">पूरा हुआ</string>
   <string name="teleconsultnotrecordeddialog_title">टेलीकंसल्ट रिकॉर्ड नहीं हुआ</string>
@@ -627,7 +629,9 @@
 
   <!-- Teleconsult Medicines View -->
   <string name="view_teleconsult_medicines">दवाएं</string>
+  <string name="view_teleconsult_medicines_add">जोड़ें</string>
   <string name="view_teleconsult_medicines_edit">संपादन करें</string>
+  <string name="view_teleconsult_medicines_required_error">कम से कम एक दवाई जोड़ें</string>
   <plurals name="list_item_teleconsult_medicine_duration">
     <item quantity="one">%1$s दिन</item>
     <item quantity="other">%1$s दिन</item>
@@ -639,4 +643,22 @@
   <string name="view_teleconsult_doctor_info_acknowledgement">इस प्रिस्क्रिप्शन पर हस्ताक्षर करके मैं यह स्वीकारता हूं कि मैं %1$s हूं</string>
   <string name="view_teleconsult_doctor_info_add_signature">हस्ताक्षर जोड़ें</string>
   <string name="view_teleconsult_doctor_info_signature_error">हस्ताक्षर जोड़ें</string>
+
+  <!-- Teleconsult share prescription screen -->
+  <string name="screen_teleconsult_share_prescription_teleconsult_prescription">फ़ोन पर राय करने का परामर्श</string>
+  <string name="screen_teleconsult_share_prescription_medicines">दवाएं</string>
+  <string name="screen_teleconsult_share_prescription_instructions">निर्देश</string>
+  <string name="screen_teleconsult_share_prescription_download">डाउनलोड</string>
+  <string name="screen_teleconsult_share_prescription_share">साझा करें</string>
+  <string name="screen_teleconsult_share_prescription_done">पूरा हुआ</string>
+  <string name="screen_teleconsult_share_prescription_patient_details">%1$s, %2$s, %3$s</string>
+  <string name="screen_teleconsult_share_prescription_medical_registration_id">चिकित्सा पंजीकरण ID: %1$s</string>
+  <string name="screen_teleconsult_share_prescription_image_using">परामर्श का उपयोग करते हुए</string>
+  <string name="screen_teleconsult_share_prescription_title">छवि को साझा करें</string>
+  <string name="screen_teleconsult_share_prescription_image_saved">परामर्श को डाउनलोड में सहेजा गया</string>
+
+  <!-- Select diagnosis error alert dialog -->
+  <string name="select_diagnosis_error_diagnosis_required">निदान आवश्यक</string>
+  <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">उच्चरक्तचाप और मधुमेह दोनों के लिए एक निदान चुनें</string>
+  <string name="select_diagnosis_error_ok">ठीक है</string>
 </resources>

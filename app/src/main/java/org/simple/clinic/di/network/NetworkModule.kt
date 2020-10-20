@@ -21,6 +21,7 @@ import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.user.User
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultStatus
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer as TeleconsultAnswer
 import org.simple.clinic.user.UserStatus
@@ -60,6 +61,7 @@ class NetworkModule {
         .add(MedicineFrequency.MoshiTypeConverter())
         .add(TeleconsultAnswer.MoshiTypeAdapter())
         .add(TeleconsultationType.MoshiTypeAdapter())
+        .add(TeleconsultStatus.MoshiTypeAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

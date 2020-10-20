@@ -174,6 +174,7 @@
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
   <string name="patientsummary_bangladesh_national_id">আইডি</string>
 
+  <string name="patientsummary_teleconsult">টেলি-পরামর্শ</string>
   <string name="patientsummary_log_teleconsult">লগ টেলিকনসাল্ট</string>
 
   <string name="patientsummary_registered_faciliy_title">নিবন্ধীত</string>
@@ -591,6 +592,7 @@
   <string name="drug_duration_title">%1$s %2$s</string>
   <string name="drugDurationLabel">দিন</string>
   <string name="drug_duration_empty_error">ওষুধের মেয়াদ খালি রাখা যাবে না</string>
+  <string name="drug_duration_max_error">ড্রাগের সময়কাল %1$s দিনের চেয়ে বেশি হতে পারে না</string>
 
   <!-- Teleconsultation success-->
   <string name="screen_teleconsult_success_add_prescription">প্রেসক্রিপশন যোগ করবেন?</string>
@@ -627,7 +629,9 @@
 
   <!-- Teleconsult Medicines View -->
   <string name="view_teleconsult_medicines">ওষুধগুলো যোগ করুন</string>
+  <string name="view_teleconsult_medicines_add">যোগ করুন</string>
   <string name="view_teleconsult_medicines_edit">সম্পাদনা করুন</string>
+  <string name="view_teleconsult_medicines_required_error">কমপক্ষে একটি ওষুধ যোগ করুন</string>
   <plurals name="list_item_teleconsult_medicine_duration">
     <item quantity="one">%1$s দিন</item>
     <item quantity="other">%1$s দিন</item>
@@ -639,4 +643,22 @@
   <string name="view_teleconsult_doctor_info_acknowledgement">এই প্রেসক্রিপশনে স্বাক্ষর করে আমি স্বীকার করছি যে আমি %1$s</string>
   <string name="view_teleconsult_doctor_info_add_signature">স্বাক্ষর যোগ করুন</string>
   <string name="view_teleconsult_doctor_info_signature_error">স্বাক্ষর যোগ করুন</string>
+
+  <!-- Teleconsult share prescription screen -->
+  <string name="screen_teleconsult_share_prescription_teleconsult_prescription">টেলিপরামর্শ প্রেসক্রিপশন</string>
+  <string name="screen_teleconsult_share_prescription_medicines">ওষুধগুলো যোগ করুন</string>
+  <string name="screen_teleconsult_share_prescription_instructions">নির্দেশিকা</string>
+  <string name="screen_teleconsult_share_prescription_download">ডাউনলোড করুন</string>
+  <string name="screen_teleconsult_share_prescription_share">শেয়ার করুন</string>
+  <string name="screen_teleconsult_share_prescription_done">সম্পন্ন</string>
+  <string name="screen_teleconsult_share_prescription_patient_details">%1$s, %2$s, %3$s</string>
+  <string name="screen_teleconsult_share_prescription_medical_registration_id">মেডিক্যাল নিবন্ধন ID: %1$s</string>
+  <string name="screen_teleconsult_share_prescription_image_using">এটি ব্যবহার করে চিত্র শেয়ার করুন</string>
+  <string name="screen_teleconsult_share_prescription_title">প্রেসক্রিপশন</string>
+  <string name="screen_teleconsult_share_prescription_image_saved">প্রেসক্রিপশন ডাউনলোডগুলিতে সেভ আছে</string>
+
+  <!-- Select diagnosis error alert dialog -->
+  <string name="select_diagnosis_error_diagnosis_required">রোগ নির্ণয় প্রয়োজন</string>
+  <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">হাইপারটেনশন এবং ডায়াবেটিস উভয়ের জন্য একটি রোগ নির্ণয় নির্বাচন করুন</string>
+  <string name="select_diagnosis_error_ok">ঠিক আছে</string>
 </resources>

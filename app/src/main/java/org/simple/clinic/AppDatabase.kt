@@ -28,6 +28,8 @@ import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
@@ -171,6 +173,7 @@ abstract class AppDatabase : RoomDatabase() {
   fun prune(
       crashReporter: CrashReporter
   ) {
+    val sizeBeforeOptimization = sizeInBytes()
     purge()
     try {
       vacuumDatabase()
@@ -180,6 +183,13 @@ abstract class AppDatabase : RoomDatabase() {
       // the original sqlite file continue to be used.
       crashReporter.report(e)
     }
+    val sizeAfterOptimization = sizeInBytes()
+
+    Analytics.reportDatabaseOptimizationEvent(DatabaseOptimizationEvent(
+        sizeBeforeOptimizationBytes = sizeBeforeOptimization,
+        sizeAfterOptimizationBytes = sizeAfterOptimization,
+        type = DatabaseOptimizationEvent.OptimizationType.PurgeDeleted
+    ))
   }
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

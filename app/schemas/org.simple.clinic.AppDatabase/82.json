@@ -1,0 +1,1590 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 82,
+    "identityHash": "bfdf54ec8ab4d8f1424b78cfba3d4904",
+    "entities": [
+      {
+        "tableName": "Patient",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `addressUuid` TEXT NOT NULL, `fullName` TEXT NOT NULL, `gender` TEXT NOT NULL, `dateOfBirth` TEXT, `status` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, `recordedAt` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `reminderConsent` TEXT NOT NULL, `deletedReason` TEXT, `registeredFacilityId` TEXT, `assignedFacilityId` TEXT, `age_value` INTEGER, `age_updatedAt` TEXT, PRIMARY KEY(`uuid`), FOREIGN KEY(`addressUuid`) REFERENCES `PatientAddress`(`uuid`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "addressUuid",
+            "columnName": "addressUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fullName",
+            "columnName": "fullName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gender",
+            "columnName": "gender",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateOfBirth",
+            "columnName": "dateOfBirth",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recordedAt",
+            "columnName": "recordedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncStatus",
+            "columnName": "syncStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reminderConsent",
+            "columnName": "reminderConsent",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deletedReason",
+            "columnName": "deletedReason",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "registeredFacilityId",
+            "columnName": "registeredFacilityId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "assignedFacilityId",
+            "columnName": "assignedFacilityId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "age.value",
+            "columnName": "age_value",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "age.updatedAt",
+            "columnName": "age_updatedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_Patient_addressUuid",
+            "unique": false,
+            "columnNames": [
+              "addressUuid"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Patient_addressUuid` ON `${TABLE_NAME}` (`addressUuid`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "PatientAddress",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "addressUuid"
+            ],
+            "referencedColumns": [
+              "uuid"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "PatientAddress",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `streetAddress` TEXT, `colonyOrVillage` TEXT, `zone` TEXT, `district` TEXT NOT NULL, `state` TEXT NOT NULL, `country` TEXT, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "streetAddress",
+            "columnName": "streetAddress",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "colonyOrVillage",
+            "columnName": "colonyOrVillage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "zone",
+            "columnName": "zone",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "district",
+            "columnName": "district",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "country",
+            "columnName": "country",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "PatientPhoneNumber",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `patientUuid` TEXT NOT NULL, `number` TEXT NOT NULL, `phoneType` TEXT NOT NULL, `active` INTEGER NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`uuid`), FOREIGN KEY(`patientUuid`) REFERENCES `Patient`(`uuid`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "patientUuid",
+            "columnName": "patientUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "number",
+            "columnName": "number",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phoneType",
+            "columnName": "phoneType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "active",
+            "columnName": "active",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_PatientPhoneNumber_patientUuid",
+            "unique": false,
+            "columnNames": [
+              "patientUuid"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_PatientPhoneNumber_patientUuid` ON `${TABLE_NAME}` (`patientUuid`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Patient",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "patientUuid"
+            ],
+            "referencedColumns": [
+              "uuid"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "BloodPressureMeasurement",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `userUuid` TEXT NOT NULL, `facilityUuid` TEXT NOT NULL, `patientUuid` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, `recordedAt` TEXT NOT NULL, `systolic` INTEGER NOT NULL, `diastolic` INTEGER NOT NULL, PRIMARY KEY(`uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncStatus",
+            "columnName": "syncStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userUuid",
+            "columnName": "userUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "facilityUuid",
+            "columnName": "facilityUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "patientUuid",
+            "columnName": "patientUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recordedAt",
+            "columnName": "recordedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reading.systolic",
+            "columnName": "systolic",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reading.diastolic",
+            "columnName": "diastolic",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_BloodPressureMeasurement_patientUuid",
+            "unique": false,
+            "columnNames": [
+              "patientUuid"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_BloodPressureMeasurement_patientUuid` ON `${TABLE_NAME}` (`patientUuid`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "PrescribedDrug",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `name` TEXT NOT NULL, `dosage` TEXT, `rxNormCode` TEXT, `isDeleted` INTEGER NOT NULL, `isProtocolDrug` INTEGER NOT NULL, `patientUuid` TEXT NOT NULL, `facilityUuid` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `frequency` TEXT, `durationInDays` INTEGER, `teleconsultationId` TEXT, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dosage",
+            "columnName": "dosage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "rxNormCode",
+            "columnName": "rxNormCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "isDeleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isProtocolDrug",
+            "columnName": "isProtocolDrug",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "patientUuid",
+            "columnName": "patientUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "facilityUuid",
+            "columnName": "facilityUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncStatus",
+            "columnName": "syncStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "frequency",
+            "columnName": "frequency",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "durationInDays",
+            "columnName": "durationInDays",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "teleconsultationId",
+            "columnName": "teleconsultationId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timestamps.createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamps.updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamps.deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_PrescribedDrug_patientUuid",
+            "unique": false,
+            "columnNames": [
+              "patientUuid"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_PrescribedDrug_patientUuid` ON `${TABLE_NAME}` (`patientUuid`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Facility",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `name` TEXT NOT NULL, `facilityType` TEXT, `streetAddress` TEXT, `villageOrColony` TEXT, `district` TEXT NOT NULL, `state` TEXT NOT NULL, `country` TEXT NOT NULL, `pinCode` TEXT, `protocolUuid` TEXT, `groupUuid` TEXT, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `deletedAt` TEXT, `syncGroup` TEXT NOT NULL, `location_latitude` REAL, `location_longitude` REAL, `config_diabetesManagementEnabled` INTEGER NOT NULL, `config_teleconsultationEnabled` INTEGER, PRIMARY KEY(`uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "facilityType",
+            "columnName": "facilityType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "streetAddress",
+            "columnName": "streetAddress",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "villageOrColony",
+            "columnName": "villageOrColony",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "district",
+            "columnName": "district",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "country",
+            "columnName": "country",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pinCode",
+            "columnName": "pinCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "protocolUuid",
+            "columnName": "protocolUuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "groupUuid",
+            "columnName": "groupUuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncStatus",
+            "columnName": "syncStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "syncGroup",
+            "columnName": "syncGroup",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "location.latitude",
+            "columnName": "location_latitude",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location.longitude",
+            "columnName": "location_longitude",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "config.diabetesManagementEnabled",
+            "columnName": "config_diabetesManagementEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "config.teleconsultationEnabled",
+            "columnName": "config_teleconsultationEnabled",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "LoggedInUser",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `fullName` TEXT NOT NULL, `phoneNumber` TEXT NOT NULL, `pinDigest` TEXT NOT NULL, `status` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `loggedInStatus` TEXT NOT NULL, `registrationFacilityUuid` TEXT NOT NULL, `currentFacilityUuid` TEXT NOT NULL, `teleconsultPhoneNumber` TEXT, `capability_canTeleconsult` TEXT, PRIMARY KEY(`uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fullName",
+            "columnName": "fullName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phoneNumber",
+            "columnName": "phoneNumber",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pinDigest",
+            "columnName": "pinDigest",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loggedInStatus",
+            "columnName": "loggedInStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "registrationFacilityUuid",
+            "columnName": "registrationFacilityUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currentFacilityUuid",
+            "columnName": "currentFacilityUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "teleconsultPhoneNumber",
+            "columnName": "teleconsultPhoneNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "capabilities.canTeleconsult",
+            "columnName": "capability_canTeleconsult",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Appointment",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `patientUuid` TEXT NOT NULL, `facilityUuid` TEXT NOT NULL, `scheduledDate` TEXT NOT NULL, `status` TEXT NOT NULL, `cancelReason` TEXT, `remindOn` TEXT, `agreedToVisit` INTEGER, `appointmentType` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, `creationFacilityUuid` TEXT, PRIMARY KEY(`uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "patientUuid",
+            "columnName": "patientUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "facilityUuid",
+            "columnName": "facilityUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scheduledDate",
+            "columnName": "scheduledDate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cancelReason",
+            "columnName": "cancelReason",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "remindOn",
+            "columnName": "remindOn",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "agreedToVisit",
+            "columnName": "agreedToVisit",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "appointmentType",
+            "columnName": "appointmentType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncStatus",
+            "columnName": "syncStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "creationFacilityUuid",
+            "columnName": "creationFacilityUuid",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "MedicalHistory",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `patientUuid` TEXT NOT NULL, `diagnosedWithHypertension` TEXT NOT NULL, `hasHadHeartAttack` TEXT NOT NULL, `hasHadStroke` TEXT NOT NULL, `hasHadKidneyDisease` TEXT NOT NULL, `hasDiabetes` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "patientUuid",
+            "columnName": "patientUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "diagnosedWithHypertension",
+            "columnName": "diagnosedWithHypertension",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasHadHeartAttack",
+            "columnName": "hasHadHeartAttack",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasHadStroke",
+            "columnName": "hasHadStroke",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasHadKidneyDisease",
+            "columnName": "hasHadKidneyDisease",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "diagnosedWithDiabetes",
+            "columnName": "hasDiabetes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncStatus",
+            "columnName": "syncStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "OngoingLoginEntry",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `phoneNumber` TEXT, `pin` TEXT, `fullName` TEXT, `pinDigest` TEXT, `registrationFacilityUuid` TEXT, `status` TEXT, `createdAt` TEXT, `updatedAt` TEXT, `teleconsultPhoneNumber` TEXT, `capability_canTeleconsult` TEXT, PRIMARY KEY(`uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phoneNumber",
+            "columnName": "phoneNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pin",
+            "columnName": "pin",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fullName",
+            "columnName": "fullName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pinDigest",
+            "columnName": "pinDigest",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "registrationFacilityUuid",
+            "columnName": "registrationFacilityUuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "teleconsultPhoneNumber",
+            "columnName": "teleconsultPhoneNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "capabilities.canTeleconsult",
+            "columnName": "capability_canTeleconsult",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Protocol",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `name` TEXT NOT NULL, `followUpDays` INTEGER NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "followUpDays",
+            "columnName": "followUpDays",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncStatus",
+            "columnName": "syncStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ProtocolDrug",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `protocolUuid` TEXT NOT NULL, `name` TEXT NOT NULL, `rxNormCode` TEXT, `dosage` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, `order` INTEGER NOT NULL, PRIMARY KEY(`uuid`), FOREIGN KEY(`protocolUuid`) REFERENCES `Protocol`(`uuid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "protocolUuid",
+            "columnName": "protocolUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rxNormCode",
+            "columnName": "rxNormCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dosage",
+            "columnName": "dosage",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "order",
+            "columnName": "order",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_ProtocolDrug_protocolUuid",
+            "unique": false,
+            "columnNames": [
+              "protocolUuid"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_ProtocolDrug_protocolUuid` ON `${TABLE_NAME}` (`protocolUuid`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Protocol",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "protocolUuid"
+            ],
+            "referencedColumns": [
+              "uuid"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "BusinessId",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `patientUuid` TEXT NOT NULL, `metaVersion` TEXT NOT NULL, `meta` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, `identifier` TEXT NOT NULL, `identifierType` TEXT NOT NULL, PRIMARY KEY(`uuid`), FOREIGN KEY(`patientUuid`) REFERENCES `Patient`(`uuid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "patientUuid",
+            "columnName": "patientUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "metaDataVersion",
+            "columnName": "metaVersion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "metaData",
+            "columnName": "meta",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "identifier.value",
+            "columnName": "identifier",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "identifier.type",
+            "columnName": "identifierType",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_BusinessId_patientUuid",
+            "unique": false,
+            "columnNames": [
+              "patientUuid"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_BusinessId_patientUuid` ON `${TABLE_NAME}` (`patientUuid`)"
+          },
+          {
+            "name": "index_BusinessId_identifier",
+            "unique": false,
+            "columnNames": [
+              "identifier"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_BusinessId_identifier` ON `${TABLE_NAME}` (`identifier`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Patient",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "patientUuid"
+            ],
+            "referencedColumns": [
+              "uuid"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "MissingPhoneReminder",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`patientUuid` TEXT NOT NULL, `remindedAt` TEXT NOT NULL, PRIMARY KEY(`patientUuid`))",
+        "fields": [
+          {
+            "fieldPath": "patientUuid",
+            "columnName": "patientUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "remindedAt",
+            "columnName": "remindedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "patientUuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "BloodSugarMeasurements",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `recordedAt` TEXT NOT NULL, `patientUuid` TEXT NOT NULL, `userUuid` TEXT NOT NULL, `facilityUuid` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `reading_value` TEXT NOT NULL, `reading_type` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recordedAt",
+            "columnName": "recordedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "patientUuid",
+            "columnName": "patientUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userUuid",
+            "columnName": "userUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "facilityUuid",
+            "columnName": "facilityUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncStatus",
+            "columnName": "syncStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reading.value",
+            "columnName": "reading_value",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reading.type",
+            "columnName": "reading_type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamps.createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamps.updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamps.deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "TextRecords",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `text` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "TeleconsultationFacilityInfo",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`teleconsultationFacilityId` TEXT NOT NULL, `facilityId` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, `syncStatus` TEXT NOT NULL, PRIMARY KEY(`teleconsultationFacilityId`))",
+        "fields": [
+          {
+            "fieldPath": "teleconsultationFacilityId",
+            "columnName": "teleconsultationFacilityId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "facilityId",
+            "columnName": "facilityId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "syncStatus",
+            "columnName": "syncStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "teleconsultationFacilityId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "MedicalOfficer",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`medicalOfficerId` TEXT NOT NULL, `fullName` TEXT NOT NULL, `phoneNumber` TEXT NOT NULL, PRIMARY KEY(`medicalOfficerId`))",
+        "fields": [
+          {
+            "fieldPath": "medicalOfficerId",
+            "columnName": "medicalOfficerId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fullName",
+            "columnName": "fullName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phoneNumber",
+            "columnName": "phoneNumber",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "medicalOfficerId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "TeleconsultationFacilityMedicalOfficersCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`teleconsultationFacilityId` TEXT NOT NULL, `medicalOfficerId` TEXT NOT NULL, PRIMARY KEY(`teleconsultationFacilityId`, `medicalOfficerId`))",
+        "fields": [
+          {
+            "fieldPath": "teleconsultationFacilityId",
+            "columnName": "teleconsultationFacilityId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "medicalOfficerId",
+            "columnName": "medicalOfficerId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "teleconsultationFacilityId",
+            "medicalOfficerId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "TeleconsultRecord",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `patientId` TEXT NOT NULL, `medicalOfficerId` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `request_requesterId` TEXT, `request_facilityId` TEXT, `request_requestedAt` TEXT, `request_requestCompleted` TEXT, `record_recordedAt` TEXT, `record_teleconsultationType` TEXT, `record_patientTookMedicines` TEXT, `record_patientConsented` TEXT, `record_medicalOfficerNumber` TEXT, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "patientId",
+            "columnName": "patientId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "medicalOfficerId",
+            "columnName": "medicalOfficerId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncStatus",
+            "columnName": "syncStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "teleconsultRequestInfo.requesterId",
+            "columnName": "request_requesterId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "teleconsultRequestInfo.facilityId",
+            "columnName": "request_facilityId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "teleconsultRequestInfo.requestedAt",
+            "columnName": "request_requestedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "teleconsultRequestInfo.requestCompleted",
+            "columnName": "request_requestCompleted",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "teleconsultRecordInfo.recordedAt",
+            "columnName": "record_recordedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "teleconsultRecordInfo.teleconsultationType",
+            "columnName": "record_teleconsultationType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "teleconsultRecordInfo.patientTookMedicines",
+            "columnName": "record_patientTookMedicines",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "teleconsultRecordInfo.patientConsented",
+            "columnName": "record_patientConsented",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "teleconsultRecordInfo.medicalOfficerNumber",
+            "columnName": "record_medicalOfficerNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timestamp.createdAt",
+            "columnName": "createdAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp.updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp.deletedAt",
+            "columnName": "deletedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [
+      {
+        "viewName": "OverdueAppointment",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId patientAssignedFacilityUuid,\n\n          A.uuid appt_uuid, A.patientUuid appt_patientUuid, A.facilityUuid appt_facilityUuid, A.scheduledDate appt_scheduledDate, A.status appt_status,\n          A.cancelReason appt_cancelReason, A.remindOn appt_remindOn, A.agreedToVisit appt_agreedToVisit, A.appointmentType appt_appointmentType,\n          A.syncStatus appt_syncStatus, A.createdAt appt_createdAt, A.updatedAt appt_updatedAt, A.creationFacilityUuid appt_creationFacilityUuid,\n\n          PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number, PPN.phoneType phone_phoneType, PPN.active phone_active,\n          PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt,\n\n          MH.hasDiabetes diagnosedWithDiabetes, MH.diagnosedWithHypertension diagnosedWithHypertension,\n\n          (\n            CASE\n                WHEN BP.uuid IS NULL THEN BloodSugar.recordedAt\n                WHEN BloodSugar.uuid IS NULL THEN BP.recordedAt\n                ELSE MAX(BP.recordedAt, BloodSugar.recordedAt)\n            END\n          ) AS patientLastSeen,\n\n          (\n            CASE\n              WHEN BloodSugar.reading_type = 'fasting' AND CAST (BloodSugar.reading_value AS REAL) >= 200 THEN 1\n              WHEN BloodSugar.reading_type = 'random' AND CAST (BloodSugar.reading_value AS REAL) >= 300 THEN 1\n              WHEN BloodSugar.reading_type = 'post_prandial' AND CAST (BloodSugar.reading_value AS REAL) >= 300 THEN 1\n              WHEN BloodSugar.reading_type = 'hba1c' AND CAST (BloodSugar.reading_value AS REAL) >= 9 THEN 1\n              WHEN BP.systolic >= 180 OR BP.diastolic >= 110 THEN 1\n              WHEN (MH.hasHadHeartAttack = 'yes' OR MH.hasHadStroke = 'yes') AND (BP.systolic >= 140 OR BP.diastolic >= 110) \n                THEN 1 \n              ELSE 0\n            END\n          ) AS isAtHighRisk,\n          \n          PA.streetAddress patient_address_streetAddress, PA.colonyOrVillage patient_address_colonyOrVillage,\n          PA.district patient_address_district, PA.state patient_address_state,\n          \n          AF.name appointmentFacilityName\n\n          FROM Patient P\n\n          INNER JOIN Appointment A ON A.patientUuid = P.uuid\n          LEFT JOIN PatientPhoneNumber PPN ON (PPN.patientUuid = P.uuid AND PPN.deletedAt IS NULL)\n          LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid\n          LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid\n\n          LEFT JOIN (\n            SELECT * FROM BloodPressureMeasurement WHERE deletedAt IS NULL GROUP BY patientUuid HAVING max(recordedAt)\n          ) BP ON BP.patientUuid = P.uuid\n\n          LEFT JOIN (\n            SELECT * FROM BloodSugarMeasurements WHERE deletedAt IS NULL GROUP BY patientUuid HAVING max(recordedAt)\n          ) BloodSugar ON BloodSugar.patientUuid = P.uuid\n          \n          LEFT JOIN Facility AF ON AF.uuid == A.facilityUuid\n          \n          WHERE \n            P.deletedAt IS NULL\n            AND A.deletedAt IS NULL\n            AND A.status = 'scheduled'\n            AND PPN.number IS NOT NULL\n            AND (BP.recordedAt IS NOT NULL OR BloodSugar.recordedAt IS NOT NULL)"
+      },
+      {
+        "viewName": "PatientSearchResult",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.status, P.createdAt, P.updatedAt, P.syncStatus, P.recordedAt,\n  PA.uuid addr_uuid, PA.streetAddress addr_streetAddress, PA.colonyOrVillage addr_colonyOrVillage, PA.zone addr_zone, PA.district addr_district,\n  PA.state addr_state, PA.country addr_country,\n  PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,\n  PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt,\n  PatientLastSeen.lastSeenTime lastSeen_lastSeenOn, F.name lastSeen_lastSeenAtFacilityName, PatientLastSeen.lastSeenFacilityUuid lastSeen_lastSeenAtFacilityUuid\n  FROM Patient P\n  INNER JOIN PatientAddress PA ON PA.uuid = P.addressUuid\n  LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid\n  LEFT JOIN (\n      SELECT P.uuid patientUuid,\n      (\n          CASE\n              WHEN LatestBloodSugar.uuid IS NULL THEN LatestBP.recordedAt\n              WHEN LatestBP.uuid IS NULL THEN LatestBloodSugar.recordedAt\n              ELSE MAX(LatestBP.recordedAt, LatestBloodSugar.recordedAt)\n          END\n      ) lastSeenTime,\n      (\n          CASE\n              WHEN LatestBloodSugar.uuid IS NULL THEN LatestBP.facilityUuid\n              WHEN LatestBP.uuid IS NULL THEN LatestBloodSugar.facilityUuid\n              WHEN LatestBP.recordedAt > LatestBloodSugar.recordedAt THEN LatestBP.facilityUuid\n              ELSE LatestBloodSugar.facilityUuid\n          END\n      ) lastSeenFacilityUuid\n      FROM Patient P\n      LEFT JOIN (\n          SELECT BP.uuid, BP.patientUuid, BP.recordedAt, F.uuid facilityUuid FROM BloodPressureMeasurement BP\n          INNER JOIN Facility F ON F.uuid = BP.facilityUuid\n          WHERE BP.deletedAt IS NULL\n          GROUP BY BP.patientUuid HAVING MAX(BP.recordedAt)\n      ) LatestBP ON LatestBP.patientUuid = P.uuid\n      LEFT JOIN (\n          SELECT BloodSugar.uuid, BloodSugar.patientUuid, BloodSugar.recordedAt, F.uuid facilityUuid FROM BloodSugarMeasurements BloodSugar\n          INNER JOIN Facility F ON F.uuid = BloodSugar.facilityUuid\n          WHERE BloodSugar.deletedAt IS NULL\n          GROUP BY BloodSugar.patientUuid HAVING MAX(BloodSugar.recordedAt)\n      ) LatestBloodSugar ON LatestBloodSugar.patientUuid = P.uuid\n      WHERE LatestBP.uuid IS NOT NULL OR LatestBloodSugar.uuid IS NOT NULL\n  ) PatientLastSeen ON PatientLastSeen.patientUuid = P.uuid\n  LEFT JOIN Facility F ON F.uuid = PatientLastSeen.lastSeenFacilityUuid"
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bfdf54ec8ab4d8f1424b78cfba3d4904')"
+    ]
+  }
+}

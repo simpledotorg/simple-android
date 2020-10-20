@@ -3,6 +3,7 @@
 ## Next Release
 ## Internal
 - Update `TeleconsultRecord` to sync frequently
+- Add `TeleconsultStatus` to `TeleconsultRecord`
 
 ## On Demo
 ## Features

@@ -28,6 +28,10 @@ import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent
+import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent.OptimizationType.PurgeDeleted
+import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent.OptimizationType.PurgeFromOtherSyncGroup
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
@@ -171,14 +175,16 @@ abstract class AppDatabase : RoomDatabase() {
   fun prune(
       crashReporter: CrashReporter
   ) {
-    purge()
-    try {
-      vacuumDatabase()
-    } catch (e: Exception) {
-      // Vacuuming is an optimization that's unlikely to fail. But if it
-      // does, we can ignore it and just report the exception and let
-      // the original sqlite file continue to be used.
-      crashReporter.report(e)
+    optimizeWithAnalytics(PurgeDeleted) {
+      purge()
+      try {
+        vacuumDatabase()
+      } catch (e: Exception) {
+        // Vacuuming is an optimization that's unlikely to fail. But if it
+        // does, we can ignore it and just report the exception and let
+        // the original sqlite file continue to be used.
+        crashReporter.report(e)
+      }
     }
   }
 
@@ -214,15 +220,17 @@ abstract class AppDatabase : RoomDatabase() {
   }
 
   fun deletePatientsNotInFacilitySyncGroup(currentFacility: Facility) {
-    runInTransaction {
-      val facilityIdsInCurrentSyncGroup = facilityDao().facilityIdsInSyncGroup(currentFacility.syncGroup)
+    optimizeWithAnalytics(PurgeFromOtherSyncGroup) {
+      runInTransaction {
+        val facilityIdsInCurrentSyncGroup = facilityDao().facilityIdsInSyncGroup(currentFacility.syncGroup)
 
-      patientDao().deletePatientsNotInFacilities(facilityIdsInCurrentSyncGroup)
-      bloodPressureDao().deleteWithoutLinkedPatient()
-      bloodSugarDao().deleteWithoutLinkedPatient()
-      appointmentDao().deleteWithoutLinkedPatient()
-      prescriptionDao().deleteWithoutLinkedPatient()
-      medicalHistoryDao().deleteWithoutLinkedPatient()
+        patientDao().deletePatientsNotInFacilities(facilityIdsInCurrentSyncGroup)
+        bloodPressureDao().deleteWithoutLinkedPatient()
+        bloodSugarDao().deleteWithoutLinkedPatient()
+        appointmentDao().deleteWithoutLinkedPatient()
+        prescriptionDao().deleteWithoutLinkedPatient()
+        medicalHistoryDao().deleteWithoutLinkedPatient()
+      }
     }
   }
 
@@ -236,5 +244,22 @@ abstract class AppDatabase : RoomDatabase() {
 
           cursor.getLong(0)
         }
+  }
+
+  private inline fun optimizeWithAnalytics(
+      type: DatabaseOptimizationEvent.OptimizationType,
+      block: () -> Unit
+  ) {
+    val sizeBeforeOptimization = sizeInBytes()
+
+    block.invoke()
+
+    val sizeAfterOptimization = sizeInBytes()
+
+    Analytics.reportDatabaseOptimizationEvent(DatabaseOptimizationEvent(
+        sizeBeforeOptimizationBytes = sizeBeforeOptimization,
+        sizeAfterOptimizationBytes = sizeAfterOptimization,
+        type = type
+    ))
   }
 }

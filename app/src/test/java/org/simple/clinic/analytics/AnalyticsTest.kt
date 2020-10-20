@@ -6,6 +6,7 @@ import org.junit.Test
 import org.simple.clinic.analytics.MockAnalyticsReporter.Event
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
+import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent
 import org.simple.clinic.platform.analytics.SyncAnalyticsEvent
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
@@ -218,6 +219,11 @@ class AnalyticsTest {
     Analytics.reportSyncEvent("Sync 1", SyncAnalyticsEvent.Started)
     Analytics.reportSyncEvent("Sync 3", SyncAnalyticsEvent.Failed)
     Analytics.reportSyncEvent("Sync 2", SyncAnalyticsEvent.Completed)
+    Analytics.reportDatabaseOptimizationEvent(DatabaseOptimizationEvent(
+        sizeBeforeOptimizationBytes = 100L,
+        sizeAfterOptimizationBytes = 50L,
+        type = DatabaseOptimizationEvent.OptimizationType.PurgeDeleted
+    ))
 
     val expected = listOf(
         Event("UserInteraction", mapOf("name" to "Test 1")),
@@ -286,6 +292,11 @@ class AnalyticsTest {
         Event("SyncEvent", mapOf(
             "name" to "Sync 2",
             "syncEvent" to "Completed"
+        )),
+        Event("DatabaseOptimized", mapOf(
+            "sizeBeforeOptimizationBytes" to 100L,
+            "sizeAfterOptimizationBytes" to 50L,
+            "type" to DatabaseOptimizationEvent.OptimizationType.PurgeDeleted.analyticsName
         ))
     )
 

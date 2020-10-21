@@ -649,7 +649,7 @@
   </style>
 
   <style name="Clinic.V2.MaterialButton" parent="Widget.MaterialComponents.Button">
-    <item name="backgroundTint">?attr/colorSecondary</item>
+    <item name="backgroundTint">@color/material_button_background</item>
     <item name="android:textColor">?attr/colorOnSecondary</item>
     <item name="android:insetTop">@dimen/spacing_0</item>
     <item name="android:insetBottom">@dimen/spacing_0</item>

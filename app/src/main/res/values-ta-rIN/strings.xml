@@ -174,6 +174,7 @@
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
   <string name="patientsummary_bangladesh_national_id">ஐடி</string>
 
+  <string name="patientsummary_teleconsult">தொலைபேசி வழி ஆலோசனை</string>
   <string name="patientsummary_log_teleconsult">தொலைபேசி ஆலோசனைக்குப் பதிவுசெய்க</string>
 
   <string name="patientsummary_registered_faciliy_title">பதிவுசெய்யப்பட்டது</string>
@@ -591,6 +592,7 @@
   <string name="drug_duration_title">%1$s %2$s</string>
   <string name="drugDurationLabel">நாட்கள்</string>
   <string name="drug_duration_empty_error">மருந்தின் காலஅளவு காலியாக இருக்கக் கூடாது</string>
+  <string name="drug_duration_max_error">மருந்தின் கால அளவு %1$s நாட்களுக்கு மேல் இருக்க முடியாது</string>
 
   <!-- Teleconsultation success-->
   <string name="screen_teleconsult_success_add_prescription">மருந்துசீட்டைச் சேர்க்கவா?</string>
@@ -627,7 +629,9 @@
 
   <!-- Teleconsult Medicines View -->
   <string name="view_teleconsult_medicines">மருந்துகள்</string>
+  <string name="view_teleconsult_medicines_add">சேர்க்கவும்</string>
   <string name="view_teleconsult_medicines_edit">திருத்தவும்</string>
+  <string name="view_teleconsult_medicines_required_error">குறைந்தது ஒரு மருந்தைச் சேர்க்கவும்</string>
   <plurals name="list_item_teleconsult_medicine_duration">
     <item quantity="one">%1$s நாள்</item>
     <item quantity="other">%1$s நாட்கள்</item>
@@ -639,4 +643,22 @@
   <string name="view_teleconsult_doctor_info_acknowledgement">இந்த மருந்துச் சீட்டில் கையொப்பமிடுவதன் மூலம் நான் %1$s என்பதை ஒப்புக்கொள்கிறேன்</string>
   <string name="view_teleconsult_doctor_info_add_signature">கையொப்பத்தைச் சேர்</string>
   <string name="view_teleconsult_doctor_info_signature_error">கையொப்பத்தைச் சேர்</string>
+
+  <!-- Teleconsult share prescription screen -->
+  <string name="screen_teleconsult_share_prescription_teleconsult_prescription">தொலைபேசி வழி மருந்துச்சீட்டு</string>
+  <string name="screen_teleconsult_share_prescription_medicines">மருந்துகள்</string>
+  <string name="screen_teleconsult_share_prescription_instructions">அறிவுரைகள்</string>
+  <string name="screen_teleconsult_share_prescription_download">பதிவிறக்கு</string>
+  <string name="screen_teleconsult_share_prescription_share">பகிர்</string>
+  <string name="screen_teleconsult_share_prescription_done">முடிந்தது</string>
+  <string name="screen_teleconsult_share_prescription_patient_details">%1$s, %2$s, %3$s</string>
+  <string name="screen_teleconsult_share_prescription_medical_registration_id">மருத்துவப் பதிவு ID: %1$s</string>
+  <string name="screen_teleconsult_share_prescription_image_using">இதைப் பயன்படுத்தி படத்தைப் பகிர்</string>
+  <string name="screen_teleconsult_share_prescription_title">மருந்துச்சீட்டு</string>
+  <string name="screen_teleconsult_share_prescription_image_saved">மருந்துச்சீட்டு பதிவிறக்கங்களில் சேமிக்கப்பட்டது</string>
+
+  <!-- Select diagnosis error alert dialog -->
+  <string name="select_diagnosis_error_diagnosis_required">நோய் கண்டறிதல் அவசியம்</string>
+  <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">உயர் இரத்த அழுத்தம் மற்றும் நீரழிவு நோய் இரண்டிற்குமான நோய் கண்டறிதலைத் தேர்ந்தெடுக்கவும்</string>
+  <string name="select_diagnosis_error_ok">சரி</string>
 </resources>

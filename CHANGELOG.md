@@ -6,7 +6,7 @@
 - Add `TeleconsultStatus` to `TeleconsultRecord`
 
 ### Changes
-- Update translations: `kn-IN`, `ta-IN`
+- Update translations: `kn-IN`, `ta-IN`, `bn-IN`
 
 ## On Demo
 ### Features

@@ -72,5 +72,12 @@ data class TeleconsultRecord(
 
     @Query("UPDATE TeleconsultRecord SET request_requesterCompletionStatus = :teleconsultStatus, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE id = :teleconsultRecordId")
     fun updateRequesterCompletionStatus(teleconsultRecordId: UUID, teleconsultStatus: TeleconsultStatus, updatedAt: Instant, syncStatus: SyncStatus)
+
+    @Query("""
+      SELECT * FROM TeleconsultRecord
+      WHERE patientId = :patientUuid AND deletedAt IS NULL
+      ORDER BY createdAt DESC LIMIT 1
+    """)
+    fun latestTeleconsultRecord(patientUuid: UUID): TeleconsultRecord?
   }
 }

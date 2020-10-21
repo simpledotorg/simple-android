@@ -103,7 +103,7 @@ class ContactDoctorEffectHandler @AssistedInject constructor(
                 requesterId = currentUser.get().uuid,
                 facilityId = currentFacility.get().uuid,
                 requestedAt = Instant.now(clock),
-                requestCompleted = null
+                requesterCompletionStatus = null
             )
 
             teleconsultRecordRepository.createTeleconsultRequestForNurse(

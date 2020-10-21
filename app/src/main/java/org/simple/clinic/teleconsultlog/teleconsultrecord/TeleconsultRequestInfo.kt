@@ -10,5 +10,5 @@ data class TeleconsultRequestInfo(
 
     val requestedAt: Instant,
 
-    val requestCompleted: TeleconsultStatus?
+    val requesterCompletionStatus: TeleconsultStatus?
 )

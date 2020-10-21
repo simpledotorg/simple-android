@@ -6,6 +6,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.FacilitySyncGroupSwitchedAt
+import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import java.time.Duration
@@ -26,12 +27,13 @@ class PurgeOnSync(
       currentFacility: Provider<Facility>,
       appDatabase: AppDatabase,
       @TypedPreference(FacilitySyncGroupSwitchedAt) facilitySyncGroupSwitchedAt: Preference<Optional<Instant>>,
-      clock: UtcClock
+      clock: UtcClock,
+      remoteConfig: ConfigReader
   ) : this(
       currentFacility = currentFacility,
       appDatabase = appDatabase,
       facilitySyncGroupSwitchedAt = facilitySyncGroupSwitchedAt,
-      delayPurgeAfterSwitchFor = Duration.ofHours(24),
+      delayPurgeAfterSwitchFor = Duration.parse(remoteConfig.string("delay_purge_after_facility_sync_group_switch_duration", "P1D")),
       clock = clock
   )
 

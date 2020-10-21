@@ -76,7 +76,7 @@ class TeleconsultRecordSync @Inject constructor(
           requesterId = teleconsultRequestInfo.requesterId,
           facilityId = teleconsultRequestInfo.facilityId,
           requestedAt = teleconsultRequestInfo.requestedAt,
-          requestCompleted = teleconsultRequestInfo.requestCompleted
+          requesterCompletionStatus = teleconsultRequestInfo.requesterCompletionStatus
       )
     } else {
       null

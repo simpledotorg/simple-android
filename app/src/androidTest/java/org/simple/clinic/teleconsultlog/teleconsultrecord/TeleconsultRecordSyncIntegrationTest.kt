@@ -81,7 +81,7 @@ class TeleconsultRecordSyncIntegrationTest {
           requesterId = UUID.fromString("73e28c27-4e79-4409-b2a6-7ac562b0ecd7"),
           facilityId = UUID.fromString("5fc76656-7e4f-4c85-b981-076bd18c9836"),
           requestedAt = Instant.now(testUtcClock),
-          requestCompleted = TeleconsultStatus.Yes
+          requesterCompletionStatus = TeleconsultStatus.Yes
       )
 
       val recordInfo = TestData.teleconsultRecordInfo(

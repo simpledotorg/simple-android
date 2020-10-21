@@ -1205,13 +1205,13 @@ object TestData {
       requesterId: UUID = UUID.randomUUID(),
       facilityId: UUID = UUID.randomUUID(),
       requestedAt: Instant = Instant.parse("2020-09-02T00:00:00Z"),
-      requestCompleted: TeleconsultStatus? = null
+      requesterCompletionStatus: TeleconsultStatus? = null
   ): TeleconsultRequestInfo {
     return TeleconsultRequestInfo(
         requesterId = requesterId,
         facilityId = facilityId,
         requestedAt = requestedAt,
-        requestCompleted = requestCompleted
+        requesterCompletionStatus = requesterCompletionStatus
     )
   }
 }

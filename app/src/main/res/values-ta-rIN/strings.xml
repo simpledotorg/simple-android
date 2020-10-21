@@ -644,7 +644,6 @@
   <string name="view_teleconsult_doctor_info_add_signature">கையொப்பத்தைச் சேர்</string>
   <string name="view_teleconsult_doctor_info_signature_error">கையொப்பத்தைச் சேர்</string>
 
-  <!-- Teleconsult share prescription screen -->
   <string name="screen_teleconsult_share_prescription_download">பதிவிறக்கு</string>
   <string name="screen_teleconsult_share_prescription_share">பகிர்</string>
   <string name="screen_teleconsult_share_prescription_done">முடிந்தது</string>

@@ -40,12 +40,8 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
     return ObservableTransformer { changeFacilityStream ->
       changeFacilityStream
           .map { it.selectedFacility }
-          .switchMapSingle {
-            facilityRepository
-                .setCurrentFacility(it)
-                .subscribeOn(io)
-                .toSingleDefault(it)
-          }
+          .observeOn(io)
+          .doOnNext(facilityRepository::setCurrentFacilityImmediate)
           .doOnNext { isFacilitySwitchedPreference.set(true) }
           .doOnNext { clearAndSyncReports(io) }
           .map { FacilityChanged }

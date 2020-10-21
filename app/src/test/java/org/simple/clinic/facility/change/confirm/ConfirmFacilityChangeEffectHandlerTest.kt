@@ -40,7 +40,6 @@ class ConfirmFacilityChangeEffectHandlerTest {
     //given
     val facility = TestData.facility(UUID.fromString("98a260cb-45b1-46f7-a7ca-d217a27c43c0"))
 
-    whenever(facilityRepository.setCurrentFacility(facility)) doReturn Completable.complete()
     whenever(reportsRepository.deleteReports()) doReturn Completable.complete()
     whenever(reportsSync.sync()) doReturn Completable.complete()
 
@@ -52,6 +51,7 @@ class ConfirmFacilityChangeEffectHandlerTest {
     verify(reportsRepository).deleteReports()
     verify(reportsSync).sync()
     verify(isFacilitySwitchedPreference).set(true)
+    verify(facilityRepository).setCurrentFacilityImmediate(facility)
     verifyZeroInteractions(uiActions)
   }
 

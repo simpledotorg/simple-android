@@ -1,20 +1,23 @@
 # CHANGELOG
 
 ## Next Release
-## Internal
+### Internal
 - Update `TeleconsultRecord` to sync frequently
 - Add `TeleconsultStatus` to `TeleconsultRecord`
 
+### Changes
+- Update translations: `kn-IN`
+
 ## On Demo
-## Features
+### Features
 - Add `SelectDiagnosisErrorDialog` when diagnosis is not selected in `NewMedicalHistoryScreen` and `MedicalHistorySummaryView` 
 
-## Changes
+### Changes
 - Made "SMS Reminders" to be the default consent label on the patient screen unless otherwise specified on a country level
 - Show toast message after saving prescription image on device
 - Fix `ProgressMaterialButton` AVD not animating when initial state is not `in-progress`
 
-## Internal
+### Internal
 - Add `syncGroup` property to the `Facility` resource
 - Remove custom WorkManager initializer
 - Bump Android Gradle Plugin version to 4.0.2
@@ -25,15 +28,15 @@
 - Stop registering a blood pressure measurement to associate a patient in tests with a facility
 - Report database optimization events to analytics
 
-## Fixes
+### Fixes
 - Fix app freeze when pressing enter/done with empty pin in lock screen
 
 ## 2020-10-13-7476
-## Features
+### Features
 - Add `TeleconsultPrescriptionScreen`
 - Add `TeleconsultSharePrescriptionScreen` 
 
-## Changes
+### Changes
 - Updated translations: `bn-IN`, `ti-ET`, `bn-BD`, `ta-IN`, `pa-IN`, `kn-IN`, `mr-IN`
 - Switch the positions of the teleconsultation and Save buttons in the `PatientSummaryScreen`
 

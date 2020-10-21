@@ -732,14 +732,14 @@
   <string name="view_teleconsult_doctor_info_signature_error">Add Signature</string>
 
   <!-- Teleconsult share prescription screen -->
-  <string name="screen_teleconsult_share_prescription_teleconsult_prescription">Teleconsult Prescription</string>
-  <string name="screen_teleconsult_share_prescription_medicines">Medicines</string>
-  <string name="screen_teleconsult_share_prescription_instructions">Instructions</string>
+  <string name="screen_teleconsult_share_prescription_teleconsult_prescription" translatable="false">Teleconsult Prescription</string>
+  <string name="screen_teleconsult_share_prescription_medicines" translatable="false">Medicines</string>
+  <string name="screen_teleconsult_share_prescription_instructions" translatable="false">Instructions</string>
   <string name="screen_teleconsult_share_prescription_download">Download</string>
   <string name="screen_teleconsult_share_prescription_share">Share</string>
   <string name="screen_teleconsult_share_prescription_done">Done</string>
-  <string name="screen_teleconsult_share_prescription_patient_details">%1$s, %2$s, %3$s</string>
-  <string name="screen_teleconsult_share_prescription_medical_registration_id">Medical Registration ID: %1$s</string>
+  <string name="screen_teleconsult_share_prescription_patient_details" translatable="false">%1$s, %2$s, %3$s</string>
+  <string name="screen_teleconsult_share_prescription_medical_registration_id" translatable="false">Medical Registration ID: %1$s</string>
   <string name="list_item_teleconsult_share_prescription_medicines_icon" translatable="false">💊</string>
   <string name="list_item_teleconsult_share_prescription_medicines_name" translatable="false">%1$s %2$s, %3$s, %4$s days</string>
   <string name="screen_teleconsult_share_prescription_image_using">Share image using</string>

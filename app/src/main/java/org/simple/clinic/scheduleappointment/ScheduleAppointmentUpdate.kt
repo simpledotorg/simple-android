@@ -10,7 +10,6 @@ import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.util.daysTill
-import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import java.time.LocalDate
 import java.time.Period
 
@@ -35,6 +34,7 @@ class ScheduleAppointmentUpdate(
       is AppointmentScheduled -> next(model.doneButtonStateChanged(ButtonState.SAVED), CloseSheet)
       SchedulingSkipped -> dispatch(LoadPatientDefaulterStatus(model.patientUuid))
       is PatientDefaulterStatusLoaded -> scheduleAutomaticAppointment(event, model)
+      is TeleconsultRecordLoaded -> next(model.teleconsultRecordLoaded(event.teleconsultRecord))
     }
   }
 

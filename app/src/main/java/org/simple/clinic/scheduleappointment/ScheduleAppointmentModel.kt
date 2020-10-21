@@ -6,6 +6,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.util.UserClock
 import java.util.UUID
 
@@ -15,7 +16,8 @@ data class ScheduleAppointmentModel(
     val potentialAppointmentDates: List<PotentialAppointmentDate>,
     val selectedAppointmentDate: PotentialAppointmentDate?,
     val appointmentFacility: Facility?,
-    val doneButtonState : ButtonState
+    val doneButtonState: ButtonState,
+    val teleconsultRecord: TeleconsultRecord?
 ) : Parcelable {
 
   companion object {
@@ -32,7 +34,8 @@ data class ScheduleAppointmentModel(
           potentialAppointmentDates = potentialAppointmentDates,
           selectedAppointmentDate = null,
           appointmentFacility = null,
-          doneButtonState = doneButtonState
+          doneButtonState = doneButtonState,
+          teleconsultRecord = null
       )
     }
 
@@ -51,7 +54,7 @@ data class ScheduleAppointmentModel(
 
   val hasLoadedAppointmentFacility: Boolean
     get() = appointmentFacility != null
-
+  
   fun appointmentDateSelected(potentialAppointmentDate: PotentialAppointmentDate): ScheduleAppointmentModel {
     return copy(selectedAppointmentDate = potentialAppointmentDate)
   }
@@ -60,7 +63,11 @@ data class ScheduleAppointmentModel(
     return copy(appointmentFacility = facility)
   }
 
-  fun doneButtonStateChanged(doneButtonState: ButtonState) : ScheduleAppointmentModel {
+  fun doneButtonStateChanged(doneButtonState: ButtonState): ScheduleAppointmentModel {
     return copy(doneButtonState = doneButtonState)
+  }
+
+  fun teleconsultRecordLoaded(teleconsultRecord: TeleconsultRecord?): ScheduleAppointmentModel {
+    return copy(teleconsultRecord = teleconsultRecord)
   }
 }

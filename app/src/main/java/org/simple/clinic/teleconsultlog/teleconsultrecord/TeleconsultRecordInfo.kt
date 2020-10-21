@@ -1,7 +1,10 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import java.time.Instant
 
+@Parcelize
 data class TeleconsultRecordInfo(
 
     val recordedAt: Instant,
@@ -13,4 +16,4 @@ data class TeleconsultRecordInfo(
     val patientConsented: Answer,
 
     val medicalOfficerNumber: String?
-)
+) : Parcelable

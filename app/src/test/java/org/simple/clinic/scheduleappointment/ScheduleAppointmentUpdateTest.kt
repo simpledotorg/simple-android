@@ -62,4 +62,35 @@ class ScheduleAppointmentUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when teleconsult record is loaded, then update the model`() {
+    val teleconsultRecord = TestData.teleconsultRecord(
+        id = UUID.fromString("f60e5a36-824d-48c6-a5eb-01a2184c8b97"),
+        teleconsultRequestInfo = TestData.teleconsultRequestInfo()
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(TeleconsultRecordLoaded(teleconsultRecord))
+        .then(
+            assertThatNext(
+                hasModel(model.teleconsultRecordLoaded(teleconsultRecord)),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when teleconsult record is not loaded, then do nothing`(){
+    updateSpec
+        .given(model)
+        .whenEvent(TeleconsultRecordLoaded(null))
+        .then(
+            assertThatNext(
+                hasModel(model.teleconsultRecordLoaded(null)),
+                hasNoEffects()
+            )
+        )
+  }
 }

@@ -5,7 +5,8 @@
 - Update `TeleconsultRecord` to sync frequently
 - Add `TeleconsultStatus` to `TeleconsultRecord`
 - Mark strings used in prescription image as un-translatable
-- Use `US` locale when formatting prescription date
+- Use `ENGLISH` locale when formatting prescription date
+- Rename `TeleconsultRecord` `requestCompleted` to `requesterCompletionStatus`
 
 ### Changes
 - Update translations: `kn-IN`, `ta-IN`, `bn-IN`

@@ -4,6 +4,8 @@
 ### Internal
 - Update `TeleconsultRecord` to sync frequently
 - Add `TeleconsultStatus` to `TeleconsultRecord`
+- Mark strings used in prescription image as un-translatable
+- Use `US` locale when formatting prescription date
 
 ### Changes
 - Update translations: `kn-IN`, `ta-IN`, `bn-IN`

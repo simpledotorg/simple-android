@@ -37,6 +37,18 @@ class PurgeOnSync(
 
   @WorkerThread
   fun purgeUnusedData() {
-    appDatabase.deletePatientsNotInFacilitySyncGroup(currentFacility.get())
+    val facilitySyncSwitchedAtInstant = facilitySyncGroupSwitchedAt.get()
+
+    val shouldPurgeData = !facilitySyncSwitchedAtInstant.isPresent() || isSafeToPurgeData(facilitySyncSwitchedAtInstant.get())
+
+    if(shouldPurgeData) appDatabase.deletePatientsNotInFacilitySyncGroup(currentFacility.get())
+  }
+
+  private fun isSafeToPurgeData(
+      switchedAt: Instant
+  ): Boolean {
+    val now = Instant.now(clock)
+
+    return Duration.between(switchedAt, now) > delayPurgeAfterSwitchFor
   }
 }

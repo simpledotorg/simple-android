@@ -8,16 +8,21 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
+import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID
 
 class ConfirmFacilityChangeEffectHandlerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val facilityRepository = mock<FacilityRepository>()
   private val reportsRepository = mock<ReportsRepository>()
@@ -64,5 +69,19 @@ class ConfirmFacilityChangeEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
     verify(uiActions).closeSheet()
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the load current facility effect is received, load the current facility`() {
+    // given
+    val facility = TestData.facility(UUID.fromString("98a260cb-45b1-46f7-a7ca-d217a27c43c0"))
+    whenever(facilityRepository.currentFacilityImmediate()) doReturn facility
+
+    // when
+    testCase.dispatch(LoadCurrentFacility)
+
+    // then
+    testCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
+    verifyZeroInteractions(uiActions)
   }
 }

@@ -31,6 +31,7 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<ConfirmFacilityChangeEffect, ConfirmFacilityChangeEvent>()
         .addTransformer(ChangeFacilityEffect::class.java, changeFacility(schedulersProvider.io()))
         .addAction(CloseSheet::class.java, { uiActions.closeSheet() }, schedulersProvider.ui())
+        .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
         .build()
   }
 
@@ -54,5 +55,14 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
         .andThen(reportsSync.sync().onErrorComplete())
         .subscribeOn(scheduler)
         .subscribe()
+  }
+
+  private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, ConfirmFacilityChangeEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { facilityRepository.currentFacilityImmediate() }
+          .map(::CurrentFacilityLoaded)
+    }
   }
 }

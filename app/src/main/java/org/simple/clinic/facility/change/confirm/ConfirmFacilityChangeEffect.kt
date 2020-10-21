@@ -7,3 +7,5 @@ sealed class ConfirmFacilityChangeEffect
 data class ChangeFacilityEffect(val selectedFacility: Facility) : ConfirmFacilityChangeEffect()
 
 object CloseSheet : ConfirmFacilityChangeEffect()
+
+object LoadCurrentFacility: ConfirmFacilityChangeEffect()

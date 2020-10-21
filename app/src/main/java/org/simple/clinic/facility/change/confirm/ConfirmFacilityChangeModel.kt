@@ -2,6 +2,16 @@ package org.simple.clinic.facility.change.confirm
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.facility.Facility
 
 @Parcelize
-class ConfirmFacilityChangeModel : Parcelable
+data class ConfirmFacilityChangeModel(
+    val currentFacility: Facility?
+) : Parcelable {
+
+  companion object {
+    fun create(): ConfirmFacilityChangeModel = ConfirmFacilityChangeModel(
+        currentFacility = null
+    )
+  }
+}

@@ -645,14 +645,9 @@
   <string name="view_teleconsult_doctor_info_signature_error">கையொப்பத்தைச் சேர்</string>
 
   <!-- Teleconsult share prescription screen -->
-  <string name="screen_teleconsult_share_prescription_teleconsult_prescription">தொலைபேசி வழி மருந்துச்சீட்டு</string>
-  <string name="screen_teleconsult_share_prescription_medicines">மருந்துகள்</string>
-  <string name="screen_teleconsult_share_prescription_instructions">அறிவுரைகள்</string>
   <string name="screen_teleconsult_share_prescription_download">பதிவிறக்கு</string>
   <string name="screen_teleconsult_share_prescription_share">பகிர்</string>
   <string name="screen_teleconsult_share_prescription_done">முடிந்தது</string>
-  <string name="screen_teleconsult_share_prescription_patient_details">%1$s, %2$s, %3$s</string>
-  <string name="screen_teleconsult_share_prescription_medical_registration_id">மருத்துவப் பதிவு ID: %1$s</string>
   <string name="screen_teleconsult_share_prescription_image_using">இதைப் பயன்படுத்தி படத்தைப் பகிர்</string>
   <string name="screen_teleconsult_share_prescription_title">மருந்துச்சீட்டு</string>
   <string name="screen_teleconsult_share_prescription_image_saved">மருந்துச்சீட்டு பதிவிறக்கங்களில் சேமிக்கப்பட்டது</string>

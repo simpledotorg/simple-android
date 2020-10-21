@@ -644,7 +644,6 @@
   <string name="view_teleconsult_doctor_info_add_signature">ಸಹಿಯನ್ನು ಸೇರಿಸಿ</string>
   <string name="view_teleconsult_doctor_info_signature_error">ಸಹಿಯನ್ನು ಸೇರಿಸಿ</string>
 
-  <!-- Teleconsult share prescription screen -->
   <string name="screen_teleconsult_share_prescription_download">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
   <string name="screen_teleconsult_share_prescription_share">ಹಂಚಿಕೊಳ್ಳಿ</string>
   <string name="screen_teleconsult_share_prescription_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>

@@ -7,15 +7,29 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.FacilitySyncGroupSwitchedAt
 import org.simple.clinic.util.Optional
+import java.time.Duration
 import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Provider
 
-class PurgeOnSync @Inject constructor(
+class PurgeOnSync(
     private val currentFacility: Provider<Facility>,
     private val appDatabase: AppDatabase,
-    @TypedPreference(FacilitySyncGroupSwitchedAt) private val facilitySyncGroupSwitchedAt: Preference<Optional<Instant>>
+    private val facilitySyncGroupSwitchedAt: Preference<Optional<Instant>>,
+    private val delayPurgeAfterSwitchFor: Duration
 ) {
+
+  @Inject
+  constructor(
+      currentFacility: Provider<Facility>,
+      appDatabase: AppDatabase,
+      @TypedPreference(FacilitySyncGroupSwitchedAt) facilitySyncGroupSwitchedAt: Preference<Optional<Instant>>
+  ) : this(
+      currentFacility = currentFacility,
+      appDatabase = appDatabase,
+      facilitySyncGroupSwitchedAt = facilitySyncGroupSwitchedAt,
+      delayPurgeAfterSwitchFor = Duration.ofHours(24)
+  )
 
   @WorkerThread
   fun purgeUnusedData() {

@@ -6,3 +6,5 @@ import java.util.UUID
 sealed class TeleconsultStatusEffect
 
 data class UpdateTeleconsultStatus(val teleconsultRecordId: UUID, val teleconsultStatus: TeleconsultStatus) : TeleconsultStatusEffect()
+
+object CloseSheet : TeleconsultStatusEffect()

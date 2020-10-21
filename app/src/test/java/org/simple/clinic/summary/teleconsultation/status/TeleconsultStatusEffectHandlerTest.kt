@@ -13,10 +13,12 @@ import java.util.UUID
 
 class TeleconsultStatusEffectHandlerTest {
 
+  private val uiActions = mock<TeleconsultStatusUiAction>()
   private val teleconsultRecordRepository = mock<TeleconsultRecordRepository>()
   private val effectHandler = TeleconsultStatusEffectHandler(
       teleconsultRecordRepository = teleconsultRecordRepository,
-      schedulersProvider = TestSchedulersProvider.trampoline()
+      schedulersProvider = TestSchedulersProvider.trampoline(),
+      uiActions = uiActions
   )
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler.build())
 
@@ -36,5 +38,15 @@ class TeleconsultStatusEffectHandlerTest {
     // then
     verify(teleconsultRecordRepository).updateRequesterCompletionStatus(teleconsultRecordId, TeleconsultStatus.Yes)
     verifyNoMoreInteractions(teleconsultRecordRepository)
+  }
+
+  @Test
+  fun `when close sheet effect is received, then dismiss the sheet`() {
+    // when
+    effectHandlerTestCase.dispatch(CloseSheet)
+
+    // then
+    verify(uiActions).dismissSheet()
+    verifyNoMoreInteractions(uiActions)
   }
 }

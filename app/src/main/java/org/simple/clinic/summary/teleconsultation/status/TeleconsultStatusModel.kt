@@ -1,14 +1,17 @@
 package org.simple.clinic.summary.teleconsultation.status
 
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultStatus
+import java.util.UUID
 
 data class TeleconsultStatusModel(
+    val teleconsultRecordId: UUID,
     val teleconsultStatus: TeleconsultStatus?
 ) {
 
   companion object {
 
-    fun create() = TeleconsultStatusModel(
+    fun create(teleconsultRecordId: UUID) = TeleconsultStatusModel(
+        teleconsultRecordId = teleconsultRecordId,
         teleconsultStatus = null
     )
   }

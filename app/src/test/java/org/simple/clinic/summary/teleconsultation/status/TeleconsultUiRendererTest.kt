@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultStatus
+import java.util.UUID
 
 class TeleconsultUiRendererTest {
 
@@ -14,8 +15,9 @@ class TeleconsultUiRendererTest {
     val ui = mock<TeleconsultStatusUi>()
     val uiRenderer = TeleconsultStatusUiRenderer(ui)
 
-    val model = TeleconsultStatusModel.create()
-        .teleconsultStatusChanged(TeleconsultStatus.Yes)
+    val model = TeleconsultStatusModel.create(
+        teleconsultRecordId = UUID.fromString("f5387bb5-0dbf-4d91-a487-bbe219adcd60")
+    ).teleconsultStatusChanged(TeleconsultStatus.Yes)
 
     // when
     uiRenderer.render(model)

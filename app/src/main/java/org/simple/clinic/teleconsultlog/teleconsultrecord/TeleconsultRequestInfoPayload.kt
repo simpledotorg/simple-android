@@ -16,6 +16,6 @@ data class TeleconsultRequestInfoPayload(
     @Json(name = "requested_at")
     val requestedAt: Instant,
 
-    @Json(name = "request_completed")
-    val requestCompleted: TeleconsultStatus?
+    @Json(name = "requester_completion_status")
+    val requesterCompletionStatus: TeleconsultStatus?
 )

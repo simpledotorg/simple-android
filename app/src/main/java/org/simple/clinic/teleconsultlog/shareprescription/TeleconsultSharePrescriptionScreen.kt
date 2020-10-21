@@ -39,6 +39,7 @@ import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -191,7 +192,8 @@ class TeleconsultSharePrescriptionScreen constructor(
   }
 
   override fun renderPrescriptionDate(prescriptionDate: LocalDate) {
-    prescriptionDateTextView.text = dateFormatter.format(prescriptionDate)
+    // Since we need the date shown in prescription image to be english, we are using english locale here
+    prescriptionDateTextView.text = dateFormatter.withLocale(Locale.ENGLISH).format(prescriptionDate)
   }
 
   override fun renderPatientInformation(patientProfile: PatientProfile) {

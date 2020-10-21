@@ -7,6 +7,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.FacilitySyncGroupSwitchedAt
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.UtcClock
 import java.time.Duration
 import java.time.Instant
 import javax.inject.Inject
@@ -16,19 +17,22 @@ class PurgeOnSync(
     private val currentFacility: Provider<Facility>,
     private val appDatabase: AppDatabase,
     private val facilitySyncGroupSwitchedAt: Preference<Optional<Instant>>,
-    private val delayPurgeAfterSwitchFor: Duration
+    private val delayPurgeAfterSwitchFor: Duration,
+    private val clock: UtcClock
 ) {
 
   @Inject
   constructor(
       currentFacility: Provider<Facility>,
       appDatabase: AppDatabase,
-      @TypedPreference(FacilitySyncGroupSwitchedAt) facilitySyncGroupSwitchedAt: Preference<Optional<Instant>>
+      @TypedPreference(FacilitySyncGroupSwitchedAt) facilitySyncGroupSwitchedAt: Preference<Optional<Instant>>,
+      clock: UtcClock
   ) : this(
       currentFacility = currentFacility,
       appDatabase = appDatabase,
       facilitySyncGroupSwitchedAt = facilitySyncGroupSwitchedAt,
-      delayPurgeAfterSwitchFor = Duration.ofHours(24)
+      delayPurgeAfterSwitchFor = Duration.ofHours(24),
+      clock = clock
   )
 
   @WorkerThread

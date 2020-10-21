@@ -164,4 +164,47 @@ class TeleconsultRecordRepositoryTest {
     // then
     assertThat(teleconsultRecordDetails).isEqualTo(teleconsultRecord)
   }
+
+  @Test
+  fun updating_requester_completion_status_should_work_correctly() {
+    // given
+    val teleconsultRecord = TestData.teleconsultRecord(
+        id = UUID.fromString("9e22cb89-ce9f-4bc2-bc07-b69482508411"),
+        teleconsultRequestInfo = TestData.teleconsultRequestInfo(
+            requesterId = UUID.fromString("10a74617-78a9-4d54-9525-7ba47958dbde"),
+            facilityId = UUID.fromString("c8bd5e29-a428-42c1-9cce-e552c3079e4a"),
+            requestedAt = Instant.now(testUtcClock),
+            requesterCompletionStatus = null
+        ),
+        timestamps = Timestamps(
+            createdAt = Instant.now(testUtcClock),
+            updatedAt = Instant.now(testUtcClock),
+            deletedAt = null
+        ),
+        syncStatus = SyncStatus.DONE
+    )
+
+    teleconsultRecordRepository.createTeleconsultRequestForNurse(
+        teleconsultRecordId = teleconsultRecord.id,
+        patientUuid = teleconsultRecord.patientId,
+        medicalOfficerId = teleconsultRecord.medicalOfficerId,
+        teleconsultRequestInfo = teleconsultRecord.teleconsultRequestInfo!!
+    )
+
+    // when
+    testUtcClock.advanceBy(Duration.ofMinutes(2))
+    teleconsultRecordRepository.updateRequesterCompletionStatus(
+        teleconsultRecordId = teleconsultRecord.id,
+        teleconsultStatus = TeleconsultStatus.Yes
+    )
+
+    // then
+    val expectedTeleconsultRecord = teleconsultRecord.copy(
+        teleconsultRequestInfo = teleconsultRecord.teleconsultRequestInfo!!.copy(requesterCompletionStatus = TeleconsultStatus.Yes),
+        timestamp = teleconsultRecord.timestamp.copy(updatedAt = teleconsultRecord.timestamp.updatedAt.plus(Duration.ofMinutes(2))),
+        syncStatus = SyncStatus.PENDING
+    )
+    assertThat(teleconsultRecordRepository.getTeleconsultRecord(teleconsultRecord.id))
+        .isEqualTo(expectedTeleconsultRecord)
+  }
 }

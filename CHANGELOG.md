@@ -10,6 +10,7 @@
 - Mark strings used in prescription image as un-translatable
 - Use `ENGLISH` locale when formatting prescription date
 - Rename `TeleconsultRecord` `requestCompleted` to `requesterCompletionStatus`
+- Delay purging of data from a different sync group for a fixed duration (remotely configurable) after switching facilities
 
 ### Changes
 - Update translations: `kn-IN`, `ta-IN`, `bn-IN`, `ti`, `bn-BD`, `pa-IN`

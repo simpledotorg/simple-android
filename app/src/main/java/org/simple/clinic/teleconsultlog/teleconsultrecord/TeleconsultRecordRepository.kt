@@ -66,6 +66,15 @@ class TeleconsultRecordRepository @Inject constructor(
     )
   }
 
+  fun updateRequesterCompletionStatus(teleconsultRecordId: UUID, teleconsultStatus: TeleconsultStatus) {
+    teleconsultRecordDao.updateRequesterCompletionStatus(
+        teleconsultRecordId = teleconsultRecordId,
+        teleconsultStatus = teleconsultStatus,
+        updatedAt = Instant.now(utcClock),
+        syncStatus = SyncStatus.PENDING
+    )
+  }
+
   override fun save(records: List<TeleconsultRecord>): Completable {
     return Completable.fromAction { teleconsultRecordDao.save(records) }
   }

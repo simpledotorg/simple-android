@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Features
+- [In Progress: 21 Oct 2020] Add `TeleconsultStatusSheet`
+
 ### Internal
 - Update `TeleconsultRecord` to sync frequently
 - Add `TeleconsultStatus` to `TeleconsultRecord`

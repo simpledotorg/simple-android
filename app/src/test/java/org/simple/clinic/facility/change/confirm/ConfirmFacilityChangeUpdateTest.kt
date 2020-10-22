@@ -14,7 +14,10 @@ class ConfirmFacilityChangeUpdateTest {
 
   private val updateSpec = UpdateSpec(ConfirmFacilityChangeUpdate())
 
-  private val currentFacility = TestData.facility(UUID.fromString("3d362e26-c8ca-4bd6-8910-4fbcbcb98678"))
+  private val currentFacility = TestData.facility(
+      uuid = UUID.fromString("3d362e26-c8ca-4bd6-8910-4fbcbcb98678"),
+      syncGroup = "8f8cfe79-ad68-440b-ab3f-2b90901db219"
+  )
 
   private val defaultModel = ConfirmFacilityChangeModel.create()
 
@@ -34,11 +37,15 @@ class ConfirmFacilityChangeUpdateTest {
   }
 
   @Test
-  fun `when user's facility is changed then the sheet should be closed`() {
-    val facility = TestData.facility(uuid = UUID.fromString("21707c61-12d4-4bae-bedb-d26367d4afcb"))
+  fun `when user's facility is changed to another facility in the same sync group, then the sheet should be closed`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("21707c61-12d4-4bae-bedb-d26367d4afcb"),
+        syncGroup = currentFacility.syncGroup
+    )
+    val model = defaultModel.currentFacilityLoaded(currentFacility)
 
     updateSpec
-        .given(defaultModel)
+        .given(model)
         .whenEvent(FacilityChanged(facility))
         .then(
             assertThatNext(
@@ -57,6 +64,40 @@ class ConfirmFacilityChangeUpdateTest {
             assertThatNext(
                 hasModel(defaultModel.currentFacilityLoaded(currentFacility)),
                 hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when user's facility is changed to another facility in a different sync group, then update the facility sync group switched at time`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("21707c61-12d4-4bae-bedb-d26367d4afcb"),
+        syncGroup = "56ddc7df-6a81-42bc-8659-78b0ccb51edd"
+    )
+    val model = defaultModel.currentFacilityLoaded(currentFacility)
+
+    updateSpec
+        .given(model)
+        .whenEvent(FacilityChanged(facility))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(TouchFacilitySyncGroupSwitchedAtTime)
+            )
+        )
+  }
+
+  @Test
+  fun `when the facility sync group switched at time is updated, close the sheet`() {
+    val model = defaultModel.currentFacilityLoaded(currentFacility)
+
+    updateSpec
+        .given(model)
+        .whenEvent(FacilitySyncGroupSwitchedAtTimeTouched)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(CloseSheet)
             )
         )
   }

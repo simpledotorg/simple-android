@@ -18,6 +18,10 @@ data class ConfirmFacilityChangeModel(
     )
   }
 
+  fun hasFacilitySyncGroupSwitched(newFacility: Facility): Boolean {
+    return currentFacility!!.syncGroup != newFacility.syncGroup
+  }
+
   fun currentFacilityLoaded(facility: Facility): ConfirmFacilityChangeModel {
     return copy(currentFacility = facility)
   }

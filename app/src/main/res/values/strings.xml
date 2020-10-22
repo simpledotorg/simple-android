@@ -354,6 +354,7 @@
   <string name="scheduleappointment_next_visit_in">Schedule next visit in</string>
   <string name="scheduleappointment_not_now">Not now</string>
   <string name="scheduleappointment_done">done</string>
+  <string name="scheduleappointment_next">Next</string>
   <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s day</item>
     <item quantity="other">%s days</item>
@@ -366,7 +367,7 @@
     <item quantity="one">%s month</item>
     <item quantity="other">%s months</item>
   </plurals>
-
+  
   <!-- Forgot PIN -->
   <string name="forgotpin_create_new_pin">Create new security PIN</string>
   <string name="forgotpin_create_new_pin_invalid_pin">PIN is too short. Please enter 4 numbers.</string>

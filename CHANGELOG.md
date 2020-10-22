@@ -12,7 +12,7 @@
 - Rename `TeleconsultRecord` `requestCompleted` to `requesterCompletionStatus`
 
 ### Changes
-- Update translations: `kn-IN`, `ta-IN`, `bn-IN`, `ti`
+- Update translations: `kn-IN`, `ta-IN`, `bn-IN`, `ti`, `bn-BD`
 
 ## On Demo
 ### Features

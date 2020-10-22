@@ -52,7 +52,7 @@ class ConfirmFacilityChangeEffectHandlerTest {
     testCase.dispatch(ChangeFacilityEffect(facility))
 
     //then
-    testCase.assertOutgoingEvents(FacilityChanged)
+    testCase.assertOutgoingEvents(FacilityChanged(facility))
     verify(reportsRepository).deleteReports()
     verify(reportsSync).sync()
     verify(isFacilitySwitchedPreference).set(true)

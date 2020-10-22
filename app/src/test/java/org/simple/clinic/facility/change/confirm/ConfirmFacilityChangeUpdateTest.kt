@@ -35,9 +35,11 @@ class ConfirmFacilityChangeUpdateTest {
 
   @Test
   fun `when user's facility is changed then the sheet should be closed`() {
+    val facility = TestData.facility(uuid = UUID.fromString("21707c61-12d4-4bae-bedb-d26367d4afcb"))
+
     updateSpec
         .given(defaultModel)
-        .whenEvent(FacilityChanged)
+        .whenEvent(FacilityChanged(facility))
         .then(
             assertThatNext(
                 hasNoModel(),

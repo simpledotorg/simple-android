@@ -45,7 +45,7 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
           .doOnNext(facilityRepository::setCurrentFacilityImmediate)
           .doOnNext { isFacilitySwitchedPreference.set(true) }
           .doOnNext { clearAndSyncReports(io) }
-          .map { FacilityChanged }
+          .map(::FacilityChanged)
     }
   }
 

@@ -7,9 +7,13 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.FacilitySyncGroupSwitchedAt
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import java.time.Instant
 import javax.inject.Named
 
 class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
@@ -18,7 +22,8 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
     private val reportsSync: ReportsSync,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: ConfirmFacilityChangeUiActions,
-    @Named("is_facility_switched") private val isFacilitySwitchedPreference: Preference<Boolean>
+    @Named("is_facility_switched") private val isFacilitySwitchedPreference: Preference<Boolean>,
+    @TypedPreference(FacilitySyncGroupSwitchedAt) private val facilitySyncGroupSwitchAtPreference: Preference<Optional<Instant>>
 ) {
 
   @AssistedInject.Factory

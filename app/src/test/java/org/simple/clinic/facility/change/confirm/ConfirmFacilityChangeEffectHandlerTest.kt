@@ -15,8 +15,10 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import java.time.Instant
 import java.util.UUID
 
 class ConfirmFacilityChangeEffectHandlerTest {
@@ -29,14 +31,16 @@ class ConfirmFacilityChangeEffectHandlerTest {
   private val reportsSync = mock<ReportsSync>()
   private val uiActions = mock<ConfirmFacilityChangeUiActions>()
   private val isFacilitySwitchedPreference = mock<Preference<Boolean>>()
+  private val facilitySyncGroupSwitchedAtPreference = mock<Preference<Optional<Instant>>>()
 
   private val effectHandler = ConfirmFacilityChangeEffectHandler(
-      facilityRepository,
-      reportsRepository,
-      reportsSync,
-      TestSchedulersProvider.trampoline(),
-      uiActions,
-      isFacilitySwitchedPreference
+      facilityRepository = facilityRepository,
+      reportsRepository = reportsRepository,
+      reportsSync = reportsSync,
+      schedulersProvider = TestSchedulersProvider.trampoline(),
+      uiActions = uiActions,
+      isFacilitySwitchedPreference = isFacilitySwitchedPreference,
+      facilitySyncGroupSwitchAtPreference = facilitySyncGroupSwitchedAtPreference
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
 

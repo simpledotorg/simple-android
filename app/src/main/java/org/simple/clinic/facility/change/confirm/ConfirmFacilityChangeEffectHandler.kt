@@ -12,6 +12,7 @@ import org.simple.clinic.main.TypedPreference.Type.FacilitySyncGroupSwitchedAt
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.Instant
 import javax.inject.Named
@@ -21,6 +22,7 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
     private val reportsRepository: ReportsRepository,
     private val reportsSync: ReportsSync,
     private val schedulersProvider: SchedulersProvider,
+    private val clock: UtcClock,
     @Assisted private val uiActions: ConfirmFacilityChangeUiActions,
     @Named("is_facility_switched") private val isFacilitySwitchedPreference: Preference<Boolean>,
     @TypedPreference(FacilitySyncGroupSwitchedAt) private val facilitySyncGroupSwitchAtPreference: Preference<Optional<Instant>>
@@ -37,6 +39,7 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
         .addTransformer(ChangeFacilityEffect::class.java, changeFacility(schedulersProvider.io()))
         .addAction(CloseSheet::class.java, { uiActions.closeSheet() }, schedulersProvider.ui())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
+        .addTransformer(TouchFacilitySyncGroupSwitchedAtTime::class.java, touchFacilitySyncGroupSwitchedAtTime())
         .build()
   }
 
@@ -68,6 +71,15 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .map { facilityRepository.currentFacilityImmediate() }
           .map(::CurrentFacilityLoaded)
+    }
+  }
+
+  private fun touchFacilitySyncGroupSwitchedAtTime(): ObservableTransformer<TouchFacilitySyncGroupSwitchedAtTime, ConfirmFacilityChangeEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .doOnNext { facilitySyncGroupSwitchAtPreference.set(Optional.of(Instant.now(clock))) }
+          .map { FacilitySyncGroupSwitchedAtTimeTouched }
     }
   }
 }

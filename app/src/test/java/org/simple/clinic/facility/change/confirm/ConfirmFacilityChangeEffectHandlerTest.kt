@@ -17,6 +17,7 @@ import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.Instant
 import java.util.UUID
@@ -32,12 +33,14 @@ class ConfirmFacilityChangeEffectHandlerTest {
   private val uiActions = mock<ConfirmFacilityChangeUiActions>()
   private val isFacilitySwitchedPreference = mock<Preference<Boolean>>()
   private val facilitySyncGroupSwitchedAtPreference = mock<Preference<Optional<Instant>>>()
+  private val clock = TestUtcClock()
 
   private val effectHandler = ConfirmFacilityChangeEffectHandler(
       facilityRepository = facilityRepository,
       reportsRepository = reportsRepository,
       reportsSync = reportsSync,
       schedulersProvider = TestSchedulersProvider.trampoline(),
+      clock = clock,
       uiActions = uiActions,
       isFacilitySwitchedPreference = isFacilitySwitchedPreference,
       facilitySyncGroupSwitchAtPreference = facilitySyncGroupSwitchedAtPreference
@@ -86,6 +89,17 @@ class ConfirmFacilityChangeEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the touch facility sync group switched at time effect is received, update the facility sync group switched at preference with the current time`() {
+    // when
+    testCase.dispatch(TouchFacilitySyncGroupSwitchedAtTime)
+
+    // then
+    verify(facilitySyncGroupSwitchedAtPreference).set(Optional.of(Instant.now(clock)))
+    testCase.assertOutgoingEvents(FacilitySyncGroupSwitchedAtTimeTouched)
     verifyZeroInteractions(uiActions)
   }
 }

@@ -70,5 +70,7 @@ data class TeleconsultRecord(
     @Query("SELECT id FROM TeleconsultRecord WHERE syncStatus = :syncStatus")
     fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
 
+    @Query("UPDATE TeleconsultRecord SET request_requesterCompletionStatus = :teleconsultStatus, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE id = :teleconsultRecordId")
+    fun updateRequesterCompletionStatus(teleconsultRecordId: UUID, teleconsultStatus: TeleconsultStatus, updatedAt: Instant, syncStatus: SyncStatus)
   }
 }

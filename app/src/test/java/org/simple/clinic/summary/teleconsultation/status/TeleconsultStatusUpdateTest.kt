@@ -40,4 +40,17 @@ class TeleconsultStatusUpdateTest {
             hasEffects(CloseSheet)
         ))
   }
+
+  @Test
+  fun `when done is clicked, then update teleconsult status`() {
+    val teleconsultStatusModel = model.teleconsultStatusChanged(TeleconsultStatus.Yes)
+
+    updateSpec
+        .given(teleconsultStatusModel)
+        .whenEvent(DoneClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(UpdateTeleconsultStatus(teleconsultRecordId, TeleconsultStatus.Yes))
+        ))
+  }
 }

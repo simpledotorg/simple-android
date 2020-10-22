@@ -7,3 +7,5 @@ sealed class TeleconsultStatusEvent
 data class TeleconsultStatusChanged(val teleconsultStatus: TeleconsultStatus) : TeleconsultStatusEvent()
 
 object TeleconsultStatusUpdated : TeleconsultStatusEvent()
+
+object DoneClicked : TeleconsultStatusEvent()

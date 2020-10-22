@@ -10,4 +10,8 @@ interface ScheduleAppointmentUi {
   fun showPatientFacility(facilityName: String)
   fun showProgress()
   fun hideProgress()
+  fun showDoneButton()
+  fun showNextButton()
+  fun hideDoneButton()
+  fun hideNextButton()
 }

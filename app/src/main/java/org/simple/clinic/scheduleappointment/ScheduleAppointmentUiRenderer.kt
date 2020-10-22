@@ -4,6 +4,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.PotentialAppointmentDate
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultStatus
 import org.simple.clinic.util.ValueChangedCallback
 
 class ScheduleAppointmentUiRenderer(
@@ -28,7 +29,30 @@ class ScheduleAppointmentUiRenderer(
       }
     }
 
+    manageRequestCompletedStatus(model)
+
     manageButtonState(model)
+  }
+
+  private fun manageRequestCompletedStatus(model: ScheduleAppointmentModel) {
+    when (model.requesterCompletionStatus) {
+      TeleconsultStatus.StillWaiting -> {
+        ui.showNextButton()
+        ui.hideDoneButton()
+      }
+      TeleconsultStatus.Yes -> {
+        ui.showDoneButton()
+        ui.hideNextButton()
+      }
+      TeleconsultStatus.No -> {
+        ui.showDoneButton()
+        ui.hideNextButton()
+      }
+      else -> {
+        ui.showDoneButton()
+        ui.hideNextButton()
+      }
+    }
   }
 
   private fun manageButtonState(model: ScheduleAppointmentModel) {

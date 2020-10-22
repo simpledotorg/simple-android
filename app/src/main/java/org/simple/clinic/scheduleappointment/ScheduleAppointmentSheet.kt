@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import com.jakewharton.rxbinding3.view.clicks
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
@@ -245,5 +247,21 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
 
   override fun hideProgress() {
     doneButton.setButtonState(Enabled)
+  }
+
+  override fun showDoneButton() {
+    doneButton.visibility = VISIBLE
+  }
+
+  override fun showNextButton() {
+    nextButton.visibility = VISIBLE
+  }
+
+  override fun hideDoneButton() {
+    doneButton.visibility = GONE
+  }
+
+  override fun hideNextButton() {
+    nextButton.visibility = GONE
   }
 }

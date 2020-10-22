@@ -61,7 +61,7 @@ data class FacilityPayload(
     @Json(name = "config")
     val config: FacilityConfig,
 
-    @Json(name = "sync_group_id")
+    @Json(name = "sync_region_id")
     val syncGroup: String?
 ) {
 

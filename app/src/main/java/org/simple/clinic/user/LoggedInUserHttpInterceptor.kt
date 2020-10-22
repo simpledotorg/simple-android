@@ -28,6 +28,7 @@ class LoggedInUserHttpInterceptor @Inject constructor(
         .addHeader("Authorization", "Bearer $accessToken")
         .addHeader("X-USER-ID", userFacilityDetails.userId.toString())
         .addHeader("X-FACILITY-ID", userFacilityDetails.currentFacilityId.toString())
+        .addHeader("X-SYNC-REGION-ID", userFacilityDetails.currentSyncGroupId)
         .build()
   }
 

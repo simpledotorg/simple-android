@@ -751,4 +751,9 @@
   <string name="select_diagnosis_error_diagnosis_required">Diagnosis Required</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Select a diagnosis for both hypertension and diabetes</string>
   <string name="select_diagnosis_error_ok">OK</string>
+  <string name="sheet_teleconsult_status_title">Tele-consult complete?</string>
+  <string name="sheet_teleconsult_status_yes">Yes</string>
+  <string name="sheet_teleconsult_status_no">No</string>
+  <string name="sheet_teleconsult_status_waiting">Still waiting</string>
+  <string name="sheet_teleconsult_status_done">Done</string>
 </resources>

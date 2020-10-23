@@ -1,12 +1,15 @@
 package org.simple.clinic.summary.teleconsultation.status
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultStatus
 import java.util.UUID
 
+@Parcelize
 data class TeleconsultStatusModel(
     val teleconsultRecordId: UUID,
     val teleconsultStatus: TeleconsultStatus?
-) {
+) : Parcelable {
 
   companion object {
 

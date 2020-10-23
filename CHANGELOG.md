@@ -13,7 +13,7 @@
 - Delay purging of data from a different sync group for a fixed duration (remotely configurable) after switching facilities
 
 ### Changes
-- Update translations: `kn-IN`, `ta-IN`, `bn-IN`, `ti`, `bn-BD`, `pa-IN`, `mr`
+- Update translations: `kn-IN`, `ta-IN`, `bn-IN`, `ti`, `bn-BD`, `pa-IN`, `mr-IN`, `te-IN`
 
 ## On Demo
 ### Features

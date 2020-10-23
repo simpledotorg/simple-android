@@ -241,5 +241,12 @@ data class User(
 
     @Query("SELECT currentFacilityUuid FROM LoggedInUser LIMIT 1")
     abstract fun currentFacilityUuid(): UUID?
+
+    @Query("""
+      SELECT U.uuid userId, F.uuid currentFacilityId, F.syncGroup currentSyncGroupId
+      FROM LoggedInUser U
+      INNER JOIN Facility F ON U.currentFacilityUuid == F.uuid
+    """)
+    abstract fun userAndFacilityDetails(): UserFacilityDetails?
   }
 }

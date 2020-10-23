@@ -20,6 +20,7 @@ import org.simple.clinic.util.Rules
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
 import java.time.Instant
+import java.util.UUID
 import javax.inject.Inject
 
 
@@ -110,5 +111,30 @@ class UserSessionAndroidTest {
     userSession.logout().blockingGet()
 
     assertThat(selectedCountryPreference.get()).isEqualTo(Optional.of(country))
+  }
+
+  @Test
+  fun fetching_the_user_and_facility_details_should_work_as_expected() {
+    // given
+    val newFacility = TestData.facility(
+        uuid = UUID.fromString("56ddc7df-6a81-42bc-8659-78b0ccb51edd"),
+        syncGroup = "bb92c082-d749-478a-bd2a-fe7f10055ef0"
+    )
+    facilityRepository
+        .save(listOf(newFacility))
+        .blockingAwait()
+
+    facilityRepository.setCurrentFacilityImmediate(newFacility)
+
+    // when
+    val userFacilityDetails = userSession.userFacilityDetails()
+
+    // then
+    val expected = UserFacilityDetails(
+        userId = user.uuid,
+        currentFacilityId = newFacility.uuid,
+        currentSyncGroupId = newFacility.syncGroup
+    )
+    assertThat(userFacilityDetails).isEqualTo(expected)
   }
 }

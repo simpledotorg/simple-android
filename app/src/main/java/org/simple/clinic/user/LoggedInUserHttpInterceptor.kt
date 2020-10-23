@@ -13,21 +13,22 @@ class LoggedInUserHttpInterceptor @Inject constructor(
   override fun intercept(chain: Interceptor.Chain?): Response {
     val originalRequest = chain!!.request()
 
-    val user = userSession.loggedInUserImmediate()
+    val userDetails = userSession.userFacilityDetails()
     val accessToken = userSession.accessToken().toNullable()
 
-    return if (user != null && accessToken.isNullOrBlank().not()) {
-      chain.proceed(addHeaders(originalRequest, accessToken!!, user))
+    return if (userDetails != null && accessToken.isNullOrBlank().not()) {
+      chain.proceed(addHeaders(originalRequest, accessToken!!, userDetails))
     } else {
       chain.proceed(originalRequest)
     }
   }
 
-  private fun addHeaders(originalRequest: Request, accessToken: String, user: User): Request {
+  private fun addHeaders(originalRequest: Request, accessToken: String, userFacilityDetails: UserFacilityDetails): Request {
     return originalRequest.newBuilder()
         .addHeader("Authorization", "Bearer $accessToken")
-        .addHeader("X-USER-ID", user.uuid.toString())
-        .addHeader("X-FACILITY-ID", user.currentFacilityUuid.toString())
+        .addHeader("X-USER-ID", userFacilityDetails.userId.toString())
+        .addHeader("X-FACILITY-ID", userFacilityDetails.currentFacilityId.toString())
+        .addHeader("X-SYNC-REGION-ID", userFacilityDetails.currentSyncGroupId)
         .build()
   }
 

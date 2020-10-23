@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface FacilitySyncApi {
 
-  @Headers(value = ["X-RESYNC-TOKEN: 2"])
+  @Headers(value = ["X-RESYNC-TOKEN: 3"])
   @GET("v3/facilities/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,

@@ -234,6 +234,11 @@ class UserSession @Inject constructor(
     }
   }
 
+  @WorkerThread
+  fun userFacilityDetails(): UserFacilityDetails? {
+    return appDatabase.userDao().userAndFacilityDetails()
+  }
+
   sealed class LogoutResult : Parcelable {
 
     @Parcelize

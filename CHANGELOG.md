@@ -20,6 +20,7 @@
 - Stop registering a blood pressure measurement to associate a patient in tests with a facility
 - Report database optimization events to analytics
 - Delay purging of data from a different sync group for a fixed duration (remotely configurable) after switching facilities
+- Add support for server controller resync when switching facility sync groups
 
 ## Fixes
 - Fix app freeze when pressing enter/done with empty pin in lock screen

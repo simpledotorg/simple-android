@@ -10,8 +10,6 @@
 - Mark strings used in prescription image as un-translatable
 - Use `ENGLISH` locale when formatting prescription date
 - Rename `TeleconsultRecord` `requestCompleted` to `requesterCompletionStatus`
-- Delay purging of data from a different sync group for a fixed duration (remotely configurable) after switching facilities
-- Add support for server controller resync when switching facility sync groups
 - Bump the resync token for the Facility sync
 
 ### Changes
@@ -36,6 +34,8 @@
 - Register patients in sync integration tests
 - Stop registering a blood pressure measurement to associate a patient in tests with a facility
 - Report database optimization events to analytics
+- Delay purging of data from a different sync group for a fixed duration (remotely configurable) after switching facilities
+- Add support for server controller resync when switching facility sync groups
 
 ### Fixes
 - Fix app freeze when pressing enter/done with empty pin in lock screen

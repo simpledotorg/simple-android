@@ -7,4 +7,8 @@ sealed class ConfirmFacilityChangeEvent : UiEvent
 
 data class FacilityChangeConfirmed(val selectedFacility: Facility) : ConfirmFacilityChangeEvent()
 
-object FacilityChanged : ConfirmFacilityChangeEvent()
+data class FacilityChanged(val newFacility: Facility) : ConfirmFacilityChangeEvent()
+
+data class CurrentFacilityLoaded(val currentFacility: Facility): ConfirmFacilityChangeEvent()
+
+object FacilitySyncGroupSwitchedAtTimeTouched: ConfirmFacilityChangeEvent()

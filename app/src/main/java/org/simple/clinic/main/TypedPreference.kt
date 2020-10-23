@@ -9,6 +9,7 @@ annotation class TypedPreference(val value: Type) {
     OnboardingComplete,
     FallbackCountry,
     DatabaseMaintenanceRunAt,
-    MedicalRegistrationId
+    MedicalRegistrationId,
+    FacilitySyncGroupSwitchedAt
   }
 }

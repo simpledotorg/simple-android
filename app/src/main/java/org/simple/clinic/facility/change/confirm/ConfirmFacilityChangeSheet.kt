@@ -57,7 +57,7 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
   private val delegate by unsafeLazy {
     MobiusDelegate.forActivity(
         events.ofType(),
-        ConfirmFacilityChangeModel(),
+        ConfirmFacilityChangeModel.create(),
         ConfirmFacilityChangeUpdate(),
         effectHandlerFactory.create(this).build(),
         ConfirmFacilityChangeInit()

@@ -1,5 +1,7 @@
 package org.simple.clinic.sync
 
+import com.f2prateek.rx.preferences2.Preference
+import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.bloodsugar.BloodSugarRepository
@@ -15,6 +17,8 @@ import org.simple.clinic.facility.FacilityModule
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.help.HelpModule
 import org.simple.clinic.help.HelpSync
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.FacilitySyncGroupSwitchedAt
 import org.simple.clinic.medicalhistory.MedicalHistoryModule
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
@@ -31,6 +35,10 @@ import org.simple.clinic.reports.ReportsModule
 import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationSync
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordSync
+import org.simple.clinic.util.Optional
+import org.simple.clinic.util.preference.InstantRxPreferencesConverter
+import org.simple.clinic.util.preference.getOptional
+import java.time.Instant
 import javax.inject.Named
 
 @Module(includes = [
@@ -60,7 +68,7 @@ class SyncModule {
       helpSync: HelpSync,
       bloodSugarSync: BloodSugarSync,
       teleconsultationMedicalOfficersSync: TeleconsultationSync,
-      teleconsultRecordSync : TeleconsultRecordSync
+      teleconsultRecordSync: TeleconsultRecordSync
   ): List<ModelSync> {
     return listOf(
         facilitySync, protocolSync, patientSync,
@@ -89,5 +97,13 @@ class SyncModule {
         prescriptionSyncRepository,
         bloodSugarRepository
     )
+  }
+
+  @Provides
+  @TypedPreference(FacilitySyncGroupSwitchedAt)
+  fun provideFacilitySyncGroupSwitchedAtPreferences(
+      rxSharedPreferences: RxSharedPreferences
+  ): Preference<Optional<Instant>> {
+    return rxSharedPreferences.getOptional("facility_sync_group_switched_at", InstantRxPreferencesConverter())
   }
 }

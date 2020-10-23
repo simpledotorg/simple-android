@@ -51,8 +51,8 @@ class FacilityRepository @Inject constructor(
         }
   }
 
-  fun setCurrentFacility(facility: Facility): Completable {
-    return setCurrentFacility(facility.uuid)
+  fun setCurrentFacilityImmediate(facility: Facility) {
+    userDao.setCurrentFacility(facility.uuid)
   }
 
   fun setCurrentFacility(facilityUuid: UUID): Completable {

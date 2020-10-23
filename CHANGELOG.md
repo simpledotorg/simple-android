@@ -11,6 +11,8 @@
 - Use `ENGLISH` locale when formatting prescription date
 - Rename `TeleconsultRecord` `requestCompleted` to `requesterCompletionStatus`
 - Delay purging of data from a different sync group for a fixed duration (remotely configurable) after switching facilities
+- Add support for server controller resync when switching facility sync groups
+- Bump the resync token for the Facility sync
 
 ### Changes
 - Update translations: `kn-IN`, `ta-IN`, `bn-IN`, `ti`, `bn-BD`, `pa-IN`, `mr-IN`, `te-IN`, `hi-IN`

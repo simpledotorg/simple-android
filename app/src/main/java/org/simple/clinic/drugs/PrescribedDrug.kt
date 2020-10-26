@@ -83,6 +83,22 @@ data class PrescribedDrug(
     )
   }
 
+  fun refill(
+      uuid: UUID,
+      facilityUuid: UUID,
+      utcClock: UtcClock
+  ): PrescribedDrug {
+    return copy(
+        uuid = uuid,
+        facilityUuid = facilityUuid,
+        syncStatus = SyncStatus.PENDING,
+        timestamps = Timestamps.create(utcClock),
+        frequency = null,
+        durationInDays = null,
+        teleconsultationId = null
+    )
+  }
+
   fun refillForTeleconsultation(
       uuid: UUID,
       facilityUuid: UUID,

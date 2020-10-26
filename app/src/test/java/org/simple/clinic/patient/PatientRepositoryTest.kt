@@ -28,7 +28,6 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchResult.PatientNameAndId
 import org.simple.clinic.patient.businessid.BusinessId
-import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.util.RxErrorsRule
@@ -57,7 +56,6 @@ class PatientRepositoryTest {
   private val businessIdDao = mock<BusinessId.RoomDao>()
   private val facilityRepository = mock<FacilityRepository>()
   private val searchPatientByName = mock<SearchPatientByName>()
-  private val businessIdMetaAdapter = mock<BusinessIdMetaDataAdapter>()
 
   private val clock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ISO_DATE
@@ -76,9 +74,10 @@ class PatientRepositoryTest {
         searchPatientByName = searchPatientByName,
         config = config,
         reportsRepository = mock(),
-        businessIdMetaDataAdapter = businessIdMetaAdapter,
+        businessIdMetaDataMoshiAdapter = mock(),
         schedulersProvider = schedulersProvider,
-        dateOfBirthFormat = dateOfBirthFormat)
+        dateOfBirthFormat = dateOfBirthFormat
+    )
 
     whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))
     whenever(bloodPressureMeasurementDao.patientToFacilityIds(any())).thenReturn(emptyList())

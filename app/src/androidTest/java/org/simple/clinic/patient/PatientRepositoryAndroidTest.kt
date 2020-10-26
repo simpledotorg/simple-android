@@ -2,6 +2,7 @@ package org.simple.clinic.patient
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
+import com.squareup.moshi.JsonAdapter
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -44,7 +45,6 @@ import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdMetaData
-import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -118,7 +118,7 @@ class PatientRepositoryAndroidTest {
   lateinit var config: PatientConfig
 
   @Inject
-  lateinit var businessIdMetaDataAdapter: BusinessIdMetaDataAdapter
+  lateinit var businessIdMetaDataAdapter: JsonAdapter<BusinessIdMetaData>
 
   @Inject
   lateinit var loggedInUser: User
@@ -1462,8 +1462,8 @@ class PatientRepositoryAndroidTest {
     assertThat(savedBusinessId.updatedAt).isEqualTo(now.plus(duration))
     assertThat(savedBusinessId.deletedAt).isNull()
 
-    val savedMeta = businessIdMetaDataAdapter.deserialize(savedBusinessId.metaData, BusinessId.MetaDataVersion.BpPassportMetaDataV1)
-    val expectedSavedMeta = BusinessIdMetaData.BpPassportMetaDataV1(
+    val savedMeta = businessIdMetaDataAdapter.fromJson(savedBusinessId.metaData)
+    val expectedSavedMeta = BusinessIdMetaData(
         assigningUserUuid = loggedInUser.uuid,
         assigningFacilityUuid = currentFacility.uuid
     )
@@ -1502,8 +1502,8 @@ class PatientRepositoryAndroidTest {
     assertThat(savedBusinessId.updatedAt).isEqualTo(now.plus(duration))
     assertThat(savedBusinessId.deletedAt).isNull()
 
-    val savedMeta = businessIdMetaDataAdapter.deserialize(savedBusinessId.metaData, BusinessId.MetaDataVersion.BangladeshNationalIdMetaDataV1)
-    val expectedSavedMeta = BusinessIdMetaData.BangladeshNationalIdMetaDataV1(
+    val savedMeta = businessIdMetaDataAdapter.fromJson(savedBusinessId.metaData)
+    val expectedSavedMeta = BusinessIdMetaData(
         assigningUserUuid = loggedInUser.uuid,
         assigningFacilityUuid = currentFacility.uuid
     )

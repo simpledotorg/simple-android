@@ -13,6 +13,7 @@
 - Bump the resync token for the Facility sync
 - Bump AGP to 4.1.0
 - Add `PrescribedDrug#refill` method
+- Remove unnecessary sealed class types for different Business ID metadata versions
 
 ### Changes
 - Update translations: `kn-IN`, `ta-IN`, `bn-IN`, `ti`, `bn-BD`, `pa-IN`, `mr-IN`, `te-IN`, `hi-IN`

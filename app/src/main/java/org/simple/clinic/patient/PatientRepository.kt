@@ -363,6 +363,166 @@ class PatientRepository @Inject constructor(
         .andThen(sharedPatient)
   }
 
+  private fun convertOngoingPatientEntryToPatientProfile(
+      loggedInUser: User,
+      facility: Facility,
+      patientUuid: UUID,
+      addressUuid: UUID,
+      supplyUuidForBpPassport: () -> UUID,
+      supplyUuidForAlternativeId: () -> UUID,
+      supplyUuidForPhoneNumber: () -> UUID
+  ): PatientProfile {
+    return with(ongoingNewPatientEntry) {
+      requireNotNull(personalDetails)
+      requireNotNull(address)
+
+      val dateOfBirth = personalDetails.dateOfBirth
+
+      val patient = Patient(
+          uuid = patientUuid,
+          addressUuid = addressUuid,
+          fullName = personalDetails.fullName,
+          gender = personalDetails.gender!!,
+          dateOfBirth = dateOfBirth?.let {
+            dateOfBirthFormat.parse(dateOfBirth, LocalDate::from)
+          },
+          age = personalDetails.age?.let { ageString ->
+            Age(ageString.toInt(), Instant.now(utcClock))
+          },
+
+          status = PatientStatus.Active,
+
+          createdAt = Instant.now(utcClock),
+          updatedAt = Instant.now(utcClock),
+          deletedAt = null,
+          recordedAt = Instant.now(utcClock),
+          syncStatus = PENDING,
+          reminderConsent = reminderConsent,
+          deletedReason = null,
+          registeredFacilityId = facility.uuid,
+          assignedFacilityId = facility.uuid
+      )
+
+      val address = PatientAddress(
+          uuid = addressUuid,
+          streetAddress = address.streetAddress,
+          colonyOrVillage = address.colonyOrVillage,
+          zone = address.zone,
+          district = address.district,
+          state = address.state,
+          country = facility.country,
+          createdAt = Instant.now(utcClock),
+          updatedAt = Instant.now(utcClock),
+          deletedAt = null
+      )
+
+      val phoneNumbers = createPhoneNumbersFromOngoingPatientEntry(
+          ongoingEntry = this,
+          patientUuid = patientUuid,
+          supplyUuidForPhoneNumber = supplyUuidForPhoneNumber
+      )
+
+      val businessIds = createBusinessIdsFromOngoingPatientEntry(
+          ongoingEntry = this,
+          patientUuid = patientUuid,
+          user = loggedInUser,
+          supplyUuidForBpPassport = supplyUuidForBpPassport,
+          supplyUuidForAlternativeId = supplyUuidForAlternativeId
+      )
+
+      PatientProfile(
+          patient = patient,
+          address = address,
+          phoneNumbers = phoneNumbers,
+          businessIds = businessIds
+      )
+    }
+  }
+
+  private fun createPhoneNumbersFromOngoingPatientEntry(
+      ongoingEntry: OngoingNewPatientEntry,
+      patientUuid: UUID,
+      supplyUuidForPhoneNumber: () -> UUID,
+  ): List<PatientPhoneNumber> {
+    return with(ongoingEntry) {
+      val phoneNumbers = mutableListOf<PatientPhoneNumber>()
+
+      if (phoneNumber != null) {
+        val patientPhoneNumber = PatientPhoneNumber(
+            uuid = supplyUuidForPhoneNumber(),
+            patientUuid = patientUuid,
+            number = phoneNumber.number,
+            phoneType = phoneNumber.type,
+            active = phoneNumber.active,
+            createdAt = Instant.now(utcClock),
+            updatedAt = Instant.now(utcClock),
+            deletedAt = null
+        )
+
+        phoneNumbers.add(patientPhoneNumber)
+      }
+
+      phoneNumbers.toList()
+    }
+  }
+
+  private fun createBusinessIdsFromOngoingPatientEntry(
+      ongoingEntry: OngoingNewPatientEntry,
+      patientUuid: UUID,
+      user: User,
+      supplyUuidForBpPassport: () -> UUID,
+      supplyUuidForAlternativeId: () -> UUID
+  ): List<BusinessId> {
+
+    return with(ongoingEntry) {
+      val businessIds = mutableListOf<BusinessId>()
+
+      if (identifier != null && identifier.value.isNotBlank()) {
+        val bpPassport = createBusinessIdFromIdentifier(
+            id = supplyUuidForBpPassport(),
+            patientUuid = patientUuid,
+            identifier = identifier,
+            user = user
+        )
+        businessIds.add(bpPassport)
+      }
+
+      if (alternativeId != null && alternativeId.value.isNotBlank()) {
+        val alternativeBusinessId = createBusinessIdFromIdentifier(
+            id = supplyUuidForAlternativeId(),
+            patientUuid = patientUuid,
+            identifier = alternativeId,
+            user = user
+        )
+
+        businessIds.add(alternativeBusinessId)
+      }
+
+      businessIds.toList()
+    }
+  }
+
+  private fun createBusinessIdFromIdentifier(
+      id: UUID,
+      patientUuid: UUID,
+      identifier: Identifier,
+      user: User
+  ): BusinessId {
+    val metaAndVersion = createBusinessIdMetaDataForIdentifier(identifier.type, user)
+    val now = Instant.now(utcClock)
+
+    return BusinessId(
+        uuid = id,
+        patientUuid = patientUuid,
+        identifier = identifier,
+        metaDataVersion = metaAndVersion.metaDataVersion,
+        metaData = metaAndVersion.metaData,
+        createdAt = now,
+        updatedAt = now,
+        deletedAt = null
+    )
+  }
+
   fun updatePatient(patient: Patient): Completable {
     return Completable.fromAction {
       val patientToSave = patient.copy(

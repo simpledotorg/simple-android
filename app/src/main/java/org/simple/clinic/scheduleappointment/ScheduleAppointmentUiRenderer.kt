@@ -29,26 +29,28 @@ class ScheduleAppointmentUiRenderer(
       }
     }
 
-    manageRequestCompletedStatus(model)
+    manageDoneAndNextButtonVisibility(model)
 
     manageButtonState(model)
   }
 
+  private fun manageDoneAndNextButtonVisibility(model: ScheduleAppointmentModel) {
+    if (model.teleconsultRecord != null) {
+      if (model.teleconsultRecord.teleconsultRequestInfo != null)
+        manageRequestCompletedStatus(model)
+    } else {
+      ui.showDoneButton()
+      ui.hideNextButton()
+    }
+  }
+
   private fun manageRequestCompletedStatus(model: ScheduleAppointmentModel) {
     when (model.requesterCompletionStatus) {
-      TeleconsultStatus.StillWaiting -> {
+      TeleconsultStatus.StillWaiting, null -> {
         ui.showNextButton()
         ui.hideDoneButton()
       }
-      TeleconsultStatus.Yes -> {
-        ui.showDoneButton()
-        ui.hideNextButton()
-      }
-      TeleconsultStatus.No -> {
-        ui.showDoneButton()
-        ui.hideNextButton()
-      }
-      else -> {
+      is TeleconsultStatus.Unknown, TeleconsultStatus.Yes, TeleconsultStatus.No -> {
         ui.showDoneButton()
         ui.hideNextButton()
       }

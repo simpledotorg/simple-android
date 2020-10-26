@@ -17,6 +17,9 @@
 ### Changes
 - Update translations: `kn-IN`, `ta-IN`, `bn-IN`, `ti`, `bn-BD`, `pa-IN`, `mr-IN`, `te-IN`, `hi-IN`
 
+### Fixes
+- Fix teleconsult button in patient summary screen is broken on some devices
+
 ## On Demo
 ### Features
 - Add `SelectDiagnosisErrorDialog` when diagnosis is not selected in `NewMedicalHistoryScreen` and `MedicalHistorySummaryView` 

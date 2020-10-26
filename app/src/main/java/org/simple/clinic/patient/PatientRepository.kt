@@ -509,23 +509,21 @@ class PatientRepository @Inject constructor(
       identifier: Identifier,
       assigningUser: User
   ): Single<BusinessId> {
-    val businessIdStream = createBusinessIdMetaDataForIdentifier(identifier.type, assigningUser)
-        .map { metaAndVersion ->
-          val now = Instant.now(utcClock)
-          BusinessId(
-              uuid = uuid,
-              patientUuid = patientUuid,
-              identifier = identifier,
-              metaDataVersion = metaAndVersion.metaDataVersion,
-              metaData = metaAndVersion.metaData,
-              createdAt = now,
-              updatedAt = now,
-              deletedAt = null
-          )
-        }
+    val metaAndVersion = createBusinessIdMetaDataForIdentifier(identifier.type, assigningUser)
+    val now = Instant.now(utcClock)
+    val businessId = BusinessId(
+        uuid = uuid,
+        patientUuid = patientUuid,
+        identifier = identifier,
+        metaDataVersion = metaAndVersion.metaDataVersion,
+        metaData = metaAndVersion.metaData,
+        createdAt = now,
+        updatedAt = now,
+        deletedAt = null
+    )
 
-    return businessIdStream
-        .flatMap { businessId -> saveBusinessId(businessId).toSingleDefault(businessId) }
+    return saveBusinessId(businessId)
+        .toSingleDefault(businessId)
         .doOnSuccess { setSyncStatus(listOf(patientUuid), PENDING) }
   }
 
@@ -538,31 +536,67 @@ class PatientRepository @Inject constructor(
   private fun createBusinessIdMetaDataForIdentifier(
       identifierType: IdentifierType,
       assigningUser: User
-  ): Single<BusinessIdMetaAndVersion> {
+  ): BusinessIdMetaAndVersion {
     return when (identifierType) {
       BpPassport -> createBpPassportMetaData(assigningUser)
       BangladeshNationalId -> createBangladeshNationalIdMetadata(assigningUser)
       EthiopiaMedicalRecordNumber -> createEthiopiaMedicalRecordNumberMetadata(assigningUser)
-      is Unknown -> Single.error<BusinessIdMetaAndVersion>(IllegalArgumentException("Cannot create meta for identifier of type: $identifierType"))
+      is Unknown -> throw IllegalArgumentException("Cannot create meta for identifier of type: $identifierType")
     }
   }
 
-  private fun createEthiopiaMedicalRecordNumberMetadata(assigningUser: User): Single<BusinessIdMetaAndVersion> {
-    return Single.just(MedicalRecordNumberMetaDataV1(assigningUserUuid = assigningUser.uuid, assigningFacilityUuid = assigningUser.currentFacilityUuid))
-        .map { businessIdMetaDataAdapter.serialize(it, MetaDataVersion.MedicalRecordNumberMetaDataV1) to MetaDataVersion.MedicalRecordNumberMetaDataV1 }
-        .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
+  private fun createEthiopiaMedicalRecordNumberMetadata(assigningUser: User): BusinessIdMetaAndVersion {
+    val metaData = MedicalRecordNumberMetaDataV1(
+        assigningUserUuid = assigningUser.uuid,
+        assigningFacilityUuid = assigningUser.currentFacilityUuid
+    )
+    val metaDataVersion = MetaDataVersion.MedicalRecordNumberMetaDataV1
+
+    val serialized = businessIdMetaDataAdapter.serialize(
+        metaData = metaData,
+        metaDataVersion = metaDataVersion
+    )
+
+    return BusinessIdMetaAndVersion(
+        metaData = serialized,
+        metaDataVersion = metaDataVersion
+    )
   }
 
-  private fun createBpPassportMetaData(assigningUser: User): Single<BusinessIdMetaAndVersion> {
-    return Single.just(BpPassportMetaDataV1(assigningUserUuid = assigningUser.uuid, assigningFacilityUuid = assigningUser.currentFacilityUuid))
-        .map { businessIdMetaDataAdapter.serialize(it, MetaDataVersion.BpPassportMetaDataV1) to MetaDataVersion.BpPassportMetaDataV1 }
-        .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
+  private fun createBpPassportMetaData(assigningUser: User): BusinessIdMetaAndVersion {
+    val metaData = BpPassportMetaDataV1(
+        assigningUserUuid = assigningUser.uuid,
+        assigningFacilityUuid = assigningUser.currentFacilityUuid
+    )
+    val metaDataVersion = MetaDataVersion.BpPassportMetaDataV1
+
+    val serialized = businessIdMetaDataAdapter.serialize(
+        metaData = metaData,
+        metaDataVersion = metaDataVersion
+    )
+
+    return BusinessIdMetaAndVersion(
+        metaData = serialized,
+        metaDataVersion = metaDataVersion
+    )
   }
 
-  private fun createBangladeshNationalIdMetadata(assigningUser: User): Single<BusinessIdMetaAndVersion> {
-    return Single.just(BangladeshNationalIdMetaDataV1(assigningUserUuid = assigningUser.uuid, assigningFacilityUuid = assigningUser.currentFacilityUuid))
-        .map { businessIdMetaDataAdapter.serialize(it, MetaDataVersion.BangladeshNationalIdMetaDataV1) to MetaDataVersion.BangladeshNationalIdMetaDataV1 }
-        .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
+  private fun createBangladeshNationalIdMetadata(assigningUser: User): BusinessIdMetaAndVersion {
+    val metaData = BangladeshNationalIdMetaDataV1(
+        assigningUserUuid = assigningUser.uuid,
+        assigningFacilityUuid = assigningUser.currentFacilityUuid
+    )
+    val metaDataVersion = MetaDataVersion.BangladeshNationalIdMetaDataV1
+
+    val serialized = businessIdMetaDataAdapter.serialize(
+        metaData = metaData,
+        metaDataVersion = metaDataVersion
+    )
+
+    return BusinessIdMetaAndVersion(
+        metaData = serialized,
+        metaDataVersion = metaDataVersion
+    )
   }
 
   fun findPatientWithBusinessId(identifier: String): Observable<Optional<Patient>> {

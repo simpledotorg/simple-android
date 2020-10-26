@@ -42,7 +42,6 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion
 import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion.BpPassportMetaDataV1
-import org.simple.clinic.patient.businessid.BusinessIdMetaData
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.sync.BusinessIdPayload
 import org.simple.clinic.patient.sync.PatientAddressPayload
@@ -339,13 +338,7 @@ object TestData {
       identifier: String = UUID.randomUUID().toString(),
       identifierType: Identifier.IdentifierType = Identifier.IdentifierType.BpPassport,
       metaDataVersion: MetaDataVersion = BpPassportMetaDataV1,
-      meta: String = run {
-        BusinessIdMetaData.BpPassportMetaDataV1(
-            assigningUserUuid = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
-            assigningFacilityUuid = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe")
-        )
-        ""
-      },
+      meta: String = "",
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null

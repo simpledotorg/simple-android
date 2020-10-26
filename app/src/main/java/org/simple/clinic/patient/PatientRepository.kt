@@ -16,9 +16,7 @@ import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion
-import org.simple.clinic.patient.businessid.BusinessIdMetaData.BangladeshNationalIdMetaDataV1
-import org.simple.clinic.patient.businessid.BusinessIdMetaData.BpPassportMetaDataV1
-import org.simple.clinic.patient.businessid.BusinessIdMetaData.MedicalRecordNumberMetaDataV1
+import org.simple.clinic.patient.businessid.BusinessIdMetaData
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
@@ -546,7 +544,7 @@ class PatientRepository @Inject constructor(
   }
 
   private fun createEthiopiaMedicalRecordNumberMetadata(assigningUser: User): BusinessIdMetaAndVersion {
-    val metaData = MedicalRecordNumberMetaDataV1(
+    val metaData = BusinessIdMetaData(
         assigningUserUuid = assigningUser.uuid,
         assigningFacilityUuid = assigningUser.currentFacilityUuid
     )
@@ -564,7 +562,7 @@ class PatientRepository @Inject constructor(
   }
 
   private fun createBpPassportMetaData(assigningUser: User): BusinessIdMetaAndVersion {
-    val metaData = BpPassportMetaDataV1(
+    val metaData = BusinessIdMetaData(
         assigningUserUuid = assigningUser.uuid,
         assigningFacilityUuid = assigningUser.currentFacilityUuid
     )
@@ -582,7 +580,7 @@ class PatientRepository @Inject constructor(
   }
 
   private fun createBangladeshNationalIdMetadata(assigningUser: User): BusinessIdMetaAndVersion {
-    val metaData = BangladeshNationalIdMetaDataV1(
+    val metaData = BusinessIdMetaData(
         assigningUserUuid = assigningUser.uuid,
         assigningFacilityUuid = assigningUser.currentFacilityUuid
     )

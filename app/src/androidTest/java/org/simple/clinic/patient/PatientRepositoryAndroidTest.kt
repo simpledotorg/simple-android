@@ -1463,7 +1463,7 @@ class PatientRepositoryAndroidTest {
     assertThat(savedBusinessId.deletedAt).isNull()
 
     val savedMeta = businessIdMetaDataAdapter.deserialize(savedBusinessId.metaData, BusinessId.MetaDataVersion.BpPassportMetaDataV1)
-    val expectedSavedMeta = BusinessIdMetaData.BpPassportMetaDataV1(
+    val expectedSavedMeta = BusinessIdMetaData(
         assigningUserUuid = loggedInUser.uuid,
         assigningFacilityUuid = currentFacility.uuid
     )
@@ -1503,7 +1503,7 @@ class PatientRepositoryAndroidTest {
     assertThat(savedBusinessId.deletedAt).isNull()
 
     val savedMeta = businessIdMetaDataAdapter.deserialize(savedBusinessId.metaData, BusinessId.MetaDataVersion.BangladeshNationalIdMetaDataV1)
-    val expectedSavedMeta = BusinessIdMetaData.BangladeshNationalIdMetaDataV1(
+    val expectedSavedMeta = BusinessIdMetaData(
         assigningUserUuid = loggedInUser.uuid,
         assigningFacilityUuid = currentFacility.uuid
     )

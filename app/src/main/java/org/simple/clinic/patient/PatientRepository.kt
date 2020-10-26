@@ -254,113 +254,23 @@ class PatientRepository @Inject constructor(
       supplyUuidForAlternativeId: () -> UUID,
       supplyUuidForPhoneNumber: () -> UUID
   ): Single<Patient> {
-    val cachedOngoingEntry = ongoingEntry().cache()
-
-    val addressSave = cachedOngoingEntry
-        .map {
-          with(it) {
-            PatientAddress(
-                uuid = addressUuid,
-                streetAddress = address!!.streetAddress,
-                colonyOrVillage = address.colonyOrVillage,
-                zone = address.zone,
-                district = address.district,
-                state = address.state,
-                country = facility.country,
-                createdAt = Instant.now(utcClock),
-                updatedAt = Instant.now(utcClock),
-                deletedAt = null)
-          }
+    return Single
+        .fromCallable {
+          convertOngoingPatientEntryToPatientProfile(
+              loggedInUser = loggedInUser,
+              facility = facility,
+              patientUuid = patientUuid,
+              addressUuid = addressUuid,
+              supplyUuidForBpPassport = supplyUuidForBpPassport,
+              supplyUuidForAlternativeId = supplyUuidForAlternativeId,
+              supplyUuidForPhoneNumber = supplyUuidForPhoneNumber
+          )
         }
-        .flatMapCompletable { address -> saveAddress(address) }
-
-    val sharedPatient = cachedOngoingEntry
-        .map {
-          with(it) {
-            Patient(
-                uuid = patientUuid,
-                addressUuid = addressUuid,
-                fullName = personalDetails!!.fullName,
-                gender = personalDetails.gender!!,
-
-                dateOfBirth = convertToDate(personalDetails.dateOfBirth),
-                age = personalDetails.age?.let { ageString ->
-                  Age(ageString.toInt(), Instant.now(utcClock))
-                },
-
-                status = PatientStatus.Active,
-
-                createdAt = Instant.now(utcClock),
-                updatedAt = Instant.now(utcClock),
-                deletedAt = null,
-                recordedAt = Instant.now(utcClock),
-                syncStatus = PENDING,
-                reminderConsent = reminderConsent,
-                deletedReason = null,
-                registeredFacilityId = facility.uuid,
-                assignedFacilityId = facility.uuid
-            )
-          }
+        .flatMap { patientProfile ->
+          save(listOf(patientProfile))
+              .toSingleDefault(patientProfile)
         }
-        .cache()
-
-    val patientSave = sharedPatient
-        .flatMapCompletable { patient -> savePatient(patient) }
-
-    val businessIdSave = cachedOngoingEntry
-        .flatMapCompletable { entry ->
-          if (entry.identifier == null) {
-            Completable.complete()
-          } else {
-            addIdentifierToPatient(
-                uuid = supplyUuidForBpPassport(),
-                patientUuid = patientUuid,
-                identifier = entry.identifier,
-                assigningUser = loggedInUser
-            ).toCompletable()
-          }
-        }
-
-    val alternativeIdSave = cachedOngoingEntry
-        .flatMapCompletable { entry ->
-          if (entry.alternativeId == null || entry.alternativeId.value.isBlank()) {
-            Completable.complete()
-          } else {
-            addIdentifierToPatient(
-                uuid = supplyUuidForAlternativeId(),
-                patientUuid = patientUuid,
-                identifier = entry.alternativeId,
-                assigningUser = loggedInUser
-            ).toCompletable()
-          }
-        }
-
-    val phoneNumberSave = cachedOngoingEntry
-        .flatMapCompletable { entry ->
-          if (entry.phoneNumber == null) {
-            Completable.complete()
-          } else {
-            val number = with(entry.phoneNumber) {
-              PatientPhoneNumber(
-                  uuid = supplyUuidForPhoneNumber(),
-                  patientUuid = patientUuid,
-                  number = number,
-                  phoneType = type,
-                  active = active,
-                  createdAt = Instant.now(utcClock),
-                  updatedAt = Instant.now(utcClock),
-                  deletedAt = null)
-            }
-            savePhoneNumber(number)
-          }
-        }
-
-    return addressSave
-        .andThen(patientSave)
-        .andThen(businessIdSave)
-        .andThen(alternativeIdSave)
-        .andThen(phoneNumberSave)
-        .andThen(sharedPatient)
+        .map(PatientProfile::patient)
   }
 
   private fun convertOngoingPatientEntryToPatientProfile(

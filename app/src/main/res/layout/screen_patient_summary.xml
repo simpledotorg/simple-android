@@ -193,15 +193,26 @@
     </LinearLayout>
   </androidx.core.widget.NestedScrollView>
 
-  <LinearLayout
+  <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/buttonFrame"
-    style="@style/Clinic.V2.BottomAlignedButtonFrame"
-    android:background="@color/blue2"
-    android:clipChildren="false"
-    android:clipToPadding="false"
-    android:orientation="horizontal"
-    android:paddingTop="@dimen/spacing_8"
-    android:paddingBottom="@dimen/spacing_8">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/blue2">
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/topGuideline"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_begin="@dimen/spacing_8" />
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/bottomGuideline"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_end="@dimen/spacing_8" />
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/teleconsultButton"
@@ -213,7 +224,11 @@
       android:text="@string/patientsummary_teleconsult"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       android:visibility="gone"
-      app:backgroundTint="@color/green1" />
+      app:backgroundTint="@color/green1"
+      app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
+      app:layout_constraintEnd_toStartOf="@id/doneButton"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/topGuideline" />
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/doneButton"
@@ -226,7 +241,11 @@
       android:text="@string/patientsummary_finish_saving_patient"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       app:icon="@drawable/ic_done_24dp"
-      app:iconGravity="textStart" />
+      app:iconGravity="textStart"
+      app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@id/teleconsultButton"
+      app:layout_constraintTop_toBottomOf="@id/topGuideline" />
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/logTeleconsultButton"
@@ -238,9 +257,13 @@
       android:text="@string/patientsummary_log_teleconsult"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       android:visibility="gone"
-      app:backgroundTint="@color/green1" />
+      app:backgroundTint="@color/green1"
+      app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/topGuideline" />
 
-  </LinearLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
 
   <org.simple.clinic.summary.linkId.LinkIdWithPatientView
     android:id="@+id/linkIdWithPatientView"

@@ -17,7 +17,6 @@ import org.simple.clinic.login.LoginUserWithOtpServerIntegrationTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
 import org.simple.clinic.overdue.AppointmentRepositoryAndroidTest
 import org.simple.clinic.patient.PatientRepositoryAndroidTest
-import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapterAndroidTest
 import org.simple.clinic.protocolv2.ProtocolRepositoryAndroidTest
 import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
 import org.simple.clinic.rules.LocalAuthenticationRule
@@ -83,7 +82,6 @@ interface TestAppComponent {
   fun inject(target: DatabaseMigrationAndroidTest)
   fun inject(target: ReportsSyncIntegrationTest)
   fun inject(target: MissingPhoneReminderRepositoryAndroidTest)
-  fun inject(target: BusinessIdMetaDataAdapterAndroidTest)
   fun inject(target: HelpSyncIntegrationTest)
   fun inject(target: ServerAuthenticationRule)
   fun inject(target: RegisterUserServerIntegrationTest)

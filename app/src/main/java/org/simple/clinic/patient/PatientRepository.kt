@@ -1,6 +1,7 @@
 package org.simple.clinic.patient
 
 import androidx.annotation.VisibleForTesting
+import com.squareup.moshi.JsonAdapter
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -16,16 +17,11 @@ import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion
-import org.simple.clinic.patient.businessid.BusinessIdMetaData.BangladeshNationalIdMetaDataV1
-import org.simple.clinic.patient.businessid.BusinessIdMetaData.BpPassportMetaDataV1
-import org.simple.clinic.patient.businessid.BusinessIdMetaData.MedicalRecordNumberMetaDataV1
-import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
+import org.simple.clinic.patient.businessid.BusinessIdMetaData
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.reports.ReportsRepository
@@ -54,7 +50,7 @@ class PatientRepository @Inject constructor(
     private val searchPatientByName: SearchPatientByName,
     private val config: PatientConfig,
     private val reportsRepository: ReportsRepository,
-    private val businessIdMetaDataAdapter: BusinessIdMetaDataAdapter,
+    private val businessIdMetaDataMoshiAdapter: JsonAdapter<BusinessIdMetaData>,
     private val schedulersProvider: SchedulersProvider,
     @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) : SynceableRepository<PatientProfile, PatientPayload> {
@@ -509,23 +505,21 @@ class PatientRepository @Inject constructor(
       identifier: Identifier,
       assigningUser: User
   ): Single<BusinessId> {
-    val businessIdStream = createBusinessIdMetaDataForIdentifier(identifier.type, assigningUser)
-        .map { metaAndVersion ->
-          val now = Instant.now(utcClock)
-          BusinessId(
-              uuid = uuid,
-              patientUuid = patientUuid,
-              identifier = identifier,
-              metaDataVersion = metaAndVersion.metaDataVersion,
-              metaData = metaAndVersion.metaData,
-              createdAt = now,
-              updatedAt = now,
-              deletedAt = null
-          )
-        }
+    val metaAndVersion = createBusinessIdMetaDataForIdentifier(identifier.type, assigningUser)
+    val now = Instant.now(utcClock)
+    val businessId = BusinessId(
+        uuid = uuid,
+        patientUuid = patientUuid,
+        identifier = identifier,
+        metaDataVersion = metaAndVersion.metaDataVersion,
+        metaData = metaAndVersion.metaData,
+        createdAt = now,
+        updatedAt = now,
+        deletedAt = null
+    )
 
-    return businessIdStream
-        .flatMap { businessId -> saveBusinessId(businessId).toSingleDefault(businessId) }
+    return saveBusinessId(businessId)
+        .toSingleDefault(businessId)
         .doOnSuccess { setSyncStatus(listOf(patientUuid), PENDING) }
   }
 
@@ -538,31 +532,21 @@ class PatientRepository @Inject constructor(
   private fun createBusinessIdMetaDataForIdentifier(
       identifierType: IdentifierType,
       assigningUser: User
-  ): Single<BusinessIdMetaAndVersion> {
-    return when (identifierType) {
-      BpPassport -> createBpPassportMetaData(assigningUser)
-      BangladeshNationalId -> createBangladeshNationalIdMetadata(assigningUser)
-      EthiopiaMedicalRecordNumber -> createEthiopiaMedicalRecordNumberMetadata(assigningUser)
-      is Unknown -> Single.error<BusinessIdMetaAndVersion>(IllegalArgumentException("Cannot create meta for identifier of type: $identifierType"))
-    }
-  }
+  ): BusinessIdMetaAndVersion {
+    val metaData = BusinessIdMetaData(
+        assigningUserUuid = assigningUser.uuid,
+        assigningFacilityUuid = assigningUser.currentFacilityUuid
+    )
+    val metaDataVersion = MetaDataVersion
+        .forIdentifierType(identifierType)
+        .orElseThrow { IllegalArgumentException("Cannot create meta for identifier of type: $identifierType") }
 
-  private fun createEthiopiaMedicalRecordNumberMetadata(assigningUser: User): Single<BusinessIdMetaAndVersion> {
-    return Single.just(MedicalRecordNumberMetaDataV1(assigningUserUuid = assigningUser.uuid, assigningFacilityUuid = assigningUser.currentFacilityUuid))
-        .map { businessIdMetaDataAdapter.serialize(it, MetaDataVersion.MedicalRecordNumberMetaDataV1) to MetaDataVersion.MedicalRecordNumberMetaDataV1 }
-        .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
-  }
+    val serialized = businessIdMetaDataMoshiAdapter.toJson(metaData)
 
-  private fun createBpPassportMetaData(assigningUser: User): Single<BusinessIdMetaAndVersion> {
-    return Single.just(BpPassportMetaDataV1(assigningUserUuid = assigningUser.uuid, assigningFacilityUuid = assigningUser.currentFacilityUuid))
-        .map { businessIdMetaDataAdapter.serialize(it, MetaDataVersion.BpPassportMetaDataV1) to MetaDataVersion.BpPassportMetaDataV1 }
-        .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
-  }
-
-  private fun createBangladeshNationalIdMetadata(assigningUser: User): Single<BusinessIdMetaAndVersion> {
-    return Single.just(BangladeshNationalIdMetaDataV1(assigningUserUuid = assigningUser.uuid, assigningFacilityUuid = assigningUser.currentFacilityUuid))
-        .map { businessIdMetaDataAdapter.serialize(it, MetaDataVersion.BangladeshNationalIdMetaDataV1) to MetaDataVersion.BangladeshNationalIdMetaDataV1 }
-        .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
+    return BusinessIdMetaAndVersion(
+        metaData = serialized,
+        metaDataVersion = metaDataVersion
+    )
   }
 
   fun findPatientWithBusinessId(identifier: String): Observable<Optional<Patient>> {

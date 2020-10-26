@@ -11,6 +11,7 @@
 - Use `ENGLISH` locale when formatting prescription date
 - Rename `TeleconsultRecord` `requestCompleted` to `requesterCompletionStatus`
 - Bump the resync token for the Facility sync
+- Bump AGP to 4.1.0
 
 ### Changes
 - Update translations: `kn-IN`, `ta-IN`, `bn-IN`, `ti`, `bn-BD`, `pa-IN`, `mr-IN`, `te-IN`, `hi-IN`

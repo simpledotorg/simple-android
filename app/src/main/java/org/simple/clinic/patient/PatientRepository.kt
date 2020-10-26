@@ -1,6 +1,7 @@
 package org.simple.clinic.patient
 
 import androidx.annotation.VisibleForTesting
+import com.squareup.moshi.JsonAdapter
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -17,7 +18,6 @@ import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion
 import org.simple.clinic.patient.businessid.BusinessIdMetaData
-import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
@@ -50,7 +50,7 @@ class PatientRepository @Inject constructor(
     private val searchPatientByName: SearchPatientByName,
     private val config: PatientConfig,
     private val reportsRepository: ReportsRepository,
-    private val businessIdMetaDataAdapter: BusinessIdMetaDataAdapter,
+    private val businessIdMetaDataMoshiAdapter: JsonAdapter<BusinessIdMetaData>,
     private val schedulersProvider: SchedulersProvider,
     @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) : SynceableRepository<PatientProfile, PatientPayload> {
@@ -541,10 +541,7 @@ class PatientRepository @Inject constructor(
         .forIdentifierType(identifierType)
         .orElseThrow { IllegalArgumentException("Cannot create meta for identifier of type: $identifierType") }
 
-    val serialized = businessIdMetaDataAdapter.serialize(
-        metaData = metaData,
-        metaDataVersion = metaDataVersion
-    )
+    val serialized = businessIdMetaDataMoshiAdapter.toJson(metaData)
 
     return BusinessIdMetaAndVersion(
         metaData = serialized,

@@ -20,7 +20,11 @@ import io.reactivex.Single
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.sync.BusinessIdPayload
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 import java.time.Instant
 import java.util.UUID
@@ -85,6 +89,19 @@ data class BusinessId(
 
       @VisibleForTesting(otherwise = VisibleForTesting.NONE)
       fun values() = TypeAdapter.knownMappings.keys
+
+      fun forIdentifierType(
+          type: IdentifierType
+      ): Optional<MetaDataVersion> {
+        val metaDataVersion = when (type) {
+          BpPassport -> BpPassportMetaDataV1
+          BangladeshNationalId -> BangladeshNationalIdMetaDataV1
+          EthiopiaMedicalRecordNumber -> MedicalRecordNumberMetaDataV1
+          is IdentifierType.Unknown -> null
+        }
+        
+        return Optional.ofNullable(metaDataVersion)
+      }
     }
 
     @Parcelize

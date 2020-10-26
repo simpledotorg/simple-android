@@ -22,8 +22,6 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.reports.ReportsRepository
@@ -535,56 +533,13 @@ class PatientRepository @Inject constructor(
       identifierType: IdentifierType,
       assigningUser: User
   ): BusinessIdMetaAndVersion {
-    return when (identifierType) {
-      BpPassport -> createBpPassportMetaData(assigningUser)
-      BangladeshNationalId -> createBangladeshNationalIdMetadata(assigningUser)
-      EthiopiaMedicalRecordNumber -> createEthiopiaMedicalRecordNumberMetadata(assigningUser)
-      is Unknown -> throw IllegalArgumentException("Cannot create meta for identifier of type: $identifierType")
-    }
-  }
-
-  private fun createEthiopiaMedicalRecordNumberMetadata(assigningUser: User): BusinessIdMetaAndVersion {
     val metaData = BusinessIdMetaData(
         assigningUserUuid = assigningUser.uuid,
         assigningFacilityUuid = assigningUser.currentFacilityUuid
     )
-    val metaDataVersion = MetaDataVersion.MedicalRecordNumberMetaDataV1
-
-    val serialized = businessIdMetaDataAdapter.serialize(
-        metaData = metaData,
-        metaDataVersion = metaDataVersion
-    )
-
-    return BusinessIdMetaAndVersion(
-        metaData = serialized,
-        metaDataVersion = metaDataVersion
-    )
-  }
-
-  private fun createBpPassportMetaData(assigningUser: User): BusinessIdMetaAndVersion {
-    val metaData = BusinessIdMetaData(
-        assigningUserUuid = assigningUser.uuid,
-        assigningFacilityUuid = assigningUser.currentFacilityUuid
-    )
-    val metaDataVersion = MetaDataVersion.BpPassportMetaDataV1
-
-    val serialized = businessIdMetaDataAdapter.serialize(
-        metaData = metaData,
-        metaDataVersion = metaDataVersion
-    )
-
-    return BusinessIdMetaAndVersion(
-        metaData = serialized,
-        metaDataVersion = metaDataVersion
-    )
-  }
-
-  private fun createBangladeshNationalIdMetadata(assigningUser: User): BusinessIdMetaAndVersion {
-    val metaData = BusinessIdMetaData(
-        assigningUserUuid = assigningUser.uuid,
-        assigningFacilityUuid = assigningUser.currentFacilityUuid
-    )
-    val metaDataVersion = MetaDataVersion.BangladeshNationalIdMetaDataV1
+    val metaDataVersion = MetaDataVersion
+        .forIdentifierType(identifierType)
+        .orElseThrow { IllegalArgumentException("Cannot create meta for identifier of type: $identifierType") }
 
     val serialized = businessIdMetaDataAdapter.serialize(
         metaData = metaData,

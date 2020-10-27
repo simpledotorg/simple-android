@@ -57,6 +57,7 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
           .map { (user, facility, ongoingMedicalHistoryEntry) ->
             patientRepository
                 .saveOngoingEntryAsPatient(
+                    patientEntry = patientRepository.ongoingEntry(),
                     loggedInUser = user,
                     facility = facility,
                     patientUuid = uuidGenerator.v4(),

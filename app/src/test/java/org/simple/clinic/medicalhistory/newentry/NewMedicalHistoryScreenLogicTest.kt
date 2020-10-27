@@ -28,6 +28,7 @@ import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
+import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -87,11 +88,13 @@ class NewMedicalHistoryScreenLogicTest {
         patientUuid = patientUuid,
         patientAddressUuid = addressUuid
     )
+    val patientEntry = savedPatient.toOngoingEntry()
 
     val uuidGenerator = mock<UuidGenerator>()
     whenever(uuidGenerator.v4()).thenReturn(patientUuid, addressUuid, medicalHistoryUuid)
 
     whenever(patientRepository.saveOngoingEntryAsPatient(
+        patientEntry = eq(patientEntry),
         loggedInUser = eq(user),
         facility = eq(facility),
         patientUuid = eq(patientUuid),
@@ -102,7 +105,7 @@ class NewMedicalHistoryScreenLogicTest {
     )).thenReturn(savedPatient)
 
     // when
-    startMobiusLoop(uuidGenerator = uuidGenerator)
+    startMobiusLoop(uuidGenerator = uuidGenerator, ongoingPatientEntry = patientEntry)
 
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, No))
@@ -114,6 +117,7 @@ class NewMedicalHistoryScreenLogicTest {
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
       verify(patientRepository).saveOngoingEntryAsPatient(
+          patientEntry = eq(patientEntry),
           loggedInUser = eq(user),
           facility = eq(facility),
           patientUuid = eq(patientUuid),
@@ -145,11 +149,13 @@ class NewMedicalHistoryScreenLogicTest {
         patientUuid = patientUuid,
         patientAddressUuid = addressUuid
     )
+    val patientEntry = savedPatient.toOngoingEntry()
 
     val uuidGenerator = mock<UuidGenerator>()
     whenever(uuidGenerator.v4()).thenReturn(patientUuid, addressUuid, medicalHistoryUuid)
 
     whenever(patientRepository.saveOngoingEntryAsPatient(
+        patientEntry = eq(patientEntry),
         loggedInUser = eq(user),
         facility = eq(facility),
         patientUuid = eq(patientUuid),
@@ -160,13 +166,14 @@ class NewMedicalHistoryScreenLogicTest {
     )).thenReturn(savedPatient)
 
     // when
-    startMobiusLoop(uuidGenerator = uuidGenerator)
+    startMobiusLoop(uuidGenerator = uuidGenerator, ongoingPatientEntry = patientEntry)
 
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
       verify(patientRepository).saveOngoingEntryAsPatient(
+          patientEntry = eq(patientEntry),
           loggedInUser = eq(user),
           facility = eq(facility),
           patientUuid = eq(patientUuid),
@@ -199,11 +206,13 @@ class NewMedicalHistoryScreenLogicTest {
         patientUuid = patientUuid,
         patientAddressUuid = addressUuid
     )
+    val patientEntry = savedPatient.toOngoingEntry()
 
     val uuidGenerator = mock<UuidGenerator>()
     whenever(uuidGenerator.v4()).thenReturn(patientUuid, addressUuid, medicalHistoryUuid)
 
     whenever(patientRepository.saveOngoingEntryAsPatient(
+        patientEntry = eq(patientEntry),
         loggedInUser = eq(user),
         facility = eq(facility),
         patientUuid = eq(patientUuid),
@@ -214,7 +223,7 @@ class NewMedicalHistoryScreenLogicTest {
     )).thenReturn(savedPatient)
 
     // when
-    startMobiusLoop(uuidGenerator = uuidGenerator)
+    startMobiusLoop(uuidGenerator = uuidGenerator, ongoingPatientEntry = patientEntry)
 
     // Initial answers
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, No))
@@ -235,6 +244,7 @@ class NewMedicalHistoryScreenLogicTest {
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
       verify(patientRepository).saveOngoingEntryAsPatient(
+          patientEntry = eq(patientEntry),
           loggedInUser = eq(user),
           facility = eq(facility),
           patientUuid = eq(patientUuid),
@@ -287,4 +297,8 @@ class NewMedicalHistoryScreenLogicTest {
 
     testFixture.start()
   }
+}
+
+private fun PatientProfile.toOngoingEntry(): OngoingNewPatientEntry {
+  return OngoingNewPatientEntry.fromFullName(patient.fullName)
 }

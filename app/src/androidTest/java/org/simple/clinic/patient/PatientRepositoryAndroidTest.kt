@@ -56,15 +56,13 @@ import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.storage.text.TextStore
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.util.unwrapJust
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -535,7 +533,6 @@ class PatientRepositoryAndroidTest {
     val prescriptionPayloads = rangeOfRecords.map { testData.prescriptionPayload(patientUuid = patientUuid, facilityUuid = facilityUuid) }
     val appointmentPayloads = rangeOfRecords.map { testData.appointmentPayload(patientUuid = patientUuid) }
 
-    val appointmentUuid = appointmentPayloads.first().uuid
     val medicalHistoryPayloads = rangeOfRecords.map { testData.medicalHistoryPayload(patientUuid = patientUuid) }
 
     patientRepository.mergeWithLocalData(patientPayloads)
@@ -604,7 +601,7 @@ class PatientRepositoryAndroidTest {
     assertThat(searchResultsAfterUpdate).isEmpty()
 
     val deadPatient: Patient = patientRepository.patient(patient.patientUuid)
-        .unwrapJust()
+        .extractIfPresent()
         .blockingFirst()
 
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1)
@@ -631,7 +628,7 @@ class PatientRepositoryAndroidTest {
 
       patientRepository.updatePatientStatusToDead(patient.patientUuid)
     val deadPatient: Patient = patientRepository.patient(patient.patientUuid)
-        .unwrapJust()
+        .extractIfPresent()
         .blockingFirst()
 
     assertThat(deadPatient.syncStatus).isEqualTo(PENDING)
@@ -820,7 +817,7 @@ class PatientRepositoryAndroidTest {
     clock.advanceBy(updatedAfter)
 
     val oldSavedAddress = patientRepository.address(patient.addressUuid)
-        .unwrapJust()
+        .extractIfPresent()
         .blockingFirst()
 
     val newAddressToSave = oldSavedAddress.copy(
@@ -832,13 +829,13 @@ class PatientRepositoryAndroidTest {
     patientRepository.updateAddressForPatient(patientUuid = patient.uuid, patientAddress = newAddressToSave).blockingAwait()
 
     val updatedPatient = patientRepository.patient(patient.uuid)
-        .unwrapJust()
+        .extractIfPresent()
         .blockingFirst()
 
     assertThat(updatedPatient.syncStatus).isEqualTo(PENDING)
 
     val savedAddress = patientRepository.address(updatedPatient.addressUuid)
-        .unwrapJust()
+        .extractIfPresent()
         .blockingFirst()
 
     assertThat(savedAddress.updatedAt).isEqualTo(oldSavedAddress.updatedAt.plus(updatedAfter))
@@ -892,7 +889,7 @@ class PatientRepositoryAndroidTest {
     patientRepository.updatePatient(newPatientToSave).blockingAwait()
 
     val savedPatient = patientRepository.patient(newPatientToSave.uuid)
-        .unwrapJust()
+        .extractIfPresent()
         .blockingFirst()
 
     assertThat(savedPatient.syncStatus).isEqualTo(PENDING)
@@ -958,7 +955,7 @@ class PatientRepositoryAndroidTest {
     assertThat(phoneNumber.updatedAt).isNotEqualTo(phoneNumber.createdAt)
 
     val patient = patientRepository.patient(originalSavedPatient.uuid)
-        .unwrapJust()
+        .extractIfPresent()
         .blockingFirst()
 
     assertThat(patient.syncStatus).isEqualTo(PENDING)
@@ -1014,7 +1011,7 @@ class PatientRepositoryAndroidTest {
     assertThat(savedPhoneNumber.phoneType).isEqualTo(PatientPhoneNumberType.Mobile)
 
     val patient = patientRepository.patient(originalSavedPatient.uuid)
-        .unwrapJust()
+        .extractIfPresent()
         .blockingFirst()
 
     assertThat(patient.syncStatus).isEqualTo(PENDING)
@@ -1460,8 +1457,8 @@ class PatientRepositoryAndroidTest {
     )
     assertThat(savedMeta).isEqualTo(expectedSavedMeta)
 
-    val (updatedPatient) = patientRepository.patient(patientProfile.patient.uuid).blockingFirst() as Just
-    assertThat(updatedPatient!!.syncStatus).isEqualTo(PENDING)
+    val updatedPatient = patientRepository.patient(patientProfile.patient.uuid).blockingFirst().get()
+    assertThat(updatedPatient.syncStatus).isEqualTo(PENDING)
   }
 
   @Test
@@ -1500,8 +1497,8 @@ class PatientRepositoryAndroidTest {
     )
     assertThat(savedMeta).isEqualTo(expectedSavedMeta)
 
-    val (updatedPatient) = patientRepository.patient(patientProfile.patient.uuid).blockingFirst() as Just
-    assertThat(updatedPatient!!.syncStatus).isEqualTo(PENDING)
+    val updatedPatient = patientRepository.patient(patientProfile.patient.uuid).blockingFirst().get()
+    assertThat(updatedPatient.syncStatus).isEqualTo(PENDING)
   }
 
   @Test
@@ -1563,7 +1560,7 @@ class PatientRepositoryAndroidTest {
     val savedPatientNationalId = patientRepository.bangladeshNationalIdForPatient(savedPatient.patientUuid).blockingFirst()
 
     // then
-    assertThat(savedPatientNationalId).isEqualTo(None<BusinessId>())
+    assertThat(savedPatientNationalId).isEqualTo(Optional.empty<BusinessId>())
   }
 
   @Test
@@ -1682,14 +1679,14 @@ class PatientRepositoryAndroidTest {
         patientWithDeletedBusinessId)
     ).blockingAwait()
 
-    val (patientResultOne) = patientRepository.findPatientWithBusinessId(identifier = uniqueBusinessIdentifier).blockingFirst() as Just<Patient>
+    val patientResultOne = patientRepository.findPatientWithBusinessId(identifier = uniqueBusinessIdentifier).blockingFirst().get()
     assertThat(patientResultOne).isEqualTo(patientWithUniqueBusinessId.patient)
 
-    val (patientResultTwo) = patientRepository.findPatientWithBusinessId(identifier = sharedBusinessIdentifier).blockingFirst() as Just<Patient>
+    val patientResultTwo = patientRepository.findPatientWithBusinessId(identifier = sharedBusinessIdentifier).blockingFirst().get()
     assertThat(patientResultTwo).isEqualTo(patientTwoWithSharedBusinessId.patient)
 
-    assertThat(patientRepository.findPatientWithBusinessId(deletedBusinessIdentifier).blockingFirst()).isEqualTo(None<Patient>())
-    assertThat(patientRepository.findPatientWithBusinessId("missing_identifier").blockingFirst()).isEqualTo(None<Patient>())
+    assertThat(patientRepository.findPatientWithBusinessId(deletedBusinessIdentifier).blockingFirst()).isEqualTo(Optional.empty<Patient>())
+    assertThat(patientRepository.findPatientWithBusinessId("missing_identifier").blockingFirst()).isEqualTo(Optional.empty<Patient>())
   }
 
   @Test
@@ -2934,7 +2931,7 @@ class PatientRepositoryAndroidTest {
 
     // then
     val expectedResults = mapOf(
-        patientWithNoBps to None(),
+        patientWithNoBps to Optional.empty(),
         patientWithOneBp to LastSeen(
             lastSeenOn = instant,
             lastSeenAtFacilityName = facilityName,
@@ -3228,11 +3225,11 @@ class PatientRepositoryAndroidTest {
 
     // when
     val resultForDeletedPatient = findPatientWithIdentifier(deletedPatientIdentifier)
-    val resultForNotDeletedPatient = findPatientWithIdentifier(notDeletedPatientIdentifier) as Just<Patient>
+    val resultForNotDeletedPatient = findPatientWithIdentifier(notDeletedPatientIdentifier).get()
 
     //then
-    assertThat(resultForDeletedPatient).isEqualTo(None<Patient>())
-    assertThat(resultForNotDeletedPatient.value.uuid).isEqualTo(notDeletedPatientId)
+    assertThat(resultForDeletedPatient).isEqualTo(Optional.empty<Patient>())
+    assertThat(resultForNotDeletedPatient.uuid).isEqualTo(notDeletedPatientId)
   }
 
   @Test
@@ -3599,15 +3596,15 @@ class PatientRepositoryAndroidTest {
     patientDao.save(patient)
 
     // when
-    val patientProfile = patientRepository.patientProfileImmediate(patient.uuid) as Just<PatientProfile>
+    val patientProfile = patientRepository.patientProfileImmediate(patient.uuid).get()
 
     // then
-    assertThat(patientProfile.value.patient).isEqualTo(patient)
-    assertThat(patientProfile.value.patient.registeredFacilityId).isNull()
-    assertThat(patientProfile.value.patient.assignedFacilityId).isNull()
-    assertThat(patientProfile.value.address).isEqualTo(patientAddress)
-    assertThat(patientProfile.value.phoneNumbers).isEmpty()
-    assertThat(patientProfile.value.businessIds).isEmpty()
+    assertThat(patientProfile.patient).isEqualTo(patient)
+    assertThat(patientProfile.patient.registeredFacilityId).isNull()
+    assertThat(patientProfile.patient.assignedFacilityId).isNull()
+    assertThat(patientProfile.address).isEqualTo(patientAddress)
+    assertThat(patientProfile.phoneNumbers).isEmpty()
+    assertThat(patientProfile.businessIds).isEmpty()
   }
 
   @Test
@@ -3630,15 +3627,15 @@ class PatientRepositoryAndroidTest {
     patientDao.save(patient)
 
     // when
-    val patientProfile = patientRepository.patientProfileImmediate(patient.uuid) as Just<PatientProfile>
+    val patientProfile = patientRepository.patientProfileImmediate(patient.uuid).get()
 
     // then
-    assertThat(patientProfile.value.patient).isEqualTo(patient)
-    assertThat(patientProfile.value.patient.registeredFacilityId).isEqualTo(registrationFacilityUuid)
-    assertThat(patientProfile.value.patient.assignedFacilityId).isEqualTo(assignedFacilityUuid)
-    assertThat(patientProfile.value.address).isEqualTo(patientAddress)
-    assertThat(patientProfile.value.phoneNumbers).isEmpty()
-    assertThat(patientProfile.value.businessIds).isEmpty()
+    assertThat(patientProfile.patient).isEqualTo(patient)
+    assertThat(patientProfile.patient.registeredFacilityId).isEqualTo(registrationFacilityUuid)
+    assertThat(patientProfile.patient.assignedFacilityId).isEqualTo(assignedFacilityUuid)
+    assertThat(patientProfile.address).isEqualTo(patientAddress)
+    assertThat(patientProfile.phoneNumbers).isEmpty()
+    assertThat(patientProfile.businessIds).isEmpty()
   }
 
   @Test
@@ -3670,13 +3667,13 @@ class PatientRepositoryAndroidTest {
     patientPhoneNumberDao.save(phoneNumbers)
 
     // when
-    val patientProfile = patientRepository.patientProfileImmediate(patient.uuid) as Just<PatientProfile>
+    val patientProfile = patientRepository.patientProfileImmediate(patient.uuid).get()
 
     // then
-    assertThat(patientProfile.value.patient).isEqualTo(patient)
-    assertThat(patientProfile.value.address).isEqualTo(patientAddress)
-    assertThat(patientProfile.value.phoneNumbers).containsExactlyElementsIn(phoneNumbers)
-    assertThat(patientProfile.value.businessIds).isEmpty()
+    assertThat(patientProfile.patient).isEqualTo(patient)
+    assertThat(patientProfile.address).isEqualTo(patientAddress)
+    assertThat(patientProfile.phoneNumbers).containsExactlyElementsIn(phoneNumbers)
+    assertThat(patientProfile.businessIds).isEmpty()
   }
 
   @Test
@@ -3708,13 +3705,13 @@ class PatientRepositoryAndroidTest {
     businessIdDao.save(businessIds)
 
     // when
-    val patientProfile = patientRepository.patientProfileImmediate(patient.uuid) as Just<PatientProfile>
+    val patientProfile = patientRepository.patientProfileImmediate(patient.uuid).get()
 
     // then
-    assertThat(patientProfile.value.patient).isEqualTo(patient)
-    assertThat(patientProfile.value.address).isEqualTo(patientAddress)
-    assertThat(patientProfile.value.phoneNumbers).isEmpty()
-    assertThat(patientProfile.value.businessIds).containsExactlyElementsIn(businessIds)
+    assertThat(patientProfile.patient).isEqualTo(patient)
+    assertThat(patientProfile.address).isEqualTo(patientAddress)
+    assertThat(patientProfile.phoneNumbers).isEmpty()
+    assertThat(patientProfile.businessIds).containsExactlyElementsIn(businessIds)
   }
 
   @Test
@@ -3733,13 +3730,13 @@ class PatientRepositoryAndroidTest {
     patientDao.save(patient)
 
     // when
-    val patientProfile = patientRepository.patientProfile(patient.uuid).blockingFirst() as Just<PatientProfile>
+    val patientProfile = patientRepository.patientProfile(patient.uuid).blockingFirst().get()
 
     // then
-    assertThat(patientProfile.value.patient).isEqualTo(patient)
-    assertThat(patientProfile.value.address).isEqualTo(patientAddress)
-    assertThat(patientProfile.value.phoneNumbers).isEmpty()
-    assertThat(patientProfile.value.businessIds).isEmpty()
+    assertThat(patientProfile.patient).isEqualTo(patient)
+    assertThat(patientProfile.address).isEqualTo(patientAddress)
+    assertThat(patientProfile.phoneNumbers).isEmpty()
+    assertThat(patientProfile.businessIds).isEmpty()
   }
 
   @Test
@@ -3771,13 +3768,13 @@ class PatientRepositoryAndroidTest {
     patientPhoneNumberDao.save(phoneNumbers)
 
     // when
-    val patientProfile = patientRepository.patientProfile(patient.uuid).blockingFirst() as Just<PatientProfile>
+    val patientProfile = patientRepository.patientProfile(patient.uuid).blockingFirst().get()
 
     // then
-    assertThat(patientProfile.value.patient).isEqualTo(patient)
-    assertThat(patientProfile.value.address).isEqualTo(patientAddress)
-    assertThat(patientProfile.value.phoneNumbers).containsExactlyElementsIn(phoneNumbers)
-    assertThat(patientProfile.value.businessIds).isEmpty()
+    assertThat(patientProfile.patient).isEqualTo(patient)
+    assertThat(patientProfile.address).isEqualTo(patientAddress)
+    assertThat(patientProfile.phoneNumbers).containsExactlyElementsIn(phoneNumbers)
+    assertThat(patientProfile.businessIds).isEmpty()
   }
 
   @Test
@@ -3809,13 +3806,13 @@ class PatientRepositoryAndroidTest {
     businessIdDao.save(businessIds)
 
     // when
-    val patientProfile = patientRepository.patientProfile(patient.uuid).blockingFirst() as Just<PatientProfile>
+    val patientProfile = patientRepository.patientProfile(patient.uuid).blockingFirst().get()
 
     // then
-    assertThat(patientProfile.value.patient).isEqualTo(patient)
-    assertThat(patientProfile.value.address).isEqualTo(patientAddress)
-    assertThat(patientProfile.value.phoneNumbers).isEmpty()
-    assertThat(patientProfile.value.businessIds).containsExactlyElementsIn(businessIds)
+    assertThat(patientProfile.patient).isEqualTo(patient)
+    assertThat(patientProfile.address).isEqualTo(patientAddress)
+    assertThat(patientProfile.phoneNumbers).isEmpty()
+    assertThat(patientProfile.businessIds).containsExactlyElementsIn(businessIds)
   }
 
   @Test

@@ -27,8 +27,6 @@ import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -133,12 +131,7 @@ class PatientRepository @Inject constructor(
     return database.patientDao()
         .patient(uuid)
         .toObservable()
-        .map { patients ->
-          when {
-            patients.isNotEmpty() -> Just(patients.first())
-            else -> None<Patient>()
-          }
-        }
+        .map { patients -> Optional.ofNullable(patients.firstOrNull()) }
   }
 
   fun patientImmediate(uuid: UUID): Patient? {
@@ -480,12 +473,7 @@ class PatientRepository @Inject constructor(
     return database.addressDao()
         .address(addressUuid)
         .toObservable()
-        .map { addresses ->
-          when {
-            addresses.isNotEmpty() -> Just(addresses.first())
-            else -> None<PatientAddress>()
-          }
-        }
+        .map { addresses -> Optional.ofNullable(addresses.firstOrNull()) }
   }
 
   private fun savePhoneNumber(number: PatientPhoneNumber): Completable {
@@ -498,12 +486,7 @@ class PatientRepository @Inject constructor(
     return database.phoneNumberDao()
         .phoneNumber(patientUuid)
         .toObservable()
-        .map { numbers ->
-          when {
-            numbers.isNotEmpty() -> Just(numbers.first())
-            else -> None<PatientPhoneNumber>()
-          }
-        }
+        .map { numbers -> Optional.ofNullable(numbers.firstOrNull()) }
   }
 
   fun latestPhoneNumberForPatient(patientUuid: UUID): Optional<PatientPhoneNumber> {
@@ -600,13 +583,7 @@ class PatientRepository @Inject constructor(
     return database
         .patientDao()
         .findPatientsWithBusinessId(identifier)
-        .map { patients ->
-          if (patients.isEmpty()) {
-            None()
-          } else {
-            patients.first().toOptional()
-          }
-        }
+        .map { patients -> Optional.ofNullable(patients.firstOrNull()) }
         .toObservable()
 
   }
@@ -623,13 +600,7 @@ class PatientRepository @Inject constructor(
     return database
         .businessIdDao()
         .latestForPatientByType(patientUuid, BangladeshNationalId)
-        .map { bangladeshNationalId ->
-          if (bangladeshNationalId.isEmpty()) {
-            None()
-          } else {
-            bangladeshNationalId.first().toOptional()
-          }
-        }
+        .map { bangladeshNationalId -> Optional.ofNullable(bangladeshNationalId.firstOrNull()) }
         .toObservable()
   }
 

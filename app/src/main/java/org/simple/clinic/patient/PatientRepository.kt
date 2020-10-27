@@ -236,10 +236,8 @@ class PatientRepository @Inject constructor(
     return ongoingNewPatientEntry
   }
 
-  fun saveOngoingEntry(ongoingEntry: OngoingNewPatientEntry): Completable {
-    return Completable.fromAction {
-      ongoingNewPatientEntry = ongoingEntry
-    }
+  fun saveOngoingEntry(ongoingEntry: OngoingNewPatientEntry) {
+    ongoingNewPatientEntry = ongoingEntry
   }
 
   fun saveOngoingEntryAsPatient(

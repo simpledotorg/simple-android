@@ -12,7 +12,6 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -167,7 +166,6 @@ class PatientEntryScreenLogicTest {
   @Test
   fun `when save button is clicked then a patient record should be created from the form input`() {
     whenever(patientRepository.ongoingEntry()).doReturn(OngoingNewPatientEntry())
-    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
     whenever(patientRegisteredCount.get()).doReturn(0)
     screenCreated()
 
@@ -209,7 +207,6 @@ class PatientEntryScreenLogicTest {
     val bangladeshNationalId = Identifier("123456789012", BangladeshNationalId)
 
     whenever(patientRepository.ongoingEntry()).doReturn(OngoingNewPatientEntry())
-    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
     whenever(patientRegisteredCount.get()).doReturn(0)
     screenCreated()
 
@@ -264,7 +261,6 @@ class PatientEntryScreenLogicTest {
     )
 
     whenever(patientRepository.ongoingEntry()).doReturn(ongoingEntry)
-    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
     whenever(patientRegisteredCount.get()).doReturn(existingPatientRegisteredCount)
     screenCreated()
 
@@ -462,7 +458,6 @@ class PatientEntryScreenLogicTest {
   @Test
   fun `regression test for validations 1`() {
     whenever(patientRepository.ongoingEntry()).doReturn(OngoingNewPatientEntry())
-    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
     screenCreated()
 
     with(uiEvents) {
@@ -485,7 +480,6 @@ class PatientEntryScreenLogicTest {
   @Test
   fun `regression test for validations 2`() {
     whenever(patientRepository.ongoingEntry()).doReturn(OngoingNewPatientEntry())
-    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
     screenCreated()
 
     with(uiEvents) {
@@ -508,7 +502,6 @@ class PatientEntryScreenLogicTest {
   @Test
   fun `regression test for validations 3`() {
     whenever(patientRepository.ongoingEntry()).doReturn(OngoingNewPatientEntry())
-    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
     screenCreated()
 
     with(uiEvents) {
@@ -528,10 +521,10 @@ class PatientEntryScreenLogicTest {
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
+  // TODO (vs) 27/10/20: Tighten assertions in this test`
   @Test
   fun `regression test for validations 4`() {
     whenever(patientRepository.ongoingEntry()).doReturn(OngoingNewPatientEntry())
-    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
     whenever(patientRegisteredCount.get()).doReturn(0)
     screenCreated()
 
@@ -576,7 +569,6 @@ class PatientEntryScreenLogicTest {
   @Test
   fun `when validation errors are shown then the form should be scrolled to the first field with error`() {
     whenever(patientRepository.ongoingEntry()).doReturn(OngoingNewPatientEntry())
-    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
     screenCreated()
 
     with(uiEvents) {
@@ -603,7 +595,6 @@ class PatientEntryScreenLogicTest {
   fun `when the ongoing entry has an identifier it must be retained when accepting input`() {
     val identifier = Identifier(value = "id", type = BpPassport)
     whenever(patientRepository.ongoingEntry()).doReturn(OngoingNewPatientEntry(identifier = identifier))
-    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
     whenever(patientRegisteredCount.get()).doReturn(0)
     screenCreated()
 

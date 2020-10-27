@@ -19,7 +19,6 @@ import org.simple.clinic.newentry.Field.PhoneNumber
 import org.simple.clinic.newentry.Field.State
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
-import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientEntryValidationError.AgeExceedsMaxLimit
@@ -138,16 +137,10 @@ class PatientEntryEffectHandler @AssistedInject constructor(
       savePatientEffects
           .map { it.entry }
           .subscribeOn(scheduler)
-          .flatMapSingle { savePatientEntry(it) }
+          .doOnNext(patientRepository::saveOngoingEntry)
           .doOnNext { patientRegisteredCount.set(patientRegisteredCount.get().plus(1)) }
           .map { PatientEntrySaved }
     }
-  }
-
-  private fun savePatientEntry(entry: OngoingNewPatientEntry): Single<Unit> {
-    return patientRepository
-        .saveOngoingEntry(entry)
-        .andThen(Single.just(Unit))
   }
 
   private fun showValidationErrors(errors: List<PatientEntryValidationError>) {

@@ -568,24 +568,17 @@ class PatientRepository @Inject constructor(
         .toObservable()
   }
 
-
   fun addIdentifierToPatient(
       uuid: UUID,
       patientUuid: UUID,
       identifier: Identifier,
       assigningUser: User
   ): Single<BusinessId> {
-    val metaAndVersion = createBusinessIdMetaDataForIdentifier(identifier.type, assigningUser)
-    val now = Instant.now(utcClock)
-    val businessId = BusinessId(
-        uuid = uuid,
+    val businessId = createBusinessIdFromIdentifier(
+        id = uuid,
         patientUuid = patientUuid,
         identifier = identifier,
-        metaDataVersion = metaAndVersion.metaDataVersion,
-        metaData = metaAndVersion.metaData,
-        createdAt = now,
-        updatedAt = now,
-        deletedAt = null
+        user = assigningUser
     )
 
     return saveBusinessId(businessId)

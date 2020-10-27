@@ -46,3 +46,5 @@ object SchedulingSkipped : ScheduleAppointmentEvent() {
 
 data class TeleconsultRecordLoaded(val teleconsultRecord: TeleconsultRecord?) : ScheduleAppointmentEvent()
 
+object AppointmentScheduledForPatientFromNext : ScheduleAppointmentEvent()
+

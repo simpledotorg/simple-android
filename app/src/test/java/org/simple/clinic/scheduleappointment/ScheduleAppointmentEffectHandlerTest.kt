@@ -12,6 +12,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.TimeToAppointment
@@ -137,6 +138,24 @@ class ScheduleAppointmentEffectHandlerTest {
     effectHandlerTestCase.assertNoOutgoingEvents()
     verify(uiActions).openTeleconsultStatusSheet(teleconsultRecordUuid)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when schedule sppointment for patient from next is received then schedule appointment`() {
+    // given
+    val facility = TestData.facility(uuid = UUID.fromString("e4a1f4d7-2444-4686-a6ae-3d15ddb42916"))
+    
+    // when
+    effectHandlerTestCase.dispatch(ScheduleAppointmentForPatientFromNext(
+        patientUuid = patientUuid,
+        scheduledForDate = LocalDate.now(),
+        scheduledAtFacility = facility,
+        type = Appointment.AppointmentType.random()
+    ))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(AppointmentScheduledForPatientFromNext)
+    verifyZeroInteractions(uiActions)
   }
 
 }

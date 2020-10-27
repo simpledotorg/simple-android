@@ -26,4 +26,11 @@ data class LoadPatientDefaulterStatus(val patientUuid: UUID) : ScheduleAppointme
 
 data class LoadTeleconsultRecord(val patientUuid: UUID) : ScheduleAppointmentEffect()
 
+data class ScheduleAppointmentForPatientFromNext(
+    val patientUuid: UUID,
+    val scheduledForDate: LocalDate,
+    val scheduledAtFacility: Facility,
+    val type: Appointment.AppointmentType
+) : ScheduleAppointmentEffect()
+
 data class GoToTeleconsultStatusSheet(val teleconsultRecordUuid: UUID) : ScheduleAppointmentEffect()

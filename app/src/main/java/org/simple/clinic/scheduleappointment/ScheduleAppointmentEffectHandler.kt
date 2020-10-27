@@ -58,7 +58,25 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
         .addTransformer(LoadPatientDefaulterStatus::class.java, loadPatientDefaulterStatus())
         .addTransformer(LoadTeleconsultRecord::class.java, loadTeleconsultRecordDetails())
         .addConsumer(GoToTeleconsultStatusSheet::class.java, { uiActions.openTeleconsultStatusSheet(it.teleconsultRecordUuid) }, schedulers.ui())
+        .addTransformer(ScheduleAppointmentForPatientFromNext::class.java, scheduleAppointmentForPatientFromNext())
         .build()
+  }
+
+  private fun scheduleAppointmentForPatientFromNext(): ObservableTransformer<ScheduleAppointmentForPatientFromNext, ScheduleAppointmentEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .doOnNext { scheduleAppointment ->
+            appointmentRepository.schedule(
+                patientUuid = scheduleAppointment.patientUuid,
+                appointmentUuid = uuidGenerator.v4(),
+                appointmentDate = scheduleAppointment.scheduledForDate,
+                appointmentType = scheduleAppointment.type,
+                appointmentFacilityUuid = scheduleAppointment.scheduledAtFacility.uuid,
+                creationFacilityUuid = currentFacility.get().uuid
+            )
+          }
+          .map { AppointmentScheduledForPatientFromNext }
+    }
   }
 
   private fun loadTeleconsultRecordDetails(): ObservableTransformer<LoadTeleconsultRecord, ScheduleAppointmentEvent> {

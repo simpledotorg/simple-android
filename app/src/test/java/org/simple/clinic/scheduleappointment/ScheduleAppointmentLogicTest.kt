@@ -95,12 +95,15 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(AppointmentDone)
 
     // then
-    verify(ui, times(4)).hideProgress()
+    verify(ui, times(5)).hideProgress()
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(false)
     verify(ui).showProgress()
     verify(ui).updateScheduledAppointment(scheduledDate, Days(protocol.followUpDays))
+    verify(ui, times(6)).showDoneButton()
+    verify(ui, times(6)).hideNextButton()
+    verify(ui, times(6)).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
 
@@ -128,11 +131,14 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(SchedulingSkipped)
 
     // then
-    verify(ui, times(4)).hideProgress()
+    verify(ui, times(5)).hideProgress()
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-28"), Days(protocol.followUpDays))
+    verify(ui, times(5)).showDoneButton()
+    verify(ui, times(5)).hideNextButton()
+    verify(ui, times(5)).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
     verify(uiActions).closeSheet()
@@ -158,12 +164,15 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(SchedulingSkipped)
 
     // then
-    verify(ui, times(3)).hideProgress()
+    verify(ui, times(4)).hideProgress()
     verify(repository, never()).schedule(any(), any(), any(), any(), any(), any())
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-28"), Days(protocol.followUpDays))
+    verify(ui, times(4)).showDoneButton()
+    verify(ui, times(4)).hideNextButton()
+    verify(ui, times(4)).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
     verify(uiActions).closeSheet()
@@ -187,11 +196,15 @@ class ScheduleAppointmentLogicTest {
     )
 
     // then
-    verify(ui, times(3)).hideProgress()
+    verify(ui, times(4)).hideProgress()
     verify(ui).showPatientFacility(facility.name)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
+    verify(ui, times(4)).showDoneButton()
+    verify(ui, times(4)).hideNextButton()
+    verify(ui, times(4)).hideProgress()
+    verify(ui, times(4)).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
     verifyZeroInteractions(uiActions)
@@ -215,11 +228,14 @@ class ScheduleAppointmentLogicTest {
     )
 
     //then
-    verify(ui, times(3)).hideProgress()
+    verify(ui, times(4)).hideProgress()
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), defaultTimeToAppointment)
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
+    verify(ui, times(4)).showDoneButton()
+    verify(ui, times(4)).hideNextButton()
+    verify(ui, times(4)).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
     verifyZeroInteractions(uiActions)
@@ -318,10 +334,13 @@ class ScheduleAppointmentLogicTest {
 
     // then
     verify(ui).showPatientFacility(facility.name)
-    verify(ui, times(3)).hideProgress()
+    verify(ui, times(4)).hideProgress()
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
+    verify(ui, times(4)).showDoneButton()
+    verify(ui, times(4)).hideNextButton()
+    verify(ui, times(4)).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
     reset(ui)
 
@@ -337,6 +356,9 @@ class ScheduleAppointmentLogicTest {
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-04"), Days(3))
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
+    verify(ui).showDoneButton()
+    verify(ui).hideNextButton()
+    verify(ui).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
     reset(ui)
 
@@ -348,6 +370,9 @@ class ScheduleAppointmentLogicTest {
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-05"), Days(4))
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
+    verify(ui).showDoneButton()
+    verify(ui).hideNextButton()
+    verify(ui).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
     verifyZeroInteractions(uiActions)

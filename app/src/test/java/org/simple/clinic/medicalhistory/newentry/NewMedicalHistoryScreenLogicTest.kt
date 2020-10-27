@@ -82,8 +82,11 @@ class NewMedicalHistoryScreenLogicTest {
   @Test
   fun `when save is clicked with selected answers then patient with the answers should be saved and summary screen should be opened`() {
     // given
-    val savedPatient = TestData.patient(uuid = patientUuid)
     val addressUuid = UUID.fromString("79f6d1bc-0e10-480b-9cce-43c628d827b7")
+    val savedPatient = TestData.patientProfile(
+        patientUuid = patientUuid,
+        patientAddressUuid = addressUuid
+    )
 
     val uuidGenerator = mock<UuidGenerator>()
     whenever(uuidGenerator.v4()).thenReturn(patientUuid, addressUuid, medicalHistoryUuid)
@@ -121,7 +124,7 @@ class NewMedicalHistoryScreenLogicTest {
       )
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
-          patientUuid = savedPatient.uuid,
+          patientUuid = savedPatient.patientUuid,
           historyEntry = OngoingMedicalHistoryEntry(
               hasHadHeartAttack = No,
               hasHadStroke = No,
@@ -130,15 +133,18 @@ class NewMedicalHistoryScreenLogicTest {
               hasDiabetes = Yes
           )
       )
-      verify(uiActions).openPatientSummaryScreen(savedPatient.uuid)
+      verify(uiActions).openPatientSummaryScreen(savedPatient.patientUuid)
     }
   }
 
   @Test
   fun `when save is clicked with no answers then patient with an empty medical history should be saved and summary screen should be opened`() {
     // given
-    val savedPatient = TestData.patient(uuid = patientUuid)
     val addressUuid = UUID.fromString("79f6d1bc-0e10-480b-9cce-43c628d827b7")
+    val savedPatient = TestData.patientProfile(
+        patientUuid = patientUuid,
+        patientAddressUuid = addressUuid
+    )
 
     val uuidGenerator = mock<UuidGenerator>()
     whenever(uuidGenerator.v4()).thenReturn(patientUuid, addressUuid, medicalHistoryUuid)
@@ -171,7 +177,7 @@ class NewMedicalHistoryScreenLogicTest {
       )
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
-          patientUuid = savedPatient.uuid,
+          patientUuid = savedPatient.patientUuid,
           historyEntry = OngoingMedicalHistoryEntry(
               // We currently default the hypertension diagnosis answer to 'Yes' if the facility
               // does not support diabetes management. The mock facility we use in tests has DM
@@ -181,15 +187,18 @@ class NewMedicalHistoryScreenLogicTest {
               hasHadKidneyDisease = Unanswered,
               diagnosedWithHypertension = Yes,
               hasDiabetes = Unanswered))
-      verify(uiActions).openPatientSummaryScreen(savedPatient.uuid)
+      verify(uiActions).openPatientSummaryScreen(savedPatient.patientUuid)
     }
   }
 
   @Test
   fun `when an already selected answer for a question is changed, the new answer should be used when saving the medical history`() {
     // given
-    val savedPatient = TestData.patient(uuid = patientUuid)
     val addressUuid = UUID.fromString("79f6d1bc-0e10-480b-9cce-43c628d827b7")
+    val savedPatient = TestData.patientProfile(
+        patientUuid = patientUuid,
+        patientAddressUuid = addressUuid
+    )
 
     val uuidGenerator = mock<UuidGenerator>()
     whenever(uuidGenerator.v4()).thenReturn(patientUuid, addressUuid, medicalHistoryUuid)
@@ -236,7 +245,7 @@ class NewMedicalHistoryScreenLogicTest {
       )
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
-          patientUuid = savedPatient.uuid,
+          patientUuid = savedPatient.patientUuid,
           historyEntry = OngoingMedicalHistoryEntry(
               hasHadHeartAttack = Unanswered,
               hasHadStroke = Unanswered,
@@ -245,7 +254,7 @@ class NewMedicalHistoryScreenLogicTest {
               hasDiabetes = No
           )
       )
-      verify(uiActions).openPatientSummaryScreen(savedPatient.uuid)
+      verify(uiActions).openPatientSummaryScreen(savedPatient.patientUuid)
     }
   }
 

@@ -181,7 +181,7 @@ class PatientRepositoryAndroidTest {
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
 
-    val patient = database.patientDao().getOne(savedPatient.uuid)!!
+    val patient = database.patientDao().getOne(savedPatient.patientUuid)!!
 
     assertThat(patient.dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
     assertThat(patient.age).isNull()
@@ -208,11 +208,11 @@ class PatientRepositoryAndroidTest {
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
 
-    val patient = database.patientDao().patient(savedPatient.uuid)
+    val patient = database.patientDao().patient(savedPatient.patientUuid)
 
     assertThat(patient).isNotNull()
 
-    val savedPhoneNumbers = database.phoneNumberDao().phoneNumber(savedPatient.uuid).firstOrError().blockingGet()
+    val savedPhoneNumbers = database.phoneNumberDao().phoneNumber(savedPatient.patientUuid).firstOrError().blockingGet()
     assertThat(savedPhoneNumbers).isEmpty()
   }
 
@@ -233,7 +233,7 @@ class PatientRepositoryAndroidTest {
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
 
-    val patient = database.patientDao().getOne(savedPatient.uuid)!!
+    val patient = database.patientDao().getOne(savedPatient.patientUuid)!!
 
     assertThat(patient.fullName).isEqualTo(patientEntry.personalDetails!!.fullName)
     assertThat(patient.dateOfBirth).isNull()
@@ -266,7 +266,7 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
-        .uuid
+        .patientUuid
 
     val patientProfile = database
         .patientDao()
@@ -418,10 +418,10 @@ class PatientRepositoryAndroidTest {
 
     assertThat(search2).hasSize(expectedResultsInSearch2.size)
     search2.forEach { searchResult ->
-      val expectedPatient = expectedResultsInSearch2.find { it.fullName == searchResult.fullName }!!
+      val expectedPatient = expectedResultsInSearch2.find { it.patient.fullName == searchResult.fullName }!!
 
-      assertThat(searchResult.fullName).isEqualTo(expectedPatient.fullName)
-      assertThat(searchResult.dateOfBirth).isEqualTo(expectedPatient.dateOfBirth)
+      assertThat(searchResult.fullName).isEqualTo(expectedPatient.patient.fullName)
+      assertThat(searchResult.dateOfBirth).isEqualTo(expectedPatient.patient.dateOfBirth)
     }
   }
 
@@ -612,13 +612,13 @@ class PatientRepositoryAndroidTest {
     assertThat(searchResults).isNotEmpty()
     assertThat(searchResults.first().fullName).isEqualTo("Ashok Kumar")
 
-    patientRepository.updatePatientStatusToDead(patient.uuid)
+    patientRepository.updatePatientStatusToDead(patient.patientUuid)
 
     val searchResultsAfterUpdate = patientRepository.search(Name(patientName = "Ashok")).blockingFirst()
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1)
     assertThat(searchResultsAfterUpdate).isEmpty()
 
-    val deadPatient: Patient = patientRepository.patient(patient.uuid)
+    val deadPatient: Patient = patientRepository.patient(patient.patientUuid)
         .unwrapJust()
         .blockingFirst()
 
@@ -645,8 +645,8 @@ class PatientRepositoryAndroidTest {
     clock.advanceBy(Duration.ofDays(365))
     val timeOfDeath = Instant.now(clock)
 
-    patientRepository.updatePatientStatusToDead(patient.uuid)
-    val deadPatient: Patient = patientRepository.patient(patient.uuid)
+      patientRepository.updatePatientStatusToDead(patient.patientUuid)
+    val deadPatient: Patient = patientRepository.patient(patient.patientUuid)
         .unwrapJust()
         .blockingFirst()
 
@@ -1546,7 +1546,7 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
-    val savedPatientNationalId = patientRepository.bangladeshNationalIdForPatient(savedPatient.uuid).blockingFirst().toNullable()!!
+    val savedPatientNationalId = patientRepository.bangladeshNationalIdForPatient(savedPatient.patientUuid).blockingFirst().toNullable()!!
 
     // then
     assertThat(savedPatientNationalId.identifier.value).isEqualTo(nationalId)
@@ -1578,7 +1578,7 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
-    val savedPatientNationalId = patientRepository.bangladeshNationalIdForPatient(savedPatient.uuid).blockingFirst()
+    val savedPatientNationalId = patientRepository.bangladeshNationalIdForPatient(savedPatient.patientUuid).blockingFirst()
 
     // then
     assertThat(savedPatientNationalId).isEqualTo(None<BusinessId>())
@@ -3288,11 +3288,11 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
-    val savedPatientAddress = patientRepository.address(savedPatient.addressUuid).blockingFirst().toNullable()!!
+    val savedPatientAddress = patientRepository.address(savedPatient.address.uuid).blockingFirst().toNullable()!!
 
     // then
     val expectedPatientAddress = testData.patientAddress(
-        uuid = savedPatient.addressUuid,
+        uuid = savedPatient.address.uuid,
         streetAddress = userEnteredPatientStreetAddress,
         colonyOrVillage = userEnteredPatientColony,
         district = userEnteredPatientDistrict,

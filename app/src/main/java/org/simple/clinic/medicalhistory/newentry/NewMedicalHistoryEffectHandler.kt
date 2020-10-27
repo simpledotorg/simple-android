@@ -70,10 +70,10 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
             medicalHistoryRepository
                 .save(
                     uuid = uuidGenerator.v4(),
-                    patientUuid = registeredPatient.uuid,
+                    patientUuid = registeredPatient.patientUuid,
                     historyEntry = ongoingMedicalHistoryEntry
                 )
-                .toSingleDefault(PatientRegistered(registeredPatient.uuid))
+                .toSingleDefault(PatientRegistered(registeredPatient.patientUuid))
           }
     }
   }

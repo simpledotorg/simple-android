@@ -248,7 +248,7 @@ class PatientRepository @Inject constructor(
       supplyUuidForBpPassport: () -> UUID,
       supplyUuidForAlternativeId: () -> UUID,
       supplyUuidForPhoneNumber: () -> UUID
-  ): Patient {
+  ): PatientProfile {
     val patientProfile = convertOngoingPatientEntryToPatientProfile(
         loggedInUser = loggedInUser,
         facility = facility,
@@ -261,7 +261,7 @@ class PatientRepository @Inject constructor(
 
     saveRecords(listOf(patientProfile))
 
-    return patientProfile.patient
+    return patientProfile
   }
 
   private fun convertOngoingPatientEntryToPatientProfile(

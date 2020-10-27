@@ -21,7 +21,7 @@
 ### Fixes
 - Fix teleconsult button in patient summary screen is broken on some devices
 
-## On Demo
+## 2020-10-26-7490
 ### Features
 - Add `SelectDiagnosisErrorDialog` when diagnosis is not selected in `NewMedicalHistoryScreen` and `MedicalHistorySummaryView` 
 

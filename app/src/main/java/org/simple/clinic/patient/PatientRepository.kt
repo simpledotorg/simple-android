@@ -232,8 +232,8 @@ class PatientRepository @Inject constructor(
     )
   }
 
-  fun ongoingEntry(): Single<OngoingNewPatientEntry> {
-    return Single.fromCallable { ongoingNewPatientEntry }
+  fun ongoingEntry(): OngoingNewPatientEntry {
+    return ongoingNewPatientEntry
   }
 
   fun saveOngoingEntry(ongoingEntry: OngoingNewPatientEntry): Completable {

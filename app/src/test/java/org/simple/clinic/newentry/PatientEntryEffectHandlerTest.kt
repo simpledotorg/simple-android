@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -103,7 +102,7 @@ class PatientEntryEffectHandlerTest {
 
   private fun setupTestCase() {
     whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(entry))
+    whenever(patientRepository.ongoingEntry()).thenReturn(entry)
 
     testCase = EffectHandlerTestCase(effectHandler.build())
   }

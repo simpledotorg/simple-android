@@ -3,6 +3,7 @@ package org.simple.clinic.patient
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.JsonAdapter
+import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -162,7 +163,7 @@ class PatientRepositoryAndroidTest {
     val personalDetailsOnlyEntry = OngoingNewPatientEntry(personalDetails = ongoingPersonalDetails)
 
     val savedPatient = patientRepository.saveOngoingEntry(personalDetailsOnlyEntry)
-        .andThen(patientRepository.ongoingEntry())
+        .andThen(Single.fromCallable { patientRepository.ongoingEntry() })
         .map { ongoingEntry -> ongoingEntry.copy(address = ongoingAddress) }
         .map { updatedEntry -> updatedEntry.copy(phoneNumber = ongoingPhoneNumber) }
         .flatMapCompletable { withAddressAndPhoneNumbers -> patientRepository.saveOngoingEntry(withAddressAndPhoneNumbers) }

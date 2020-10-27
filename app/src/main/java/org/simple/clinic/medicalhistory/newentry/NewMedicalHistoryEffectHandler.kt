@@ -37,7 +37,7 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<NewMedicalHistoryEffect, NewMedicalHistoryEvent>()
         .addConsumer(OpenPatientSummaryScreen::class.java, { effect -> uiActions.openPatientSummaryScreen(effect.patientUuid) }, schedulersProvider.ui())
         .addTransformer(RegisterPatient::class.java, registerPatient(schedulersProvider.io()))
-        .addTransformer(LoadOngoingPatientEntry::class.java, loadOngoingNewPatientEntry(schedulersProvider.io()))
+        .addTransformer(LoadOngoingPatientEntry::class.java, loadOngoingNewPatientEntry())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
         .addTransformer(TriggerSync::class.java, triggerSync())
         .build()
@@ -78,10 +78,10 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun loadOngoingNewPatientEntry(scheduler: Scheduler): ObservableTransformer<LoadOngoingPatientEntry, NewMedicalHistoryEvent> {
+  private fun loadOngoingNewPatientEntry(): ObservableTransformer<LoadOngoingPatientEntry, NewMedicalHistoryEvent> {
     return ObservableTransformer { effects ->
       effects
-          .flatMapSingle { patientRepository.ongoingEntry().subscribeOn(scheduler) }
+          .map { patientRepository.ongoingEntry() }
           .map(::OngoingPatientEntryLoaded)
     }
   }

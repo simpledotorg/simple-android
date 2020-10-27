@@ -70,7 +70,7 @@ class NewMedicalHistoryScreenLogicTest {
         dateOfBirth = null,
         age = "20",
         gender = Gender.Transgender))
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(patientEntry))
+    whenever(patientRepository.ongoingEntry()).thenReturn(patientEntry)
 
     startMobiusLoop(ongoingPatientEntry = patientEntry)
 
@@ -231,7 +231,7 @@ class NewMedicalHistoryScreenLogicTest {
       uuidGenerator: UuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
   ) {
     whenever(medicalHistoryRepository.save(eq(medicalHistoryUuid), eq(patientUuid), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(ongoingPatientEntry))
+    whenever(patientRepository.ongoingEntry()).thenReturn(ongoingPatientEntry)
 
     val effectHandler = NewMedicalHistoryEffectHandler(
         uiActions = uiActions,

@@ -41,7 +41,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 typealias PatientUuid = UUID
-typealias FacilityUuid = UUID
 
 @AppScope
 class PatientRepository @Inject constructor(
@@ -129,8 +128,6 @@ class PatientRepository @Inject constructor(
         .searchByPhoneNumber(phoneNumber, config.limitOfSearchResults)
         .toObservable()
   }
-
-  private fun savePatient(patient: Patient): Completable = Completable.fromAction { database.patientDao().save(patient) }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {
     return database.patientDao()
@@ -480,16 +477,6 @@ class PatientRepository @Inject constructor(
         }
         .flatMapCompletable(this::savePhoneNumber)
         .andThen(Completable.fromAction { setSyncStatus(listOf(patientUuid), PENDING) })
-  }
-
-  private fun convertToDate(dateOfBirth: String?): LocalDate? {
-    return dateOfBirth?.let { dateOfBirthFormat.parse(dateOfBirth, LocalDate::from) }
-  }
-
-  private fun saveAddress(address: PatientAddress): Completable {
-    return Completable.fromAction {
-      database.addressDao().save(address)
-    }
   }
 
   fun address(addressUuid: UUID): Observable<Optional<PatientAddress>> {

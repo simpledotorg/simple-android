@@ -9,7 +9,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
 import io.reactivex.Completable
-import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -97,7 +96,7 @@ class NewMedicalHistoryScreenLogicTest {
         supplyUuidForBpPassport = any(),
         supplyUuidForAlternativeId = any(),
         supplyUuidForPhoneNumber = any()
-    )).thenReturn(Single.just(savedPatient))
+    )).thenReturn(savedPatient)
 
     // when
     startMobiusLoop(uuidGenerator = uuidGenerator)
@@ -111,7 +110,15 @@ class NewMedicalHistoryScreenLogicTest {
 
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
-      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), eq(patientUuid), eq(addressUuid), any(), any(), any())
+      verify(patientRepository).saveOngoingEntryAsPatient(
+          loggedInUser = eq(user),
+          facility = eq(facility),
+          patientUuid = eq(patientUuid),
+          addressUuid = eq(addressUuid),
+          supplyUuidForBpPassport = any(),
+          supplyUuidForAlternativeId = any(),
+          supplyUuidForPhoneNumber = any()
+      )
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,
@@ -144,7 +151,7 @@ class NewMedicalHistoryScreenLogicTest {
         supplyUuidForBpPassport = any(),
         supplyUuidForAlternativeId = any(),
         supplyUuidForPhoneNumber = any()
-    )).thenReturn(Single.just(savedPatient))
+    )).thenReturn(savedPatient)
 
     // when
     startMobiusLoop(uuidGenerator = uuidGenerator)
@@ -153,7 +160,15 @@ class NewMedicalHistoryScreenLogicTest {
 
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
-      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), eq(patientUuid), eq(addressUuid), any(), any(), any())
+      verify(patientRepository).saveOngoingEntryAsPatient(
+          loggedInUser = eq(user),
+          facility = eq(facility),
+          patientUuid = eq(patientUuid),
+          addressUuid = eq(addressUuid),
+          supplyUuidForBpPassport = any(),
+          supplyUuidForAlternativeId = any(),
+          supplyUuidForPhoneNumber = any()
+      )
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,
@@ -187,7 +202,7 @@ class NewMedicalHistoryScreenLogicTest {
         supplyUuidForBpPassport = any(),
         supplyUuidForAlternativeId = any(),
         supplyUuidForPhoneNumber = any()
-    )).thenReturn(Single.just(savedPatient))
+    )).thenReturn(savedPatient)
 
     // when
     startMobiusLoop(uuidGenerator = uuidGenerator)
@@ -210,7 +225,15 @@ class NewMedicalHistoryScreenLogicTest {
 
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
-      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), eq(patientUuid), eq(addressUuid), any(), any(), any())
+      verify(patientRepository).saveOngoingEntryAsPatient(
+          loggedInUser = eq(user),
+          facility = eq(facility),
+          patientUuid = eq(patientUuid),
+          addressUuid = eq(addressUuid),
+          supplyUuidForBpPassport = any(),
+          supplyUuidForAlternativeId = any(),
+          supplyUuidForPhoneNumber = any()
+      )
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,

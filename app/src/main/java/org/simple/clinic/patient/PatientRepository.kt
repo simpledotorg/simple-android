@@ -248,24 +248,20 @@ class PatientRepository @Inject constructor(
       supplyUuidForBpPassport: () -> UUID,
       supplyUuidForAlternativeId: () -> UUID,
       supplyUuidForPhoneNumber: () -> UUID
-  ): Single<Patient> {
-    return Single
-        .fromCallable {
-          convertOngoingPatientEntryToPatientProfile(
-              loggedInUser = loggedInUser,
-              facility = facility,
-              patientUuid = patientUuid,
-              addressUuid = addressUuid,
-              supplyUuidForBpPassport = supplyUuidForBpPassport,
-              supplyUuidForAlternativeId = supplyUuidForAlternativeId,
-              supplyUuidForPhoneNumber = supplyUuidForPhoneNumber
-          )
-        }
-        .flatMap { patientProfile ->
-          save(listOf(patientProfile))
-              .toSingleDefault(patientProfile)
-        }
-        .map(PatientProfile::patient)
+  ): Patient {
+    val patientProfile = convertOngoingPatientEntryToPatientProfile(
+        loggedInUser = loggedInUser,
+        facility = facility,
+        patientUuid = patientUuid,
+        addressUuid = addressUuid,
+        supplyUuidForBpPassport = supplyUuidForBpPassport,
+        supplyUuidForAlternativeId = supplyUuidForAlternativeId,
+        supplyUuidForPhoneNumber = supplyUuidForPhoneNumber
+    )
+
+    saveRecords(listOf(patientProfile))
+
+    return patientProfile.patient
   }
 
   private fun convertOngoingPatientEntryToPatientProfile(

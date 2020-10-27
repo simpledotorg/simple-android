@@ -180,7 +180,6 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
-        .blockingGet()
 
     val patient = database.patientDao().getOne(savedPatient.uuid)!!
 
@@ -208,7 +207,6 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
-        .blockingGet()
 
     val patient = database.patientDao().patient(savedPatient.uuid)
 
@@ -234,7 +232,6 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
-        .blockingGet()
 
     val patient = database.patientDao().getOne(savedPatient.uuid)!!
 
@@ -269,7 +266,6 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
-        .blockingGet()
         .uuid
 
     val patientProfile = database
@@ -299,8 +295,6 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
-        .ignoreElement()
-        .blockingAwait()
 
     val combinedPatient = patientRepository.search(Name(patientName = "kumar"))
         .blockingFirst()
@@ -342,7 +336,6 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("1a3326ea-0be6-4265-ad17-57a89ed7ee1a") },
             supplyUuidForPhoneNumber = { UUID.fromString("b1c47a77-06ba-48af-8db7-8ec4ded3e906") }
         )
-        .blockingGet()
 
     val opd2 = OngoingNewPatientEntry.PersonalDetails("Alok Kumar", "15/08/1940", null, Gender.Transgender)
     val opa2 = OngoingNewPatientEntry.Address(
@@ -365,7 +358,6 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("2e07d591-f79d-4c9a-8209-54b86e23ac9f") },
             supplyUuidForPhoneNumber = { UUID.fromString("9b51bc94-418b-45a0-9c83-f28dc36147fd") }
         )
-        .blockingGet()
 
     val opd3 = OngoingNewPatientEntry.PersonalDetails("Abhishek Kumar", null, "68", Gender.Transgender)
     val opa3 = OngoingNewPatientEntry.Address(
@@ -388,7 +380,6 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("7fe2b07e-2bc3-42a1-95f3-d171154c6cad") },
             supplyUuidForPhoneNumber = { UUID.fromString("05a0d327-09e2-4bb5-8e6f-dfd911337748") }
         )
-        .blockingGet()
 
     val opd4 = OngoingNewPatientEntry.PersonalDetails("Abshot Kumar", null, "67", Gender.Transgender)
     val opa4 = OngoingNewPatientEntry.Address(
@@ -411,7 +402,6 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("8b7a671c-f0fc-4c83-b9fb-19dce2515c57") },
             supplyUuidForPhoneNumber = { UUID.fromString("2a877a22-a9e6-40ab-b540-c0a49a6a15b4") }
         )
-        .blockingGet()
 
     val search0 = patientRepository.search(Name("Vinod")).blockingFirst()
     assertThat(search0).hasSize(0)
@@ -617,7 +607,6 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
-        .blockingGet()
 
     val searchResults = patientRepository.search(Name(patientName = "Ashok")).blockingFirst()
     assertThat(searchResults).isNotEmpty()
@@ -652,7 +641,6 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
-        .blockingGet()
 
     clock.advanceBy(Duration.ofDays(365))
     val timeOfDeath = Instant.now(clock)
@@ -1558,7 +1546,6 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
-        .blockingGet()
     val savedPatientNationalId = patientRepository.bangladeshNationalIdForPatient(savedPatient.uuid).blockingFirst().toNullable()!!
 
     // then
@@ -1591,7 +1578,6 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
-        .blockingGet()
     val savedPatientNationalId = patientRepository.bangladeshNationalIdForPatient(savedPatient.uuid).blockingFirst()
 
     // then
@@ -1756,7 +1742,6 @@ class PatientRepositoryAndroidTest {
               supplyUuidForAlternativeId = { alternativeIdUuid },
               supplyUuidForPhoneNumber = { phoneNumberUuid }
           )
-          .blockingGet()
 
       bpMeasurement?.forEach {
         bloodPressureRepository.save(listOf(testData.bloodPressureMeasurement(
@@ -3303,7 +3288,6 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
             supplyUuidForPhoneNumber = { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
         )
-        .blockingGet()
     val savedPatientAddress = patientRepository.address(savedPatient.addressUuid).blockingFirst().toNullable()!!
 
     // then

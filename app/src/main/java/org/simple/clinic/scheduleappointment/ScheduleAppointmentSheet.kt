@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
@@ -25,6 +26,7 @@ import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
+import org.simple.clinic.summary.teleconsultation.status.TeleconsultStatusSheet
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
@@ -200,6 +202,15 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
 
     setResult(Activity.RESULT_OK, resultIntent)
     finish()
+  }
+
+  override fun openTeleconsultStatusSheet(teleconsultRecordUuid: UUID) {
+    startActivity(
+        TeleconsultStatusSheet.intent(
+            context = this,
+            teleconsultRecordId = teleconsultRecordUuid
+        )
+    )
   }
 
   override fun updateScheduledAppointment(appointmentDate: LocalDate, timeToAppointment: TimeToAppointment) {

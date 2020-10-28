@@ -68,5 +68,3 @@ object ContactDoctorClicked : PatientSummaryEvent() {
 object LogTeleconsultClicked : PatientSummaryEvent()
 
 data class MedicalOfficersLoaded(val medicalOfficers: List<MedicalOfficer>) : PatientSummaryEvent()
-
-object TeleconsultStatusChanged : PatientSummaryEvent()

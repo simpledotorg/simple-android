@@ -7,7 +7,6 @@ import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.main.initialScreenKey
-import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 
@@ -56,31 +55,17 @@ class TheActivityInitialScreenKeyTest {
   }
 
   @Test
-  fun `when the local user is waiting for approval and has not logged in, the login screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN, status = UserStatus.WaitingForApproval)
-
-    assertThat(initialScreenKey(user)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
-  }
-
-  @Test
-  fun `when the local user is approved for syncing and has not logged in, the login screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN, status = UserStatus.ApprovedForSyncing)
-
-    assertThat(initialScreenKey(user)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
-  }
-
-  @Test
   fun `when the local user is waiting for approval and has been unauthorized, the login screen must be shown`() {
     val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.UNAUTHORIZED, status = UserStatus.WaitingForApproval)
 
-    assertThat(initialScreenKey(user)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(HomeScreenKey::class.java)
   }
 
   @Test
   fun `when the local user is approved for syncing and has been unauthorized, the login screen must be shown`() {
     val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.UNAUTHORIZED, status = UserStatus.ApprovedForSyncing)
 
-    assertThat(initialScreenKey(user)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
+    assertThat(initialScreenKey(user)).isInstanceOf(HomeScreenKey::class.java)
   }
 
   @Test
@@ -137,11 +122,5 @@ class TheActivityInitialScreenKeyTest {
     val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.UNAUTHORIZED, status = UserStatus.DisapprovedForSyncing)
 
     assertThat(initialScreenKey(user)).isInstanceOf(AccessDeniedScreenKey::class.java)
-  }
-
-  @Test
-  fun `when there is no local user, the login screen should be shown`() {
-
-    assertThat(initialScreenKey(null)).isInstanceOf(RegistrationPhoneScreenKey::class.java)
   }
 }

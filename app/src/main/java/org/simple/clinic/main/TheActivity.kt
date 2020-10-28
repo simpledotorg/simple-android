@@ -32,7 +32,6 @@ import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.registerorlogin.AuthenticationActivity
-import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
@@ -48,6 +47,12 @@ import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.user.UnauthorizeUser
 import org.simple.clinic.user.User
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
+import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.LocaleOverrideContextWrapper
@@ -69,16 +74,16 @@ fun initialScreenKey(
   val userDisapproved = user?.status == UserStatus.DisapprovedForSyncing
 
   val canMoveToHomeScreen = when (user?.loggedInStatus) {
-    User.LoggedInStatus.NOT_LOGGED_IN, User.LoggedInStatus.RESETTING_PIN, User.LoggedInStatus.UNAUTHORIZED -> false
-    User.LoggedInStatus.LOGGED_IN, User.LoggedInStatus.OTP_REQUESTED, User.LoggedInStatus.RESET_PIN_REQUESTED -> true
+    NOT_LOGGED_IN, RESETTING_PIN -> false
+    LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED, UNAUTHORIZED -> true
     null -> false
   }
 
   return when {
     canMoveToHomeScreen && !userDisapproved -> HomeScreenKey
     userDisapproved -> AccessDeniedScreenKey(user?.fullName!!)
-    user?.loggedInStatus == User.LoggedInStatus.RESETTING_PIN -> ForgotPinCreateNewPinScreenKey()
-    else -> RegistrationPhoneScreenKey()
+    user?.loggedInStatus == RESETTING_PIN -> ForgotPinCreateNewPinScreenKey()
+    else -> throw IllegalStateException("Unknown user status combinations: [${user?.loggedInStatus}, ${user?.status}]")
   }
 }
 

@@ -27,8 +27,6 @@ import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -41,7 +39,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 typealias PatientUuid = UUID
-typealias FacilityUuid = UUID
 
 @AppScope
 class PatientRepository @Inject constructor(
@@ -130,18 +127,11 @@ class PatientRepository @Inject constructor(
         .toObservable()
   }
 
-  private fun savePatient(patient: Patient): Completable = Completable.fromAction { database.patientDao().save(patient) }
-
   fun patient(uuid: UUID): Observable<Optional<Patient>> {
     return database.patientDao()
         .patient(uuid)
         .toObservable()
-        .map { patients ->
-          when {
-            patients.isNotEmpty() -> Just(patients.first())
-            else -> None<Patient>()
-          }
-        }
+        .map { patients -> Optional.ofNullable(patients.firstOrNull()) }
   }
 
   fun patientImmediate(uuid: UUID): Patient? {
@@ -235,17 +225,16 @@ class PatientRepository @Inject constructor(
     )
   }
 
-  fun ongoingEntry(): Single<OngoingNewPatientEntry> {
-    return Single.fromCallable { ongoingNewPatientEntry }
+  fun ongoingEntry(): OngoingNewPatientEntry {
+    return ongoingNewPatientEntry
   }
 
-  fun saveOngoingEntry(ongoingEntry: OngoingNewPatientEntry): Completable {
-    return Completable.fromAction {
-      ongoingNewPatientEntry = ongoingEntry
-    }
+  fun saveOngoingEntry(ongoingEntry: OngoingNewPatientEntry) {
+    ongoingNewPatientEntry = ongoingEntry
   }
 
   fun saveOngoingEntryAsPatient(
+      patientEntry: OngoingNewPatientEntry,
       loggedInUser: User,
       facility: Facility,
       patientUuid: UUID,
@@ -253,114 +242,182 @@ class PatientRepository @Inject constructor(
       supplyUuidForBpPassport: () -> UUID,
       supplyUuidForAlternativeId: () -> UUID,
       supplyUuidForPhoneNumber: () -> UUID
-  ): Single<Patient> {
-    val cachedOngoingEntry = ongoingEntry().cache()
+  ): PatientProfile {
+    val patientProfile = convertOngoingPatientEntryToPatientProfile(
+        patientEntry = patientEntry,
+        loggedInUser = loggedInUser,
+        facility = facility,
+        patientUuid = patientUuid,
+        addressUuid = addressUuid,
+        supplyUuidForBpPassport = supplyUuidForBpPassport,
+        supplyUuidForAlternativeId = supplyUuidForAlternativeId,
+        supplyUuidForPhoneNumber = supplyUuidForPhoneNumber
+    )
 
-    val addressSave = cachedOngoingEntry
-        .map {
-          with(it) {
-            PatientAddress(
-                uuid = addressUuid,
-                streetAddress = address!!.streetAddress,
-                colonyOrVillage = address.colonyOrVillage,
-                zone = address.zone,
-                district = address.district,
-                state = address.state,
-                country = facility.country,
-                createdAt = Instant.now(utcClock),
-                updatedAt = Instant.now(utcClock),
-                deletedAt = null)
-          }
-        }
-        .flatMapCompletable { address -> saveAddress(address) }
+    saveRecords(listOf(patientProfile))
 
-    val sharedPatient = cachedOngoingEntry
-        .map {
-          with(it) {
-            Patient(
-                uuid = patientUuid,
-                addressUuid = addressUuid,
-                fullName = personalDetails!!.fullName,
-                gender = personalDetails.gender!!,
+    return patientProfile
+  }
 
-                dateOfBirth = convertToDate(personalDetails.dateOfBirth),
-                age = personalDetails.age?.let { ageString ->
-                  Age(ageString.toInt(), Instant.now(utcClock))
-                },
+  private fun convertOngoingPatientEntryToPatientProfile(
+      patientEntry: OngoingNewPatientEntry,
+      loggedInUser: User,
+      facility: Facility,
+      patientUuid: UUID,
+      addressUuid: UUID,
+      supplyUuidForBpPassport: () -> UUID,
+      supplyUuidForAlternativeId: () -> UUID,
+      supplyUuidForPhoneNumber: () -> UUID
+  ): PatientProfile {
+    return with(patientEntry) {
+      requireNotNull(personalDetails)
+      requireNotNull(address)
 
-                status = PatientStatus.Active,
+      val dateOfBirth = personalDetails.dateOfBirth
 
-                createdAt = Instant.now(utcClock),
-                updatedAt = Instant.now(utcClock),
-                deletedAt = null,
-                recordedAt = Instant.now(utcClock),
-                syncStatus = PENDING,
-                reminderConsent = reminderConsent,
-                deletedReason = null,
-                registeredFacilityId = facility.uuid,
-                assignedFacilityId = facility.uuid
-            )
-          }
-        }
-        .cache()
+      val patient = Patient(
+          uuid = patientUuid,
+          addressUuid = addressUuid,
+          fullName = personalDetails.fullName,
+          gender = personalDetails.gender!!,
+          dateOfBirth = dateOfBirth?.let {
+            dateOfBirthFormat.parse(dateOfBirth, LocalDate::from)
+          },
+          age = personalDetails.age?.let { ageString ->
+            Age(ageString.toInt(), Instant.now(utcClock))
+          },
 
-    val patientSave = sharedPatient
-        .flatMapCompletable { patient -> savePatient(patient) }
+          status = PatientStatus.Active,
 
-    val businessIdSave = cachedOngoingEntry
-        .flatMapCompletable { entry ->
-          if (entry.identifier == null) {
-            Completable.complete()
-          } else {
-            addIdentifierToPatient(
-                uuid = supplyUuidForBpPassport(),
-                patientUuid = patientUuid,
-                identifier = entry.identifier,
-                assigningUser = loggedInUser
-            ).toCompletable()
-          }
-        }
+          createdAt = Instant.now(utcClock),
+          updatedAt = Instant.now(utcClock),
+          deletedAt = null,
+          recordedAt = Instant.now(utcClock),
+          syncStatus = PENDING,
+          reminderConsent = reminderConsent,
+          deletedReason = null,
+          registeredFacilityId = facility.uuid,
+          assignedFacilityId = facility.uuid
+      )
 
-    val alternativeIdSave = cachedOngoingEntry
-        .flatMapCompletable { entry ->
-          if (entry.alternativeId == null || entry.alternativeId.value.isBlank()) {
-            Completable.complete()
-          } else {
-            addIdentifierToPatient(
-                uuid = supplyUuidForAlternativeId(),
-                patientUuid = patientUuid,
-                identifier = entry.alternativeId,
-                assigningUser = loggedInUser
-            ).toCompletable()
-          }
-        }
+      val address = PatientAddress(
+          uuid = addressUuid,
+          streetAddress = address.streetAddress,
+          colonyOrVillage = address.colonyOrVillage,
+          zone = address.zone,
+          district = address.district,
+          state = address.state,
+          country = facility.country,
+          createdAt = Instant.now(utcClock),
+          updatedAt = Instant.now(utcClock),
+          deletedAt = null
+      )
 
-    val phoneNumberSave = cachedOngoingEntry
-        .flatMapCompletable { entry ->
-          if (entry.phoneNumber == null) {
-            Completable.complete()
-          } else {
-            val number = with(entry.phoneNumber) {
-              PatientPhoneNumber(
-                  uuid = supplyUuidForPhoneNumber(),
-                  patientUuid = patientUuid,
-                  number = number,
-                  phoneType = type,
-                  active = active,
-                  createdAt = Instant.now(utcClock),
-                  updatedAt = Instant.now(utcClock),
-                  deletedAt = null)
-            }
-            savePhoneNumber(number)
-          }
-        }
+      val phoneNumbers = createPhoneNumbersFromOngoingPatientEntry(
+          ongoingEntry = this,
+          patientUuid = patientUuid,
+          supplyUuidForPhoneNumber = supplyUuidForPhoneNumber
+      )
 
-    return addressSave
-        .andThen(patientSave)
-        .andThen(businessIdSave)
-        .andThen(alternativeIdSave)
-        .andThen(phoneNumberSave)
-        .andThen(sharedPatient)
+      val businessIds = createBusinessIdsFromOngoingPatientEntry(
+          ongoingEntry = this,
+          patientUuid = patientUuid,
+          user = loggedInUser,
+          supplyUuidForBpPassport = supplyUuidForBpPassport,
+          supplyUuidForAlternativeId = supplyUuidForAlternativeId
+      )
+
+      PatientProfile(
+          patient = patient,
+          address = address,
+          phoneNumbers = phoneNumbers,
+          businessIds = businessIds
+      )
+    }
+  }
+
+  private fun createPhoneNumbersFromOngoingPatientEntry(
+      ongoingEntry: OngoingNewPatientEntry,
+      patientUuid: UUID,
+      supplyUuidForPhoneNumber: () -> UUID,
+  ): List<PatientPhoneNumber> {
+    return with(ongoingEntry) {
+      val phoneNumbers = mutableListOf<PatientPhoneNumber>()
+
+      if (phoneNumber != null) {
+        val patientPhoneNumber = PatientPhoneNumber(
+            uuid = supplyUuidForPhoneNumber(),
+            patientUuid = patientUuid,
+            number = phoneNumber.number,
+            phoneType = phoneNumber.type,
+            active = phoneNumber.active,
+            createdAt = Instant.now(utcClock),
+            updatedAt = Instant.now(utcClock),
+            deletedAt = null
+        )
+
+        phoneNumbers.add(patientPhoneNumber)
+      }
+
+      phoneNumbers.toList()
+    }
+  }
+
+  private fun createBusinessIdsFromOngoingPatientEntry(
+      ongoingEntry: OngoingNewPatientEntry,
+      patientUuid: UUID,
+      user: User,
+      supplyUuidForBpPassport: () -> UUID,
+      supplyUuidForAlternativeId: () -> UUID
+  ): List<BusinessId> {
+
+    return with(ongoingEntry) {
+      val businessIds = mutableListOf<BusinessId>()
+
+      if (identifier != null && identifier.value.isNotBlank()) {
+        val bpPassport = createBusinessIdFromIdentifier(
+            id = supplyUuidForBpPassport(),
+            patientUuid = patientUuid,
+            identifier = identifier,
+            user = user
+        )
+        businessIds.add(bpPassport)
+      }
+
+      if (alternativeId != null && alternativeId.value.isNotBlank()) {
+        val alternativeBusinessId = createBusinessIdFromIdentifier(
+            id = supplyUuidForAlternativeId(),
+            patientUuid = patientUuid,
+            identifier = alternativeId,
+            user = user
+        )
+
+        businessIds.add(alternativeBusinessId)
+      }
+
+      businessIds.toList()
+    }
+  }
+
+  private fun createBusinessIdFromIdentifier(
+      id: UUID,
+      patientUuid: UUID,
+      identifier: Identifier,
+      user: User
+  ): BusinessId {
+    val metaAndVersion = createBusinessIdMetaDataForIdentifier(identifier.type, user)
+    val now = Instant.now(utcClock)
+
+    return BusinessId(
+        uuid = id,
+        patientUuid = patientUuid,
+        identifier = identifier,
+        metaDataVersion = metaAndVersion.metaDataVersion,
+        metaData = metaAndVersion.metaData,
+        createdAt = now,
+        updatedAt = now,
+        deletedAt = null
+    )
   }
 
   fun updatePatient(patient: Patient): Completable {
@@ -412,26 +469,11 @@ class PatientRepository @Inject constructor(
         .andThen(Completable.fromAction { setSyncStatus(listOf(patientUuid), PENDING) })
   }
 
-  private fun convertToDate(dateOfBirth: String?): LocalDate? {
-    return dateOfBirth?.let { dateOfBirthFormat.parse(dateOfBirth, LocalDate::from) }
-  }
-
-  private fun saveAddress(address: PatientAddress): Completable {
-    return Completable.fromAction {
-      database.addressDao().save(address)
-    }
-  }
-
   fun address(addressUuid: UUID): Observable<Optional<PatientAddress>> {
     return database.addressDao()
         .address(addressUuid)
         .toObservable()
-        .map { addresses ->
-          when {
-            addresses.isNotEmpty() -> Just(addresses.first())
-            else -> None<PatientAddress>()
-          }
-        }
+        .map { addresses -> Optional.ofNullable(addresses.firstOrNull()) }
   }
 
   private fun savePhoneNumber(number: PatientPhoneNumber): Completable {
@@ -444,12 +486,7 @@ class PatientRepository @Inject constructor(
     return database.phoneNumberDao()
         .phoneNumber(patientUuid)
         .toObservable()
-        .map { numbers ->
-          when {
-            numbers.isNotEmpty() -> Just(numbers.first())
-            else -> None<PatientPhoneNumber>()
-          }
-        }
+        .map { numbers -> Optional.ofNullable(numbers.firstOrNull()) }
   }
 
   fun latestPhoneNumberForPatient(patientUuid: UUID): Optional<PatientPhoneNumber> {
@@ -498,24 +535,17 @@ class PatientRepository @Inject constructor(
         .toObservable()
   }
 
-
   fun addIdentifierToPatient(
       uuid: UUID,
       patientUuid: UUID,
       identifier: Identifier,
       assigningUser: User
   ): Single<BusinessId> {
-    val metaAndVersion = createBusinessIdMetaDataForIdentifier(identifier.type, assigningUser)
-    val now = Instant.now(utcClock)
-    val businessId = BusinessId(
-        uuid = uuid,
+    val businessId = createBusinessIdFromIdentifier(
+        id = uuid,
         patientUuid = patientUuid,
         identifier = identifier,
-        metaDataVersion = metaAndVersion.metaDataVersion,
-        metaData = metaAndVersion.metaData,
-        createdAt = now,
-        updatedAt = now,
-        deletedAt = null
+        user = assigningUser
     )
 
     return saveBusinessId(businessId)
@@ -553,13 +583,7 @@ class PatientRepository @Inject constructor(
     return database
         .patientDao()
         .findPatientsWithBusinessId(identifier)
-        .map { patients ->
-          if (patients.isEmpty()) {
-            None()
-          } else {
-            patients.first().toOptional()
-          }
-        }
+        .map { patients -> Optional.ofNullable(patients.firstOrNull()) }
         .toObservable()
 
   }
@@ -576,13 +600,7 @@ class PatientRepository @Inject constructor(
     return database
         .businessIdDao()
         .latestForPatientByType(patientUuid, BangladeshNationalId)
-        .map { bangladeshNationalId ->
-          if (bangladeshNationalId.isEmpty()) {
-            None()
-          } else {
-            bangladeshNationalId.first().toOptional()
-          }
-        }
+        .map { bangladeshNationalId -> Optional.ofNullable(bangladeshNationalId.firstOrNull()) }
         .toObservable()
   }
 

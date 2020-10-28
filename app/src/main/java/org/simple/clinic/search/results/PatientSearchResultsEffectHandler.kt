@@ -39,12 +39,8 @@ class PatientSearchResultsEffectHandler @AssistedInject constructor(
   private fun saveNewPatientEntry(): ObservableTransformer<SaveNewOngoingPatientEntry, PatientSearchResultsEvent> {
     return ObservableTransformer { effects ->
       effects
-          .observeOn(schedulers.io())
-          .switchMap { effect ->
-            patientRepository
-                .saveOngoingEntry(effect.entry)
-                .andThen(Observable.just(NewOngoingPatientEntrySaved))
-          }
+          .doOnNext { effect -> patientRepository.saveOngoingEntry(effect.entry) }
+          .map { NewOngoingPatientEntrySaved }
     }
   }
 

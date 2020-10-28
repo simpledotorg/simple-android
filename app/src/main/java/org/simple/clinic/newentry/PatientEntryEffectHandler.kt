@@ -8,7 +8,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
-import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.Field.Age
 import org.simple.clinic.newentry.Field.ColonyOrVillage
@@ -20,7 +19,6 @@ import org.simple.clinic.newentry.Field.PhoneNumber
 import org.simple.clinic.newentry.Field.State
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
-import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientEntryValidationError.AgeExceedsMaxLimit
@@ -43,7 +41,6 @@ import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberNonNullB
 import org.simple.clinic.patient.PatientEntryValidationError.StateEmpty
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.platform.analytics.Analytics
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ValueChangedCallback
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import javax.inject.Named
@@ -90,7 +87,7 @@ class PatientEntryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { fetchPatientEntries ->
       val getPatientEntryAndFacility = Singles
           .zip(
-              patientRepository.ongoingEntry(),
+              Single.just(patientRepository.ongoingEntry()),
               facilityRepository.currentFacility().firstOrError()
           )
 
@@ -140,16 +137,10 @@ class PatientEntryEffectHandler @AssistedInject constructor(
       savePatientEffects
           .map { it.entry }
           .subscribeOn(scheduler)
-          .flatMapSingle { savePatientEntry(it) }
+          .doOnNext(patientRepository::saveOngoingEntry)
           .doOnNext { patientRegisteredCount.set(patientRegisteredCount.get().plus(1)) }
           .map { PatientEntrySaved }
     }
-  }
-
-  private fun savePatientEntry(entry: OngoingNewPatientEntry): Single<Unit> {
-    return patientRepository
-        .saveOngoingEntry(entry)
-        .andThen(Single.just(Unit))
   }
 
   private fun showValidationErrors(errors: List<PatientEntryValidationError>) {

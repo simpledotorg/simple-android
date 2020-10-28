@@ -14,3 +14,9 @@ inline fun <reified T> Observable<ActivityResult>.extractSuccessful(
   return filter { it.requestCode == requestCode && it.succeeded() && it.data != null }
       .map { resultMapper(it.data!!) }
 }
+
+fun Observable<ActivityResult>.filterIfSuccessful(
+    requestCode: Int
+): Observable<ActivityResult> {
+  return filter { it.requestCode == requestCode && it.succeeded() && it.data != null }
+}

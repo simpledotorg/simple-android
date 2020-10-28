@@ -1,5 +1,6 @@
 package org.simple.clinic.summary.teleconsultation.status
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -129,6 +130,9 @@ class TeleconsultStatusSheet : BottomSheetActivity(), TeleconsultStatusUi, Telec
   }
 
   override fun dismissSheet() {
+    val intent = Intent()
+    setResult(Activity.RESULT_OK, intent)
+
     finish()
   }
 

@@ -17,7 +17,7 @@ class AuthenticationInitTest {
     spec
         .whenInit(model)
         .then(assertThatFirst(
-            hasModel(model),
+            hasModel(model.initialScreenOpened()),
             hasEffects(OpenCountrySelectionScreen)
         ))
   }
@@ -29,7 +29,7 @@ class AuthenticationInitTest {
     spec
         .whenInit(model)
         .then(assertThatFirst(
-            hasModel(model),
+            hasModel(model.initialScreenOpened()),
             hasEffects(OpenRegistrationPhoneScreen)
         ))
   }

@@ -4,4 +4,11 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class AuthenticationModel(val openFor: OpenFor): Parcelable
+data class AuthenticationModel(val openFor: OpenFor) : Parcelable {
+
+  companion object {
+    fun create(openFor: OpenFor): AuthenticationModel {
+      return AuthenticationModel(openFor)
+    }
+  }
+}

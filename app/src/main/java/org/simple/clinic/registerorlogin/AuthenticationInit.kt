@@ -9,6 +9,6 @@ class AuthenticationInit : Init<AuthenticationModel, AuthenticationEffect> {
   override fun init(
       model: AuthenticationModel
   ): First<AuthenticationModel, AuthenticationEffect> {
-    return first(model)
+    return first(model, OpenCountrySelectionScreen)
   }
 }

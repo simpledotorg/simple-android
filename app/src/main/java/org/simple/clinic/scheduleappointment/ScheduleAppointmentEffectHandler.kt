@@ -15,6 +15,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolRepository
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -37,7 +38,8 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     private val userClock: UserClock,
     private val schedulers: SchedulersProvider,
     private val uuidGenerator: UuidGenerator,
-    @Assisted private val uiActions: ScheduleAppointmentUiActions
+    @Assisted private val uiActions: ScheduleAppointmentUiActions,
+    private val teleconsultRecordRepository: TeleconsultRecordRepository
 ) {
 
   @AssistedInject.Factory
@@ -54,7 +56,19 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
         .addTransformer(ScheduleAppointmentForPatient::class.java, scheduleAppointmentForPatient())
         .addAction(CloseSheet::class.java, uiActions::closeSheet, schedulers.ui())
         .addTransformer(LoadPatientDefaulterStatus::class.java, loadPatientDefaulterStatus())
+        .addTransformer(LoadTeleconsultRecord::class.java, loadTeleconsultRecordDetails())
         .build()
+  }
+
+  private fun loadTeleconsultRecordDetails(): ObservableTransformer<LoadTeleconsultRecord, ScheduleAppointmentEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map {
+            val teleconsultRecord = teleconsultRecordRepository.getPatientTeleconsultRecord(patientUuid = it.patientUuid)
+            TeleconsultRecordLoaded(teleconsultRecord)
+          }
+    }
   }
 
   private fun loadDefaultAppointmentDate(): ObservableTransformer<LoadDefaultAppointmentDate, ScheduleAppointmentEvent> {

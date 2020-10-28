@@ -33,6 +33,7 @@ import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolRepository
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -55,6 +56,7 @@ class ScheduleAppointmentLogicTest {
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
   private val protocolRepository = mock<ProtocolRepository>()
+  private val teleconsultRecordRepository = mock<TeleconsultRecordRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val today = LocalDate.parse("2019-01-01")
@@ -736,7 +738,8 @@ class ScheduleAppointmentLogicTest {
         userClock = clock,
         schedulers = TrampolineSchedulersProvider(),
         uuidGenerator = FakeUuidGenerator.fixed(appointmentUuid),
-        uiActions = uiActions
+        uiActions = uiActions,
+        teleconsultRecordRepository = teleconsultRecordRepository
     )
 
     testFixture = MobiusTestFixture(

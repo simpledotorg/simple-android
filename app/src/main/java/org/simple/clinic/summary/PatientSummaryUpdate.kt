@@ -51,6 +51,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       ContactDoctorClicked -> dispatch(OpenContactDoctorSheet(model.patientUuid))
       LogTeleconsultClicked -> logTeleconsultClicked(model)
       is MedicalOfficersLoaded -> next(model.medicalOfficersLoaded(event.medicalOfficers))
+      TeleconsultStatusChanged -> dispatch(GoToHomeScreen)
     }
   }
 

@@ -20,6 +20,7 @@ class AuthenticationEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<AuthenticationEffect, AuthenticationEvent>()
         .addAction(OpenCountrySelectionScreen::class.java, uiActions::openCountrySelectionScreen, schedulers.ui())
+        .addAction(OpenRegistrationPhoneScreen::class.java, uiActions::openRegistrationPhoneScreen, schedulers.ui())
         .build()
   }
 }

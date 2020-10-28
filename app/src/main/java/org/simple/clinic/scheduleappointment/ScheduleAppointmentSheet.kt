@@ -86,6 +86,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
   private val calendarDateSelectedEvents: Subject<AppointmentCalendarDateSelected> = PublishSubject.create()
   private val facilityChanges: DeferredEventSource<ScheduleAppointmentEvent> = DeferredEventSource()
+  private val REQUEST_CODE_TELECONSULT_STATUS_CHANGED = 11
 
   private val events by unsafeLazy {
     Observable
@@ -178,10 +179,15 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    if (requestCode == REQCODE_FACILITY_SELECT && resultCode == Activity.RESULT_OK) {
-      val selectedFacility = FacilitySelectionActivity.selectedFacility(data!!)
-      val patientFacilityChanged = PatientFacilityChanged(facility = selectedFacility)
-      facilityChanges.notify(patientFacilityChanged)
+    if (resultCode == Activity.RESULT_OK) {
+      when (requestCode) {
+        REQCODE_FACILITY_SELECT -> {
+          val selectedFacility = FacilitySelectionActivity.selectedFacility(data!!)
+          val patientFacilityChanged = PatientFacilityChanged(facility = selectedFacility)
+          facilityChanges.notify(patientFacilityChanged)
+        }
+        REQUEST_CODE_TELECONSULT_STATUS_CHANGED -> closeSheet()
+      }
     }
   }
 
@@ -209,11 +215,12 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
   }
 
   override fun openTeleconsultStatusSheet(teleconsultRecordUuid: UUID) {
-    startActivity(
+    startActivityForResult(
         TeleconsultStatusSheet.intent(
             context = this,
             teleconsultRecordId = teleconsultRecordUuid
-        )
+        ),
+        REQUEST_CODE_TELECONSULT_STATUS_CHANGED
     )
   }
 

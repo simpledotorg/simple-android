@@ -649,17 +649,6 @@ class PatientSummaryUpdateTest {
         ))
   }
 
-  @Test
-  fun `when teleconsult status sheet is closed, then go back to home screen`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(TeleconsultStatusChanged)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(GoToHomeScreen)
-        ))
-  }
-
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

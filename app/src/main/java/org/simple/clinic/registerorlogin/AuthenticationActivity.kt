@@ -5,27 +5,32 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
+import io.reactivex.Observable
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.empty.EmptyScreenKey
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
+import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.selectcountry.SelectCountryScreenKey
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import java.util.Locale
 import javax.inject.Inject
 
-class AuthenticationActivity : AppCompatActivity() {
+class AuthenticationActivity : AppCompatActivity(), AuthenticationUiActions {
 
   companion object {
     private const val EXTRA_OPEN_FOR = "AuthenticationActivity.EXTRA_OPEN_FOR"
@@ -49,6 +54,9 @@ class AuthenticationActivity : AppCompatActivity() {
   @Inject
   lateinit var features: Features
 
+  @Inject
+  lateinit var effectHandlerFactory: AuthenticationEffectHandler.Factory
+
   private val screenRouter: ScreenRouter by unsafeLazy {
     ScreenRouter.create(this, NestedKeyChanger(), screenResults)
   }
@@ -59,7 +67,21 @@ class AuthenticationActivity : AppCompatActivity() {
     intent.extras!!.getSerializable(EXTRA_OPEN_FOR)!! as OpenFor
   }
 
+  private val delegate: MobiusDelegate<AuthenticationModel, AuthenticationEvent, AuthenticationEffect> by unsafeLazy {
+    MobiusDelegate.forActivity(
+        events = Observable.never(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = AuthenticationInit(),
+        defaultModel = AuthenticationModel.create(openFor)
+    )
+  }
+
   private lateinit var component: AuthenticationActivityComponent
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    delegate.onRestoreInstanceState(savedInstanceState)
+  }
 
   override fun attachBaseContext(baseContext: Context) {
     setupDiGraph()
@@ -71,6 +93,16 @@ class AuthenticationActivity : AppCompatActivity() {
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)
+  }
+
+  override fun onStart() {
+    super.onStart()
+    delegate.start()
+  }
+
+  override fun onStop() {
+    delegate.stop()
+    super.onStop()
   }
 
   private fun setupDiGraph() {
@@ -125,6 +157,15 @@ class AuthenticationActivity : AppCompatActivity() {
     if (features.isEnabled(Feature.LogSavedStateSizes)) {
       screenRouter.logSizesOfSavedStates()
     }
+    delegate.onSaveInstanceState(outState)
     super.onSaveInstanceState(outState)
+  }
+
+  override fun openCountrySelectionScreen() {
+    screenRouter.clearHistoryAndPush(SelectCountryScreenKey(), RouterDirection.REPLACE)
+  }
+
+  override fun openRegistrationPhoneScreen() {
+    screenRouter.clearHistoryAndPush(RegistrationPhoneScreenKey(), RouterDirection.REPLACE)
   }
 }

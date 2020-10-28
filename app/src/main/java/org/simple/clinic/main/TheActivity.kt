@@ -59,7 +59,6 @@ import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
-import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import java.time.Instant
@@ -69,21 +68,20 @@ import javax.inject.Inject
 
 @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 fun initialScreenKey(
-    user: User?
+    user: User
 ): FullScreenKey {
-  val userDisapproved = user?.status == UserStatus.DisapprovedForSyncing
+  val userDisapproved = user.status == UserStatus.DisapprovedForSyncing
 
-  val canMoveToHomeScreen = when (user?.loggedInStatus) {
+  val canMoveToHomeScreen = when (user.loggedInStatus) {
     NOT_LOGGED_IN, RESETTING_PIN -> false
     LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED, UNAUTHORIZED -> true
-    null -> false
   }
 
   return when {
     canMoveToHomeScreen && !userDisapproved -> HomeScreenKey
-    userDisapproved -> AccessDeniedScreenKey(user?.fullName!!)
-    user?.loggedInStatus == RESETTING_PIN -> ForgotPinCreateNewPinScreenKey()
-    else -> throw IllegalStateException("Unknown user status combinations: [${user?.loggedInStatus}, ${user?.status}]")
+    userDisapproved -> AccessDeniedScreenKey(user.fullName)
+    user.loggedInStatus == RESETTING_PIN -> ForgotPinCreateNewPinScreenKey()
+    else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
   }
 }
 
@@ -257,7 +255,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
         onKeyChange = this::onScreenChanged
     ))
 
-    val currentUser: User? = userSession.loggedInUser().blockingFirst().toNullable()
+    val currentUser: User = userSession.loggedInUser().blockingFirst().get()
     return screenRouter.installInContext(baseContext, initialScreenKey(currentUser))
   }
 

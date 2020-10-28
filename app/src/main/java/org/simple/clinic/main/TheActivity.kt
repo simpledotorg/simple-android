@@ -31,6 +31,7 @@ import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
@@ -52,6 +53,7 @@ import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
@@ -315,7 +317,13 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   override fun redirectToLogin() {
-    screenRouter.clearHistoryAndPush(RegistrationPhoneScreenKey(), RouterDirection.REPLACE)
+    val intent = AuthenticationActivity
+        .forReauthentication(this)
+        .disableAnimations()
+
+    startActivity(intent)
+    overridePendingTransition(0, 0)
+    finish()
   }
 
   override fun showAccessDeniedScreen(fullName: String) {

@@ -46,5 +46,9 @@ object SchedulingSkipped : ScheduleAppointmentEvent() {
 
 data class TeleconsultRecordLoaded(val teleconsultRecord: TeleconsultRecord?) : ScheduleAppointmentEvent()
 
+object NextClicked : ScheduleAppointmentEvent() {
+  override val analyticsName = "Schedule Appointment:Next clicked"
+}
+
 object AppointmentScheduledForPatientFromNext : ScheduleAppointmentEvent()
 

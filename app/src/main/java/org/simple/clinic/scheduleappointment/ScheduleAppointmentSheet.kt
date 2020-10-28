@@ -95,6 +95,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
             notNowClicks(),
             doneClicks(),
             appointmentDateClicks(),
+            nextClicks(),
             calendarDateSelectedEvents
         )
         .compose(ReportAnalyticsEvents())
@@ -191,6 +192,8 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
   private fun notNowClicks() = notNowButton.clicks().map { SchedulingSkipped }
 
   private fun doneClicks() = doneButton.clicks().map { AppointmentDone }
+
+  private fun nextClicks() = nextButton.clicks().map { NextClicked }
 
   private fun appointmentDateClicks() = changeAppointmentDate.clicks().map { ManuallySelectAppointmentDateClicked }
 

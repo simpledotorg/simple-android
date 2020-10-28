@@ -37,7 +37,19 @@ class ScheduleAppointmentUpdate(
       is PatientDefaulterStatusLoaded -> scheduleAutomaticAppointment(event, model)
       is TeleconsultRecordLoaded -> next(model.teleconsultRecordLoaded(event.teleconsultRecord))
       AppointmentScheduledForPatientFromNext -> next(model.nextButtonStateChanged(NextButtonState.SCHEDULED), GoToTeleconsultStatusSheet(model.teleconsultRecord!!.id))
+      NextClicked -> scheduleManualAppointmentFromNext(model)
     }
+  }
+
+  private fun scheduleManualAppointmentFromNext(model: ScheduleAppointmentModel): Next<ScheduleAppointmentModel, ScheduleAppointmentEffect> {
+    val effect = ScheduleAppointmentForPatientFromNext(
+        patientUuid = model.patientUuid,
+        scheduledForDate = model.selectedAppointmentDate!!.scheduledFor,
+        scheduledAtFacility = model.appointmentFacility!!,
+        type = Manual
+    )
+
+    return next(model.nextButtonStateChanged(NextButtonState.SCHEDULING), effect)
   }
 
   private fun appointmentFacilityLoaded(

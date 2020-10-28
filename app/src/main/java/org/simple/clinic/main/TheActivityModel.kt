@@ -4,9 +4,11 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class TheActivityModel : Parcelable {
+data class TheActivityModel(val isFreshLogin: Boolean) : Parcelable {
 
   companion object {
-    fun create(): TheActivityModel = TheActivityModel()
+    fun createForAlreadyLoggedInUser(): TheActivityModel = TheActivityModel(isFreshLogin = false)
+
+    fun createForNewlyLoggedInUser(): TheActivityModel = TheActivityModel(isFreshLogin = true)
   }
 }

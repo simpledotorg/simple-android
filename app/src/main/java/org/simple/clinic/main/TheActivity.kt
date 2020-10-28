@@ -175,7 +175,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
     MobiusDelegate.forActivity(
         events = Observable.never(),
-        defaultModel = TheActivityModel.create(),
+        defaultModel = TheActivityModel.createForAlreadyLoggedInUser(),
         update = TheActivityUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = TheActivityInit(),

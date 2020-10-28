@@ -30,24 +30,14 @@ import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsTabScreen
 import org.simple.clinic.home.report.ReportsScreen
-import org.simple.clinic.introvideoscreen.IntroVideoScreenInjector
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.applock.ConfirmResetPinDialog
-import org.simple.clinic.login.pin.LoginPinScreen
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.newentry.country.di.InputFieldsFactoryModule
 import org.simple.clinic.onboarding.OnboardingScreenInjector
 import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.recentpatientsview.RecentPatientsView
-import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
-import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
-import org.simple.clinic.registration.location.RegistrationLocationPermissionScreen
-import org.simple.clinic.registration.name.RegistrationFullNameScreen
-import org.simple.clinic.registration.phone.RegistrationPhoneScreen
-import org.simple.clinic.registration.phone.loggedout.LoggedOutOfDeviceDialog
-import org.simple.clinic.registration.pin.RegistrationPinScreen
-import org.simple.clinic.registration.register.RegistrationLoadingScreen
 import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
@@ -88,23 +78,14 @@ interface TheActivityComponent :
     BloodSugarHistoryScreenInjector,
     AccessDeniedScreenInjector,
     PinEntryCardView.Injector,
-    RegistrationPhoneScreen.Injector,
-    LoginPinScreen.Injector,
     EnterOtpScreen.Injector,
     DeletePatientScreenInjector,
     PatientsTabScreen.Injector,
     HelpScreen.Injector,
     ReportsScreen.Injector,
-    IntroVideoScreenInjector,
-    RegistrationFullNameScreen.Injector,
-    RegistrationPinScreen.Injector,
-    RegistrationConfirmPinScreen.Injector,
-    RegistrationLocationPermissionScreen.Injector,
-    RegistrationFacilitySelectionScreen.Injector,
     AddPhoneNumberDialog.Injector,
     RecentPatientsView.Injector,
     AssignedFacilityView.Injector,
-    RegistrationLoadingScreen.Injector,
     RecentPatientsScreen.Injector,
     FacilityPickerView.Injector,
     ForgotPinCreateNewPinScreen.Injector,
@@ -114,7 +95,6 @@ interface TheActivityComponent :
     ForgotPinConfirmPinScreen.Injector,
     ScanSimpleIdScreen.Injector,
     HomeScreen.Injector,
-    LoggedOutOfDeviceDialog.Injector,
     PatientEntryScreen.Injector,
     UpdatePhoneNumberDialog.Injector,
     EditPatientScreen.Injector,

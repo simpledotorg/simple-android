@@ -13,6 +13,7 @@ import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
 import java.util.UUID
+import org.simple.clinic.scheduleappointment.ButtonState as NextButtonState
 
 class ScheduleAppointmentUpdateTest {
 
@@ -33,7 +34,8 @@ class ScheduleAppointmentUpdateTest {
       patientUuid = patientUuid,
       timeToAppointments = appointmentConfig.scheduleAppointmentsIn,
       userClock = clock,
-      doneButtonState = SAVED
+      doneButtonState = SAVED,
+      nextButtonState = NextButtonState.SCHEDULED
   )
 
   @Test

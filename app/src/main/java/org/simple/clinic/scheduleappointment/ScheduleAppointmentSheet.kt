@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
@@ -42,6 +41,7 @@ import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
+import org.simple.clinic.scheduleappointment.ButtonState as NextButtonState
 
 class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, ScheduleAppointmentUiActions {
 
@@ -111,7 +111,8 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
             patientUuid = patientUuid,
             timeToAppointments = config.scheduleAppointmentsIn,
             userClock = userClock,
-            doneButtonState = ButtonState.SAVED
+            doneButtonState = ButtonState.SAVED,
+            nextButtonState = NextButtonState.SCHEDULED
         ),
         update = ScheduleAppointmentUpdate(
             currentDate = LocalDate.now(userClock),

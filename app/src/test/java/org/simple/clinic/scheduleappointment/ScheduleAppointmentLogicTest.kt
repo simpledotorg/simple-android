@@ -748,7 +748,8 @@ class ScheduleAppointmentLogicTest {
             patientUuid = patientUuid,
             timeToAppointments = config.scheduleAppointmentsIn,
             userClock = clock,
-            doneButtonState = SAVED
+            doneButtonState = SAVED,
+            nextButtonState = ButtonState.SCHEDULED
         ),
         init = ScheduleAppointmentInit(),
         update = ScheduleAppointmentUpdate(

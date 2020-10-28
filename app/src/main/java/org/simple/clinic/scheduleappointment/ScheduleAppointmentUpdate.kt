@@ -1,7 +1,6 @@
 package org.simple.clinic.scheduleappointment
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -13,6 +12,7 @@ import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.util.daysTill
 import java.time.LocalDate
 import java.time.Period
+import org.simple.clinic.scheduleappointment.ButtonState as NextButtonState
 
 class ScheduleAppointmentUpdate(
     private val currentDate: LocalDate,
@@ -36,7 +36,7 @@ class ScheduleAppointmentUpdate(
       SchedulingSkipped -> dispatch(LoadPatientDefaulterStatus(model.patientUuid))
       is PatientDefaulterStatusLoaded -> scheduleAutomaticAppointment(event, model)
       is TeleconsultRecordLoaded -> next(model.teleconsultRecordLoaded(event.teleconsultRecord))
-      AppointmentScheduledForPatientFromNext -> noChange()
+      AppointmentScheduledForPatientFromNext -> next(model.nextButtonStateChanged(NextButtonState.SCHEDULED), GoToTeleconsultStatusSheet(model.teleconsultRecord!!.id))
     }
   }
 

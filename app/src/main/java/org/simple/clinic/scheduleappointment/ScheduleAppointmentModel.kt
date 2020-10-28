@@ -79,4 +79,8 @@ data class ScheduleAppointmentModel(
   fun teleconsultRecordLoaded(teleconsultRecord: TeleconsultRecord?): ScheduleAppointmentModel {
     return copy(teleconsultRecord = teleconsultRecord)
   }
+
+  fun nextButtonStateChanged(nextButtonState: NextButtonState): ScheduleAppointmentModel {
+    return copy(nextButtonState = nextButtonState)
+  }
 }

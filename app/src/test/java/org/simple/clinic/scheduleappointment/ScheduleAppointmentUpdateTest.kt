@@ -1,5 +1,6 @@
 package org.simple.clinic.scheduleappointment
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.UpdateSpec
@@ -37,6 +38,7 @@ class ScheduleAppointmentUpdateTest {
       doneButtonState = SAVED,
       nextButtonState = NextButtonState.SCHEDULED
   )
+  private val teleconsultRecordUuid = UUID.fromString("f60e5a36-824d-48c6-a5eb-01a2184c8b97")
 
   @Test
   fun `when appointment facilities are loaded, then set current facility for schedule appointment if assigned facility is not present`() {
@@ -68,7 +70,7 @@ class ScheduleAppointmentUpdateTest {
   @Test
   fun `when teleconsult record is loaded, then update the model`() {
     val teleconsultRecord = TestData.teleconsultRecord(
-        id = UUID.fromString("f60e5a36-824d-48c6-a5eb-01a2184c8b97"),
+        id = teleconsultRecordUuid,
         teleconsultRequestInfo = TestData.teleconsultRequestInfo()
     )
 
@@ -84,7 +86,7 @@ class ScheduleAppointmentUpdateTest {
   }
 
   @Test
-  fun `when teleconsult record is not loaded, then do nothing`(){
+  fun `when teleconsult record is not loaded, then do nothing`() {
     updateSpec
         .given(model)
         .whenEvent(TeleconsultRecordLoaded(null))
@@ -92,6 +94,19 @@ class ScheduleAppointmentUpdateTest {
             assertThatNext(
                 hasModel(model.teleconsultRecordLoaded(null)),
                 hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when the appointment is scheduled, then go to teleconsult status sheet`() {
+    updateSpec
+        .given(model)
+        .whenEvent(AppointmentScheduledForPatientFromNext)
+        .then(
+            assertThatNext(
+                hasModel(model.nextButtonStateChanged(NextButtonState.SCHEDULED)),
+                hasEffects(GoToTeleconsultStatusSheet(teleconsultRecordUuid))
             )
         )
   }

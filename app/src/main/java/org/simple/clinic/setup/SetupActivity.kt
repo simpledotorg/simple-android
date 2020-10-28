@@ -15,11 +15,13 @@ import org.simple.clinic.R
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import java.util.Locale
@@ -124,12 +126,13 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   override fun showCountrySelectionScreen() {
-    // If select country screen is already being shown don't navigate again, it would cause
-    // duplicate destinations
-    if (navController.currentDestination?.id == R.id.placeholderScreen &&
-        navController.currentDestination?.id != R.id.selectCountryScreen) {
-      navController.navigate(R.id.action_placeholderScreen_to_selectCountryScreen)
-    }
+    val intent = AuthenticationActivity
+        .newIntent(this)
+        .disableAnimations()
+
+    startActivity(intent)
+    overridePendingTransition(0, 0)
+    finish()
   }
 
   private fun setupDiGraph() {

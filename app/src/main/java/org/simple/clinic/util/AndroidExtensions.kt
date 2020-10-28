@@ -20,3 +20,9 @@ fun Observable<ActivityResult>.filterIfSuccessful(
 ): Observable<ActivityResult> {
   return filter { it.requestCode == requestCode && it.succeeded() && it.data != null }
 }
+
+fun Intent.disableAnimations(): Intent {
+  flags = flags or Intent.FLAG_ACTIVITY_NO_ANIMATION
+
+  return this
+}

@@ -19,6 +19,7 @@ class AuthenticationEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<AuthenticationEffect, AuthenticationEvent> {
     return RxMobius
         .subtypeEffectHandler<AuthenticationEffect, AuthenticationEvent>()
+        .addAction(OpenCountrySelectionScreen::class.java, uiActions::openCountrySelectionScreen, schedulers.ui())
         .build()
   }
 }

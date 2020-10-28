@@ -11,6 +11,7 @@ import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
@@ -25,11 +26,21 @@ import org.simple.clinic.util.wrap
 import java.util.Locale
 import javax.inject.Inject
 
-class AuthenticationActivity: AppCompatActivity() {
+class AuthenticationActivity : AppCompatActivity() {
 
   companion object {
-    fun newIntent(context: Context): Intent {
-      return Intent(context, AuthenticationActivity::class.java)
+    private const val EXTRA_INITIAL_SCREEN_KEY = "AuthenticationActivity.EXTRA_INITIAL_SCREEN_KEY"
+
+    fun forNewLogin(context: Context): Intent {
+      return Intent(context, AuthenticationActivity::class.java).apply {
+        putExtra(EXTRA_INITIAL_SCREEN_KEY, SelectCountryScreenKey())
+      }
+    }
+
+    fun forReauthentication(context: Context): Intent {
+      return Intent(context, AuthenticationActivity::class.java).apply {
+        putExtra(EXTRA_INITIAL_SCREEN_KEY, RegistrationPhoneScreenKey())
+      }
     }
   }
 
@@ -44,6 +55,10 @@ class AuthenticationActivity: AppCompatActivity() {
   }
 
   private val screenResults: ScreenResultBus = ScreenResultBus()
+
+  private val initialScreenKey: FullScreenKey by unsafeLazy {
+    intent.extras!!.getParcelable(EXTRA_INITIAL_SCREEN_KEY)!!
+  }
 
   private lateinit var component: AuthenticationActivityComponent
 
@@ -76,7 +91,7 @@ class AuthenticationActivity: AppCompatActivity() {
         onKeyChange = ::onScreenChanged
     ))
 
-    return screenRouter.installInContext(baseContext, SelectCountryScreenKey())
+    return screenRouter.installInContext(baseContext, initialScreenKey)
   }
 
   private fun onScreenChanged(outgoing: FullScreenKey?, incoming: FullScreenKey) {

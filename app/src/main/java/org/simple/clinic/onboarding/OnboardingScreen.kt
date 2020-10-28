@@ -75,7 +75,7 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : Constrain
     // event bus?) and handle the navigation there.
     // TODO(vs): 2019-11-07 Move this to an event that is subscribed in the parent activity
     val intent = AuthenticationActivity
-        .newIntent(activity)
+        .forNewLogin(activity)
         .disableAnimations()
 
     activity.startActivity(intent)

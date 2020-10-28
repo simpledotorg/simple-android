@@ -127,7 +127,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
   override fun showCountrySelectionScreen() {
     val intent = AuthenticationActivity
-        .newIntent(this)
+        .forNewLogin(this)
         .disableAnimations()
 
     startActivity(intent)

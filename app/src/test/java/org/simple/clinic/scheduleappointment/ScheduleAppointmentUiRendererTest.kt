@@ -53,6 +53,7 @@ class ScheduleAppointmentUiRendererTest {
     verify(ui).showDoneButton()
     verify(ui).hideNextButton()
     verify(ui).hideProgress()
+    verify(ui).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -79,6 +80,7 @@ class ScheduleAppointmentUiRendererTest {
     verify(ui).showDoneButton()
     verify(ui).hideNextButton()
     verify(ui).hideProgress()
+    verify(ui).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -104,6 +106,7 @@ class ScheduleAppointmentUiRendererTest {
     verify(ui).showNextButton()
     verify(ui).hideDoneButton()
     verify(ui).hideProgress()
+    verify(ui).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
   }
 }

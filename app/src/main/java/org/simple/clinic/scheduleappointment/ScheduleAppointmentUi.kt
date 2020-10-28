@@ -14,4 +14,6 @@ interface ScheduleAppointmentUi {
   fun showNextButton()
   fun hideDoneButton()
   fun hideNextButton()
+  fun showNextButtonProgress()
+  fun hideNextButtonProgress()
 }

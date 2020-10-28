@@ -276,4 +276,12 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
   override fun hideNextButton() {
     nextButton.visibility = GONE
   }
+
+  override fun showNextButtonProgress() {
+    nextButton.setButtonState(InProgress)
+  }
+
+  override fun hideNextButtonProgress() {
+    nextButton.setButtonState(Enabled)
+  }
 }

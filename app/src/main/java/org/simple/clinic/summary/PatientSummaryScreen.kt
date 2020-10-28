@@ -54,7 +54,6 @@ import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.extractSuccessful
-import org.simple.clinic.util.filterIfSuccessful
 import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
@@ -112,8 +111,7 @@ class PatientSummaryScreen(
             phoneNumberClicks(),
             contactDoctorClicks(),
             snackbarActionClicks,
-            logTeleconsultClicks(),
-            teleconsultStatusChanged()
+            logTeleconsultClicks()
         )
         .compose(ReportAnalyticsEvents())
         .cast<PatientSummaryEvent>()
@@ -276,11 +274,6 @@ class PatientSummaryScreen(
         .takeUntil(onDestroys)
         .subscribe(::openContinuation)
   }
-
-  private fun teleconsultStatusChanged() = screenRouter.streamScreenResults()
-      .ofType<ActivityResult>()
-      .filterIfSuccessful(TELECONSULT_STATUS_SHEET)
-      .map { TeleconsultStatusChanged }
 
   private fun openContinuation(continuation: Continuation) {
     when (continuation) {

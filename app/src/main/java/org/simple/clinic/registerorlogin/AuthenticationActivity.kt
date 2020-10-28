@@ -8,6 +8,7 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.empty.EmptyScreenKey
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.platform.analytics.Analytics
@@ -91,7 +92,7 @@ class AuthenticationActivity : AppCompatActivity() {
         onKeyChange = ::onScreenChanged
     ))
 
-    return screenRouter.installInContext(baseContext, initialScreenKey)
+    return screenRouter.installInContext(baseContext, EmptyScreenKey())
   }
 
   private fun onScreenChanged(outgoing: FullScreenKey?, incoming: FullScreenKey) {

@@ -14,6 +14,10 @@
 - Bump AGP to 4.1.0
 - Add `PrescribedDrug#refill` method
 - Remove unnecessary sealed class types for different Business ID metadata versions
+- Clean up `PatientRepository`
+    - Change reactive calls for registering a patient to synchronous ones
+    - Accept the ongoing patient entry as a parameter to the register patient method
+    - Remove deprecated `Optional` class usages
 
 ### Changes
 - Update translations: `kn-IN`, `ta-IN`, `bn-IN`, `ti`, `bn-BD`, `pa-IN`, `mr-IN`, `te-IN`, `hi-IN`

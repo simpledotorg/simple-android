@@ -1,11 +1,8 @@
 package org.simple.clinic.search.results
 
-import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -81,8 +78,6 @@ class PatientSearchResultsLogicTest {
     val ongoingEntry = OngoingNewPatientEntry.fromFullName(fullName)
     val searchCriteria = PatientSearchCriteria.Name(fullName)
 
-    whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
-
     // when
     setupController(searchCriteria)
     uiEvents.onNext(PatientSearchResultRegisterNewPatient(searchCriteria))
@@ -103,8 +98,6 @@ class PatientSearchResultsLogicTest {
         .withIdentifier(identifier)
     val searchCriteria = PatientSearchCriteria.Name(fullName, identifier)
 
-    whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
-
     // when
     setupController(searchCriteria)
     uiEvents.onNext(PatientSearchResultRegisterNewPatient(searchCriteria))
@@ -121,8 +114,6 @@ class PatientSearchResultsLogicTest {
     val phoneNumber = "123456"
     val ongoingEntry = OngoingNewPatientEntry.fromPhoneNumber(phoneNumber)
     val searchCriteria = PatientSearchCriteria.PhoneNumber(phoneNumber)
-
-    whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
     setupController(searchCriteria)
@@ -144,8 +135,6 @@ class PatientSearchResultsLogicTest {
         .withIdentifier(identifier)
     val searchCriteria = PatientSearchCriteria.PhoneNumber(phoneNumber, identifier)
 
-    whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
-
     // when
     setupController(searchCriteria)
     uiEvents.onNext(PatientSearchResultRegisterNewPatient(searchCriteria))
@@ -162,8 +151,6 @@ class PatientSearchResultsLogicTest {
     val fullName = "name"
     val ongoingEntry = OngoingNewPatientEntry.fromFullName(fullName)
     val searchCriteria = PatientSearchCriteria.Name(fullName)
-
-    whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
 
     // when
     setupController(searchCriteria)

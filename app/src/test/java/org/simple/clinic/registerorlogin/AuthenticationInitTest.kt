@@ -8,9 +8,10 @@ import org.junit.Test
 
 class AuthenticationInitTest {
 
+  private val spec = InitSpec(AuthenticationInit())
+
   @Test
   fun `when the screen is created for a new login, open the country selection screen`() {
-    val spec = InitSpec(AuthenticationInit())
     val model = AuthenticationModel.create(OpenFor.NewLogin)
 
     spec
@@ -18,6 +19,18 @@ class AuthenticationInitTest {
         .then(assertThatFirst(
             hasModel(model),
             hasEffects(OpenCountrySelectionScreen)
+        ))
+  }
+
+  @Test
+  fun `when the screen is created for a reauthentication, open the phone number entry screen`() {
+    val model = AuthenticationModel.create(OpenFor.Reauthentication)
+
+    spec
+        .whenInit(model)
+        .then(assertThatFirst(
+            hasModel(model),
+            hasEffects(OpenRegistrationPhoneScreen)
         ))
   }
 }

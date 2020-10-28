@@ -107,9 +107,11 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   override fun goToMainActivity() {
-    val intent = TheActivity.newIntent(this).apply {
-      flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
-    }
+    val intent = TheActivity
+        .newIntent(this, isFreshAuthentication = false)
+        .apply {
+          flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
+        }
     startActivity(intent)
     overridePendingTransition(0, 0)
   }

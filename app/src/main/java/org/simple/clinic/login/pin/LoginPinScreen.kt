@@ -134,7 +134,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   override fun openHomeScreen() {
     val intent = TheActivity
-        .newIntent(activity)
+        .newIntent(activity, isFreshAuthentication = true)
         .disableAnimations()
 
     activity.startActivity(intent)

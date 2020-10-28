@@ -88,10 +88,16 @@ fun initialScreenKey(
 class TheActivity : AppCompatActivity(), TheActivityUi {
 
   companion object {
-    private const val EXTRA_DEEP_LINK_RESULT = "deep_link_result"
+    private const val EXTRA_DEEP_LINK_RESULT = "TheActivity.EXTRA_DEEP_LINK_RESULT"
+    private const val EXTRA_IS_FRESH_AUTHENTICATION = "TheActivity.EXTRA_IS_FRESH_AUTHENTICATION"
 
-    fun newIntent(context: Context): Intent {
-      return Intent(context, TheActivity::class.java)
+    fun newIntent(
+        context: Context,
+        isFreshAuthentication: Boolean
+    ): Intent {
+      return Intent(context, TheActivity::class.java).apply {
+        putExtra(EXTRA_IS_FRESH_AUTHENTICATION, isFreshAuthentication)
+      }
     }
 
     fun intentForOpenPatientSummary(context: Context, patientUuid: UUID): Intent {
@@ -170,12 +176,21 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   private val screenResults: ScreenResultBus = ScreenResultBus()
 
+  private val isFreshAuthentication: Boolean by unsafeLazy {
+    intent.getBooleanExtra(EXTRA_IS_FRESH_AUTHENTICATION, false)
+  }
+
   private val delegate by unsafeLazy {
     val uiRenderer = TheActivityUiRenderer(this)
 
+    val defaultModel = if (isFreshAuthentication)
+      TheActivityModel.createForNewlyLoggedInUser()
+    else
+      TheActivityModel.createForAlreadyLoggedInUser()
+
     MobiusDelegate.forActivity(
         events = Observable.never(),
-        defaultModel = TheActivityModel.createForAlreadyLoggedInUser(),
+        defaultModel = defaultModel,
         update = TheActivityUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = TheActivityInit(),

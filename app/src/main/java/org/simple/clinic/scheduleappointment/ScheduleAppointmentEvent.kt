@@ -34,7 +34,7 @@ data class PatientFacilityChanged(val facility: Facility) : ScheduleAppointmentE
 
 object AppointmentScheduled : ScheduleAppointmentEvent()
 
-object AppointmentDone : ScheduleAppointmentEvent() {
+object DoneClicked : ScheduleAppointmentEvent() {
   override val analyticsName = "Schedule Appointment:Appointment done"
 }
 

@@ -31,7 +31,7 @@ class ScheduleAppointmentUpdate(
       ManuallySelectAppointmentDateClicked -> dispatch(ShowDatePicker(model.selectedAppointmentDate!!.scheduledFor))
       is AppointmentFacilitiesLoaded -> appointmentFacilityLoaded(model, event)
       is PatientFacilityChanged -> next(model.appointmentFacilitySelected(event.facility))
-      is AppointmentDone -> scheduleManualAppointment(model)
+      is DoneClicked -> scheduleManualAppointment(model)
       is AppointmentScheduled -> next(model.doneButtonStateChanged(ButtonState.SAVED), CloseSheet)
       SchedulingSkipped -> dispatch(LoadPatientDefaulterStatus(model.patientUuid))
       is PatientDefaulterStatusLoaded -> scheduleAutomaticAppointment(event, model)

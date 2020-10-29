@@ -92,7 +92,7 @@ class ScheduleAppointmentLogicTest {
 
     // when
     sheetCreated(config = appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn))
-    uiEvents.onNext(AppointmentDone)
+    uiEvents.onNext(DoneClicked)
 
     // then
     verify(ui, times(5)).hideProgress()
@@ -667,7 +667,7 @@ class ScheduleAppointmentLogicTest {
     //when
     sheetCreated()
     uiEvents.onNext(PatientFacilityChanged(updatedFacility))
-    uiEvents.onNext(AppointmentDone)
+    uiEvents.onNext(DoneClicked)
 
     //then
     verify(uiActions).closeSheet()
@@ -687,7 +687,7 @@ class ScheduleAppointmentLogicTest {
   fun `when patient facility is not changed then appointment should be scheduled in the current facility`() {
     //when
     sheetCreated()
-    uiEvents.onNext(AppointmentDone)
+    uiEvents.onNext(DoneClicked)
 
     //then
     verify(uiActions).closeSheet()

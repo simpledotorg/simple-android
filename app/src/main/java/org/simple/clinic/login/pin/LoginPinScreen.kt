@@ -4,21 +4,23 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_login_pin.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
-import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
-import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.security.pin.PinAuthenticated
 import org.simple.clinic.security.pin.verification.LoginPinServerVerificationMethod.UserData
 import org.simple.clinic.user.OngoingLoginEntry
+import org.simple.clinic.util.disableAnimations
+import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -30,6 +32,9 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   @Inject
   lateinit var effectHandler: LoginPinEffectHandler.Factory
+
+  @Inject
+  lateinit var activity: AppCompatActivity
 
   private val events by unsafeLazy {
     Observable
@@ -129,7 +134,12 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   }
 
   override fun openHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreenKey, RouterDirection.REPLACE)
+    val intent = TheActivity
+        .newIntent(activity, isFreshAuthentication = true)
+        .disableAnimations()
+
+    activity.startActivity(intent)
+    activity.finishWithoutAnimations()
   }
 
   override fun goBackToRegistrationScreen() {

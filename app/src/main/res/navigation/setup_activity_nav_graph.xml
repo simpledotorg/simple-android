@@ -12,23 +12,11 @@
     app:layout="@layout/screen_placeholder"
     tools:layout="@layout/screen_placeholder">
     <action
-      android:id="@+id/action_placeholderScreen_to_selectCountryScreen"
-      app:destination="@id/selectCountryScreen"
-      app:popUpTo="@id/placeholderScreen"
-      app:popUpToInclusive="true" />
-    <action
       android:id="@+id/action_placeholderScreen_to_splashScreen"
       app:destination="@id/splashScreen"
       app:popUpTo="@id/placeholderScreen"
       app:popUpToInclusive="true" />
   </screen>
-  <screen
-    android:id="@+id/selectCountryScreen"
-    android:name="org.simple.clinic.selectcountry.SelectCountryScreen"
-    android:label="SelectCountryScreen"
-    app:analyticsName="Select Country"
-    app:layout="@layout/screen_selectcountry"
-    tools:layout="@layout/screen_selectcountry" />
   <screen
     android:id="@+id/splashScreen"
     android:name="org.simple.clinic.splash.SplashScreen"
@@ -48,11 +36,5 @@
     android:label="OnboardingScreen"
     app:analyticsName="Onboarding Screen"
     app:layout="@layout/screen_onboarding"
-    tools:layout="@layout/screen_onboarding">
-    <action
-      android:id="@+id/action_onboardingScreen_to_selectCountryScreen"
-      app:destination="@id/selectCountryScreen"
-      app:popUpTo="@id/onboardingScreen"
-      app:popUpToInclusive="true" />
-  </screen>
+    tools:layout="@layout/screen_onboarding" />
 </navigation>

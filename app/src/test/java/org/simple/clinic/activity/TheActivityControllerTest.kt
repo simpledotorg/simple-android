@@ -384,7 +384,7 @@ class TheActivityControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = TheActivityModel.create(),
+        defaultModel = TheActivityModel.createForAlreadyLoggedInUser(),
         update = TheActivityUpdate(),
         effectHandler = effectHandler.build(),
         init = TheActivityInit(),

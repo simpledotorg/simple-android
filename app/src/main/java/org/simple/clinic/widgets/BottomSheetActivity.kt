@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotterknife.bindView
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.R
+import org.simple.clinic.util.disablePendingTransitions
 
 /**
  * We're using Activities as fake bottom sheets instead of BottomSheetDialog because we want
@@ -24,7 +25,7 @@ abstract class BottomSheetActivity : AppCompatActivity() {
   private val contentContainer by bindView<ViewGroup>(R.id.bottomsheet_content_container)
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    overridePendingTransition(0, 0)
+    disablePendingTransitions()
     super.onCreate(savedInstanceState)
     @Suppress("ConstantConditionIf")
     if (BuildConfig.DISABLE_SCREENSHOT) {
@@ -52,7 +53,7 @@ abstract class BottomSheetActivity : AppCompatActivity() {
         contentContainer = contentContainer,
         endAction = {
           super.finish()
-          overridePendingTransition(0, 0)
+          disablePendingTransitions()
         }
     )
   }

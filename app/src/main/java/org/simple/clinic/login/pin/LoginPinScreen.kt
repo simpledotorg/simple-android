@@ -20,6 +20,7 @@ import org.simple.clinic.security.pin.PinAuthenticated
 import org.simple.clinic.security.pin.verification.LoginPinServerVerificationMethod.UserData
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.util.disableAnimations
+import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -138,8 +139,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
         .disableAnimations()
 
     activity.startActivity(intent)
-    activity.overridePendingTransition(0, 0)
-    activity.finish()
+    activity.finishWithoutAnimations()
   }
 
   override fun goBackToRegistrationScreen() {

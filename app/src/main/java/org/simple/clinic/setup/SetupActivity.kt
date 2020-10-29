@@ -22,6 +22,8 @@ import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
+import org.simple.clinic.util.disablePendingTransitions
+import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import java.util.Locale
@@ -113,7 +115,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
           flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
         }
     startActivity(intent)
-    overridePendingTransition(0, 0)
+    disablePendingTransitions()
   }
 
   override fun showSplashScreen() {
@@ -133,8 +135,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
         .disableAnimations()
 
     startActivity(intent)
-    overridePendingTransition(0, 0)
-    finish()
+    finishWithoutAnimations()
   }
 
   private fun setupDiGraph() {

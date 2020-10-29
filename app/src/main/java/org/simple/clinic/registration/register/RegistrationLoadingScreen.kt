@@ -16,6 +16,7 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.disableAnimations
+import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
@@ -91,8 +92,7 @@ class RegistrationLoadingScreen(
         .disableAnimations()
 
     activity.startActivity(intent)
-    activity.overridePendingTransition(0, 0)
-    activity.finish()
+    activity.finishWithoutAnimations()
   }
 
   override fun showNetworkError() {

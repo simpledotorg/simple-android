@@ -16,6 +16,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.disableAnimations
+import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
@@ -79,8 +80,7 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : Constrain
         .disableAnimations()
 
     activity.startActivity(intent)
-    activity.overridePendingTransition(0, 0)
-    activity.finish()
+    activity.finishWithoutAnimations()
   }
 
   private fun setIntroOneTextView() {

@@ -59,6 +59,7 @@ import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
+import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import java.time.Instant
@@ -340,8 +341,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
         .disableAnimations()
 
     startActivity(intent)
-    overridePendingTransition(0, 0)
-    finish()
+    finishWithoutAnimations()
   }
 
   override fun showAccessDeniedScreen(fullName: String) {

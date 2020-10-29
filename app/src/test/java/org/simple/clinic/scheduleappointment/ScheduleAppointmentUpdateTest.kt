@@ -140,7 +140,7 @@ class ScheduleAppointmentUpdateTest {
                         patientUuid = patientUuid,
                         scheduledForDate = scheduledForDate.scheduledFor,
                         scheduledAtFacility = facilityModel.appointmentFacility!!,
-                        type = Appointment.AppointmentType.random(),
+                        type = Appointment.AppointmentType.Manual,
                     )
                 )
             )

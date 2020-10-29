@@ -150,7 +150,7 @@ class ScheduleAppointmentEffectHandlerTest {
         patientUuid = patientUuid,
         scheduledForDate = LocalDate.now(),
         scheduledAtFacility = facility,
-        type = Appointment.AppointmentType.random()
+        type = Appointment.AppointmentType.Manual
     ))
 
     // then

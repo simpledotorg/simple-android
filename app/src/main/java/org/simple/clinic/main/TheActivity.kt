@@ -31,7 +31,7 @@ import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.analytics.Analytics
-import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
+import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
@@ -47,12 +47,19 @@ import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.user.UnauthorizeUser
 import org.simple.clinic.user.User
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
+import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.toNullable
+import org.simple.clinic.util.disableAnimations
+import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import java.time.Instant
@@ -62,31 +69,36 @@ import javax.inject.Inject
 
 @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 fun initialScreenKey(
-    user: User?
+    user: User
 ): FullScreenKey {
-  val userDisapproved = user?.status == UserStatus.DisapprovedForSyncing
+  val userDisapproved = user.status == UserStatus.DisapprovedForSyncing
 
-  val canMoveToHomeScreen = when (user?.loggedInStatus) {
-    User.LoggedInStatus.NOT_LOGGED_IN, User.LoggedInStatus.RESETTING_PIN, User.LoggedInStatus.UNAUTHORIZED -> false
-    User.LoggedInStatus.LOGGED_IN, User.LoggedInStatus.OTP_REQUESTED, User.LoggedInStatus.RESET_PIN_REQUESTED -> true
-    null -> false
+  val canMoveToHomeScreen = when (user.loggedInStatus) {
+    NOT_LOGGED_IN, RESETTING_PIN -> false
+    LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED, UNAUTHORIZED -> true
   }
 
   return when {
     canMoveToHomeScreen && !userDisapproved -> HomeScreenKey
-    userDisapproved -> AccessDeniedScreenKey(user?.fullName!!)
-    user?.loggedInStatus == User.LoggedInStatus.RESETTING_PIN -> ForgotPinCreateNewPinScreenKey()
-    else -> RegistrationPhoneScreenKey()
+    userDisapproved -> AccessDeniedScreenKey(user.fullName)
+    user.loggedInStatus == RESETTING_PIN -> ForgotPinCreateNewPinScreenKey()
+    else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
   }
 }
 
 class TheActivity : AppCompatActivity(), TheActivityUi {
 
   companion object {
-    private const val EXTRA_DEEP_LINK_RESULT = "deep_link_result"
+    private const val EXTRA_DEEP_LINK_RESULT = "TheActivity.EXTRA_DEEP_LINK_RESULT"
+    private const val EXTRA_IS_FRESH_AUTHENTICATION = "TheActivity.EXTRA_IS_FRESH_AUTHENTICATION"
 
-    fun newIntent(context: Context): Intent {
-      return Intent(context, TheActivity::class.java)
+    fun newIntent(
+        context: Context,
+        isFreshAuthentication: Boolean
+    ): Intent {
+      return Intent(context, TheActivity::class.java).apply {
+        putExtra(EXTRA_IS_FRESH_AUTHENTICATION, isFreshAuthentication)
+      }
     }
 
     fun intentForOpenPatientSummary(context: Context, patientUuid: UUID): Intent {
@@ -165,12 +177,21 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   private val screenResults: ScreenResultBus = ScreenResultBus()
 
+  private val isFreshAuthentication: Boolean by unsafeLazy {
+    intent.getBooleanExtra(EXTRA_IS_FRESH_AUTHENTICATION, false)
+  }
+
   private val delegate by unsafeLazy {
     val uiRenderer = TheActivityUiRenderer(this)
 
+    val defaultModel = if (isFreshAuthentication)
+      TheActivityModel.createForNewlyLoggedInUser()
+    else
+      TheActivityModel.createForAlreadyLoggedInUser()
+
     MobiusDelegate.forActivity(
         events = Observable.never(),
-        defaultModel = TheActivityModel.create(),
+        defaultModel = defaultModel,
         update = TheActivityUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = TheActivityInit(),
@@ -250,7 +271,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
         onKeyChange = this::onScreenChanged
     ))
 
-    val currentUser: User? = userSession.loggedInUser().blockingFirst().toNullable()
+    val currentUser: User = userSession.loggedInUser().blockingFirst().get()
     return screenRouter.installInContext(baseContext, initialScreenKey(currentUser))
   }
 
@@ -315,7 +336,12 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   override fun redirectToLogin() {
-    screenRouter.clearHistoryAndPush(RegistrationPhoneScreenKey(), RouterDirection.REPLACE)
+    val intent = AuthenticationActivity
+        .forReauthentication(this)
+        .disableAnimations()
+
+    startActivity(intent)
+    finishWithoutAnimations()
   }
 
   override fun showAccessDeniedScreen(fullName: String) {

@@ -7,6 +7,7 @@ import com.spotify.mobius.EventSource
 import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
 import com.spotify.mobius.MobiusLoop
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import com.spotify.mobius.android.MobiusAndroid
 import com.spotify.mobius.extras.Connectables
@@ -33,7 +34,7 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
     fun <M : Parcelable, E, F> forView(
         events: Observable<E>,
         defaultModel: M,
-        update: Update<M, E, F>,
+        update: Update<M, E, F> = Update { _, _ -> noChange() },
         effectHandler: ObservableTransformer<F, E>,
         init: Init<M, F> = Init { first(defaultModel) },
         modelUpdateListener: (M) -> Unit = {},
@@ -54,7 +55,7 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
     fun <M : Parcelable, E, F> forActivity(
         events: Observable<E>,
         defaultModel: M,
-        update: Update<M, E, F>,
+        update: Update<M, E, F> = Update { _, _ -> noChange() },
         effectHandler: ObservableTransformer<F, E>,
         init: Init<M, F> = Init { first(defaultModel) },
         modelUpdateListener: (M) -> Unit = {},

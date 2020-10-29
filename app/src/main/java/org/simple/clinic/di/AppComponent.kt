@@ -14,6 +14,7 @@ import org.simple.clinic.facility.change.confirm.FacilityChangeComponent
 import org.simple.clinic.facility.change.confirm.di.ConfirmFacilityChangeComponent
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
+import org.simple.clinic.registerorlogin.AuthenticationActivityComponent
 import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivityComponent
 import org.simple.clinic.setup.SetupActivityComponent
@@ -54,6 +55,7 @@ interface AppComponent {
   fun medicineFrequencyComponent(): MedicineFrequencyComponent.Builder
   fun contactDoctorComponent(): ContactDoctorComponent.Builder
   fun teleconsultStatusComponent(): TeleconsultStatusComponent.Builder
+  fun authenticationActivityComponent(): AuthenticationActivityComponent.Builder
 }
 
 @Scope

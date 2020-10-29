@@ -165,6 +165,11 @@
       android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
+    <activity
+      android:name=".registerorlogin.AuthenticationActivity"
+      android:screenOrientation="portrait"
+      android:windowSoftInputMode="adjustResize" />
+
     <receiver
       android:name=".login.OtpSmsReceiver"
       android:exported="true"

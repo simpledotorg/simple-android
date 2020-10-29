@@ -3,10 +3,9 @@ package org.simple.clinic.setup
 import dagger.Subcomponent
 import org.simple.clinic.activity.BindsActivity
 import org.simple.clinic.onboarding.OnboardingScreenInjector
-import org.simple.clinic.selectcountry.SelectCountryScreenInjector
 
 @Subcomponent(modules = [SetupActivityModule::class])
-interface SetupActivityComponent : OnboardingScreenInjector, SelectCountryScreenInjector {
+interface SetupActivityComponent : OnboardingScreenInjector {
 
   fun inject(target: SetupActivity)
 

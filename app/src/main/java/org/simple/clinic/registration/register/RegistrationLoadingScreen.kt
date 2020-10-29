@@ -5,16 +5,18 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_loading.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
-import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.disableAnimations
+import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
@@ -28,6 +30,9 @@ class RegistrationLoadingScreen(
 
   @Inject
   lateinit var effectHandlerFactory: RegistrationLoadingEffectHandler.Factory
+
+  @Inject
+  lateinit var activity: AppCompatActivity
 
   private val events by unsafeLazy {
     retryClicks()
@@ -82,7 +87,12 @@ class RegistrationLoadingScreen(
       .doAfterNext { showLoader() }
 
   override fun openHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreenKey, RouterDirection.FORWARD)
+    val intent = TheActivity
+        .newIntent(activity, isFreshAuthentication = true)
+        .disableAnimations()
+
+    activity.startActivity(intent)
+    activity.finishWithoutAnimations()
   }
 
   override fun showNetworkError() {

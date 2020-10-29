@@ -42,7 +42,7 @@ class ScheduleAppointmentUiRendererTest {
   )
 
   @Test
-  fun `when teleconsult record is not present, then show save button`() {
+  fun `when teleconsult record is not present, then show done button`() {
     // given
     defaultModel.teleconsultRecordLoaded(null)
 
@@ -58,7 +58,7 @@ class ScheduleAppointmentUiRendererTest {
   }
 
   @Test
-  fun `when teleconsult record is present and teleconsult request status is yes or no then show save button`() {
+  fun `when teleconsult record is present and teleconsult request status is yes or no then show done button`() {
     // given
     val teleconsultRequestInfo = TeleconsultRequestInfo(
         requesterId = requesterId,

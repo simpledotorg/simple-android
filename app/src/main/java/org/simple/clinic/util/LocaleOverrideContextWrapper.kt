@@ -7,7 +7,7 @@ import java.util.Locale
 class LocaleOverrideContextWrapper private constructor(base: Context) : ContextWrapper(base) {
 
   companion object {
-    fun wrap(base: Context, locale: Locale): Context {
+    private fun wrap(base: Context, locale: Locale): Context {
       return overrideLocaleInContext(base, locale)
     }
 

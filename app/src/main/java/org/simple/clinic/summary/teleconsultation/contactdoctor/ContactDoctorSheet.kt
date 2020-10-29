@@ -2,6 +2,7 @@ package org.simple.clinic.summary.teleconsultation.contactdoctor
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
@@ -16,10 +17,10 @@ import org.simple.clinic.summary.PatientTeleconsultationInfo
 import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder
 import org.simple.clinic.summary.teleconsultation.messagebuilder.ShortTeleconsultMessageBuilder
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
-import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.messagesender.SmsMessageSender
 import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.DividerItemDecorator
@@ -140,11 +141,15 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctor
     setupDiGraph()
 
     val wrappedContext = baseContext
-        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
         .wrap { InjectorProviderContextWrapper.wrap(it, component) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)
+    applyOverrideConfiguration(Configuration())
+  }
+
+  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale))
   }
 
   private fun whatsAppButtonClicks(): Observable<UiEvent> {

@@ -180,15 +180,21 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     if (resultCode == Activity.RESULT_OK) {
-      when (requestCode) {
-        REQCODE_FACILITY_SELECT -> {
-          val selectedFacility = FacilitySelectionActivity.selectedFacility(data!!)
-          val patientFacilityChanged = PatientFacilityChanged(facility = selectedFacility)
-          facilityChanges.notify(patientFacilityChanged)
-        }
-        REQUEST_CODE_TELECONSULT_STATUS_CHANGED -> closeSheet()
-      }
+      manageRequestCodes(requestCode, data)
     }
+  }
+
+  private fun manageRequestCodes(requestCode: Int, data: Intent?) {
+    when (requestCode) {
+      REQCODE_FACILITY_SELECT -> updateFacilityChangeForPatient(data)
+      REQUEST_CODE_TELECONSULT_STATUS_CHANGED -> closeSheet()
+    }
+  }
+
+  private fun updateFacilityChangeForPatient(data: Intent?) {
+    val selectedFacility = FacilitySelectionActivity.selectedFacility(data!!)
+    val patientFacilityChanged = PatientFacilityChanged(facility = selectedFacility)
+    facilityChanges.notify(patientFacilityChanged)
   }
 
   private fun incrementClicks() = incrementDateButton.clicks().map { AppointmentDateIncremented }

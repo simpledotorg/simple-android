@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import com.jakewharton.rxbinding3.view.clicks
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
@@ -23,6 +25,7 @@ import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
+import org.simple.clinic.summary.teleconsultation.status.TeleconsultStatusSheet
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
@@ -38,6 +41,7 @@ import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
+import org.simple.clinic.scheduleappointment.ButtonState as NextButtonState
 
 class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, ScheduleAppointmentUiActions {
 
@@ -82,6 +86,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
   private val calendarDateSelectedEvents: Subject<AppointmentCalendarDateSelected> = PublishSubject.create()
   private val facilityChanges: DeferredEventSource<ScheduleAppointmentEvent> = DeferredEventSource()
+  private val REQUEST_CODE_TELECONSULT_STATUS_CHANGED = 11
 
   private val events by unsafeLazy {
     Observable
@@ -91,6 +96,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
             notNowClicks(),
             doneClicks(),
             appointmentDateClicks(),
+            nextClicks(),
             calendarDateSelectedEvents
         )
         .compose(ReportAnalyticsEvents())
@@ -107,7 +113,8 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
             patientUuid = patientUuid,
             timeToAppointments = config.scheduleAppointmentsIn,
             userClock = userClock,
-            doneButtonState = ButtonState.SAVED
+            doneButtonState = ButtonState.SAVED,
+            nextButtonState = NextButtonState.SCHEDULED
         ),
         update = ScheduleAppointmentUpdate(
             currentDate = LocalDate.now(userClock),
@@ -172,11 +179,22 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    if (requestCode == REQCODE_FACILITY_SELECT && resultCode == Activity.RESULT_OK) {
-      val selectedFacility = FacilitySelectionActivity.selectedFacility(data!!)
-      val patientFacilityChanged = PatientFacilityChanged(facility = selectedFacility)
-      facilityChanges.notify(patientFacilityChanged)
+    if (resultCode == Activity.RESULT_OK) {
+      manageRequestCodes(requestCode, data)
     }
+  }
+
+  private fun manageRequestCodes(requestCode: Int, data: Intent?) {
+    when (requestCode) {
+      REQCODE_FACILITY_SELECT -> updateFacilityChangeForPatient(data)
+      REQUEST_CODE_TELECONSULT_STATUS_CHANGED -> closeSheet()
+    }
+  }
+
+  private fun updateFacilityChangeForPatient(data: Intent?) {
+    val selectedFacility = FacilitySelectionActivity.selectedFacility(data!!)
+    val patientFacilityChanged = PatientFacilityChanged(facility = selectedFacility)
+    facilityChanges.notify(patientFacilityChanged)
   }
 
   private fun incrementClicks() = incrementDateButton.clicks().map { AppointmentDateIncremented }
@@ -185,7 +203,9 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
 
   private fun notNowClicks() = notNowButton.clicks().map { SchedulingSkipped }
 
-  private fun doneClicks() = doneButton.clicks().map { AppointmentDone }
+  private fun doneClicks() = doneButton.clicks().map { DoneClicked }
+
+  private fun nextClicks() = nextButton.clicks().map { NextClicked }
 
   private fun appointmentDateClicks() = changeAppointmentDate.clicks().map { ManuallySelectAppointmentDateClicked }
 
@@ -198,6 +218,16 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
 
     setResult(Activity.RESULT_OK, resultIntent)
     finish()
+  }
+
+  override fun openTeleconsultStatusSheet(teleconsultRecordUuid: UUID) {
+    startActivityForResult(
+        TeleconsultStatusSheet.intent(
+            context = this,
+            teleconsultRecordId = teleconsultRecordUuid
+        ),
+        REQUEST_CODE_TELECONSULT_STATUS_CHANGED
+    )
   }
 
   override fun updateScheduledAppointment(appointmentDate: LocalDate, timeToAppointment: TimeToAppointment) {
@@ -245,5 +275,29 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
 
   override fun hideProgress() {
     doneButton.setButtonState(Enabled)
+  }
+
+  override fun showDoneButton() {
+    doneButton.visibility = VISIBLE
+  }
+
+  override fun showNextButton() {
+    nextButton.visibility = VISIBLE
+  }
+
+  override fun hideDoneButton() {
+    doneButton.visibility = GONE
+  }
+
+  override fun hideNextButton() {
+    nextButton.visibility = GONE
+  }
+
+  override fun showNextButtonProgress() {
+    nextButton.setButtonState(InProgress)
+  }
+
+  override fun hideNextButtonProgress() {
+    nextButton.setButtonState(Enabled)
   }
 }

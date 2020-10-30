@@ -1,5 +1,6 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord
 
+import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -8,11 +9,13 @@ import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
 import java.time.Instant
 import java.util.UUID
 
+@Parcelize
 @Entity
 data class TeleconsultRecord(
     @PrimaryKey
@@ -32,7 +35,7 @@ data class TeleconsultRecord(
     val timestamp: Timestamps,
 
     val syncStatus: SyncStatus
-) {
+) : Parcelable {
 
   @Dao
   interface RoomDao {
@@ -72,5 +75,12 @@ data class TeleconsultRecord(
 
     @Query("UPDATE TeleconsultRecord SET request_requesterCompletionStatus = :teleconsultStatus, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE id = :teleconsultRecordId")
     fun updateRequesterCompletionStatus(teleconsultRecordId: UUID, teleconsultStatus: TeleconsultStatus, updatedAt: Instant, syncStatus: SyncStatus)
+
+    @Query("""
+      SELECT * FROM TeleconsultRecord
+      WHERE patientId = :patientUuid AND deletedAt IS NULL
+      ORDER BY createdAt DESC LIMIT 1
+    """)
+    fun latestTeleconsultRecord(patientUuid: UUID): TeleconsultRecord?
   }
 }

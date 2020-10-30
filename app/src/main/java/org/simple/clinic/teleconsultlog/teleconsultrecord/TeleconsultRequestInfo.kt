@@ -1,8 +1,11 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import java.time.Instant
 import java.util.UUID
 
+@Parcelize
 data class TeleconsultRequestInfo(
     val requesterId: UUID,
 
@@ -11,4 +14,4 @@ data class TeleconsultRequestInfo(
     val requestedAt: Instant,
 
     val requesterCompletionStatus: TeleconsultStatus?
-)
+) : Parcelable

@@ -3,11 +3,13 @@ package org.simple.clinic.scheduleappointment
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.util.UserClock
 import java.util.UUID
+import org.simple.clinic.newentry.ButtonState as ButtonState
+import org.simple.clinic.scheduleappointment.ButtonState as NextButtonState
 
 @Parcelize
 data class ScheduleAppointmentModel(
@@ -15,7 +17,9 @@ data class ScheduleAppointmentModel(
     val potentialAppointmentDates: List<PotentialAppointmentDate>,
     val selectedAppointmentDate: PotentialAppointmentDate?,
     val appointmentFacility: Facility?,
-    val doneButtonState : ButtonState
+    val doneButtonState: ButtonState,
+    val teleconsultRecord: TeleconsultRecord?,
+    val nextButtonState: NextButtonState
 ) : Parcelable {
 
   companion object {
@@ -23,7 +27,8 @@ data class ScheduleAppointmentModel(
         patientUuid: UUID,
         timeToAppointments: List<TimeToAppointment>,
         userClock: UserClock,
-        doneButtonState: ButtonState
+        doneButtonState: ButtonState,
+        nextButtonState: NextButtonState
     ): ScheduleAppointmentModel {
       val potentialAppointmentDates = generatePotentialAppointmentDatesForScheduling(timeToAppointments, userClock)
 
@@ -32,7 +37,9 @@ data class ScheduleAppointmentModel(
           potentialAppointmentDates = potentialAppointmentDates,
           selectedAppointmentDate = null,
           appointmentFacility = null,
-          doneButtonState = doneButtonState
+          doneButtonState = doneButtonState,
+          teleconsultRecord = null,
+          nextButtonState = nextButtonState
       )
     }
 
@@ -52,6 +59,11 @@ data class ScheduleAppointmentModel(
   val hasLoadedAppointmentFacility: Boolean
     get() = appointmentFacility != null
 
+  val hasTeleconsultRecord: Boolean
+    get() = teleconsultRecord != null
+
+  val requesterCompletionStatus = teleconsultRecord?.teleconsultRequestInfo?.requesterCompletionStatus
+
   fun appointmentDateSelected(potentialAppointmentDate: PotentialAppointmentDate): ScheduleAppointmentModel {
     return copy(selectedAppointmentDate = potentialAppointmentDate)
   }
@@ -60,7 +72,15 @@ data class ScheduleAppointmentModel(
     return copy(appointmentFacility = facility)
   }
 
-  fun doneButtonStateChanged(doneButtonState: ButtonState) : ScheduleAppointmentModel {
+  fun doneButtonStateChanged(doneButtonState: ButtonState): ScheduleAppointmentModel {
     return copy(doneButtonState = doneButtonState)
+  }
+
+  fun teleconsultRecordLoaded(teleconsultRecord: TeleconsultRecord?): ScheduleAppointmentModel {
+    return copy(teleconsultRecord = teleconsultRecord)
+  }
+
+  fun nextButtonStateChanged(nextButtonState: NextButtonState): ScheduleAppointmentModel {
+    return copy(nextButtonState = nextButtonState)
   }
 }

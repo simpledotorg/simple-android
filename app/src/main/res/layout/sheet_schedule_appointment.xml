@@ -156,5 +156,16 @@
       android:textColor="@color/white"
       app:buttonState="in-progress"
       tools:ignore="ButtonStyle" />
+
+    <org.simple.clinic.widgets.ProgressMaterialButton
+      android:id="@+id/nextButton"
+      style="?attr/materialButtonStyle"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_weight="1"
+      android:text="@string/scheduleappointment_next"
+      android:visibility="gone" />
+
   </LinearLayout>
 </LinearLayout>

@@ -3,6 +3,7 @@
 ## Next Release
 ### Features
 - Add `TeleconsultStatusSheet`
+- Show `Next` in `ScheduleAppointmentSheet`
 
 ### Internal
 - Update `TeleconsultRecord` to sync frequently

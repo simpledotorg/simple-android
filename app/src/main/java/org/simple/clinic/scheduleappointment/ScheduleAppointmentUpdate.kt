@@ -10,9 +10,9 @@ import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.util.daysTill
-import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import java.time.LocalDate
 import java.time.Period
+import org.simple.clinic.scheduleappointment.ButtonState as NextButtonState
 
 class ScheduleAppointmentUpdate(
     private val currentDate: LocalDate,
@@ -31,11 +31,25 @@ class ScheduleAppointmentUpdate(
       ManuallySelectAppointmentDateClicked -> dispatch(ShowDatePicker(model.selectedAppointmentDate!!.scheduledFor))
       is AppointmentFacilitiesLoaded -> appointmentFacilityLoaded(model, event)
       is PatientFacilityChanged -> next(model.appointmentFacilitySelected(event.facility))
-      is AppointmentDone -> scheduleManualAppointment(model)
+      is DoneClicked -> scheduleManualAppointment(model)
       is AppointmentScheduled -> next(model.doneButtonStateChanged(ButtonState.SAVED), CloseSheet)
       SchedulingSkipped -> dispatch(LoadPatientDefaulterStatus(model.patientUuid))
       is PatientDefaulterStatusLoaded -> scheduleAutomaticAppointment(event, model)
+      is TeleconsultRecordLoaded -> next(model.teleconsultRecordLoaded(event.teleconsultRecord))
+      AppointmentScheduledForPatientFromNext -> next(model.nextButtonStateChanged(NextButtonState.SCHEDULED), GoToTeleconsultStatusSheet(model.teleconsultRecord!!.id))
+      NextClicked -> scheduleManualAppointmentFromNext(model)
     }
+  }
+
+  private fun scheduleManualAppointmentFromNext(model: ScheduleAppointmentModel): Next<ScheduleAppointmentModel, ScheduleAppointmentEffect> {
+    val effect = ScheduleAppointmentForPatientFromNext(
+        patientUuid = model.patientUuid,
+        scheduledForDate = model.selectedAppointmentDate!!.scheduledFor,
+        scheduledAtFacility = model.appointmentFacility!!,
+        type = Manual
+    )
+
+    return next(model.nextButtonStateChanged(NextButtonState.SCHEDULING), effect)
   }
 
   private fun appointmentFacilityLoaded(

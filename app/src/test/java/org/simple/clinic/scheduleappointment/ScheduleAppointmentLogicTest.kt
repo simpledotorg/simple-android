@@ -33,6 +33,7 @@ import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolRepository
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -55,6 +56,7 @@ class ScheduleAppointmentLogicTest {
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
   private val protocolRepository = mock<ProtocolRepository>()
+  private val teleconsultRecordRepository = mock<TeleconsultRecordRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val today = LocalDate.parse("2019-01-01")
@@ -90,15 +92,18 @@ class ScheduleAppointmentLogicTest {
 
     // when
     sheetCreated(config = appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn))
-    uiEvents.onNext(AppointmentDone)
+    uiEvents.onNext(DoneClicked)
 
     // then
-    verify(ui, times(4)).hideProgress()
+    verify(ui, times(5)).hideProgress()
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(false)
     verify(ui).showProgress()
     verify(ui).updateScheduledAppointment(scheduledDate, Days(protocol.followUpDays))
+    verify(ui, times(6)).showDoneButton()
+    verify(ui, times(6)).hideNextButton()
+    verify(ui, times(6)).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
 
@@ -126,11 +131,14 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(SchedulingSkipped)
 
     // then
-    verify(ui, times(4)).hideProgress()
+    verify(ui, times(5)).hideProgress()
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-28"), Days(protocol.followUpDays))
+    verify(ui, times(5)).showDoneButton()
+    verify(ui, times(5)).hideNextButton()
+    verify(ui, times(5)).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
     verify(uiActions).closeSheet()
@@ -156,12 +164,15 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(SchedulingSkipped)
 
     // then
-    verify(ui, times(3)).hideProgress()
+    verify(ui, times(4)).hideProgress()
     verify(repository, never()).schedule(any(), any(), any(), any(), any(), any())
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-28"), Days(protocol.followUpDays))
+    verify(ui, times(4)).showDoneButton()
+    verify(ui, times(4)).hideNextButton()
+    verify(ui, times(4)).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
     verify(uiActions).closeSheet()
@@ -185,11 +196,15 @@ class ScheduleAppointmentLogicTest {
     )
 
     // then
-    verify(ui, times(3)).hideProgress()
+    verify(ui, times(4)).hideProgress()
     verify(ui).showPatientFacility(facility.name)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
+    verify(ui, times(4)).showDoneButton()
+    verify(ui, times(4)).hideNextButton()
+    verify(ui, times(4)).hideProgress()
+    verify(ui, times(4)).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
     verifyZeroInteractions(uiActions)
@@ -213,11 +228,14 @@ class ScheduleAppointmentLogicTest {
     )
 
     //then
-    verify(ui, times(3)).hideProgress()
+    verify(ui, times(4)).hideProgress()
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), defaultTimeToAppointment)
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
+    verify(ui, times(4)).showDoneButton()
+    verify(ui, times(4)).hideNextButton()
+    verify(ui, times(4)).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
     verifyZeroInteractions(uiActions)
@@ -316,10 +334,13 @@ class ScheduleAppointmentLogicTest {
 
     // then
     verify(ui).showPatientFacility(facility.name)
-    verify(ui, times(3)).hideProgress()
+    verify(ui, times(4)).hideProgress()
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
+    verify(ui, times(4)).showDoneButton()
+    verify(ui, times(4)).hideNextButton()
+    verify(ui, times(4)).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
     reset(ui)
 
@@ -335,6 +356,9 @@ class ScheduleAppointmentLogicTest {
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-04"), Days(3))
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
+    verify(ui).showDoneButton()
+    verify(ui).hideNextButton()
+    verify(ui).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
     reset(ui)
 
@@ -346,6 +370,9 @@ class ScheduleAppointmentLogicTest {
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-05"), Days(4))
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
+    verify(ui).showDoneButton()
+    verify(ui).hideNextButton()
+    verify(ui).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
     verifyZeroInteractions(uiActions)
@@ -640,7 +667,7 @@ class ScheduleAppointmentLogicTest {
     //when
     sheetCreated()
     uiEvents.onNext(PatientFacilityChanged(updatedFacility))
-    uiEvents.onNext(AppointmentDone)
+    uiEvents.onNext(DoneClicked)
 
     //then
     verify(uiActions).closeSheet()
@@ -660,7 +687,7 @@ class ScheduleAppointmentLogicTest {
   fun `when patient facility is not changed then appointment should be scheduled in the current facility`() {
     //when
     sheetCreated()
-    uiEvents.onNext(AppointmentDone)
+    uiEvents.onNext(DoneClicked)
 
     //then
     verify(uiActions).closeSheet()
@@ -736,7 +763,8 @@ class ScheduleAppointmentLogicTest {
         userClock = clock,
         schedulers = TrampolineSchedulersProvider(),
         uuidGenerator = FakeUuidGenerator.fixed(appointmentUuid),
-        uiActions = uiActions
+        uiActions = uiActions,
+        teleconsultRecordRepository = teleconsultRecordRepository
     )
 
     testFixture = MobiusTestFixture(
@@ -745,7 +773,8 @@ class ScheduleAppointmentLogicTest {
             patientUuid = patientUuid,
             timeToAppointments = config.scheduleAppointmentsIn,
             userClock = clock,
-            doneButtonState = SAVED
+            doneButtonState = SAVED,
+            nextButtonState = ButtonState.SCHEDULED
         ),
         init = ScheduleAppointmentInit(),
         update = ScheduleAppointmentUpdate(

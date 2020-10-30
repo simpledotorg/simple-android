@@ -2,6 +2,7 @@ package org.simple.clinic.scheduleappointment
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.PotentialAppointmentDate
+import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
 
@@ -33,7 +34,7 @@ data class PatientFacilityChanged(val facility: Facility) : ScheduleAppointmentE
 
 object AppointmentScheduled : ScheduleAppointmentEvent()
 
-object AppointmentDone : ScheduleAppointmentEvent() {
+object DoneClicked : ScheduleAppointmentEvent() {
   override val analyticsName = "Schedule Appointment:Appointment done"
 }
 
@@ -42,3 +43,12 @@ data class PatientDefaulterStatusLoaded(val isPatientADefaulter: Boolean) : Sche
 object SchedulingSkipped : ScheduleAppointmentEvent() {
   override val analyticsName = "Schedule Appointment:Scheduling skipped"
 }
+
+data class TeleconsultRecordLoaded(val teleconsultRecord: TeleconsultRecord?) : ScheduleAppointmentEvent()
+
+object NextClicked : ScheduleAppointmentEvent() {
+  override val analyticsName = "Schedule Appointment:Next clicked"
+}
+
+object AppointmentScheduledForPatientFromNext : ScheduleAppointmentEvent()
+

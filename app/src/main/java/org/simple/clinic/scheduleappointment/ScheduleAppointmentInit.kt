@@ -17,6 +17,9 @@ class ScheduleAppointmentInit : Init<ScheduleAppointmentModel, ScheduleAppointme
       effects.add(LoadAppointmentFacilities(model.patientUuid))
     }
 
+    if (!model.hasTeleconsultRecord)
+      effects.add(LoadTeleconsultRecord(model.patientUuid))
+
     return first(model, effects)
   }
 }

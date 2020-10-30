@@ -492,7 +492,7 @@
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">Simple Logo</string>
   <string name="selectcountry_next">Next</string>
-  <string name="selectcountry_title">Select Your Country</string>
+  <string name="selectcountry_title">Select your country</string>
   <string name="selectcountry_networkerror">No internet connection!</string>
   <string name="selectcountry_servererror">Server error! Please try again later!</string>
   <string name="selectcountry_genericerror">Something went wrong! Please try again later!</string>

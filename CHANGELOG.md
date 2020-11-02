@@ -20,6 +20,7 @@
     - Accept the ongoing patient entry as a parameter to the register patient method
     - Remove deprecated `Optional` class usages
 - Move registration and login flows to a separate activity
+- Update `appupdatedialog_body` string
 
 ### Changes
 - Update translations: `kn-IN`, `ta-IN`, `bn-IN`, `ti`, `bn-BD`, `pa-IN`, `mr-IN`, `te-IN`, `hi-IN`

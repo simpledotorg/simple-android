@@ -367,7 +367,7 @@
     <item quantity="one">%s month</item>
     <item quantity="other">%s months</item>
   </plurals>
-  
+
   <!-- Forgot PIN -->
   <string name="forgotpin_create_new_pin">Create new security PIN</string>
   <string name="forgotpin_create_new_pin_invalid_pin">PIN is too short. Please enter 4 numbers.</string>
@@ -442,7 +442,7 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">Update app</string>
-  <string name="appupdatedialog_body">You will be taken to Play Store to update Simple</string>
+  <string name="appupdatedialog_body">You will be taken to Google Play Store to update Simple.</string>
   <string name="appupdatedialog_positive_button_text">Update</string>
   <string name="appupdatedialog_negative_button_text">Not Now</string>
 

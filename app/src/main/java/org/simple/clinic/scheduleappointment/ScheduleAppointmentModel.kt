@@ -3,19 +3,17 @@ package org.simple.clinic.scheduleappointment
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.util.UserClock
 import java.util.UUID
-import org.simple.clinic.newentry.ButtonState as ButtonState
 import org.simple.clinic.scheduleappointment.ButtonState as NextButtonState
 
 @Parcelize
 data class ScheduleAppointmentModel(
     val patientUuid: UUID,
-    val potentialAppointmentDates: List<PotentialAppointmentDate>,
-    val selectedAppointmentDate: PotentialAppointmentDate?,
     val potentialAppointmentDateModel: PotentialAppointmentDateModel,
     val appointmentFacility: Facility?,
     val doneButtonState: ButtonState,
@@ -37,8 +35,6 @@ data class ScheduleAppointmentModel(
 
       return ScheduleAppointmentModel(
           patientUuid = patientUuid,
-          potentialAppointmentDates = potentialAppointmentDates,
-          selectedAppointmentDate = null,
           potentialAppointmentDateModel = potientialAppointmentDateModel,
           appointmentFacility = null,
           doneButtonState = doneButtonState,
@@ -67,6 +63,12 @@ data class ScheduleAppointmentModel(
     get() = teleconsultRecord != null
 
   val requesterCompletionStatus = teleconsultRecord?.teleconsultRequestInfo?.requesterCompletionStatus
+
+  val potentialAppointmentDates: List<PotentialAppointmentDate>
+    get() = potentialAppointmentDateModel.potentialAppointmentDates
+
+  val selectedAppointmentDate: PotentialAppointmentDate?
+    get() = potentialAppointmentDateModel.selectedAppointmentDate
 
   fun appointmentDateSelected(potentialAppointmentDate: PotentialAppointmentDate): ScheduleAppointmentModel {
     return copy(potentialAppointmentDateModel = potentialAppointmentDateModel.selectedAppointmentDate(potentialAppointmentDate))

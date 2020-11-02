@@ -58,7 +58,7 @@ data class ScheduleAppointmentModel(
   }
 
   val hasLoadedAppointmentDate: Boolean
-    get() = selectedAppointmentDate != null
+    get() = potentialAppointmentDateModel.selectedAppointmentDate != null
 
   val hasLoadedAppointmentFacility: Boolean
     get() = appointmentFacility != null
@@ -69,7 +69,7 @@ data class ScheduleAppointmentModel(
   val requesterCompletionStatus = teleconsultRecord?.teleconsultRequestInfo?.requesterCompletionStatus
 
   fun appointmentDateSelected(potentialAppointmentDate: PotentialAppointmentDate): ScheduleAppointmentModel {
-    return copy(selectedAppointmentDate = potentialAppointmentDate)
+    return copy(potentialAppointmentDateModel = potentialAppointmentDateModel.selectedAppointmentDate(potentialAppointmentDate))
   }
 
   fun appointmentFacilitySelected(facility: Facility): ScheduleAppointmentModel {

@@ -20,4 +20,8 @@ data class PotentialAppointmentDateModel(
       )
     }
   }
+
+  fun selectedAppointmentDate(potentialAppointmentDate: PotentialAppointmentDate): PotentialAppointmentDateModel {
+    return copy(selectedAppointmentDate = potentialAppointmentDate)
+  }
 }

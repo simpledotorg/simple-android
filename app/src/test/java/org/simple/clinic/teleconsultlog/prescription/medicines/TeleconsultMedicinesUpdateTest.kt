@@ -9,7 +9,9 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.OpenIntention
+import org.simple.clinic.drugs.OpenIntention.AddNewMedicine
 import org.simple.clinic.drugs.OpenIntention.RefillMedicine
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.time.Duration
 import java.util.UUID
@@ -115,6 +117,18 @@ class TeleconsultMedicinesUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenEditMedicines(patientUuid, RefillMedicine)),
+        ))
+  }
+
+  @Test
+  fun `when edit medicine is clicked and there are no medicines, then open edit medicine screen with add new medicines open intention`() {
+    val prescribedDrugRecords = emptyList<PrescribedDrug>()
+    updateSpec
+        .given(model.medicinesLoaded(prescribedDrugRecords))
+        .whenEvent(EditMedicinesClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenEditMedicines(patientUuid, AddNewMedicine)),
         ))
   }
 }

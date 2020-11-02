@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 import org.simple.clinic.drugs.OpenIntention
+import org.simple.clinic.drugs.OpenIntention.AddNewMedicine
 import org.simple.clinic.drugs.OpenIntention.RefillMedicine
 import org.simple.clinic.mobius.dispatch
 
@@ -16,7 +17,7 @@ class TeleconsultMedicinesUpdate : Update<TeleconsultMedicinesModel, Teleconsult
     return when (event) {
       is PatientMedicinesLoaded -> next(model.medicinesLoaded(event.medicines))
       EditMedicinesClicked -> {
-        val openIntention = openIntentionForEditMedicineScreen()
+        val openIntention = openIntentionForEditMedicineScreen(model)
         dispatch(OpenEditMedicines(model.patientUuid, openIntention))
       }
       is DrugDurationClicked -> dispatch(OpenDrugDurationSheet(event.prescription))
@@ -26,7 +27,11 @@ class TeleconsultMedicinesUpdate : Update<TeleconsultMedicinesModel, Teleconsult
     }
   }
 
-  private fun openIntentionForEditMedicineScreen(): OpenIntention {
-    return RefillMedicine
+  private fun openIntentionForEditMedicineScreen(model: TeleconsultMedicinesModel): OpenIntention {
+    return if (model.medicinesNotNullorEmpty) {
+      RefillMedicine
+    } else {
+      AddNewMedicine
+    }
   }
 }

@@ -22,7 +22,7 @@ class TeleconsultMedicinesEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<TeleconsultMedicinesEffect, TeleconsultMedicinesEvent>()
         .addTransformer(LoadPatientMedicines::class.java, loadPatientMedicines())
-        .addConsumer(OpenEditMedicines::class.java, { uiActions.openEditMedicines(it.patientUuid) }, schedulersProvider.ui())
+        .addConsumer(OpenEditMedicines::class.java, { uiActions.openEditMedicines(it.patientUuid, it.openIntention) }, schedulersProvider.ui())
         .addConsumer(OpenDrugDurationSheet::class.java, { uiActions.openDrugDurationSheet(it.prescription) }, schedulersProvider.ui())
         .addConsumer(OpenDrugFrequencySheet::class.java, { uiActions.openDrugFrequencySheet(it.prescription) }, schedulersProvider.ui())
         .addConsumer(UpdateDrugDuration::class.java, { updateDrugDuration(it) }, schedulersProvider.io())

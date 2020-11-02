@@ -10,7 +10,6 @@ import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.drugs.OpenIntention
 import org.simple.clinic.drugs.OpenIntention.RefillMedicine
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -69,7 +68,7 @@ class TeleconsultMedicinesEffectHandlerTest {
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
 
-    verify(uiActions).openEditMedicines(patientUuid)
+    verify(uiActions).openEditMedicines(patientUuid, RefillMedicine)
     verifyNoMoreInteractions(uiActions)
   }
 

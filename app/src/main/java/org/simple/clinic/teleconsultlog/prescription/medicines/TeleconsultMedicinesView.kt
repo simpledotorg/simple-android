@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.view_teleconsult_medicines.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
+import org.simple.clinic.drugs.OpenIntention
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
@@ -140,7 +141,7 @@ class TeleconsultMedicinesView(
     medicinesEditButton.text = context.getString(R.string.view_teleconsult_medicines_edit)
   }
 
-  override fun openEditMedicines(patientUuid: UUID) {
+  override fun openEditMedicines(patientUuid: UUID, openIntention: OpenIntention) {
     screenRouter.push(PrescribedDrugsScreenKey(patientUuid))
   }
 

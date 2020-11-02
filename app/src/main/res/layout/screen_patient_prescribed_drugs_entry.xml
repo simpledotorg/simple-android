@@ -22,21 +22,34 @@
     android:clipToPadding="false"
     android:paddingBottom="@dimen/spacing_16" />
 
-  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
-    android:id="@+id/prescribeddrugs_done"
+  <androidx.constraintlayout.widget.ConstraintLayout
     style="@style/Clinic.V2.BottomAlignedButtonFrame"
-    app:buttonBackgroundDisabled="@color/grey2"
-    app:buttonBackgroundEnabled="@color/blue1"
-    app:frameBackgroundDisabled="@color/grey3"
-    app:frameBackgroundEnabled="@color/blue2">
+    android:backgroundTint="@color/blue1">
 
     <com.google.android.material.button.MaterialButton
+      android:id="@+id/prescribeddrugs_done"
       style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/patientsummary_finish_saving_patient"
       android:layout_margin="@dimen/spacing_8"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
-  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
+      android:text="@string/patientsummary_finish_saving_patient"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/prescribeddrugs_refill_done"
+      style="?attr/materialButtonStyle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_8"
+      android:text="@string/patientsummary_finish_refill_medicine"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+      android:visibility="gone"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent" />
+  </androidx.constraintlayout.widget.ConstraintLayout>
 
 </org.simple.clinic.drugs.selection.EditMedicinesScreen>

@@ -190,6 +190,7 @@
   <string name="patientsummary_prescriptions_update">Edit medicines</string>
   <string name="patientsummary_bp_add_new">Blood Pressure</string>
   <string name="patientsummary_finish_saving_patient">Save</string>
+  <string name="patientsummary_finish_refill_medicine">Refill Medicine</string>
   <string name="patientsummary_bp_none_added">No blood pressures added</string>
   <string name="patientsummary_edit">Edit</string>
 

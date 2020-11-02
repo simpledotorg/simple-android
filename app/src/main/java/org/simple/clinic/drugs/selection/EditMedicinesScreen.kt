@@ -10,6 +10,7 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.jakewharton.rxbinding2.view.RxView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.xwray.groupie.GroupAdapter
@@ -32,12 +33,10 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
@@ -55,7 +54,7 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
 
   private val toolbar by bindView<Toolbar>(R.id.prescribeddrugs_toolbar)
   private val recyclerView by bindView<RecyclerView>(R.id.prescribeddrugs_recyclerview)
-  private val doneButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.prescribeddrugs_done)
+  private val doneButton by bindView<MaterialButton>(R.id.prescribeddrugs_done)
   private val groupieAdapter = GroupAdapter<ViewHolder>()
 
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
@@ -119,7 +118,7 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
-  private fun doneClicks() = RxView.clicks(doneButtonFrame.button).map { PrescribedDrugsDoneClicked }
+  private fun doneClicks() = RxView.clicks(doneButton).map { PrescribedDrugsDoneClicked }
 
   override fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewHolder>>) {
     // Replace the default fade animator with another animator that

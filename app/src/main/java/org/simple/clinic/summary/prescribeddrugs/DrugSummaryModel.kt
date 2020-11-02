@@ -22,6 +22,9 @@ data class DrugSummaryModel(
   val hasPrescribedDrugs: Boolean
     get() = prescribedDrugs != null
 
+  val prescribedDrugsNotNullorEmpty: Boolean
+    get() = !prescribedDrugs.isNullOrEmpty()
+
   override fun readyToRender(): Boolean {
     return hasPrescribedDrugs
   }

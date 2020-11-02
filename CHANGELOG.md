@@ -4,6 +4,7 @@
 ### Features
 - Add `TeleconsultStatusSheet`
 - Show `Next` in `ScheduleAppointmentSheet`
+- [In Progress: 29 Oct 2020] Refill prescriptions in edit medicine screen
 
 ### Internal
 - Update `TeleconsultRecord` to sync frequently

@@ -8,4 +8,16 @@ import org.simple.clinic.overdue.PotentialAppointmentDate
 data class PotentialAppointmentDateModel(
     val potentialAppointmentDates: List<PotentialAppointmentDate>,
     val selectedAppointmentDate: PotentialAppointmentDate?
-): Parcelable
+) : Parcelable {
+
+  companion object {
+    fun create(
+        potentialAppointmentDates: List<PotentialAppointmentDate>,
+    ): PotentialAppointmentDateModel {
+      return PotentialAppointmentDateModel(
+          potentialAppointmentDates = potentialAppointmentDates,
+          selectedAppointmentDate = null
+      )
+    }
+  }
+}

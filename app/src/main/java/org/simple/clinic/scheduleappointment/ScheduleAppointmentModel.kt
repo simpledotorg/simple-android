@@ -16,6 +16,7 @@ data class ScheduleAppointmentModel(
     val patientUuid: UUID,
     val potentialAppointmentDates: List<PotentialAppointmentDate>,
     val selectedAppointmentDate: PotentialAppointmentDate?,
+    val potentialAppointmentDateModel: PotentialAppointmentDateModel,
     val appointmentFacility: Facility?,
     val doneButtonState: ButtonState,
     val teleconsultRecord: TeleconsultRecord?,
@@ -31,11 +32,14 @@ data class ScheduleAppointmentModel(
         nextButtonState: NextButtonState
     ): ScheduleAppointmentModel {
       val potentialAppointmentDates = generatePotentialAppointmentDatesForScheduling(timeToAppointments, userClock)
+      val potientialAppointmentDateModel = PotentialAppointmentDateModel
+          .create(potentialAppointmentDates = potentialAppointmentDates)
 
       return ScheduleAppointmentModel(
           patientUuid = patientUuid,
           potentialAppointmentDates = potentialAppointmentDates,
           selectedAppointmentDate = null,
+          potentialAppointmentDateModel = potientialAppointmentDateModel,
           appointmentFacility = null,
           doneButtonState = doneButtonState,
           teleconsultRecord = null,

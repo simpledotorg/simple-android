@@ -515,7 +515,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">\&quot;வருவதற்கு ஒப்புக்கொண்டார்\&quot; என நோயாளியைக் குறிக்கவும்</string>
+  <string name="contactpatient_agreed_to_visit">\"வருவதற்கு ஒப்புக்கொண்டார்\" என நோயாளியைக் குறிக்கவும்</string>
   <string name="contactpatient_remind_call_later">பின்னர் அழைக்க நினைவூட்டவும்…</string>
   <string name="contactpatient_remove_from_list">குறித்த தேதியில் வாராதவர்கள் பட்டியலிலிருந்து அகற்றவும்…</string>
   <string name="contactpatient_result_of_call">அழைப்பின் முடிவு</string>

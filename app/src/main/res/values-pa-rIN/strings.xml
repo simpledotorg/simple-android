@@ -158,6 +158,7 @@
   <string name="patientsummary_prescriptions_update">ਦਵਾਈਆਂ ਵਿੱਚ ਸੋਧ ਕਰੋ</string>
   <string name="patientsummary_bp_add_new">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ</string>
   <string name="patientsummary_finish_saving_patient">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
+  <string name="patientsummary_finish_refill_medicine">ਦਵਾਈ ਦੁਬਾਰਾ ਭਰੋ</string>
   <string name="patientsummary_bp_none_added">ਕੋਈ ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਨਹੀਂ ਜੋੜੇ ਗਏ</string>
   <string name="patientsummary_edit">ਸੰਪਾਦਨ ਕਰੋ</string>
 
@@ -294,6 +295,7 @@
   <string name="scheduleappointment_next_visit_in">ਅਗਲੀ ਫੇਰੀ ਇਦੋਂ ਕਰਨਾ ਤੈਅ ਕਰੋ</string>
   <string name="scheduleappointment_not_now">ਹੁਣੇ ਨਹੀਂ</string>
   <string name="scheduleappointment_done">ਹੋ ਗਿਆ</string>
+  <string name="scheduleappointment_next">ਅਗਲਾ</string>
   <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s ਦਿਨ</item>
     <item quantity="other">%s ਦਿਨ</item>
@@ -380,7 +382,7 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਕਰੋ</string>
-  <string name="appupdatedialog_body">ਸਿੰਪਲ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਪਲੇ ਸਟੋਰ \'ਤੇ ਲਿਜਾਇਆ ਜਾਵੇਗਾ</string>
+  <string name="appupdatedialog_body">ਸਿੰਪਲ ਨੂੰ ਅਪਡੇਟ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ Google Play Store ਤੇ ਲਿਜਾਇਆ ਜਾਵੇਗਾ।</string>
   <string name="appupdatedialog_positive_button_text">ਅੱਪਡੇਟ ਕਰੋ</string>
   <string name="appupdatedialog_negative_button_text">ਹੁਣੇ ਨਹੀਂ</string>
 
@@ -430,7 +432,7 @@
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">ਸਧਾਰਨ ਲੋਗੋ</string>
   <string name="selectcountry_next">ਅਗਲਾ</string>
-  <string name="selectcountry_title">ਆਪਣਾ ਦੇਸ਼ ਚੁਣੋ</string>
+  <string name="selectcountry_title">ਆਪਣਾ ਦੇਸ਼ ਚੁਣੋ</string>
   <string name="selectcountry_networkerror">ਕੋਈ ਇੰਟਰਨੈੱਟ ਕਨੈਕਸ਼ਨ ਨਹੀਂ ਹੈ!</string>
   <string name="selectcountry_servererror">ਸਰਵਰ ਤਰੁੱਟੀ! ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ!</string>
   <string name="selectcountry_genericerror">ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ! ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ!</string>
@@ -655,4 +657,9 @@
   <string name="select_diagnosis_error_diagnosis_required">ਡਾਇਗਨੋਸਿਸ ਲੋੜੀਂਦਾ ਹੈ</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">ਹਾਈਪਰਟੈਨਸ਼ਨ ਅਤੇ ਡਾਇਬਿਟੀਜ਼ ਦੋਵਾਂ ਲਈ ਇੱਕ ਨਿਦਾਨ ਦੀ ਚੋਣ ਕਰੋ</string>
   <string name="select_diagnosis_error_ok">ਠੀਕ ਹੈ</string>
+  <string name="sheet_teleconsult_status_title">ਕੀ ਟੇਲੀ-ਕਨਸਲਟ ਪੂਰੀ ਹੋਈ ਹੈ?</string>
+  <string name="sheet_teleconsult_status_yes">ਹਾਂ</string>
+  <string name="sheet_teleconsult_status_no">ਨਹੀਂ</string>
+  <string name="sheet_teleconsult_status_waiting">ਹਾਲੇ ਵੀ ਉਡੀਕ ਕਰ ਰਹੇ ਹੋ</string>
+  <string name="sheet_teleconsult_status_done">ਹੋ ਗਿਆ</string>
 </resources>

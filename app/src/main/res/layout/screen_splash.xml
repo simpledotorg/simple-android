@@ -29,11 +29,11 @@
   <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
     android:id="@+id/nextButtonFrame"
     style="@style/Clinic.V2.BottomAlignedButtonFrame"
+    android:clipToPadding="false"
     app:buttonBackgroundDisabled="@color/grey2"
     app:buttonBackgroundEnabled="@color/blue1"
     app:frameBackgroundDisabled="@color/grey3"
     app:frameBackgroundEnabled="@color/blue2"
-    android:clipToPadding="false"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent">

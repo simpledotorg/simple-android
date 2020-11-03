@@ -62,6 +62,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
         .addTransformer(SetFallbackCountryAsCurrentCountry::class.java, setFallbackCountryAsSelected(schedulersProvider.io()))
         .addTransformer(RunDatabaseMaintenance::class.java, runDatabaseMaintenance())
         .addTransformer(FetchDatabaseMaintenanceLastRunAtTime::class.java, loadLastDatabaseMaintenanceTime())
+        .addConsumer(ShowNotAllowedToRunMessage::class.java, { uiActions.showDisallowedToRunError(it.reason)}, schedulersProvider.ui())
         .build()
   }
 

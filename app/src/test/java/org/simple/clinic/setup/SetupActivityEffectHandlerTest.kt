@@ -15,6 +15,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.setup.runcheck.Disallowed.Reason
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
@@ -162,5 +163,19 @@ class SetupActivityEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(DatabaseMaintenanceLastRunAtTimeLoaded(databaseMaintenanceLastRunAt))
     verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the show not allowed to run message effect is received, show the not allowed to run message`() {
+    // given
+    val reason = Reason.Rooted
+
+    // when
+    testCase.dispatch(ShowNotAllowedToRunMessage(reason))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showDisallowedToRunError(reason)
+    verifyNoMoreInteractions(uiActions)
   }
 }

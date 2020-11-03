@@ -158,6 +158,7 @@
   <string name="patientsummary_prescriptions_update">మందులను సవరించు</string>
   <string name="patientsummary_bp_add_new">రక్తపోటు</string>
   <string name="patientsummary_finish_saving_patient">సేవ్ చేయి</string>
+  <string name="patientsummary_finish_refill_medicine">మందులను మళ్లీ పూరించండి</string>
   <string name="patientsummary_bp_none_added">రక్తపోటును జోడించలేదు</string>
   <string name="patientsummary_edit">సవరించు</string>
 
@@ -294,6 +295,7 @@
   <string name="scheduleappointment_next_visit_in">షెడ్యూల్ చేసిన తదుపరి సందర్శన</string>
   <string name="scheduleappointment_not_now">ఇప్పుడు కాదు</string>
   <string name="scheduleappointment_done">పూర్తయింది</string>
+  <string name="scheduleappointment_next">తదుపరి</string>
   <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s రోజు</item>
     <item quantity="other">%s రోజులు</item>
@@ -380,7 +382,7 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">యాప్‌ను అప్‌డేట్ చేయి</string>
-  <string name="appupdatedialog_body">సింపుల్‌ను అప్‌డేట్ చేయడానికి మీరు ప్లే స్టోర్‌కు వెళతారు</string>
+  <string name="appupdatedialog_body">Simpleను నవీకరించడానికి మీరు Google Play స్టోర్కు తీకుకెళ్లబడతారు.</string>
   <string name="appupdatedialog_positive_button_text">అప్‌డేట్ చేయి</string>
   <string name="appupdatedialog_negative_button_text">ఇప్పుడు కాదు</string>
 
@@ -655,4 +657,9 @@
   <string name="select_diagnosis_error_diagnosis_required">రోగ నిర్ధారణ అవసరం</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">రక్తపోటు మరియు మధుమేహం రెండింటి కోసం రోగ నిర్ధారణను ఎంచుకోండి</string>
   <string name="select_diagnosis_error_ok">సరే</string>
+  <string name="sheet_teleconsult_status_title">టెలి-కన్సల్ట్ పూర్తయ్యిందా?</string>
+  <string name="sheet_teleconsult_status_yes">అవును</string>
+  <string name="sheet_teleconsult_status_no">కాదు</string>
+  <string name="sheet_teleconsult_status_waiting">ఇంకా వేచి ఉన్నాను</string>
+  <string name="sheet_teleconsult_status_done">పూర్తయింది</string>
 </resources>

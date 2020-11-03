@@ -1,6 +1,7 @@
 package org.simple.clinic.setup
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.mobius.dispatch
@@ -32,6 +33,7 @@ class SetupActivityUpdate(
       is FallbackCountrySetAsSelected -> dispatch(GoToMainActivity)
       is DatabaseMaintenanceCompleted -> dispatch(FetchUserDetails)
       is DatabaseMaintenanceLastRunAtTimeLoaded -> runDatabaseMaintenanceIfRequired(event, model)
+      is AppAllowedToRunCheckCompleted -> noChange()
     }
   }
 

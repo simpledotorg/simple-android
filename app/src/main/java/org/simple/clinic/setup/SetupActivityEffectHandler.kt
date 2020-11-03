@@ -15,6 +15,7 @@ import org.simple.clinic.main.TypedPreference.Type.DatabaseMaintenanceRunAt
 import org.simple.clinic.main.TypedPreference.Type.FallbackCountry
 import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
@@ -30,6 +31,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     private val appDatabase: AppDatabase,
     private val crashReporter: CrashReporter,
     private val clock: UtcClock,
+    private val allowApplicationToRun: AllowApplicationToRun,
     @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,
     @TypedPreference(FallbackCountry) private val fallbackCountry: Country,
     @TypedPreference(DatabaseMaintenanceRunAt) private val databaseMaintenanceRunAt: Preference<Optional<Instant>>
@@ -63,6 +65,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
         .addTransformer(RunDatabaseMaintenance::class.java, runDatabaseMaintenance())
         .addTransformer(FetchDatabaseMaintenanceLastRunAtTime::class.java, loadLastDatabaseMaintenanceTime())
         .addConsumer(ShowNotAllowedToRunMessage::class.java, { uiActions.showDisallowedToRunError(it.reason)}, schedulersProvider.ui())
+        .addTransformer(CheckIfAppCanRun::class.java, checkApplicationAllowedToRun())
         .build()
   }
 
@@ -119,6 +122,15 @@ class SetupActivityEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .map { databaseMaintenanceRunAt.get() }
           .map(::DatabaseMaintenanceLastRunAtTimeLoaded)
+    }
+  }
+
+  private fun checkApplicationAllowedToRun(): ObservableTransformer<CheckIfAppCanRun, SetupActivityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { allowApplicationToRun.check() }
+          .map(::AppAllowedToRunCheckCompleted)
     }
   }
 }

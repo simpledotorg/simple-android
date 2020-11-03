@@ -11,8 +11,7 @@ import java.time.Instant
 class SetupActivityInitTest {
 
   @Test
-  fun `when the screen is created, the database must be initialized`() {
-    // given
+  fun `when the screen is created, check whether the app is allowed to run`() {
     val spec = InitSpec(SetupActivityInit())
     val model = SetupActivityModel.create(TestUtcClock(Instant.parse("2018-01-01T00:00:00Z")))
 
@@ -20,7 +19,7 @@ class SetupActivityInitTest {
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
-            hasEffects(InitializeDatabase as SetupActivityEffect)
+            hasEffects(CheckIfAppCanRun)
         ))
   }
 }

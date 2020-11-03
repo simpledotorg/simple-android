@@ -758,4 +758,9 @@
   <string name="sheet_teleconsult_status_no">No</string>
   <string name="sheet_teleconsult_status_waiting">Still waiting</string>
   <string name="sheet_teleconsult_status_done">Done</string>
+
+  <!-- Setup activity -->
+  <string name="setup_cannot_run">Cannot Run Application</string>
+  <string name="setup_rooted">Simple cannot be run on a rooted device.</string>
+  <string name="setup_close">Close</string>
 </resources>

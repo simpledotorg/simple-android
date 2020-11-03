@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Next Release
+### Changes
+- Disabled running the app on rooted devices
+
 ## On Demo
 ### Features
 - Add `TeleconsultStatusSheet`

@@ -119,6 +119,7 @@ android {
       buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + qaFallbackApiEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + qaMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
+      buildConfigField "boolean", "ALLOW_ROOTED_DEVICE", "true"
     }
 
     staging {
@@ -129,6 +130,7 @@ android {
       buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + stagingFallbackApiEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + stagingMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
+      buildConfigField "boolean", "ALLOW_ROOTED_DEVICE", "true"
     }
 
     sandbox {
@@ -139,6 +141,7 @@ android {
       buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + sandboxFallbackApiEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + sandboxMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
+      buildConfigField "boolean", "ALLOW_ROOTED_DEVICE", "true"
     }
 
     production {
@@ -147,6 +150,7 @@ android {
       buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + productionFallbackApiEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + productionMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "true"
+      buildConfigField "boolean", "ALLOW_ROOTED_DEVICE", "false"
     }
 
     security {
@@ -157,6 +161,7 @@ android {
       buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + securityFallbackApiEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + securityMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "true"
+      buildConfigField "boolean", "ALLOW_ROOTED_DEVICE", "false"
     }
   }
 
@@ -384,6 +389,8 @@ dependencies {
   implementation "androidx.viewpager2:viewpager2:$versions.viewpager2"
 
   lintChecks project(path: ':lint')
+
+  implementation "com.github.scottyab:rootbeer:$versions.rootbeer"
 }
 
 // This must always be present at the bottom of this file, as per:

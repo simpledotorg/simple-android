@@ -1,11 +1,12 @@
 package org.simple.clinic.setup
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.setup.runcheck.Allowed
+import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.isEmpty
@@ -17,7 +18,7 @@ class SetupActivityUpdate(
     private val databaseMaintenanceInterval: Duration
 ) : Update<SetupActivityModel, SetupActivityEvent, SetupActivityEffect> {
 
-  constructor(config: SetupActivityConfig): this(databaseMaintenanceInterval = config.databaseMaintenanceTaskInterval)
+  constructor(config: SetupActivityConfig) : this(databaseMaintenanceInterval = config.databaseMaintenanceTaskInterval)
 
   override fun update(model: SetupActivityModel, event: SetupActivityEvent): Next<SetupActivityModel, SetupActivityEffect> {
     return when (event) {
@@ -33,8 +34,19 @@ class SetupActivityUpdate(
       is FallbackCountrySetAsSelected -> dispatch(GoToMainActivity)
       is DatabaseMaintenanceCompleted -> dispatch(FetchUserDetails)
       is DatabaseMaintenanceLastRunAtTimeLoaded -> runDatabaseMaintenanceIfRequired(event, model)
-      is AppAllowedToRunCheckCompleted -> noChange()
+      is AppAllowedToRunCheckCompleted -> initializeDatabase(event)
     }
+  }
+
+  private fun initializeDatabase(
+      event: AppAllowedToRunCheckCompleted
+  ): Next<SetupActivityModel, SetupActivityEffect> {
+    val effect = when (event.allowedToRun) {
+      Allowed -> InitializeDatabase
+      is Disallowed -> ShowNotAllowedToRunMessage(event.allowedToRun.reason)
+    }
+
+    return dispatch(effect)
   }
 
   private fun runDatabaseMaintenanceIfRequired(

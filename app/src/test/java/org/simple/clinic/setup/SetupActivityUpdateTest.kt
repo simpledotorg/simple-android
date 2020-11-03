@@ -8,6 +8,9 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.setup.runcheck.Allowed
+import org.simple.clinic.setup.runcheck.Disallowed
+import org.simple.clinic.setup.runcheck.Disallowed.Reason.Rooted
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -163,6 +166,29 @@ class SetupActivityUpdateTest {
         ))
   }
 
+  @Test
+  fun `when the app is allowed to run, initialize the database`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(AppAllowedToRunCheckCompleted(Allowed))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(InitializeDatabase)
+        ))
+  }
+
+  @Test
+  fun `when the app is not allowed to run, show the error message`() {
+    val disallowedReason = Rooted
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(AppAllowedToRunCheckCompleted(Disallowed(disallowedReason)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowNotAllowedToRunMessage(disallowedReason))
+        ))
+  }
 
   private fun previouslyLoggedInUserFetched(user: User): UserDetailsFetched {
     return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Just(user), userSelectedCountry = None())

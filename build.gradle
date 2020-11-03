@@ -78,7 +78,8 @@ buildscript {
       desugarJdk               : '1.0.9',
       signaturePad             : '1.3.1',
       viewpager2               : '1.0.0',
-      lint                     : '27.0.1'
+      lint                     : '27.0.1',
+      rootbeer                 : '5fef9f62f9'
   ]
 
   repositories {

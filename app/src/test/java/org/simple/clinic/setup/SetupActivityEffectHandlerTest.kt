@@ -15,6 +15,9 @@ import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.setup.runcheck.AllowApplicationToRun
+import org.simple.clinic.setup.runcheck.Allowed
+import org.simple.clinic.setup.runcheck.Disallowed.Reason
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
@@ -35,6 +38,7 @@ class SetupActivityEffectHandlerTest {
   private val crashReporter = mock<CrashReporter>()
   private val databaseMaintenanceRunAtPreference = mock<Preference<Optional<Instant>>>()
   private val clock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
+  private val allowApplicationToRun = mock<AllowApplicationToRun>()
 
   private val effectHandler = SetupActivityEffectHandler(
       uiActions = uiActions,
@@ -44,6 +48,7 @@ class SetupActivityEffectHandlerTest {
       appDatabase = appDatabase,
       crashReporter = crashReporter,
       clock = clock,
+      allowApplicationToRun = allowApplicationToRun,
       onboardingCompletePreference = onboardingCompletePreference,
       fallbackCountry = fallbackCountry,
       databaseMaintenanceRunAt = databaseMaintenanceRunAtPreference
@@ -161,6 +166,34 @@ class SetupActivityEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(DatabaseMaintenanceLastRunAtTimeLoaded(databaseMaintenanceLastRunAt))
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the show not allowed to run message effect is received, show the not allowed to run message`() {
+    // given
+    val reason = Reason.Rooted
+
+    // when
+    testCase.dispatch(ShowNotAllowedToRunMessage(reason))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showDisallowedToRunError(reason)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the check application allowed to run effect is received, the application allowed to run check must be performed`() {
+    // given
+    val allowedToRun = Allowed
+    whenever(allowApplicationToRun.check()).thenReturn(allowedToRun)
+
+    // when
+    testCase.dispatch(CheckIfAppCanRun)
+
+    // then
+    testCase.assertOutgoingEvents(AppAllowedToRunCheckCompleted(allowedToRun))
     verifyZeroInteractions(uiActions)
   }
 }

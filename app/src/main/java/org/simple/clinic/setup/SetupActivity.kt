@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -19,6 +20,7 @@ import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
+import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
@@ -136,6 +138,17 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
     startActivity(intent)
     finishWithoutAnimations()
+  }
+
+  override fun showDisallowedToRunError(reason: Disallowed.Reason) {
+    val dialog = AlertDialog
+        .Builder(this, R.style.Clinic_V2_DialogStyle)
+        .setTitle(R.string.setup_cannot_run)
+        .setMessage(R.string.setup_rooted)
+        .setCancelable(false)
+        .setPositiveButton(R.string.setup_close) { _, _ -> finish() }
+
+    dialog.show()
   }
 
   private fun setupDiGraph() {

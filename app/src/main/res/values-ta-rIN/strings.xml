@@ -158,6 +158,7 @@
   <string name="patientsummary_prescriptions_update">மருந்துகளின் விவரத்தைத் திருத்தி எழுதவும்</string>
   <string name="patientsummary_bp_add_new">இரத்த அழுத்தம்</string>
   <string name="patientsummary_finish_saving_patient">சேமிக்கவும்</string>
+  <string name="patientsummary_finish_refill_medicine">மருந்தை மீண்டும் நிரப்புக</string>
   <string name="patientsummary_bp_none_added">இரத்த அழுத்த அளவுகள் சேர்க்கப்படவில்லை</string>
   <string name="patientsummary_edit">திருத்தவும்</string>
 
@@ -294,6 +295,7 @@
   <string name="scheduleappointment_next_visit_in">அடுத்து வர வேண்டிய நாள்</string>
   <string name="scheduleappointment_not_now">இப்போது வேண்டாம்</string>
   <string name="scheduleappointment_done">முடிந்தது</string>
+  <string name="scheduleappointment_next">அடுத்து</string>
   <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s நாள்</item>
     <item quantity="other">%s நாட்கள்</item>
@@ -380,7 +382,7 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">செயலியைப் புதுப்பிக்கவும்</string>
-  <string name="appupdatedialog_body">சிம்பிள் செயலியைப் புதுப்பிப்பதற்கு, பிளே ஸ்டோருக்குச் செல்வீர்கள்</string>
+  <string name="appupdatedialog_body">சிம்பிள் செயலியைப் புதுப்பிப்பிதற்காக Google Play Store-க்குக் கொண்டுச் செல்லப்படுவீர்கள்.</string>
   <string name="appupdatedialog_positive_button_text">புதுப்பிக்கவும்</string>
   <string name="appupdatedialog_negative_button_text">இப்போது வேண்டாம்</string>
 
@@ -430,7 +432,7 @@
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">சிம்பிள் லோகோ</string>
   <string name="selectcountry_next">அடுத்து</string>
-  <string name="selectcountry_title">உங்கள் நாட்டின் பெயரைத் தேர்ந்தெடுக்கவும்</string>
+  <string name="selectcountry_title">உங்கள் நாட்டைத் தேர்ந்தெடுக்கவும்</string>
   <string name="selectcountry_networkerror">இணைய இணைப்பு இல்லை!</string>
   <string name="selectcountry_servererror">சேவையகத்தில் பிழை ஏற்பட்டுள்ளது! தயவுசெய்து சிறிது நேரம் கழித்து மீண்டும் முயலவும்!</string>
   <string name="selectcountry_genericerror">எதுவோ தவறாக உள்ளது! தயவுசெய்து சிறிது நேரம் கழித்து மீண்டும் முயலவும்!</string>
@@ -644,7 +646,6 @@
   <string name="view_teleconsult_doctor_info_add_signature">கையொப்பத்தைச் சேர்</string>
   <string name="view_teleconsult_doctor_info_signature_error">கையொப்பத்தைச் சேர்</string>
 
-  <!-- Teleconsult share prescription screen -->
   <string name="screen_teleconsult_share_prescription_download">பதிவிறக்கு</string>
   <string name="screen_teleconsult_share_prescription_share">பகிர்</string>
   <string name="screen_teleconsult_share_prescription_done">முடிந்தது</string>
@@ -656,4 +657,9 @@
   <string name="select_diagnosis_error_diagnosis_required">நோய் கண்டறிதல் அவசியம்</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">உயர் இரத்த அழுத்தம் மற்றும் நீரழிவு நோய் இரண்டிற்குமான நோய் கண்டறிதலைத் தேர்ந்தெடுக்கவும்</string>
   <string name="select_diagnosis_error_ok">சரி</string>
+  <string name="sheet_teleconsult_status_title">தொலைபேசி ஆலோசனை முடிந்ததா?</string>
+  <string name="sheet_teleconsult_status_yes">ஆம்</string>
+  <string name="sheet_teleconsult_status_no">இல்லை</string>
+  <string name="sheet_teleconsult_status_waiting">காத்திருப்பில் உள்ளது</string>
+  <string name="sheet_teleconsult_status_done">முடிந்தது</string>
 </resources>

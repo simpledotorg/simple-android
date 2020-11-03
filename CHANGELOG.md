@@ -22,6 +22,8 @@
     - Remove deprecated `Optional` class usages
 - Move registration and login flows to a separate activity
 - Update `appupdatedialog_body` string
+- Enable ViewBinding
+- Migrate `SplashScreen` to use ViewBinding
 
 ### Changes
 - Update translations: `kn-IN`, `ta-IN`, `bn-IN`, `ti`, `bn-BD`, `pa-IN`, `mr-IN`, `te-IN`, `hi-IN`

@@ -12,10 +12,10 @@ import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_registration_phone.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.databinding.ScreenRegistrationPhoneBinding
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.injector
 import org.simple.clinic.login.pin.LoginPinScreenKey
@@ -48,6 +48,20 @@ class RegistrationPhoneScreen(
   @Inject
   lateinit var effectHandlerFactory: RegistrationPhoneEffectHandler.Factory
 
+  var binding: ScreenRegistrationPhoneBinding? = null
+
+  private val isdCodeEditText
+    get() = binding!!.isdCodeEditText
+
+  private val phoneNumberEditText
+    get() = binding!!.phoneNumberEditText
+
+  private val validationErrorTextView
+    get() = binding!!.validationErrorTextView
+
+  private val progressView
+    get() = binding!!.progressView
+
   @Inject
   lateinit var uuidGenerator: UuidGenerator
 
@@ -76,6 +90,7 @@ class RegistrationPhoneScreen(
 
   override fun onFinishInflate() {
     super.onFinishInflate()
+    binding = ScreenRegistrationPhoneBinding.bind(this)
     if (isInEditMode) {
       return
     }
@@ -92,6 +107,7 @@ class RegistrationPhoneScreen(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

@@ -142,7 +142,7 @@ class TeleconsultMedicinesView(
   }
 
   override fun openEditMedicines(patientUuid: UUID, openIntention: OpenIntention) {
-    screenRouter.push(PrescribedDrugsScreenKey(patientUuid))
+    screenRouter.push(PrescribedDrugsScreenKey(patientUuid, openIntention))
   }
 
   override fun openDrugDurationSheet(prescription: PrescribedDrug) {

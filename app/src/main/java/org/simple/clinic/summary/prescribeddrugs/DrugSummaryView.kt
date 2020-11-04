@@ -153,7 +153,7 @@ class DrugSummaryView(
     val alertFacilityChangeIntent = AlertFacilityChangeSheet.intent(
         context,
         currentFacility.name,
-        ContinueToScreen(PrescribedDrugsScreenKey(patientUuid))
+        ContinueToScreen(PrescribedDrugsScreenKey(patientUuid, openIntention))
     )
 
     activity.startActivityForResult(alertFacilityChangeIntent, DRUGS_REQCODE_ALERT_FACILITY_CHANGE)

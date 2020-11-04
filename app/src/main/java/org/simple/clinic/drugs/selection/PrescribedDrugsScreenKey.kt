@@ -4,11 +4,12 @@ import android.os.Parcelable
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
+import org.simple.clinic.drugs.OpenIntention
 import org.simple.clinic.router.screen.FullScreenKey
 import java.util.UUID
 
 @Parcelize
-data class PrescribedDrugsScreenKey(val patientUuid: UUID) : FullScreenKey, Parcelable {
+data class PrescribedDrugsScreenKey(val patientUuid: UUID, val openIntention: OpenIntention) : FullScreenKey, Parcelable {
 
   @IgnoredOnParcel
   override val analyticsName = "Patient Drugs"

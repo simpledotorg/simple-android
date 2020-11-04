@@ -158,6 +158,7 @@
   <string name="patientsummary_prescriptions_update">አብ መድሓኒታት ለውጢ ግበር</string>
   <string name="patientsummary_bp_add_new">ፀቕጢ ደም</string>
   <string name="patientsummary_finish_saving_patient">ምዕቃብ</string>
+  <string name="patientsummary_finish_refill_medicine">መድሓኒት መሊስካ ምላእ</string>
   <string name="patientsummary_bp_none_added">ዝተወሰኸ ፀቕጢ ደም የለን</string>
   <string name="patientsummary_edit">ምእራም</string>
 
@@ -294,6 +295,7 @@
   <string name="scheduleappointment_next_visit_in">ዝቕፅል ዑደት መድብ</string>
   <string name="scheduleappointment_not_now">ሕዚ ኣይኮነን</string>
   <string name="scheduleappointment_done">ተፈፂሙ</string>
+  <string name="scheduleappointment_next">ዝቕፅል</string>
   <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%sመዓልቲ</item>
     <item quantity="other">%sመዓልታት</item>
@@ -380,7 +382,7 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ኣፕሊኬሽን ኣሓድስ</string>
-  <string name="appupdatedialog_body">ምሕዳስ ኣፕሊኬሽን ንኸተተግብር ናብ ፕለይ ስቶር ክትውሰድ ኢኻ</string>
+  <string name="appupdatedialog_body">ምሕዳስ ኣፕሊኬሽን ንኸተተግብር ናብ ጉግል ፕለይ ስቶር ክትውሰድ ኢኻ</string>
   <string name="appupdatedialog_positive_button_text">ኣሐድስ</string>
   <string name="appupdatedialog_negative_button_text">ሕዚ ኣይኮነን</string>
 
@@ -655,4 +657,14 @@
   <string name="select_diagnosis_error_diagnosis_required">ምርመራ የድሊ</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">ናይ ጸቕጢ-ደምን ናይ ሕማም ሽኮርን ምርመራ ምረጽ</string>
   <string name="select_diagnosis_error_ok">እሺ</string>
+  <string name="sheet_teleconsult_status_title">ቴሌኮንሳልት ተዛዚሙ?</string>
+  <string name="sheet_teleconsult_status_yes">እወ</string>
+  <string name="sheet_teleconsult_status_no">ኣይፋሉን</string>
+  <string name="sheet_teleconsult_status_waiting">ክሳብ ሕጂ ኣብ ትጽቢት</string>
+  <string name="sheet_teleconsult_status_done">ተሰሪሑ</string>
+
+  <!-- Setup activity -->
+  <string name="setup_cannot_run">ኣፕሊኬሽን ክኽፈት ኣይከኣለን</string>
+  <string name="setup_rooted">ቀሊል ኣብ ሱር ዝሰደደ መሳርሒ ክኽፈት ኣይከኣልን።</string>
+  <string name="setup_close">ዕጾ</string>
 </resources>

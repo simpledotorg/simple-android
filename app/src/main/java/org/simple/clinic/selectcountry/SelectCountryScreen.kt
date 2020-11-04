@@ -10,12 +10,12 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_selectcountry.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcher
+import org.simple.clinic.databinding.ScreenSelectcountryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
@@ -34,6 +34,26 @@ class SelectCountryScreen(
     context: Context,
     attributeSet: AttributeSet
 ) : ConstraintLayout(context, attributeSet), SelectCountryUi, UiActions {
+
+  var binding: ScreenSelectcountryBinding? = null
+
+  private val countrySelectionViewFlipper
+    get() = binding!!.countrySelectionViewFlipper
+
+  private val supportedCountriesList
+    get() = binding!!.supportedCountriesList
+
+  private val tryAgain
+    get() = binding!!.tryAgain
+
+  private val nextButton
+    get() = binding!!.nextButton
+
+  private val errorMessageTextView
+    get() = binding!!.errorMessageTextView
+
+  private val nextButtonFrame
+    get() = binding!!.nextButtonFrame
 
   @Inject
   lateinit var appConfigRepository: AppConfigRepository
@@ -95,6 +115,7 @@ class SelectCountryScreen(
   override fun onFinishInflate() {
     super.onFinishInflate()
 
+    binding = ScreenSelectcountryBinding.bind(this)
     if (isInEditMode) {
       return
     }
@@ -140,6 +161,7 @@ class SelectCountryScreen(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

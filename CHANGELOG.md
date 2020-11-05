@@ -1,6 +1,12 @@
 # CHANGELOG
 
 ## Next Release
+### Features
+- [In Progress: 29 Oct 2020] Refill prescriptions in edit medicine screen
+
+### Internal
+- Add `recipes.md`
+
 ### Changes
 - Disabled running the app on rooted devices
 
@@ -12,7 +18,6 @@
 ### Features
 - Add `TeleconsultStatusSheet`
 - Show `Next` in `ScheduleAppointmentSheet`
-- [In Progress: 29 Oct 2020] Refill prescriptions in edit medicine screen
 
 ### Internal
 - Update `TeleconsultRecord` to sync frequently

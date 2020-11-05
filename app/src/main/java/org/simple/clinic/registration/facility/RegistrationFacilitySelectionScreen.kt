@@ -8,8 +8,8 @@ import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_registration_facility_selection.view.*
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenRegistrationFacilitySelectionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.introvideoscreen.IntroVideoScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
@@ -26,6 +26,11 @@ class RegistrationFacilitySelectionScreen(
     context: Context,
     attrs: AttributeSet
 ) : RelativeLayout(context, attrs), RegistrationFacilitySelectionUiActions {
+
+  var binding: ScreenRegistrationFacilitySelectionBinding? = null
+
+  private val facilityPickerView
+    get() = binding!!.facilityPickerView
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -61,6 +66,7 @@ class RegistrationFacilitySelectionScreen(
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
+    binding = ScreenRegistrationFacilitySelectionBinding.bind(this)
     if (isInEditMode) {
       return
     }
@@ -78,6 +84,7 @@ class RegistrationFacilitySelectionScreen(
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
     delegate.stop()
+    binding = null
   }
 
   override fun onSaveInstanceState(): Parcelable? {

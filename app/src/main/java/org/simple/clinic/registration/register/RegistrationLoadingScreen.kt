@@ -8,9 +8,9 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_registration_loading.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenRegistrationLoadingBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
@@ -24,6 +24,23 @@ class RegistrationLoadingScreen(
     context: Context,
     attrs: AttributeSet
 ) : LinearLayout(context, attrs), RegistrationLoadingUi, RegistrationLoadingUiActions {
+
+  var binding: ScreenRegistrationLoadingBinding? = null
+
+  private val loaderBack
+    get() = binding!!.loaderBack
+
+  private val errorRetryButton
+    get() = binding!!.errorRetryButton
+
+  private val errorTitle
+    get() = binding!!.errorTitle
+
+  private val errorMessage
+    get() = binding!!.errorMessage
+
+  private val viewSwitcher
+    get() = binding!!.viewSwitcher
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -56,6 +73,7 @@ class RegistrationLoadingScreen(
   override fun onFinishInflate() {
     super.onFinishInflate()
 
+    binding = ScreenRegistrationLoadingBinding.bind(this)
     context.injector<Injector>().inject(this)
 
     loaderBack.setOnClickListener {
@@ -70,6 +88,7 @@ class RegistrationLoadingScreen(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

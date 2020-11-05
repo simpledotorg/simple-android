@@ -28,6 +28,7 @@
 - Update `appupdatedialog_body` string
 - Enable ViewBinding
 - Migrate `SplashScreen` to use ViewBinding
+- [In Progress: 4 Nov 2020] Migrate app screens to use ViewBinding
 
 ### Changes
 - Update translations: `kn-IN`, `ta-IN`, `bn-IN`, `ti`, `bn-BD`, `pa-IN`, `mr-IN`, `te-IN`, `hi-IN`

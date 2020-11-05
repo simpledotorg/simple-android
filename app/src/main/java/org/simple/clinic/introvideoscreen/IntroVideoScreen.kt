@@ -9,9 +9,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import kotlinx.android.synthetic.main.screen_intro_video.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenIntroVideoBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
@@ -25,6 +25,20 @@ class IntroVideoScreen(
     context: Context,
     attrs: AttributeSet
 ) : ConstraintLayout(context, attrs), UiActions {
+
+  var binding: ScreenIntroVideoBinding? = null
+
+  private val introVideoSubtitle
+    get() = binding!!.introVideoSubtitle
+
+  private val introVideoImageView
+    get() = binding!!.introVideoImageView
+
+  private val watchVideoButton
+    get() = binding!!.watchVideoButton
+
+  private val skipButton
+    get() = binding!!.skipButton
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -60,6 +74,7 @@ class IntroVideoScreen(
 
   override fun onFinishInflate() {
     super.onFinishInflate()
+    binding = ScreenIntroVideoBinding.bind(this)
     if (isInEditMode) return
 
     context.injector<IntroVideoScreenInjector>().inject(this)
@@ -78,6 +93,7 @@ class IntroVideoScreen(
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
     mobiusDelegate.stop()
+    binding = null
   }
 
   override fun openVideo() {

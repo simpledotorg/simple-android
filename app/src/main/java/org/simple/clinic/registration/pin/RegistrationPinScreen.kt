@@ -9,10 +9,10 @@ import android.widget.RelativeLayout
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_registration_pin.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.SECURITY_PIN_LENGTH
+import org.simple.clinic.databinding.ScreenRegistrationPinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
@@ -25,6 +25,20 @@ class RegistrationPinScreen(
     context: Context,
     attrs: AttributeSet
 ) : RelativeLayout(context, attrs), RegistrationPinUi, RegistrationPinUiActions {
+
+  var binding: ScreenRegistrationPinBinding? = null
+
+  private val pinEditText
+    get() = binding!!.pinEditText
+
+  private val backButton
+    get() = binding!!.backButton
+
+  private val pinHintTextView
+    get() = binding!!.pinHintTextView
+
+  private val errorTextView
+    get() = binding!!.errorTextView
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -47,7 +61,7 @@ class RegistrationPinScreen(
     val screenKey = screenRouter.key<RegistrationPinScreenKey>(this)
 
     MobiusDelegate.forView(
-      events = events.ofType(),
+        events = events.ofType(),
         defaultModel = RegistrationPinModel.create(screenKey.registrationEntry),
         update = RegistrationPinUpdate(requiredPinLength = SECURITY_PIN_LENGTH),
         init = RegistrationPinInit(),
@@ -58,6 +72,7 @@ class RegistrationPinScreen(
 
   override fun onFinishInflate() {
     super.onFinishInflate()
+    binding = ScreenRegistrationPinBinding.bind(this)
     if (isInEditMode) {
       return
     }
@@ -79,6 +94,7 @@ class RegistrationPinScreen(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

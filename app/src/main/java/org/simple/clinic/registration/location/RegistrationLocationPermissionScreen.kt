@@ -7,8 +7,8 @@ import android.widget.RelativeLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_registration_location_permission.view.*
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenRegistrationLocationPermissionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreenKey
@@ -26,6 +26,17 @@ class RegistrationLocationPermissionScreen(
     context: Context,
     attrs: AttributeSet
 ) : RelativeLayout(context, attrs), RegistrationLocationPermissionUi {
+
+  var binding: ScreenRegistrationLocationPermissionBinding? = null
+
+  private val allowAccessButton
+    get() = binding!!.allowAccessButton
+
+  private val skipButton
+    get() = binding!!.skipButton
+
+  private val toolbar
+    get() = binding!!.toolbar
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -68,6 +79,7 @@ class RegistrationLocationPermissionScreen(
 
   override fun onFinishInflate() {
     super.onFinishInflate()
+    binding = ScreenRegistrationLocationPermissionBinding.bind(this)
     if (isInEditMode) {
       return
     }
@@ -89,6 +101,7 @@ class RegistrationLocationPermissionScreen(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

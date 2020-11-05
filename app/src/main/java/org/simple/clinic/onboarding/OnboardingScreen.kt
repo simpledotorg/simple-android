@@ -8,9 +8,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import kotlinx.android.synthetic.main.screen_onboarding.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenOnboardingBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registerorlogin.AuthenticationActivity
@@ -27,6 +27,20 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : Constrain
 
   @Inject
   lateinit var activity: AppCompatActivity
+
+  private var binding: ScreenOnboardingBinding? = null
+
+  private val getStartedButton
+    get() = binding!!.getStartedButton
+
+  private val introOneTextView
+    get() = binding!!.introOneTextView
+
+  private val introTwoTextView
+    get() = binding!!.introTwoTextView
+
+  private val introThreeTextView
+    get() = binding!!.introThreeTextView
 
   private val events: Observable<OnboardingEvent> by unsafeLazy {
     getStartedClicks()
@@ -45,6 +59,7 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : Constrain
 
   override fun onFinishInflate() {
     super.onFinishInflate()
+    binding = ScreenOnboardingBinding.bind(this)
     if (isInEditMode) {
       return
     }
@@ -63,6 +78,7 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : Constrain
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

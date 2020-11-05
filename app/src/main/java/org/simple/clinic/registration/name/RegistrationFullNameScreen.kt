@@ -11,9 +11,9 @@ import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_registration_name.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenRegistrationNameBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
@@ -27,6 +27,20 @@ class RegistrationFullNameScreen(
     context: Context,
     attrs: AttributeSet
 ) : RelativeLayout(context, attrs), RegistrationNameUi, RegistrationNameUiActions {
+
+  var binding: ScreenRegistrationNameBinding? = null
+
+  private val backButton
+    get() = binding!!.backButton
+
+  private val cardViewContentLayout
+    get() = binding!!.cardViewContentLayout
+
+  private val fullNameEditText
+    get() = binding!!.fullNameEditText
+
+  private val validationErrorTextView
+    get() = binding!!.validationErrorTextView
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -61,6 +75,7 @@ class RegistrationFullNameScreen(
 
   override fun onFinishInflate() {
     super.onFinishInflate()
+    binding = ScreenRegistrationNameBinding.bind(this)
     if (isInEditMode) {
       return
     }
@@ -85,6 +100,7 @@ class RegistrationFullNameScreen(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

@@ -132,12 +132,20 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
 
   private fun refillMedicineClicks() = RxView.clicks(refillMedicineButton).map { PresribedDrugsRefillClicked }
 
+  override fun showRefillMedicineButton() {
+    refillMedicineButton.visibility = VISIBLE
+  }
+
   override fun showDoneButton() {
     doneButton.visibility = VISIBLE
   }
 
   override fun hideRefillMedicineButton() {
     refillMedicineButton.visibility = GONE
+  }
+
+  override fun hideDoneButton() {
+    doneButton.visibility = GONE
   }
 
   override fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewHolder>>) {

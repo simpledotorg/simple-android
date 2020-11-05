@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.OpenIntention.AddNewMedicine
+import org.simple.clinic.drugs.OpenIntention.RefillMedicine
 import org.simple.clinic.drugs.selection.EditMedicinesUi
 import org.simple.clinic.drugs.selection.ProtocolDrugListItem
 import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
@@ -97,6 +98,27 @@ class EditMedicinesUiRendererTest {
     // then
     verify(ui).showDoneButton()
     verify(ui).hideRefillMedicineButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when open intention is to refill medicine, then show refill medicine button `() {
+    // given
+    val defaultModel = EditMedicinesModel.create(patientUuid, RefillMedicine)
+    val prescribedDrugRecords = listOf(
+        TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1"),
+        TestData.prescription(uuid = UUID.fromString("537a119e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine2"),
+        TestData.prescription(uuid = UUID.fromString("5ac2a678-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine3"),
+        TestData.prescription(uuid = UUID.fromString("5f9f0fe2-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine4"),
+    )
+    val model = defaultModel.prescribedDrugsFetched(prescribedDrugRecords)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showRefillMedicineButton()
+    verify(ui).hideDoneButton()
     verifyNoMoreInteractions(ui)
   }
 }

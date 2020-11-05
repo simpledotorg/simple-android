@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.sync.BloodSugarSyncApi
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.preference.StringPreferenceConverter
@@ -30,5 +31,12 @@ class BloodSugarModule {
   @Named("last_blood_sugar_pull_token")
   fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
     return rxSharedPrefs.getOptional("last_blood_sugar_pull_token", StringPreferenceConverter())
+  }
+
+  @Provides
+  fun updateBloodSugarUnitPreference(
+      rxSharedPrefs: RxSharedPreferences,
+  ): Preference<BloodSugarUnitPreference> {
+    return rxSharedPrefs.getEnum("blood_sugar_unit_preference", BloodSugarUnitPreference.Mg, BloodSugarUnitPreference::class.java)
   }
 }

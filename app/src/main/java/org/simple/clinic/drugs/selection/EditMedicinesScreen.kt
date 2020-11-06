@@ -31,6 +31,7 @@ import org.simple.clinic.drugs.EditMedicinesUiRenderer
 import org.simple.clinic.drugs.EditMedicinesUpdate
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
+import org.simple.clinic.drugs.PresribedDrugsRefillClicked
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.mobius.MobiusDelegate
@@ -55,6 +56,7 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
   private val toolbar by bindView<Toolbar>(R.id.prescribeddrugs_toolbar)
   private val recyclerView by bindView<RecyclerView>(R.id.prescribeddrugs_recyclerview)
   private val doneButton by bindView<MaterialButton>(R.id.prescribeddrugs_done)
+  private val refillMedicineButton by bindView<MaterialButton>(R.id.prescribeddrugs_refill_done)
   private val groupieAdapter = GroupAdapter<ViewHolder>()
 
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
@@ -71,7 +73,10 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
 
   private val events by unsafeLazy {
     Observable
-        .merge(adapterUiEvents, doneClicks())
+        .merge(
+            adapterUiEvents,
+            doneClicks(),
+            refillMedicineClicks())
         .compose(ReportAnalyticsEvents())
   }
 
@@ -124,6 +129,16 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
   }
 
   private fun doneClicks() = RxView.clicks(doneButton).map { PrescribedDrugsDoneClicked }
+
+  private fun refillMedicineClicks() = RxView.clicks(refillMedicineButton).map { PresribedDrugsRefillClicked }
+
+  override fun showDoneButton() {
+    doneButton.visibility = VISIBLE
+  }
+
+  override fun hideRefillMedicineButton() {
+    refillMedicineButton.visibility = GONE
+  }
 
   override fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewHolder>>) {
     // Replace the default fade animator with another animator that

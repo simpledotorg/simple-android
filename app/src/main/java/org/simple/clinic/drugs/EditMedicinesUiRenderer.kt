@@ -11,6 +11,8 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
   override fun render(model: EditMedicinesModel) {
     if (model.prescribedDrugs != null && model.protocolDrugs != null)
       renderPrescribedProtocolDrugs(model, model.prescribedDrugs, model.protocolDrugs)
+    ui.showDoneButton()
+    ui.hideRefillMedicineButton()
   }
 
   private fun renderPrescribedProtocolDrugs(

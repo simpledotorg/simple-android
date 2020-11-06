@@ -550,6 +550,7 @@
   <string name="bloodsugar_reading_type_hba1c" translatable="false">HbA1c</string>
 
   <string name="bloodsugar_reading_unit_type_mg_dl" translatable="false">mg/dL</string>
+  <string name="bloodsugar_reading_unit_type_mmol" translatable="false">mmol/L</string>
   <string name="bloodsugar_reading_unit_type_percentage" translatable="false">%</string>
 
   <!-- Blood Pressure History screen -->

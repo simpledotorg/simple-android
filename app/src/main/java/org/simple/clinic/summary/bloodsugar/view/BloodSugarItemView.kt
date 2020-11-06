@@ -32,7 +32,7 @@ class BloodSugarItemView(
       bloodSugarUnitPreference: BloodSugarUnitPreference,
       editMeasurementClicked: (BloodSugarMeasurement) -> Unit
   ) {
-    renderBloodSugarReading(measurement.reading)
+    renderBloodSugarReading(measurement.reading, bloodSugarUnitPreference)
     renderBloodSugarLevel(measurement.reading)
     renderDateTime(bloodSugarDate, bloodSugarTime)
 
@@ -64,10 +64,10 @@ class BloodSugarItemView(
   }
 
   @SuppressLint("SetTextI18n")
-  private fun renderBloodSugarReading(reading: BloodSugarReading) {
-    val displayUnit = context.getString(reading.displayUnit)
+  private fun renderBloodSugarReading(reading: BloodSugarReading, bloodSugarUnitPreference: BloodSugarUnitPreference) {
+    val displayUnit = context.getString(reading.displayUnit(bloodSugarUnitPreference))
     val displayType = context.getString(reading.displayType)
-    val readingPrefix = reading.displayValue
+    val readingPrefix = reading.displayValue(bloodSugarUnitPreference)
     val readingSuffix = "$displayUnit $displayType"
 
     readingTextView.text = "$readingPrefix${reading.displayUnitSeparator}$readingSuffix"

@@ -1,7 +1,9 @@
 package org.simple.clinic.summary.teleconsultation.messagebuilder
 
 import android.content.res.Resources
+import com.f2prateek.rx.preferences2.Preference
 import org.simple.clinic.R
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.summary.PatientTeleconsultationInfo
 import org.simple.clinic.util.UserClock
@@ -13,7 +15,8 @@ import javax.inject.Named
 class LongTeleconsultMessageBuilder_Old @Inject constructor(
     private val resources: Resources,
     private val userClock: UserClock,
-    @Named("full_date") private val dateFormatter: DateTimeFormatter
+    @Named("full_date") private val dateFormatter: DateTimeFormatter,
+    private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>
 ) : TeleconsultationMessageBuilder {
 
   companion object {
@@ -67,9 +70,10 @@ class LongTeleconsultMessageBuilder_Old @Inject constructor(
           .bloodSugars.joinToString(separator = LINE_BREAK) {
             val bloodSugarRecordedAtDate = dateFormatter.format(it.recordedAt.toLocalDateAtZone(userClock.zone))
             val bloodSugarType = resources.getString(it.reading.displayType)
-            val bloodSugarUnit = resources.getString(it.reading.displayUnit)
+            val bloodSugarUnit = resources.getString(it.reading.displayUnit(bloodSugarUnitPreference.get()))
+            val displayValue = it.reading.displayValue(bloodSugarUnitPreference.get())
 
-            "$bloodSugarType ${it.reading.displayValue}${it.reading.displayUnitSeparator}${bloodSugarUnit} ($bloodSugarRecordedAtDate)"
+            "$bloodSugarType ${displayValue}${it.reading.displayUnitSeparator}${bloodSugarUnit} ($bloodSugarRecordedAtDate)"
           }
 
       val bloodSugarsSize = patientTeleconsultationInfo.bloodSugars.size

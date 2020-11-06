@@ -45,9 +45,9 @@ sealed class BloodSugarHistoryListItem : PagingItemAdapter.Item<Event> {
           .popSpan()
           .build()
 
-      val displayUnit = context.getString(bloodSugarReading.displayUnit)
+      val displayUnit = context.getString(bloodSugarReading.displayUnit(bloodSugarUnitPreference))
       val displayType = context.getString(bloodSugarReading.displayType)
-      val readingPrefix = bloodSugarReading.displayValue
+      val readingPrefix = bloodSugarReading.displayValue(bloodSugarUnitPreference)
       val readingSuffix = "$displayUnit $displayType"
 
       renderBloodSugarLevel(holder, context, measurement.reading)

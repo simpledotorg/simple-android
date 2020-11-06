@@ -9,12 +9,13 @@ import java.util.UUID
 data class EditMedicinesModel(
     val patientUuid: UUID,
     val prescribedDrugs: List<PrescribedDrug>?,
-    val protocolDrugs: List<ProtocolDrugAndDosages>?
+    val protocolDrugs: List<ProtocolDrugAndDosages>?,
+    val openIntention: OpenIntention?
 ) : Parcelable {
 
   companion object {
-    fun create(patientUuid: UUID): EditMedicinesModel {
-      return EditMedicinesModel(patientUuid, null, null)
+    fun create(patientUuid: UUID, openIntention: OpenIntention): EditMedicinesModel {
+      return EditMedicinesModel(patientUuid, null, null, openIntention)
     }
   }
 

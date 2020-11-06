@@ -24,6 +24,7 @@ import org.simple.clinic.drugs.EditMedicinesInit
 import org.simple.clinic.drugs.EditMedicinesModel
 import org.simple.clinic.drugs.EditMedicinesUiRenderer
 import org.simple.clinic.drugs.EditMedicinesUpdate
+import org.simple.clinic.drugs.OpenIntention.AddNewMedicine
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.ProtocolDrugClicked
@@ -80,7 +81,7 @@ class EditMedicinesScreenLogicTest {
 
     fixture = MobiusTestFixture(
         uiEvents.ofType(),
-        EditMedicinesModel.create(patientUuid),
+        EditMedicinesModel.create(patientUuid, AddNewMedicine),
         EditMedicinesInit(),
         EditMedicinesUpdate(),
         effectHandler.build(),

@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.entry
 
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType
 import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
@@ -51,3 +52,5 @@ data class BloodSugarMeasurementFetched(val bloodSugarMeasurement: BloodSugarMea
 object RemoveBloodSugarClicked : BloodSugarEntryEvent() {
   override val analyticsName: String = "Blood Sugar Entry: Remove clicked"
 }
+
+data class BloodSugarUnitPreferenceLoaded(val bloodSugarUnitPreference: BloodSugarUnitPreference) : BloodSugarEntryEvent()

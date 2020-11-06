@@ -28,10 +28,13 @@ import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.ProtocolDrugClicked
 import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
+import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -46,6 +49,8 @@ class EditMedicinesScreenLogicTest {
   private val ui = mock<EditMedicinesUi>()
   private val uiActions = mock<EditMedicinesUiActions>()
   private val protocolRepository = mock<ProtocolRepository>()
+  private val uuidGenerator = mock<UuidGenerator>()
+  private val utcClock = mock<UtcClock>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val patientUuid = UUID.fromString("2e9a1721-5472-4ebb-9d1a-7e707645eb7b")
   private val protocolUuid = UUID.fromString("905a545c-1988-441b-9139-11ae00579883")
@@ -55,6 +60,7 @@ class EditMedicinesScreenLogicTest {
       protocolUuid = protocolUuid
   )
   private val uiEvents = PublishSubject.create<UiEvent>()
+  private val appointmentRepository = mock<AppointmentRepository>()
 
   private lateinit var fixture: MobiusTestFixture<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect>
 
@@ -66,7 +72,10 @@ class EditMedicinesScreenLogicTest {
         schedulersProvider = TrampolineSchedulersProvider(),
         protocolRepository = protocolRepository,
         prescriptionRepository = prescriptionRepository,
-        facility = Lazy { facility }
+        facility = Lazy { facility },
+        utcClock = utcClock,
+        uuidGenerator = uuidGenerator,
+        appointmentsRepository = appointmentRepository
     )
 
     fixture = MobiusTestFixture(

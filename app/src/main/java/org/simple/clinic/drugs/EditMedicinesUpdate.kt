@@ -14,6 +14,7 @@ class EditMedicinesUpdate : Update<EditMedicinesModel, EditMedicinesEvent, EditM
       is CustomPrescriptionClicked -> dispatch(ShowUpdateCustomPrescriptionSheet(event.prescribedDrug))
       PrescribedDrugsDoneClicked -> dispatch(GoBackToPatientSummary)
       is DrugsListFetched -> next(model.prescribedDrugsFetched(event.prescribedDrugs).protocolDrugsFetched(event.protocolDrugs))
+      PrescribedMedicinesRefilled -> dispatch(GoBackToPatientSummary)
     }
   }
 }

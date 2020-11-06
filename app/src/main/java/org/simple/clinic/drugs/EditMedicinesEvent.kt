@@ -28,3 +28,5 @@ data class DrugsListFetched(
     val protocolDrugs: List<ProtocolDrugAndDosages>,
     val prescribedDrugs: List<PrescribedDrug>
 ) : EditMedicinesEvent()
+
+object PrescribedMedicinesRefilled : EditMedicinesEvent()

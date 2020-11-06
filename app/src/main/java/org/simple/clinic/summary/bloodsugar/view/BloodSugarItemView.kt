@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.patientsummary_bloodsugar_item_content.vie
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarReading
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.visibleOrGone
 
@@ -28,6 +29,7 @@ class BloodSugarItemView(
       bloodSugarDate: String,
       bloodSugarTime: String?,
       isBloodSugarEditable: Boolean,
+      bloodSugarUnitPreference: BloodSugarUnitPreference,
       editMeasurementClicked: (BloodSugarMeasurement) -> Unit
   ) {
     renderBloodSugarReading(measurement.reading)

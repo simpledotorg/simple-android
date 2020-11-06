@@ -2,6 +2,8 @@ package org.simple.clinic.drugs
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.drugs.OpenIntention.AddNewMedicine
+import org.simple.clinic.drugs.OpenIntention.RefillMedicine
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
@@ -13,6 +15,7 @@ class EditMedicinesUpdate : Update<EditMedicinesModel, EditMedicinesEvent, EditM
       is ProtocolDrugClicked -> dispatch(OpenDosagePickerSheet(event.drugName, model.patientUuid, event.prescription?.uuid))
       is CustomPrescriptionClicked -> dispatch(ShowUpdateCustomPrescriptionSheet(event.prescribedDrug))
       PrescribedDrugsDoneClicked -> dispatch(GoBackToPatientSummary)
+      PresribedDrugsRefillClicked -> dispatch(RefillMedicines(model.patientUuid))
       is DrugsListFetched -> next(model.prescribedDrugsFetched(event.prescribedDrugs).protocolDrugsFetched(event.protocolDrugs))
       PrescribedMedicinesRefilled -> dispatch(GoBackToPatientSummary)
     }

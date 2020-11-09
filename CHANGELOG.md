@@ -6,14 +6,13 @@
 
 ### Internal
 - Add `recipes.md`
+- [In Progress: 4 Nov 2020] Migrate app screens to use ViewBinding
+- Added blood sugar unit preference
 
 ### Changes
 - Disabled running the app on rooted devices
 - Change label of district address fields in  patient entry and edit screens to "Zone" for Ethiopia users
-
-### Internal
-- [In Progress: 4 Nov 2020] Migrate app screens to use ViewBinding
-- Added blood sugar unit preference
+- Updated translations: `ti-ET`
 
 ## On Demo
 ### Features

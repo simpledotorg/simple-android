@@ -25,8 +25,9 @@
   <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/spacing_8"
-    android:background="@color/blue2">
+    android:background="@color/blue2"
+    android:clipToPadding="false"
+    android:padding="@dimen/spacing_8">
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/prescribeddrugs_done"
@@ -35,11 +36,10 @@
       android:layout_height="wrap_content"
       android:text="@string/patientsummary_finish_saving_patient"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+      android:visibility="visible"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      android:visibility="visible"
-      android:backgroundTint="@color/blue1"/>
+      app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/prescribeddrugs_refill_done"
@@ -51,8 +51,8 @@
       android:visibility="gone"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      android:backgroundTint="@color/blue1"/>
+      app:layout_constraintStart_toStartOf="parent" />
+
   </androidx.constraintlayout.widget.ConstraintLayout>
 
 </org.simple.clinic.drugs.selection.EditMedicinesScreen>

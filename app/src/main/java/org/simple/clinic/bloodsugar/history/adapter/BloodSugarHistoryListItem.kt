@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.list_new_blood_sugar_button.*
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarReading
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
@@ -29,7 +30,8 @@ sealed class BloodSugarHistoryListItem : PagingItemAdapter.Item<Event> {
       val measurement: BloodSugarMeasurement,
       val bloodSugarDate: String,
       val bloodSugarTime: String?,
-      val isBloodSugarEditable: Boolean
+      val isBloodSugarEditable: Boolean,
+      val bloodSugarUnitPreference: BloodSugarUnitPreference
   ) : BloodSugarHistoryListItem() {
     override fun layoutResId(): Int = R.layout.list_blood_sugar_history_item
 

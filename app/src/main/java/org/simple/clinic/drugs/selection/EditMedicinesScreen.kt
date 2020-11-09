@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
@@ -134,9 +134,9 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
-  private fun doneClicks() = RxView.clicks(doneButton).map { PrescribedDrugsDoneClicked }
+  private fun doneClicks() = doneButton.clicks().map { PrescribedDrugsDoneClicked }
 
-  private fun refillMedicineClicks() = RxView.clicks(refillMedicineButton).map { PresribedDrugsRefillClicked }
+  private fun refillMedicineClicks() = refillMedicineButton.clicks().map { PresribedDrugsRefillClicked }
 
   override fun showRefillMedicineButton() {
     refillMedicineButton.visibility = VISIBLE

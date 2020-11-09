@@ -158,6 +158,7 @@
   <string name="patientsummary_prescriptions_update">औषध संपादित करा</string>
   <string name="patientsummary_bp_add_new">रक्‍तदाब</string>
   <string name="patientsummary_finish_saving_patient">जतन करा</string>
+  <string name="patientsummary_finish_refill_medicine">औषध रिफिल करा</string>
   <string name="patientsummary_bp_none_added">कोणतेही रक्‍तदाब जोडलेले नाहीत</string>
   <string name="patientsummary_edit">संपादित करा</string>
 
@@ -294,6 +295,7 @@
   <string name="scheduleappointment_next_visit_in">मध्‍ये पुढील भेट शेड्यूल करा</string>
   <string name="scheduleappointment_not_now">आता नाही</string>
   <string name="scheduleappointment_done">पूर्ण झाले</string>
+  <string name="scheduleappointment_next">पुढील</string>
   <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s दिवस</item>
     <item quantity="other">%s दिवस</item>
@@ -380,7 +382,7 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ॲप अद्यतनित करा</string>
-  <string name="appupdatedialog_body">तुम्‍हाला सिंपल अद्यतनित करण्‍यासाठी प्‍ले स्‍टोअरवर नेण्‍यात येईल</string>
+  <string name="appupdatedialog_body">आपल्‍याला Simple अपडेट करण्‍यासाठी Google Play Store वर नेण्‍यात येईल.</string>
   <string name="appupdatedialog_positive_button_text">अद्यतनित करा</string>
   <string name="appupdatedialog_negative_button_text">आता नाही</string>
 
@@ -430,7 +432,7 @@
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">सिंपल लोगो</string>
   <string name="selectcountry_next">पुढील</string>
-  <string name="selectcountry_title">तुमचा देश निवडा</string>
+  <string name="selectcountry_title">आपला देश निवडा</string>
   <string name="selectcountry_networkerror">इंटरनेट कनेक्‍शन नाही!</string>
   <string name="selectcountry_servererror">सर्व्‍हर त्रुटी! कृपया पुन्‍हा प्रयत्‍न करा!</string>
   <string name="selectcountry_genericerror">काहीतरी चुकले! कृपया पुन्‍हा प्रयत्‍न करा!</string>
@@ -655,4 +657,9 @@
   <string name="select_diagnosis_error_diagnosis_required">निदान आवश्यक आहे</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">अतिरक्तदाब आणि मधुमेह या दोन्हीसाठी निदान निवडा</string>
   <string name="select_diagnosis_error_ok">ठीक आहे</string>
+  <string name="sheet_teleconsult_status_title">टेलि-कन्‍सल्‍ट पूर्ण झाले?</string>
+  <string name="sheet_teleconsult_status_yes">होय</string>
+  <string name="sheet_teleconsult_status_no">नाही</string>
+  <string name="sheet_teleconsult_status_waiting">अद्याप प्रतीक्षा करत आहे</string>
+  <string name="sheet_teleconsult_status_done">पूर्ण झाले</string>
 </resources>

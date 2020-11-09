@@ -5,6 +5,7 @@ import androidx.paging.PagedList
 import androidx.paging.PositionalDataSource
 import androidx.paging.toObservable
 import androidx.room.InvalidationTracker
+import com.f2prateek.rx.preferences2.Preference
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
@@ -29,7 +30,8 @@ class BloodSugarHistoryListItemDataSource(
     private val dateFormatter: DateTimeFormatter,
     private val timeFormatter: DateTimeFormatter,
     private val canEditFor: Duration,
-    private val source: PositionalDataSource<BloodSugarMeasurement>
+    private val source: PositionalDataSource<BloodSugarMeasurement>,
+    private val bloodSugarUnitPreference: BloodSugarUnitPreference
 ) : PositionalDataSource<BloodSugarHistoryListItem>() {
 
   private val invalidationTracker = object : InvalidationTracker.Observer(arrayOf("BloodSugarMeasurements")) {
@@ -114,9 +116,10 @@ class BloodSugarHistoryListItemDataSource(
 
         BloodSugarHistoryItem(
             measurement = measurement,
-            isBloodSugarEditable = isBloodSugarEditable,
             bloodSugarDate = dateFormatter.format(recordedAt),
-            bloodSugarTime = bloodSugarTime
+            bloodSugarTime = bloodSugarTime,
+            isBloodSugarEditable = isBloodSugarEditable,
+            bloodSugarUnitPreference = bloodSugarUnitPreference
         )
       }
     }.values.flatten()
@@ -140,6 +143,7 @@ class BloodSugarHistoryListItemDataSourceFactory @AssistedInject constructor(
     private val utcClock: UtcClock,
     private val userClock: UserClock,
     private val config: BloodSugarSummaryConfig,
+    private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>,
     @Named("full_date") private val dateFormatter: DateTimeFormatter,
     @Named("time_for_measurement_history") private val timeFormatter: DateTimeFormatter,
     @Assisted private val source: PositionalDataSource<BloodSugarMeasurement>
@@ -167,7 +171,7 @@ class BloodSugarHistoryListItemDataSourceFactory @AssistedInject constructor(
   }
 
   override fun create(): DataSource<Int, BloodSugarHistoryListItem> {
-    dataSource = BloodSugarHistoryListItemDataSource(appDatabase, utcClock, userClock, dateFormatter, timeFormatter, config.bloodSugarEditableDuration, source)
+    dataSource = BloodSugarHistoryListItemDataSource(appDatabase, utcClock, userClock, dateFormatter, timeFormatter, config.bloodSugarEditableDuration, source, bloodSugarUnitPreference.get())
     return dataSource!!
   }
 }

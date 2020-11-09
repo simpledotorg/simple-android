@@ -1,14 +1,20 @@
 package org.simple.clinic.bloodsugar.entry
 
+import com.f2prateek.rx.preferences2.Preference
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
+import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarReading
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
@@ -37,13 +43,20 @@ class BloodSugarEntryUpdateTest {
   private val validBloodSugarDate = LocalDate.of(1994, 2, 14)
 
   private val defaultModel = BloodSugarEntryModel.create(LocalDate.now(testUserClock).year, New(patientUuid, Random))
+  private val bloodSugarUnitPreference = mock<Preference<BloodSugarUnitPreference>>()
   private val updateSpec = UpdateSpec<BloodSugarEntryModel, BloodSugarEntryEvent, BloodSugarEntryEffect>(
       BloodSugarEntryUpdate(
           dateValidator,
           LocalDate.now(testUserClock.zone),
-          UserInputDatePaddingCharacter.ZERO
+          UserInputDatePaddingCharacter.ZERO,
+          bloodSugarUnitPreference
       )
   )
+
+  @Before
+  fun setup() {
+    whenever(bloodSugarUnitPreference.get()) doReturn BloodSugarUnitPreference.Mg
+  }
 
   @Test
   fun `when blood sugar value changes, hide any blood sugar error message`() {
@@ -330,7 +343,7 @@ class BloodSugarEntryUpdateTest {
   @Test
   fun `when blood sugar measurement is fetched, then prefill date and set blood sugar reading`() {
     val bloodSugarMeasurement = TestData.bloodSugarMeasurement()
-    val bloodSugarReading = bloodSugarMeasurement.reading.displayValue
+    val bloodSugarReading = bloodSugarMeasurement.reading.displayValue(bloodSugarUnitPreference.get())
 
     updateSpec
         .given(defaultModel)

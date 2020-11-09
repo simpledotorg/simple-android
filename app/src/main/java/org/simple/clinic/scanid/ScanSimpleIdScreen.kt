@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.widget.editorActionEvents
 import com.jakewharton.rxbinding3.widget.textChangeEvents
@@ -53,9 +54,14 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   @Inject
   lateinit var effectHandlerFactory: ScanSimpleIdEffectHandler.Factory
 
+  @Inject
+  lateinit var activity: AppCompatActivity
+
   private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
 
   private lateinit var qrCodeScannerView: IQrCodeScannerView
+
+  var scanResultsReceiver: ScanResultsReceiver? = null
 
   private val events by unsafeLazy {
     Observable
@@ -96,6 +102,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
       return
     }
     context.injector<Injector>().inject(this)
+
     // It is possible that going back via the app bar from future screens will come back to this
     // screen with the keyboard open. So, we hide it here.
     hideKeyboard()
@@ -160,6 +167,10 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     screenRouter.popAndPush(PatientSearchScreenKey(identifier), RouterDirection.FORWARD)
   }
 
+  override fun sendScannedId(identifier: Identifier) {
+    scanResultsReceiver?.onIdentifierScanned(identifier)
+  }
+
   override fun showShortCodeValidationError(failure: ShortCodeValidationResult) {
     shortCodeErrorText.visibility = View.VISIBLE
     val validationErrorMessage = if (failure == Empty) {
@@ -188,6 +199,10 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
   interface Injector {
     fun inject(target: ScanSimpleIdScreen)
+  }
+
+  interface ScanResultsReceiver {
+    fun onIdentifierScanned(identifier: Identifier)
   }
 }
 

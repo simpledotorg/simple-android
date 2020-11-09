@@ -11,4 +11,5 @@ interface ScanSimpleIdUiActions {
   fun openPatientShortCodeSearch(validShortCode: String)
   fun openPatientSummary(patientUuid: UUID)
   fun openAddIdToPatientScreen(identifier: Identifier)
+  fun sendScannedId(identifier: Identifier)
 }

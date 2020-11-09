@@ -5,12 +5,9 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.button.MaterialButton
 import com.jakewharton.rxbinding2.view.RxView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.xwray.groupie.GroupAdapter
@@ -18,9 +15,8 @@ import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotterknife.bindView
-import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenPatientPrescribedDrugsEntryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.EditMedicinesEffect
 import org.simple.clinic.drugs.EditMedicinesEffectHandler
@@ -53,10 +49,17 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
   @Inject
   lateinit var activity: AppCompatActivity
 
-  private val toolbar by bindView<Toolbar>(R.id.prescribeddrugs_toolbar)
-  private val recyclerView by bindView<RecyclerView>(R.id.prescribeddrugs_recyclerview)
-  private val doneButton by bindView<MaterialButton>(R.id.prescribeddrugs_done)
-  private val refillMedicineButton by bindView<MaterialButton>(R.id.prescribeddrugs_refill_done)
+  private var binding: ScreenPatientPrescribedDrugsEntryBinding? = null
+
+  private val toolbar
+    get() = binding!!.prescribeddrugsToolbar
+  private val recyclerView
+    get() = binding!!.prescribeddrugsRecyclerview
+  private val doneButton
+    get() = binding!!.prescribeddrugsDone
+  private val refillMedicineButton
+    get() = binding!!.prescribeddrugsRefill
+
   private val groupieAdapter = GroupAdapter<ViewHolder>()
 
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
@@ -99,6 +102,8 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
       return
     }
 
+    binding = ScreenPatientPrescribedDrugsEntryBinding.bind(this)
+
     context.injector<Injector>().inject(this)
 
     toolbar.setNavigationOnClickListener { screenRouter.pop() }
@@ -117,6 +122,7 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

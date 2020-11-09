@@ -377,4 +377,18 @@ class BloodSugarEntryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when blood sugar unit preference is loaded, then update the model`() {
+    val bloodSugarUnitPreference = BloodSugarUnitPreference.Mg
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(BloodSugarUnitPreferenceLoaded(bloodSugarUnitPreference))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.bloodSugarUnitChanged(bloodSugarUnitPreference)),
+                hasNoEffects()
+            )
+        )
+  }
 }

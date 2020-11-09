@@ -3,6 +3,7 @@ package org.simple.clinic.bloodsugar.entry
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.bloodsugar.BloodSugarReading
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarSaveState.NOT_SAVING_BLOOD_SUGAR
@@ -18,7 +19,8 @@ data class BloodSugarEntryModel(
     val month: String = "",
     val fourDigitYear: String = "",
     val prefilledDate: LocalDate? = null,
-    val bloodSugarSaveState: BloodSugarSaveState = NOT_SAVING_BLOOD_SUGAR
+    val bloodSugarSaveState: BloodSugarSaveState = NOT_SAVING_BLOOD_SUGAR,
+    val bloodSugarUnitPreference: BloodSugarUnitPreference = BloodSugarUnitPreference.Mg
 ) : Parcelable {
 
   companion object {
@@ -46,4 +48,8 @@ data class BloodSugarEntryModel(
 
   fun bloodSugarStateChanged(bloodSugarSaveState: BloodSugarSaveState): BloodSugarEntryModel =
       copy(bloodSugarSaveState = bloodSugarSaveState)
+
+  fun bloodSugarUnitChanged(bloodSugarUnitPreference: BloodSugarUnitPreference): BloodSugarEntryModel {
+    return copy(bloodSugarUnitPreference = bloodSugarUnitPreference)
+  }
 }

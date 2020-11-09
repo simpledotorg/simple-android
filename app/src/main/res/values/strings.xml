@@ -71,7 +71,7 @@
   <string name="patiententry_kebele">Kebele</string>
   <string name="patiententry_zone">Union</string>
   <string name="patiententry_district">District</string>
-  <string name="patiententry_woreda">Woreda</string>
+  <string name="patiententry_woreda">Zone</string>
   <string name="patiententry_upazila">Upazila</string>
   <string name="patiententry_state">State</string>
   <string name="patiententry_region">Region</string>

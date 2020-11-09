@@ -18,4 +18,6 @@ object GoBackToPatientSummary : EditMedicinesEffect()
 
 data class FetchPrescribedAndProtocolDrugs(val patientUuid: UUID) : EditMedicinesEffect()
 
+data class RefillMedicines(val patientUuid: UUID) : EditMedicinesEffect()
+
 

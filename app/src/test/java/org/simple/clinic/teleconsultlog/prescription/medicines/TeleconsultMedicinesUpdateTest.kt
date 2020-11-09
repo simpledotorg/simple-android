@@ -8,6 +8,10 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.drugs.OpenIntention
+import org.simple.clinic.drugs.OpenIntention.AddNewMedicine
+import org.simple.clinic.drugs.OpenIntention.RefillMedicine
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.time.Duration
 import java.util.UUID
@@ -37,17 +41,6 @@ class TeleconsultMedicinesUpdateTest {
         .then(assertThatNext(
             hasModel(model.medicinesLoaded(medicines)),
             hasNoEffects()
-        ))
-  }
-
-  @Test
-  fun `when edit medicines is clicked, then open edit medicines`() {
-    updateSpec
-        .given(model)
-        .whenEvent(EditMedicinesClicked)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(OpenEditMedicines(patientUuid))
         ))
   }
 
@@ -106,6 +99,36 @@ class TeleconsultMedicinesUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(UpdateDrugFrequency(prescriptionUuid, frequency))
+        ))
+  }
+
+  @Test
+  fun `when edit medicine is clicked and there are medicines, then open edit medicine screen with refill medicines open intention`() {
+    val prescribedDrugRecords = listOf(
+        TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1"),
+        TestData.prescription(uuid = UUID.fromString("537a119e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine2"),
+        TestData.prescription(uuid = UUID.fromString("5ac2a678-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine3"),
+        TestData.prescription(uuid = UUID.fromString("5f9f0fe2-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine4"),
+    )
+
+    updateSpec
+        .given(model.medicinesLoaded(prescribedDrugRecords))
+        .whenEvent(EditMedicinesClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenEditMedicines(patientUuid, RefillMedicine)),
+        ))
+  }
+
+  @Test
+  fun `when edit medicine is clicked and there are no medicines, then open edit medicine screen with add new medicines open intention`() {
+    val prescribedDrugRecords = emptyList<PrescribedDrug>()
+    updateSpec
+        .given(model.medicinesLoaded(prescribedDrugRecords))
+        .whenEvent(EditMedicinesClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenEditMedicines(patientUuid, AddNewMedicine)),
         ))
   }
 }

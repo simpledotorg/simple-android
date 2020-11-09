@@ -24,7 +24,11 @@ object PrescribedDrugsDoneClicked : EditMedicinesEvent() {
   override val analyticsName = "Drugs:Protocol:Save Clicked"
 }
 
+object PresribedDrugsRefillClicked : EditMedicinesEvent()
+
 data class DrugsListFetched(
     val protocolDrugs: List<ProtocolDrugAndDosages>,
     val prescribedDrugs: List<PrescribedDrug>
 ) : EditMedicinesEvent()
+
+object PrescribedMedicinesRefilled : EditMedicinesEvent()

@@ -9,6 +9,7 @@
 
 ### Changes
 - Disabled running the app on rooted devices
+- Change label of district address fields in  patient entry and edit screens to "Zone" for Ethiopia users
 
 ### Internal
 - [In Progress: 4 Nov 2020] Migrate app screens to use ViewBinding

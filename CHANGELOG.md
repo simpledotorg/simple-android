@@ -14,6 +14,7 @@
 - Change label of district address fields in  patient entry and edit screens to "Zone" for Ethiopia users
 - Updated translations: `ti-ET`, `pa-IN`, `ta-IN`
 - Render blood sugar in `mmol/L` in summary view and history.
+- Refill prescriptions in edit medicine screen
 
 ## On Demo
 ### Features

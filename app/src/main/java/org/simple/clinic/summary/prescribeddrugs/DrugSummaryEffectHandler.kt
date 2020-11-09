@@ -25,7 +25,7 @@ class DrugSummaryEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<DrugSummaryEffect, DrugSummaryEvent>()
       .addTransformer(LoadPrescribedDrugs::class.java, populatePrescribedDrugs())
       .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
-      .addConsumer(OpenUpdatePrescribedDrugScreen::class.java, { uiActions.showUpdatePrescribedDrugsScreen(it.patientUuid, it.facility) }, schedulersProvider.ui())
+      .addConsumer(OpenUpdatePrescribedDrugScreen::class.java, { uiActions.showUpdatePrescribedDrugsScreen(it.patientUuid, it.facility, it.openIntention) }, schedulersProvider.ui())
       .build()
 
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, DrugSummaryEvent> {

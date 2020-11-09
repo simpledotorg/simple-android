@@ -5,6 +5,8 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.drugs.OpenIntention.AddNewMedicine
+import org.simple.clinic.drugs.OpenIntention.RefillMedicine
 import org.simple.clinic.drugs.selection.EditMedicinesUi
 import org.simple.clinic.drugs.selection.ProtocolDrugListItem
 import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
@@ -17,11 +19,11 @@ class EditMedicinesUiRendererTest {
   private val uiRenderer = EditMedicinesUiRenderer(ui)
 
   private val patientUuid = UUID.fromString("00f6ad74-703a-4176-acaa-fc6b57b4fa3c")
-  private val defaultModel = EditMedicinesModel.create(patientUuid)
 
   @Test
   fun `when prescribed drug is no longer present in protocol, it should be rendered as custom drug`() {
     // given
+    val defaultModel = EditMedicinesModel.create(patientUuid, AddNewMedicine)
     val amlodipine5mg = TestData.protocolDrug(name = "Amlodipine", dosage = "5mg")
     val amlodipine10mg = TestData.protocolDrug(name = "Amlodipine", dosage = "10mg")
 
@@ -78,6 +80,45 @@ class EditMedicinesUiRendererTest {
         CustomPrescribedDrugListItem(barPrescription, true))
 
     verify(ui).populateDrugsList(drugsList)
+    verify(ui).showDoneButton()
+    verify(ui).hideRefillMedicineButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when open intention is to add new medicine, then show done button and hide refill medicine button`() {
+    // given
+    val defaultModel = EditMedicinesModel.create(patientUuid, AddNewMedicine)
+    val prescribedDrugRecords = emptyList<PrescribedDrug>()
+    val model = defaultModel.prescribedDrugsFetched(prescribedDrugRecords)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showDoneButton()
+    verify(ui).hideRefillMedicineButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when open intention is to refill medicine, then show refill medicine button `() {
+    // given
+    val defaultModel = EditMedicinesModel.create(patientUuid, RefillMedicine)
+    val prescribedDrugRecords = listOf(
+        TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1"),
+        TestData.prescription(uuid = UUID.fromString("537a119e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine2"),
+        TestData.prescription(uuid = UUID.fromString("5ac2a678-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine3"),
+        TestData.prescription(uuid = UUID.fromString("5f9f0fe2-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine4"),
+    )
+    val model = defaultModel.prescribedDrugsFetched(prescribedDrugRecords)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showRefillMedicineButton()
+    verify(ui).hideDoneButton()
     verifyNoMoreInteractions(ui)
   }
 }

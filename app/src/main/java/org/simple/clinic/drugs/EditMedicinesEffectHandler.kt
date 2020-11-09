@@ -9,8 +9,12 @@ import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.drugs.selection.EditMedicinesUiActions
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.protocol.ProtocolRepository
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 import java.util.UUID
 
 class EditMedicinesEffectHandler @AssistedInject constructor(
@@ -18,8 +22,11 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val protocolRepository: ProtocolRepository,
     private val prescriptionRepository: PrescriptionRepository,
-    private val facility: Lazy<Facility>
-) {
+    private val facility: Lazy<Facility>,
+    private val utcClock: UtcClock,
+    private val uuidGenerator: UuidGenerator,
+    private val appointmentsRepository: AppointmentRepository
+    ) {
 
   @AssistedInject.Factory
   interface Factory {
@@ -34,7 +41,41 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
         .addConsumer(OpenDosagePickerSheet::class.java, { uiActions.showDosageSelectionSheet(it.drugName, it.patientUuid, it.prescribedDrugUuid) }, schedulersProvider.ui())
         .addConsumer(ShowUpdateCustomPrescriptionSheet::class.java, { uiActions.showUpdateCustomPrescriptionSheet(it.prescribedDrug) }, schedulersProvider.ui())
         .addAction(GoBackToPatientSummary::class.java, uiActions::goBackToPatientSummary, schedulersProvider.ui())
+        .addTransformer(RefillMedicines::class.java, refillMedicines())
         .build()
+  }
+
+  private fun refillMedicines(): ObservableTransformer<RefillMedicines, EditMedicinesEvent>? {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { effect -> prescriptionRepository.newestPrescriptionsForPatientImmediate(effect.patientUuid) to effect }
+          .doOnNext { (prescriptions, _) -> clonePrescriptions(prescriptions) }
+          .doOnNext { (_, effect) -> updateAppointmentsAsVisited(effect.patientUuid) }
+          .map { PrescribedMedicinesRefilled }
+    }
+  }
+
+  private fun clonePrescriptions(
+      prescriptions: List<PrescribedDrug>,
+  ) {
+    if (prescriptions.isNotEmpty()) {
+      prescriptionRepository.softDeletePrescriptions(prescriptions)
+
+      val clonedPrescriptions = prescriptions.map { prescribedDrug ->
+        prescribedDrug.refill(
+            uuid = uuidGenerator.v4(),
+            facilityUuid = facility.get().uuid,
+            utcClock = utcClock
+        )
+      }
+
+      prescriptionRepository.saveImmediate(clonedPrescriptions)
+    }
+  }
+
+  private fun updateAppointmentsAsVisited(patientUuid: PatientUuid) {
+    appointmentsRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)
   }
 
   private fun fetchDrugsList(io: Scheduler): ObservableTransformer<FetchPrescribedAndProtocolDrugs, EditMedicinesEvent> {

@@ -1,24 +1,20 @@
 package org.simple.clinic.widgets.qrcodescanner
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_qrcode_scanner.view.*
 import org.simple.clinic.R
-import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.di.injector
-import org.simple.clinic.widgets.ScreenDestroyed
 import java.util.concurrent.Executors
 import javax.inject.Inject
 
@@ -30,11 +26,10 @@ constructor(
 ) : FrameLayout(context, attrs, defStyleAttr), IQrCodeScannerView {
 
   @Inject
-  lateinit var lifecycle: Observable<ActivityLifecycle>
+  lateinit var activity: AppCompatActivity
 
   private val scans = PublishSubject.create<String>()
 
-  private val qrCodeScannerLifecycle = QrCodeScannerLifecycle()
   private val cameraExecutor = Executors.newSingleThreadExecutor()
 
   private val cameraProviderFuture = ProcessCameraProvider.getInstance(context.applicationContext)
@@ -53,14 +48,10 @@ constructor(
 
     context.injector<Injector>().inject(this)
 
-    qrCodeScannerLifecycle.bindCamera()
-
     cameraProviderFuture.addListener(Runnable {
       val cameraProvider = cameraProviderFuture.get()
       startCamera(cameraProvider)
     }, ContextCompat.getMainExecutor(context))
-
-    bindCameraToActivityLifecycle()
   }
 
   private fun startCamera(cameraProvider: ProcessCameraProvider) {
@@ -79,54 +70,27 @@ constructor(
 
     cameraProvider.unbindAll()
 
-    cameraProvider.bindToLifecycle(qrCodeScannerLifecycle, cameraSelector, preview, analyzer)
+    cameraProvider.bindToLifecycle(activity, cameraSelector, preview, analyzer)
     preview.setSurfaceProvider(previewView.surfaceProvider)
   }
 
   override fun onDetachedFromWindow() {
     cameraExecutor.shutdown()
-    qrCodeScannerLifecycle.destroyCamera()
     super.onDetachedFromWindow()
   }
 
   override fun hideQrCodeScanner() {
     previewView.visibility = View.INVISIBLE
     viewFinderImageView.visibility = View.INVISIBLE
-    qrCodeScannerLifecycle.unBindCamera()
   }
 
   override fun showQrCodeScanner() {
     previewView.visibility = View.VISIBLE
     viewFinderImageView.visibility = View.VISIBLE
-    qrCodeScannerLifecycle.bindCamera()
   }
 
   override fun scans(): Observable<String> {
     return scans
-  }
-
-  private fun bindCameraToActivityLifecycle() {
-    val screenDestroys = detaches()
-        .map { ScreenDestroyed() }
-
-    startScanningWhenActivityIsResumed(screenDestroys)
-    stopScanningWhenActivityIsPaused(screenDestroys)
-  }
-
-  @SuppressLint("CheckResult")
-  private fun startScanningWhenActivityIsResumed(screenDestroys: Observable<ScreenDestroyed>) {
-    lifecycle
-        .ofType<ActivityLifecycle.Resumed>()
-        .takeUntil(screenDestroys)
-        .subscribe { qrCodeScannerLifecycle.bindCamera() }
-  }
-
-  @SuppressLint("CheckResult")
-  private fun stopScanningWhenActivityIsPaused(screenDestroys: Observable<ScreenDestroyed>) {
-    lifecycle
-        .ofType<ActivityLifecycle.Paused>()
-        .takeUntil(screenDestroys)
-        .subscribe { qrCodeScannerLifecycle.unBindCamera() }
   }
 
   interface Injector {

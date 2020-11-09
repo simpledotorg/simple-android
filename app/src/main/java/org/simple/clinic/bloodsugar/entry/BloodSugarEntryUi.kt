@@ -26,4 +26,6 @@ interface BloodSugarEntryUi {
   fun showEditTitle(measurementType: BloodSugarMeasurementType)
   fun showProgress()
   fun hideProgress()
+  fun setBloodSugarUnitPreferenceLabelToMmol()
+  fun setBloodSugarUnitPreferenceLabelToMg()
 }

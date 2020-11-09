@@ -157,7 +157,6 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
         }
         Random, PostPrandial, Fasting -> {
           bloodSugarReadingEditText.inputType = EditorInfo.TYPE_CLASS_NUMBER
-          bloodSugarReadingUnitLabel.text = getString(R.string.bloodsugarentry_mg_dl)
         }
       }
     }
@@ -374,6 +373,14 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     progressLoader.visibleOrGone(isVisible = false)
     bloodSugarReadingLayout.visibleOrGone(isVisible = true)
     bloodSugarDateButton.visibleOrGone(isVisible = true)
+  }
+
+  override fun setBloodSugarUnitPreferenceLabelToMmol() {
+    bloodSugarReadingUnitButton.text = getString(R.string.bloodsugarentry_mmol_l)
+  }
+
+  override fun setBloodSugarUnitPreferenceLabelToMg() {
+    bloodSugarReadingUnitButton.text = getString(R.string.bloodsugarentry_mg_dl)
   }
 
   override fun showRemoveButton() {

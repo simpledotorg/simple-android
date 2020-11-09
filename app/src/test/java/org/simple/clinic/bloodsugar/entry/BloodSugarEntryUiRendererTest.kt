@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.entry.BloodSugarSaveState.SAVING_BLOOD_SUGAR
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
@@ -34,6 +35,7 @@ class BloodSugarEntryUiRendererTest {
     verify(ui).hideRemoveButton()
     verify(ui).showEntryTitle(Random)
     verify(ui).hideProgress()
+    verify(ui).setBloodSugarUnitPreferenceLabelToMg()
     verifyNoMoreInteractions(ui)
   }
 
@@ -49,6 +51,7 @@ class BloodSugarEntryUiRendererTest {
     verify(ui).showRemoveButton()
     verify(ui).showEditTitle(Random)
     verify(ui).hideProgress()
+    verify(ui).setBloodSugarUnitPreferenceLabelToMg()
     verifyNoMoreInteractions(ui)
   }
 
@@ -64,6 +67,23 @@ class BloodSugarEntryUiRendererTest {
     verify(ui).hideRemoveButton()
     verify(ui).showEntryTitle(Random)
     verify(ui).showProgress()
+    verify(ui).setBloodSugarUnitPreferenceLabelToMg()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the blood sugar preference is changed, then update the UI`() {
+    // given
+    val newBloodSugarEntryModel = bloodSugarEntryModel.bloodSugarUnitChanged(BloodSugarUnitPreference.Mmol)
+
+    // when
+    bloodSugarEntryUiRenderer.render(newBloodSugarEntryModel)
+
+    // then
+    verify(ui).hideRemoveButton()
+    verify(ui).showEntryTitle(Random)
+    verify(ui).hideProgress()
+    verify(ui).setBloodSugarUnitPreferenceLabelToMmol()
     verifyNoMoreInteractions(ui)
   }
 }

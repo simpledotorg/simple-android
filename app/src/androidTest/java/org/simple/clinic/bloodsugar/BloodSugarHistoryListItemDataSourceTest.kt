@@ -51,6 +51,7 @@ class BloodSugarHistoryListItemDataSourceTest {
   val ruleChain: RuleChain = Rules.global()
 
   private val canEditBloodSugarFor = Duration.ofMinutes(10)
+  private val bloodSugarUnitPreference = BloodSugarUnitPreference.Mg
 
   @Before
   fun setup() {
@@ -96,7 +97,8 @@ class BloodSugarHistoryListItemDataSourceTest {
         dateFormatter,
         timeFormatter,
         canEditBloodSugarFor,
-        appDatabase.bloodSugarDao().allBloodSugarsDataSource(patientUuid).create() as PositionalDataSource<BloodSugarMeasurement>
+        appDatabase.bloodSugarDao().allBloodSugarsDataSource(patientUuid).create() as PositionalDataSource<BloodSugarMeasurement>,
+        bloodSugarUnitPreference
     )
 
     appDatabase.bloodSugarDao().save(listOf(bloodSugarNow, bloodSugarInPast))
@@ -105,8 +107,8 @@ class BloodSugarHistoryListItemDataSourceTest {
         assertThat(data)
             .containsExactly(
                 NewBloodSugarButton,
-                BloodSugarHistoryItem(measurement = bloodSugarNow, isBloodSugarEditable = true, bloodSugarDate = "1-Jan-2020", bloodSugarTime = null),
-                BloodSugarHistoryItem(measurement = bloodSugarInPast, isBloodSugarEditable = false, bloodSugarDate = "31-Dec-2019", bloodSugarTime = null)
+                BloodSugarHistoryItem(measurement = bloodSugarNow, bloodSugarDate = "1-Jan-2020", bloodSugarTime = null, isBloodSugarEditable = true, bloodSugarUnitPreference = bloodSugarUnitPreference),
+                BloodSugarHistoryItem(measurement = bloodSugarInPast, bloodSugarDate = "31-Dec-2019", bloodSugarTime = null, isBloodSugarEditable = false, bloodSugarUnitPreference = bloodSugarUnitPreference)
             )
       }
 
@@ -160,7 +162,8 @@ class BloodSugarHistoryListItemDataSourceTest {
         dateFormatter,
         timeFormatter,
         canEditBloodSugarFor,
-        appDatabase.bloodSugarDao().allBloodSugarsDataSource(patientUuid).create() as PositionalDataSource<BloodSugarMeasurement>
+        appDatabase.bloodSugarDao().allBloodSugarsDataSource(patientUuid).create() as PositionalDataSource<BloodSugarMeasurement>,
+        bloodSugarUnitPreference
     )
 
     appDatabase.bloodSugarDao().save(listOf(bloodSugarNow, bloodSugar15MinutesInPast, bloodSugar40MinutesInPast, bloodSugar1DayInPast))
@@ -168,9 +171,9 @@ class BloodSugarHistoryListItemDataSourceTest {
       override fun onResult(data: MutableList<BloodSugarHistoryListItem>) {
         assertThat(data)
             .containsExactly(
-                BloodSugarHistoryItem(measurement = bloodSugarNow, isBloodSugarEditable = true, bloodSugarDate = "1-Jan-2020", bloodSugarTime = null),
-                BloodSugarHistoryItem(measurement = bloodSugar15MinutesInPast, isBloodSugarEditable = false, bloodSugarDate = "31-Dec-2019", bloodSugarTime = null),
-                BloodSugarHistoryItem(measurement = bloodSugar40MinutesInPast, isBloodSugarEditable = false, bloodSugarDate = "30-Dec-2019", bloodSugarTime = null)
+                BloodSugarHistoryItem(measurement = bloodSugarNow, bloodSugarDate = "1-Jan-2020", bloodSugarTime = null, isBloodSugarEditable = true, bloodSugarUnitPreference = bloodSugarUnitPreference),
+                BloodSugarHistoryItem(measurement = bloodSugar15MinutesInPast, bloodSugarDate = "31-Dec-2019", bloodSugarTime = null, isBloodSugarEditable = false, bloodSugarUnitPreference = bloodSugarUnitPreference),
+                BloodSugarHistoryItem(measurement = bloodSugar40MinutesInPast, bloodSugarDate = "30-Dec-2019", bloodSugarTime = null, isBloodSugarEditable = false, bloodSugarUnitPreference = bloodSugarUnitPreference)
             )
       }
     })
@@ -221,7 +224,8 @@ class BloodSugarHistoryListItemDataSourceTest {
         dateFormatter,
         timeFormatter,
         canEditBloodSugarFor,
-        appDatabase.bloodSugarDao().allBloodSugarsDataSource(patientUuid).create() as PositionalDataSource<BloodSugarMeasurement>
+        appDatabase.bloodSugarDao().allBloodSugarsDataSource(patientUuid).create() as PositionalDataSource<BloodSugarMeasurement>,
+        bloodSugarUnitPreference
     )
 
     appDatabase.bloodSugarDao().save(listOf(bloodSugarNow, bloodSugar15MinutesInPast, bloodSugar40MinutesInPast, bloodSugar1DayInPast))
@@ -230,9 +234,9 @@ class BloodSugarHistoryListItemDataSourceTest {
         assertThat(data)
             .containsExactly(
                 NewBloodSugarButton,
-                BloodSugarHistoryItem(measurement = bloodSugarNow, isBloodSugarEditable = true, bloodSugarDate = "1-Jan-2020", bloodSugarTime = null),
-                BloodSugarHistoryItem(measurement = bloodSugar15MinutesInPast, isBloodSugarEditable = false, bloodSugarDate = "31-Dec-2019", bloodSugarTime = null),
-                BloodSugarHistoryItem(measurement = bloodSugar40MinutesInPast, isBloodSugarEditable = false, bloodSugarDate = "30-Dec-2019", bloodSugarTime = null)
+                BloodSugarHistoryItem(measurement = bloodSugarNow, bloodSugarDate = "1-Jan-2020", bloodSugarTime = null, isBloodSugarEditable = true, bloodSugarUnitPreference = bloodSugarUnitPreference),
+                BloodSugarHistoryItem(measurement = bloodSugar15MinutesInPast, bloodSugarDate = "31-Dec-2019", bloodSugarTime = null, isBloodSugarEditable = false, bloodSugarUnitPreference = bloodSugarUnitPreference),
+                BloodSugarHistoryItem(measurement = bloodSugar40MinutesInPast, bloodSugarDate = "30-Dec-2019", bloodSugarTime = null, isBloodSugarEditable = false, bloodSugarUnitPreference = bloodSugarUnitPreference)
             )
       }
     })

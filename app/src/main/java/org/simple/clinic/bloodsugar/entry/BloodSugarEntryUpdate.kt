@@ -1,9 +1,11 @@
 package org.simple.clinic.bloodsugar.entry
 
+import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarSaveState.NOT_SAVING_BLOOD_SUGAR
@@ -19,7 +21,8 @@ import java.time.LocalDate
 class BloodSugarEntryUpdate @AssistedInject constructor(
     private val dateValidator: UserInputDateValidator,
     @Assisted private val dateInUserTimeZone: LocalDate,
-    private val inputDatePaddingCharacter: UserInputDatePaddingCharacter
+    private val inputDatePaddingCharacter: UserInputDatePaddingCharacter,
+    private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>
 ) : Update<BloodSugarEntryModel, BloodSugarEntryEvent, BloodSugarEntryEffect> {
   @AssistedInject.Factory
   interface Factory {
@@ -53,7 +56,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
   ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
     val bloodSugarMeasurement = event.bloodSugarMeasurement
     val recordedAt = bloodSugarMeasurement.recordedAt
-    val bloodSugarReading = bloodSugarMeasurement.reading.displayValue
+    val bloodSugarReading = bloodSugarMeasurement.reading.displayValue(bloodSugarUnitPreference.get())
     val modelWithBloodSugarChanged = model.bloodSugarChanged(bloodSugarReading)
 
     return next(

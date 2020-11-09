@@ -1,8 +1,10 @@
 package org.simple.clinic.summary.teleconsultation.messagebuilder
 
 import android.content.res.Resources
+import com.f2prateek.rx.preferences2.Preference
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.summary.PatientTeleconsultationInfo
@@ -15,7 +17,8 @@ import javax.inject.Named
 class LongTeleconsultMessageBuilder @Inject constructor(
     private val resources: Resources,
     private val userClock: UserClock,
-    @Named("full_date") private val dateFormatter: DateTimeFormatter
+    @Named("full_date") private val dateFormatter: DateTimeFormatter,
+    private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>
 ) : TeleconsultationMessageBuilder {
 
   companion object {
@@ -179,9 +182,10 @@ class LongTeleconsultMessageBuilder @Inject constructor(
   private fun bloodSugarToDisplayString(measurement: BloodSugarMeasurement): String {
     val bloodSugarRecordedAtDate = dateFormatter.format(measurement.recordedAt.toLocalDateAtZone(userClock.zone))
     val bloodSugarType = resources.getString(measurement.reading.displayType)
-    val bloodSugarUnit = resources.getString(measurement.reading.displayUnit)
+    val bloodSugarUnit = resources.getString(measurement.reading.displayUnit(bloodSugarUnitPreference.get()))
+    val displayValue = measurement.reading.displayValue(bloodSugarUnitPreference.get())
 
-    return "$bloodSugarType ${measurement.reading.displayValue}${measurement.reading.displayUnitSeparator}${bloodSugarUnit} ($bloodSugarRecordedAtDate)"
+    return "$bloodSugarType ${displayValue}${measurement.reading.displayUnitSeparator}${bloodSugarUnit} ($bloodSugarRecordedAtDate)"
   }
 
   private fun sectionBreaker(message: StringBuilder) {

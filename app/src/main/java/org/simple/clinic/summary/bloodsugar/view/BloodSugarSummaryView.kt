@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import com.f2prateek.rx.preferences2.Preference
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
@@ -20,6 +21,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.Unknown
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenKey
@@ -110,6 +112,9 @@ class BloodSugarSummaryView(
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>
 
   private val uiRenderer: BloodSugarSummaryViewUiRenderer by unsafeLazy {
     BloodSugarSummaryViewUiRenderer(this, bloodSugarSummaryConfig)
@@ -301,8 +306,8 @@ class BloodSugarSummaryView(
             bloodSugarDate = dateFormatter.format(recordedAt),
             bloodSugarTime = bloodSugarTime,
             isBloodSugarEditable = isBloodSugarEditable,
-            editMeasurementClicked = { clickedMeasurement -> viewEvents.onNext(BloodSugarClicked(clickedMeasurement)) }
-        )
+            bloodSugarUnitPreference = bloodSugarUnitPreference.get(),
+        ) { clickedMeasurement -> viewEvents.onNext(BloodSugarClicked(clickedMeasurement)) }
 
         bloodSugarItemView
       }

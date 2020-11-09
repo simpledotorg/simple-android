@@ -45,7 +45,7 @@
       tools:visibility="visible" />
 
     <com.google.android.material.button.MaterialButton
-      android:id="@+id/prescribeddrugs_refill_done"
+      android:id="@+id/prescribeddrugs_refill"
       style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

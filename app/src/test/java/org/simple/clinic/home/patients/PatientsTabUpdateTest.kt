@@ -9,6 +9,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.Optional
 import java.util.UUID
 
 class PatientsTabUpdateTest {
@@ -54,6 +55,29 @@ class PatientsTabUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SearchPatientByIdentifier(identifier))
+        ))
+  }
+
+  @Test
+  fun `when the scanned identifier has a corresponding patient, the patient summary screen must be opened`() {
+    val model = defaultModel
+        .userLoaded(user)
+        .numberOfPatientsRegisteredUpdated(0)
+
+    val identifier = TestData.identifier("88d12415-b10d-4ebb-bf48-482ece022139", BpPassport)
+    val patient = TestData.patient(uuid = UUID.fromString("614a3a62-92be-4551-92d0-beca649cfd7c"))
+
+    val event = PatientSearchByIdentifierCompleted(
+        foundPatient = Optional.of(patient),
+        searchedIdentifier = identifier
+    )
+
+    spec
+        .given(model)
+        .whenEvent(event)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenPatientSummary(patient.uuid))
         ))
   }
 }

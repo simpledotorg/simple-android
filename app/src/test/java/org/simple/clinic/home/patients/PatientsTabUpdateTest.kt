@@ -6,6 +6,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import java.util.UUID
@@ -36,6 +37,23 @@ class PatientsTabUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenShortCodeSearchScreen(shortCode))
+        ))
+  }
+
+  @Test
+  fun `when the patient identifier is scanned, a patient with the given identifier must be searched for`() {
+    val model = defaultModel
+        .userLoaded(user)
+        .numberOfPatientsRegisteredUpdated(0)
+
+    val identifier = TestData.identifier("88d12415-b10d-4ebb-bf48-482ece022139", BpPassport)
+
+    spec
+        .given(model)
+        .whenEvent(BusinessIdScanned.ByIdentifier(identifier))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SearchPatientByIdentifier(identifier))
         ))
   }
 }

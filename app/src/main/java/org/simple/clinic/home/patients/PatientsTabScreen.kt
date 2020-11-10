@@ -33,11 +33,16 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
+import org.simple.clinic.summary.OpenIntention
+import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
+import java.time.Instant
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -67,6 +72,9 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   @Inject
   lateinit var effectHandlerFactory: PatientsEffectHandler.Factory
+
+  @Inject
+  lateinit var utcClock: UtcClock
 
   @IdRes
   private var currentStatusViewId: Int = R.id.userStatusHiddenView
@@ -222,6 +230,10 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   override fun openShortCodeSearchScreen(shortCode: String) {
     screenRouter.push(ShortCodeSearchResultScreenKey(shortCode))
+  }
+
+  override fun openPatientSummary(patientId: UUID) {
+    screenRouter.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
   }
 
   private fun showHomeScreenBackground(@IdRes viewId: Int) {

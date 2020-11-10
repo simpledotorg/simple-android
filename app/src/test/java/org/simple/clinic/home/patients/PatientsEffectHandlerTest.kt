@@ -75,4 +75,18 @@ class PatientsEffectHandlerTest {
     testCase.assertOutgoingEvents(expected)
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when the open patient summary effect is received, the patient summary screen must be opened`() {
+    // given
+    val patientId = UUID.fromString("c9e15c6d-a59a-4e08-a3bc-0c1e85fac92f")
+
+    // when
+    testCase.dispatch(OpenPatientSummary(patientId))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).openPatientSummary(patientId)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

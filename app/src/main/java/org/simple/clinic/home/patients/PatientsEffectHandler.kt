@@ -63,6 +63,7 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addAction(ShowAppUpdateAvailable::class.java, uiActions::showAppUpdateDialog, schedulers.ui())
         .addConsumer(OpenShortCodeSearchScreen::class.java, { uiActions.openShortCodeSearchScreen(it.shortCode) }, schedulers.ui())
         .addTransformer(SearchPatientByIdentifier::class.java, searchForPatientByIdentifier())
+        .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientId)}, schedulers.ui())
         .build()
   }
 

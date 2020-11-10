@@ -1,5 +1,7 @@
 package org.simple.clinic.home.patients
 
+import java.util.UUID
+
 interface PatientsTabUiActions {
   fun openEnterCodeManuallyScreen()
   fun openPatientSearchScreen()
@@ -11,4 +13,5 @@ interface PatientsTabUiActions {
   fun openYouTubeLinkForSimpleVideo()
   fun showAppUpdateDialog()
   fun openShortCodeSearchScreen(shortCode: String)
+  fun openPatientSummary(patientId: UUID)
 }

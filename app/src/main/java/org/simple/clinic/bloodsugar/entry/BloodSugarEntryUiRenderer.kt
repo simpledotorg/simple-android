@@ -1,6 +1,10 @@
 package org.simple.clinic.bloodsugar.entry
 
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
+import org.simple.clinic.bloodsugar.Fasting
+import org.simple.clinic.bloodsugar.HbA1c
+import org.simple.clinic.bloodsugar.PostPrandial
+import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.mobius.ViewRenderer
@@ -15,6 +19,15 @@ class BloodSugarEntryUiRenderer(
     openAsValueChangedCallback.pass(model.openAs) { setupUi(it) }
     manageProgress(model)
     manageBloodSugarUnitPreferenceButtonText(model)
+    manageBloodSugarUnitPreferenceButtonVisibility(model)
+  }
+
+  private fun manageBloodSugarUnitPreferenceButtonVisibility(model: BloodSugarEntryModel) {
+    when (model.openAs.measurementType) {
+      Random, PostPrandial, Fasting -> ui.showBloodSugarUnitPreferenceButton()
+      HbA1c -> ui.hideBloodSugarUnitPreferenceButton()
+      else -> ui.showBloodSugarUnitPreferenceButton()
+    }
   }
 
   private fun manageBloodSugarUnitPreferenceButtonText(model: BloodSugarEntryModel) {

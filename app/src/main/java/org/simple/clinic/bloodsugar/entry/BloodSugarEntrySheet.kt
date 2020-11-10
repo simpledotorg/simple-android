@@ -383,6 +383,14 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     bloodSugarReadingUnitButton.text = getString(R.string.bloodsugarentry_mg_dl)
   }
 
+  override fun showBloodSugarUnitPreferenceButton() {
+    bloodSugarReadingUnitButton.visibility = View.VISIBLE
+  }
+
+  override fun hideBloodSugarUnitPreferenceButton() {
+    bloodSugarReadingUnitButton.visibility = View.GONE
+  }
+
   override fun showRemoveButton() {
     removeBloodSugarButton.visibility = View.VISIBLE
   }

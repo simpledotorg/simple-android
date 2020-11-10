@@ -28,4 +28,6 @@ interface BloodSugarEntryUi {
   fun hideProgress()
   fun setBloodSugarUnitPreferenceLabelToMmol()
   fun setBloodSugarUnitPreferenceLabelToMg()
+  fun showBloodSugarUnitPreferenceButton()
+  fun hideBloodSugarUnitPreferenceButton()
 }

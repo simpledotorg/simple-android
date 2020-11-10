@@ -23,6 +23,8 @@ class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTab
       SimpleVideoClicked -> dispatch(OpenTrainingVideo)
       is RequiredInfoForShowingAppUpdateLoaded -> showAppUpdateAvailableMessage(event)
       is PatientSearchByIdentifierCompleted -> noChange()
+      is BusinessIdScanned.ByIdentifier -> noChange()
+      is BusinessIdScanned.ByShortCode -> dispatch(OpenShortCodeSearchScreen(event.shortCode))
     }
   }
 

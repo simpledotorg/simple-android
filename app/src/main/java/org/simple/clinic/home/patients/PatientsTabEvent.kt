@@ -4,6 +4,9 @@ import android.Manifest
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.util.RuntimePermissionResult
+import org.simple.clinic.scanid.EnteredShortCode
+import org.simple.clinic.scanid.ScanResult
+import org.simple.clinic.scanid.ScannedId
 import org.simple.clinic.user.User
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -61,3 +64,19 @@ data class PatientSearchByIdentifierCompleted(
     val foundPatient: Optional<Patient>,
     val searchedIdentifier: Identifier
 ): PatientsTabEvent()
+
+sealed class BusinessIdScanned: PatientsTabEvent() {
+
+  companion object {
+    fun fromScanResult(scanResult: ScanResult): BusinessIdScanned {
+      return when(scanResult) {
+        is ScannedId -> ByIdentifier(scanResult.identifier)
+        is EnteredShortCode -> ByShortCode(scanResult.shortCode)
+      }
+    }
+  }
+
+  data class ByIdentifier(val identifier: Identifier): BusinessIdScanned()
+
+  data class ByShortCode(val shortCode: String): BusinessIdScanned()
+}

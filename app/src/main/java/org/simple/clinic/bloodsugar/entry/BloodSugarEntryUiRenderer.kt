@@ -29,7 +29,10 @@ class BloodSugarEntryUiRenderer(
       Random, PostPrandial, Fasting -> {
         setInputTypeUnitPreferenceSelectionBased(model)
       }
-      HbA1c -> ui.decimalOrNumericBloodSugarInputType()
+      HbA1c -> {
+        ui.decimalOrNumericBloodSugarInputType()
+        ui.setLabelForHbA1c()
+      }
       is Unknown -> ui.numericBloodSugarInputType()
     }
   }

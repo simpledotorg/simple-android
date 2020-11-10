@@ -145,22 +145,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-
     setContentView(R.layout.sheet_blood_sugar_entry)
-
-    openAs.let { openAs ->
-
-      when (openAs.measurementType) {
-        HbA1c -> {
-          bloodSugarReadingEditText.inputType = EditorInfo.TYPE_CLASS_NUMBER or EditorInfo.TYPE_NUMBER_FLAG_DECIMAL
-          bloodSugarReadingUnitLabel.text = getString(R.string.bloodsugarentry_percentage)
-        }
-        Random, PostPrandial, Fasting -> {
-          bloodSugarReadingEditText.inputType = EditorInfo.TYPE_CLASS_NUMBER
-        }
-      }
-    }
-
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 

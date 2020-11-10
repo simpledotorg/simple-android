@@ -26,8 +26,6 @@ class BloodSugarEntryUiRendererTest {
 
   @Test
   fun `it should render the entry title when creating a new blood sugar`() {
-    // given
-
     // when
     bloodSugarEntryUiRenderer.render(bloodSugarEntryModel)
 

@@ -26,7 +26,7 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
     private val utcClock: UtcClock,
     private val uuidGenerator: UuidGenerator,
     private val appointmentsRepository: AppointmentRepository
-    ) {
+) {
 
   @AssistedInject.Factory
   interface Factory {
@@ -45,7 +45,7 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
         .build()
   }
 
-  private fun refillMedicines(): ObservableTransformer<RefillMedicines, EditMedicinesEvent>? {
+  private fun refillMedicines(): ObservableTransformer<RefillMedicines, EditMedicinesEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())

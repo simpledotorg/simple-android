@@ -20,6 +20,16 @@ data class BloodSugarReading(val value: String, val type: BloodSugarMeasurementT
     fun fromMg(value: String, measurementType: BloodSugarMeasurementType): BloodSugarReading {
       return BloodSugarReading(value, measurementType)
     }
+
+    fun fromMmol(value: String, measurementType: BloodSugarMeasurementType): BloodSugarReading {
+      val mgValue = if (value.isNotBlank()) {
+        value.toFloat() * 18.0182
+      } else {
+        value
+      }
+
+      return BloodSugarReading(mgValue.toString(), measurementType)
+    }
   }
 
   val isHigh: Boolean

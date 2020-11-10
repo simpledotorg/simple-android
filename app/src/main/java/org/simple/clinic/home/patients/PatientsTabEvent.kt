@@ -1,6 +1,8 @@
 package org.simple.clinic.home.patients
 
 import android.Manifest
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.user.User
 import org.simple.clinic.util.None
@@ -55,3 +57,7 @@ data class RequiredInfoForShowingAppUpdateLoaded(
     val currentDate: LocalDate
 ): PatientsTabEvent()
 
+data class PatientSearchByIdentifierCompleted(
+    val foundPatient: Optional<Patient>,
+    val searchedIdentifier: Identifier
+): PatientsTabEvent()

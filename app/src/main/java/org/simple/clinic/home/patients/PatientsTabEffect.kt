@@ -1,5 +1,7 @@
 package org.simple.clinic.home.patients
 
+import org.simple.clinic.patient.businessid.Identifier
+
 sealed class PatientsTabEffect
 
 object OpenEnterOtpScreen : PatientsTabEffect()
@@ -35,3 +37,5 @@ object TouchAppUpdateShownAtTime: PatientsTabEffect()
 object ShowAppUpdateAvailable: PatientsTabEffect()
 
 data class OpenShortCodeSearchScreen(val shortCode: String): PatientsTabEffect()
+
+data class SearchPatientByIdentifier(val identifier: Identifier): PatientsTabEffect()

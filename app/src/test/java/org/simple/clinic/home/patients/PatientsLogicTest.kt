@@ -84,14 +84,15 @@ class PatientsLogicTest {
         schedulers = TrampolineSchedulersProvider(),
         refreshCurrentUser = refreshCurrentUser,
         userSession = userSession,
-        uiActions = uiActions,
         utcClock = utcClock,
+        userClock = userClock,
+        checkAppUpdate = checkAppUpdate,
+        patientRepository = mock(),
         approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
         numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
-        checkAppUpdate = checkAppUpdate,
-        userClock = userClock,
-        appUpdateDialogShownAtPref = appUpdateDialogShownPref
+        appUpdateDialogShownAtPref = appUpdateDialogShownPref,
+        uiActions = uiActions
     )
 
     testFixture = MobiusTestFixture(

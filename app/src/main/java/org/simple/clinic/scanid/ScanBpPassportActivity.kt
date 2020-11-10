@@ -22,6 +22,10 @@ class ScanBpPassportActivity: AppCompatActivity(), ScanSimpleIdScreen.ScanResult
     fun readScannedId(data: Intent): ScanResult {
       return data.getParcelableExtra(SCAN_RESULT)!!
     }
+
+    fun intent(context: Context): Intent {
+      return Intent(context, ScanBpPassportActivity::class.java)
+    }
   }
 
   @Inject

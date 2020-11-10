@@ -21,15 +21,15 @@ class ScanSimpleIdEffectHandlerTest {
     ).build())
 
     // when
-    val identifier = TestData.identifier(
+    val scannedId = ScannedId(TestData.identifier(
         value = "ec08a1c4-4e57-4882-8292-d33205e1f098",
         type = BpPassport
-    )
-    testCase.dispatch(SendScannedIdentifierResult(identifier))
+    ))
+    testCase.dispatch(SendScannedIdentifierResult(scannedId))
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).sendScannedId(identifier)
+    verify(uiActions).sendScannedId(scannedId)
     verifyNoMoreInteractions(uiActions)
     testCase.dispose()
   }

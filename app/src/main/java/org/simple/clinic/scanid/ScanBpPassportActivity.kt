@@ -9,7 +9,6 @@ import kotlinx.android.synthetic.main.screen_scan_simple.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.di.InjectorProviderContextWrapper
-import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.wrap
 import java.util.Locale
@@ -18,10 +17,10 @@ import javax.inject.Inject
 class ScanBpPassportActivity: AppCompatActivity(), ScanSimpleIdScreen.ScanResultsReceiver {
 
   companion object {
-    private const val RESULT_SCANNED_ID = "org.simple.clinic.scanid.ScanBpPassportActivity.RESULT_SCANNED_ID"
+    private const val SCAN_RESULT = "org.simple.clinic.scanid.ScanBpPassportActivity.SCAN_RESULT"
 
-    fun readScannedId(data: Intent): Identifier {
-      return data.getParcelableExtra(RESULT_SCANNED_ID)!!
+    fun readScannedId(data: Intent): ScanResult {
+      return data.getParcelableExtra(SCAN_RESULT)!!
     }
   }
 
@@ -37,9 +36,9 @@ class ScanBpPassportActivity: AppCompatActivity(), ScanSimpleIdScreen.ScanResult
     scanBpPassportView.scanResultsReceiver = this
   }
 
-  override fun onIdentifierScanned(identifier: Identifier) {
+  override fun onScanResult(scanResult: ScanResult) {
     val resultIntent = Intent().apply {
-      putExtra(RESULT_SCANNED_ID, identifier)
+      putExtra(SCAN_RESULT, scanResult)
     }
 
     setResult(RESULT_OK, resultIntent)

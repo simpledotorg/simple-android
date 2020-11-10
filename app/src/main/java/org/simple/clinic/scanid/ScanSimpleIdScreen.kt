@@ -20,7 +20,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport.SHORT_CODE_LENGTH
 import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.ui.ShortCodeSpanWatcher
@@ -141,8 +140,8 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     }
   }
 
-  override fun sendScannedId(identifier: Identifier) {
-    scanResultsReceiver?.onIdentifierScanned(identifier)
+  override fun sendScannedId(scanResult: ScanResult) {
+    scanResultsReceiver?.onScanResult(scanResult)
   }
 
   override fun showShortCodeValidationError(failure: ShortCodeValidationResult) {
@@ -172,7 +171,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   interface ScanResultsReceiver {
-    fun onIdentifierScanned(identifier: Identifier)
+    fun onScanResult(scanResult: ScanResult)
   }
 }
 

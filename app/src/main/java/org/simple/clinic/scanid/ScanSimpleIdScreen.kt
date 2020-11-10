@@ -112,6 +112,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   private fun qrScans(): Observable<UiEvent> {
     val scans = qrCodeScannerView
         .scans()
+        .take(1)
     return scans.map(::ScanSimpleIdScreenQrCodeScanned)
   }
 

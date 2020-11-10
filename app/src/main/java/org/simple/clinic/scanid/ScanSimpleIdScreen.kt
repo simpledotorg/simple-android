@@ -22,28 +22,17 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport.SHORT_CODE_LENGTH
-import org.simple.clinic.router.screen.RouterDirection
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.ui.ShortCodeSpanWatcher
-import org.simple.clinic.search.PatientSearchScreenKey
-import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
-import org.simple.clinic.summary.OpenIntention
-import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.qrcodescanner.IQrCodeScannerView
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
-import java.time.Instant
-import java.util.UUID
 import javax.inject.Inject
 
 class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), ScanSimpleIdUiActions {
-
-  @Inject
-  lateinit var screenRouter: ScreenRouter
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -106,7 +95,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     // It is possible that going back via the app bar from future screens will come back to this
     // screen with the keyboard open. So, we hide it here.
     hideKeyboard()
-    toolBar.setNavigationOnClickListener { screenRouter.pop() }
+    toolBar.setNavigationOnClickListener { activity.finish() }
     setupShortCodeTextField()
 
     qrCodeScannerView = QrCodeScannerView(context)
@@ -152,21 +141,6 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     }
   }
 
-  override fun openPatientSummary(patientUuid: UUID) {
-    screenRouter.popAndPush(
-        PatientSummaryScreenKey(
-            patientUuid = patientUuid,
-            intention = OpenIntention.ViewExistingPatient,
-            screenCreatedTimestamp = Instant.now(utcClock)
-        ),
-        RouterDirection.FORWARD
-    )
-  }
-
-  override fun openAddIdToPatientScreen(identifier: Identifier) {
-    screenRouter.popAndPush(PatientSearchScreenKey(identifier), RouterDirection.FORWARD)
-  }
-
   override fun sendScannedId(identifier: Identifier) {
     scanResultsReceiver?.onIdentifierScanned(identifier)
   }
@@ -183,10 +157,6 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
   override fun hideShortCodeValidationError() {
     shortCodeErrorText.visibility = View.GONE
-  }
-
-  override fun openPatientShortCodeSearch(validShortCode: String) {
-    screenRouter.popAndPush(ShortCodeSearchResultScreenKey(validShortCode), RouterDirection.FORWARD)
   }
 
   override fun hideQrCodeScannerView() {

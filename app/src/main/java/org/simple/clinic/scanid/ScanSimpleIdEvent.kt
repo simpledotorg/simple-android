@@ -1,9 +1,6 @@
 package org.simple.clinic.scanid
 
-import org.simple.clinic.patient.Patient
-import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.UiEvent
-import java.util.UUID
 
 sealed class ScanSimpleIdEvent : UiEvent
 
@@ -28,8 +25,6 @@ data class ShortCodeSearched(val shortCode: ShortCodeInput) : ScanSimpleIdEvent(
   override val analyticsName: String
     get() = "Scan Simple Card:Short code searched"
 }
-
-data class PatientSearchCompleted(val patient: Optional<Patient>, val scannedId: UUID) : ScanSimpleIdEvent()
 
 data class ScanSimpleIdScreenQrCodeScanned(val text: String) : ScanSimpleIdEvent() {
   override val analyticsName = "Scan Simple Card:QR code scanned"

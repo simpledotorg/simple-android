@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.drugs.selection.EditMedicinesScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/prescribeddrugs_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -25,34 +26,38 @@
   <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/spacing_8"
-    android:background="@color/blue2">
+    android:background="@color/blue2"
+    android:clipToPadding="false">
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/prescribeddrugs_done"
       style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_8"
       android:text="@string/patientsummary_finish_saving_patient"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+      android:visibility="gone"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      android:visibility="visible"
-      android:backgroundTint="@color/blue1"/>
+      app:layout_constraintTop_toTopOf="parent"
+      tools:visibility="visible" />
 
     <com.google.android.material.button.MaterialButton
-      android:id="@+id/prescribeddrugs_refill_done"
+      android:id="@+id/prescribeddrugs_refill"
       style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_8"
       android:text="@string/patientsummary_finish_refill_medicine"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       android:visibility="gone"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      android:backgroundTint="@color/blue1"/>
+      app:layout_constraintTop_toTopOf="parent" />
+
   </androidx.constraintlayout.widget.ConstraintLayout>
 
 </org.simple.clinic.drugs.selection.EditMedicinesScreen>

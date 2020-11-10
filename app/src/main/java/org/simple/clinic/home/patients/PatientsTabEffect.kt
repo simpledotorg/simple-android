@@ -7,7 +7,7 @@ sealed class PatientsTabEffect
 
 object OpenEnterOtpScreen : PatientsTabEffect()
 
-object OpenPatientSearchScreen : PatientsTabEffect()
+data class OpenPatientSearchScreen(val additionalIdentifier: Identifier?) : PatientsTabEffect()
 
 object RefreshUserDetails : PatientsTabEffect()
 

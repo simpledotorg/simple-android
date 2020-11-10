@@ -122,7 +122,7 @@ class PatientsLogicTest {
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
 
-    verify(uiActions).openPatientSearchScreen()
+    verify(uiActions).openPatientSearchScreen(null)
 
     verifyNoMoreInteractions(ui)
     verifyNoMoreInteractions(uiActions)

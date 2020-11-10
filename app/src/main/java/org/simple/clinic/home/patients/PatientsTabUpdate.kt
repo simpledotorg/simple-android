@@ -13,7 +13,7 @@ class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTab
   override fun update(model: PatientsTabModel, event: PatientsTabEvent): Next<PatientsTabModel, PatientsTabEffect> {
     return when (event) {
       is PatientsEnterCodeManuallyClicked -> dispatch(OpenEnterOtpScreen)
-      NewPatientClicked -> dispatch(OpenPatientSearchScreen)
+      NewPatientClicked -> dispatch(OpenPatientSearchScreen(null))
       is UserDetailsLoaded -> showAccountNotifications(model, event)
       is ActivityResumed -> dispatch(RefreshUserDetails)
       is DataForShowingApprovedStatusLoaded -> showUserApprovedStatus(event)

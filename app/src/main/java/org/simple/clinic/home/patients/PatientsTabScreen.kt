@@ -28,6 +28,7 @@ import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.di.injector
 import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
@@ -169,8 +170,8 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
       .mergeWith(simpleVideoImage.clicks())
       .map { SimpleVideoClicked }
 
-  override fun openPatientSearchScreen() {
-    screenRouter.push(PatientSearchScreenKey(additionalIdentifier = null))
+  override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
+    screenRouter.push(PatientSearchScreenKey(additionalIdentifier))
   }
 
   private fun showStatus(@IdRes statusViewId: Int) {

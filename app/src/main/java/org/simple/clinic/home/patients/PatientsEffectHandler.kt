@@ -46,7 +46,7 @@ class PatientsEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<PatientsTabEffect, PatientsTabEvent>()
         .addAction(OpenEnterOtpScreen::class.java, uiActions::openEnterCodeManuallyScreen, schedulers.ui())
-        .addAction(OpenPatientSearchScreen::class.java, uiActions::openPatientSearchScreen, schedulers.ui())
+        .addConsumer(OpenPatientSearchScreen::class.java, { uiActions.openPatientSearchScreen(it.additionalIdentifier) }, schedulers.ui())
         .addTransformer(RefreshUserDetails::class.java, refreshCurrentUser())
         .addTransformer(LoadUser::class.java, loadUser())
         .addTransformer(LoadInfoForShowingApprovalStatus::class.java, loadRequiredInfoForShowingApprovalStatus())

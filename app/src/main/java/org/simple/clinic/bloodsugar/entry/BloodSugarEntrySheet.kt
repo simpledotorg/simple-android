@@ -399,6 +399,14 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     bloodSugarReadingUnitLabel.visibility = View.GONE
   }
 
+  override fun decimalOrNumericBloodSugarInputType() {
+    bloodSugarReadingEditText.inputType = EditorInfo.TYPE_CLASS_NUMBER or EditorInfo.TYPE_NUMBER_FLAG_DECIMAL
+  }
+
+  override fun numericBloodSugarInputType() {
+    bloodSugarReadingEditText.inputType = EditorInfo.TYPE_CLASS_NUMBER
+  }
+
   override fun showRemoveButton() {
     removeBloodSugarButton.visibility = View.VISIBLE
   }

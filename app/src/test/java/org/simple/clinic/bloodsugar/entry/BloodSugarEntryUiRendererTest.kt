@@ -36,6 +36,9 @@ class BloodSugarEntryUiRendererTest {
     verify(ui).showEntryTitle(Random)
     verify(ui).hideProgress()
     verify(ui).setBloodSugarUnitPreferenceLabelToMg()
+    verify(ui).showBloodSugarUnitPreferenceButton()
+    verify(ui).hideBloodSugarUnitPreferenceLabel()
+    verify(ui).numericBloodSugarInputType()
     verifyNoMoreInteractions(ui)
   }
 
@@ -52,6 +55,9 @@ class BloodSugarEntryUiRendererTest {
     verify(ui).showEditTitle(Random)
     verify(ui).hideProgress()
     verify(ui).setBloodSugarUnitPreferenceLabelToMg()
+    verify(ui).showBloodSugarUnitPreferenceButton()
+    verify(ui).hideBloodSugarUnitPreferenceLabel()
+    verify(ui).numericBloodSugarInputType()
     verifyNoMoreInteractions(ui)
   }
 
@@ -68,6 +74,9 @@ class BloodSugarEntryUiRendererTest {
     verify(ui).showEntryTitle(Random)
     verify(ui).showProgress()
     verify(ui).setBloodSugarUnitPreferenceLabelToMg()
+    verify(ui).showBloodSugarUnitPreferenceButton()
+    verify(ui).hideBloodSugarUnitPreferenceLabel()
+    verify(ui).numericBloodSugarInputType()
     verifyNoMoreInteractions(ui)
   }
 
@@ -84,6 +93,28 @@ class BloodSugarEntryUiRendererTest {
     verify(ui).showEntryTitle(Random)
     verify(ui).hideProgress()
     verify(ui).setBloodSugarUnitPreferenceLabelToMmol()
+    verify(ui).showBloodSugarUnitPreferenceButton()
+    verify(ui).hideBloodSugarUnitPreferenceLabel()
+    verify(ui).decimalOrNumericBloodSugarInputType()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the blood sugar unit preference is changed, update the input type to support decimal type as well`() {
+    // given
+    val newBloodSugarEntryModel = bloodSugarEntryModel.bloodSugarUnitChanged(BloodSugarUnitPreference.Mmol)
+
+    // when
+    bloodSugarEntryUiRenderer.render(newBloodSugarEntryModel)
+
+    // then
+    verify(ui).hideRemoveButton()
+    verify(ui).showEntryTitle(Random)
+    verify(ui).hideProgress()
+    verify(ui).setBloodSugarUnitPreferenceLabelToMmol()
+    verify(ui).showBloodSugarUnitPreferenceButton()
+    verify(ui).hideBloodSugarUnitPreferenceLabel()
+    verify(ui).decimalOrNumericBloodSugarInputType()
     verifyNoMoreInteractions(ui)
   }
 }

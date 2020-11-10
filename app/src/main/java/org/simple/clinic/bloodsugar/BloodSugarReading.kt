@@ -30,6 +30,10 @@ data class BloodSugarReading(val value: String, val type: BloodSugarMeasurementT
 
       return BloodSugarReading(mgValue.toString(), measurementType)
     }
+
+    fun fromHbA1c(value: String): BloodSugarReading {
+      return BloodSugarReading(value, HbA1c)
+    }
   }
 
   val isHigh: Boolean

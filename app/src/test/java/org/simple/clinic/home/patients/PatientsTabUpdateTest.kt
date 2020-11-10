@@ -80,4 +80,26 @@ class PatientsTabUpdateTest {
             hasEffects(OpenPatientSummary(patient.uuid))
         ))
   }
+
+  @Test
+  fun `when the scanned identifier does not have a corresponding patient, the patient search screen must be opened`() {
+    val model = defaultModel
+        .userLoaded(user)
+        .numberOfPatientsRegisteredUpdated(0)
+
+    val identifier = TestData.identifier("88d12415-b10d-4ebb-bf48-482ece022139", BpPassport)
+
+    val event = PatientSearchByIdentifierCompleted(
+        foundPatient = Optional.empty(),
+        searchedIdentifier = identifier
+    )
+
+    spec
+        .given(model)
+        .whenEvent(event)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenPatientSearchScreen(identifier))
+        ))
+  }
 }

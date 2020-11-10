@@ -22,10 +22,19 @@ class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTab
       is LoadedNumberOfPatientsRegistered -> next(model.numberOfPatientsRegisteredUpdated(event.numberOfPatientsRegistered))
       SimpleVideoClicked -> dispatch(OpenTrainingVideo)
       is RequiredInfoForShowingAppUpdateLoaded -> showAppUpdateAvailableMessage(event)
-      is PatientSearchByIdentifierCompleted -> dispatch(OpenPatientSummary(event.foundPatient.get().uuid))
+      is PatientSearchByIdentifierCompleted -> scannedPatientBusinessId(event)
       is BusinessIdScanned.ByIdentifier -> dispatch(SearchPatientByIdentifier(event.identifier))
       is BusinessIdScanned.ByShortCode -> dispatch(OpenShortCodeSearchScreen(event.shortCode))
     }
+  }
+
+  private fun scannedPatientBusinessId(event: PatientSearchByIdentifierCompleted): Next<PatientsTabModel, PatientsTabEffect> {
+    val effect = event
+        .foundPatient
+        .map { patient -> OpenPatientSummary(patient.uuid) as PatientsTabEffect }
+        .orElse(OpenPatientSearchScreen(event.searchedIdentifier) as PatientsTabEffect)
+
+    return dispatch(effect)
   }
 
   // TODO (vs) 26/05/20: This should actually be rendered and not be as effects. Move later.

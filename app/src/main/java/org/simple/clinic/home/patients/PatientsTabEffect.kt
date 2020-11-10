@@ -33,3 +33,5 @@ object LoadInfoForShowingAppUpdateMessage: PatientsTabEffect()
 object TouchAppUpdateShownAtTime: PatientsTabEffect()
 
 object ShowAppUpdateAvailable: PatientsTabEffect()
+
+data class OpenShortCodeSearchScreen(val shortCode: String): PatientsTabEffect()

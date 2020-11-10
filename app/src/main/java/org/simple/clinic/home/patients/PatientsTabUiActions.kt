@@ -10,4 +10,5 @@ interface PatientsTabUiActions {
   fun openScanSimpleIdCardScreen()
   fun openYouTubeLinkForSimpleVideo()
   fun showAppUpdateDialog()
+  fun openShortCodeSearchScreen(shortCode: String)
 }

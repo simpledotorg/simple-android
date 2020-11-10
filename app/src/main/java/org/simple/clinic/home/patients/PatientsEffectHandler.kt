@@ -59,6 +59,7 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addTransformer(LoadInfoForShowingAppUpdateMessage::class.java, loadInfoForShowingAppUpdate())
         .addConsumer(TouchAppUpdateShownAtTime::class.java, { appUpdateDialogShownAtPref.set(Instant.now(utcClock)) }, schedulers.io())
         .addAction(ShowAppUpdateAvailable::class.java, uiActions::showAppUpdateDialog, schedulers.ui())
+        .addConsumer(OpenShortCodeSearchScreen::class.java, { uiActions.openShortCodeSearchScreen(it.shortCode) }, schedulers.ui())
         .build()
   }
 

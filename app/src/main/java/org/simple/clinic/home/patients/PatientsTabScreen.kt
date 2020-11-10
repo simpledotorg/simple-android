@@ -32,6 +32,7 @@ import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.search.PatientSearchScreenKey
+import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.unsafeLazy
@@ -217,6 +218,10 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   override fun showAppUpdateDialog() {
     AppUpdateDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun openShortCodeSearchScreen(shortCode: String) {
+    screenRouter.push(ShortCodeSearchResultScreenKey(shortCode))
   }
 
   private fun showHomeScreenBackground(@IdRes viewId: Int) {

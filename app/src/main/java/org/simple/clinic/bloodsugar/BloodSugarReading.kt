@@ -14,6 +14,14 @@ import org.simple.clinic.bloodsugar.entry.ValidationResult.Valid
 
 @Parcelize
 data class BloodSugarReading(val value: String, val type: BloodSugarMeasurementType) : Parcelable {
+
+  companion object {
+
+    fun fromMg(value: String, measurementType: BloodSugarMeasurementType): BloodSugarReading {
+      return BloodSugarReading(value, measurementType)
+    }
+  }
+
   val isHigh: Boolean
     get() {
       return when (type) {

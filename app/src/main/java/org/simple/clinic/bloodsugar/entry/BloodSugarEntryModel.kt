@@ -2,6 +2,7 @@ package org.simple.clinic.bloodsugar.entry
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType
@@ -20,7 +21,9 @@ data class BloodSugarEntryModel(
     val fourDigitYear: String = "",
     val prefilledDate: LocalDate? = null,
     val bloodSugarSaveState: BloodSugarSaveState = NOT_SAVING_BLOOD_SUGAR,
-    val bloodSugarUnitPreference: BloodSugarUnitPreference = BloodSugarUnitPreference.Mg
+    val bloodSugarUnitPreference: BloodSugarUnitPreference = BloodSugarUnitPreference.Mg,
+    val bloodSugarReadingValue: String = "",
+    val bloodSugarMeasurementType: BloodSugarMeasurementType = openAs.measurementType
 ) : Parcelable {
 
   companion object {

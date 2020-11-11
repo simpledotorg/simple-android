@@ -30,4 +30,6 @@ interface BloodSugarEntryUi {
   fun setBloodSugarUnitPreferenceLabelToMg()
   fun showBloodSugarUnitPreferenceButton()
   fun hideBloodSugarUnitPreferenceButton()
+  fun showBloodSugarUnitPreferenceLabel()
+  fun hideBloodSugarUnitPreferenceLabel()
 }

@@ -24,8 +24,14 @@ class BloodSugarEntryUiRenderer(
 
   private fun manageBloodSugarUnitPreferenceButtonVisibility(model: BloodSugarEntryModel) {
     when (model.openAs.measurementType) {
-      Random, PostPrandial, Fasting -> ui.showBloodSugarUnitPreferenceButton()
-      HbA1c -> ui.hideBloodSugarUnitPreferenceButton()
+      Random, PostPrandial, Fasting -> {
+        ui.showBloodSugarUnitPreferenceButton()
+        ui.hideBloodSugarUnitPreferenceLabel()
+      }
+      HbA1c -> {
+        ui.hideBloodSugarUnitPreferenceButton()
+        ui.showBloodSugarUnitPreferenceLabel()
+      }
       else -> ui.showBloodSugarUnitPreferenceButton()
     }
   }

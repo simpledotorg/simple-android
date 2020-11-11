@@ -391,6 +391,14 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     bloodSugarReadingUnitButton.visibility = View.GONE
   }
 
+  override fun showBloodSugarUnitPreferenceLabel() {
+    bloodSugarReadingUnitLabel.visibility = View.VISIBLE
+  }
+
+  override fun hideBloodSugarUnitPreferenceLabel() {
+    bloodSugarReadingUnitLabel.visibility = View.GONE
+  }
+
   override fun showRemoveButton() {
     removeBloodSugarButton.visibility = View.VISIBLE
   }

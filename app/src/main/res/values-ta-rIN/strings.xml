@@ -66,7 +66,7 @@
   <string name="patiententry_kebele">கேபிலே</string>
   <string name="patiententry_zone">யூனியன்</string>
   <string name="patiententry_district">மாவட்டம்</string>
-  <string name="patiententry_woreda">வோர்டா</string>
+  <string name="patiententry_woreda">பகுதி</string>
   <string name="patiententry_upazila">துணை மாவட்டம்</string>
   <string name="patiententry_state">மாநிலம்</string>
   <string name="patiententry_region">வட்டாரம்</string>
@@ -662,4 +662,9 @@
   <string name="sheet_teleconsult_status_no">இல்லை</string>
   <string name="sheet_teleconsult_status_waiting">காத்திருப்பில் உள்ளது</string>
   <string name="sheet_teleconsult_status_done">முடிந்தது</string>
+
+  <!-- Setup activity -->
+  <string name="setup_cannot_run">பயன்பாட்டை இயக்க இயலாது</string>
+  <string name="setup_rooted">ரூட்செய்யப்பட்ட சாதனத்தில் சிம்பிளை இயக்க இயலாது</string>
+  <string name="setup_close">மூடுக</string>
 </resources>

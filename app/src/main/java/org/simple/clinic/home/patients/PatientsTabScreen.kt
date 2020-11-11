@@ -1,5 +1,6 @@
 package org.simple.clinic.home.patients
 
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -13,6 +14,7 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.patients_user_status_approved.view.*
@@ -27,18 +29,30 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.di.injector
 import org.simple.clinic.enterotp.EnterOtpScreenKey
+import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.scanid.ScanSimpleIdScreenKey
+import org.simple.clinic.scanid.ScanBpPassportActivity
 import org.simple.clinic.search.PatientSearchScreenKey
+import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
+import org.simple.clinic.summary.OpenIntention
+import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
+import java.time.Instant
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
+
+private const val REQUEST_CODE_SCAN_BP_PASSPORT = 100
 
 class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientsTabUi, PatientsTabUiActions {
 
@@ -67,6 +81,11 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
   @Inject
   lateinit var effectHandlerFactory: PatientsEffectHandler.Factory
 
+  @Inject
+  lateinit var utcClock: UtcClock
+
+  private val deferredEvents = DeferredEventSource<PatientsTabEvent>()
+
   @IdRes
   private var currentStatusViewId: Int = R.id.userStatusHiddenView
 
@@ -93,7 +112,8 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
         update = PatientsTabUpdate(),
         init = PatientsInit(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
+        modelUpdateListener = uiRenderer::render,
+        additionalEventSources = listOf(deferredEvents)
     )
   }
 
@@ -105,9 +125,28 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
 
     context.injector<Injector>().inject(this)
 
+    setupDeferredEvents()
     setupApprovalStatusAnimations()
 
     homeIllustration.setImageResource(illustrationResourceId())
+  }
+
+  @SuppressLint("CheckResult")
+  private fun setupDeferredEvents() {
+    // This is necessary because the `onActivityResult()` of the parent
+    // activity is invoked BEFORE the `onAttachedToWindow()` of this
+    // screen, which means that the activity result event is emitted
+    // before this stream is subscribed to, and is lost.
+    // However, the view gets inflated BEFORE `onActivityResult` is
+    // invoked, so setting up this deferred event source in
+    // `onFinishInflate` is a good enough workaround.
+    screenRouter
+        .streamScreenResults()
+        .ofType<ActivityResult>()
+        .extractSuccessful(REQUEST_CODE_SCAN_BP_PASSPORT, ScanBpPassportActivity.Companion::readScannedId)
+        .map(BusinessIdScanned.Companion::fromScanResult)
+        .takeUntil(detaches())
+        .subscribe(deferredEvents::notify)
   }
 
   override fun onAttachedToWindow() {
@@ -160,8 +199,8 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
       .mergeWith(simpleVideoImage.clicks())
       .map { SimpleVideoClicked }
 
-  override fun openPatientSearchScreen() {
-    screenRouter.push(PatientSearchScreenKey(additionalIdentifier = null))
+  override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
+    screenRouter.push(PatientSearchScreenKey(additionalIdentifier))
   }
 
   private fun showStatus(@IdRes statusViewId: Int) {
@@ -204,7 +243,9 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
   }
 
   override fun openScanSimpleIdCardScreen() {
-    screenRouter.push(ScanSimpleIdScreenKey())
+    val intent = ScanBpPassportActivity.intent(activity)
+
+    activity.startActivityForResult(intent, REQUEST_CODE_SCAN_BP_PASSPORT)
   }
 
   override fun hideSyncIndicator() {
@@ -217,6 +258,14 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   override fun showAppUpdateDialog() {
     AppUpdateDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun openShortCodeSearchScreen(shortCode: String) {
+    screenRouter.push(ShortCodeSearchResultScreenKey(shortCode))
+  }
+
+  override fun openPatientSummary(patientId: UUID) {
+    screenRouter.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
   }
 
   private fun showHomeScreenBackground(@IdRes viewId: Int) {

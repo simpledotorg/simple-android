@@ -38,7 +38,6 @@ import org.simple.clinic.newentry.country.di.InputFieldsFactoryModule
 import org.simple.clinic.onboarding.OnboardingScreenInjector
 import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.recentpatientsview.RecentPatientsView
-import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.searchresultsview.PatientSearchView
@@ -65,7 +64,6 @@ import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessScreen
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultNotRecordedDialog
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreen
 import org.simple.clinic.widgets.PatientSearchResultItemView
-import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 
 @Subcomponent(modules = [TheActivityModule::class])
 interface TheActivityComponent :
@@ -93,7 +91,6 @@ interface TheActivityComponent :
     PatientSearchResultsScreen.Injector,
     PatientSearchScreen.Injector,
     ForgotPinConfirmPinScreen.Injector,
-    ScanSimpleIdScreen.Injector,
     HomeScreen.Injector,
     PatientEntryScreen.Injector,
     UpdatePhoneNumberDialog.Injector,
@@ -113,7 +110,6 @@ interface TheActivityComponent :
     NewMedicalHistoryScreen.Injector,
     ConfirmDiscardChangesDialog.Injector,
     EditMedicinesScreen.Injector,
-    QrCodeScannerView.Injector,
     SyncIndicatorView.Injector,
     PatientSearchResultItemView.Injector,
     AllPatientsInFacilityView.Injector,

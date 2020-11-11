@@ -8,6 +8,7 @@
 - Add `recipes.md`
 - [In Progress: 4 Nov 2020] Migrate app screens to use ViewBinding
 - Added blood sugar unit preference
+- Move scanning of QR codes to a discrete activity
 
 ### Changes
 - Disabled running the app on rooted devices

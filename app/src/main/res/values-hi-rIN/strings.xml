@@ -66,7 +66,7 @@
   <string name="patiententry_kebele">केबेले</string>
   <string name="patiententry_zone">संघ</string>
   <string name="patiententry_district">जिला</string>
-  <string name="patiententry_woreda">वोरेडा</string>
+  <string name="patiententry_woreda">क्षेत्र</string>
   <string name="patiententry_upazila">उप-ज़िला</string>
   <string name="patiententry_state">राज्य</string>
   <string name="patiententry_region">क्षेत्र</string>
@@ -158,6 +158,7 @@
   <string name="patientsummary_prescriptions_update">दवाइयों मे बदलाव करें</string>
   <string name="patientsummary_bp_add_new">रक्तचाप</string>
   <string name="patientsummary_finish_saving_patient">सहेजें</string>
+  <string name="patientsummary_finish_refill_medicine">औषधि की और मात्रा</string>
   <string name="patientsummary_bp_none_added">कोई रक्तचाप नहीं जोड़ा गया</string>
   <string name="patientsummary_edit">संपादन करें</string>
 
@@ -294,6 +295,7 @@
   <string name="scheduleappointment_next_visit_in">अगली मुलाकात इतने समय बाद नियत की गई</string>
   <string name="scheduleappointment_not_now">अभी नहीं</string>
   <string name="scheduleappointment_done">पूरा हुआ</string>
+  <string name="scheduleappointment_next">आगे</string>
   <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s दिन</item>
     <item quantity="other">%s दिन</item>
@@ -380,7 +382,7 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ऐप अपडेट करें</string>
-  <string name="appupdatedialog_body">सिंपल को अपडेट करने के लिए आपको प्ले स्टोर पर ले जाया जाएगा</string>
+  <string name="appupdatedialog_body">सिंपल को अपडेट करने के लिए आपको Google Play Store पर ले जाया जाएगा।</string>
   <string name="appupdatedialog_positive_button_text">अपडेट करें</string>
   <string name="appupdatedialog_negative_button_text">अभी नहीं</string>
 
@@ -655,4 +657,14 @@
   <string name="select_diagnosis_error_diagnosis_required">निदान आवश्यक</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">उच्चरक्तचाप और मधुमेह दोनों के लिए एक निदान चुनें</string>
   <string name="select_diagnosis_error_ok">ठीक है</string>
+  <string name="sheet_teleconsult_status_title">टेली-कंसल्ट पूरा हुआ?</string>
+  <string name="sheet_teleconsult_status_yes">हाँ</string>
+  <string name="sheet_teleconsult_status_no">नहीं</string>
+  <string name="sheet_teleconsult_status_waiting">अभी भी इंतज़ार कर रहे हैं</string>
+  <string name="sheet_teleconsult_status_done">पूरा हुआ</string>
+
+  <!-- Setup activity -->
+  <string name="setup_cannot_run">एप्लिकेशन नहीं चला सकते</string>
+  <string name="setup_rooted">सिंपल को रूटड डिवाइस पर नहीं चलाया जा सकता।</string>
+  <string name="setup_close">बंद करें</string>
 </resources>

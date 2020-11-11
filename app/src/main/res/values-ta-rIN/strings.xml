@@ -66,7 +66,7 @@
   <string name="patiententry_kebele">கேபிலே</string>
   <string name="patiententry_zone">யூனியன்</string>
   <string name="patiententry_district">மாவட்டம்</string>
-  <string name="patiententry_woreda">வோர்டா</string>
+  <string name="patiententry_woreda">பகுதி</string>
   <string name="patiententry_upazila">துணை மாவட்டம்</string>
   <string name="patiententry_state">மாநிலம்</string>
   <string name="patiententry_region">வட்டாரம்</string>
@@ -515,7 +515,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">\"வருவதற்கு ஒப்புக்கொண்டார்\" என நோயாளியைக் குறிக்கவும்</string>
+  <string name="contactpatient_agreed_to_visit">\&quot;வருவதற்கு ஒப்புக்கொண்டார்\&quot; என நோயாளியைக் குறிக்கவும்</string>
   <string name="contactpatient_remind_call_later">பின்னர் அழைக்க நினைவூட்டவும்…</string>
   <string name="contactpatient_remove_from_list">குறித்த தேதியில் வாராதவர்கள் பட்டியலிலிருந்து அகற்றவும்…</string>
   <string name="contactpatient_result_of_call">அழைப்பின் முடிவு</string>
@@ -662,4 +662,9 @@
   <string name="sheet_teleconsult_status_no">இல்லை</string>
   <string name="sheet_teleconsult_status_waiting">காத்திருப்பில் உள்ளது</string>
   <string name="sheet_teleconsult_status_done">முடிந்தது</string>
+
+  <!-- Setup activity -->
+  <string name="setup_cannot_run">பயன்பாட்டை இயக்க இயலாது</string>
+  <string name="setup_rooted">ரூட்செய்யப்பட்ட சாதனத்தில் சிம்பிளை இயக்க இயலாது.</string>
+  <string name="setup_close">மூடுக</string>
 </resources>

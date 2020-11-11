@@ -10,6 +10,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.UserClock
@@ -28,6 +29,7 @@ class PatientsEffectHandler @AssistedInject constructor(
     private val utcClock: UtcClock,
     private val userClock: UserClock,
     private val checkAppUpdate: CheckAppUpdateAvailability,
+    private val patientRepository: PatientRepository,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
     @Named("number_of_patients_registered") private val numberOfPatientsRegisteredPref: Preference<Int>,
@@ -44,7 +46,7 @@ class PatientsEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<PatientsTabEffect, PatientsTabEvent>()
         .addAction(OpenEnterOtpScreen::class.java, uiActions::openEnterCodeManuallyScreen, schedulers.ui())
-        .addAction(OpenPatientSearchScreen::class.java, uiActions::openPatientSearchScreen, schedulers.ui())
+        .addConsumer(OpenPatientSearchScreen::class.java, { uiActions.openPatientSearchScreen(it.additionalIdentifier) }, schedulers.ui())
         .addTransformer(RefreshUserDetails::class.java, refreshCurrentUser())
         .addTransformer(LoadUser::class.java, loadUser())
         .addTransformer(LoadInfoForShowingApprovalStatus::class.java, loadRequiredInfoForShowingApprovalStatus())
@@ -59,6 +61,9 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addTransformer(LoadInfoForShowingAppUpdateMessage::class.java, loadInfoForShowingAppUpdate())
         .addConsumer(TouchAppUpdateShownAtTime::class.java, { appUpdateDialogShownAtPref.set(Instant.now(utcClock)) }, schedulers.io())
         .addAction(ShowAppUpdateAvailable::class.java, uiActions::showAppUpdateDialog, schedulers.ui())
+        .addConsumer(OpenShortCodeSearchScreen::class.java, { uiActions.openShortCodeSearchScreen(it.shortCode) }, schedulers.ui())
+        .addTransformer(SearchPatientByIdentifier::class.java, searchForPatientByIdentifier())
+        .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientId)}, schedulers.ui())
         .build()
   }
 
@@ -133,6 +138,19 @@ class PatientsEffectHandler @AssistedInject constructor(
                 appUpdateLastShownOn = updateLastShownOn,
                 currentDate = today
             )
+          }
+    }
+  }
+
+  private fun searchForPatientByIdentifier(): ObservableTransformer<SearchPatientByIdentifier, PatientsTabEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .map(SearchPatientByIdentifier::identifier)
+          .switchMap { identifier ->
+            patientRepository
+                .findPatientWithBusinessId(identifier.value)
+                .subscribeOn(schedulers.io())
+                .map { foundPatient -> PatientSearchByIdentifierCompleted(foundPatient, identifier) }
           }
     }
   }

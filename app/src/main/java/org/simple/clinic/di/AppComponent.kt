@@ -15,6 +15,7 @@ import org.simple.clinic.facility.change.confirm.di.ConfirmFacilityChangeCompone
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
 import org.simple.clinic.registerorlogin.AuthenticationActivityComponent
+import org.simple.clinic.scanid.ScanBpPassportActivityComponent
 import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivityComponent
 import org.simple.clinic.setup.SetupActivityComponent
@@ -56,6 +57,7 @@ interface AppComponent {
   fun contactDoctorComponent(): ContactDoctorComponent.Builder
   fun teleconsultStatusComponent(): TeleconsultStatusComponent.Builder
   fun authenticationActivityComponent(): AuthenticationActivityComponent.Builder
+  fun scanBpPassportActivityComponent(): ScanBpPassportActivityComponent.Builder
 }
 
 @Scope

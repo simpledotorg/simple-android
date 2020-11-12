@@ -66,7 +66,7 @@
   <string name="patiententry_kebele">কেবেলে</string>
   <string name="patiententry_zone">ইউনিয়ন</string>
   <string name="patiententry_district">জেলা</string>
-  <string name="patiententry_woreda">ওরেডা</string>
+  <string name="patiententry_woreda">অঞ্চল</string>
   <string name="patiententry_upazila">উপজেলা</string>
   <string name="patiententry_state">Sub District</string>
   <string name="patiententry_region">অঞ্চল</string>
@@ -158,6 +158,7 @@
   <string name="patientsummary_prescriptions_update">ওষুধগুলো আপডেট করুন</string>
   <string name="patientsummary_bp_add_new">রক্তচাপ</string>
   <string name="patientsummary_finish_saving_patient">সংরক্ষণ করুন</string>
+  <string name="patientsummary_finish_refill_medicine">ওষুধ রিফিল করুন</string>
   <string name="patientsummary_bp_none_added">কোন রক্তচাপ যোগ করা হয়নি</string>
   <string name="patientsummary_edit">সম্পাদনা করুন</string>
 
@@ -294,6 +295,7 @@
   <string name="scheduleappointment_next_visit_in">সাক্ষাতের পরবর্তী সময়সূচী স্থির করুন</string>
   <string name="scheduleappointment_not_now">এখন নয়</string>
   <string name="scheduleappointment_done">সম্পন্ন হয়েছে</string>
+  <string name="scheduleappointment_next">পরবর্তী</string>
   <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s দিন</item>
     <item quantity="other">%s দিন</item>
@@ -380,7 +382,7 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">অ্যাপটি আপডেট করুন</string>
-  <string name="appupdatedialog_body">সিম্পিল আপডেট করার জন্য আপনাকে প্লে স্টোরে নিয়ে যাওয়া হবে</string>
+  <string name="appupdatedialog_body">সিম্পিল আপডেট করার জন্য আপনাকে Google Play Store এ নিয়ে যাওয়া হবে।</string>
   <string name="appupdatedialog_positive_button_text">আপডেট করুন</string>
   <string name="appupdatedialog_negative_button_text">এখন নয়</string>
 
@@ -644,7 +646,6 @@
   <string name="view_teleconsult_doctor_info_add_signature">স্বাক্ষর যোগ করুন</string>
   <string name="view_teleconsult_doctor_info_signature_error">স্বাক্ষর যোগ করুন</string>
 
-  <!-- Teleconsult share prescription screen -->
   <string name="screen_teleconsult_share_prescription_download">ডাউনলোড করুন</string>
   <string name="screen_teleconsult_share_prescription_share">শেয়ার করুন</string>
   <string name="screen_teleconsult_share_prescription_done">সম্পন্ন</string>
@@ -656,4 +657,14 @@
   <string name="select_diagnosis_error_diagnosis_required">রোগ নির্ণয় প্রয়োজন</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">হাইপারটেনশন এবং ডায়াবেটিস উভয়ের জন্য একটি রোগ নির্ণয় নির্বাচন করুন</string>
   <string name="select_diagnosis_error_ok">ঠিক আছে</string>
+  <string name="sheet_teleconsult_status_title">টেলি-কনসাল্ট সম্পূর্ণ হয়ে গেছে?</string>
+  <string name="sheet_teleconsult_status_yes">হ্যাঁ</string>
+  <string name="sheet_teleconsult_status_no">না</string>
+  <string name="sheet_teleconsult_status_waiting">এখনও অপেক্ষা করছেন</string>
+  <string name="sheet_teleconsult_status_done">সম্পন্ন</string>
+
+  <!-- Setup activity -->
+  <string name="setup_cannot_run">অ্যাপ্লিকেশন চালনা করা যাচ্ছে না</string>
+  <string name="setup_rooted">কোনও রুট থাকা ডিভাইসে সিম্পিল চালনা করা যাবে না।</string>
+  <string name="setup_close">বন্ধ করুন</string>
 </resources>

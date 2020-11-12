@@ -5,21 +5,30 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.screen_placeholder.view.*
 import org.simple.clinic.await.Await
 import org.simple.clinic.await.Checkpoint
+import org.simple.clinic.databinding.ScreenPlaceholderBinding
 import java.util.concurrent.TimeUnit.SECONDS
 
 class PlaceholderScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
   private val delayToShowMessage = SECONDS.toMillis(3).toInt()
   private val await = Await(listOf(Checkpoint.unit(delayToShowMessage)))
   private var awaitDisposable: Disposable? = null
+  private var binding: ScreenPlaceholderBinding? = null
+
+  private val loadingTextLayout
+    get() = binding!!.loadingTextLayout
+
+  private val loadingProgressBar
+    get() = binding!!.loadingProgressBar
 
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
+
+    binding = ScreenPlaceholderBinding.bind(this)
   }
 
   override fun onAttachedToWindow() {
@@ -31,6 +40,7 @@ class PlaceholderScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   override fun onDetachedFromWindow() {
     awaitDisposable?.dispose()
+    binding = null
     super.onDetachedFromWindow()
   }
 

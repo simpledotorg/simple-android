@@ -181,7 +181,7 @@ class BloodSugarEntryUpdateTest {
         .whenEvent(BloodSugarDateClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh(measurementType)) as BloodSugarEntryEffect)
+            hasEffects(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh(measurementType), BloodSugarUnitPreference.Mg) as BloodSugarEntryEffect)
         ))
   }
 
@@ -291,7 +291,7 @@ class BloodSugarEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh(measurementType)) as BloodSugarEntryEffect)
+            hasEffects(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh(measurementType), BloodSugarUnitPreference.Mg) as BloodSugarEntryEffect)
         ))
   }
 

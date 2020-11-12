@@ -79,7 +79,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
       val bloodSugarReading = createBloodSugarReading(model)
       val bloodSugarValidationResult = bloodSugarReading.validate()
       val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
-      val validationErrorEffects = getValidationErrorEffects(bloodSugarValidationResult, dateValidationResult)
+      val validationErrorEffects = getValidationErrorEffects(bloodSugarValidationResult, dateValidationResult, model.bloodSugarUnitPreference)
 
       if (validationErrorEffects.isNotEmpty()) {
         Next.dispatch(validationErrorEffects)
@@ -100,12 +100,13 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
 
   private fun getValidationErrorEffects(
       bloodSugarValidationResult: ValidationResult,
-      dateValidationResult: Result
+      dateValidationResult: Result,
+      unitPreference: BloodSugarUnitPreference
   ): Set<BloodSugarEntryEffect> {
     val validationErrorEffects = mutableSetOf<BloodSugarEntryEffect>()
 
     if (bloodSugarValidationResult !is Valid) {
-      validationErrorEffects.add(ShowBloodSugarValidationError(bloodSugarValidationResult))
+      validationErrorEffects.add(ShowBloodSugarValidationError(bloodSugarValidationResult, unitPreference))
     }
 
     if (dateValidationResult !is Result.Valid) {
@@ -158,7 +159,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
     val effect = if (result is Valid) {
       ShowDateEntryScreen
     } else {
-      ShowBloodSugarValidationError(result)
+      ShowBloodSugarValidationError(result, model.bloodSugarUnitPreference)
     }
     return dispatch(effect)
   }

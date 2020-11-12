@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.entry.BloodSugarSaveState.SAVING_BLOOD_SUGAR
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
@@ -25,8 +26,6 @@ class BloodSugarEntryUiRendererTest {
 
   @Test
   fun `it should render the entry title when creating a new blood sugar`() {
-    // given
-
     // when
     bloodSugarEntryUiRenderer.render(bloodSugarEntryModel)
 
@@ -34,6 +33,10 @@ class BloodSugarEntryUiRendererTest {
     verify(ui).hideRemoveButton()
     verify(ui).showEntryTitle(Random)
     verify(ui).hideProgress()
+    verify(ui).setBloodSugarUnitPreferenceLabelToMg()
+    verify(ui).showBloodSugarUnitPreferenceButton()
+    verify(ui).hideBloodSugarUnitPreferenceLabel()
+    verify(ui).numericBloodSugarInputType()
     verifyNoMoreInteractions(ui)
   }
 
@@ -49,6 +52,10 @@ class BloodSugarEntryUiRendererTest {
     verify(ui).showRemoveButton()
     verify(ui).showEditTitle(Random)
     verify(ui).hideProgress()
+    verify(ui).setBloodSugarUnitPreferenceLabelToMg()
+    verify(ui).showBloodSugarUnitPreferenceButton()
+    verify(ui).hideBloodSugarUnitPreferenceLabel()
+    verify(ui).numericBloodSugarInputType()
     verifyNoMoreInteractions(ui)
   }
 
@@ -64,6 +71,48 @@ class BloodSugarEntryUiRendererTest {
     verify(ui).hideRemoveButton()
     verify(ui).showEntryTitle(Random)
     verify(ui).showProgress()
+    verify(ui).setBloodSugarUnitPreferenceLabelToMg()
+    verify(ui).showBloodSugarUnitPreferenceButton()
+    verify(ui).hideBloodSugarUnitPreferenceLabel()
+    verify(ui).numericBloodSugarInputType()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the blood sugar preference is changed, then update the UI`() {
+    // given
+    val newBloodSugarEntryModel = bloodSugarEntryModel.bloodSugarUnitChanged(BloodSugarUnitPreference.Mmol)
+
+    // when
+    bloodSugarEntryUiRenderer.render(newBloodSugarEntryModel)
+
+    // then
+    verify(ui).hideRemoveButton()
+    verify(ui).showEntryTitle(Random)
+    verify(ui).hideProgress()
+    verify(ui).setBloodSugarUnitPreferenceLabelToMmol()
+    verify(ui).showBloodSugarUnitPreferenceButton()
+    verify(ui).hideBloodSugarUnitPreferenceLabel()
+    verify(ui).decimalOrNumericBloodSugarInputType()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the blood sugar unit preference is changed, update the input type to support decimal type as well`() {
+    // given
+    val newBloodSugarEntryModel = bloodSugarEntryModel.bloodSugarUnitChanged(BloodSugarUnitPreference.Mmol)
+
+    // when
+    bloodSugarEntryUiRenderer.render(newBloodSugarEntryModel)
+
+    // then
+    verify(ui).hideRemoveButton()
+    verify(ui).showEntryTitle(Random)
+    verify(ui).hideProgress()
+    verify(ui).setBloodSugarUnitPreferenceLabelToMmol()
+    verify(ui).showBloodSugarUnitPreferenceButton()
+    verify(ui).hideBloodSugarUnitPreferenceLabel()
+    verify(ui).decimalOrNumericBloodSugarInputType()
     verifyNoMoreInteractions(ui)
   }
 }

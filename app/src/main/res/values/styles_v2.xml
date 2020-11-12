@@ -726,4 +726,15 @@
     <item name="android:letterSpacing">0.0892857143</item>
     <item name="android:textColor">?attr/colorOnError</item>
   </style>
+
+  <style name="Clinic.V2.MaterialButton.UnitPreference">
+    <item name="iconGravity">textEnd</item>
+    <item name="iconSize">@dimen/spacing_16</item>
+    <item name="iconPadding">@dimen/spacing_4</item>
+    <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.Body2Left.Grey1</item>
+    <item name="android:minHeight">@dimen/spacing_32</item>
+    <item name="cornerRadius">@null</item>
+    <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Clinic.V2.UnitPreferenceButton</item>
+  </style>
+
 </resources>

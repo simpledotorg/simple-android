@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.entry
 
 import org.simple.clinic.bloodsugar.BloodSugarReading
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import java.time.Instant
 import java.time.LocalDate
@@ -65,3 +66,5 @@ data class FetchBloodSugarMeasurement(val bloodSugarMeasurementUuid: UUID) : Blo
 data class SetBloodSugarReading(val bloodSugarReading: String) : BloodSugarEntryEffect()
 
 data class ShowConfirmRemoveBloodSugarDialog(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryEffect()
+
+object LoadBloodSugarUnitPreference: BloodSugarEntryEffect()

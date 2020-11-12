@@ -3,6 +3,7 @@
 ## Next Release
 ### Features
 - [In Progress: 29 Oct 2020] Refill prescriptions in edit medicine screen
+- [In Progress: 11 Nov 2020] Migrate app screens to use ViewBinding
 
 ### Internal
 - Add `recipes.md`

@@ -9,9 +9,9 @@ import androidx.annotation.StringRes
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_forgotpin_confirmpin.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenForgotpinConfirmpinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
@@ -33,6 +33,32 @@ class ForgotPinConfirmPinScreen(
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  private var binding: ScreenForgotpinConfirmpinBinding? = null
+
+  private val pinEntryEditText
+    get() = binding!!.pinEntryEditText
+
+  private val backButton
+    get() = binding!!.backButton
+
+  private val userNameTextView
+    get() = binding!!.userNameTextView
+
+  private val facilityNameTextView
+    get() = binding!!.facilityNameTextView
+
+  private val pinErrorTextView
+    get() = binding!!.pinErrorTextView
+
+  private val pinEntryHintTextView
+    get() = binding!!.pinEntryHintTextView
+
+  private val progressBar
+    get() = binding!!.progressBar
+
+  private val pinEntryContainer
+    get() = binding!!.pinEntryContainer
 
   private val events by unsafeLazy {
     Observable
@@ -64,11 +90,14 @@ class ForgotPinConfirmPinScreen(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
+
+    binding = ScreenForgotpinConfirmpinBinding.bind(this)
 
     context.injector<Injector>().inject(this)
 

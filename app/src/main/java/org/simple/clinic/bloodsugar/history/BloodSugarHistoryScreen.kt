@@ -13,7 +13,6 @@ import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_blood_sugar_history.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceFactory
@@ -23,6 +22,7 @@ import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryItemClicked
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItemDiffCallback
 import org.simple.clinic.bloodsugar.history.adapter.NewBloodSugarClicked
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
+import org.simple.clinic.databinding.ScreenBloodSugarHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.DateOfBirth
@@ -85,6 +85,14 @@ class BloodSugarHistoryScreen(
   @Named("for_measurement_history")
   lateinit var measurementHistoryPaginationConfig: PagedList.Config
 
+  private var binding: ScreenBloodSugarHistoryBinding? = null
+
+  private val toolbar
+    get() = binding!!.toolbar
+
+  private val bloodSugarHistoryList
+    get() = binding!!.bloodSugarHistoryList
+
   private val bloodSugarHistoryAdapter = PagingItemAdapter(BloodSugarHistoryListItemDiffCallback())
 
   private val events: Observable<BloodSugarHistoryScreenEvent> by unsafeLazy {
@@ -117,6 +125,9 @@ class BloodSugarHistoryScreen(
     if (isInEditMode) {
       return
     }
+
+    binding = ScreenBloodSugarHistoryBinding.bind(this)
+
     context.injector<BloodSugarHistoryScreenInjector>().inject(this)
 
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
@@ -135,6 +146,7 @@ class BloodSugarHistoryScreen(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

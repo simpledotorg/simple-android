@@ -382,7 +382,7 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ኣፕሊኬሽን ኣሓድስ</string>
-  <string name="appupdatedialog_body">ምሕዳስ ኣፕሊኬሽን ንኸተተግብር ናብ ጉግል ፕለይ ስቶር ክትውሰድ ኢኻ</string>
+  <string name="appupdatedialog_body">ምሕዳስ ኣፕሊኬሽን ሲምፕል ንኸተተግብር ናብ Google Play Store ክትውሰድ ኢኻ</string>
   <string name="appupdatedialog_positive_button_text">ኣሐድስ</string>
   <string name="appupdatedialog_negative_button_text">ሕዚ ኣይኮነን</string>
 

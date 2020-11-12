@@ -2,6 +2,7 @@ package org.simple.clinic.bloodsugar.entry
 
 import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -47,6 +48,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
       SaveClicked -> onSaveClicked(model)
       is BloodSugarSaved -> next(model.bloodSugarStateChanged(NOT_SAVING_BLOOD_SUGAR), SetBloodSugarSavedResultAndFinish)
       RemoveBloodSugarClicked -> dispatch(ShowConfirmRemoveBloodSugarDialog((model.openAs as OpenAs.Update).bloodSugarMeasurementUuid))
+      is BloodSugarUnitPreferenceLoaded -> next(model.bloodSugarUnitChanged(event.bloodSugarUnitPreference))
     }
   }
 
@@ -70,7 +72,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
       model: BloodSugarEntryModel
   ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
     return if (model.bloodSugarSaveState == SAVING_BLOOD_SUGAR) {
-      Next.noChange()
+      noChange()
     } else {
       val bloodSugarValidationResult = model.bloodSugarReading.validate()
       val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)

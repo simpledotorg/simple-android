@@ -145,23 +145,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-
     setContentView(R.layout.sheet_blood_sugar_entry)
-
-    openAs.let { openAs ->
-
-      when (openAs.measurementType) {
-        HbA1c -> {
-          bloodSugarReadingEditText.inputType = EditorInfo.TYPE_CLASS_NUMBER or EditorInfo.TYPE_NUMBER_FLAG_DECIMAL
-          bloodSugarReadingUnitLabel.text = getString(R.string.bloodsugarentry_percentage)
-        }
-        Random, PostPrandial, Fasting -> {
-          bloodSugarReadingEditText.inputType = EditorInfo.TYPE_CLASS_NUMBER
-          bloodSugarReadingUnitLabel.text = getString(R.string.bloodsugarentry_mg_dl)
-        }
-      }
-    }
-
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 
@@ -374,6 +358,46 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     progressLoader.visibleOrGone(isVisible = false)
     bloodSugarReadingLayout.visibleOrGone(isVisible = true)
     bloodSugarDateButton.visibleOrGone(isVisible = true)
+  }
+
+  override fun setBloodSugarUnitPreferenceLabelToMmol() {
+    bloodSugarReadingUnitButton.text = getString(R.string.bloodsugarentry_mmol_l)
+  }
+
+  override fun setBloodSugarUnitPreferenceLabelToMg() {
+    bloodSugarReadingUnitButton.text = getString(R.string.bloodsugarentry_mg_dl)
+  }
+
+  override fun showBloodSugarUnitPreferenceButton() {
+    bloodSugarReadingUnitButton.visibility = View.VISIBLE
+  }
+
+  override fun hideBloodSugarUnitPreferenceButton() {
+    bloodSugarReadingUnitButton.visibility = View.GONE
+  }
+
+  override fun showBloodSugarUnitPreferenceLabel() {
+    bloodSugarReadingUnitLabel.visibility = View.VISIBLE
+  }
+
+  override fun hideBloodSugarUnitPreferenceLabel() {
+    bloodSugarReadingUnitLabel.visibility = View.GONE
+  }
+
+  override fun decimalOrNumericBloodSugarInputType() {
+    bloodSugarReadingEditText.inputType = EditorInfo.TYPE_CLASS_NUMBER or EditorInfo.TYPE_NUMBER_FLAG_DECIMAL
+  }
+
+  override fun numericBloodSugarInputType() {
+    bloodSugarReadingEditText.inputType = EditorInfo.TYPE_CLASS_NUMBER
+  }
+
+  override fun setLabelForHbA1c() {
+    bloodSugarReadingUnitLabel.text = getString(R.string.bloodsugarentry_percentage)
+  }
+
+  override fun setLabelForUnknown() {
+    bloodSugarReadingUnitLabel.text = getString(R.string.bloodsugarentry_mg_dl)
   }
 
   override fun showRemoveButton() {

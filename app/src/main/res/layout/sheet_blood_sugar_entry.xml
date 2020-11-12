@@ -104,9 +104,26 @@
         <TextView
           android:id="@+id/bloodSugarReadingUnitLabel"
           style="@style/Clinic.V2.MeasurementInputLayout"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/spacing_10"
           android:labelFor="@+id/bloodSugarReadingEditText"
           android:text="@string/bloodsugarentry_mg_dl"
           android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+          android:visibility="gone"
+          app:layout_constraintEnd_toEndOf="@+id/bloodSugarReadingEditText"
+          app:layout_constraintStart_toStartOf="@+id/bloodSugarReadingEditText"
+          app:layout_constraintTop_toBottomOf="@+id/bloodSugarReadingEditText" />
+
+        <com.google.android.material.button.MaterialButton
+          android:id="@+id/bloodSugarReadingUnitButton"
+          style="@style/Clinic.V2.MaterialButton.UnitPreference"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/spacing_16"
+          android:labelFor="@+id/bloodSugarReadingEditText"
+          android:text="@string/bloodsugarentry_mg_dl"
+          app:icon="@drawable/ic_keyboard_arrow_down_24dp"
           app:layout_constraintEnd_toEndOf="@+id/bloodSugarReadingEditText"
           app:layout_constraintStart_toStartOf="@+id/bloodSugarReadingEditText"
           app:layout_constraintTop_toBottomOf="@+id/bloodSugarReadingEditText" />

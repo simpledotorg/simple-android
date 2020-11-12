@@ -1,5 +1,6 @@
 package org.simple.clinic.bloodsugar.entry
 
+import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -7,13 +8,14 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
-import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarRepository
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.HbA1c
 import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
@@ -47,6 +49,7 @@ class BloodSugarEntryEffectHandlerTest {
   private val user = TestData.loggedInUser(uuid = UUID.fromString("4844b826-a162-49fe-b92c-962da172e86c"))
   private val facility = TestData.facility(uuid = UUID.fromString("7fabe36b-8fc3-457d-b9a8-68df71def7bd"))
   private val measurementUuid = UUID.fromString("175fb078-87b1-4c01-b5f0-91c3d2cefdfd")
+  private val bloodSugarUnitPreference = mock<Preference<BloodSugarUnitPreference>>()
 
   private val effectHandler = BloodSugarEntryEffectHandler(
       ui = ui,
@@ -57,8 +60,8 @@ class BloodSugarEntryEffectHandlerTest {
       schedulersProvider = TrampolineSchedulersProvider(),
       currentUser = Lazy { user },
       currentFacility = Lazy { facility },
-      uuidGenerator = FakeUuidGenerator.fixed(measurementUuid)
-
+      uuidGenerator = FakeUuidGenerator.fixed(measurementUuid),
+      bloodSugarUnitPreference = bloodSugarUnitPreference
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -412,4 +415,16 @@ class BloodSugarEntryEffectHandlerTest {
     verifyNoMoreInteractions(ui)
   }
 
+  @Test
+  fun `when load blood sugar unit preference effect is received, then load unit preference`() {
+    // given
+    whenever(bloodSugarUnitPreference.asObservable()) doReturn Observable.just(BloodSugarUnitPreference.Mg)
+
+    // when
+    testCase.dispatch(LoadBloodSugarUnitPreference)
+
+    // then
+    testCase.assertOutgoingEvents(BloodSugarUnitPreferenceLoaded(BloodSugarUnitPreference.Mg))
+    verifyZeroInteractions(ui)
+  }
 }

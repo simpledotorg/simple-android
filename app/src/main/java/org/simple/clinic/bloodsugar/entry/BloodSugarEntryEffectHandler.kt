@@ -1,5 +1,6 @@
 package org.simple.clinic.bloodsugar.entry
 
+import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -11,6 +12,7 @@ import io.reactivex.rxkotlin.cast
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarRepository
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.entry.PrefillDate.PrefillSpecificDate
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarEmpty
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
@@ -42,7 +44,8 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
-    private val uuidGenerator: UuidGenerator
+    private val uuidGenerator: UuidGenerator,
+    private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>
 ) {
   @AssistedInject.Factory
   interface Factory {
@@ -68,7 +71,17 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
         .addConsumer(SetBloodSugarReading::class.java, { ui.setBloodSugarReading(it.bloodSugarReading) }, schedulersProvider.ui())
         .addTransformer(UpdateBloodSugarEntry::class.java, updateBloodSugarEntryTransformer(schedulersProvider.io()))
         .addConsumer(ShowConfirmRemoveBloodSugarDialog::class.java, { ui.showConfirmRemoveBloodSugarDialog(it.bloodSugarMeasurementUuid) }, schedulersProvider.ui())
+        .addTransformer(LoadBloodSugarUnitPreference::class.java, loadBloodSugarUnitPreference())
         .build()
+  }
+
+  private fun loadBloodSugarUnitPreference(): ObservableTransformer<LoadBloodSugarUnitPreference, BloodSugarEntryEvent> {
+    return ObservableTransformer { effect ->
+      effect
+          .observeOn(schedulersProvider.io())
+          .switchMap { bloodSugarUnitPreference.asObservable() }
+          .map(::BloodSugarUnitPreferenceLoaded)
+    }
   }
 
   private fun fetchBloodSugarMeasurement(

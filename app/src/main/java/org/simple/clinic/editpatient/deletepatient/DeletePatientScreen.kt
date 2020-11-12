@@ -11,9 +11,9 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.screen_delete_patient.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenDeletePatientBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
@@ -39,6 +39,14 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   private val screenKey by unsafeLazy {
     screenRouter.key<DeletePatientScreenKey>(this)
   }
+
+  private var binding: ScreenDeletePatientBinding? = null
+
+  private val toolbar
+    get() = binding!!.toolbar
+
+  private val deleteReasonsRecyclerView
+    get() = binding!!.deleteReasonsRecyclerView
 
   private val deleteReasonsAdapter = ItemAdapter(DeleteReasonItem.DiffCallback())
   private val dialogEvents = PublishSubject.create<DeletePatientEvent>()
@@ -75,6 +83,8 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     super.onFinishInflate()
     if (isInEditMode) return
 
+    binding = ScreenDeletePatientBinding.bind(this)
+
     context.injector<DeletePatientScreenInjector>().inject(this)
 
     toolbar.setNavigationOnClickListener { screenRouter.pop() }
@@ -92,6 +102,7 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   override fun onDetachedFromWindow() {
     deleteConfirmationDialog.dismiss()
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

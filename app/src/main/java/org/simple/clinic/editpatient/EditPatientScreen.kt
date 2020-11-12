@@ -20,9 +20,9 @@ import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.patient_edit_bp_passport_view.view.*
-import kotlinx.android.synthetic.main.screen_edit_patient.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenEditPatientBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.editpatient.EditPatientValidationError.AgeExceedsMaxLimit
 import org.simple.clinic.editpatient.EditPatientValidationError.AgeExceedsMinLimit
@@ -117,6 +117,104 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     screenRouter.key<EditPatientScreenKey>(this)
   }
 
+  private var binding: ScreenEditPatientBinding? = null
+
+  private val zoneEditText
+    get() = binding!!.zoneEditText
+
+  private val streetAddressEditText
+    get() = binding!!.streetAddressEditText
+
+  private val deletePatient
+    get() = binding!!.deletePatient
+
+  private val fullNameInputLayout
+    get() = binding!!.fullNameInputLayout
+
+  private val ageInputLayout
+    get() = binding!!.ageInputLayout
+
+  private val dateOfBirthInputLayout
+    get() = binding!!.dateOfBirthInputLayout
+
+  private val phoneNumberInputLayout
+    get() = binding!!.phoneNumberInputLayout
+
+  private val genderRadioGroup
+    get() = binding!!.genderRadioGroup
+
+  private val alternativeIdInputLayout
+    get() = binding!!.alternativeIdInputLayout
+
+  private val streetAddressInputLayout
+    get() = binding!!.streetAddressInputLayout
+
+  private val colonyOrVillageInputLayout
+    get() = binding!!.colonyOrVillageInputLayout
+
+  private val zoneInputLayout
+    get() = binding!!.zoneInputLayout
+
+  private val districtInputLayout
+    get() = binding!!.districtInputLayout
+
+  private val stateInputLayout
+    get() = binding!!.stateInputLayout
+
+  private val maleRadioButton
+    get() = binding!!.maleRadioButton
+
+  private val femaleRadioButton
+    get() = binding!!.femaleRadioButton
+
+  private val transgenderRadioButton
+    get() = binding!!.transgenderRadioButton
+
+  private val saveButtonFrame
+    get() = binding!!.saveButtonFrame
+
+  private val fullNameEditText
+    get() = binding!!.fullNameEditText
+
+  private val phoneNumberEditText
+    get() = binding!!.phoneNumberEditText
+
+  private val districtEditText
+    get() = binding!!.districtEditText
+
+  private val stateEditText
+    get() = binding!!.stateEditText
+
+  private val alternativeIdInputEditText
+    get() = binding!!.alternativeIdInputEditText
+
+  private val colonyOrVillageEditText
+    get() = binding!!.colonyOrVillageEditText
+
+  private val backButton
+    get() = binding!!.backButton
+
+  private val dateOfBirthEditText
+    get() = binding!!.dateOfBirthEditText
+
+  private val ageEditText
+    get() = binding!!.ageEditText
+
+  private val bpPassportsContainer
+    get() = binding!!.bpPassportsContainer
+
+  private val bpPassportsLabel
+    get() = binding!!.bpPassportsLabel
+
+  private val formScrollView
+    get() = binding!!.formScrollView
+
+  private val dateOfBirthAndAgeSeparator
+    get() = binding!!.dateOfBirthAndAgeSeparator
+
+  private val saveButton
+    get() = binding!!.saveButton
+
   private val viewRenderer = EditPatientViewRenderer(this)
 
   private val events: Observable<EditPatientEvent>
@@ -156,6 +254,8 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     if (isInEditMode) {
       return
     }
+
+    binding = ScreenEditPatientBinding.bind(this)
 
     context.injector<Injector>().inject(this)
   }
@@ -228,6 +328,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

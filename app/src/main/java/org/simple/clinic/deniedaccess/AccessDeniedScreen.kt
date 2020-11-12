@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.screen_access_denied.view.*
+import org.simple.clinic.databinding.ScreenAccessDeniedBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
@@ -24,11 +24,19 @@ class AccessDeniedScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     screenRouter.key<AccessDeniedScreenKey>(this)
   }
 
+  private var binding: ScreenAccessDeniedBinding? = null
+
+  private val userFullNameText
+    get() = binding!!.userFullNameText
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
+
+    binding = ScreenAccessDeniedBinding.bind(this)
+
     context.injector<AccessDeniedScreenInjector>().inject(this)
 
     userFullNameText.text = screenKey.fullName
@@ -43,5 +51,10 @@ class AccessDeniedScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       }
     }
     screenRouter.registerBackPressInterceptor(interceptor)
+  }
+
+  override fun onDetachedFromWindow() {
+    binding = null
+    super.onDetachedFromWindow()
   }
 }

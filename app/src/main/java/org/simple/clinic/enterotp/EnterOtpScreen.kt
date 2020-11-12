@@ -11,11 +11,11 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_enterotp.view.*
 import org.simple.clinic.LOGIN_OTP_LENGTH
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.databinding.ScreenEnterotpBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
@@ -38,6 +38,32 @@ class EnterOtpScreen(
 
   @Inject
   lateinit var effectHandlerFactory: EnterOtpEffectHandler.Factory
+
+  private var binding: ScreenEnterotpBinding? = null
+
+  private val otpEntryEditText
+    get() = binding!!.otpEntryEditText
+
+  private val backButton
+    get() = binding!!.backButton
+
+  private val resendSmsButton
+    get() = binding!!.resendSmsButton
+
+  private val userPhoneNumberTextView
+    get() = binding!!.userPhoneNumberTextView
+
+  private val smsSentTextView
+    get() = binding!!.smsSentTextView
+
+  private val errorTextView
+    get() = binding!!.errorTextView
+
+  private val validateOtpProgressBar
+    get() = binding!!.validateOtpProgressBar
+
+  private val otpEntryContainer
+    get() = binding!!.otpEntryContainer
 
   private val events by unsafeLazy {
     Observable
@@ -66,6 +92,9 @@ class EnterOtpScreen(
     if (isInEditMode) {
       return
     }
+
+    binding = ScreenEnterotpBinding.bind(this)
+
     context.injector<Injector>().inject(this)
 
     otpEntryEditText.showKeyboard()
@@ -79,6 +108,7 @@ class EnterOtpScreen(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

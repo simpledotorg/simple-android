@@ -395,6 +395,11 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
   override fun setLabelForHbA1c() {
     bloodSugarReadingUnitLabel.text = getString(R.string.bloodsugarentry_percentage)
   }
+
+  override fun setLabelForUnknown() {
+    bloodSugarReadingUnitLabel.text = getString(R.string.bloodsugarentry_mg_dl)
+  }
+
   override fun showRemoveButton() {
     removeBloodSugarButton.visibility = View.VISIBLE
   }

@@ -35,4 +35,5 @@ interface BloodSugarEntryUi {
   fun decimalOrNumericBloodSugarInputType()
   fun numericBloodSugarInputType()
   fun setLabelForHbA1c()
+  fun setLabelForUnknown()
 }

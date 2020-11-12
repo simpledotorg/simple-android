@@ -33,7 +33,10 @@ class BloodSugarEntryUiRenderer(
         ui.decimalOrNumericBloodSugarInputType()
         ui.setLabelForHbA1c()
       }
-      is Unknown -> ui.numericBloodSugarInputType()
+      is Unknown -> {
+        ui.numericBloodSugarInputType()
+        ui.setLabelForUnknown()
+      }
     }
   }
 

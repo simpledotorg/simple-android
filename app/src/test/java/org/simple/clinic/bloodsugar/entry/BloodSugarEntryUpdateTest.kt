@@ -44,7 +44,7 @@ class BloodSugarEntryUpdateTest {
 
   private val defaultModel = BloodSugarEntryModel.create(LocalDate.now(testUserClock).year, New(patientUuid, Random))
   private val bloodSugarUnitPreference = mock<Preference<BloodSugarUnitPreference>>()
-  private val updateSpec = UpdateSpec<BloodSugarEntryModel, BloodSugarEntryEvent, BloodSugarEntryEffect>(
+  private val updateSpec = UpdateSpec(
       BloodSugarEntryUpdate(
           dateValidator,
           LocalDate.now(testUserClock.zone),

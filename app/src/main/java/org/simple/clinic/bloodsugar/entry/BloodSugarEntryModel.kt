@@ -32,7 +32,7 @@ data class BloodSugarEntryModel(
   }
 
   fun bloodSugarChanged(bloodSugarReading: String): BloodSugarEntryModel =
-      copy(bloodSugarReading = this.bloodSugarReading.readingChanged(bloodSugarReading))
+      copy(bloodSugarReadingValue = bloodSugarReading)
 
   fun dayChanged(day: String): BloodSugarEntryModel =
       copy(day = day)

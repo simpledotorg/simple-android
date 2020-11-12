@@ -61,7 +61,7 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
         .addAction(HideDateErrorMessage::class.java, ui::hideDateErrorMessage, schedulersProvider.ui())
         .addAction(Dismiss::class.java, ui::dismiss, schedulersProvider.ui())
         .addAction(ShowDateEntryScreen::class.java, ui::showDateEntryScreen, schedulersProvider.ui())
-        .addConsumer(ShowBloodSugarValidationError::class.java, { showBloodSugarValidationError(it.result) }, schedulersProvider.ui())
+        .addConsumer(ShowBloodSugarValidationError::class.java, { showBloodSugarValidationError(it.result, it.unitPreference) }, schedulersProvider.ui())
         .addConsumer(ShowBloodSugarEntryScreen::class.java, { showBloodSugarEntryScreen(it.date) }, schedulersProvider.ui())
         .addTransformer(PrefillDate::class.java, prefillDate(schedulersProvider.ui()))
         .addConsumer(ShowDateValidationError::class.java, { showDateValidationError(it.result) }, schedulersProvider.ui())
@@ -98,10 +98,10 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
   private fun getExistingBloodSugarMeasurement(bloodSugarMeasurementUuid: UUID): BloodSugarMeasurement? =
       bloodSugarRepository.measurement(bloodSugarMeasurementUuid)
 
-  private fun showBloodSugarValidationError(result: ValidationResult) {
+  private fun showBloodSugarValidationError(result: ValidationResult, unitPreference: BloodSugarUnitPreference) {
     when (result) {
       ErrorBloodSugarEmpty -> ui.showBloodSugarEmptyError()
-      is ErrorBloodSugarTooHigh -> ui.showBloodSugarHighError(result.measurementType)
+      is ErrorBloodSugarTooHigh -> ui.showBloodSugarHighError(result.measurementType, unitPreference)
       is ErrorBloodSugarTooLow -> ui.showBloodSugarLowError(result.measurementType)
     }
   }

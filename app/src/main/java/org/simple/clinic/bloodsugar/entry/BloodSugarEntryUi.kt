@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.entry
 
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import java.time.LocalDate
 import java.util.UUID
 
@@ -8,7 +9,7 @@ interface BloodSugarEntryUi {
   fun setBloodSugarSavedResultAndFinish()
   fun hideBloodSugarErrorMessage()
   fun showBloodSugarEmptyError()
-  fun showBloodSugarHighError(measurementType: BloodSugarMeasurementType)
+  fun showBloodSugarHighError(measurementType: BloodSugarMeasurementType, unitPreference: BloodSugarUnitPreference)
   fun showBloodSugarLowError(measurementType: BloodSugarMeasurementType)
   fun showBloodSugarEntryScreen()
   fun showDateEntryScreen()

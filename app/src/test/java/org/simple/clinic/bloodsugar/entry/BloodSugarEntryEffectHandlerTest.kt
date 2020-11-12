@@ -134,7 +134,7 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh(measurementType), BloodSugarUnitPreference.Mg))
 
     // then
-    verify(ui).showBloodSugarHighError(measurementType)
+    verify(ui).showBloodSugarHighError(measurementType, BloodSugarUnitPreference.Mg)
     verifyNoMoreInteractions(ui)
   }
 

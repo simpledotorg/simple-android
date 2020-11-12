@@ -13,7 +13,7 @@
 ### Changes
 - Disabled running the app on rooted devices
 - Change label of district address fields in  patient entry and edit screens to "Zone" for Ethiopia users
-- Updated translations: `ti-ET`, `pa-IN`, `ta-IN`, `te-IN`
+- Updated translations: `ti-ET`, `pa-IN`, `ta-IN`, `te-IN`, `mr-IN`
 - Render blood sugar in `mmol/L` in summary view and history.
 - Refill prescriptions in edit medicine screen
 

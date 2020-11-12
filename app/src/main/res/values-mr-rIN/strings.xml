@@ -66,7 +66,7 @@
   <string name="patiententry_kebele">कबियल</string>
   <string name="patiententry_zone">युनियन</string>
   <string name="patiententry_district">जिल्‍हा</string>
-  <string name="patiententry_woreda">वॉरेदा</string>
+  <string name="patiententry_woreda">क्षेत्र</string>
   <string name="patiententry_upazila">उपजिल्‍हा</string>
   <string name="patiententry_state">राज्‍य</string>
   <string name="patiententry_region">प्रदेश</string>
@@ -382,7 +382,7 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ॲप अद्यतनित करा</string>
-  <string name="appupdatedialog_body">आपल्‍याला Simple अपडेट करण्‍यासाठी Google Play Store वर नेण्‍यात येईल.</string>
+  <string name="appupdatedialog_body">आपल्‍याला सिंपल अपडेट करण्‍यासाठी Google Play Store वर नेण्‍यात येईल.</string>
   <string name="appupdatedialog_positive_button_text">अद्यतनित करा</string>
   <string name="appupdatedialog_negative_button_text">आता नाही</string>
 
@@ -662,4 +662,9 @@
   <string name="sheet_teleconsult_status_no">नाही</string>
   <string name="sheet_teleconsult_status_waiting">अद्याप प्रतीक्षा करत आहे</string>
   <string name="sheet_teleconsult_status_done">पूर्ण झाले</string>
+
+  <!-- Setup activity -->
+  <string name="setup_cannot_run">ॲप्लिकेशन चालू करू शकत नाही</string>
+  <string name="setup_rooted">सिंपल रूट केलेल्या उपकरणावर चालू केले जाऊ शकत नाही.</string>
+  <string name="setup_close">बंद करा</string>
 </resources>

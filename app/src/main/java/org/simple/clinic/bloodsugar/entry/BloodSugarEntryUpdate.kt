@@ -6,7 +6,9 @@ import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
+import org.simple.clinic.bloodsugar.HbA1c
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarSaveState.NOT_SAVING_BLOOD_SUGAR
@@ -74,26 +76,37 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
     return if (model.bloodSugarSaveState == SAVING_BLOOD_SUGAR) {
       noChange()
     } else {
-      val bloodSugarValidationResult = model.bloodSugarReading.validate()
+      val bloodSugarReading = createBloodSugarReading(model)
+      val bloodSugarValidationResult = bloodSugarReading.validate()
       val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
-      val validationErrorEffects = getValidationErrorEffects(bloodSugarValidationResult, dateValidationResult)
+      val validationErrorEffects = getValidationErrorEffects(bloodSugarValidationResult, dateValidationResult, model.bloodSugarUnitPreference)
 
       if (validationErrorEffects.isNotEmpty()) {
         Next.dispatch(validationErrorEffects)
       } else {
-        next(model.bloodSugarStateChanged(SAVING_BLOOD_SUGAR), getCreateorUpdateEntryEffect(model, dateValidationResult))
+        next(model.bloodSugarStateChanged(SAVING_BLOOD_SUGAR), getCreateorUpdateEntryEffect(model, dateValidationResult, bloodSugarReading))
       }
+    }
+  }
+
+  private fun createBloodSugarReading(model: BloodSugarEntryModel): BloodSugarReading {
+    return when {
+      model.bloodSugarMeasurementType is HbA1c -> BloodSugarReading.fromHbA1c(model.bloodSugarReadingValue)
+      model.bloodSugarUnitPreference == BloodSugarUnitPreference.Mg -> BloodSugarReading.fromMg(model.bloodSugarReadingValue, model.bloodSugarMeasurementType)
+      model.bloodSugarUnitPreference == BloodSugarUnitPreference.Mmol -> BloodSugarReading.fromMmol(model.bloodSugarReadingValue, model.bloodSugarMeasurementType)
+      else -> throw IllegalArgumentException("Cannot create blood sugar reading for the given measurement type & unit preference.")
     }
   }
 
   private fun getValidationErrorEffects(
       bloodSugarValidationResult: ValidationResult,
-      dateValidationResult: Result
+      dateValidationResult: Result,
+      unitPreference: BloodSugarUnitPreference
   ): Set<BloodSugarEntryEffect> {
     val validationErrorEffects = mutableSetOf<BloodSugarEntryEffect>()
 
     if (bloodSugarValidationResult !is Valid) {
-      validationErrorEffects.add(ShowBloodSugarValidationError(bloodSugarValidationResult))
+      validationErrorEffects.add(ShowBloodSugarValidationError(bloodSugarValidationResult, unitPreference))
     }
 
     if (dateValidationResult !is Result.Valid) {
@@ -104,7 +117,8 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
 
   private fun getCreateorUpdateEntryEffect(
       model: BloodSugarEntryModel,
-      dateValidationResult: Result
+      dateValidationResult: Result,
+      bloodSugarReading: BloodSugarReading
   ): BloodSugarEntryEffect {
     val userEnteredDate = (dateValidationResult as Result.Valid).parsedDate
     val prefillDate = model.prefilledDate!!
@@ -114,13 +128,13 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
           openAs.patientId,
           userEnteredDate,
           prefillDate,
-          model.bloodSugarReading
+          bloodSugarReading
       )
       is OpenAs.Update -> UpdateBloodSugarEntry(
           openAs.bloodSugarMeasurementUuid,
           userEnteredDate,
           prefillDate,
-          model.bloodSugarReading
+          bloodSugarReading
       )
     }
   }
@@ -140,11 +154,12 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
   private fun onBloodSugarDateClicked(
       model: BloodSugarEntryModel
   ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
-    val result = model.bloodSugarReading.validate()
+    val bloodSugarReading = createBloodSugarReading(model)
+    val result = bloodSugarReading.validate()
     val effect = if (result is Valid) {
       ShowDateEntryScreen
     } else {
-      ShowBloodSugarValidationError(result)
+      ShowBloodSugarValidationError(result, model.bloodSugarUnitPreference)
     }
     return dispatch(effect)
   }

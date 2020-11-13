@@ -33,7 +33,7 @@ object Dismiss : BloodSugarEntryEffect()
 
 object ShowDateEntryScreen : BloodSugarEntryEffect()
 
-data class ShowBloodSugarValidationError(val result: ValidationResult) : BloodSugarEntryEffect()
+data class ShowBloodSugarValidationError(val result: ValidationResult, val unitPreference: BloodSugarUnitPreference) : BloodSugarEntryEffect()
 
 data class ShowBloodSugarEntryScreen(val date: LocalDate) : BloodSugarEntryEffect()
 

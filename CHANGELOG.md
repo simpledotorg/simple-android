@@ -12,6 +12,7 @@
 - Added blood sugar unit preference
 - Move scanning of QR codes to a discrete activity
 - Bump AGP to 4.1.1
+- Convert blood sugar values to `mg/dL` when saving/updating
 
 ### Changes
 - Disabled running the app on rooted devices

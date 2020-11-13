@@ -20,6 +20,9 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference.Mg
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference.Mmol
 import org.simple.clinic.bloodsugar.Fasting
 import org.simple.clinic.bloodsugar.HbA1c
 import org.simple.clinic.bloodsugar.PostPrandial
@@ -259,17 +262,43 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_empty))
   }
 
-  override fun showBloodSugarHighError(measurementType: BloodSugarMeasurementType) {
+  override fun showBloodSugarHighError(measurementType: BloodSugarMeasurementType, unitPreference: BloodSugarUnitPreference) {
+    when (unitPreference) {
+      Mg -> showBloodSugarHighErrorForMg(measurementType)
+      Mmol -> showBloodSugarHighErrorForMmol(measurementType)
+    }
+  }
+
+  private fun showBloodSugarHighErrorForMg(measurementType: BloodSugarMeasurementType) {
     when (measurementType) {
       Random, PostPrandial, Fasting -> showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_higher_limit))
       HbA1c -> showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_higher_limit_hba1c))
     }
   }
 
-  override fun showBloodSugarLowError(measurementType: BloodSugarMeasurementType) {
+  private fun showBloodSugarHighErrorForMmol(measurementType: BloodSugarMeasurementType) {
+    when (measurementType) {
+      Random, PostPrandial, Fasting -> showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_higher_limit_mmol))
+    }
+  }
+
+  override fun showBloodSugarLowError(measurementType: BloodSugarMeasurementType, unitPreference: BloodSugarUnitPreference) {
+    when (unitPreference) {
+      Mg -> showBloodSugarLowErrorForMg(measurementType)
+      Mmol -> showBloodSugarLowErrorForMmol(measurementType)
+    }
+  }
+
+  private fun showBloodSugarLowErrorForMg(measurementType: BloodSugarMeasurementType) {
     when (measurementType) {
       Random, PostPrandial, Fasting -> showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_lower_limit))
       HbA1c -> showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_lower_limit_hba1c))
+    }
+  }
+
+  private fun showBloodSugarLowErrorForMmol(measurementType: BloodSugarMeasurementType) {
+    when (measurementType) {
+      Random, PostPrandial, Fasting -> showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_lower_limit_mmol))
     }
   }
 

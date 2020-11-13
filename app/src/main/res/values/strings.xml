@@ -519,8 +519,10 @@
   <string name="bloodsugarentry_year">Year</string>
   <string name="bloodsugarentry_error_lower_limit">Value cannot be less than 30 mg/dL</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">Value cannot be less than 3\u0025</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">Value cannot be less than 1.66 mmol/L</string>
   <string name="bloodsugarentry_error_higher_limit">Value cannot be more than 1000 mg/dL</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">Value cannot be more than 25\u0025</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">Value cannot be more than 55.49 mmol/L</string>
   <string name="bloodsugarentry_error_empty">Value cannot be empty</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">Enter a valid date in DD/MM/YYYY</string>
   <string name="bloodsugarentry_error_date_is_in_future">Date cannot be in the future</string>

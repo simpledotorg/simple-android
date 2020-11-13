@@ -25,4 +25,17 @@ class BloodSugarUnitSelectionUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when the blood sugar unit preference is updated, then close the dialog`() {
+    updateSpec
+        .given(model)
+        .whenEvent(BloodSugarUnitSelectionUpdated)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(CloseDialog)
+            )
+        )
+  }
 }

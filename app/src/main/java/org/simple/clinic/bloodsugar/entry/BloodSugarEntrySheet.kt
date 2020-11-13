@@ -15,7 +15,6 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.toObservable
-import kotlinx.android.synthetic.main.sheet_blood_sugar_entry.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -35,6 +34,7 @@ import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog
 import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog.RemoveBloodSugarListener
 import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
+import org.simple.clinic.databinding.SheetBloodSugarEntryBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.LocaleOverrideContextWrapper
@@ -113,7 +113,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
   private val uiRenderer = BloodSugarEntryUiRenderer(this)
 
   private val openAs: OpenAs by lazy {
-    intent.getParcelableExtra<OpenAs>(KEY_OPEN_AS)!!
+    intent.getParcelableExtra(KEY_OPEN_AS)!!
   }
 
   private val delegate by unsafeLazy {
@@ -146,9 +146,63 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
         .share()
   }
 
+  private lateinit var binding: SheetBloodSugarEntryBinding
+
+  private val rootLayout
+    get() = binding.rootLayout
+
+  private val bloodSugarReadingEditText
+    get() = binding.bloodSugarReadingEditText
+
+  private val dayEditText
+    get() = binding.dayEditText
+
+  private val monthEditText
+    get() = binding.monthEditText
+
+  private val yearEditText
+    get() = binding.yearEditText
+
+  private val bloodSugarDateButton
+    get() = binding.bloodSugarDateButton
+
+  private val backImageButton
+    get() = binding.backImageButton
+
+  private val viewFlipper
+    get() = binding.viewFlipper
+
+  private val removeBloodSugarButton
+    get() = binding.removeBloodSugarButton
+
+  private val bloodSugarErrorTextView
+    get() = binding.bloodSugarErrorTextView
+
+  private val dateErrorTextView
+    get() = binding.dateErrorTextView
+
+  private val enterBloodSugarTitleTextView
+    get() = binding.enterBloodSugarTitleTextView
+
+  private val editBloodSugarTitleTextView
+    get() = binding.editBloodSugarTitleTextView
+
+  private val progressLoader
+    get() = binding.progressLoader
+
+  private val bloodSugarReadingLayout
+    get() = binding.bloodSugarReadingLayout
+
+  private val bloodSugarReadingUnitButton
+    get() = binding.bloodSugarReadingUnitButton
+
+  private val bloodSugarReadingUnitLabel
+    get() = binding.bloodSugarReadingUnitLabel
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.sheet_blood_sugar_entry)
+    binding = SheetBloodSugarEntryBinding.inflate(layoutInflater)
+    setContentView(binding.root)
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 

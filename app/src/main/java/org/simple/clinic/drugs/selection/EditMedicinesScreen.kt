@@ -53,10 +53,13 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
 
   private val toolbar
     get() = binding!!.prescribeddrugsToolbar
+
   private val recyclerView
     get() = binding!!.prescribeddrugsRecyclerview
+
   private val doneButton
     get() = binding!!.prescribeddrugsDone
+
   private val refillMedicineButton
     get() = binding!!.prescribeddrugsRefill
 

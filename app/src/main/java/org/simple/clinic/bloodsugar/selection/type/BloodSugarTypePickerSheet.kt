@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
-import kotlinx.android.synthetic.main.sheet_blood_sugar_type_picker.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
@@ -14,6 +13,7 @@ import org.simple.clinic.bloodsugar.HbA1c
 import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.selection.type.di.BloodSugarTypePickerSheetComponent
+import org.simple.clinic.databinding.SheetBloodSugarTypePickerBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
@@ -38,9 +38,15 @@ class BloodSugarTypePickerSheet : BottomSheetActivity() {
     )
   }
 
+  private lateinit var binding: SheetBloodSugarTypePickerBinding
+
+  private val typesRecyclerView
+    get() = binding.typesRecyclerView
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.sheet_blood_sugar_type_picker)
+    binding = SheetBloodSugarTypePickerBinding.inflate(layoutInflater)
+    setContentView(binding.root)
     val adapter = BloodSugarTypeAdapter { type ->
       val intent = Intent()
       intent.putExtra(EXTRA_BLOOD_SUGAR_TYPE, type)

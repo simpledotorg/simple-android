@@ -8,10 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_facility_change.*
 import org.simple.clinic.ClinicApp
-import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenFacilityChangeBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.ConfirmFacilityChangeSheet
@@ -55,9 +54,16 @@ class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi, FacilityCh
     )
   }
 
+  private lateinit var binding: ScreenFacilityChangeBinding
+
+  private val facilityPickerView
+    get() = binding.facilityPickerView
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.screen_facility_change)
+
+    binding = ScreenFacilityChangeBinding.inflate(layoutInflater)
+    setContentView(binding.root)
 
     setupUiComponents()
 

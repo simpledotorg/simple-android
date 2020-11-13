@@ -44,7 +44,7 @@ class BloodSugarEntryUpdateTest {
 
   private val defaultModel = BloodSugarEntryModel.create(LocalDate.now(testUserClock).year, New(patientUuid, Random))
   private val bloodSugarUnitPreference = mock<Preference<BloodSugarUnitPreference>>()
-  private val updateSpec = UpdateSpec<BloodSugarEntryModel, BloodSugarEntryEvent, BloodSugarEntryEffect>(
+  private val updateSpec = UpdateSpec(
       BloodSugarEntryUpdate(
           dateValidator,
           LocalDate.now(testUserClock.zone),
@@ -174,14 +174,14 @@ class BloodSugarEntryUpdateTest {
 
   @Test
   fun `when blood sugar entry is active and value is invalid and date button is pressed, then show blood sugar validation errors`() {
-    val measurementType = defaultModel.bloodSugarReading.type
+    val measurementType = defaultModel.bloodSugarMeasurementType
 
     updateSpec
         .given(defaultModel.bloodSugarChanged(invalidBloodSugar))
         .whenEvent(BloodSugarDateClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh(measurementType)) as BloodSugarEntryEffect)
+            hasEffects(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh(measurementType), BloodSugarUnitPreference.Mg) as BloodSugarEntryEffect)
         ))
   }
 
@@ -284,14 +284,14 @@ class BloodSugarEntryUpdateTest {
         .monthChanged(validBloodSugarDate.monthValue.toString())
         .yearChanged(validBloodSugarDate.year.toString())
         .datePrefilled(validBloodSugarDate)
-    val measurementType = invalidBloodSugarModel.bloodSugarReading.type
+    val measurementType = invalidBloodSugarModel.bloodSugarMeasurementType
 
     updateSpec
         .given(invalidBloodSugarModel)
         .whenEvent(SaveClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh(measurementType)) as BloodSugarEntryEffect)
+            hasEffects(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh(measurementType), BloodSugarUnitPreference.Mg) as BloodSugarEntryEffect)
         ))
   }
 

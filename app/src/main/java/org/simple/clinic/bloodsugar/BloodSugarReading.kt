@@ -14,6 +14,28 @@ import org.simple.clinic.bloodsugar.entry.ValidationResult.Valid
 
 @Parcelize
 data class BloodSugarReading(val value: String, val type: BloodSugarMeasurementType) : Parcelable {
+
+  companion object {
+
+    fun fromMg(value: String, measurementType: BloodSugarMeasurementType): BloodSugarReading {
+      return BloodSugarReading(value, measurementType)
+    }
+
+    fun fromMmol(value: String, measurementType: BloodSugarMeasurementType): BloodSugarReading {
+      val mgValue = if (value.isNotBlank()) {
+        value.toFloat() * 18.0182
+      } else {
+        value
+      }
+
+      return BloodSugarReading(mgValue.toString(), measurementType)
+    }
+
+    fun fromHbA1c(value: String): BloodSugarReading {
+      return BloodSugarReading(value, HbA1c)
+    }
+  }
+
   val isHigh: Boolean
     get() {
       return when (type) {
@@ -106,8 +128,6 @@ data class BloodSugarReading(val value: String, val type: BloodSugarMeasurementT
         HbA1c -> ""
       }
     }
-
-  fun readingChanged(newReading: String): BloodSugarReading = copy(value = newReading)
 
   fun validate(): ValidationResult {
     if (value.isBlank()) {

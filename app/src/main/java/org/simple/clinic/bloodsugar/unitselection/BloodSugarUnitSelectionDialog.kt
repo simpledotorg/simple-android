@@ -2,6 +2,7 @@ package org.simple.clinic.bloodsugar.unitselection
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.dialog_bloodsugar_selectionunit.*
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
+import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -73,6 +75,11 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment() {
     )
   }
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<BloodSugarUnitSelectionDialogInjector>().inject(this)
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)
@@ -114,5 +121,9 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment() {
   override fun onDestroyView() {
     super.onDestroyView()
     screenDestroys.onNext(ScreenDestroyed())
+  }
+
+  interface BloodSugarUnitSelectionDialogInjector {
+    fun inject(target: BloodSugarUnitSelectionDialog)
   }
 }

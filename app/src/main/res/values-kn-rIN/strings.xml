@@ -66,7 +66,7 @@
   <string name="patiententry_kebele">ಕೆಬೇಲ್</string>
   <string name="patiententry_zone">ಪ್ರದೇಶ</string>
   <string name="patiententry_district">ಜಿಲ್ಲೆ</string>
-  <string name="patiententry_woreda">ವೊರೇಡಾ</string>
+  <string name="patiententry_woreda">ವಲಯ</string>
   <string name="patiententry_upazila">ಉಪಜಿಲ್ಲೆ</string>
   <string name="patiententry_state">ರಾಜ್ಯ</string>
   <string name="patiententry_region">ಪ್ರದೇಶ</string>
@@ -158,6 +158,7 @@
   <string name="patientsummary_prescriptions_update">ಔಷಧಗಳನ್ನು ಎಡಿಟ್ ಮಾಡಿ</string>
   <string name="patientsummary_bp_add_new">ರಕ್ತದೊತ್ತಡ</string>
   <string name="patientsummary_finish_saving_patient">ಉಳಿಸಿ</string>
+  <string name="patientsummary_finish_refill_medicine">ಔಷಧಿ ರೀಫಿಲ್ ಮಾಡಿ</string>
   <string name="patientsummary_bp_none_added">ಯಾವುದೇ ರಕ್ತದ ಒತ್ತಡವನ್ನು ಸೇರಿಸಲಾಗಿಲ್ಲ</string>
   <string name="patientsummary_edit">ಸಂಪಾದಿಸಿ</string>
 
@@ -294,6 +295,7 @@
   <string name="scheduleappointment_next_visit_in">ಇಷ್ಟು ಸಮಯದಲ್ಲಿ ಮುಂದಿನ ಭೇಟಿ ನಿಗದಿಪಡಿಸಿ</string>
   <string name="scheduleappointment_not_now">ಈಗಲ್ಲ</string>
   <string name="scheduleappointment_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
+  <string name="scheduleappointment_next">ಮುಂದಿನ</string>
   <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s ದಿನ</item>
     <item quantity="other">%s ದಿನಗಳು</item>
@@ -380,7 +382,7 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ಆ್ಯಪ್ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>
-  <string name="appupdatedialog_body">ಸಿಂಪಲ್ ಅನ್ನು ಅಪ್‌ಡೇಟ್ ಮಾಡಲು ನಿಮ್ಮನ್ನು ಪ್ಲೇ ಸ್ಟೋರ್‌ಗೆ ಒಯ್ಯಲಾಗುತ್ತದೆ</string>
+  <string name="appupdatedialog_body">ಸಿಂಪಲ್ ಅನ್ನು ಅಪ್ಡೇಟ್ ಮಾಡುವುದಕ್ಕಾಗಿ ನಿಮ್ಮನ್ನು Google Play Store ಗೆ ಕರೆದೊಯ್ಯಲಾಗುತ್ತದೆ.</string>
   <string name="appupdatedialog_positive_button_text">ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>
   <string name="appupdatedialog_negative_button_text">ಈಗಲ್ಲ</string>
 
@@ -430,7 +432,7 @@
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">ಸಿಂಪಲ್ ಲೋಗೊ</string>
   <string name="selectcountry_next">ಮುಂದಿನ</string>
-  <string name="selectcountry_title">ನಿಮ್ಮ ದೇಶವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+  <string name="selectcountry_title">ನಿಮ್ಮ ದೇಶ ಆಯ್ಕೆಮಾಡಿ</string>
   <string name="selectcountry_networkerror">ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವಿಲ್ಲ!</string>
   <string name="selectcountry_servererror">ಸರ್ವರ್ ದೋಷ! ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ!</string>
   <string name="selectcountry_genericerror">ಏನೋ ತಪ್ಪಾಗಿದೆ! ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ!</string>
@@ -644,7 +646,6 @@
   <string name="view_teleconsult_doctor_info_add_signature">ಸಹಿಯನ್ನು ಸೇರಿಸಿ</string>
   <string name="view_teleconsult_doctor_info_signature_error">ಸಹಿಯನ್ನು ಸೇರಿಸಿ</string>
 
-  <!-- Teleconsult share prescription screen -->
   <string name="screen_teleconsult_share_prescription_download">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
   <string name="screen_teleconsult_share_prescription_share">ಹಂಚಿಕೊಳ್ಳಿ</string>
   <string name="screen_teleconsult_share_prescription_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
@@ -656,4 +657,14 @@
   <string name="select_diagnosis_error_diagnosis_required">ರೋಗನಿರ್ಣಯ ಅಗತ್ಯವಿದೆ</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">ಹೈಪರ್‌ಟೆನ್ಶನ್ ಮತ್ತು ಡಯಾಬಿಟಿಸ್ ಎರಡಕ್ಕೂ ರೋಗನಿರ್ಣಯ ಆಯ್ಕೆಮಾಡಿ</string>
   <string name="select_diagnosis_error_ok">ಸರಿ</string>
+  <string name="sheet_teleconsult_status_title">ಟೆಲೆ-ಕನ್ಸಲ್ಟ್ ಪೂರ್ಣಗೊಂಡಿದೆಯೇ?</string>
+  <string name="sheet_teleconsult_status_yes">ಹೌದು</string>
+  <string name="sheet_teleconsult_status_no">ಇಲ್ಲ</string>
+  <string name="sheet_teleconsult_status_waiting">ಇನ್ನೂ ಕಾಯಲಾಗುತ್ತಿದೆ</string>
+  <string name="sheet_teleconsult_status_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
+
+  <!-- Setup activity -->
+  <string name="setup_cannot_run">ಅಪ್ಲಿಕೇಶನ್ ರನ್ ಮಾಡಲಾಗುವುದಿಲ್ಲ</string>
+  <string name="setup_rooted">ಸಿಂಪಲ್ ಅನ್ನು ರೂಟ್ ಮಾಡಲಾದ ಸಾಧನದಲ್ಲಿ ರನ್ ಮಾಡಲಾಗುವುದಿಲ್ಲ.</string>
+  <string name="setup_close">ಮುಚ್ಚಿ</string>
 </resources>

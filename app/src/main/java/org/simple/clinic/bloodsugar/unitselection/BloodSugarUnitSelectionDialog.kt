@@ -52,7 +52,6 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
       val fragment = BloodSugarUnitSelectionDialog()
       fragment.arguments = arguments
 
-
       fragmentManager
           .beginTransaction()
           .add(fragment, FRAGMENT_TAG)
@@ -89,7 +88,8 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
         events = dialogEvents.ofType(),
         defaultModel = BloodSugarUnitSelectionModel.create(bloodSugarUnitPreference = bloodSugarUnitPreference as BloodSugarUnitPreference),
         update = BloodSugarUnitSelectionUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build()
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = BloodSugarUnitSelectionInit()
     )
   }
 

@@ -22,6 +22,8 @@ class BloodSugarUnitSelectionEffectHandlerTest {
   ).build()
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
+  private val bloodSugarUnitPreferenceValue = BloodSugarUnitPreference.Mmol
+
 
   @After
   fun tearDown() {
@@ -30,9 +32,6 @@ class BloodSugarUnitSelectionEffectHandlerTest {
 
   @Test
   fun `when update blood sugar unit selection effect is received, then update the blood sugar unit preference`() {
-    // given
-    val bloodSugarUnitPreferenceValue = BloodSugarUnitPreference.Mmol
-
     // when
     effectHandlerTestCase.dispatch(SaveBloodSugarUnitSelection(bloodSugarUnitSelection = bloodSugarUnitPreferenceValue))
 
@@ -49,6 +48,17 @@ class BloodSugarUnitSelectionEffectHandlerTest {
 
     // then
     verify(uiActions).closeDialog()
+    verifyNoMoreInteractions(uiActions)
+    effectHandlerTestCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when prefill blood sugar unit selected effect is received, then select the prefilled unit preference`() {
+    // when
+    effectHandlerTestCase.dispatch(PreFillBloodSugarUnitSelected(bloodSugarUnitPreferenceValue))
+
+    // then
+    verify(uiActions).prefillBloodSugarUnitSelection(bloodSugarUnitPreferenceValue)
     verifyNoMoreInteractions(uiActions)
     effectHandlerTestCase.assertNoOutgoingEvents()
   }

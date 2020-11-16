@@ -24,6 +24,7 @@ class BloodSugarUnitSelectionEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<BloodSugarUnitSelectionEffect, BloodSugarUnitSelectionEvent>()
         .addTransformer(SaveBloodSugarUnitSelection::class.java, updateBloodSugarUnitPreferenceSelection())
         .addAction(CloseDialog::class.java, uiActions::closeDialog, schedulersProvider.ui())
+        .addConsumer(PreFillBloodSugarUnitSelected::class.java, { uiActions.prefillBloodSugarUnitSelection(it.bloodSugarUnitPreference) }, schedulersProvider.ui())
         .build()
   }
 

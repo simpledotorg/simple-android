@@ -10,7 +10,7 @@ import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 class BloodSugarUnitSelectionUpdateTest {
 
   private val unitSelectionValue = BloodSugarUnitPreference.Mg
-  private val model = BloodSugarUnitSelectionModel()
+  private val model = BloodSugarUnitSelectionModel.create(unitSelectionValue)
   private val updateSpec = UpdateSpec(BloodSugarUnitSelectionUpdate())
 
   @Test

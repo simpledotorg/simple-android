@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
@@ -36,10 +37,29 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment() {
   companion object {
 
     private const val FRAGMENT_TAG = "blood_sugar_unit_selection_tag"
+    private const val KEY_UNIT_PREF = "bloodSugarUnitSelection"
 
-    fun show(fragmentManager: FragmentManager) {
+    fun show(fragmentManager: FragmentManager, bloodSugarUnitPreference: BloodSugarUnitPreference) {
+      val existingFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG)
+
+      if (existingFragment != null) {
+        fragmentManager
+            .beginTransaction()
+            .remove(existingFragment)
+            .commitNowAllowingStateLoss()
+      }
+
+      val arguments = Bundle()
+      arguments.putSerializable(KEY_UNIT_PREF, bloodSugarUnitPreference)
+
       val fragment = BloodSugarUnitSelectionDialog()
-      fragment.show(fragmentManager, FRAGMENT_TAG)
+      fragment.arguments = arguments
+
+
+      fragmentManager
+          .beginTransaction()
+          .add(fragment, FRAGMENT_TAG)
+          .commitNowAllowingStateLoss()
     }
   }
 
@@ -66,10 +86,11 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment() {
   }
 
   private val delegate: MobiusDelegate<BloodSugarUnitSelectionModel, BloodSugarUnitSelectionEvent, BloodSugarUnitSelectionEffect> by unsafeLazy {
+    val bloodSugarUnitPreference = arguments!!.getSerializable(KEY_UNIT_PREF)
 
     MobiusDelegate.forActivity(
         events = dialogEvents.ofType(),
-        defaultModel = BloodSugarUnitSelectionModel(),
+        defaultModel = BloodSugarUnitSelectionModel.create(bloodSugarUnitPreference = bloodSugarUnitPreference as BloodSugarUnitPreference),
         update = BloodSugarUnitSelectionUpdate(),
         effectHandler = effectHandlerFactory.create(this).build()
     )

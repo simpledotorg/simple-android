@@ -15,9 +15,9 @@ import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.dialog_bloodsugar_selectionunit.*
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
+import org.simple.clinic.databinding.DialogBloodsugarSelectionunitBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
@@ -27,6 +27,11 @@ import javax.inject.Inject
 class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitSelectionUiActions {
 
   private lateinit var layout: View
+
+  private var binding: DialogBloodsugarSelectionunitBinding? = null
+
+  private val bloodSugarUnitGroup
+    get() = binding!!.bloodSugarUnitGroup
 
   @Inject
   lateinit var effectHandlerFactory: BloodSugarUnitSelectionEffectHandler.Factory
@@ -95,6 +100,7 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
+    binding = DialogBloodsugarSelectionunitBinding.bind(layout)
     context.injector<BloodSugarUnitSelectionDialogInjector>().inject(this)
   }
 
@@ -121,6 +127,11 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
   override fun onStop() {
     super.onStop()
     delegate.stop()
+  }
+
+  override fun onDetach() {
+    super.onDetach()
+    binding = null
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

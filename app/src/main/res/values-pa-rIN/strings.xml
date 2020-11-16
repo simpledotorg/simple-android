@@ -66,7 +66,7 @@
   <string name="patiententry_kebele">ਕੇਬੇਲੇ</string>
   <string name="patiententry_zone">ਯੂਨੀਅਨ</string>
   <string name="patiententry_district">ਜ਼ਿਲ੍ਹਾ</string>
-  <string name="patiententry_woreda">ਵੋਰੈਡਾ</string>
+  <string name="patiententry_woreda">ਖੇਤਰ/ਜ਼ੋਨ</string>
   <string name="patiententry_upazila">ਅਪੈਜ਼ੀਲਾ</string>
   <string name="patiententry_state">ਰਾਜ</string>
   <string name="patiententry_region">ਖੇਤਰ</string>
@@ -662,4 +662,9 @@
   <string name="sheet_teleconsult_status_no">ਨਹੀਂ</string>
   <string name="sheet_teleconsult_status_waiting">ਹਾਲੇ ਵੀ ਉਡੀਕ ਕਰ ਰਹੇ ਹੋ</string>
   <string name="sheet_teleconsult_status_done">ਹੋ ਗਿਆ</string>
+
+  <!-- Setup activity -->
+  <string name="setup_cannot_run">ਐਪਲੀਕੇਸ਼ਨ ਨੂੰ ਨਹੀਂ ਚਲਾ ਸਕਦੇ</string>
+  <string name="setup_rooted">ਸਿੰਪਲ ਨੂੰ ਰੂਟ ਡਿਵਾਈਸ ਤੇ ਨਹੀਂ ਚਲਾ ਸਕਦੇ।</string>
+  <string name="setup_close">ਬੰਦ ਕਰੋ</string>
 </resources>

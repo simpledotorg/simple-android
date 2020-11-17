@@ -14,7 +14,6 @@ import org.simple.clinic.TestData
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -30,7 +29,6 @@ class RegistrationFacilitySelectionLogicTest {
   private val uiActions = mock<RegistrationFacilitySelectionUiActions>()
   private val userSession = mock<UserSession>()
   private val currentTime = Instant.parse("2018-01-01T00:00:00Z")
-  private val utcClock = TestUtcClock(currentTime)
   private val ongoingEntry = OngoingRegistrationEntry(
       uuid = UUID.fromString("759f5f53-6f71-4a00-825b-c74654a5e448"),
       phoneNumber = "1111111111",
@@ -67,12 +65,10 @@ class RegistrationFacilitySelectionLogicTest {
   }
 
   @Test
-  fun `when a facility is confirmed then the ongoing entry should be updated with selected facility and the user should be logged in`() {
+  fun `when a facility is confirmed then open the intro video screen`() {
     // given
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("bc761c6c-032f-4f1d-a66a-3ec81e9e8aa3"))
     val entryWithFacility = ongoingEntry.copy(facilityId = facility1.uuid)
-
-    whenever(userSession.saveOngoingRegistrationEntryAsUser(entryWithFacility, currentTime)).thenReturn(Completable.complete())
 
     // when
     setupController()
@@ -81,7 +77,6 @@ class RegistrationFacilitySelectionLogicTest {
     // then
     verify(uiActions).openIntroVideoScreen(entryWithFacility)
     verifyNoMoreInteractions(uiActions)
-    verify(userSession).saveOngoingRegistrationEntryAsUser(entryWithFacility, currentTime)
   }
 
   private fun setupController(
@@ -89,8 +84,6 @@ class RegistrationFacilitySelectionLogicTest {
   ) {
     val effectHandler = RegistrationFacilitySelectionEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        userSession = userSession,
-        utcClock = utcClock,
         uiActions = uiActions
     )
 

@@ -14,8 +14,4 @@ data class RegistrationFacilitySelectionModel(
       return RegistrationFacilitySelectionModel(entry)
     }
   }
-
-  fun withUpdatedEntry(updatedEntry: OngoingRegistrationEntry): RegistrationFacilitySelectionModel {
-    return copy(ongoingEntry = updatedEntry)
-  }
 }

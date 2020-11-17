@@ -5,8 +5,6 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class RegistrationLoadingEvent : UiEvent
 
-data class RegistrationDetailsLoaded(val user: User) : RegistrationLoadingEvent()
-
 data class UserRegistrationCompleted(val result: RegisterUserResult) : RegistrationLoadingEvent()
 
 object RegisterErrorRetryClicked : RegistrationLoadingEvent() {

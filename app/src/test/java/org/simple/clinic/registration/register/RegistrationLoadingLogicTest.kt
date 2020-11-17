@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import dagger.Lazy
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -151,7 +150,6 @@ class RegistrationLoadingLogicTest {
     val effectHandler = RegistrationLoadingEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         registerUser = registerUser,
-        currentUser = Lazy { user },
         clock = clock,
         passwordHasher = passwordHasher,
         uiActions = uiActions

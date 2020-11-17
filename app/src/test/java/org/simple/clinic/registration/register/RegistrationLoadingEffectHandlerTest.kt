@@ -23,12 +23,6 @@ class RegistrationLoadingEffectHandlerTest {
 
   private val currentFacility = TestData.facility(uuid = UUID.fromString("198963c5-4c45-4f02-903c-ada09d8f6877"))
 
-  private val currentUser = TestData.loggedInUser(
-      uuid = UUID.fromString("de930d5c-2d13-4f19-a194-b3679d543e7d"),
-      registrationFacilityUuid = currentFacility.uuid,
-      currentFacilityUuid = currentFacility.uuid
-  )
-
   private val clock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
 
   private val passwordHasher = JavaHashPasswordHasher()
@@ -36,7 +30,6 @@ class RegistrationLoadingEffectHandlerTest {
   private val effectHandler = RegistrationLoadingEffectHandler(
       schedulers = TestSchedulersProvider.trampoline(),
       registerUser = registerUser,
-      currentUser = { currentUser },
       clock = clock,
       passwordHasher = passwordHasher,
       uiActions = uiActions

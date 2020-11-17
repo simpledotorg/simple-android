@@ -10,11 +10,10 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.sheet_contact_patient.*
 import org.simple.clinic.ClinicApp
-import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
+import org.simple.clinic.databinding.SheetContactPatientBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Feature.SecureCalling
 import org.simple.clinic.feature.Features
@@ -104,7 +103,7 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
         )
         .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, permissionResults))
         .compose(ReportAnalyticsEvents())
-        .cast<ContactPatientEvent>()
+        .cast()
 
   }
 
@@ -125,10 +124,22 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
     )
   }
 
+  private lateinit var binding: SheetContactPatientBinding
+
+  private val callPatientView
+    get() = binding.callPatientView
+
+  private val setAppointmentReminderView
+    get() = binding.setAppointmentReminderView
+
+  private val removeAppointmentView
+    get() = binding.removeAppointmentView
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    setContentView(R.layout.sheet_contact_patient)
+    binding = SheetContactPatientBinding.inflate(layoutInflater)
+    setContentView(binding.root)
 
     delegate.onRestoreInstanceState(savedInstanceState)
   }

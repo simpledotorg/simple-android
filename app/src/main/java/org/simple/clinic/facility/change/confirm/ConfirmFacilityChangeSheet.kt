@@ -8,9 +8,9 @@ import com.jakewharton.rxbinding3.view.clicks
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.sheet_confirm_facility_change.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.databinding.SheetConfirmFacilityChangeBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.di.ConfirmFacilityChangeComponent
@@ -64,10 +64,22 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
     )
   }
 
+  private lateinit var binding: SheetConfirmFacilityChangeBinding
+
+  private val facilityName
+    get() = binding.facilityName
+
+  private val cancelButton
+    get() = binding.cancelButton
+
+  private val yesButton
+    get() = binding.yesButton
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    setContentView(R.layout.sheet_confirm_facility_change)
+    binding = SheetConfirmFacilityChangeBinding.inflate(layoutInflater)
+    setContentView(binding.root)
 
     facilityName.text = getString(R.string.confirmfacilitychange_facility_name, selectedFacility.name)
     cancelButton.setOnClickListener {

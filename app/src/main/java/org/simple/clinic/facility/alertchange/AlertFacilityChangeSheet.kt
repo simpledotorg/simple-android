@@ -8,9 +8,9 @@ import android.os.Parcelable
 import com.f2prateek.rx.preferences2.Preference
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.sheet_alert_facility_change.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.databinding.SheetAlertFacilityChangeBinding
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.util.LocaleOverrideContextWrapper
@@ -63,13 +63,25 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
     intent.getParcelableExtra<Continuation>(CONTINUE_TO)!!
   }
 
+  private lateinit var binding: SheetAlertFacilityChangeBinding
+
+  private val facilityName
+    get() = binding.facilityName
+
+  private val yesButton
+    get() = binding.yesButton
+
+  private val changeButton
+    get() = binding.changeButton
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     if (isFacilitySwitchedPreference.get().not()) {
       closeSheetWithContinuation()
     } else {
-      setContentView(R.layout.sheet_alert_facility_change)
+      binding = SheetAlertFacilityChangeBinding.inflate(layoutInflater)
+      setContentView(binding.root)
 
       facilityName.text = getString(R.string.alertfacilitychange_facility_name, currentFacilityName)
       yesButton.setOnClickListener {

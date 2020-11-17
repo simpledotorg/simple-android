@@ -11,7 +11,6 @@ import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_bp_history.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
@@ -19,6 +18,7 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItemDiffCallback
 import org.simple.clinic.bp.history.adapter.Event.AddNewBpClicked
 import org.simple.clinic.bp.history.adapter.Event.BloodPressureHistoryItemClicked
+import org.simple.clinic.databinding.ScreenBpHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.DateOfBirth
@@ -79,7 +79,7 @@ class BloodPressureHistoryScreen(
             bloodPressureClicked()
         )
         .compose(ReportAnalyticsEvents())
-        .cast<BloodPressureHistoryScreenEvent>()
+        .cast()
   }
 
   private val uiRenderer = BloodPressureHistoryScreenUiRenderer(this)
@@ -96,11 +96,20 @@ class BloodPressureHistoryScreen(
     )
   }
 
+  private var binding: ScreenBpHistoryBinding? = null
+
+  private val bpHistoryList
+    get() = binding!!.bpHistoryList
+
+  private val toolbar
+    get() = binding!!.toolbar
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
+    binding = ScreenBpHistoryBinding.bind(this)
     context.injector<BloodPressureHistoryScreenInjector>().inject(this)
 
     setupBloodPressureHistoryList()
@@ -113,6 +122,7 @@ class BloodPressureHistoryScreen(
   }
 
   override fun onDetachedFromWindow() {
+    binding = null
     delegate.stop()
     super.onDetachedFromWindow()
   }

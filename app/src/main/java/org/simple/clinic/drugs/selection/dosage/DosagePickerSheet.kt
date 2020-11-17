@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.sheet_dosage_picker.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.SheetDosagePickerBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
 import org.simple.clinic.mobius.MobiusDelegate
@@ -70,10 +70,20 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi, DosagePickerUiA
     )
   }
 
+  private lateinit var binding: SheetDosagePickerBinding
+
+  private val recyclerView
+    get() = binding.recyclerView
+
+  private val drugNameTextView
+    get() = binding.drugNameTextView
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)
-    setContentView(R.layout.sheet_dosage_picker)
+
+    binding = SheetDosagePickerBinding.inflate(layoutInflater)
+    setContentView(binding.root)
 
     recyclerView.apply {
       adapter = dosageAdapter

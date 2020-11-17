@@ -479,14 +479,15 @@ object TestData {
       uuid: UUID = UUID.randomUUID(),
       phoneNumber: String = faker.number.number(10),
       pin: String = "1111",
-      registrationFacility: Facility
+      registrationFacility: Facility? = null
   ): OngoingRegistrationEntry {
     return OngoingRegistrationEntry(
         uuid = uuid,
         phoneNumber = phoneNumber,
         fullName = faker.name.name(),
         pin = pin,
-        facilityId = registrationFacility.uuid)
+        facilityId = registrationFacility?.uuid
+    )
   }
 
   fun bpPayload(

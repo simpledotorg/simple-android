@@ -1,6 +1,5 @@
 package org.simple.clinic.registration.facility
 
-import java.time.Duration
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.user.OngoingRegistrationEntry
 
@@ -10,4 +9,4 @@ data class OpenConfirmFacilitySheet(val facility: Facility): RegistrationFacilit
 
 data class SaveRegistrationEntryAsUser(val entry: OngoingRegistrationEntry): RegistrationFacilitySelectionEffect()
 
-object MoveToIntroVideoScreen: RegistrationFacilitySelectionEffect()
+data class MoveToIntroVideoScreen(val registrationEntry: OngoingRegistrationEntry) : RegistrationFacilitySelectionEffect()

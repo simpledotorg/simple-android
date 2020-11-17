@@ -39,6 +39,13 @@ class RegistrationLoadingLogicTest {
       status = WaitingForApproval
   )
 
+  private val facility = TestData.facility(uuid = UUID.fromString("6bf38b14-ae29-4b02-ad26-8340bbe6d861"))
+
+  private val registrationEntry = TestData.ongoingRegistrationEntry(
+      uuid = UUID.fromString("fe1786be-5725-45b5-a6aa-e9ce0f99f794"),
+      registrationFacility = facility
+  )
+
   private lateinit var testFixture: MobiusTestFixture<RegistrationLoadingModel, RegistrationLoadingEvent, RegistrationLoadingEffect>
 
   @After
@@ -133,7 +140,7 @@ class RegistrationLoadingLogicTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = RegistrationLoadingModel.create(),
+        defaultModel = RegistrationLoadingModel.create(registrationEntry),
         update = RegistrationLoadingUpdate(),
         effectHandler = effectHandler.build(),
         init = RegistrationLoadingInit(),

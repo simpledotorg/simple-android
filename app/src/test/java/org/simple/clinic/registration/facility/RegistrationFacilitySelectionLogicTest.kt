@@ -17,8 +17,8 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
-import java.time.Instant
 import org.simple.mobius.migration.MobiusTestFixture
+import java.time.Instant
 import java.util.UUID
 
 class RegistrationFacilitySelectionLogicTest {
@@ -79,7 +79,7 @@ class RegistrationFacilitySelectionLogicTest {
     uiEvents.onNext(RegistrationFacilityConfirmed(facility1.uuid))
 
     // then
-    verify(uiActions).openIntroVideoScreen()
+    verify(uiActions).openIntroVideoScreen(entryWithFacility)
     verifyNoMoreInteractions(uiActions)
     verify(userSession).saveOngoingRegistrationEntryAsUser(entryWithFacility, currentTime)
   }

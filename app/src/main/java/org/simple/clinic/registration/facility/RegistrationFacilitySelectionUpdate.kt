@@ -3,6 +3,7 @@ package org.simple.clinic.registration.facility
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
+import org.simple.clinic.mobius.next
 
 class RegistrationFacilitySelectionUpdate : Update<RegistrationFacilitySelectionModel, RegistrationFacilitySelectionEvent, RegistrationFacilitySelectionEffect> {
 
@@ -15,9 +16,9 @@ class RegistrationFacilitySelectionUpdate : Update<RegistrationFacilitySelection
       is RegistrationFacilityConfirmed -> {
         val updatedEntry = model.ongoingEntry.withFacilityUuid(event.facilityUuid)
 
-        dispatch(SaveRegistrationEntryAsUser(updatedEntry))
+        next(model.withUpdatedEntry(updatedEntry),SaveRegistrationEntryAsUser(updatedEntry))
       }
-      is CurrentRegistrationEntrySaved -> dispatch(MoveToIntroVideoScreen)
+      is CurrentRegistrationEntrySaved -> dispatch(MoveToIntroVideoScreen(model.ongoingEntry))
     }
   }
 }

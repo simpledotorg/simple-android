@@ -38,7 +38,6 @@ class RegistrationLoadingLogicTest {
       loggedInStatus = NOT_LOGGED_IN,
       status = WaitingForApproval
   )
-  private val facility = TestData.facility(UUID.fromString("37e253a9-8a8a-4c60-8aac-34338dc47e8b"))
 
   private lateinit var testFixture: MobiusTestFixture<RegistrationLoadingModel, RegistrationLoadingEvent, RegistrationLoadingEffect>
 
@@ -50,7 +49,7 @@ class RegistrationLoadingLogicTest {
   @Test
   fun `when retry button is clicked, then user registration should be attempted again`() {
     // given
-    whenever(registerUser.registerUserAtFacility(user, facility)).doReturn(
+    whenever(registerUser.registerUserAtFacility(user)).doReturn(
         Single.just<RegistrationResult>(NetworkError),
         Single.just<RegistrationResult>(Success)
     )
@@ -74,20 +73,20 @@ class RegistrationLoadingLogicTest {
   @Test
   fun `when screen is created, then the user registration should be attempted`() {
     // given
-    whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.never()
+    whenever(registerUser.registerUserAtFacility(user)) doReturn Single.never()
 
     // when
     setupController()
 
     // then
-    verify(registerUser).registerUserAtFacility(user, facility)
+    verify(registerUser).registerUserAtFacility(user)
     verifyZeroInteractions(ui, uiActions)
   }
 
   @Test
   fun `when the user registration succeeds, then clear registration entry and go to home screen`() {
     // given
-    whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(Success)
+    whenever(registerUser.registerUserAtFacility(user)) doReturn Single.just<RegistrationResult>(Success)
 
     // when
     setupController()
@@ -100,7 +99,7 @@ class RegistrationLoadingLogicTest {
   @Test
   fun `when the user registration fails with a network error, show the network error message`() {
     // given
-    whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(NetworkError)
+    whenever(registerUser.registerUserAtFacility(user)) doReturn Single.just<RegistrationResult>(NetworkError)
 
     // when
     setupController()
@@ -113,7 +112,7 @@ class RegistrationLoadingLogicTest {
   @Test
   fun `when the user registration fails with any other error, show the generic error message`() {
     // given
-    whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(UnexpectedError)
+    whenever(registerUser.registerUserAtFacility(user)) doReturn Single.just<RegistrationResult>(UnexpectedError)
 
     // when
     setupController()
@@ -128,7 +127,6 @@ class RegistrationLoadingLogicTest {
         schedulers = TestSchedulersProvider.trampoline(),
         registerUser = registerUser,
         currentUser = Lazy { user },
-        currentFacility = Lazy { facility },
         uiActions = uiActions
     )
     val uiRenderer = RegistrationLoadingUiRenderer(ui)

@@ -6,7 +6,6 @@ import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.user.User
 import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -15,7 +14,6 @@ class RegistrationLoadingEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val registerUser: RegisterUser,
     private val currentUser: Lazy<User>,
-    private val currentFacility: Lazy<Facility>,
     @Assisted private val uiActions: RegistrationLoadingUiActions
 ) {
 
@@ -39,8 +37,7 @@ class RegistrationLoadingEffectHandler @AssistedInject constructor(
           .observeOn(schedulers.io())
           .switchMap {
             val details = RegistrationDetailsLoaded(
-                user = currentUser.get(),
-                facility = currentFacility.get()
+                user = currentUser.get()
             )
 
             Observable.just(details)
@@ -53,7 +50,7 @@ class RegistrationLoadingEffectHandler @AssistedInject constructor(
       effects
           .switchMapSingle { effect ->
             registerUser
-                .registerUserAtFacility(effect.user, effect.facility)
+                .registerUserAtFacility(effect.user)
                 .subscribeOn(schedulers.io())
                 .map { UserRegistrationCompleted(RegisterUserResult.from(it)) }
           }

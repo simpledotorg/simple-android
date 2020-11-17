@@ -26,7 +26,6 @@ class RegistrationLoadingEffectHandlerTest {
       schedulers = TestSchedulersProvider.trampoline(),
       registerUser = registerUser,
       currentUser = { currentUser },
-      currentFacility = { currentFacility },
       uiActions = uiActions
   ).build()
 

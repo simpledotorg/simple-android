@@ -15,7 +15,8 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.security.pin.JavaHashPasswordHasher
-import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
+import org.simple.clinic.user.User
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.user.registeruser.RegistrationResult
@@ -26,6 +27,7 @@ import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import java.time.Instant
 import java.util.UUID
 
 class RegistrationLoadingLogicTest {
@@ -34,18 +36,32 @@ class RegistrationLoadingLogicTest {
   private val uiActions = mock<RegistrationLoadingUiActions>()
   private val registerUser = mock<RegisterUser>()
   private val uiEvents = PublishSubject.create<UiEvent>()
-
-  private val user = TestData.loggedInUser(
-      uuid = UUID.fromString("fe1786be-5725-45b5-a6aa-e9ce0f99f794"),
-      loggedInStatus = NOT_LOGGED_IN,
-      status = WaitingForApproval
-  )
+  private val clock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
+  private val passwordHasher = JavaHashPasswordHasher()
 
   private val facility = TestData.facility(uuid = UUID.fromString("6bf38b14-ae29-4b02-ad26-8340bbe6d861"))
 
   private val registrationEntry = TestData.ongoingRegistrationEntry(
       uuid = UUID.fromString("fe1786be-5725-45b5-a6aa-e9ce0f99f794"),
+      fullName = "Anish Acharya",
+      phoneNumber = "1234567890",
+      pin = "1111",
       registrationFacility = facility
+  )
+
+  private val user = User(
+      uuid = registrationEntry.uuid!!,
+      loggedInStatus = LOGGED_IN,
+      status = WaitingForApproval,
+      fullName = registrationEntry.fullName!!,
+      phoneNumber = registrationEntry.phoneNumber!!,
+      pinDigest = passwordHasher.hash(registrationEntry.pin!!),
+      createdAt = Instant.now(clock),
+      updatedAt = Instant.now(clock),
+      registrationFacilityUuid = registrationEntry.facilityId!!,
+      currentFacilityUuid = registrationEntry.facilityId!!,
+      teleconsultPhoneNumber = null,
+      capabilities = null
   )
 
   private lateinit var testFixture: MobiusTestFixture<RegistrationLoadingModel, RegistrationLoadingEvent, RegistrationLoadingEffect>
@@ -136,8 +152,8 @@ class RegistrationLoadingLogicTest {
         schedulers = TestSchedulersProvider.trampoline(),
         registerUser = registerUser,
         currentUser = Lazy { user },
-        clock = TestUtcClock(),
-        passwordHasher = JavaHashPasswordHasher(),
+        clock = clock,
+        passwordHasher = passwordHasher,
         uiActions = uiActions
     )
     val uiRenderer = RegistrationLoadingUiRenderer(ui)

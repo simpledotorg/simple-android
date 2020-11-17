@@ -6,14 +6,20 @@ import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.User
+import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.registeruser.RegisterUser
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import java.time.Instant
 
 class RegistrationLoadingEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val registerUser: RegisterUser,
     private val currentUser: Lazy<User>,
+    private val clock: UtcClock,
+    private val passwordHasher: PasswordHasher,
     @Assisted private val uiActions: RegistrationLoadingUiActions
 ) {
 
@@ -28,6 +34,7 @@ class RegistrationLoadingEffectHandler @AssistedInject constructor(
         .addTransformer(LoadRegistrationDetails::class.java, loadRegistrationDetails())
         .addTransformer(RegisterUserAtFacility::class.java, registerUserAtFacility())
         .addAction(GoToHomeScreen::class.java, uiActions::openHomeScreen, schedulers.ui())
+        .addTransformer(ConvertRegistrationEntryToUserDetails::class.java, convertRegistrationEntryToUser())
         .build()
   }
 
@@ -54,6 +61,32 @@ class RegistrationLoadingEffectHandler @AssistedInject constructor(
                 .subscribeOn(schedulers.io())
                 .map { UserRegistrationCompleted(RegisterUserResult.from(it)) }
           }
+    }
+  }
+
+  private fun convertRegistrationEntryToUser(): ObservableTransformer<ConvertRegistrationEntryToUserDetails, RegistrationLoadingEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .map { it.registrationEntry }
+          .map { entry ->
+            val now = Instant.now(clock)
+
+            User(
+                uuid = entry.uuid!!,
+                fullName = entry.fullName!!,
+                phoneNumber = entry.phoneNumber!!,
+                pinDigest = passwordHasher.hash(entry.pin!!),
+                status = UserStatus.WaitingForApproval,
+                createdAt = now,
+                updatedAt = now,
+                loggedInStatus = User.LoggedInStatus.LOGGED_IN,
+                registrationFacilityUuid = entry.facilityId!!,
+                currentFacilityUuid = entry.facilityId,
+                teleconsultPhoneNumber = null,
+                capabilities = null
+            )
+          }
+          .map(::ConvertedRegistrationEntryToUserDetails)
     }
   }
 }

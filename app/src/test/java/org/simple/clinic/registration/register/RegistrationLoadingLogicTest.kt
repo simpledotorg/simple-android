@@ -14,6 +14,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.security.pin.JavaHashPasswordHasher
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.registeruser.RegisterUser
@@ -21,6 +22,7 @@ import org.simple.clinic.user.registeruser.RegistrationResult
 import org.simple.clinic.user.registeruser.RegistrationResult.NetworkError
 import org.simple.clinic.user.registeruser.RegistrationResult.Success
 import org.simple.clinic.user.registeruser.RegistrationResult.UnexpectedError
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -134,6 +136,8 @@ class RegistrationLoadingLogicTest {
         schedulers = TestSchedulersProvider.trampoline(),
         registerUser = registerUser,
         currentUser = Lazy { user },
+        clock = TestUtcClock(),
+        passwordHasher = JavaHashPasswordHasher(),
         uiActions = uiActions
     )
     val uiRenderer = RegistrationLoadingUiRenderer(ui)

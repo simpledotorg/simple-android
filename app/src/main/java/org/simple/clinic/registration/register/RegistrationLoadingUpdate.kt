@@ -1,6 +1,7 @@
 package org.simple.clinic.registration.register
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -12,6 +13,7 @@ class RegistrationLoadingUpdate : Update<RegistrationLoadingModel, RegistrationL
       is RegistrationDetailsLoaded -> dispatch(RegisterUserAtFacility(event.user))
       is UserRegistrationCompleted -> userRegistrationCompleted(event, model)
       is RegisterErrorRetryClicked -> next(model.clearRegistrationResult(), LoadRegistrationDetails)
+      is ConvertedRegistrationEntryToUserDetails -> noChange()
     }
   }
 

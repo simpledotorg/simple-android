@@ -478,13 +478,14 @@ object TestData {
   fun ongoingRegistrationEntry(
       uuid: UUID = UUID.randomUUID(),
       phoneNumber: String = faker.number.number(10),
+      fullName: String? = faker.name.name(),
       pin: String = "1111",
       registrationFacility: Facility? = null
   ): OngoingRegistrationEntry {
     return OngoingRegistrationEntry(
         uuid = uuid,
         phoneNumber = phoneNumber,
-        fullName = faker.name.name(),
+        fullName = fullName,
         pin = pin,
         facilityId = registrationFacility?.uuid
     )

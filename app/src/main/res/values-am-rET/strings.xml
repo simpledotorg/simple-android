@@ -66,7 +66,7 @@
   <string name="patiententry_kebele">ቀበሌ</string>
   <string name="patiententry_zone">ህብረት</string>
   <string name="patiententry_district">ቀበሌ</string>
-  <string name="patiententry_woreda">ወረዳ</string>
+  <string name="patiententry_woreda">ዞን</string>
   <string name="patiententry_upazila">ኡፓዚላ</string>
   <string name="patiententry_state">አከባቢ</string>
   <string name="patiententry_region">ክልል</string>
@@ -158,6 +158,7 @@
   <string name="patientsummary_prescriptions_update">መድኃኒቶችን ያርትዑ</string>
   <string name="patientsummary_bp_add_new">ደም ግፊት</string>
   <string name="patientsummary_finish_saving_patient">ሴቭ ያድርጉ</string>
+  <string name="patientsummary_finish_refill_medicine">መድኃኒት እንደገና ይሙሉ</string>
   <string name="patientsummary_bp_none_added">ምንም የደም ግፊት አልገባም</string>
   <string name="patientsummary_edit">ያርትዑ ወይም ያስተካክሉ</string>
 
@@ -174,6 +175,7 @@
   <string name="patientsummary_toolbar_title">%1$s ፣ %2$s ፣ %3$s</string>
   <string name="patientsummary_bangladesh_national_id">መታወቂያ</string>
 
+  <string name="patientsummary_teleconsult">Tele-consult</string>
   <string name="patientsummary_log_teleconsult">Teleconsult ይግቡ</string>
 
   <string name="patientsummary_registered_faciliy_title">የመዝግቧል</string>
@@ -293,6 +295,7 @@
   <string name="scheduleappointment_next_visit_in">ቀጣዩ ጉብኝት መርሃግብር በ</string>
   <string name="scheduleappointment_not_now">አሁን አይሆንም</string>
   <string name="scheduleappointment_done">ተጠናቅቋል</string>
+  <string name="scheduleappointment_next">ቀጣይ</string>
   <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s ቀን</item>
     <item quantity="other">%s ቀናት</item>
@@ -379,7 +382,7 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">መተግበሪያን አዘምን ወይም አድስ</string>
-  <string name="appupdatedialog_body">በቀላሉ ለማዘመን ወደ Play መደብር ይወሰዳሉ</string>
+  <string name="appupdatedialog_body">Simpleን ለማዘመን ወደ Google Play Store ይወሰዳሉ ፡፡</string>
   <string name="appupdatedialog_positive_button_text">አዘምን ወይም አድስ</string>
   <string name="appupdatedialog_negative_button_text">አሁን አይሆንም</string>
 
@@ -591,6 +594,7 @@
   <string name="drug_duration_title">%1$s %2$s</string>
   <string name="drugDurationLabel">ቀናት</string>
   <string name="drug_duration_empty_error">የመድኃኒት ጊዜ ባዶ ሊሆን አይችልም</string>
+  <string name="drug_duration_max_error">Yeroon fudhannaa dawaa guyyoota %1$s caaluu hin danda\'u</string>
 
   <!-- Teleconsultation success-->
   <string name="screen_teleconsult_success_add_prescription">ትዕዛዝ ያክሉ?</string>
@@ -617,4 +621,50 @@
   <string name="teleconsultnotrecordeddialog_body">እርግጠኛ ነዎት ማቋረጥ ይፈልጋሉ?</string>
   <string name="teleconsultnotrecordeddialog_positive_button_text">አዎ</string>
   <string name="teleconsultnotrecordeddialog_negative_button_text">አይ</string>
+
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">ወደ teleconsult ለመግባት ፈቃድ አልተሰጠዎትም</string>
+  <string name="deeplink_please_check_with_your_supervisor">እባክዎን ከተቆጣጣሪዎ ጋር ያረጋግጡ</string>
+  <string name="deeplink_okay_positive_action">እሺ</string>
+
+  <string name="screen_teleconsult_prescription_next">ቀጣይ</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">መድኃኒቶች</string>
+  <string name="view_teleconsult_medicines_add">ያክሉ</string>
+  <string name="view_teleconsult_medicines_edit">ያርትዑ ወይም ያስተካክሉ</string>
+  <string name="view_teleconsult_medicines_required_error">Xiqqatu dawaa tokko dabali</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="one">%1$s day</item>
+    <item quantity="other">%1$s ቀናት</item>
+  </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">ለታካሚ መመሪያዎች</string>
+  <string name="view_teleconsult_doctor_info_registration_id">የህክምና ምዝገባ መታወቅያ</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">ይህንን ማዘዣ በመፈረም %1$sመሆኔን አረጋግጣለው</string>
+  <string name="view_teleconsult_doctor_info_add_signature">ፍርምያ ያክሉ</string>
+  <string name="view_teleconsult_doctor_info_signature_error">ፍርምያ ያክሉ</string>
+
+  <string name="screen_teleconsult_share_prescription_download">አውርድ</string>
+  <string name="screen_teleconsult_share_prescription_share">ያጋሩ</string>
+  <string name="screen_teleconsult_share_prescription_done">ተጠናቅቋል</string>
+  <string name="screen_teleconsult_share_prescription_image_using">በመጠቀም ምስልን ያጋሩ</string>
+  <string name="screen_teleconsult_share_prescription_title">የሐኪም ማዘዣ</string>
+  <string name="screen_teleconsult_share_prescription_image_saved">ማዘዣዎች በውርዶች ውስጥ ይቀመጣሉ</string>
+
+  <!-- Select diagnosis error alert dialog -->
+  <string name="select_diagnosis_error_diagnosis_required">ምርመራ ያስፈልጋል</string>
+  <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">ለሁለቱም የደም ግፊት እና የስኳር በሽታ ምርመራን ይምረጡ</string>
+  <string name="select_diagnosis_error_ok">እሺ</string>
+  <string name="sheet_teleconsult_status_title">ቴሌ-ማማከር ተጠናቅቋል?</string>
+  <string name="sheet_teleconsult_status_yes">አዎ</string>
+  <string name="sheet_teleconsult_status_no">አይ</string>
+  <string name="sheet_teleconsult_status_waiting">አሁንም በመጠበቅ ላይ</string>
+  <string name="sheet_teleconsult_status_done">ተጠናቅቋል</string>
+
+  <!-- Setup activity -->
+  <string name="setup_cannot_run">መተግበሪያን ማሄድ አልተቻለም</string>
+  <string name="setup_rooted">Simple ስር በሰደደ መሣሪያ ላይ ማሄድ አይቻልም።</string>
+  <string name="setup_close">ዝጋ</string>
 </resources>

@@ -3,8 +3,6 @@ package org.simple.clinic.registration.facility
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -46,14 +44,7 @@ class RegistrationFacilitySelectionLogicTest {
   @Test
   fun `when a facility is clicked then show confirm facility sheet`() {
     // given
-    val ongoingEntry = OngoingRegistrationEntry(
-        uuid = UUID.fromString("eb0a9bc0-b24d-4f3f-9990-aa05e217be1a"),
-        phoneNumber = "1234567890",
-        fullName = "Ashok",
-        pin = "1234")
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("5cf9d744-7f34-4633-aa46-a6c7e7542060"))
-
-    whenever(userSession.saveOngoingRegistrationEntryAsUser(ongoingEntry, currentTime)).thenReturn(Completable.complete())
 
     // when
     setupController()

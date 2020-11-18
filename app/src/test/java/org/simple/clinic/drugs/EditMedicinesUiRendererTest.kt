@@ -5,6 +5,8 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.drugs.EditMedicineButtonState.REFILL_MEDICINE
+import org.simple.clinic.drugs.EditMedicineButtonState.SAVE_MEDICINE
 import org.simple.clinic.drugs.selection.EditMedicinesUi
 import org.simple.clinic.drugs.selection.ProtocolDrugListItem
 import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
@@ -62,6 +64,7 @@ class EditMedicinesUiRendererTest {
     val model = defaultModel
         .protocolDrugsFetched(protocolDrugAndDosages)
         .prescribedDrugsFetched(prescriptions)
+        .editMedicineDrugStateFetched(SAVE_MEDICINE)
 
     // when
     uiRenderer.render(model)
@@ -84,36 +87,130 @@ class EditMedicinesUiRendererTest {
   }
 
   @Test
-  fun `when open intention is to add new medicine, then show done button and hide refill medicine button`() {
+  fun `when edit medicine button state is to save medicine, then show done button and hide refill medicine button`() {
     // given
-    val prescribedDrugRecords = emptyList<PrescribedDrug>()
-    val prescribedDrugsFetchedModel = defaultModel.prescribedDrugsFetched(prescribedDrugRecords)
+    val amlodipine5mg = TestData.protocolDrug(name = "Amlodipine", dosage = "5mg")
+    val amlodipine10mg = TestData.protocolDrug(name = "Amlodipine", dosage = "10mg")
+
+    val protocolDrugAndDosages = listOf(
+        ProtocolDrugAndDosages(amlodipine10mg.name, listOf(amlodipine5mg, amlodipine10mg))
+    )
+
+    val amlodipine10mgPrescription = TestData.prescription(
+        uuid = UUID.fromString("90e28866-90f6-48a0-add1-cf44aa43209c"),
+        name = "Amlodipine",
+        dosage = "10mg",
+        isProtocolDrug = true
+    )
+    val telmisartan40mgPrescription = TestData.prescription(
+        uuid = UUID.fromString("ac3cfff0-2ebf-4c9c-adab-a41cc8a0bbeb"),
+        name = "Telmisartan",
+        dosage = "40mg",
+        isProtocolDrug = true
+    )
+    val fooPrescription = TestData.prescription(
+        uuid = UUID.fromString("68dc8060-bed4-4e1b-9891-7d77cad9639e"),
+        name = "Foo",
+        dosage = "2 pills",
+        isProtocolDrug = false
+    )
+    val barPrescription = TestData.prescription(
+        uuid = UUID.fromString("b5eb5dfa-f131-4d9f-a2d2-41d56aa109da"),
+        name = "Bar",
+        dosage = null,
+        isProtocolDrug = false
+    )
+    val prescriptions = listOf(
+        amlodipine10mgPrescription,
+        telmisartan40mgPrescription,
+        fooPrescription,
+        barPrescription)
+
+    val prescribedDrugsFetchedModel = defaultModel
+        .protocolDrugsFetched(protocolDrugAndDosages)
+        .prescribedDrugsFetched(prescriptions)
+        .editMedicineDrugStateFetched(SAVE_MEDICINE)
 
     // when
     uiRenderer.render(prescribedDrugsFetchedModel)
 
     // then
+    val drugsList = listOf(
+        ProtocolDrugListItem(
+            id = 0,
+            drugName = amlodipine10mg.name,
+            prescribedDrug = amlodipine10mgPrescription,
+            hideDivider = false),
+        CustomPrescribedDrugListItem(telmisartan40mgPrescription, false),
+        CustomPrescribedDrugListItem(fooPrescription, false),
+        CustomPrescribedDrugListItem(barPrescription, true))
+
+    verify(ui).populateDrugsList(drugsList)
     verify(ui).showDoneButton()
     verify(ui).hideRefillMedicineButton()
     verifyNoMoreInteractions(ui)
   }
 
   @Test
-  fun `when open intention is to refill medicine, then show refill medicine button `() {
+  fun `when edit medicine button state is refill medicine, then show refill medicine button `() {
     // given
-    val prescribedDrugRecords = listOf(
-        TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1"),
-        TestData.prescription(uuid = UUID.fromString("537a119e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine2"),
-        TestData.prescription(uuid = UUID.fromString("5ac2a678-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine3"),
-        TestData.prescription(uuid = UUID.fromString("5f9f0fe2-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine4"),
+    val amlodipine5mg = TestData.protocolDrug(name = "Amlodipine", dosage = "5mg")
+    val amlodipine10mg = TestData.protocolDrug(name = "Amlodipine", dosage = "10mg")
+
+    val protocolDrugAndDosages = listOf(
+        ProtocolDrugAndDosages(amlodipine10mg.name, listOf(amlodipine5mg, amlodipine10mg))
     )
-    val model = EditMedicinesModel.create(patientUuid)
-        .prescribedDrugsFetched(prescribedDrugRecords)
+
+    val amlodipine10mgPrescription = TestData.prescription(
+        uuid = UUID.fromString("90e28866-90f6-48a0-add1-cf44aa43209c"),
+        name = "Amlodipine",
+        dosage = "10mg",
+        isProtocolDrug = true
+    )
+    val telmisartan40mgPrescription = TestData.prescription(
+        uuid = UUID.fromString("ac3cfff0-2ebf-4c9c-adab-a41cc8a0bbeb"),
+        name = "Telmisartan",
+        dosage = "40mg",
+        isProtocolDrug = true
+    )
+    val fooPrescription = TestData.prescription(
+        uuid = UUID.fromString("68dc8060-bed4-4e1b-9891-7d77cad9639e"),
+        name = "Foo",
+        dosage = "2 pills",
+        isProtocolDrug = false
+    )
+    val barPrescription = TestData.prescription(
+        uuid = UUID.fromString("b5eb5dfa-f131-4d9f-a2d2-41d56aa109da"),
+        name = "Bar",
+        dosage = null,
+        isProtocolDrug = false
+    )
+    val prescriptions = listOf(
+        amlodipine10mgPrescription,
+        telmisartan40mgPrescription,
+        fooPrescription,
+        barPrescription)
+
+    val prescribedDrugsFetchedModel = defaultModel
+        .protocolDrugsFetched(protocolDrugAndDosages)
+        .prescribedDrugsFetched(prescriptions)
+        .editMedicineDrugStateFetched(REFILL_MEDICINE)
 
     // when
-    uiRenderer.render(model)
+    uiRenderer.render(prescribedDrugsFetchedModel)
 
     // then
+    val drugsList = listOf(
+        ProtocolDrugListItem(
+            id = 0,
+            drugName = amlodipine10mg.name,
+            prescribedDrug = amlodipine10mgPrescription,
+            hideDivider = false),
+        CustomPrescribedDrugListItem(telmisartan40mgPrescription, false),
+        CustomPrescribedDrugListItem(fooPrescription, false),
+        CustomPrescribedDrugListItem(barPrescription, true))
+
+    verify(ui).populateDrugsList(drugsList)
     verify(ui).showRefillMedicineButton()
     verify(ui).hideDoneButton()
     verifyNoMoreInteractions(ui)

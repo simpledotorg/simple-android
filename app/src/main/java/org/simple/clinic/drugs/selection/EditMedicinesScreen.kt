@@ -83,11 +83,6 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
     screenKey.patientUuid
   }
 
-  private val openIntention by unsafeLazy {
-    val screenKey = screenRouter.key<PrescribedDrugsScreenKey>(this)
-    screenKey.openIntention
-  }
-
   private val events by unsafeLazy {
     Observable
         .merge(
@@ -102,7 +97,7 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
   private val delegate: MobiusDelegate<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect> by unsafeLazy {
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = EditMedicinesModel.create(patientUuid, openIntention),
+        defaultModel = EditMedicinesModel.create(patientUuid),
         update = EditMedicinesUpdate(LocalDate.now(userClock), userClock.zone),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = EditMedicinesInit(),

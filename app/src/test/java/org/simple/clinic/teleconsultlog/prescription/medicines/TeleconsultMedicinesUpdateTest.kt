@@ -8,9 +8,6 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.drugs.OpenIntention
-import org.simple.clinic.drugs.OpenIntention.AddNewMedicine
-import org.simple.clinic.drugs.OpenIntention.RefillMedicine
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.time.Duration
@@ -116,7 +113,7 @@ class TeleconsultMedicinesUpdateTest {
         .whenEvent(EditMedicinesClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenEditMedicines(patientUuid, RefillMedicine)),
+            hasEffects(OpenEditMedicines(patientUuid)),
         ))
   }
 
@@ -128,7 +125,7 @@ class TeleconsultMedicinesUpdateTest {
         .whenEvent(EditMedicinesClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenEditMedicines(patientUuid, AddNewMedicine)),
+            hasEffects(OpenEditMedicines(patientUuid)),
         ))
   }
 }

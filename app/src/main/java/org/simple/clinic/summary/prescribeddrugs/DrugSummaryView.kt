@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.drugs_summary_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
-import org.simple.clinic.drugs.OpenIntention
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.facility.Facility
@@ -149,11 +148,11 @@ class DrugSummaryView(
     )
   }
 
-  override fun showUpdatePrescribedDrugsScreen(patientUuid: UUID, currentFacility: Facility, openIntention: OpenIntention) {
+  override fun showUpdatePrescribedDrugsScreen(patientUuid: UUID, currentFacility: Facility) {
     val alertFacilityChangeIntent = AlertFacilityChangeSheet.intent(
         context,
         currentFacility.name,
-        ContinueToScreen(PrescribedDrugsScreenKey(patientUuid, openIntention))
+        ContinueToScreen(PrescribedDrugsScreenKey(patientUuid))
     )
 
     activity.startActivityForResult(alertFacilityChangeIntent, DRUGS_REQCODE_ALERT_FACILITY_CHANGE)

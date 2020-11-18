@@ -12,7 +12,6 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.drugs.OpenIntention
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -78,14 +77,12 @@ class DrugSummaryUiLogicTest {
 
     whenever(repository.newestPrescriptionsForPatient(patientUuid)) doReturn Observable.never<List<PrescribedDrug>>()
 
-    val openIntention =  OpenIntention.AddNewMedicine
-
     // when
     setupController()
     events.onNext(PatientSummaryUpdateDrugsClicked())
 
     // then
-    verify(uiActions).showUpdatePrescribedDrugsScreen(patientUuid, currentFacility, openIntention)
+    verify(uiActions).showUpdatePrescribedDrugsScreen(patientUuid, currentFacility)
     verifyNoMoreInteractions(ui, uiActions)
 
     verify(repository).newestPrescriptionsForPatient(patientUuid)

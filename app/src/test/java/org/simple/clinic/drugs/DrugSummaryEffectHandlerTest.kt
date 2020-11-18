@@ -37,14 +37,13 @@ class DrugSummaryEffectHandlerTest {
   fun `when open update prescribed drug screen effect is received, then show update prescribed drugs screen`() {
     //given
     val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
-    val openIntention =  OpenIntention.AddNewMedicine
 
     //when
-    testCase.dispatch(OpenUpdatePrescribedDrugScreen(patientUuid, facility, openIntention))
+    testCase.dispatch(OpenUpdatePrescribedDrugScreen(patientUuid, facility))
 
     //then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).showUpdatePrescribedDrugsScreen(patientUuid, facility, openIntention)
+    verify(uiActions).showUpdatePrescribedDrugsScreen(patientUuid, facility)
     verifyNoMoreInteractions(uiActions)
   }
 }

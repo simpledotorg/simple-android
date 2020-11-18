@@ -8,7 +8,6 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.drugs.OpenIntention.RefillMedicine
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import java.time.Instant
@@ -23,7 +22,7 @@ class EditMedicineUpdateTest {
   @Test
   fun `when prescribed drugs refill done is clicked, then refill medicines`() {
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
-    val model = EditMedicinesModel.create(patientUuid, RefillMedicine)
+    val model = EditMedicinesModel.create(patientUuid)
     val prescribedDrugRecords = listOf(
         TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1"),
         TestData.prescription(uuid = UUID.fromString("537a119e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine2"),
@@ -43,7 +42,7 @@ class EditMedicineUpdateTest {
 
   @Test
   fun `when the prescription has been updated on the current date, then the save medicine button must be shown`() {
-    val model = EditMedicinesModel.create(patientUuid, RefillMedicine)
+    val model = EditMedicinesModel.create(patientUuid)
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.parse("2018-01-01"), ZoneOffset.UTC))
     val prescribedDrugRecords = listOf(
         TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1", createdAt = Instant.parse("2018-01-01T00:00:00Z"), updatedAt = Instant.parse("2018-01-01T00:00:00Z")),
@@ -69,7 +68,7 @@ class EditMedicineUpdateTest {
 
   @Test
   fun `when prescription is empty and it has not been updated on the current day, then the save medicine button must be shown`() {
-    val model = EditMedicinesModel.create(patientUuid, RefillMedicine)
+    val model = EditMedicinesModel.create(patientUuid)
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
     val prescribedDrugRecords = listOf<PrescribedDrug>()
 
@@ -89,7 +88,7 @@ class EditMedicineUpdateTest {
 
   @Test
   fun `when the prescription has not been updated on the current day, then the refill medicine button must be shown`() {
-    val model = EditMedicinesModel.create(patientUuid, RefillMedicine)
+    val model = EditMedicinesModel.create(patientUuid)
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
     val prescribedDrugRecords = listOf(
         TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1", createdAt = Instant.parse("2012-12-12T00:00:00Z"), updatedAt = Instant.parse("2012-12-12T00:00:00Z")),

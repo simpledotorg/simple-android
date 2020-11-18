@@ -10,13 +10,12 @@ data class EditMedicinesModel(
     val patientUuid: UUID,
     val prescribedDrugs: List<PrescribedDrug>?,
     val protocolDrugs: List<ProtocolDrugAndDosages>?,
-    val openIntention: OpenIntention?,
     val editMedicineButtonState: EditMedicineButtonState?
 ) : Parcelable {
 
   companion object {
-    fun create(patientUuid: UUID, openIntention: OpenIntention): EditMedicinesModel {
-      return EditMedicinesModel(patientUuid, null, null, openIntention, null)
+    fun create(patientUuid: UUID): EditMedicinesModel {
+      return EditMedicinesModel(patientUuid, null, null, null)
     }
   }
 

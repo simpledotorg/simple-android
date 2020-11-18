@@ -7,8 +7,6 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.RadioButton
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
@@ -24,10 +22,9 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-class BloodSugarUnitSelectionDialog : AppCompatDialogFragment() {
+class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitSelectionUiActions {
 
   private lateinit var layout: View
 
@@ -142,6 +139,17 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment() {
   override fun onDestroyView() {
     super.onDestroyView()
     screenDestroys.onNext(ScreenDestroyed())
+  }
+
+  override fun closeDialog() {
+    dismiss()
+  }
+
+  override fun prefillBloodSugarUnitSelection(blodSugarUnitPreference: BloodSugarUnitPreference) {
+    when (blodSugarUnitPreference) {
+      BloodSugarUnitPreference.Mg -> bloodSugarUnitGroup.check(R.id.bloodSugarUnitMg)
+      BloodSugarUnitPreference.Mmol -> bloodSugarUnitGroup.check(R.id.bloodSugarUnitMmol)
+    }
   }
 
   interface BloodSugarUnitSelectionDialogInjector {

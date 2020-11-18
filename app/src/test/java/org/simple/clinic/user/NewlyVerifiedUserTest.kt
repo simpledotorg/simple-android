@@ -35,7 +35,6 @@ class NewlyVerifiedUserTest {
 
   @Test
   @Parameters(value = [
-    "NOT_LOGGED_IN|NOT_LOGGED_IN|OTP_REQUESTED|false",
     "OTP_REQUESTED|OTP_REQUESTED|LOGGED_IN|true",
     "LOGGED_IN|LOGGED_IN|LOGGED_IN|false"
   ])

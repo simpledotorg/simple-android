@@ -71,11 +71,10 @@ class UpdateAnalyticsUserIdTest {
 
   @Test
   @Parameters(value = [
-    "NOT_LOGGED_IN",
     "OTP_REQUESTED",
     "UNAUTHORIZED"
   ])
-  fun `the user id must not be set if the local logged in status is NOT_LOGGED_IN, OTP_REQUESTED or UNAUTHORIZED`(
+  fun `the user id must not be set if the local logged in status is OTP_REQUESTED or UNAUTHORIZED`(
       loggedInStatus: User.LoggedInStatus
   ) {
     // given

@@ -24,7 +24,6 @@ import org.simple.clinic.insert
 import org.simple.clinic.integer
 import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.string
-import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -2434,7 +2433,7 @@ class DatabaseMigrationAndroidTest {
         status: String,
         createdAt: String,
         updatedAt: String,
-        loggedInStatus: User.LoggedInStatus
+        loggedInStatus: String
     ) {
       require(db.version == 43) { "Required DB version: 43; Found: ${db.version}" }
       db.execSQL("""
@@ -2550,7 +2549,7 @@ class DatabaseMigrationAndroidTest {
         val status: String,
         val createdAt: String,
         val updatedAt: String,
-        val loggedInStatus: User.LoggedInStatus,
+        val loggedInStatus: String,
         val pin: String,
         val createUserBeforeMigration: Boolean = true,
         val createLoginEntryBeforeMigration: Boolean = true,
@@ -2566,7 +2565,7 @@ class DatabaseMigrationAndroidTest {
         status = "allowed",
         createdAt = "created 1",
         updatedAt = "updated 1",
-        loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN,
+        loggedInStatus = "NOT_LOGGED_IN",
         pin = "pin 1",
         shouldUserBePresentAfterMigration = false,
         shouldLoginEntryBePresentAfterMigration = false
@@ -2579,7 +2578,7 @@ class DatabaseMigrationAndroidTest {
         status = "allowed",
         createdAt = "created 2",
         updatedAt = "updated 2",
-        loggedInStatus = User.LoggedInStatus.OTP_REQUESTED,
+        loggedInStatus = "OTP_REQUESTED",
         pin = "pin 2",
         shouldUserBePresentAfterMigration = true,
         shouldLoginEntryBePresentAfterMigration = true
@@ -2592,7 +2591,7 @@ class DatabaseMigrationAndroidTest {
         status = "allowed",
         createdAt = "created 3",
         updatedAt = "updated 3",
-        loggedInStatus = User.LoggedInStatus.LOGGED_IN,
+        loggedInStatus = "LOGGED_IN",
         pin = "pin 3",
         shouldUserBePresentAfterMigration = true,
         shouldLoginEntryBePresentAfterMigration = false
@@ -2605,7 +2604,7 @@ class DatabaseMigrationAndroidTest {
         status = "allowed",
         createdAt = "created 4",
         updatedAt = "updated 4",
-        loggedInStatus = User.LoggedInStatus.RESETTING_PIN,
+        loggedInStatus = "RESETTING_PIN",
         pin = "pin 4",
         shouldUserBePresentAfterMigration = true,
         shouldLoginEntryBePresentAfterMigration = false
@@ -2618,7 +2617,7 @@ class DatabaseMigrationAndroidTest {
         status = "allowed",
         createdAt = "created 5",
         updatedAt = "updated 5",
-        loggedInStatus = User.LoggedInStatus.RESET_PIN_REQUESTED,
+        loggedInStatus = "RESET_PIN_REQUESTED",
         pin = "pin 5",
         shouldUserBePresentAfterMigration = true,
         shouldLoginEntryBePresentAfterMigration = false
@@ -2631,7 +2630,7 @@ class DatabaseMigrationAndroidTest {
         status = "allowed",
         createdAt = "created 6",
         updatedAt = "updated 6",
-        loggedInStatus = User.LoggedInStatus.UNAUTHORIZED,
+        loggedInStatus = "UNAUTHORIZED",
         pin = "pin 6",
         shouldUserBePresentAfterMigration = true,
         shouldLoginEntryBePresentAfterMigration = false
@@ -2644,7 +2643,7 @@ class DatabaseMigrationAndroidTest {
         status = "allowed",
         createdAt = "created 7",
         updatedAt = "updated 7",
-        loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN,
+        loggedInStatus = "NOT_LOGGED_IN",
         pin = "pin 7",
         createUserBeforeMigration = false,
         shouldUserBePresentAfterMigration = false,
@@ -2658,7 +2657,7 @@ class DatabaseMigrationAndroidTest {
         status = "requested",
         createdAt = "created 8",
         updatedAt = "updated 8",
-        loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN,
+        loggedInStatus = "NOT_LOGGED_IN",
         pin = "pin 8",
         createLoginEntryBeforeMigration = false,
         shouldUserBePresentAfterMigration = false,

@@ -48,7 +48,6 @@ import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.user.UnauthorizeUser
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
@@ -74,7 +73,7 @@ fun initialScreenKey(
   val userDisapproved = user.status == UserStatus.DisapprovedForSyncing
 
   val canMoveToHomeScreen = when (user.loggedInStatus) {
-    NOT_LOGGED_IN, RESETTING_PIN -> false
+    RESETTING_PIN -> false
     LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED, UNAUTHORIZED -> true
   }
 

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.widget.checkedChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -68,7 +69,10 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
   private val dialogEvents = PublishSubject.create<BloodSugarUnitSelectionEvent>()
   private val events by unsafeLazy {
     val doneButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
-    doneClicks(doneButton)
+    Observable.mergeArray(
+        doneClicks(doneButton),
+        radioButtonClicks()
+    ).takeUntil(screenDestroys)
   }
 
   private fun doneClicks(doneButton: Button): Observable<BloodSugarUnitSelectionEvent> {
@@ -117,6 +121,18 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
         .setView(layout)
         .setPositiveButton(R.string.blood_sugar_unit_selection_done, null)
         .create()
+  }
+
+  private fun radioButtonClicks(): Observable<BloodSugarUnitSelectionEvent> {
+    return bloodSugarUnitGroup
+        .checkedChanges()
+        .map { checkedId ->
+          when (checkedId) {
+            R.id.bloodSugarUnitMg -> SaveBloodSugarUnitPreference(BloodSugarUnitPreference.Mg)
+            R.id.bloodSugarUnitMmol -> SaveBloodSugarUnitPreference(BloodSugarUnitPreference.Mmol)
+            else -> SaveBloodSugarUnitPreference(BloodSugarUnitPreference.Mg)
+          }
+        }
   }
 
   override fun onStart() {

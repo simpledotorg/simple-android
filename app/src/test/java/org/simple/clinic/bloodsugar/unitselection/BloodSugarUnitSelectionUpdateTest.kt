@@ -1,6 +1,8 @@
 package org.simple.clinic.bloodsugar.unitselection
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
+import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -35,6 +37,19 @@ class BloodSugarUnitSelectionUpdateTest {
             assertThatNext(
                 hasNoModel(),
                 hasEffects(CloseDialog)
+            )
+        )
+  }
+
+  @Test
+  fun `when the blood sugar unit preference is updated, then update the model`() {
+    updateSpec
+        .given(model)
+        .whenEvent(SaveBloodSugarUnitPreference(unitSelectionValue))
+        .then(
+            assertThatNext(
+                hasModel(model.bloodSugarUnitPreferenceChanged(unitSelectionValue)),
+                hasNoEffects()
             )
         )
   }

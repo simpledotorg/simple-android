@@ -16,4 +16,8 @@ data class BloodSugarUnitSelectionModel(
       )
     }
   }
+
+  fun bloodSugarUnitPreferenceChanged(bloodSugarUnitPreference: BloodSugarUnitPreference): BloodSugarUnitSelectionModel {
+    return copy(bloodSugarUnitPreference = bloodSugarUnitPreference)
+  }
 }

@@ -767,4 +767,9 @@
   <string name="setup_cannot_run">Cannot Run Application</string>
   <string name="setup_rooted">Simple cannot be run on a rooted device.</string>
   <string name="setup_close">Close</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">Choose</string>
+  <string name="blood_sugar_unit_selection_done">DONE</string>
+
 </resources>

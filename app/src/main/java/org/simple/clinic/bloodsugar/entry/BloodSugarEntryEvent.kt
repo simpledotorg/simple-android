@@ -54,3 +54,5 @@ object RemoveBloodSugarClicked : BloodSugarEntryEvent() {
 }
 
 data class BloodSugarUnitPreferenceLoaded(val bloodSugarUnitPreference: BloodSugarUnitPreference) : BloodSugarEntryEvent()
+
+object BloodSugarReadingUnitButtonClicked : BloodSugarEntryEvent()

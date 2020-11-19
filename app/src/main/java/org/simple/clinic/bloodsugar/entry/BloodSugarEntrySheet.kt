@@ -261,6 +261,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
       .clicks()
       .map { ShowBloodSugarEntryClicked }
 
+  private fun bloodSugarReadingUnitButtonClicks() = bloodSugarReadingUnitButton
+      .clicks()
+      .map { BloodSugarReadingUnitButtonClicked }
+
   private fun hardwareBackPresses(): Observable<UiEvent> {
     return Observable.create { emitter ->
       val interceptor = {

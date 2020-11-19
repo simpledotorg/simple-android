@@ -37,4 +37,5 @@ interface BloodSugarEntryUi {
   fun numericBloodSugarInputType()
   fun setLabelForHbA1c()
   fun setLabelForUnknown()
+  fun showBloodSugarUnitSelectionDialog(bloodSugarUnitPreference: BloodSugarUnitPreference)
 }

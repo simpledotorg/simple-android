@@ -50,6 +50,7 @@ class BloodSugarEntryEffectHandlerTest {
   private val facility = TestData.facility(uuid = UUID.fromString("7fabe36b-8fc3-457d-b9a8-68df71def7bd"))
   private val measurementUuid = UUID.fromString("175fb078-87b1-4c01-b5f0-91c3d2cefdfd")
   private val bloodSugarUnitPreference = mock<Preference<BloodSugarUnitPreference>>()
+  private val bloodSugarUnitPreferenceSelection = BloodSugarUnitPreference.Mg
 
   private val effectHandler = BloodSugarEntryEffectHandler(
       ui = ui,
@@ -423,13 +424,24 @@ class BloodSugarEntryEffectHandlerTest {
   @Test
   fun `when load blood sugar unit preference effect is received, then load unit preference`() {
     // given
-    whenever(bloodSugarUnitPreference.asObservable()) doReturn Observable.just(BloodSugarUnitPreference.Mg)
+    whenever(bloodSugarUnitPreference.asObservable()) doReturn Observable.just(bloodSugarUnitPreferenceSelection)
 
     // when
     testCase.dispatch(LoadBloodSugarUnitPreference)
 
     // then
-    testCase.assertOutgoingEvents(BloodSugarUnitPreferenceLoaded(BloodSugarUnitPreference.Mg))
+    testCase.assertOutgoingEvents(BloodSugarUnitPreferenceLoaded(bloodSugarUnitPreferenceSelection))
     verifyZeroInteractions(ui)
+  }
+
+  @Test
+  fun `when show blood sugar unit selection dialog effect is received, then open the dialog`() {
+    // when
+    testCase.dispatch(ShowBloodSugarUnitSelectionDialog(bloodSugarUnitPreferenceSelection))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(ui).showBloodSugarUnitSelectionDialog(bloodSugarUnitPreferenceSelection)
+    verifyNoMoreInteractions(ui)
   }
 }

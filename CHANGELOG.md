@@ -2,7 +2,7 @@
 
 ## Next Release
 ### Features
-- [In Progress: 29 Oct 2020] Refill prescriptions in edit medicine screen
+- Refill prescriptions in edit medicine screen
 - [In Progress: 11 Nov 2020] Migrate app screens to use ViewBinding
 - Add support for recording RBS, FBS, and PPBS blood sugars in two units: mmol/L or mg/dL
 

@@ -140,7 +140,8 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
         dayTextChanges(),
         monthTextChanges(),
         yearTextChanges(),
-        removeClicks()
+        removeClicks(),
+        bloodSugarReadingUnitButtonClicks()
     )
         .compose(ReportAnalyticsEvents())
         .share()

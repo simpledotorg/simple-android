@@ -24,7 +24,7 @@ class DrugSummaryUpdateTest {
   )
 
   @Test
-  fun `when current facility is loaded and there are prescribed drugs, then open prescribed drug screen with refill medicines open intention`() {
+  fun `when current facility is loaded with prescribed drugs, then open prescribed drug screen`() {
     val prescribedDrugRecords = listOf(
         TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1"),
         TestData.prescription(uuid = UUID.fromString("537a119e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine2"),
@@ -37,20 +37,7 @@ class DrugSummaryUpdateTest {
         .whenEvent(CurrentFacilityLoaded(facility))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenUpdatePrescribedDrugScreen(patientUuid, facility, OpenIntention.RefillMedicine)),
-        ))
-  }
-
-  @Test
-  fun `when current facility is loaded and there are no prescribed drugs, then open prescribed drug screen with add new medicines open intention`() {
-    val prescribedDrugRecords = emptyList<PrescribedDrug>()
-
-    updateSpec
-        .given(defaultModel.prescribedDrugsLoaded(prescribedDrugRecords))
-        .whenEvent(CurrentFacilityLoaded(facility))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(OpenUpdatePrescribedDrugScreen(patientUuid, facility, OpenIntention.AddNewMedicine)),
+            hasEffects(OpenUpdatePrescribedDrugScreen(patientUuid, facility)),
         ))
   }
 }

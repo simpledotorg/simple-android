@@ -1,6 +1,5 @@
 package org.simple.clinic.teleconsultlog.prescription.medicines
 
-import org.simple.clinic.drugs.OpenIntention
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.time.Duration
@@ -10,7 +9,7 @@ sealed class TeleconsultMedicinesEffect
 
 data class LoadPatientMedicines(val patientUuid: UUID) : TeleconsultMedicinesEffect()
 
-data class OpenEditMedicines(val patientUuid: UUID, val openIntention: OpenIntention) : TeleconsultMedicinesEffect()
+data class OpenEditMedicines(val patientUuid: UUID) : TeleconsultMedicinesEffect()
 
 data class OpenDrugDurationSheet(val prescription: PrescribedDrug) : TeleconsultMedicinesEffect()
 

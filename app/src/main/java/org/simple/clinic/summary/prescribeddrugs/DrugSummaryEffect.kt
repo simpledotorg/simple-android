@@ -1,6 +1,5 @@
 package org.simple.clinic.summary.prescribeddrugs
 
-import org.simple.clinic.drugs.OpenIntention
 import org.simple.clinic.facility.Facility
 import java.util.UUID
 
@@ -12,6 +11,5 @@ object LoadCurrentFacility : DrugSummaryEffect()
 
 data class OpenUpdatePrescribedDrugScreen(
     val patientUuid: UUID,
-    val facility: Facility,
-    val openIntention: OpenIntention
+    val facility: Facility
 ) : DrugSummaryEffect()

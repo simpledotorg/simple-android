@@ -33,8 +33,13 @@ import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
+import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
+import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
@@ -48,6 +53,12 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
 
   @Inject
   lateinit var activity: AppCompatActivity
+
+  @Inject
+  lateinit var utcClock: UtcClock
+
+  @Inject
+  lateinit var userClock: UserClock
 
   private var binding: ScreenPatientPrescribedDrugsEntryBinding? = null
 
@@ -72,11 +83,6 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
     screenKey.patientUuid
   }
 
-  private val openIntention by unsafeLazy {
-    val screenKey = screenRouter.key<PrescribedDrugsScreenKey>(this)
-    screenKey.openIntention
-  }
-
   private val events by unsafeLazy {
     Observable
         .merge(
@@ -91,8 +97,8 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
   private val delegate: MobiusDelegate<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect> by unsafeLazy {
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = EditMedicinesModel.create(patientUuid, openIntention),
-        update = EditMedicinesUpdate(),
+        defaultModel = EditMedicinesModel.create(patientUuid),
+        update = EditMedicinesUpdate(LocalDate.now(userClock), userClock.zone),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = EditMedicinesInit(),
         modelUpdateListener = uiRenderer::render

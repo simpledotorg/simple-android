@@ -10,7 +10,6 @@ import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.drugs.OpenIntention.RefillMedicine
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
@@ -63,12 +62,12 @@ class TeleconsultMedicinesEffectHandlerTest {
   @Test
   fun `when open edit medicines effect is received, then open edit medicines`() {
     // when
-    effectHandlerTestCase.dispatch(OpenEditMedicines(patientUuid, RefillMedicine))
+    effectHandlerTestCase.dispatch(OpenEditMedicines(patientUuid))
 
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
 
-    verify(uiActions).openEditMedicines(patientUuid, RefillMedicine)
+    verify(uiActions).openEditMedicines(patientUuid)
     verifyNoMoreInteractions(uiActions)
   }
 

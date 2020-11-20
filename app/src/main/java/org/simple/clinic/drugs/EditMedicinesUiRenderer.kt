@@ -1,7 +1,7 @@
 package org.simple.clinic.drugs
 
-import org.simple.clinic.drugs.OpenIntention.AddNewMedicine
-import org.simple.clinic.drugs.OpenIntention.RefillMedicine
+import org.simple.clinic.drugs.EditMedicineButtonState.REFILL_MEDICINE
+import org.simple.clinic.drugs.EditMedicineButtonState.SAVE_MEDICINE
 import org.simple.clinic.drugs.selection.EditMedicinesUi
 import org.simple.clinic.drugs.selection.ProtocolDrugListItem
 import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
@@ -13,12 +13,12 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
   override fun render(model: EditMedicinesModel) {
     if (model.prescribedDrugs != null && model.protocolDrugs != null)
       renderPrescribedProtocolDrugs(model, model.prescribedDrugs, model.protocolDrugs)
-    when (model.openIntention) {
-      AddNewMedicine -> {
+    when (model.editMedicineButtonState) {
+      SAVE_MEDICINE -> {
         ui.showDoneButton()
         ui.hideRefillMedicineButton()
       }
-      RefillMedicine -> {
+      REFILL_MEDICINE -> {
         ui.showRefillMedicineButton()
         ui.hideDoneButton()
       }

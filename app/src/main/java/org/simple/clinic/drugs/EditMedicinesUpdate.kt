@@ -2,6 +2,7 @@ package org.simple.clinic.drugs
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.drugs.EditMedicineButtonState.REFILL_MEDICINE
 import org.simple.clinic.drugs.EditMedicineButtonState.SAVE_MEDICINE
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -27,7 +28,7 @@ class EditMedicinesUpdate(
         }
         val noPrescribedDrugsAvailable = event.prescribedDrugs.isNullOrEmpty()
 
-        val buttonState = if (hasAnyPrescribedDrugBeenUpdatedToday || noPrescribedDrugsAvailable) SAVE_MEDICINE else TODO()
+        val buttonState = if (hasAnyPrescribedDrugBeenUpdatedToday || noPrescribedDrugsAvailable) SAVE_MEDICINE else REFILL_MEDICINE
 
         val drugsFetchedAndSaveMedicineModel = model
             .prescribedDrugsFetched(event.prescribedDrugs)

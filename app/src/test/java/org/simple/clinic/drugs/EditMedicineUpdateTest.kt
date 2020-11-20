@@ -86,4 +86,30 @@ class EditMedicineUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when the prescription has not been updated on the current day, then the refill medicine button must be shown`() {
+    val model = EditMedicinesModel.create(patientUuid, RefillMedicine)
+    val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
+    val prescribedDrugRecords = listOf(
+        TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1", createdAt = Instant.parse("2012-12-12T00:00:00Z"), updatedAt = Instant.parse("2012-12-12T00:00:00Z")),
+        TestData.prescription(uuid = UUID.fromString("537a119e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine2", createdAt = Instant.parse("2012-12-12T00:00:00Z"), updatedAt = Instant.parse("2012-12-12T00:00:00Z")),
+        TestData.prescription(uuid = UUID.fromString("5ac2a678-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine3", createdAt = Instant.parse("2012-12-12T00:00:00Z"), updatedAt = Instant.parse("2012-12-12T00:00:00Z")),
+    )
+
+    val protocolDrugRecords = listOf(
+        TestData.protocolDrug(uuid = UUID.fromString("5f9f0fe2-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine4", createdAt = Instant.parse("2012-12-12T00:00:00Z"), updatedAt = Instant.parse("2012-12-12T00:00:00Z"))
+    )
+
+    val protocolDrugsAndDosages = listOf(ProtocolDrugAndDosages("Amlodipine5", protocolDrugRecords))
+
+    val drugsFetchedAndRefillMedicineModel = model.prescribedDrugsFetched(prescribedDrugRecords).protocolDrugsFetched(protocolDrugsAndDosages).editMedicineDrugStateFetched(EditMedicineButtonState.REFILL_MEDICINE)
+    updateSpec
+        .given(model)
+        .whenEvent(DrugsListFetched(protocolDrugsAndDosages, prescribedDrugRecords))
+        .then(assertThatNext(
+            hasModel(drugsFetchedAndRefillMedicineModel),
+            hasNoEffects()
+        ))
+  }
 }

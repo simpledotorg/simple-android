@@ -3,8 +3,6 @@ package org.simple.clinic.registration.facility
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -14,11 +12,10 @@ import org.simple.clinic.TestData
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
-import java.time.Instant
 import org.simple.mobius.migration.MobiusTestFixture
+import java.time.Instant
 import java.util.UUID
 
 class RegistrationFacilitySelectionLogicTest {
@@ -30,7 +27,6 @@ class RegistrationFacilitySelectionLogicTest {
   private val uiActions = mock<RegistrationFacilitySelectionUiActions>()
   private val userSession = mock<UserSession>()
   private val currentTime = Instant.parse("2018-01-01T00:00:00Z")
-  private val utcClock = TestUtcClock(currentTime)
   private val ongoingEntry = OngoingRegistrationEntry(
       uuid = UUID.fromString("759f5f53-6f71-4a00-825b-c74654a5e448"),
       phoneNumber = "1111111111",
@@ -48,14 +44,7 @@ class RegistrationFacilitySelectionLogicTest {
   @Test
   fun `when a facility is clicked then show confirm facility sheet`() {
     // given
-    val ongoingEntry = OngoingRegistrationEntry(
-        uuid = UUID.fromString("eb0a9bc0-b24d-4f3f-9990-aa05e217be1a"),
-        phoneNumber = "1234567890",
-        fullName = "Ashok",
-        pin = "1234")
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("5cf9d744-7f34-4633-aa46-a6c7e7542060"))
-
-    whenever(userSession.saveOngoingRegistrationEntryAsUser(ongoingEntry, currentTime)).thenReturn(Completable.complete())
 
     // when
     setupController()
@@ -67,21 +56,18 @@ class RegistrationFacilitySelectionLogicTest {
   }
 
   @Test
-  fun `when a facility is confirmed then the ongoing entry should be updated with selected facility and the user should be logged in`() {
+  fun `when a facility is confirmed then open the intro video screen`() {
     // given
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("bc761c6c-032f-4f1d-a66a-3ec81e9e8aa3"))
     val entryWithFacility = ongoingEntry.copy(facilityId = facility1.uuid)
-
-    whenever(userSession.saveOngoingRegistrationEntryAsUser(entryWithFacility, currentTime)).thenReturn(Completable.complete())
 
     // when
     setupController()
     uiEvents.onNext(RegistrationFacilityConfirmed(facility1.uuid))
 
     // then
-    verify(uiActions).openIntroVideoScreen()
+    verify(uiActions).openIntroVideoScreen(entryWithFacility)
     verifyNoMoreInteractions(uiActions)
-    verify(userSession).saveOngoingRegistrationEntryAsUser(entryWithFacility, currentTime)
   }
 
   private fun setupController(
@@ -89,8 +75,6 @@ class RegistrationFacilitySelectionLogicTest {
   ) {
     val effectHandler = RegistrationFacilitySelectionEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        userSession = userSession,
-        utcClock = utcClock,
         uiActions = uiActions
     )
 

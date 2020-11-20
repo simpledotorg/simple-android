@@ -10,8 +10,6 @@ data class RegistrationFacilityClicked(val facility: Facility) : RegistrationFac
   override val analyticsName = "Registration:Facility Selection:Done Clicked"
 }
 
-object CurrentRegistrationEntrySaved: RegistrationFacilitySelectionEvent()
-
 data class RegistrationFacilityConfirmed(val facilityUuid: UUID) : RegistrationFacilitySelectionEvent() {
   override val analyticsName: String = "Registration:Facility Selection:Confirmed Facility Selection"
 }

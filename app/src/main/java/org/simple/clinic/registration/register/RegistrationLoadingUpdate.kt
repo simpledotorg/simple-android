@@ -9,9 +9,9 @@ class RegistrationLoadingUpdate : Update<RegistrationLoadingModel, RegistrationL
 
   override fun update(model: RegistrationLoadingModel, event: RegistrationLoadingEvent): Next<RegistrationLoadingModel, RegistrationLoadingEffect> {
     return when (event) {
-      is RegistrationDetailsLoaded -> dispatch(RegisterUserAtFacility(event.user, event.facility))
       is UserRegistrationCompleted -> userRegistrationCompleted(event, model)
-      is RegisterErrorRetryClicked -> next(model.clearRegistrationResult(), LoadRegistrationDetails)
+      is RegisterErrorRetryClicked -> next(model.clearRegistrationResult(), ConvertRegistrationEntryToUserDetails(model.registrationEntry))
+      is ConvertedRegistrationEntryToUserDetails -> dispatch(RegisterUserAtFacility(event.user))
     }
   }
 

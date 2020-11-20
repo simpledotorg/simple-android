@@ -28,7 +28,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
@@ -130,25 +129,6 @@ class TheActivityControllerTest {
 
     // then
     verify(ui).showAppLockScreen()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when activity is started, user is not logged in and user was inactive then app lock should not be shown`() {
-    // given
-    whenever(userSession.loggedInUserImmediate()).thenReturn(TestData.loggedInUser(
-        uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
-        loggedInStatus = NOT_LOGGED_IN,
-        status = UserStatus.ApprovedForSyncing
-    ))
-
-    val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
-
-    //when
-    setupController(lockAtTime = lockAfterTime)
-
-    // then
-    verify(ui, never()).showAppLockScreen()
     verifyNoMoreInteractions(ui)
   }
 

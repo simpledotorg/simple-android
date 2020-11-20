@@ -21,7 +21,10 @@
 - Render blood sugar in `mmol/L` in summary view and history.
 - Refill prescriptions in edit medicine screen
 
-## On Demo
+### Fixes
+- Fix issue where the local user state can become inconsistent during registration
+
+## 2020-11-09-7507
 ### Features
 - Add `TeleconsultStatusSheet`
 - Show `Next` in `ScheduleAppointmentSheet`

@@ -250,54 +250,6 @@ class DataSyncTest {
   }
 
   @Test
-  fun `when syncing everything, syncs which require a sync approved user should be skipped if there is a user present and they are not logged in`() {
-    val user = TestData.loggedInUser(
-        uuid = UUID.fromString("54cb095a-71f3-412d-8587-dc450a7a47b9"),
-        loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN,
-        status = UserStatus.ApprovedForSyncing
-    )
-    whenever(userSession.loggedInUserImmediate()).thenReturn(user)
-
-    val modelSync1 = FakeModelSync(
-        _name = "sync1",
-        config = dailySyncConfig
-    )
-
-    val modelSync2 = FakeModelSync(
-        _name = "sync2",
-        _requiresSyncApprovedUser = true,
-        config = dailySyncConfig,
-        pullError = RuntimeException("TEST"),
-    )
-
-    val modelSync3 = FakeModelSync(
-        _name = "sync3",
-        config = frequentSyncConfig
-    )
-
-    val dataSync = DataSync(
-        modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
-        crashReporter = mock(),
-        userSession = userSession,
-        schedulersProvider = schedulersProvider,
-        syncScheduler = schedulersProvider.io(),
-        purgeOnSync = mock()
-    )
-
-    val syncErrors = dataSync
-        .streamSyncErrors()
-        .test()
-        .assertNoErrors()
-
-    dataSync.syncTheWorld()
-
-    syncErrors
-        .assertNoValues()
-        .assertNoErrors()
-        .dispose()
-  }
-
-  @Test
   fun `when syncing everything, syncs which require a sync approved user should be skipped if there is a user present and they are waiting for login OTP`() {
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("54cb095a-71f3-412d-8587-dc450a7a47b9"),

@@ -51,6 +51,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
       is BloodSugarSaved -> next(model.bloodSugarStateChanged(NOT_SAVING_BLOOD_SUGAR), SetBloodSugarSavedResultAndFinish)
       RemoveBloodSugarClicked -> dispatch(ShowConfirmRemoveBloodSugarDialog((model.openAs as OpenAs.Update).bloodSugarMeasurementUuid))
       is BloodSugarUnitPreferenceLoaded -> next(model.bloodSugarUnitChanged(event.bloodSugarUnitPreference))
+      BloodSugarReadingUnitButtonClicked -> dispatch(ShowBloodSugarUnitSelectionDialog(model.bloodSugarUnitPreference))
     }
   }
 

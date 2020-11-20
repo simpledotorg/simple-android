@@ -34,6 +34,7 @@ import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog
 import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog.RemoveBloodSugarListener
 import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
+import org.simple.clinic.bloodsugar.unitselection.BloodSugarUnitSelectionDialog
 import org.simple.clinic.databinding.SheetBloodSugarEntryBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
@@ -140,7 +141,8 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
         dayTextChanges(),
         monthTextChanges(),
         yearTextChanges(),
-        removeClicks()
+        removeClicks(),
+        bloodSugarReadingUnitButtonClicks()
     )
         .compose(ReportAnalyticsEvents())
         .share()
@@ -260,6 +262,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
   private fun backClicks(): Observable<UiEvent> = backImageButton
       .clicks()
       .map { ShowBloodSugarEntryClicked }
+
+  private fun bloodSugarReadingUnitButtonClicks() = bloodSugarReadingUnitButton
+      .clicks()
+      .map { BloodSugarReadingUnitButtonClicked }
 
   private fun hardwareBackPresses(): Observable<UiEvent> {
     return Observable.create { emitter ->
@@ -481,6 +487,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
 
   override fun setLabelForUnknown() {
     bloodSugarReadingUnitLabel.text = getString(R.string.bloodsugarentry_mg_dl)
+  }
+
+  override fun showBloodSugarUnitSelectionDialog(bloodSugarUnitPreference: BloodSugarUnitPreference) {
+    BloodSugarUnitSelectionDialog.show(supportFragmentManager, bloodSugarUnitPreference)
   }
 
   override fun showRemoveButton() {

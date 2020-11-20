@@ -102,8 +102,10 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
     )
   }
 
+  @SuppressLint("InflateParams")
   override fun onAttach(context: Context) {
     super.onAttach(context)
+    layout = LayoutInflater.from(context).inflate(R.layout.dialog_bloodsugar_selectionunit, null)
     binding = DialogBloodsugarSelectionunitBinding.bind(layout)
     context.injector<BloodSugarUnitSelectionDialogInjector>().inject(this)
   }
@@ -113,9 +115,8 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 
-  @SuppressLint("CheckResult", "InflateParams")
+  @SuppressLint("CheckResult")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    layout = LayoutInflater.from(context).inflate(R.layout.dialog_bloodsugar_selectionunit, null)
     return AlertDialog.Builder(requireContext())
         .setTitle(R.string.blood_sugar_unit_selection_choose)
         .setView(layout)

@@ -3,9 +3,8 @@
 ## Next Release
 ### Features
 - [In Progress: 29 Oct 2020] Refill prescriptions in edit medicine screen
-- Add blood sugar unit switching button in `BloodSugarEntrySheet`
 - [In Progress: 11 Nov 2020] Migrate app screens to use ViewBinding
-- Add `BloodSugarUnitSelectionDialog`
+- Add support for recording RBS, FBS, and PPBS blood sugars in two units: mmol/L or mg/dL
 
 ### Internal
 - Add `recipes.md`

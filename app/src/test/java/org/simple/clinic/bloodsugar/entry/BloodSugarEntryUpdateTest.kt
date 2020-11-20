@@ -391,4 +391,17 @@ class BloodSugarEntryUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `When the blood sugar unit button is clicked then show blood sugar unit selection dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(BloodSugarReadingUnitButtonClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowBloodSugarUnitSelectionDialog(bloodSugarUnitPreference = defaultModel.bloodSugarUnitPreference))
+            )
+        )
+  }
 }

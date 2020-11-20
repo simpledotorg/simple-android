@@ -24,7 +24,6 @@ import org.simple.clinic.drugs.EditMedicinesInit
 import org.simple.clinic.drugs.EditMedicinesModel
 import org.simple.clinic.drugs.EditMedicinesUiRenderer
 import org.simple.clinic.drugs.EditMedicinesUpdate
-import org.simple.clinic.drugs.OpenIntention.AddNewMedicine
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.ProtocolDrugClicked
@@ -39,6 +38,8 @@ import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import java.time.LocalDate
+import java.time.ZoneOffset
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -81,9 +82,9 @@ class EditMedicinesScreenLogicTest {
 
     fixture = MobiusTestFixture(
         uiEvents.ofType(),
-        EditMedicinesModel.create(patientUuid, AddNewMedicine),
+        EditMedicinesModel.create(patientUuid),
         EditMedicinesInit(),
-        EditMedicinesUpdate(),
+        EditMedicinesUpdate(LocalDate.of(2020,11,12), ZoneOffset.UTC),
         effectHandler.build(),
         editMedicinesUiRenderer::render
     )

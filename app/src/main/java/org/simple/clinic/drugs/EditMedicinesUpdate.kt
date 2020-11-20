@@ -2,12 +2,17 @@ package org.simple.clinic.drugs
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
-import org.simple.clinic.drugs.OpenIntention.AddNewMedicine
-import org.simple.clinic.drugs.OpenIntention.RefillMedicine
+import org.simple.clinic.drugs.EditMedicineButtonState.SAVE_MEDICINE
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.util.toLocalDateAtZone
+import java.time.LocalDate
+import java.time.ZoneId
 
-class EditMedicinesUpdate : Update<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect> {
+class EditMedicinesUpdate(
+    private val currentDate: LocalDate,
+    private val timeZone: ZoneId
+) : Update<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect> {
 
   override fun update(model: EditMedicinesModel, event: EditMedicinesEvent): Next<EditMedicinesModel, EditMedicinesEffect> {
     return when (event) {
@@ -16,7 +21,21 @@ class EditMedicinesUpdate : Update<EditMedicinesModel, EditMedicinesEvent, EditM
       is CustomPrescriptionClicked -> dispatch(ShowUpdateCustomPrescriptionSheet(event.prescribedDrug))
       PrescribedDrugsDoneClicked -> dispatch(GoBackToPatientSummary)
       PresribedDrugsRefillClicked -> dispatch(RefillMedicines(model.patientUuid))
-      is DrugsListFetched -> next(model.prescribedDrugsFetched(event.prescribedDrugs).protocolDrugsFetched(event.protocolDrugs))
+      is DrugsListFetched -> {
+        val hasAnyPrescribedDrugBeenUpdatedToday = event.prescribedDrugs.any { prescribedDrug: PrescribedDrug ->
+          prescribedDrug.updatedAt.toLocalDateAtZone(timeZone) == currentDate
+        }
+        val noPrescribedDrugsAvailable = event.prescribedDrugs.isNullOrEmpty()
+
+        val buttonState = if (hasAnyPrescribedDrugBeenUpdatedToday || noPrescribedDrugsAvailable) SAVE_MEDICINE else TODO()
+
+        val drugsFetchedAndSaveMedicineModel = model
+            .prescribedDrugsFetched(event.prescribedDrugs)
+            .protocolDrugsFetched(event.protocolDrugs)
+            .editMedicineDrugStateFetched(buttonState)
+
+        next(drugsFetchedAndSaveMedicineModel)
+      }
       PrescribedMedicinesRefilled -> dispatch(GoBackToPatientSummary)
     }
   }

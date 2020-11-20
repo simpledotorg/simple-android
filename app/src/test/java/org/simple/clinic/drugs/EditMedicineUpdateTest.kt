@@ -111,4 +111,31 @@ class EditMedicineUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when filled prescribed drugs are fetched and some of the drugs are deleted, then set edit medicine button state to save button`() {
+    val model = EditMedicinesModel.create(patientUuid)
+    val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
+    val prescribedDrugRecords = listOf(
+        TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1", createdAt = Instant.parse("2020-11-18T00:00:00Z"), updatedAt = Instant.parse("2020-11-18T00:00:00Z")),
+        TestData.prescription(uuid = UUID.fromString("537a119e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine2", createdAt = Instant.parse("2020-11-18T00:00:00Z"), updatedAt = Instant.parse("2020-11-18T00:00:00Z")),
+        TestData.prescription(uuid = UUID.fromString("5ac2a678-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine3", createdAt = Instant.parse("2020-11-18T00:00:00Z"), updatedAt = Instant.parse("2020-11-18T00:00:00Z"), isDeleted = true),
+    )
+
+    val protocolDrugRecords = listOf(
+        TestData.protocolDrug(uuid = UUID.fromString("5f9f0fe2-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine4", createdAt = Instant.parse("2020-11-18T00:00:00Z"), updatedAt = Instant.parse("2020-11-18T00:00:00Z"))
+    )
+
+    val protocolDrugsAndDosages = listOf(ProtocolDrugAndDosages("Amlodipine5", protocolDrugRecords))
+
+    val drugsFetchedAndSaveMedicineModel = model.prescribedDrugsFetched(prescribedDrugRecords).protocolDrugsFetched(protocolDrugsAndDosages).editMedicineDrugStateFetched(EditMedicineButtonState.SAVE_MEDICINE)
+    updateSpec
+        .given(model)
+        .whenEvent(DrugsListFetched(protocolDrugsAndDosages, prescribedDrugRecords))
+        .then(assertThatNext(
+            hasModel(drugsFetchedAndSaveMedicineModel),
+            hasNoEffects()
+        ))
+  }
+
 }

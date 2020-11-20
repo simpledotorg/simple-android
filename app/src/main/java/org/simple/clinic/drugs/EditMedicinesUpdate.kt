@@ -22,22 +22,30 @@ class EditMedicinesUpdate(
       is CustomPrescriptionClicked -> dispatch(ShowUpdateCustomPrescriptionSheet(event.prescribedDrug))
       PrescribedDrugsDoneClicked -> dispatch(GoBackToPatientSummary)
       PresribedDrugsRefillClicked -> dispatch(RefillMedicines(model.patientUuid))
-      is DrugsListFetched -> {
-        val hasAnyPrescribedDrugBeenUpdatedToday = event.prescribedDrugs.any { prescribedDrug: PrescribedDrug ->
-          prescribedDrug.updatedAt.toLocalDateAtZone(timeZone) == currentDate
-        }
-        val noPrescribedDrugsAvailable = event.prescribedDrugs.isNullOrEmpty()
-
-        val buttonState = if (hasAnyPrescribedDrugBeenUpdatedToday || noPrescribedDrugsAvailable) SAVE_MEDICINE else REFILL_MEDICINE
-
-        val drugsFetchedAndSaveMedicineModel = model
-            .prescribedDrugsFetched(event.prescribedDrugs)
-            .protocolDrugsFetched(event.protocolDrugs)
-            .editMedicineDrugStateFetched(buttonState)
-
-        next(drugsFetchedAndSaveMedicineModel)
-      }
+      is DrugsListFetched -> drugsListAndButtonStateFetched(event, model)
       PrescribedMedicinesRefilled -> dispatch(GoBackToPatientSummary)
     }
+  }
+
+  private fun drugsListAndButtonStateFetched(
+      event: DrugsListFetched,
+      model: EditMedicinesModel
+  ): Next<EditMedicinesModel, EditMedicinesEffect> {
+    val hasAnyPrescribedDrugBeenUpdatedToday = event.prescribedDrugs.any { prescribedDrug: PrescribedDrug ->
+      prescribedDrug.updatedAt.toLocalDateAtZone(timeZone) == currentDate
+    }
+    val noPrescribedDrugsAvailable = event.prescribedDrugs.isNullOrEmpty()
+
+    val hasAnyPrescribedDrugBeenDeleted = event.prescribedDrugs.any { prescribedDrug -> prescribedDrug.isDeleted }
+    val isButtonStateSaveMedicine = hasAnyPrescribedDrugBeenUpdatedToday || hasAnyPrescribedDrugBeenDeleted || noPrescribedDrugsAvailable
+
+    val buttonState = if (isButtonStateSaveMedicine) SAVE_MEDICINE else REFILL_MEDICINE
+
+    val drugsFetchedAndSaveMedicineModel = model
+        .prescribedDrugsFetched(event.prescribedDrugs)
+        .protocolDrugsFetched(event.protocolDrugs)
+        .editMedicineDrugStateFetched(buttonState)
+
+    return next(drugsFetchedAndSaveMedicineModel)
   }
 }

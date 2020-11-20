@@ -3,8 +3,6 @@ package org.simple.clinic.user.registeruser
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.login.UsersApi
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
@@ -27,12 +25,11 @@ import javax.inject.Named
 class RegisterUser @Inject constructor(
     private val usersApi: UsersApi,
     private val userDao: User.RoomDao,
-    private val facilityRepository: FacilityRepository,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>
 ) {
 
-  fun registerUserAtFacility(user: User, facility: Facility): Single<RegistrationResult> {
-    val registrationRequest = RegistrationRequest(userToPayload(user, facility.uuid))
+  fun registerUserAtFacility(user: User): Single<RegistrationResult> {
+    val registrationRequest = RegistrationRequest(userToPayload(user, user.registrationFacilityUuid))
 
     return usersApi
         .createUser(registrationRequest)
@@ -79,11 +76,9 @@ class RegisterUser @Inject constructor(
 
   private fun storeUserAndAccessToken(response: RegistrationResponse): Single<User> {
     val user = userFromPayload(response.userPayload)
-    val facilityUuid = response.userPayload.registrationFacilityId
 
     return Completable
         .fromAction { userDao.createOrUpdate(user) }
-        .andThen(facilityRepository.setCurrentFacility(facilityUuid = facilityUuid))
         .andThen(Completable.fromAction { accessTokenPreference.set(Just(response.accessToken)) })
         .andThen(Single.just(user))
   }

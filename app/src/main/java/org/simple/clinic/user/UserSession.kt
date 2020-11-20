@@ -16,15 +16,12 @@ import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
 import timber.log.Timber
-import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -54,31 +51,6 @@ class UserSession @Inject constructor(
   @Deprecated(message = "Use OngoingLoginEntryRepository directly.")
   fun clearOngoingLoginEntry() {
     ongoingLoginEntryRepository.clearLoginEntry()
-  }
-
-  fun saveOngoingRegistrationEntryAsUser(
-      ongoingRegistrationEntry: OngoingRegistrationEntry,
-      timestamp: Instant
-  ): Completable {
-    val user = ongoingRegistrationEntry.let { entry ->
-      User(
-          uuid = entry.uuid!!,
-          fullName = entry.fullName!!,
-          phoneNumber = entry.phoneNumber!!,
-          pinDigest = passwordHasher.hash(entry.pin!!),
-          createdAt = timestamp,
-          updatedAt = timestamp,
-          status = WaitingForApproval,
-          loggedInStatus = NOT_LOGGED_IN,
-          registrationFacilityUuid = entry.facilityId!!,
-          currentFacilityUuid = entry.facilityId,
-          teleconsultPhoneNumber = null,
-          capabilities = null
-      )
-    }
-
-    return storeUser(user)
-        .doOnSubscribe { Timber.i("Logging in from ongoing registration entry") }
   }
 
   private fun userFromPayload(payload: LoggedInUserPayload, status: User.LoggedInStatus): User {

@@ -16,6 +16,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
@@ -111,8 +112,8 @@ class RegistrationFacilitySelectionScreen(
         }
   }
 
-  override fun openIntroVideoScreen() {
-    screenRouter.push(IntroVideoScreenKey())
+  override fun openIntroVideoScreen(registrationEntry: OngoingRegistrationEntry) {
+    screenRouter.push(IntroVideoScreenKey(registrationEntry))
   }
 
   override fun showConfirmFacilitySheet(facilityUuid: UUID, facilityName: String) {

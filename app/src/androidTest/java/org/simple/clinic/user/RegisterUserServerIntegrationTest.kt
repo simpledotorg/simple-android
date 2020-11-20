@@ -79,10 +79,12 @@ class RegisterUserServerIntegrationTest {
     val registerUserWithId = UUID.randomUUID()
     val user = testData.loggedInUser(
         uuid = registerUserWithId,
-        pinDigest = passwordHasher.hash(userPin)
+        pinDigest = passwordHasher.hash(userPin),
+        registrationFacilityUuid = registerFacility.uuid,
+        currentFacilityUuid = registerFacility.uuid
     )
 
-    val registrationResult = registerUser.registerUserAtFacility(user, facilityDao.getOne(registerFacility.uuid)!!)
+    val registrationResult = registerUser.registerUserAtFacility(user)
         .blockingGet()
 
     assertThat(registrationResult).isInstanceOf(RegistrationResult.Success::class.java)

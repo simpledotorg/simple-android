@@ -30,7 +30,6 @@ import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
@@ -228,14 +227,6 @@ class UserSessionTest {
 
     return listOf(
         testCase(
-            loggedInStatus = listOf(NOT_LOGGED_IN),
-            expectedIsUnauthorized = listOf(false)
-        ),
-        testCase(
-            loggedInStatus = listOf(NOT_LOGGED_IN, NOT_LOGGED_IN),
-            expectedIsUnauthorized = listOf(false)
-        ),
-        testCase(
             loggedInStatus = listOf(OTP_REQUESTED),
             expectedIsUnauthorized = listOf(false)
         ),
@@ -282,22 +273,6 @@ class UserSessionTest {
         testCase(
             loggedInStatus = listOf(UNAUTHORIZED, UNAUTHORIZED, LOGGED_IN, UNAUTHORIZED, UNAUTHORIZED, LOGGED_IN),
             expectedIsUnauthorized = listOf(true, false, true, false)
-        ),
-        testCase(
-            loggedInStatus = listOf(NOT_LOGGED_IN, UNAUTHORIZED),
-            expectedIsUnauthorized = listOf(false, true)
-        ),
-        testCase(
-            loggedInStatus = listOf(NOT_LOGGED_IN, UNAUTHORIZED, LOGGED_IN, UNAUTHORIZED),
-            expectedIsUnauthorized = listOf(false, true, false, true)
-        ),
-        testCase(
-            loggedInStatus = listOf(NOT_LOGGED_IN, UNAUTHORIZED, UNAUTHORIZED, LOGGED_IN, LOGGED_IN),
-            expectedIsUnauthorized = listOf(false, true, false)
-        ),
-        testCase(
-            loggedInStatus = listOf(NOT_LOGGED_IN, OTP_REQUESTED, LOGGED_IN, UNAUTHORIZED, LOGGED_IN, UNAUTHORIZED),
-            expectedIsUnauthorized = listOf(false, true, false, true)
         )
     )
   }

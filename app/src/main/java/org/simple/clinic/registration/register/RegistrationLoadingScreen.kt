@@ -58,11 +58,12 @@ class RegistrationLoadingScreen(
   }
 
   private val delegate by unsafeLazy {
+    val screenKey = screenRouter.key<RegistrationLoadingScreenKey>(this)
     val uiRenderer = RegistrationLoadingUiRenderer(this)
 
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = RegistrationLoadingModel.create(),
+        defaultModel = RegistrationLoadingModel.create(screenKey.registrationEntry),
         effectHandler = effectHandlerFactory.create(this).build(),
         update = RegistrationLoadingUpdate(),
         init = RegistrationLoadingInit(),

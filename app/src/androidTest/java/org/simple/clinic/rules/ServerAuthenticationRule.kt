@@ -184,10 +184,12 @@ class ServerAuthenticationRule : TestRule {
   private fun registerUserAtFacility(facility: Facility): RegistrationResult {
     val user = testData.loggedInUser(
         phone = fakePhoneNumber.phoneNumber(),
-        pinDigest = passwordHasher.hash(userPin)
+        pinDigest = passwordHasher.hash(userPin),
+        currentFacilityUuid = facility.uuid,
+        registrationFacilityUuid = facility.uuid
     )
 
-    return registerUser.registerUserAtFacility(user, facility).blockingGet()
+    return registerUser.registerUserAtFacility(user).blockingGet()
   }
 
   private fun verifyAccessTokenIsPresent() {

@@ -101,7 +101,8 @@ class IntroVideoScreen(
   }
 
   override fun openHome() {
-    screenRouter.push(RegistrationLoadingScreenKey())
+    val screenKey = screenRouter.key<IntroVideoScreenKey>(this)
+    screenRouter.push(RegistrationLoadingScreenKey(screenKey.registrationEntry))
   }
 
   private fun videoClicks(): Observable<IntroVideoEvent> {

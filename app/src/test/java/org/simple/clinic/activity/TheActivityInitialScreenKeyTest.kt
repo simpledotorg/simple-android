@@ -83,13 +83,6 @@ class TheActivityInitialScreenKeyTest {
   }
 
   @Test
-  fun `when the local user is disapproved for syncing and is not logged in, the access denied screen must be shown`() {
-    val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN, status = UserStatus.DisapprovedForSyncing)
-
-    assertThat(initialScreenKey(user)).isInstanceOf(AccessDeniedScreenKey::class.java)
-  }
-
-  @Test
   fun `when the local user is disapproved for syncing and has requested an OTP, the access denied screen must be shown`() {
     val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.OTP_REQUESTED, status = UserStatus.DisapprovedForSyncing)
 

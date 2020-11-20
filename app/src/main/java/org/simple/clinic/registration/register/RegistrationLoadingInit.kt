@@ -7,6 +7,6 @@ import org.simple.clinic.mobius.first
 class RegistrationLoadingInit: Init<RegistrationLoadingModel, RegistrationLoadingEffect> {
 
   override fun init(model: RegistrationLoadingModel): First<RegistrationLoadingModel, RegistrationLoadingEffect> {
-    return first(model, LoadRegistrationDetails)
+    return first(model, ConvertRegistrationEntryToUserDetails(model.registrationEntry))
   }
 }

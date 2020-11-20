@@ -19,7 +19,6 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
-import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
@@ -56,24 +55,6 @@ class UserSessionAndroidTest {
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-  }
-
-  @Test
-  fun when_logging_in_from_registration_entry_user_should_be_logged_in_locally() {
-    val ongoingRegistrationEntry = testData.ongoingRegistrationEntry(
-        uuid = user.uuid,
-        registrationFacility = facility
-    )
-    userSession.saveOngoingRegistrationEntryAsUser(ongoingRegistrationEntry, Instant.parse("2018-01-01T00:00:00Z")).blockingAwait()
-
-    assertThat(userSession.isUserPresentLocally()).isTrue()
-    val loggedInUser = userSession.loggedInUser().blockingFirst().get()
-    assertThat(loggedInUser.status).isEqualTo(UserStatus.WaitingForApproval)
-
-    val currentFacility = facilityRepository
-        .currentFacility()
-        .blockingFirst()
-    assertThat(currentFacility.uuid).isEqualTo(facility.uuid)
   }
 
   @Test

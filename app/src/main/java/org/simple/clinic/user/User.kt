@@ -92,13 +92,6 @@ data class User(
 
   enum class LoggedInStatus {
     /**
-     * Phone number match happened on the server,
-     * and information was stored locally, but the
-     * OTP request has not yet been made.
-     **/
-    NOT_LOGGED_IN,
-
-    /**
      * Login OTP request has been raised with the server.
      **/
     OTP_REQUESTED,

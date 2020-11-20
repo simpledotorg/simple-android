@@ -15,9 +15,8 @@ class RegistrationFacilitySelectionUpdate : Update<RegistrationFacilitySelection
       is RegistrationFacilityConfirmed -> {
         val updatedEntry = model.ongoingEntry.withFacilityUuid(event.facilityUuid)
 
-        dispatch(SaveRegistrationEntryAsUser(updatedEntry))
+        dispatch(MoveToIntroVideoScreen(updatedEntry))
       }
-      is CurrentRegistrationEntrySaved -> dispatch(MoveToIntroVideoScreen)
     }
   }
 }

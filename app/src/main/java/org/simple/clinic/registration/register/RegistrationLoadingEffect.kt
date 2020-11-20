@@ -1,12 +1,12 @@
 package org.simple.clinic.registration.register
 
-import org.simple.clinic.facility.Facility
+import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 
 sealed class RegistrationLoadingEffect
 
-object LoadRegistrationDetails: RegistrationLoadingEffect()
-
-data class RegisterUserAtFacility(val user: User, val facility: Facility): RegistrationLoadingEffect()
+data class RegisterUserAtFacility(val user: User): RegistrationLoadingEffect()
 
 object GoToHomeScreen: RegistrationLoadingEffect()
+
+data class ConvertRegistrationEntryToUserDetails(val registrationEntry: OngoingRegistrationEntry): RegistrationLoadingEffect()

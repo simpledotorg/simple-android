@@ -5,7 +5,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
+import io.reactivex.observers.TestObserver
 import io.reactivex.subjects.PublishSubject
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -45,6 +47,12 @@ class ShortCodeSearchResultStateProducerTest {
       schedulersProvider = TrampolineSchedulersProvider()
   )
   lateinit var uiStates: Observable<ShortCodeSearchResultState>
+  lateinit var testObserver: TestObserver<ShortCodeSearchResultState>
+
+  @After
+  fun tearDown() {
+    testObserver.dispose()
+  }
 
   @Test
   fun `when the screen is created, then patients matching the BP passport number must be fetched`() {
@@ -74,7 +82,6 @@ class ShortCodeSearchResultStateProducerTest {
 
     // when
     setupStateProducer()
-    val testObserver = uiStates.test()
     uiEventsSubject.onNext(ScreenCreated())
 
     // then
@@ -98,7 +105,6 @@ class ShortCodeSearchResultStateProducerTest {
 
     // when
     setupStateProducer()
-    val testObserver = uiStates.test()
     uiEventsSubject.onNext(ScreenCreated())
 
     // then
@@ -115,7 +121,6 @@ class ShortCodeSearchResultStateProducerTest {
 
     // when
     setupStateProducer()
-    val testObserver = uiStates.test()
     uiEventsSubject.onNext(ViewPatient(patientUuid))
 
     // then
@@ -142,7 +147,6 @@ class ShortCodeSearchResultStateProducerTest {
 
     // when
     setupStateProducer()
-    val testObserver = uiStates.test()
     uiEventsSubject.onNext(SearchPatient)
 
     // then
@@ -162,5 +166,6 @@ class ShortCodeSearchResultStateProducerTest {
     uiStates = uiEventsSubject
         .compose(uiStateProducer)
         .doOnNext { uiStateProducer.states.onNext(it) }
+    testObserver = uiStates.test()
   }
 }

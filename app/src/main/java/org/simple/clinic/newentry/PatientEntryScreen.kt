@@ -24,10 +24,10 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_manual_patient_entry.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.databinding.ScreenManualPatientEntryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
@@ -97,6 +97,116 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   @Inject
   lateinit var effectHandlerInjectionFactory: PatientEntryEffectHandler.InjectionFactory
 
+  private var binding: ScreenManualPatientEntryBinding? = null
+
+  private val fullNameEditText
+    get() = binding!!.fullNameEditText
+
+  private val ageEditText
+    get() = binding!!.ageEditText
+
+  private val dateOfBirthEditText
+    get() = binding!!.dateOfBirthEditText
+
+  private val phoneNumberEditText
+    get() = binding!!.phoneNumberEditText
+
+  private val colonyOrVillageEditText
+    get() = binding!!.colonyOrVillageEditText
+
+  private val districtEditText
+    get() = binding!!.districtEditText
+
+  private val stateEditText
+    get() = binding!!.stateEditText
+
+  private val backButton
+    get() = binding!!.backButton
+
+  private val identifierTextView
+    get() = binding!!.identifierTextView
+
+  private val fullNameInputLayout
+    get() = binding!!.fullNameInputLayout
+
+  private val ageEditTextInputLayout
+    get() = binding!!.ageEditTextInputLayout
+
+  private val dateOfBirthInputLayout
+    get() = binding!!.dateOfBirthInputLayout
+
+  private val phoneNumberInputLayout
+    get() = binding!!.phoneNumberInputLayout
+
+  private val genderRadioGroup
+    get() = binding!!.genderRadioGroup
+
+  private val alternativeIdInputLayout
+    get() = binding!!.alternativeIdInputLayout
+
+  private val streetAddressInputLayout
+    get() = binding!!.streetAddressInputLayout
+
+  private val colonyOrVillageInputLayout
+    get() = binding!!.colonyOrVillageInputLayout
+
+  private val zoneInputLayout
+    get() = binding!!.zoneInputLayout
+
+  private val districtInputLayout
+    get() = binding!!.districtInputLayout
+
+  private val stateInputLayout
+    get() = binding!!.stateInputLayout
+
+  private val maleRadioButton
+    get() = binding!!.maleRadioButton
+
+  private val femaleRadioButton
+    get() = binding!!.femaleRadioButton
+
+  private val transgenderRadioButton
+    get() = binding!!.transgenderRadioButton
+
+  private val consentTextView
+    get() = binding!!.consentTextView
+
+  private val consentLabel
+    get() = binding!!.consentLabel
+
+  private val alternativeIdInputEditText
+    get() = binding!!.alternativeIdInputEditText
+
+  private val zoneEditText
+    get() = binding!!.zoneEditText
+
+  private val streetAddressEditText
+    get() = binding!!.streetAddressEditText
+
+  private val saveButtonFrame
+    get() = binding!!.saveButtonFrame
+
+  private val consentSwitch
+    get() = binding!!.consentSwitch
+
+  private val dateOfBirthAndAgeSeparator
+    get() = binding!!.dateOfBirthAndAgeSeparator
+
+  private val genderErrorTextView
+    get() = binding!!.genderErrorTextView
+
+  private val formScrollView
+    get() = binding!!.formScrollView
+
+  private val patientEntryRoot
+    get() = binding!!.patientEntryRoot
+
+  private val identifierContainer
+    get() = binding!!.identifierContainer
+
+  private val saveButton
+    get() = binding!!.saveButton
+
   // FIXME This is temporally coupled to `scrollToFirstFieldWithError()`.
   private val allTextInputFields: List<EditText> by unsafeLazy {
     listOf(
@@ -143,6 +253,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     if (isInEditMode) {
       return
     }
+
+    binding = ScreenManualPatientEntryBinding.bind(this)
 
     context.injector<Injector>().inject(this)
 
@@ -254,10 +366,11 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 

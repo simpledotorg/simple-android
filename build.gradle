@@ -72,7 +72,11 @@ buildscript {
       cameraLifecycle          : '1.0.0-beta11',
       zxing                    : '3.3.3',
       paging                   : '2.1.2',
+
+      // When bumping this dependency, verify whether `org.simple.clinic.feature.Feature.ChangeLanguage`
+      // can be enabled again.
       appcompat                : '1.2.0',
+
       navigation               : '2.3.0',
       lottie                   : '3.4.0',
       desugarJdk               : '1.0.9',

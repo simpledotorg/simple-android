@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import org.simple.clinic.util.withLocale
 import java.util.Locale
 
+/* Remember to enable the activity in the debug manifest when running this activity. */
 class WebviewTestActivity: AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {

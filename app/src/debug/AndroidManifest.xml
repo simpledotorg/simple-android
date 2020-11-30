@@ -33,7 +33,8 @@
 
     <activity
       android:name=".WebviewTestActivity"
-      android:label="WebViewTest">
+      android:label="WebViewTest"
+      android:enabled="false">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

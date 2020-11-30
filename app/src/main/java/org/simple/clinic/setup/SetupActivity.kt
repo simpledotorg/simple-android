@@ -15,6 +15,7 @@ import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.feature.Features
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registerorlogin.AuthenticationActivity
@@ -47,6 +48,9 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
   @Inject
   lateinit var clock: UtcClock
+
+  @Inject
+  lateinit var features: Features
 
   private val screenResults = ScreenResultBus()
 
@@ -102,7 +106,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale))
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

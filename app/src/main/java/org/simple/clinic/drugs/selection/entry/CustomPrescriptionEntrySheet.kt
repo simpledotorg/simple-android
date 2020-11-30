@@ -22,6 +22,7 @@ import org.simple.clinic.databinding.SheetCustomPrescriptionEntryBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetComponent
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
@@ -42,6 +43,9 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
 
   @Inject
   lateinit var effectHandlerFactory: CustomPrescriptionEntryEffectHandler.Factory
+
+  @Inject
+  lateinit var features: Features
 
   private lateinit var component: CustomPrescriptionEntrySheetComponent
 
@@ -123,7 +127,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
   }
 
   override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale))
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   private fun setupDiGraph() {

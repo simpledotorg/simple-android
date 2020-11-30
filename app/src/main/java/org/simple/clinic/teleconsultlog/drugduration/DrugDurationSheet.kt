@@ -16,6 +16,7 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.teleconsultlog.drugduration.di.DrugDurationComponent
 import org.simple.clinic.util.unsafeLazy
@@ -39,6 +40,9 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
 
   @Inject
   lateinit var effectHandlerFactory: DrugDurationEffectHandler.Factory
+
+  @Inject
+  lateinit var features: Features
 
   companion object {
     private const val EXTRA_DRUG_DURATION = "drugDuration"
@@ -128,7 +132,7 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
   }
 
   override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale))
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   private fun setupDi() {

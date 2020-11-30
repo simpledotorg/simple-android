@@ -16,6 +16,7 @@ import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.selection.type.di.BloodSugarTypePickerSheetComponent
 import org.simple.clinic.databinding.SheetBloodSugarTypePickerBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.feature.Features
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
@@ -27,6 +28,9 @@ class BloodSugarTypePickerSheet : BottomSheetActivity() {
 
   @Inject
   lateinit var locale: Locale
+
+  @Inject
+  lateinit var features: Features
 
   private lateinit var component: BloodSugarTypePickerSheetComponent
 
@@ -71,7 +75,7 @@ class BloodSugarTypePickerSheet : BottomSheetActivity() {
   }
 
   override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale))
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   private fun setupDiGraph() {

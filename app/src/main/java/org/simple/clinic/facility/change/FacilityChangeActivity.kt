@@ -16,6 +16,7 @@ import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.ConfirmFacilityChangeSheet
 import org.simple.clinic.facility.change.confirm.FacilityChangeComponent
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.unsafeLazy
@@ -35,6 +36,9 @@ class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi, FacilityCh
 
   @Inject
   lateinit var effectHandlerFactory: FacilityChangeEffectHandler.Factory
+
+  @Inject
+  lateinit var features: Features
 
   private val events by unsafeLazy {
     facilityClicks()
@@ -83,7 +87,7 @@ class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi, FacilityCh
   }
 
   override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale))
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   override fun onStart() {

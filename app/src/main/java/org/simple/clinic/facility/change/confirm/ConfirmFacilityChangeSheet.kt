@@ -15,6 +15,7 @@ import org.simple.clinic.databinding.SheetConfirmFacilityChangeBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.di.ConfirmFacilityChangeComponent
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
@@ -46,6 +47,9 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
 
   @Inject
   lateinit var effectHandlerFactory: ConfirmFacilityChangeEffectHandler.Factory
+
+  @Inject
+  lateinit var features: Features
 
   private val selectedFacility: Facility by lazy {
     intent.getParcelableExtra<Facility>(SELECTED_FACILITY)!!
@@ -108,7 +112,7 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
   }
 
   override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale))
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   override fun onStart() {

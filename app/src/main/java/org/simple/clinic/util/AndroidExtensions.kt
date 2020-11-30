@@ -6,6 +6,8 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import io.reactivex.Observable
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.router.screen.ActivityResult
 import java.util.Locale
 
@@ -40,7 +42,10 @@ fun Activity.finishWithoutAnimations() {
   finish()
 }
 
-fun Configuration.withLocale(overrideLocale: Locale): Configuration {
+fun Configuration.withLocale(
+    overrideLocale: Locale,
+    features: Features
+): Configuration {
   // Configuration.getLocales is added after 24 and Configuration.locale is deprecated in 24
   if (Build.VERSION.SDK_INT >= 24) {
     if (!this.locales.isEmpty) {
@@ -52,6 +57,8 @@ fun Configuration.withLocale(overrideLocale: Locale): Configuration {
     }
   }
 
-  this.setLocale(overrideLocale)
+  if (features.isEnabled(Feature.ChangeLanguage)) {
+    this.setLocale(overrideLocale)
+  }
   return this
 }

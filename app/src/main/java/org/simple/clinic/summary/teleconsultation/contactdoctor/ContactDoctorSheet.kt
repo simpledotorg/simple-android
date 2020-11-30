@@ -12,6 +12,7 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.summary.PatientTeleconsultationInfo
 import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder
@@ -60,6 +61,9 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctor
 
   @Inject
   lateinit var smsMessageSender: SmsMessageSender
+
+  @Inject
+  lateinit var features: Features
 
   private val itemAdapter = ItemAdapter(DoctorListItem.DiffCallback())
 
@@ -149,7 +153,7 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctor
   }
 
   override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale))
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   private fun whatsAppButtonClicks(): Observable<UiEvent> {

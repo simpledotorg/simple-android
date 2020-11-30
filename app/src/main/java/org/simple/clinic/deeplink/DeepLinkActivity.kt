@@ -10,6 +10,7 @@ import io.reactivex.Observable
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.deeplink.di.DeepLinkComponent
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.feature.Features
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.setup.SetupActivity
@@ -33,6 +34,9 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
 
   @Inject
   lateinit var locale: Locale
+
+  @Inject
+  lateinit var features: Features
 
   private val deepLinkData by unsafeLazy {
     intent.data
@@ -90,7 +94,7 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
   }
 
   override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale))
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   private fun setupDi() {

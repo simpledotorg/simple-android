@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.screen_scan_simple.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.feature.Features
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import java.util.Locale
@@ -34,6 +35,9 @@ class ScanBpPassportActivity: AppCompatActivity(), ScanSimpleIdScreen.ScanResult
 
   @Inject
   lateinit var component: ScanBpPassportActivityComponent
+
+  @Inject
+  lateinit var features: Features
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -62,7 +66,7 @@ class ScanBpPassportActivity: AppCompatActivity(), ScanSimpleIdScreen.ScanResult
   }
 
   override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale))
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   private fun setupDiGraph() {

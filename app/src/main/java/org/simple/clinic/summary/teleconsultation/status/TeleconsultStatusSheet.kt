@@ -16,6 +16,7 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultStatus.No
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultStatus.StillWaiting
@@ -49,6 +50,9 @@ class TeleconsultStatusSheet : BottomSheetActivity(), TeleconsultStatusUi, Telec
 
   @Inject
   lateinit var effectHandlerFactory: TeleconsultStatusEffectHandler.Factory
+
+  @Inject
+  lateinit var features: Features
 
   private lateinit var component: TeleconsultStatusComponent
 
@@ -118,7 +122,7 @@ class TeleconsultStatusSheet : BottomSheetActivity(), TeleconsultStatusUi, Telec
   }
 
   override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale))
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   private fun setupDi() {

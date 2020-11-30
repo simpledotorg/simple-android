@@ -2,6 +2,7 @@ package org.simple.clinic.setup
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
@@ -14,6 +15,7 @@ import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.feature.Features
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registerorlogin.AuthenticationActivity
@@ -21,12 +23,12 @@ import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.setup.runcheck.Disallowed
-import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.disablePendingTransitions
 import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import java.util.Locale
 import javax.inject.Inject
@@ -46,6 +48,9 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
   @Inject
   lateinit var clock: UtcClock
+
+  @Inject
+  lateinit var features: Features
 
   private val screenResults = ScreenResultBus()
 
@@ -93,11 +98,15 @@ class SetupActivity : AppCompatActivity(), UiActions {
     setupDiGraph()
 
     val wrappedContext = baseContext
-        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
         .wrap { InjectorProviderContextWrapper.wrap(it, component) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)
+    applyOverrideConfiguration(Configuration())
+  }
+
+  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

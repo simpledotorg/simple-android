@@ -3,6 +3,7 @@ package org.simple.clinic.teleconsultlog.medicinefrequency
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.checkedChanges
@@ -14,14 +15,15 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.BD
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.OD
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.QDS
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.TDS
 import org.simple.clinic.teleconsultlog.medicinefrequency.di.MedicineFrequencyComponent
-import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import java.util.Locale
@@ -35,6 +37,9 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
 
   @Inject
   lateinit var effectHandlerFactory: MedicineFrequencyEffectHandler.Factory
+
+  @Inject
+  lateinit var features: Features
 
   private lateinit var component: MedicineFrequencyComponent
 
@@ -159,11 +164,14 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
     setUpDependencyInjection()
 
     val context = newBaseContext
-        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
         .wrap { InjectorProviderContextWrapper.wrap(it, component) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
     super.attachBaseContext(context)
+    applyOverrideConfiguration(Configuration())
+  }
 
+  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   private fun setUpDependencyInjection() {

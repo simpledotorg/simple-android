@@ -2,6 +2,7 @@ package org.simple.clinic.contactpatient
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -25,11 +26,11 @@ import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.router.screen.ActivityPermissionResult
-import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
@@ -167,11 +168,15 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
     setupDiGraph()
 
     val wrappedContext = baseContext
-        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
         .wrap { InjectorProviderContextWrapper.wrap(it, component) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)
+    applyOverrideConfiguration(Configuration())
+  }
+
+  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   private fun setupDiGraph() {

@@ -3,6 +3,7 @@ package org.simple.clinic.facility.alertchange
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
 import com.f2prateek.rx.preferences2.Preference
@@ -12,9 +13,10 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetAlertFacilityChangeBinding
 import org.simple.clinic.facility.change.FacilityChangeActivity
+import org.simple.clinic.feature.Features
 import org.simple.clinic.router.screen.FullScreenKey
-import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import java.util.Locale
@@ -29,6 +31,9 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
   @Inject
   @Named("is_facility_switched")
   lateinit var isFacilitySwitchedPreference: Preference<Boolean>
+
+  @Inject
+  lateinit var features: Features
 
   private lateinit var component: AlertFacilityChangeComponent
 
@@ -98,10 +103,14 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
     setupDI()
 
     val wrappedContext = baseContext
-        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)
+    applyOverrideConfiguration(Configuration())
+  }
+
+  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   private fun setupDI() {

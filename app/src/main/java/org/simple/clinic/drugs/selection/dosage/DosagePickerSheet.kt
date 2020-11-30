@@ -2,6 +2,7 @@ package org.simple.clinic.drugs.selection.dosage
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
@@ -13,9 +14,10 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetDosagePickerBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.DividerItemDecorator
@@ -31,6 +33,9 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi, DosagePickerUiA
 
   @Inject
   lateinit var locale: Locale
+
+  @Inject
+  lateinit var features: Features
 
   @Inject
   lateinit var effectHandlerFactory: DosagePickerEffectHandler.Factory
@@ -97,11 +102,15 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi, DosagePickerUiA
     setupDiGraph()
 
     val wrappedContext = baseContext
-        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
         .wrap { InjectorProviderContextWrapper.wrap(it, component) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)
+    applyOverrideConfiguration(Configuration())
+  }
+
+  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   private fun setupDiGraph() {

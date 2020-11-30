@@ -3,8 +3,13 @@ package org.simple.clinic.util
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.os.Build
 import io.reactivex.Observable
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.router.screen.ActivityResult
+import java.util.Locale
 
 inline fun Context.wrap(wrapper: (Context) -> Context): Context = wrapper(this)
 
@@ -35,4 +40,25 @@ fun Activity.disablePendingTransitions() {
 fun Activity.finishWithoutAnimations() {
   overridePendingTransition(0, 0)
   finish()
+}
+
+fun Configuration.withLocale(
+    overrideLocale: Locale,
+    features: Features
+): Configuration {
+  val canOverrideLocale = features.isEnabled(Feature.ChangeLanguage) && !isLocaleAlreadyOverriden()
+
+  if (canOverrideLocale) {
+    this.setLocale(overrideLocale)
+  }
+
+  return this
+}
+
+private fun Configuration.isLocaleAlreadyOverriden(): Boolean {
+  return when {
+    Build.VERSION.SDK_INT >= 24 && !this.locales.isEmpty -> true
+    Build.VERSION.SDK_INT < 24 && this.locale != null -> true
+    else -> false
+  }
 }

@@ -9,10 +9,12 @@ import org.simple.clinic.util.UtcClock
 import java.time.Instant
 import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Provider
 
 class AppInfoHttpInterceptor @Inject constructor(
     private val userClock: UserClock,
     private val utcClock: UtcClock,
+    private val locale: Provider<Locale>,
     application: Application
 ) : Interceptor {
 
@@ -38,7 +40,7 @@ class AppInfoHttpInterceptor @Inject constructor(
   }
 
   private fun deviceLanguage(): String {
-    return Locale.getDefault().toLanguageTag()
+    return locale.get().toLanguageTag()
   }
 
   private fun addTimezoneHeaders(builder: Request.Builder) {

@@ -3,6 +3,7 @@ package org.simple.clinic.drugs.selection.entry
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -21,9 +22,10 @@ import org.simple.clinic.databinding.SheetCustomPrescriptionEntryBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetComponent
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -41,6 +43,9 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
 
   @Inject
   lateinit var effectHandlerFactory: CustomPrescriptionEntryEffectHandler.Factory
+
+  @Inject
+  lateinit var features: Features
 
   private lateinit var component: CustomPrescriptionEntrySheetComponent
 
@@ -114,11 +119,15 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
     setupDiGraph()
 
     val wrappedContext = baseContext
-        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
         .wrap { InjectorProviderContextWrapper.wrap(it, component) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)
+    applyOverrideConfiguration(Configuration())
+  }
+
+  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   private fun setupDiGraph() {

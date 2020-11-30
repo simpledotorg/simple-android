@@ -58,7 +58,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
 
   private var binding: PinEntryCardBinding? = null
 
-  private val pinEditText
+  val pinEditText
     get() = binding!!.pinEditText
 
   private val errorTextView
@@ -76,7 +76,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   private val timeRemainingTillUnlockTextView
     get() = binding!!.timeRemainingTillUnlockTextView
 
-  private val forgotPinButton
+  val forgotPinButton
     get() = binding!!.forgotPinButton
 
   init {

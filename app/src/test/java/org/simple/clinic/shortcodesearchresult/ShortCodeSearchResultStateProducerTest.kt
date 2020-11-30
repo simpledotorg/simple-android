@@ -18,6 +18,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.searchresultsview.PatientSearchResults
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
@@ -45,7 +46,7 @@ class ShortCodeSearchResultStateProducerTest {
       facilityRepository = facilityRepository,
       bloodPressureDao = bloodPressureDao,
       ui = ui,
-      schedulersProvider = TrampolineSchedulersProvider()
+      schedulersProvider = TestSchedulersProvider.trampoline()
   )
   lateinit var uiStates: Observable<ShortCodeSearchResultState>
   lateinit var testObserver: TestObserver<ShortCodeSearchResultState>

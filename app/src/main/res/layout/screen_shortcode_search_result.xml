@@ -15,6 +15,8 @@
     android:layout_height="wrap_content"
     android:layout_below="@+id/toolBar">
 
-    <include layout="@layout/patient_search_view" />
+    <include
+      android:id="@+id/patientSearchView"
+      layout="@layout/patient_search_view" />
   </RelativeLayout>
 </org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreen>

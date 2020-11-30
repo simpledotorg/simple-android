@@ -14,7 +14,6 @@ import com.jakewharton.rxbinding3.widget.editorActionEvents
 import com.jakewharton.rxbinding3.widget.textChangeEvents
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenScanSimpleBinding
@@ -48,8 +47,21 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
   private var binding: ScreenScanSimpleBinding? = null
 
+  private val toolBar
+    get() = binding!!.toolBar
+
+  private val qrCodeScannerViewContainer
+    get() = binding!!.qrCodeScannerViewContainer
+
+  private val shortCodeText
+    get() = binding!!.shortCodeText
+
+  private val shortCodeErrorText
+    get() = binding!!.shortCodeErrorText
+
   private val searchingContainer
     get() = binding!!.searchingContainer
+
 
   private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
 
@@ -82,10 +94,11 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 
@@ -98,6 +111,9 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     if (isInEditMode) {
       return
     }
+
+    binding = ScreenScanSimpleBinding.bind(this)
+
     context.injector<Injector>().inject(this)
 
     // It is possible that going back via the app bar from future screens will come back to this

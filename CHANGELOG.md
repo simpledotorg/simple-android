@@ -8,7 +8,7 @@
 ### Changes
 - Disable the change language feature on devices running Lollipop (API level 21, 22)
 
-## On Demo
+## 2020-11-30-7529
 ### Features
 - Refill prescriptions in edit medicine screen
 - Add support for recording RBS, FBS, and PPBS blood sugars in two units: mmol/L or mg/dL

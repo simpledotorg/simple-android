@@ -3,6 +3,7 @@ package org.simple.clinic.scheduleappointment.facilityselection
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
@@ -14,9 +15,10 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
@@ -37,6 +39,9 @@ class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi, Faci
 
   @Inject
   lateinit var effectHandlerFactory: FacilitySelectionEffectHandler.Factory
+
+  @Inject
+  lateinit var features: Features
 
   private val events by unsafeLazy {
     facilityClicks()
@@ -76,11 +81,15 @@ class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi, Faci
     component.inject(this)
 
     val wrappedContext = baseContext
-        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
         .wrap { InjectorProviderContextWrapper.wrap(it, component) }
 
     super.attachBaseContext(wrappedContext)
+    applyOverrideConfiguration(Configuration())
+  }
+
+  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   override fun onStart() {

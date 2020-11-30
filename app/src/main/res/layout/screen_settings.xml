@@ -173,6 +173,14 @@
         app:layout_constraintTop_toTopOf="@id/userPhoneDivider"
         tools:visibility="visible" />
 
+      <androidx.constraintlayout.widget.Group
+        android:id="@+id/changeLanguageWidgetGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="languageIcon, currentLanguageLabel, currentLanguage, currentLanguageDivider, changeLanguageButton"
+        tools:visibility="visible"
+        android:visibility="gone"/>
+
       <!-- App version section -->
       <ImageView
         android:id="@+id/appVersionIcon"

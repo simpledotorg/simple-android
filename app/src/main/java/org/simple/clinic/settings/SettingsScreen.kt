@@ -15,6 +15,8 @@ import org.simple.clinic.BuildConfig
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreenKey
@@ -31,6 +33,9 @@ class SettingsScreen(
 
   @Inject
   lateinit var settingsEffectHandler: SettingsEffectHandler.Factory
+
+  @Inject
+  lateinit var features: Features
 
   private val uiRenderer: SettingsUiRenderer = SettingsUiRenderer(this)
 
@@ -51,6 +56,8 @@ class SettingsScreen(
     )
   }
 
+  private val isChangeLanguageFeatureEnabled by unsafeLazy { features.isEnabled(Feature.ChangeLanguage) }
+
   private fun changeLanguageButtonClicks(): Observable<SettingsEvent> {
     return RxView.clicks(changeLanguageButton).map { ChangeLanguage }
   }
@@ -63,11 +70,16 @@ class SettingsScreen(
 
     context.injector<Injector>().inject(this)
 
+    toggleChangeLanguageFeature()
     toolbar.setNavigationOnClickListener { screenRouter.pop() }
 
     updateAppVersionButton.setOnClickListener {
       launchPlayStoreForUpdate()
     }
+  }
+
+  private fun toggleChangeLanguageFeature() {
+    changeLanguageWidgetGroup.visibility = if (isChangeLanguageFeatureEnabled) VISIBLE else GONE
   }
 
   override fun onAttachedToWindow() {
@@ -98,7 +110,9 @@ class SettingsScreen(
   }
 
   override fun setChangeLanguageButtonVisible() {
-    changeLanguageButton.visibility = View.VISIBLE
+    if (isChangeLanguageFeatureEnabled) {
+      changeLanguageButton.visibility = View.VISIBLE
+    }
   }
 
   override fun openLanguageSelectionScreen() {

@@ -3,6 +3,7 @@ package org.simple.clinic.teleconsultlog.drugduration
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -15,10 +16,11 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.teleconsultlog.drugduration.di.DrugDurationComponent
-import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.setTextAndCursor
@@ -38,6 +40,9 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
 
   @Inject
   lateinit var effectHandlerFactory: DrugDurationEffectHandler.Factory
+
+  @Inject
+  lateinit var features: Features
 
   companion object {
     private const val EXTRA_DRUG_DURATION = "drugDuration"
@@ -119,11 +124,15 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
     setupDi()
 
     val wrappedContext = baseContext
-        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
         .wrap { InjectorProviderContextWrapper.wrap(it, component) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)
+    applyOverrideConfiguration(Configuration())
+  }
+
+  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
+    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   private fun setupDi() {

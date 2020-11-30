@@ -8,7 +8,6 @@ import io.reactivex.Observable
 import io.reactivex.observers.TestObserver
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -22,6 +21,7 @@ import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import java.time.Instant
 import java.util.UUID
 
 class ShortCodeSearchResultStateProducerTest {
@@ -82,7 +82,6 @@ class ShortCodeSearchResultStateProducerTest {
 
     // when
     setupStateProducer()
-    uiEventsSubject.onNext(ScreenCreated())
 
     // then
     val expectedPatientResults = PatientSearchResults(
@@ -105,7 +104,6 @@ class ShortCodeSearchResultStateProducerTest {
 
     // when
     setupStateProducer()
-    uiEventsSubject.onNext(ScreenCreated())
 
     // then
     testObserver
@@ -118,15 +116,32 @@ class ShortCodeSearchResultStateProducerTest {
   fun `when the user clicks on a patient search result, then open the patient summary screen`() {
     // given
     val patientUuid = UUID.fromString("d18fa4dc-3b47-4a88-826f-342401527d65")
+    val patientSearchResults = listOf(TestData.patientSearchResult(
+        uuid = patientUuid,
+        lastSeen = PatientSearchResult.LastSeen(
+            lastSeenOn = Instant.parse("2018-01-01T00:00:00Z"),
+            lastSeenAtFacilityName = "PHC Obvious",
+            lastSeenAtFacilityUuid = currentFacility.uuid
+        )
+    ))
+    whenever(patientRepository.searchByShortCode(shortCode))
+        .thenReturn(Observable.just(patientSearchResults))
+    whenever(bloodPressureDao.patientToFacilityIds(listOf(patientUuid)))
+        .thenReturn(listOf(PatientToFacilityId(patientUuid, currentFacility.uuid)))
 
     // when
     setupStateProducer()
     uiEventsSubject.onNext(ViewPatient(patientUuid))
 
     // then
+    val expectedPatientResults = PatientSearchResults(
+        visitedCurrentFacility = patientSearchResults,
+        notVisitedCurrentFacility = emptyList(),
+        currentFacility = currentFacility
+    )
     testObserver
         .assertNoErrors()
-        .assertNoValues()
+        .assertValues(fetchingPatientsState, fetchingPatientsState.patientsFetched(expectedPatientResults))
         .assertNotTerminated()
 
     verify(ui).openPatientSummary(patientUuid)
@@ -136,23 +151,33 @@ class ShortCodeSearchResultStateProducerTest {
   @Test
   fun `when enter patient name is clicked, then take the user to search patient screen`() {
     // given
-    val patientSearchResults = listOf(TestData.patientSearchResult())
-    val patientsFetched = ShortCodeSearchResultState
-        .fetchingPatients("1234567")
-        .patientsFetched(PatientSearchResults(
-            visitedCurrentFacility = patientSearchResults,
-            notVisitedCurrentFacility = emptyList(),
-            currentFacility = currentFacility))
-    uiStateProducer.states.onNext(patientsFetched) // TODO Fix `setState` in tests
+    val patientUuid = UUID.fromString("ee25c8dd-59ee-448d-8e37-cf87aee8423a")
+    val patientSearchResults = listOf(TestData.patientSearchResult(
+        uuid = patientUuid,
+        lastSeen = PatientSearchResult.LastSeen(
+            lastSeenOn = Instant.parse("2018-01-01T00:00:00Z"),
+            lastSeenAtFacilityName = "PHC Obvious",
+            lastSeenAtFacilityUuid = currentFacility.uuid
+        )
+    ))
+    whenever(patientRepository.searchByShortCode(shortCode))
+        .thenReturn(Observable.just(patientSearchResults))
+    whenever(bloodPressureDao.patientToFacilityIds(listOf(patientUuid)))
+        .thenReturn(listOf(PatientToFacilityId(patientUuid, currentFacility.uuid)))
 
     // when
     setupStateProducer()
     uiEventsSubject.onNext(SearchPatient)
 
     // then
+    val expectedPatientResults = PatientSearchResults(
+        visitedCurrentFacility = patientSearchResults,
+        notVisitedCurrentFacility = emptyList(),
+        currentFacility = currentFacility
+    )
     testObserver
         .assertNoErrors()
-        .assertNoValues()
+        .assertValues(fetchingPatientsState, fetchingPatientsState.patientsFetched(expectedPatientResults))
         .assertNotTerminated()
 
     verify(ui).openPatientSearch()
@@ -167,5 +192,6 @@ class ShortCodeSearchResultStateProducerTest {
         .compose(uiStateProducer)
         .doOnNext { uiStateProducer.states.onNext(it) }
     testObserver = uiStates.test()
+    uiEventsSubject.onNext(ScreenCreated())
   }
 }

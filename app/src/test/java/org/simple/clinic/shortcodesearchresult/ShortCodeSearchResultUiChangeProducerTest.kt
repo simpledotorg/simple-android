@@ -3,7 +3,9 @@ package org.simple.clinic.shortcodesearchresult
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -15,11 +17,11 @@ class ShortCodeSearchResultUiChangeProducerTest {
   private val ui = mock<ShortCodeSearchResultUi>()
   private val states = PublishSubject.create<ShortCodeSearchResultState>()
 
-  @Before
-  fun setup() {
-    states
-        .compose(ShortCodeSearchResultUiChangeProducer(TrampolineSchedulersProvider()))
-        .subscribe { uiChange -> uiChange(ui) }
+  private lateinit var stateSubscription: Disposable
+
+  @After
+  fun tearDown() {
+    stateSubscription.dispose()
   }
 
   @Test
@@ -28,6 +30,7 @@ class ShortCodeSearchResultUiChangeProducerTest {
     val fetchingPatients = ShortCodeSearchResultState.fetchingPatients("1234567")
 
     // when
+    setupUiChangeProducer()
     states.onNext(fetchingPatients)
 
     // then
@@ -46,6 +49,7 @@ class ShortCodeSearchResultUiChangeProducerTest {
         .patientsFetched(foundPatients)
 
     // when
+    setupUiChangeProducer()
     states.onNext(patientsFetched)
 
     // then
@@ -63,6 +67,7 @@ class ShortCodeSearchResultUiChangeProducerTest {
         .noMatchingPatients()
 
     // when
+    setupUiChangeProducer()
     states.onNext(noMatchingPatients)
 
     // then
@@ -70,5 +75,11 @@ class ShortCodeSearchResultUiChangeProducerTest {
     verify(ui).showNoPatientsMatched()
     verify(ui).showSearchPatientButton()
     verifyNoMoreInteractions(ui)
+  }
+
+  private fun setupUiChangeProducer() {
+    stateSubscription = states
+        .compose(ShortCodeSearchResultUiChangeProducer(TrampolineSchedulersProvider()))
+        .subscribe { uiChange -> uiChange(ui) }
   }
 }

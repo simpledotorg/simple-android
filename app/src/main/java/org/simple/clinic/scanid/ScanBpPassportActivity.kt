@@ -6,9 +6,8 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
-import kotlinx.android.synthetic.main.screen_scan_simple.*
 import org.simple.clinic.ClinicApp
-import org.simple.clinic.R
+import org.simple.clinic.databinding.ScreenScanSimpleBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.util.withLocale
@@ -16,7 +15,7 @@ import org.simple.clinic.util.wrap
 import java.util.Locale
 import javax.inject.Inject
 
-class ScanBpPassportActivity: AppCompatActivity(), ScanSimpleIdScreen.ScanResultsReceiver {
+class ScanBpPassportActivity : AppCompatActivity(), ScanSimpleIdScreen.ScanResultsReceiver {
 
   companion object {
     private const val SCAN_RESULT = "org.simple.clinic.scanid.ScanBpPassportActivity.SCAN_RESULT"
@@ -34,14 +33,21 @@ class ScanBpPassportActivity: AppCompatActivity(), ScanSimpleIdScreen.ScanResult
   lateinit var locale: Locale
 
   @Inject
-  lateinit var component: ScanBpPassportActivityComponent
+  lateinit var features: Features
 
   @Inject
-  lateinit var features: Features
+  lateinit var component: ScanBpPassportActivityComponent
+
+  private lateinit var binding: ScreenScanSimpleBinding
+
+  private val scanBpPassportView
+    get() = binding.scanBpPassportView
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.screen_scan_simple)
+
+    binding = ScreenScanSimpleBinding.inflate(layoutInflater)
+    setContentView(binding.root)
     scanBpPassportView.scanResultsReceiver = this
   }
 

@@ -3,6 +3,7 @@ package org.simple.clinic.shortcodesearchresult
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.observers.TestObserver
@@ -93,6 +94,7 @@ class ShortCodeSearchResultStateProducerTest {
         .assertNoErrors()
         .assertValues(fetchingPatientsState, fetchingPatientsState.patientsFetched(expectedPatientResults))
         .assertNotTerminated()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -110,6 +112,7 @@ class ShortCodeSearchResultStateProducerTest {
         .assertNoErrors()
         .assertValues(fetchingPatientsState, fetchingPatientsState.noMatchingPatients())
         .assertNotTerminated()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test

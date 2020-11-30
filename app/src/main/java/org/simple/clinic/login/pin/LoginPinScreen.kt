@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_login_pin.view.*
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenLoginPinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
@@ -35,6 +35,17 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   @Inject
   lateinit var activity: AppCompatActivity
+
+  private var binding: ScreenLoginPinBinding? = null
+
+  private val pinEntryCardView
+    get() = binding!!.pinEntryCardView
+
+  private val backButton
+    get() = binding!!.backButton
+
+  private val phoneNumberTextView
+    get() = binding!!.phoneNumberTextView
 
   private val events by unsafeLazy {
     Observable
@@ -64,6 +75,8 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
       return
     }
 
+    binding = ScreenLoginPinBinding.bind(this)
+
     context.injector<Injector>().inject(this)
 
     pinEntryCardView.setForgotButtonVisible(false)
@@ -76,10 +89,11 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 

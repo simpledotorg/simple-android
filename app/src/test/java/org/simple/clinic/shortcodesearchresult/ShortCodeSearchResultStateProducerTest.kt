@@ -46,16 +46,6 @@ class ShortCodeSearchResultStateProducerTest {
   )
   lateinit var uiStates: Observable<ShortCodeSearchResultState>
 
-  @Before
-  fun setup() {
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
-    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(currentFacility))
-
-    uiStates = uiEventsSubject
-        .compose(uiStateProducer)
-        .doOnNext { uiStateProducer.states.onNext(it) }
-  }
-
   @Test
   fun `when the screen is created, then patients matching the BP passport number must be fetched`() {
     // given
@@ -82,9 +72,9 @@ class ShortCodeSearchResultStateProducerTest {
         )
     )).thenReturn(patientToFacilityIds)
 
-    val testObserver = uiStates.test()
-
     // when
+    setupStateProducer()
+    val testObserver = uiStates.test()
     uiEventsSubject.onNext(ScreenCreated())
 
     // then
@@ -106,9 +96,9 @@ class ShortCodeSearchResultStateProducerTest {
     whenever(patientRepository.searchByShortCode(shortCode))
         .thenReturn(Observable.just(emptyPatientSearchResults))
 
-    val testObserver = uiStates.test()
-
     // when
+    setupStateProducer()
+    val testObserver = uiStates.test()
     uiEventsSubject.onNext(ScreenCreated())
 
     // then
@@ -123,9 +113,9 @@ class ShortCodeSearchResultStateProducerTest {
     // given
     val patientUuid = UUID.fromString("d18fa4dc-3b47-4a88-826f-342401527d65")
 
-    val testObserver = uiStates.test()
-
     // when
+    setupStateProducer()
+    val testObserver = uiStates.test()
     uiEventsSubject.onNext(ViewPatient(patientUuid))
 
     // then
@@ -150,9 +140,9 @@ class ShortCodeSearchResultStateProducerTest {
             currentFacility = currentFacility))
     uiStateProducer.states.onNext(patientsFetched) // TODO Fix `setState` in tests
 
-    val testObserver = uiStates.test()
-
     // when
+    setupStateProducer()
+    val testObserver = uiStates.test()
     uiEventsSubject.onNext(SearchPatient)
 
     // then
@@ -163,5 +153,14 @@ class ShortCodeSearchResultStateProducerTest {
 
     verify(ui).openPatientSearch()
     verifyNoMoreInteractions(ui)
+  }
+
+  private fun setupStateProducer() {
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
+    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(currentFacility))
+
+    uiStates = uiEventsSubject
+        .compose(uiStateProducer)
+        .doOnNext { uiStateProducer.states.onNext(it) }
   }
 }

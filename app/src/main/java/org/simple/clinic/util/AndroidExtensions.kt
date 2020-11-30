@@ -46,19 +46,19 @@ fun Configuration.withLocale(
     overrideLocale: Locale,
     features: Features
 ): Configuration {
-  // Configuration.getLocales is added after 24 and Configuration.locale is deprecated in 24
-  if (Build.VERSION.SDK_INT >= 24) {
-    if (!this.locales.isEmpty) {
-      return this
-    }
-  } else {
-    if (this.locale != null) {
-      return this
-    }
-  }
+  val canOverrideLocale = features.isEnabled(Feature.ChangeLanguage) && !isLocaleAlreadyOverriden()
 
-  if (features.isEnabled(Feature.ChangeLanguage)) {
+  if (canOverrideLocale) {
     this.setLocale(overrideLocale)
   }
+
   return this
+}
+
+private fun Configuration.isLocaleAlreadyOverriden(): Boolean {
+  return when {
+    Build.VERSION.SDK_INT >= 24 && !this.locales.isEmpty -> true
+    Build.VERSION.SDK_INT < 24 && this.locale != null -> true
+    else -> false
+  }
 }

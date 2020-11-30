@@ -9,10 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.activity_select_facility.*
 import org.simple.clinic.ClinicApp
-import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ActivitySelectFacilityBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.feature.Features
@@ -38,10 +37,15 @@ class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi, Faci
   lateinit var locale: Locale
 
   @Inject
-  lateinit var effectHandlerFactory: FacilitySelectionEffectHandler.Factory
+  lateinit var features: Features
 
   @Inject
-  lateinit var features: Features
+  lateinit var effectHandlerFactory: FacilitySelectionEffectHandler.Factory
+
+  private lateinit var binding: ActivitySelectFacilityBinding
+
+  private val facilityPickerView
+    get() = binding.facilityPickerView
 
   private val events by unsafeLazy {
     facilityClicks()
@@ -65,7 +69,9 @@ class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi, Faci
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_select_facility)
+
+    binding = ActivitySelectFacilityBinding.inflate(layoutInflater)
+    setContentView(binding.root)
 
     facilityPickerView.backClicked = this@FacilitySelectionActivity::finish
 

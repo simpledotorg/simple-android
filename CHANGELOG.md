@@ -1,14 +1,16 @@
 # CHANGELOG
 
 ## Next Release
+### Internal
+- [In Progress: 11 Nov 2020] Migrate app screens to use ViewBinding
+
+## On Demo
 ### Features
 - Refill prescriptions in edit medicine screen
-- [In Progress: 11 Nov 2020] Migrate app screens to use ViewBinding
 - Add support for recording RBS, FBS, and PPBS blood sugars in two units: mmol/L or mg/dL
 
 ### Internal
 - Add `recipes.md`
-- [In Progress: 13 Nov 2020] Migrate app to use ViewBinding
 - Added blood sugar unit preference
 - Move scanning of QR codes to a discrete activity
 - Bump AGP to 4.1.1

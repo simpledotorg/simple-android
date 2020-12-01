@@ -452,8 +452,10 @@
   <string name="bloodsugarentry_year">वर्ष</string>
   <string name="bloodsugarentry_error_lower_limit">मात्रा 30 mg/dL से कम नहीं होनी चाहिए</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">मान 3\u0025 से कम नहीं हो सकता है</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">मान 1.66 mmol/L से कम नहीं होना चाहिए</string>
   <string name="bloodsugarentry_error_higher_limit">मात्रा 1000 mg/dL से अधिक नहीं होनी चाहिए</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">मान 25\u0025 से ज़्यादा नहीं हो सकता है</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">मान 55.49 mmol/L से अधिक नहीं होना चाहिए</string>
   <string name="bloodsugarentry_error_empty">मात्रा रिक्त नहीं होनी चाहिए</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YYYY में वैध तारीख दर्ज करे</string>
   <string name="bloodsugarentry_error_date_is_in_future">भविष्य की तारीख नहीं लिखी जा सकती</string>
@@ -667,4 +669,9 @@
   <string name="setup_cannot_run">एप्लिकेशन नहीं चला सकते</string>
   <string name="setup_rooted">सिंपल को रूटिड डिवाइस पर नहीं चलाया जा सकता।</string>
   <string name="setup_close">बंद करें</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">चयन करें</string>
+  <string name="blood_sugar_unit_selection_done">पूरा हुआ</string>
+
 </resources>

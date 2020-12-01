@@ -452,8 +452,10 @@
   <string name="bloodsugarentry_year">ವರ್ಷ</string>
   <string name="bloodsugarentry_error_lower_limit">ಮೌಲ್ಯವು 30 ಮಿಗ್ರಾಂ/ಡೆಲೀಗಿಂತ ಕಡಿಮೆ ಇರಬಾರದು</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">ಮೌಲ್ಯವು 3\u0025 ಗಿಂತ ಕಡಿಮೆ ಇರಬಾರದು</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">ಮೌಲ್ಯವು 1.66 mmol/L ಕಡಿಮೆ ಇರಬಾರದು</string>
   <string name="bloodsugarentry_error_higher_limit">ಮೌಲ್ಯವು 1000 ಮಿಗ್ರಾಂ/ಡೆಲೀಗಿಂತ ಹೆಚ್ಚಿರಬಾರದು</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">ಮೌಲ್ಯವು 25\u0025 ಗಿಂತ ಹೆಚ್ಚು ಇರಬಾರದು</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">ಮೌಲ್ಯವು 55.49 mmol/L ಹೆಚ್ಚಿರಬಾರದು</string>
   <string name="bloodsugarentry_error_empty">ಮೌಲ್ಯವು ಖಾಲಿ ಇರಬಾರದು</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YYYY ನಲ್ಲಿ ಮಾನ್ಯ ದಿನಾಂಕವನ್ನು ನಮೂದಿಸಿ</string>
   <string name="bloodsugarentry_error_date_is_in_future">ಭವಿಷ್ಯದ ದಿನಾಂಕದಲ್ಲಿರಬಾರದು</string>
@@ -667,4 +669,9 @@
   <string name="setup_cannot_run">ಅಪ್ಲಿಕೇಶನ್ ರನ್ ಮಾಡಲಾಗುವುದಿಲ್ಲ</string>
   <string name="setup_rooted">ಸಿಂಪಲ್ ಅನ್ನು ರೂಟ್ ಮಾಡಲಾದ ಸಾಧನದಲ್ಲಿ ರನ್ ಮಾಡಲಾಗುವುದಿಲ್ಲ.</string>
   <string name="setup_close">ಮುಚ್ಚಿ</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">ಆಯ್ಕೆಮಾಡಿ</string>
+  <string name="blood_sugar_unit_selection_done">ಮುಗಿದಿದೆ</string>
+
 </resources>

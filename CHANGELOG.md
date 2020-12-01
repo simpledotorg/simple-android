@@ -8,6 +8,7 @@
 
 ### Changes
 - Disable the change language feature on devices running Lollipop (API level 21, 22)
+- Updated translations: `kn-IN`
 
 ### Fixes
 - Fix BP passport scanning not working

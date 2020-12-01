@@ -61,9 +61,6 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addTransformer(LoadInfoForShowingAppUpdateMessage::class.java, loadInfoForShowingAppUpdate())
         .addConsumer(TouchAppUpdateShownAtTime::class.java, { appUpdateDialogShownAtPref.set(Instant.now(utcClock)) }, schedulers.io())
         .addAction(ShowAppUpdateAvailable::class.java, uiActions::showAppUpdateDialog, schedulers.ui())
-        .addConsumer(OpenShortCodeSearchScreen::class.java, { uiActions.openShortCodeSearchScreen(it.shortCode) }, schedulers.ui())
-        .addTransformer(SearchPatientByIdentifier::class.java, searchForPatientByIdentifier())
-        .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientId)}, schedulers.ui())
         .build()
   }
 
@@ -138,19 +135,6 @@ class PatientsEffectHandler @AssistedInject constructor(
                 appUpdateLastShownOn = updateLastShownOn,
                 currentDate = today
             )
-          }
-    }
-  }
-
-  private fun searchForPatientByIdentifier(): ObservableTransformer<SearchPatientByIdentifier, PatientsTabEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .map(SearchPatientByIdentifier::identifier)
-          .switchMap { identifier ->
-            patientRepository
-                .findPatientWithBusinessId(identifier.value)
-                .subscribeOn(schedulers.io())
-                .map { foundPatient -> PatientSearchByIdentifierCompleted(foundPatient, identifier) }
           }
     }
   }

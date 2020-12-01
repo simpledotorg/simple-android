@@ -52,7 +52,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val REQUEST_CODE_SCAN_BP_PASSPORT = 100
+const val REQUEST_CODE_SCAN_BP_PASSPORT = 100
 
 class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientsTabUi, PatientsTabUiActions {
 
@@ -125,28 +125,9 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
 
     context.injector<Injector>().inject(this)
 
-    setupDeferredEvents()
     setupApprovalStatusAnimations()
 
     homeIllustration.setImageResource(illustrationResourceId())
-  }
-
-  @SuppressLint("CheckResult")
-  private fun setupDeferredEvents() {
-    // This is necessary because the `onActivityResult()` of the parent
-    // activity is invoked BEFORE the `onAttachedToWindow()` of this
-    // screen, which means that the activity result event is emitted
-    // before this stream is subscribed to, and is lost.
-    // However, the view gets inflated BEFORE `onActivityResult` is
-    // invoked, so setting up this deferred event source in
-    // `onFinishInflate` is a good enough workaround.
-    screenRouter
-        .streamScreenResults()
-        .ofType<ActivityResult>()
-        .extractSuccessful(REQUEST_CODE_SCAN_BP_PASSPORT, ScanBpPassportActivity.Companion::readScannedId)
-        .map(BusinessIdScanned.Companion::fromScanResult)
-        .takeUntil(detaches())
-        .subscribe(deferredEvents::notify)
   }
 
   override fun onAttachedToWindow() {

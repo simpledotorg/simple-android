@@ -75,4 +75,22 @@ class HomeScreenEffectHandlerTest {
     verify(uiActions).openShortCodeSearchScreen(shortCode)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when open patient search screen effect is received, then open the screen`() {
+    // given
+    val identifier = TestData.identifier(
+        value = "123 456",
+        type = Identifier.IdentifierType.BpPassport
+    )
+
+    // when
+    effectHandlerTestCase.dispatch(OpenPatientSearchScreen(identifier))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openPatientSearchScreen(identifier)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

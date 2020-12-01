@@ -33,6 +33,7 @@ class HomeScreenEffectHandler @AssistedInject constructor(
       .addTransformer(LoadOverdueAppointmentCount::class.java, loadOverdueAppointmentCount())
       .addTransformer(SearchPatientByIdentifier::class.java, searchForPatientByIdentifier())
       .addConsumer(OpenShortCodeSearchScreen::class.java, { uiActions.openShortCodeSearchScreen(it.shortCode) }, schedulersProvider.ui())
+      .addConsumer(OpenPatientSearchScreen::class.java, { uiActions.openPatientSearchScreen(it.additionalIdentifier) }, schedulersProvider.ui())
       .build()
 
   private fun loadOverdueAppointmentCount(): ObservableTransformer<LoadOverdueAppointmentCount, HomeScreenEvent> {

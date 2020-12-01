@@ -18,7 +18,9 @@ import org.simple.clinic.home.HomeTab.PATIENTS
 import org.simple.clinic.home.HomeTab.REPORTS
 import org.simple.clinic.home.help.HelpScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.settings.SettingsScreenKey
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.util.unsafeLazy
@@ -154,6 +156,10 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
   override fun openShortCodeSearchScreen(shortCode: String) {
     screenRouter.push(ShortCodeSearchResultScreenKey(shortCode))
+  }
+
+  override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
+    screenRouter.push(PatientSearchScreenKey(additionalIdentifier))
   }
 
   interface Injector {

@@ -452,8 +452,10 @@
   <string name="bloodsugarentry_year">வருடம்</string>
   <string name="bloodsugarentry_error_lower_limit">அளவு 30 மிகி/டிஎல்-க்கும் குறைவாக இருக்கக்கூடாது</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">மதிப்பு 3\u0025-க்கும் குறைவாக இருக்கக்கூடாது</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">அளவு 1.66 mmol/L-க்கும் குறைவாக இருக்கக்கூடாது</string>
   <string name="bloodsugarentry_error_higher_limit">அளவு 1000 மிகி/டிஎல்-க்கும் அதிகமாக இருக்கக்கூடாது</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">மதிப்பு 25\u0025-க்கும் அதிகமாக இருக்கக்கூடாது</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">அளவு 55.49 mmol/L-க்கும் அதிகமாக இருக்கக்கூடாது</string>
   <string name="bloodsugarentry_error_empty">மதிப்பு காலியாக இருக்கக்கூடாது</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YYYY என்ற வடிவத்தில் சரியான தேதியை எழுதவும்</string>
   <string name="bloodsugarentry_error_date_is_in_future">தேதி, எதிர்காலத்தில் இருக்கக்கூடாது</string>
@@ -667,4 +669,9 @@
   <string name="setup_cannot_run">பயன்பாட்டை இயக்க இயலாது</string>
   <string name="setup_rooted">ரூட்செய்யப்பட்ட சாதனத்தில் சிம்பிளை இயக்க இயலாது.</string>
   <string name="setup_close">மூடுக</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">தேர்ந்தெடு</string>
+  <string name="blood_sugar_unit_selection_done">முடிந்தது</string>
+
 </resources>

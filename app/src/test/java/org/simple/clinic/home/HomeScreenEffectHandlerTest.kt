@@ -2,6 +2,8 @@ package org.simple.clinic.home
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
@@ -18,13 +20,15 @@ import java.util.UUID
 class HomeScreenEffectHandlerTest {
 
   private val patientRepository = mock<PatientRepository>()
+  private val uiActions = mock<HomeScreenUiActions>()
+
   private val effectHandler = HomeScreenEffectHandler(
       currentFacilityStream = Observable.just(TestData.facility()),
       appointmentRepository = mock(),
       patientRepository = patientRepository,
       userClock = TestUserClock(),
       schedulersProvider = TestSchedulersProvider.trampoline(),
-      uiActions = mock()
+      uiActions = uiActions
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
 
@@ -55,5 +59,20 @@ class HomeScreenEffectHandlerTest {
         patient = Optional.of(patient),
         identifier = identifier
     ))
+  }
+
+  @Test
+  fun `when open short code search screen effect is received, then open the screen`() {
+    // given
+    val shortCode = "123456"
+
+    // when
+    effectHandlerTestCase.dispatch(OpenShortCodeSearchScreen(shortCode))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openShortCodeSearchScreen(shortCode)
+    verifyNoMoreInteractions(uiActions)
   }
 }

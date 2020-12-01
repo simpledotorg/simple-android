@@ -20,6 +20,7 @@ import org.simple.clinic.home.help.HelpScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.SettingsScreenKey
+import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
@@ -149,6 +150,10 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     val overdueTab = homeTabLayout.getTabAt(overdueTabIndex)
 
     overdueTab?.removeBadge()
+  }
+
+  override fun openShortCodeSearchScreen(shortCode: String) {
+    screenRouter.push(ShortCodeSearchResultScreenKey(shortCode))
   }
 
   interface Injector {

@@ -25,7 +25,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import java.util.UUID
 
-class ShortCodeSearchResultStateProducerTest {
+class ShortCodeSearchResultLogicTest {
   private val uiEventsSubject = PublishSubject.create<UiEvent>()
   private val patientRepository = mock<PatientRepository>()
   private val userSession = mock<UserSession>()

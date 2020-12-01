@@ -7,6 +7,7 @@ import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayoutMediator
 import com.jakewharton.rxbinding3.view.clicks
+import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_home.view.*
 import org.simple.clinic.R
@@ -17,11 +18,23 @@ import org.simple.clinic.home.HomeTab.OVERDUE
 import org.simple.clinic.home.HomeTab.PATIENTS
 import org.simple.clinic.home.HomeTab.REPORTS
 import org.simple.clinic.home.help.HelpScreenKey
+import org.simple.clinic.home.patients.REQUEST_CODE_SCAN_BP_PASSPORT
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.scanid.ScanBpPassportActivity
+import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.settings.SettingsScreenKey
+import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
+import org.simple.clinic.summary.OpenIntention
+import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.hideKeyboard
+import java.time.Instant
+import java.util.UUID
 import javax.inject.Inject
 
 class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), HomeScreenUi, HomeScreenUiActions {
@@ -35,11 +48,16 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   @Inject
   lateinit var effectHandlerFactory: HomeScreenEffectHandler.Factory
 
+  @Inject
+  lateinit var utcClock: UtcClock
+
   private val tabs = listOf(PATIENTS, OVERDUE, REPORTS)
 
   private val events by unsafeLazy {
-    facilitySelectionClicks()
-        .compose(ReportAnalyticsEvents())
+    Observable.merge(
+        facilitySelectionClicks(),
+        bpPassportScanResults()
+    ).compose(ReportAnalyticsEvents())
   }
 
   private val delegate by unsafeLazy {
@@ -149,6 +167,26 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     val overdueTab = homeTabLayout.getTabAt(overdueTabIndex)
 
     overdueTab?.removeBadge()
+  }
+
+  override fun openShortCodeSearchScreen(shortCode: String) {
+    screenRouter.push(ShortCodeSearchResultScreenKey(shortCode))
+  }
+
+  override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
+    screenRouter.push(PatientSearchScreenKey(additionalIdentifier))
+  }
+
+  override fun openPatientSummary(patientId: UUID) {
+    screenRouter.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
+  }
+
+  private fun bpPassportScanResults(): Observable<BusinessIdScanned> {
+    return screenRouter
+        .streamScreenResults()
+        .ofType<ActivityResult>()
+        .extractSuccessful(REQUEST_CODE_SCAN_BP_PASSPORT, ScanBpPassportActivity.Companion::readScannedId)
+        .map(BusinessIdScanned.Companion::fromScanResult)
   }
 
   interface Injector {

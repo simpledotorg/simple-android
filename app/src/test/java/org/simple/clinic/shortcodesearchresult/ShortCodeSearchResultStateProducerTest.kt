@@ -3,9 +3,9 @@ package org.simple.clinic.shortcodesearchresult
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.TestObserver
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -19,7 +19,6 @@ import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.searchresultsview.PatientSearchResults
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -48,12 +47,14 @@ class ShortCodeSearchResultStateProducerTest {
       ui = ui,
       schedulersProvider = TestSchedulersProvider.trampoline()
   )
-  lateinit var uiStates: Observable<ShortCodeSearchResultState>
+  private val uiChangeProducer = ShortCodeSearchResultUiChangeProducer(TestSchedulersProvider.trampoline())
+  private val disposables = CompositeDisposable()
+
   lateinit var testObserver: TestObserver<ShortCodeSearchResultState>
 
   @After
   fun tearDown() {
-    testObserver.dispose()
+    disposables.dispose()
   }
 
   @Test
@@ -95,6 +96,11 @@ class ShortCodeSearchResultStateProducerTest {
         .assertNoErrors()
         .assertValues(fetchingPatientsState, fetchingPatientsState.patientsFetched(expectedPatientResults))
         .assertNotTerminated()
+
+    verify(ui).showLoading()
+    verify(ui).hideLoading()
+    verify(ui).showSearchResults(expectedPatientResults)
+    verify(ui).showSearchPatientButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -113,6 +119,11 @@ class ShortCodeSearchResultStateProducerTest {
         .assertNoErrors()
         .assertValues(fetchingPatientsState, fetchingPatientsState.noMatchingPatients())
         .assertNotTerminated()
+
+    verify(ui).showLoading()
+    verify(ui).hideLoading()
+    verify(ui).showNoPatientsMatched()
+    verify(ui).showSearchPatientButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -148,6 +159,10 @@ class ShortCodeSearchResultStateProducerTest {
         .assertValues(fetchingPatientsState, fetchingPatientsState.patientsFetched(expectedPatientResults))
         .assertNotTerminated()
 
+    verify(ui).showLoading()
+    verify(ui).hideLoading()
+    verify(ui).showSearchPatientButton()
+    verify(ui).showSearchResults(expectedPatientResults)
     verify(ui).openPatientSummary(patientUuid)
     verifyNoMoreInteractions(ui)
   }
@@ -184,6 +199,10 @@ class ShortCodeSearchResultStateProducerTest {
         .assertValues(fetchingPatientsState, fetchingPatientsState.patientsFetched(expectedPatientResults))
         .assertNotTerminated()
 
+    verify(ui).showLoading()
+    verify(ui).hideLoading()
+    verify(ui).showSearchPatientButton()
+    verify(ui).showSearchResults(expectedPatientResults)
     verify(ui).openPatientSearch()
     verifyNoMoreInteractions(ui)
   }
@@ -192,10 +211,19 @@ class ShortCodeSearchResultStateProducerTest {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
     whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(currentFacility))
 
-    uiStates = uiEventsSubject
+    val uiStates = uiEventsSubject
         .compose(uiStateProducer)
         .doOnNext { uiStateProducer.states.onNext(it) }
+        .share()
+
+    val uiChangeSubscription = uiStates
+        .compose(uiChangeProducer)
+        .subscribe { uiChange -> uiChange(ui) }
+
     testObserver = uiStates.test()
+
+    disposables.addAll(testObserver, uiChangeSubscription)
+
     uiEventsSubject.onNext(ScreenCreated())
   }
 }

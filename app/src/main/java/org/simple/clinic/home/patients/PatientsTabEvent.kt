@@ -59,24 +59,3 @@ data class RequiredInfoForShowingAppUpdateLoaded(
     val appUpdateLastShownOn: LocalDate,
     val currentDate: LocalDate
 ): PatientsTabEvent()
-
-data class PatientSearchByIdentifierCompleted(
-    val foundPatient: Optional<Patient>,
-    val searchedIdentifier: Identifier
-): PatientsTabEvent()
-
-sealed class BusinessIdScanned: PatientsTabEvent() {
-
-  companion object {
-    fun fromScanResult(scanResult: ScanResult): BusinessIdScanned {
-      return when(scanResult) {
-        is ScannedId -> ByIdentifier(scanResult.identifier)
-        is EnteredShortCode -> ByShortCode(scanResult.shortCode)
-      }
-    }
-  }
-
-  data class ByIdentifier(val identifier: Identifier): BusinessIdScanned()
-
-  data class ByShortCode(val shortCode: String): BusinessIdScanned()
-}

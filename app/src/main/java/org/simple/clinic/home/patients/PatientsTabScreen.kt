@@ -52,7 +52,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val REQUEST_CODE_SCAN_BP_PASSPORT = 100
+const val REQUEST_CODE_SCAN_BP_PASSPORT = 100
 
 class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientsTabUi, PatientsTabUiActions {
 

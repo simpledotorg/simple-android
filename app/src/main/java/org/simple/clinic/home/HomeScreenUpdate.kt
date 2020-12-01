@@ -13,6 +13,8 @@ class HomeScreenUpdate : Update<HomeScreenModel, HomeScreenEvent, HomeScreenEffe
       is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility))
       is OverdueAppointmentCountLoaded -> next(model.overdueAppointmentCountLoaded(event.overdueAppointmentCount))
       is PatientSearchByIdentifierCompleted -> scannedPatientBusinessId(event)
+      is BusinessIdScanned.ByIdentifier -> dispatch(SearchPatientByIdentifier(event.identifier))
+      is BusinessIdScanned.ByShortCode -> dispatch(OpenShortCodeSearchScreen(event.shortCode))
     }
   }
 

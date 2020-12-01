@@ -17,6 +17,11 @@ class HomeScreenUpdate : Update<HomeScreenModel, HomeScreenEvent, HomeScreenEffe
   }
 
   private fun scannedPatientBusinessId(event: PatientSearchByIdentifierCompleted): Next<HomeScreenModel, HomeScreenEffect> {
-    return dispatch(OpenPatientSummary(event.patient.get().uuid))
+    val effect = event
+        .patient
+        .map { patient -> OpenPatientSummary(patient.uuid) as HomeScreenEffect }
+        .orElse(OpenPatientSearchScreen(event.identifier) as HomeScreenEffect)
+
+    return dispatch(effect)
   }
 }

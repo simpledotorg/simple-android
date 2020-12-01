@@ -23,8 +23,13 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.settings.SettingsScreenKey
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
+import org.simple.clinic.summary.OpenIntention
+import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.hideKeyboard
+import java.time.Instant
+import java.util.UUID
 import javax.inject.Inject
 
 class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), HomeScreenUi, HomeScreenUiActions {
@@ -37,6 +42,9 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
   @Inject
   lateinit var effectHandlerFactory: HomeScreenEffectHandler.Factory
+
+  @Inject
+  lateinit var utcClock: UtcClock
 
   private val tabs = listOf(PATIENTS, OVERDUE, REPORTS)
 
@@ -160,6 +168,10 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
   override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
     screenRouter.push(PatientSearchScreenKey(additionalIdentifier))
+  }
+
+  override fun openPatientSummary(patientId: UUID) {
+    screenRouter.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
   }
 
   interface Injector {

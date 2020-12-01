@@ -2,6 +2,7 @@ package org.simple.clinic.home
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
+import java.util.UUID
 
 sealed class HomeScreenEffect
 
@@ -16,3 +17,5 @@ data class SearchPatientByIdentifier(val identifier: Identifier) : HomeScreenEff
 data class OpenShortCodeSearchScreen(val shortCode: String) : HomeScreenEffect()
 
 data class OpenPatientSearchScreen(val additionalIdentifier: Identifier?) : HomeScreenEffect()
+
+data class OpenPatientSummary(val patientId: UUID) : HomeScreenEffect()

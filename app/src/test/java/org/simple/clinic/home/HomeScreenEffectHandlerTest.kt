@@ -93,4 +93,19 @@ class HomeScreenEffectHandlerTest {
     verify(uiActions).openPatientSearchScreen(identifier)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when open patient summary effect is received, then open the screen`() {
+    // given
+    val patientUuid = UUID.fromString("fc14d003-0d49-422a-b0e6-34a372e78544")
+
+    // when
+    effectHandlerTestCase.dispatch(OpenPatientSummary(patientUuid))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openPatientSummary(patientUuid)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

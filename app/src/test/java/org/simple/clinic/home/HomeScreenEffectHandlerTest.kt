@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
@@ -59,6 +60,8 @@ class HomeScreenEffectHandlerTest {
         patient = Optional.of(patient),
         identifier = identifier
     ))
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test

@@ -9,7 +9,7 @@
 
 ### Changes
 - Disable the change language feature on devices running Lollipop (API level 21, 22)
-- Updated translations: `kn-IN`, `ta-IN`
+- Updated translations: `kn-IN`, `ta-IN`, `pa-IN`
 
 ## 2020-12-03-7536
 ### Fixes

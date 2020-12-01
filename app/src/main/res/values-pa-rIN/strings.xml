@@ -452,8 +452,10 @@
   <string name="bloodsugarentry_year">ਸਾਲ</string>
   <string name="bloodsugarentry_error_lower_limit">ਮਾਤਰਾ 30 ਮਿਲੀ/ਡੀਐੱਲ ਤੋਂ ਘੱਟ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">ਵੈਲਿਊ 3\u0025 ਤੋਂ ਘੱਟ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">ਮਾਤਰਾ 1.66 mmol/L ਤੋਂ ਘੱਟ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_higher_limit">ਮਾਤਰਾ 1000 ਮਿਲੀ/ਡੀਐੱਲ ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">ਵੈਲਿਊ 25\u0025 ਤੋਂ ਜਿਆਦਾ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">ਮਾਤਰਾ 55.49 mmol/L ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_empty">ਮਾਤਰਾ ਜ਼ੀਰੋ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YYYY ਵਿੱਚ ਇੱਕ ਵੈਧ ਮਿਤੀ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="bloodsugarentry_error_date_is_in_future">ਮਿਤੀ ਅੱਗੇ ਦੀ ਵਿੱਚ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
@@ -667,4 +669,9 @@
   <string name="setup_cannot_run">ਐਪਲੀਕੇਸ਼ਨ ਨੂੰ ਨਹੀਂ ਚਲਾ ਸਕਦੇ</string>
   <string name="setup_rooted">ਸਿੰਪਲ ਨੂੰ ਰੂਟ ਡਿਵਾਈਸ ਤੇ ਨਹੀਂ ਚਲਾ ਸਕਦੇ।</string>
   <string name="setup_close">ਬੰਦ ਕਰੋ</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">ਚੁਣੋ</string>
+  <string name="blood_sugar_unit_selection_done">ਮੁਕੰਮਲ</string>
+
 </resources>

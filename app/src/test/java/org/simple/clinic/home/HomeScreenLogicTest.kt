@@ -93,6 +93,7 @@ class HomeScreenLogicTest {
     val effectHandler = HomeScreenEffectHandler(
         currentFacilityStream = facilityStream,
         appointmentRepository = appointmentRepository,
+        patientRepository = mock(),
         userClock = clock,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = uiActions

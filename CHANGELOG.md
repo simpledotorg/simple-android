@@ -4,10 +4,16 @@
 ### Internal
 - [In Progress: 11 Nov 2020] Migrate app screens to use ViewBinding
 - Bump appcompat -> 1.2.0
-- Move BP passport scan results handling to `HomeScreen`
 
 ### Changes
 - Disable the change language feature on devices running Lollipop (API level 21, 22)
+
+## 2020-12-01-7532
+### Internal
+- Move BP passport scan results handling to `HomeScreen`
+
+### Fixes
+- Fixed BP Passport scanning does not work after the first scan
 
 ## 2020-11-30-7529
 ### Features

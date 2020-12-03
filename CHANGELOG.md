@@ -9,6 +9,9 @@
 ### Changes
 - Disable the change language feature on devices running Lollipop (API level 21, 22)
 
+### Fixes
+- Fix BP passport scanning not working
+
 ## 2020-12-01-7532
 ### Internal
 - Move BP passport scan results handling to `HomeScreen`

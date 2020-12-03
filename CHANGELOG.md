@@ -11,6 +11,7 @@
 - Disable the change language feature on devices running Lollipop (API level 21, 22)
 - Updated translations: `kn-IN`, `ta-IN`
 
+## 2020-12-03-7536
 ### Fixes
 - Fix BP passport scanning not working
 

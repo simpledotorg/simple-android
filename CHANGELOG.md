@@ -4,7 +4,21 @@
 ### Internal
 - [In Progress: 11 Nov 2020] Migrate app screens to use ViewBinding
 
-## On Demo
+### Changes
+- Disable the change language feature on devices running Lollipop (API level 21, 22)
+
+### Fixes
+- Fix BP passport scanning not working
+
+## 2020-12-01-7532
+### Internal
+- Move BP passport scan results handling to `HomeScreen`
+
+### Fixes
+- Fixed BP Passport scanning does not work after the first scan
+
+## 2020-11-30-7529
+>>>>>>> 9f22be965 (Fix BP passport scanning not working (#2167))
 ### Features
 - Refill prescriptions in edit medicine screen
 - Add support for recording RBS, FBS, and PPBS blood sugars in two units: mmol/L or mg/dL

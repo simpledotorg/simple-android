@@ -450,10 +450,10 @@
   <string name="bloodsugarentry_day">நாள்</string>
   <string name="bloodsugarentry_month">மாதம்</string>
   <string name="bloodsugarentry_year">வருடம்</string>
-  <string name="bloodsugarentry_error_lower_limit">அளவு 30 மிகி/டிஎல்-க்கும் குறைவாக இருக்கக்கூடாது</string>
+  <string name="bloodsugarentry_error_lower_limit">அளவு 30 mg/dl-க்கும் குறைவாக இருக்கக்கூடாது</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">மதிப்பு 3\u0025-க்கும் குறைவாக இருக்கக்கூடாது</string>
   <string name="bloodsugarentry_error_lower_limit_mmol">அளவு 1.66 mmol/L-க்கும் குறைவாக இருக்கக்கூடாது</string>
-  <string name="bloodsugarentry_error_higher_limit">அளவு 1000 மிகி/டிஎல்-க்கும் அதிகமாக இருக்கக்கூடாது</string>
+  <string name="bloodsugarentry_error_higher_limit">విలువ 1000 mg/dL కంటే ఎక్కువగా ఉండకూడదు</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">மதிப்பு 25\u0025-க்கும் அதிகமாக இருக்கக்கூடாது</string>
   <string name="bloodsugarentry_error_higher_limit_mmol">அளவு 55.49 mmol/L-க்கும் அதிகமாக இருக்கக்கூடாது</string>
   <string name="bloodsugarentry_error_empty">மதிப்பு காலியாக இருக்கக்கூடாது</string>
@@ -517,7 +517,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">\"வருவதற்கு ஒப்புக்கொண்டார்\" என நோயாளியைக் குறிக்கவும்</string>
+  <string name="contactpatient_agreed_to_visit">\&quot;வருவதற்கு ஒப்புக்கொண்டார்\&quot; என நோயாளியைக் குறிக்கவும்</string>
   <string name="contactpatient_remind_call_later">பின்னர் அழைக்க நினைவூட்டவும்…</string>
   <string name="contactpatient_remove_from_list">குறித்த தேதியில் வாராதவர்கள் பட்டியலிலிருந்து அகற்றவும்…</string>
   <string name="contactpatient_result_of_call">அழைப்பின் முடிவு</string>

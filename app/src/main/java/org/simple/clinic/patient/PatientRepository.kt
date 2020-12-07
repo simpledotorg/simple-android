@@ -100,23 +100,21 @@ class PatientRepository @Inject constructor(
             analyticsName = "Search Patient:Fetch Name and Id",
             timestampScheduler = schedulersProvider.computation()
         ))
-        .switchMap { patientNamesAndIds -> findPatientsWithNameMatching(patientNamesAndIds, name) }
+        .map { patientNamesAndIds -> findPatientsWithNameMatching(patientNamesAndIds, name) }
   }
 
   private fun findPatientsWithNameMatching(
       allPatientNamesAndIds: List<PatientSearchResult.PatientNameAndId>,
       name: String
-  ): Observable<List<UUID>> {
+  ): List<UUID> {
+    /*.compose(RxTimingAnalytics(
+        analyticsName = "Search Patient:Fuzzy Filtering By Name",
+        timestampScheduler = schedulersProvider.computation()
+    ))*/
 
-    val allPatientUuidsMatchingName = Observable
-        .fromCallable { searchPatientByName.search(searchTerm = name, names = allPatientNamesAndIds) }
-        .compose(RxTimingAnalytics(
-            analyticsName = "Search Patient:Fuzzy Filtering By Name",
-            timestampScheduler = schedulersProvider.computation()
-        ))
-
-    return allPatientUuidsMatchingName
-        .map { uuids -> uuids.take(config.limitOfSearchResults) }
+    return searchPatientByName
+        .search(searchTerm = name, names = allPatientNamesAndIds)
+        .take(config.limitOfSearchResults)
   }
 
   private fun searchByPhoneNumber(phoneNumber: String): Observable<List<PatientSearchResult>> {

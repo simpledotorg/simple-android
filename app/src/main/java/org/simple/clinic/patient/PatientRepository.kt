@@ -108,9 +108,8 @@ class PatientRepository @Inject constructor(
       name: String
   ): Observable<List<UUID>> {
 
-    val allPatientUuidsMatchingName = searchPatientByName
-        .search(searchTerm = name, names = allPatientNamesAndIds)
-        .toObservable()
+    val allPatientUuidsMatchingName = Observable
+        .fromCallable { searchPatientByName.search(searchTerm = name, names = allPatientNamesAndIds) }
         .compose(RxTimingAnalytics(
             analyticsName = "Search Patient:Fuzzy Filtering By Name",
             timestampScheduler = schedulersProvider.computation()

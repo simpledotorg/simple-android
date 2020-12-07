@@ -13,12 +13,12 @@ class TestPatientSearchModule {
   @Provides
   fun provideFilterPatientByName(): SearchPatientByName {
     return object : SearchPatientByName {
-      override fun search(searchTerm: String, names: List<PatientSearchResult.PatientNameAndId>): Single<List<UUID>> {
+      override fun search(searchTerm: String, names: List<PatientSearchResult.PatientNameAndId>): List<UUID> {
         val results = names
             .filter { it.fullName.contains(other = searchTerm, ignoreCase = true) }
             .map { it.uuid }
 
-        return Single.just(results)
+        return results
       }
     }
   }

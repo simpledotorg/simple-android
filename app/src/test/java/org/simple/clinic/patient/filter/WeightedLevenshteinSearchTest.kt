@@ -29,7 +29,7 @@ class WeightedLevenshteinSearchTest {
         characterInsertionCost = charInsertionCost,
         resultsComparator = DoNothingComparator())
 
-    assertThat(search.search(searchTerm, input).blockingGet()).isEqualTo(expectedResults)
+    assertThat(search.search(searchTerm, input)).isEqualTo(expectedResults)
   }
 
   @Suppress("Unused")
@@ -165,7 +165,7 @@ class WeightedLevenshteinSearchTest {
         characterInsertionCost = 30F,
         resultsComparator = DoNothingComparator())
 
-    assertThat(search.search(searchTerm, input).blockingGet()).isEqualTo(expectedResults)
+    assertThat(search.search(searchTerm, input)).isEqualTo(expectedResults)
   }
 
   @Suppress("Unused")
@@ -217,7 +217,7 @@ class WeightedLevenshteinSearchTest {
         characterInsertionCost = 30F,
         resultsComparator = DoNothingComparator())
 
-    assertThat(search.search(searchTerm, input).blockingGet()).isEqualTo(expectedResults)
+    assertThat(search.search(searchTerm, input)).isEqualTo(expectedResults)
   }
 
   @Suppress("Unused")
@@ -274,7 +274,7 @@ class WeightedLevenshteinSearchTest {
         characterInsertionCost = 1F,
         resultsComparator = comparator)
 
-    assertThat(search.search(searchTerm, input).blockingGet()).isEqualTo(expectedResults)
+    assertThat(search.search(searchTerm, input)).isEqualTo(expectedResults)
   }
 
   @Suppress("Unused")
@@ -340,7 +340,7 @@ class WeightedLevenshteinSearchTest {
         resultsComparator = DoNothingComparator()
     )
 
-    assertThat(search.search(searchTerm, input).blockingGet()).isEqualTo(expectedResults)
+    assertThat(search.search(searchTerm, input)).isEqualTo(expectedResults)
   }
 
   @Suppress("Unused")

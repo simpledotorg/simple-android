@@ -50,7 +50,7 @@
   <string name="patientsearchresults_item_birthdate">ਜਨਮ ਮਿਤੀ</string>
 
   <!-- Manual patient entry -->
-  <string name="patiententry_contentdescription_up_button">ਖੋਜ \'ਤੇ ਵਾਪਿਸ ਜਾਓ</string>
+  <string name="patiententry_contentdescription_up_button">ਖੋਜ &apos;ਤੇ ਵਾਪਿਸ ਜਾਓ</string>
   <string name="patiententry_full_name">ਮਰੀਜ਼ ਦਾ ਨਾਮ</string>
   <string name="patiententry_phone_number">ਫ਼ੋਨ ਨੰਬਰ</string>
   <string name="patiententry_bangladesh_national_id">ਰਾਸ਼ਟਰੀ ਆਈ ਡੀ ਸੰਖਿਆ</string>
@@ -119,7 +119,7 @@
   <string name="patients_dismiss_user_approved_status">ਸਮਝ ਗਏ</string>
   <string name="patients_enter_code">ਕੋਡ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="patients_you_are_now_logged_in">ਤਸਦੀਕ ਕਰਨਾ ਸਫਲ ਰਿਹਾ! ਮਰੀਜ਼ ਰਿਕਾਰਡ ਹੁਣ ਦਿਖਾਈ ਦਿੰਦੇ ਹਨ।</string>
-  <string name="patients_loggedoutalert_title">ਤੁਹਾਨੂੰ ਇੱਕ ਸਮੇਂ \'ਤੇ ਸਿਰਫ਼ ਇੱਕ ਡਿਵਾਈਸ \'ਤੇ ਲੌਗ ਇਨ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ</string>
+  <string name="patients_loggedoutalert_title">ਤੁਹਾਨੂੰ ਇੱਕ ਸਮੇਂ &apos;ਤੇ ਸਿਰਫ਼ ਇੱਕ ਡਿਵਾਈਸ &apos;ਤੇ ਲੌਗ ਇਨ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ</string>
   <string name="patients_loggedoutalert_message">ਤੁਹਾਨੂੰ ਤੁਹਾਡੇ ਪੁਰਾਣੇ ਡਿਵਾਈਸ ਤੋਂ ਲੌਗ ਆਉਟ ਕੀਤਾ ਗਿਆ ਹੈ।</string>
   <string name="patients_loggedoutalert_dismiss">ਸਮਝ ਗਏ</string>
   <string name="patients_scan_simple_card">ਬੀਪੀ ਪਾਸਪੋਰਟ ਸਕੈਨ ਕਰੋ</string>
@@ -213,7 +213,7 @@
   <string name="customprescription_delete_cancel">ਰੱਦ ਕਰੋ</string>
 
   <!-- Login -->
-  <string name="loginpin_go_back">ਫ਼ੋਨ ਨੰਬਰ ਸਕ੍ਰੀਨ \'ਤੇ ਵਾਪਿਸ ਜਾਓ</string>
+  <string name="loginpin_go_back">ਫ਼ੋਨ ਨੰਬਰ ਸਕ੍ਰੀਨ &apos;ਤੇ ਵਾਪਿਸ ਜਾਓ</string>
 
   <!-- App lock -->
   <string name="applock_logout">ਕੀ ਤੁਸੀਂ ਨਹੀਂ ਹੋ?</string>
@@ -285,7 +285,7 @@
   <!-- Facility change -->
 
   <!-- Enter OTP -->
-  <string name="enterotp_check_sms_sent_to">ਇਸ \'ਤੇ ਭੇਜੇ ਗਏ SMS ਦੀ ਜਾਂਚ ਕਰੋ</string>
+  <string name="enterotp_check_sms_sent_to">ਇਸ &apos;ਤੇ ਭੇਜੇ ਗਏ SMS ਦੀ ਜਾਂਚ ਕਰੋ</string>
   <string name="enterotp_enter_verification_code">ਤਸਦੀਕੀ ਕੋਡ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="enterotp_incorrect_code">ਗ਼ਲਤ ਕੋਡ, ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
   <string name="enterotp_resend_sms">SMS ਦੁਬਾਰਾ ਭੇਜੋ</string>
@@ -355,7 +355,7 @@
   <string name="syncindicator_status_synced_min_ago">%s ਮਿੰ ਪਹਿਲਾਂ ਸਿੰਕ ਕੀਤਾ</string>
   <string name="syncindicator_dialog_error_network">ਯਕੀਨੀ ਬਣਾਓ ਕਿ ਮਰੀਜ਼ ਦੇ ਰਿਕਾਰਡਾਂ ਨੂੰ ਸਿੰਕ ਕਰਨ ਲਈ ਤੁਹਾਡੇ ਕੋਲ ਕਾਰਜਸ਼ੀਲ ਇੰਟਰਨੈੱਟ ਕਨੈਕਸ਼ਨ ਹੈ।</string>
   <string name="syncindicator_dialog_button_text">ਠੀਕ ਹੈ</string>
-  <string name="syncindicator_dialog_error_server">ਇਸ ਸਮੇਂ \'ਤੇ ਸਿੰਕ ਸਰਵਰ ਡਾਊਨ ਹਨ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਓ।</string>
+  <string name="syncindicator_dialog_error_server">ਇਸ ਸਮੇਂ &apos;ਤੇ ਸਿੰਕ ਸਰਵਰ ਡਾਊਨ ਹਨ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਓ।</string>
 
   <!-- Help Screen -->
   <string name="help_title">ਮਦਦ</string>
@@ -388,7 +388,7 @@
 
   <!-- All Patients In Facility View-->
   <string name="allpatientsinfacility_nopatients_message">ਤੁਸੀਂ ਇੱਥੇ ਆਪਣੀ ਫੈਸਿਲਿਟੀ ਵਿਖੇ ਰਜਿਸਟਰ ਕੀਤੇ ਸਾਰੇ ਮਰੀਜ਼ਾਂ ਨੂੰ ਦੇਖਣ ਦੇ ਯੋਗ ਹੋਵੋਗੇ।</string>
-  <string name="allpatientsinfacility_nopatients_title">%1$s \'ਤੇ ਕੋਈ ਮਰੀਜ਼ ਨਹੀਂ ਹਨ</string>
+  <string name="allpatientsinfacility_nopatients_title">%1$s &apos;ਤੇ ਕੋਈ ਮਰੀਜ਼ ਨਹੀਂ ਹਨ</string>
   <string name="allpatientsinfacility_foundpatients_header">ਸਾਰੇ ਮਰੀਜ਼: %1$s</string>
 
   <!--Registration loader screen -->
@@ -437,7 +437,7 @@
   <string name="selectcountry_servererror">ਸਰਵਰ ਤਰੁੱਟੀ! ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ!</string>
   <string name="selectcountry_genericerror">ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ! ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ!</string>
   <string name="selectcountry_retry">ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
-  <string name="scheduleappointment_at">\'ਤੇ</string>
+  <string name="scheduleappointment_at">&apos;ਤੇ</string>
   <string name="scheduleappointment_change">ਬਦਲੋ</string>
 
   <!-- BloodSugar type picker -->
@@ -450,10 +450,10 @@
   <string name="bloodsugarentry_day">ਦਿਨ</string>
   <string name="bloodsugarentry_month">ਮਹੀਨਾ</string>
   <string name="bloodsugarentry_year">ਸਾਲ</string>
-  <string name="bloodsugarentry_error_lower_limit">ਮਾਤਰਾ 30 ਮਿਲੀ/ਡੀਐੱਲ ਤੋਂ ਘੱਟ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="bloodsugarentry_error_lower_limit">ਮਾਤਰਾ 30 mg/dL ਤੋਂ ਘੱਟ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">ਵੈਲਿਊ 3\u0025 ਤੋਂ ਘੱਟ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_lower_limit_mmol">ਮਾਤਰਾ 1.66 mmol/L ਤੋਂ ਘੱਟ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
-  <string name="bloodsugarentry_error_higher_limit">ਮਾਤਰਾ 1000 ਮਿਲੀ/ਡੀਐੱਲ ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="bloodsugarentry_error_higher_limit">ਮਾਤਰਾ 1000 mg/dL ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">ਵੈਲਿਊ 25\u0025 ਤੋਂ ਜਿਆਦਾ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_higher_limit_mmol">ਮਾਤਰਾ 55.49 mmol/L ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_empty">ਮਾਤਰਾ ਜ਼ੀਰੋ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
@@ -517,7 +517,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">ਮਰੀਜ਼ ਨੂੰ \"ਫੇਰੀ ਲਈ ਸਹਿਮਤ ਹੋਏ\" ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕਰੋ</string>
+  <string name="contactpatient_agreed_to_visit">ਮਰੀਜ਼ ਨੂੰ \&quot;ਫੇਰੀ ਲਈ ਸਹਿਮਤ ਹੋਏ\&quot; ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕਰੋ</string>
   <string name="contactpatient_remind_call_later">ਬਾਅਦ ਵਿੱਚ ਕਾਲ ਕਰਨ ਲਈ ਯਾਦ ਕਰਵਾਓ…</string>
   <string name="contactpatient_remove_from_list">ਓਵਰਡਿਊ ਸੂਚੀ ਤੋਂ ਹਟਾਓ…</string>
   <string name="contactpatient_result_of_call">ਕਾਲ ਦੀ ਨਤੀਜਾ</string>

@@ -2,25 +2,25 @@
 
 ## Next Release
 ### Internal
+- [In Progress: 30 Nov 2020] Migrate app to use ViewBinding
+- [In progress: 01 Dec 2020] Migrate `ShortCodeSearchResultScreen` to Mobius
+- Add PR comment commands for running instrumented tests and rebasing PR
 - Add breadcrumbs for different stages in search operations
 
 ### Changes
-- Updated translations: `pa-IN`, `te-IN`, `ti-ET`, `bn-IN`
+- Updated translations: `pa-IN`, `te-IN`, `ti-ET`, `bn-IN`, `mr-IN`
 
 ### Internal
 - Revert view binding migration for `RecentPatientsView`
 
-## Next Release
+## On Demo
 ### Internal
-- [In Progress: 30 Nov 2020] Migrate app to use ViewBinding
 - Bump appcompat -> 1.2.0
 - Bump CI JDK version to 11
-- [In progress: 01 Dec 2020] Migrate `ShortCodeSearchResultScreen` to Mobius
-- Add PR comment commands for running instrumented tests and rebasing PR
 
 ### Changes
 - Disable the change language feature on devices running Lollipop (API level 21, 22)
-- Updated translations: `kn-IN`, `ta-IN`, `pa-IN`, `om-ET`, `mr-IN`
+- Updated translations: `kn-IN`, `ta-IN`, `pa-IN`, `om-ET`
 
 ### Fixes
 - Fix `shortCodeText` auto focusing in `ScanSimpleIdScreen`

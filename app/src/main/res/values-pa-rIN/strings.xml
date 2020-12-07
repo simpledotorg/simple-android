@@ -450,10 +450,10 @@
   <string name="bloodsugarentry_day">ਦਿਨ</string>
   <string name="bloodsugarentry_month">ਮਹੀਨਾ</string>
   <string name="bloodsugarentry_year">ਸਾਲ</string>
-  <string name="bloodsugarentry_error_lower_limit">ਮਾਤਰਾ 30 ਮਿਲੀ/ਡੀਐੱਲ ਤੋਂ ਘੱਟ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="bloodsugarentry_error_lower_limit">ਮਾਤਰਾ 30 mg/dL ਤੋਂ ਘੱਟ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">ਵੈਲਿਊ 3\u0025 ਤੋਂ ਘੱਟ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_lower_limit_mmol">ਮਾਤਰਾ 1.66 mmol/L ਤੋਂ ਘੱਟ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
-  <string name="bloodsugarentry_error_higher_limit">ਮਾਤਰਾ 1000 ਮਿਲੀ/ਡੀਐੱਲ ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="bloodsugarentry_error_higher_limit">ਮਾਤਰਾ 1000 mg/dL ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">ਵੈਲਿਊ 25\u0025 ਤੋਂ ਜਿਆਦਾ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_higher_limit_mmol">ਮਾਤਰਾ 55.49 mmol/L ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_empty">ਮਾਤਰਾ ਜ਼ੀਰੋ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>

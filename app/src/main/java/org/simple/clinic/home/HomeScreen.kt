@@ -9,9 +9,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_home.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenHomeBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.home.HomeTab.OVERDUE
@@ -51,6 +51,26 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   @Inject
   lateinit var utcClock: UtcClock
 
+  private var binding: ScreenHomeBinding? = null
+
+  private val homeScreenRootLayout
+    get() = binding!!.homeScreenRootLayout
+
+  private val viewPager
+    get() = binding!!.viewPager
+
+  private val homeTabLayout
+    get() = binding!!.homeTabLayout
+
+  private val toolbar
+    get() = binding!!.toolbar
+
+  private val helpButton
+    get() = binding!!.helpButton
+
+  private val facilitySelectButton
+    get() = binding!!.facilitySelectButton
+
   private val tabs = listOf(PATIENTS, OVERDUE, REPORTS)
 
   private val events by unsafeLazy {
@@ -80,10 +100,11 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 
@@ -96,6 +117,8 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     if (isInEditMode) {
       return
     }
+
+    binding = ScreenHomeBinding.bind(this)
 
     context.injector<Injector>().inject(this)
 
@@ -112,7 +135,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
     // The WebView in "Progress" tab is expensive to load. Pre-instantiating
     // it when the app starts reduces its time-to-display.
-    viewPager.offscreenPageLimit = HomeTab.REPORTS.ordinal - HomeTab.PATIENTS.ordinal
+    viewPager.offscreenPageLimit = REPORTS.ordinal - PATIENTS.ordinal
   }
 
   private fun setupToolBar() {

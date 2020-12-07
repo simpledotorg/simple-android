@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_patient_search_results.view.*
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenPatientSearchResultsBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
@@ -52,6 +52,14 @@ class PatientSearchResultsScreen(
   @Inject
   lateinit var effectHandlerInjectionFactory: PatientSearchResultsEffectHandler.InjectionFactory
 
+  private var binding: ScreenPatientSearchResultsBinding? = null
+
+  private val searchResultsView
+    get() = binding!!.searchResultsView
+
+  private val toolbar
+    get() = binding!!.toolbar
+
   private val screenKey by unsafeLazy { screenRouter.key<PatientSearchResultsScreenKey>(this) }
 
   private val events by unsafeLazy {
@@ -84,6 +92,8 @@ class PatientSearchResultsScreen(
       return
     }
 
+    binding = ScreenPatientSearchResultsBinding.bind(this)
+
     context.injector<Injector>().inject(this)
     setupScreen()
 
@@ -99,6 +109,7 @@ class PatientSearchResultsScreen(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

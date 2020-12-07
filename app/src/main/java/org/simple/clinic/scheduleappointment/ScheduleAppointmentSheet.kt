@@ -14,10 +14,10 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.sheet_schedule_appointment.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.SheetScheduleAppointmentBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.DeferredEventSource
@@ -87,6 +87,37 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
   lateinit var features: Features
 
   private lateinit var component: ScheduleAppointmentSheetComponent
+  private lateinit var binding: SheetScheduleAppointmentBinding
+
+  private val changeFacilityButton
+    get() = binding.changeFacilityButton
+
+  private val incrementDateButton
+    get() = binding.incrementDateButton
+
+  private val decrementDateButton
+    get() = binding.decrementDateButton
+
+  private val notNowButton
+    get() = binding.notNowButton
+
+  private val doneButton
+    get() = binding.doneButton
+
+  private val nextButton
+    get() = binding.nextButton
+
+  private val changeAppointmentDate
+    get() = binding.changeAppointmentDate
+
+  private val currentAppointmentDate
+    get() = binding.currentAppointmentDate
+
+  private val currentDateTextView
+    get() = binding.currentDateTextView
+
+  private val selectedFacilityName
+    get() = binding.selectedFacilityName
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
   private val calendarDateSelectedEvents: Subject<AppointmentCalendarDateSelected> = PublishSubject.create()
@@ -134,7 +165,10 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.sheet_schedule_appointment)
+
+    binding = SheetScheduleAppointmentBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
     delegate.onRestoreInstanceState(savedInstanceState)
 
     changeFacilityButton.setOnClickListener {

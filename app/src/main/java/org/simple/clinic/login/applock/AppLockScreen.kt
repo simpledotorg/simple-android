@@ -9,9 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.pin_entry_card.view.*
-import kotlinx.android.synthetic.main.screen_app_lock.view.*
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenAppLockBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.BackPressInterceptCallback
@@ -32,6 +31,26 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   @Inject
   lateinit var effectHandlerFactory: AppLockEffectHandler.Factory
+
+  private var binding: ScreenAppLockBinding? = null
+
+  private val logoutButton
+    get() = binding!!.logoutButton
+
+  private val pinEntryCardView
+    get() = binding!!.pinEntryCardView
+
+  private val pinEditText
+    get() = binding!!.pinEntryCardView.pinEditText
+
+  private val forgotPinButton
+    get() = binding!!.pinEntryCardView.forgotPinButton
+
+  private val fullNameTextView
+    get() = binding!!.fullNameTextView
+
+  private val facilityTextView
+    get() = binding!!.facilityTextView
 
   private val events by unsafeLazy {
     Observable
@@ -63,10 +82,11 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 
@@ -79,6 +99,9 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     if (isInEditMode) {
       return
     }
+
+    binding = ScreenAppLockBinding.bind(this)
+
     context.injector<Injector>().inject(this)
 
     logoutButton.setOnClickListener {
@@ -87,7 +110,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
     // The keyboard shows up on PIN field automatically when the app is
     // starting, but not when the user comes back from FacilityChangeScreen.
-    pinEntryCardView.pinEditText.showKeyboard()
+    pinEditText.showKeyboard()
   }
 
   private fun backClicks(): Observable<AppLockBackClicked> {
@@ -104,8 +127,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   private fun forgotPinClicks() =
-      pinEntryCardView
-          .forgotPinButton
+      forgotPinButton
           .clicks()
           .map { AppLockForgotPinClicked }
 
@@ -120,7 +142,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   override fun setFacilityName(facilityName: String) {
-    this.facilityTextView.text = facilityName
+    facilityTextView.text = facilityName
   }
 
   override fun restorePreviousScreen() {

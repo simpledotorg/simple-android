@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,9 +16,9 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.view_facilitypicker.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ViewFacilitypickerBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilityListItem
@@ -54,8 +55,29 @@ class FacilityPickerView(
 
   private val pickFrom: PickFrom
 
+  private var binding: ViewFacilitypickerBinding? = null
+
+  private val toolbarViewWithSearch
+    get() = binding!!.toolbarViewWithSearch
+
+  private val toolbarViewWithoutSearch
+    get() = binding!!.toolbarViewWithoutSearch
+
+  private val facilityRecyclerView
+    get() = binding!!.facilityRecyclerView
+
+  private val searchEditText
+    get() = binding!!.searchEditText
+
+  private val progressView
+    get() = binding!!.progressView
+
+  private val toolbarViewFlipper
+    get() = binding!!.toolbarViewFlipper
+
   init {
-    inflate(context, R.layout.view_facilitypicker, this)
+    val layoutInflater = LayoutInflater.from(context)
+    binding = ViewFacilitypickerBinding.inflate(layoutInflater, this)
 
     val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.FacilityPickerView)
     pickFrom = PickFrom.forAttribute(typedArray)
@@ -108,6 +130,7 @@ class FacilityPickerView(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

@@ -13,12 +13,12 @@ import com.jakewharton.rxbinding3.widget.editorActionEvents
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_patient_search.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
+import org.simple.clinic.databinding.ScreenPatientSearchBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientSearchCriteria
@@ -53,8 +53,22 @@ class PatientSearchScreen(
   @Inject
   lateinit var effectHandlerFactory: PatientSearchEffectHandler.Factory
 
-  private val allPatientsInFacility by unsafeLazy {
-    allPatientsInFacilityView as AllPatientsInFacilityView
+  private var binding: ScreenPatientSearchBinding? = null
+
+  private val allPatientsInFacilityView
+    get() = binding!!.allPatientsInFacilityView.rootLayout
+
+  private val searchQueryTextInputLayout
+    get() = binding!!.searchQueryTextInputLayout
+
+  private val searchQueryEditText
+    get() = binding!!.searchQueryEditText
+
+  private val searchButtonFrame
+    get() = binding!!.searchButtonFrame
+
+  private val allPatientsInFacility: AllPatientsInFacilityView by unsafeLazy {
+    allPatientsInFacilityView
   }
 
   private val screenKey by unsafeLazy {
@@ -89,6 +103,9 @@ class PatientSearchScreen(
     if (isInEditMode) {
       return
     }
+
+    binding = ScreenPatientSearchBinding.bind(this)
+
     context.injector<Injector>().inject(this)
 
     searchQueryTextInputLayout.setStartIconOnClickListener {
@@ -107,6 +124,7 @@ class PatientSearchScreen(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

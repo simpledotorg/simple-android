@@ -55,20 +55,18 @@ class PatientRepository @Inject constructor(
 
   fun search(criteria: PatientSearchCriteria): Observable<List<PatientSearchResult>> {
     return when (criteria) {
-      is Name -> searchByName(criteria.patientName)
+      is Name -> Observable.fromCallable { searchByName(criteria.patientName) }
       is PhoneNumber -> searchByPhoneNumber(criteria.phoneNumber)
     }
   }
 
-  private fun searchByName(name: String): Observable<List<PatientSearchResult>> {
-    return Observable
-        .fromCallable { findPatientIdsMatchingName(name) }
-        .switchMap { matchingUuidsSortedByScore ->
-          when {
-            matchingUuidsSortedByScore.isEmpty() -> Observable.just(emptyList())
-            else -> Observable.fromCallable { searchResultsByPatientUuids(matchingUuidsSortedByScore) }
-          }
-        }
+  private fun searchByName(name: String): List<PatientSearchResult> {
+    val patientIdsMatchingName = findPatientIdsMatchingName(name)
+
+    return when {
+      patientIdsMatchingName.isEmpty() -> emptyList()
+      else -> searchResultsByPatientUuids(patientIdsMatchingName)
+    }
   }
 
   private fun searchResultsByPatientUuids(patientUuids: List<UUID>): List<PatientSearchResult> {

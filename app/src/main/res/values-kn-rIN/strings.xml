@@ -450,7 +450,7 @@
   <string name="bloodsugarentry_day">ದಿನ</string>
   <string name="bloodsugarentry_month">ತಿಂಗಳು</string>
   <string name="bloodsugarentry_year">ವರ್ಷ</string>
-  <string name="bloodsugarentry_error_lower_limit">ಮೌಲ್ಯವು 30 ಮಿಗ್ರಾಂ/ಡೆಲೀಗಿಂತ ಕಡಿಮೆ ಇರಬಾರದು</string>
+  <string name="bloodsugarentry_error_lower_limit">ಮೌಲ್ಯವು 30 mg/dL ಗಿಂತ ಕಡಿಮೆ ಇರಬಾರದು</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">ಮೌಲ್ಯವು 3\u0025 ಗಿಂತ ಕಡಿಮೆ ಇರಬಾರದು</string>
   <string name="bloodsugarentry_error_lower_limit_mmol">ಮೌಲ್ಯವು 1.66 mmol/L ಕಡಿಮೆ ಇರಬಾರದು</string>
   <string name="bloodsugarentry_error_higher_limit">ಮೌಲ್ಯವು 1000 ಮಿಗ್ರಾಂ/ಡೆಲೀಗಿಂತ ಹೆಚ್ಚಿರಬಾರದು</string>
@@ -517,9 +517,9 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">ರೋಗಿಯನ್ನು \"ಭೇಟಿಮಾಡಲು ಒಪ್ಪಿದ್ದಾರೆ\" ಎಂದು ಗುರುತಿಸಿ</string>
-  <string name="contactpatient_remind_call_later">ನಂತರ ಕರೆ ಮಾಡಲು ನೆನಪಿಸಿ…</string>
-  <string name="contactpatient_remove_from_list">ಬಾಕಿ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಿ…</string>
+  <string name="contactpatient_agreed_to_visit">ರೋಗಿಯನ್ನು \&quot;ಭೇಟಿಮಾಡಲು ಒಪ್ಪಿದ್ದಾರೆ\&quot; ಎಂದು ಗುರುತಿಸಿ</string>
+  <string name="contactpatient_remind_call_later">ನಂತರ ಕರೆ ಮಾಡಲು ನೆನಪಿಸಿ...</string>
+  <string name="contactpatient_remove_from_list">ಬಾಕಿ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಿ...</string>
   <string name="contactpatient_result_of_call">ಕರೆಯ ಫಲಿತಾಂಶ</string>
   <string name="contactpatient_call_normal">ಸಾಮಾನ್ಯ</string>
   <string name="contactpatient_call_secure">ಸುರಕ್ಷಿತ</string>

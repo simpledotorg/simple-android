@@ -4,8 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import kotlinx.android.synthetic.main.sheet_registration_confirm_facility.*
-import org.simple.clinic.R
+import org.simple.clinic.databinding.SheetRegistrationConfirmFacilityBinding
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.BottomSheetActivity
 import java.util.UUID
@@ -40,9 +39,22 @@ class ConfirmFacilitySheet : BottomSheetActivity() {
     intent.getSerializableExtra(EXTRA_FACILITY_UUID) as UUID
   }
 
+  private lateinit var binding: SheetRegistrationConfirmFacilityBinding
+
+  private val facilityNameTextView
+    get() = binding.facilityNameTextView
+
+  private val yesButton
+    get() = binding.yesButton
+
+  private val cancelButton
+    get() = binding.cancelButton
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.sheet_registration_confirm_facility)
+
+    binding = SheetRegistrationConfirmFacilityBinding.inflate(layoutInflater)
+    setContentView(binding.root)
 
     facilityNameTextView.text = facilityName
 

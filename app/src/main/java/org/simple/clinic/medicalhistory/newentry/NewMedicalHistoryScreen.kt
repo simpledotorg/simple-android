@@ -10,8 +10,8 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.screen_new_medical_history.view.*
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenNewMedicalHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
@@ -50,6 +50,35 @@ class NewMedicalHistoryScreen(
   @Inject
   lateinit var effectHandlerFactory: NewMedicalHistoryEffectHandler.Factory
 
+  private var binding: ScreenNewMedicalHistoryBinding? = null
+
+  private val toolbar
+    get() = binding!!.toolbar
+
+  private val nextButtonFrame
+    get() = binding!!.nextButtonFrame
+
+  private val heartAttackQuestionView
+    get() = binding!!.heartAttackQuestionView
+
+  private val strokeQuestionView
+    get() = binding!!.strokeQuestionView
+
+  private val kidneyDiseaseQuestionView
+    get() = binding!!.kidneyDiseaseQuestionView
+
+  private val diabetesQuestionView
+    get() = binding!!.diabetesQuestionView
+
+  private val diagnosisViewContainer
+    get() = binding!!.diagnosisViewContainer
+
+  private val diabetesDiagnosisView
+    get() = binding!!.diabetesDiagnosisView
+
+  private val hypertensionDiagnosisView
+    get() = binding!!.hypertensionDiagnosisView
+
   private val questionViewEvents: Subject<NewMedicalHistoryEvent> = PublishSubject.create()
 
   private val events: Observable<NewMedicalHistoryEvent> by unsafeLazy {
@@ -78,6 +107,8 @@ class NewMedicalHistoryScreen(
       return
     }
 
+    binding = ScreenNewMedicalHistoryBinding.bind(this)
+
     context.injector<Injector>().inject(this)
 
     toolbar.setNavigationOnClickListener {
@@ -96,10 +127,11 @@ class NewMedicalHistoryScreen(
 
   override fun onDetachedFromWindow() {
     mobiusDelegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return mobiusDelegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 

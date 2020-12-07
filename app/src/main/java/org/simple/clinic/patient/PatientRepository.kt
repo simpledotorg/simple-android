@@ -62,7 +62,8 @@ class PatientRepository @Inject constructor(
   }
 
   private fun searchByName(name: String): Observable<List<PatientSearchResult>> {
-    return findPatientIdsMatchingName(name)
+    return Observable
+        .fromCallable { findPatientIdsMatchingName(name) }
         .switchMap { matchingUuidsSortedByScore ->
           when {
             matchingUuidsSortedByScore.isEmpty() -> Observable.just(emptyList())
@@ -89,18 +90,17 @@ class PatientRepository @Inject constructor(
         ))
   }
 
-  private fun findPatientIdsMatchingName(name: String): Observable<List<UUID>> {
-    val loadAllPatientNamesAndIds = database
+  private fun findPatientIdsMatchingName(name: String): List<UUID> {
+    /*.compose(RxTimingAnalytics(
+        analyticsName = "Search Patient:Fetch Name and Id",
+        timestampScheduler = schedulersProvider.computation()
+    ))*/
+
+    val allPatientNamesAndIds = database
         .patientSearchDao()
         .nameAndId(PatientStatus.Active)
-        .toObservable()
 
-    return loadAllPatientNamesAndIds
-        .compose(RxTimingAnalytics(
-            analyticsName = "Search Patient:Fetch Name and Id",
-            timestampScheduler = schedulersProvider.computation()
-        ))
-        .map { patientNamesAndIds -> findPatientsWithNameMatching(patientNamesAndIds, name) }
+    return findPatientsWithNameMatching(allPatientNamesAndIds, name)
   }
 
   private fun findPatientsWithNameMatching(

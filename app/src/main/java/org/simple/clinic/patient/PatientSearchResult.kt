@@ -115,7 +115,7 @@ data class PatientSearchResult(
     fun searchByIds(uuids: List<UUID>, status: PatientStatus): Single<List<PatientSearchResult>>
 
     @Query("""SELECT Patient.uuid, Patient.fullName FROM Patient WHERE Patient.status = :status AND Patient.deletedAt IS NULL""")
-    fun nameAndId(status: PatientStatus): Flowable<List<PatientNameAndId>>
+    fun nameAndId(status: PatientStatus): List<PatientNameAndId>
 
     @Suppress("AndroidUnresolvedRoomSqlReference")
     @Query("""

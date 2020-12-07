@@ -103,7 +103,7 @@ class PatientRepositoryTest {
     whenever(searchPatientByName.search(any(), any())).thenReturn(filteredUuids)
     whenever(patientSearchResultDao.searchByIds(any(), any()))
         .thenReturn(Single.just(filteredUuids.map { TestData.patientSearchResult(uuid = it) }))
-    whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
+    whenever(database.patientSearchDao().nameAndId(any())).thenReturn(emptyList())
 
     repository
         .search(Name("name"))
@@ -138,7 +138,7 @@ class PatientRepositoryTest {
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
     whenever(searchPatientByName.search(any(), any())).thenReturn(filteredUuids)
     whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(Single.just(results))
-    whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
+    whenever(database.patientSearchDao().nameAndId(any())).thenReturn(emptyList())
 
     val actualResults = repository.search(Name("name")).blockingFirst()
     assertThat(actualResults).isEqualTo(expectedResults)
@@ -178,12 +178,7 @@ class PatientRepositoryTest {
     // emission (using just(), for example). This is fine for most of our tests, but the way this
     // test is structured depends on the sources behaving as they do in reality
     // (i.e, infinite sources). We replace the mocks for these tests with Subjects to do this.
-    whenever(patientSearchResultDao.nameAndId(any()))
-        .thenReturn(
-            BehaviorSubject.createDefault(listOf(PatientNameAndId(patientUuid, "Name")))
-                .doOnNext { computationScheduler.advanceTimeBy(timeTakenToFetchPatientNameAndId) }
-                .toFlowable(BackpressureStrategy.LATEST)
-        )
+    whenever(patientSearchResultDao.nameAndId(any())).thenReturn(listOf(PatientNameAndId(patientUuid, "Name"))        )
     whenever(searchPatientByName.search(any(), any())).thenReturn(listOf(patientUuid))
     whenever(patientSearchResultDao.searchByIds(any(), any()))
         .thenReturn(

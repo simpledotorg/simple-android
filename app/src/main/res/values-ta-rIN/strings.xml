@@ -450,10 +450,10 @@
   <string name="bloodsugarentry_day">நாள்</string>
   <string name="bloodsugarentry_month">மாதம்</string>
   <string name="bloodsugarentry_year">வருடம்</string>
-  <string name="bloodsugarentry_error_lower_limit">அளவு 30 மிகி/டிஎல்-க்கும் குறைவாக இருக்கக்கூடாது</string>
+  <string name="bloodsugarentry_error_lower_limit">அளவு 30 mg/dl-க்கும் குறைவாக இருக்கக்கூடாது</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">மதிப்பு 3\u0025-க்கும் குறைவாக இருக்கக்கூடாது</string>
   <string name="bloodsugarentry_error_lower_limit_mmol">அளவு 1.66 mmol/L-க்கும் குறைவாக இருக்கக்கூடாது</string>
-  <string name="bloodsugarentry_error_higher_limit">அளவு 1000 மிகி/டிஎல்-க்கும் அதிகமாக இருக்கக்கூடாது</string>
+  <string name="bloodsugarentry_error_higher_limit">அளவு 1000 mg/dl-க்கும் அதிகமாக இருக்கக்கூடாது</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">மதிப்பு 25\u0025-க்கும் அதிகமாக இருக்கக்கூடாது</string>
   <string name="bloodsugarentry_error_higher_limit_mmol">அளவு 55.49 mmol/L-க்கும் அதிகமாக இருக்கக்கூடாது</string>
   <string name="bloodsugarentry_error_empty">மதிப்பு காலியாக இருக்கக்கூடாது</string>

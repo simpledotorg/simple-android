@@ -112,7 +112,7 @@ data class PatientSearchResult(
       LEFT JOIN Patient P ON P.uuid = searchResult.uuid
       WHERE P.uuid IN (:uuids) AND P.status = :status AND P.deletedAt IS NULL
       """)
-    fun searchByIds(uuids: List<UUID>, status: PatientStatus): Single<List<PatientSearchResult>>
+    fun searchByIds(uuids: List<UUID>, status: PatientStatus): List<PatientSearchResult>
 
     @Query("""SELECT Patient.uuid, Patient.fullName FROM Patient WHERE Patient.status = :status AND Patient.deletedAt IS NULL""")
     fun nameAndId(status: PatientStatus): List<PatientNameAndId>

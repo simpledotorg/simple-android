@@ -102,7 +102,7 @@ class PatientRepositoryTest {
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
     whenever(searchPatientByName.search(any(), any())).thenReturn(filteredUuids)
     whenever(patientSearchResultDao.searchByIds(any(), any()))
-        .thenReturn(Single.just(filteredUuids.map { TestData.patientSearchResult(uuid = it) }))
+        .thenReturn(filteredUuids.map { TestData.patientSearchResult(uuid = it) })
     whenever(database.patientSearchDao().nameAndId(any())).thenReturn(emptyList())
 
     repository
@@ -137,7 +137,7 @@ class PatientRepositoryTest {
     whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
     whenever(searchPatientByName.search(any(), any())).thenReturn(filteredUuids)
-    whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(Single.just(results))
+    whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(results)
     whenever(database.patientSearchDao().nameAndId(any())).thenReturn(emptyList())
 
     val actualResults = repository.search(Name("name")).blockingFirst()
@@ -180,12 +180,7 @@ class PatientRepositoryTest {
     // (i.e, infinite sources). We replace the mocks for these tests with Subjects to do this.
     whenever(patientSearchResultDao.nameAndId(any())).thenReturn(listOf(PatientNameAndId(patientUuid, "Name"))        )
     whenever(searchPatientByName.search(any(), any())).thenReturn(listOf(patientUuid))
-    whenever(patientSearchResultDao.searchByIds(any(), any()))
-        .thenReturn(
-            BehaviorSubject.createDefault(listOf(TestData.patientSearchResult(uuid = patientUuid)))
-                .doOnNext { computationScheduler.advanceTimeBy(timeTakenToFetchPatientDetails) }
-                .firstOrError()
-        )
+    whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(listOf(TestData.patientSearchResult(uuid = patientUuid))        )
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
 
     repository

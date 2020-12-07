@@ -6,7 +6,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.analytics.RxTimingAnalytics
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
@@ -67,27 +66,28 @@ class PatientRepository @Inject constructor(
         .switchMap { matchingUuidsSortedByScore ->
           when {
             matchingUuidsSortedByScore.isEmpty() -> Observable.just(emptyList())
-            else -> searchResultsByPatientUuids(matchingUuidsSortedByScore)
+            else -> Observable.fromCallable { searchResultsByPatientUuids(matchingUuidsSortedByScore) }
           }
         }
   }
 
-  private fun searchResultsByPatientUuids(patientUuids: List<UUID>): Observable<List<PatientSearchResult>> {
-    return database.patientSearchDao()
+  private fun searchResultsByPatientUuids(patientUuids: List<UUID>): List<PatientSearchResult> {
+    val searchResults = database
+        .patientSearchDao()
         .searchByIds(patientUuids, PatientStatus.Active)
-        .toObservable()
-        .map { results ->
-          // This is needed to maintain the order of the search results
-          // so that its in the same order of the list of the UUIDs.
-          // Otherwise, the order is dependent on the SQLite default
-          // implementation.
-          val resultsByUuid = results.associateBy { it.uuid }
-          patientUuids.map { resultsByUuid.getValue(it) }
-        }
-        .compose(RxTimingAnalytics(
-            analyticsName = "Search Patient:Fetch Patient Details",
-            timestampScheduler = schedulersProvider.computation()
-        ))
+
+    // This is needed to maintain the order of the search results
+    // so that its in the same order of the list of the UUIDs.
+    // Otherwise, the order is dependent on the SQLite default
+    // implementation.
+    val resultsByUuid = searchResults.associateBy { it.uuid }
+
+    return patientUuids.map { resultsByUuid.getValue(it) }
+
+    /*.compose(RxTimingAnalytics(
+        analyticsName = "Search Patient:Fetch Patient Details",
+        timestampScheduler = schedulersProvider.computation()
+    ))*/
   }
 
   private fun findPatientIdsMatchingName(name: String): List<UUID> {
@@ -640,7 +640,7 @@ class PatientRepository @Inject constructor(
         }
 
     return shortCodeSearchResult
-        .flatMapSingle { database.patientSearchDao().searchByIds(it, PatientStatus.Active) }
+        .map { database.patientSearchDao().searchByIds(it, PatientStatus.Active) }
   }
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

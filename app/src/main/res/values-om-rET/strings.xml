@@ -176,7 +176,7 @@
   <string name="patientsummary_bangladesh_national_id">ID</string>
 
   <string name="patientsummary_teleconsult">Tele-consult</string>
-  <string name="patientsummary_log_teleconsult">Teleconsult seeni</string>
+  <string name="patientsummary_log_teleconsult">Gorsa Bilbilaani seeni</string>
 
   <string name="patientsummary_registered_faciliy_title">Galmaa\'eera</string>
   <string name="patientsummary_registered_facility">%1$skan %2$s</string>
@@ -453,8 +453,10 @@
   <string name="bloodsugarentry_year">Waggaa</string>
   <string name="bloodsugarentry_error_lower_limit">Gatiin 30 mg/dL gadi ta’uu hin danda’u</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">Bu\'aan 3\u0025 ta\'uu hin danda\'u</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">Gatiin 1.66 mmol/L gadi ta\'uu hin danda\'u</string>
   <string name="bloodsugarentry_error_higher_limit">Hammichi 1000 mg/dl ol ta’uu hin danda’u</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">Hammi 25\u0025 ol ta\'uu hin danda\'u</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">Gatiin 55.49 mmol/L ol ta\'uu hin danda\'u</string>
   <string name="bloodsugarentry_error_empty">Hammichi duwwaa ta’uu hin danda’u</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">Guyyaa sirrii GG/JJ/WWWW keessatti galchi</string>
   <string name="bloodsugarentry_error_date_is_in_future">Guyyaan gara fuulduraa ta’uu hin danda’u</string>
@@ -601,7 +603,7 @@
   <string name="screen_teleconsult_success_add_prescription">Ajaja ida\'i?</string>
   <string name="screen_teleconsult_success_yes">Eeyyee</string>
   <string name="screen_teleconsult_success_no">Lakki</string>
-  <string name="screen_teleconsult_success_teleconsult_recorded">Teleconsult galmeeffameera</string>
+  <string name="screen_teleconsult_success_teleconsult_recorded">Gorsa Bilbilaani galmeeffameera</string>
   <string name="screen_teleconsult_success_patient_information">%1$s, %2$s, %3$s</string>
   <string name="sheet_medicine_frequency_od">OD</string>
   <string name="sheet_medicine_frequency_bd">BD</string>
@@ -610,21 +612,21 @@
   <string name="sheet_medicine_frequency_save">Ol kaa’i</string>
 
   <!-- Teleconsult Record Screen -->
-  <string name="screen_teleconsult_record">Teleconsult waraabbamee jira</string>
-  <string name="screen_teleconsult_record_type">Gosa Teleconsultation</string>
+  <string name="screen_teleconsult_record">Gorsa Bilbilaani waraabbamee jira</string>
+  <string name="screen_teleconsult_record_type">Gosa Gorsa Bilbilaani</string>
   <string name="screen_teleconsult_record_type_audio">Bilbila sagalee</string>
   <string name="screen_teleconsult_record_type_video">Bilbila suur-sagalee</string>
   <string name="screen_teleconsult_record_type_message">Erga</string>
   <string name="screen_teleconsult_record_patient_took_medicine">Dhukkubsattoota dawaa dhiibbaa dhiigaa fii sukkaaraa dhaabbiidhan fudhachaa jira</string>
-  <string name="screen_teleconsult_record_patient_consented">Dhukkubsataan teleconsultation dhaaf hayyama isaa kenneera</string>
+  <string name="screen_teleconsult_record_patient_consented">Dhukkubsataan Gorsa Bilbilaani dhaaf hayyama isaa kenneera</string>
   <string name="screen_teleconsult_record_done">Taasifameera</string>
-  <string name="teleconsultnotrecordeddialog_title">Teleconsult hin waraabbamne</string>
+  <string name="teleconsultnotrecordeddialog_title">Gorsa Bilbilaani hin waraabbamne</string>
   <string name="teleconsultnotrecordeddialog_body">Dhugumatti addaan kutuu barbaaddaa?</string>
   <string name="teleconsultnotrecordeddialog_positive_button_text">Eeyyee</string>
   <string name="teleconsultnotrecordeddialog_negative_button_text">Lakki</string>
 
   <!-- Deeplink Teleconsult not authorised-->
-  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">Gara teleconsult tti seenudhaaf hayyama hin qabdu</string>
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">Gara Gorsa Bilbilaani tti seenudhaaf hayyama hin qabdu</string>
   <string name="deeplink_please_check_with_your_supervisor">Maaloo hogganaa kee waliin ilaali</string>
   <string name="deeplink_okay_positive_action">Hayyee</string>
 
@@ -668,4 +670,9 @@
   <string name="setup_cannot_run">Appilikeeshinicha geggeessuu hin dandeenye</string>
   <string name="setup_rooted">Simple meeshaa fageeffame irratti geggeessuu hin danda\'u.</string>
   <string name="setup_close">Cufi</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">Filadhu</string>
+  <string name="blood_sugar_unit_selection_done">XUMURAMEERA</string>
+
 </resources>

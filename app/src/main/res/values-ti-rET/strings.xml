@@ -176,7 +176,7 @@
   <string name="patientsummary_bangladesh_national_id">መለለዪ ቁጽሪ</string>
 
   <string name="patientsummary_teleconsult">ቴሌኮንሳልት</string>
-  <string name="patientsummary_log_teleconsult">ናብ Teleconsult እተው</string>
+  <string name="patientsummary_log_teleconsult">ናብ ምኽሪ ብቴሌፎን እተው</string>
 
   <string name="patientsummary_registered_faciliy_title">ዝተመዝገበ</string>
   <string name="patientsummary_registered_facility">%1$s at%2$s</string>
@@ -450,10 +450,12 @@
   <string name="bloodsugarentry_day">መዓልቲ</string>
   <string name="bloodsugarentry_month">ወርሒ</string>
   <string name="bloodsugarentry_year">ዓመት</string>
-  <string name="bloodsugarentry_error_lower_limit">ዓቐን ካብ 30 ሚግ/ደሊ ንታሕቲ ክኸውን ኣይኽእልን</string>
+  <string name="bloodsugarentry_error_lower_limit">ዓቐን ካብ 30 mg/dL ንታሕቲ ክኸውን ኣይኽእልን</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">ዓቐን ትሕቲ 30/uoo25 ክኸውን ኣይክእልን</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">ዓቐን ካብ 1.66 mmol/L ንታሕቲ ክኸውን ኣይኽእልን</string>
   <string name="bloodsugarentry_error_higher_limit">ዓቐን ካብ 1000 ሚግ/ደሊ ንላዕሊ ክኸውን ኣይኽእልን</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">ዓቐን ልዕሊ 25/u0025 ክኽውን ኣይኽእልን</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">ዓቐን ካብ 55.49 mmol/L ንላዕሊ ክኸውን ኣይኽእልን</string>
   <string name="bloodsugarentry_error_empty">ዓቕን ጥራዩ ክኸውን ኣይኽእልን</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">ቅቡል ዕለት ብ መሰረት ዕለት/ወርሒ/ዓመተ ምህረት ኣእትው/ዊ</string>
   <string name="bloodsugarentry_error_date_is_in_future">ዕለት ኣብ መፃኢ ክኸውን ኣይኽእልን</string>
@@ -600,7 +602,7 @@
   <string name="screen_teleconsult_success_add_prescription">ናይ መድሃኒት ትእዛዝ የእቱ</string>
   <string name="screen_teleconsult_success_yes">እወ</string>
   <string name="screen_teleconsult_success_no">ኣይፋሉን</string>
-  <string name="screen_teleconsult_success_teleconsult_recorded">Teleconsult ተቐዲሑ ኣሎ</string>
+  <string name="screen_teleconsult_success_teleconsult_recorded">ምኽሪ ብቴሌፎን ተቐዲሑ ኣሎ</string>
   <string name="screen_teleconsult_success_patient_information">%1$s,%2$s,%3$s</string>
   <string name="sheet_medicine_frequency_od">OD</string>
   <string name="sheet_medicine_frequency_bd">BD</string>
@@ -667,4 +669,9 @@
   <string name="setup_cannot_run">ኣፕሊኬሽን ክኽፈት ኣይከኣለን</string>
   <string name="setup_rooted">ቀሊል ኣብ ሱር ዝሰደደ መሳርሒ ክኽፈት ኣይከኣልን።</string>
   <string name="setup_close">ዕጾ</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">ምረጽ</string>
+  <string name="blood_sugar_unit_selection_done">ተወዲኡ</string>
+
 </resources>

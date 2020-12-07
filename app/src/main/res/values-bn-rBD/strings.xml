@@ -452,8 +452,10 @@
   <string name="bloodsugarentry_year">বছর</string>
   <string name="bloodsugarentry_error_lower_limit">মান 30 মিগ্রা/ডেসিলি এর কম হতে পারবে না</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">মান 3\u0025 এর কম হতে পারবে না</string>
-  <string name="bloodsugarentry_error_higher_limit">মান 1000 মিগ্রা/ডেসিলি এর বেশি হতে পারবে না</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">মান 1.66 mmol/L এর কম হতে পারে না</string>
+  <string name="bloodsugarentry_error_higher_limit">মান 1000 mg/dL এর বেশি হতে পারবে না</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">মান 25\u0025 এর বেশি হতে পারবে না</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">মান 55.49 mmol/L এর বেশি হতে পারে না</string>
   <string name="bloodsugarentry_error_empty">মান খালি রাখা যাবে না</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YYYY বিন্যাসে একটি বৈধ তারিখ লিখুন</string>
   <string name="bloodsugarentry_error_date_is_in_future">তারিখটি ভবিষ্যতের হতে পারে না</string>
@@ -515,7 +517,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">\"ভিজিটে আসতে সম্মত হয়েছেন\"\ বলে রোগীকে চিহ্নিত করুন</string>
+  <string name="contactpatient_agreed_to_visit">\&quot;ভিজিটে আসতে সম্মত হয়েছেন&quot;\ বলে রোগীকে চিহ্নিত করুন</string>
   <string name="contactpatient_remind_call_later">পরে কল করার জন্য মনে করিয়ে দিন…</string>
   <string name="contactpatient_remove_from_list">সময়াতীতের তালিকা থেকে সরান…</string>
   <string name="contactpatient_result_of_call">কলের ফলাফল</string>
@@ -667,4 +669,9 @@
   <string name="setup_cannot_run">অ্যাপ্লিকেশন চালানো যাচ্ছে না</string>
   <string name="setup_rooted">রুট করা ডিভাইসে সিম্পিল চালানো যাবে না।</string>
   <string name="setup_close">বন্ধ করুন</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">বেছে নিন</string>
+  <string name="blood_sugar_unit_selection_done">শেষ করুন</string>
+
 </resources>

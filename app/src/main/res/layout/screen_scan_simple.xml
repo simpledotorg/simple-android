@@ -48,17 +48,25 @@
         android:gravity="center"
         android:text="@string/scansimpleid_type_bp_passport_number" />
 
-      <EditText
-        android:id="@+id/shortCodeText"
-        android:layout_width="@dimen/spacing_128"
+      <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:ems="10"
-        android:hint="@string/scansimpleid_hint_short_code"
-        android:imeOptions="actionSearch"
-        android:inputType="number"
-        android:textAlignment="center"
-        android:textSize="@dimen/textsize_20" />
+        android:focusable="false"
+        android:focusableInTouchMode="true">
+
+        <EditText
+          android:id="@+id/shortCodeText"
+          android:layout_width="@dimen/spacing_128"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:ems="10"
+          android:hint="@string/scansimpleid_hint_short_code"
+          android:imeOptions="actionSearch"
+          android:inputType="number"
+          android:textAlignment="center"
+          android:textSize="@dimen/textsize_20" />
+
+      </FrameLayout>
 
       <TextView
         android:id="@+id/shortCodeErrorText"

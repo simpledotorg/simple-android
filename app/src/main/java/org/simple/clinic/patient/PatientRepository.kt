@@ -56,7 +56,7 @@ class PatientRepository @Inject constructor(
   fun search(criteria: PatientSearchCriteria): Observable<List<PatientSearchResult>> {
     return when (criteria) {
       is Name -> Observable.fromCallable { searchByName(criteria.patientName) }
-      is PhoneNumber -> searchByPhoneNumber(criteria.phoneNumber)
+      is PhoneNumber -> Observable.fromCallable { searchByPhoneNumber(criteria.phoneNumber) }
     }
   }
 
@@ -115,11 +115,10 @@ class PatientRepository @Inject constructor(
         .take(config.limitOfSearchResults)
   }
 
-  private fun searchByPhoneNumber(phoneNumber: String): Observable<List<PatientSearchResult>> {
+  private fun searchByPhoneNumber(phoneNumber: String): List<PatientSearchResult> {
     return database
         .patientSearchDao()
         .searchByPhoneNumber(phoneNumber, config.limitOfSearchResults)
-        .toObservable()
   }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {

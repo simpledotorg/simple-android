@@ -7,8 +7,10 @@
 ### Changes
 - Disable the change language feature on devices running Lollipop (API level 21, 22)
 
+## 2020-12-03-7536
 ### Fixes
 - Fix BP passport scanning not working
+- Fix `shortCodeText` auto focusing in `ScanSimpleIdScreen`
 
 ## 2020-12-01-7532
 ### Internal
@@ -18,7 +20,6 @@
 - Fixed BP Passport scanning does not work after the first scan
 
 ## 2020-11-30-7529
->>>>>>> 9f22be965 (Fix BP passport scanning not working (#2167))
 ### Features
 - Refill prescriptions in edit medicine screen
 - Add support for recording RBS, FBS, and PPBS blood sugars in two units: mmol/L or mg/dL
@@ -29,7 +30,6 @@
 - Move scanning of QR codes to a discrete activity
 - Bump AGP to 4.1.1
 - Convert blood sugar values to `mg/dL` when saving/updating
-- Move BP passport scan results handling to `HomeScreen`
 
 ### Changes
 - Disabled running the app on rooted devices

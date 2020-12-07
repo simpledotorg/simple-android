@@ -3,9 +3,12 @@
 ## Next Release
 ### Internal
 - [In Progress: 11 Nov 2020] Migrate app screens to use ViewBinding
+- [In progress: 01 Dec 2020] Migrate `ShortCodeSearchResultScreen` to Mobius
+
+## On Demo
+### Internal
 - Bump appcompat -> 1.2.0
 - Bump CI JDK version to 11
-- [In progress: 01 Dec 2020] Migrate `ShortCodeSearchResultScreen` to Mobius
 
 ### Changes
 - Disable the change language feature on devices running Lollipop (API level 21, 22)

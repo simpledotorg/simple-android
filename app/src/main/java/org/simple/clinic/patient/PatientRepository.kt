@@ -31,6 +31,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
+import timber.log.Timber
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -63,6 +64,7 @@ class PatientRepository @Inject constructor(
   }
 
   private fun searchByName(name: String): List<PatientSearchResult> {
+    Timber.tag("Search").i("Search by name")
     val patientIdsMatchingName = findPatientIdsMatchingName(name)
 
     return when {
@@ -72,6 +74,7 @@ class PatientRepository @Inject constructor(
   }
 
   private fun searchResultsByPatientUuids(patientUuids: List<UUID>): List<PatientSearchResult> {
+    Timber.tag("Search").i("Load search results for matching IDs")
     val searchResults = reportTimeTaken(
         utcClock,
         "Search Patient:Fetch Patient Details"
@@ -91,6 +94,7 @@ class PatientRepository @Inject constructor(
   }
 
   private fun findPatientIdsMatchingName(name: String): List<UUID> {
+    Timber.tag("Search").i("Find patient IDs matching name")
     val allPatientNamesAndIds = reportTimeTaken(
         utcClock,
         "Search Patient:Fetch Name and Id"
@@ -107,6 +111,7 @@ class PatientRepository @Inject constructor(
       allPatientNamesAndIds: List<PatientSearchResult.PatientNameAndId>,
       name: String
   ): List<UUID> {
+    Timber.tag("Search").i("Fuzzy filter patient names")
     return reportTimeTaken(
         utcClock,
         "Search Patient:Fuzzy Filtering By Name"
@@ -118,6 +123,7 @@ class PatientRepository @Inject constructor(
   }
 
   private fun searchByPhoneNumber(phoneNumber: String): List<PatientSearchResult> {
+    Timber.tag("Search").i("Search by phone number")
     return database
         .patientSearchDao()
         .searchByPhoneNumber(phoneNumber, config.limitOfSearchResults)

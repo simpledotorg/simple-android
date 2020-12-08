@@ -10,6 +10,7 @@
 - Bump appcompat -> 1.2.0
 - Bump CI JDK version to 11
 - [In progress: 01 Dec 2020] Migrate `ShortCodeSearchResultScreen` to Mobius
+- Add PR comment commands for running instrumented tests and rebasing PR
 
 ### Changes
 - Disable the change language feature on devices running Lollipop (API level 21, 22)

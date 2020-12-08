@@ -48,27 +48,6 @@ jobs:
       - name: Mobius Migration Tests
         run: ./gradlew :mobius-migration:test
 
-  # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
-  # https://github.com/ReactiveCircus/android-emulator-runner
-  qa_android_tests:
-    runs-on: [macos-latest]
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: set up JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-
-      - name: Turn on capturing of flaky tests
-        run: cat app/src/androidTest/resources/quarantine_ci.properties > app/src/androidTest/resources/quarantine.properties
-
-      - name: QA Android Tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: ./gradlew connectedQaDebugAndroidTest
-
   verify_release_bundles:
     runs-on: [ubuntu-latest]
     strategy:
@@ -163,7 +142,7 @@ jobs:
 
   qa_purge_env:
     runs-on: [ubuntu-latest]
-    needs: [qa_lint, qa_unit_tests, mobius_migration_tests, qa_android_tests]
+    needs: [qa_lint, qa_unit_tests, mobius_migration_tests]
     steps:
       - name: Purge QA server
         run: |

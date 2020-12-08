@@ -30,7 +30,6 @@ import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import java.time.Duration
 import java.time.Instant
@@ -50,7 +49,6 @@ class PatientRepository @Inject constructor(
     private val config: PatientConfig,
     private val reportsRepository: ReportsRepository,
     private val businessIdMetaDataMoshiAdapter: JsonAdapter<BusinessIdMetaData>,
-    private val schedulersProvider: SchedulersProvider,
     @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 

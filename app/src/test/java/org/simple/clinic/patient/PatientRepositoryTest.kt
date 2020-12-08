@@ -7,17 +7,12 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.schedulers.TestScheduler
-import io.reactivex.subjects.BehaviorSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,7 +28,6 @@ import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.advanceTimeBy
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.Duration
 import java.time.format.DateTimeFormatter
@@ -76,7 +70,6 @@ class PatientRepositoryTest {
         config = config,
         reportsRepository = mock(),
         businessIdMetaDataMoshiAdapter = mock(),
-        schedulersProvider = schedulersProvider,
         dateOfBirthFormat = dateOfBirthFormat
     )
 

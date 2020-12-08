@@ -3,13 +3,12 @@ package org.simple.clinic.recentpatientsview
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.rxkotlin.ofType
+import kotlinx.android.synthetic.main.recent_patients.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.databinding.RecentPatientsBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientConfig
@@ -46,14 +45,6 @@ class RecentPatientsView(
   @Inject
   lateinit var config: PatientConfig
 
-  private var binding: RecentPatientsBinding? = null
-
-  private val recentRecyclerView
-    get() = binding!!.recentRecyclerView
-
-  private val noRecentPatientsTextView
-    get() = binding!!.noRecentPatientsTextView
-
   private val recentAdapter = ItemAdapter(RecentPatientItemTypeDiffCallback())
 
   private val events by unsafeLazy {
@@ -76,8 +67,7 @@ class RecentPatientsView(
   }
 
   init {
-    val layoutInflater = LayoutInflater.from(context)
-    binding = RecentPatientsBinding.inflate(layoutInflater, this)
+    inflate(context, R.layout.recent_patients, this)
   }
 
   override fun onFinishInflate() {
@@ -102,7 +92,6 @@ class RecentPatientsView(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 

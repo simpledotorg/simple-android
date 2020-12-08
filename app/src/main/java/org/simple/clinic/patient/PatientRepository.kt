@@ -24,6 +24,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Bangladesh
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.sync.PatientPayload
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
@@ -31,6 +32,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -72,9 +74,14 @@ class PatientRepository @Inject constructor(
   }
 
   private fun searchResultsByPatientUuids(patientUuids: List<UUID>): List<PatientSearchResult> {
-    val searchResults = database
-        .patientSearchDao()
-        .searchByIds(patientUuids, PatientStatus.Active)
+    val searchResults = reportTimeTaken(
+        utcClock,
+        "Search Patient:Fetch Patient Details"
+    ) {
+      database
+          .patientSearchDao()
+          .searchByIds(patientUuids, PatientStatus.Active)
+    }
 
     // This is needed to maintain the order of the search results
     // so that its in the same order of the list of the UUIDs.
@@ -83,22 +90,17 @@ class PatientRepository @Inject constructor(
     val resultsByUuid = searchResults.associateBy { it.uuid }
 
     return patientUuids.map { resultsByUuid.getValue(it) }
-
-    /*.compose(RxTimingAnalytics(
-        analyticsName = "Search Patient:Fetch Patient Details",
-        timestampScheduler = schedulersProvider.computation()
-    ))*/
   }
 
   private fun findPatientIdsMatchingName(name: String): List<UUID> {
-    /*.compose(RxTimingAnalytics(
-        analyticsName = "Search Patient:Fetch Name and Id",
-        timestampScheduler = schedulersProvider.computation()
-    ))*/
-
-    val allPatientNamesAndIds = database
-        .patientSearchDao()
-        .nameAndId(PatientStatus.Active)
+    val allPatientNamesAndIds = reportTimeTaken(
+        utcClock,
+        "Search Patient:Fetch Name and Id"
+    ) {
+      database
+          .patientSearchDao()
+          .nameAndId(PatientStatus.Active)
+    }
 
     return findPatientsWithNameMatching(allPatientNamesAndIds, name)
   }
@@ -107,14 +109,14 @@ class PatientRepository @Inject constructor(
       allPatientNamesAndIds: List<PatientSearchResult.PatientNameAndId>,
       name: String
   ): List<UUID> {
-    /*.compose(RxTimingAnalytics(
-        analyticsName = "Search Patient:Fuzzy Filtering By Name",
-        timestampScheduler = schedulersProvider.computation()
-    ))*/
-
-    return searchPatientByName
-        .search(searchTerm = name, names = allPatientNamesAndIds)
-        .take(config.limitOfSearchResults)
+    return reportTimeTaken(
+        utcClock,
+        "Search Patient:Fuzzy Filtering By Name"
+    ) {
+      searchPatientByName
+          .search(searchTerm = name, names = allPatientNamesAndIds)
+          .take(config.limitOfSearchResults)
+    }
   }
 
   private fun searchByPhoneNumber(phoneNumber: String): List<PatientSearchResult> {
@@ -745,4 +747,19 @@ class PatientRepository @Inject constructor(
   }
 
   private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: MetaDataVersion)
+}
+
+private inline fun <reified T> reportTimeTaken(
+    clock: UtcClock,
+    operation: String,
+    block: () -> T
+): T {
+  val start = Instant.now(clock)
+  val result = block()
+  val end = Instant.now(clock)
+
+  val timeTaken = Duration.between(start, end)
+  Analytics.reportTimeTaken(operation, timeTaken)
+
+  return result
 }

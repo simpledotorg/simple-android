@@ -160,7 +160,6 @@ class PatientRepositoryTest {
   }
 
   @Test
-  @Ignore("Re-enable after making the search query synchronous")
   fun `the timing of all parts of search patient flow must be reported to analytics`() {
     val reporter = MockAnalyticsReporter()
     Analytics.addReporter(reporter)
@@ -171,13 +170,18 @@ class PatientRepositoryTest {
 
     val patientUuid = UUID.randomUUID()
 
-    // The setup function in this test creates reactive sources that terminate immediately after
-    // emission (using just(), for example). This is fine for most of our tests, but the way this
-    // test is structured depends on the sources behaving as they do in reality
-    // (i.e, infinite sources). We replace the mocks for these tests with Subjects to do this.
-    whenever(patientSearchResultDao.nameAndId(any())).thenReturn(listOf(PatientNameAndId(patientUuid, "Name"))        )
-    whenever(searchPatientByName.search(any(), any())).thenReturn(listOf(patientUuid))
-    whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(listOf(TestData.patientSearchResult(uuid = patientUuid))        )
+    whenever(patientSearchResultDao.nameAndId(any())).thenAnswer {
+      clock.advanceBy(timeTakenToFetchPatientNameAndId)
+      listOf(PatientNameAndId(patientUuid, "Name"))
+    }
+    whenever(searchPatientByName.search(any(), any())).thenAnswer {
+      clock.advanceBy(timeTakenToFuzzyFilterPatientNames)
+      listOf(patientUuid)
+    }
+    whenever(patientSearchResultDao.searchByIds(any(), any())).thenAnswer {
+      clock.advanceBy(timeTakenToFetchPatientDetails)
+      listOf(TestData.patientSearchResult(uuid = patientUuid))
+    }
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
 
     repository.search(Name("search"))

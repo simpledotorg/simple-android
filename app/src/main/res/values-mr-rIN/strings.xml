@@ -452,8 +452,10 @@
   <string name="bloodsugarentry_year">वर्ष</string>
   <string name="bloodsugarentry_error_lower_limit">मूल्य 30 mg/dL पेक्षा कमी असू शकत नाही</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">मूल्य 3\u0025 पेक्षा कमी असू शकत नाही</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">मूल्य 1.66 mmol/L पेक्षा कमी असू शकत नाही</string>
   <string name="bloodsugarentry_error_higher_limit">मूल्य 1000 mg/dL पेक्षा जास्‍त असू शकत नाही</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">मूल्‍य 25\u0025 पेक्षा जास्‍त असू शकत नाही</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">मूल्य 55.49 mmol/L पेक्षा जास्‍त असू शकत नाही</string>
   <string name="bloodsugarentry_error_empty">मूल्‍य रिक्‍त असू शकत नाही</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">वैध तारीख DD/MM/YYYY मध्‍ये प्रविष्ट करा</string>
   <string name="bloodsugarentry_error_date_is_in_future">तारीख भविष्‍यातील असू शकत नाही</string>
@@ -667,4 +669,9 @@
   <string name="setup_cannot_run">ॲप्लिकेशन चालू करू शकत नाही</string>
   <string name="setup_rooted">सिंपल रूट केलेल्या उपकरणावर चालू केले जाऊ शकत नाही.</string>
   <string name="setup_close">बंद करा</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">निवडा</string>
+  <string name="blood_sugar_unit_selection_done">झाले</string>
+
 </resources>

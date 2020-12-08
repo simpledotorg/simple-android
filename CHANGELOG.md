@@ -1,6 +1,10 @@
 # CHANGELOG
 
 ## Next Release
+### Changes
+- Updated translations: `pa-IN`
+
+## Next Release
 ### Internal
 - [In Progress: 30 Nov 2020] Migrate app to use ViewBinding
 - Bump appcompat -> 1.2.0
@@ -9,7 +13,7 @@
 
 ### Changes
 - Disable the change language feature on devices running Lollipop (API level 21, 22)
-- Updated translations: `kn-IN`, `ta-IN`, `pa-IN`, `om-ET`, `mr`
+- Updated translations: `kn-IN`, `ta-IN`, `pa-IN`, `om-ET`, `mr-IN`
 
 ### Fixes
 - Fix `shortCodeText` auto focusing in `ScanSimpleIdScreen`

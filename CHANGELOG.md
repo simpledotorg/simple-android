@@ -2,7 +2,7 @@
 
 ## Next Release
 ### Changes
-- Updated translations: `pa-IN`
+- Updated translations: `pa-IN`, `te-IN`
 
 ## Next Release
 ### Internal

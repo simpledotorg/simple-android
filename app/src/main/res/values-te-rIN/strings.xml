@@ -450,10 +450,12 @@
   <string name="bloodsugarentry_day">రోజు</string>
   <string name="bloodsugarentry_month">నెల</string>
   <string name="bloodsugarentry_year">సంవత్సరం</string>
-  <string name="bloodsugarentry_error_lower_limit">విలువ 30 ఎంజి/డిఎల్ కంటే తక్కువగా ఉండకూడదు</string>
+  <string name="bloodsugarentry_error_lower_limit">విలువ 30 mg/dL కంటే తక్కువగా ఉండకూడదు</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">విలువ 3\u0025 కంటే తక్కువగా ఉండకూడదు</string>
-  <string name="bloodsugarentry_error_higher_limit">విలువ 1000 ఎంజి/డిఎల్ కంటే ఎక్కువగా ఉండకూడదు</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">విలువ 1.66 mmol/L కంటే తక్కువగా ఉండకూడదు</string>
+  <string name="bloodsugarentry_error_higher_limit">విలువ 1000 mg/dL కంటే ఎక్కువగా ఉండకూడదు</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">విలువ 25\u0025 కంటే ఎక్కువగా ఉండకూడదు</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">విలువ 55.49 mmol/L కంటే ఎక్కువగా ఉండకూడదు</string>
   <string name="bloodsugarentry_error_empty">విలువ ఖాళీగా ఉండకూడదు</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YYYYలో చెల్లుబాటు అయ్యే తేదీని నమోదు చేయండి</string>
   <string name="bloodsugarentry_error_date_is_in_future">తేదీ భవిష్యత్తులో ఉండకూడదు</string>
@@ -667,4 +669,9 @@
   <string name="setup_cannot_run">అప్లికేషన్ అమలు చేయడం సాధ్యపడదు</string>
   <string name="setup_rooted">సింపుల్‌ను రూట్ చేసిన పరికరంలో అమలు చేయడం సాధ్యం కాదు.</string>
   <string name="setup_close">మూసివేయి</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">ఎంచుకోండి</string>
+  <string name="blood_sugar_unit_selection_done">పూర్తయ్యింది</string>
+
 </resources>

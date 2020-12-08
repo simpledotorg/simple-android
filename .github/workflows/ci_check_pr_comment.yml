@@ -29,6 +29,24 @@ jobs:
           api-level: 29
           script: ./gradlew connectedQaDebugAndroidTest
 
+  rebase_pr:
+    runs-on: [ ubuntu-latest ]
+    # This job only runs for pull request comments and when the comment starts with `/instrumentedTests`
+    if: contains(github.event.comment.html_url, '/pull/') && startsWith(github.event.comment.body, '/rebase')
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+
+      - name: Rebase and push
+        env:
+          USER_NAME: ${{ secrets.USER_NAME }}
+          USER_EMAIL: ${{ secrets.USER_EMAIL }}
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+        run: .github/scripts/rebase_and_push.sh
+
   qa_purge_env:
     runs-on: [ ubuntu-latest ]
     needs: [ qa_android_tests ]

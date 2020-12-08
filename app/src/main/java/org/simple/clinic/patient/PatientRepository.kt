@@ -1,6 +1,7 @@
 package org.simple.clinic.patient
 
 import androidx.annotation.VisibleForTesting
+import androidx.annotation.WorkerThread
 import com.squareup.moshi.JsonAdapter
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -53,10 +54,11 @@ class PatientRepository @Inject constructor(
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
-  fun search(criteria: PatientSearchCriteria): Observable<List<PatientSearchResult>> {
+  @WorkerThread
+  fun search(criteria: PatientSearchCriteria): List<PatientSearchResult> {
     return when (criteria) {
-      is Name -> Observable.fromCallable { searchByName(criteria.patientName) }
-      is PhoneNumber -> Observable.fromCallable { searchByPhoneNumber(criteria.phoneNumber) }
+      is Name -> searchByName(criteria.patientName)
+      is PhoneNumber -> searchByPhoneNumber(criteria.phoneNumber)
     }
   }
 

@@ -105,10 +105,7 @@ class PatientRepositoryTest {
         .thenReturn(filteredUuids.map { TestData.patientSearchResult(uuid = it) })
     whenever(database.patientSearchDao().nameAndId(any())).thenReturn(emptyList())
 
-    repository
-        .search(Name("name"))
-        .ignoreElements()
-        .blockingAwait()
+    repository.search(Name("name"))
 
     if (shouldQueryFilteredIds) {
       verify(patientSearchResultDao, atLeastOnce()).searchByIds(filteredUuids, PatientStatus.Active)
@@ -140,7 +137,7 @@ class PatientRepositoryTest {
     whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(results)
     whenever(database.patientSearchDao().nameAndId(any())).thenReturn(emptyList())
 
-    val actualResults = repository.search(Name("name")).blockingFirst()
+    val actualResults = repository.search(Name("name"))
     assertThat(actualResults).isEqualTo(expectedResults)
   }
 
@@ -183,9 +180,7 @@ class PatientRepositoryTest {
     whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(listOf(TestData.patientSearchResult(uuid = patientUuid))        )
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
 
-    repository
-        .search(Name("search"))
-        .blockingFirst()
+    repository.search(Name("search"))
 
     val receivedEvents = reporter.receivedEvents
     assertThat(receivedEvents).hasSize(3)

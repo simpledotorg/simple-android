@@ -284,9 +284,7 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
         ) { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
 
-    val combinedPatient = patientRepository.search(Name(patientName = "kumar"))
-        .blockingFirst()
-        .first()
+    val combinedPatient = patientRepository.search(Name(patientName = "kumar")).first()
 
     assertThat(combinedPatient.fullName).isEqualTo("Asha Kumar")
     assertThat(combinedPatient.gender).isEqualTo(patientEntry.personalDetails!!.gender)
@@ -387,17 +385,17 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("8b7a671c-f0fc-4c83-b9fb-19dce2515c57") }
         ) { UUID.fromString("2a877a22-a9e6-40ab-b540-c0a49a6a15b4") }
 
-    val search0 = patientRepository.search(Name("Vinod")).blockingFirst()
+    val search0 = patientRepository.search(Name("Vinod"))
     assertThat(search0).hasSize(0)
 
-    val search1 = patientRepository.search(Name("Alok")).blockingFirst()
+    val search1 = patientRepository.search(Name("Alok"))
     val person1 = search1.first()
     assertThat(search1).hasSize(1)
     assertThat(person1.fullName).isEqualTo("Alok Kumar")
     assertThat(person1.dateOfBirth).isEqualTo(LocalDate.parse("1940-08-15"))
     assertThat(person1.phoneNumber).isEqualTo("3418959")
 
-    val search2 = patientRepository.search(Name("ab")).blockingFirst()
+    val search2 = patientRepository.search(Name("ab"))
     val expectedResultsInSearch2 = setOf(abhayKumar, abhishekKumar, abshotKumar)
 
     assertThat(search2).hasSize(expectedResultsInSearch2.size)
@@ -487,7 +485,6 @@ class PatientRepositoryAndroidTest {
 
     // when
     val searchResults = patientRepository.search(Name("patient"))
-        .blockingFirst()
         .associateBy { it.uuid }
 
     // then
@@ -590,13 +587,13 @@ class PatientRepositoryAndroidTest {
             supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
         ) { UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
 
-    val searchResults = patientRepository.search(Name(patientName = "Ashok")).blockingFirst()
+    val searchResults = patientRepository.search(Name(patientName = "Ashok"))
     assertThat(searchResults).isNotEmpty()
     assertThat(searchResults.first().fullName).isEqualTo("Ashok Kumar")
 
     patientRepository.updatePatientStatusToDead(patient.patientUuid)
 
-    val searchResultsAfterUpdate = patientRepository.search(Name(patientName = "Ashok")).blockingFirst()
+    val searchResultsAfterUpdate = patientRepository.search(Name(patientName = "Ashok"))
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1)
     assertThat(searchResultsAfterUpdate).isEmpty()
 
@@ -669,7 +666,6 @@ class PatientRepositoryAndroidTest {
     assertThat(
         patientRepository
             .search(Name(patientName = "ame"))
-            .blockingFirst()
             .size
     ).isEqualTo(config.limitOfSearchResults)
   }
@@ -710,7 +706,6 @@ class PatientRepositoryAndroidTest {
     assertThat(
         patientRepository
             .search(PhoneNumber("1234"))
-            .blockingFirst()
             .size
     ).isEqualTo(config.limitOfSearchResults)
   }
@@ -2697,7 +2692,6 @@ class PatientRepositoryAndroidTest {
     fun searchResults(phoneNumber: String): Set<UUID> {
       return patientRepository
           .search(PhoneNumber(phoneNumber))
-          .blockingFirst()
           .map { it.uuid }
           .toSet()
     }
@@ -2789,7 +2783,6 @@ class PatientRepositoryAndroidTest {
     fun searchResults(phoneNumber: String): List<String> {
       return patientRepository
           .search(PhoneNumber(phoneNumber))
-          .blockingFirst()
           .map { it.fullName }
     }
 
@@ -2866,7 +2859,6 @@ class PatientRepositoryAndroidTest {
     fun searchResults(phoneNumber: String): Map<UUID, Optional<LastSeen>> {
       return patientRepository
           .search(PhoneNumber(phoneNumber))
-          .blockingFirst()
           .associateBy({ it.uuid }, { it.lastSeen.toOptional() })
     }
 
@@ -3025,7 +3017,7 @@ class PatientRepositoryAndroidTest {
     createPatient(notDeletedPatientId, "Patient that is not deleted", isDeleted = false)
 
     // when
-    val searchResults = patientRepository.search(Name("Patient")).blockingFirst()
+    val searchResults = patientRepository.search(Name("Patient"))
 
     // then
     assertThat(searchResults).hasSize(1)
@@ -3056,7 +3048,7 @@ class PatientRepositoryAndroidTest {
     createPatient(notDeletedPatientId, "1234567890", isDeleted = false)
 
     // when
-    val searchResults = patientRepository.search(PhoneNumber("1234567890")).blockingFirst()
+    val searchResults = patientRepository.search(PhoneNumber("1234567890"))
 
     // then
     assertThat(searchResults).hasSize(1)

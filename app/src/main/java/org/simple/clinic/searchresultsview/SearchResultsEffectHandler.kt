@@ -8,6 +8,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import timber.log.Timber
 import javax.inject.Inject
 
 class SearchResultsEffectHandler @Inject constructor(
@@ -27,13 +28,11 @@ class SearchResultsEffectHandler @Inject constructor(
   private fun searchForPatients(): ObservableTransformer<SearchWithCriteria, SearchResultsEvent> {
     return ObservableTransformer { effects ->
       effects
-          .switchMap { effect ->
-            patientRepository
-                .search(effect.searchCriteria)
-                .subscribeOn(schedulers.io())
-                .map { searchResults -> partitionSearchResultsByFacility(searchResults, currentFacility.get()) }
-                .map(::SearchResultsLoaded)
-          }
+          .observeOn(schedulers.io())
+          .doOnNext { Timber.tag("Search").i("Search effect received") }
+          .map { effect -> patientRepository.search(effect.searchCriteria) }
+          .map { searchResults -> partitionSearchResultsByFacility(searchResults, currentFacility.get()) }
+          .map(::SearchResultsLoaded)
     }
   }
 

@@ -44,12 +44,6 @@ class SearchResultsLogicTest {
 
   private lateinit var testFixture: MobiusTestFixture<SearchResultsModel, SearchResultsEvent, SearchResultsEffect>
 
-  @Before
-  fun setUp() {
-    whenever(patientRepository.search(Name(patientName))).doReturn(Observable.never())
-    whenever(patientRepository.search(PhoneNumber(phoneNumber))).doReturn(Observable.never())
-  }
-
   @After
   fun tearDown() {
     testFixture.dispose()
@@ -99,7 +93,7 @@ class SearchResultsLogicTest {
     whenever(bloodPressureDao.patientToFacilityIds(patientUuids))
         .doReturn(patientAndFacilityIdsToReturn)
     whenever(patientRepository.search(searchCriteria))
-        .doReturn(Observable.just(allSearchResults))
+        .doReturn(allSearchResults)
 
     // when
     setupController()
@@ -159,7 +153,7 @@ class SearchResultsLogicTest {
     whenever(bloodPressureDao.patientToFacilityIds(patientUuids))
         .doReturn(patientAndFacilityIdsToReturn)
     whenever(patientRepository.search(searchCriteria))
-        .doReturn(Observable.just(allSearchResults))
+        .doReturn(allSearchResults)
 
     // when
     setupController()

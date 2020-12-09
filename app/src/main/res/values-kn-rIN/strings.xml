@@ -450,10 +450,10 @@
   <string name="bloodsugarentry_day">ದಿನ</string>
   <string name="bloodsugarentry_month">ತಿಂಗಳು</string>
   <string name="bloodsugarentry_year">ವರ್ಷ</string>
-  <string name="bloodsugarentry_error_lower_limit">ಮೌಲ್ಯವು 30 ಮಿಗ್ರಾಂ/ಡೆಲೀಗಿಂತ ಕಡಿಮೆ ಇರಬಾರದು</string>
+  <string name="bloodsugarentry_error_lower_limit">ಮೌಲ್ಯವು 30 mg/dL ಗಿಂತ ಕಡಿಮೆ ಇರಬಾರದು</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">ಮೌಲ್ಯವು 3\u0025 ಗಿಂತ ಕಡಿಮೆ ಇರಬಾರದು</string>
   <string name="bloodsugarentry_error_lower_limit_mmol">ಮೌಲ್ಯವು 1.66 mmol/L ಕಡಿಮೆ ಇರಬಾರದು</string>
-  <string name="bloodsugarentry_error_higher_limit">ಮೌಲ್ಯವು 1000 ಮಿಗ್ರಾಂ/ಡೆಲೀಗಿಂತ ಹೆಚ್ಚಿರಬಾರದು</string>
+  <string name="bloodsugarentry_error_higher_limit">ಮೌಲ್ಯವು 1000 mg/dL ಗಿಂತ ಹೆಚ್ಚಿರಬಾರದು</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">ಮೌಲ್ಯವು 25\u0025 ಗಿಂತ ಹೆಚ್ಚು ಇರಬಾರದು</string>
   <string name="bloodsugarentry_error_higher_limit_mmol">ಮೌಲ್ಯವು 55.49 mmol/L ಹೆಚ್ಚಿರಬಾರದು</string>
   <string name="bloodsugarentry_error_empty">ಮೌಲ್ಯವು ಖಾಲಿ ಇರಬಾರದು</string>

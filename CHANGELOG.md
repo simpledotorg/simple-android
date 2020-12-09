@@ -4,6 +4,9 @@
 ### Changes
 - Updated translations: `pa-IN`, `te-IN`
 
+### Internal
+- Revert view binding migration for `RecentPatientsView`
+
 ## Next Release
 ### Internal
 - [In Progress: 30 Nov 2020] Migrate app to use ViewBinding

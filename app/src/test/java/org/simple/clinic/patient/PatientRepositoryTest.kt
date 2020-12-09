@@ -7,12 +7,8 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.schedulers.TestScheduler
-import io.reactivex.subjects.BehaviorSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
@@ -32,7 +28,6 @@ import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.advanceTimeBy
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.Duration
 import java.time.format.DateTimeFormatter
@@ -75,7 +70,6 @@ class PatientRepositoryTest {
         config = config,
         reportsRepository = mock(),
         businessIdMetaDataMoshiAdapter = mock(),
-        schedulersProvider = schedulersProvider,
         dateOfBirthFormat = dateOfBirthFormat
     )
 
@@ -99,15 +93,12 @@ class PatientRepositoryTest {
     whenever(database.addressDao()).thenReturn(patientAddressDao)
     whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
-    whenever(searchPatientByName.search(any(), any())).thenReturn(Single.just(filteredUuids))
+    whenever(searchPatientByName.search(any(), any())).thenReturn(filteredUuids)
     whenever(patientSearchResultDao.searchByIds(any(), any()))
-        .thenReturn(Single.just(filteredUuids.map { TestData.patientSearchResult(uuid = it) }))
-    whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
+        .thenReturn(filteredUuids.map { TestData.patientSearchResult(uuid = it) })
+    whenever(database.patientSearchDao().nameAndId(any())).thenReturn(emptyList())
 
-    repository
-        .search(Name("name"))
-        .ignoreElements()
-        .blockingAwait()
+    repository.search(Name("name"))
 
     if (shouldQueryFilteredIds) {
       verify(patientSearchResultDao, atLeastOnce()).searchByIds(filteredUuids, PatientStatus.Active)
@@ -135,11 +126,11 @@ class PatientRepositoryTest {
     whenever(database.addressDao()).thenReturn(patientAddressDao)
     whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
-    whenever(searchPatientByName.search(any(), any())).thenReturn(Single.just(filteredUuids))
-    whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(Single.just(results))
-    whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
+    whenever(searchPatientByName.search(any(), any())).thenReturn(filteredUuids)
+    whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(results)
+    whenever(database.patientSearchDao().nameAndId(any())).thenReturn(emptyList())
 
-    val actualResults = repository.search(Name("name")).blockingFirst()
+    val actualResults = repository.search(Name("name"))
     assertThat(actualResults).isEqualTo(expectedResults)
   }
 
@@ -172,33 +163,21 @@ class PatientRepositoryTest {
 
     val patientUuid = UUID.randomUUID()
 
-    // The setup function in this test creates reactive sources that terminate immediately after
-    // emission (using just(), for example). This is fine for most of our tests, but the way this
-    // test is structured depends on the sources behaving as they do in reality
-    // (i.e, infinite sources). We replace the mocks for these tests with Subjects to do this.
-    whenever(patientSearchResultDao.nameAndId(any()))
-        .thenReturn(
-            BehaviorSubject.createDefault(listOf(PatientNameAndId(patientUuid, "Name")))
-                .doOnNext { computationScheduler.advanceTimeBy(timeTakenToFetchPatientNameAndId) }
-                .toFlowable(BackpressureStrategy.LATEST)
-        )
-    whenever(searchPatientByName.search(any(), any()))
-        .thenReturn(
-            BehaviorSubject.createDefault(listOf(patientUuid))
-                .doOnNext { computationScheduler.advanceTimeBy(timeTakenToFuzzyFilterPatientNames) }
-                .firstOrError()
-        )
-    whenever(patientSearchResultDao.searchByIds(any(), any()))
-        .thenReturn(
-            BehaviorSubject.createDefault(listOf(TestData.patientSearchResult(uuid = patientUuid)))
-                .doOnNext { computationScheduler.advanceTimeBy(timeTakenToFetchPatientDetails) }
-                .firstOrError()
-        )
+    whenever(patientSearchResultDao.nameAndId(any())).thenAnswer {
+      clock.advanceBy(timeTakenToFetchPatientNameAndId)
+      listOf(PatientNameAndId(patientUuid, "Name"))
+    }
+    whenever(searchPatientByName.search(any(), any())).thenAnswer {
+      clock.advanceBy(timeTakenToFuzzyFilterPatientNames)
+      listOf(patientUuid)
+    }
+    whenever(patientSearchResultDao.searchByIds(any(), any())).thenAnswer {
+      clock.advanceBy(timeTakenToFetchPatientDetails)
+      listOf(TestData.patientSearchResult(uuid = patientUuid))
+    }
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
 
-    repository
-        .search(Name("search"))
-        .blockingFirst()
+    repository.search(Name("search"))
 
     val receivedEvents = reporter.receivedEvents
     assertThat(receivedEvents).hasSize(3)

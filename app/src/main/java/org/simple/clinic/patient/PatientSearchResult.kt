@@ -112,10 +112,10 @@ data class PatientSearchResult(
       LEFT JOIN Patient P ON P.uuid = searchResult.uuid
       WHERE P.uuid IN (:uuids) AND P.status = :status AND P.deletedAt IS NULL
       """)
-    fun searchByIds(uuids: List<UUID>, status: PatientStatus): Single<List<PatientSearchResult>>
+    fun searchByIds(uuids: List<UUID>, status: PatientStatus): List<PatientSearchResult>
 
     @Query("""SELECT Patient.uuid, Patient.fullName FROM Patient WHERE Patient.status = :status AND Patient.deletedAt IS NULL""")
-    fun nameAndId(status: PatientStatus): Flowable<List<PatientNameAndId>>
+    fun nameAndId(status: PatientStatus): List<PatientNameAndId>
 
     @Suppress("AndroidUnresolvedRoomSqlReference")
     @Query("""
@@ -143,7 +143,7 @@ data class PatientSearchResult(
         WHERE phoneNumber LIKE '%' || :phoneNumber || '%' AND P.deletedAt IS NULL
         ORDER BY P.fullName COLLATE NOCASE ASC LIMIT :limit
     """)
-    fun searchByPhoneNumber(phoneNumber: String, limit: Int): Flowable<List<PatientSearchResult>>
+    fun searchByPhoneNumber(phoneNumber: String, limit: Int): List<PatientSearchResult>
   }
 
   data class PatientNameAndId(val uuid: UUID, val fullName: String)

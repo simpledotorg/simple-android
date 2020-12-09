@@ -5,7 +5,7 @@
 - Add breadcrumbs for different stages in search operations
 
 ### Changes
-- Updated translations: `pa-IN`, `te-IN`
+- Updated translations: `pa-IN`, `te-IN`, `ti-ET`
 
 ### Internal
 - Revert view binding migration for `RecentPatientsView`

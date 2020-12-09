@@ -772,4 +772,8 @@
   <string name="blood_sugar_unit_selection_choose">Choose</string>
   <string name="blood_sugar_unit_selection_done">DONE</string>
 
+  <!-- BP passport sheet -->
+  <string name="sheet_bp_passport_register_new_patient">Register new patient</string>
+  <string name="sheet_bp_passport_add_to_existing_patient">Add to existing patient</string>
+
 </resources>

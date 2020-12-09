@@ -40,7 +40,7 @@ jobs:
       - name: Rebase
         uses: cirrus-actions/rebase@1.4
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
   qa_purge_env:
     runs-on: [ ubuntu-latest ]

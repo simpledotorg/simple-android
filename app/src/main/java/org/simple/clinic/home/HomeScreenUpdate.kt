@@ -15,6 +15,7 @@ class HomeScreenUpdate : Update<HomeScreenModel, HomeScreenEvent, HomeScreenEffe
       is PatientSearchByIdentifierCompleted -> scannedPatientBusinessId(event)
       is BusinessIdScanned.ByIdentifier -> dispatch(SearchPatientByIdentifier(event.identifier))
       is BusinessIdScanned.ByShortCode -> dispatch(OpenShortCodeSearchScreen(event.shortCode))
+      is BusinessIdScanned.ByPatientFound -> dispatch(OpenPatientSummary(event.patientId))
     }
   }
 

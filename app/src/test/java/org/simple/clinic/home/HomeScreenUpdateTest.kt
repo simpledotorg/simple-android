@@ -76,4 +76,17 @@ class HomeScreenUpdateTest {
             hasEffects(OpenPatientSearchScreen(identifier))
         ))
   }
+
+  @Test
+  fun `when identifier is scanned and patient is found, then open the patient summary`() {
+    val patientUuid = UUID.fromString("0b772168-b1d8-4410-8d74-efa1ca447a43")
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(BusinessIdScanned.ByPatientFound(patientUuid))
+        .then(UpdateSpec.assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenPatientSummary(patientUuid))
+        ))
+  }
 }

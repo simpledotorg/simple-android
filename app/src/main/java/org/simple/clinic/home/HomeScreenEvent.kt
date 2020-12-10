@@ -4,10 +4,12 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.scanid.EnteredShortCode
+import org.simple.clinic.scanid.PatientFound
 import org.simple.clinic.scanid.ScanResult
 import org.simple.clinic.scanid.ScannedId
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 sealed class HomeScreenEvent : UiEvent
 
@@ -28,6 +30,7 @@ sealed class BusinessIdScanned : HomeScreenEvent() {
       return when (scanResult) {
         is ScannedId -> ByIdentifier(scanResult.identifier)
         is EnteredShortCode -> ByShortCode(scanResult.shortCode)
+        is PatientFound -> ByPatientFound(scanResult.patientId)
       }
     }
   }
@@ -35,5 +38,7 @@ sealed class BusinessIdScanned : HomeScreenEvent() {
   data class ByIdentifier(val identifier: Identifier) : BusinessIdScanned()
 
   data class ByShortCode(val shortCode: String) : BusinessIdScanned()
+
+  data class ByPatientFound(val patientId: UUID) : BusinessIdScanned()
 }
 

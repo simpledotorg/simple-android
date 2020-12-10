@@ -89,4 +89,17 @@ class HomeScreenUpdateTest {
             hasEffects(OpenPatientSummary(patientUuid))
         ))
   }
+
+  @Test
+  fun `when identifier is scanned and patient is not found, then open the patient summary`() {
+    val identifier = TestData.identifier("88d12415-b10d-4ebb-bf48-482ece022139", Identifier.IdentifierType.BpPassport)
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(BusinessIdScanned.ByPatientNotFound(identifier))
+        .then(UpdateSpec.assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenPatientSearchScreen(identifier))
+        ))
+  }
 }

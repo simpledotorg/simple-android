@@ -5,6 +5,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.scanid.EnteredShortCode
 import org.simple.clinic.scanid.PatientFound
+import org.simple.clinic.scanid.PatientNotFound
 import org.simple.clinic.scanid.ScanResult
 import org.simple.clinic.scanid.ScannedId
 import org.simple.clinic.util.Optional
@@ -31,6 +32,7 @@ sealed class BusinessIdScanned : HomeScreenEvent() {
         is ScannedId -> ByIdentifier(scanResult.identifier)
         is EnteredShortCode -> ByShortCode(scanResult.shortCode)
         is PatientFound -> ByPatientFound(scanResult.patientId)
+        is PatientNotFound -> ByPatientNotFound(scanResult.identifier)
       }
     }
   }
@@ -40,5 +42,7 @@ sealed class BusinessIdScanned : HomeScreenEvent() {
   data class ByShortCode(val shortCode: String) : BusinessIdScanned()
 
   data class ByPatientFound(val patientId: UUID) : BusinessIdScanned()
+
+  data class ByPatientNotFound(val identifier: Identifier) : BusinessIdScanned()
 }
 

@@ -15,3 +15,6 @@ data class EnteredShortCode(val shortCode: String) : ScanResult()
 
 @Parcelize
 data class PatientFound(val patientId: UUID) : ScanResult()
+
+@Parcelize
+data class PatientNotFound(val identifier: Identifier) : ScanResult()

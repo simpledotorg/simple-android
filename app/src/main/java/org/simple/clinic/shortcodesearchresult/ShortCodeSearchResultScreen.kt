@@ -77,6 +77,8 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
         .doOnNext(binding::onEvent)
   }
 
+  private val screenKey by unsafeLazy { screenRouter.key<ShortCodeSearchResultScreenKey>(this) }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -86,17 +88,16 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
 
     context.injector<Injector>().inject(this)
 
-    val screenKey = screenRouter.key<ShortCodeSearchResultScreenKey>(this)
-    setupToolBar(screenKey)
+    setupToolBar()
     setupScreen()
-    setupViewControllerBinding(screenKey)
+    setupViewControllerBinding()
   }
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
   }
 
-  private fun setupToolBar(screenKey: ShortCodeSearchResultScreenKey) {
+  private fun setupToolBar() {
     toolBar.title = formatShortCodeForDisplay(context, screenKey.shortCode)
 
     with(toolBar) {
@@ -105,7 +106,7 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
     }
   }
 
-  private fun setupViewControllerBinding(screenKey: ShortCodeSearchResultScreenKey) {
+  private fun setupViewControllerBinding() {
     val uiStateProducer = ShortCodeSearchResultStateProducer(
         shortCode = screenKey.shortCode,
         patientRepository = patientRepository,

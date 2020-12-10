@@ -7,3 +7,5 @@ sealed class BpPassportEvent
 object NewOngoingPatientEntrySaved : BpPassportEvent()
 
 data class CurrentFacilityRetrieved(val facility: Facility): BpPassportEvent()
+
+object RegisterNewPatientClicked : BpPassportEvent()

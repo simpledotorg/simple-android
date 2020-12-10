@@ -176,7 +176,7 @@
   <string name="patientsummary_bangladesh_national_id">መታወቂያ</string>
 
   <string name="patientsummary_teleconsult">Tele-consult</string>
-  <string name="patientsummary_log_teleconsult">Teleconsult ይግቡ</string>
+  <string name="patientsummary_log_teleconsult">በስልክ ማማከር ይግቡ</string>
 
   <string name="patientsummary_registered_faciliy_title">የመዝግቧል</string>
   <string name="patientsummary_registered_facility">%1$sበ %2$s</string>
@@ -452,8 +452,10 @@
   <string name="bloodsugarentry_year">አመት</string>
   <string name="bloodsugarentry_error_lower_limit">ልኬት ወይም መጠን ከ30 mg/dL በታች ሊሆን አይችልም</string>
   <string name="bloodsugarentry_error_lower_limit_hba1c">መጠኑ ከ 3\u0025 በታች መሆን አይችልም</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">እሴቱ ከ 1.66 mmol/L ሊያንስ አይችልም</string>
   <string name="bloodsugarentry_error_higher_limit">ውጤቱ ከ1000 mg/dL በላይ ሊሆን አይችልም</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">መጠኑ ከ 25\u0025 በላይ መሆን አይችልም</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">እሴቱ ከ 55.49 mmol/L ሊበልጥ አይችልም</string>
   <string name="bloodsugarentry_error_empty">ልኬት ባዶ ሊሆን አይችልም</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">በ ቀን/ወር/ዓመት ትክክለኛ ቀን ያስገቡ</string>
   <string name="bloodsugarentry_error_date_is_in_future">ቀን ለወደፊቱ መሆን አይችልም</string>
@@ -600,7 +602,7 @@
   <string name="screen_teleconsult_success_add_prescription">ትዕዛዝ ያክሉ?</string>
   <string name="screen_teleconsult_success_yes">አዎ</string>
   <string name="screen_teleconsult_success_no">አይ</string>
-  <string name="screen_teleconsult_success_teleconsult_recorded">Teleconsult ተመዝግቧል</string>
+  <string name="screen_teleconsult_success_teleconsult_recorded">በስልክ ማማከር ተመዝግቧል</string>
   <string name="screen_teleconsult_success_patient_information">%1$s ፣ %2$s ፣ %3$s</string>
   <string name="sheet_medicine_frequency_od">OD</string>
   <string name="sheet_medicine_frequency_bd">BD</string>
@@ -609,21 +611,21 @@
   <string name="sheet_medicine_frequency_save">ሴቭ</string>
 
   <!-- Teleconsult Record Screen -->
-  <string name="screen_teleconsult_record">የ Teleconsult ቅጂ</string>
-  <string name="screen_teleconsult_record_type">የ Teleconsultation  አይነት</string>
+  <string name="screen_teleconsult_record">የ በስልክ ማማከር ቅጂ</string>
+  <string name="screen_teleconsult_record_type">የ በስልክ ማማከር  አይነት</string>
   <string name="screen_teleconsult_record_type_audio">የድምጽ ጥሪ</string>
   <string name="screen_teleconsult_record_type_video">የቪዲዮ ጥሪ</string>
   <string name="screen_teleconsult_record_type_message">ማልዕክት</string>
   <string name="screen_teleconsult_record_patient_took_medicine">ታካሚው ፀረ-ግፊት እና የስኳር በሽታ መድኃኒቶችን አዘውትሮ እየወሰደ ነው</string>
-  <string name="screen_teleconsult_record_patient_consented">ታካሚው ለ teleconsultation ፈቃድ ሰጠ</string>
+  <string name="screen_teleconsult_record_patient_consented">ታካሚው ለ በስልክ ማማከር ፈቃድ ሰጠ</string>
   <string name="screen_teleconsult_record_done">ተጠናቅቋል</string>
-  <string name="teleconsultnotrecordeddialog_title">Teleconsult አልተቀዳም</string>
+  <string name="teleconsultnotrecordeddialog_title">በስልክ ማማከር አልተቀዳም</string>
   <string name="teleconsultnotrecordeddialog_body">እርግጠኛ ነዎት ማቋረጥ ይፈልጋሉ?</string>
   <string name="teleconsultnotrecordeddialog_positive_button_text">አዎ</string>
   <string name="teleconsultnotrecordeddialog_negative_button_text">አይ</string>
 
   <!-- Deeplink Teleconsult not authorised-->
-  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">ወደ teleconsult ለመግባት ፈቃድ አልተሰጠዎትም</string>
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">ወደ በስልክ ማማከር ለመግባት ፈቃድ አልተሰጠዎትም</string>
   <string name="deeplink_please_check_with_your_supervisor">እባክዎን ከተቆጣጣሪዎ ጋር ያረጋግጡ</string>
   <string name="deeplink_okay_positive_action">እሺ</string>
 
@@ -667,4 +669,9 @@
   <string name="setup_cannot_run">መተግበሪያን ማሄድ አልተቻለም</string>
   <string name="setup_rooted">Simple ስር በሰደደ መሣሪያ ላይ ማሄድ አይቻልም።</string>
   <string name="setup_close">ዝጋ</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">ይምረጡ</string>
+  <string name="blood_sugar_unit_selection_done">አልቋል</string>
+
 </resources>

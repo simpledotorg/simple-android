@@ -7,8 +7,10 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.TestObserver
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -22,6 +24,7 @@ import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
 import java.util.UUID
 
@@ -52,9 +55,30 @@ class ShortCodeSearchResultLogicTest {
 
   lateinit var testObserver: TestObserver<ShortCodeSearchResultState>
 
+  private lateinit var testFixture: MobiusTestFixture<ShortCodeSearchResultState, ShortCodeSearchResultEvent, ShortCodeSearchResultEffect>
+
+  @Before
+  fun setUp() {
+    val effectHandler = ShortCodeSearchResultEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline(),
+        uiActions = ui
+    )
+    val uiRenderer = UiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEventsSubject.ofType(),
+        defaultModel = fetchingPatientsState,
+        init = ShortCodeSearchResultInit(),
+        update = ShortCodeSearchResultUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
   @After
   fun tearDown() {
     disposables.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -219,6 +243,8 @@ class ShortCodeSearchResultLogicTest {
     val uiChangeSubscription = uiStates
         .compose(uiChangeProducer)
         .subscribe { uiChange -> uiChange(ui) }
+
+    testFixture.start()
 
     testObserver = uiStates.test()
 

@@ -21,7 +21,8 @@ class ShortCodeSearchResultStateProducer(
     private val facilityRepository: FacilityRepository,
     private val bloodPressureDao: BloodPressureMeasurement.RoomDao,
     private val ui: ShortCodeSearchResultUi,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    private val initialState: ShortCodeSearchResultState
 ) : BaseUiStateProducer<UiEvent, ShortCodeSearchResultState>() {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<ShortCodeSearchResultState> {
@@ -33,14 +34,15 @@ class ShortCodeSearchResultStateProducer(
     )
   }
 
-  private fun initialStates(events: Observable<UiEvent>) = events.ofType<ScreenCreated>()
-      .map { ShortCodeSearchResultState.fetchingPatients(shortCode) }
+  private fun initialStates(events: Observable<UiEvent>) = events
+      .ofType<ScreenCreated>()
+      .map { initialState }
 
   private fun fetchPatients(events: Observable<UiEvent>): Observable<ShortCodeSearchResultState> {
     val shortCodeSearchResults = events.ofType<ScreenCreated>()
         .flatMap {
           patientRepository
-              .searchByShortCode(shortCode)
+              .searchByShortCode(initialState.shortCode)
               .subscribeOn(schedulersProvider.io())
         }
         .share()

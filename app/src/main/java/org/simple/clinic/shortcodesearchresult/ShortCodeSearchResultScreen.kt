@@ -107,6 +107,7 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
   }
 
   private fun setupViewControllerBinding() {
+    val initialState = ShortCodeSearchResultState.fetchingPatients(screenKey.shortCode)
     val uiStateProducer = ShortCodeSearchResultStateProducer(
         shortCode = screenKey.shortCode,
         patientRepository = patientRepository,
@@ -114,7 +115,8 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
         facilityRepository = facilityRepository,
         bloodPressureDao = bloodPressureDao,
         ui = this,
-        schedulersProvider = schedulersProvider
+        schedulersProvider = schedulersProvider,
+        initialState = initialState
     )
     binding = ViewControllerBinding.bindToView(this, uiStateProducer, uiChangeProducer)
   }

@@ -5,8 +5,11 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.util.Optional
+import java.util.UUID
 
 class ScanSimpleIdUpdateTest {
 
@@ -39,6 +42,27 @@ class ScanSimpleIdUpdateTest {
     spec
         .given(model)
         .whenEvent(ShortCodeValidated(ShortCodeValidationResult.Success))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SendScannedIdentifierResult(expectedScanResult))
+        ))
+  }
+
+  @Test
+  fun `when identifier is scanned and patient is found, then send the patient id to the parent screen`() {
+    val patientId = UUID.fromString("60822507-9151-4836-944b-9cbbd1530c0b")
+    val patient = Optional.of(
+        TestData.patient(
+            uuid = patientId
+        )
+    )
+    val identifier = Identifier("123456", BpPassport)
+
+    val expectedScanResult = PatientFound(patientId)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(PatientSearchByIdentifierCompleted(patient, identifier))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SendScannedIdentifierResult(expectedScanResult))

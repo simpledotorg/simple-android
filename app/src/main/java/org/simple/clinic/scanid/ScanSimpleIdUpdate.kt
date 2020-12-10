@@ -20,7 +20,16 @@ class ScanSimpleIdUpdate : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimp
       is ShortCodeValidated -> shortCodeValidated(model, event)
       is ShortCodeSearched -> next(model.shortCodeChanged(event.shortCode), ValidateShortCode(event.shortCode))
       is ScanSimpleIdScreenQrCodeScanned -> simpleIdQrScanned(event)
-      is PatientSearchByIdentifierCompleted -> noChange()
+      is PatientSearchByIdentifierCompleted -> patientSearchByIdentifierCompleted(event)
+    }
+  }
+
+  private fun patientSearchByIdentifierCompleted(event: PatientSearchByIdentifierCompleted): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    return if (event.patient.isPresent()) {
+      val patientId = event.patient.get().uuid
+      dispatch(SendScannedIdentifierResult(PatientFound(patientId)))
+    } else {
+      noChange()
     }
   }
 

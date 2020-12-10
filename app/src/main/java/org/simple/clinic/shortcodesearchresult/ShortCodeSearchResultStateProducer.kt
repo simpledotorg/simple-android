@@ -25,6 +25,9 @@ class ShortCodeSearchResultStateProducer(
     private val initialState: ShortCodeSearchResultState
 ) : BaseUiStateProducer<UiEvent, ShortCodeSearchResultState>() {
 
+  private val currentState: ShortCodeSearchResultState
+    get() = states.value ?: initialState
+
   override fun apply(events: Observable<UiEvent>): ObservableSource<ShortCodeSearchResultState> {
     return Observable.merge(
         initialStates(events),
@@ -49,18 +52,14 @@ class ShortCodeSearchResultStateProducer(
 
     val noMatchingPatient = shortCodeSearchResults
         .filter { it.isEmpty() }
-        .withLatestFrom(states) { _, state ->
-          state.noMatchingPatients()
-        }
+        .map { currentState.noMatchingPatients() }
 
     val currentFacilityStream = facilityRepository.currentFacility()
 
     val matchingPatients = shortCodeSearchResults
         .filter { it.isNotEmpty() }
         .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, currentFacilityStream))
-        .withLatestFrom(states) { patientSearchResults, state ->
-          state.patientsFetched(patientSearchResults)
-        }
+        .map(currentState::patientsFetched)
 
     return matchingPatients.mergeWith(noMatchingPatient)
   }

@@ -1,6 +1,7 @@
 package org.simple.clinic.home
 
-import com.spotify.mobius.test.NextMatchers
+import com.spotify.mobius.test.NextMatchers.hasEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -21,8 +22,8 @@ class HomeScreenUpdateTest {
         .given(defaultModel)
         .whenEvent(BusinessIdScanned.ByShortCode(shortCode))
         .then(UpdateSpec.assertThatNext(
-            NextMatchers.hasNoModel(),
-            NextMatchers.hasEffects(OpenShortCodeSearchScreen(shortCode))
+            hasNoModel(),
+            hasEffects(OpenShortCodeSearchScreen(shortCode))
         ))
   }
 
@@ -34,8 +35,8 @@ class HomeScreenUpdateTest {
         .given(defaultModel)
         .whenEvent(BusinessIdScanned.ByIdentifier(identifier))
         .then(UpdateSpec.assertThatNext(
-            NextMatchers.hasNoModel(),
-            NextMatchers.hasEffects(SearchPatientByIdentifier(identifier))
+            hasNoModel(),
+            hasEffects(SearchPatientByIdentifier(identifier))
         ))
   }
 
@@ -53,8 +54,8 @@ class HomeScreenUpdateTest {
         .given(defaultModel)
         .whenEvent(event)
         .then(UpdateSpec.assertThatNext(
-            NextMatchers.hasNoModel(),
-            NextMatchers.hasEffects(OpenPatientSummary(patient.uuid))
+            hasNoModel(),
+            hasEffects(OpenPatientSummary(patient.uuid))
         ))
   }
 
@@ -71,8 +72,8 @@ class HomeScreenUpdateTest {
         .given(defaultModel)
         .whenEvent(event)
         .then(UpdateSpec.assertThatNext(
-            NextMatchers.hasNoModel(),
-            NextMatchers.hasEffects(OpenPatientSearchScreen(identifier))
+            hasNoModel(),
+            hasEffects(OpenPatientSearchScreen(identifier))
         ))
   }
 }

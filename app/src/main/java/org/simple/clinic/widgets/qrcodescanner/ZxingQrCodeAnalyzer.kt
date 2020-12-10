@@ -22,8 +22,6 @@ private fun ByteBuffer.toByteArray(): ByteArray {
   return data
 }
 
-private typealias OnQrCodeDetected = (String) -> Unit
-
 class ZxingQrCodeAnalyzer(
     private val onQrCodeDetected: OnQrCodeDetected
 ) : ImageAnalysis.Analyzer {

@@ -46,6 +46,10 @@
       android:name="com.mixpanel.android.MPConfig.DisableViewCrawler"
       android:value="true" />
 
+    <meta-data
+      android:name="com.google.mlkit.vision.DEPENDENCIES"
+      android:value="barcode" />
+
     <activity
       android:name=".setup.SetupActivity"
       android:launchMode="singleTask"

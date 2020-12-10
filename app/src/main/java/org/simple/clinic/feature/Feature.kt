@@ -20,5 +20,6 @@ enum class Feature(
    * There's a corresponding activity [org.simple.clinic.WebviewTestActivity], which you
    * can run to verify the fix.
    **/
-  ChangeLanguage(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+  ChangeLanguage(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M),
+  MLKitQrCodeScanner(true, "ml_kit_qr_code_scanner")
 }

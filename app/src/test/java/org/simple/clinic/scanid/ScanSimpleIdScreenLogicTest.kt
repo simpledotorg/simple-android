@@ -126,6 +126,7 @@ class ScanSimpleIdScreenLogicTest {
   private fun setupController() {
     val effectHandler = ScanSimpleIdEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
+        patientRepository = mock(),
         uiActions = uiActions
     )
 

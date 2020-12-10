@@ -6,12 +6,13 @@
 - [In progress: 01 Dec 2020] Migrate `ShortCodeSearchResultScreen` to Mobius
 - Add PR comment commands for running instrumented tests and rebasing PR
 - Add breadcrumbs for different stages in search operations
+- Revert view binding migration for `RecentPatientsView`
 
 ### Changes
 - Updated translations: `pa-IN`, `te-IN`, `ti-ET`, `bn-IN`, `mr-IN`, `am_ET`
 
-### Internal
-- Revert view binding migration for `RecentPatientsView`
+### Fixes
+- Fix app going back to home screen after scanning a BP passport
 
 ### Fixes
 - Fix a crash that could happen when closing the edit medicines screen

@@ -22,4 +22,8 @@ data class ScanSimpleIdModel(
   fun searching(): ScanSimpleIdModel {
     return copy(scanSearchState = Searching)
   }
+
+  fun notSearching(): ScanSimpleIdModel {
+    return copy(scanSearchState = NotSearching)
+  }
 }

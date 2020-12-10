@@ -65,7 +65,7 @@ class ScanSimpleIdUpdateTest {
         .given(defaultModel)
         .whenEvent(PatientSearchByIdentifierCompleted(patient, identifier))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(defaultModel.notSearching()),
             hasEffects(SendScannedIdentifierResult(expectedScanResult))
         ))
   }
@@ -81,7 +81,7 @@ class ScanSimpleIdUpdateTest {
         .given(defaultModel)
         .whenEvent(PatientSearchByIdentifierCompleted(patient, identifier))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(defaultModel.notSearching()),
             hasEffects(SendScannedIdentifierResult(expectedScanResult))
         ))
   }

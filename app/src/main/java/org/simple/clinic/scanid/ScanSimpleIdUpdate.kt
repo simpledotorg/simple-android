@@ -39,7 +39,7 @@ class ScanSimpleIdUpdate : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimp
     return try {
       val bpPassportCode = UUID.fromString(event.text)
       val identifier = Identifier(bpPassportCode.toString(), BpPassport)
-      dispatch(SendScannedIdentifierResult(ScannedId(identifier)))
+      dispatch(SearchPatientByIdentifier(identifier))
     } catch (e: IllegalArgumentException) {
       noChange()
     }

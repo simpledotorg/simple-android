@@ -19,17 +19,16 @@ class ScanSimpleIdUpdateTest {
   private val spec = UpdateSpec(ScanSimpleIdUpdate())
 
   @Test
-  fun `when a valid QR code is scanned, send the scanned identifier to the parent screen`() {
+  fun `when a valid QR code is scanned, then search for the patient`() {
     val scannedId = "9f154761-ee2f-4ee3-acd1-0038328f75ca"
-
-    val expectedScanResult = ScannedId(Identifier(scannedId, BpPassport))
+    val identifier = Identifier(scannedId, BpPassport)
 
     spec
         .given(defaultModel)
         .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(SendScannedIdentifierResult(expectedScanResult))
+            hasEffects(SearchPatientByIdentifier(identifier))
         ))
   }
 

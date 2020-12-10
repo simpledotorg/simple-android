@@ -8,9 +8,6 @@ import java.util.UUID
 sealed class ScanResult : Parcelable
 
 @Parcelize
-data class ScannedId(val identifier: Identifier) : ScanResult()
-
-@Parcelize
 data class EnteredShortCode(val shortCode: String) : ScanResult()
 
 @Parcelize

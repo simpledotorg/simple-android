@@ -33,21 +33,6 @@ class ScanSimpleIdEffectHandlerTest {
   }
 
   @Test
-  fun `when the send scanned identifier result is received, the scanned identifier result must be sent`() {
-    // when
-    val scannedId = ScannedId(TestData.identifier(
-        value = "ec08a1c4-4e57-4882-8292-d33205e1f098",
-        type = BpPassport
-    ))
-    testCase.dispatch(SendScannedIdentifierResult(scannedId))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-    verify(uiActions).sendScannedId(scannedId)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
   fun `when search for patient by identifier effect is received, then search for patient`() {
     // given
     val patient = TestData.patient(

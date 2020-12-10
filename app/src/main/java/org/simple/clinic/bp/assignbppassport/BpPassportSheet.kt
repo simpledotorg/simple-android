@@ -9,10 +9,12 @@ import com.jakewharton.rxbinding3.view.clicks
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import org.simple.clinic.ClinicApp
+import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetBpPassportBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
@@ -23,6 +25,15 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
   companion object {
     private const val KEY_BP_PASSPORT_NUMBER = "bpPassportNumber"
     private const val FACILITY_CHANGE = "alertFacilityChange"
+
+    fun intent(
+        context: Context,
+        bpPassportNumber: Identifier
+    ): Intent {
+      val intent = Intent(context, BpPassportSheet::class.java)
+      intent.putExtra(KEY_BP_PASSPORT_NUMBER, bpPassportNumber)
+      return intent
+    }
 
     fun selectedFacility(data: Intent): String? {
       return data.getStringExtra(FACILITY_CHANGE)
@@ -42,6 +53,9 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
   private val addToExistingPatientButton
     get() = binding.addToExistingPatientButton
 
+  private val bpPassportNumberTextview
+    get() = binding.bpPassportNumberTextview
+
   private val events: Observable<BpPassportEvent> by unsafeLazy {
     Observable
         .merge(
@@ -54,10 +68,14 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
 
     MobiusDelegate.forActivity(
         events = events,
-        defaultModel = BpPassportModel(),
+        defaultModel = BpPassportModel.create(identifier = bpPassportIdentifier),
         update = BpPassportUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
     )
+  }
+
+  private val bpPassportIdentifier: Identifier by lazy {
+    intent.getParcelableExtra(KEY_BP_PASSPORT_NUMBER)!!
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +83,7 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
     binding = SheetBpPassportBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
+    bpPassportNumberTextview.text = getString(R.string.sheet_bp_passport_number, bpPassportIdentifier.value)
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 

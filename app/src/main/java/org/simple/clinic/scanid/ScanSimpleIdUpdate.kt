@@ -25,12 +25,14 @@ class ScanSimpleIdUpdate : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimp
   }
 
   private fun patientSearchByIdentifierCompleted(event: PatientSearchByIdentifierCompleted): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    return if (event.patient.isPresent()) {
+    val scanResult = if (event.patient.isPresent()) {
       val patientId = event.patient.get().uuid
-      dispatch(SendScannedIdentifierResult(PatientFound(patientId)))
+      PatientFound(patientId)
     } else {
-      noChange()
+      PatientNotFound(event.identifier)
     }
+
+    return dispatch(SendScannedIdentifierResult(scanResult))
   }
 
   private fun simpleIdQrScanned(event: ScanSimpleIdScreenQrCodeScanned): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {

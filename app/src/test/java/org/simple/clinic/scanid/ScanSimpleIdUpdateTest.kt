@@ -6,6 +6,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.util.Optional
@@ -59,6 +60,22 @@ class ScanSimpleIdUpdateTest {
     val identifier = Identifier("123456", BpPassport)
 
     val expectedScanResult = PatientFound(patientId)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(PatientSearchByIdentifierCompleted(patient, identifier))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SendScannedIdentifierResult(expectedScanResult))
+        ))
+  }
+
+  @Test
+  fun `when identifier is scanned and patient is not found, then send the identifier to parent screen`() {
+    val patient = Optional.empty<Patient>()
+    val identifier = Identifier("123456", BpPassport)
+
+    val expectedScanResult = PatientNotFound(identifier)
 
     spec
         .given(defaultModel)

@@ -27,6 +27,7 @@ class BpPassportEffectHandler @AssistedInject constructor(
         .addTransformer(SaveNewOngoingPatientEntry::class.java, saveNewPatientEntry())
         .addTransformer(FetchCurrentFacility::class.java, fetchCurrentFacility())
         .addConsumer(OpenPatientEntryScreen::class.java, { uiActions.openPatientEntryScreen(it.facility) }, schedulersProvider.ui())
+        .addAction(CloseSheet::class.java, { uiActions.closeSheet() }, schedulersProvider.ui())
         .build()
   }
 

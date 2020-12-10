@@ -4,4 +4,5 @@ import org.simple.clinic.facility.Facility
 
 interface BpPassportUiActions {
   fun openPatientEntryScreen(facility: Facility)
+  fun closeSheet()
 }

@@ -27,6 +27,7 @@ class BpPassportEffectHandlerTest {
   ).build()
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
+  private val bpPassportNumber = 1111111
 
   @After
   fun tearDown() {
@@ -68,4 +69,16 @@ class BpPassportEffectHandlerTest {
     effectHandlerTestCase.assertNoOutgoingEvents()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when close sheet effect is received, then close the sheet`() {
+    // when
+    effectHandlerTestCase.dispatch(CloseSheet)
+
+    // then
+    verify(uiActions).closeSheet()
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verifyNoMoreInteractions(uiActions)
+  }
+
 }

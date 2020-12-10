@@ -10,3 +10,5 @@ data class SaveNewOngoingPatientEntry(val entry: OngoingNewPatientEntry) : BpPas
 object FetchCurrentFacility : BpPassportEffect()
 
 data class OpenPatientEntryScreen(val facility: Facility) : BpPassportEffect()
+
+object CloseSheet : BpPassportEffect()

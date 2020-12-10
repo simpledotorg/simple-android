@@ -1,5 +1,8 @@
 package org.simple.clinic.scanid
 
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.UiEvent
 
 sealed class ScanSimpleIdEvent : UiEvent
@@ -29,3 +32,8 @@ data class ShortCodeSearched(val shortCode: ShortCodeInput) : ScanSimpleIdEvent(
 data class ScanSimpleIdScreenQrCodeScanned(val text: String) : ScanSimpleIdEvent() {
   override val analyticsName = "Scan Simple Card:QR code scanned"
 }
+
+data class PatientSearchByIdentifierCompleted(
+    val patient: Optional<Patient>,
+    val identifier: Identifier
+) : ScanSimpleIdEvent()

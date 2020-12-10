@@ -20,6 +20,7 @@ class ScanSimpleIdUpdate : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimp
       is ShortCodeValidated -> shortCodeValidated(model, event)
       is ShortCodeSearched -> next(model.shortCodeChanged(event.shortCode), ValidateShortCode(event.shortCode))
       is ScanSimpleIdScreenQrCodeScanned -> simpleIdQrScanned(event)
+      is PatientSearchByIdentifierCompleted -> noChange()
     }
   }
 

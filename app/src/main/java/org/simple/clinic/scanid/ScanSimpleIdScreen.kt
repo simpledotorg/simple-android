@@ -17,6 +17,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenScanSimpleBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
@@ -31,7 +32,7 @@ import org.simple.clinic.widgets.qrcodescanner.IQrCodeScannerView
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 import javax.inject.Inject
 
-class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), ScanSimpleIdUiActions {
+class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), ScanSimpleIdUi, ScanSimpleIdUiActions {
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -44,6 +45,11 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
   @Inject
   lateinit var activity: AppCompatActivity
+
+  private var binding: ScreenScanSimpleBinding? = null
+
+  private val searchingContainer
+    get() = binding!!.searchingContainer
 
   private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
 
@@ -58,11 +64,14 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   private val delegate by unsafeLazy {
+    val uiRenderer = ScanSimpleIdUiRenderer(this)
+
     MobiusDelegate.forView(
         events = events.ofType(),
         defaultModel = ScanSimpleIdModel.create(),
         update = ScanSimpleIdUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build()
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
     )
   }
 
@@ -165,6 +174,14 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
   override fun showQrCodeScannerView() {
     qrCodeScannerView.showQrCodeScanner()
+  }
+
+  override fun showSearchingForPatient() {
+    searchingContainer.visibility = View.VISIBLE
+  }
+
+  override fun hideSearchingForPatient() {
+    searchingContainer.visibility = View.GONE
   }
 
   interface Injector {

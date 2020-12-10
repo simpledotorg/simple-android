@@ -1,5 +1,7 @@
 package org.simple.clinic.scanid
 
+import org.simple.clinic.patient.businessid.Identifier
+
 sealed class ScanSimpleIdEffect
 
 object ShowQrCodeScannerView : ScanSimpleIdEffect()
@@ -12,4 +14,6 @@ data class ShowShortCodeValidationError(val failure: ShortCodeValidationResult) 
 
 data class ValidateShortCode(val shortCode: ShortCodeInput) : ScanSimpleIdEffect()
 
-data class SendScannedIdentifierResult(val scannedId: ScanResult): ScanSimpleIdEffect()
+data class SendScannedIdentifierResult(val scannedId: ScanResult) : ScanSimpleIdEffect()
+
+data class SearchPatientByIdentifier(val identifier: Identifier) : ScanSimpleIdEffect()

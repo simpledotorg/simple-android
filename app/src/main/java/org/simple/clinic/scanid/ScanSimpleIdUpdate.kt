@@ -19,15 +19,29 @@ class ScanSimpleIdUpdate : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimp
       ShortCodeChanged -> dispatch(HideShortCodeValidationError)
       is ShortCodeValidated -> shortCodeValidated(model, event)
       is ShortCodeSearched -> next(model.shortCodeChanged(event.shortCode), ValidateShortCode(event.shortCode))
-      is ScanSimpleIdScreenQrCodeScanned -> simpleIdQrScanned(event)
+      is ScanSimpleIdScreenQrCodeScanned -> simpleIdQrScanned(model, event)
+      is PatientSearchByIdentifierCompleted -> patientSearchByIdentifierCompleted(model, event)
     }
   }
 
-  private fun simpleIdQrScanned(event: ScanSimpleIdScreenQrCodeScanned): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+  private fun patientSearchByIdentifierCompleted(model: ScanSimpleIdModel, event: PatientSearchByIdentifierCompleted): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    val scanResult = if (event.patient.isPresent()) {
+      val patientId = event.patient.get().uuid
+      PatientFound(patientId)
+    } else {
+      PatientNotFound(event.identifier)
+    }
+
+    return next(model = model.notSearching(), SendScannedIdentifierResult(scanResult))
+  }
+
+  private fun simpleIdQrScanned(model: ScanSimpleIdModel, event: ScanSimpleIdScreenQrCodeScanned): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    if (model.isSearching) return noChange()
+
     return try {
       val bpPassportCode = UUID.fromString(event.text)
       val identifier = Identifier(bpPassportCode.toString(), BpPassport)
-      dispatch(SendScannedIdentifierResult(ScannedId(identifier)))
+      next(model = model.searching(), SearchPatientByIdentifier(identifier))
     } catch (e: IllegalArgumentException) {
       noChange()
     }

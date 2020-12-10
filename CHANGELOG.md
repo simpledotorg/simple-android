@@ -9,6 +9,7 @@
 ### Internal
 - Bump appcompat -> 1.2.0
 - Bump CI JDK version to 11
+- Revert view binding migration for `RecentPatientsView`
 
 ### Changes
 - Disable the change language feature on devices running Lollipop (API level 21, 22)
@@ -16,6 +17,7 @@
 
 ### Fixes
 - Fix `shortCodeText` auto focusing in `ScanSimpleIdScreen`
+- Fix app going back to home screen after scanning a BP passport
 
 ## 2020-12-03-7536
 ### Fixes

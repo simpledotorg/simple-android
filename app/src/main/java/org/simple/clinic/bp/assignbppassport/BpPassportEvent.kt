@@ -9,3 +9,5 @@ object NewOngoingPatientEntrySaved : BpPassportEvent()
 data class CurrentFacilityRetrieved(val facility: Facility): BpPassportEvent()
 
 object RegisterNewPatientClicked : BpPassportEvent()
+
+object AddToExistingPatientClicked : BpPassportEvent()

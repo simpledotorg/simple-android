@@ -14,6 +14,7 @@ class BpPassportUpdate : Update<BpPassportModel, BpPassportEvent, BpPassportEffe
       }
       NewOngoingPatientEntrySaved -> dispatch(FetchCurrentFacility)
       is CurrentFacilityRetrieved -> dispatch(OpenPatientEntryScreen(event.facility))
+      is AddToExistingPatientClicked -> dispatch(CloseSheet)
     }
   }
 }

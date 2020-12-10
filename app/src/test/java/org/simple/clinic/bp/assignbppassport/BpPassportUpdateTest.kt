@@ -58,4 +58,17 @@ class BpPassportUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when add to existing patient is clicked, then close the sheet`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(AddToExistingPatientClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(CloseSheet)
+            )
+        )
+  }
 }

@@ -21,23 +21,31 @@ class MLKitQrCodeAnalyzer(
   @SuppressLint("UnsafeExperimentalUsageError")
   override fun analyze(imageProxy: ImageProxy) {
     val mediaImage = imageProxy.image
-    if (mediaImage != null) {
-      val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-      scanner.process(image)
-          .addOnSuccessListener { barcodes ->
-            barcodes.forEach { barcode ->
-              val qrCodeResult = barcode.rawValue
-              if (qrCodeResult != null) {
-                onQrCodeDetected(qrCodeResult)
-              }
+
+    if (mediaImage == null) {
+      imageProxy.close()
+      return
+    }
+
+    val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+    processImage(image = image, imageProxy = imageProxy)
+  }
+
+  private fun processImage(image: InputImage, imageProxy: ImageProxy) {
+    scanner.process(image)
+        .addOnSuccessListener { barcodes ->
+          barcodes.forEach { barcode ->
+            val qrCodeResult = barcode.rawValue
+            if (qrCodeResult != null) {
+              onQrCodeDetected(qrCodeResult)
             }
           }
-          .addOnFailureListener {
-            // Do nothing
-          }
-          .addOnCompleteListener {
-            imageProxy.close()
-          }
-    }
+        }
+        .addOnFailureListener {
+          // Do nothing
+        }
+        .addOnCompleteListener {
+          imageProxy.close()
+        }
   }
 }

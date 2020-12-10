@@ -1,15 +1,18 @@
 package org.simple.clinic.shortcodesearchresult
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.plumbing.AsyncOp
 import org.simple.clinic.plumbing.AsyncOp.IN_FLIGHT
 import org.simple.clinic.plumbing.AsyncOp.SUCCEEDED
 import org.simple.clinic.searchresultsview.PatientSearchResults
 
+@Parcelize
 data class ShortCodeSearchResultState(
     val shortCode: String,
     val fetchPatientsAsyncOp: AsyncOp,
     val patients: PatientSearchResults
-) {
+): Parcelable {
   companion object {
     fun fetchingPatients(
         bpPassportNumber: String

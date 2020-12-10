@@ -1,12 +1,7 @@
 package org.simple.clinic.home.patients
 
 import android.Manifest
-import org.simple.clinic.patient.Patient
-import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.util.RuntimePermissionResult
-import org.simple.clinic.scanid.EnteredShortCode
-import org.simple.clinic.scanid.ScanResult
-import org.simple.clinic.scanid.ScannedId
 import org.simple.clinic.user.User
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -48,7 +43,7 @@ data class ScanCardIdButtonClicked(
   override val analyticsName: String = "Patients:Scan Simple Card Clicked:"
 }
 
-data class LoadedNumberOfPatientsRegistered(val numberOfPatientsRegistered: Int): PatientsTabEvent()
+data class LoadedNumberOfPatientsRegistered(val numberOfPatientsRegistered: Int) : PatientsTabEvent()
 
 object SimpleVideoClicked : PatientsTabEvent() {
   override val analyticsName = "Patients:Simple Video Clicked"
@@ -58,4 +53,4 @@ data class RequiredInfoForShowingAppUpdateLoaded(
     val isAppUpdateAvailable: Boolean,
     val appUpdateLastShownOn: LocalDate,
     val currentDate: LocalDate
-): PatientsTabEvent()
+) : PatientsTabEvent()

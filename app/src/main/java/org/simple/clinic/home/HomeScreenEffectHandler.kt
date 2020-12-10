@@ -31,7 +31,6 @@ class HomeScreenEffectHandler @AssistedInject constructor(
       .addAction(OpenFacilitySelection::class.java, uiActions::openFacilitySelection, schedulersProvider.ui())
       .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
       .addTransformer(LoadOverdueAppointmentCount::class.java, loadOverdueAppointmentCount())
-      .addTransformer(SearchPatientByIdentifier::class.java, searchForPatientByIdentifier())
       .addConsumer(OpenShortCodeSearchScreen::class.java, { uiActions.openShortCodeSearchScreen(it.shortCode) }, schedulersProvider.ui())
       .addConsumer(OpenPatientSearchScreen::class.java, { uiActions.openPatientSearchScreen(it.additionalIdentifier) }, schedulersProvider.ui())
       .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientId) }, schedulersProvider.ui())
@@ -56,19 +55,6 @@ class HomeScreenEffectHandler @AssistedInject constructor(
           .switchMap {
             currentFacilityStream
                 .map(::CurrentFacilityLoaded)
-          }
-    }
-  }
-
-  private fun searchForPatientByIdentifier(): ObservableTransformer<SearchPatientByIdentifier, HomeScreenEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .map(SearchPatientByIdentifier::identifier)
-          .switchMap { identifier ->
-            patientRepository
-                .findPatientWithBusinessId(identifier.value)
-                .subscribeOn(schedulersProvider.io())
-                .map { foundPatient -> PatientSearchByIdentifierCompleted(foundPatient, identifier) }
           }
     }
   }

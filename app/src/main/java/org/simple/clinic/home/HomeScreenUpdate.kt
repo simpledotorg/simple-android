@@ -12,18 +12,9 @@ class HomeScreenUpdate : Update<HomeScreenModel, HomeScreenEvent, HomeScreenEffe
       HomeFacilitySelectionClicked -> dispatch(OpenFacilitySelection)
       is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility))
       is OverdueAppointmentCountLoaded -> next(model.overdueAppointmentCountLoaded(event.overdueAppointmentCount))
-      is PatientSearchByIdentifierCompleted -> scannedPatientBusinessId(event)
-      is BusinessIdScanned.ByIdentifier -> dispatch(SearchPatientByIdentifier(event.identifier))
       is BusinessIdScanned.ByShortCode -> dispatch(OpenShortCodeSearchScreen(event.shortCode))
+      is BusinessIdScanned.ByPatientFound -> dispatch(OpenPatientSummary(event.patientId))
+      is BusinessIdScanned.ByPatientNotFound -> dispatch(OpenPatientSearchScreen(event.identifier))
     }
-  }
-
-  private fun scannedPatientBusinessId(event: PatientSearchByIdentifierCompleted): Next<HomeScreenModel, HomeScreenEffect> {
-    val effect = event
-        .patient
-        .map { patient -> OpenPatientSummary(patient.uuid) as HomeScreenEffect }
-        .orElse(OpenPatientSearchScreen(event.identifier) as HomeScreenEffect)
-
-    return dispatch(effect)
   }
 }

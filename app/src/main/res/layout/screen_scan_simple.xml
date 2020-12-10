@@ -19,6 +19,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
 
+  <!-- Added translation-z to make the scrim visible above the card view -->
+  <FrameLayout
+    android:id="@+id/searchingContainer"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:background="@color/scrim_color"
+    android:translationZ="@dimen/spacing_8"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <ProgressBar
+      android:id="@+id/searchingProgress"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:indeterminate="true" />
+
+  </FrameLayout>
+
   <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -28,7 +50,7 @@
     android:background="@color/white100"
     android:visibility="visible"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="@+id/qrCodeScannerView"
+    app:layout_constraintEnd_toEndOf="@+id/qrCodeScannerViewContainer"
     app:layout_constraintStart_toStartOf="parent"
     tools:visibility="visible">
 
@@ -83,4 +105,5 @@
         tools:visibility="visible" />
     </LinearLayout>
   </androidx.cardview.widget.CardView>
+
 </org.simple.clinic.scanid.ScanSimpleIdScreen>

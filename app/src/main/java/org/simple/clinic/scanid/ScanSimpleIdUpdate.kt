@@ -36,6 +36,8 @@ class ScanSimpleIdUpdate : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimp
   }
 
   private fun simpleIdQrScanned(model: ScanSimpleIdModel, event: ScanSimpleIdScreenQrCodeScanned): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    if (model.isSearching) return noChange()
+
     return try {
       val bpPassportCode = UUID.fromString(event.text)
       val identifier = Identifier(bpPassportCode.toString(), BpPassport)

@@ -3,6 +3,7 @@ package org.simple.clinic.scanid
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoModel
+import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -83,6 +84,21 @@ class ScanSimpleIdUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
             hasEffects(SendScannedIdentifierResult(expectedScanResult))
+        ))
+  }
+
+  @Test
+  fun `when searching for patient, then ignore newly scanned identifiers`() {
+    val scannedId = "9f154761-ee2f-4ee3-acd1-0038328f75ca"
+
+    val searchingModel = defaultModel
+        .searching()
+
+    spec
+        .given(searchingModel)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
+        .then(assertThatNext(
+            hasNothing()
         ))
   }
 }

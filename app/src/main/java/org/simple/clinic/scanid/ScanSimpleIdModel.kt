@@ -15,6 +15,9 @@ data class ScanSimpleIdModel(
     fun create() = ScanSimpleIdModel(shortCode = null, scanSearchState = NotSearching)
   }
 
+  val isSearching: Boolean
+    get() = scanSearchState == Searching
+
   fun shortCodeChanged(shortCode: ShortCodeInput): ScanSimpleIdModel {
     return copy(shortCode = shortCode)
   }

@@ -13,6 +13,9 @@
 ### Internal
 - Revert view binding migration for `RecentPatientsView`
 
+### Fixes
+- Fix a crash that could happen when closing the edit medicines screen
+
 ## On Demo
 ### Internal
 - Bump appcompat -> 1.2.0

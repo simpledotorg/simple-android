@@ -17,6 +17,8 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_qrcode_scanner.view.*
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import kotlin.math.abs
@@ -37,6 +39,9 @@ constructor(
 
   @Inject
   lateinit var activity: AppCompatActivity
+
+  @Inject
+  lateinit var features: Features
 
   private val scans = PublishSubject.create<String>()
 
@@ -78,12 +83,19 @@ constructor(
 
     val preview = Preview.Builder().build()
 
+    val isMLKitQrCodeScannerEnabled = features.isEnabled(Feature.MLKitQrCodeScanner)
+    val qrCodeAnalyzer = if (isMLKitQrCodeScannerEnabled) {
+      MLKitQrCodeAnalyzer(scans::onNext)
+    } else {
+      ZxingQrCodeAnalyzer(scans::onNext)
+    }
+
     val analyzer = ImageAnalysis.Builder()
         .setTargetAspectRatio(screenAspectRatio)
         .setTargetRotation(rotation)
         .build()
         .also {
-          it.setAnalyzer(cameraExecutor, ZxingQrCodeAnalyzer(scans::onNext))
+          it.setAnalyzer(cameraExecutor, qrCodeAnalyzer)
         }
 
     cameraProvider.unbindAll()

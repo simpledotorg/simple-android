@@ -10,6 +10,7 @@
 - Bump appcompat -> 1.2.0
 - Bump CI JDK version to 11
 - Revert view binding migration for `RecentPatientsView`
+- Add `MLKitQrCodeAnalyzer`
 
 ### Changes
 - Disable the change language feature on devices running Lollipop (API level 21, 22)

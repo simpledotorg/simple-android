@@ -5,11 +5,13 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import io.reactivex.disposables.Disposable
+import com.jakewharton.rxbinding3.view.clicks
+import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.patient_search_view.view.*
 import kotlinx.android.synthetic.main.screen_shortcode_search_result.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.ViewControllerBinding
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.di.injector
@@ -27,6 +29,7 @@ import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -64,7 +67,15 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
 
   private val adapter = ItemAdapter(SearchResultsItemType.DiffCallback())
 
-  private lateinit var disposable: Disposable
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            searchPatientClicks(),
+            patientItemClicks()
+        )
+        .compose(ReportAnalyticsEvents())
+        .doOnNext(binding::onEvent)
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -79,11 +90,9 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
     setupToolBar(screenKey)
     setupScreen()
     setupViewControllerBinding(screenKey)
-    setupClickEvents()
   }
 
   override fun onDetachedFromWindow() {
-    if (::disposable.isInitialized) disposable.dispose()
     super.onDetachedFromWindow()
   }
 
@@ -109,13 +118,17 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
     binding = ViewControllerBinding.bindToView(this, uiStateProducer, uiChangeProducer)
   }
 
-  private fun setupClickEvents() {
-    newPatientButton.setOnClickListener { binding.onEvent(SearchPatient) }
-    disposable = adapter
+  private fun searchPatientClicks(): Observable<ShortCodeSearchResultEvent> {
+    return newPatientButton
+        .clicks()
+        .map { SearchPatient }
+  }
+
+  private fun patientItemClicks(): Observable<ShortCodeSearchResultEvent> {
+    return adapter
         .itemEvents
         .ofType<SearchResultsItemType.Event.ResultClicked>()
-        .map { binding.onEvent(ViewPatient(it.patientUuid)) }
-        .subscribe()
+        .map { ViewPatient(it.patientUuid) }
   }
 
   private fun setupScreen() {

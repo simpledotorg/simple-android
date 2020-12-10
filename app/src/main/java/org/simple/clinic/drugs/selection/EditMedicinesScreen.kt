@@ -181,11 +181,13 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
 
     // Scroll to end to show newly added prescriptions.
     if (hasNewItems) {
-      recyclerView.postDelayed({
-        if (binding != null) {
-          recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount - 1)
-        }
-      }, 300)
+      recyclerView.postDelayed(::scrollListToLastPosition, 300)
+    }
+  }
+
+  private fun scrollListToLastPosition() {
+    if (binding != null) {
+      recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount - 1)
     }
   }
 

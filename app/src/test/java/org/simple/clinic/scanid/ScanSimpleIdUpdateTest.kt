@@ -1,6 +1,7 @@
 package org.simple.clinic.scanid
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
+import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -27,7 +28,7 @@ class ScanSimpleIdUpdateTest {
         .given(defaultModel)
         .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(defaultModel.searching()),
             hasEffects(SearchPatientByIdentifier(identifier))
         ))
   }

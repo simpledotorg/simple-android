@@ -35,10 +35,8 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
-import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
@@ -183,9 +181,13 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
 
     // Scroll to end to show newly added prescriptions.
     if (hasNewItems) {
-      recyclerView.postDelayed(
-          { recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount - 1) },
-          300)
+      recyclerView.postDelayed(::scrollListToLastPosition, 300)
+    }
+  }
+
+  private fun scrollListToLastPosition() {
+    if (binding != null) {
+      recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount - 1)
     }
   }
 

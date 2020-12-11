@@ -19,6 +19,7 @@ class ShortCodeSearchResultEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<ShortCodeSearchResultEffect, ShortCodeSearchResultEvent> {
     return RxMobius
         .subtypeEffectHandler<ShortCodeSearchResultEffect, ShortCodeSearchResultEvent>()
+        .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientId)}, schedulers.ui())
         .build()
   }
 }

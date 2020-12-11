@@ -31,8 +31,7 @@ class ShortCodeSearchResultStateProducer(
   override fun apply(events: Observable<UiEvent>): ObservableSource<ShortCodeSearchResultState> {
     return Observable.merge(
         initialStates(events),
-        fetchPatients(events),
-        searchPatient(events)
+        fetchPatients(events)
     )
   }
 
@@ -61,11 +60,5 @@ class ShortCodeSearchResultStateProducer(
         .map(currentState::patientsFetched)
 
     return matchingPatients.mergeWith(noMatchingPatient)
-  }
-
-  private fun searchPatient(events: Observable<UiEvent>): Observable<ShortCodeSearchResultState> {
-    return events.ofType<SearchPatient>()
-        .doOnNext { ui.openPatientSearch() }
-        .flatMap { Observable.empty<ShortCodeSearchResultState>() }
   }
 }

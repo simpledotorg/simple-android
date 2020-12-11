@@ -13,7 +13,7 @@ class ShortCodeSearchResultUpdate: Update<ShortCodeSearchResultState, ShortCodeS
   ): Next<ShortCodeSearchResultState, ShortCodeSearchResultEffect> {
     return when(event) {
       is ViewPatient -> dispatch(OpenPatientSummary(event.patientUuid))
-      SearchPatient -> noChange()
+      SearchPatient -> dispatch(OpenPatientSearch)
     }
   }
 }

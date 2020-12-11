@@ -1,6 +1,7 @@
 package org.simple.clinic.shortcodesearchresult
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
@@ -16,6 +17,7 @@ import org.simple.clinic.ViewControllerBinding
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreenKey
@@ -63,6 +65,9 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
 
+  @Inject
+  lateinit var effectHandlerFactory: ShortCodeSearchResultEffectHandler.Factory
+
   private lateinit var binding: ViewControllerBinding<UiEvent, ShortCodeSearchResultState, ShortCodeSearchResultUi>
 
   private val adapter = ItemAdapter(SearchResultsItemType.DiffCallback())
@@ -79,6 +84,22 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
 
   private val screenKey by unsafeLazy { screenRouter.key<ShortCodeSearchResultScreenKey>(this) }
 
+  // TODO: Inline later after refactoring is complete
+  private val initialModel by unsafeLazy { ShortCodeSearchResultState.fetchingPatients(screenKey.shortCode) }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = UiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = initialModel,
+        update = ShortCodeSearchResultUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render,
+        init = ShortCodeSearchResultInit()
+    )
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -93,8 +114,22 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
     setupViewControllerBinding()
   }
 
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
   override fun onDetachedFromWindow() {
+    delegate.stop()
     super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun setupToolBar() {
@@ -107,7 +142,6 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
   }
 
   private fun setupViewControllerBinding() {
-    val initialState = ShortCodeSearchResultState.fetchingPatients(screenKey.shortCode)
     val uiStateProducer = ShortCodeSearchResultStateProducer(
         shortCode = screenKey.shortCode,
         patientRepository = patientRepository,
@@ -116,7 +150,7 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
         bloodPressureDao = bloodPressureDao,
         ui = this,
         schedulersProvider = schedulersProvider,
-        initialState = initialState
+        initialState = initialModel
     )
     binding = ViewControllerBinding.bindToView(this, uiStateProducer, uiChangeProducer)
   }

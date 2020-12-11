@@ -1,35 +1,12 @@
 package org.simple.clinic
 
-import android.annotation.SuppressLint
 import android.view.View
-import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.plumbing.BaseUiChangeProducer
 import org.simple.clinic.plumbing.BaseUiStateProducer
 import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.ScreenRestored
-import org.simple.clinic.widgets.UiEvent
-
-@SuppressLint("CheckResult")
-fun <T> bindUiToController(
-    ui: T,
-    events: Observable<UiEvent>,
-    controller: ObservableTransformer<UiEvent, (T) -> Unit>,
-    screenDestroys: Observable<ScreenDestroyed>
-) {
-  events
-      .mergeWith(screenDestroys)
-      .observeOn(io())
-      .compose(controller)
-      .observeOn(mainThread())
-      .takeUntil(screenDestroys)
-      .subscribe { uiChange -> uiChange(ui) }
-}
 
 class ViewControllerBinding<E, S, T>(
     private val uiStateProducer: BaseUiStateProducer<E, S>,
@@ -81,13 +58,5 @@ class ViewControllerBinding<E, S, T>(
 
   fun onEvent(event: E) {
     uiEvents.onNext(event)
-  }
-
-  fun latestState(): S? {
-    return uiStateProducer.states.value
-  }
-
-  fun restoreSavedState(state: S) {
-    uiStateProducer.states.onNext(state)
   }
 }

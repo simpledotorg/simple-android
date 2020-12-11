@@ -1,19 +1,23 @@
 package org.simple.clinic.shortcodesearchresult
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import io.reactivex.disposables.Disposable
+import com.jakewharton.rxbinding3.view.clicks
+import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.patient_search_view.view.*
 import kotlinx.android.synthetic.main.screen_shortcode_search_result.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.ViewControllerBinding
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreenKey
@@ -27,6 +31,7 @@ import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -60,11 +65,40 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
 
+  @Inject
+  lateinit var effectHandlerFactory: ShortCodeSearchResultEffectHandler.Factory
+
   private lateinit var binding: ViewControllerBinding<UiEvent, ShortCodeSearchResultState, ShortCodeSearchResultUi>
 
   private val adapter = ItemAdapter(SearchResultsItemType.DiffCallback())
 
-  private lateinit var disposable: Disposable
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            searchPatientClicks(),
+            patientItemClicks()
+        )
+        .compose(ReportAnalyticsEvents())
+        .doOnNext(binding::onEvent)
+  }
+
+  private val screenKey by unsafeLazy { screenRouter.key<ShortCodeSearchResultScreenKey>(this) }
+
+  // TODO: Inline later after refactoring is complete
+  private val initialModel by unsafeLazy { ShortCodeSearchResultState.fetchingPatients(screenKey.shortCode) }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = UiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = initialModel,
+        update = ShortCodeSearchResultUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render,
+        init = ShortCodeSearchResultInit()
+    )
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -75,19 +109,30 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
 
     context.injector<Injector>().inject(this)
 
-    val screenKey = screenRouter.key<ShortCodeSearchResultScreenKey>(this)
-    setupToolBar(screenKey)
+    setupToolBar()
     setupScreen()
-    setupViewControllerBinding(screenKey)
-    setupClickEvents()
+    setupViewControllerBinding()
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
   }
 
   override fun onDetachedFromWindow() {
-    if (::disposable.isInitialized) disposable.dispose()
+    delegate.stop()
     super.onDetachedFromWindow()
   }
 
-  private fun setupToolBar(screenKey: ShortCodeSearchResultScreenKey) {
+  override fun onSaveInstanceState(): Parcelable {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+  }
+
+  private fun setupToolBar() {
     toolBar.title = formatShortCodeForDisplay(context, screenKey.shortCode)
 
     with(toolBar) {
@@ -96,7 +141,7 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
     }
   }
 
-  private fun setupViewControllerBinding(screenKey: ShortCodeSearchResultScreenKey) {
+  private fun setupViewControllerBinding() {
     val uiStateProducer = ShortCodeSearchResultStateProducer(
         shortCode = screenKey.shortCode,
         patientRepository = patientRepository,
@@ -104,18 +149,24 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
         facilityRepository = facilityRepository,
         bloodPressureDao = bloodPressureDao,
         ui = this,
-        schedulersProvider = schedulersProvider
+        schedulersProvider = schedulersProvider,
+        initialState = initialModel,
+        currentStateProvider = { delegate.currentModel }
     )
     binding = ViewControllerBinding.bindToView(this, uiStateProducer, uiChangeProducer)
   }
 
-  private fun setupClickEvents() {
-    newPatientButton.setOnClickListener { binding.onEvent(SearchPatient) }
-    disposable = adapter
+  private fun searchPatientClicks(): Observable<ShortCodeSearchResultEvent> {
+    return newPatientButton
+        .clicks()
+        .map { SearchPatient }
+  }
+
+  private fun patientItemClicks(): Observable<ShortCodeSearchResultEvent> {
+    return adapter
         .itemEvents
         .ofType<SearchResultsItemType.Event.ResultClicked>()
-        .map { binding.onEvent(ViewPatient(it.patientUuid)) }
-        .subscribe()
+        .map { ViewPatient(it.patientUuid) }
   }
 
   private fun setupScreen() {

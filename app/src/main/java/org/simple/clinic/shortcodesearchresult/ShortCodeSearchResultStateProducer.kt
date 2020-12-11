@@ -3,7 +3,6 @@ package org.simple.clinic.shortcodesearchresult
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
@@ -22,11 +21,12 @@ class ShortCodeSearchResultStateProducer(
     private val bloodPressureDao: BloodPressureMeasurement.RoomDao,
     private val ui: ShortCodeSearchResultUi,
     private val schedulersProvider: SchedulersProvider,
-    private val initialState: ShortCodeSearchResultState
+    private val initialState: ShortCodeSearchResultState,
+    private val currentStateProvider: () -> ShortCodeSearchResultState
 ) : BaseUiStateProducer<UiEvent, ShortCodeSearchResultState>() {
 
   private val currentState: ShortCodeSearchResultState
-    get() = states.value ?: initialState
+    get() = currentStateProvider()
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<ShortCodeSearchResultState> {
     return Observable.merge(

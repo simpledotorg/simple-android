@@ -150,7 +150,8 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
         bloodPressureDao = bloodPressureDao,
         ui = this,
         schedulersProvider = schedulersProvider,
-        initialState = initialModel
+        initialState = initialModel,
+        currentStateProvider = { delegate.currentModel }
     )
     binding = ViewControllerBinding.bindToView(this, uiStateProducer, uiChangeProducer)
   }

@@ -49,7 +49,8 @@ class ShortCodeSearchResultLogicTest {
       bloodPressureDao = bloodPressureDao,
       ui = ui,
       schedulersProvider = TestSchedulersProvider.trampoline(),
-      initialState = fetchingPatientsState
+      initialState = fetchingPatientsState,
+      currentStateProvider = { testFixture.model }
   )
   private val uiChangeProducer = ShortCodeSearchResultUiChangeProducer(TestSchedulersProvider.trampoline())
   private val disposables = CompositeDisposable()

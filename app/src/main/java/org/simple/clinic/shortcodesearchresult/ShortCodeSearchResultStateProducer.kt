@@ -3,7 +3,6 @@ package org.simple.clinic.shortcodesearchresult
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
@@ -21,8 +20,13 @@ class ShortCodeSearchResultStateProducer(
     private val facilityRepository: FacilityRepository,
     private val bloodPressureDao: BloodPressureMeasurement.RoomDao,
     private val ui: ShortCodeSearchResultUi,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    private val initialState: ShortCodeSearchResultState,
+    private val currentStateProvider: () -> ShortCodeSearchResultState
 ) : BaseUiStateProducer<UiEvent, ShortCodeSearchResultState>() {
+
+  private val currentState: ShortCodeSearchResultState
+    get() = currentStateProvider()
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<ShortCodeSearchResultState> {
     return Observable.merge(
@@ -33,32 +37,29 @@ class ShortCodeSearchResultStateProducer(
     )
   }
 
-  private fun initialStates(events: Observable<UiEvent>) = events.ofType<ScreenCreated>()
-      .map { ShortCodeSearchResultState.fetchingPatients(shortCode) }
+  private fun initialStates(events: Observable<UiEvent>) = events
+      .ofType<ScreenCreated>()
+      .map { initialState }
 
   private fun fetchPatients(events: Observable<UiEvent>): Observable<ShortCodeSearchResultState> {
     val shortCodeSearchResults = events.ofType<ScreenCreated>()
         .flatMap {
           patientRepository
-              .searchByShortCode(shortCode)
+              .searchByShortCode(initialState.shortCode)
               .subscribeOn(schedulersProvider.io())
         }
         .share()
 
     val noMatchingPatient = shortCodeSearchResults
         .filter { it.isEmpty() }
-        .withLatestFrom(states) { _, state ->
-          state.noMatchingPatients()
-        }
+        .map { currentState.noMatchingPatients() }
 
     val currentFacilityStream = facilityRepository.currentFacility()
 
     val matchingPatients = shortCodeSearchResults
         .filter { it.isNotEmpty() }
         .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, currentFacilityStream))
-        .withLatestFrom(states) { patientSearchResults, state ->
-          state.patientsFetched(patientSearchResults)
-        }
+        .map(currentState::patientsFetched)
 
     return matchingPatients.mergeWith(noMatchingPatient)
   }

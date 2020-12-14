@@ -14,6 +14,7 @@ class ShortCodeSearchResultUpdate: Update<ShortCodeSearchResultState, ShortCodeS
     return when(event) {
       is ViewPatient -> dispatch(OpenPatientSummary(event.patientUuid))
       SearchPatient -> dispatch(OpenPatientSearch)
+      is ShortCodeSearchCompleted -> noChange()
     }
   }
 }

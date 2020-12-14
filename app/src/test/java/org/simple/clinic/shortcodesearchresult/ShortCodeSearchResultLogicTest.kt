@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.TestObserver
@@ -63,7 +64,10 @@ class ShortCodeSearchResultLogicTest {
   fun setUp() {
     val effectHandler = ShortCodeSearchResultEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
-        uiActions = ui
+        uiActions = ui,
+        patientRepository = patientRepository,
+        currentFacility = Lazy { currentFacility },
+        bloodPressureDao = bloodPressureDao
     )
     val uiRenderer = UiRenderer(ui)
 

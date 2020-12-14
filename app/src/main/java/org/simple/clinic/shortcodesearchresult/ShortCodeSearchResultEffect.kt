@@ -7,3 +7,5 @@ sealed class ShortCodeSearchResultEffect
 data class OpenPatientSummary(val patientId: UUID): ShortCodeSearchResultEffect()
 
 object OpenPatientSearch: ShortCodeSearchResultEffect()
+
+data class SearchByShortCode(val shortCode: String): ShortCodeSearchResultEffect()

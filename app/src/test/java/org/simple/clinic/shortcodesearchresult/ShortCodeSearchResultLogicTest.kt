@@ -30,6 +30,7 @@ class ShortCodeSearchResultLogicTest {
   private val shortCode = "1234567"
   private val fetchingPatientsState = ShortCodeSearchResultState.fetchingPatients(shortCode)
   private val ui = mock<ShortCodeSearchResultUi>()
+  private val uiActions = mock<UiActions>()
 
   private val currentFacility = TestData.facility(uuid = UUID.fromString("27a61122-ed11-490a-a3ae-b881840e9842"))
 
@@ -42,7 +43,7 @@ class ShortCodeSearchResultLogicTest {
   fun setUp() {
     val effectHandler = ShortCodeSearchResultEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
-        uiActions = ui,
+        uiActions = uiActions,
         patientRepository = patientRepository,
         currentFacility = { currentFacility },
         bloodPressureDao = bloodPressureDao
@@ -111,7 +112,7 @@ class ShortCodeSearchResultLogicTest {
     verify(ui).hideLoading()
     verify(ui).showSearchResults(expectedPatientResults)
     verify(ui).showSearchPatientButton()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -136,7 +137,7 @@ class ShortCodeSearchResultLogicTest {
     verify(ui).hideLoading()
     verify(ui).showNoPatientsMatched()
     verify(ui).showSearchPatientButton()
-    verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -175,8 +176,8 @@ class ShortCodeSearchResultLogicTest {
     verify(ui).hideLoading()
     verify(ui).showSearchPatientButton()
     verify(ui).showSearchResults(expectedPatientResults)
-    verify(ui).openPatientSummary(patientUuid)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openPatientSummary(patientUuid)
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   @Test
@@ -215,8 +216,8 @@ class ShortCodeSearchResultLogicTest {
     verify(ui).hideLoading()
     verify(ui).showSearchPatientButton()
     verify(ui).showSearchResults(expectedPatientResults)
-    verify(ui).openPatientSearch()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).openPatientSearch()
+    verifyNoMoreInteractions(ui, uiActions)
   }
 
   private fun setupStateProducer() {

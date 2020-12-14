@@ -32,7 +32,10 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : RelativeLayout(context, attributes), ShortCodeSearchResultUi {
+class ShortCodeSearchResultScreen(
+    context: Context,
+    attributes: AttributeSet
+) : RelativeLayout(context, attributes), ShortCodeSearchResultUi, UiActions {
 
   @Inject
   lateinit var utcClock: UtcClock

@@ -4,9 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import dagger.Lazy
 import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.TestObserver
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -16,14 +14,10 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.PatientToFacilityId
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.searchresultsview.PatientSearchResults
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.util.toOptional
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
@@ -32,29 +26,13 @@ import java.util.UUID
 class ShortCodeSearchResultLogicTest {
   private val uiEventsSubject = PublishSubject.create<UiEvent>()
   private val patientRepository = mock<PatientRepository>()
-  private val userSession = mock<UserSession>()
-  private val facilityRepository = mock<FacilityRepository>()
   private val bloodPressureDao = mock<BloodPressureMeasurement.RoomDao>()
   private val shortCode = "1234567"
   private val fetchingPatientsState = ShortCodeSearchResultState.fetchingPatients(shortCode)
   private val ui = mock<ShortCodeSearchResultUi>()
 
-  private val loggedInUser = TestData.loggedInUser()
   private val currentFacility = TestData.facility(uuid = UUID.fromString("27a61122-ed11-490a-a3ae-b881840e9842"))
 
-  private val uiStateProducer = ShortCodeSearchResultStateProducer(
-      shortCode = shortCode,
-      patientRepository = patientRepository,
-      userSession = userSession,
-      facilityRepository = facilityRepository,
-      bloodPressureDao = bloodPressureDao,
-      ui = ui,
-      schedulersProvider = TestSchedulersProvider.trampoline(),
-      initialState = fetchingPatientsState,
-      currentStateProvider = { testFixture.model }
-  )
-  private val uiChangeProducer = ShortCodeSearchResultUiChangeProducer(TestSchedulersProvider.trampoline())
-  private val disposables = CompositeDisposable()
   private val statesFromMobiusLoop = PublishSubject.create<ShortCodeSearchResultState>()
 
   lateinit var testObserver: TestObserver<ShortCodeSearchResultState>
@@ -86,8 +64,8 @@ class ShortCodeSearchResultLogicTest {
 
   @After
   fun tearDown() {
-    disposables.dispose()
     testFixture.dispose()
+    testObserver.dispose()
   }
 
   @Test
@@ -107,7 +85,6 @@ class ShortCodeSearchResultLogicTest {
         PatientToFacilityId(patientSearchResultInOtherFacility.uuid, otherFacility.uuid)
     )
 
-    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(currentFacility))
     whenever(patientRepository.searchByShortCode(shortCode)).thenReturn(Observable.just(patientSearchResults))
     whenever(bloodPressureDao.patientToFacilityIds(
         listOf(
@@ -243,24 +220,8 @@ class ShortCodeSearchResultLogicTest {
   }
 
   private fun setupStateProducer() {
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
-    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(currentFacility))
-
-    val uiStates = uiEventsSubject
-        .compose(uiStateProducer)
-        .doOnNext { uiStateProducer.states.onNext(it) }
-        .share()
-
-    val uiChangeSubscription = uiStates
-        .compose(uiChangeProducer)
-        .subscribe { uiChange -> uiChange(ui) }
-
     testObserver = statesFromMobiusLoop.test()
 
     testFixture.start()
-
-    disposables.addAll(testObserver, uiChangeSubscription)
-
-    uiEventsSubject.onNext(ScreenCreated())
   }
 }

@@ -29,10 +29,7 @@ class ShortCodeSearchResultStateProducer(
     get() = currentStateProvider()
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<ShortCodeSearchResultState> {
-    return Observable.merge(
-        initialStates(events),
-        fetchPatients(events)
-    )
+    return Observable.never()
   }
 
   private fun initialStates(events: Observable<UiEvent>) = events

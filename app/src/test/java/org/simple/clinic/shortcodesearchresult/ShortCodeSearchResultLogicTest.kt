@@ -66,7 +66,7 @@ class ShortCodeSearchResultLogicTest {
         schedulers = TestSchedulersProvider.trampoline(),
         uiActions = ui,
         patientRepository = patientRepository,
-        currentFacility = Lazy { currentFacility },
+        currentFacility = { currentFacility },
         bloodPressureDao = bloodPressureDao
     )
     val uiRenderer = UiRenderer(ui)
@@ -143,6 +143,8 @@ class ShortCodeSearchResultLogicTest {
     val emptyPatientSearchResults = emptyList<PatientSearchResult>()
     whenever(patientRepository.searchByShortCode(shortCode))
         .thenReturn(Observable.just(emptyPatientSearchResults))
+    whenever(bloodPressureDao.patientToFacilityIds(emptyList()))
+        .thenReturn(emptyList())
 
     // when
     setupStateProducer()
@@ -253,11 +255,9 @@ class ShortCodeSearchResultLogicTest {
         .compose(uiChangeProducer)
         .subscribe { uiChange -> uiChange(ui) }
 
-    testFixture.start()
+    testObserver = statesFromMobiusLoop.test()
 
-    testObserver = uiStates
-        .mergeWith(statesFromMobiusLoop)
-        .test()
+    testFixture.start()
 
     disposables.addAll(testObserver, uiChangeSubscription)
 

@@ -196,7 +196,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   override fun hideSearchingForPatient() {
-    searchingContainer.visibility = View.GONE
+    if (binding != null) searchingContainer.visibility = View.GONE
   }
 
   interface Injector {

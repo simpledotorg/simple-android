@@ -1,5 +1,10 @@
 package org.simple.clinic.lint
 
+import com.android.SdkConstants.ANDROID_URI
+import com.android.SdkConstants.ATTR_SRC
+import com.android.SdkConstants.ATTR_SRC_COMPAT
+import com.android.SdkConstants.AUTO_URI
+import com.android.SdkConstants.IMAGE_VIEW
 import com.android.tools.lint.detector.api.Category
 import com.android.tools.lint.detector.api.Implementation
 import com.android.tools.lint.detector.api.Issue
@@ -14,11 +19,6 @@ import org.w3c.dom.Element
 class ImageSrcDetector : ResourceXmlDetector() {
 
   companion object {
-    const val ANDROID_URI = "http://schemas.android.com/apk/res/android"
-    const val AUTO_URI = "http://schemas.android.com/apk/res-auto"
-    const val IMAGE_VIEW = "ImageView"
-    const val ATTR_SRC = "src"
-
     private const val ImageSrcExplanation = "Please use `app:srcCompat` instead of `android:src` when setting an image resource"
 
     val ImageSrcIssue = Issue.create(
@@ -38,7 +38,7 @@ class ImageSrcDetector : ResourceXmlDetector() {
   override fun getApplicableElements() = listOf(IMAGE_VIEW)
 
   override fun visitElement(context: XmlContext, element: Element) {
-    if (element.tagName == IMAGE_VIEW && element.hasAttributeNS(ANDROID_URI, ATTR_SRC)) {
+    if (element.hasAttributeNS(ANDROID_URI, ATTR_SRC)) {
       reportSrcIssue(context, element)
     }
   }
@@ -47,14 +47,14 @@ class ImageSrcDetector : ResourceXmlDetector() {
     context.report(
         ImageSrcIssue,
         element,
-        context.getLocation(element.getAttributeNodeNS(ANDROID_URI, "src")),
+        context.getLocation(element.getAttributeNodeNS(ANDROID_URI, ATTR_SRC)),
         ImageSrcExplanation,
         LintFix.create().composite(
             LintFix.create().set(
-                AUTO_URI, "srcCompat",
-                element.getAttributeNS(ANDROID_URI, "src")
+                AUTO_URI, ATTR_SRC_COMPAT,
+                element.getAttributeNS(ANDROID_URI, ATTR_SRC)
             ).build(),
-            LintFix.create().unset(ANDROID_URI, "src").build()
+            LintFix.create().unset(ANDROID_URI, ATTR_SRC).build()
         )
     )
   }

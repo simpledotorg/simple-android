@@ -55,9 +55,9 @@ class ShortCodeSearchResultLogicTest {
   )
   private val uiChangeProducer = ShortCodeSearchResultUiChangeProducer(TestSchedulersProvider.trampoline())
   private val disposables = CompositeDisposable()
+  private val statesFromMobiusLoop = PublishSubject.create<ShortCodeSearchResultState>()
 
   lateinit var testObserver: TestObserver<ShortCodeSearchResultState>
-
   private lateinit var testFixture: MobiusTestFixture<ShortCodeSearchResultState, ShortCodeSearchResultEvent, ShortCodeSearchResultEffect>
 
   @Before
@@ -77,7 +77,10 @@ class ShortCodeSearchResultLogicTest {
         init = ShortCodeSearchResultInit(),
         update = ShortCodeSearchResultUpdate(),
         effectHandler = effectHandler.build(),
-        modelUpdateListener = uiRenderer::render
+        modelUpdateListener = { model ->
+          statesFromMobiusLoop.onNext(model)
+          uiRenderer.render(model)
+        }
     )
   }
 
@@ -252,7 +255,9 @@ class ShortCodeSearchResultLogicTest {
 
     testFixture.start()
 
-    testObserver = uiStates.test()
+    testObserver = uiStates
+        .mergeWith(statesFromMobiusLoop)
+        .test()
 
     disposables.addAll(testObserver, uiChangeSubscription)
 

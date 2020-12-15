@@ -5,3 +5,5 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 sealed class BpPassportEffect
 
 data class SaveNewOngoingPatientEntry(val entry: OngoingNewPatientEntry) : BpPassportEffect()
+
+object FetchCurrentFacility : BpPassportEffect()

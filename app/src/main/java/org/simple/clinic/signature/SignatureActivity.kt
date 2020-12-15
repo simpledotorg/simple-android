@@ -8,10 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.activity_signature.*
 import org.simple.clinic.ClinicApp
-import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ActivitySignatureBinding
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
@@ -49,9 +48,25 @@ class SignatureActivity : AppCompatActivity(), SignatureUiActions {
     )
   }
 
+  private lateinit var binding: ActivitySignatureBinding
+
+  private val signatureRoot
+    get() = binding.signatureRoot
+
+  private val acceptSignature
+    get() = binding.acceptSignature
+
+  private val drawSignatureFrame
+    get() = binding.drawSignatureFrame
+
+  private val clearSignature
+    get() = binding.clearSignature
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_signature)
+
+    binding = ActivitySignatureBinding.inflate(layoutInflater)
+    setContentView(binding.root)
 
     signatureRoot.setOnClickListener { finish() }
   }
@@ -102,6 +117,5 @@ class SignatureActivity : AppCompatActivity(), SignatureUiActions {
     setupDI()
     super.attachBaseContext(newBase)
   }
-
 }
 

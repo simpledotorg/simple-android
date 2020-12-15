@@ -7,13 +7,13 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import kotlinx.android.synthetic.main.screen_settings.view.*
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenSettingsBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
@@ -37,6 +37,32 @@ class SettingsScreen(
   @Inject
   lateinit var features: Features
 
+  private var binding: ScreenSettingsBinding? = null
+
+  private val changeLanguageButton
+    get() = binding!!.changeLanguageButton
+
+  private val toolbar
+    get() = binding!!.toolbar
+
+  private val updateAppVersionButton
+    get() = binding!!.updateAppVersionButton
+
+  private val userName
+    get() = binding!!.userName
+
+  private val userNumber
+    get() = binding!!.userNumber
+
+  private val currentLanguage
+    get() = binding!!.currentLanguage
+
+  private val appVersion
+    get() = binding!!.appVersion
+
+  private val changeLanguageWidgetGroup
+    get() = binding!!.changeLanguageWidgetGroup
+
   private val uiRenderer: SettingsUiRenderer = SettingsUiRenderer(this)
 
   private val events: Observable<SettingsEvent> by unsafeLazy {
@@ -59,7 +85,7 @@ class SettingsScreen(
   private val isChangeLanguageFeatureEnabled by unsafeLazy { features.isEnabled(Feature.ChangeLanguage) }
 
   private fun changeLanguageButtonClicks(): Observable<SettingsEvent> {
-    return RxView.clicks(changeLanguageButton).map { ChangeLanguage }
+    return changeLanguageButton.clicks().map { ChangeLanguage }
   }
 
   override fun onFinishInflate() {
@@ -67,6 +93,8 @@ class SettingsScreen(
     if (isInEditMode) {
       return
     }
+
+    binding = ScreenSettingsBinding.bind(this)
 
     context.injector<Injector>().inject(this)
 
@@ -89,6 +117,7 @@ class SettingsScreen(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

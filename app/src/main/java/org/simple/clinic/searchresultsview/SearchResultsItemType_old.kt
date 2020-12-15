@@ -12,7 +12,7 @@ import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResult
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import java.util.UUID
 
-sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Event> {
+sealed class SearchResultsItemType_old : ItemAdapter.Item<SearchResultsItemType_old.Event> {
 
   sealed class Event {
     data class ResultClicked(val patientUuid: UUID) : Event()
@@ -21,7 +21,7 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
   companion object {
     fun from(
         results: PatientSearchResults
-    ): List<SearchResultsItemType> {
+    ): List<SearchResultsItemType_old> {
       return when {
         results.hasNoResults -> emptyList()
         else -> generateSearchResultListItems(results)
@@ -30,7 +30,7 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
 
     private fun generateSearchResultListItems(
         results: PatientSearchResults
-    ): List<SearchResultsItemType> {
+    ): List<SearchResultsItemType_old> {
       val currentFacility = results.currentFacility!!
       val itemsInCurrentFacility = SearchResultRow
           .forSearchResults(results.visitedCurrentFacility, currentFacility)
@@ -51,7 +51,7 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
     private fun listItemsForCurrentFacility(
         currentFacility: Facility,
         searchResultRows: List<SearchResultRow>
-    ): List<SearchResultsItemType> {
+    ): List<SearchResultsItemType_old> {
 
       val currentFacilityHeader = InCurrentFacilityHeader(currentFacility.name)
 
@@ -70,7 +70,7 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
 
     private fun listItemsForOtherFacilities(
         searchResultRows: List<SearchResultRow>
-    ): List<SearchResultsItemType> {
+    ): List<SearchResultsItemType_old> {
 
       return if (searchResultRows.isNotEmpty()) {
         listOf(
@@ -85,7 +85,7 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
 
   data class InCurrentFacilityHeader(
       val facilityName: String
-  ) : SearchResultsItemType() {
+  ) : SearchResultsItemType_old() {
 
     override fun layoutResId(): Int = R.layout.list_patient_search_header
 
@@ -96,7 +96,7 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
     }
   }
 
-  object NotInCurrentFacilityHeader : SearchResultsItemType() {
+  object NotInCurrentFacilityHeader : SearchResultsItemType_old() {
 
     override fun layoutResId(): Int = R.layout.list_patient_search_header
 
@@ -107,7 +107,7 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
     }
   }
 
-  object NoPatientsInCurrentFacility : SearchResultsItemType() {
+  object NoPatientsInCurrentFacility : SearchResultsItemType_old() {
 
     override fun layoutResId(): Int = R.layout.list_patient_search_no_patients
 
@@ -118,7 +118,7 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
   data class SearchResultRow(
       val searchResultViewModel: PatientSearchResultViewModel,
       val currentFacilityUuid: UUID
-  ) : SearchResultsItemType() {
+  ) : SearchResultsItemType_old() {
 
     companion object {
       fun forSearchResults(
@@ -156,9 +156,9 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
     }
   }
 
-  class DiffCallback : DiffUtil.ItemCallback<SearchResultsItemType>() {
+  class DiffCallback : DiffUtil.ItemCallback<SearchResultsItemType_old>() {
 
-    override fun areItemsTheSame(oldItem: SearchResultsItemType, newItem: SearchResultsItemType): Boolean {
+    override fun areItemsTheSame(oldItem: SearchResultsItemType_old, newItem: SearchResultsItemType_old): Boolean {
       return when {
         oldItem is InCurrentFacilityHeader && newItem is InCurrentFacilityHeader -> oldItem.facilityName == newItem.facilityName
         oldItem is NotInCurrentFacilityHeader && newItem is NotInCurrentFacilityHeader -> true
@@ -168,7 +168,7 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
       }
     }
 
-    override fun areContentsTheSame(oldItem: SearchResultsItemType, newItem: SearchResultsItemType): Boolean {
+    override fun areContentsTheSame(oldItem: SearchResultsItemType_old, newItem: SearchResultsItemType_old): Boolean {
       return oldItem == newItem
     }
   }

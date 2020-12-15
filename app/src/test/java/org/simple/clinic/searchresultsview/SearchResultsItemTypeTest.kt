@@ -3,10 +3,10 @@ package org.simple.clinic.searchresultsview
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.searchresultsview.SearchResultsItemType.InCurrentFacilityHeader
-import org.simple.clinic.searchresultsview.SearchResultsItemType.NoPatientsInCurrentFacility
-import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFacilityHeader
-import org.simple.clinic.searchresultsview.SearchResultsItemType.SearchResultRow
+import org.simple.clinic.searchresultsview.SearchResultsItemType_old.InCurrentFacilityHeader
+import org.simple.clinic.searchresultsview.SearchResultsItemType_old.NoPatientsInCurrentFacility
+import org.simple.clinic.searchresultsview.SearchResultsItemType_old.NotInCurrentFacilityHeader
+import org.simple.clinic.searchresultsview.SearchResultsItemType_old.SearchResultRow
 import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
 import java.util.UUID
 
@@ -29,7 +29,7 @@ class SearchResultsItemTypeTest {
     )
 
     // when
-    val listItems = SearchResultsItemType.from(
+    val listItems = SearchResultsItemType_old.from(
         results = searchResults
     )
 
@@ -81,7 +81,7 @@ class SearchResultsItemTypeTest {
     )
 
     // when
-    val listItems = SearchResultsItemType.from(
+    val listItems = SearchResultsItemType_old.from(
         results = searchResults
     )
 
@@ -129,7 +129,7 @@ class SearchResultsItemTypeTest {
     )
 
     // when
-    val listItems = SearchResultsItemType.from(
+    val listItems = SearchResultsItemType_old.from(
         results = searchResults
     )
 
@@ -178,7 +178,7 @@ class SearchResultsItemTypeTest {
     )
 
     // when
-    val listItems = SearchResultsItemType.from(searchResults)
+    val listItems = SearchResultsItemType_old.from(searchResults)
 
     // then
     assertThat(listItems).isEmpty()

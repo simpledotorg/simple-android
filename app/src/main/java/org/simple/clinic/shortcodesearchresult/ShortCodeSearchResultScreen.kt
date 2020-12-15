@@ -20,7 +20,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.searchresultsview.PatientSearchResults
-import org.simple.clinic.searchresultsview.SearchResultsItemType
+import org.simple.clinic.searchresultsview.SearchResultsItemType_old
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
@@ -49,7 +49,7 @@ class ShortCodeSearchResultScreen(
   lateinit var effectHandlerFactory: ShortCodeSearchResultEffectHandler.Factory
 
   private val adapter = ItemAdapter(
-      diffCallback = SearchResultsItemType.DiffCallback(),
+      diffCallback = SearchResultsItemType_old.DiffCallback(),
       bindings = mapOf(
           R.layout.list_patient_search_header to { layoutInflater, parent ->
             ListPatientSearchHeaderBinding.inflate(layoutInflater, parent, false)
@@ -162,7 +162,7 @@ class ShortCodeSearchResultScreen(
   private fun patientItemClicks(): Observable<ShortCodeSearchResultEvent> {
     return adapter
         .itemEvents
-        .ofType<SearchResultsItemType.Event.ResultClicked>()
+        .ofType<SearchResultsItemType_old.Event.ResultClicked>()
         .map { ViewPatient(it.patientUuid) }
   }
 
@@ -194,7 +194,7 @@ class ShortCodeSearchResultScreen(
   }
 
   override fun showSearchResults(foundPatients: PatientSearchResults) {
-    adapter.submitList(SearchResultsItemType.from(foundPatients))
+    adapter.submitList(SearchResultsItemType_old.from(foundPatients))
   }
 
   override fun showSearchPatientButton() {

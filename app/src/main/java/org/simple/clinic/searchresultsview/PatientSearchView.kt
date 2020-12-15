@@ -63,7 +63,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
   var searchResultClicked: SearchResultClicked? = null
 
   private val adapter = ItemAdapter(
-      diffCallback = SearchResultsItemType.DiffCallback(),
+      diffCallback = SearchResultsItemType_old.DiffCallback(),
       bindings = mapOf(
           R.layout.list_patient_search_header to { layoutInflater, parent ->
             ListPatientSearchHeaderBinding.inflate(layoutInflater, parent, false)
@@ -148,7 +148,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
   private fun setupSearchResultClicks(screenDestroys: Observable<ScreenDestroyed>) {
     adapter
         .itemEvents
-        .ofType<SearchResultsItemType.Event.ResultClicked>()
+        .ofType<SearchResultsItemType_old.Event.ResultClicked>()
         .doOnNext { searchResultClicked?.invoke(it.patientUuid) }
         .takeUntil(screenDestroys)
         .subscribe()
@@ -164,7 +164,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
       adapter.submitList(emptyList())
     } else {
       setEmptyStateVisible(false)
-      adapter.submitList(SearchResultsItemType.from(results))
+      adapter.submitList(SearchResultsItemType_old.from(results))
     }
   }
 

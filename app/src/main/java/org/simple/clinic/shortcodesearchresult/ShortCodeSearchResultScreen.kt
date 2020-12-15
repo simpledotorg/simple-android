@@ -9,10 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.patient_search_view.view.*
-import kotlinx.android.synthetic.main.screen_shortcode_search_result.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenShortcodeSearchResultBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
@@ -72,12 +71,37 @@ class ShortCodeSearchResultScreen(
     )
   }
 
+  private var viewBinding: ScreenShortcodeSearchResultBinding? = null
+
+  private val toolBar
+    get() = viewBinding!!.toolBar
+
+  private val patientSearchView
+    get() = viewBinding!!.patientSearchView
+
+  private val newPatientButton
+    get() = patientSearchView.newPatientButton
+
+  private val resultsRecyclerView
+    get() = patientSearchView.resultsRecyclerView
+
+  private val loader
+    get() = patientSearchView.loader
+
+  private val newPatientContainer
+    get() = patientSearchView.newPatientContainer
+
+  private val emptyStateView
+    get() = patientSearchView.emptyStateView
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
     hideKeyboard()
+
+    viewBinding = ScreenShortcodeSearchResultBinding.bind(this)
 
     context.injector<Injector>().inject(this)
 
@@ -92,6 +116,7 @@ class ShortCodeSearchResultScreen(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    viewBinding = null
     super.onDetachedFromWindow()
   }
 

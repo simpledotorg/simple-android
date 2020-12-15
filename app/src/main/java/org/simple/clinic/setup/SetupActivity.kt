@@ -14,6 +14,7 @@ import io.reactivex.Observable
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.databinding.ActivitySetupBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.main.TheActivity
@@ -67,13 +68,18 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
   private lateinit var navController: NavController
 
+  private lateinit var binding: ActivitySetupBinding
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     @Suppress("ConstantConditionIf")
     if (BuildConfig.DISABLE_SCREENSHOT) {
       window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
     }
-    setContentView(R.layout.activity_setup)
+
+    binding = ActivitySetupBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
     navController = findNavController(R.id.screen_host_view)
 
     delegate.onRestoreInstanceState(savedInstanceState)

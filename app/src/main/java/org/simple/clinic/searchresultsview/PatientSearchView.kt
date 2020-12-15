@@ -4,13 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.patient_search_view.view.*
 import org.simple.clinic.R
+import org.simple.clinic.databinding.PatientSearchViewBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.MobiusDelegate
@@ -33,6 +34,26 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   @Inject
   lateinit var effectHandler: SearchResultsEffectHandler
+
+  private var binding: PatientSearchViewBinding? = null
+
+  private val resultsRecyclerView
+    get() = binding!!.resultsRecyclerView
+
+  private val newPatientButton
+    get() = binding!!.newPatientButton
+
+  private val loader
+    get() = binding!!.loader
+
+  private val newPatientContainer
+    get() = binding!!.newPatientContainer
+
+  private val emptyStateView
+    get() = binding!!.emptyStateView
+
+  private val newPatientRationaleTextView
+    get() = binding!!.newPatientRationaleTextView
 
   var registerNewPatientClicked: RegisterNewPatientClicked? = null
 
@@ -59,10 +80,12 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
-    inflate(context, R.layout.patient_search_view, this)
     if (isInEditMode) {
       return
     }
+
+    val layoutInflater = LayoutInflater.from(context)
+    binding = PatientSearchViewBinding.inflate(layoutInflater, this)
 
     context.injector<Injector>().inject(this)
 
@@ -78,6 +101,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

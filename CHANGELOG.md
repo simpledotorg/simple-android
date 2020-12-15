@@ -2,7 +2,7 @@
 
 ## Next Release
 ### Internal
-- [In Progress: 30 Nov 2020] Migrate app to use ViewBinding
+- [In Progress: 15 Dec 2020] Migrate app to use ViewBinding
 - Add PR comment commands for running instrumented tests and rebasing PR
 - Add breadcrumbs for different stages in search operations
 - Revert view binding migration for `RecentPatientsView`
@@ -16,8 +16,6 @@
 
 ### Fixes
 - Fix app going back to home screen after scanning a BP passport
-
-### Fixes
 - Fix a crash that could happen when closing the edit medicines screen
 
 ## On Demo

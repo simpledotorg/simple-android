@@ -14,9 +14,9 @@ import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.dialog_patientsummary_addphone.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.DialogPatientsummaryAddphoneBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientUuid
@@ -86,6 +86,13 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi, UiActi
   }
 
   private var layout: View? = null
+  private var binding: DialogPatientsummaryAddphoneBinding? = null
+
+  private val phoneNumberEditText
+    get() = binding!!.phoneNumberEditText
+
+  private val phoneNumberInputLayout
+    get() = binding!!.phoneNumberInputLayout
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -99,7 +106,9 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi, UiActi
 
   @SuppressLint("CheckResult", "InflateParams")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    layout = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_patientsummary_addphone, null)
+    val layoutInflater = LayoutInflater.from(requireContext())
+    binding = DialogPatientsummaryAddphoneBinding.inflate(layoutInflater)
+    layout = binding?.root
 
     return AlertDialog.Builder(requireContext())
         .setTitle(R.string.patientsummary_addphone_dialog_title)
@@ -123,6 +132,7 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi, UiActi
   override fun onDestroyView() {
     super.onDestroyView()
     screenDestroys.onNext(ScreenDestroyed())
+    binding = null
     layout = null
   }
 

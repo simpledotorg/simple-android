@@ -7,6 +7,6 @@ import org.simple.clinic.mobius.first
 class ShortCodeSearchResultInit : Init<ShortCodeSearchResultState, ShortCodeSearchResultEffect> {
 
   override fun init(model: ShortCodeSearchResultState): First<ShortCodeSearchResultState, ShortCodeSearchResultEffect> {
-    return first(model)
+    return first(model, SearchByShortCode(model.shortCode))
   }
 }

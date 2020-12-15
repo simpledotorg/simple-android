@@ -7,9 +7,9 @@
 - Add breadcrumbs for different stages in search operations
 - Revert view binding migration for `RecentPatientsView`
 - Add `MLKitQrCodeAnalyzer`
-- [In progress: 11 Dec 2020] Migrate `ShortCodeSearchResultScreen` to Mobius
 - Cleanup `ImageSrcDetector`
 - Bump tooling JDK to 11
+- Migrate `ShortCodeSearchResultScreen` to Mobius
 
 ### Changes
 - Updated translations: `pa-IN`, `te-IN`, `ti-ET`, `bn-IN`, `mr-IN`, `am_ET`

@@ -7,11 +7,15 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.scanid.ShortCodeValidationResult.Failure
 import org.simple.clinic.scanid.ShortCodeValidationResult.Success
 import java.util.UUID
+import javax.inject.Inject
 
-class ScanSimpleIdUpdate : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimpleIdEffect> {
+class ScanSimpleIdUpdate @Inject constructor(
+    private val crashReporter: CrashReporter
+) : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimpleIdEffect> {
   override fun update(model: ScanSimpleIdModel, event: ScanSimpleIdEvent): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return when (event) {
       ShowKeyboard -> dispatch(HideQrCodeScannerView)
@@ -24,7 +28,10 @@ class ScanSimpleIdUpdate : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimp
     }
   }
 
-  private fun patientSearchByIdentifierCompleted(model: ScanSimpleIdModel, event: PatientSearchByIdentifierCompleted): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+  private fun patientSearchByIdentifierCompleted(
+      model: ScanSimpleIdModel,
+      event: PatientSearchByIdentifierCompleted
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val scanResult = if (event.patient.isPresent()) {
       val patientId = event.patient.get().uuid
       PatientFound(patientId)
@@ -43,6 +50,7 @@ class ScanSimpleIdUpdate : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimp
       val identifier = Identifier(bpPassportCode.toString(), BpPassport)
       next(model = model.searching(), SearchPatientByIdentifier(identifier))
     } catch (e: IllegalArgumentException) {
+      crashReporter.report(e)
       noChange()
     }
   }

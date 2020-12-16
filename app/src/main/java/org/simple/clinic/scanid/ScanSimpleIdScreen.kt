@@ -45,6 +45,9 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   @Inject
   lateinit var activity: AppCompatActivity
 
+  @Inject
+  lateinit var scanSimpleIdUpdate: ScanSimpleIdUpdate
+
   private var binding: ScreenScanSimpleBinding? = null
 
   private val toolBar
@@ -81,7 +84,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     MobiusDelegate.forView(
         events = events.ofType(),
         defaultModel = ScanSimpleIdModel.create(),
-        update = ScanSimpleIdUpdate(),
+        update = scanSimpleIdUpdate,
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render
     )

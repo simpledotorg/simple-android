@@ -9,6 +9,7 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 
 class MLKitQrCodeAnalyzer(
+    private val bitmapUtils: BitmapUtils,
     private val onQrCodeDetected: OnQrCodeDetected
 ) : ImageAnalysis.Analyzer {
 
@@ -20,14 +21,13 @@ class MLKitQrCodeAnalyzer(
 
   @SuppressLint("UnsafeExperimentalUsageError")
   override fun analyze(imageProxy: ImageProxy) {
-    val mediaImage = imageProxy.image
-
-    if (mediaImage == null) {
+    val bitmap = bitmapUtils.getBitmap(imageProxy)
+    if (bitmap == null) {
       imageProxy.close()
       return
     }
 
-    val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+    val image = InputImage.fromBitmap(bitmap, 0)
     processImage(image = image, imageProxy = imageProxy)
   }
 

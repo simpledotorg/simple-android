@@ -11,6 +11,7 @@
 - Bump CI JDK version to 11
 - Revert view binding migration for `RecentPatientsView`
 - Add `MLKitQrCodeAnalyzer`
+- Convert the `ImageProxy` to `Bitmap` when decoding the QR code using ML kit
 
 ### Changes
 - Disable the change language feature on devices running Lollipop (API level 21, 22)

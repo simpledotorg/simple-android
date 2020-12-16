@@ -11,8 +11,9 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.contactpatient_removeappointment.view.*
 import org.simple.clinic.R
 import org.simple.clinic.contactpatient.RemoveAppointmentReason
+import org.simple.clinic.databinding.ContactpatientRemoveappointmentReasonitemBinding
+import org.simple.clinic.widgets.BindingItemAdapter
 import org.simple.clinic.widgets.DividerItemDecorator
-import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.dp
 
 private typealias RemoveReasonClicked = (RemoveAppointmentReason) -> Unit
@@ -24,7 +25,14 @@ class RemoveAppointmentView(
     attributeSet: AttributeSet
 ) : ConstraintLayout(context, attributeSet) {
 
-  private val removalReasonsAdapter = ItemAdapter(RemoveAppointmentReasonItem.DiffCallback())
+  private val removalReasonsAdapter = BindingItemAdapter(
+      diffCallback = RemoveAppointmentReasonItem.DiffCallback(),
+      bindings = mapOf(
+          R.layout.contactpatient_removeappointment_reasonitem to { layoutInflater, parent ->
+            ContactpatientRemoveappointmentReasonitemBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
 
   var removeReasonClicked: RemoveReasonClicked? = null
 

@@ -2,16 +2,16 @@ package org.simple.clinic.contactpatient.views
 
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.contactpatient_removeappointment_reasonitem.*
 import org.simple.clinic.R
 import org.simple.clinic.contactpatient.RemoveAppointmentReason
-import org.simple.clinic.widgets.ItemAdapter
-import org.simple.clinic.widgets.recyclerview.ViewHolderX
+import org.simple.clinic.databinding.ContactpatientRemoveappointmentReasonitemBinding
+import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
 data class RemoveAppointmentReasonItem(
     private val reason: RemoveAppointmentReason,
     private val isSelected: Boolean
-) : ItemAdapter.Item<RemoveAppointmentReasonItem.Event> {
+) : BindingItemAdapter.Item<RemoveAppointmentReasonItem.Event> {
 
   companion object {
 
@@ -30,10 +30,12 @@ data class RemoveAppointmentReasonItem(
 
   override fun layoutResId(): Int = R.layout.contactpatient_removeappointment_reasonitem
 
-  override fun render(holder: ViewHolderX, subject: Subject<Event>) {
-    holder.removalReasonButton.setText(reason.displayText)
-    holder.removalReasonButton.isChecked = isSelected
-    holder.removalReasonButton.setOnClickListener { subject.onNext(Event.Clicked(reason)) }
+  override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
+    val binding = holder.binding as ContactpatientRemoveappointmentReasonitemBinding
+
+    binding.removalReasonButton.setText(reason.displayText)
+    binding.removalReasonButton.isChecked = isSelected
+    binding.removalReasonButton.setOnClickListener { subject.onNext(Event.Clicked(reason)) }
   }
 
   sealed class Event {

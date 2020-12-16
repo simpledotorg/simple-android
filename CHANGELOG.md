@@ -10,6 +10,7 @@
 - Cleanup `ImageSrcDetector`
 - Bump tooling JDK to 11
 - Migrate `ShortCodeSearchResultScreen` to Mobius
+- Convert the `ImageProxy` to `Bitmap` when decoding the QR code using ML kit
 
 ### Changes
 - Updated translations: `pa-IN`, `te-IN`, `ti-ET`, `bn-IN`, `mr-IN`, `am_ET`

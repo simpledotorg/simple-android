@@ -43,6 +43,9 @@ constructor(
   @Inject
   lateinit var features: Features
 
+  @Inject
+  lateinit var bitmapUtils: BitmapUtils
+
   private val scans = PublishSubject.create<String>()
 
   private val cameraExecutor = Executors.newSingleThreadExecutor()
@@ -85,7 +88,7 @@ constructor(
 
     val isMLKitQrCodeScannerEnabled = features.isEnabled(Feature.MLKitQrCodeScanner)
     val qrCodeAnalyzer = if (isMLKitQrCodeScannerEnabled) {
-      MLKitQrCodeAnalyzer(scans::onNext)
+      MLKitQrCodeAnalyzer(bitmapUtils, scans::onNext)
     } else {
       ZxingQrCodeAnalyzer(scans::onNext)
     }

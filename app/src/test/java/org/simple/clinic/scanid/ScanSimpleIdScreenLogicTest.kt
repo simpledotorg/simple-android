@@ -10,6 +10,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.first
+import org.simple.clinic.platform.crash.NoOpCrashReporter
 import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.NotEqualToRequiredLength
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -133,7 +134,7 @@ class ScanSimpleIdScreenLogicTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         init = Init { first(it) },
-        update = ScanSimpleIdUpdate(),
+        update = ScanSimpleIdUpdate(crashReporter = NoOpCrashReporter()),
         effectHandler = effectHandler.build(),
         defaultModel = ScanSimpleIdModel.create(),
         modelUpdateListener = { /* no-op */ }

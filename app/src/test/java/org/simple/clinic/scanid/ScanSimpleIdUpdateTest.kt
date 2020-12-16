@@ -11,6 +11,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.platform.crash.NoOpCrashReporter
 import org.simple.clinic.util.Optional
 import java.util.UUID
 
@@ -18,7 +19,9 @@ class ScanSimpleIdUpdateTest {
 
   private val defaultModel = ScanSimpleIdModel.create()
 
-  private val spec = UpdateSpec(ScanSimpleIdUpdate())
+  private val spec = UpdateSpec(ScanSimpleIdUpdate(
+      crashReporter = NoOpCrashReporter()
+  ))
 
   @Test
   fun `when a valid QR code is scanned, then search for the patient`() {

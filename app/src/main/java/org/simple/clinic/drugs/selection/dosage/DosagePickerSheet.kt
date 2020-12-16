@@ -11,6 +11,7 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.PrescribedDrugWithDosageListItemBinding
 import org.simple.clinic.databinding.SheetDosagePickerBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
@@ -19,9 +20,9 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
+import org.simple.clinic.widgets.BindingItemAdapter
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.DividerItemDecorator
-import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.dp
@@ -42,7 +43,14 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi, DosagePickerUiA
 
   private lateinit var component: DosagePickerSheetComponent
 
-  private val dosageAdapter = ItemAdapter(DosageDiffer())
+  private val dosageAdapter = BindingItemAdapter(
+      diffCallback = DosageDiffer(),
+      bindings = mapOf(
+          R.layout.prescribed_drug_with_dosage_list_item to { layoutInflater, parent ->
+            PrescribedDrugWithDosageListItemBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
 
   private val events by unsafeLazy {
     Observable

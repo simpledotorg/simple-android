@@ -4,16 +4,16 @@ import android.annotation.SuppressLint
 import androidx.annotation.VisibleForTesting
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.list_allpatientsinfacility_facility_header.*
-import kotlinx.android.synthetic.main.list_patient_search.*
 import org.simple.clinic.R
-import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.databinding.ListAllpatientsinfacilityFacilityHeaderBinding
+import org.simple.clinic.databinding.ListPatientSearchBinding
+import org.simple.clinic.widgets.BindingItemAdapter
 import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
-import org.simple.clinic.widgets.recyclerview.ViewHolderX
+import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import java.util.Locale
 import java.util.UUID
 
-sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacilityListItem.Event> {
+sealed class AllPatientsInFacilityListItem : BindingItemAdapter.Item<AllPatientsInFacilityListItem.Event> {
 
   companion object {
     fun mapSearchResultsToListItems(
@@ -50,11 +50,13 @@ sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacil
     }
 
     override fun render(
-        holder: ViewHolderX,
+        holder: BindingViewHolder,
         subject: Subject<Event>
     ) {
       val resources = holder.itemView.resources
-      holder.facilityLabel.text = resources.getString(R.string.allpatientsinfacility_foundpatients_header, facilityName)
+      val binding = holder.binding as ListAllpatientsinfacilityFacilityHeaderBinding
+
+      binding.facilityLabel.text = resources.getString(R.string.allpatientsinfacility_foundpatients_header, facilityName)
     }
 
     override fun sectionTitle(locale: Locale): SectionTitle = SectionTitle.None
@@ -70,10 +72,12 @@ sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacil
     }
 
     override fun render(
-        holder: ViewHolderX,
+        holder: BindingViewHolder,
         subject: Subject<Event>
     ) {
-      holder.patientSearchResultView.render(searchResultViewModel, facilityUuid)
+      val binding = holder.binding as ListPatientSearchBinding
+
+      binding.patientSearchResultView.render(searchResultViewModel, facilityUuid)
       holder.itemView.setOnClickListener { subject.onNext(Event.SearchResultClicked(searchResultViewModel.uuid)) }
     }
 

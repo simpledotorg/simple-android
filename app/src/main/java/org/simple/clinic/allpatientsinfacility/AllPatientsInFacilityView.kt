@@ -14,6 +14,8 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.SearchResultClicked
+import org.simple.clinic.databinding.ListAllpatientsinfacilityFacilityHeaderBinding
+import org.simple.clinic.databinding.ListPatientSearchBinding
 import org.simple.clinic.databinding.ViewAllpatientsinfacilityBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.FacilityRepository
@@ -32,7 +34,18 @@ class AllPatientsInFacilityView(
 ) : FrameLayout(context, attributeSet), AllPatientsInFacilityUi {
 
   private val searchResultsAdapter by unsafeLazy {
-    AllPatientsInFacilityListAdapter(AllPatientsInFacilityListItemCallback(), locale)
+    AllPatientsInFacilityListAdapter(
+        diffCallback = AllPatientsInFacilityListItemCallback(),
+        bindings = mapOf(
+            R.layout.list_allpatientsinfacility_facility_header to { layoutInflater, parent ->
+              ListAllpatientsinfacilityFacilityHeaderBinding.inflate(layoutInflater, parent, false)
+            },
+            R.layout.list_patient_search to { layoutInflater, parent ->
+              ListPatientSearchBinding.inflate(layoutInflater, parent, false)
+            }
+        ),
+        locale = locale
+    )
   }
 
   @Inject

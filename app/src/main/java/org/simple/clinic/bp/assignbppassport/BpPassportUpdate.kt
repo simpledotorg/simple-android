@@ -13,6 +13,7 @@ class BpPassportUpdate : Update<BpPassportModel, BpPassportEvent, BpPassportEffe
         dispatch(SaveNewOngoingPatientEntry(ongoingNewPatientEntry))
       }
       NewOngoingPatientEntrySaved -> dispatch(FetchCurrentFacility)
+      is CurrentFacilityRetrieved -> dispatch(OpenPatientEntryScreen(event.facility))
     }
   }
 }

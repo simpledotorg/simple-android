@@ -8,24 +8,26 @@
 - [In Progress: 15 Dec 2020] Migrate app to use ViewBinding
 - Add PR comment commands for running instrumented tests and rebasing PR
 - Add breadcrumbs for different stages in search operations
-- Revert view binding migration for `RecentPatientsView`
-- Add `MLKitQrCodeAnalyzer`
 - Cleanup `ImageSrcDetector`
 - Bump tooling JDK to 11
 - Migrate `ShortCodeSearchResultScreen` to Mobius
-- Convert the `ImageProxy` to `Bitmap` when decoding the QR code using ML kit
 
 ### Changes
 - Updated translations: `pa-IN`, `te-IN`, `ti-ET`, `bn-IN`, `mr-IN`, `am_ET`
 
 ### Fixes
-- Fix app going back to home screen after scanning a BP passport
 - Fix a crash that could happen when closing the edit medicines screen
 
-## On Demo
+## 2020-12-17-7559
+### Internal
+- Convert the `ImageProxy` to `Bitmap` when decoding the QR code using ML kit
+
+## 2020-12-14-7554
 ### Internal
 - Bump appcompat -> 1.2.0
 - Bump CI JDK version to 11
+- Revert view binding migration for `RecentPatientsView`
+- Add `MLKitQrCodeAnalyzer`
 
 ### Changes
 - Disable the change language feature on devices running Lollipop (API level 21, 22)
@@ -33,6 +35,7 @@
 
 ### Fixes
 - Fix `shortCodeText` auto focusing in `ScanSimpleIdScreen`
+- Fix app going back to home screen after scanning a BP passport
 
 ## 2020-12-03-7536
 ### Fixes

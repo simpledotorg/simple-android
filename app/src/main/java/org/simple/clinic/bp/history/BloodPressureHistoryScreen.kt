@@ -18,6 +18,8 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItemDiffCallback
 import org.simple.clinic.bp.history.adapter.Event.AddNewBpClicked
 import org.simple.clinic.bp.history.adapter.Event.BloodPressureHistoryItemClicked
+import org.simple.clinic.databinding.ListBpHistoryItemBinding
+import org.simple.clinic.databinding.ListNewBpButtonBinding
 import org.simple.clinic.databinding.ScreenBpHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
@@ -30,8 +32,8 @@ import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.BindingPagingItemAdapter
 import org.simple.clinic.widgets.DividerItemDecorator
-import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.dp
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -70,7 +72,17 @@ class BloodPressureHistoryScreen(
   @Named("for_measurement_history")
   lateinit var measurementHistoryPaginationConfig: PagedList.Config
 
-  private val bloodPressureHistoryAdapter = PagingItemAdapter(BloodPressureHistoryListItemDiffCallback())
+  private val bloodPressureHistoryAdapter = BindingPagingItemAdapter(
+      diffCallback = BloodPressureHistoryListItemDiffCallback(),
+      bindings = mapOf(
+          R.layout.list_new_bp_button to { layoutInflater, parent ->
+            ListNewBpButtonBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_bp_history_item to { layoutInflater, parent ->
+            ListBpHistoryItemBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
 
   private val events: Observable<BloodPressureHistoryScreenEvent> by unsafeLazy {
     Observable

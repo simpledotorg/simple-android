@@ -19,6 +19,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.screen_teleconsult_share_prescription.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ListItemTeleconsultSharePrescriptionMedicineBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.home.HomeScreenKey
@@ -33,7 +34,7 @@ import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.BindingItemAdapter
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
@@ -99,7 +100,14 @@ class TeleconsultSharePrescriptionScreen constructor(
     )
   }
 
-  private val teleconsultSharePrescriptionMedicinesAdapter = ItemAdapter(TeleconsultSharePrescriptionDiffCallback())
+  private val teleconsultSharePrescriptionMedicinesAdapter = BindingItemAdapter(
+      diffCallback = TeleconsultSharePrescriptionDiffCallback(),
+      bindings = mapOf(
+          R.layout.list_item_teleconsult_share_prescription_medicine to { layoutInflater, parent ->
+            ListItemTeleconsultSharePrescriptionMedicineBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()

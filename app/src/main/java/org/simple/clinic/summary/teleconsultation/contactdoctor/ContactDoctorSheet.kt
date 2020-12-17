@@ -24,7 +24,7 @@ import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.UiEvent
@@ -66,7 +66,7 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctor
   @Inject
   lateinit var features: Features
 
-  private val itemAdapter = BindingItemAdapter(
+  private val itemAdapter = ItemAdapter(
       diffCallback = DoctorListItem.DiffCallback(),
       bindings = mapOf(
           R.layout.list_contact_doctor to { layoutInflater, parent ->

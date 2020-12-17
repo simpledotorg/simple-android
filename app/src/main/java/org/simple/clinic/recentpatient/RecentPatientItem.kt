@@ -10,7 +10,7 @@ import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.visibleOrGone
@@ -28,7 +28,7 @@ data class RecentPatientItem(
     val dateFormatter: DateTimeFormatter,
     val clock: UserClock,
     val isNewRegistration: Boolean
-) : BindingItemAdapter.Item<UiEvent> {
+) : ItemAdapter.Item<UiEvent> {
 
   companion object {
     fun create(

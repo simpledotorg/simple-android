@@ -7,7 +7,7 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcher
 import org.simple.clinic.databinding.ListSelectcountryCountryViewBinding
 import org.simple.clinic.selectcountry.adapter.Event.CountryClicked
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
 data class SelectableCountryItem(
@@ -15,7 +15,7 @@ data class SelectableCountryItem(
     private val isCountryChosenByUser: Boolean,
     private val showDivider: Boolean,
     private val countryDisplayNameFetcher: CountryDisplayNameFetcher
-) : BindingItemAdapter.Item<Event> {
+) : ItemAdapter.Item<Event> {
 
   companion object {
     fun from(countries: List<Country>, chosenCountry: Country?, countryDisplayNameFetcher: CountryDisplayNameFetcher): List<SelectableCountryItem> {

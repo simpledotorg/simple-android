@@ -21,7 +21,7 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.Language
 import org.simple.clinic.settings.changelanguage.ChangeLanguageListItem.Event.ListItemClicked
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import javax.inject.Inject
 
 class ChangeLanguageScreen(
@@ -49,7 +49,7 @@ class ChangeLanguageScreen(
   private val doneButton
     get() = binding!!.doneButton
 
-  private val languagesAdapter = BindingItemAdapter(
+  private val languagesAdapter = ItemAdapter(
       diffCallback = ChangeLanguageListItem.DiffCallback(),
       bindings = mapOf(
           R.layout.list_change_language_view to { layoutInflater, parent ->

@@ -27,7 +27,7 @@ import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequencySheet
 import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreenKey
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -88,7 +88,7 @@ class TeleconsultMedicinesView(
     )
   }
 
-  private val teleconsultMedicinesAdapter = BindingItemAdapter(
+  private val teleconsultMedicinesAdapter = ItemAdapter(
       diffCallback = TeleconsultMedicineDiffCallback(),
       bindings = mapOf(
           R.layout.list_item_teleconsult_medicine to { layoutInflater, parent ->

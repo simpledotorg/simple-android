@@ -26,7 +26,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
@@ -53,7 +53,7 @@ class FacilityPickerView(
 
   var backClicked: OnBackClicked? = null
 
-  private val recyclerViewAdapter = BindingItemAdapter(
+  private val recyclerViewAdapter = ItemAdapter(
       diffCallback = FacilityListItem.Differ(),
       bindings = mapOf(
           R.layout.list_facility_selection_header to { layoutInflater, parent ->

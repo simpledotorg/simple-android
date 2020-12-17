@@ -7,14 +7,14 @@ import androidx.viewbinding.ViewBinding
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.SectionTitle.None
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.SectionTitle.Text
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import java.util.Locale
 
 class AllPatientsInFacilityListAdapter(
     diffCallback: DiffUtil.ItemCallback<AllPatientsInFacilityListItem>,
     bindings: Map<Int, (layoutInflater: LayoutInflater, parent: ViewGroup) -> ViewBinding>,
     private val locale: Locale
-) : BindingItemAdapter<AllPatientsInFacilityListItem, AllPatientsInFacilityListItem.Event>(diffCallback, bindings), FastScrollRecyclerView.SectionedAdapter {
+) : ItemAdapter<AllPatientsInFacilityListItem, AllPatientsInFacilityListItem.Event>(diffCallback, bindings), FastScrollRecyclerView.SectionedAdapter {
 
   override fun getSectionName(position: Int): String {
     return when (val sectionTitle = getItem(position).sectionTitle(locale)) {

@@ -7,7 +7,7 @@ import org.simple.clinic.databinding.ListContactDoctorBinding
 import org.simple.clinic.summary.teleconsultation.contactdoctor.DoctorListItem.Event.SmsClicked
 import org.simple.clinic.summary.teleconsultation.contactdoctor.DoctorListItem.Event.WhatsAppClicked
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import java.util.UUID
 
@@ -15,7 +15,7 @@ data class DoctorListItem(
     private val doctorId: UUID,
     private val name: String,
     private val number: String
-) : BindingItemAdapter.Item<DoctorListItem.Event> {
+) : ItemAdapter.Item<DoctorListItem.Event> {
 
   companion object {
     fun from(medicalOfficers: List<MedicalOfficer>): List<DoctorListItem> {

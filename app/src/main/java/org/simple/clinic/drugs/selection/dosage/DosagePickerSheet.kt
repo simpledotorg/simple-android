@@ -20,7 +20,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ScreenCreated
@@ -43,7 +43,7 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi, DosagePickerUiA
 
   private lateinit var component: DosagePickerSheetComponent
 
-  private val dosageAdapter = BindingItemAdapter(
+  private val dosageAdapter = ItemAdapter(
       diffCallback = DosageDiffer(),
       bindings = mapOf(
           R.layout.prescribed_drug_with_dosage_list_item to { layoutInflater, parent ->

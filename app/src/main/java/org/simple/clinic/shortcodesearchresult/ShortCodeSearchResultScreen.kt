@@ -28,7 +28,7 @@ import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
 import java.util.UUID
@@ -48,7 +48,7 @@ class ShortCodeSearchResultScreen(
   @Inject
   lateinit var effectHandlerFactory: ShortCodeSearchResultEffectHandler.Factory
 
-  private val adapter = BindingItemAdapter(
+  private val adapter = ItemAdapter(
       diffCallback = SearchResultsItemType.DiffCallback(),
       bindings = mapOf(
           R.layout.list_patient_search_header to { layoutInflater, parent ->

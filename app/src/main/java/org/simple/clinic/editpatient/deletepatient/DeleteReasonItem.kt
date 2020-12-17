@@ -4,13 +4,13 @@ import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ListDeleteReasonBinding
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
 data class DeleteReasonItem(
     val reason: PatientDeleteReason,
     val isSelected: Boolean
-) : BindingItemAdapter.Item<DeleteReasonItem.Event> {
+) : ItemAdapter.Item<DeleteReasonItem.Event> {
 
   companion object {
 

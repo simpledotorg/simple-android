@@ -22,7 +22,7 @@ import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.dp
 import javax.inject.Inject
@@ -49,7 +49,7 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   private val deleteReasonsRecyclerView
     get() = binding!!.deleteReasonsRecyclerView
 
-  private val deleteReasonsAdapter = BindingItemAdapter(
+  private val deleteReasonsAdapter = ItemAdapter(
       diffCallback = DeleteReasonItem.DiffCallback(),
       bindings = mapOf(
           R.layout.list_delete_reason to { layoutInflater, parent ->

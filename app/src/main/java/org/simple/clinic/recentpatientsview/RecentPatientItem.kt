@@ -11,7 +11,7 @@ import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.visibleOrGone
@@ -20,7 +20,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
-sealed class RecentPatientItemType : BindingItemAdapter.Item<UiEvent> {
+sealed class RecentPatientItemType : ItemAdapter.Item<UiEvent> {
 
   companion object {
 

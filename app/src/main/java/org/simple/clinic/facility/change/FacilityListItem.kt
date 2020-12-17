@@ -14,12 +14,12 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name.Highlighted
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name.Plain
 import org.simple.clinic.util.exhaustive
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.setTopMargin
 import org.simple.clinic.widgets.setTopMarginRes
 
-sealed class FacilityListItem : BindingItemAdapter.Item<FacilityListItem.FacilityItemClicked> {
+sealed class FacilityListItem : ItemAdapter.Item<FacilityListItem.FacilityItemClicked> {
 
   sealed class Header : FacilityListItem() {
 

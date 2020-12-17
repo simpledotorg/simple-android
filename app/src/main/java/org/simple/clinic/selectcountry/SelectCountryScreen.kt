@@ -27,7 +27,7 @@ import org.simple.clinic.selectcountry.adapter.SelectableCountryItem
 import org.simple.clinic.selectcountry.adapter.SelectableCountryItemDiffCallback
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.indexOfChildId
 import javax.inject.Inject
 
@@ -99,7 +99,7 @@ class SelectCountryScreen(
     )
   }
 
-  private val supportedCountriesAdapter = BindingItemAdapter(
+  private val supportedCountriesAdapter = ItemAdapter(
       diffCallback = SelectableCountryItemDiffCallback(),
       bindings = mapOf(
           R.layout.list_selectcountry_country_view to { layoutInflater, parent ->

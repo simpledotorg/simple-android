@@ -7,13 +7,13 @@ import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ListAllpatientsinfacilityFacilityHeaderBinding
 import org.simple.clinic.databinding.ListPatientSearchBinding
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import java.util.Locale
 import java.util.UUID
 
-sealed class AllPatientsInFacilityListItem : BindingItemAdapter.Item<AllPatientsInFacilityListItem.Event> {
+sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacilityListItem.Event> {
 
   companion object {
     fun mapSearchResultsToListItems(

@@ -6,7 +6,7 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.ListItemTeleconsultMedicineBinding
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import java.time.Duration
 
@@ -14,7 +14,7 @@ data class TeleconsultMedicineItem(
     val prescribedDrug: PrescribedDrug,
     val defaultDuration: Duration,
     val defaultFrequency: MedicineFrequency
-) : BindingItemAdapter.Item<TeleconsultMedicineItemEvent> {
+) : ItemAdapter.Item<TeleconsultMedicineItemEvent> {
 
   companion object {
 

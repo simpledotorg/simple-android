@@ -11,8 +11,7 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
-// TODO (SM): Rename to `ItemAdapter` once view binding migration for adapters is finished.
-open class BindingItemAdapter<I : BindingItemAdapter.Item<E>, E>(
+open class ItemAdapter<I : ItemAdapter.Item<E>, E>(
     diffCallback: DiffUtil.ItemCallback<I>,
     private val bindings: Map<Int, (layoutInflater: LayoutInflater, parent: ViewGroup) -> ViewBinding>
 ) : ListAdapter<I, BindingViewHolder>(diffCallback) {

@@ -5,13 +5,13 @@ import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.contactpatient.RemoveAppointmentReason
 import org.simple.clinic.databinding.ContactpatientRemoveappointmentReasonitemBinding
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
 data class RemoveAppointmentReasonItem(
     private val reason: RemoveAppointmentReason,
     private val isSelected: Boolean
-) : BindingItemAdapter.Item<RemoveAppointmentReasonItem.Event> {
+) : ItemAdapter.Item<RemoveAppointmentReasonItem.Event> {
 
   companion object {
 

@@ -8,10 +8,10 @@ import org.simple.clinic.databinding.PrescribedDrugWithDosageListItemBinding
 import org.simple.clinic.drugs.selection.dosage.DosageListItem.WithDosage
 import org.simple.clinic.drugs.selection.dosage.DosageListItem.WithoutDosage
 import org.simple.clinic.protocol.ProtocolDrug
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
-sealed class DosageListItem : BindingItemAdapter.Item<DosageListItem.Event> {
+sealed class DosageListItem : ItemAdapter.Item<DosageListItem.Event> {
 
   companion object {
     fun from(protocolDrugs: List<ProtocolDrug>): List<DosageListItem> {

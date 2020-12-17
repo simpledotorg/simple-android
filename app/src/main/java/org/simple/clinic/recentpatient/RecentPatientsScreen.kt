@@ -18,7 +18,7 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import java.util.UUID
@@ -67,7 +67,7 @@ class RecentPatientsScreen(
     )
   }
 
-  private val recentAdapter = BindingItemAdapter(
+  private val recentAdapter = ItemAdapter(
       diffCallback = RecentPatientItemDiffCallback(),
       bindings = mapOf(
           R.layout.recent_patient_item_view to { layoutInflater, parent ->

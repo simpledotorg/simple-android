@@ -34,7 +34,7 @@ import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
@@ -100,7 +100,7 @@ class TeleconsultSharePrescriptionScreen constructor(
     )
   }
 
-  private val teleconsultSharePrescriptionMedicinesAdapter = BindingItemAdapter(
+  private val teleconsultSharePrescriptionMedicinesAdapter = ItemAdapter(
       diffCallback = TeleconsultSharePrescriptionDiffCallback(),
       bindings = mapOf(
           R.layout.list_item_teleconsult_share_prescription_medicine to { layoutInflater, parent ->

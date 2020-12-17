@@ -7,12 +7,12 @@ import org.simple.clinic.databinding.ListPatientSearchBinding
 import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import java.util.UUID
 
-sealed class SearchResultsItemType : BindingItemAdapter.Item<SearchResultsItemType.Event> {
+sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Event> {
 
   sealed class Event {
     data class ResultClicked(val patientUuid: UUID) : Event()

@@ -6,7 +6,7 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.ListItemTeleconsultSharePrescriptionMedicineBinding
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
-import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import java.time.Duration
@@ -15,7 +15,7 @@ data class TeleconsultSharePrescriptionItem(
     val prescribedDrug: PrescribedDrug,
     val defaultDuration: Duration,
     val defaultFrequency: MedicineFrequency
-) : BindingItemAdapter.Item<UiEvent> {
+) : ItemAdapter.Item<UiEvent> {
 
   companion object {
     fun from(

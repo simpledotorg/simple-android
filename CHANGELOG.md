@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Features
+- Add BP Passport sheet
+
 ### Internal
 - [In Progress: 15 Dec 2020] Migrate app to use ViewBinding
 - Add PR comment commands for running instrumented tests and rebasing PR

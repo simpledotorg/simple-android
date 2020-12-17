@@ -13,6 +13,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.view_teleconsult_medicines.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ListItemTeleconsultMedicineBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
@@ -26,8 +27,8 @@ import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequencySheet
 import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreenKey
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.BindingItemAdapter
 import org.simple.clinic.widgets.DividerItemDecorator
-import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
@@ -87,7 +88,14 @@ class TeleconsultMedicinesView(
     )
   }
 
-  private val teleconsultMedicinesAdapter = ItemAdapter(TeleconsultMedicineDiffCallback())
+  private val teleconsultMedicinesAdapter = BindingItemAdapter(
+      diffCallback = TeleconsultMedicineDiffCallback(),
+      bindings = mapOf(
+          R.layout.list_item_teleconsult_medicine to { layoutInflater, parent ->
+            ListItemTeleconsultMedicineBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()

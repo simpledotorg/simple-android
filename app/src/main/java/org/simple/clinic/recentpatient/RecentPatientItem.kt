@@ -2,17 +2,17 @@ package org.simple.clinic.recentpatient
 
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.recent_patient_item_view.*
 import org.simple.clinic.R
+import org.simple.clinic.databinding.RecentPatientItemViewBinding
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
-import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.BindingItemAdapter
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.recyclerview.ViewHolderX
+import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.time.LocalDate
@@ -28,7 +28,7 @@ data class RecentPatientItem(
     val dateFormatter: DateTimeFormatter,
     val clock: UserClock,
     val isNewRegistration: Boolean
-) : ItemAdapter.Item<UiEvent> {
+) : BindingItemAdapter.Item<UiEvent> {
 
   companion object {
     fun create(
@@ -72,17 +72,18 @@ data class RecentPatientItem(
 
   override fun layoutResId(): Int = R.layout.recent_patient_item_view
 
-  override fun render(holder: ViewHolderX, subject: Subject<UiEvent>) {
+  override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
     val context = holder.itemView.context
+    val binding = holder.binding as RecentPatientItemViewBinding
 
     holder.itemView.setOnClickListener {
       subject.onNext(RecentPatientItemClicked(patientUuid = uuid))
     }
 
-    holder.newRegistrationTextView.visibleOrGone(isNewRegistration)
-    holder.patientNameTextView.text = context.resources.getString(R.string.patients_recentpatients_nameage, name, age.toString())
-    holder.genderImageView.setImageResource(gender.displayIconRes)
-    holder.lastSeenTextView.text = dateFormatter.format(updatedAt.toLocalDateAtZone(clock.zone))
+    binding.newRegistrationTextView.visibleOrGone(isNewRegistration)
+    binding.patientNameTextView.text = context.resources.getString(R.string.patients_recentpatients_nameage, name, age.toString())
+    binding.genderImageView.setImageResource(gender.displayIconRes)
+    binding.lastSeenTextView.text = dateFormatter.format(updatedAt.toLocalDateAtZone(clock.zone))
   }
 }
 

@@ -7,7 +7,9 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.RecentPatientItemViewBinding
 import org.simple.clinic.databinding.RecentPatientsScreenBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
@@ -16,7 +18,7 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.BindingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import java.util.UUID
@@ -65,7 +67,14 @@ class RecentPatientsScreen(
     )
   }
 
-  private val recentAdapter = ItemAdapter(RecentPatientItemDiffCallback())
+  private val recentAdapter = BindingItemAdapter(
+      diffCallback = RecentPatientItemDiffCallback(),
+      bindings = mapOf(
+          R.layout.recent_patient_item_view to { layoutInflater, parent ->
+            RecentPatientItemViewBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
 
   override fun onFinishInflate() {
     super.onFinishInflate()

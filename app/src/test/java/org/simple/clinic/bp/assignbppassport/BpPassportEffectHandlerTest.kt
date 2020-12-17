@@ -57,4 +57,15 @@ class BpPassportEffectHandlerTest {
     effectHandlerTestCase.assertOutgoingEvents(CurrentFacilityRetrieved(facility))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when open patient entry screen effect is received, then open patient entry screeen`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenPatientEntryScreen(facility))
+
+    // then
+    verify(uiActions).openPatientEntryScreen(facility)
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

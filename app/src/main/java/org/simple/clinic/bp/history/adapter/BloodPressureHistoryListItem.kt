@@ -11,11 +11,11 @@ import org.simple.clinic.bp.history.adapter.Event.BloodPressureHistoryItemClicke
 import org.simple.clinic.databinding.ListBpHistoryItemBinding
 import org.simple.clinic.databinding.ListNewBpButtonBinding
 import org.simple.clinic.util.Truss
-import org.simple.clinic.widgets.BindingPagingItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.visibleOrGone
 
-sealed class BloodPressureHistoryListItem : BindingPagingItemAdapter.Item<Event> {
+sealed class BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
 
   object NewBpButton : BloodPressureHistoryListItem() {
 

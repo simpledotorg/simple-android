@@ -40,7 +40,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BindingPagingItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.dp
@@ -95,7 +95,7 @@ class BloodSugarHistoryScreen(
   private val bloodSugarHistoryList
     get() = binding!!.bloodSugarHistoryList
 
-  private val bloodSugarHistoryAdapter = BindingPagingItemAdapter(
+  private val bloodSugarHistoryAdapter = PagingItemAdapter(
       diffCallback = BloodSugarHistoryListItemDiffCallback(),
       bindings = mapOf(
           R.layout.list_new_blood_sugar_button to { layoutInflater, parent ->

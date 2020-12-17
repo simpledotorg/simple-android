@@ -11,8 +11,7 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
-// TODO (SM) : Rename to PagingItemAdapter once migration to ViewBinding is finished
-open class BindingPagingItemAdapter<I : BindingPagingItemAdapter.Item<E>, E>(
+open class PagingItemAdapter<I : PagingItemAdapter.Item<E>, E>(
     diffCallback: DiffUtil.ItemCallback<I>,
     private val bindings: Map<Int, (layoutInflater: LayoutInflater, parent: ViewGroup) -> ViewBinding>
 ) : PagedListAdapter<I, BindingViewHolder>(diffCallback) {

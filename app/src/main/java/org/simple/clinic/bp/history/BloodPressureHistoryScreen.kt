@@ -32,7 +32,7 @@ import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BindingPagingItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.dp
 import java.time.format.DateTimeFormatter
@@ -72,7 +72,7 @@ class BloodPressureHistoryScreen(
   @Named("for_measurement_history")
   lateinit var measurementHistoryPaginationConfig: PagedList.Config
 
-  private val bloodPressureHistoryAdapter = BindingPagingItemAdapter(
+  private val bloodPressureHistoryAdapter = PagingItemAdapter(
       diffCallback = BloodPressureHistoryListItemDiffCallback(),
       bindings = mapOf(
           R.layout.list_new_bp_button to { layoutInflater, parent ->

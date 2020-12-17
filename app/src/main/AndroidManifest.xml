@@ -76,6 +76,11 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
+      android:name=".bp.assignbppassport.BpPassportSheet"
+      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:windowSoftInputMode="adjustResize" />
+
+    <activity
       android:name=".scheduleappointment.ScheduleAppointmentSheet"
       android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />

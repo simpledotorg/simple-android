@@ -11,6 +11,9 @@ import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.R
+import org.simple.clinic.databinding.ListPatientSearchBinding
+import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
+import org.simple.clinic.databinding.ListPatientSearchNoPatientsBinding
 import org.simple.clinic.databinding.PatientSearchViewBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.DeferredEventSource
@@ -18,7 +21,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.BindingItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
@@ -59,7 +62,20 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   var searchResultClicked: SearchResultClicked? = null
 
-  private val adapter = ItemAdapter(SearchResultsItemType.DiffCallback())
+  private val adapter = BindingItemAdapter(
+      diffCallback = SearchResultsItemType.DiffCallback(),
+      bindings = mapOf(
+          R.layout.list_patient_search_header to { layoutInflater, parent ->
+            ListPatientSearchHeaderBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_patient_search_no_patients to { layoutInflater, parent ->
+            ListPatientSearchNoPatientsBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_patient_search to { layoutInflater, parent ->
+            ListPatientSearchBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
 
   private val externalEvents = DeferredEventSource<SearchResultsEvent>()
 

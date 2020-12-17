@@ -1,18 +1,18 @@
 package org.simple.clinic.searchresultsview
 
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
+import org.simple.clinic.databinding.ListPatientSearchBinding
+import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
-import org.simple.clinic.widgets.ItemAdapter
-import org.simple.clinic.widgets.PatientSearchResultItemView
+import org.simple.clinic.widgets.BindingItemAdapter
 import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
-import org.simple.clinic.widgets.recyclerview.ViewHolderX
+import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import java.util.UUID
 
-sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Event> {
+sealed class SearchResultsItemType : BindingItemAdapter.Item<SearchResultsItemType.Event> {
 
   sealed class Event {
     data class ResultClicked(val patientUuid: UUID) : Event()
@@ -89,10 +89,10 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
 
     override fun layoutResId(): Int = R.layout.list_patient_search_header
 
-    override fun render(holder: ViewHolderX, subject: Subject<Event>) {
-      val header = holder.itemView.findViewById<TextView>(R.id.patientsearch_header)
+    override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
+      val binding = holder.binding as ListPatientSearchHeaderBinding
 
-      header.text = holder.itemView.context.getString(R.string.patientsearchresults_current_facility_header, facilityName)
+      binding.patientsearchHeader.text = holder.itemView.context.getString(R.string.patientsearchresults_current_facility_header, facilityName)
     }
   }
 
@@ -100,10 +100,10 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
 
     override fun layoutResId(): Int = R.layout.list_patient_search_header
 
-    override fun render(holder: ViewHolderX, subject: Subject<Event>) {
-      val header = holder.itemView.findViewById<TextView>(R.id.patientsearch_header)
+    override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
+      val binding = holder.binding as ListPatientSearchHeaderBinding
 
-      header.text = holder.itemView.context.getString(R.string.patientsearchresults_other_results_header)
+      binding.patientsearchHeader.text = holder.itemView.context.getString(R.string.patientsearchresults_other_results_header)
     }
   }
 
@@ -111,7 +111,7 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
 
     override fun layoutResId(): Int = R.layout.list_patient_search_no_patients
 
-    override fun render(holder: ViewHolderX, subject: Subject<Event>) {
+    override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
     }
   }
 
@@ -146,14 +146,13 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
 
     override fun layoutResId(): Int = R.layout.list_patient_search
 
-    override fun render(holder: ViewHolderX, subject: Subject<Event>) {
-      val patientSearchResultView = holder.itemView.findViewById<PatientSearchResultItemView>(R.id.patientSearchResultView)
+    override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
+      val binding = holder.binding as ListPatientSearchBinding
 
-      patientSearchResultView.setOnClickListener {
+      binding.patientSearchResultView.setOnClickListener {
         subject.onNext(Event.ResultClicked(searchResultViewModel.uuid))
       }
-
-      patientSearchResultView.render(searchResultViewModel, currentFacilityUuid)
+      binding.patientSearchResultView.render(searchResultViewModel, currentFacilityUuid)
     }
   }
 

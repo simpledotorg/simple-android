@@ -7,19 +7,19 @@ import android.text.style.BackgroundColorSpan
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.list_facility_selection_header.*
-import kotlinx.android.synthetic.main.list_facility_selection_option.*
 import org.simple.clinic.R
+import org.simple.clinic.databinding.ListFacilitySelectionHeaderBinding
+import org.simple.clinic.databinding.ListFacilitySelectionOptionBinding
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name.Highlighted
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name.Plain
 import org.simple.clinic.util.exhaustive
-import org.simple.clinic.widgets.ItemAdapter
-import org.simple.clinic.widgets.recyclerview.ViewHolderX
+import org.simple.clinic.widgets.BindingItemAdapter
+import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.setTopMargin
 import org.simple.clinic.widgets.setTopMarginRes
 
-sealed class FacilityListItem : ItemAdapter.Item<FacilityListItem.FacilityItemClicked> {
+sealed class FacilityListItem : BindingItemAdapter.Item<FacilityListItem.FacilityItemClicked> {
 
   sealed class Header : FacilityListItem() {
 
@@ -32,8 +32,10 @@ sealed class FacilityListItem : ItemAdapter.Item<FacilityListItem.FacilityItemCl
       return R.layout.list_facility_selection_header
     }
 
-    override fun render(holder: ViewHolderX, subject: Subject<FacilityItemClicked>) {
-      holder.headerNameTextView.setText(when (this) {
+    override fun render(holder: BindingViewHolder, subject: Subject<FacilityItemClicked>) {
+      val binding = holder.binding as ListFacilitySelectionHeaderBinding
+
+      binding.headerNameTextView.setText(when (this) {
         is SuggestedFacilities -> R.string.facilitypicker_header_suggested_facilities
         is AllFacilities -> R.string.facilitypicker_header_all_facilities
       })
@@ -66,20 +68,22 @@ sealed class FacilityListItem : ItemAdapter.Item<FacilityListItem.FacilityItemCl
       return R.layout.list_facility_selection_option
     }
 
-    override fun render(holder: ViewHolderX, subject: Subject<FacilityItemClicked>) {
+    override fun render(holder: BindingViewHolder, subject: Subject<FacilityItemClicked>) {
+      val binding = holder.binding as ListFacilitySelectionOptionBinding
+
       when (name) {
         is Highlighted -> {
           val highlightedName = SpannableStringBuilder(name.text)
           val highlightColor = ContextCompat.getColor(holder.itemView.context, R.color.facility_search_query_highlight)
           highlightedName.setSpan(BackgroundColorSpan(highlightColor), name.highlightStart, name.highlightEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-          holder.facilityNameTextView.text = highlightedName
+          binding.facilityNameTextView.text = highlightedName
         }
         is Plain -> {
-          holder.facilityNameTextView.text = name.text
+          binding.facilityNameTextView.text = name.text
         }
       }.exhaustive()
 
-      holder.facilityAddressTextView.text = when (address) {
+      binding.facilityAddressTextView.text = when (address) {
         is Address.WithStreet -> {
           holder.itemView.resources.getString(
               R.string.facilitypicker_facility_address_with_street,

@@ -55,9 +55,25 @@ class PatientSearchResultDataSource(
     val loadParamsForDatabaseSource = LoadRangeParams(params.startPosition, params.loadSize)
     source.loadRange(loadParamsForDatabaseSource, object : LoadRangeCallback<PatientSearchResult>() {
       override fun onResult(patientSearchResult: MutableList<PatientSearchResult>) {
+        val patientSearchResults = partitionSearchResultsByFacility(patientSearchResult, currentFacility.get())
+        val searchResultsItems = SearchResultsItemType.from(patientSearchResults)
+        callback.onResult(searchResultsItems)
       }
     })
 
+  }
+
+  private fun partitionSearchResultsByFacility(
+      searchResults: List<PatientSearchResult>,
+      facility: Facility
+  ): PatientSearchResults {
+    val patientIds = searchResults.map { it.uuid }
+
+    return PatientSearchResults.from(
+        searchResults = searchResults,
+        patientToFacilityIds = appDatabase.bloodPressureDao().patientToFacilityIds(patientIds),
+        currentFacility = facility
+    )
   }
 
   fun dispose() {

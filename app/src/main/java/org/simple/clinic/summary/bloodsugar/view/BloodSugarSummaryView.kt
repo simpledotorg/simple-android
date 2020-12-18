@@ -16,7 +16,6 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.patientsummary_bloodsugarsummary_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
@@ -26,6 +25,7 @@ import org.simple.clinic.bloodsugar.Unknown
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenKey
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
+import org.simple.clinic.databinding.PatientsummaryBloodsugarsummaryContentBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
@@ -74,6 +74,20 @@ class BloodSugarSummaryView(
     context: Context,
     attributes: AttributeSet
 ) : CardView(context, attributes), BloodSugarSummaryViewUi, UiActions, PatientSummaryChildView {
+
+  private var binding: PatientsummaryBloodsugarsummaryContentBinding? = null
+
+  private val addNewBloodSugar
+    get() = binding!!.addNewBloodSugar
+
+  private val bloodSugarSeeAll
+    get() = binding!!.bloodSugarSeeAll
+
+  private val bloodSugarItemContainer
+    get() = binding!!.bloodSugarItemContainer
+
+  private val noBloodSugarTextView
+    get() = binding!!.noBloodSugarTextView
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -152,7 +166,8 @@ class BloodSugarSummaryView(
   }
 
   init {
-    LayoutInflater.from(context).inflate(R.layout.patientsummary_bloodsugarsummary_content, this, true)
+    val layoutInflater = LayoutInflater.from(context)
+    binding = PatientsummaryBloodsugarsummaryContentBinding.inflate(layoutInflater, this, true)
   }
 
   override fun onFinishInflate() {
@@ -176,10 +191,11 @@ class BloodSugarSummaryView(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 

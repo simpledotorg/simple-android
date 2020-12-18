@@ -1,12 +1,12 @@
 package org.simple.clinic.patient
 
 import android.os.Parcelable
+import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.DatabaseView
 import androidx.room.Embedded
 import androidx.room.Query
 import io.reactivex.Flowable
-import io.reactivex.Single
 import kotlinx.android.parcel.Parcelize
 import java.time.Instant
 import java.time.LocalDate
@@ -97,7 +97,7 @@ data class PatientSearchResult(
 
     @Embedded(prefix = "lastSeen_")
     val lastSeen: LastSeen?
-): Parcelable {
+) : Parcelable {
 
   override fun toString(): String {
     return "Name: $fullName, UUID: $uuid, Facility UUID: ${lastSeen?.lastSeenAtFacilityUuid}"
@@ -144,6 +144,27 @@ data class PatientSearchResult(
         ORDER BY P.fullName COLLATE NOCASE ASC LIMIT :limit
     """)
     fun searchByPhoneNumber(phoneNumber: String, limit: Int): List<PatientSearchResult>
+
+    @Suppress("AndroidUnresolvedRoomSqlReference")
+    @Query("""
+        SELECT * FROM 
+        PatientSearchResult searchResult
+        LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+        WHERE phoneNumber LIKE '%' || :phoneNumber || '%' AND P.deletedAt IS NULL
+        ORDER BY P.fullName COLLATE NOCASE ASC 
+    """)
+    fun searchByPhoneNumberPaginated(phoneNumber: String): DataSource.Factory<Int, PatientSearchResult>
+
+    @Suppress("AndroidUnresolvedRoomSqlReference")
+    @Query("""
+    SELECT * FROM 
+    PatientSearchResult searchResult
+    LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+    WHERE P.fullName LIKE '%' || :name || '%' AND P.deletedAt IS NULL
+    ORDER BY P.fullName COLLATE NOCASE ASC 
+    """
+    )
+    fun searchByNamePaginated(name: String): DataSource.Factory<Int, PatientSearchResult>
   }
 
   data class PatientNameAndId(val uuid: UUID, val fullName: String)

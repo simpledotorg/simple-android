@@ -5,14 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.patientsummary_assigned_facility_content.view.*
-import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.PatientsummaryAssignedFacilityContentBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ActivityResult
@@ -31,8 +31,17 @@ class AssignedFacilityView(
     attrs: AttributeSet
 ) : CardView(context, attrs), AssignedFacilityUi, UiActions, PatientSummaryChildView {
 
+  private var binding: PatientsummaryAssignedFacilityContentBinding? = null
+
+  private val assignedFacilityTextView
+    get() = binding!!.assignedFacilityTextView
+
+  private val changeAssignedFacilityButton
+    get() = binding!!.changeAssignedFacilityButton
+
   init {
-    inflate(context, R.layout.patientsummary_assigned_facility_content, this)
+    val layoutInflater = LayoutInflater.from(context)
+    binding = PatientsummaryAssignedFacilityContentBinding.inflate(layoutInflater, this, true)
   }
 
   @Inject
@@ -89,10 +98,11 @@ class AssignedFacilityView(
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
+    binding = null
     delegate.stop()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 

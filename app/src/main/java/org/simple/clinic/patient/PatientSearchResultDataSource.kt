@@ -40,8 +40,10 @@ class PatientSearchResultDataSource(
     )
 
     source.loadInitial(loadParamsForDatabaseSource, object : LoadInitialCallback<PatientSearchResult>() {
-      override fun onResult(data: MutableList<PatientSearchResult>, position: Int, totalCount: Int) {
-
+      override fun onResult(patientSearchResult: MutableList<PatientSearchResult>, position: Int, totalCount: Int) {
+        val patientSearchResults = partitionSearchResultsByFacility(patientSearchResult, currentFacility.get())
+        val searchResultsItems = SearchResultsItemType.from(patientSearchResults)
+        callback.onResult(searchResultsItems, position, totalCount)
       }
 
       override fun onResult(data: MutableList<PatientSearchResult>, position: Int) {

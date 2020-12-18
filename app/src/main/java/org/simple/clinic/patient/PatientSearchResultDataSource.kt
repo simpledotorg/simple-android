@@ -1,10 +1,18 @@
 package org.simple.clinic.patient
 
+import androidx.paging.DataSource
+import androidx.paging.PagedList
 import androidx.paging.PositionalDataSource
+import androidx.paging.toObservable
 import androidx.room.InvalidationTracker
 import dagger.Lazy
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.patient.PatientSearchCriteria.Name
+import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
+import org.simple.clinic.searchresultsview.PatientSearchResults
 import org.simple.clinic.searchresultsview.SearchResultsItemType
 
 class PatientSearchResultDataSource(
@@ -55,4 +63,50 @@ class PatientSearchResultDataSource(
   fun dispose() {
     appDatabase.invalidationTracker.removeObserver(invalidationTracker)
   }
+}
+
+class PatientSearchDataSourceFactory constructor(
+    private val appDatabase: AppDatabase,
+    private val currentFacility: Lazy<Facility>,
+    private val patientSearchCriteria: PatientSearchCriteria,
+    private var config: PatientConfig
+) : DataSource.Factory<Int, SearchResultsItemType>() {
+
+  private val disposable = CompositeDisposable()
+  private var dataSource: PatientSearchResultDataSource? = null
+
+  fun toObservable(config: PagedList.Config, detaches: Observable<Unit>): Observable<PagedList<SearchResultsItemType>> {
+    disposable.add(
+        detaches.subscribe {
+          dataSource?.dispose()
+          dataSource = null
+          disposable.clear()
+        }
+    )
+    return toObservable(config)
+  }
+
+  override fun create(): DataSource<Int, SearchResultsItemType> {
+
+    dataSource = when (patientSearchCriteria) {
+      is Name -> PatientSearchResultDataSource(
+          appDatabase,
+          currentFacility,
+          appDatabase
+              .patientSearchDao()
+              .searchByNamePaginated(patientSearchCriteria.patientName)
+              .create() as PositionalDataSource<PatientSearchResult>
+      )
+      is PhoneNumber -> PatientSearchResultDataSource(
+          appDatabase,
+          currentFacility,
+          appDatabase
+              .patientSearchDao()
+              .searchByPhoneNumberPaginated(patientSearchCriteria.phoneNumber)
+              .create() as PositionalDataSource<PatientSearchResult>
+      )
+    }
+    return dataSource!!
+  }
+
 }

@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.medicalhistory_summary_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.MedicalhistorySummaryViewBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
@@ -37,6 +37,29 @@ class MedicalHistorySummaryView(
     attributeSet: AttributeSet
 ) : FrameLayout(context, attributeSet), MedicalHistorySummaryUi, PatientSummaryChildView {
 
+  private var binding: MedicalhistorySummaryViewBinding? = null
+
+  private val heartAttackQuestionView
+    get() = binding!!.heartAttackQuestionView
+
+  private val strokeQuestionView
+    get() = binding!!.strokeQuestionView
+
+  private val kidneyDiseaseQuestionView
+    get() = binding!!.kidneyDiseaseQuestionView
+
+  private val diabetesQuestionView
+    get() = binding!!.diabetesQuestionView
+
+  private val hypertensionDiagnosisView
+    get() = binding!!.hypertensionDiagnosisView
+
+  private val diabetesDiagnosisView
+    get() = binding!!.diabetesDiagnosisView
+
+  private val diagnosisViewContainer
+    get() = binding!!.diagnosisViewContainer
+
   private val internalEvents = PublishSubject.create<MedicalHistorySummaryEvent>()
 
   @Inject
@@ -49,7 +72,8 @@ class MedicalHistorySummaryView(
   lateinit var effectHandler: MedicalHistorySummaryEffectHandler
 
   init {
-    LayoutInflater.from(context).inflate(R.layout.medicalhistory_summary_view, this, true)
+    val layoutInflater = LayoutInflater.from(context)
+    binding = MedicalhistorySummaryViewBinding.inflate(layoutInflater, this, true)
   }
 
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
@@ -97,10 +121,11 @@ class MedicalHistorySummaryView(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 

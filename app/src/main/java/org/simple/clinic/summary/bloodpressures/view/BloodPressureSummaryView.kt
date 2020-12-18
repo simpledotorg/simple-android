@@ -14,12 +14,12 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.patientsummary_bpsummary_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.history.BloodPressureHistoryScreenKey
+import org.simple.clinic.databinding.PatientsummaryBpsummaryContentBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
@@ -67,6 +67,20 @@ class BloodPressureSummaryView(
     context: Context,
     attrs: AttributeSet
 ) : CardView(context, attrs), BloodPressureSummaryViewUi, BloodPressureSummaryViewUiActions, PatientSummaryChildView {
+
+  private var binding: PatientsummaryBpsummaryContentBinding? = null
+
+  private val newBPItemContainer
+    get() = binding!!.newBPItemContainer
+
+  private val placeHolderMessageTextView
+    get() = binding!!.placeHolderMessageTextView
+
+  private val seeAll
+    get() = binding!!.seeAll
+
+  private val addNewBP
+    get() = binding!!.addNewBP
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -138,7 +152,8 @@ class BloodPressureSummaryView(
   var bpRecorded: BpRecorded? = null
 
   init {
-    inflate(context, R.layout.patientsummary_bpsummary_content, this)
+    val layoutInflater = LayoutInflater.from(context)
+    binding = PatientsummaryBpsummaryContentBinding.inflate(layoutInflater, this, true)
   }
 
   override fun onFinishInflate() {
@@ -163,10 +178,11 @@ class BloodPressureSummaryView(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 

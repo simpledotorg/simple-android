@@ -11,9 +11,9 @@ import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.drugs_summary_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.DrugsSummaryViewBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
@@ -45,6 +45,17 @@ class DrugSummaryView(
     context: Context,
     attributeSet: AttributeSet
 ) : CardView(context, attributeSet), DrugSummaryUi, DrugSummaryUiActions, PatientSummaryChildView {
+
+  private var binding: DrugsSummaryViewBinding? = null
+
+  private val updateButton
+    get() = binding!!.updateButton
+
+  private val drugsSummaryContainer
+    get() = binding!!.drugsSummaryContainer
+
+  private val emptyMedicinesTextView
+    get() = binding!!.emptyMedicinesTextView
 
   @Inject
   @Named("full_date")
@@ -95,7 +106,8 @@ class DrugSummaryView(
   }
 
   init {
-    inflate(context, R.layout.drugs_summary_view, this)
+    val layoutInflater = LayoutInflater.from(context)
+    binding = DrugsSummaryViewBinding.inflate(layoutInflater, this, true)
   }
 
   override fun onAttachedToWindow() {
@@ -105,10 +117,11 @@ class DrugSummaryView(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 

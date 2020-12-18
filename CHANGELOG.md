@@ -5,7 +5,7 @@
 - Add BP Passport sheet
 
 ### Internal
-- [In Progress: 15 Dec 2020] Migrate app to use ViewBinding
+- [In Progress: 18 Dec 2020] Migrate app to use ViewBinding
 - Add PR comment commands for running instrumented tests and rebasing PR
 - Add breadcrumbs for different stages in search operations
 - Cleanup `ImageSrcDetector`

@@ -2,10 +2,10 @@ package org.simple.clinic.contactpatient.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
+import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
-import kotlinx.android.synthetic.main.contactpatient_appointmentreminder.view.*
 import org.simple.clinic.R
+import org.simple.clinic.databinding.ContactpatientAppointmentreminderBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
@@ -26,6 +26,23 @@ class SetAppointmentReminderView(
     attributeSet: AttributeSet
 ) : ConstraintLayout(context, attributeSet) {
 
+  private var binding: ContactpatientAppointmentreminderBinding? = null
+
+  private val previousDateStepper
+    get() = binding!!.previousDateStepper
+
+  private val nextDateStepper
+    get() = binding!!.nextDateStepper
+
+  private val saveReminder
+    get() = binding!!.saveReminder
+
+  private val actualAppointmentDateButton
+    get() = binding!!.actualAppointmentDateButton
+
+  private val selectedAppointmentDate
+    get() = binding!!.selectedAppointmentDate
+
   @Inject
   @Named("date_for_user_input")
   lateinit var dateFormatter: DateTimeFormatter
@@ -42,7 +59,8 @@ class SetAppointmentReminderView(
     super.onFinishInflate()
     context.injector<Injector>().inject(this)
 
-    View.inflate(context, R.layout.contactpatient_appointmentreminder, this)
+    val layoutInflater = LayoutInflater.from(context)
+    binding = ContactpatientAppointmentreminderBinding.inflate(layoutInflater, this)
 
     previousDateStepper.setOnClickListener { decrementStepperClicked?.invoke() }
     nextDateStepper.setOnClickListener { incrementStepperClicked?.invoke() }
@@ -82,6 +100,11 @@ class SetAppointmentReminderView(
 
   fun enableNextReminderDateStepper() {
     nextDateStepper.isEnabled = true
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    binding = null
   }
 
   interface Injector {

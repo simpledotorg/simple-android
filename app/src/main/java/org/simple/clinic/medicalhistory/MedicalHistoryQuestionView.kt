@@ -8,8 +8,8 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
-import kotlinx.android.synthetic.main.list_medical_history_question.view.*
 import org.simple.clinic.R
+import org.simple.clinic.databinding.ListMedicalHistoryQuestionBinding
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
@@ -19,8 +19,26 @@ import org.simple.clinic.widgets.setHorizontalPadding
 @SuppressLint("ClickableViewAccessibility")
 class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
+  private var binding: ListMedicalHistoryQuestionBinding? = null
+
+  private val contentLayout
+    get() = binding!!.contentLayout
+
+  private val yesCheckBox
+    get() = binding!!.yesCheckBox
+
+  private val noCheckBox
+    get() = binding!!.noCheckBox
+
+  private val dividerView
+    get() = binding!!.dividerView
+
+  private val labelTextView
+    get() = binding!!.labelTextView
+
   init {
-    LayoutInflater.from(context).inflate(R.layout.list_medical_history_question, this, true)
+    val layoutInflater = LayoutInflater.from(context)
+    binding = ListMedicalHistoryQuestionBinding.inflate(layoutInflater, this, true)
 
     val attributes = context.obtainStyledAttributes(attrs, R.styleable.MedicalHistoryQuestionView)
     val contentPaddingStart = attributes.getDimensionPixelSize(R.styleable.MedicalHistoryQuestionView_contentPaddingStart, 0)
@@ -77,5 +95,10 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
       val newAnswer = if (checked) No else Unanswered
       answerChangeListener.invoke(question, newAnswer)
     }
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    binding = null
   }
 }

@@ -9,7 +9,7 @@
 - Add PR comment commands for running instrumented tests and rebasing PR
 - Add breadcrumbs for different stages in search operations
 - Cleanup `ImageSrcDetector`
-- Bump tooling JDK to 11
+- Bump tooling JDK to 11.0
 - Migrate `ShortCodeSearchResultScreen` to Mobius
 
 ### Changes

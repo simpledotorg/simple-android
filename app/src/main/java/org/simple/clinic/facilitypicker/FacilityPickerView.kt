@@ -18,6 +18,8 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ListFacilitySelectionHeaderBinding
+import org.simple.clinic.databinding.ListFacilitySelectionOptionBinding
 import org.simple.clinic.databinding.ViewFacilitypickerBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
@@ -51,7 +53,17 @@ class FacilityPickerView(
 
   var backClicked: OnBackClicked? = null
 
-  private val recyclerViewAdapter = ItemAdapter(FacilityListItem.Differ())
+  private val recyclerViewAdapter = ItemAdapter(
+      diffCallback = FacilityListItem.Differ(),
+      bindings = mapOf(
+          R.layout.list_facility_selection_header to { layoutInflater, parent ->
+            ListFacilitySelectionHeaderBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_facility_selection_option to { layoutInflater, parent ->
+            ListFacilitySelectionOptionBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
 
   private val pickFrom: PickFrom
 

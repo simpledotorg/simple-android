@@ -13,6 +13,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ListDeleteReasonBinding
 import org.simple.clinic.databinding.ScreenDeletePatientBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
@@ -21,8 +22,8 @@ import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.dp
 import javax.inject.Inject
 
@@ -48,7 +49,14 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   private val deleteReasonsRecyclerView
     get() = binding!!.deleteReasonsRecyclerView
 
-  private val deleteReasonsAdapter = ItemAdapter(DeleteReasonItem.DiffCallback())
+  private val deleteReasonsAdapter = ItemAdapter(
+      diffCallback = DeleteReasonItem.DiffCallback(),
+      bindings = mapOf(
+          R.layout.list_delete_reason to { layoutInflater, parent ->
+            ListDeleteReasonBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
   private val dialogEvents = PublishSubject.create<DeletePatientEvent>()
   private val events: Observable<DeletePatientEvent> by unsafeLazy {
     Observable

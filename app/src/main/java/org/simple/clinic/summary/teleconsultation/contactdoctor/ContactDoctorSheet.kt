@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.sheet_contact_doctor.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ListContactDoctorBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
@@ -23,9 +24,9 @@ import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.DividerItemDecorator
-import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.dp
 import java.util.Locale
@@ -65,7 +66,14 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctor
   @Inject
   lateinit var features: Features
 
-  private val itemAdapter = ItemAdapter(DoctorListItem.DiffCallback())
+  private val itemAdapter = ItemAdapter(
+      diffCallback = DoctorListItem.DiffCallback(),
+      bindings = mapOf(
+          R.layout.list_contact_doctor to { layoutInflater, parent ->
+            ListContactDoctorBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
 
   private val events by unsafeLazy {
     Observable

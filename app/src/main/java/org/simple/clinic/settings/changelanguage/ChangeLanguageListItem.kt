@@ -2,12 +2,12 @@ package org.simple.clinic.settings.changelanguage
 
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.list_change_language_view.*
 import org.simple.clinic.R
+import org.simple.clinic.databinding.ListChangeLanguageViewBinding
 import org.simple.clinic.settings.Language
 import org.simple.clinic.settings.ProvidedLanguage
 import org.simple.clinic.widgets.ItemAdapter
-import org.simple.clinic.widgets.recyclerview.ViewHolderX
+import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
 data class ChangeLanguageListItem(
     private val language: ProvidedLanguage,
@@ -30,8 +30,10 @@ data class ChangeLanguageListItem(
     return R.layout.list_change_language_view
   }
 
-  override fun render(holder: ViewHolderX, subject: Subject<Event>) {
-    holder.languageButton.apply {
+  override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
+    val binding = holder.binding as ListChangeLanguageViewBinding
+
+    binding.languageButton.apply {
       text = language.displayName
       isChecked = isLanguageSelectedByUser
       setOnClickListener { subject.onNext(Event.ListItemClicked(language)) }

@@ -7,7 +7,9 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.RecentPatientItemViewBinding
 import org.simple.clinic.databinding.RecentPatientsScreenBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
@@ -65,7 +67,14 @@ class RecentPatientsScreen(
     )
   }
 
-  private val recentAdapter = ItemAdapter(RecentPatientItemDiffCallback())
+  private val recentAdapter = ItemAdapter(
+      diffCallback = RecentPatientItemDiffCallback(),
+      bindings = mapOf(
+          R.layout.recent_patient_item_view to { layoutInflater, parent ->
+            RecentPatientItemViewBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
 
   override fun onFinishInflate() {
     super.onFinishInflate()

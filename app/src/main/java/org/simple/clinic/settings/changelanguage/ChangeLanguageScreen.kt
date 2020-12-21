@@ -11,7 +11,9 @@ import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ListChangeLanguageViewBinding
 import org.simple.clinic.databinding.ScreenChangeLanguageBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
@@ -47,7 +49,14 @@ class ChangeLanguageScreen(
   private val doneButton
     get() = binding!!.doneButton
 
-  private val languagesAdapter = ItemAdapter(ChangeLanguageListItem.DiffCallback())
+  private val languagesAdapter = ItemAdapter(
+      diffCallback = ChangeLanguageListItem.DiffCallback(),
+      bindings = mapOf(
+          R.layout.list_change_language_view to { layoutInflater, parent ->
+            ListChangeLanguageViewBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
 
   private val events: Observable<ChangeLanguageEvent> by unsafeLazy {
     Observable

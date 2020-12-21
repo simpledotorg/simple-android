@@ -3,13 +3,13 @@ package org.simple.clinic.drugs.selection.dosage
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.prescribed_drug_with_dosage_list_item.*
 import org.simple.clinic.R
+import org.simple.clinic.databinding.PrescribedDrugWithDosageListItemBinding
 import org.simple.clinic.drugs.selection.dosage.DosageListItem.WithDosage
 import org.simple.clinic.drugs.selection.dosage.DosageListItem.WithoutDosage
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.widgets.ItemAdapter
-import org.simple.clinic.widgets.recyclerview.ViewHolderX
+import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
 sealed class DosageListItem : ItemAdapter.Item<DosageListItem.Event> {
 
@@ -25,8 +25,10 @@ sealed class DosageListItem : ItemAdapter.Item<DosageListItem.Event> {
 
     override fun layoutResId() = R.layout.prescribed_drug_with_dosage_list_item
 
-    override fun render(holder: ViewHolderX, subject: Subject<Event>) {
-      holder.dosageTextView.text = protocolDrug.dosage
+    override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
+      val binding = holder.binding as PrescribedDrugWithDosageListItemBinding
+
+      binding.dosageTextView.text = protocolDrug.dosage
       holder.itemView.setOnClickListener { subject.onNext(Event.DosageClicked(protocolDrug)) }
     }
   }
@@ -35,8 +37,10 @@ sealed class DosageListItem : ItemAdapter.Item<DosageListItem.Event> {
 
     override fun layoutResId() = R.layout.prescribed_drug_with_dosage_list_item
 
-    override fun render(holder: ViewHolderX, subject: Subject<Event>) {
-      holder.dosageTextView.text = holder.itemView.context.getString(R.string.prescribed_drugs_dosage_none)
+    override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
+      val binding = holder.binding as PrescribedDrugWithDosageListItemBinding
+
+      binding.dosageTextView.text = holder.itemView.context.getString(R.string.prescribed_drugs_dosage_none)
       holder.itemView.setOnClickListener { subject.onNext(Event.NoneClicked) }
     }
   }

@@ -9,6 +9,8 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.recent_patients.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.RecentPatientItemViewBinding
+import org.simple.clinic.databinding.SeeAllItemViewBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientConfig
@@ -45,7 +47,17 @@ class RecentPatientsView(
   @Inject
   lateinit var config: PatientConfig
 
-  private val recentAdapter = ItemAdapter(RecentPatientItemTypeDiffCallback())
+  private val recentAdapter = ItemAdapter(
+      diffCallback = RecentPatientItemTypeDiffCallback(),
+      bindings = mapOf(
+          R.layout.recent_patient_item_view to { layoutInflater, parent ->
+            RecentPatientItemViewBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.see_all_item_view to { layoutInflater, parent ->
+            SeeAllItemViewBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
 
   private val events by unsafeLazy {
     adapterEvents()

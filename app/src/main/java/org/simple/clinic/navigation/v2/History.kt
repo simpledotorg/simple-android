@@ -15,7 +15,7 @@ data class History(val requests: List<NavRequest>) : Parcelable {
     return copy(requests = requests + request)
   }
 
-  fun withoutLast(): History {
+  fun removeLast(): History {
     require(requests.size > 1) { "Cannot remove last when there is only one key left" }
 
     return copy(requests = requests.dropLast(1))

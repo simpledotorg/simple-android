@@ -79,13 +79,13 @@ class Router(
   }
 
   fun pop() {
-    val newHistory = history.withoutLast()
+    val newHistory = history.removeLast()
 
     executeStateChange(newHistory, Direction.Backward, null)
   }
 
   fun popWithResult(result: ScreenResult) {
-    val newHistory = history.withoutLast()
+    val newHistory = history.removeLast()
 
     executeStateChange(newHistory, Direction.Backward, result)
   }

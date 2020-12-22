@@ -6,8 +6,8 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.item_overdue_list_patient.*
 import org.simple.clinic.R
+import org.simple.clinic.databinding.ItemOverdueListPatientBinding
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -16,7 +16,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.recyclerview.ViewHolderX
+import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.LocalDate
@@ -88,32 +88,33 @@ data class OverdueAppointmentRow(
 
   override fun layoutResId(): Int = R.layout.item_overdue_list_patient
 
-  override fun render(holder: ViewHolderX, subject: Subject<UiEvent>) {
-    setupEvents(holder, subject)
+  override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
+    val binding = holder.binding as ItemOverdueListPatientBinding
+    setupEvents(binding, subject)
     bindUi(holder)
   }
 
   private fun setupEvents(
-      holder: ViewHolderX,
+      binding: ItemOverdueListPatientBinding,
       eventSubject: Subject<UiEvent>
   ) {
-    holder.callButton.setOnClickListener {
+    binding.callButton.setOnClickListener {
       eventSubject.onNext(CallPatientClicked(patientUuid))
     }
 
-    holder.patientNameTextView.setOnClickListener {
+    binding.patientNameTextView.setOnClickListener {
       eventSubject.onNext(PatientNameClicked(patientUuid))
     }
   }
 
   @SuppressLint("SetTextI18n")
-  private fun bindUi(holder: ViewHolderX) {
-    val containerView = holder.containerView
-    val context = containerView.context
+  private fun bindUi(holder: BindingViewHolder) {
+    val binding = holder.binding as ItemOverdueListPatientBinding
+    val context = holder.itemView.context
 
-    holder.patientNameTextView.text = context.getString(R.string.overdue_list_item_name_age, name, age.toString())
-    holder.patientNameTextView.setCompoundDrawableStart(gender.displayIconRes)
-    holder.patientAddressTextView.text = when {
+    binding.patientNameTextView.text = context.getString(R.string.overdue_list_item_name_age, name, age.toString())
+    binding.patientNameTextView.setCompoundDrawableStart(gender.displayIconRes)
+    binding.patientAddressTextView.text = when {
       !patientAddress.streetAddress.isNullOrBlank() && !patientAddress.colonyOrVillage.isNullOrBlank() -> {
         "${patientAddress.streetAddress}, ${patientAddress.colonyOrVillage}"
       }
@@ -122,24 +123,24 @@ data class OverdueAppointmentRow(
       else -> "${patientAddress.district}, ${patientAddress.state}"
     }
 
-    holder.patientLastSeenTextView.text = lastSeenDate
+    binding.patientLastSeenTextView.text = lastSeenDate
 
-    holder.callButton.visibility = if (phoneNumber == null) GONE else VISIBLE
+    binding.callButton.visibility = if (phoneNumber == null) GONE else VISIBLE
 
-    holder.isAtHighRiskTextView.visibility = if (isAtHighRisk) VISIBLE else GONE
+    binding.isAtHighRiskTextView.visibility = if (isAtHighRisk) VISIBLE else GONE
 
-    holder.overdueDaysTextView.text = context.resources.getQuantityString(
+    binding.overdueDaysTextView.text = context.resources.getQuantityString(
         R.plurals.overdue_list_item_appointment_overdue_days,
         overdueDays,
         "$overdueDays"
     )
 
-    holder.diagnosisLabelContainer.visibleOrGone(showDiagnosisLabel)
-    holder.diagnosisTextView.text = diagnosisText(context)
+    binding.diagnosisLabelContainer.visibleOrGone(showDiagnosisLabel)
+    binding.diagnosisTextView.text = diagnosisText(context)
 
     val showTransferLabel = isAppointmentAtAssignedFacility.not()
-    holder.patientTransferredContainer.visibleOrGone(showTransferLabel)
-    holder.patientTransferredTextView.text = appointmentFacilityName
+    binding.patientTransferredContainer.visibleOrGone(showTransferLabel)
+    binding.patientTransferredTextView.text = appointmentFacilityName
   }
 
   private fun diagnosisText(context: Context): CharSequence {

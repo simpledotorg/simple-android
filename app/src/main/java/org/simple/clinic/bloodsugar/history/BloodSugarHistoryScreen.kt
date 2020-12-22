@@ -22,6 +22,8 @@ import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryItemClicked
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItemDiffCallback
 import org.simple.clinic.bloodsugar.history.adapter.NewBloodSugarClicked
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
+import org.simple.clinic.databinding.ListBloodSugarHistoryItemBinding
+import org.simple.clinic.databinding.ListNewBloodSugarButtonBinding
 import org.simple.clinic.databinding.ScreenBloodSugarHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
@@ -38,8 +40,8 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.PagingItemAdapter
+import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.dp
 import java.time.format.DateTimeFormatter
@@ -93,7 +95,17 @@ class BloodSugarHistoryScreen(
   private val bloodSugarHistoryList
     get() = binding!!.bloodSugarHistoryList
 
-  private val bloodSugarHistoryAdapter = PagingItemAdapter(BloodSugarHistoryListItemDiffCallback())
+  private val bloodSugarHistoryAdapter = PagingItemAdapter(
+      diffCallback = BloodSugarHistoryListItemDiffCallback(),
+      bindings = mapOf(
+          R.layout.list_new_blood_sugar_button to { layoutInflater, parent ->
+            ListNewBloodSugarButtonBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_blood_sugar_history_item to { layoutInflater, parent ->
+            ListBloodSugarHistoryItemBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
 
   private val events: Observable<BloodSugarHistoryScreenEvent> by unsafeLazy {
     Observable

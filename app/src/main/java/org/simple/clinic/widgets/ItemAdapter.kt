@@ -11,9 +11,11 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
+typealias BindingsCallback = Map<Int, (layoutInflater: LayoutInflater, parent: ViewGroup) -> ViewBinding>
+
 open class ItemAdapter<I : ItemAdapter.Item<E>, E>(
     diffCallback: DiffUtil.ItemCallback<I>,
-    private val bindings: Map<Int, (layoutInflater: LayoutInflater, parent: ViewGroup) -> ViewBinding>
+    private val bindings: BindingsCallback
 ) : ListAdapter<I, BindingViewHolder>(diffCallback) {
 
   private val eventSubject: Subject<E> = PublishSubject.create<E>()
@@ -23,10 +25,7 @@ open class ItemAdapter<I : ItemAdapter.Item<E>, E>(
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder {
     val layoutInflater = LayoutInflater.from(parent.context)
 
-    val binding = bindings
-        .filter { it.key == viewType }
-        .values
-        .first()
+    val binding = bindings.getValue(viewType)
 
     return BindingViewHolder(binding = binding.invoke(layoutInflater, parent))
   }

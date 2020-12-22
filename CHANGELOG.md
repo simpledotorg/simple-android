@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Next release
+### Internal
+- Add shell env comment to `pre-push` hook
+
 ## On Demo
 ### Features
 - Add BP Passport sheet

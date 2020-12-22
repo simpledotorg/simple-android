@@ -3,6 +3,7 @@
 ## Next release
 ### Internal
 - Add shell env comment to `pre-push` hook
+- Add the Router for the new navigation framework 
 
 ## On Demo
 ### Features

@@ -1,16 +1,14 @@
 # CHANGELOG
 
-## Next release
+## Next Release
 ### Internal
 - Add shell env comment to `pre-push` hook
 - Add the Router for the new navigation framework 
+- [In Progress: 18 Dec 2020] Migrate app to use ViewBinding
+- [In Progress: 21 Dec 2020] Instant search in Faster registration
 
 ## On Demo
-### Features
-- Add BP Passport sheet
-
 ### Internal
-- [In Progress: 21 Dec 2020] Migrate app to use ViewBinding
 - Add PR comment commands for running instrumented tests and rebasing PR
 - Add breadcrumbs for different stages in search operations
 - Cleanup `ImageSrcDetector`

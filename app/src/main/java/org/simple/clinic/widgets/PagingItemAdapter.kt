@@ -13,7 +13,7 @@ import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
 open class PagingItemAdapter<I : PagingItemAdapter.Item<E>, E>(
     diffCallback: DiffUtil.ItemCallback<I>,
-    private val bindings: Map<Int, (layoutInflater: LayoutInflater, parent: ViewGroup) -> ViewBinding>
+    private val bindings: BindingsCallback
 ) : PagedListAdapter<I, BindingViewHolder>(diffCallback) {
 
   private val eventSubject = PublishSubject.create<E>()

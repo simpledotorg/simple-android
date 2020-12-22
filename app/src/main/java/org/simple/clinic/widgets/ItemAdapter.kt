@@ -11,9 +11,11 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
+typealias BindingsCallback = Map<Int, (layoutInflater: LayoutInflater, parent: ViewGroup) -> ViewBinding>
+
 open class ItemAdapter<I : ItemAdapter.Item<E>, E>(
     diffCallback: DiffUtil.ItemCallback<I>,
-    private val bindings: Map<Int, (layoutInflater: LayoutInflater, parent: ViewGroup) -> ViewBinding>
+    private val bindings: BindingsCallback
 ) : ListAdapter<I, BindingViewHolder>(diffCallback) {
 
   private val eventSubject: Subject<E> = PublishSubject.create<E>()

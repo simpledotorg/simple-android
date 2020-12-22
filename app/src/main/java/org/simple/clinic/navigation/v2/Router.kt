@@ -1,5 +1,6 @@
 package org.simple.clinic.navigation.v2
 
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Parcelable
@@ -17,34 +18,49 @@ import androidx.fragment.app.FragmentTransaction
 class Router(
     private var history: History,
     private val fragmentManager: FragmentManager,
-    @IdRes private val containerId: Int
+    @IdRes private val containerId: Int,
+    private val savedInstanceState: Bundle?
 ) {
+
+  companion object {
+    private const val HISTORY_STATE_KEY = "org.simple.clinic.navigation.v2.Router.HISTORY_STATE_KEY"
+  }
 
   constructor(
       history: List<ScreenKey>,
       fragmentManager: FragmentManager,
-      @IdRes containerId: Int
+      @IdRes containerId: Int,
+      savedInstanceState: Bundle?
   ) : this(
       history = History(history.map(::Normal)),
       fragmentManager = fragmentManager,
-      containerId = containerId
+      containerId = containerId,
+      savedInstanceState = savedInstanceState
   )
 
   constructor(
       initialScreenKey: ScreenKey,
       fragmentManager: FragmentManager,
-      @IdRes containerId: Int
+      @IdRes containerId: Int,
+      savedInstanceState: Bundle?
   ) : this(
       history = listOf(initialScreenKey),
       fragmentManager = fragmentManager,
-      containerId = containerId
+      containerId = containerId,
+      savedInstanceState = savedInstanceState
   )
 
   // Used for posting screen results
   private val handler = Handler(Looper.getMainLooper())
 
   init {
+    history = savedInstanceState?.getParcelable(HISTORY_STATE_KEY) ?: history
+
     executeStateChange(history, Direction.Replace, null)
+  }
+
+  fun onSaveInstanceState(savedInstanceState: Bundle) {
+    savedInstanceState.putParcelable(HISTORY_STATE_KEY, history)
   }
 
   fun push(screenKey: ScreenKey) {

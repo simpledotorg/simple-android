@@ -23,10 +23,7 @@ open class ItemAdapter<I : ItemAdapter.Item<E>, E>(
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder {
     val layoutInflater = LayoutInflater.from(parent.context)
 
-    val binding = bindings
-        .filter { it.key == viewType }
-        .values
-        .first()
+    val binding = bindings.getValue(viewType)
 
     return BindingViewHolder(binding = binding.invoke(layoutInflater, parent))
   }

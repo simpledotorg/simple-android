@@ -4,16 +4,17 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.view_teleconsult_doctor_info.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.ActivityLifecycle
+import org.simple.clinic.databinding.ViewTeleconsultDoctorInfoBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
@@ -29,6 +30,29 @@ class TeleconsultDoctorInfoView(
     attr: AttributeSet?
 ) : ConstraintLayout(context, attr), TeleconsultDoctorInfoUi, TeleconsultDoctorInfoUiActions {
 
+  private var binding: ViewTeleconsultDoctorInfoBinding? = null
+
+  private val medicalRegistrationIdEditText
+    get() = binding!!.medicalRegistrationIdEditText
+
+  private val signatureContainer
+    get() = binding!!.signatureContainer
+
+  private val addSignatureButton
+    get() = binding!!.addSignatureButton
+
+  private val signatureErrorTextView
+    get() = binding!!.signatureErrorTextView
+
+  private val signatureImageView
+    get() = binding!!.signatureImageView
+
+  private val acknowledgementTextView
+    get() = binding!!.acknowledgementTextView
+
+  private val instructionsEditText
+    get() = binding!!.instructionsEditText
+
   @Inject
   lateinit var screenRouter: ScreenRouter
 
@@ -39,7 +63,8 @@ class TeleconsultDoctorInfoView(
   lateinit var lifecycle: Observable<ActivityLifecycle>
 
   init {
-    inflate(context, R.layout.view_teleconsult_doctor_info, this)
+    val layoutInflater = LayoutInflater.from(context)
+    binding = ViewTeleconsultDoctorInfoBinding.inflate(layoutInflater, this, true)
   }
 
   private val events by unsafeLazy {
@@ -79,6 +104,7 @@ class TeleconsultDoctorInfoView(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.ScreenKey
 
-class ScreenFragmentCompat : Fragment() {
+class ScreenFragmentCompat: Fragment(), HandlesBack {
 
   companion object {
     fun create() = ScreenFragmentCompat()
@@ -23,5 +24,11 @@ class ScreenFragmentCompat : Fragment() {
       savedInstanceState: Bundle?
   ): View {
     return inflater.inflate(key.layoutRes(), container, false)
+  }
+
+  override fun onBackPressed(): Boolean {
+    val screen = requireView()
+
+    return (screen as? HandlesBack)?.onBackPressed() ?: false
   }
 }

@@ -159,6 +159,22 @@ data class PatientSearchResult(
         ORDER BY priority ASC, fullName COLLATE NOCASE
     """)
     fun searchByName(name: String, facilityId: UUID): List<PatientSearchResult>
+
+    @Query("""
+        SELECT * FROM (
+            SELECT searchResult.*, 0 priority FROM 
+            PatientSearchResult searchResult
+            LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+            WHERE phoneNumber LIKE '%' || :phoneNumber || '%' AND P.deletedAt IS NULL AND P.assignedFacilityId = :facilityId
+            UNION
+            SELECT searchResult.*, 1 priority FROM 
+            PatientSearchResult searchResult                                       
+            LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+            WHERE phoneNumber LIKE '%' || :phoneNumber || '%' AND P.deletedAt IS NULL AND P.assignedFacilityId != :facilityId
+            )
+        ORDER BY priority ASC, fullName COLLATE NOCASE
+    """)
+    fun searchByPhoneNumber2(phoneNumber: String, facilityId: UUID): List<PatientSearchResult>
   }
 
   data class PatientNameAndId(val uuid: UUID, val fullName: String)

@@ -7,11 +7,11 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
-import kotlinx.android.synthetic.main.patientsummary_bloodsugar_item_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
+import org.simple.clinic.databinding.PatientsummaryBloodsugarItemContentBinding
 import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.visibleOrGone
 
@@ -20,8 +20,29 @@ class BloodSugarItemView(
     attributeSet: AttributeSet
 ) : FrameLayout(context, attributeSet) {
 
+  private var binding: PatientsummaryBloodsugarItemContentBinding? = null
+
+  private val bloodSugarItemRoot
+    get() = binding!!.bloodSugarItemRoot
+
+  private val bloodSugarEditButton
+    get() = binding!!.bloodSugarEditButton
+
+  private val bloodSugarLevelTextView
+    get() = binding!!.bloodSugarLevelTextView
+
+  private val bloodSugarIconImageView
+    get() = binding!!.bloodSugarIconImageView
+
+  private val readingTextView
+    get() = binding!!.readingTextView
+
+  private val dateTimeTextView
+    get() = binding!!.dateTimeTextView
+
   init {
-    LayoutInflater.from(context).inflate(R.layout.patientsummary_bloodsugar_item_content, this, true)
+    val layoutInflater = LayoutInflater.from(context)
+    binding = PatientsummaryBloodsugarItemContentBinding.inflate(layoutInflater, this, true)
   }
 
   fun render(
@@ -90,5 +111,10 @@ class BloodSugarItemView(
         .append(bloodSugarDateTime)
         .popSpan()
         .build()
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    binding = null
   }
 }

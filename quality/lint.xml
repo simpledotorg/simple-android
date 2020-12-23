@@ -22,6 +22,7 @@
     <ignore path="src/main/res/drawable/illustration_overdue.xml" />
     <ignore path="src/main/res/drawable/illustration_reports.xml" />
     <ignore path="src/main/res/drawable/ic_whatsapp_circular.xml" />
+    <ignore path="src/main/res/drawable/ic_homescreen_india" />
   </issue>
 
   <issue id="ParcelCreator" severity="informational" />
@@ -56,5 +57,6 @@
     <ignore path="src/main/res/drawable/illustration_location.xml" />
     <ignore path="src/main/res/drawable/illustration_overdue.xml" />
     <ignore path="src/main/res/drawable/illustration_reports.xml" />
+    <ignore path="src/main/res/drawable/ic_homescreen_india" />
   </issue>
 </lint>

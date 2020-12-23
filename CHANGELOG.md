@@ -7,6 +7,9 @@
 - [In Progress: 21 Dec 2020] Instant search in Faster registration
 - [In Progress: 22 Dec 2020] Migrate app to use ViewBinding
 
+### Changes
+- Change home illustration for India
+
 ## On Demo
 ### Internal
 - Add PR comment commands for running instrumented tests and rebasing PR

@@ -7,6 +7,7 @@
 - [In Progress: 21 Dec 2020] Instant search in Faster registration
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - Track code style and lint rules for project in VCS
+- Add Instant search query
 
 ### Changes
 - Change home illustration for India

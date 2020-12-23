@@ -7,11 +7,11 @@ import android.os.Bundle
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.sheet_contact_doctor.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ListContactDoctorBinding
+import org.simple.clinic.databinding.SheetContactDoctorBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
@@ -24,9 +24,9 @@ import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.DividerItemDecorator
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.dp
 import java.util.Locale
@@ -34,6 +34,11 @@ import java.util.UUID
 import javax.inject.Inject
 
 class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctorUiActions {
+
+  private lateinit var binding: SheetContactDoctorBinding
+
+  private val doctorsRecyclerView
+    get() = binding.doctorsRecyclerView
 
   companion object {
     private const val EXTRA_PATIENT_UUID = "patientUuid"
@@ -117,7 +122,8 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctor
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.sheet_contact_doctor)
+    binding = SheetContactDoctorBinding.inflate(layoutInflater)
+    setContentView(binding.root)
     delegate.onRestoreInstanceState(savedInstanceState)
 
     doctorsRecyclerView.adapter = itemAdapter

@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.screen_teleconsult_success.view.*
 import org.simple.clinic.R
+import org.simple.clinic.databinding.ScreenTeleconsultSuccessBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
@@ -27,6 +27,17 @@ class TeleConsultSuccessScreen(
     context: Context,
     attributeSet: AttributeSet
 ) : ConstraintLayout(context, attributeSet), TeleConsultSuccessScreenUiActions, TeleConsultSuccessUi {
+
+  private var binding: ScreenTeleconsultSuccessBinding? = null
+
+  private val prescriptionNoButton
+    get() = binding!!.prescriptionNoButton
+
+  private val prescriptionYesButton
+    get() = binding!!.prescriptionYesButton
+
+  private val toolbar
+    get() = binding!!.toolbar
 
   @Inject
   lateinit var effectHandler: TeleConsultSuccessEffectHandler.Factory
@@ -64,6 +75,7 @@ class TeleConsultSuccessScreen(
     if (isInEditMode) {
       return
     }
+    binding = ScreenTeleconsultSuccessBinding.bind(this)
     context.injector<Injector>().inject(this)
     backClicks()
   }
@@ -89,10 +101,11 @@ class TeleConsultSuccessScreen(
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
+    binding = null
     mobiusDelegate.stop()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return mobiusDelegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 

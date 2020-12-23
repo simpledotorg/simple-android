@@ -3,6 +3,7 @@ package org.simple.clinic.widgets.qrcodescanner
 import android.content.Context
 import android.util.AttributeSet
 import android.util.DisplayMetrics
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -14,8 +15,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.view_qrcode_scanner.view.*
-import org.simple.clinic.R
+import org.simple.clinic.databinding.ViewQrcodeScannerBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
@@ -31,6 +31,14 @@ constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), IQrCodeScannerView {
+
+  private var binding: ViewQrcodeScannerBinding? = null
+
+  private val previewView
+    get() = binding!!.previewView
+
+  private val viewFinderImageView
+    get() = binding!!.viewFinderImageView
 
   companion object {
     private const val RATIO_4_3_VALUE = 4.0 / 3.0
@@ -53,7 +61,8 @@ constructor(
   private val cameraProviderFuture = ProcessCameraProvider.getInstance(context.applicationContext)
 
   init {
-    View.inflate(context, R.layout.view_qrcode_scanner, this)
+    val layoutInflater = LayoutInflater.from(context)
+    binding = ViewQrcodeScannerBinding.inflate(layoutInflater, this, true)
   }
 
   override fun onFinishInflate() {
@@ -130,6 +139,7 @@ constructor(
 
   override fun onDetachedFromWindow() {
     cameraExecutor.shutdown()
+    binding = null
     super.onDetachedFromWindow()
   }
 

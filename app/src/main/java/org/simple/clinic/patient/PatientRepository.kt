@@ -65,8 +65,14 @@ class PatientRepository @Inject constructor(
 
   @WorkerThread
   fun search2(criteria: PatientSearchCriteria, facilityId: UUID): List<PatientSearchResult> {
-    val phoneNumber = (criteria as PhoneNumber).phoneNumber
-    return searchByPhoneNumber2(phoneNumber, facilityId)
+    return when (criteria) {
+      is Name -> searchByName2(criteria.patientName, facilityId)
+      is PhoneNumber -> searchByPhoneNumber2(criteria.phoneNumber, facilityId)
+    }
+  }
+
+  private fun searchByName2(patientName: String, facilityId: UUID): List<PatientSearchResult> {
+    return database.patientSearchDao().searchByName(patientName, facilityId)
   }
 
   private fun searchByPhoneNumber2(phoneNumber: String, facilityId: UUID): List<PatientSearchResult> {

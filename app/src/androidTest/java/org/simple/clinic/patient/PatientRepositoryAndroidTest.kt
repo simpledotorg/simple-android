@@ -623,7 +623,7 @@ class PatientRepositoryAndroidTest {
     clock.advanceBy(Duration.ofDays(365))
     val timeOfDeath = Instant.now(clock)
 
-      patientRepository.updatePatientStatusToDead(patient.patientUuid)
+    patientRepository.updatePatientStatusToDead(patient.patientUuid)
     val deadPatient: Patient = patientRepository.patient(patient.patientUuid)
         .extractIfPresent()
         .blockingFirst()
@@ -3869,5 +3869,57 @@ class PatientRepositoryAndroidTest {
       assertThat(assignedFacilityId).isEqualTo(updatedAssignedFacilityUuid)
       assertThat(syncStatus).isEqualTo(PENDING)
     }
+  }
+
+  @Test
+  fun `searching_for_a_patient_by_phone_number_must_return_list_of_patient_search_results_paritioned_by_assigned_and_not_assigned_facility`() {
+    fun createPatientWithPhoneNumberAndAssignedFacilityID(
+        patientUuid: UUID,
+        phoneNumber: String?,
+        assignedFacilityId: UUID?
+    ) {
+      val patientProfile = testData
+          .patientProfile(patientUuid = patientUuid, generatePhoneNumber = !phoneNumber.isNullOrBlank(), patientAssignedFacilityId = assignedFacilityId)
+          .let { patientProfile ->
+            patientProfile.copy(
+                patient = patientProfile.patient.copy(fullName = "Patient", assignedFacilityId = assignedFacilityId),
+                phoneNumbers = patientProfile
+                    .phoneNumbers
+                    .take(1)
+                    .map { it.copy(number = phoneNumber!!) }
+            )
+          }
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+    }
+
+    // given
+    val currentFacility = testData.facility(uuid = UUID.fromString("c0056c11-105d-4079-80fa-c745128f7fc5"), name = "CHC Bucho")
+    val facility2 = testData.facility(uuid = UUID.fromString("532264e6-b358-445e-8b48-c6253677db24"), name = "Test")
+    database.facilityDao().save(listOf(currentFacility, facility2))
+
+
+    val patientWithCurrentFacilityAsAssignedFacility = UUID.fromString("d47ae2e7-7453-4a6f-806e-88eb130823d8")
+    createPatientWithPhoneNumberAndAssignedFacilityID(
+        patientUuid = patientWithCurrentFacilityAsAssignedFacility,
+        phoneNumber = "1234567890",
+        assignedFacilityId = currentFacility.uuid)
+
+    val patientWithAnotherFacilityAsAssignedFacility = UUID.fromString("f6cfd657-bf32-40c1-9dd2-4c956fd910a8")
+    createPatientWithPhoneNumberAndAssignedFacilityID(
+        patientUuid = patientWithAnotherFacilityAsAssignedFacility,
+        phoneNumber = "1239382472983",
+        assignedFacilityId = facility2.uuid
+    )
+
+    //when
+    val searchResults = patientRepository
+        .search2(PhoneNumber("12"), currentFacility.uuid)
+        .map { it.uuid }
+
+    //then
+    assertThat(searchResults).containsExactly(
+        patientWithCurrentFacilityAsAssignedFacility, patientWithAnotherFacilityAsAssignedFacility
+    )
   }
 }

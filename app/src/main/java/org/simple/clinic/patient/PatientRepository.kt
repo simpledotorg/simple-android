@@ -63,6 +63,16 @@ class PatientRepository @Inject constructor(
     }
   }
 
+  @WorkerThread
+  fun search2(criteria: PatientSearchCriteria, facilityId: UUID): List<PatientSearchResult> {
+    val phoneNumber = (criteria as PhoneNumber).phoneNumber
+    return searchByPhoneNumber2(phoneNumber, facilityId)
+  }
+
+  private fun searchByPhoneNumber2(phoneNumber: String, facilityId: UUID): List<PatientSearchResult> {
+    return database.patientSearchDao().searchByPhoneNumber2(phoneNumber, facilityId)
+  }
+
   private fun searchByName(name: String): List<PatientSearchResult> {
     Timber.tag("Search").i("Search by name")
     val patientIdsMatchingName = findPatientIdsMatchingName(name)

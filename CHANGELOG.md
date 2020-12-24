@@ -5,7 +5,7 @@
 - Add shell env comment to `pre-push` hook
 - Add the Router for the new navigation framework 
 - [In Progress: 21 Dec 2020] Instant search in Faster registration
-- [In Progress: 22 Dec 2020] Migrate app to use ViewBinding
+- [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 
 ### Changes
 - Change home illustration for India

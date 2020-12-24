@@ -16,10 +16,10 @@ import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.screen_teleconsult_share_prescription.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ListItemTeleconsultSharePrescriptionMedicineBinding
+import org.simple.clinic.databinding.ScreenTeleconsultSharePrescriptionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.home.HomeScreenKey
@@ -49,6 +49,44 @@ class TeleconsultSharePrescriptionScreen constructor(
     context: Context,
     attributeSet: AttributeSet?
 ) : ConstraintLayout(context, attributeSet), TeleconsultSharePrescriptionUi, TeleconsultSharePrescriptionUiActions {
+
+  private var binding: ScreenTeleconsultSharePrescriptionBinding? = null
+
+  private val medicinesRecyclerView
+    get() = binding!!.medicinesRecyclerView
+
+  private val instructionsTextView
+    get() = binding!!.instructionsTextView
+
+  private val shareButton
+    get() = binding!!.shareButton
+
+  private val layoutSharePrescription
+    get() = binding!!.layoutSharePrescription
+
+  private val downloadButton
+    get() = binding!!.downloadButton
+
+  private val doneButton
+    get() = binding!!.doneButton
+
+  private val toolbar
+    get() = binding!!.toolbar
+
+  private val signatureImageView
+    get() = binding!!.signatureImageView
+
+  private val prescriptionDateTextView
+    get() = binding!!.prescriptionDateTextView
+
+  private val medicalRegistrationIdTextView
+    get() = binding!!.medicalRegistrationIdTextView
+
+  private val patientAddressTextView
+    get() = binding!!.patientAddressTextView
+
+  private val patientNameTextView
+    get() = binding!!.patientNameTextView
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -116,10 +154,11 @@ class TeleconsultSharePrescriptionScreen constructor(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 
@@ -131,6 +170,8 @@ class TeleconsultSharePrescriptionScreen constructor(
     super.onFinishInflate()
     if (isInEditMode) return
     context.injector<Injector>().inject(this)
+
+    binding = ScreenTeleconsultSharePrescriptionBinding.bind(this)
 
     showMedicalInstructions()
     medicinesRecyclerView.adapter = teleconsultSharePrescriptionMedicinesAdapter

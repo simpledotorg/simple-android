@@ -11,10 +11,10 @@ import com.jakewharton.rxbinding3.widget.checkedChanges
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.sheet_teleconsult_status.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.SheetTeleconsultStatusBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
@@ -31,6 +31,14 @@ import java.util.UUID
 import javax.inject.Inject
 
 class TeleconsultStatusSheet : BottomSheetActivity(), TeleconsultStatusUi, TeleconsultStatusUiAction {
+
+  private lateinit var binding: SheetTeleconsultStatusBinding
+
+  private val teleconsultStatusDoneButton
+    get() = binding.teleconsultStatusDoneButton
+
+  private val teleconsultStatusRadioGroup
+    get() = binding.teleconsultStatusRadioGroup
 
   companion object {
     private const val EXTRA_TELECONSULT_RECORD_ID = "teleconsultRecordId"
@@ -101,7 +109,8 @@ class TeleconsultStatusSheet : BottomSheetActivity(), TeleconsultStatusUi, Telec
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.sheet_teleconsult_status)
+    binding = SheetTeleconsultStatusBinding.inflate(layoutInflater)
+    setContentView(binding.root)
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 

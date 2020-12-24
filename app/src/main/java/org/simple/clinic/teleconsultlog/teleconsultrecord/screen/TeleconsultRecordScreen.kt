@@ -9,9 +9,9 @@ import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_teleconsult_record.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ScreenTeleconsultRecordBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.DateOfBirth
@@ -39,6 +39,23 @@ class TeleconsultRecordScreen(
     context: Context,
     attrs: AttributeSet
 ) : ConstraintLayout(context, attrs), TeleconsultRecordUi, UiActions {
+
+  private var binding: ScreenTeleconsultRecordBinding? = null
+
+  private val toolbar
+    get() = binding!!.toolbar
+
+  private val teleconsultTypeRadioGroup
+    get() = binding!!.teleconsultTypeRadioGroup
+
+  private val patientTookMedicineCheckBox
+    get() = binding!!.patientTookMedicineCheckBox
+
+  private val doneButton
+    get() = binding!!.doneButton
+
+  private val patientConsentedCheckBox
+    get() = binding!!.patientConsentedCheckBox
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -94,10 +111,11 @@ class TeleconsultRecordScreen(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 
@@ -108,6 +126,8 @@ class TeleconsultRecordScreen(
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) return
+
+    binding = ScreenTeleconsultRecordBinding.bind(this)
 
     context.injector<Injector>().inject(this)
   }

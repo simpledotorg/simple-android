@@ -28,7 +28,11 @@ proguard/
 *.log
 
 # Android Studio files
-.idea/
+.idea/caches
+.idea/libraries
+.idea/modules
+.idea/$CACHE_FILE$
+.idea/*.xml
 .navigation/
 captures/
 *.iml

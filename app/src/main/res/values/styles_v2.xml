@@ -737,4 +737,12 @@
     <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Clinic.V2.UnitPreferenceButton</item>
   </style>
 
+  <style name="Clinic.V2.Theme.BottomSheetFragment" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+    <item name="colorPrimary">@color/color_primary</item>
+    <item name="colorPrimaryDark">@color/color_primary_dark</item>
+    <item name="colorAccent">@color/color_accent</item>
+    <item name="android:windowIsFloating">false</item>
+    <item name="android:statusBarColor">@android:color/transparent</item>
+    <item name="android:windowSoftInputMode">adjustResize</item>
+  </style>
 </resources>

@@ -2413,7 +2413,7 @@ class PatientRepositoryAndroidTest {
     // when
     fun patientsInFacility(facility: Facility): List<PatientSearchResult> {
       return patientRepository
-          .allPatientsInFacility(facility)
+          .allPatientsInFacility_Old(facility)
           .blockingFirst()
     }
 
@@ -2482,7 +2482,7 @@ class PatientRepositoryAndroidTest {
     // when
     fun patientsInFacility(facility: Facility): List<PatientSearchResult> {
       return patientRepository
-          .allPatientsInFacility(facility)
+          .allPatientsInFacility_Old(facility)
           .blockingFirst()
     }
 
@@ -2594,7 +2594,7 @@ class PatientRepositoryAndroidTest {
     // when
     fun patientsInFacility(facility: Facility): List<PatientSearchResult> {
       return patientRepository
-          .allPatientsInFacility(facility)
+          .allPatientsInFacility_Old(facility)
           .blockingFirst()
     }
 
@@ -3163,7 +3163,7 @@ class PatientRepositoryAndroidTest {
     )
 
     //when
-    val allPatientsInFacility = patientRepository.allPatientsInFacility(currentFacility).blockingFirst()
+    val allPatientsInFacility = patientRepository.allPatientsInFacility_Old(currentFacility).blockingFirst()
 
     //then
     assertThat(allPatientsInFacility).hasSize(2)

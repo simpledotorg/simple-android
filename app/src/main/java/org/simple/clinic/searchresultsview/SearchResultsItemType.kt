@@ -3,8 +3,8 @@ package org.simple.clinic.searchresultsview
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
-import org.simple.clinic.databinding.ListPatientSearchBinding
 import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
+import org.simple.clinic.databinding.ListPatientSearchOldBinding
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.widgets.ItemAdapter
@@ -144,10 +144,10 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
       }
     }
 
-    override fun layoutResId(): Int = R.layout.list_patient_search
+    override fun layoutResId(): Int = R.layout.list_patient_search_old
 
     override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
-      val binding = holder.binding as ListPatientSearchBinding
+      val binding = holder.binding as ListPatientSearchOldBinding
 
       binding.patientSearchResultView.setOnClickListener {
         subject.onNext(Event.ResultClicked(searchResultViewModel.uuid))

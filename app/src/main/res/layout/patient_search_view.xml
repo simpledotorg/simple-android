@@ -62,7 +62,7 @@
     android:layout_above="@+id/newPatientContainer"
     android:clipToPadding="false"
     android:paddingTop="@dimen/spacing_8"
-    tools:listitem="@layout/list_patient_search"
+    tools:listitem="@layout/list_patient_search_old"
     tools:visibility="visible" />
 
   <LinearLayout

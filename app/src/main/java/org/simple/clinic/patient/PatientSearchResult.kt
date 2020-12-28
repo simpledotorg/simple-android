@@ -134,7 +134,7 @@ data class PatientSearchResult(
       ) PatientsAtFacility ON searchResults.uuid = PatientsAtFacility.uuid
       ORDER BY searchResults.fullName COLLATE NOCASE ASC
     """)
-    fun searchInFacilityAndSortByName(facilityUuid: UUID, status: PatientStatus): Flowable<List<PatientSearchResult>>
+    fun searchInFacilityAndSortByName_Old(facilityUuid: UUID, status: PatientStatus): Flowable<List<PatientSearchResult>>
 
     @Suppress("AndroidUnresolvedRoomSqlReference")
     @Query("""

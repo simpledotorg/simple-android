@@ -642,7 +642,7 @@ class PatientRepository @Inject constructor(
   fun allPatientsInFacility_Old(facility: Facility): Observable<List<PatientSearchResult>> {
     return database
         .patientSearchDao()
-        .searchInFacilityAndSortByName(facility.uuid, PatientStatus.Active)
+        .searchInFacilityAndSortByName_Old(facility.uuid, PatientStatus.Active)
         .toObservable()
   }
 

@@ -63,6 +63,7 @@ import org.simple.clinic.teleconsultlog.shareprescription.TeleconsultSharePrescr
 import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessScreen
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultNotRecordedDialog
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreen
+import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.simple.clinic.widgets.PatientSearchResultItemView_Old
 
 @Subcomponent(modules = [TheActivityModule::class])
@@ -116,7 +117,8 @@ interface TheActivityComponent :
     ShortCodeSearchResultScreen.Injector,
     SettingsScreen.Injector,
     ChangeLanguageScreen.Injector,
-    TeleconsultSharePrescriptionScreen.Injector {
+    TeleconsultSharePrescriptionScreen.Injector,
+    PatientSearchResultItemView.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Builder

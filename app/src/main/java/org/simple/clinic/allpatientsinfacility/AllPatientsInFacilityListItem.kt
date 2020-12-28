@@ -8,7 +8,7 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.ListAllpatientsinfacilityFacilityHeaderBinding
 import org.simple.clinic.databinding.ListPatientSearchBinding
 import org.simple.clinic.widgets.ItemAdapter
-import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
+import org.simple.clinic.widgets.PatientSearchResultItemView_Old.PatientSearchResultViewModel
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import java.util.Locale
 import java.util.UUID

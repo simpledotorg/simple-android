@@ -5,7 +5,7 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.patient.DateOfBirth.Type.EXACT
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.widgets.PatientSearchResultItemView
+import org.simple.clinic.widgets.PatientSearchResultItemView_Old
 import java.time.LocalDate
 import java.time.Period
 
@@ -49,7 +49,7 @@ data class DateOfBirth(
       return fromAgeOrDate(overdueAppointment.age, overdueAppointment.dateOfBirth, userClock)
     }
 
-    fun fromPatientSearchResultViewModel(viewModel: PatientSearchResultItemView.PatientSearchResultViewModel, userClock: UserClock): DateOfBirth {
+    fun fromPatientSearchResultViewModel_Old(viewModel: PatientSearchResultItemView_Old.PatientSearchResultViewModel, userClock: UserClock): DateOfBirth {
       return fromAgeOrDate(viewModel.age, viewModel.dateOfBirth, userClock)
     }
 

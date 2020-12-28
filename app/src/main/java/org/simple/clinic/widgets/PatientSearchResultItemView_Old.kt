@@ -22,7 +22,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientSearchResultItemView(
+class PatientSearchResultItemView_Old(
     context: Context,
     attributeSet: AttributeSet
 ) : CardView(context, attributeSet) {
@@ -36,7 +36,7 @@ class PatientSearchResultItemView(
 
   override fun onFinishInflate() {
     super.onFinishInflate()
-    inflate(context, R.layout.view_patient_search_result, this)
+    inflate(context, R.layout.view_patient_search_result_old, this)
     if (isInEditMode) {
       return
     }
@@ -45,7 +45,7 @@ class PatientSearchResultItemView(
   }
 
   fun render(model: PatientSearchResultViewModel, currentFacilityUuid: UUID) {
-    renderPatientNameAgeAndGender(model.fullName, model.gender, DateOfBirth.fromPatientSearchResultViewModel(model, userClock))
+    renderPatientNameAgeAndGender(model.fullName, model.gender, DateOfBirth.fromPatientSearchResultViewModel_Old(model, userClock))
     renderPatientAddress(model.address)
     renderPatientDateOfBirth(model.dateOfBirth)
     renderPatientPhoneNumber(model.phoneNumber)
@@ -116,6 +116,6 @@ class PatientSearchResultItemView(
   )
 
   interface Injector {
-    fun inject(target: PatientSearchResultItemView)
+    fun inject(target: PatientSearchResultItemView_Old)
   }
 }

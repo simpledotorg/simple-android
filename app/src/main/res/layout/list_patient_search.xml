@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.widgets.PatientSearchResultItemView android:id="@+id/patientSearchResultView"
+<org.simple.clinic.widgets.PatientSearchResultItemView_Old android:id="@+id/patientSearchResultView"
   style="@style/Clinic.V2.CardView"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"

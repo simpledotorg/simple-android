@@ -7,7 +7,7 @@ import org.simple.clinic.searchresultsview.SearchResultsItemType.InCurrentFacili
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NoPatientsInCurrentFacility
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFacilityHeader
 import org.simple.clinic.searchresultsview.SearchResultsItemType.SearchResultRow
-import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
+import org.simple.clinic.widgets.PatientSearchResultItemView_Old.PatientSearchResultViewModel
 import java.util.UUID
 
 class SearchResultsItemTypeTest {

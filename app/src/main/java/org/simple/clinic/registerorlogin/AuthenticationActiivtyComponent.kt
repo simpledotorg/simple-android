@@ -8,6 +8,7 @@ import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.facilitypicker.FacilityPickerView
 import org.simple.clinic.introvideoscreen.IntroVideoScreenInjector
 import org.simple.clinic.login.pin.LoginPinScreen
+import org.simple.clinic.navigation.di.FlowScreenKeyModule
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreen
@@ -19,7 +20,10 @@ import org.simple.clinic.registration.register.RegistrationLoadingScreen
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.selectcountry.SelectCountryScreenInjector
 
-@Subcomponent(modules = [AssistedInjectModule::class])
+@Subcomponent(modules = [
+  AssistedInjectModule::class,
+  FlowScreenKeyModule::class
+])
 interface AuthenticationActivityComponent :
     RegistrationPhoneScreen.Injector,
     AccessDeniedScreenInjector,

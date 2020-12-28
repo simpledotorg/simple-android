@@ -56,7 +56,7 @@ class ConfirmRemoveBloodSugarDialog : AppCompatDialogFragment(), ConfirmRemoveBl
   private val events = PublishSubject.create<ConfirmRemoveBloodSugarEvent>()
 
   private val delegate by unsafeLazy {
-    val bloodSugarMeasurementUuid = arguments!!.getSerializable(KEY_BLOOD_SUGAR_UUID) as UUID
+    val bloodSugarMeasurementUuid = requireArguments().getSerializable(KEY_BLOOD_SUGAR_UUID) as UUID
 
     MobiusDelegate.forActivity(
         events = events.ofType(),

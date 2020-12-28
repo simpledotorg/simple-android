@@ -6,20 +6,20 @@ import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import org.simple.clinic.databinding.ScreenAccessDeniedBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
 class AccessDeniedScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var screenKeyProvider: ScreenKeyProvider
 
   @Inject
   lateinit var activity: AppCompatActivity
 
   private val screenKey by unsafeLazy {
-    screenRouter.key<AccessDeniedScreenKey>(this)
+    screenKeyProvider.keyFor<AccessDeniedScreenKey>(this)
   }
 
   private var binding: ScreenAccessDeniedBinding? = null

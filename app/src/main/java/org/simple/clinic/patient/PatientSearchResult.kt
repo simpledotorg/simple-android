@@ -12,7 +12,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 @DatabaseView("""
-  SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.status, P.createdAt, P.updatedAt, P.syncStatus, P.recordedAt,
+  SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId, P.status, P.createdAt, P.updatedAt, P.syncStatus, P.recordedAt,
   PA.uuid addr_uuid, PA.streetAddress addr_streetAddress, PA.colonyOrVillage addr_colonyOrVillage, PA.zone addr_zone, PA.district addr_district,
   PA.state addr_state, PA.country addr_country,
   PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
@@ -68,6 +68,8 @@ data class PatientSearchResult(
 
     @Embedded(prefix = "age_")
     val age: Age?,
+
+    val assignedFacilityId: UUID?,
 
     val status: PatientStatus,
 

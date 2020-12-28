@@ -8,6 +8,7 @@
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - Track code style and lint rules for project in VCS
 - Add Instant search query
+- Add `ScreenFragmentCompat` to support using the older view-based screens in the v2 navigation framework
 
 ### Changes
 - Change home illustration for India

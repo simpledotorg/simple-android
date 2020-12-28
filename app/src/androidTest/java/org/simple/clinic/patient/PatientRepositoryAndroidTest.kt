@@ -3872,7 +3872,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun `searching_for_a_patient_by_phone_number_must_return_list_of_patient_search_results_paritioned_by_assigned_and_not_assigned_facility`() {
+  fun searching_for_a_patient_by_phone_number_must_return_list_of_patient_search_results_paritioned_by_assigned_and_not_assigned_facility() {
     fun createPatientWithPhoneNumberAndAssignedFacilityID(
         patientUuid: UUID,
         phoneNumber: String?,
@@ -3924,7 +3924,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun `searching_for_a_patient_by_name_must_return_list_of_patient_search_results_paritioned_by_assigned_and_not_assigned_facility`() {
+  fun searching_for_a_patient_by_name_must_return_list_of_patient_search_results_paritioned_by_assigned_and_not_assigned_facility() {
     fun createPatientWithNameAndAssignedFacilityID(
         patientUuid: UUID,
         patientName: String,

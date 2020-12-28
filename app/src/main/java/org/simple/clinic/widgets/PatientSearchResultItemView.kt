@@ -43,31 +43,32 @@ class PatientSearchResultItemView(
     context.injector<Injector>().inject(this)
   }
 
-  fun render(model: PatientSearchResultViewModel) {
+  fun render(model: PatientSearchResultViewModel, currentFacilityId: UUID) {
     renderPatientNameAgeAndGender(model.fullName, model.gender, DateOfBirth.fromPatientSearchResultViewModel(model, userClock))
     renderPatientAddress(model.address)
     renderPatientDateOfBirth(model.dateOfBirth)
     renderPatientPhoneNumber(model.phoneNumber)
     renderVisited(model.lastSeen)
-    renderLastSeen(model.lastSeen)
+    renderLastSeen(model.lastSeen, currentFacilityId)
   }
 
-  private fun renderVisited(lastSeen: PatientSearchResult.LastSeen?) {
-    visitedContainer.visibleOrGone(lastSeen != null)
+  private fun renderLastSeen(lastSeen: PatientSearchResult.LastSeen?, currentFacilityId: UUID) {
+    val isAtCurrentFacility = currentFacilityId == lastSeen?.lastSeenAtFacilityUuid
+    lastSeenContainer.visibleOrGone(lastSeen != null && !isAtCurrentFacility)
     if (lastSeen != null) {
-      visitedTextView.text = lastSeen.lastSeenAtFacilityName
+      lastSeenTextView.text = lastSeen.lastSeenAtFacilityName
     }
   }
 
-  private fun renderLastSeen(
+  private fun renderVisited(
       lastSeen: PatientSearchResult.LastSeen?
   ) {
-    lastSeenContainer.visibleOrGone(lastSeen != null)
+    visitedContainer.visibleOrGone(lastSeen != null)
     if (lastSeen != null) {
       val lastSeenDate = lastSeen.lastSeenOn.toLocalDateAtZone(userClock.zone)
       val formattedLastSeenDate = dateTimeFormatter.format(lastSeenDate)
 
-      lastSeenTextView.text = formattedLastSeenDate
+      visitedTextView.text = formattedLastSeenDate
     }
   }
 

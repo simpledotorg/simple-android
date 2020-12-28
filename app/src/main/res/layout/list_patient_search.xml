@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.widgets.PatientSearchResultItemView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/patientSearchResultView"
+  style="@style/Clinic.V2.CardView"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginStart="@dimen/spacing_8"
+  android:layout_marginEnd="@dimen/spacing_8"
+  android:layout_marginBottom="@dimen/spacing_8"
+  tools:layout_marginTop="@dimen/spacing_8" />

@@ -646,6 +646,12 @@ class PatientRepository @Inject constructor(
         .toObservable()
   }
 
+  fun allPatientsInFacility(facility: Facility): List<PatientSearchResult> {
+    return database
+        .patientSearchDao()
+        .searchInFacilityAndSortByName(facility.uuid, PatientStatus.Active)
+  }
+
   fun searchByShortCode(shortCode: String): Observable<List<PatientSearchResult>> {
     val allPatients = database
         .businessIdDao()

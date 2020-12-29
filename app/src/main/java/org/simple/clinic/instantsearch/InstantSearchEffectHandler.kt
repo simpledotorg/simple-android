@@ -18,7 +18,17 @@ class InstantSearchEffectHandler @Inject constructor(
       .subtypeEffectHandler<InstantSearchEffect, InstantSearchEvent>()
       .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
       .addTransformer(LoadAllPatients::class.java, loadAllPatients())
+      .addTransformer(SearchWithCriteria::class.java, searchWithCriteria())
       .build()
+
+  private fun searchWithCriteria(): ObservableTransformer<SearchWithCriteria, InstantSearchEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map { patientRepository.search2(it.criteria, it.facility.uuid) }
+          .map(::SearchResultsLoaded)
+    }
+  }
 
   private fun loadAllPatients(): ObservableTransformer<LoadAllPatients, InstantSearchEvent> {
     return ObservableTransformer { effects ->

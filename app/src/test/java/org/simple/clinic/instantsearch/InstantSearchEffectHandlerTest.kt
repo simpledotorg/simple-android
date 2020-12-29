@@ -8,6 +8,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID
 
@@ -51,5 +52,23 @@ class InstantSearchEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(AllPatientsLoaded(patients))
+  }
+
+  @Test
+  fun `when search by criteria effect is received, then search by criteria`() {
+    // given
+    val patients = listOf(
+        TestData.patientSearchResult(fullName = "Patient 1"),
+        TestData.patientSearchResult(fullName = "Patient 2")
+    )
+    val searchCriteria = PatientSearchCriteria.Name("Pat")
+
+    whenever(patientRepository.search2(searchCriteria, facility.uuid)) doReturn patients
+
+    // when
+    testCase.dispatch(SearchWithCriteria(searchCriteria, facility))
+
+    // then
+    testCase.assertOutgoingEvents(SearchResultsLoaded(patients))
   }
 }

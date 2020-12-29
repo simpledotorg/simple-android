@@ -11,4 +11,8 @@ data class InstantSearchModel(
         facility = null
     )
   }
+
+  fun facilityLoaded(facility: Facility): InstantSearchModel {
+    return copy(facility = facility)
+  }
 }

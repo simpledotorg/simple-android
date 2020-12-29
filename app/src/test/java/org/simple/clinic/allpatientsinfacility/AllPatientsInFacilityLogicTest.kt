@@ -54,7 +54,7 @@ class AllPatientsInFacilityLogicTest {
   @Test
   fun `when the screen is created, then current facility must be fetched`() {
     // given
-    whenever(patientRepository.allPatientsInFacility(facility))
+    whenever(patientRepository.allPatientsInFacility_Old(facility))
         .thenReturn(Observable.never())
 
     // when
@@ -71,7 +71,7 @@ class AllPatientsInFacilityLogicTest {
   @Test
   fun `when the facility does not have any patients, then show no patients found screen`() {
     // given
-    whenever(patientRepository.allPatientsInFacility(facility))
+    whenever(patientRepository.allPatientsInFacility_Old(facility))
         .thenReturn(Observable.just(emptyList()))
 
     // when
@@ -91,7 +91,7 @@ class AllPatientsInFacilityLogicTest {
   fun `when the facility has patients, then show a list of patients`() {
     // given
     val patientSearchResults = listOf(TestData.patientSearchResult())
-    whenever(patientRepository.allPatientsInFacility(facility))
+    whenever(patientRepository.allPatientsInFacility_Old(facility))
         .thenReturn(Observable.just(patientSearchResults))
 
     // when

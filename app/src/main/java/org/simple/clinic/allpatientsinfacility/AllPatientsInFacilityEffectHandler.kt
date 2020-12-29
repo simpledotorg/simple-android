@@ -53,7 +53,7 @@ object AllPatientsInFacilityEffectHandler {
       schedulersProvider: SchedulersProvider
   ): Observable<List<PatientSearchResult>> {
     return patientRepository
-        .allPatientsInFacility(facility)
+        .allPatientsInFacility_Old(facility)
         .subscribeOn(schedulersProvider.io())
   }
 

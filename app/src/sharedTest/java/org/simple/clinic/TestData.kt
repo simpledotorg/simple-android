@@ -1010,7 +1010,8 @@ object TestData {
           lastSeenOn = Instant.now(),
           lastSeenAtFacilityName = "Some Facility",
           lastSeenAtFacilityUuid = UUID.randomUUID()
-      )
+      ),
+      assignedFacilityId: UUID? = null
   ): PatientSearchResult {
     return PatientSearchResult(
         uuid = uuid,
@@ -1018,14 +1019,15 @@ object TestData {
         gender = gender,
         dateOfBirth = dateOfBirth,
         age = age,
+        assignedFacilityId = assignedFacilityId,
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        address = address,
         syncStatus = syncStatus,
+        address = address,
+        phoneUuid = phoneNumberUuid,
         phoneNumber = phoneNumber,
         phoneType = phoneType,
-        phoneUuid = phoneNumberUuid,
         phoneActive = phoneActive,
         phoneCreatedAt = phoneCreatedAt,
         phoneUpdatedAt = phoneUpdatedAt,

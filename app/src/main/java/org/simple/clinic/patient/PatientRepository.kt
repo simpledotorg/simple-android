@@ -639,11 +639,17 @@ class PatientRepository @Inject constructor(
         .isPatientDefaulter(patientUuid)
   }
 
-  fun allPatientsInFacility(facility: Facility): Observable<List<PatientSearchResult>> {
+  fun allPatientsInFacility_Old(facility: Facility): Observable<List<PatientSearchResult>> {
+    return database
+        .patientSearchDao()
+        .searchInFacilityAndSortByName_Old(facility.uuid, PatientStatus.Active)
+        .toObservable()
+  }
+
+  fun allPatientsInFacility(facility: Facility): List<PatientSearchResult> {
     return database
         .patientSearchDao()
         .searchInFacilityAndSortByName(facility.uuid, PatientStatus.Active)
-        .toObservable()
   }
 
   fun searchByShortCode(shortCode: String): Observable<List<PatientSearchResult>> {

@@ -12,7 +12,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 @DatabaseView("""
-  SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.status, P.createdAt, P.updatedAt, P.syncStatus, P.recordedAt,
+  SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId, P.status, P.createdAt, P.updatedAt, P.syncStatus, P.recordedAt,
   PA.uuid addr_uuid, PA.streetAddress addr_streetAddress, PA.colonyOrVillage addr_colonyOrVillage, PA.zone addr_zone, PA.district addr_district,
   PA.state addr_state, PA.country addr_country,
   PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
@@ -68,6 +68,8 @@ data class PatientSearchResult(
 
     @Embedded(prefix = "age_")
     val age: Age?,
+
+    val assignedFacilityId: UUID?,
 
     val status: PatientStatus,
 
@@ -132,7 +134,23 @@ data class PatientSearchResult(
       ) PatientsAtFacility ON searchResults.uuid = PatientsAtFacility.uuid
       ORDER BY searchResults.fullName COLLATE NOCASE ASC
     """)
-    fun searchInFacilityAndSortByName(facilityUuid: UUID, status: PatientStatus): Flowable<List<PatientSearchResult>>
+    fun searchInFacilityAndSortByName_Old(facilityUuid: UUID, status: PatientStatus): Flowable<List<PatientSearchResult>>
+
+    @Query("""
+        SELECT * FROM (
+            SELECT searchResult.*, 1 priority FROM 
+            PatientSearchResult searchResult
+            LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+            WHERE P.status = :status AND P.deletedAt IS NULL AND P.assignedFacilityId = :facilityUuid
+            UNION
+            SELECT searchResult.*, 0 priority FROM 
+            PatientSearchResult searchResult
+            LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+            WHERE P.status = :status AND P.deletedAt IS NULL AND P.assignedFacilityId != :facilityUuid
+            )
+        ORDER BY priority DESC, fullName COLLATE NOCASE
+    """)
+    fun searchInFacilityAndSortByName(facilityUuid: UUID, status: PatientStatus): List<PatientSearchResult>
 
     @Suppress("AndroidUnresolvedRoomSqlReference")
     @Query("""

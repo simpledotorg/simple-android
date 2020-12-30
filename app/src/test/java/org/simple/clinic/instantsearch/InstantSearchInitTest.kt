@@ -19,13 +19,26 @@ class InstantSearchInitTest {
 
   @Test
   fun `when screen is created, then load current facility`() {
+    val model = InstantSearchModel.create(additionalIdentifier = null)
+
+    initSpec
+        .whenInit(model)
+        .then(assertThatFirst(
+            hasModel(model),
+            hasEffects(LoadCurrentFacility)
+        ))
+  }
+
+  @Test
+  fun `when screen is opened from blank bp passport scan, then load current facility and open bp passport sheet`() {
     initSpec
         .whenInit(defaultModel)
         .then(assertThatFirst(
             hasModel(defaultModel),
-            hasEffects(LoadCurrentFacility)
+            hasEffects(LoadCurrentFacility, OpenBpPassportSheet(identifier))
         ))
   }
+
 
   @Test
   fun `when screen is restored and facility is loaded, then validate search query`() {
@@ -38,7 +51,7 @@ class InstantSearchInitTest {
         .whenInit(facilityLoadedModel)
         .then(assertThatFirst(
             hasModel(facilityLoadedModel),
-            hasEffects(ValidateSearchQuery("Pa"))
+            hasEffects(ValidateSearchQuery("Pa"), OpenBpPassportSheet(identifier))
         ))
   }
 }

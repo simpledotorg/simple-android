@@ -3,12 +3,14 @@ package org.simple.clinic.instantsearch
 import org.simple.clinic.facility.Facility
 
 data class InstantSearchModel(
-    val facility: Facility?
+    val facility: Facility?,
+    val searchQuery: String?
 ) {
 
   companion object {
     fun create() = InstantSearchModel(
-        facility = null
+        facility = null,
+        searchQuery = null
     )
   }
 

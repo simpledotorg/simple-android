@@ -10,7 +10,8 @@ import org.simple.clinic.TestData
 class InstantSearchInitTest {
 
   private val initSpec = InitSpec(InstantSearchInit())
-  private val defaultModel = InstantSearchModel.create()
+  private val identifier = TestData.identifier()
+  private val defaultModel = InstantSearchModel.create(identifier)
 
   @Test
   fun `when screen is created, then load current facility`() {

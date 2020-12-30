@@ -15,11 +15,14 @@ data class InstantSearchModel(
   val hasSearchQuery: Boolean
     get() = !searchQuery.isNullOrBlank()
 
+  val hasAdditionalIdentifier: Boolean
+    get() = additionalIdentifier != null
+
   companion object {
-    fun create() = InstantSearchModel(
+    fun create(additionalIdentifier: Identifier?) = InstantSearchModel(
         facility = null,
         searchQuery = null,
-        additionalIdentifier = null
+        additionalIdentifier = additionalIdentifier
     )
   }
 

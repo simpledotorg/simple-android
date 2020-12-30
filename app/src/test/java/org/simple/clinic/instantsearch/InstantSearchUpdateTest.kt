@@ -7,6 +7,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.patient.PatientSearchCriteria
 
 class InstantSearchUpdateTest {
 
@@ -60,6 +61,22 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowPatientSearchResults(patients, facility))
+        ))
+  }
+
+  @Test
+  fun `when search query is valid, then load search results`() {
+    val facility = TestData.facility()
+    val searchQueryModel = defaultModel
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    updateSpec
+        .given(searchQueryModel)
+        .whenEvent(SearchQueryValidated(InstantSearchValidator.Result.Valid("Pat")))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SearchWithCriteria(PatientSearchCriteria.Name("Pat"), facility))
         ))
   }
 }

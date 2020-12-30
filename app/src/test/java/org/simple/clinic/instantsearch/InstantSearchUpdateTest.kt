@@ -8,12 +8,17 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import java.util.UUID
 
 class InstantSearchUpdateTest {
 
   private val updateSpec = UpdateSpec(InstantSearchUpdate())
-  private val defaultModel = InstantSearchModel.create()
+  private val identifier = TestData.identifier(
+      value = "3e5500fe-e10e-4009-a0bb-3db9009fdef6",
+      type = BpPassport
+  )
+  private val defaultModel = InstantSearchModel.create(identifier)
 
   @Test
   fun `when current facility is loaded, then update the model and load all patients`() {
@@ -77,7 +82,7 @@ class InstantSearchUpdateTest {
         .whenEvent(SearchQueryValidated(InstantSearchValidator.Result.Valid("Pat")))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(SearchWithCriteria(PatientSearchCriteria.Name("Pat"), facility))
+            hasEffects(SearchWithCriteria(PatientSearchCriteria.Name("Pat", identifier), facility))
         ))
   }
 
@@ -100,7 +105,8 @@ class InstantSearchUpdateTest {
   fun `when search result is clicked, then open patient summary`() {
     val patientUuid = UUID.fromString("f607be71-630d-4adb-8d3a-76fdf347fe8a")
     val facility = TestData.facility()
-    val model = defaultModel
+    val model = InstantSearchModel
+        .create(additionalIdentifier = null)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -110,6 +116,25 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenPatientSummary(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when the search result is clicked from the scanning bp passport flow, open the link id with patient screen`() {
+    val patientUuid = UUID.fromString("f607be71-630d-4adb-8d3a-76fdf347fe8a")
+    val identifier = TestData.identifier("123456", BpPassport)
+    val facility = TestData.facility()
+    val model = InstantSearchModel
+        .create(additionalIdentifier = identifier)
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    updateSpec
+        .given(model)
+        .whenEvent(SearchResultClicked(patientUuid))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenLinkIdWithPatientScreen(patientUuid, identifier))
         ))
   }
 }

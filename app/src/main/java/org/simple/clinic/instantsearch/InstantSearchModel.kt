@@ -9,6 +9,9 @@ data class InstantSearchModel(
     val additionalIdentifier: Identifier?
 ) {
 
+  val hasFacility: Boolean
+    get() = facility != null
+
   val hasSearchQuery: Boolean
     get() = !searchQuery.isNullOrBlank()
 

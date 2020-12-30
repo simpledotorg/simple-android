@@ -7,6 +7,11 @@ import org.simple.clinic.mobius.first
 class InstantSearchInit : Init<InstantSearchModel, InstantSearchEffect> {
 
   override fun init(model: InstantSearchModel): First<InstantSearchModel, InstantSearchEffect> {
-    return first(model, LoadCurrentFacility)
+    val effect = if (model.hasFacility)
+      ValidateSearchQuery(model.searchQuery.orEmpty())
+    else
+      LoadCurrentFacility
+
+    return first(model, effect)
   }
 }

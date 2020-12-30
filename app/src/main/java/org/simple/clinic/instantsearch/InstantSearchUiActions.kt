@@ -9,4 +9,5 @@ interface InstantSearchUiActions {
   fun showPatientsSearchResults(patients: List<PatientSearchResult>, facility: Facility)
   fun openPatientSummary(patientId: UUID)
   fun openLinkIdWithPatientScreen(patientId: UUID, identifier: Identifier)
+  fun openBpPassportSheet(identifier: Identifier)
 }

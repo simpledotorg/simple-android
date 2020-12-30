@@ -2,6 +2,7 @@ package org.simple.clinic.instantsearch
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -22,6 +23,24 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.facilityLoaded(facility)),
             hasEffects(LoadAllPatients(facility))
+        ))
+  }
+
+  @Test
+  fun `when all patients are loaded, then show patient search results if the search query is empty`() {
+    val patients = listOf(
+        TestData.patientSearchResult()
+    )
+    val facility = TestData.facility()
+    val facilityLoadedModel = defaultModel
+        .facilityLoaded(facility)
+
+    updateSpec
+        .given(facilityLoadedModel)
+        .whenEvent(AllPatientsLoaded(patients))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowPatientSearchResults(patients, facility))
         ))
   }
 }

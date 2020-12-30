@@ -7,6 +7,9 @@ data class InstantSearchModel(
     val searchQuery: String?
 ) {
 
+  val hasSearchQuery: Boolean
+    get() = !searchQuery.isNullOrBlank()
+
   companion object {
     fun create() = InstantSearchModel(
         facility = null,

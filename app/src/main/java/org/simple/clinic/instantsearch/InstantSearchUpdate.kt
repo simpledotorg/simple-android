@@ -31,7 +31,7 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
         dispatch(SearchWithCriteria(criteria, model.facility!!))
       }
       InstantSearchValidator.Result.LengthTooShort -> noChange()
-      InstantSearchValidator.Result.Empty -> noChange()
+      InstantSearchValidator.Result.Empty -> dispatch(LoadAllPatients(model.facility!!))
     }
   }
 

@@ -79,4 +79,19 @@ class InstantSearchUpdateTest {
             hasEffects(SearchWithCriteria(PatientSearchCriteria.Name("Pat"), facility))
         ))
   }
+
+  @Test
+  fun `when search query is empty, then load all patients`() {
+    val facility = TestData.facility()
+    val facilityLoadedModel = defaultModel
+        .facilityLoaded(facility)
+
+    updateSpec
+        .given(facilityLoadedModel)
+        .whenEvent(SearchQueryValidated(InstantSearchValidator.Result.Empty))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadAllPatients(facility))
+        ))
+  }
 }

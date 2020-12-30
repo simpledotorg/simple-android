@@ -117,4 +117,19 @@ class InstantSearchEffectHandlerTest {
 
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when open patient summary effect is received, then open patient summary`() {
+    // given
+    val patientId = UUID.fromString("da014c89-a32b-4236-a811-357590b57b99")
+
+    // when
+    testCase.dispatch(OpenPatientSummary(patientId))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openPatientSummary(patientId)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

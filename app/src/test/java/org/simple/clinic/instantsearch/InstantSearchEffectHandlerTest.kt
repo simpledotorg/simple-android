@@ -12,6 +12,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID
 
@@ -130,6 +131,25 @@ class InstantSearchEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
 
     verify(uiActions).openPatientSummary(patientId)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open link id with patient screen effect is received, then open link id with patient screen`() {
+    // given
+    val patientId = UUID.fromString("f7242bcf-585d-4f4e-81ff-407ccc2d7554")
+    val identifier = TestData.identifier(
+        type = BpPassport,
+        value = "96a58c7c-e516-42ed-a635-044cc89d6e64"
+    )
+
+    // when
+    testCase.dispatch(OpenLinkIdWithPatientScreen(patientId, identifier))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openLinkIdWithPatientScreen(patientId, identifier)
     verifyNoMoreInteractions(uiActions)
   }
 }

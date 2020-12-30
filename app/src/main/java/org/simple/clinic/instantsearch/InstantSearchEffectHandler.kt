@@ -31,6 +31,7 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addConsumer(ShowPatientSearchResults::class.java, { uiActions.showPatientsSearchResults(it.patients, it.facility) }, schedulers.ui())
       .addTransformer(ValidateSearchQuery::class.java, validateSearchQuery())
       .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientId) }, schedulers.ui())
+      .addConsumer(OpenLinkIdWithPatientScreen::class.java, { uiActions.openLinkIdWithPatientScreen(it.patientId, it.identifier) }, schedulers.ui())
       .build()
 
   private fun validateSearchQuery(): ObservableTransformer<ValidateSearchQuery, InstantSearchEvent> {

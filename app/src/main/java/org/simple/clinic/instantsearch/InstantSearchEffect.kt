@@ -3,6 +3,7 @@ package org.simple.clinic.instantsearch
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.patient.businessid.Identifier
 import java.util.UUID
 
 sealed class InstantSearchEffect
@@ -18,3 +19,5 @@ data class ShowPatientSearchResults(val patients: List<PatientSearchResult>, val
 data class ValidateSearchQuery(val searchQuery: String) : InstantSearchEffect()
 
 data class OpenPatientSummary(val patientId: UUID) : InstantSearchEffect()
+
+data class OpenLinkIdWithPatientScreen(val patientId: UUID, val identifier: Identifier) : InstantSearchEffect()

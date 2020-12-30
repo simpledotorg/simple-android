@@ -1,10 +1,12 @@
 package org.simple.clinic.instantsearch
 
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.patient.businessid.Identifier
 
 data class InstantSearchModel(
     val facility: Facility?,
-    val searchQuery: String?
+    val searchQuery: String?,
+    val additionalIdentifier: Identifier?
 ) {
 
   val hasSearchQuery: Boolean
@@ -13,7 +15,8 @@ data class InstantSearchModel(
   companion object {
     fun create() = InstantSearchModel(
         facility = null,
-        searchQuery = null
+        searchQuery = null,
+        additionalIdentifier = null
     )
   }
 

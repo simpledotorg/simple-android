@@ -2,6 +2,9 @@ package org.simple.clinic.instantsearch
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
@@ -16,10 +19,12 @@ class InstantSearchEffectHandlerTest {
 
   private val facility = TestData.facility()
   private val patientRepository = mock<PatientRepository>()
+  private val uiActions = mock<InstantSearchUiActions>()
   private val effectHandler = InstantSearchEffectHandler(
       currentFacility = { facility },
       patientRepository = patientRepository,
-      schedulers = TestSchedulersProvider.trampoline()
+      schedulers = TestSchedulersProvider.trampoline(),
+      uiActions = uiActions
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -52,6 +57,8 @@ class InstantSearchEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(AllPatientsLoaded(patients))
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -70,5 +77,26 @@ class InstantSearchEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(SearchResultsLoaded(patients))
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when show patients search results effect is received, then show patients search results`() {
+    // given
+    val facility = TestData.facility()
+    val patients = listOf(
+        TestData.patientSearchResult(),
+        TestData.patientSearchResult()
+    )
+
+    // when
+    testCase.dispatch(ShowPatientSearchResults(patients, facility))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showPatientsSearchResults(patients, facility)
+    verifyNoMoreInteractions(uiActions)
   }
 }

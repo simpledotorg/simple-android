@@ -8,21 +8,30 @@ import java.util.UUID
 @Parcelize
 data class LinkIdWithPatientModel(
     val patientUuid: UUID?,
-    val identifier: Identifier?
+    val identifier: Identifier?,
+    val patientName: String?
 ) : Parcelable {
 
   companion object {
 
     fun create() = LinkIdWithPatientModel(
         patientUuid = null,
-        identifier = null
+        identifier = null,
+        patientName = null
     )
   }
 
   val hasIdentifier: Boolean
     get() = identifier != null
 
+  val hasIdentifierAndName: Boolean
+    get() = identifier != null && patientName != null
+
   fun linkIdWithPatientViewShown(patientUuid: UUID, identifier: Identifier): LinkIdWithPatientModel {
     return copy(patientUuid = patientUuid, identifier = identifier)
+  }
+
+  fun patientNameFetched(patientName: String): LinkIdWithPatientModel {
+    return copy(patientName = patientName)
   }
 }

@@ -20,4 +20,8 @@ data class InstantSearchModel(
   fun facilityLoaded(facility: Facility): InstantSearchModel {
     return copy(facility = facility)
   }
+
+  fun searchQueryChanged(searchQuery: String): InstantSearchModel {
+    return copy(searchQuery = searchQuery)
+  }
 }

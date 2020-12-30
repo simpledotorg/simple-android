@@ -43,4 +43,23 @@ class InstantSearchUpdateTest {
             hasEffects(ShowPatientSearchResults(patients, facility))
         ))
   }
+
+  @Test
+  fun `when search results are loaded, then show the patient search results if the query is not empty`() {
+    val patients = listOf(
+        TestData.patientSearchResult()
+    )
+    val facility = TestData.facility()
+    val searchQueryModel = defaultModel
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    updateSpec
+        .given(searchQueryModel)
+        .whenEvent(SearchResultsLoaded(patients))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowPatientSearchResults(patients, facility))
+        ))
+  }
 }

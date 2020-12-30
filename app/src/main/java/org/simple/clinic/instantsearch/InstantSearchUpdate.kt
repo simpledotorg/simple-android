@@ -12,8 +12,14 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
     return when (event) {
       is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility), LoadAllPatients(event.facility))
       is AllPatientsLoaded -> allPatientsLoaded(model, event)
-      is SearchResultsLoaded -> noChange()
+      is SearchResultsLoaded -> searchResultsLoaded(model, event)
     }
+  }
+
+  private fun searchResultsLoaded(model: InstantSearchModel, event: SearchResultsLoaded): Next<InstantSearchModel, InstantSearchEffect> {
+    if (!model.hasSearchQuery) return noChange()
+
+    return dispatch(ShowPatientSearchResults(event.patientsSearchResults, model.facility!!))
   }
 
   private fun allPatientsLoaded(model: InstantSearchModel, event: AllPatientsLoaded): Next<InstantSearchModel, InstantSearchEffect> {

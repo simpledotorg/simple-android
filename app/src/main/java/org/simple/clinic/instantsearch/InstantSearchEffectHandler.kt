@@ -12,6 +12,8 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class InstantSearchEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val patientRepository: PatientRepository,
+    private val instantSearchValidator: InstantSearchValidator,
+    private val instantSearchConfig: InstantSearchConfig,
     private val schedulers: SchedulersProvider,
     @Assisted private val uiActions: InstantSearchUiActions
 ) {
@@ -27,7 +29,20 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addTransformer(LoadAllPatients::class.java, loadAllPatients())
       .addTransformer(SearchWithCriteria::class.java, searchWithCriteria())
       .addConsumer(ShowPatientSearchResults::class.java, { uiActions.showPatientsSearchResults(it.patients, it.facility) }, schedulers.ui())
+      .addTransformer(ValidateSearchQuery::class.java, validateSearchQuery())
       .build()
+
+  private fun validateSearchQuery(): ObservableTransformer<ValidateSearchQuery, InstantSearchEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.computation())
+          .map { instantSearchValidator.validate(
+              searchQuery = it.searchQuery,
+              minLengthForSearchQuery = instantSearchConfig.minLengthOfSearchQuery
+          ) }
+          .map(::SearchQueryValidated)
+    }
+  }
 
   private fun searchWithCriteria(): ObservableTransformer<SearchWithCriteria, InstantSearchEvent> {
     return ObservableTransformer { effects ->

@@ -23,6 +23,10 @@ class InstantSearchEffectHandlerTest {
   private val effectHandler = InstantSearchEffectHandler(
       currentFacility = { facility },
       patientRepository = patientRepository,
+      instantSearchValidator = InstantSearchValidator(),
+      instantSearchConfig = InstantSearchConfig(
+          minLengthOfSearchQuery = 2
+      ),
       schedulers = TestSchedulersProvider.trampoline(),
       uiActions = uiActions
   ).build()
@@ -98,5 +102,19 @@ class InstantSearchEffectHandlerTest {
 
     verify(uiActions).showPatientsSearchResults(patients, facility)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when validate search query effect is received, then validate search query`() {
+    // given
+    val validationResult = InstantSearchValidator.Result.Valid("Pat")
+
+    // when
+    testCase.dispatch(ValidateSearchQuery("Pat"))
+
+    // then
+    testCase.assertOutgoingEvents(SearchQueryValidated(validationResult))
+
+    verifyZeroInteractions(uiActions)
   }
 }

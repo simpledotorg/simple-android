@@ -13,6 +13,7 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
       is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility), LoadAllPatients(event.facility))
       is AllPatientsLoaded -> allPatientsLoaded(model, event)
       is SearchResultsLoaded -> searchResultsLoaded(model, event)
+      is SearchQueryValidated -> noChange()
     }
   }
 

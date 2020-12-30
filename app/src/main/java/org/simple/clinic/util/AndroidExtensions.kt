@@ -1,10 +1,12 @@
 package org.simple.clinic.util
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
+import android.view.KeyEvent
 import io.reactivex.Observable
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
@@ -60,5 +62,18 @@ private fun Configuration.isLocaleAlreadyOverriden(): Boolean {
     Build.VERSION.SDK_INT >= 24 && !this.locales.isEmpty -> true
     Build.VERSION.SDK_INT < 24 && this.locale != null -> true
     else -> false
+  }
+}
+
+inline fun Dialog.overrideCancellation(crossinline backPressed: () -> Unit) {
+  setCancelable(false)
+  setCanceledOnTouchOutside(false)
+  setOnKeyListener { _, keyCode, event ->
+    if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+      backPressed()
+      true
+    } else {
+      false
+    }
   }
 }

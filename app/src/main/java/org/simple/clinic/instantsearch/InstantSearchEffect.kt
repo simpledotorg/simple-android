@@ -21,3 +21,5 @@ data class ValidateSearchQuery(val searchQuery: String) : InstantSearchEffect()
 data class OpenPatientSummary(val patientId: UUID) : InstantSearchEffect()
 
 data class OpenLinkIdWithPatientScreen(val patientId: UUID, val identifier: Identifier) : InstantSearchEffect()
+
+data class OpenBpPassportSheet(val identifier: Identifier) : InstantSearchEffect()

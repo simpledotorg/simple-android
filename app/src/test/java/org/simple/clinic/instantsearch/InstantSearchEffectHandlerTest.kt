@@ -149,4 +149,19 @@ class InstantSearchEffectHandlerTest {
     verify(uiActions).openLinkIdWithPatientScreen(patientId, identifier)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when open bp passport sheet effect is received, then open bp passport sheet`() {
+    // given
+    val identifier = TestData.identifier()
+
+    // when
+    testCase.dispatch(OpenBpPassportSheet(identifier))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openBpPassportSheet(identifier)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

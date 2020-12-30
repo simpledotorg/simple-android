@@ -1,13 +1,16 @@
 package org.simple.clinic.instantsearch
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
 
+@Parcelize
 data class InstantSearchModel(
     val facility: Facility?,
     val searchQuery: String?,
     val additionalIdentifier: Identifier?
-) {
+) : Parcelable {
 
   val hasFacility: Boolean
     get() = facility != null

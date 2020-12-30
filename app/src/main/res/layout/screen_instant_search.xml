@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.instantsearch.InstantSearchScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/patientsearch_root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <FrameLayout
+    android:id="@+id/patientSearchToolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white100"
+    android:elevation="@dimen/elevation_toolbar"
+    android:paddingTop="@dimen/spacing_8"
+    android:paddingBottom="@dimen/spacing_8"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/searchQueryTextInputLayout"
+      style="@style/Clinic.V2.TextInputLayout.ToolbarSearch"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:boxBackgroundMode="none"
+      app:startIconDrawable="@drawable/ic_arrow_back_24dp">
+
+      <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/searchQueryEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@null"
+        android:hint="@string/patientsearch_hint"
+        android:imeOptions="flagNoFullscreen|actionSearch"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
+        android:privateImeOptions="nm"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Grey1"
+        android:textColorHint="@color/grey1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+  </FrameLayout>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/noPatientsInFacilityContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/patientSearchToolbar"
+    tools:visibility="visible">
+
+    <TextView
+      android:id="@+id/noPatientsInFacilityTextView"
+      style="@style/Clinic.V2.TextAppearance.H6.Grey1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:text="No patients at CHC Bhucho" />
+
+    <TextView
+      style="@style/Clinic.V2.TextAppearance.Body1Center.Grey1"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_32"
+      android:layout_marginTop="@dimen/spacing_12"
+      android:layout_marginEnd="@dimen/spacing_32"
+      android:gravity="center"
+      android:text="@string/patientsearch_error_no_patients_in_facility"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/noPatientsInFacilityTextView" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/noSearchResultsContainer"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_marginBottom="@dimen/spacing_12"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:visibility="gone"
+    app:layout_constraintBottom_toTopOf="@id/newPatientContainer"
+    app:layout_constraintTop_toBottomOf="@id/patientSearchToolbar">
+
+    <TextView
+      android:id="@+id/noSearchResultsTextView"
+      style="@style/Clinic.V2.TextAppearance.H6.Grey1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/patientsearch_error_no_search_results"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_chainStyle="packed" />
+
+    <View
+      android:id="@+id/noSearchResultsArrowStem"
+      android:layout_width="2dp"
+      android:layout_height="0dp"
+      android:layout_marginTop="@dimen/spacing_16"
+      android:layout_marginBottom="@dimen/spacing_12"
+      android:background="@color/grey2"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/noSearchResultsTextView" />
+
+    <ImageView
+      android:id="@+id/noSearchResultsArrow"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:srcCompat="@drawable/ic_arrow_downward_24dp"
+      app:tint="@color/grey2"
+      tools:ignore="ContentDescription" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/searchResultsView"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    app:layout_constraintBottom_toTopOf="@id/newPatientContainer"
+    app:layout_constraintTop_toBottomOf="@id/patientSearchToolbar" />
+
+  <LinearLayout
+    android:id="@+id/newPatientContainer"
+    style="@style/Clinic.V2.BottomAlignedButtonFrame.Blue2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="20dp"
+    android:orientation="vertical"
+    android:visibility="visible"
+    app:layout_constraintBottom_toBottomOf="parent"
+    tools:visibility="visible">
+
+    <TextView
+      android:id="@+id/newPatientRationaleTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="@dimen/spacing_4"
+      android:layout_marginBottom="@dimen/spacing_4"
+      android:gravity="center_horizontal"
+      android:text="@string/patientsearchresults_register_patient_rationale"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey0" />
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/newPatientButton"
+      style="?attr/materialButtonStyle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_8"
+      android:text="@string/patientsearchresults_register_patient"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+  </LinearLayout>
+
+</org.simple.clinic.instantsearch.InstantSearchScreen>

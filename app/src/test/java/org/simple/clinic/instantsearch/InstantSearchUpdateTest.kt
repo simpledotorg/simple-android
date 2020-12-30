@@ -8,6 +8,7 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientSearchCriteria
+import java.util.UUID
 
 class InstantSearchUpdateTest {
 
@@ -92,6 +93,23 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(LoadAllPatients(facility))
+        ))
+  }
+
+  @Test
+  fun `when search result is clicked, then open patient summary`() {
+    val patientUuid = UUID.fromString("f607be71-630d-4adb-8d3a-76fdf347fe8a")
+    val facility = TestData.facility()
+    val model = defaultModel
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    updateSpec
+        .given(model)
+        .whenEvent(SearchResultClicked(patientUuid))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenPatientSummary(patientUuid))
         ))
   }
 }

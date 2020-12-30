@@ -21,7 +21,12 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
       is AllPatientsLoaded -> allPatientsLoaded(model, event)
       is SearchResultsLoaded -> searchResultsLoaded(model, event)
       is SearchQueryValidated -> searchQueryValidated(model, event)
+      is SearchResultClicked -> searchResultClicked(event)
     }
+  }
+
+  private fun searchResultClicked(event: SearchResultClicked): Next<InstantSearchModel, InstantSearchEffect> {
+    return dispatch(OpenPatientSummary(event.patientId))
   }
 
   private fun searchQueryValidated(model: InstantSearchModel, event: SearchQueryValidated): Next<InstantSearchModel, InstantSearchEffect> {

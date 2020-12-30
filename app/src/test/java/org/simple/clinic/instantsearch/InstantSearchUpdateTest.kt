@@ -134,4 +134,19 @@ class InstantSearchUpdateTest {
             hasEffects(OpenLinkIdWithPatientScreen(patientUuid, identifier))
         ))
   }
+
+  @Test
+  fun `when search query is changed, then search for patients`() {
+    val facility = TestData.facility()
+    val facilityLoadedModel = defaultModel
+        .facilityLoaded(facility)
+
+    updateSpec
+        .given(facilityLoadedModel)
+        .whenEvent(SearchQueryChanged("Pat"))
+        .then(assertThatNext(
+            hasModel(facilityLoadedModel.searchQueryChanged("Pat")),
+            hasEffects(ValidateSearchQuery("Pat"))
+        ))
+  }
 }

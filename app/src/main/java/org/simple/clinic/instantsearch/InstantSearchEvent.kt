@@ -15,3 +15,5 @@ data class SearchResultsLoaded(val patientsSearchResults: List<PatientSearchResu
 data class SearchQueryValidated(val result: InstantSearchValidator.Result) : InstantSearchEvent()
 
 data class SearchResultClicked(val patientId: UUID) : InstantSearchEvent()
+
+data class SearchQueryChanged(val searchQuery: String) : InstantSearchEvent()

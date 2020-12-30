@@ -29,6 +29,7 @@ import org.simple.clinic.mobius.eventSources
 import org.simple.clinic.mobius.first
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.overrideCancellation
 
 abstract class BaseBottomSheet<K : ScreenKey, B: ViewBinding, M : Parcelable, E, F> : BottomSheetDialogFragment() {
 
@@ -87,21 +88,10 @@ abstract class BaseBottomSheet<K : ScreenKey, B: ViewBinding, M : Parcelable, E,
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val dialog = super.onCreateDialog(savedInstanceState)
 
-    with(dialog) {
-      // This is needed because the router is not aware of the changes
-      // in the history when the bottom sheet dialog is dismissed in the
-      // normal fashion.
-      setCancelable(false)
-      setCanceledOnTouchOutside(false)
-      setOnKeyListener { _, keyCode, event ->
-        if (event.action == ACTION_UP && keyCode == KEYCODE_BACK) {
-          backPressed()
-          true
-        } else {
-          false
-        }
-      }
-    }
+    // This is needed because the router is not aware of the changes
+    // in the history when the bottom sheet dialog is dismissed in the
+    // normal fashion.
+    dialog.overrideCancellation(::backPressed)
 
     return dialog
   }

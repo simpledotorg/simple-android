@@ -22,6 +22,7 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.mobius.eventSources
 import org.simple.clinic.mobius.first
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.util.overrideCancellation
 import org.simple.clinic.util.unsafeLazy
 
 abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F> : DialogFragment() {
@@ -65,14 +66,7 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F> : DialogFragment(
     // This is needed because the router is not aware of the changes
     // in the history when the bottom sheet dialog is dismissed in the
     // normal fashion.
-    dialog.setOnKeyListener { _, keyCode, event ->
-      if (event.action == ACTION_UP && keyCode == KEYCODE_BACK) {
-        backPressed()
-        true
-      } else {
-        false
-      }
-    }
+    dialog.overrideCancellation(::backPressed)
 
     return dialog
   }

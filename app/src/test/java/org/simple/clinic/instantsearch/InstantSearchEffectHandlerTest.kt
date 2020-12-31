@@ -215,4 +215,18 @@ class InstantSearchEffectHandlerTest {
     verify(uiActions).hideNoSearchResults()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when save on going patient entry effect is received, then save on going patient entry`() {
+    // given
+    val ongoingNewPatientEntry = TestData.ongoingPatientEntry()
+
+    // when
+    testCase.dispatch(SaveNewOngoingPatientEntry(ongoingNewPatientEntry))
+
+    // then
+    testCase.assertOutgoingEvents(SavedNewOngoingPatientEntry)
+
+    verifyZeroInteractions(uiActions)
+  }
 }

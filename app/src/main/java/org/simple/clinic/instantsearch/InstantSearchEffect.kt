@@ -1,6 +1,7 @@
 package org.simple.clinic.instantsearch
 
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
@@ -31,3 +32,5 @@ object ShowNoSearchResults : InstantSearchEffect()
 object HideNoPatientsInFacility : InstantSearchEffect()
 
 object HideNoSearchResults : InstantSearchEffect()
+
+data class SaveNewOngoingPatientEntry(val ongoingNewPatientEntry: OngoingNewPatientEntry) : InstantSearchEffect()

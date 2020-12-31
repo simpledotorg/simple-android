@@ -21,3 +21,5 @@ data class SearchResultClicked(val patientId: UUID) : InstantSearchEvent() {
 }
 
 data class SearchQueryChanged(val searchQuery: String) : InstantSearchEvent()
+
+object SavedNewOngoingPatientEntry : InstantSearchEvent()

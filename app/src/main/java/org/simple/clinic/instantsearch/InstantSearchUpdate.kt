@@ -26,6 +26,7 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
       is SearchQueryValidated -> searchQueryValidated(model, event)
       is SearchResultClicked -> searchResultClicked(model, event)
       is SearchQueryChanged -> next(model.searchQueryChanged(event.searchQuery), ValidateSearchQuery(event.searchQuery))
+      SavedNewOngoingPatientEntry -> noChange()
     }
   }
 

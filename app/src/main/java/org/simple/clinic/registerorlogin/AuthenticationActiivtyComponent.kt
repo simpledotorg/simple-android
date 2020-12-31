@@ -2,6 +2,7 @@ package org.simple.clinic.registerorlogin
 
 import dagger.Subcomponent
 import org.simple.clinic.activity.BindsActivity
+import org.simple.clinic.activity.BindsScreenResultBus
 import org.simple.clinic.activity.BindsScreenRouter
 import org.simple.clinic.deniedaccess.AccessDeniedScreenInjector
 import org.simple.clinic.di.AssistedInjectModule
@@ -42,7 +43,10 @@ interface AuthenticationActivityComponent :
   fun inject(target: AuthenticationActivity)
 
   @Subcomponent.Builder
-  interface Builder : BindsActivity<Builder>, BindsScreenRouter<Builder> {
+  interface Builder :
+      BindsActivity<Builder>,
+      BindsScreenRouter<Builder>,
+      BindsScreenResultBus<Builder> {
     fun build(): AuthenticationActivityComponent
   }
 }

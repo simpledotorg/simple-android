@@ -15,6 +15,7 @@ import org.simple.clinic.introvideoscreen.IntroVideoScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
+import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -45,6 +46,9 @@ class RegistrationFacilitySelectionScreen(
 
   @Inject
   lateinit var effectHandlerFactory: RegistrationFacilitySelectionEffectHandler.Factory
+
+  @Inject
+  lateinit var screenResultBus: ScreenResultBus
 
   private val events by unsafeLazy {
     Observable
@@ -107,8 +111,8 @@ class RegistrationFacilitySelectionScreen(
   }
 
   private fun registrationFacilityConfirmations(): Observable<UiEvent> {
-    return screenRouter
-        .streamScreenResults()
+    return screenResultBus
+        .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(CONFIRM_FACILITY_SHEET) { intent ->
           val confirmedFacilityUuid = ConfirmFacilitySheet.confirmedFacilityUuid(intent)

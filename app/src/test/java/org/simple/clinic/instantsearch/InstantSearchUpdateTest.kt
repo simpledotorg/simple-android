@@ -110,7 +110,11 @@ class InstantSearchUpdateTest {
         .whenEvent(SearchQueryValidated(InstantSearchValidator.Result.Valid("Pat")))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(SearchWithCriteria(PatientSearchCriteria.Name("Pat", identifier), facility))
+            hasEffects(
+                HideNoPatientsInFacility,
+                HideNoSearchResults,
+                SearchWithCriteria(PatientSearchCriteria.Name("Pat", identifier), facility)
+            )
         ))
   }
 

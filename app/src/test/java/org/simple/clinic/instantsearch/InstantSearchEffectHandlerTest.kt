@@ -164,4 +164,19 @@ class InstantSearchEffectHandlerTest {
     verify(uiActions).openBpPassportSheet(identifier)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show no patients in facility effect is received, then show no patients in facility`() {
+    // given
+    val facility = TestData.facility()
+
+    // when
+    testCase.dispatch(ShowNoPatientsInFacility(facility))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showNoPatientsInFacility(facility)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

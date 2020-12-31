@@ -27,3 +27,5 @@ data class OpenBpPassportSheet(val identifier: Identifier) : InstantSearchEffect
 data class ShowNoPatientsInFacility(val facility: Facility) : InstantSearchEffect()
 
 object ShowNoSearchResults : InstantSearchEffect()
+
+object HideNoPatientsInFacility : InstantSearchEffect()

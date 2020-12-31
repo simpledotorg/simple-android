@@ -190,6 +190,18 @@ class InstantSearchEffectHandlerTest {
   }
 
   @Test
+  fun `when hide no patients in facility effect is received, then hide no patients in facility`() {
+    // when
+    testCase.dispatch(HideNoPatientsInFacility)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).hideNoPatientsInFacility()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
   fun `when show no search results effect is received, then show no search results`() {
     // when
     testCase.dispatch(ShowNoSearchResults)

@@ -12,4 +12,5 @@ interface InstantSearchUiActions {
   fun openBpPassportSheet(identifier: Identifier)
   fun showNoPatientsInFacility(facility: Facility)
   fun showNoSearchResults()
+  fun hideNoPatientsInFacility()
 }

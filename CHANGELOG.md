@@ -12,6 +12,9 @@
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 29 Dec 2020] Add Instant search screen
 
+### Fixes
+- Fix BPpassport prefill value to have display value
+
 ### Changes
 - Change home illustration for India
 

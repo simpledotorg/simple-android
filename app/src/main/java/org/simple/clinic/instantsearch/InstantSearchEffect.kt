@@ -25,3 +25,5 @@ data class OpenLinkIdWithPatientScreen(val patientId: UUID, val identifier: Iden
 data class OpenBpPassportSheet(val identifier: Identifier) : InstantSearchEffect()
 
 data class ShowNoPatientsInFacility(val facility: Facility) : InstantSearchEffect()
+
+object ShowNoSearchResults : InstantSearchEffect()

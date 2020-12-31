@@ -188,4 +188,16 @@ class InstantSearchEffectHandlerTest {
     verify(uiActions).showNoPatientsInFacility(facility)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show no search results effect is received, then show no search results`() {
+    // when
+    testCase.dispatch(ShowNoSearchResults)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showNoSearchResults()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

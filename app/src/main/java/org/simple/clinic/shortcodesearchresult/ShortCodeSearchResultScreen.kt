@@ -14,6 +14,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
 import org.simple.clinic.databinding.ListPatientSearchNoPatientsBinding
 import org.simple.clinic.databinding.ListPatientSearchOldBinding
+import org.simple.clinic.databinding.PatientSearchViewBinding
 import org.simple.clinic.databinding.ScreenShortcodeSearchResultBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
@@ -88,27 +89,25 @@ class ShortCodeSearchResultScreen(
   }
 
   private var viewBinding: ScreenShortcodeSearchResultBinding? = null
+  private var patientSearchViewBinding: PatientSearchViewBinding? = null
 
   private val toolBar
     get() = viewBinding!!.toolBar
 
-  private val patientSearchView
-    get() = viewBinding!!.patientSearchView
-
   private val newPatientButton
-    get() = patientSearchView.newPatientButton
+    get() = patientSearchViewBinding!!.newPatientButton
 
   private val resultsRecyclerView
-    get() = patientSearchView.resultsRecyclerView
+    get() = patientSearchViewBinding!!.resultsRecyclerView
 
   private val loader
-    get() = patientSearchView.loader
+    get() = patientSearchViewBinding!!.loader
 
   private val newPatientContainer
-    get() = patientSearchView.newPatientContainer
+    get() = patientSearchViewBinding!!.newPatientContainer
 
   private val emptyStateView
-    get() = patientSearchView.emptyStateView
+    get() = patientSearchViewBinding!!.emptyStateView
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -118,6 +117,7 @@ class ShortCodeSearchResultScreen(
     hideKeyboard()
 
     viewBinding = ScreenShortcodeSearchResultBinding.bind(this)
+    patientSearchViewBinding = PatientSearchViewBinding.bind(viewBinding!!.root)
 
     context.injector<Injector>().inject(this)
 
@@ -133,6 +133,7 @@ class ShortCodeSearchResultScreen(
   override fun onDetachedFromWindow() {
     delegate.stop()
     viewBinding = null
+    patientSearchViewBinding = null
     super.onDetachedFromWindow()
   }
 

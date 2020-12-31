@@ -39,7 +39,7 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
     return when (val validationResult = event.result) {
       is InstantSearchValidator.Result.Valid -> {
         val criteria = searchCriteriaFromInput(validationResult.searchQuery, model.additionalIdentifier)
-        dispatch(SearchWithCriteria(criteria, model.facility!!))
+        dispatch(HideNoPatientsInFacility, HideNoSearchResults, SearchWithCriteria(criteria, model.facility!!))
       }
       InstantSearchValidator.Result.LengthTooShort -> noChange()
       InstantSearchValidator.Result.Empty -> dispatch(LoadAllPatients(model.facility!!))

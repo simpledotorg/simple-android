@@ -38,6 +38,7 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addAction(HideNoPatientsInFacility::class.java, uiActions::hideNoPatientsInFacility, schedulers.ui())
       .addAction(HideNoSearchResults::class.java, uiActions::hideNoSearchResults, schedulers.ui())
       .addTransformer(SaveNewOngoingPatientEntry::class.java, saveNewOngoingPatientEntry())
+      .addConsumer(OpenPatientEntryScreen::class.java, { uiActions.openPatientEntryScreen(it.facility) }, schedulers.ui())
       .build()
 
   private fun saveNewOngoingPatientEntry(): ObservableTransformer<SaveNewOngoingPatientEntry, InstantSearchEvent> {

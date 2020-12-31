@@ -4,6 +4,10 @@
 ### Features
 - Add BP Passport sheet
 
+### Fixes
+- Fix short code search screen crash
+
+## 2020-12-28-7571
 ### Internal
 - [In Progress: 18 Dec 2020] Migrate app to use ViewBinding
 - Add PR comment commands for running instrumented tests and rebasing PR

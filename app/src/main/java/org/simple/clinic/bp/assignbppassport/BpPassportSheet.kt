@@ -83,7 +83,7 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
     binding = SheetBpPassportBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    bpPassportNumberTextview.text = getString(R.string.sheet_bp_passport_number, bpPassportIdentifier.value)
+    bpPassportNumberTextview.text = getString(R.string.sheet_bp_passport_number, bpPassportIdentifier.displayValue())
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 

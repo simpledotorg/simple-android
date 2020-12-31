@@ -1,5 +1,6 @@
 package org.simple.clinic.instantsearch
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
@@ -19,13 +20,18 @@ import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
 import org.simple.clinic.databinding.ScreenInstantSearchBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
+import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
@@ -37,7 +43,8 @@ import javax.inject.Inject
 class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), InstantSearchUiActions {
 
   companion object {
-    private const val BP_PASSPORT_SHEET = 1
+    private const val BP_PASSPORT_SHEET = 1333
+    private const val ALERT_FACILITY_CHANGE = 1444
   }
 
   @Inject
@@ -133,6 +140,8 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     }
 
     searchResultsView.adapter = adapter
+
+    setupAlertResults()
   }
 
   override fun showPatientsSearchResults(patients: List<PatientSearchResult>, facility: Facility) {
@@ -188,6 +197,24 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   override fun hideNoSearchResults() {
     noSearchResultsContainer.visibility = View.GONE
     activity.window.setSoftInputMode(SOFT_INPUT_ADJUST_NOTHING)
+  }
+
+  override fun openPatientEntryScreen(facility: Facility) {
+    activity.startActivityForResult(
+        AlertFacilityChangeSheet.intent(context, facility.name, Continuation.ContinueToScreen(PatientEntryScreenKey())),
+        ALERT_FACILITY_CHANGE
+    )
+  }
+
+  @SuppressLint("CheckResult")
+  private fun setupAlertResults() {
+    screenRouter.streamScreenResults()
+        .ofType<ActivityResult>()
+        .extractSuccessful(ALERT_FACILITY_CHANGE) { intent ->
+          AlertFacilityChangeSheet.readContinuationExtra<Continuation.ContinueToScreen>(intent).screenKey
+        }
+        .takeUntil(detaches())
+        .subscribe(screenRouter::push)
   }
 
   private fun searchItemClicks(): Observable<UiEvent> {

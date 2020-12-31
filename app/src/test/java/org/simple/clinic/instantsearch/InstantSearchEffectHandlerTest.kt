@@ -254,4 +254,19 @@ class InstantSearchEffectHandlerTest {
 
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when open patient entry screen effect is received, then open patient entry screen`() {
+    // given
+    val facility = TestData.facility()
+
+    // when
+    testCase.dispatch(OpenPatientEntryScreen(facility))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openPatientEntryScreen(facility)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

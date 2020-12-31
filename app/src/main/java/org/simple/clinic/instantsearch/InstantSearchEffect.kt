@@ -34,3 +34,5 @@ object HideNoPatientsInFacility : InstantSearchEffect()
 object HideNoSearchResults : InstantSearchEffect()
 
 data class SaveNewOngoingPatientEntry(val ongoingNewPatientEntry: OngoingNewPatientEntry) : InstantSearchEffect()
+
+data class OpenPatientEntryScreen(val facility: Facility) : InstantSearchEffect()

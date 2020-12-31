@@ -13,4 +13,5 @@ interface InstantSearchUiActions {
   fun showNoPatientsInFacility(facility: Facility)
   fun showNoSearchResults()
   fun hideNoPatientsInFacility()
+  fun hideNoSearchResults()
 }

@@ -36,6 +36,7 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addConsumer(ShowNoPatientsInFacility::class.java, { uiActions.showNoPatientsInFacility(it.facility) }, schedulers.ui())
       .addAction(ShowNoSearchResults::class.java, { uiActions.showNoSearchResults() }, schedulers.ui())
       .addAction(HideNoPatientsInFacility::class.java, uiActions::hideNoPatientsInFacility, schedulers.ui())
+      .addAction(HideNoSearchResults::class.java, uiActions::hideNoSearchResults, schedulers.ui())
       .build()
 
   private fun validateSearchQuery(): ObservableTransformer<ValidateSearchQuery, InstantSearchEvent> {

@@ -203,4 +203,16 @@ class InstantSearchEffectHandlerTest {
     verify(uiActions).showNoSearchResults()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when hide no search results effect is received, then hide no search results`() {
+    // when
+    testCase.dispatch(HideNoSearchResults)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).hideNoSearchResults()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

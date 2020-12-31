@@ -29,3 +29,5 @@ data class ShowNoPatientsInFacility(val facility: Facility) : InstantSearchEffec
 object ShowNoSearchResults : InstantSearchEffect()
 
 object HideNoPatientsInFacility : InstantSearchEffect()
+
+object HideNoSearchResults : InstantSearchEffect()

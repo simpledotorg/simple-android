@@ -138,7 +138,10 @@ class InstantSearchUpdateTest {
         .whenEvent(SearchQueryValidated(InstantSearchValidator.Result.Empty))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(LoadAllPatients(facility))
+            hasEffects(
+                HideNoSearchResults,
+                LoadAllPatients(facility)
+            )
         ))
   }
 

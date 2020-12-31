@@ -364,10 +364,6 @@
   <string name="help_try_again">ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ</string>
 
   <!-- Link Id Sheet-->
-  <string name="linkidwithpatient_button_add">ಮುಂದಿನ</string>
-  <string name="linkidwithpatient_button_cancel">ರದ್ದುಮಾಡಿ</string>
-  <string name="linkidwithpatient_add_id_text">%1$s\u0020 ಸೇರಿಸಿ</string>
-  <string name="linkidwithpatient_to_patient_text">\u0020\u00A0ರೋಗಿಗೆ?</string>
 
   <!-- Add ID to Patient: Search -->
 

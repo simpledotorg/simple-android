@@ -364,10 +364,6 @@
   <string name="help_try_again">మళ్లీ ప్రయత్నించండి</string>
 
   <!-- Link Id Sheet-->
-  <string name="linkidwithpatient_button_add">తదుపరి</string>
-  <string name="linkidwithpatient_button_cancel">రద్దు చేయి</string>
-  <string name="linkidwithpatient_add_id_text">%1$s\u0020 జోడించు</string>
-  <string name="linkidwithpatient_to_patient_text">\u0020కు\u00A0రోగి?</string>
 
   <!-- Add ID to Patient: Search -->
 

@@ -92,11 +92,6 @@
     <item name="android:textColor">@color/grey0</item>
   </style>
 
-  <style name="Clinic.V2.TextAppearance.Body0Left.NumericBold">
-    <item name="android:letterSpacing">0.11</item>
-    <item name="android:textStyle">bold</item>
-  </style>
-
   <style name="Clinic.V2.TextAppearance.Body0Left.Numeric">
     <item name="android:letterSpacing">0.11</item>
     <item name="android:textStyle">normal</item>
@@ -104,10 +99,6 @@
 
   <style name="Clinic.V2.TextAppearance.Body0Left.Numeric.White100">
     <item name="android:textColor">@color/white100</item>
-  </style>
-
-  <style name="Clinic.V2.TextAppearance.Body0Left.NumericBold.Grey0">
-    <item name="android:textColor">@color/grey0</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.Body0Left.Grey0">

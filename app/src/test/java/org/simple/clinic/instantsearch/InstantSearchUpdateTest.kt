@@ -83,6 +83,22 @@ class InstantSearchUpdateTest {
   }
 
   @Test
+  fun `when search results are empty, then show no search results`() {
+    val facility = TestData.facility()
+    val searchQueryModel = defaultModel
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    updateSpec
+        .given(searchQueryModel)
+        .whenEvent(SearchResultsLoaded(emptyList()))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowNoSearchResults)
+        ))
+  }
+
+  @Test
   fun `when search query is valid, then load search results`() {
     val facility = TestData.facility()
     val searchQueryModel = defaultModel

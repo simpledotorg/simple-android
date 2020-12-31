@@ -15,6 +15,9 @@
 ### Changes
 - Change home illustration for India
 
+### Fixes
+- Fix short code search screen crash
+
 ## 2020-12-28-7571
 ### Internal
 - Add PR comment commands for running instrumented tests and rebasing PR

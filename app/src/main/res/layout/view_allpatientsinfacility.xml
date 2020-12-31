@@ -47,6 +47,6 @@
     app:fastScrollPopupTextSize="@dimen/textsize_24"
     app:fastScrollThumbColor="@color/blue1"
     app:fastScrollTrackColor="@color/transparent"
-    tools:listitem="@layout/list_patient_search" />
+    tools:listitem="@layout/list_patient_search_old" />
 
 </org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView>

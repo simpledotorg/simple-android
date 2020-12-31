@@ -10,7 +10,7 @@
 - Add convenience classes for creating screens for the new navigation framework
 - [In Progress: 21 Dec 2020] Instant search in Faster registration
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
-- [In Progress: 28 Dec 2020] Add Instant search screen
+- [In Progress: 29 Dec 2020] Add Instant search screen
 
 ### Changes
 - Change home illustration for India

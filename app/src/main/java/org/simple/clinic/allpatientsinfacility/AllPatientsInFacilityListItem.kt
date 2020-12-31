@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ListAllpatientsinfacilityFacilityHeaderBinding
-import org.simple.clinic.databinding.ListPatientSearchBinding
+import org.simple.clinic.databinding.ListPatientSearchOldBinding
 import org.simple.clinic.widgets.ItemAdapter
-import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
+import org.simple.clinic.widgets.PatientSearchResultItemView_Old.PatientSearchResultViewModel
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import java.util.Locale
 import java.util.UUID
@@ -68,14 +68,14 @@ sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacil
   ) : AllPatientsInFacilityListItem() {
 
     override fun layoutResId(): Int {
-      return R.layout.list_patient_search
+      return R.layout.list_patient_search_old
     }
 
     override fun render(
         holder: BindingViewHolder,
         subject: Subject<Event>
     ) {
-      val binding = holder.binding as ListPatientSearchBinding
+      val binding = holder.binding as ListPatientSearchOldBinding
 
       binding.patientSearchResultView.render(searchResultViewModel, facilityUuid)
       holder.itemView.setOnClickListener { subject.onNext(Event.SearchResultClicked(searchResultViewModel.uuid)) }

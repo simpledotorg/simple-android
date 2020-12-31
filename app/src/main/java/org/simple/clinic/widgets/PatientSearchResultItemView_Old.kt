@@ -2,6 +2,7 @@ package org.simple.clinic.widgets
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import androidx.cardview.widget.CardView
 import kotlinx.android.synthetic.main.view_patient_search_result.view.*
 import org.simple.clinic.R
@@ -21,7 +22,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientSearchResultItemView(
+class PatientSearchResultItemView_Old(
     context: Context,
     attributeSet: AttributeSet
 ) : CardView(context, attributeSet) {
@@ -35,7 +36,7 @@ class PatientSearchResultItemView(
 
   override fun onFinishInflate() {
     super.onFinishInflate()
-    inflate(context, R.layout.view_patient_search_result, this)
+    inflate(context, R.layout.view_patient_search_result_old, this)
     if (isInEditMode) {
       return
     }
@@ -43,32 +44,36 @@ class PatientSearchResultItemView(
     context.injector<Injector>().inject(this)
   }
 
-  fun render(model: PatientSearchResultViewModel, currentFacilityId: UUID) {
-    renderPatientNameAgeAndGender(model.fullName, model.gender, DateOfBirth.fromPatientSearchResultViewModel(model, userClock))
+  fun render(model: PatientSearchResultViewModel, currentFacilityUuid: UUID) {
+    renderPatientNameAgeAndGender(model.fullName, model.gender, DateOfBirth.fromPatientSearchResultViewModel_Old(model, userClock))
     renderPatientAddress(model.address)
     renderPatientDateOfBirth(model.dateOfBirth)
     renderPatientPhoneNumber(model.phoneNumber)
-    renderVisited(model.lastSeen)
-    renderLastSeen(model.lastSeen, currentFacilityId)
+    renderLastSeen(model.lastSeen, currentFacilityUuid)
   }
 
-  private fun renderLastSeen(lastSeen: PatientSearchResult.LastSeen?, currentFacilityId: UUID) {
-    val isAtCurrentFacility = currentFacilityId == lastSeen?.lastSeenAtFacilityUuid
-    lastSeenContainer.visibleOrGone(lastSeen != null && !isAtCurrentFacility)
-    if (lastSeen != null) {
-      lastSeenTextView.text = lastSeen.lastSeenAtFacilityName
-    }
-  }
-
-  private fun renderVisited(
-      lastSeen: PatientSearchResult.LastSeen?
+  private fun renderLastSeen(
+      lastSeen: PatientSearchResult.LastSeen?,
+      currentFacilityUuid: UUID
   ) {
-    visitedContainer.visibleOrGone(lastSeen != null)
-    if (lastSeen != null) {
+    lastSeenContainer.visibleOrGone(lastSeen != null)
+    if (lastSeen == null) {
+      lastSeenContainer.visibility = View.GONE
+    } else {
+      lastSeenContainer.visibility = View.VISIBLE
+
       val lastSeenDate = lastSeen.lastSeenOn.toLocalDateAtZone(userClock.zone)
       val formattedLastSeenDate = dateTimeFormatter.format(lastSeenDate)
 
-      visitedTextView.text = formattedLastSeenDate
+      val isCurrentFacility = lastSeen.lastSeenAtFacilityUuid == currentFacilityUuid
+      if (isCurrentFacility) {
+        lastSeenTextView.text = formattedLastSeenDate
+      } else {
+        lastSeenTextView.text = resources.getString(
+            R.string.patientsearchresults_item_last_seen_date_with_facility,
+            formattedLastSeenDate,
+            lastSeen.lastSeenAtFacilityName)
+      }
     }
   }
 
@@ -111,6 +116,6 @@ class PatientSearchResultItemView(
   )
 
   interface Injector {
-    fun inject(target: PatientSearchResultItemView)
+    fun inject(target: PatientSearchResultItemView_Old)
   }
 }

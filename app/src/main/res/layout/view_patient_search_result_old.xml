@@ -93,7 +93,7 @@
       </LinearLayout>
 
       <LinearLayout
-        android:id="@+id/visitedContainer"
+        android:id="@+id/lastSeenContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_12"
@@ -106,31 +106,14 @@
           android:text="@string/patientsearchresults_item_last_seen" />
 
         <TextView
-          android:id="@+id/visitedTextView"
+          android:id="@+id/lastSeenTextView"
           style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
           android:ellipsize="end"
           android:maxLines="1"
-          tools:text="12-Jul-2018" />
-      </LinearLayout>
-
-      <LinearLayout
-        android:id="@+id/lastSeenContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_12"
-        android:orientation="horizontal">
-
-        <TextView
-          android:id="@+id/lastSeenTextView"
-          style="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:ellipsize="end"
-          android:maxLines="1"
-          tools:text="PHC Obvious" />
+          tools:text="12-Jul-2018, PHC Bagta" />
       </LinearLayout>
     </LinearLayout>
   </LinearLayout>

@@ -65,6 +65,11 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
   private fun allPatientsLoaded(model: InstantSearchModel, event: AllPatientsLoaded): Next<InstantSearchModel, InstantSearchEffect> {
     if (model.hasSearchQuery) return noChange()
 
-    return dispatch(ShowPatientSearchResults(event.patients, model.facility!!))
+    val effect = if (event.patients.isNotEmpty())
+      ShowPatientSearchResults(event.patients, model.facility!!)
+    else
+      ShowNoPatientsInFacility(model.facility!!)
+
+    return dispatch(effect)
   }
 }

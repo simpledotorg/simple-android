@@ -52,6 +52,24 @@ class InstantSearchUpdateTest {
   }
 
   @Test
+  fun `when all patients list is empty, then show no patients in facility`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("3ccb34f2-dabb-4baa-8576-00fe59827682"),
+        name = "PHC Obvious"
+    )
+    val facilityLoadedModel = defaultModel
+        .facilityLoaded(facility)
+
+    updateSpec
+        .given(facilityLoadedModel)
+        .whenEvent(AllPatientsLoaded(emptyList()))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowNoPatientsInFacility(facility))
+        ))
+  }
+
+  @Test
   fun `when search results are loaded, then show the patient search results if the query is not empty`() {
     val patients = listOf(
         TestData.patientSearchResult()

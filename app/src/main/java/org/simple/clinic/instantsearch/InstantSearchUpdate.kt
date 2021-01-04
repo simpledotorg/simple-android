@@ -8,6 +8,7 @@ import org.simple.clinic.instantsearch.InstantSearchValidator.Result.LengthTooSh
 import org.simple.clinic.instantsearch.InstantSearchValidator.Result.Valid
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier
 
@@ -27,7 +28,21 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
       is SearchResultClicked -> searchResultClicked(model, event)
       is SearchQueryChanged -> next(model.searchQueryChanged(event.searchQuery), ValidateSearchQuery(event.searchQuery))
       SavedNewOngoingPatientEntry -> dispatch(OpenPatientEntryScreen(model.facility!!))
+      RegisterNewPatientClicked -> registerNewPatient(model)
     }
+  }
+
+  private fun registerNewPatient(model: InstantSearchModel): Next<InstantSearchModel, InstantSearchEffect> {
+    var ongoingPatientEntry = when (val searchCriteria = searchCriteriaFromInput(model.searchQuery.orEmpty(), model.additionalIdentifier)) {
+      is PatientSearchCriteria.Name -> OngoingNewPatientEntry.fromFullName(searchCriteria.patientName)
+      is PatientSearchCriteria.PhoneNumber -> OngoingNewPatientEntry.fromPhoneNumber(searchCriteria.phoneNumber)
+    }
+
+    if (model.hasAdditionalIdentifier) {
+      ongoingPatientEntry = ongoingPatientEntry.withIdentifier(model.additionalIdentifier!!)
+    }
+
+    return dispatch(SaveNewOngoingPatientEntry(ongoingPatientEntry))
   }
 
   private fun searchResultClicked(model: InstantSearchModel, event: SearchResultClicked): Next<InstantSearchModel, InstantSearchEffect> {

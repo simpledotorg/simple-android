@@ -9,6 +9,7 @@ import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -70,6 +71,9 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   private val searchResultsView
     get() = binding!!.searchResultsView
 
+  private val newPatientButton
+    get() = binding!!.newPatientButton
+
   private val screenKey: InstantSearchScreenKey by unsafeLazy {
     screenRouter.key(this)
   }
@@ -89,7 +93,8 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   private val events by unsafeLazy {
     Observable.mergeArray(
         searchItemClicks(),
-        searchQueryChanges()
+        searchQueryChanges(),
+        registerNewPatientClicks()
     )
   }
 
@@ -228,6 +233,12 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     return searchQueryEditText
         .textChanges()
         .map { SearchQueryChanged(it.toString()) }
+  }
+
+  private fun registerNewPatientClicks(): Observable<UiEvent> {
+    return newPatientButton
+        .clicks()
+        .map { RegisterNewPatientClicked }
   }
 
   interface Injector {

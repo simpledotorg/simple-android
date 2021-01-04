@@ -15,9 +15,10 @@ import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.databinding.ScreenRegistrationPinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
@@ -42,7 +43,7 @@ class RegistrationPinScreen(
     get() = binding!!.errorTextView
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
@@ -85,7 +86,7 @@ class RegistrationPinScreen(
     pinEditText.isSaveEnabled = false
 
     backButton.setOnClickListener {
-      screenRouter.pop()
+      router.pop()
     }
 
     post { pinEditText.requestFocus() }
@@ -143,7 +144,7 @@ class RegistrationPinScreen(
   }
 
   override fun openRegistrationConfirmPinScreen(registrationEntry: OngoingRegistrationEntry) {
-    screenRouter.push(RegistrationConfirmPinScreenKey(registrationEntry))
+    router.push(RegistrationConfirmPinScreenKey(registrationEntry).wrap())
   }
 
   interface Injector {

@@ -32,6 +32,10 @@ abstract class ScreenKey: Parcelable {
     }
   }
 
+  open fun matchesScreen(other: ScreenKey): Boolean {
+    return javaClass == other.javaClass
+  }
+
   protected abstract fun instantiateFragment(): Fragment
 
   enum class ScreenType {

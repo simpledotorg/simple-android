@@ -16,9 +16,10 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationNameBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.setTextAndCursor
@@ -44,7 +45,7 @@ class RegistrationFullNameScreen(
     get() = binding!!.validationErrorTextView
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
@@ -86,7 +87,7 @@ class RegistrationFullNameScreen(
     context.injector<Injector>().inject(this)
 
     backButton.setOnClickListener {
-      screenRouter.pop()
+      router.pop()
     }
 
     cardViewContentLayout.layoutTransition.setDuration(200)
@@ -142,7 +143,7 @@ class RegistrationFullNameScreen(
   }
 
   override fun openRegistrationPinEntryScreen(registrationEntry: OngoingRegistrationEntry) {
-    screenRouter.push(RegistrationPinScreenKey(registrationEntry))
+    router.push(RegistrationPinScreenKey(registrationEntry).wrap())
   }
 
   interface Injector {

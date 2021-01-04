@@ -15,6 +15,8 @@ import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.databinding.ScreenRegistrationConfirmPinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreenKey
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
@@ -48,7 +50,7 @@ class RegistrationConfirmPinScreen(
     get() = binding!!.pinHintTextView
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
@@ -90,7 +92,7 @@ class RegistrationConfirmPinScreen(
     context.injector<Injector>().inject(this)
 
     backButton.setOnClickListener {
-      screenRouter.pop()
+      router.pop()
     }
 
     // Showing the keyboard again in case the user returns from location permission screen.
@@ -154,11 +156,11 @@ class RegistrationConfirmPinScreen(
 
   override fun openFacilitySelectionScreen(entry: OngoingRegistrationEntry) {
     hideKeyboard()
-    screenRouter.push(RegistrationLocationPermissionScreenKey(entry))
+    router.push(RegistrationLocationPermissionScreenKey(entry).wrap())
   }
 
   override fun goBackToPinScreen(entry: OngoingRegistrationEntry) {
-    screenRouter.replaceKeyOfSameType(RegistrationPinScreenKey(entry))
+    router.replaceKeyOfSameType(RegistrationPinScreenKey(entry).wrap())
   }
 
   interface Injector {

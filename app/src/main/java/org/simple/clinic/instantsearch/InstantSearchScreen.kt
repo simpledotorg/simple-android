@@ -9,7 +9,10 @@ import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
+import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -36,6 +39,7 @@ import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import java.time.Instant
 import java.util.UUID
@@ -108,6 +112,8 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     )
   }
 
+  private val detaches = detaches()
+
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     delegate.start()
@@ -147,6 +153,7 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     searchResultsView.adapter = adapter
 
     setupAlertResults()
+    hideKeyboardOnSearchResultsScroll()
   }
 
   override fun showPatientsSearchResults(patients: List<PatientSearchResult>, facility: Facility) {
@@ -208,7 +215,7 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
         .extractSuccessful(ALERT_FACILITY_CHANGE) { intent ->
           AlertFacilityChangeSheet.readContinuationExtra<Continuation.ContinueToScreen>(intent).screenKey
         }
-        .takeUntil(detaches())
+        .takeUntil(detaches)
         .subscribe(screenRouter::push)
   }
 
@@ -229,6 +236,15 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     return newPatientButton
         .clicks()
         .map { RegisterNewPatientClicked }
+  }
+
+  @SuppressLint("CheckResult")
+  private fun hideKeyboardOnSearchResultsScroll() {
+    searchResultsView
+        .scrollStateChanges()
+        .filter { it == RecyclerView.SCROLL_STATE_DRAGGING }
+        .takeUntil(detaches)
+        .subscribe { hideKeyboard() }
   }
 
   interface Injector {

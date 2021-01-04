@@ -228,6 +228,10 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     instantSearchProgressIndicator.visibility = View.VISIBLE
   }
 
+  override fun hideSearchProgress() {
+    instantSearchProgressIndicator.visibility = View.GONE
+  }
+
   @SuppressLint("CheckResult")
   private fun setupAlertResults() {
     screenRouter.streamScreenResults()

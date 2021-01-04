@@ -9,7 +9,8 @@ import org.simple.clinic.patient.businessid.Identifier
 data class InstantSearchModel(
     val facility: Facility?,
     val searchQuery: String?,
-    val additionalIdentifier: Identifier?
+    val additionalIdentifier: Identifier?,
+    val instantSearchProgressState: InstantSearchProgressState?
 ) : Parcelable {
 
   val hasFacility: Boolean
@@ -25,7 +26,8 @@ data class InstantSearchModel(
     fun create(additionalIdentifier: Identifier?) = InstantSearchModel(
         facility = null,
         searchQuery = null,
-        additionalIdentifier = additionalIdentifier
+        additionalIdentifier = additionalIdentifier,
+        instantSearchProgressState = null
     )
   }
 

@@ -11,6 +11,8 @@ class InstantSearchUiRenderer(private val ui: InstantSearchUi) : ViewRenderer<In
   private fun renderSearchProgress(model: InstantSearchModel) {
     if (model.instantSearchProgressState == InstantSearchProgressState.IN_PROGRESS) {
       ui.showSearchProgress()
+    } else {
+      ui.hideSearchProgress()
     }
   }
 }

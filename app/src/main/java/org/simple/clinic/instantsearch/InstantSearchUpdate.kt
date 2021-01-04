@@ -62,7 +62,12 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
     return when (val validationResult = event.result) {
       is Valid -> {
         val criteria = searchCriteriaFromInput(validationResult.searchQuery, model.additionalIdentifier)
-        dispatch(HideNoPatientsInFacility, HideNoSearchResults, SearchWithCriteria(criteria, model.facility!!))
+        next(
+            model.loadingSearchResults(),
+            HideNoPatientsInFacility,
+            HideNoSearchResults,
+            SearchWithCriteria(criteria, model.facility!!)
+        )
       }
       LengthTooShort -> noChange()
       Empty -> next(
@@ -92,7 +97,7 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
     else
       ShowNoSearchResults
 
-    return dispatch(effect)
+    return next(model.searchResultsLoaded(), effect)
   }
 
   private fun allPatientsLoaded(model: InstantSearchModel, event: AllPatientsLoaded): Next<InstantSearchModel, InstantSearchEffect> {

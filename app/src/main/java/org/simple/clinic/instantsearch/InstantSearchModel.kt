@@ -46,4 +46,12 @@ data class InstantSearchModel(
   fun allPatientsLoaded(): InstantSearchModel {
     return copy(instantSearchProgressState = InstantSearchProgressState.DONE)
   }
+
+  fun loadingSearchResults(): InstantSearchModel {
+    return copy(instantSearchProgressState = InstantSearchProgressState.IN_PROGRESS)
+  }
+
+  fun searchResultsLoaded(): InstantSearchModel {
+    return copy(instantSearchProgressState = InstantSearchProgressState.DONE)
+  }
 }

@@ -97,7 +97,7 @@ class InstantSearchUpdateTest {
         .given(searchQueryModel)
         .whenEvent(SearchResultsLoaded(patients))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(searchQueryModel.searchResultsLoaded()),
             hasEffects(ShowPatientSearchResults(patients, facility))
         ))
   }
@@ -116,7 +116,7 @@ class InstantSearchUpdateTest {
         .given(searchQueryModel)
         .whenEvent(SearchResultsLoaded(emptyList()))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(searchQueryModel.searchResultsLoaded()),
             hasEffects(ShowNoSearchResults)
         ))
   }
@@ -135,7 +135,7 @@ class InstantSearchUpdateTest {
         .given(searchQueryModel)
         .whenEvent(SearchQueryValidated(InstantSearchValidator.Result.Valid("Pat")))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(searchQueryModel.loadingSearchResults()),
             hasEffects(
                 HideNoPatientsInFacility,
                 HideNoSearchResults,

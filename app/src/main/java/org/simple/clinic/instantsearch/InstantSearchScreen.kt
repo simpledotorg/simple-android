@@ -45,7 +45,7 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), InstantSearchUiActions {
+class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), InstantSearchUi, InstantSearchUiActions {
 
   companion object {
     private const val BP_PASSPORT_SHEET = 1333
@@ -78,6 +78,9 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   private val newPatientButton
     get() = binding!!.newPatientButton
 
+  private val instantSearchProgressIndicator
+    get() = binding!!.instantSearchProgressIndicator
+
   private val screenKey: InstantSearchScreenKey by unsafeLazy {
     screenRouter.key(this)
   }
@@ -103,12 +106,15 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   }
 
   private val delegate by unsafeLazy {
+    val uiRenderer = InstantSearchUiRenderer(this)
+
     MobiusDelegate.forView(
         events = events.ofType(),
         defaultModel = InstantSearchModel.create(screenKey.additionalIdentifier),
         init = InstantSearchInit(),
         update = InstantSearchUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build()
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render
     )
   }
 
@@ -216,6 +222,10 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
         AlertFacilityChangeSheet.intent(context, facility.name, Continuation.ContinueToScreen(PatientEntryScreenKey())),
         ALERT_FACILITY_CHANGE
     )
+  }
+
+  override fun showSearchProgress() {
+    instantSearchProgressIndicator.visibility = View.VISIBLE
   }
 
   @SuppressLint("CheckResult")

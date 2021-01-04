@@ -12,8 +12,6 @@
     android:layout_height="wrap_content"
     android:background="@color/white100"
     android:elevation="@dimen/elevation_toolbar"
-    android:paddingTop="@dimen/spacing_8"
-    android:paddingBottom="@dimen/spacing_8"
     app:layout_constraintTop_toTopOf="parent">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -21,6 +19,8 @@
       style="@style/Clinic.V2.TextInputLayout.ToolbarSearch"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:layout_marginBottom="@dimen/spacing_8"
       app:boxBackgroundMode="none"
       app:startIconDrawable="@drawable/ic_arrow_back_24dp">
 
@@ -39,6 +39,16 @@
         android:textColorHint="@color/grey1" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+      android:id="@+id/instantSearchProgressIndicator"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom"
+      android:indeterminate="true"
+      android:visibility="gone"
+      app:indicatorColor="?attr/colorSecondary"
+      tools:visibility="visible" />
 
   </FrameLayout>
 

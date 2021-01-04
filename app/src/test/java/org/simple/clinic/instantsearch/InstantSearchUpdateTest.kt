@@ -224,4 +224,20 @@ class InstantSearchUpdateTest {
             hasEffects(ValidateSearchQuery("Pat"))
         ))
   }
+
+  @Test
+  fun `when ongoing patient entry is saved, then open patient entry screen`() {
+    val facility = TestData.facility()
+    val searchQueryModel = defaultModel
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    updateSpec
+        .given(searchQueryModel)
+        .whenEvent(SavedNewOngoingPatientEntry)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenPatientEntryScreen(facility))
+        ))
+  }
 }

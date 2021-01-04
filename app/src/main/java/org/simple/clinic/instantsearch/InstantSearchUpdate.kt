@@ -21,7 +21,11 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
 
   override fun update(model: InstantSearchModel, event: InstantSearchEvent): Next<InstantSearchModel, InstantSearchEffect> {
     return when (event) {
-      is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility), LoadAllPatients(event.facility))
+      is CurrentFacilityLoaded -> next(
+          model.facilityLoaded(event.facility)
+              .loadingAllPatients(),
+          LoadAllPatients(event.facility)
+      )
       is AllPatientsLoaded -> allPatientsLoaded(model, event)
       is SearchResultsLoaded -> searchResultsLoaded(model, event)
       is SearchQueryValidated -> searchQueryValidated(model, event)
@@ -61,7 +65,12 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
         dispatch(HideNoPatientsInFacility, HideNoSearchResults, SearchWithCriteria(criteria, model.facility!!))
       }
       LengthTooShort -> noChange()
-      Empty -> dispatch(HideNoPatientsInFacility, HideNoSearchResults, LoadAllPatients(model.facility!!))
+      Empty -> next(
+          model.loadingAllPatients(),
+          HideNoPatientsInFacility,
+          HideNoSearchResults,
+          LoadAllPatients(model.facility!!)
+      )
     }
   }
 
@@ -94,6 +103,6 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
     else
       ShowNoPatientsInFacility(model.facility!!)
 
-    return dispatch(effect)
+    return next(model.allPatientsLoaded(), effect)
   }
 }

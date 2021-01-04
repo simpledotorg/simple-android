@@ -56,9 +56,11 @@
     android:id="@+id/noPatientsInFacilityContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_40"
     android:visibility="gone"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintTop_toBottomOf="@id/patientSearchToolbar"
+    app:layout_constraintVertical_bias="0"
     tools:visibility="visible">
 
     <TextView
@@ -102,11 +104,13 @@
       style="@style/Clinic.V2.TextAppearance.H6.Grey1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_40"
       android:text="@string/patientsearch_error_no_search_results"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0"
       app:layout_constraintVertical_chainStyle="packed" />
 
     <View

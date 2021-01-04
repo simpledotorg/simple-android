@@ -14,11 +14,14 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenHomeBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.change.FacilityChangeActivity
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeTab.OVERDUE
 import org.simple.clinic.home.HomeTab.PATIENTS
 import org.simple.clinic.home.HomeTab.REPORTS
 import org.simple.clinic.home.help.HelpScreenKey
 import org.simple.clinic.home.patients.REQUEST_CODE_SCAN_BP_PASSPORT
+import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.ActivityResult
@@ -50,6 +53,9 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
   @Inject
   lateinit var utcClock: UtcClock
+
+  @Inject
+  lateinit var features: Features
 
   private var binding: ScreenHomeBinding? = null
 
@@ -197,7 +203,13 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   }
 
   override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
-    screenRouter.push(PatientSearchScreenKey(additionalIdentifier))
+    val screenKey = if (features.isEnabled(Feature.InstantSearch)) {
+      InstantSearchScreenKey(additionalIdentifier)
+    } else {
+      PatientSearchScreenKey(additionalIdentifier)
+    }
+
+    screenRouter.push(screenKey)
   }
 
   override fun openPatientSummary(patientId: UUID) {

@@ -26,7 +26,7 @@ class InstantSearchUpdateTest {
         .given(defaultModel)
         .whenEvent(CurrentFacilityLoaded(facility))
         .then(assertThatNext(
-            hasModel(defaultModel.facilityLoaded(facility)),
+            hasModel(defaultModel.facilityLoaded(facility).loadingAllPatients()),
             hasEffects(LoadAllPatients(facility))
         ))
   }
@@ -44,7 +44,7 @@ class InstantSearchUpdateTest {
         .given(facilityLoadedModel)
         .whenEvent(AllPatientsLoaded(patients))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(facilityLoadedModel.allPatientsLoaded()),
             hasEffects(ShowPatientSearchResults(patients, facility))
         ))
   }
@@ -59,7 +59,7 @@ class InstantSearchUpdateTest {
         .given(facilityLoadedModel)
         .whenEvent(AllPatientsLoaded(emptyList()))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(facilityLoadedModel.allPatientsLoaded()),
             hasEffects(ShowNoPatientsInFacility(facility))
         ))
   }
@@ -129,7 +129,7 @@ class InstantSearchUpdateTest {
         .given(facilityLoadedModel)
         .whenEvent(SearchQueryValidated(InstantSearchValidator.Result.Empty))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(facilityLoadedModel.loadingAllPatients()),
             hasEffects(
                 HideNoSearchResults,
                 LoadAllPatients(facility)

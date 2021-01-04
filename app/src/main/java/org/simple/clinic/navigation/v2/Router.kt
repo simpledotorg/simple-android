@@ -59,6 +59,12 @@ class Router(
     savedInstanceState.putParcelable(HISTORY_STATE_KEY, history)
   }
 
+  fun clearHistoryAndPush(screenKey: ScreenKey) {
+    val newHistory = History(listOf(Normal(screenKey)))
+
+    executeStateChange(newHistory, Direction.Replace, null)
+  }
+
   fun push(screenKey: ScreenKey) {
     val newHistory = history.add(Normal(screenKey))
 

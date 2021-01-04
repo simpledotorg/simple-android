@@ -43,6 +43,7 @@ import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import java.time.Instant
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), InstantSearchUi, InstantSearchUiActions {
@@ -253,6 +254,7 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   private fun searchQueryChanges(): Observable<UiEvent> {
     return searchQueryEditText
         .textChanges()
+        .debounce(500, TimeUnit.MILLISECONDS)
         .map { SearchQueryChanged(it.toString()) }
   }
 

@@ -1,4 +1,3 @@
-
 package org.simple.clinic.navigation.v2
 
 import android.os.Parcelable
@@ -22,7 +21,11 @@ data class History(val requests: List<NavRequest>) : Parcelable {
   }
 
   fun removeUntil(key: ScreenKey): History {
-    val newRequests = requests.dropLastWhile { it.key != key }
+    return removeUntil { it != key }
+  }
+
+  inline fun removeUntil(predicate: (ScreenKey) -> Boolean): History {
+    val newRequests = requests.dropLastWhile { navRequest -> predicate(navRequest.key) }
 
     return copy(requests = newRequests)
   }

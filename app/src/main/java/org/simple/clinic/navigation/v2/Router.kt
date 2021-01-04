@@ -98,6 +98,17 @@ class Router(
     executeStateChange(newHistory, Direction.Backward, null)
   }
 
+  fun replaceKeyOfSameType(
+      keyToPush: ScreenKey
+  ) {
+    val newHistory = history
+        .removeUntil { screenKey -> screenKey.matchesScreen(keyToPush) }
+        .removeLast() // We need to remove the key which matches this key as well
+        .add(Normal(keyToPush))
+
+    executeStateChange(newHistory, Direction.Replace, null)
+  }
+
   fun onBackPressed(): Boolean {
     val currentTop = history.top()
     val fragment = fragmentManager.findFragmentByTag(currentTop.key.fragmentTag)

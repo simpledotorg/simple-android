@@ -7,12 +7,14 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
+import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -161,6 +163,7 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
 
     setupAlertResults()
     hideKeyboardOnSearchResultsScroll()
+    hideKeyboardOnImeAction()
   }
 
   override fun showPatientsSearchResults(patients: List<PatientSearchResult>, facility: Facility) {
@@ -269,6 +272,14 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     searchResultsView
         .scrollStateChanges()
         .filter { it == RecyclerView.SCROLL_STATE_DRAGGING }
+        .takeUntil(detaches)
+        .subscribe { hideKeyboard() }
+  }
+
+  @SuppressLint("CheckResult")
+  private fun hideKeyboardOnImeAction() {
+    searchQueryEditText
+        .editorActions { actionId -> actionId == EditorInfo.IME_ACTION_SEARCH }
         .takeUntil(detaches)
         .subscribe { hideKeyboard() }
   }

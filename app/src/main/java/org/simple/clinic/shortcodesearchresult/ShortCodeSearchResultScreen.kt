@@ -17,6 +17,9 @@ import org.simple.clinic.databinding.ListPatientSearchOldBinding
 import org.simple.clinic.databinding.PatientSearchViewBinding
 import org.simple.clinic.databinding.ScreenShortcodeSearchResultBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
+import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreenKey
@@ -48,6 +51,9 @@ class ShortCodeSearchResultScreen(
 
   @Inject
   lateinit var effectHandlerFactory: ShortCodeSearchResultEffectHandler.Factory
+
+  @Inject
+  lateinit var features: Features
 
   private val adapter = ItemAdapter(
       diffCallback = SearchResultsItemType.DiffCallback(),
@@ -183,7 +189,13 @@ class ShortCodeSearchResultScreen(
   }
 
   override fun openPatientSearch() {
-    screenRouter.push(PatientSearchScreenKey(additionalIdentifier = null))
+    val screenKey = if (features.isEnabled(Feature.InstantSearch)) {
+      InstantSearchScreenKey(additionalIdentifier = null)
+    } else {
+      PatientSearchScreenKey(additionalIdentifier = null)
+    }
+
+    screenRouter.push(screenKey)
   }
 
   override fun showLoading() {

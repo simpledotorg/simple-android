@@ -20,6 +20,8 @@ import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.injector
 import org.simple.clinic.login.pin.LoginPinScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registration.name.RegistrationNameScreenKey
 import org.simple.clinic.registration.phone.loggedout.LoggedOutOfDeviceDialog
 import org.simple.clinic.router.screen.RouterDirection
@@ -37,7 +39,7 @@ class RegistrationPhoneScreen(
 ) : RelativeLayout(context, attrs), RegistrationPhoneUi, RegistrationPhoneUiActions {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -135,7 +137,7 @@ class RegistrationPhoneScreen(
   }
 
   override fun openRegistrationNameEntryScreen(currentRegistrationEntry: OngoingRegistrationEntry) {
-    screenRouter.push(RegistrationNameScreenKey(currentRegistrationEntry))
+    router.push(RegistrationNameScreenKey(currentRegistrationEntry).wrap())
   }
 
   override fun showInvalidNumberError() {
@@ -168,7 +170,7 @@ class RegistrationPhoneScreen(
   }
 
   override fun openLoginPinEntryScreen() {
-    screenRouter.push(LoginPinScreenKey())
+    router.push(LoginPinScreenKey().wrap())
   }
 
   override fun showLoggedOutOfDeviceDialog() {
@@ -176,7 +178,7 @@ class RegistrationPhoneScreen(
   }
 
   override fun showAccessDeniedScreen(number: String) {
-    screenRouter.clearHistoryAndPush(AccessDeniedScreenKey(number), RouterDirection.REPLACE)
+    router.clearHistoryAndPush(AccessDeniedScreenKey(number).wrap())
   }
 
   interface Injector {

@@ -14,6 +14,7 @@ import org.simple.clinic.databinding.ScreenRegistrationLoadingBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.disableAnimations
@@ -44,7 +45,7 @@ class RegistrationLoadingScreen(
     get() = binding!!.viewSwitcher
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
@@ -82,7 +83,7 @@ class RegistrationLoadingScreen(
     context.injector<Injector>().inject(this)
 
     loaderBack.setOnClickListener {
-      screenRouter.pop()
+      router.pop()
     }
   }
 

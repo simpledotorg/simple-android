@@ -4,13 +4,12 @@ import dagger.Subcomponent
 import org.simple.clinic.activity.BindsActivity
 import org.simple.clinic.activity.BindsRouter
 import org.simple.clinic.activity.BindsScreenResultBus
-import org.simple.clinic.activity.BindsScreenRouter
 import org.simple.clinic.deniedaccess.AccessDeniedScreenInjector
 import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.facilitypicker.FacilityPickerView
 import org.simple.clinic.introvideoscreen.IntroVideoScreenInjector
 import org.simple.clinic.login.pin.LoginPinScreen
-import org.simple.clinic.navigation.di.FlowScreenKeyModule
+import org.simple.clinic.navigation.di.FragmentScreenKeyModule
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreen
@@ -24,7 +23,7 @@ import org.simple.clinic.selectcountry.SelectCountryScreenInjector
 
 @Subcomponent(modules = [
   AssistedInjectModule::class,
-  FlowScreenKeyModule::class
+  FragmentScreenKeyModule::class
 ])
 interface AuthenticationActivityComponent :
     RegistrationPhoneScreen.Injector,

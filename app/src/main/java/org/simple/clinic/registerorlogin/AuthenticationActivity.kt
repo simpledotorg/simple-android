@@ -8,22 +8,16 @@ import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import org.simple.clinic.ClinicApp
-import org.simple.clinic.R
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.empty.EmptyScreenKey
-import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.FullScreenKey
-import org.simple.clinic.router.screen.FullScreenKeyChanger
-import org.simple.clinic.router.screen.NestedKeyChanger
-import org.simple.clinic.router.screen.RouterDirection
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.selectcountry.SelectCountryScreenKey
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
@@ -58,8 +52,12 @@ class AuthenticationActivity : AppCompatActivity(), AuthenticationUiActions {
   @Inject
   lateinit var effectHandlerFactory: AuthenticationEffectHandler.Factory
 
-  private val screenRouter: ScreenRouter by unsafeLazy {
-    ScreenRouter.create(this, NestedKeyChanger(), screenResults)
+  private val router by unsafeLazy {
+    Router(
+        initialScreenKey = EmptyScreenKey().wrap(),
+        fragmentManager = supportFragmentManager,
+        containerId = android.R.id.content
+    )
   }
 
   private val screenResults: ScreenResultBus = ScreenResultBus()
@@ -81,6 +79,7 @@ class AuthenticationActivity : AppCompatActivity(), AuthenticationUiActions {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    router.onReady(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 
@@ -88,7 +87,6 @@ class AuthenticationActivity : AppCompatActivity(), AuthenticationUiActions {
     setupDiGraph()
 
     val wrappedContext = baseContext
-        .wrap { wrapContextWithRouter(it) }
         .wrap { InjectorProviderContextWrapper.wrap(it, component) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
@@ -114,27 +112,10 @@ class AuthenticationActivity : AppCompatActivity(), AuthenticationUiActions {
     component = ClinicApp.appComponent
         .authenticationActivityComponent()
         .activity(this)
-        .screenRouter(screenRouter)
+        .router(router)
         .screenResultBus(screenResults)
         .build()
     component.inject(this)
-  }
-
-  private fun wrapContextWithRouter(baseContext: Context): Context {
-    screenRouter.registerKeyChanger(FullScreenKeyChanger(
-        activity = this,
-        screenLayoutContainerRes = android.R.id.content,
-        screenBackgroundRes = R.color.window_background,
-        onKeyChange = ::onScreenChanged
-    ))
-
-    return screenRouter.installInContext(baseContext, EmptyScreenKey())
-  }
-
-  private fun onScreenChanged(outgoing: FullScreenKey?, incoming: FullScreenKey) {
-    val outgoingScreenName = outgoing?.analyticsName ?: ""
-    val incomingScreenName = incoming.analyticsName
-    Analytics.reportScreenChange(outgoingScreenName, incomingScreenName)
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -148,30 +129,22 @@ class AuthenticationActivity : AppCompatActivity(), AuthenticationUiActions {
   }
 
   override fun onBackPressed() {
-    val interceptCallback = screenRouter.offerBackPressToInterceptors()
-    if (interceptCallback.intercepted) {
-      return
+    if (!router.onBackPressed()) {
+      super.onBackPressed()
     }
-    val popCallback = screenRouter.pop()
-    if (popCallback.popped) {
-      return
-    }
-    super.onBackPressed()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
-    if (features.isEnabled(Feature.LogSavedStateSizes)) {
-      screenRouter.logSizesOfSavedStates()
-    }
+    router.onSaveInstanceState(outState)
     delegate.onSaveInstanceState(outState)
     super.onSaveInstanceState(outState)
   }
 
   override fun openCountrySelectionScreen() {
-    screenRouter.clearHistoryAndPush(SelectCountryScreenKey(), RouterDirection.REPLACE)
+    router.clearHistoryAndPush(SelectCountryScreenKey().wrap())
   }
 
   override fun openRegistrationPhoneScreen() {
-    screenRouter.clearHistoryAndPush(RegistrationPhoneScreenKey(), RouterDirection.REPLACE)
+    router.clearHistoryAndPush(RegistrationPhoneScreenKey().wrap())
   }
 }

@@ -17,6 +17,7 @@ import org.simple.clinic.di.network.HttpInterceptorsModule
 import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.di.network.RetrofitModule
 import org.simple.clinic.facility.change.FacilityChangeModule
+import org.simple.clinic.instantsearch.InstantSearchConfigModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListenerModule
 import org.simple.clinic.onboarding.OnboardingModule
@@ -84,7 +85,8 @@ import javax.inject.Named
   UuidGeneratorModule::class,
   SyncConfigModule::class,
   AppLockModule::class,
-  TeleconsultPrescriptionModule::class
+  TeleconsultPrescriptionModule::class,
+  InstantSearchConfigModule::class
 ])
 class AppModule(private val appContext: Application) {
 

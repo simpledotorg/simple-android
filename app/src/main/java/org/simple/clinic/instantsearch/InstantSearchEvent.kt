@@ -23,3 +23,8 @@ data class SearchResultClicked(val patientId: UUID) : InstantSearchEvent() {
 data class SearchQueryChanged(val searchQuery: String) : InstantSearchEvent()
 
 object SavedNewOngoingPatientEntry : InstantSearchEvent()
+
+object RegisterNewPatientClicked : InstantSearchEvent() {
+
+  override val analyticsName: String = "Instant Search: Register New Patient"
+}

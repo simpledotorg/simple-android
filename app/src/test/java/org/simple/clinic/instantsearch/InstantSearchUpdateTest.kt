@@ -7,6 +7,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier
 import java.util.UUID
@@ -201,6 +202,25 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenPatientEntryScreen(facility))
+        ))
+  }
+
+  @Test
+  fun `when register new patient is clicked, then save ongoing patient entry`() {
+    val facility = TestData.facility()
+    val searchQueryModel = defaultModel
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    val ongoingPatientEntry = OngoingNewPatientEntry.fromFullName("Pat")
+        .withIdentifier(identifier)
+
+    updateSpec
+        .given(searchQueryModel)
+        .whenEvent(RegisterNewPatientClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SaveNewOngoingPatientEntry(ongoingPatientEntry))
         ))
   }
 }

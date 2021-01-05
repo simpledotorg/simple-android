@@ -81,4 +81,15 @@ class BpPassportEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
   }
 
+  @Test
+  fun `when send blank bp passport result effect is received, then send add to existing patient`() {
+    // when
+    effectHandlerTestCase.dispatch(SendBlankBpPassportResult(AddToExistingPatient))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).sendBpPassportResult(AddToExistingPatient)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

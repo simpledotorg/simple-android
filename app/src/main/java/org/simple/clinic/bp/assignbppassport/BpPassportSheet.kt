@@ -98,6 +98,10 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
     finish()
   }
 
+  override fun sendBpPassportResult(buttonClicked: BlankBpPassportResult) {
+    
+  }
+
   private fun addToExistingPatientClicks(): Observable<BpPassportEvent> {
     return addToExistingPatientButton
         .clicks()

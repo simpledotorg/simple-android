@@ -12,3 +12,5 @@ object FetchCurrentFacility : BpPassportEffect()
 data class OpenPatientEntryScreen(val facility: Facility) : BpPassportEffect()
 
 object CloseSheet : BpPassportEffect()
+
+data class SendBlankBpPassportResult(val bpPassportResult: BlankBpPassportResult) : BpPassportEffect()

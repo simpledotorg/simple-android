@@ -1,5 +1,6 @@
 package org.simple.clinic.bp.assignbppassport
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -22,7 +23,7 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
 
   companion object {
     private const val KEY_BP_PASSPORT_NUMBER = "bpPassportNumber"
-    private const val FACILITY_CHANGE = "alertFacilityChange"
+    private const val BP_PASSPORT_RESULT = "bpPassportResult"
 
     fun intent(
         context: Context,
@@ -33,8 +34,8 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
       return intent
     }
 
-    fun selectedFacility(data: Intent): String? {
-      return data.getStringExtra(FACILITY_CHANGE)
+    fun blankBpPassportResult(data: Intent): String? {
+      return data.getStringExtra(BP_PASSPORT_RESULT)
     }
   }
 
@@ -85,8 +86,11 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 
-  override fun sendBpPassportResult(buttonClicked: BlankBpPassportResult) {
-    
+  override fun sendBpPassportResult(blankBpPassportResult: BlankBpPassportResult) {
+    val intent = Intent()
+    intent.putExtra(BP_PASSPORT_RESULT, blankBpPassportResult)
+    setResult(Activity.RESULT_OK, intent)
+    finish()
   }
 
   private fun addToExistingPatientClicks(): Observable<BpPassportEvent> {

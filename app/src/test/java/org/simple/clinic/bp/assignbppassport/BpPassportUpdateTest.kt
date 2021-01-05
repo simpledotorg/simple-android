@@ -60,14 +60,14 @@ class BpPassportUpdateTest {
   }
 
   @Test
-  fun `when add to existing patient is clicked, then close the sheet`() {
+  fun `when add to existing patient is clicked, then send bp passport blank result`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(AddToExistingPatientClicked)
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(CloseSheet)
+                hasEffects(SendBlankBpPassportResult(AddToExistingPatient))
             )
         )
   }

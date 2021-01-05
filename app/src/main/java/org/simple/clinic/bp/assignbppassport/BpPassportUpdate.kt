@@ -12,7 +12,7 @@ class BpPassportUpdate : Update<BpPassportModel, BpPassportEvent, BpPassportEffe
         val ongoingNewPatientEntry = OngoingNewPatientEntry(identifier = model.identifier)
         dispatch(SaveNewOngoingPatientEntry(ongoingNewPatientEntry))
       }
-      NewOngoingPatientEntrySaved -> dispatch(FetchCurrentFacility)
+      NewOngoingPatientEntrySaved -> dispatch(SendBlankBpPassportResult(RegisterNewPatient))
       is CurrentFacilityRetrieved -> dispatch(OpenPatientEntryScreen(event.facility))
       is AddToExistingPatientClicked -> dispatch(SendBlankBpPassportResult(AddToExistingPatient))
     }

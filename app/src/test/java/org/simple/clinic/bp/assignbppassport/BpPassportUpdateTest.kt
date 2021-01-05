@@ -34,14 +34,14 @@ class BpPassportUpdateTest {
   }
 
   @Test
-  fun `when the ongoing patient entry is saved, then fetch current facility`() {
+  fun `when the ongoing patient entry is saved, then send bp passport blank result`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(NewOngoingPatientEntrySaved)
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(FetchCurrentFacility)
+                hasEffects(SendBlankBpPassportResult(RegisterNewPatient))
             )
         )
   }

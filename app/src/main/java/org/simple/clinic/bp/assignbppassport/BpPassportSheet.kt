@@ -1,6 +1,5 @@
 package org.simple.clinic.bp.assignbppassport
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -12,7 +11,6 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetBpPassportBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.unsafeLazy
@@ -85,17 +83,6 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
 
     bpPassportNumberTextview.text = getString(R.string.sheet_bp_passport_number, bpPassportIdentifier.displayValue())
     delegate.onRestoreInstanceState(savedInstanceState)
-  }
-
-  override fun openPatientEntryScreen(facility: Facility) {
-    val intent = Intent()
-    intent.putExtra(FACILITY_CHANGE, facility.name)
-    setResult(Activity.RESULT_OK, intent)
-    finish()
-  }
-
-  override fun closeSheet() {
-    finish()
   }
 
   override fun sendBpPassportResult(buttonClicked: BlankBpPassportResult) {

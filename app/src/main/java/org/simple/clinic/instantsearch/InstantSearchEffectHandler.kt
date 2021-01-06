@@ -30,16 +30,25 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addTransformer(SearchWithCriteria::class.java, searchWithCriteria())
       .addConsumer(ShowPatientSearchResults::class.java, { uiActions.showPatientsSearchResults(it.patients, it.facility) }, schedulers.ui())
       .addTransformer(ValidateSearchQuery::class.java, validateSearchQuery())
+      .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientId) }, schedulers.ui())
+      .addConsumer(OpenLinkIdWithPatientScreen::class.java, { uiActions.openLinkIdWithPatientScreen(it.patientId, it.identifier) }, schedulers.ui())
+      .addConsumer(OpenBpPassportSheet::class.java, { uiActions.openBpPassportSheet(it.identifier) }, schedulers.ui())
+      .addConsumer(ShowNoPatientsInFacility::class.java, { uiActions.showNoPatientsInFacility(it.facility) }, schedulers.ui())
+      .addAction(ShowNoSearchResults::class.java, { uiActions.showNoSearchResults() }, schedulers.ui())
+      .addAction(HideNoPatientsInFacility::class.java, uiActions::hideNoPatientsInFacility, schedulers.ui())
+      .addAction(HideNoSearchResults::class.java, uiActions::hideNoSearchResults, schedulers.ui())
       .build()
 
   private fun validateSearchQuery(): ObservableTransformer<ValidateSearchQuery, InstantSearchEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.computation())
-          .map { instantSearchValidator.validate(
-              searchQuery = it.searchQuery,
-              minLengthForSearchQuery = instantSearchConfig.minLengthOfSearchQuery
-          ) }
+          .map {
+            instantSearchValidator.validate(
+                searchQuery = it.searchQuery,
+                minLengthForSearchQuery = instantSearchConfig.minLengthOfSearchQuery
+            )
+          }
           .map(::SearchQueryValidated)
     }
   }

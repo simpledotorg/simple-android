@@ -12,12 +12,16 @@ import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID
 
 class InstantSearchEffectHandlerTest {
 
-  private val facility = TestData.facility()
+  private val facility = TestData.facility(
+      uuid = UUID.fromString("9cb066b5-ffa4-412e-b345-dfa98850fcce"),
+      name = "PHC Obvious"
+  )
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<InstantSearchUiActions>()
   private val effectHandler = InstantSearchEffectHandler(
@@ -69,8 +73,14 @@ class InstantSearchEffectHandlerTest {
   fun `when search by criteria effect is received, then search by criteria`() {
     // given
     val patients = listOf(
-        TestData.patientSearchResult(fullName = "Patient 1"),
-        TestData.patientSearchResult(fullName = "Patient 2")
+        TestData.patientSearchResult(
+            uuid = UUID.fromString("c9ecb8c1-93a2-4a9e-92ee-2231670ef91e"),
+            fullName = "Patient 1"
+        ),
+        TestData.patientSearchResult(
+            uuid = UUID.fromString("4e615da0-eed2-4e8d-b9e9-a84021db9d3d"),
+            fullName = "Patient 2"
+        )
     )
     val searchCriteria = PatientSearchCriteria.Name("Pat")
 
@@ -88,10 +98,17 @@ class InstantSearchEffectHandlerTest {
   @Test
   fun `when show patients search results effect is received, then show patients search results`() {
     // given
-    val facility = TestData.facility()
+    val facility = TestData.facility(
+        uuid = UUID.fromString("f1e9ad5c-7de0-4566-b1fc-392bdfdc8490"),
+        name = "PHC Obvious"
+    )
     val patients = listOf(
-        TestData.patientSearchResult(),
-        TestData.patientSearchResult()
+        TestData.patientSearchResult(
+            uuid = UUID.fromString("14edda47-c177-4b5b-9d72-832e262255a3")
+        ),
+        TestData.patientSearchResult(
+            uuid = UUID.fromString("a96ebfe1-a59c-4518-86ef-2ad2174cca03")
+        )
     )
 
     // when
@@ -116,5 +133,111 @@ class InstantSearchEffectHandlerTest {
     testCase.assertOutgoingEvents(SearchQueryValidated(validationResult))
 
     verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open patient summary effect is received, then open patient summary`() {
+    // given
+    val patientId = UUID.fromString("da014c89-a32b-4236-a811-357590b57b99")
+
+    // when
+    testCase.dispatch(OpenPatientSummary(patientId))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openPatientSummary(patientId)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open link id with patient screen effect is received, then open link id with patient screen`() {
+    // given
+    val patientId = UUID.fromString("f7242bcf-585d-4f4e-81ff-407ccc2d7554")
+    val identifier = TestData.identifier(
+        type = BpPassport,
+        value = "96a58c7c-e516-42ed-a635-044cc89d6e64"
+    )
+
+    // when
+    testCase.dispatch(OpenLinkIdWithPatientScreen(patientId, identifier))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openLinkIdWithPatientScreen(patientId, identifier)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open bp passport sheet effect is received, then open bp passport sheet`() {
+    // given
+    val identifier = TestData.identifier(
+        value = "08d5528b-8587-4ada-9b6a-4ff07b9b3357",
+        type = BpPassport
+    )
+
+    // when
+    testCase.dispatch(OpenBpPassportSheet(identifier))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openBpPassportSheet(identifier)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when show no patients in facility effect is received, then show no patients in facility`() {
+    // given
+    val facility = TestData.facility(
+        uuid = UUID.fromString("6889f6fb-aa9f-4e5f-8d48-4d22420bd811"),
+        name = "PHC Obvious"
+    )
+
+    // when
+    testCase.dispatch(ShowNoPatientsInFacility(facility))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showNoPatientsInFacility(facility)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when hide no patients in facility effect is received, then hide no patients in facility`() {
+    // when
+    testCase.dispatch(HideNoPatientsInFacility)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).hideNoPatientsInFacility()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when show no search results effect is received, then show no search results`() {
+    // when
+    testCase.dispatch(ShowNoSearchResults)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showNoSearchResults()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when hide no search results effect is received, then hide no search results`() {
+    // when
+    testCase.dispatch(HideNoSearchResults)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).hideNoSearchResults()
+    verifyNoMoreInteractions(uiActions)
   }
 }

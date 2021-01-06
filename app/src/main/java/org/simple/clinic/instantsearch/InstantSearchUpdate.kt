@@ -3,6 +3,9 @@ package org.simple.clinic.instantsearch
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.instantsearch.InstantSearchValidator.Result.Empty
+import org.simple.clinic.instantsearch.InstantSearchValidator.Result.LengthTooShort
+import org.simple.clinic.instantsearch.InstantSearchValidator.Result.Valid
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.PatientSearchCriteria
@@ -21,17 +24,28 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
       is AllPatientsLoaded -> allPatientsLoaded(model, event)
       is SearchResultsLoaded -> searchResultsLoaded(model, event)
       is SearchQueryValidated -> searchQueryValidated(model, event)
+      is SearchResultClicked -> searchResultClicked(model, event)
+      is SearchQueryChanged -> next(model.searchQueryChanged(event.searchQuery), ValidateSearchQuery(event.searchQuery))
     }
+  }
+
+  private fun searchResultClicked(model: InstantSearchModel, event: SearchResultClicked): Next<InstantSearchModel, InstantSearchEffect> {
+    val effect = if (model.hasAdditionalIdentifier)
+      OpenLinkIdWithPatientScreen(event.patientId, model.additionalIdentifier!!)
+    else
+      OpenPatientSummary(event.patientId)
+
+    return dispatch(effect)
   }
 
   private fun searchQueryValidated(model: InstantSearchModel, event: SearchQueryValidated): Next<InstantSearchModel, InstantSearchEffect> {
     return when (val validationResult = event.result) {
-      is InstantSearchValidator.Result.Valid -> {
+      is Valid -> {
         val criteria = searchCriteriaFromInput(validationResult.searchQuery, model.additionalIdentifier)
-        dispatch(SearchWithCriteria(criteria, model.facility!!))
+        dispatch(HideNoPatientsInFacility, HideNoSearchResults, SearchWithCriteria(criteria, model.facility!!))
       }
-      InstantSearchValidator.Result.LengthTooShort -> noChange()
-      InstantSearchValidator.Result.Empty -> dispatch(LoadAllPatients(model.facility!!))
+      LengthTooShort -> noChange()
+      Empty -> dispatch(HideNoPatientsInFacility, HideNoSearchResults, LoadAllPatients(model.facility!!))
     }
   }
 
@@ -48,12 +62,22 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
   private fun searchResultsLoaded(model: InstantSearchModel, event: SearchResultsLoaded): Next<InstantSearchModel, InstantSearchEffect> {
     if (!model.hasSearchQuery) return noChange()
 
-    return dispatch(ShowPatientSearchResults(event.patientsSearchResults, model.facility!!))
+    val effect = if (event.patientsSearchResults.isNotEmpty())
+      ShowPatientSearchResults(event.patientsSearchResults, model.facility!!)
+    else
+      ShowNoSearchResults
+
+    return dispatch(effect)
   }
 
   private fun allPatientsLoaded(model: InstantSearchModel, event: AllPatientsLoaded): Next<InstantSearchModel, InstantSearchEffect> {
     if (model.hasSearchQuery) return noChange()
 
-    return dispatch(ShowPatientSearchResults(event.patients, model.facility!!))
+    val effect = if (event.patients.isNotEmpty())
+      ShowPatientSearchResults(event.patients, model.facility!!)
+    else
+      ShowNoPatientsInFacility(model.facility!!)
+
+    return dispatch(effect)
   }
 }

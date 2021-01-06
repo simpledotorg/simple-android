@@ -10,7 +10,7 @@
 - [In Progress: 07 Jan 2021] Add Instant search
 
 ### Changes
-- Updated translations: `bn-IN`, `mr-IN`, `hi-IN`, `pa-IN`
+- Updated translations: `bn-IN`, `mr-IN`, `hi-IN`, `pa-IN`, `bn-BD`
 
 ## On Demo
 ### Internal

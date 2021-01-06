@@ -77,7 +77,7 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
   }
 
   private val delegate by unsafeLazy {
-    val patientUuid = arguments!!.getSerializable(KEY_PATIENT_UUID) as PatientUuid
+    val patientUuid = requireArguments().getSerializable(KEY_PATIENT_UUID) as PatientUuid
     val uiRenderer = UpdatePhoneNumberUiRenderer(this)
 
     MobiusDelegate.forActivity(

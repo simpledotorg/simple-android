@@ -11,7 +11,9 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationLocationPermissionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreenKey
+import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -42,16 +44,22 @@ class RegistrationLocationPermissionScreen(
   lateinit var screenRouter: ScreenRouter
 
   @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
+  @Inject
   lateinit var runtimePermissions: RuntimePermissions
 
   @Inject
   lateinit var effectHandlerFactory: RegistrationLocationPermissionEffectHandler.Factory
 
-  private val screenKey by unsafeLazy { screenRouter.key<RegistrationLocationPermissionScreenKey>(this) }
+  @Inject
+  lateinit var screenResults: ScreenResultBus
+
+  private val screenKey by unsafeLazy { screenKeyProvider.keyFor<RegistrationLocationPermissionScreenKey>(this) }
 
   private val events by unsafeLazy {
-    val permissionResults = screenRouter
-        .streamScreenResults()
+    val permissionResults = screenResults
+        .streamResults()
         .ofType<ActivityPermissionResult>()
 
     Observable

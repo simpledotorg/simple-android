@@ -15,6 +15,7 @@ import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.databinding.ScreenRegistrationPinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -44,6 +45,9 @@ class RegistrationPinScreen(
   lateinit var screenRouter: ScreenRouter
 
   @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
+  @Inject
   lateinit var effectHandlerFactory: RegistrationPinEffectHandler.Factory
 
   private val events by unsafeLazy {
@@ -58,7 +62,7 @@ class RegistrationPinScreen(
 
   private val delegate: MobiusDelegate<RegistrationPinModel, RegistrationPinEvent, RegistrationPinEffect> by unsafeLazy {
     val uiRenderer = RegistrationPinUiRenderer(this)
-    val screenKey = screenRouter.key<RegistrationPinScreenKey>(this)
+    val screenKey = screenKeyProvider.keyFor<RegistrationPinScreenKey>(this)
 
     MobiusDelegate.forView(
         events = events.ofType(),

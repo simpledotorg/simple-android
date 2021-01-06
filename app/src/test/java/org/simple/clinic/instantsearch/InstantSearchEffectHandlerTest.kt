@@ -18,7 +18,10 @@ import java.util.UUID
 
 class InstantSearchEffectHandlerTest {
 
-  private val facility = TestData.facility()
+  private val facility = TestData.facility(
+      uuid = UUID.fromString("9cb066b5-ffa4-412e-b345-dfa98850fcce"),
+      name = "PHC Obvious"
+  )
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<InstantSearchUiActions>()
   private val effectHandler = InstantSearchEffectHandler(
@@ -70,8 +73,14 @@ class InstantSearchEffectHandlerTest {
   fun `when search by criteria effect is received, then search by criteria`() {
     // given
     val patients = listOf(
-        TestData.patientSearchResult(fullName = "Patient 1"),
-        TestData.patientSearchResult(fullName = "Patient 2")
+        TestData.patientSearchResult(
+            uuid = UUID.fromString("c9ecb8c1-93a2-4a9e-92ee-2231670ef91e"),
+            fullName = "Patient 1"
+        ),
+        TestData.patientSearchResult(
+            uuid = UUID.fromString("4e615da0-eed2-4e8d-b9e9-a84021db9d3d"),
+            fullName = "Patient 2"
+        )
     )
     val searchCriteria = PatientSearchCriteria.Name("Pat")
 
@@ -89,10 +98,17 @@ class InstantSearchEffectHandlerTest {
   @Test
   fun `when show patients search results effect is received, then show patients search results`() {
     // given
-    val facility = TestData.facility()
+    val facility = TestData.facility(
+        uuid = UUID.fromString("f1e9ad5c-7de0-4566-b1fc-392bdfdc8490"),
+        name = "PHC Obvious"
+    )
     val patients = listOf(
-        TestData.patientSearchResult(),
-        TestData.patientSearchResult()
+        TestData.patientSearchResult(
+            uuid = UUID.fromString("14edda47-c177-4b5b-9d72-832e262255a3")
+        ),
+        TestData.patientSearchResult(
+            uuid = UUID.fromString("a96ebfe1-a59c-4518-86ef-2ad2174cca03")
+        )
     )
 
     // when

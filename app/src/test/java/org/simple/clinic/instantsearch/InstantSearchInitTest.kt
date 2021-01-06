@@ -7,6 +7,7 @@ import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import java.util.UUID
 
 class InstantSearchInitTest {
 
@@ -42,7 +43,10 @@ class InstantSearchInitTest {
 
   @Test
   fun `when screen is restored and facility is loaded, then validate search query`() {
-    val facility = TestData.facility()
+    val facility = TestData.facility(
+        uuid = UUID.fromString("df98a72b-3392-4364-80b3-c73328bafed3"),
+        name = "PHC Obvious"
+    )
     val facilityLoadedModel = defaultModel
         .facilityLoaded(facility)
         .searchQueryChanged("Pa")

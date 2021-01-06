@@ -14,6 +14,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenIntroVideoBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.register.RegistrationLoadingScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
@@ -42,6 +43,9 @@ class IntroVideoScreen(
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
 
   @Inject
   @Named("training_video_youtube_id")
@@ -101,7 +105,7 @@ class IntroVideoScreen(
   }
 
   override fun openHome() {
-    val screenKey = screenRouter.key<IntroVideoScreenKey>(this)
+    val screenKey = screenKeyProvider.keyFor<IntroVideoScreenKey>(this)
     screenRouter.push(RegistrationLoadingScreenKey(screenKey.registrationEntry))
   }
 

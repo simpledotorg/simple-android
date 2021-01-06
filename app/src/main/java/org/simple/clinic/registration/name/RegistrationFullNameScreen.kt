@@ -16,6 +16,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationNameBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -46,6 +47,9 @@ class RegistrationFullNameScreen(
   lateinit var screenRouter: ScreenRouter
 
   @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
+  @Inject
   lateinit var effectHandlerFactory: RegistrationNameEffectHandler.Factory
 
   private val events by unsafeLazy {
@@ -61,7 +65,7 @@ class RegistrationFullNameScreen(
   private val delegate: MobiusDelegate<RegistrationNameModel, RegistrationNameEvent, RegistrationNameEffect> by unsafeLazy {
     val uiRenderer = RegistrationNameUiRenderer(this)
 
-    val screenKey = screenRouter.key<RegistrationNameScreenKey>(this)
+    val screenKey = screenKeyProvider.keyFor<RegistrationNameScreenKey>(this)
 
     MobiusDelegate.forView(
         events = events.ofType(),

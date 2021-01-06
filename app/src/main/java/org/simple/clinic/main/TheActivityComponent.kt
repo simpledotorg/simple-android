@@ -33,6 +33,7 @@ import org.simple.clinic.home.report.ReportsScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
+import org.simple.clinic.navigation.di.FlowScreenKeyModule
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.newentry.country.di.InputFieldsFactoryModule
 import org.simple.clinic.onboarding.OnboardingScreenInjector
@@ -132,7 +133,8 @@ interface TheActivityComponent :
   PatientsModule::class,
   AssistedInjectModule::class,
   PagingModule::class,
-  InputFieldsFactoryModule::class
+  InputFieldsFactoryModule::class,
+  FlowScreenKeyModule::class
 ])
 class TheActivityModule {
 

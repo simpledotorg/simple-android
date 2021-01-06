@@ -91,7 +91,7 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
   }
 
   private val delegate: MobiusDelegate<BloodSugarUnitSelectionModel, BloodSugarUnitSelectionEvent, BloodSugarUnitSelectionEffect> by unsafeLazy {
-    val bloodSugarUnitPreference = arguments!!.getSerializable(KEY_UNIT_PREF)
+    val bloodSugarUnitPreference = requireArguments().getSerializable(KEY_UNIT_PREF)
 
     MobiusDelegate.forActivity(
         events = dialogEvents.ofType(),

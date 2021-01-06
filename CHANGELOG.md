@@ -11,6 +11,7 @@
 - [In Progress: 21 Dec 2020] Instant search in Faster registration
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 31 Dec 2020] Add Instant search screen
+- [In Progress: 04 Jan 2020] Migrate `AuthenticationActivity` to the new navigation framework
 
 ### Fixes
 - Fix BPpassport prefill value to have display value

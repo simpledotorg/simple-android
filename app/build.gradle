@@ -393,6 +393,8 @@ dependencies {
   implementation "com.github.scottyab:rootbeer:$versions.rootbeer"
 
   implementation "com.google.android.gms:play-services-mlkit-barcode-scanning:$versions.mlKitBarcode"
+
+  implementation "androidx.fragment:fragment:$versions.fragment"
 }
 
 // This must always be present at the bottom of this file, as per:

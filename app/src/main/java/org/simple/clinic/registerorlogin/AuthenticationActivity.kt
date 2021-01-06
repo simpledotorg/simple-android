@@ -115,6 +115,7 @@ class AuthenticationActivity : AppCompatActivity(), AuthenticationUiActions {
         .authenticationActivityComponent()
         .activity(this)
         .screenRouter(screenRouter)
+        .screenResultBus(screenResults)
         .build()
     component.inject(this)
   }

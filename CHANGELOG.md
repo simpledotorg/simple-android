@@ -13,7 +13,7 @@
 - Add Instant search
 
 ### Changes
-- Updated translations: `bn-IN`, `mr-IN`, `hi-IN`, `pa-IN`, `bn-BD`, `am-ET`
+- Updated translations: `bn-IN`, `mr-IN`, `hi-IN`, `pa-IN`, `bn-BD`, `am-ET`, `ti-ET`
 
 ## 2021-01-11-7589
 ### Internal

@@ -3,6 +3,9 @@ package org.simple.clinic.instantsearch
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.instantsearch.InstantSearchValidator.Result.Empty
+import org.simple.clinic.instantsearch.InstantSearchValidator.Result.LengthTooShort
+import org.simple.clinic.instantsearch.InstantSearchValidator.Result.Valid
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.PatientSearchCriteria
@@ -37,12 +40,12 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
 
   private fun searchQueryValidated(model: InstantSearchModel, event: SearchQueryValidated): Next<InstantSearchModel, InstantSearchEffect> {
     return when (val validationResult = event.result) {
-      is InstantSearchValidator.Result.Valid -> {
+      is Valid -> {
         val criteria = searchCriteriaFromInput(validationResult.searchQuery, model.additionalIdentifier)
         dispatch(HideNoPatientsInFacility, HideNoSearchResults, SearchWithCriteria(criteria, model.facility!!))
       }
-      InstantSearchValidator.Result.LengthTooShort -> noChange()
-      InstantSearchValidator.Result.Empty -> dispatch(HideNoPatientsInFacility, HideNoSearchResults, LoadAllPatients(model.facility!!))
+      LengthTooShort -> noChange()
+      Empty -> dispatch(HideNoPatientsInFacility, HideNoSearchResults, LoadAllPatients(model.facility!!))
     }
   }
 

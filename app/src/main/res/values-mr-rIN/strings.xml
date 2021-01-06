@@ -674,4 +674,13 @@
   <string name="blood_sugar_unit_selection_choose">निवडा</string>
   <string name="blood_sugar_unit_selection_done">झाले</string>
 
+  <!-- BP passport sheet -->
+  <string name="sheet_bp_passport_register_new_patient">नवीन रुग्णाची नोंदणी करा</string>
+  <string name="sheet_bp_passport_add_to_existing_patient">विद्यमान रुग्णाला जोडा</string>
+  <string name="sheet_bp_passport_number">बीपी पासपोर्ट %1$s</string>
+
+  <!-- Instant search -->
+  <string name="patientinstantsearch_assigned_facility_header">%1$s यांना नियुक्त</string>
+  <string name="patientinstantsearch_nearby_facilities_header">जवळपासच्या सुविधांमधून</string>
+
 </resources>

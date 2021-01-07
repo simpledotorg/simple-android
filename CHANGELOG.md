@@ -10,10 +10,9 @@
 ## Next Release
 ### Internal
 - Rename `newbranch` script to `newbranch.sh`
-- [In Progress: 21 Dec 2020] Instant search in Faster registration
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 04 Jan 2020] Migrate `AuthenticationActivity` to the new navigation framework
-- [In Progress: 05 Jan 2021] Add Instant search screen
+- [In Progress: 05 Jan 2021] Add Instant search
 
 ## On Demo
 ### Internal

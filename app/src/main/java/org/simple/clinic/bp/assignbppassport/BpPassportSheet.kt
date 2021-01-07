@@ -34,8 +34,8 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
       return intent
     }
 
-    fun blankBpPassportResult(data: Intent): String? {
-      return data.getStringExtra(BP_PASSPORT_RESULT)
+    fun blankBpPassportResult(data: Intent): BlankBpPassportResult? {
+      return data.getParcelableExtra(BP_PASSPORT_RESULT)
     }
   }
 

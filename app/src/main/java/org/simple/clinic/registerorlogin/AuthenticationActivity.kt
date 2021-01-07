@@ -145,6 +145,6 @@ class AuthenticationActivity : AppCompatActivity(), AuthenticationUiActions {
   }
 
   override fun openRegistrationPhoneScreen() {
-    router.clearHistoryAndPush(RegistrationPhoneScreenKey().wrap())
+    router.clearHistoryAndPush(RegistrationPhoneScreenKey())
   }
 }

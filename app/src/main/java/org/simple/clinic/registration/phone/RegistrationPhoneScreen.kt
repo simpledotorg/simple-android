@@ -1,17 +1,17 @@
 package org.simple.clinic.registration.phone
 
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.RelativeLayout
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.cast
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
@@ -19,24 +19,26 @@ import org.simple.clinic.databinding.ScreenRegistrationPhoneBinding
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.injector
 import org.simple.clinic.login.pin.LoginPinScreenKey
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.name.RegistrationNameScreenKey
 import org.simple.clinic.registration.phone.loggedout.LoggedOutOfDeviceDialog
-import org.simple.clinic.router.screen.RouterDirection
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class RegistrationPhoneScreen(
-    context: Context,
-    attrs: AttributeSet
-) : RelativeLayout(context, attrs), RegistrationPhoneUi, RegistrationPhoneUiActions {
+class RegistrationPhoneScreen :
+    BaseScreen<
+        RegistrationPhoneScreenKey,
+        ScreenRegistrationPhoneBinding,
+        RegistrationPhoneModel,
+        RegistrationPhoneEvent,
+        RegistrationPhoneEffect>(),
+    RegistrationPhoneUi,
+    RegistrationPhoneUiActions {
 
   @Inject
   lateinit var router: Router
@@ -50,75 +52,55 @@ class RegistrationPhoneScreen(
   @Inject
   lateinit var effectHandlerFactory: RegistrationPhoneEffectHandler.Factory
 
-  var binding: ScreenRegistrationPhoneBinding? = null
-
   private val isdCodeEditText
-    get() = binding!!.isdCodeEditText
+    get() = binding.isdCodeEditText
 
   private val phoneNumberEditText
-    get() = binding!!.phoneNumberEditText
+    get() = binding.phoneNumberEditText
 
   private val validationErrorTextView
-    get() = binding!!.validationErrorTextView
+    get() = binding.validationErrorTextView
 
   private val progressView
-    get() = binding!!.progressView
+    get() = binding.progressView
 
   @Inject
   lateinit var uuidGenerator: UuidGenerator
 
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            phoneNumberTextChanges(),
-            doneClicks()
-        )
-        .compose(ReportAnalyticsEvents())
-        .share()
+  private val uiRenderer = RegistrationPhoneUiRenderer(this)
+
+  override fun defaultModel() = RegistrationPhoneModel.create(OngoingRegistrationEntry(uuid = uuidGenerator.v4()))
+
+  override fun onModelUpdate(model: RegistrationPhoneModel) {
+    uiRenderer.render(model)
   }
 
-  private val delegate by unsafeLazy {
-    val uiRenderer = RegistrationPhoneUiRenderer(this)
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenRegistrationPhoneBinding.inflate(layoutInflater, container, false)
 
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = RegistrationPhoneModel.create(OngoingRegistrationEntry(uuid = uuidGenerator.v4())),
-        update = RegistrationPhoneUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = RegistrationPhoneInit(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
+  override fun events() = Observable
+      .merge(
+          phoneNumberTextChanges(),
+          doneClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<RegistrationPhoneEvent>()
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    binding = ScreenRegistrationPhoneBinding.bind(this)
-    if (isInEditMode) {
-      return
-    }
+  override fun createUpdate() = RegistrationPhoneUpdate()
+
+  override fun createInit() = RegistrationPhoneInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     isdCodeEditText.setText(resources.getString(R.string.registrationphone_country_code, country.isdCode))
     phoneNumberEditText.showKeyboard()
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun phoneNumberTextChanges() =
@@ -162,11 +144,11 @@ class RegistrationPhoneScreen(
   }
 
   override fun showProgressIndicator() {
-    progressView.visibility = VISIBLE
+    progressView.visibility = View.VISIBLE
   }
 
   override fun hideProgressIndicator() {
-    progressView.visibility = GONE
+    progressView.visibility = View.GONE
   }
 
   override fun openLoginPinEntryScreen() {

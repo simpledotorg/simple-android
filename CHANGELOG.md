@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Changes
+- Updated translations: `bn-IN`
+
 ### Internal
 - Purge the QA environment before running the instrumented tests instead of after in CI
 

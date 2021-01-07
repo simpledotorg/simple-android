@@ -8,6 +8,7 @@
 - Add Instant search query
 - Add `ScreenFragmentCompat` to support using the older view-based screens in the v2 navigation framework
 - Add convenience classes for creating screens for the new navigation framework
+- Rename `newbranch` script to `newbranch.sh`
 - [In Progress: 21 Dec 2020] Instant search in Faster registration
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 04 Jan 2020] Migrate `AuthenticationActivity` to the new navigation framework

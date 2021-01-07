@@ -2,6 +2,10 @@
 
 ## Next Release
 ### Internal
+- Purge the QA environment before running the instrumented tests instead of after in CI
+
+## Next Release
+### Internal
 - Add shell env comment to `pre-push` hook
 - Add the Router for the new navigation framework 
 - Track code style and lint rules for project in VCS

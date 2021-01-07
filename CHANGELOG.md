@@ -9,17 +9,20 @@
 
 ## Next Release
 ### Internal
+- Rename `newbranch` script to `newbranch.sh`
+- [In Progress: 21 Dec 2020] Instant search in Faster registration
+- [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
+- [In Progress: 04 Jan 2020] Migrate `AuthenticationActivity` to the new navigation framework
+- [In Progress: 05 Jan 2021] Add Instant search screen
+
+## On Demo
+### Internal
 - Add shell env comment to `pre-push` hook
 - Add the Router for the new navigation framework 
 - Track code style and lint rules for project in VCS
 - Add Instant search query
 - Add `ScreenFragmentCompat` to support using the older view-based screens in the v2 navigation framework
 - Add convenience classes for creating screens for the new navigation framework
-- Rename `newbranch` script to `newbranch.sh`
-- [In Progress: 21 Dec 2020] Instant search in Faster registration
-- [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
-- [In Progress: 04 Jan 2020] Migrate `AuthenticationActivity` to the new navigation framework
-- [In Progress: 05 Jan 2021] Add Instant search screen
 
 ### Fixes
 - Fix BPpassport prefill value to have display value

@@ -12,7 +12,6 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetBpPassportBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.unsafeLazy
@@ -24,7 +23,7 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
 
   companion object {
     private const val KEY_BP_PASSPORT_NUMBER = "bpPassportNumber"
-    private const val FACILITY_CHANGE = "alertFacilityChange"
+    private const val BP_PASSPORT_RESULT = "bpPassportResult"
 
     fun intent(
         context: Context,
@@ -35,8 +34,8 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
       return intent
     }
 
-    fun selectedFacility(data: Intent): String? {
-      return data.getStringExtra(FACILITY_CHANGE)
+    fun blankBpPassportResult(data: Intent): String? {
+      return data.getStringExtra(BP_PASSPORT_RESULT)
     }
   }
 
@@ -87,14 +86,10 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 
-  override fun openPatientEntryScreen(facility: Facility) {
+  override fun sendBpPassportResult(blankBpPassportResult: BlankBpPassportResult) {
     val intent = Intent()
-    intent.putExtra(FACILITY_CHANGE, facility.name)
+    intent.putExtra(BP_PASSPORT_RESULT, blankBpPassportResult)
     setResult(Activity.RESULT_OK, intent)
-    finish()
-  }
-
-  override fun closeSheet() {
     finish()
   }
 

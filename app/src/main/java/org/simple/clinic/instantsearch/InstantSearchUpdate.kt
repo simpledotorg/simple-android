@@ -3,6 +3,8 @@ package org.simple.clinic.instantsearch
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.bp.assignbppassport.AddToExistingPatient
+import org.simple.clinic.bp.assignbppassport.RegisterNewPatient
 import org.simple.clinic.instantsearch.InstantSearchValidator.Result.Empty
 import org.simple.clinic.instantsearch.InstantSearchValidator.Result.LengthTooShort
 import org.simple.clinic.instantsearch.InstantSearchValidator.Result.Valid
@@ -33,6 +35,17 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
       is SearchQueryChanged -> next(model.searchQueryChanged(event.searchQuery), ValidateSearchQuery(event.searchQuery))
       SavedNewOngoingPatientEntry -> dispatch(OpenPatientEntryScreen(model.facility!!))
       RegisterNewPatientClicked -> registerNewPatient(model)
+      is BlankBpPassportResultReceived -> blankBpPassportResult(model, event)
+    }
+  }
+
+  private fun blankBpPassportResult(
+      model: InstantSearchModel,
+      event: BlankBpPassportResultReceived
+  ): Next<InstantSearchModel, InstantSearchEffect> {
+    return when (event.blankBpPassportResult) {
+      AddToExistingPatient -> noChange()
+      RegisterNewPatient -> registerNewPatient(model)
     }
   }
 

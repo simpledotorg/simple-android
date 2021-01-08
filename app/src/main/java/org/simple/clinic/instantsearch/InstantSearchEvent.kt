@@ -1,5 +1,6 @@
 package org.simple.clinic.instantsearch
 
+import org.simple.clinic.bp.assignbppassport.BlankBpPassportResult
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.widgets.UiEvent
@@ -27,4 +28,9 @@ object SavedNewOngoingPatientEntry : InstantSearchEvent()
 object RegisterNewPatientClicked : InstantSearchEvent() {
 
   override val analyticsName: String = "Instant Search: Register New Patient"
+}
+
+data class BlankBpPassportResultReceived(val blankBpPassportResult: BlankBpPassportResult) : InstantSearchEvent() {
+
+  override val analyticsName: String = "Instant Search : Blank BP Passport Result Received"
 }

@@ -7,7 +7,9 @@
 - Add support for reporting screen changes to Analytics for the new navigation framework
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 04 Jan 2020] Migrate `AuthenticationActivity` to the new navigation framework
-- [In Progress: 07 Jan 2021] Add Instant search
+
+### Features
+- Add Instant search
 
 ### Changes
 - Updated translations: `bn-IN`, `mr-IN`, `hi-IN`, `pa-IN`, `bn-BD`

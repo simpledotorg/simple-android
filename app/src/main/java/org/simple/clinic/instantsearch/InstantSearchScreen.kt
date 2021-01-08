@@ -104,7 +104,8 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     Observable.mergeArray(
         searchItemClicks(),
         searchQueryChanges(),
-        registerNewPatientClicks()
+        registerNewPatientClicks(),
+        blankBpPassportResults()
     )
   }
 
@@ -265,6 +266,14 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     return newPatientButton
         .clicks()
         .map { RegisterNewPatientClicked }
+  }
+
+  private fun blankBpPassportResults(): Observable<UiEvent> {
+    return screenRouter
+        .streamScreenResults()
+        .ofType<ActivityResult>()
+        .extractSuccessful(BP_PASSPORT_SHEET, BpPassportSheet.Companion::blankBpPassportResult)
+        .map(::BlankBpPassportResultReceived)
   }
 
   @SuppressLint("CheckResult")

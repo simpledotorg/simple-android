@@ -2,11 +2,14 @@ package org.simple.clinic.instantsearch
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.bp.assignbppassport.AddToExistingPatient
+import org.simple.clinic.bp.assignbppassport.RegisterNewPatient
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -258,6 +261,43 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SaveNewOngoingPatientEntry(ongoingPatientEntry))
+        ))
+  }
+
+  @Test
+  fun `when register new patient is selected in blank bp passport sheet, then register new patient`() {
+    val ongoingPatientEntry = OngoingNewPatientEntry.fromFullName("")
+        .withIdentifier(identifier)
+
+    val facility = TestData.facility(
+        uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
+    )
+    val facilityLoadedModel = defaultModel
+        .facilityLoaded(facility)
+
+    updateSpec
+        .given(facilityLoadedModel)
+        .whenEvent(BlankBpPassportResultReceived(RegisterNewPatient))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SaveNewOngoingPatientEntry(ongoingPatientEntry))
+        ))
+  }
+
+  @Test
+  fun `when add to existing patient is selected in blank bp passport sheet, then do nothing`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
+    )
+    val facilityLoadedModel = defaultModel
+        .facilityLoaded(facility)
+
+    updateSpec
+        .given(facilityLoadedModel)
+        .whenEvent(BlankBpPassportResultReceived(AddToExistingPatient))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasNoEffects()
         ))
   }
 }

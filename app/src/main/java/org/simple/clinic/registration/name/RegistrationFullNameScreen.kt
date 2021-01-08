@@ -2,14 +2,15 @@ package org.simple.clinic.registration.name
 
 import android.animation.LayoutTransition
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.RelativeLayout
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -17,41 +18,65 @@ import org.simple.clinic.databinding.ScreenRegistrationNameBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 
-class RegistrationFullNameScreen(
-    context: Context,
-    attrs: AttributeSet
-) : RelativeLayout(context, attrs), RegistrationNameUi, RegistrationNameUiActions {
-
-  var binding: ScreenRegistrationNameBinding? = null
+class RegistrationFullNameScreen :
+    BaseScreen<
+        RegistrationNameScreenKey,
+        ScreenRegistrationNameBinding,
+        RegistrationNameModel,
+        RegistrationNameEvent,
+        RegistrationNameEffect>(),
+    RegistrationNameUi,
+    RegistrationNameUiActions {
 
   private val backButton
-    get() = binding!!.backButton
+    get() = binding.backButton
 
   private val cardViewContentLayout
-    get() = binding!!.cardViewContentLayout
+    get() = binding.cardViewContentLayout
 
   private val fullNameEditText
-    get() = binding!!.fullNameEditText
+    get() = binding.fullNameEditText
 
   private val validationErrorTextView
-    get() = binding!!.validationErrorTextView
+    get() = binding.validationErrorTextView
+
+  private val uiRenderer = RegistrationNameUiRenderer(this)
 
   @Inject
   lateinit var router: Router
 
   @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
-  @Inject
   lateinit var effectHandlerFactory: RegistrationNameEffectHandler.Factory
+
+  override fun defaultModel() = RegistrationNameModel.create(screenKey.registrationEntry)
+
+  override fun onModelUpdate(model: RegistrationNameModel) {
+    uiRenderer.render(model)
+  }
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenRegistrationNameBinding.inflate(layoutInflater, container, false)
+
+  override fun events() = Observable
+      .merge(
+          nameTextChanges(),
+          doneClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<RegistrationNameEvent>()
+
+  override fun createUpdate() = RegistrationNameUpdate()
+
+  override fun createInit() = RegistrationNameInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
   private val events by unsafeLazy {
     Observable
@@ -64,9 +89,7 @@ class RegistrationFullNameScreen(
   }
 
   private val delegate: MobiusDelegate<RegistrationNameModel, RegistrationNameEvent, RegistrationNameEffect> by unsafeLazy {
-    val uiRenderer = RegistrationNameUiRenderer(this)
 
-    val screenKey = screenKeyProvider.keyFor<RegistrationNameScreenKey>(this)
 
     MobiusDelegate.forView(
         events = events.ofType(),
@@ -78,13 +101,13 @@ class RegistrationFullNameScreen(
     )
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    binding = ScreenRegistrationNameBinding.bind(this)
-    if (isInEditMode) {
-      return
-    }
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
     backButton.setOnClickListener {
       router.pop()
@@ -95,26 +118,7 @@ class RegistrationFullNameScreen(
     cardViewContentLayout.layoutTransition.setStagger(LayoutTransition.CHANGE_DISAPPEARING, 0)
     cardViewContentLayout.layoutTransition.setStagger(LayoutTransition.CHANGING, 0)
 
-    post { fullNameEditText.requestFocus() }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+    view.post { fullNameEditText.requestFocus() }
   }
 
   private fun nameTextChanges() =

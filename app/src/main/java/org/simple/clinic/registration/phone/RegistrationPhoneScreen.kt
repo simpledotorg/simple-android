@@ -119,7 +119,7 @@ class RegistrationPhoneScreen :
   }
 
   override fun openRegistrationNameEntryScreen(currentRegistrationEntry: OngoingRegistrationEntry) {
-    router.push(RegistrationNameScreenKey(currentRegistrationEntry).wrap())
+    router.push(RegistrationNameScreenKey(currentRegistrationEntry))
   }
 
   override fun showInvalidNumberError() {

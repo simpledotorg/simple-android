@@ -14,6 +14,8 @@ abstract class ScreenKey: Parcelable {
     }
   }
 
+  abstract val analyticsName: String
+
   open val fragmentTag: String
     get() = javaClass.name
 

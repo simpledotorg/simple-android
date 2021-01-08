@@ -674,4 +674,13 @@
   <string name="blood_sugar_unit_selection_choose">বেছে নিন</string>
   <string name="blood_sugar_unit_selection_done">শেষ করুন</string>
 
+  <!-- BP passport sheet -->
+  <string name="sheet_bp_passport_register_new_patient">নতুন রোগী হিসাবে নিবন্ধন করুন</string>
+  <string name="sheet_bp_passport_add_to_existing_patient">বিদ্যমান রোগীতে যোগ করুন</string>
+  <string name="sheet_bp_passport_number">বিপি পাসপোর্ট %1$s</string>
+
+  <!-- Instant search -->
+  <string name="patientinstantsearch_assigned_facility_header">%1$s কে অর্পণ করা হয়েছে</string>
+  <string name="patientinstantsearch_nearby_facilities_header">কাছাকাছি কেন্দ্রগুলি থেকে</string>
+
 </resources>

@@ -674,4 +674,13 @@
   <string name="blood_sugar_unit_selection_choose">தேர்ந்தெடு</string>
   <string name="blood_sugar_unit_selection_done">முடிந்தது</string>
 
+  <!-- BP passport sheet -->
+  <string name="sheet_bp_passport_register_new_patient">புதிய நோயாளியைப் பதிவு செய்யவும்</string>
+  <string name="sheet_bp_passport_add_to_existing_patient">பழைய நோயாளியைச் சேர்க்கவும்</string>
+  <string name="sheet_bp_passport_number">பிபி கடவுச்சீட்டு %1$s</string>
+
+  <!-- Instant search -->
+  <string name="patientinstantsearch_assigned_facility_header">%1$s-க்கு ஒதுக்கப்பட்டது</string>
+  <string name="patientinstantsearch_nearby_facilities_header">அருகாமை மையங்களில் இருந்து</string>
+
 </resources>

@@ -7,6 +7,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import java.util.UUID
@@ -31,7 +32,7 @@ class InstantSearchUpdateTest {
         .given(defaultModel)
         .whenEvent(CurrentFacilityLoaded(facility))
         .then(assertThatNext(
-            hasModel(defaultModel.facilityLoaded(facility)),
+            hasModel(defaultModel.facilityLoaded(facility).loadingAllPatients()),
             hasEffects(LoadAllPatients(facility))
         ))
   }
@@ -54,7 +55,7 @@ class InstantSearchUpdateTest {
         .given(facilityLoadedModel)
         .whenEvent(AllPatientsLoaded(patients))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(facilityLoadedModel.allPatientsLoaded()),
             hasEffects(ShowPatientSearchResults(patients, facility))
         ))
   }
@@ -72,7 +73,7 @@ class InstantSearchUpdateTest {
         .given(facilityLoadedModel)
         .whenEvent(AllPatientsLoaded(emptyList()))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(facilityLoadedModel.allPatientsLoaded()),
             hasEffects(ShowNoPatientsInFacility(facility))
         ))
   }
@@ -96,7 +97,7 @@ class InstantSearchUpdateTest {
         .given(searchQueryModel)
         .whenEvent(SearchResultsLoaded(patients))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(searchQueryModel.searchResultsLoaded()),
             hasEffects(ShowPatientSearchResults(patients, facility))
         ))
   }
@@ -115,7 +116,7 @@ class InstantSearchUpdateTest {
         .given(searchQueryModel)
         .whenEvent(SearchResultsLoaded(emptyList()))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(searchQueryModel.searchResultsLoaded()),
             hasEffects(ShowNoSearchResults)
         ))
   }
@@ -134,7 +135,7 @@ class InstantSearchUpdateTest {
         .given(searchQueryModel)
         .whenEvent(SearchQueryValidated(InstantSearchValidator.Result.Valid("Pat")))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(searchQueryModel.loadingSearchResults()),
             hasEffects(
                 HideNoPatientsInFacility,
                 HideNoSearchResults,
@@ -156,7 +157,7 @@ class InstantSearchUpdateTest {
         .given(facilityLoadedModel)
         .whenEvent(SearchQueryValidated(InstantSearchValidator.Result.Empty))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(facilityLoadedModel.loadingAllPatients()),
             hasEffects(
                 HideNoSearchResults,
                 LoadAllPatients(facility)
@@ -222,6 +223,41 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasModel(facilityLoadedModel.searchQueryChanged("Pat")),
             hasEffects(ValidateSearchQuery("Pat"))
+        ))
+  }
+
+  @Test
+  fun `when ongoing patient entry is saved, then open patient entry screen`() {
+    val facility = TestData.facility()
+    val searchQueryModel = defaultModel
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    updateSpec
+        .given(searchQueryModel)
+        .whenEvent(SavedNewOngoingPatientEntry)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenPatientEntryScreen(facility))
+        ))
+  }
+
+  @Test
+  fun `when register new patient is clicked, then save ongoing patient entry`() {
+    val facility = TestData.facility()
+    val searchQueryModel = defaultModel
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    val ongoingPatientEntry = OngoingNewPatientEntry.fromFullName("Pat")
+        .withIdentifier(identifier)
+
+    updateSpec
+        .given(searchQueryModel)
+        .whenEvent(RegisterNewPatientClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SaveNewOngoingPatientEntry(ongoingPatientEntry))
         ))
   }
 }

@@ -6,7 +6,7 @@
 - Purge the QA environment before running the instrumented tests instead of after in CI
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 04 Jan 2020] Migrate `AuthenticationActivity` to the new navigation framework
-- [In Progress: 05 Jan 2021] Add Instant search
+- [In Progress: 07 Jan 2021] Add Instant search
 
 ### Changes
 - Updated translations: `bn-IN`, `mr-IN`, `hi-IN`

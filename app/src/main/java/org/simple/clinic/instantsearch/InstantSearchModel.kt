@@ -1,13 +1,17 @@
 package org.simple.clinic.instantsearch
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
 
+@Parcelize
 data class InstantSearchModel(
     val facility: Facility?,
     val searchQuery: String?,
-    val additionalIdentifier: Identifier?
-) {
+    val additionalIdentifier: Identifier?,
+    val instantSearchProgressState: InstantSearchProgressState?
+) : Parcelable {
 
   val hasFacility: Boolean
     get() = facility != null
@@ -22,7 +26,8 @@ data class InstantSearchModel(
     fun create(additionalIdentifier: Identifier?) = InstantSearchModel(
         facility = null,
         searchQuery = null,
-        additionalIdentifier = additionalIdentifier
+        additionalIdentifier = additionalIdentifier,
+        instantSearchProgressState = null
     )
   }
 
@@ -32,5 +37,21 @@ data class InstantSearchModel(
 
   fun searchQueryChanged(searchQuery: String): InstantSearchModel {
     return copy(searchQuery = searchQuery)
+  }
+
+  fun loadingAllPatients(): InstantSearchModel {
+    return copy(instantSearchProgressState = InstantSearchProgressState.IN_PROGRESS)
+  }
+
+  fun allPatientsLoaded(): InstantSearchModel {
+    return copy(instantSearchProgressState = InstantSearchProgressState.DONE)
+  }
+
+  fun loadingSearchResults(): InstantSearchModel {
+    return copy(instantSearchProgressState = InstantSearchProgressState.IN_PROGRESS)
+  }
+
+  fun searchResultsLoaded(): InstantSearchModel {
+    return copy(instantSearchProgressState = InstantSearchProgressState.DONE)
   }
 }

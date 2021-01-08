@@ -37,7 +37,18 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addAction(ShowNoSearchResults::class.java, { uiActions.showNoSearchResults() }, schedulers.ui())
       .addAction(HideNoPatientsInFacility::class.java, uiActions::hideNoPatientsInFacility, schedulers.ui())
       .addAction(HideNoSearchResults::class.java, uiActions::hideNoSearchResults, schedulers.ui())
+      .addTransformer(SaveNewOngoingPatientEntry::class.java, saveNewOngoingPatientEntry())
+      .addConsumer(OpenPatientEntryScreen::class.java, { uiActions.openPatientEntryScreen(it.facility) }, schedulers.ui())
       .build()
+
+  private fun saveNewOngoingPatientEntry(): ObservableTransformer<SaveNewOngoingPatientEntry, InstantSearchEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map { patientRepository.saveOngoingEntry(it.ongoingNewPatientEntry) }
+          .map { SavedNewOngoingPatientEntry }
+    }
+  }
 
   private fun validateSearchQuery(): ObservableTransformer<ValidateSearchQuery, InstantSearchEvent> {
     return ObservableTransformer { effects ->

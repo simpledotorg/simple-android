@@ -56,7 +56,8 @@ class DateOfBirthEditText(context: Context, attrs: AttributeSet) : MaskedEditTex
     super.setText(text, type)
   }
 
+  @Deprecated(message = "Cannot use setOnFocusChangeListener, use focusChanges instead")
   override fun setOnFocusChangeListener(listener: OnFocusChangeListener) {
-    throw AssertionError("Use focusChanges instead")
+    super.setOnFocusChangeListener(listener)
   }
 }

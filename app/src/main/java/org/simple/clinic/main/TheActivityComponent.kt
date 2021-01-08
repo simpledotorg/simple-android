@@ -30,6 +30,7 @@ import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsTabScreen
 import org.simple.clinic.home.report.ReportsScreen
+import org.simple.clinic.instantsearch.InstantSearchScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
@@ -119,7 +120,8 @@ interface TheActivityComponent :
     SettingsScreen.Injector,
     ChangeLanguageScreen.Injector,
     TeleconsultSharePrescriptionScreen.Injector,
-    PatientSearchResultItemView.Injector {
+    PatientSearchResultItemView.Injector,
+    InstantSearchScreen.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Builder

@@ -1,6 +1,5 @@
 package org.simple.clinic.home.patients
 
-import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -14,7 +13,6 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding3.view.clicks
-import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.patients_user_status_approved.view.*
@@ -29,11 +27,13 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.di.injector
 import org.simple.clinic.enterotp.EnterOtpScreenKey
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
+import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanBpPassportActivity
 import org.simple.clinic.search.PatientSearchScreenKey
@@ -43,7 +43,6 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
@@ -83,6 +82,9 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   @Inject
   lateinit var utcClock: UtcClock
+
+  @Inject
+  lateinit var features: Features
 
   private val deferredEvents = DeferredEventSource<PatientsTabEvent>()
 
@@ -181,7 +183,13 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
       .map { SimpleVideoClicked }
 
   override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
-    screenRouter.push(PatientSearchScreenKey(additionalIdentifier))
+    val screenKey = if (features.isEnabled(Feature.InstantSearch)) {
+      InstantSearchScreenKey(additionalIdentifier)
+    } else {
+      PatientSearchScreenKey(additionalIdentifier)
+    }
+
+    screenRouter.push(screenKey)
   }
 
   private fun showStatus(@IdRes statusViewId: Int) {

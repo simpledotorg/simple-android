@@ -58,8 +58,10 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
     override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
       val binding = holder.binding as ListPatientSearchHeaderBinding
       val context = holder.itemView.context
+      val headerColor = ContextCompat.getColor(context, R.color.grey1)
 
       binding.patientsearchHeader.text = context.getString(R.string.patientinstantsearch_assigned_facility_header, facilityName)
+      binding.patientsearchHeader.setTextColor(headerColor)
     }
   }
 

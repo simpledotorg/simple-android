@@ -143,7 +143,7 @@ class RegistrationFullNameScreen(
   }
 
   override fun openRegistrationPinEntryScreen(registrationEntry: OngoingRegistrationEntry) {
-    router.push(RegistrationPinScreenKey(registrationEntry).wrap())
+    router.push(RegistrationPinScreenKey(registrationEntry))
   }
 
   interface Injector {

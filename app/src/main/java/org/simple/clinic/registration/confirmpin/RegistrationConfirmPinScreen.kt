@@ -160,7 +160,7 @@ class RegistrationConfirmPinScreen(
   }
 
   override fun goBackToPinScreen(entry: OngoingRegistrationEntry) {
-    router.replaceKeyOfSameType(RegistrationPinScreenKey(entry).wrap())
+    router.replaceKeyOfSameType(RegistrationPinScreenKey(entry))
   }
 
   interface Injector {

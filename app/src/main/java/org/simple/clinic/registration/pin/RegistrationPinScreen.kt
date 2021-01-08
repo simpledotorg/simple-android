@@ -1,13 +1,15 @@
 package org.simple.clinic.registration.pin
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
-import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.RelativeLayout
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -17,98 +19,79 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
-class RegistrationPinScreen(
-    context: Context,
-    attrs: AttributeSet
-) : RelativeLayout(context, attrs), RegistrationPinUi, RegistrationPinUiActions {
-
-  var binding: ScreenRegistrationPinBinding? = null
+class RegistrationPinScreen :
+    BaseScreen<
+        RegistrationPinScreenKey,
+        ScreenRegistrationPinBinding,
+        RegistrationPinModel,
+        RegistrationPinEvent,
+        RegistrationPinEffect>(),
+    RegistrationPinUi,
+    RegistrationPinUiActions {
 
   private val pinEditText
-    get() = binding!!.pinEditText
+    get() = binding.pinEditText
 
   private val backButton
-    get() = binding!!.backButton
+    get() = binding.backButton
 
   private val pinHintTextView
-    get() = binding!!.pinHintTextView
+    get() = binding.pinHintTextView
 
   private val errorTextView
-    get() = binding!!.errorTextView
+    get() = binding.errorTextView
+
+  private val uiRenderer = RegistrationPinUiRenderer(this)
 
   @Inject
   lateinit var router: Router
 
   @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
-  @Inject
   lateinit var effectHandlerFactory: RegistrationPinEffectHandler.Factory
 
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            pinTextChanges(),
-            doneClicks()
-        )
-        .compose(ReportAnalyticsEvents())
-        .share()
+  override fun events() = Observable
+      .merge(
+          pinTextChanges(),
+          doneClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<RegistrationPinEvent>()
+
+  override fun createUpdate() = RegistrationPinUpdate(requiredPinLength = SECURITY_PIN_LENGTH)
+
+  override fun createInit() = RegistrationPinInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun defaultModel() = RegistrationPinModel.create(screenKey.registrationEntry)
+
+  override fun onModelUpdate(model: RegistrationPinModel) {
+    uiRenderer.render(model)
   }
 
-  private val delegate: MobiusDelegate<RegistrationPinModel, RegistrationPinEvent, RegistrationPinEffect> by unsafeLazy {
-    val uiRenderer = RegistrationPinUiRenderer(this)
-    val screenKey = screenKeyProvider.keyFor<RegistrationPinScreenKey>(this)
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenRegistrationPinBinding.inflate(layoutInflater, container, false)
 
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = RegistrationPinModel.create(screenKey.registrationEntry),
-        update = RegistrationPinUpdate(requiredPinLength = SECURITY_PIN_LENGTH),
-        init = RegistrationPinInit(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    binding = ScreenRegistrationPinBinding.bind(this)
-    if (isInEditMode) {
-      return
-    }
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     pinEditText.isSaveEnabled = false
 
     backButton.setOnClickListener {
       router.pop()
     }
 
-    post { pinEditText.requestFocus() }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+    pinEditText.post { pinEditText.requestFocus() }
   }
 
   private fun pinTextChanges() =

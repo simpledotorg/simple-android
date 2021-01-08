@@ -9,6 +9,7 @@
 - Scroll to top when instant search results are updated
 - Report time taken when loading all patients and search results in Instant Search
 - Change `RegistrationPhoneScreen` to a fragment
+- Change `RegistrationPinScreen` to a fragment
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 04 Jan 2020] Migrate `AuthenticationActivity` to the new navigation framework
 

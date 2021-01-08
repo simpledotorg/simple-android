@@ -10,6 +10,9 @@ data class ScreenKeyCompat(val key: FullScreenKey) : ScreenKey() {
   override val fragmentTag: String
     get() = key.javaClass.name
 
+  override val analyticsName: String
+    get() = key.analyticsName
+
   override fun instantiateFragment() = ScreenFragmentCompat.create()
 }
 

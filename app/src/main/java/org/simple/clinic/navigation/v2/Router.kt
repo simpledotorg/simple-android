@@ -8,6 +8,7 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import org.simple.clinic.platform.analytics.Analytics
 
 /**
  * Class that maintains a history of screens and is used to perform
@@ -162,6 +163,21 @@ class Router(
     history = newHistory
 
     dispatchScreenResult(currentTopScreen, screenResult)
+    reportScreenChangeToAnalytics(outgoing = currentTopScreen.key, incoming = newTopScreen.key)
+  }
+
+  private fun reportScreenChangeToAnalytics(
+      outgoing: ScreenKey,
+      incoming: ScreenKey
+  ) {
+    val outgoingAnalyticsName = if (outgoing == incoming)
+      "" // This is the initial screen setup
+    else
+      outgoing.analyticsName
+
+    val incomingAnalyticsName = incoming.analyticsName
+
+    Analytics.reportScreenChange(outgoingAnalyticsName, incomingAnalyticsName)
   }
 
   private fun clearCurrentHistory(

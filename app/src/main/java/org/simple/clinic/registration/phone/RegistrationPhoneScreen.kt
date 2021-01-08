@@ -152,7 +152,7 @@ class RegistrationPhoneScreen :
   }
 
   override fun openLoginPinEntryScreen() {
-    router.push(LoginPinScreenKey().wrap())
+    router.push(LoginPinScreenKey())
   }
 
   override fun showLoggedOutOfDeviceDialog() {

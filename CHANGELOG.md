@@ -19,6 +19,7 @@
 - Add Instant search query
 - Add `ScreenFragmentCompat` to support using the older view-based screens in the v2 navigation framework
 - Add convenience classes for creating screens for the new navigation framework
+- Fix garbled gradle logs when running pre-push hook in Git Bash
 
 ### Fixes
 - Fix BPpassport prefill value to have display value

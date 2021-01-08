@@ -1,2 +1,13 @@
 #!/bin/sh
-GIT_WORK_TREE=".." ./gradlew lintQaDebug assembleQaDebugUnitTest assembleQaDebugAndroidTest
+readonly MSYS="msys"
+readonly OSTYPE="$OSTYPE"
+
+CONSOLE_PRINT_TYPE="auto"
+
+if [[ ${OSTYPE} -eq ${MSYS} ]]; then
+    CONSOLE_PRINT_TYPE="plain"
+else
+    CONSOLE_PRINT_TYPE="auto"
+fi
+
+GIT_WORK_TREE=".." ./gradlew --console="$CONSOLE_PRINT_TYPE" lintQaDebug assembleQaDebugUnitTest assembleQaDebugAndroidTest

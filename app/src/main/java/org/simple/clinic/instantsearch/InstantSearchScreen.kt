@@ -170,6 +170,7 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   override fun showPatientsSearchResults(patients: List<PatientSearchResult>, facility: Facility) {
     searchResultsView.visibility = View.VISIBLE
     adapter.submitList(InstantSearchResultsItemType.from(patients, facility))
+    searchResultsView.smoothScrollToPosition(0)
   }
 
   override fun openPatientSummary(patientId: UUID) {

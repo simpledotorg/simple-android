@@ -6,7 +6,7 @@
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 29 Dec 2020] Add Instant search screen
 
-## On Demo
+## 2021-01-11-7589
 ### Internal
 - Add shell env comment to `pre-push` hook
 - Add the Router for the new navigation framework 

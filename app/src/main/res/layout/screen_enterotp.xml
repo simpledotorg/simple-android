@@ -58,8 +58,9 @@
     android:layout_below="@+id/enterotp_logo_container"
     android:animateLayoutChanges="true">
 
-    <ProgressBar
+    <com.google.android.material.progressindicator.CircularProgressIndicator
       android:id="@+id/validateOtpProgressBar"
+      style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"

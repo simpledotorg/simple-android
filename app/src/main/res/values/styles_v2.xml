@@ -745,4 +745,14 @@
     <item name="android:statusBarColor">@android:color/transparent</item>
     <item name="android:windowSoftInputMode">adjustResize</item>
   </style>
+
+  <!-- Progress Indicators -->
+  <style name="Widget.Simple.CircularProgressIndicator.Indeterminate" parent="Widget.MaterialComponents.CircularProgressIndicator">
+    <item name="android:indeterminate">true</item>
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.ProgressIndicator</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.ProgressIndicator" parent="">
+    <item name="colorPrimary">@color/blue1</item>
+  </style>
 </resources>

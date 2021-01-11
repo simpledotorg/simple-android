@@ -1,46 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.activity.placeholder.PlaceholderScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  xmlns:tools="http://schemas.android.com/tools">
+  android:layout_height="match_parent">
 
   <LinearLayout
     android:id="@+id/loadingTextLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:layout_centerInParent="true"
+    android:orientation="vertical"
     android:paddingStart="@dimen/spacing_32"
     android:paddingEnd="@dimen/spacing_32"
     android:visibility="invisible"
-    tools:visibility="visible"
-    >
+    tools:visibility="visible">
 
     <TextView
+      style="@style/Clinic.V2.TextAppearance.H6.Grey1"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:textAlignment="center"
       android:text="@string/placeholder_loading_title"
-      style="@style/Clinic.V2.TextAppearance.H6.Grey1"
-      />
+      android:textAlignment="center" />
 
     <TextView
+      style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/spacing_12"
-      android:text="@string/placeholder_loading_message"
-      style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
-      />
+      android:text="@string/placeholder_loading_message" />
   </LinearLayout>
 
-  <ProgressBar
+  <com.google.android.material.progressindicator.CircularProgressIndicator
     android:id="@+id/loadingProgressBar"
+    style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
     android:layout_width="@dimen/spacing_44"
     android:layout_height="@dimen/spacing_44"
     android:layout_above="@+id/loadingTextLayout"
     android:layout_centerHorizontal="true"
     android:layout_marginBottom="@dimen/spacing_48"
     android:visibility="invisible"
-    tools:visibility="visible"
-    />
+    tools:visibility="visible" />
 </org.simple.clinic.activity.placeholder.PlaceholderScreen>

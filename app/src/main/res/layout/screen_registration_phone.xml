@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.registration.phone.RegistrationPhoneScreen android:id="@+id/registrationphone_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.registration.phone.RegistrationPhoneScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/registrationphone_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/window_background_auth"
@@ -52,7 +52,7 @@
           android:inputType="none"
           android:textAppearance="@style/Clinic.LoginInputTextAppearance"
           tools:ignore="Deprecated,LabelFor"
-          tools:text="+880"/>
+          tools:text="+880" />
 
         <EditText
           android:id="@id/phoneNumberEditText"
@@ -81,7 +81,8 @@
       android:background="@color/white"
       android:visibility="gone">
 
-      <ProgressBar
+      <com.google.android.material.progressindicator.CircularProgressIndicator
+        style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />

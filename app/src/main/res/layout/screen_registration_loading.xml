@@ -14,7 +14,8 @@
     android:inAnimation="@android:anim/fade_in"
     android:outAnimation="@android:anim/fade_out">
 
-    <ProgressBar
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+      style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center" />

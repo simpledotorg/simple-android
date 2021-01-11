@@ -42,8 +42,9 @@
       android:minHeight="@dimen/spacing_128"
       app:debug_displayedChild="1">
 
-      <ProgressBar
+      <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressBar"
+        style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />

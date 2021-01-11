@@ -6,6 +6,7 @@
 - Purge the QA environment before running the instrumented tests instead of after in CI
 - Add support for reporting screen changes to Analytics for the new navigation framework
 - Migrate `ProgressBar` usage to `CircularProgressIndicator`
+- Scroll to top when instant search results are updated
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 04 Jan 2020] Migrate `AuthenticationActivity` to the new navigation framework
 

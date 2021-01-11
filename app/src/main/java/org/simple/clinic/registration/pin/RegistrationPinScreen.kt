@@ -2,7 +2,6 @@ package org.simple.clinic.registration.pin
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,19 +9,15 @@ import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.databinding.ScreenRegistrationPinBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
 class RegistrationPinScreen :
@@ -127,7 +122,7 @@ class RegistrationPinScreen :
   }
 
   override fun openRegistrationConfirmPinScreen(registrationEntry: OngoingRegistrationEntry) {
-    router.push(RegistrationConfirmPinScreenKey(registrationEntry).wrap())
+    router.push(RegistrationConfirmPinScreenKey(registrationEntry))
   }
 
   interface Injector {

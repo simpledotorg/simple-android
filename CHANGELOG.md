@@ -12,6 +12,7 @@
 - Change `RegistrationPinScreen` to a fragment
 - Change `LoginPinScreen` to a fragment
 - Change `RegistrationFullNameScreen` to a fragment
+- Change `RegistrationConfirmPinScreen` to a fragment
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 04 Jan 2020] Migrate `AuthenticationActivity` to the new navigation framework
 

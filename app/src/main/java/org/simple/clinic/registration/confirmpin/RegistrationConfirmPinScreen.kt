@@ -1,121 +1,100 @@
 package org.simple.clinic.registration.confirmpin
 
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.RelativeLayout
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.cast
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.databinding.ScreenRegistrationConfirmPinBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreenKey
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class RegistrationConfirmPinScreen(
-    context: Context,
-    attrs: AttributeSet
-) : RelativeLayout(context, attrs), RegistrationConfirmPinUi, RegistrationConfirmPinUiActions {
-
-  var binding: ScreenRegistrationConfirmPinBinding? = null
+class RegistrationConfirmPinScreen :
+    BaseScreen<
+        RegistrationConfirmPinScreenKey,
+        ScreenRegistrationConfirmPinBinding,
+        RegistrationConfirmPinModel,
+        RegistrationConfirmPinEvent,
+        RegistrationConfirmPinEffect
+        >(),
+    RegistrationConfirmPinUi,
+    RegistrationConfirmPinUiActions {
 
   private val confirmPinEditText
-    get() = binding!!.confirmPinEditText
+    get() = binding.confirmPinEditText
 
   private val backButton
-    get() = binding!!.backButton
+    get() = binding.backButton
 
   private val resetPinButton
-    get() = binding!!.resetPinButton
+    get() = binding.resetPinButton
 
   private val errorStateViewGroup
-    get() = binding!!.errorStateViewGroup
+    get() = binding.errorStateViewGroup
 
   private val pinHintTextView
-    get() = binding!!.pinHintTextView
+    get() = binding.pinHintTextView
+
+  private val uiRenderer = RegistrationConfirmPinUiRenderer(this)
 
   @Inject
   lateinit var router: Router
 
   @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
-  @Inject
   lateinit var effectHandlerFactory: RegistrationConfirmPinEffectHandler.Factory
 
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            confirmPinTextChanges(),
-            resetPinClicks(),
-            doneClicks()
-        )
-        .compose(ReportAnalyticsEvents())
+  override fun defaultModel() = RegistrationConfirmPinModel.create(screenKey.registrationEntry)
+
+  override fun onModelUpdate(model: RegistrationConfirmPinModel) {
+    uiRenderer.render(model)
   }
 
-  private val delegate by unsafeLazy {
-    val uiRenderer = RegistrationConfirmPinUiRenderer(this)
-    val screenKey = screenKeyProvider.keyFor<RegistrationConfirmPinScreenKey>(this)
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenRegistrationConfirmPinBinding.inflate(layoutInflater, container, false)
 
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = RegistrationConfirmPinModel.create(screenKey.registrationEntry),
-        update = RegistrationConfirmPinUpdate(),
-        init = RegistrationConfirmPinInit(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
+  override fun events() = Observable
+      .merge(
+          confirmPinTextChanges(),
+          resetPinClicks(),
+          doneClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<RegistrationConfirmPinEvent>()
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    binding = ScreenRegistrationConfirmPinBinding.bind(this)
-    if (isInEditMode) {
-      return
-    }
+  override fun createUpdate() = RegistrationConfirmPinUpdate()
 
+  override fun createInit() = RegistrationConfirmPinInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     backButton.setOnClickListener {
       router.pop()
     }
 
     // Showing the keyboard again in case the user returns from location permission screen.
     confirmPinEditText.showKeyboard()
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    binding = null
-    delegate.stop()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun confirmPinTextChanges() =
@@ -155,7 +134,7 @@ class RegistrationConfirmPinScreen(
   }
 
   override fun openFacilitySelectionScreen(entry: OngoingRegistrationEntry) {
-    hideKeyboard()
+    binding.root.hideKeyboard()
     router.push(RegistrationLocationPermissionScreenKey(entry).wrap())
   }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/registrationconfirmpin_root"
@@ -83,4 +83,4 @@
       </LinearLayout>
     </LinearLayout>
   </androidx.cardview.widget.CardView>
-</org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen>
+</RelativeLayout>

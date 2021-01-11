@@ -655,9 +655,14 @@ class PatientRepository @Inject constructor(
   }
 
   fun allPatientsInFacility(facility: Facility): List<PatientSearchResult> {
-    return database
-        .patientSearchDao()
-        .searchInFacilityAndSortByName(facility.uuid, PatientStatus.Active)
+    return reportTimeTaken(
+        clock = utcClock,
+        operation = "Instant Search Patient:Loading All Patients in Facility: ${facility.uuid}"
+    ) {
+      database
+          .patientSearchDao()
+          .searchInFacilityAndSortByName(facility.uuid, PatientStatus.Active)
+    }
   }
 
   fun searchByShortCode(shortCode: String): Observable<List<PatientSearchResult>> {

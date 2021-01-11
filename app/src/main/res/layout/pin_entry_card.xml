@@ -7,8 +7,9 @@
   tools:parentTag="androidx.cardview.widget.CardView"
   tools:showIn="@layout/screen_app_lock">
 
-  <ProgressBar
+  <com.google.android.material.progressindicator.CircularProgressIndicator
     android:id="@+id/progressView"
+    style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"

@@ -109,15 +109,22 @@
     </RelativeLayout>
   </RelativeLayout>
 
-  <ProgressBar
-    android:id="@+id/summaryLoadingProgressBar"
-    android:layout_width="wrap_content"
+  <FrameLayout
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_above="@+id/buttonFrame"
-    android:layout_below="@+id/patientsummary_header"
-    android:layout_centerInParent="true"
-    android:visibility="visible"
-    tools:visibility="invisible" />
+    android:layout_above="@id/buttonFrame"
+    android:layout_below="@id/patientsummary_header">
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+      android:id="@+id/summaryLoadingProgressBar"
+      style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:visibility="visible"
+      tools:visibility="invisible" />
+
+  </FrameLayout>
 
   <androidx.core.widget.NestedScrollView
     android:id="@+id/summaryViewsContainer"

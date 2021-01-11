@@ -72,11 +72,19 @@ class PatientRepository @Inject constructor(
   }
 
   private fun searchByName2(patientName: String, facilityId: UUID): List<PatientSearchResult> {
-    return database.patientSearchDao().searchByName(patientName, facilityId)
+    return reportTimeTaken(
+        clock = utcClock,
+        operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
+      database.patientSearchDao().searchByName(patientName, facilityId)
+    }
   }
 
   private fun searchByPhoneNumber2(phoneNumber: String, facilityId: UUID): List<PatientSearchResult> {
-    return database.patientSearchDao().searchByPhoneNumber2(phoneNumber, facilityId)
+    return reportTimeTaken(
+        clock = utcClock,
+        operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
+      database.patientSearchDao().searchByPhoneNumber2(phoneNumber, facilityId)
+    }
   }
 
   private fun searchByName(name: String): List<PatientSearchResult> {

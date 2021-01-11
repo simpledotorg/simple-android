@@ -72,11 +72,19 @@ class PatientRepository @Inject constructor(
   }
 
   private fun searchByName2(patientName: String, facilityId: UUID): List<PatientSearchResult> {
-    return database.patientSearchDao().searchByName(patientName, facilityId)
+    return reportTimeTaken(
+        clock = utcClock,
+        operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
+      database.patientSearchDao().searchByName(patientName, facilityId)
+    }
   }
 
   private fun searchByPhoneNumber2(phoneNumber: String, facilityId: UUID): List<PatientSearchResult> {
-    return database.patientSearchDao().searchByPhoneNumber2(phoneNumber, facilityId)
+    return reportTimeTaken(
+        clock = utcClock,
+        operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
+      database.patientSearchDao().searchByPhoneNumber2(phoneNumber, facilityId)
+    }
   }
 
   private fun searchByName(name: String): List<PatientSearchResult> {
@@ -647,9 +655,14 @@ class PatientRepository @Inject constructor(
   }
 
   fun allPatientsInFacility(facility: Facility): List<PatientSearchResult> {
-    return database
-        .patientSearchDao()
-        .searchInFacilityAndSortByName(facility.uuid, PatientStatus.Active)
+    return reportTimeTaken(
+        clock = utcClock,
+        operation = "Instant Search Patient:Loading All Patients in Facility: ${facility.uuid}"
+    ) {
+      database
+          .patientSearchDao()
+          .searchInFacilityAndSortByName(facility.uuid, PatientStatus.Active)
+    }
   }
 
   fun searchByShortCode(shortCode: String): Observable<List<PatientSearchResult>> {

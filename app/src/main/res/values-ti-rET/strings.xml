@@ -674,4 +674,13 @@
   <string name="blood_sugar_unit_selection_choose">ምረጽ</string>
   <string name="blood_sugar_unit_selection_done">ተወዲኡ</string>
 
+  <!-- BP passport sheet -->
+  <string name="sheet_bp_passport_register_new_patient">ሓድሽ ተሓካሚ መዝግብ</string>
+  <string name="sheet_bp_passport_add_to_existing_patient">ምስ ዝጸንሐ ተሓካሚ ጸምብር</string>
+  <string name="sheet_bp_passport_number">BP ፓስፖርት %1$s</string>
+
+  <!-- Instant search -->
+  <string name="patientinstantsearch_assigned_facility_header">ዝተመደቦ ናብ %1$s</string>
+  <string name="patientinstantsearch_nearby_facilities_header">ካብ ቀረባ ትካላት</string>
+
 </resources>

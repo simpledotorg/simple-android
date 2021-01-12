@@ -190,15 +190,15 @@ class InstantSearchScreen :
 
   override fun showAllPatients(patients: List<PatientSearchResult>, facility: Facility) {
     searchResultsView.visibility = View.VISIBLE
-    allPatientsAdapter.submitList(InstantSearchResultsItemType.from(patients, facility))
+    allPatientsAdapter.submitList(InstantSearchResultsItemType.from(patients, facility, searchQuery = null))
 
     searchResultsView.swapAdapter(allPatientsAdapter, false)
     searchResultsView.scrollToPosition(0)
   }
 
-  override fun showPatientsSearchResults(patients: List<PatientSearchResult>, facility: Facility) {
+  override fun showPatientsSearchResults(patients: List<PatientSearchResult>, facility: Facility, searchQuery: String) {
     searchResultsView.visibility = View.VISIBLE
-    searchResultsAdapter.submitList(InstantSearchResultsItemType.from(patients, facility))
+    searchResultsAdapter.submitList(InstantSearchResultsItemType.from(patients, facility, searchQuery))
 
     searchResultsView.swapAdapter(searchResultsAdapter, false)
     searchResultsView.scrollToPosition(0)

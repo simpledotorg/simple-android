@@ -14,6 +14,13 @@ data class ScreenKeyCompat(val key: FullScreenKey) : ScreenKey() {
     get() = key.analyticsName
 
   override fun instantiateFragment() = ScreenFragmentCompat.create()
+
+  override fun matchesScreen(other: ScreenKey): Boolean {
+    return if (other is ScreenKeyCompat)
+      key.javaClass == other.key.javaClass
+    else
+      false
+  }
 }
 
 fun FullScreenKey.wrap(): ScreenKey {

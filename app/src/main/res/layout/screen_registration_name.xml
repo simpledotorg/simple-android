@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.registration.name.RegistrationFullNameScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/registrationname_root"
@@ -61,4 +61,4 @@
         tools:text="A really long error message to test wrapping on this TextView." />
     </LinearLayout>
   </androidx.cardview.widget.CardView>
-</org.simple.clinic.registration.name.RegistrationFullNameScreen>
+</RelativeLayout>

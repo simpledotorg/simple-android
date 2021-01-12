@@ -13,6 +13,8 @@ import org.simple.clinic.databinding.ScreenRegistrationFacilitySelectionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.introvideoscreen.IntroVideoScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.router.ScreenResultBus
@@ -36,7 +38,7 @@ class RegistrationFacilitySelectionScreen(
     get() = binding!!.facilityPickerView
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
@@ -82,7 +84,7 @@ class RegistrationFacilitySelectionScreen(
 
     context.injector<Injector>().inject(this)
 
-    facilityPickerView.backClicked = { screenRouter.pop() }
+    facilityPickerView.backClicked = { router.pop() }
   }
 
   override fun onAttachedToWindow() {
@@ -121,7 +123,7 @@ class RegistrationFacilitySelectionScreen(
   }
 
   override fun openIntroVideoScreen(registrationEntry: OngoingRegistrationEntry) {
-    screenRouter.push(IntroVideoScreenKey(registrationEntry))
+    router.push(IntroVideoScreenKey(registrationEntry).wrap())
   }
 
   override fun showConfirmFacilitySheet(facilityUuid: UUID, facilityName: String) {

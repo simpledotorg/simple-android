@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.login.pin.LoginPinScreen android:id="@+id/loginpin_root"
+<RelativeLayout android:id="@+id/loginpin_root"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -36,4 +36,4 @@
     style="@style/Clinic.LoginCard"
     android:layout_below="@+id/loginpin_logo_container"
     app:verificationMethod="serverLogin"/>
-</org.simple.clinic.login.pin.LoginPinScreen>
+</RelativeLayout>

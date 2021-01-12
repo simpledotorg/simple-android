@@ -11,6 +11,8 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationLocationPermissionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreenKey
 import org.simple.clinic.router.ScreenResultBus
@@ -41,7 +43,7 @@ class RegistrationLocationPermissionScreen(
     get() = binding!!.toolbar
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
@@ -94,7 +96,7 @@ class RegistrationLocationPermissionScreen(
     context.injector<Injector>().inject(this)
 
     toolbar.setOnClickListener {
-      screenRouter.pop()
+      router.pop()
     }
 
     // Can't tell why, but the keyboard stays
@@ -134,7 +136,7 @@ class RegistrationLocationPermissionScreen(
   }
 
   override fun openFacilitySelectionScreen(registrationEntry: OngoingRegistrationEntry) {
-    screenRouter.push(RegistrationFacilitySelectionScreenKey(registrationEntry))
+    router.push(RegistrationFacilitySelectionScreenKey(registrationEntry).wrap())
   }
 
   interface Injector {

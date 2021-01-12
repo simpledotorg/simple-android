@@ -13,6 +13,7 @@
 - Change `LoginPinScreen` to a fragment
 - Change `RegistrationFullNameScreen` to a fragment
 - Change `RegistrationConfirmPinScreen` to a fragment
+- Show keyboard in Instant Search only when there is no identifier
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 04 Jan 2020] Migrate `AuthenticationActivity` to the new navigation framework
 

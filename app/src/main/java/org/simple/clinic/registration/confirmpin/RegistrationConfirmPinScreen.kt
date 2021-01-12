@@ -30,8 +30,8 @@ class RegistrationConfirmPinScreen :
         ScreenRegistrationConfirmPinBinding,
         RegistrationConfirmPinModel,
         RegistrationConfirmPinEvent,
-        RegistrationConfirmPinEffect
-        >(),
+        RegistrationConfirmPinEffect,
+        RegistrationConfirmPinUiRenderer>(),
     RegistrationConfirmPinUi,
     RegistrationConfirmPinUiActions {
 
@@ -63,6 +63,8 @@ class RegistrationConfirmPinScreen :
   override fun onModelUpdate(model: RegistrationConfirmPinModel) {
     uiRenderer.render(model)
   }
+
+  override fun uiRenderer() = RegistrationConfirmPinUiRenderer(this)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenRegistrationConfirmPinBinding.inflate(layoutInflater, container, false)

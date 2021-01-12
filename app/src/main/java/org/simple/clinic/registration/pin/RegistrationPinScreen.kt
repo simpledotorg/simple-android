@@ -14,6 +14,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.databinding.ScreenRegistrationPinBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
@@ -26,7 +27,8 @@ class RegistrationPinScreen :
         ScreenRegistrationPinBinding,
         RegistrationPinModel,
         RegistrationPinEvent,
-        RegistrationPinEffect>(),
+        RegistrationPinEffect,
+        RegistrationPinUiRenderer>(),
     RegistrationPinUi,
     RegistrationPinUiActions {
 
@@ -69,6 +71,8 @@ class RegistrationPinScreen :
   override fun onModelUpdate(model: RegistrationPinModel) {
     uiRenderer.render(model)
   }
+
+  override fun uiRenderer() = RegistrationPinUiRenderer(this)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenRegistrationPinBinding.inflate(layoutInflater, container, false)

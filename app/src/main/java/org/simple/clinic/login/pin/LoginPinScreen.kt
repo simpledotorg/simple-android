@@ -15,6 +15,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenLoginPinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -32,7 +33,8 @@ class LoginPinScreen :
         ScreenLoginPinBinding,
         LoginPinModel,
         LoginPinEvent,
-        LoginPinEffect>(),
+        LoginPinEffect,
+        LoginPinUiRenderer>(),
     LoginPinScreenUi,
     UiActions,
     HandlesBack {
@@ -64,6 +66,8 @@ class LoginPinScreen :
   override fun onModelUpdate(model: LoginPinModel) {
     uiRenderer.render(model)
   }
+
+  override fun uiRenderer() = LoginPinUiRenderer(this)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenLoginPinBinding.inflate(layoutInflater, container, false)

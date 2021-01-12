@@ -17,6 +17,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationNameBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
@@ -31,7 +32,8 @@ class RegistrationFullNameScreen :
         ScreenRegistrationNameBinding,
         RegistrationNameModel,
         RegistrationNameEvent,
-        RegistrationNameEffect>(),
+        RegistrationNameEffect,
+        RegistrationNameUiRenderer>(),
     RegistrationNameUi,
     RegistrationNameUiActions {
 
@@ -60,6 +62,8 @@ class RegistrationFullNameScreen :
   override fun onModelUpdate(model: RegistrationNameModel) {
     uiRenderer.render(model)
   }
+
+  override fun uiRenderer() = RegistrationNameUiRenderer(this)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenRegistrationNameBinding.inflate(layoutInflater, container, false)

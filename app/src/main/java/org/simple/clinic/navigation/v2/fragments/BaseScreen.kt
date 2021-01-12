@@ -5,7 +5,6 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.spotify.mobius.Connection
@@ -20,12 +19,13 @@ import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.mobius.eventSources
 import org.simple.clinic.mobius.first
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.unsafeLazy
 
-abstract class BaseScreen<K : ScreenKey, B: ViewBinding, M : Parcelable, E, F> : Fragment() {
+abstract class BaseScreen<K : ScreenKey, B: ViewBinding, M : Parcelable, E, F, R: ViewRenderer<M>> : Fragment() {
 
   companion object {
     private const val KEY_MODEL = "org.simple.clinic.navigation.v2.fragments.BaseScreen.KEY_MODEL"
@@ -55,6 +55,8 @@ abstract class BaseScreen<K : ScreenKey, B: ViewBinding, M : Parcelable, E, F> :
   abstract fun defaultModel(): M
 
   abstract fun onModelUpdate(model: M)
+
+  abstract fun uiRenderer(): ViewRenderer<M>
 
   abstract fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): B
 

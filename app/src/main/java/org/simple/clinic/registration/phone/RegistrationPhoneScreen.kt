@@ -19,6 +19,7 @@ import org.simple.clinic.databinding.ScreenRegistrationPhoneBinding
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.injector
 import org.simple.clinic.login.pin.LoginPinScreenKey
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -36,7 +37,8 @@ class RegistrationPhoneScreen :
         ScreenRegistrationPhoneBinding,
         RegistrationPhoneModel,
         RegistrationPhoneEvent,
-        RegistrationPhoneEffect>(),
+        RegistrationPhoneEffect,
+        RegistrationPhoneUiRenderer>(),
     RegistrationPhoneUi,
     RegistrationPhoneUiActions {
 
@@ -74,6 +76,8 @@ class RegistrationPhoneScreen :
   override fun onModelUpdate(model: RegistrationPhoneModel) {
     uiRenderer.render(model)
   }
+
+  override fun uiRenderer() = RegistrationPhoneUiRenderer(this)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenRegistrationPhoneBinding.inflate(layoutInflater, container, false)

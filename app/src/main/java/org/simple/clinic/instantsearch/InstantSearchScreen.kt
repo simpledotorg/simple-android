@@ -192,7 +192,7 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     allPatientsAdapter.submitList(InstantSearchResultsItemType.from(patients, facility))
 
     searchResultsView.swapAdapter(allPatientsAdapter, false)
-    searchResultsView.smoothScrollToPosition(0)
+    searchResultsView.scrollToPosition(0)
   }
 
   override fun showPatientsSearchResults(patients: List<PatientSearchResult>, facility: Facility) {
@@ -200,7 +200,7 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     searchResultsAdapter.submitList(InstantSearchResultsItemType.from(patients, facility))
 
     searchResultsView.swapAdapter(searchResultsAdapter, false)
-    searchResultsView.smoothScrollToPosition(0)
+    searchResultsView.scrollToPosition(0)
   }
 
   override fun openPatientSummary(patientId: UUID) {

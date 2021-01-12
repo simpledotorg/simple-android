@@ -88,7 +88,19 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     screenRouter.key(this)
   }
 
-  private val adapter = ItemAdapter(
+  private val allPatientsAdapter = ItemAdapter(
+      diffCallback = InstantSearchResultsItemType.DiffCallback(),
+      bindings = mapOf(
+          R.layout.list_patient_search_header to { layoutInflater, parent ->
+            ListPatientSearchHeaderBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_patient_search to { layoutInflater, parent ->
+            ListPatientSearchBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
+
+  private val searchResultsAdapter = ItemAdapter(
       diffCallback = InstantSearchResultsItemType.DiffCallback(),
       bindings = mapOf(
           R.layout.list_patient_search_header to { layoutInflater, parent ->
@@ -102,6 +114,7 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
 
   private val events by unsafeLazy {
     Observable.mergeArray(
+        allPatientsItemClicks(),
         searchItemClicks(),
         searchQueryChanges(),
         registerNewPatientClicks(),
@@ -167,16 +180,26 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
       screenRouter.pop()
     }
 
-    searchResultsView.adapter = adapter
+    searchResultsView.adapter = allPatientsAdapter
 
     setupAlertResults()
     hideKeyboardOnSearchResultsScroll()
     hideKeyboardOnImeAction()
   }
 
+  override fun showAllPatients(patients: List<PatientSearchResult>, facility: Facility) {
+    searchResultsView.visibility = View.VISIBLE
+    allPatientsAdapter.submitList(InstantSearchResultsItemType.from(patients, facility))
+
+    searchResultsView.swapAdapter(allPatientsAdapter, false)
+    searchResultsView.smoothScrollToPosition(0)
+  }
+
   override fun showPatientsSearchResults(patients: List<PatientSearchResult>, facility: Facility) {
     searchResultsView.visibility = View.VISIBLE
-    adapter.submitList(InstantSearchResultsItemType.from(patients, facility))
+    searchResultsAdapter.submitList(InstantSearchResultsItemType.from(patients, facility))
+
+    searchResultsView.swapAdapter(searchResultsAdapter, false)
     searchResultsView.smoothScrollToPosition(0)
   }
 
@@ -256,8 +279,15 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
         .subscribe(screenRouter::push)
   }
 
+  private fun allPatientsItemClicks(): Observable<UiEvent> {
+    return allPatientsAdapter
+        .itemEvents
+        .ofType<InstantSearchResultsItemType.Event.ResultClicked>()
+        .map { SearchResultClicked(it.patientUuid) }
+  }
+
   private fun searchItemClicks(): Observable<UiEvent> {
-    return adapter
+    return searchResultsAdapter
         .itemEvents
         .ofType<InstantSearchResultsItemType.Event.ResultClicked>()
         .map { SearchResultClicked(it.patientUuid) }

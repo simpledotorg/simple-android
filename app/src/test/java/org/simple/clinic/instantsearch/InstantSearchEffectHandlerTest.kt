@@ -96,6 +96,32 @@ class InstantSearchEffectHandlerTest {
   }
 
   @Test
+  fun `when show all patients effect is received, then show all patients`() {
+    // given
+    val facility = TestData.facility(
+        uuid = UUID.fromString("f1e9ad5c-7de0-4566-b1fc-392bdfdc8490"),
+        name = "PHC Obvious"
+    )
+    val patients = listOf(
+        TestData.patientSearchResult(
+            uuid = UUID.fromString("14edda47-c177-4b5b-9d72-832e262255a3")
+        ),
+        TestData.patientSearchResult(
+            uuid = UUID.fromString("a96ebfe1-a59c-4518-86ef-2ad2174cca03")
+        )
+    )
+
+    // when
+    testCase.dispatch(ShowAllPatients(patients, facility))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showAllPatients(patients, facility)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
   fun `when show patients search results effect is received, then show patients search results`() {
     // given
     val facility = TestData.facility(

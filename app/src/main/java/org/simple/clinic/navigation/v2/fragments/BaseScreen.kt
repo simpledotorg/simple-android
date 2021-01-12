@@ -79,7 +79,11 @@ abstract class BaseScreen<K : ScreenKey, B: ViewBinding, M : Parcelable, E, F, R
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    controller.connect(Connectables.contramap({ it }, ::connectViews))
+    val uiRenderer = uiRenderer()
+    controller.connect(
+        Connectables.contramap({ it })
+        { eventConsumer -> connectViews(eventConsumer, uiRenderer) }
+    )
 
     if (savedInstanceState != null) {
       val savedModel = savedInstanceState.getParcelable<M>(KEY_MODEL)!!
@@ -108,7 +112,10 @@ abstract class BaseScreen<K : ScreenKey, B: ViewBinding, M : Parcelable, E, F, R
     outState.putParcelable(KEY_MODEL, controller.model)
   }
 
-  private fun connectViews(output: Consumer<E>): Connection<M> {
+  private fun connectViews(
+      output: Consumer<E>,
+      uiRenderer: ViewRenderer<M>
+  ): Connection<M> {
     val eventsDisposable = events().subscribe(output::accept)
 
     return object : Connection<M> {
@@ -119,7 +126,7 @@ abstract class BaseScreen<K : ScreenKey, B: ViewBinding, M : Parcelable, E, F, R
 
       override fun accept(model: M) {
         if (isBound) {
-          onModelUpdate(model)
+          uiRenderer.render(model)
         }
       }
     }

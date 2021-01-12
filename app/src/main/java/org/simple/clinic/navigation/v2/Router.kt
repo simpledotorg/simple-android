@@ -19,8 +19,7 @@ import org.simple.clinic.platform.analytics.Analytics
 class Router(
     private var history: History,
     private val fragmentManager: FragmentManager,
-    @IdRes private val containerId: Int,
-    private val savedInstanceState: Bundle?
+    @IdRes private val containerId: Int
 ) {
 
   companion object {
@@ -30,31 +29,27 @@ class Router(
   constructor(
       history: List<ScreenKey>,
       fragmentManager: FragmentManager,
-      @IdRes containerId: Int,
-      savedInstanceState: Bundle?
+      @IdRes containerId: Int
   ) : this(
       history = History(history.map(::Normal)),
       fragmentManager = fragmentManager,
-      containerId = containerId,
-      savedInstanceState = savedInstanceState
+      containerId = containerId
   )
 
   constructor(
       initialScreenKey: ScreenKey,
       fragmentManager: FragmentManager,
-      @IdRes containerId: Int,
-      savedInstanceState: Bundle?
+      @IdRes containerId: Int
   ) : this(
       history = listOf(initialScreenKey),
       fragmentManager = fragmentManager,
-      containerId = containerId,
-      savedInstanceState = savedInstanceState
+      containerId = containerId
   )
 
   // Used for posting screen results
   private val handler = Handler(Looper.getMainLooper())
 
-  init {
+  fun onReady(savedInstanceState: Bundle?) {
     history = savedInstanceState?.getParcelable(HISTORY_STATE_KEY) ?: history
 
     executeStateChange(history, Direction.Replace, null)
@@ -62,6 +57,12 @@ class Router(
 
   fun onSaveInstanceState(savedInstanceState: Bundle) {
     savedInstanceState.putParcelable(HISTORY_STATE_KEY, history)
+  }
+
+  fun clearHistoryAndPush(screenKey: ScreenKey) {
+    val newHistory = History(listOf(Normal(screenKey)))
+
+    executeStateChange(newHistory, Direction.Replace, null)
   }
 
   fun push(screenKey: ScreenKey) {
@@ -95,6 +96,17 @@ class Router(
     val newHistory = history.removeUntil(key)
 
     executeStateChange(newHistory, Direction.Backward, null)
+  }
+
+  fun replaceKeyOfSameType(
+      keyToPush: ScreenKey
+  ) {
+    val newHistory = history
+        .removeUntil { screenKey -> screenKey.matchesScreen(keyToPush) }
+        .removeLast() // We need to remove the key which matches this key as well
+        .add(Normal(keyToPush))
+
+    executeStateChange(newHistory, Direction.Replace, null)
   }
 
   fun onBackPressed(): Boolean {

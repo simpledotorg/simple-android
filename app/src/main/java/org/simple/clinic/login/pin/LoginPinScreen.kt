@@ -1,34 +1,44 @@
 package org.simple.clinic.login.pin
 
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
-import android.widget.RelativeLayout
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenLoginPinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
-import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.router.screen.BackPressInterceptCallback
-import org.simple.clinic.router.screen.BackPressInterceptor
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.navigation.v2.HandlesBack
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.security.pin.PinAuthenticated
 import org.simple.clinic.security.pin.verification.LoginPinServerVerificationMethod.UserData
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), LoginPinScreenUi, UiActions {
+class LoginPinScreen :
+    BaseScreen<
+        LoginPinScreenKey,
+        ScreenLoginPinBinding,
+        LoginPinModel,
+        LoginPinEvent,
+        LoginPinEffect>(),
+    LoginPinScreenUi,
+    UiActions,
+    HandlesBack {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var effectHandler: LoginPinEffectHandler.Factory
@@ -36,69 +46,50 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   @Inject
   lateinit var activity: AppCompatActivity
 
-  private var binding: ScreenLoginPinBinding? = null
+  private val uiRenderer = LoginPinUiRenderer(this)
 
   private val pinEntryCardView
-    get() = binding!!.pinEntryCardView
+    get() = binding.pinEntryCardView
 
   private val backButton
-    get() = binding!!.backButton
+    get() = binding.backButton
 
   private val phoneNumberTextView
-    get() = binding!!.phoneNumberTextView
+    get() = binding.phoneNumberTextView
 
-  private val events by unsafeLazy {
-    Observable
-        .mergeArray(
-            pinAuthentications(),
-            backClicks()
-        )
-        .compose(ReportAnalyticsEvents())
+  private val hardwareBackClicks = PublishSubject.create<PinBackClicked>()
+
+  override fun defaultModel() = LoginPinModel.create()
+
+  override fun onModelUpdate(model: LoginPinModel) {
+    uiRenderer.render(model)
   }
 
-  private val delegate by unsafeLazy {
-    val uiRenderer = LoginPinUiRenderer(this)
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenLoginPinBinding.inflate(layoutInflater, container, false)
 
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = LoginPinModel.create(),
-        init = LoginPinInit(),
-        update = LoginPinUpdate(),
-        effectHandler = effectHandler.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
+  override fun events() = Observable
+      .mergeArray(
+          pinAuthentications(),
+          backClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<LoginPinEvent>()
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
+  override fun createUpdate() = LoginPinUpdate()
 
-    binding = ScreenLoginPinBinding.bind(this)
+  override fun createInit() = LoginPinInit()
 
+  override fun createEffectHandler() = effectHandler.create(this).build()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     pinEntryCardView.setForgotButtonVisible(false)
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun pinAuthentications(): Observable<UiEvent> {
@@ -125,22 +116,15 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     )
   }
 
+  override fun onBackPressed(): Boolean {
+    hardwareBackClicks.onNext(PinBackClicked)
+    return true
+  }
+
   private fun backClicks(): Observable<PinBackClicked> {
     val backClicksFromView = backButton.clicks().map { PinBackClicked }
 
-    val backClicksFromSystem = Observable.create<PinBackClicked> { emitter ->
-      val backPressInterceptor = object : BackPressInterceptor {
-        override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
-          emitter.onNext(PinBackClicked)
-        }
-      }
-
-      screenRouter.registerBackPressInterceptor(backPressInterceptor)
-
-      emitter.setCancellable { screenRouter.unregisterBackPressInterceptor(backPressInterceptor) }
-    }
-
-    return backClicksFromView.mergeWith(backClicksFromSystem)
+    return backClicksFromView.mergeWith(hardwareBackClicks)
   }
 
   override fun showPhoneNumber(phoneNumber: String) {
@@ -157,7 +141,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   }
 
   override fun goBackToRegistrationScreen() {
-    screenRouter.pop()
+    router.pop()
   }
 
   interface Injector {

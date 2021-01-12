@@ -155,7 +155,14 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
 
     binding = ScreenInstantSearchBinding.bind(this)
 
-    searchQueryEditText.showKeyboard()
+    // When a scanned BP Passport does not result in a match, we bring up a bottom sheet which asks
+    // whether this is a new registration or an existing patient. If we show the keyboard in these 
+    // cases, the UI is janky since the keyboard pops up and immediately another bottom sheet pops up.
+    // This improves the experience by showing the keyboard only if we have arrived here by searching
+    // for a patient by the name
+    if (screenKey.additionalIdentifier == null) {
+      searchQueryEditText.showKeyboard()
+    }
     searchQueryTextInputLayout.setStartIconOnClickListener {
       screenRouter.pop()
     }

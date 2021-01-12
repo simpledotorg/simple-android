@@ -1,7 +1,7 @@
 # ADR 002: Using Activity for bottom sheets instead of Fragment
 
 ## Status
-Accepted
+Superceded by [011](./011-screen-navigation-v2.md) on 2020-01-12.
 
 ## Context
 

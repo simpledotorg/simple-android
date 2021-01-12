@@ -72,29 +72,6 @@ class RegistrationFullNameScreen :
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            nameTextChanges(),
-            doneClicks()
-        )
-        .compose(ReportAnalyticsEvents())
-        .share()
-  }
-
-  private val delegate: MobiusDelegate<RegistrationNameModel, RegistrationNameEvent, RegistrationNameEffect> by unsafeLazy {
-
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = RegistrationNameModel.create(screenKey.registrationEntry),
-        update = RegistrationNameUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = RegistrationNameInit(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)

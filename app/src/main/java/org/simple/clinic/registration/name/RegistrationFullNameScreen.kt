@@ -11,18 +11,14 @@ import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationNameBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 
@@ -49,8 +45,6 @@ class RegistrationFullNameScreen :
   private val validationErrorTextView
     get() = binding.validationErrorTextView
 
-  private val uiRenderer = RegistrationNameUiRenderer(this)
-
   @Inject
   lateinit var router: Router
 
@@ -58,10 +52,6 @@ class RegistrationFullNameScreen :
   lateinit var effectHandlerFactory: RegistrationNameEffectHandler.Factory
 
   override fun defaultModel() = RegistrationNameModel.create(screenKey.registrationEntry)
-
-  override fun onModelUpdate(model: RegistrationNameModel) {
-    uiRenderer.render(model)
-  }
 
   override fun uiRenderer() = RegistrationNameUiRenderer(this)
 

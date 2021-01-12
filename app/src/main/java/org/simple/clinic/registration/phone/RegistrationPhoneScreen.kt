@@ -19,7 +19,6 @@ import org.simple.clinic.databinding.ScreenRegistrationPhoneBinding
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.injector
 import org.simple.clinic.login.pin.LoginPinScreenKey
-import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -69,13 +68,7 @@ class RegistrationPhoneScreen :
   @Inject
   lateinit var uuidGenerator: UuidGenerator
 
-  private val uiRenderer = RegistrationPhoneUiRenderer(this)
-
   override fun defaultModel() = RegistrationPhoneModel.create(OngoingRegistrationEntry(uuid = uuidGenerator.v4()))
-
-  override fun onModelUpdate(model: RegistrationPhoneModel) {
-    uiRenderer.render(model)
-  }
 
   override fun uiRenderer() = RegistrationPhoneUiRenderer(this)
 

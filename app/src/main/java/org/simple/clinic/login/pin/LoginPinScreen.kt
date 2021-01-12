@@ -15,7 +15,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenLoginPinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
-import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -48,8 +47,6 @@ class LoginPinScreen :
   @Inject
   lateinit var activity: AppCompatActivity
 
-  private val uiRenderer = LoginPinUiRenderer(this)
-
   private val pinEntryCardView
     get() = binding.pinEntryCardView
 
@@ -62,10 +59,6 @@ class LoginPinScreen :
   private val hardwareBackClicks = PublishSubject.create<PinBackClicked>()
 
   override fun defaultModel() = LoginPinModel.create()
-
-  override fun onModelUpdate(model: LoginPinModel) {
-    uiRenderer.render(model)
-  }
 
   override fun uiRenderer() = LoginPinUiRenderer(this)
 

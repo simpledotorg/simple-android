@@ -50,8 +50,6 @@ class RegistrationConfirmPinScreen :
   private val pinHintTextView
     get() = binding.pinHintTextView
 
-  private val uiRenderer = RegistrationConfirmPinUiRenderer(this)
-
   @Inject
   lateinit var router: Router
 
@@ -59,10 +57,6 @@ class RegistrationConfirmPinScreen :
   lateinit var effectHandlerFactory: RegistrationConfirmPinEffectHandler.Factory
 
   override fun defaultModel() = RegistrationConfirmPinModel.create(screenKey.registrationEntry)
-
-  override fun onModelUpdate(model: RegistrationConfirmPinModel) {
-    uiRenderer.render(model)
-  }
 
   override fun uiRenderer() = RegistrationConfirmPinUiRenderer(this)
 

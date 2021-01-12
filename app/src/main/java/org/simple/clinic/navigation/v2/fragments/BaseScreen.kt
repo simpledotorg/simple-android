@@ -54,8 +54,6 @@ abstract class BaseScreen<K : ScreenKey, B: ViewBinding, M : Parcelable, E, F, R
 
   abstract fun defaultModel(): M
 
-  abstract fun onModelUpdate(model: M)
-
   abstract fun uiRenderer(): ViewRenderer<M>
 
   abstract fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): B

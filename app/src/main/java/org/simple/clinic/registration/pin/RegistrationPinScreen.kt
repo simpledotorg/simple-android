@@ -14,7 +14,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.databinding.ScreenRegistrationPinBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
@@ -44,8 +43,6 @@ class RegistrationPinScreen :
   private val errorTextView
     get() = binding.errorTextView
 
-  private val uiRenderer = RegistrationPinUiRenderer(this)
-
   @Inject
   lateinit var router: Router
 
@@ -67,10 +64,6 @@ class RegistrationPinScreen :
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
   override fun defaultModel() = RegistrationPinModel.create(screenKey.registrationEntry)
-
-  override fun onModelUpdate(model: RegistrationPinModel) {
-    uiRenderer.render(model)
-  }
 
   override fun uiRenderer() = RegistrationPinUiRenderer(this)
 

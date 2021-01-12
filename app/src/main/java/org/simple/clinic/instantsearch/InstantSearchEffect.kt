@@ -15,6 +15,8 @@ data class LoadAllPatients(val facility: Facility) : InstantSearchEffect()
 
 data class SearchWithCriteria(val criteria: PatientSearchCriteria, val facility: Facility) : InstantSearchEffect()
 
+data class ShowAllPatients(val patients: List<PatientSearchResult>, val facility: Facility) : InstantSearchEffect()
+
 data class ShowPatientSearchResults(val patients: List<PatientSearchResult>, val facility: Facility) : InstantSearchEffect()
 
 data class ValidateSearchQuery(val searchQuery: String) : InstantSearchEffect()

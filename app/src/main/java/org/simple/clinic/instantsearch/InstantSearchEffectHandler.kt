@@ -28,6 +28,7 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
       .addTransformer(LoadAllPatients::class.java, loadAllPatients())
       .addTransformer(SearchWithCriteria::class.java, searchWithCriteria())
+      .addConsumer(ShowAllPatients::class.java, { uiActions.showAllPatients(it.patients, it.facility) }, schedulers.ui())
       .addConsumer(ShowPatientSearchResults::class.java, { uiActions.showPatientsSearchResults(it.patients, it.facility) }, schedulers.ui())
       .addTransformer(ValidateSearchQuery::class.java, validateSearchQuery())
       .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientId) }, schedulers.ui())

@@ -54,7 +54,7 @@ interface AppComponent {
   fun deepLinkComponent(): DeepLinkComponent.Factory
   fun signatureComponent(): SignatureComponent.Factory
   fun drugDurationComponent(): DrugDurationComponent.Factory
-  fun medicineFrequencyComponent(): MedicineFrequencyComponent.Builder
+  fun medicineFrequencyComponent(): MedicineFrequencyComponent.Factory
   fun contactDoctorComponent(): ContactDoctorComponent.Builder
   fun teleconsultStatusComponent(): TeleconsultStatusComponent.Builder
   fun authenticationActivityComponent(): AuthenticationActivityComponent.Builder

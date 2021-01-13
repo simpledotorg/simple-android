@@ -29,6 +29,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
@@ -67,6 +68,9 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   @Inject
   lateinit var utcClock: UtcClock
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private var binding: ScreenInstantSearchBinding? = null
 
   private val searchQueryEditText
@@ -85,7 +89,7 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     get() = binding!!.instantSearchProgressIndicator
 
   private val screenKey: InstantSearchScreenKey by unsafeLazy {
-    screenRouter.key(this)
+    screenKeyProvider.keyFor(this)
   }
 
   private val allPatientsAdapter = ItemAdapter(

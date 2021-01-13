@@ -42,6 +42,7 @@ import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenKey
 import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AgeField
 import org.simple.clinic.newentry.form.AlternativeIdInputField
@@ -113,8 +114,11 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   @Inject
   lateinit var features: Features
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private val screenKey by unsafeLazy {
-    screenRouter.key<EditPatientScreenKey>(this)
+    screenKeyProvider.keyFor<EditPatientScreenKey>(this)
   }
 
   private var binding: ScreenEditPatientBinding? = null

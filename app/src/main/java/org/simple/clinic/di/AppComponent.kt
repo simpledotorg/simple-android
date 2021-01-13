@@ -59,7 +59,7 @@ interface AppComponent {
   fun teleconsultStatusComponent(): TeleconsultStatusComponent.Factory
   fun authenticationActivityComponent(): AuthenticationActivityComponent.Factory
   fun scanBpPassportActivityComponent(): ScanBpPassportActivityComponent.Factory
-  fun bpPassportSheetComponent(): BpPassportSheetComponent.Builder
+  fun bpPassportSheetComponent(): BpPassportSheetComponent.Factory
 }
 
 @Scope

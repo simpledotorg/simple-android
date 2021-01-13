@@ -11,6 +11,7 @@ import org.simple.clinic.databinding.ScreenTeleconsultSuccessBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -48,6 +49,9 @@ class TeleConsultSuccessScreen(
   @Inject
   lateinit var userClock: UserClock
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private val events: Observable<TeleConsultSuccessEvent> by unsafeLazy {
     Observable
         .merge(
@@ -59,7 +63,7 @@ class TeleConsultSuccessScreen(
   private val uiRenderer = TeleConsultSuccessUiRenderer(this)
 
   private val mobiusDelegate: MobiusDelegate<TeleConsultSuccessModel, TeleConsultSuccessEvent, TeleConsultSuccessEffect> by unsafeLazy {
-    val screenKey = screenRouter.key<TeleConsultSuccessScreenKey>(this)
+    val screenKey = screenKeyProvider.keyFor<TeleConsultSuccessScreenKey>(this)
     MobiusDelegate.forView(
         events = events,
         defaultModel = TeleConsultSuccessModel.create(screenKey.patientUuid, screenKey.teleconsultRecordId),

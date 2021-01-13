@@ -17,6 +17,9 @@
 - Add different adapters for showing all patients and search results in Instant Search
 - Add ADR for the new navigation framework
 - Use Dagger Factory to bind instances instead of `BindX` interfaces
+- Bump Room dependency
+- Bump CameraX dependency
+- Bump Dagger dependency
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 04 Jan 2020] Migrate `AuthenticationActivity` to the new navigation framework
 

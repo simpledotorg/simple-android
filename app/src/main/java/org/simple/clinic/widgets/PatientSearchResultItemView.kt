@@ -43,7 +43,7 @@ class PatientSearchResultItemView(
     context.injector<Injector>().inject(this)
   }
 
-  fun render(model: PatientSearchResultViewModel, currentFacilityId: UUID) {
+  fun render(model: PatientSearchResultViewModel, currentFacilityId: UUID, searchQuery: String?) {
     renderPatientNameAgeAndGender(model.fullName, model.gender, DateOfBirth.fromPatientSearchResultViewModel(model, userClock))
     renderPatientAddress(model.address)
     renderPatientDateOfBirth(model.dateOfBirth)

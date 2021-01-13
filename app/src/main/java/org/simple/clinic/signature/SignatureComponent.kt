@@ -1,8 +1,8 @@
 package org.simple.clinic.signature
 
-import android.os.Binder
+import androidx.appcompat.app.AppCompatActivity
+import dagger.BindsInstance
 import dagger.Subcomponent
-import org.simple.clinic.activity.BindsActivity
 import org.simple.clinic.di.AssistedInjectModule
 
 @Subcomponent(modules = [AssistedInjectModule::class])
@@ -10,9 +10,8 @@ interface SignatureComponent {
 
   fun inject(target: SignatureActivity)
 
-  @Subcomponent.Builder
-  interface Builder : BindsActivity<Builder> {
-
-    fun build(): SignatureComponent
+  @Subcomponent.Factory
+  interface Factory {
+    fun create(@BindsInstance activity: AppCompatActivity): SignatureComponent
   }
 }

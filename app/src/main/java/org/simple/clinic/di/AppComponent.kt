@@ -38,28 +38,28 @@ interface AppComponent {
   fun inject(target: OtpSmsReceiver)
   fun inject(target: DataSync)
 
-  fun theActivityComponentBuilder(): TheActivityComponent.Builder
-  fun setupActivityComponentBuilder(): SetupActivityComponent.Builder
-  fun patientFacilityChangeComponentBuilder(): FacilitySelectionActivityComponent.Builder
-  fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Builder
-  fun bloodPressureEntryComponent(): BloodPressureEntryComponent.Builder
-  fun scheduleAppointmentSheetComponentBuilder(): ScheduleAppointmentSheetComponent.Builder
-  fun dosagePickerSheetComponentBuilder(): DosagePickerSheetComponent.Builder
-  fun bloodSugarTypePickerSheetComponentBuilder(): BloodSugarTypePickerSheetComponent.Builder
-  fun customPrescriptionEntrySheetComponentBuilder(): CustomPrescriptionEntrySheetComponent.Builder
-  fun confirmFacilityChangeComponent(): ConfirmFacilityChangeComponent.Builder
-  fun facilityChangeComponentBuilder(): FacilityChangeComponent.Builder
-  fun alertFacilityChangeComponent(): AlertFacilityChangeComponent.Builder
-  fun patientContactBottomSheetComponent(): ContactPatientBottomSheetComponent.Builder
-  fun deepLinkComponent(): DeepLinkComponent.Builder
-  fun signatureComponent(): SignatureComponent.Builder
-  fun drugDurationComponent(): DrugDurationComponent.Builder
-  fun medicineFrequencyComponent(): MedicineFrequencyComponent.Builder
-  fun contactDoctorComponent(): ContactDoctorComponent.Builder
-  fun teleconsultStatusComponent(): TeleconsultStatusComponent.Builder
-  fun authenticationActivityComponent(): AuthenticationActivityComponent.Builder
-  fun scanBpPassportActivityComponent(): ScanBpPassportActivityComponent.Builder
-  fun bpPassportSheetComponent(): BpPassportSheetComponent.Builder
+  fun theActivityComponent(): TheActivityComponent.Factory
+  fun setupActivityComponent(): SetupActivityComponent.Factory
+  fun facilitySelectionActivityComponent(): FacilitySelectionActivityComponent.Factory
+  fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Factory
+  fun bloodPressureEntryComponent(): BloodPressureEntryComponent.Factory
+  fun scheduleAppointmentSheetComponent(): ScheduleAppointmentSheetComponent.Factory
+  fun dosagePickerSheetComponent(): DosagePickerSheetComponent.Factory
+  fun bloodSugarTypePickerSheetComponent(): BloodSugarTypePickerSheetComponent.Factory
+  fun customPrescriptionEntrySheetComponent(): CustomPrescriptionEntrySheetComponent.Factory
+  fun confirmFacilityChangeComponent(): ConfirmFacilityChangeComponent.Factory
+  fun facilityChangeComponent(): FacilityChangeComponent.Factory
+  fun alertFacilityChangeComponent(): AlertFacilityChangeComponent.Factory
+  fun patientContactBottomSheetComponent(): ContactPatientBottomSheetComponent.Factory
+  fun deepLinkComponent(): DeepLinkComponent.Factory
+  fun signatureComponent(): SignatureComponent.Factory
+  fun drugDurationComponent(): DrugDurationComponent.Factory
+  fun medicineFrequencyComponent(): MedicineFrequencyComponent.Factory
+  fun contactDoctorComponent(): ContactDoctorComponent.Factory
+  fun teleconsultStatusComponent(): TeleconsultStatusComponent.Factory
+  fun authenticationActivityComponent(): AuthenticationActivityComponent.Factory
+  fun scanBpPassportActivityComponent(): ScanBpPassportActivityComponent.Factory
+  fun bpPassportSheetComponent(): BpPassportSheetComponent.Factory
 }
 
 @Scope

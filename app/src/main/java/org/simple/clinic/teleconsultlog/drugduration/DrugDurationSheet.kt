@@ -138,8 +138,7 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
   private fun setupDi() {
     component = ClinicApp.appComponent
         .drugDurationComponent()
-        .activity(this)
-        .build()
+        .create(activity = this)
 
     component.inject(this)
   }

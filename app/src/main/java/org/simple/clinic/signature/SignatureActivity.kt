@@ -107,8 +107,7 @@ class SignatureActivity : AppCompatActivity(), SignatureUiActions {
   private fun setupDI() {
     component = ClinicApp.appComponent
         .signatureComponent()
-        .activity(this)
-        .build()
+        .create(activity = this)
 
     component.inject(this)
   }

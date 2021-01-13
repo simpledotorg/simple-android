@@ -2,13 +2,12 @@ package org.simple.clinic.main
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
+import dagger.BindsInstance
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
 import io.reactivex.Observable
 import org.simple.clinic.activity.ActivityLifecycle
-import org.simple.clinic.activity.BindsActivity
-import org.simple.clinic.activity.BindsScreenRouter
 import org.simple.clinic.activity.RxActivityLifecycle
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenInjector
@@ -40,6 +39,7 @@ import org.simple.clinic.newentry.country.di.InputFieldsFactoryModule
 import org.simple.clinic.onboarding.OnboardingScreenInjector
 import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.recentpatientsview.RecentPatientsView
+import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.searchresultsview.PatientSearchView
@@ -124,10 +124,12 @@ interface TheActivityComponent :
     InstantSearchScreen.Injector {
   fun inject(target: TheActivity)
 
-  @Subcomponent.Builder
-  interface Builder : BindsActivity<Builder>, BindsScreenRouter<Builder> {
-
-    fun build(): TheActivityComponent
+  @Subcomponent.Factory
+  interface Factory {
+    fun create(
+        @BindsInstance activity: AppCompatActivity,
+        @BindsInstance screenRouter: ScreenRouter
+    ): TheActivityComponent
   }
 }
 

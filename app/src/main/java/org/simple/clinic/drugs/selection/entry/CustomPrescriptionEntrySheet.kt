@@ -132,9 +132,8 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
 
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
-        .customPrescriptionEntrySheetComponentBuilder()
-        .activity(this)
-        .build()
+        .customPrescriptionEntrySheetComponent()
+        .create(activity = this)
 
     component.inject(this)
   }

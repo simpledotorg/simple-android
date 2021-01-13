@@ -133,8 +133,7 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
   private fun setupDi() {
     component = ClinicApp.appComponent
         .confirmFacilityChangeComponent()
-        .activity(this)
-        .build()
+        .create(activity = this)
 
     component.inject(this)
   }

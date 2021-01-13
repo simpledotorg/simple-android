@@ -177,8 +177,7 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
   private fun setUpDependencyInjection() {
     component = ClinicApp.appComponent
         .medicineFrequencyComponent()
-        .activity(this)
-        .build()
+        .create(activity = this)
 
     component.inject(this)
   }

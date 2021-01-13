@@ -187,8 +187,7 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctor
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
         .contactDoctorComponent()
-        .activity(this)
-        .build()
+        .create(activity = this)
 
     component.inject(this)
   }

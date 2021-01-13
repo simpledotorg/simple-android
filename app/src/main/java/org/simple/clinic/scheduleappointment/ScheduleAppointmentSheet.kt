@@ -208,9 +208,8 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
 
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
-        .scheduleAppointmentSheetComponentBuilder()
-        .activity(this)
-        .build()
+        .scheduleAppointmentSheetComponent()
+        .create(activity = this)
 
     component.inject(this)
   }

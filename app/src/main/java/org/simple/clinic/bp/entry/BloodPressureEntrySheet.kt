@@ -219,8 +219,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
         .bloodPressureEntryComponent()
-        .activity(this)
-        .build()
+        .create(activity = this)
 
     component.inject(this)
   }

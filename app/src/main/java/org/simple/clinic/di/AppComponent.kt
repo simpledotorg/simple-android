@@ -41,7 +41,7 @@ interface AppComponent {
   fun theActivityComponent(): TheActivityComponent.Factory
   fun setupActivityComponent(): SetupActivityComponent.Factory
   fun facilitySelectionActivityComponent(): FacilitySelectionActivityComponent.Factory
-  fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Builder
+  fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Factory
   fun bloodPressureEntryComponent(): BloodPressureEntryComponent.Builder
   fun scheduleAppointmentSheetComponentBuilder(): ScheduleAppointmentSheetComponent.Builder
   fun dosagePickerSheetComponentBuilder(): DosagePickerSheetComponent.Builder

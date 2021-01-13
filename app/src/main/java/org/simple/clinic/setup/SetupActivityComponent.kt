@@ -1,7 +1,8 @@
 package org.simple.clinic.setup
 
+import androidx.appcompat.app.AppCompatActivity
+import dagger.BindsInstance
 import dagger.Subcomponent
-import org.simple.clinic.activity.BindsActivity
 import org.simple.clinic.onboarding.OnboardingScreenInjector
 
 @Subcomponent(modules = [SetupActivityModule::class])
@@ -9,9 +10,8 @@ interface SetupActivityComponent : OnboardingScreenInjector {
 
   fun inject(target: SetupActivity)
 
-  @Subcomponent.Builder
-  interface Builder : BindsActivity<Builder> {
-
-    fun build(): SetupActivityComponent
+  @Subcomponent.Factory
+  interface Factory {
+    fun create(@BindsInstance activity: AppCompatActivity): SetupActivityComponent
   }
 }

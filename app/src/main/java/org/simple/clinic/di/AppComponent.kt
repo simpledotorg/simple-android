@@ -39,7 +39,7 @@ interface AppComponent {
   fun inject(target: DataSync)
 
   fun theActivityComponent(): TheActivityComponent.Factory
-  fun setupActivityComponentBuilder(): SetupActivityComponent.Builder
+  fun setupActivityComponent(): SetupActivityComponent.Factory
   fun patientFacilityChangeComponentBuilder(): FacilitySelectionActivityComponent.Builder
   fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Builder
   fun bloodPressureEntryComponent(): BloodPressureEntryComponent.Builder

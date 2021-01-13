@@ -168,9 +168,9 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
-        .setupActivityComponentBuilder()
-        .activity(this)
-        .build()
+        .setupActivityComponent()
+        .create(activity = this)
+
     component.inject(this)
   }
 }

@@ -137,8 +137,7 @@ class TeleconsultStatusSheet : BottomSheetActivity(), TeleconsultStatusUi, Telec
   private fun setupDi() {
     component = ClinicApp.appComponent
         .teleconsultStatusComponent()
-        .activity(this)
-        .build()
+        .create(activity = this)
 
     component.inject(this)
   }

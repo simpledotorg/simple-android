@@ -78,8 +78,7 @@ class ScanBpPassportActivity : AppCompatActivity(), ScanSimpleIdScreen.ScanResul
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
         .scanBpPassportActivityComponent()
-        .activity(this)
-        .build()
+        .create(activity = this)
 
     component.inject(this)
   }

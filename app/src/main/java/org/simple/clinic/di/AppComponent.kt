@@ -58,7 +58,7 @@ interface AppComponent {
   fun contactDoctorComponent(): ContactDoctorComponent.Factory
   fun teleconsultStatusComponent(): TeleconsultStatusComponent.Factory
   fun authenticationActivityComponent(): AuthenticationActivityComponent.Factory
-  fun scanBpPassportActivityComponent(): ScanBpPassportActivityComponent.Builder
+  fun scanBpPassportActivityComponent(): ScanBpPassportActivityComponent.Factory
   fun bpPassportSheetComponent(): BpPassportSheetComponent.Builder
 }
 

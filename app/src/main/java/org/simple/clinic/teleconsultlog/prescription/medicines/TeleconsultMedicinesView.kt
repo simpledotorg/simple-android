@@ -18,6 +18,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.teleconsultlog.drugduration.DrugDuration
@@ -50,6 +51,9 @@ class TeleconsultMedicinesView(
   @Inject
   lateinit var teleconsultMedicinesConfig: TeleconsultMedicinesConfig
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   companion object {
     private const val DRUG_FREQUENCY_SHEET = 1
     private const val DRUG_DURATION_SHEET = 2
@@ -60,7 +64,7 @@ class TeleconsultMedicinesView(
   }
 
   private val screenKey by unsafeLazy {
-    screenRouter.key<TeleconsultPrescriptionScreenKey>(this)
+    screenKeyProvider.keyFor<TeleconsultPrescriptionScreenKey>(this)
   }
 
   private val events by unsafeLazy {

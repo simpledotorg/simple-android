@@ -53,7 +53,7 @@ interface AppComponent {
   fun patientContactBottomSheetComponent(): ContactPatientBottomSheetComponent.Factory
   fun deepLinkComponent(): DeepLinkComponent.Factory
   fun signatureComponent(): SignatureComponent.Factory
-  fun drugDurationComponent(): DrugDurationComponent.Builder
+  fun drugDurationComponent(): DrugDurationComponent.Factory
   fun medicineFrequencyComponent(): MedicineFrequencyComponent.Builder
   fun contactDoctorComponent(): ContactDoctorComponent.Builder
   fun teleconsultStatusComponent(): TeleconsultStatusComponent.Builder

@@ -43,7 +43,7 @@ interface AppComponent {
   fun facilitySelectionActivityComponent(): FacilitySelectionActivityComponent.Factory
   fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Factory
   fun bloodPressureEntryComponent(): BloodPressureEntryComponent.Factory
-  fun scheduleAppointmentSheetComponentBuilder(): ScheduleAppointmentSheetComponent.Builder
+  fun scheduleAppointmentSheetComponent(): ScheduleAppointmentSheetComponent.Factory
   fun dosagePickerSheetComponentBuilder(): DosagePickerSheetComponent.Builder
   fun bloodSugarTypePickerSheetComponentBuilder(): BloodSugarTypePickerSheetComponent.Builder
   fun customPrescriptionEntrySheetComponentBuilder(): CustomPrescriptionEntrySheetComponent.Builder

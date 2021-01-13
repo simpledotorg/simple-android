@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.view_teleconsult_patient_info.view.*
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -41,8 +42,11 @@ class TeleconsultPatientInfoView constructor(
   @Inject
   lateinit var screenRouter: ScreenRouter
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private val delegate by unsafeLazy {
-    val screenKey = screenRouter.key<TeleconsultPrescriptionScreenKey>(this)
+    val screenKey = screenKeyProvider.keyFor<TeleconsultPrescriptionScreenKey>(this)
     val uiRenderer = TeleconsultPatientInfoUiRenderer(this)
 
     MobiusDelegate.forView(

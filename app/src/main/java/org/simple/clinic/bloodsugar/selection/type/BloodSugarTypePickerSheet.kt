@@ -80,9 +80,8 @@ class BloodSugarTypePickerSheet : BottomSheetActivity() {
 
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
-        .bloodSugarTypePickerSheetComponentBuilder()
-        .activity(this)
-        .build()
+        .bloodSugarTypePickerSheetComponent()
+        .create(activity = this)
 
     component.inject(this)
   }

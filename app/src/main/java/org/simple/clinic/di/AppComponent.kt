@@ -38,7 +38,7 @@ interface AppComponent {
   fun inject(target: OtpSmsReceiver)
   fun inject(target: DataSync)
 
-  fun theActivityComponentBuilder(): TheActivityComponent.Builder
+  fun theActivityComponent(): TheActivityComponent.Factory
   fun setupActivityComponentBuilder(): SetupActivityComponent.Builder
   fun patientFacilityChangeComponentBuilder(): FacilitySelectionActivityComponent.Builder
   fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Builder

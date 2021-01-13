@@ -50,7 +50,7 @@ interface AppComponent {
   fun confirmFacilityChangeComponent(): ConfirmFacilityChangeComponent.Factory
   fun facilityChangeComponent(): FacilityChangeComponent.Factory
   fun alertFacilityChangeComponent(): AlertFacilityChangeComponent.Factory
-  fun patientContactBottomSheetComponent(): ContactPatientBottomSheetComponent.Builder
+  fun patientContactBottomSheetComponent(): ContactPatientBottomSheetComponent.Factory
   fun deepLinkComponent(): DeepLinkComponent.Builder
   fun signatureComponent(): SignatureComponent.Builder
   fun drugDurationComponent(): DrugDurationComponent.Builder

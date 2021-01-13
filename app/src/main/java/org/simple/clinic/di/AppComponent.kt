@@ -46,7 +46,7 @@ interface AppComponent {
   fun scheduleAppointmentSheetComponent(): ScheduleAppointmentSheetComponent.Factory
   fun dosagePickerSheetComponent(): DosagePickerSheetComponent.Factory
   fun bloodSugarTypePickerSheetComponent(): BloodSugarTypePickerSheetComponent.Factory
-  fun customPrescriptionEntrySheetComponentBuilder(): CustomPrescriptionEntrySheetComponent.Builder
+  fun customPrescriptionEntrySheetComponent(): CustomPrescriptionEntrySheetComponent.Factory
   fun confirmFacilityChangeComponent(): ConfirmFacilityChangeComponent.Builder
   fun facilityChangeComponentBuilder(): FacilityChangeComponent.Builder
   fun alertFacilityChangeComponent(): AlertFacilityChangeComponent.Builder

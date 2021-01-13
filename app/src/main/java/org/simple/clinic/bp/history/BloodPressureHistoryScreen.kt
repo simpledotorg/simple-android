@@ -23,6 +23,7 @@ import org.simple.clinic.databinding.ListNewBpButtonBinding
 import org.simple.clinic.databinding.ScreenBpHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -72,6 +73,9 @@ class BloodPressureHistoryScreen(
   @Named("for_measurement_history")
   lateinit var measurementHistoryPaginationConfig: PagedList.Config
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private val bloodPressureHistoryAdapter = PagingItemAdapter(
       diffCallback = BloodPressureHistoryListItemDiffCallback(),
       bindings = mapOf(
@@ -97,7 +101,7 @@ class BloodPressureHistoryScreen(
   private val uiRenderer = BloodPressureHistoryScreenUiRenderer(this)
 
   private val delegate: MobiusDelegate<BloodPressureHistoryScreenModel, BloodPressureHistoryScreenEvent, BloodPressureHistoryScreenEffect> by unsafeLazy {
-    val screenKey = screenRouter.key<BloodPressureHistoryScreenKey>(this)
+    val screenKey = screenKeyProvider.keyFor<BloodPressureHistoryScreenKey>(this)
     MobiusDelegate.forView(
         events = events,
         defaultModel = BloodPressureHistoryScreenModel.create(screenKey.patientUuid),

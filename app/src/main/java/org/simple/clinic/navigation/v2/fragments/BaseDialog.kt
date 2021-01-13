@@ -3,11 +3,8 @@ package org.simple.clinic.navigation.v2.fragments
 import android.app.Dialog
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.KeyEvent.ACTION_UP
-import android.view.KeyEvent.KEYCODE_BACK
 import android.view.View
 import androidx.fragment.app.DialogFragment
-import com.spotify.mobius.Connection
 import com.spotify.mobius.EventSource
 import com.spotify.mobius.Init
 import com.spotify.mobius.MobiusLoop
@@ -15,17 +12,17 @@ import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import com.spotify.mobius.android.MobiusAndroid
 import com.spotify.mobius.extras.Connectables
-import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.mobius.eventSources
 import org.simple.clinic.mobius.first
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.overrideCancellation
 import org.simple.clinic.util.unsafeLazy
 
-abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F> : DialogFragment() {
+abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, R : ViewRenderer<M>> : DialogFragment() {
 
   companion object {
     private const val KEY_MODEL = "org.simple.clinic.navigation.v2.fragments.BaseScreen.KEY_MODEL"
@@ -46,7 +43,7 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F> : DialogFragment(
 
   abstract fun defaultModel(): M
 
-  abstract fun onModelUpdate(model: M)
+  abstract fun uiRenderer(): R
 
   abstract fun createDialog(savedInstanceState: Bundle?): Dialog
 
@@ -78,7 +75,8 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F> : DialogFragment(
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    controller.connect(Connectables.contramap({ it }, ::connectViews))
+    val rxBridge = RxMobiusBridge(events(), uiRenderer())
+    controller.connect(Connectables.contramap({ it }, rxBridge))
 
     if (savedInstanceState != null) {
       val savedModel = savedInstanceState.getParcelable<M>(KEY_MODEL)!!
@@ -104,20 +102,5 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F> : DialogFragment(
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
     outState.putParcelable(KEY_MODEL, controller.model)
-  }
-
-  private fun connectViews(output: Consumer<E>): Connection<M> {
-    val eventsDisposable = events().subscribe(output::accept)
-
-    return object : Connection<M> {
-
-      override fun dispose() {
-        eventsDisposable.dispose()
-      }
-
-      override fun accept(model: M) {
-        onModelUpdate(model)
-      }
-    }
   }
 }

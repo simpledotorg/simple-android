@@ -13,6 +13,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenTeleconsultPrescriptionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
@@ -53,8 +54,11 @@ class TeleconsultPrescriptionScreen constructor(
   @Inject
   lateinit var userClock: UserClock
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private val screenKey by unsafeLazy {
-    screenRouter.key<TeleconsultPrescriptionScreenKey>(this)
+    screenKeyProvider.keyFor<TeleconsultPrescriptionScreenKey>(this)
   }
 
   private val events by unsafeLazy {

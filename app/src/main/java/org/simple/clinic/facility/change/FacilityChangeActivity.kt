@@ -107,9 +107,8 @@ class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi, FacilityCh
 
   private fun setupDi() {
     component = ClinicApp.appComponent
-        .facilityChangeComponentBuilder()
-        .activity(this)
-        .build()
+        .facilityChangeComponent()
+        .create(activity = this)
 
     component.inject(this)
   }

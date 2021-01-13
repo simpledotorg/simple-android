@@ -111,10 +111,12 @@ class AuthenticationActivity : AppCompatActivity(), AuthenticationUiActions {
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
         .authenticationActivityComponent()
-        .activity(this)
-        .router(router)
-        .screenResultBus(screenResults)
-        .build()
+        .create(
+            activity = this,
+            router = router,
+            screenResultBus = screenResults
+        )
+
     component.inject(this)
   }
 

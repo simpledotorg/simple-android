@@ -20,9 +20,9 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.DividerItemDecorator
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.dp
@@ -123,9 +123,8 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi, DosagePickerUiA
 
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
-        .dosagePickerSheetComponentBuilder()
-        .activity(this)
-        .build()
+        .dosagePickerSheetComponent()
+        .create(activity = this)
 
     component.inject(this)
   }

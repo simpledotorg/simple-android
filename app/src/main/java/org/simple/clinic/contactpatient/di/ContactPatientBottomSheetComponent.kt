@@ -1,7 +1,8 @@
 package org.simple.clinic.contactpatient.di
 
+import androidx.appcompat.app.AppCompatActivity
+import dagger.BindsInstance
 import dagger.Subcomponent
-import org.simple.clinic.activity.BindsActivity
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.contactpatient.views.SetAppointmentReminderView
 import org.simple.clinic.di.AssistedInjectModule
@@ -11,9 +12,8 @@ interface ContactPatientBottomSheetComponent : SetAppointmentReminderView.Inject
 
   fun inject(target: ContactPatientBottomSheet)
 
-  @Subcomponent.Builder
-  interface Builder : BindsActivity<Builder> {
-
-    fun build(): ContactPatientBottomSheetComponent
+  @Subcomponent.Factory
+  interface Factory {
+    fun create(@BindsInstance activity: AppCompatActivity): ContactPatientBottomSheetComponent
   }
 }

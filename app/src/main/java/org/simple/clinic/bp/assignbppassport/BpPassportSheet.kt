@@ -108,8 +108,7 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
   private fun setUpDiGraph() {
     component = ClinicApp.appComponent
         .bpPassportSheetComponent()
-        .activity(this)
-        .build()
+        .create(activity = this)
 
     component.inject(this)
   }

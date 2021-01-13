@@ -246,8 +246,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
   private fun setupDi() {
     component = ClinicApp.appComponent
         .bloodSugarEntryComponent()
-        .activity(this)
-        .build()
+        .create(activity = this)
 
     component.inject(this)
   }

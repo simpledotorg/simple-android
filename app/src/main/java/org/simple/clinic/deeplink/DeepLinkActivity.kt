@@ -100,8 +100,7 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
   private fun setupDi() {
     component = ClinicApp.appComponent
         .deepLinkComponent()
-        .activity(this)
-        .build()
+        .create(activity = this)
 
     component.inject(this)
   }

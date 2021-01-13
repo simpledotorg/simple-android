@@ -81,9 +81,9 @@ class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi, Faci
   override fun attachBaseContext(baseContext: Context) {
     component = ClinicApp
         .appComponent
-        .patientFacilityChangeComponentBuilder()
-        .activity(this)
-        .build()
+        .facilitySelectionActivityComponent()
+        .create(activity = this)
+
     component.inject(this)
 
     val wrappedContext = baseContext

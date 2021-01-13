@@ -182,8 +182,7 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
         .patientContactBottomSheetComponent()
-        .activity(this)
-        .build()
+        .create(activity = this)
 
     component.inject(this)
   }

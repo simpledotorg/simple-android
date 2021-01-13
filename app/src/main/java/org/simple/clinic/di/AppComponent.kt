@@ -49,7 +49,7 @@ interface AppComponent {
   fun customPrescriptionEntrySheetComponent(): CustomPrescriptionEntrySheetComponent.Factory
   fun confirmFacilityChangeComponent(): ConfirmFacilityChangeComponent.Factory
   fun facilityChangeComponent(): FacilityChangeComponent.Factory
-  fun alertFacilityChangeComponent(): AlertFacilityChangeComponent.Builder
+  fun alertFacilityChangeComponent(): AlertFacilityChangeComponent.Factory
   fun patientContactBottomSheetComponent(): ContactPatientBottomSheetComponent.Builder
   fun deepLinkComponent(): DeepLinkComponent.Builder
   fun signatureComponent(): SignatureComponent.Builder

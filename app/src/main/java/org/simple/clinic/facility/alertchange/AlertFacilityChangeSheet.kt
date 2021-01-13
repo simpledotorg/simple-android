@@ -116,8 +116,8 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
   private fun setupDI() {
     component = ClinicApp.appComponent
         .alertFacilityChangeComponent()
-        .activity(this)
-        .build()
+        .create(activity = this)
+
     component.inject(this)
   }
 

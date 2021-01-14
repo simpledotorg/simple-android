@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Colors -->
+  <attr name="colorToolbarPrimary" format="color" />
+  <attr name="colorToolbarPrimaryVariant" format="color" />
+  <attr name="colorLowEmphasis" format="color" />
+  <attr name="colorMediumEmphasis" format="color" />
+  <attr name="colorHighEmphasis" format="color" />
+
+  <!-- Text Appearances -->
+  <attr name="textAppearanceHeadline5Numeric" format="reference" />
+  <attr name="textAppearanceHeadline6Numeric" format="reference" />
+  <attr name="textAppearanceSubtitle1Medium" format="reference" />
+  <attr name="textAppearanceBody0" format="reference" />
+  <attr name="textAppearanceBody0Medium" format="reference" />
+  <attr name="textAppearanceBody0Numeric" format="reference" />
+  <attr name="textAppearanceBody1Numeric" format="reference" />
+  <attr name="textAppearanceBody2Numeric" format="reference" />
+  <attr name="textAppearanceBody2Bold" format="reference" />
+  <attr name="textAppearanceButtonBig" format="reference" />
+  <attr name="textAppearanceTag" format="reference" />
+</resources>

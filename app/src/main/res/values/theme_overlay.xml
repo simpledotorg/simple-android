@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="ThemeOverlay.Simple.Blue0Primary" parent="">
+    <item name="colorPrimary">@color/simple_dark_blue_800</item>
+    <item name="colorOnPrimary">@color/white</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.Blue2Primary" parent="">
+    <item name="colorPrimary">@color/simple_light_blue_100</item>
+    <item name="colorOnPrimary">@color/simple_light_blue_500</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.Green1Primary" parent="">
+    <item name="colorPrimary">@color/simple_green_500</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.Red1Primary" parent="">
+    <item name="colorPrimary">@color/simple_red_500</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.Red2Primary" parent="">
+    <item name="colorPrimary">@color/simple_red_100</item>
+    <item name="colorOnPrimary">@color/simple_red_500</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.HighEmphasisPrimary" parent="">
+    <item name="colorPrimary">@color/color_high_emphasis</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.MediumEmphasisPrimary" parent="">
+    <item name="colorPrimary">@color/color_medium_emphasis</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.Light.Dialog.Alert" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+    <item name="buttonBarNeutralButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.MediumEmphasis</item>
+    <item name="buttonBarNegativeButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.MediumEmphasis</item>
+    <item name="buttonBarPositiveButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.Light.Dialog.Alert.Destructive">
+    <item name="buttonBarPositiveButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.Red1</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+    <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.Simple.Title.Text</item>
+    <item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialog.Simple.Body.Text</item>
+    <item name="buttonBarNeutralButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.MediumEmphasis</item>
+    <item name="buttonBarNegativeButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.MediumEmphasis</item>
+    <item name="buttonBarPositiveButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.MaterialAlertDialog.Destructive">
+    <item name="buttonBarPositiveButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.Red1</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.BottomSheetDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+    <item name="android:windowIsFloating">false</item>
+    <item name="android:statusBarColor">@android:color/transparent</item>
+    <item name="android:windowSoftInputMode">adjustResize</item>
+  </style>
+
+</resources>

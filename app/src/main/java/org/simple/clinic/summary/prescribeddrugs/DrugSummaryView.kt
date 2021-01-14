@@ -21,6 +21,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.DRUGS_REQCODE_ALERT_FACILITY_CHANGE
@@ -76,10 +77,13 @@ class DrugSummaryView(
   @Inject
   lateinit var effectHandlerFactory: DrugSummaryEffectHandler.Factory
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val screenKey by unsafeLazy {
-    screenRouter.key<PatientSummaryScreenKey>(this)
+    screenKeyProvider.keyFor<PatientSummaryScreenKey>(this)
   }
 
   private val internalEvents = PublishSubject.create<DrugSummaryEvent>()

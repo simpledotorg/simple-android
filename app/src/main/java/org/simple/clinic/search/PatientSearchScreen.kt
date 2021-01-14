@@ -21,6 +21,7 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.databinding.ScreenPatientSearchBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
@@ -53,6 +54,9 @@ class PatientSearchScreen(
   @Inject
   lateinit var effectHandlerFactory: PatientSearchEffectHandler.Factory
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private var binding: ScreenPatientSearchBinding? = null
 
   private val allPatientsInFacilityView
@@ -72,7 +76,7 @@ class PatientSearchScreen(
   }
 
   private val screenKey by unsafeLazy {
-    screenRouter.key<PatientSearchScreenKey>(this)
+    screenKeyProvider.keyFor<PatientSearchScreenKey>(this)
   }
 
   private val events by unsafeLazy {

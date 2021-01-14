@@ -16,6 +16,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
@@ -52,6 +53,9 @@ class PatientSearchResultsScreen(
   @Inject
   lateinit var effectHandlerInjectionFactory: PatientSearchResultsEffectHandler.InjectionFactory
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private var binding: ScreenPatientSearchResultsBinding? = null
 
   private val searchResultsView
@@ -60,7 +64,7 @@ class PatientSearchResultsScreen(
   private val toolbar
     get() = binding!!.toolbar
 
-  private val screenKey by unsafeLazy { screenRouter.key<PatientSearchResultsScreenKey>(this) }
+  private val screenKey by unsafeLazy { screenKeyProvider.keyFor<PatientSearchResultsScreenKey>(this) }
 
   private val events by unsafeLazy {
     Observable

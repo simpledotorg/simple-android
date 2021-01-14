@@ -31,6 +31,7 @@ import org.simple.clinic.drugs.PresribedDrugsRefillClicked
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.util.UserClock
@@ -58,6 +59,9 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
   @Inject
   lateinit var userClock: UserClock
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private var binding: ScreenPatientPrescribedDrugsEntryBinding? = null
 
   private val toolbar
@@ -77,7 +81,7 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
 
   private val patientUuid by unsafeLazy {
-    val screenKey = screenRouter.key<PrescribedDrugsScreenKey>(this)
+    val screenKey = screenKeyProvider.keyFor<PrescribedDrugsScreenKey>(this)
     screenKey.patientUuid
   }
 

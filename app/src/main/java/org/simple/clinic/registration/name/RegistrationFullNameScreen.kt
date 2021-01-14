@@ -11,17 +11,14 @@ import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationNameBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 
@@ -31,7 +28,8 @@ class RegistrationFullNameScreen :
         ScreenRegistrationNameBinding,
         RegistrationNameModel,
         RegistrationNameEvent,
-        RegistrationNameEffect>(),
+        RegistrationNameEffect,
+        RegistrationNameUiRenderer>(),
     RegistrationNameUi,
     RegistrationNameUiActions {
 
@@ -47,8 +45,6 @@ class RegistrationFullNameScreen :
   private val validationErrorTextView
     get() = binding.validationErrorTextView
 
-  private val uiRenderer = RegistrationNameUiRenderer(this)
-
   @Inject
   lateinit var router: Router
 
@@ -57,9 +53,7 @@ class RegistrationFullNameScreen :
 
   override fun defaultModel() = RegistrationNameModel.create(screenKey.registrationEntry)
 
-  override fun onModelUpdate(model: RegistrationNameModel) {
-    uiRenderer.render(model)
-  }
+  override fun uiRenderer() = RegistrationNameUiRenderer(this)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenRegistrationNameBinding.inflate(layoutInflater, container, false)
@@ -77,29 +71,6 @@ class RegistrationFullNameScreen :
   override fun createInit() = RegistrationNameInit()
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
-
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            nameTextChanges(),
-            doneClicks()
-        )
-        .compose(ReportAnalyticsEvents())
-        .share()
-  }
-
-  private val delegate: MobiusDelegate<RegistrationNameModel, RegistrationNameEvent, RegistrationNameEffect> by unsafeLazy {
-
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = RegistrationNameModel.create(screenKey.registrationEntry),
-        update = RegistrationNameUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = RegistrationNameInit(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

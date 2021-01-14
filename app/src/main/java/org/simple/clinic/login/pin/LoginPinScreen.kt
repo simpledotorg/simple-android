@@ -32,7 +32,8 @@ class LoginPinScreen :
         ScreenLoginPinBinding,
         LoginPinModel,
         LoginPinEvent,
-        LoginPinEffect>(),
+        LoginPinEffect,
+        LoginPinUiRenderer>(),
     LoginPinScreenUi,
     UiActions,
     HandlesBack {
@@ -45,8 +46,6 @@ class LoginPinScreen :
 
   @Inject
   lateinit var activity: AppCompatActivity
-
-  private val uiRenderer = LoginPinUiRenderer(this)
 
   private val pinEntryCardView
     get() = binding.pinEntryCardView
@@ -61,9 +60,7 @@ class LoginPinScreen :
 
   override fun defaultModel() = LoginPinModel.create()
 
-  override fun onModelUpdate(model: LoginPinModel) {
-    uiRenderer.render(model)
-  }
+  override fun uiRenderer() = LoginPinUiRenderer(this)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenLoginPinBinding.inflate(layoutInflater, container, false)

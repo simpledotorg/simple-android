@@ -26,7 +26,8 @@ class RegistrationPinScreen :
         ScreenRegistrationPinBinding,
         RegistrationPinModel,
         RegistrationPinEvent,
-        RegistrationPinEffect>(),
+        RegistrationPinEffect,
+        RegistrationPinUiRenderer>(),
     RegistrationPinUi,
     RegistrationPinUiActions {
 
@@ -41,8 +42,6 @@ class RegistrationPinScreen :
 
   private val errorTextView
     get() = binding.errorTextView
-
-  private val uiRenderer = RegistrationPinUiRenderer(this)
 
   @Inject
   lateinit var router: Router
@@ -66,9 +65,7 @@ class RegistrationPinScreen :
 
   override fun defaultModel() = RegistrationPinModel.create(screenKey.registrationEntry)
 
-  override fun onModelUpdate(model: RegistrationPinModel) {
-    uiRenderer.render(model)
-  }
+  override fun uiRenderer() = RegistrationPinUiRenderer(this)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenRegistrationPinBinding.inflate(layoutInflater, container, false)

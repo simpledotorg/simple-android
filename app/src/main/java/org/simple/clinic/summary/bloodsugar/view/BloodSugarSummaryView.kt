@@ -33,10 +33,12 @@ import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.feature.Feature.EditBloodSugar
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.BLOOD_SUGAR_REQCODE_ALERT_FACILITY_CHANGE
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
@@ -112,7 +114,10 @@ class BloodSugarSummaryView(
   lateinit var effectHandlerFactory: BloodSugarSummaryViewEffectHandler.Factory
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
 
   @Inject
   lateinit var crashReporter: CrashReporter
@@ -246,7 +251,7 @@ class BloodSugarSummaryView(
   }
 
   override fun showBloodSugarHistoryScreen(patientUuid: UUID) {
-    screenRouter.push(BloodSugarHistoryScreenKey(patientUuid))
+    router.push(BloodSugarHistoryScreenKey(patientUuid).wrap())
   }
 
   override fun openBloodSugarUpdateSheet(bloodSugarMeasurementUuid: UUID, measurementType: BloodSugarMeasurementType) {
@@ -260,7 +265,8 @@ class BloodSugarSummaryView(
 
   @SuppressLint("CheckResult")
   private fun openEntrySheetAfterTypeIsSelected(onDestroys: Observable<ScreenDestroyed>) {
-    screenRouter.streamScreenResults()
+    screenResults
+        .streamResults()
         .ofType<ActivityResult>()
         .filter { it.requestCode == TYPE_PICKER_SHEET && it.succeeded() && it.data != null }
         .takeUntil(onDestroys)
@@ -270,7 +276,8 @@ class BloodSugarSummaryView(
 
   @SuppressLint("CheckResult")
   private fun alertFacilityChangeSheetClosed(onDestroys: Observable<ScreenDestroyed>) {
-    screenRouter.streamScreenResults()
+    screenResults
+        .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(BLOOD_SUGAR_REQCODE_ALERT_FACILITY_CHANGE) { intent ->
           AlertFacilityChangeSheet.readContinuationExtra<ContinueToActivity>(intent)

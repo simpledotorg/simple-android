@@ -25,6 +25,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
@@ -114,6 +115,9 @@ class BloodPressureSummaryView(
   @Inject
   lateinit var crashReporter: CrashReporter
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private val viewEvents = PublishSubject.create<BloodPressureSummaryViewEvent>()
 
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
@@ -134,7 +138,7 @@ class BloodPressureSummaryView(
   }
 
   private val delegate: MobiusDelegate<BloodPressureSummaryViewModel, BloodPressureSummaryViewEvent, BloodPressureSummaryViewEffect> by unsafeLazy {
-    val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
+    val screenKey = screenKeyProvider.keyFor<PatientSummaryScreenKey>(this)
     MobiusDelegate(
         events = events,
         defaultModel = BloodPressureSummaryViewModel.create(screenKey.patientUuid),

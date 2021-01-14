@@ -33,6 +33,7 @@ import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.feature.Feature.EditBloodSugar
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
@@ -130,8 +131,15 @@ class BloodSugarSummaryView(
   @Inject
   lateinit var bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private val uiRenderer: BloodSugarSummaryViewUiRenderer by unsafeLazy {
     BloodSugarSummaryViewUiRenderer(this, bloodSugarSummaryConfig)
+  }
+
+  private val screenKey by unsafeLazy {
+    screenKeyProvider.keyFor<PatientSummaryScreenKey>(this)
   }
 
   private val viewEvents = PublishSubject.create<BloodSugarSummaryViewEvent>()
@@ -150,7 +158,6 @@ class BloodSugarSummaryView(
   }
 
   private val delegate: MobiusDelegate<BloodSugarSummaryViewModel, BloodSugarSummaryViewEvent, BloodSugarSummaryViewEffect> by unsafeLazy {
-    val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
     MobiusDelegate(
         events = events,
         defaultModel = BloodSugarSummaryViewModel.create(screenKey.patientUuid),
@@ -274,7 +281,6 @@ class BloodSugarSummaryView(
 
 
   private fun showBloodSugarEntrySheet(intent: Intent) {
-    val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
     val patientUuid = screenKey.patientUuid
 
     val intentForNewBloodSugar = BloodSugarEntrySheet.intentForNewBloodSugar(

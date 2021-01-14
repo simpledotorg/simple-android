@@ -15,6 +15,7 @@ import org.simple.clinic.databinding.ScreenForgotpinConfirmpinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
@@ -33,6 +34,9 @@ class ForgotPinConfirmPinScreen(
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
 
   private var binding: ScreenForgotpinConfirmpinBinding? = null
 
@@ -70,7 +74,7 @@ class ForgotPinConfirmPinScreen(
   }
 
   private val delegate by unsafeLazy {
-    val screenKey = screenRouter.key<ForgotPinConfirmPinScreenKey>(this)
+    val screenKey = screenKeyProvider.keyFor<ForgotPinConfirmPinScreenKey>(this)
     val uiRenderer = ForgotPinConfirmPinUiRenderer(this)
 
     MobiusDelegate.forView(

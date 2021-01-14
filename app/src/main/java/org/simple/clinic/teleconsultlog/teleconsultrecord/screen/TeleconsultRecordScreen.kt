@@ -14,6 +14,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenTeleconsultRecordBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
@@ -69,6 +70,9 @@ class TeleconsultRecordScreen(
   @Inject
   lateinit var activity: AppCompatActivity
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private val radioIdToTeleconsultationType = mapOf(
       R.id.teleconsultTypeAudioRadioButton to Audio,
       R.id.teleconsultTypeVideoRadioButton to Video,
@@ -85,7 +89,7 @@ class TeleconsultRecordScreen(
   }
 
   private val screenKey by unsafeLazy {
-    screenRouter.key<TeleconsultRecordScreenKey>(this)
+    screenKeyProvider.keyFor<TeleconsultRecordScreenKey>(this)
   }
 
   private val delegate by unsafeLazy {

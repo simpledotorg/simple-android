@@ -18,6 +18,7 @@ import org.simple.clinic.databinding.ScreenDeletePatientBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
@@ -35,10 +36,13 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   @Inject
   lateinit var effectHandlerFactory: DeletePatientEffectHandler.Factory
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private val viewRenderer = DeletePatientViewRenderer(this)
 
   private val screenKey by unsafeLazy {
-    screenRouter.key<DeletePatientScreenKey>(this)
+    screenKeyProvider.keyFor<DeletePatientScreenKey>(this)
   }
 
   private var binding: ScreenDeletePatientBinding? = null

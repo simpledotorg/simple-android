@@ -27,6 +27,7 @@ import org.simple.clinic.databinding.ListNewBloodSugarButtonBinding
 import org.simple.clinic.databinding.ScreenBloodSugarHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -40,8 +41,8 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.DividerItemDecorator
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.dp
 import java.time.format.DateTimeFormatter
@@ -87,6 +88,9 @@ class BloodSugarHistoryScreen(
   @Named("for_measurement_history")
   lateinit var measurementHistoryPaginationConfig: PagedList.Config
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private var binding: ScreenBloodSugarHistoryBinding? = null
 
   private val toolbar
@@ -94,6 +98,10 @@ class BloodSugarHistoryScreen(
 
   private val bloodSugarHistoryList
     get() = binding!!.bloodSugarHistoryList
+
+  private val screenKey by unsafeLazy {
+    screenKeyProvider.keyFor<BloodSugarHistoryScreenKey>(this)
+  }
 
   private val bloodSugarHistoryAdapter = PagingItemAdapter(
       diffCallback = BloodSugarHistoryListItemDiffCallback(),
@@ -120,7 +128,6 @@ class BloodSugarHistoryScreen(
   private val uiRenderer = BloodSugarHistoryScreenUiRenderer(this)
 
   private val delegate: MobiusDelegate<BloodSugarHistoryScreenModel, BloodSugarHistoryScreenEvent, BloodSugarHistoryScreenEffect> by unsafeLazy {
-    val screenKey = screenRouter.key<BloodSugarHistoryScreenKey>(this)
     MobiusDelegate(
         events = events,
         defaultModel = BloodSugarHistoryScreenModel.create(screenKey.patientUuid),
@@ -227,7 +234,6 @@ class BloodSugarHistoryScreen(
   }
 
   private fun showBloodSugarEntrySheet(intent: Intent) {
-    val screenKey = screenRouter.key<BloodSugarHistoryScreenKey>(this)
     val patientUuid = screenKey.patientUuid
 
     val intentForNewBloodSugar = BloodSugarEntrySheet.intentForNewBloodSugar(

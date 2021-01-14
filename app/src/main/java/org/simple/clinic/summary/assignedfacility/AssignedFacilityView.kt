@@ -15,6 +15,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.PatientsummaryAssignedFacilityContentBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
@@ -53,6 +54,9 @@ class AssignedFacilityView(
   @Inject
   lateinit var effectHandlerFactory: AssignedFacilityEffectHandler.Factory
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val events by unsafeLazy {
@@ -66,7 +70,7 @@ class AssignedFacilityView(
 
   private val delegate by unsafeLazy {
     val uiRenderer = AssignedFacilityUiRenderer(this)
-    val patientUuid = screenRouter.key<PatientSummaryScreenKey>(this).patientUuid
+    val patientUuid = screenKeyProvider.keyFor<PatientSummaryScreenKey>(this).patientUuid
 
     MobiusDelegate.forView(
         events = events.ofType(),

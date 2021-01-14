@@ -23,6 +23,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
@@ -71,6 +72,9 @@ class MedicalHistorySummaryView(
   @Inject
   lateinit var effectHandler: MedicalHistorySummaryEffectHandler
 
+  @Inject
+  lateinit var screenKeyProvider: ScreenKeyProvider
+
   init {
     val layoutInflater = LayoutInflater.from(context)
     binding = MedicalhistorySummaryViewBinding.inflate(layoutInflater, this, true)
@@ -78,7 +82,7 @@ class MedicalHistorySummaryView(
 
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
-  private val screenKey by unsafeLazy { screenRouter.key<PatientSummaryScreenKey>(this) }
+  private val screenKey by unsafeLazy { screenKeyProvider.keyFor<PatientSummaryScreenKey>(this) }
 
   private val events by unsafeLazy {
     Observable

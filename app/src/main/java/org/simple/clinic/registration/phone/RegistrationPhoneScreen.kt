@@ -36,7 +36,8 @@ class RegistrationPhoneScreen :
         ScreenRegistrationPhoneBinding,
         RegistrationPhoneModel,
         RegistrationPhoneEvent,
-        RegistrationPhoneEffect>(),
+        RegistrationPhoneEffect,
+        RegistrationPhoneUiRenderer>(),
     RegistrationPhoneUi,
     RegistrationPhoneUiActions {
 
@@ -67,13 +68,9 @@ class RegistrationPhoneScreen :
   @Inject
   lateinit var uuidGenerator: UuidGenerator
 
-  private val uiRenderer = RegistrationPhoneUiRenderer(this)
-
   override fun defaultModel() = RegistrationPhoneModel.create(OngoingRegistrationEntry(uuid = uuidGenerator.v4()))
 
-  override fun onModelUpdate(model: RegistrationPhoneModel) {
-    uiRenderer.render(model)
-  }
+  override fun uiRenderer() = RegistrationPhoneUiRenderer(this)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenRegistrationPhoneBinding.inflate(layoutInflater, container, false)

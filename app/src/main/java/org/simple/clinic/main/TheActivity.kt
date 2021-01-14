@@ -274,7 +274,8 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
         .theActivityComponent()
         .create(
             activity = this,
-            router = router
+            router = router,
+            screenResults = screenResults
         )
 
     component.inject(this)

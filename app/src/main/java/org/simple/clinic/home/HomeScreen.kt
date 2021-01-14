@@ -23,9 +23,11 @@ import org.simple.clinic.home.help.HelpScreenKey
 import org.simple.clinic.home.patients.REQUEST_CODE_SCAN_BP_PASSPORT
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanBpPassportActivity
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.settings.SettingsScreenKey
@@ -43,7 +45,10 @@ import javax.inject.Inject
 class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), HomeScreenUi, HomeScreenUiActions {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -150,7 +155,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
       setOnMenuItemClickListener { menuItem ->
         when (menuItem.itemId) {
           R.id.openSettings -> {
-            screenRouter.push(SettingsScreenKey())
+            router.push(SettingsScreenKey().wrap())
             true
           }
           else -> false
@@ -161,7 +166,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
   private fun setupHelpClicks() {
     helpButton.setOnClickListener {
-      screenRouter.push(HelpScreenKey())
+      router.push(HelpScreenKey().wrap())
     }
   }
 
@@ -199,7 +204,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   }
 
   override fun openShortCodeSearchScreen(shortCode: String) {
-    screenRouter.push(ShortCodeSearchResultScreenKey(shortCode))
+    router.push(ShortCodeSearchResultScreenKey(shortCode).wrap())
   }
 
   override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
@@ -209,16 +214,16 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
       PatientSearchScreenKey(additionalIdentifier)
     }
 
-    screenRouter.push(screenKey)
+    router.push(screenKey.wrap())
   }
 
   override fun openPatientSummary(patientId: UUID) {
-    screenRouter.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
+    router.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)).wrap())
   }
 
   private fun bpPassportScanResults(): Observable<BusinessIdScanned> {
-    return screenRouter
-        .streamScreenResults()
+    return screenResults
+        .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(REQUEST_CODE_SCAN_BP_PASSPORT, ScanBpPassportActivity.Companion::readScannedId)
         .map(BusinessIdScanned.Companion::fromScanResult)

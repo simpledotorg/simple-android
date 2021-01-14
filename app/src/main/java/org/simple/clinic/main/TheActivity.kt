@@ -23,7 +23,6 @@ import org.simple.clinic.deeplink.ShowPatientNotFound
 import org.simple.clinic.deeplink.ShowTeleconsultNotAllowed
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.InjectorProviderContextWrapper
-import org.simple.clinic.feature.Feature.LogSavedStateSizes
 import org.simple.clinic.feature.Features
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
@@ -31,16 +30,13 @@ import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.FullScreenKey
-import org.simple.clinic.router.screen.FullScreenKeyChanger
-import org.simple.clinic.router.screen.NestedKeyChanger
-import org.simple.clinic.router.screen.RouterDirection
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -171,8 +167,14 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   private val disposables = CompositeDisposable()
 
-  private val screenRouter: ScreenRouter by unsafeLazy {
-    ScreenRouter.create(this, NestedKeyChanger(), screenResults)
+  private val router by unsafeLazy {
+    val currentUser = userSession.loggedInUser().blockingFirst().get()
+
+    Router(
+        initialScreenKey = initialScreenKey(currentUser).wrap(),
+        fragmentManager = supportFragmentManager,
+        containerId = android.R.id.content
+    )
   }
 
   private val screenResults: ScreenResultBus = ScreenResultBus()
@@ -201,6 +203,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    router.onReady(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 
@@ -240,7 +243,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     setupDiGraph()
 
     val wrappedContext = baseContext
-        .wrap { wrapContextWithRouter(it) }
         .wrap { InjectorProviderContextWrapper.wrap(it, component) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
@@ -258,7 +260,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   override fun onStop() {
-    if (!screenRouter.hasKeyOfType<AppLockScreenKey>()) {
+    if (!router.hasKeyOfType(AppLockScreenKey::class.java)) {
       val lockAfterTimestamp = Instant.now(utcClock).plusMillis(config.lockAfterTimeMillis)
       unlockAfterTimestamp.set(Optional.of(lockAfterTimestamp))
     }
@@ -267,33 +269,15 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     super.onStop()
   }
 
-  private fun wrapContextWithRouter(baseContext: Context): Context {
-    screenRouter.registerKeyChanger(FullScreenKeyChanger(
-        activity = this,
-        screenLayoutContainerRes = android.R.id.content,
-        screenBackgroundAttr = android.R.attr.windowBackground,
-        onKeyChange = this::onScreenChanged
-    ))
-
-    val currentUser: User = userSession.loggedInUser().blockingFirst().get()
-    return screenRouter.installInContext(baseContext, initialScreenKey(currentUser))
-  }
-
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
         .theActivityComponent()
         .create(
             activity = this,
-            screenRouter = screenRouter
+            router = router
         )
 
     component.inject(this)
-  }
-
-  private fun onScreenChanged(outgoing: FullScreenKey?, incoming: FullScreenKey) {
-    val outgoingScreenName = outgoing?.analyticsName ?: ""
-    val incomingScreenName = incoming.analyticsName
-    Analytics.reportScreenChange(outgoingScreenName, incomingScreenName)
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -307,21 +291,13 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   override fun onBackPressed() {
-    val interceptCallback = screenRouter.offerBackPressToInterceptors()
-    if (interceptCallback.intercepted) {
-      return
+    if (!router.onBackPressed()) {
+      super.onBackPressed()
     }
-    val popCallback = screenRouter.pop()
-    if (popCallback.popped) {
-      return
-    }
-    super.onBackPressed()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
-    if (features.isEnabled(LogSavedStateSizes)) {
-      screenRouter.logSizesOfSavedStates()
-    }
+    router.onSaveInstanceState(outState)
     delegate.onSaveInstanceState(outState)
     super.onSaveInstanceState(outState)
   }
@@ -332,7 +308,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   override fun showAppLockScreen() {
-    screenRouter.push(AppLockScreenKey)
+    router.push(AppLockScreenKey.wrap())
   }
 
   // This is here because we need to show the same alert in multiple
@@ -351,25 +327,27 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   override fun showAccessDeniedScreen(fullName: String) {
-    screenRouter.clearHistoryAndPush(AccessDeniedScreenKey(fullName), RouterDirection.REPLACE)
+    router.clearHistoryAndPush(AccessDeniedScreenKey(fullName).wrap())
   }
 
   private fun showPatientSummaryForDeepLink(deepLinkResult: OpenPatientSummary) {
-    screenRouter
-        .push(PatientSummaryScreenKey(
+    router.push(
+        PatientSummaryScreenKey(
             patientUuid = deepLinkResult.patientUuid,
             intention = OpenIntention.ViewExistingPatient,
             screenCreatedTimestamp = Instant.now(utcClock)
-        ))
+        ).wrap()
+    )
   }
 
   private fun showPatientSummaryWithTeleconsultLogForDeepLink(deepLinkResult: OpenPatientSummaryWithTeleconsultLog) {
-    screenRouter
-        .push(PatientSummaryScreenKey(
+    router.push(
+        PatientSummaryScreenKey(
             patientUuid = deepLinkResult.patientUuid,
             intention = OpenIntention.ViewExistingPatientWithTeleconsultLog(deepLinkResult.teleconsultRecordId),
             screenCreatedTimestamp = Instant.now(utcClock)
-        ))
+        ).wrap()
+    )
   }
 
   private fun showPatientNotFoundErrorDialog() {

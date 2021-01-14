@@ -5,6 +5,21 @@
   <issue id="UnusedResources">
     <ignore path="src/main/res/values/colors_material.xml" />
     <ignore path="src/main/res/values/colors_v2.xml" />
+
+    <!-- TODO: Remove these once Material theming migration is finished -->
+    <ignore path="src/main/res/values/colors_v3.xml" />
+    <ignore path="src/main/res/values/styles_v3.xml" />
+    <ignore path="src/main/res/values/theme_overlay.xml" />
+    <ignore path="src/main/res/values/type.xml" />
+    <ignore path="src/main/res/values/theme_v2.xml" />
+    <ignore path="src/main/res/color/color_low_emphasis.xml" />
+    <ignore path="src/main/res/color/color_medium_emphasis.xml" />
+    <ignore path="src/main/res/color/color_high_emphasis.xml" />
+    <ignore path="src/main/res/color/mtrl_btn_stroke_color_selector.xml" />
+
+    <ignore regexp="ShapeAppearance.Simple.LargeComponent" />
+    <ignore regexp="ShapeAppearance.Simple.MediumComponent" />
+    <ignore regexp="ShapeAppearance.Simple.SmallComponent" />
   </issue>
 
   <!-- Ignore this for now due to time constraints. Switch to static images later. -->

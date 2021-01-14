@@ -5,6 +5,7 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
 import android.util.AttributeSet
+import android.view.View
 import com.google.android.material.card.MaterialCardView
 import kotlinx.android.synthetic.main.view_patient_search_result.view.*
 import org.simple.clinic.R
@@ -51,9 +52,26 @@ class PatientSearchResultItemView(
     renderPatientNameAgeAndGender(searchQuery, model)
     renderPatientAddress(model.address)
     renderPatientDateOfBirth(model.dateOfBirth)
-    renderPatientPhoneNumber(model.phoneNumber)
+    renderPatientPhoneNumber(searchQuery, model)
     renderVisited(model.lastSeen)
     renderLastSeen(model.lastSeen, currentFacilityId)
+  }
+
+  private fun getPatientPhoneNumber(
+      phoneNumber: String,
+      searchQuery: String?
+  ): PhoneNumber {
+    val canHighlightNumber = !searchQuery.isNullOrBlank() && phoneNumber.contains(searchQuery)
+
+    return if (canHighlightNumber) {
+      val indexOfSearchedPhoneNumber = phoneNumber.indexOf(searchQuery!!)
+      PhoneNumber.Highlighted(
+          patientNumber = phoneNumber,
+          highlightStart = indexOfSearchedPhoneNumber,
+          highlightEnd = indexOfSearchedPhoneNumber + searchQuery.length)
+    } else {
+      PhoneNumber.Plain(phoneNumber)
+    }
   }
 
   private fun renderLastSeen(lastSeen: PatientSearchResult.LastSeen?, currentFacilityId: UUID) {
@@ -76,11 +94,26 @@ class PatientSearchResultItemView(
     }
   }
 
-  private fun renderPatientPhoneNumber(phoneNumber: String?) {
-    phoneNumberContainer.visibleOrGone(phoneNumber.isNullOrBlank().not())
-    if (phoneNumber != null) {
-      phoneNumberTextView.text = phoneNumber
+  private fun renderPatientPhoneNumber(searchQuery: String?, patientSearchResult: PatientSearchResultViewModel) {
+    if (patientSearchResult.phoneNumber == null) {
+      phoneNumberContainer.visibility = View.GONE
+      return
     }
+
+    phoneNumberContainer.visibility = View.VISIBLE
+
+    val patientPhoneNumber = when (val number = getPatientPhoneNumber(patientSearchResult.phoneNumber, searchQuery)) {
+      is PhoneNumber.Highlighted -> {
+        val highlightNumber = SpannableStringBuilder(number.patientNumber)
+        val highlightColor = context.resolveColor(colorRes = R.color.simple_light_blue_100)
+        highlightNumber.setSpan(BackgroundColorSpan(highlightColor), number.highlightStart, number.highlightEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        highlightNumber
+      }
+      is PhoneNumber.Plain -> {
+        number.patientNumber
+      }
+    }
+    phoneNumberTextView.text = patientPhoneNumber
   }
 
   private fun renderPatientDateOfBirth(dateOfBirth: LocalDate?) {
@@ -142,6 +175,12 @@ class PatientSearchResultItemView(
     data class Highlighted(override val patientName: String, val highlightStart: Int, val highlightEnd: Int) : Name(patientName)
     data class Plain(override val patientName: String) : Name(patientName)
   }
+
+  sealed class PhoneNumber(open val patientNumber: String?) {
+    data class Highlighted(override val patientNumber: String, val highlightStart: Int, val highlightEnd: Int) : PhoneNumber(patientNumber)
+    data class Plain(override val patientNumber: String) : PhoneNumber(patientNumber)
+  }
+
 
   interface Injector {
     fun inject(target: PatientSearchResultItemView)

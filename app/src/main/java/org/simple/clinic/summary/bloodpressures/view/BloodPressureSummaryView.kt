@@ -25,10 +25,12 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.BP_REQCODE_ALERT_FACILITY_CHANGE
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryConfig
@@ -96,7 +98,10 @@ class BloodPressureSummaryView(
   lateinit var effectHandlerFactory: BloodPressureSummaryViewEffectHandler.Factory
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -238,7 +243,7 @@ class BloodPressureSummaryView(
   }
 
   override fun showBloodPressureHistoryScreen(patientUuid: UUID) {
-    screenRouter.push(BloodPressureHistoryScreenKey(patientUuid))
+    router.push(BloodPressureHistoryScreenKey(patientUuid).wrap())
   }
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
@@ -247,7 +252,8 @@ class BloodPressureSummaryView(
 
   @SuppressLint("CheckResult")
   private fun setupBpRecordedEvents(screenDestroys: Observable<ScreenDestroyed>) {
-    screenRouter.streamScreenResults()
+    screenResults
+        .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(SUMMARY_REQCODE_BP_ENTRY) { intent ->
           BloodPressureEntrySheet.wasBloodPressureSaved(intent)
@@ -258,7 +264,8 @@ class BloodPressureSummaryView(
 
   @SuppressLint("CheckResult")
   private fun alertFacilityChangeSheetClosed(onDestroys: Observable<ScreenDestroyed>) {
-    screenRouter.streamScreenResults()
+    screenResults
+        .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(BP_REQCODE_ALERT_FACILITY_CHANGE) { intent ->
           AlertFacilityChangeSheet.readContinuationExtra<ContinueToActivity>(intent)

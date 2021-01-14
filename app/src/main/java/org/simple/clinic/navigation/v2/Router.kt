@@ -109,6 +109,10 @@ class Router(
     executeStateChange(newHistory, Direction.Replace, null)
   }
 
+  fun hasKeyOfType(clazz: Class<*>): Boolean {
+    return history.requests.any { it.key.javaClass == clazz }
+  }
+
   fun onBackPressed(): Boolean {
     val currentTop = history.top()
     val fragment = fragmentManager.findFragmentByTag(currentTop.key.fragmentTag)

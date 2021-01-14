@@ -32,9 +32,11 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.ScanBpPassportActivity
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
@@ -56,7 +58,10 @@ const val REQUEST_CODE_SCAN_BP_PASSPORT = 100
 class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientsTabUi, PatientsTabUiActions {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
 
   @Inject
   lateinit var activityLifecycle: Observable<ActivityLifecycle>
@@ -101,7 +106,7 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
             scanCardIdButtonClicks(),
             simpleVideoClicked()
         )
-        .compose<UiEvent>(RequestPermissions(runtimePermissions, screenRouter.streamScreenResults().ofType()))
+        .compose<UiEvent>(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
         .compose(ReportAnalyticsEvents())
   }
 
@@ -189,7 +194,7 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
       PatientSearchScreenKey(additionalIdentifier)
     }
 
-    screenRouter.push(screenKey)
+    router.push(screenKey.wrap())
   }
 
   private fun showStatus(@IdRes statusViewId: Int) {
@@ -228,7 +233,7 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
   }
 
   override fun openEnterCodeManuallyScreen() {
-    screenRouter.push(EnterOtpScreenKey())
+    router.push(EnterOtpScreenKey().wrap())
   }
 
   override fun openScanSimpleIdCardScreen() {
@@ -250,11 +255,11 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
   }
 
   override fun openShortCodeSearchScreen(shortCode: String) {
-    screenRouter.push(ShortCodeSearchResultScreenKey(shortCode))
+    router.push(ShortCodeSearchResultScreenKey(shortCode).wrap())
   }
 
   override fun openPatientSummary(patientId: UUID) {
-    screenRouter.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
+    router.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)).wrap())
   }
 
   private fun showHomeScreenBackground(@IdRes viewId: Int) {

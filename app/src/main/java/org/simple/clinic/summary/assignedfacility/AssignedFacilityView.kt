@@ -15,9 +15,10 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.PatientsummaryAssignedFacilityContentBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
 import org.simple.clinic.summary.ASSIGNED_FACILITY_SELECTION
 import org.simple.clinic.summary.PatientSummaryChildView
@@ -49,7 +50,10 @@ class AssignedFacilityView(
   lateinit var activity: AppCompatActivity
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
 
   @Inject
   lateinit var effectHandlerFactory: AssignedFacilityEffectHandler.Factory
@@ -131,8 +135,8 @@ class AssignedFacilityView(
   }
 
   private fun assignedFacilitySelected(): Observable<AssignedFacilityEvent> {
-    return screenRouter
-        .streamScreenResults()
+    return screenResults
+        .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(ASSIGNED_FACILITY_SELECTION, FacilitySelectionActivity.Companion::selectedFacility)
         .map(::AssignedFacilitySelected)

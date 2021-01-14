@@ -12,7 +12,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenHelpBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), HelpScreenUi, HelpScreenUiActions {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var effectHandlerFactory: HelpScreenEffectHandler.Factory
@@ -94,7 +94,7 @@ class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, 
 
     context.injector<Injector>().inject(this)
 
-    toolbar.setNavigationOnClickListener { screenRouter.pop() }
+    toolbar.setNavigationOnClickListener { router.pop() }
 
     webView.settings.javaScriptEnabled = true
   }

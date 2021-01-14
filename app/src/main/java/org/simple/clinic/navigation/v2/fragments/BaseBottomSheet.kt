@@ -15,7 +15,6 @@ import com.spotify.mobius.MobiusLoop
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import com.spotify.mobius.android.MobiusAndroid
-import com.spotify.mobius.extras.Connectables
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -96,7 +95,7 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
     super.onViewCreated(view, savedInstanceState)
 
     val rxBridge = RxMobiusBridge(events(), uiRenderer())
-    controller.connect(Connectables.contramap({ it }, rxBridge))
+    controller.connect(rxBridge)
 
     if (savedInstanceState != null) {
       val savedModel = savedInstanceState.getParcelable<M>(KEY_MODEL)!!

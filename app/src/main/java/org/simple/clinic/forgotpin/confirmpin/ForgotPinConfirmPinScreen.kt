@@ -15,9 +15,9 @@ import org.simple.clinic.databinding.ScreenForgotpinConfirmpinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.router.screen.RouterDirection
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
@@ -33,7 +33,7 @@ class ForgotPinConfirmPinScreen(
   lateinit var effectHandlerFactory: ForgotPinConfirmPinEffectHandler.Factory
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
@@ -136,7 +136,7 @@ class ForgotPinConfirmPinScreen(
   }
 
   private fun goBack() {
-    screenRouter.pop()
+    router.pop()
   }
 
   override fun showPinMismatchedError() {
@@ -168,7 +168,7 @@ class ForgotPinConfirmPinScreen(
   }
 
   override fun goToHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreenKey, RouterDirection.FORWARD)
+    router.clearHistoryAndPush(HomeScreenKey.wrap())
   }
 
   private fun showError(@StringRes errorMessageResId: Int) {

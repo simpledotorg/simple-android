@@ -18,20 +18,20 @@ import org.simple.clinic.databinding.ScreenDeletePatientBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DeletedReason
-import org.simple.clinic.router.screen.RouterDirection
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.DividerItemDecorator
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.dp
 import javax.inject.Inject
 
 class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), UiActions, DeletePatientUi {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var effectHandlerFactory: DeletePatientEffectHandler.Factory
@@ -99,7 +99,7 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
 
     context.injector<DeletePatientScreenInjector>().inject(this)
 
-    toolbar.setNavigationOnClickListener { screenRouter.pop() }
+    toolbar.setNavigationOnClickListener { router.pop() }
     with(deleteReasonsRecyclerView) {
       adapter = deleteReasonsAdapter
       addItemDecoration(DividerItemDecorator(context, marginStart = 56.dp, marginEnd = 16.dp))
@@ -156,7 +156,7 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   }
 
   override fun showHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreenKey, RouterDirection.BACKWARD)
+    router.clearHistoryAndPush(HomeScreenKey.wrap())
   }
 
   private fun adapterEvents(): Observable<DeletePatientEvent> {

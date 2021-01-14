@@ -19,6 +19,7 @@ import com.jakewharton.rxbinding3.widget.checkedChanges
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.patient_edit_bp_passport_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -42,6 +43,9 @@ import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenKey
 import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.HandlesBack
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AgeField
@@ -62,9 +66,6 @@ import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.router.screen.BackPressInterceptCallback
-import org.simple.clinic.router.screen.BackPressInterceptor
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
@@ -84,10 +85,10 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
-class EditPatientScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet), EditPatientUi {
+class EditPatientScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet), EditPatientUi, HandlesBack {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   @Named("date_for_user_input")
@@ -218,6 +219,8 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private val viewRenderer = EditPatientViewRenderer(this)
 
+  private val hardwareBackPressEvents = PublishSubject.create<BackClicked>()
+
   private val events: Observable<EditPatientEvent>
     get() = Observable.mergeArray(
         saveClicks(),
@@ -267,7 +270,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     showOrHideGenderRadioButtons(inputFields)
 
     deletePatient.visibleOrGone(features.isEnabled(DeletePatient))
-    deletePatient.setOnClickListener { screenRouter.push(DeletePatientScreenKey(screenKey.patient.uuid)) }
+    deletePatient.setOnClickListener { router.push(DeletePatientScreenKey(screenKey.patient.uuid).wrap()) }
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {
@@ -371,23 +374,12 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   private fun backClicks(): Observable<EditPatientEvent> {
-    val hardwareBackKeyClicks = Observable.create<BackClicked> { emitter ->
-      val interceptor = object : BackPressInterceptor {
-        override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
-          emitter.onNext(BackClicked)
-          callback.markBackPressIntercepted()
-        }
-      }
-      emitter.setCancellable { screenRouter.unregisterBackPressInterceptor(interceptor) }
-      screenRouter.registerBackPressInterceptor(interceptor)
-    }
-
     val backButtonClicks = backButton
         .clicks()
         .map { BackClicked }
 
     return backButtonClicks
-        .mergeWith(hardwareBackKeyClicks)
+        .mergeWith(hardwareBackPressEvents)
         .cast()
   }
 
@@ -636,7 +628,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   override fun goBack() {
-    screenRouter.pop()
+    router.pop()
   }
 
   override fun showDatePatternInDateOfBirthLabel() {
@@ -686,6 +678,11 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   override fun setBangladeshNationalId(nationalId: String) {
     alternativeIdInputEditText.setTextAndCursor(nationalId)
+  }
+
+  override fun onBackPressed(): Boolean {
+    hardwareBackPressEvents.onNext(BackClicked)
+    return true
   }
 
   interface Injector {

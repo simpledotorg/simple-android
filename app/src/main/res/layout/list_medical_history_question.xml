@@ -5,9 +5,8 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:foreground="?attr/selectableItemBackgroundBorderless"
-  tools:background="@color/white100"
-  tools:ignore="UnusedAttribute"
-  tools:parentTag="android.widget.RelativeLayout">
+  tools:background="?attr/colorSurface"
+  tools:ignore="UnusedAttribute">
 
   <LinearLayout
     android:id="@+id/contentLayout"
@@ -26,7 +25,8 @@
       android:layout_weight="1"
       android:ellipsize="end"
       android:lines="1"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+      android:textAppearance="?attr/textAppearanceBody1"
+      android:textColor="?attr/colorOnSurface"
       tools:text="Kidney disease" />
 
     <LinearLayout
@@ -36,7 +36,7 @@
       android:gravity="center"
       android:orientation="horizontal">
 
-      <CheckBox
+      <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/yesCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -50,7 +50,7 @@
         android:paddingBottom="@dimen/medicalhistory_answer_vertical_padding"
         android:text="@string/newmedicalhistory_yes"
         android:textAllCaps="false"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center" />
+        android:textAppearance="?attr/textAppearanceBody2" />
 
       <CheckBox
         android:id="@+id/noCheckBox"
@@ -67,7 +67,8 @@
         android:paddingBottom="@dimen/medicalhistory_answer_vertical_padding"
         android:text="@string/newmedicalhistory_no"
         android:textAllCaps="false"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center" />
+        android:textAppearance="?attr/textAppearanceBody2" />
+
     </LinearLayout>
 
   </LinearLayout>
@@ -79,5 +80,6 @@
     android:layout_below="@+id/contentLayout"
     android:layout_alignStart="@+id/contentLayout"
     android:layout_alignEnd="@+id/contentLayout"
-    android:background="@color/grey4" />
+    android:background="@drawable/divider" />
+
 </RelativeLayout>

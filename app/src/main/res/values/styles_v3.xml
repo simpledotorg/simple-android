@@ -155,4 +155,15 @@
     <item name="android:paddingTop">@dimen/spacing_12</item>
   </style>
 
+  <style name="Widget.Simple.ExpandedToolbar.FacilityName" parent="">
+    <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+    <item name="android:textColor">?attr/colorOnToolbarPrimary</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:padding">@dimen/spacing_8</item>
+    <item name="android:textAllCaps">false</item>
+    <item name="android:drawableStart">@drawable/ic_location_20dp</item>
+    <item name="android:drawablePadding">@dimen/spacing_8</item>
+  </style>
+
 </resources>

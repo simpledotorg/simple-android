@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginBottom="@dimen/spacing_8"
-  app:cardCornerRadius="4dp"
-  app:cardElevation="2dp">
+  android:layout_marginBottom="@dimen/spacing_8">
 
   <LinearLayout
     android:id="@+id/patient_details"
@@ -26,7 +24,6 @@
 
       <TextView
         android:id="@+id/patientNameTextView"
-        style="@style/Clinic.V2.TextAppearance.Body0Left.Emphasis.Blue1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_16"
@@ -35,16 +32,19 @@
         android:clickable="true"
         android:drawablePadding="@dimen/spacing_16"
         android:focusable="true"
+        android:textAppearance="?attr/textAppearanceBody0Medium"
+        android:textColor="?attr/colorPrimary"
         app:drawableStartCompat="@drawable/ic_patient_female"
         tools:text="Anisha Acharya" />
 
       <TextView
         android:id="@+id/patientAddressTextView"
-        style="@style/Clinic.V2.TextAppearance.Body2Left.Grey0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_56"
         android:layout_marginBottom="@dimen/spacing_12"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/colorOnSurface"
         tools:text="Bathinda, Punjab" />
 
       <LinearLayout
@@ -56,18 +56,21 @@
         android:orientation="horizontal">
 
         <TextView
-          style="@style/Clinic.V2.TextAppearance.Body2Bold.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/overduelist_diagnosis_label" />
+          android:text="@string/overduelist_diagnosis_label"
+          android:textAppearance="?attr/textAppearanceBody2Bold"
+          android:textColor="?attr/colorHighEmphasis" />
 
         <TextView
           android:id="@+id/diagnosisTextView"
-          style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
+          android:textAppearance="?attr/textAppearanceBody2"
+          android:textColor="?attr/colorHighEmphasis"
           tools:text="Hypertension, Diabetes" />
+
       </LinearLayout>
 
       <LinearLayout
@@ -78,18 +81,21 @@
         android:orientation="horizontal">
 
         <TextView
-          style="@style/Clinic.V2.TextAppearance.Body2Bold.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/overduelist_visited" />
+          android:text="@string/overduelist_visited"
+          android:textAppearance="?attr/textAppearanceBody2Bold"
+          android:textColor="?attr/colorHighEmphasis" />
 
         <TextView
           android:id="@+id/patientLastSeenTextView"
-          style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
+          android:textAppearance="?attr/textAppearanceBody2"
+          android:textColor="?attr/colorHighEmphasis"
           tools:text="01-01-2020" />
+
       </LinearLayout>
 
       <LinearLayout
@@ -102,18 +108,21 @@
         android:visibility="gone">
 
         <TextView
-          style="@style/Clinic.V2.TextAppearance.Body2Bold.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/overduelist_transferred" />
+          android:text="@string/overduelist_transferred"
+          android:textAppearance="?attr/textAppearanceBody2Bold"
+          android:textColor="?attr/colorHighEmphasis" />
 
         <TextView
           android:id="@+id/patientTransferredTextView"
-          style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
+          android:textAppearance="?attr/textAppearanceBody2"
+          android:textColor="?attr/colorHighEmphasis"
           tools:text="PHC Obvious" />
+
       </LinearLayout>
 
       <LinearLayout
@@ -123,15 +132,15 @@
 
         <TextView
           android:id="@+id/overdueDaysTextView"
-          style="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginEnd="@dimen/spacing_8"
+          android:textAppearance="?attr/textAppearanceBody2"
+          android:textColor="?attr/colorError"
           tools:text="4 day overdue" />
 
         <TextView
           android:id="@+id/isAtHighRiskTextView"
-          style="@style/Clinic.V2.TextAppearance.Body2Tag"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:background="@drawable/background_overdue_high_risk_label"
@@ -139,9 +148,11 @@
           android:paddingEnd="@dimen/spacing_8"
           android:text="@string/overduelist_high_risk"
           android:textAllCaps="true"
-          android:textColor="@color/red1" />
+          android:textAppearance="?attr/textAppearanceTag"
+          android:textColor="?attr/colorError" />
 
       </LinearLayout>
+
     </LinearLayout>
 
     <ImageButton
@@ -152,9 +163,10 @@
       android:background="@drawable/overdue_call_button_background"
       android:foreground="?selectableItemBackground"
       android:padding="@dimen/spacing_16"
-      android:tint="@color/white"
+      android:tint="?attr/colorOnPrimary"
       app:srcCompat="@drawable/ic_call_24dp"
       tools:ignore="ContentDescription,UnusedAttribute" />
+
   </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

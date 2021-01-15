@@ -106,4 +106,21 @@
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField.Large</item>
   </style>
 
+  <style name="Widget.Simple.TextField.Search" parent="Widget.MaterialComponents.TextInputEditText.FilledBox.Dense">
+    <item name="android:paddingTop">@dimen/spacing_0</item>
+    <item name="android:paddingBottom">@dimen/spacing_0</item>
+    <item name="android:paddingStart">@dimen/spacing_0</item>
+    <item name="android:paddingEnd">@dimen/spacing_0</item>
+    <item name="android:textAppearance">?attr/textAppearanceBody0</item>
+  </style>
+
+  <style name="Widget.Simple.TextField.Layout.Search" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+    <item name="boxBackgroundColor">@android:color/transparent</item>
+    <item name="boxBackgroundMode">none</item>
+    <item name="endIconMode">clear_text</item>
+    <item name="endIconTint">?attr/colorHighEmphasis</item>
+    <item name="hintEnabled">false</item>
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField.Flat</item>
+  </style>
+
 </resources>

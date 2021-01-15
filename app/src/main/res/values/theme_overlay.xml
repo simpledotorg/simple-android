@@ -70,6 +70,11 @@
     <item name="editTextStyle">@style/Widget.Simple.TextField.Large</item>
   </style>
 
+  <style name="ThemeOverlay.Simple.TextField.Flat" parent="">
+    <item name="colorSecondary">@color/simple_light_blue_500</item>
+    <item name="editTextStyle">@style/Widget.Simple.TextField.Search</item>
+  </style>
+
   <!-- Screen Specific Theme Overlays -->
   <style name="ThemeOverlay.Simple.SplashScreen" parent="">
     <item name="android:colorBackground">@color/simple_dark_blue_800</item>
@@ -77,5 +82,10 @@
 
   <style name="ThemeOverlay.Simple.OnboardingScreen" parent="">
     <item name="android:colorBackground">@color/white</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.FacilityPicker.Search" parent="">
+    <item name="colorPrimary">@color/white</item>
+    <item name="colorOnPrimary">@color/color_high_emphasis</item>
   </style>
 </resources>

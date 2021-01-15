@@ -8,8 +8,9 @@
   android:layout_marginTop="@dimen/spacing_8"
   android:drawablePadding="@dimen/spacing_8"
   android:gravity="center_vertical"
-  android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Numeric.Grey0"
+  android:textAppearance="?attr/textAppearanceBody1Numeric"
+  android:textColor="?attr/colorOnSurface"
   app:drawableStartCompat="@drawable/patient_id_card"
-  app:drawableTint="@color/grey1"
+  app:drawableTint="?attr/colorHighEmphasis"
   tools:targetApi="m"
   tools:text="12345678" />

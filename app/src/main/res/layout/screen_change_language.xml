@@ -6,21 +6,26 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
-    android:id="@+id/toolbar"
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/appbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white100"
-    app:layout_constraintTop_toTopOf="parent"
-    app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:navigationIconTint="@color/grey0"
-    app:title="@string/changelanguage_title"
-    app:titleTextColor="?attr/colorOnSurface"
-    app:titleTextAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
+    android:theme="@style/ThemeOverlay.Simple.WhitePrimary"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:layout_constraintTop_toTopOf="parent"
+      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      app:navigationIconTint="?attr/colorOnSurface"
+      app:title="@string/changelanguage_title" />
+
+  </com.google.android.material.appbar.AppBarLayout>
 
   <com.google.android.material.button.MaterialButton
     android:id="@+id/doneButton"
-    style="?attr/materialButtonStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/spacing_16"
@@ -37,7 +42,7 @@
     android:clipToPadding="false"
     android:paddingBottom="@dimen/spacing_16"
     app:layout_constraintBottom_toTopOf="@id/doneButton"
-    app:layout_constraintTop_toBottomOf="@id/toolbar"
+    app:layout_constraintTop_toBottomOf="@id/appbar"
     tools:listitem="@layout/list_change_language_view" />
 
 </org.simple.clinic.settings.changelanguage.ChangeLanguageScreen>

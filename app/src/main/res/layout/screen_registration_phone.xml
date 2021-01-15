@@ -1,92 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/registrationphone_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/window_background_auth"
   tools:ignore="Overdraw">
 
-  <FrameLayout
-    android:id="@+id/registrationphone_logo_container"
-    style="@style/Clinic.LoginLogoContainer">
-
-    <ImageView
-      style="@style/Clinic.V2.LogoWithType.Large"
-      android:layout_gravity="center_horizontal"
-      tools:ignore="ContentDescription" />
-  </FrameLayout>
-
   <View
-    style="@style/Clinic.LoginLogoContainerOverflow"
-    android:layout_below="@+id/registrationphone_logo_container" />
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/spacing_192"
+    android:background="?attr/colorToolbarPrimary"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
 
-  <androidx.cardview.widget.CardView
+  <ImageView
+    android:id="@+id/simple_logo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_40"
+    android:contentDescription="@string/selectcountry_logo_contentdescription"
+    app:layout_constraintBottom_toTopOf="@id/registrationphone_card"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/logo_large" />
+
+  <com.google.android.material.card.MaterialCardView
     android:id="@+id/registrationphone_card"
-    style="@style/Clinic.LoginCard"
-    android:layout_below="@+id/registrationphone_logo_container">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_44"
+    android:layout_marginEnd="@dimen/spacing_16"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/simple_logo">
 
     <LinearLayout
-      style="@style/Clinic.CardContentContainer.Login"
-      android:animateLayoutChanges="true">
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:animateLayoutChanges="true"
+      android:gravity="center"
+      android:orientation="vertical"
+      android:paddingStart="@dimen/spacing_24"
+      android:paddingTop="@dimen/spacing_24"
+      android:paddingEnd="@dimen/spacing_24"
+      android:paddingBottom="@dimen/spacing_40">
 
       <TextView
-        style="@style/Clinic.LoginCardTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:labelFor="@+id/phoneNumberEditText"
-        android:text="@string/registrationphone_phone_number_label" />
+        android:text="@string/registrationphone_phone_number_label"
+        android:textAppearance="?attr/textAppearanceHeadline6" />
 
       <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="@dimen/spacing_8">
+        android:layout_marginTop="@dimen/spacing_24"
+        android:orientation="horizontal">
 
-        <EditText
-          android:id="@+id/isdCodeEditText"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:clickable="false"
-          android:editable="false"
-          android:focusable="false"
-          android:focusableInTouchMode="false"
-          android:inputType="none"
-          android:textAppearance="@style/Clinic.LoginInputTextAppearance"
-          tools:ignore="Deprecated,LabelFor"
-          tools:text="+880" />
+        <com.google.android.material.textfield.TextInputLayout
+          style="@style/Widget.Simple.TextField.Layout.Large"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
 
-        <EditText
-          android:id="@id/phoneNumberEditText"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:digits="1234567890"
-          android:imeOptions="actionDone"
-          android:inputType="phone"
-          android:maxLength="10"
-          android:minEms="6"
-          android:textAppearance="@style/Clinic.LoginInputTextAppearance" />
+          <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/isdCodeEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:editable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="none"
+            tools:ignore="Autofill,Deprecated,LabelFor"
+            tools:text="+880" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Space
+          android:layout_width="@dimen/spacing_4"
+          android:layout_height="match_parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+          style="@style/Widget.Simple.TextField.Layout.Large"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+          <com.google.android.material.textfield.TextInputEditText
+            android:id="@id/phoneNumberEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:digits="1234567890"
+            android:imeOptions="actionDone"
+            android:inputType="phone"
+            android:maxLength="10"
+            android:minEms="6"
+            tools:ignore="Autofill" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
       </LinearLayout>
 
       <TextView
         android:id="@+id/validationErrorTextView"
-        style="@style/Clinic.V2.RegistrationInputError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/colorError"
         android:visibility="gone"
         tools:text="A really long error message to test wrapping on this TextView." />
+
     </LinearLayout>
 
     <FrameLayout
       android:id="@+id/progressView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@color/white"
+      android:background="?attr/colorSurface"
       android:visibility="gone">
 
       <com.google.android.material.progressindicator.CircularProgressIndicator
-        style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:indeterminate="true" />
+
     </FrameLayout>
-  </androidx.cardview.widget.CardView>
-</RelativeLayout>
+
+  </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

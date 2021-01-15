@@ -58,6 +58,7 @@
     <item name="colorOnError">@color/white</item>
 
     <item name="scrimBackground">@color/scrim_color</item>
+    <item name="colorOnBackground">@color/simple_dark_grey</item>
 
     <item name="android:statusBarColor">@color/simple_dark_blue_900</item>
     <item name="android:colorBackground">@color/simple_light_grey</item>

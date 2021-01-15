@@ -92,4 +92,18 @@
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.RadioButton</item>
   </style>
 
+  <!-- Text Field -->
+  <style name="Widget.Simple.TextField.Large" parent="Widget.MaterialComponents.TextInputEditText.FilledBox.Dense">
+    <!-- Simple EditText is 40dp height, so we need total of 20dp top and bottom. -->
+    <item name="android:paddingTop">@dimen/spacing_16</item>
+    <item name="android:paddingBottom">@dimen/spacing_4</item>
+    <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+  </style>
+
+  <style name="Widget.Simple.TextField.Layout.Large" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+    <item name="boxBackgroundColor">@android:color/transparent</item>
+    <item name="hintEnabled">false</item>
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField.Large</item>
+  </style>
+
 </resources>

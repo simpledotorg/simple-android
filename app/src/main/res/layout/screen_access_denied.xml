@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.deniedaccess.AccessDeniedScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/window_background_auth"
   tools:ignore="Overdraw">
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/spacing_192"
+    android:background="?attr/colorToolbarPrimary"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
 
   <LinearLayout
     android:id="@+id/outerContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?colorPrimary"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingStart="@dimen/spacing_24"
     android:paddingTop="@dimen/spacing_64"
     android:paddingEnd="@dimen/spacing_24"
-    android:paddingBottom="@dimen/spacing_24">
+    android:paddingBottom="@dimen/spacing_24"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
     <TextView
       android:id="@+id/userFullNameText"
@@ -25,7 +35,7 @@
       android:layout_weight="1"
       android:ellipsize="end"
       android:maxLines="1"
-      android:textColor="@color/white"
+      android:textColor="?attr/colorOnToolbarPrimary"
       android:textSize="@dimen/textsize_20"
       tools:text="Gangadhar Vidyadhar Mayadhar Omkarnath Shastri" />
 
@@ -44,22 +54,23 @@
       android:paddingEnd="@dimen/spacing_8"
       android:paddingBottom="2dp"
       android:text="@string/applock_logout"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button2"
+      android:textAppearance="?attr/textAppearanceButton"
       android:visibility="gone"
       tools:ignore="UnusedAttribute"
       tools:visibility="visible" />
+
   </LinearLayout>
 
-  <View
-    android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:layout_alignTop="@+id/cardView"
-    android:background="?colorPrimary" />
-
-  <androidx.cardview.widget.CardView
+  <com.google.android.material.card.MaterialCardView
     android:id="@+id/cardView"
-    style="@style/Clinic.LoginCard"
-    android:layout_below="@+id/outerContainer">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/outerContainer"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/outerContainer">
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -75,15 +86,19 @@
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/spacing_12"
         android:text="@string/accessdeniedscreen_title_access_denied"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="?attr/colorOnSurface" />
 
       <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lineSpacingExtra="2sp"
         android:text="@string/accessdeniedscreen_description"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/colorHighEmphasis" />
+
     </LinearLayout>
 
-  </androidx.cardview.widget.CardView>
+  </com.google.android.material.card.MaterialCardView>
+
 </org.simple.clinic.deniedaccess.AccessDeniedScreen>

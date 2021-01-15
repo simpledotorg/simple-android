@@ -60,6 +60,11 @@
     <item name="android:windowSoftInputMode">adjustResize</item>
   </style>
 
+  <!-- Widget Specific Theme Overlays -->
+  <style name="ThemeOverlay.Simple.RadioButton" parent="">
+    <item name="colorSecondary">@color/simple_light_blue_500</item>
+  </style>
+
   <!-- Screen Specific Theme Overlays -->
   <style name="ThemeOverlay.Simple.SplashScreen" parent="">
     <item name="android:colorBackground">@color/simple_dark_blue_800</item>

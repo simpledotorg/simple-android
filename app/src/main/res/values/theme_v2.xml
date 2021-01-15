@@ -12,6 +12,7 @@
     <item name="borderlessButtonStyle">@style/Widget.Simple.Button.TextButton</item>
     <item name="materialButtonStyle">@style/Widget.Simple.Button</item>
     <item name="materialButtonOutlinedStyle">@style/Widget.Simple.Button.OutlinedButton</item>
+    <item name="radioButtonStyle">@style/Widget.Simple.CompoundButton.RadioButton</item>
     <item name="toolbarStyle">@style/Widget.Simple.Toolbar</item>
 
     <!-- Text Appearances -->

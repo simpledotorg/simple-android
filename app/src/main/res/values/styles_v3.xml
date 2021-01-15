@@ -87,4 +87,9 @@
     <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
   </style>
 
+  <!-- Radio Button -->
+  <style name="Widget.Simple.CompoundButton.RadioButton" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.RadioButton</item>
+  </style>
+
 </resources>

@@ -67,6 +67,7 @@
     <!-- Custom Attrs -->
     <item name="colorToolbarPrimary">@color/simple_dark_blue_800</item>
     <item name="colorToolbarPrimaryVariant">@color/simple_dark_blue_900</item>
+    <item name="colorOnToolbarPrimary">@color/white</item>
 
     <item name="colorLowEmphasis">@color/color_low_emphasis</item>
     <item name="colorMediumEmphasis">@color/color_medium_emphasis</item>

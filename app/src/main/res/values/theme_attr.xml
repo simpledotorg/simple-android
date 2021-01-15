@@ -3,6 +3,7 @@
   <!-- Colors -->
   <attr name="colorToolbarPrimary" format="color" />
   <attr name="colorToolbarPrimaryVariant" format="color" />
+  <attr name="colorOnToolbarPrimary" format="color" />
   <attr name="colorLowEmphasis" format="color" />
   <attr name="colorMediumEmphasis" format="color" />
   <attr name="colorHighEmphasis" format="color" />

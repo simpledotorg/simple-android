@@ -9,19 +9,19 @@
     android:id="@+id/backgroundView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_opacity_50" />
+    android:background="?attr/scrimBackground" />
 
   <!--
       A negative bottom-margin is required because CardView
       doesn't let us change the radius of specific corners.
    -->
-  <androidx.cardview.widget.CardView
+  <com.google.android.material.card.MaterialCardView
     android:id="@+id/contentContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:layout_marginBottom="-4dp"
-    android:background="@color/white"
+    android:background="?attr/colorSurface"
     android:elevation="20dp"
     app:cardCornerRadius="4dp"
     app:contentPaddingBottom="4dp"
@@ -40,7 +40,7 @@
         android:layout_alignParentStart="true"
         android:layout_margin="@dimen/spacing_8"
         app:srcCompat="@drawable/patient_id_card"
-        app:tint="@color/grey1"
+        app:tint="?attr/colorHighEmphasis"
         tools:ignore="ContentDescription" />
 
       <TextView
@@ -49,7 +49,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_8"
         android:layout_toEndOf="@+id/linkidwithpatient_icon"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.Grey0"
+        android:textAppearance="?attr/textAppearanceBody0"
+        android:textColor="?attr/colorOnSurface"
         tools:text="Add BP Passport id 512 6789121 to patient" />
 
       <LinearLayout
@@ -57,33 +58,33 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/idTextView"
         android:layout_marginTop="@dimen/spacing_16"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
           android:id="@+id/cancelButton"
-          style="@style/Clinic.V2.OutlineButton.Grey1"
+          style="@style/Widget.Simple.Button.OutlinedButton.HighEmphasis"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_marginEnd="@dimen/spacing_8"
           android:layout_weight="1"
           android:text="@string/linkidwithpatient_button_cancel"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
           tools:ignore="ButtonStyle" />
 
         <com.google.android.material.button.MaterialButton
           android:id="@+id/addButton"
-          style="?attr/materialButtonStyle"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
           android:layout_weight="1"
-          android:backgroundTint="@color/blue1"
           android:gravity="center"
-          android:text="@string/linkidwithpatient_button_add"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+          android:text="@string/linkidwithpatient_button_add" />
+
       </LinearLayout>
+
     </RelativeLayout>
 
-  </androidx.cardview.widget.CardView>
-</merge>
+  </com.google.android.material.card.MaterialCardView>
 
+</merge>

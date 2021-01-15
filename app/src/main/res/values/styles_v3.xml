@@ -72,6 +72,12 @@
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Red1Primary</item>
   </style>
 
+  <style name="Widget.Simple.Button.Frame" parent="">
+    <item name="android:padding">@dimen/spacing_8</item>
+    <item name="android:background">?attr/colorPrimaryVariant</item>
+    <item name="android:clipToPadding">false</item>
+  </style>
+
   <!-- Dialog -->
   <style name="MaterialAlertDialog.Simple.Title.Text" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
     <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>

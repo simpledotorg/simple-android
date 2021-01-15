@@ -98,4 +98,9 @@
     <item name="colorPrimary">@color/white</item>
     <item name="colorOnPrimary">@color/color_high_emphasis</item>
   </style>
+
+  <style name="ThemeOverlay.Simple.DeletePatient" parent="">
+    <item name="android:colorBackground">@color/white</item>
+  </style>
+
 </resources>

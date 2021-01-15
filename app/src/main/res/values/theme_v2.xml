@@ -82,4 +82,11 @@
     <item name="android:windowTranslucentStatus">true</item>
   </style>
 
+  <style name="Theme.Simple.TranslucentBackground">
+    <item name="android:windowBackground">@color/translucent_background</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowTranslucentStatus">true</item>
+    <item name="android:fitsSystemWindows">true</item>
+  </style>
+
 </resources>

@@ -9,9 +9,10 @@
 
   <TextView
     android:id="@+id/medicineNameTextView"
-    style="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="?attr/colorOnSurface"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     tools:text="Amlodipine" />
@@ -26,29 +27,31 @@
 
   <TextView
     android:id="@+id/medicineFrequencyButton"
-    style="@style/Clinic.V2.TextAppearance.Body1Left.Blue1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
     android:textAllCaps="true"
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="?attr/colorPrimary"
     app:drawableEndCompat="@drawable/ic_keyboard_arrow_down_24dp"
-    app:drawableTint="@color/blue1"
+    app:drawableTint="?attr/colorPrimary"
     app:layout_constraintTop_toBottomOf="@id/medicineNameBarrier"
     tools:text="OD" />
 
   <TextView
     android:id="@+id/medicineDurationButton"
-    style="@style/Clinic.V2.TextAppearance.Body1Left.Blue1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_24"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="?attr/colorPrimary"
     app:drawableEndCompat="@drawable/ic_keyboard_arrow_down_24dp"
-    app:drawableTint="@color/blue1"
+    app:drawableTint="?attr/colorPrimary"
     app:layout_constraintStart_toEndOf="@id/medicineFrequencyButton"
     app:layout_constraintTop_toBottomOf="@id/medicineNameBarrier"
     tools:text="30 days" />

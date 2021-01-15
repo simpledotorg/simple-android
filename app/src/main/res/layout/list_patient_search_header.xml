@@ -10,5 +10,6 @@
   android:layout_marginBottom="@dimen/spacing_12"
   android:orientation="vertical"
   android:textAllCaps="true"
-  android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
+  android:textAppearance="?attr/textAppearanceTag"
+  android:textColor="?attr/colorHighEmphasis"
   tools:text="Header" />

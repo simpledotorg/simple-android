@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+  <style name="ThemeOverlay.Simple.WhitePrimary" parent="">
+    <item name="colorPrimary">@color/white</item>
+    <item name="colorOnPrimary">@color/simple_dark_grey</item>
+  </style>
+
   <style name="ThemeOverlay.Simple.Blue0Primary" parent="">
     <item name="colorPrimary">@color/simple_dark_blue_800</item>
     <item name="colorOnPrimary">@color/white</item>

@@ -2,10 +2,11 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginEnd="@dimen/spacing_8"
   android:layout_marginStart="@dimen/spacing_8"
+  android:layout_marginEnd="@dimen/spacing_8"
   android:background="@drawable/results_row_empty_state_background"
   android:gravity="center"
   android:padding="@dimen/spacing_32"
   android:text="@string/patientsearchresults_no_patients_match"
-  android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1" />
+  android:textAppearance="?attr/textAppearanceSubtitle1"
+  android:textColor="?attr/colorHighEmphasis" />

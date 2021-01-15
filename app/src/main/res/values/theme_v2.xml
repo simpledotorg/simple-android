@@ -13,6 +13,7 @@
     <item name="materialButtonStyle">@style/Widget.Simple.Button</item>
     <item name="materialButtonOutlinedStyle">@style/Widget.Simple.Button.OutlinedButton</item>
     <item name="radioButtonStyle">@style/Widget.Simple.CompoundButton.RadioButton</item>
+    <item name="textInputStyle">@style/Widget.Simple.TextField.Layout</item>
     <item name="toolbarStyle">@style/Widget.Simple.Toolbar</item>
 
     <!-- Text Appearances -->

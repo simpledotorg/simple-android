@@ -80,6 +80,11 @@
     <item name="editTextStyle">@style/Widget.Simple.TextField.Search</item>
   </style>
 
+  <style name="ThemeOverlay.Simple.TextField" parent="">
+    <item name="colorSecondary">@color/simple_light_blue_500</item>
+    <item name="editTextStyle">@style/Widget.Simple.TextField</item>
+  </style>
+
   <!-- Screen Specific Theme Overlays -->
   <style name="ThemeOverlay.Simple.SplashScreen" parent="">
     <item name="android:colorBackground">@color/simple_dark_blue_800</item>

@@ -121,6 +121,20 @@
     <item name="endIconTint">?attr/colorHighEmphasis</item>
     <item name="hintEnabled">false</item>
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField.Flat</item>
+    <item name="errorTextAppearance">?attr/textAppearanceBody2</item>
+  </style>
+
+  <style name="Widget.Simple.TextField" parent="Widget.MaterialComponents.TextInputEditText.FilledBox.Dense">
+    <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+    <item name="android:paddingTop">26dp</item>
+    <item name="android:paddingBottom">6dp</item>
+  </style>
+
+  <style name="Widget.Simple.TextField.Layout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+    <item name="boxBackgroundColor">@android:color/transparent</item>
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField</item>
+    <item name="hintTextAppearance">?attr/textAppearanceBody2</item>
+    <item name="errorTextAppearance">?attr/textAppearanceBody2</item>
   </style>
 
   <!-- Simple App Views -->

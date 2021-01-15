@@ -5,22 +5,27 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <androidx.appcompat.widget.Toolbar
-    android:id="@+id/toolbar"
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/appbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_constraintTop_toTopOf="parent"
-    app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:titleTextAppearance="@style/Clinic.V2.TextAppearance.H6.White100"
-    tools:title="Anish Acharya, M, 43" />
+    app:layout_constraintTop_toTopOf="parent">
 
-  <androidx.cardview.widget.CardView
-    style="@style/Clinic.V2.CardView"
+    <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      tools:title="Anish Acharya, M, 43" />
+
+  </com.google.android.material.appbar.AppBarLayout>
+
+  <com.google.android.material.card.MaterialCardView
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_margin="@dimen/spacing_8"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/toolbar">
+    app:layout_constraintTop_toBottomOf="@id/appbar">
 
     <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/bloodSugarHistoryList"
@@ -29,6 +34,6 @@
       tools:itemCount="15"
       tools:listitem="@layout/list_blood_sugar_history_item" />
 
-  </androidx.cardview.widget.CardView>
+  </com.google.android.material.card.MaterialCardView>
 
 </org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreen>

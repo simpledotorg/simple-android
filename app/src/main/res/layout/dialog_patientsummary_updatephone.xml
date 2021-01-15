@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:paddingStart="@dimen/spacing_16"
-  android:paddingEnd="@dimen/spacing_16">
+  android:paddingEnd="@dimen/spacing_16"
+  tools:background="?attr/colorSurface">
 
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/phoneInputLayout"
-    style="@style/Clinic.V2.TextInputLayout.FilledBox.Dense"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_4"
@@ -22,5 +23,7 @@
       android:hint="@string/patientsummary_updatephone_phone_hint"
       android:imeOptions="flagNoFullscreen"
       android:inputType="phone" />
+
   </com.google.android.material.textfield.TextInputLayout>
+
 </FrameLayout>

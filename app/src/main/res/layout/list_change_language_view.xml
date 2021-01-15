@@ -12,22 +12,23 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
     android:padding="@dimen/spacing_16"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
+    android:textAppearance="?attr/textAppearanceBody1"
     android:textColor="@color/changelanguage_radio_button"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     tools:ignore="RtlSymmetry"
     tools:text="English"
-    tools:textColor="@color/grey1" />
+    tools:textColor="?attr/colorHighEmphasis" />
 
   <View
     android:layout_width="0dp"
     android:layout_height="1dp"
     android:layout_marginStart="48dp"
     android:layout_marginEnd="@dimen/spacing_16"
-    android:background="@color/grey3"
+    android:background="@drawable/divider"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="@id/languageButton"
     app:layout_constraintTop_toBottomOf="@id/languageButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

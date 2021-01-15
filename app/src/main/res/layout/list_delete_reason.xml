@@ -9,6 +9,6 @@
   android:paddingTop="@dimen/spacing_16"
   android:paddingEnd="@dimen/spacing_16"
   android:paddingBottom="@dimen/spacing_16"
-  android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
+  android:textAppearance="?attr/textAppearanceBody1"
   android:textColor="@color/deletereason_radio_button"
   tools:text="This is a duplicate patient" />

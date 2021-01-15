@@ -64,4 +64,8 @@
   <style name="ThemeOverlay.Simple.SplashScreen" parent="">
     <item name="android:colorBackground">@color/simple_dark_blue_800</item>
   </style>
+
+  <style name="ThemeOverlay.Simple.OnboardingScreen" parent="">
+    <item name="android:colorBackground">@color/white</item>
+  </style>
 </resources>

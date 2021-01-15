@@ -4,6 +4,6 @@
 
   <size android:height="1dp" />
 
-  <solid android:color="@color/grey3" />
+  <solid android:color="?attr/colorLowEmphasis" />
 
 </shape>

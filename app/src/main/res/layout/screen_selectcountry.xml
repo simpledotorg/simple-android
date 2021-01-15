@@ -7,15 +7,17 @@
 
   <View
     android:layout_width="match_parent"
-    android:layout_height="168dp"
-    android:background="?colorPrimary"
+    android:layout_height="@dimen/spacing_192"
+    android:background="?attr/colorToolbarPrimary"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
   <ImageView
+    android:id="@+id/simple_logo"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_40"
     android:contentDescription="@string/selectcountry_logo_contentdescription"
     app:layout_constraintBottom_toTopOf="@id/contentContainer"
     app:layout_constraintEnd_toEndOf="parent"
@@ -23,17 +25,16 @@
     app:layout_constraintTop_toTopOf="parent"
     app:srcCompat="@drawable/logo_large" />
 
-  <androidx.cardview.widget.CardView
+  <com.google.android.material.card.MaterialCardView
     android:id="@+id/contentContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
-    android:layout_marginTop="116dp"
+    android:layout_marginTop="@dimen/spacing_44"
     android:layout_marginEnd="@dimen/spacing_16"
-    android:background="@color/white100"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    app:layout_constraintTop_toBottomOf="@id/simple_logo">
 
     <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
       android:id="@+id/countrySelectionViewFlipper"
@@ -44,10 +45,10 @@
 
       <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressBar"
-        style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:indeterminate="true" />
 
       <LinearLayout
         android:id="@+id/countryListContainer"
@@ -56,20 +57,22 @@
         android:orientation="vertical">
 
         <TextView
-          style="@style/Clinic.V2.TextAppearance.H6.Grey0"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
           android:layout_marginTop="@dimen/spacing_24"
           android:layout_marginBottom="@dimen/spacing_12"
-          android:text="@string/selectcountry_title" />
+          android:text="@string/selectcountry_title"
+          android:textAppearance="?attr/textAppearanceHeadline6" />
 
         <androidx.recyclerview.widget.RecyclerView
           android:id="@+id/supportedCountriesList"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:paddingBottom="@dimen/spacing_8"
           tools:layout_height="128dp"
           tools:listitem="@layout/list_selectcountry_country_view" />
+
       </LinearLayout>
 
       <LinearLayout
@@ -81,9 +84,10 @@
 
         <TextView
           android:id="@+id/errorMessageTextView"
-          style="@style/Clinic.V2.TextAppearance.H6.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:textAppearance="?attr/textAppearanceHeadline6"
+          android:textColor="?attr/colorHighEmphasis"
           tools:text="@string/selectcountry_networkerror" />
 
         <com.google.android.material.button.MaterialButton
@@ -94,22 +98,20 @@
           android:layout_marginStart="@dimen/spacing_40"
           android:layout_marginTop="@dimen/spacing_24"
           android:layout_marginEnd="@dimen/spacing_40"
-          android:text="@string/selectcountry_retry"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+          android:text="@string/selectcountry_retry" />
+
       </LinearLayout>
 
     </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 
-  </androidx.cardview.widget.CardView>
+  </com.google.android.material.card.MaterialCardView>
 
-  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+  <FrameLayout
     android:id="@+id/nextButtonFrame"
-    style="@style/Clinic.V2.BottomAlignedButtonFrame"
+    style="@style/Widget.Simple.Button.Frame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:visibility="gone"
-    app:buttonBackgroundDisabled="@color/grey2"
-    app:buttonBackgroundEnabled="@color/blue1"
-    app:frameBackgroundDisabled="@color/grey3"
-    app:frameBackgroundEnabled="@color/blue2"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -117,13 +119,10 @@
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/nextButton"
-      style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/selectcountry_next"
-      android:layout_margin="@dimen/spacing_8"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
-  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
+      android:text="@string/selectcountry_next" />
 
+  </FrameLayout>
 
 </org.simple.clinic.selectcountry.SelectCountryScreen>

@@ -245,7 +245,7 @@ class ShortCodeSearchResultScreen(
   }
 
   private fun formatShortCodeForDisplay(context: Context, shortCode: String): CharSequence {
-    val textSpacingSpan = TextAppearanceWithLetterSpacingSpan(context, R.style.Clinic_V2_TextAppearance_Body0Left_Numeric_White100)
+    val textSpacingSpan = TextAppearanceWithLetterSpacingSpan(context, R.style.TextAppearance_Simple_Body0_Numeric)
     return formatShortCodeForDisplay(textSpacingSpan, shortCode)
   }
 

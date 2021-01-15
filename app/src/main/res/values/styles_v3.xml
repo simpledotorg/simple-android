@@ -137,6 +137,12 @@
     <item name="errorTextAppearance">?attr/textAppearanceBody2</item>
   </style>
 
+  <!-- Card View -->
+  <style name="Widget.Simple.CardView" parent="Widget.MaterialComponents.CardView">
+    <item name="android:stateListAnimator">@animator/raise_card_on_press</item>
+    <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Simple.MaterialCardView</item>
+  </style>
+
   <!-- Simple App Views -->
   <style name="Widget.Simple.PatientContactCallResultItem" parent="">
     <item name="android:textAppearance">?attr/textAppearanceBody2</item>

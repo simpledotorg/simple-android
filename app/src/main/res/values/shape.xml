@@ -26,4 +26,9 @@
     <item name="cornerSize">@dimen/spacing_2</item>
   </style>
 
+  <style name="ShapeAppearanceOverlay.Simple.MaterialCardView" parent="">
+    <item name="cornerFamily">rounded</item>
+    <item name="cornerRadius">2dp</item>
+  </style>
+
 </resources>

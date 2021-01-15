@@ -4,7 +4,7 @@
 
   <stroke
     android:width="2dp"
-    android:color="@color/grey4" />
+    android:color="?attr/colorLowEmphasis" />
 
   <corners android:radius="2dp" />
 </shape>

@@ -4,45 +4,63 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  tools:parentTag="androidx.cardview.widget.CardView"
-  tools:showIn="@layout/screen_app_lock">
+  tools:parentTag="androidx.cardview.widget.CardView">
 
   <com.google.android.material.progressindicator.CircularProgressIndicator
     android:id="@+id/progressView"
-    style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:indeterminate="true"
     android:visibility="invisible" />
 
   <LinearLayout
     android:id="@+id/contentContainer"
-    style="@style/Clinic.CardContentContainer.PinEntry">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/spacing_24"
+    android:paddingTop="@dimen/spacing_24"
+    android:paddingEnd="@dimen/spacing_24"
+    android:paddingBottom="@dimen/spacing_16">
 
     <TextView
-      style="@style/Clinic.LoginPinLabel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:labelFor="@+id/pinEditText"
-      android:text="@string/pinentry_pin_number_hint" />
+      android:text="@string/pinentry_pin_number_hint"
+      android:textAppearance="?attr/textAppearanceHeadline6" />
 
     <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
       android:id="@+id/pinAndLockViewFlipper"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_24"
       android:measureAllChildren="false"
       app:debug_displayedChild="1">
 
       <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/pinEditText"
-        style="@style/Clinic.StaggeredEditText.Pin"
+        android:layout_width="168dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:digits="1234567890"
+        android:gravity="center_horizontal"
         android:imeOptions="actionDone"
-        android:maxLength="4" />
+        android:inputType="numberPassword"
+        android:maxLength="4"
+        app:pinAnimationType="none"
+        app:pinCharacterMask="\u25CF"
+        app:pinCharacterSpacing="@dimen/spacing_8"
+        app:pinLineColors="@color/pin_edittext_underline"
+        app:pinLineStroke="@dimen/spacing_1"
+        app:pinLineStrokeSelected="@dimen/spacing_1" />
 
       <LinearLayout
         android:id="@+id/pinentry_bruteforcelock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:background="@drawable/background_pinentry_bruteforcelock_timer"
         android:gravity="center_horizontal"
         android:orientation="vertical"
@@ -52,22 +70,29 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/pinentry_bruteforcelock_timer_label"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Center.Grey1" />
+          android:textAppearance="?attr/textAppearanceBody1" />
 
         <TextView
           android:id="@+id/timeRemainingTillUnlockTextView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/spacing_8"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.H5.Numeric.Grey0"
+          android:textAppearance="?attr/textAppearanceHeadline5Numeric"
           tools:text="19:42" />
+
       </LinearLayout>
+
     </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 
     <TextView
       android:id="@+id/errorTextView"
-      style="@style/Clinic.V2.LoginPinErrorText"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_8"
       android:text="@string/api_network_error"
+      android:textAppearance="?attr/textAppearanceBody2"
+      android:textColor="?attr/colorError"
+      android:visibility="gone"
       tools:visibility="visible" />
 
     <com.google.android.material.button.MaterialButton
@@ -75,6 +100,9 @@
       style="?attr/borderlessButtonStyle"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_16"
       android:text="@string/pinentry_forgotpin" />
+
   </LinearLayout>
+
 </merge>

@@ -6,7 +6,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
+import com.google.android.material.card.MaterialCardView
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -34,7 +34,6 @@ import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
@@ -45,7 +44,7 @@ import javax.inject.Named
 class DrugSummaryView(
     context: Context,
     attributeSet: AttributeSet
-) : CardView(context, attributeSet), DrugSummaryUi, DrugSummaryUiActions, PatientSummaryChildView {
+) : MaterialCardView(context, attributeSet), DrugSummaryUi, DrugSummaryUiActions, PatientSummaryChildView {
 
   private var binding: DrugsSummaryViewBinding? = null
 
@@ -226,6 +225,6 @@ class DrugSummaryView(
     } else {
       R.drawable.ic_edit_medicine
     }
-    updateButton.setCompoundDrawableStart(drawableRes)
+    updateButton.setIconResource(drawableRes)
   }
 }

@@ -4,16 +4,18 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:layout_marginTop="@dimen/registrationfacilities_header_top_spacing_with_previous_section"
-  android:paddingBottom="@dimen/spacing_8"
-  android:paddingEnd="@dimen/spacing_16"
   android:paddingStart="@dimen/spacing_16"
-  android:paddingTop="@dimen/spacing_24">
+  android:paddingTop="@dimen/spacing_24"
+  android:paddingEnd="@dimen/spacing_16"
+  android:paddingBottom="@dimen/spacing_8">
 
   <TextView
     android:id="@+id/headerNameTextView"
-    style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textAllCaps="true"
+    android:textAppearance="?attr/textAppearanceTag"
+    android:textColor="?attr/colorHighEmphasis"
     tools:text="Suggested clinics" />
+
 </FrameLayout>

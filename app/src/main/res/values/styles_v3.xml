@@ -123,4 +123,16 @@
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField.Flat</item>
   </style>
 
+  <!-- Simple App Views -->
+  <style name="Widget.Simple.PatientContactCallResultItem" parent="">
+    <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+    <item name="android:textColor">?attr/colorPrimary</item>
+    <item name="android:paddingStart">@dimen/spacing_16</item>
+    <item name="android:background">?attr/selectableItemBackground</item>
+    <item name="android:drawablePadding">@dimen/spacing_8</item>
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:paddingBottom">@dimen/spacing_12</item>
+    <item name="android:paddingTop">@dimen/spacing_12</item>
+  </style>
+
 </resources>

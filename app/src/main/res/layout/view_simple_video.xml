@@ -5,7 +5,7 @@
   android:id="@+id/simpleVideoLayout"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:background="@color/blue2">
+  android:background="?attr/colorPrimaryVariant">
 
   <ImageView
     android:id="@+id/simpleVideoImage"
@@ -31,29 +31,33 @@
     android:orientation="vertical">
 
     <TextView
-      style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/simple_video_watch_video"
-      android:textAllCaps="true" />
+      android:textAllCaps="true"
+      android:textAppearance="?attr/textAppearanceTag"
+      android:textColor="?attr/colorHighEmphasis" />
 
     <TextView
       android:id="@+id/videoTitleText"
-      style="@style/Clinic.V2.TextAppearance.Subtitle1Left.Bold.Grey0"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/spacing_8"
       android:layout_marginBottom="@dimen/spacing_8"
       android:background="?attr/selectableItemBackground"
       android:minLines="2"
-      android:text="@string/simple_video_how_to_use_the_simple_app" />
+      android:text="@string/simple_video_how_to_use_the_simple_app"
+      android:textAppearance="?attr/textAppearanceSubtitle1Medium"
+      android:textColor="?attr/colorOnSurface" />
 
     <TextView
       android:id="@+id/simpleVideoDuration"
-      style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="@string/simple_video_duration" />
+      android:text="@string/simple_video_duration"
+      android:textAppearance="?attr/textAppearanceBody2"
+      android:textColor="?attr/colorHighEmphasis" />
+
   </LinearLayout>
 
 </RelativeLayout>

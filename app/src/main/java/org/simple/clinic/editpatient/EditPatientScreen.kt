@@ -174,9 +174,6 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   private val transgenderRadioButton
     get() = binding!!.transgenderRadioButton
 
-  private val saveButtonFrame
-    get() = binding!!.saveButtonFrame
-
   private val fullNameEditText
     get() = binding!!.fullNameEditText
 
@@ -346,7 +343,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   private fun saveClicks(): Observable<EditPatientEvent> {
-    return saveButtonFrame.button.clicks().map { SaveClicked }
+    return saveButton.clicks().map { SaveClicked }
   }
 
   private fun nameTextChanges(): Observable<EditPatientEvent> {

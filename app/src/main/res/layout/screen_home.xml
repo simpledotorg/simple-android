@@ -18,8 +18,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:elevation="@dimen/spacing_0"
-      app:logo="@drawable/ic_icons_logo"
-      tools:targetApi="lollipop">
+      app:logo="@drawable/ic_icons_logo">
 
       <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -43,13 +42,13 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textAlignment="textStart"
-            android:textAppearance="@style/Clinic.V2.TextAppearance.H6"
-            android:textColor="?attr/colorOnPrimary"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textColor="?attr/colorOnToolbarPrimary"
             app:icon="@drawable/ic_keyboard_arrow_down_24dp"
             app:iconGravity="textEnd"
             app:iconPadding="@dimen/spacing_4"
-            app:iconTint="?attr/colorOnPrimary"
-            app:rippleColor="@color/ripple_grey1"
+            app:iconTint="?attr/colorOnToolbarPrimary"
+            app:rippleColor="?attr/colorToolbarPrimaryVariant"
             tools:text="CHC Facility Name" />
 
         </FrameLayout>
@@ -73,11 +72,7 @@
       android:id="@+id/homeTabLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="?colorPrimary"
-      app:tabIndicatorColor="@color/red1"
-      app:tabIndicatorHeight="4dp"
-      app:tabSelectedTextColor="@color/white100"
-      app:tabTextColor="@color/white48"
+      app:tabIndicatorHeight="@dimen/spacing_4"
       tools:ignore="UnusedAttribute" />
 
   </com.google.android.material.appbar.AppBarLayout>

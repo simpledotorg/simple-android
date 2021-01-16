@@ -73,6 +73,9 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
 
   private var binding: ScreenInstantSearchBinding? = null
 
+  private val instantSearchToolbar
+    get() = binding!!.instantSearchToolbar
+
   private val searchQueryEditText
     get() = binding!!.searchQueryEditText
 
@@ -180,7 +183,7 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     if (screenKey.additionalIdentifier == null) {
       searchQueryEditText.showKeyboard()
     }
-    searchQueryTextInputLayout.setStartIconOnClickListener {
+    instantSearchToolbar.setNavigationOnClickListener {
       screenRouter.pop()
     }
 

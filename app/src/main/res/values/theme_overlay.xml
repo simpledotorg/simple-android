@@ -11,6 +11,10 @@
     <item name="colorOnPrimary">@color/white</item>
   </style>
 
+  <style name="ThemeOverlay.Simple.Blue1Primary" parent="">
+    <item name="colorPrimary">@color/simple_light_blue_500</item>
+  </style>
+
   <style name="ThemeOverlay.Simple.Blue2Primary" parent="">
     <item name="colorPrimary">@color/simple_light_blue_100</item>
     <item name="colorOnPrimary">@color/simple_light_blue_500</item>

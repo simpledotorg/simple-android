@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen android:id="@+id/applock_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/applock_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/window_background_auth"
@@ -13,17 +13,17 @@
     android:layout_height="wrap_content"
     android:background="?colorPrimary"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/spacing_16"
-    android:paddingEnd="@dimen/spacing_24"
     android:paddingStart="@dimen/spacing_24"
-    android:paddingTop="@dimen/spacing_4">
+    android:paddingTop="@dimen/spacing_4"
+    android:paddingEnd="@dimen/spacing_24"
+    android:paddingBottom="@dimen/spacing_16">
 
     <TextView
       android:id="@+id/facilityNameTextView"
       style="@style/Clinic.V2.FacilityNameTextView"
       android:layout_gravity="center_horizontal"
-      android:layout_marginEnd="@dimen/spacing_24"
       android:layout_marginStart="@dimen/spacing_24"
+      android:layout_marginEnd="@dimen/spacing_24"
       tools:text="A really long facility name that does not fit" />
 
     <TextView
@@ -62,7 +62,11 @@
 
       <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/createPinEditText"
-        style="@style/Clinic.StaggeredEditText.Pin"
+        style="@style/Widget.Simple.TextField.PinEntry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:gravity="center"
         android:imeOptions="actionDone"
         android:maxLength="4" />
 

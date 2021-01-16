@@ -96,21 +96,14 @@
 
       <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/otpEntryEditText"
-        android:layout_width="168dp"
+        style="@style/Widget.Simple.TextField.PinEntry.Otp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:digits="1234567890"
         android:gravity="center_horizontal"
         android:imeOptions="actionDone"
         android:inputType="number"
         android:maxLength="6"
-        android:textStyle="bold"
-        app:pinAnimationType="none"
-        app:pinCharacterMask="@null"
-        app:pinCharacterSpacing="@dimen/spacing_8"
-        app:pinLineColors="@color/pin_edittext_underline"
-        app:pinLineStroke="@dimen/spacing_1"
-        app:pinLineStrokeSelected="@dimen/spacing_1"
         tools:text="123456" />
 
       <TextView

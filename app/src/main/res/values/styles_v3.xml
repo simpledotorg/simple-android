@@ -173,4 +173,21 @@
     <item name="endIconDrawable">@drawable/ic_clear_circular_16dp</item>
   </style>
 
+  <style name="Widget.Simple.TextField.PinEntry" parent="">
+    <item name="android:digits">1234567890</item>
+    <item name="android:imeOptions">actionDone</item>
+    <item name="android:minWidth">168dp</item>
+    <item name="android:textStyle">bold</item>
+    <item name="pinAnimationType">none</item>
+    <item name="pinCharacterMask">\u25CF</item>
+    <item name="pinCharacterSpacing">@dimen/spacing_8</item>
+    <item name="pinLineColors">@color/pin_edittext_underline</item>
+    <item name="pinLineStroke">@dimen/spacing_1</item>
+    <item name="pinLineStrokeSelected">@dimen/spacing_1</item>
+  </style>
+
+  <style name="Widget.Simple.TextField.PinEntry.Otp">
+    <item name="pinCharacterMask">@null</item>
+  </style>
+
 </resources>

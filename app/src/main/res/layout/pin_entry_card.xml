@@ -42,20 +42,15 @@
 
       <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/pinEditText"
-        android:layout_width="168dp"
+        style="@style/Widget.Simple.TextField.PinEntry"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:digits="1234567890"
         android:gravity="center_horizontal"
         android:imeOptions="actionDone"
         android:inputType="numberPassword"
-        android:maxLength="4"
-        app:pinAnimationType="none"
-        app:pinCharacterMask="\u25CF"
-        app:pinCharacterSpacing="@dimen/spacing_8"
-        app:pinLineColors="@color/pin_edittext_underline"
-        app:pinLineStroke="@dimen/spacing_1"
-        app:pinLineStrokeSelected="@dimen/spacing_1" />
+        android:maxLength="4" />
 
       <LinearLayout
         android:id="@+id/pinentry_bruteforcelock"

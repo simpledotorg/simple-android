@@ -85,6 +85,12 @@
     <item name="editTextStyle">@style/Widget.Simple.TextField</item>
   </style>
 
+  <style name="ThemeOverlay.Simple.TabLayout" parent="">
+    <item name="colorPrimary">@color/simple_dark_blue_800</item>
+    <item name="colorSurface">@color/simple_dark_grey</item>
+    <item name="colorOnSurface">@color/white</item>
+  </style>
+
   <!-- Screen Specific Theme Overlays -->
   <style name="ThemeOverlay.Simple.SplashScreen" parent="">
     <item name="android:colorBackground">@color/simple_dark_blue_800</item>

@@ -243,4 +243,15 @@
     <item name="android:text">/</item>
   </style>
 
+  <style name="Widget.Simple.Button.UnitPreference">
+    <item name="iconGravity">textEnd</item>
+    <item name="iconSize">@dimen/spacing_16</item>
+    <item name="iconPadding">@dimen/spacing_4</item>
+    <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+    <item name="android:textColor">?attr/colorOnPrimary</item>
+    <item name="android:minHeight">@dimen/spacing_32</item>
+    <item name="cornerRadius">@null</item>
+    <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Simple.UnitPreferenceButton</item>
+  </style>
+
 </resources>

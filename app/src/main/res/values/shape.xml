@@ -9,7 +9,7 @@
     <item name="cornerSizeBottomRight">@dimen/spacing_0</item>
   </style>
 
-  <style name="ShapeAppearanceOverlay.Clinic.V2.UnitPreferenceButton" parent="">
+  <style name="ShapeAppearanceOverlay.Simple.UnitPreferenceButton" parent="">
     <item name="cornerFamily">rounded</item>
     <item name="cornerSize">50%</item>
   </style>

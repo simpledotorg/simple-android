@@ -518,7 +518,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
   }
 
   override fun onBackgroundClick() {
-    if (bloodSugarReadingEditText.text.isBlank()) {
+    if (bloodSugarReadingEditText.text.isNullOrBlank()) {
       super.onBackgroundClick()
     }
   }

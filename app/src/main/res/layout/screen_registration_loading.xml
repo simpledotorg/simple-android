@@ -4,7 +4,6 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/grey4"
   android:orientation="vertical">
 
   <ViewSwitcher
@@ -15,10 +14,10 @@
     android:outAnimation="@android:anim/fade_out">
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
-      style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center" />
+      android:layout_gravity="center"
+      android:indeterminate="true" />
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -30,10 +29,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:backgroundTint="@color/grey4"
         android:padding="16dp"
-        android:tint="@color/grey1"
         app:srcCompat="@drawable/ic_arrow_back_24dp"
+        app:tint="?attr/colorHighEmphasis"
         tools:ignore="ContentDescription" />
 
       <LinearLayout
@@ -46,20 +44,22 @@
 
         <TextView
           android:id="@+id/errorTitle"
-          style="@style/Clinic.V2.TextAppearance.H6.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:textAppearance="?attr/textAppearanceHeadline6"
+          android:textColor="?attr/colorHighEmphasis"
           tools:text="@string/registrationloader_error_unexpected_title" />
 
         <TextView
           android:id="@+id/errorMessage"
-          style="@style/Clinic.V2.TextAppearance.Body1Center.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_48"
           android:layout_marginTop="@dimen/spacing_8"
           android:layout_marginEnd="@dimen/spacing_48"
           android:gravity="center_horizontal"
+          android:textAppearance="?attr/textAppearanceBody1"
+          android:textColor="?attr/colorHighEmphasis"
           tools:text="@string/registrationloader_error_unexpected_message" />
 
         <com.google.android.material.button.MaterialButton
@@ -70,9 +70,12 @@
           android:layout_marginStart="@dimen/spacing_40"
           android:layout_marginTop="@dimen/spacing_24"
           android:layout_marginEnd="@dimen/spacing_40"
-          android:text="@string/registrationloader_retry"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+          android:text="@string/registrationloader_retry" />
+
       </LinearLayout>
+
     </LinearLayout>
+
   </ViewSwitcher>
+
 </org.simple.clinic.registration.register.RegistrationLoadingScreen>

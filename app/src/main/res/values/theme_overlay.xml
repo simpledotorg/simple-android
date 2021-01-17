@@ -113,4 +113,10 @@
     <item name="android:colorBackground">@color/white</item>
   </style>
 
+  <style name="ThemeOverlay.Simple.IntroVideoScreen" parent="">
+    <item name="android:colorBackground">@color/simple_dark_blue_800</item>
+    <item name="colorOnBackground">@color/white</item>
+    <item name="colorOnSurface">@color/white</item>
+  </style>
+
 </resources>

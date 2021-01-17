@@ -4,7 +4,8 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/blue0">
+  android:background="?android:attr/colorBackground"
+  android:theme="@style/ThemeOverlay.Simple.IntroVideoScreen">
 
   <TextView
     android:id="@+id/skipButton"
@@ -23,7 +24,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="@string/screenintrovideo_how_to_use_simple_app"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.H6.White100"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    android:textColor="?attr/colorOnBackground"
     app:layout_constraintBottom_toTopOf="@+id/introVideoSubtitle"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +37,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_24"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center.Grey2"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="?attr/colorMediumEmphasis"
     app:layout_constraintBottom_toTopOf="@+id/introVideoImageView"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -47,23 +50,21 @@
     android:layout_width="0dp"
     android:layout_height="208dp"
     android:foreground="?selectableItemBackground"
-    app:srcCompat="@drawable/thumbnail_simple_video"
     app:layout_constraintBottom_toTopOf="@id/watchVideoButton"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/introVideoSubtitle"
+    app:srcCompat="@drawable/thumbnail_simple_video"
     tools:ignore="ContentDescription,UnusedAttribute" />
 
   <com.google.android.material.button.MaterialButton
     android:id="@+id/watchVideoButton"
-    style="?attr/materialButtonStyle"
     android:layout_width="0dp"
-    android:layout_height="@dimen/spacing_56"
+    android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginTop="@dimen/spacing_24"
     android:layout_marginEnd="@dimen/spacing_16"
     android:text="@string/screenintrovideo_watch_video"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
     app:icon="@drawable/ic_play_circle_filled_24px"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"

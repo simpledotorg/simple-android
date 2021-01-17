@@ -202,4 +202,8 @@
     <item name="pinCharacterMask">@null</item>
   </style>
 
+  <style name="Widget.Simple.TextField.Layout.Large.ShortCodeEntry">
+    <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+  </style>
+
 </resources>

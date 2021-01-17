@@ -14,6 +14,7 @@
     <item name="materialButtonOutlinedStyle">@style/Widget.Simple.Button.OutlinedButton</item>
     <item name="materialCardViewStyle">@style/Widget.Simple.CardView</item>
     <item name="radioButtonStyle">@style/Widget.Simple.CompoundButton.RadioButton</item>
+    <item name="switchStyle">@style/Widget.Simple.CompoundButton.Switch</item>
     <item name="tabStyle">@style/Widget.Simple.TabLayout</item>
     <item name="textInputStyle">@style/Widget.Simple.TextField.Layout</item>
     <item name="toolbarStyle">@style/Widget.Simple.Toolbar</item>

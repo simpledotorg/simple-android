@@ -74,6 +74,10 @@
     <item name="colorSecondary">@color/simple_light_blue_500</item>
   </style>
 
+  <style name="ThemeOverlay.Simple.Switch" parent="">
+    <item name="colorSecondary">@color/simple_light_blue_500</item>
+  </style>
+
   <style name="ThemeOverlay.Simple.TextField.Large" parent="">
     <item name="colorSecondary">@color/simple_light_blue_500</item>
     <item name="editTextStyle">@style/Widget.Simple.TextField.Large</item>

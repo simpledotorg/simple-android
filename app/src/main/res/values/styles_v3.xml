@@ -99,6 +99,11 @@
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.RadioButton</item>
   </style>
 
+  <!-- Switch -->
+  <style name="Widget.Simple.CompoundButton.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Switch</item>
+  </style>
+
   <!-- Text Field -->
   <style name="Widget.Simple.TextField.Large" parent="Widget.MaterialComponents.TextInputEditText.FilledBox.Dense">
     <!-- Simple EditText is 40dp height, so we need total of 20dp top and bottom. -->

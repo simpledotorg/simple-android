@@ -3,7 +3,7 @@ package org.simple.clinic.teleconsultlog.prescription.patientinfo
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import androidx.cardview.widget.CardView
+import android.widget.FrameLayout
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.view_teleconsult_patient_info.view.*
 import org.simple.clinic.R
@@ -27,7 +27,7 @@ import javax.inject.Named
 class TeleconsultPatientInfoView constructor(
     context: Context,
     attrs: AttributeSet?
-) : CardView(context, attrs), TeleconsultPatientInfoUi {
+) : FrameLayout(context, attrs), TeleconsultPatientInfoUi {
 
   @Inject
   lateinit var userClock: UserClock

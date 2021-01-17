@@ -7,12 +7,18 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <androidx.appcompat.widget.Toolbar
-    android:id="@+id/prescribeddrugs_toolbar"
+  <com.google.android.material.appbar.AppBarLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:title="@string/patient_prescribeddrugs_screen_title" />
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.Toolbar
+      android:id="@+id/prescribeddrugs_toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      app:title="@string/patient_prescribeddrugs_screen_title" />
+
+  </com.google.android.material.appbar.AppBarLayout>
 
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/prescribeddrugs_recyclerview"
@@ -24,19 +30,16 @@
     android:paddingBottom="@dimen/spacing_16" />
 
   <androidx.constraintlayout.widget.ConstraintLayout
+    style="@style/Widget.Simple.Button.Frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/blue2"
     android:clipToPadding="false">
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/prescribeddrugs_done"
-      style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_margin="@dimen/spacing_8"
       android:text="@string/patientsummary_finish_saving_patient"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       android:visibility="gone"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
@@ -46,12 +49,10 @@
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/prescribeddrugs_refill"
-      style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/spacing_8"
       android:text="@string/patientsummary_finish_refill_medicine"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       android:visibility="gone"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"

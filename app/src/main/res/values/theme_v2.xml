@@ -10,6 +10,7 @@
     <!-- Framework, AppCompat, Design or Material Widget Styles -->
     <item name="appBarLayoutStyle">@style/Widget.Simple.AppBarLayout</item>
     <item name="borderlessButtonStyle">@style/Widget.Simple.Button.TextButton</item>
+    <item name="checkboxStyle">@style/Widget.Simple.CompoundButton.CheckBox</item>
     <item name="materialButtonStyle">@style/Widget.Simple.Button</item>
     <item name="materialButtonOutlinedStyle">@style/Widget.Simple.Button.OutlinedButton</item>
     <item name="materialCardViewStyle">@style/Widget.Simple.CardView</item>

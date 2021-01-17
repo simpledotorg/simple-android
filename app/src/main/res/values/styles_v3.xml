@@ -104,6 +104,11 @@
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Switch</item>
   </style>
 
+  <!-- Check Box -->
+  <style name="Widget.Simple.CompoundButton.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.CheckBox</item>
+  </style>
+
   <!-- Text Field -->
   <style name="Widget.Simple.TextField.Large" parent="Widget.MaterialComponents.TextInputEditText.FilledBox.Dense">
     <!-- Simple EditText is 40dp height, so we need total of 20dp top and bottom. -->

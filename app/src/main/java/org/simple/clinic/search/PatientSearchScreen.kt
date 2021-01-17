@@ -71,6 +71,9 @@ class PatientSearchScreen(
   private val searchButtonFrame
     get() = binding!!.searchButtonFrame
 
+  private val searchButton
+    get() = binding!!.searchButton
+
   private val allPatientsInFacility: AllPatientsInFacilityView by unsafeLazy {
     allPatientsInFacilityView
   }
@@ -153,8 +156,7 @@ class PatientSearchScreen(
         .filter { it.actionId == EditorInfo.IME_ACTION_SEARCH }
         .map { SearchClicked() }
 
-    val searchClicksFromButton = searchButtonFrame
-        .button
+    val searchClicksFromButton = searchButton
         .clicks()
         .map { SearchClicked() }
 

@@ -3,7 +3,8 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="wrap_content">
+  android:layout_height="wrap_content"
+  tools:background="?attr/colorSurface">
 
   <TextView
     android:id="@+id/title"
@@ -13,7 +14,8 @@
     android:layout_marginBottom="@dimen/spacing_4"
     android:gravity="center_horizontal"
     android:text="@string/registrationconfirmfacility_title"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    android:textColor="?attr/colorOnSurface"
     app:layout_constraintBottom_toTopOf="@+id/facilityNameTextView"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +28,8 @@
     android:layout_marginTop="@dimen/spacing_32"
     android:layout_marginBottom="@dimen/spacing_24"
     android:gravity="center"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.H5.Grey0"
+    android:textAppearance="?attr/textAppearanceHeadline5"
+    android:textColor="?attr/colorOnSurface"
     app:layout_constraintBottom_toTopOf="@+id/buttonLayout"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -55,13 +58,12 @@
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/yesButton"
-      style="?attr/materialButtonStyle"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_8"
       android:layout_weight="1"
-      android:gravity="center"
       android:text="@string/registrationconfirmfacility_positive_button" />
+
   </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

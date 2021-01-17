@@ -11,12 +11,13 @@
 
   <TextView
     android:id="@+id/statusTextView"
-    style="@style/Clinic.V2.TextAppearance.Body2Center.Grey1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:drawablePadding="@dimen/spacing_8"
     android:gravity="center_vertical"
     android:text="@string/syncindicator_status_pending"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="?attr/colorHighEmphasis"
     app:drawableStartCompat="@drawable/ic_cloud_upload_16dp" />
 
 </LinearLayout>

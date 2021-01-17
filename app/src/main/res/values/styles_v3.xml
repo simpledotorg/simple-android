@@ -211,4 +211,36 @@
     <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
   </style>
 
+  <style name="Widget.Simple.TextField.Large.MeasurementInput">
+    <item name="android:paddingTop">@dimen/spacing_8</item>
+    <item name="android:paddingBottom">@dimen/spacing_8</item>
+    <item name="android:paddingStart">@dimen/spacing_4</item>
+    <item name="android:paddingEnd">@dimen/spacing_4</item>
+    <item name="android:textAppearance">?attr/textAppearanceHeadline3</item>
+    <item name="android:minWidth">84dp</item>
+    <item name="android:textAlignment">center</item>
+  </style>
+
+  <style name="Widget.Simple.TextField.Layout.Large.MeasurementInput">
+    <item name="boxBackgroundColor">@android:color/transparent</item>
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField.Large.MeasurementInput</item>
+  </style>
+
+  <style name="Widget.Simple.TextField.Large.MeasurementInput.Date">
+    <item name="android:minWidth">64dp</item>
+    <item name="android:minEms">1</item>
+  </style>
+
+  <style name="Widget.Simple.TextField.Layout.Large.MeasurementInput.Date">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField.Large.MeasurementInput.Date</item>
+  </style>
+
+  <style name="Widget.Simple.MeasurementInputSeparator" parent="android:Widget">
+    <item name="android:layout_marginStart">@dimen/spacing_8</item>
+    <item name="android:layout_marginEnd">@dimen/spacing_8</item>
+    <item name="android:textAppearance">?attr/textAppearanceHeadline3</item>
+    <item name="android:textColor">?attr/colorMediumEmphasis</item>
+    <item name="android:text">/</item>
+  </style>
+
 </resources>

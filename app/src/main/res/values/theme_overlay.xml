@@ -87,6 +87,14 @@
     <item name="editTextStyle">@style/Widget.Simple.TextField.Large</item>
   </style>
 
+  <style name="ThemeOverlay.Simple.TextField.Large.MeasurementInput">
+    <item name="editTextStyle">@style/Widget.Simple.TextField.Large.MeasurementInput</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.TextField.Large.MeasurementInput.Date">
+    <item name="editTextStyle">@style/Widget.Simple.TextField.Large.MeasurementInput.Date</item>
+  </style>
+
   <style name="ThemeOverlay.Simple.TextField.Flat" parent="">
     <item name="colorSecondary">@color/simple_light_blue_500</item>
     <item name="editTextStyle">@style/Widget.Simple.TextField.Search</item>

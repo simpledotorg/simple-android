@@ -34,7 +34,7 @@
       android:layout_marginEnd="@dimen/spacing_24"
       android:text="@string/patientsearchresults_empty_state"
       android:textAppearance="?attr/textAppearanceHeadline6"
-      android:textColor="?attr/colorMediumEmphasis" />
+      android:textColor="@color/color_on_surface_34" />
 
     <View
       android:layout_width="2dp"
@@ -44,7 +44,7 @@
       android:layout_centerHorizontal="true"
       android:layout_marginTop="@dimen/spacing_16"
       android:layout_marginBottom="@dimen/spacing_12"
-      android:background="?attr/colorMediumEmphasis" />
+      android:background="@color/color_on_surface_34" />
 
     <ImageView
       android:id="@+id/searchresults_empty_state_arrow"
@@ -53,7 +53,7 @@
       android:layout_alignParentBottom="true"
       android:layout_centerHorizontal="true"
       app:srcCompat="@drawable/ic_arrow_downward_24dp"
-      app:tint="?attr/colorMediumEmphasis"
+      app:tint="@color/color_on_surface_34"
       tools:ignore="ContentDescription" />
 
   </RelativeLayout>

@@ -75,7 +75,7 @@
       android:layout_marginTop="@dimen/spacing_16"
       android:text="@string/view_teleconsult_doctor_info_add_signature"
       app:layout_constraintTop_toBottomOf="@id/medicalRegistrationIdLayout"
-      app:strokeColor="?attr/colorMediumEmphasis" />
+      app:strokeColor="@color/color_on_surface_34" />
 
     <TextView
       android:id="@+id/signatureErrorTextView"

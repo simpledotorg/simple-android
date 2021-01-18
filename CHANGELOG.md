@@ -22,6 +22,7 @@
 - Bump Dagger dependency
 - Clean up the abstract screen types
 - Migrate `AuthenticationActivity` to the new navigation framework
+- Improve instant search ordering
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 13 Jan 2020] Migrate `TheActivity` to the new navigation framework
 

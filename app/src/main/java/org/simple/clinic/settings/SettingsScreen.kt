@@ -18,6 +18,8 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreenKey
 import org.simple.clinic.util.unsafeLazy
@@ -29,7 +31,7 @@ class SettingsScreen(
 ) : LinearLayout(context, attributeSet), SettingsUi, UiActions {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var settingsEffectHandler: SettingsEffectHandler.Factory
@@ -99,7 +101,7 @@ class SettingsScreen(
     context.injector<Injector>().inject(this)
 
     toggleChangeLanguageFeature()
-    toolbar.setNavigationOnClickListener { screenRouter.pop() }
+    toolbar.setNavigationOnClickListener { router.pop() }
 
     updateAppVersionButton.setOnClickListener {
       launchPlayStoreForUpdate()
@@ -145,7 +147,7 @@ class SettingsScreen(
   }
 
   override fun openLanguageSelectionScreen() {
-    screenRouter.push(ChangeLanguageScreenKey())
+    router.push(ChangeLanguageScreenKey().wrap())
   }
 
   override fun displayAppVersion(version: String) {

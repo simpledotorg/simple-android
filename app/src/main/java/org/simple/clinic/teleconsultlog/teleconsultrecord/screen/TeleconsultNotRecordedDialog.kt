@@ -9,14 +9,14 @@ import androidx.fragment.app.FragmentManager
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
-import org.simple.clinic.router.screen.RouterDirection
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import javax.inject.Inject
 
 class TeleconsultNotRecordedDialog : DialogFragment() {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   companion object {
     private const val FRAGMENT_TAG = "teleconsult_not_recorded_alert"
@@ -43,7 +43,7 @@ class TeleconsultNotRecordedDialog : DialogFragment() {
   }
 
   private fun navigateToHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreenKey, direction = RouterDirection.BACKWARD)
+    router.clearHistoryAndPush(HomeScreenKey.wrap())
   }
 
   interface Injector {

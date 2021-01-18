@@ -8,4 +8,5 @@ interface TheActivityUiActions {
   fun showUserLoggedOutOnOtherDeviceAlert()
   fun redirectToLogin()
   fun showAccessDeniedScreen(fullName: String)
+  fun showHomeScreen()
 }

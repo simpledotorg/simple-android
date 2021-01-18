@@ -21,3 +21,5 @@ object ListenForUserDisapprovals: TheActivityEffect()
 object ClearPatientData: TheActivityEffect()
 
 object ShowAccessDeniedScreen: TheActivityEffect()
+
+object ShowHomeScreen: TheActivityEffect()

@@ -11,6 +11,6 @@
   android:textAppearance="?attr/textAppearanceBody1Numeric"
   android:textColor="?attr/colorOnSurface"
   app:drawableStartCompat="@drawable/patient_id_card"
-  app:drawableTint="?attr/colorHighEmphasis"
+  app:drawableTint="@color/color_on_surface_67"
   tools:targetApi="m"
   tools:text="12345678" />

@@ -27,7 +27,7 @@
       android:layout_height="wrap_content"
       app:contentInsetStartWithNavigation="@dimen/spacing_56"
       app:navigationIcon="@drawable/ic_arrow_back_24dp"
-      app:navigationIconTint="?attr/colorHighEmphasis">
+      app:navigationIconTint="@color/color_on_surface_67">
 
       <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/searchQueryTextInputLayout"
@@ -47,7 +47,7 @@
           android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
           android:privateImeOptions="nm"
           android:textColor="?attr/colorOnSurface"
-          android:textColorHint="?attr/colorHighEmphasis" />
+          android:textColorHint="@color/color_on_surface_67" />
 
       </com.google.android.material.textfield.TextInputLayout>
 

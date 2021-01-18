@@ -71,7 +71,7 @@
         android:layout_marginTop="@dimen/spacing_12"
         android:text="@string/registrationlocation_permission_rationale_description"
         android:textAppearance="?attr/textAppearanceSubtitle1"
-        android:textColor="?attr/colorHighEmphasis" />
+        android:textColor="@color/color_on_surface_67" />
 
       <com.google.android.material.button.MaterialButton
         android:id="@+id/allowAccessButton"

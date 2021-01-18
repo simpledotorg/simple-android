@@ -80,7 +80,7 @@
     android:layout_marginEnd="@dimen/spacing_12"
     android:textAlignment="viewEnd"
     android:textAppearance="?attr/textAppearanceBody2"
-    android:textColor="?attr/colorHighEmphasis"
+    android:textColor="@color/color_on_surface_67"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="@id/flow"

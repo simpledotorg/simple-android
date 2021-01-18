@@ -116,7 +116,7 @@
         android:layout_marginTop="@dimen/spacing_8"
         android:text="@string/forgotpin_confirm_pin_message"
         android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="?attr/colorHighEmphasis" />
+        android:textColor="@color/color_on_surface_67" />
 
     </LinearLayout>
 

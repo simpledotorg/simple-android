@@ -10,5 +10,5 @@
   android:paddingEnd="@dimen/spacing_24"
   android:paddingBottom="@dimen/spacing_16"
   android:textAppearance="?attr/textAppearanceBody1"
-  android:textColor="?attr/colorHighEmphasis"
+  android:textColor="@color/color_on_surface_67"
   tools:text="20 mg" />

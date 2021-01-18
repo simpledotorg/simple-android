@@ -87,7 +87,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textAppearance="?attr/textAppearanceHeadline6"
-          android:textColor="?attr/colorHighEmphasis"
+          android:textColor="@color/color_on_surface_67"
           tools:text="@string/selectcountry_networkerror" />
 
         <com.google.android.material.button.MaterialButton

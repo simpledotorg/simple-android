@@ -15,7 +15,7 @@
     android:layout_height="wrap_content"
     android:textAllCaps="true"
     android:textAppearance="?attr/textAppearanceTag"
-    android:textColor="?attr/colorHighEmphasis"
+    android:textColor="@color/color_on_surface_67"
     tools:text="Suggested clinics" />
 
 </FrameLayout>

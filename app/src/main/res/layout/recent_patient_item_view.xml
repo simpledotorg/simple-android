@@ -60,7 +60,7 @@
       android:text="@string/recent_patients_itemview_last_seen"
       android:textAllCaps="true"
       android:textAppearance="?attr/textAppearanceTag"
-      android:textColor="?attr/colorHighEmphasis"
+      android:textColor="@color/color_on_surface_67"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toStartOf="@+id/patientNameTextView"
       app:layout_constraintTop_toBottomOf="@+id/newRegistrationTextView" />
@@ -72,7 +72,7 @@
       android:ellipsize="end"
       android:maxLines="1"
       android:textAppearance="?attr/textAppearanceBody2"
-      android:textColor="?attr/colorHighEmphasis"
+      android:textColor="@color/color_on_surface_67"
       app:layout_constraintBaseline_toBaselineOf="@+id/lastSeenLabelTextView"
       app:layout_constraintStart_toEndOf="@+id/lastSeenLabelTextView"
       tools:text="Today" />

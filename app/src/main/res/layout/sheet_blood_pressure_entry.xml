@@ -118,7 +118,7 @@
           android:labelFor="@+id/systolicEditText"
           android:text="@string/bloodpressureentry_systolic"
           android:textAppearance="?attr/textAppearanceBody2"
-          android:textColor="?attr/colorHighEmphasis"
+          android:textColor="@color/color_on_surface_67"
           app:layout_constraintEnd_toEndOf="@+id/systolicTextFieldLayout"
           app:layout_constraintStart_toStartOf="@+id/systolicTextFieldLayout"
           app:layout_constraintTop_toBottomOf="@+id/systolicTextFieldLayout" />
@@ -162,7 +162,7 @@
           android:labelFor="@id/diastolicEditText"
           android:text="@string/bloodpressureentry_diastolic"
           android:textAppearance="?attr/textAppearanceBody2"
-          android:textColor="?attr/colorHighEmphasis"
+          android:textColor="@color/color_on_surface_67"
           app:layout_constraintEnd_toEndOf="@+id/diastolicTextFieldLayout"
           app:layout_constraintStart_toStartOf="@+id/diastolicTextFieldLayout"
           app:layout_constraintTop_toBottomOf="@+id/diastolicTextFieldLayout" />
@@ -276,7 +276,7 @@
             android:labelFor="@id/dayEditText"
             android:text="@string/bloodpressureentry_day"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorHighEmphasis"
+            android:textColor="@color/color_on_surface_67"
             app:layout_constraintEnd_toEndOf="@+id/dayTextFieldLayout"
             app:layout_constraintStart_toStartOf="@+id/dayTextFieldLayout"
             app:layout_constraintTop_toBottomOf="@+id/dayTextFieldLayout" />
@@ -321,7 +321,7 @@
             android:labelFor="@id/monthEditText"
             android:text="@string/bloodpressureentry_month"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorHighEmphasis"
+            android:textColor="@color/color_on_surface_67"
             app:layout_constraintEnd_toEndOf="@+id/monthTextFieldLayout"
             app:layout_constraintStart_toStartOf="@+id/monthTextFieldLayout"
             app:layout_constraintTop_toBottomOf="@+id/monthTextFieldLayout" />
@@ -366,7 +366,7 @@
             android:labelFor="@id/yearEditText"
             android:text="@string/bloodpressureentry_year"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorHighEmphasis"
+            android:textColor="@color/color_on_surface_67"
             app:layout_constraintEnd_toEndOf="@+id/yearTextFieldLayout"
             app:layout_constraintStart_toStartOf="@+id/yearTextFieldLayout"
             app:layout_constraintTop_toBottomOf="@+id/yearTextFieldLayout" />

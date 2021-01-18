@@ -51,7 +51,7 @@
         android:lines="1"
         android:text="@string/settings_name"
         android:textAppearance="?attr/textAppearanceCaption"
-        android:textColor="?attr/colorHighEmphasis"
+        android:textColor="@color/color_on_surface_67"
         app:layout_constraintStart_toEndOf="@id/accountIcon"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -98,7 +98,7 @@
         android:lines="1"
         android:text="@string/settings_number"
         android:textAppearance="?attr/textAppearanceCaption"
-        android:textColor="?attr/colorHighEmphasis"
+        android:textColor="@color/color_on_surface_67"
         app:layout_constraintStart_toEndOf="@id/accountIcon"
         app:layout_constraintTop_toBottomOf="@id/userNameDivider" />
 
@@ -144,7 +144,7 @@
         android:lines="1"
         android:text="@string/settings_language"
         android:textAppearance="?attr/textAppearanceCaption"
-        android:textColor="?attr/colorHighEmphasis"
+        android:textColor="@color/color_on_surface_67"
         app:layout_constraintStart_toEndOf="@id/languageIcon"
         app:layout_constraintTop_toBottomOf="@id/userPhoneDivider" />
 
@@ -212,7 +212,7 @@
         android:lines="1"
         android:text="@string/settings_software"
         android:textAppearance="?attr/textAppearanceCaption"
-        android:textColor="?attr/colorHighEmphasis"
+        android:textColor="@color/color_on_surface_67"
         app:layout_constraintStart_toEndOf="@id/appVersionIcon"
         app:layout_constraintTop_toBottomOf="@id/currentLanguageDivider" />
 

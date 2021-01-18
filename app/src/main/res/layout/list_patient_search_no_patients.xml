@@ -9,4 +9,4 @@
   android:padding="@dimen/spacing_32"
   android:text="@string/patientsearchresults_no_patients_match"
   android:textAppearance="?attr/textAppearanceSubtitle1"
-  android:textColor="?attr/colorHighEmphasis" />
+  android:textColor="@color/color_on_surface_67" />

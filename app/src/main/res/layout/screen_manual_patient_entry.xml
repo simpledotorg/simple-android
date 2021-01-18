@@ -13,7 +13,7 @@
     android:background="?attr/selectableItemBackgroundBorderless"
     android:contentDescription="@string/patiententry_contentdescription_up_button"
     android:padding="@dimen/spacing_12"
-    android:tint="?attr/colorHighEmphasis"
+    android:tint="@color/color_on_surface_67"
     app:srcCompat="@drawable/ic_arrow_back_24dp" />
 
   <ScrollView
@@ -85,7 +85,7 @@
           android:text="@string/patiententry_dateofbirth_and_age_separator"
           android:textAllCaps="true"
           android:textAppearance="?attr/textAppearanceBody1"
-          android:textColor="?attr/colorHighEmphasis" />
+          android:textColor="@color/color_on_surface_67" />
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/dateOfBirthInputLayout"
@@ -121,7 +121,7 @@
           android:paddingStart="@dimen/spacing_4"
           android:text="@string/patiententry_identifier"
           android:textAppearance="?attr/textAppearanceBody2"
-          android:textColor="?attr/colorHighEmphasis" />
+          android:textColor="@color/color_on_surface_67" />
 
         <TextView
           android:id="@+id/identifierTextView"
@@ -134,7 +134,7 @@
           android:textAppearance="?attr/textAppearanceBody1Numeric"
           android:textColor="?attr/colorOnBackground"
           tools:drawableStart="@drawable/patient_id_card"
-          tools:drawableTint="?attr/colorHighEmphasis"
+          tools:drawableTint="@color/color_on_surface_67"
           tools:text="123 4567" />
 
       </LinearLayout>

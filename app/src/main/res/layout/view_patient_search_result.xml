@@ -60,7 +60,7 @@
           android:layout_height="wrap_content"
           android:text="@string/patientsearchresults_item_phone_number"
           android:textAppearance="?attr/textAppearanceBody2Bold"
-          android:textColor="?attr/colorHighEmphasis" />
+          android:textColor="@color/color_on_surface_67" />
 
         <org.simple.clinic.widgets.TintableCompoundDrawableTextView
           android:id="@+id/phoneNumberTextView"
@@ -68,7 +68,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
           android:textAppearance="?attr/textAppearanceBody2Numeric"
-          android:textColor="?attr/colorHighEmphasis"
+          android:textColor="@color/color_on_surface_67"
           tools:text="98*****365" />
 
       </LinearLayout>
@@ -84,7 +84,7 @@
           android:layout_height="wrap_content"
           android:text="@string/patientsearchresults_item_birthdate"
           android:textAppearance="?attr/textAppearanceBody2Bold"
-          android:textColor="?attr/colorHighEmphasis" />
+          android:textColor="@color/color_on_surface_67" />
 
         <TextView
           android:id="@+id/dateOfBirthTextView"
@@ -92,7 +92,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
           android:textAppearance="?attr/textAppearanceBody2"
-          android:textColor="?attr/colorHighEmphasis"
+          android:textColor="@color/color_on_surface_67"
           tools:text="24-Mar-1975" />
 
       </LinearLayout>
@@ -109,7 +109,7 @@
           android:layout_height="wrap_content"
           android:text="@string/patientsearchresults_item_last_seen"
           android:textAppearance="?attr/textAppearanceBody2Bold"
-          android:textColor="?attr/colorHighEmphasis" />
+          android:textColor="@color/color_on_surface_67" />
 
         <TextView
           android:id="@+id/visitedTextView"
@@ -119,7 +119,7 @@
           android:ellipsize="end"
           android:maxLines="1"
           android:textAppearance="?attr/textAppearanceBody2"
-          android:textColor="?attr/colorHighEmphasis"
+          android:textColor="@color/color_on_surface_67"
           tools:text="12-Jul-2018" />
 
       </LinearLayout>

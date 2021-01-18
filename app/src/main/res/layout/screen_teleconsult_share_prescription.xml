@@ -60,7 +60,7 @@
             android:text="@string/screen_teleconsult_share_prescription_teleconsult_prescription"
             android:textAllCaps="true"
             android:textAppearance="?attr/textAppearanceTag"
-            android:textColor="?attr/colorHighEmphasis"
+            android:textColor="@color/color_on_surface_67"
             app:layout_constraintBottom_toTopOf="@+id/patientNameTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_4"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorHighEmphasis"
+            android:textColor="@color/color_on_surface_67"
             app:layout_constraintBottom_toTopOf="@+id/prescriptionDateTextView"
             app:layout_constraintTop_toBottomOf="@id/patientNameTextView"
             tools:text="House No. 14, Street No. 10/11, Guru Gobind Singh Nagar" />
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_12"
             android:textAppearance="?attr/textAppearanceBody2Bold"
-            android:textColor="?attr/colorHighEmphasis"
+            android:textColor="@color/color_on_surface_67"
             app:layout_constraintBottom_toTopOf="@+id/sharePrescriptionPatientDetailsDivider"
             app:layout_constraintTop_toBottomOf="@id/patientAddressTextView"
             tools:text="15-Sep-2020" />
@@ -160,7 +160,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_8"
             android:textAppearance="?attr/textAppearanceBody1"
-            android:textColor="?attr/colorHighEmphasis"
+            android:textColor="@color/color_on_surface_67"
             app:layout_constraintBottom_toTopOf="@+id/sharePrescriptionInstructionsDivider"
             app:layout_constraintTop_toBottomOf="@id/instructionsHeadingTextView"
             tools:text="Remind to come back in 30 days" />
@@ -193,7 +193,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorHighEmphasis"
+            android:textColor="@color/color_on_surface_67"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/signatureImageView"
             tools:text="Medical Registration ID: 637835171" />

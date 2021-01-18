@@ -22,7 +22,7 @@
       android:layout_marginEnd="@dimen/spacing_56"
       android:gravity="center"
       android:textAppearance="?attr/textAppearanceHeadline6"
-      android:textColor="?attr/colorHighEmphasis"
+      android:textColor="@color/color_on_surface_67"
       tools:text="No patients at CHC Bhucho" />
 
     <TextView
@@ -34,7 +34,7 @@
       android:gravity="center"
       android:text="@string/allpatientsinfacility_nopatients_message"
       android:textAppearance="?attr/textAppearanceSubtitle1"
-      android:textColor="?attr/colorHighEmphasis" />
+      android:textColor="@color/color_on_surface_67" />
 
   </LinearLayout>
 

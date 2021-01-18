@@ -60,7 +60,7 @@
           android:layout_height="wrap_content"
           android:text="@string/overduelist_diagnosis_label"
           android:textAppearance="?attr/textAppearanceBody2Bold"
-          android:textColor="?attr/colorHighEmphasis" />
+          android:textColor="@color/color_on_surface_67" />
 
         <TextView
           android:id="@+id/diagnosisTextView"
@@ -68,7 +68,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
           android:textAppearance="?attr/textAppearanceBody2"
-          android:textColor="?attr/colorHighEmphasis"
+          android:textColor="@color/color_on_surface_67"
           tools:text="Hypertension, Diabetes" />
 
       </LinearLayout>
@@ -85,7 +85,7 @@
           android:layout_height="wrap_content"
           android:text="@string/overduelist_visited"
           android:textAppearance="?attr/textAppearanceBody2Bold"
-          android:textColor="?attr/colorHighEmphasis" />
+          android:textColor="@color/color_on_surface_67" />
 
         <TextView
           android:id="@+id/patientLastSeenTextView"
@@ -93,7 +93,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
           android:textAppearance="?attr/textAppearanceBody2"
-          android:textColor="?attr/colorHighEmphasis"
+          android:textColor="@color/color_on_surface_67"
           tools:text="01-01-2020" />
 
       </LinearLayout>
@@ -112,7 +112,7 @@
           android:layout_height="wrap_content"
           android:text="@string/overduelist_transferred"
           android:textAppearance="?attr/textAppearanceBody2Bold"
-          android:textColor="?attr/colorHighEmphasis" />
+          android:textColor="@color/color_on_surface_67" />
 
         <TextView
           android:id="@+id/patientTransferredTextView"
@@ -120,7 +120,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
           android:textAppearance="?attr/textAppearanceBody2"
-          android:textColor="?attr/colorHighEmphasis"
+          android:textColor="@color/color_on_surface_67"
           tools:text="PHC Obvious" />
 
       </LinearLayout>

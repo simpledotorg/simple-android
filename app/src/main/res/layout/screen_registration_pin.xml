@@ -82,7 +82,7 @@
         android:layout_marginTop="@dimen/spacing_16"
         android:text="@string/registrationpin_pin_hint"
         android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="?attr/colorHighEmphasis" />
+        android:textColor="@color/color_on_surface_67" />
 
       <TextView
         android:id="@+id/errorTextView"

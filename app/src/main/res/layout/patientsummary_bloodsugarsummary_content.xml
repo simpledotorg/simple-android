@@ -52,7 +52,7 @@
     android:gravity="center"
     android:text="@string/bloodsugarsummaryview_no_blood_sugars"
     android:textAppearance="?attr/textAppearanceBody1"
-    android:textColor="?attr/colorHighEmphasis"
+    android:textColor="@color/color_on_surface_67"
     android:visibility="invisible"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"

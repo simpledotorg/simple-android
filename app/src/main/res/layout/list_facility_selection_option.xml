@@ -30,7 +30,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:textAppearance="?attr/textAppearanceBody2"
-      android:textColor="?attr/colorHighEmphasis"
+      android:textColor="@color/color_on_surface_67"
       tools:text="A really long address for this facility to test line wrapping" />
 
   </LinearLayout>

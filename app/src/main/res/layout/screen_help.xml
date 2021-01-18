@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:text="@string/help_no_connection"
         android:textAppearance="?attr/textAppearanceHeadline6"
-        android:textColor="?attr/colorHighEmphasis" />
+        android:textColor="@color/color_on_surface_67" />
 
       <com.google.android.material.button.MaterialButton
         android:id="@+id/tryAgainButton"

@@ -97,7 +97,7 @@
     android:layout_height="wrap_content"
     android:textAlignment="viewEnd"
     android:textAppearance="?attr/textAppearanceBody2"
-    android:textColor="?attr/colorHighEmphasis"
+    android:textColor="@color/color_on_surface_67"
     app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
     app:layout_constraintEnd_toStartOf="@id/endGuideline"
     app:layout_constraintStart_toEndOf="@id/editButton"

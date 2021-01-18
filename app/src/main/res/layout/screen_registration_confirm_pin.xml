@@ -84,7 +84,7 @@
         android:layout_marginBottom="@dimen/spacing_16"
         android:text="@string/registrationconfirmpin_hint"
         android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="?attr/colorHighEmphasis"
+        android:textColor="@color/color_on_surface_67"
         android:visibility="visible" />
 
       <LinearLayout

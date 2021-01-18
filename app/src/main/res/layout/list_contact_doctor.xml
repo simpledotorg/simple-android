@@ -27,7 +27,7 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:textAppearance="?attr/textAppearanceBody2Numeric"
-    android:textColor="?attr/colorHighEmphasis"
+    android:textColor="@color/color_on_surface_67"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="@id/doctorNameTextView"
     app:layout_constraintStart_toStartOf="parent"

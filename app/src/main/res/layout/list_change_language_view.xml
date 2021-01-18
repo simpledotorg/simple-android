@@ -19,7 +19,7 @@
     app:layout_constraintTop_toTopOf="parent"
     tools:ignore="RtlSymmetry"
     tools:text="English"
-    tools:textColor="?attr/colorHighEmphasis" />
+    tools:textColor="@color/color_on_surface_67" />
 
   <View
     android:layout_width="0dp"

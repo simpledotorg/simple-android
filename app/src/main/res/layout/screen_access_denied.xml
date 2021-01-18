@@ -95,7 +95,7 @@
         android:lineSpacingExtra="2sp"
         android:text="@string/accessdeniedscreen_description"
         android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="?attr/colorHighEmphasis" />
+        android:textColor="@color/color_on_surface_67" />
 
     </LinearLayout>
 

@@ -31,7 +31,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="16dp"
         app:srcCompat="@drawable/ic_arrow_back_24dp"
-        app:tint="?attr/colorHighEmphasis"
+        app:tint="@color/color_on_surface_67"
         tools:ignore="ContentDescription" />
 
       <LinearLayout
@@ -47,7 +47,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textAppearance="?attr/textAppearanceHeadline6"
-          android:textColor="?attr/colorHighEmphasis"
+          android:textColor="@color/color_on_surface_67"
           tools:text="@string/registrationloader_error_unexpected_title" />
 
         <TextView
@@ -59,7 +59,7 @@
           android:layout_marginEnd="@dimen/spacing_48"
           android:gravity="center_horizontal"
           android:textAppearance="?attr/textAppearanceBody1"
-          android:textColor="?attr/colorHighEmphasis"
+          android:textColor="@color/color_on_surface_67"
           tools:text="@string/registrationloader_error_unexpected_message" />
 
         <com.google.android.material.button.MaterialButton

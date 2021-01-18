@@ -13,7 +13,7 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackgroundBorderless"
     android:padding="@dimen/spacing_16"
-    android:tint="?attr/colorHighEmphasis"
+    android:tint="@color/color_on_surface_67"
     android:tintMode="src_in"
     app:srcCompat="@drawable/ic_close_24dp"
     tools:ignore="ContentDescription" />

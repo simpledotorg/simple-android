@@ -3901,10 +3901,16 @@ class PatientRepositoryAndroidTest {
         phoneNumber = "1234567890",
         assignedFacilityId = currentFacility.uuid)
 
+    val patient2WithCurrentFacilityAsAssignedFacility = UUID.fromString("23761fad-432d-4ef9-a387-1a7f1a127ba5")
+    createPatientWithPhoneNumberAndAssignedFacilityID(
+        patientUuid = patient2WithCurrentFacilityAsAssignedFacility,
+        phoneNumber = "3456789012",
+        assignedFacilityId = currentFacility.uuid)
+
     val patientWithAnotherFacilityAsAssignedFacility = UUID.fromString("f6cfd657-bf32-40c1-9dd2-4c956fd910a8")
     createPatientWithPhoneNumberAndAssignedFacilityID(
         patientUuid = patientWithAnotherFacilityAsAssignedFacility,
-        phoneNumber = "1239382472983",
+        phoneNumber = "1239382472934",
         assignedFacilityId = facility2.uuid
     )
 
@@ -3915,7 +3921,9 @@ class PatientRepositoryAndroidTest {
 
     //then
     assertThat(searchResults).containsExactly(
-        patientWithCurrentFacilityAsAssignedFacility, patientWithAnotherFacilityAsAssignedFacility
+        patient2WithCurrentFacilityAsAssignedFacility,
+        patientWithCurrentFacilityAsAssignedFacility,
+        patientWithAnotherFacilityAsAssignedFacility
     )
   }
 

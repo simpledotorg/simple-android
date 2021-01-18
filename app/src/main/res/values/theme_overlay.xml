@@ -33,17 +33,17 @@
     <item name="colorOnPrimary">@color/simple_red_500</item>
   </style>
 
-  <style name="ThemeOverlay.Simple.HighEmphasisPrimary" parent="">
-    <item name="colorPrimary">@color/color_high_emphasis</item>
+  <style name="ThemeOverlay.Simple.OnSurface67Primary" parent="">
+    <item name="colorPrimary">@color/color_on_surface_67</item>
   </style>
 
-  <style name="ThemeOverlay.Simple.MediumEmphasisPrimary" parent="">
-    <item name="colorPrimary">@color/color_medium_emphasis</item>
+  <style name="ThemeOverlay.Simple.OnSurface34Primary" parent="">
+    <item name="colorPrimary">@color/color_on_surface_34</item>
   </style>
 
   <style name="ThemeOverlay.Simple.Light.Dialog.Alert" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-    <item name="buttonBarNeutralButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.MediumEmphasis</item>
-    <item name="buttonBarNegativeButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.MediumEmphasis</item>
+    <item name="buttonBarNeutralButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.OnSurface34</item>
+    <item name="buttonBarNegativeButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.OnSurface34</item>
     <item name="buttonBarPositiveButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog</item>
   </style>
 
@@ -54,8 +54,8 @@
   <style name="ThemeOverlay.Simple.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
     <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.Simple.Title.Text</item>
     <item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialog.Simple.Body.Text</item>
-    <item name="buttonBarNeutralButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.MediumEmphasis</item>
-    <item name="buttonBarNegativeButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.MediumEmphasis</item>
+    <item name="buttonBarNeutralButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.OnSurface34</item>
+    <item name="buttonBarNegativeButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.OnSurface34</item>
     <item name="buttonBarPositiveButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog</item>
   </style>
 
@@ -122,7 +122,7 @@
 
   <style name="ThemeOverlay.Simple.FacilityPicker.Search" parent="">
     <item name="colorPrimary">@color/white</item>
-    <item name="colorOnPrimary">@color/color_high_emphasis</item>
+    <item name="colorOnPrimary">@color/color_on_surface_67</item>
   </style>
 
   <style name="ThemeOverlay.Simple.DeletePatient" parent="">

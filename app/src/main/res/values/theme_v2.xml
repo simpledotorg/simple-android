@@ -73,10 +73,6 @@
     <item name="colorToolbarPrimary">@color/simple_dark_blue_800</item>
     <item name="colorToolbarPrimaryVariant">@color/simple_dark_blue_900</item>
     <item name="colorOnToolbarPrimary">@color/white</item>
-
-    <item name="colorLowEmphasis">@color/color_low_emphasis</item>
-    <item name="colorMediumEmphasis">@color/color_medium_emphasis</item>
-    <item name="colorHighEmphasis">@color/color_high_emphasis</item>
   </style>
 
   <!-- TODO: Remove this once `BottomSheetActivity` usage is replaced by `BottomSheetDialogFragment` -->

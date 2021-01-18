@@ -48,8 +48,8 @@
     <item name="android:textAppearance">?attr/textAppearanceButton</item>
   </style>
 
-  <style name="Widget.Simple.Button.TextButton.MediumEmphasis">
-    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.MediumEmphasisPrimary</item>
+  <style name="Widget.Simple.Button.TextButton.OnSurface34">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.OnSurface34Primary</item>
   </style>
 
   <style name="Widget.Simple.Button.TextButton.Red1">
@@ -65,14 +65,14 @@
     <item name="android:textAppearance">?attr/textAppearanceButtonBig</item>
   </style>
 
-  <style name="Widget.Simple.Button.OutlinedButton.HighEmphasis">
-    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.HighEmphasisPrimary</item>
+  <style name="Widget.Simple.Button.OutlinedButton.OnSurface67">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.OnSurface67Primary</item>
   </style>
 
   <style name="Widget.Simple.Button.TextButton.Dialog" parent="Widget.MaterialComponents.Button.TextButton.Dialog" />
 
-  <style name="Widget.Simple.Button.TextButton.Dialog.MediumEmphasis">
-    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.MediumEmphasisPrimary</item>
+  <style name="Widget.Simple.Button.TextButton.Dialog.OnSurface34">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.OnSurface34Primary</item>
   </style>
 
   <style name="Widget.Simple.Button.TextButton.Dialog.Red1">
@@ -135,7 +135,7 @@
     <item name="boxBackgroundColor">@android:color/transparent</item>
     <item name="boxBackgroundMode">none</item>
     <item name="endIconMode">clear_text</item>
-    <item name="endIconTint">?attr/colorHighEmphasis</item>
+    <item name="endIconTint">@color/color_on_surface_67</item>
     <item name="hintEnabled">false</item>
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField.Flat</item>
     <item name="errorTextAppearance">?attr/textAppearanceBody2</item>

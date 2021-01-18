@@ -32,6 +32,9 @@ import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.HandlesBack
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -40,11 +43,8 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
+import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.BackPressInterceptCallback
-import org.simple.clinic.router.screen.BackPressInterceptor
-import org.simple.clinic.router.screen.RouterDirection.BACKWARD
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
@@ -73,10 +73,13 @@ import javax.inject.Named
 class PatientSummaryScreen(
     context: Context,
     attrs: AttributeSet
-) : RelativeLayout(context, attrs), PatientSummaryScreenUi, PatientSummaryUiActions, PatientSummaryChildView {
+) : RelativeLayout(context, attrs), PatientSummaryScreenUi, PatientSummaryUiActions, PatientSummaryChildView, HandlesBack {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -103,6 +106,8 @@ class PatientSummaryScreen(
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val snackbarActionClicks = PublishSubject.create<PatientSummaryEvent>()
+  private val hardwareBackClicks = PublishSubject.create<Unit>()
+
   private val events: Observable<PatientSummaryEvent> by unsafeLazy {
     Observable
         .mergeArray(
@@ -232,19 +237,8 @@ class PatientSummaryScreen(
   private fun logTeleconsultClicks() = logTeleconsultButton.clicks().map { LogTeleconsultClicked }
 
   private fun backClicks(): Observable<UiEvent> {
-    val hardwareBackKeyClicks = Observable.create<Unit> { emitter ->
-      val interceptor = object : BackPressInterceptor {
-        override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
-          emitter.onNext(Unit)
-          callback.markBackPressIntercepted()
-        }
-      }
-      emitter.setCancellable { screenRouter.unregisterBackPressInterceptor(interceptor) }
-      screenRouter.registerBackPressInterceptor(interceptor)
-    }
-
     return backButton.clicks()
-        .mergeWith(hardwareBackKeyClicks)
+        .mergeWith(hardwareBackClicks)
         .map {
           if (linkIdWithPatientView.isVisible) {
             PatientSummaryLinkIdCancelled
@@ -252,6 +246,11 @@ class PatientSummaryScreen(
             PatientSummaryBackClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp)
           }
         }
+  }
+
+  override fun onBackPressed(): Boolean {
+    hardwareBackClicks.onNext(Unit)
+    return true
   }
 
   private fun bloodPressureSaves(): Observable<PatientSummaryBloodPressureSaved> {
@@ -262,7 +261,8 @@ class PatientSummaryScreen(
     }
   }
 
-  private fun appointmentScheduleSheetClosed() = screenRouter.streamScreenResults()
+  private fun appointmentScheduleSheetClosed() = screenResults
+      .streamResults()
       .ofType<ActivityResult>()
       .extractSuccessful(SUMMARY_REQCODE_SCHEDULE_APPOINTMENT) { intent ->
         ScheduleAppointmentSheet.readExtra<ScheduleAppointmentSheetExtra>(intent)
@@ -271,7 +271,8 @@ class PatientSummaryScreen(
 
   @SuppressLint("CheckResult")
   private fun alertFacilityChangeSheetClosed(onDestroys: Observable<ScreenDestroyed>) {
-    screenRouter.streamScreenResults()
+    screenResults
+        .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(SUMMARY_REQCODE_ALERT_FACILITY_CHANGE) { intent ->
           AlertFacilityChangeSheet.readContinuationExtra<Continuation>(intent)
@@ -282,7 +283,7 @@ class PatientSummaryScreen(
 
   private fun openContinuation(continuation: Continuation) {
     when (continuation) {
-      is ContinueToScreen -> screenRouter.push(continuation.screenKey)
+      is ContinueToScreen -> router.push(continuation.screenKey.wrap())
       is ContinueToActivity -> activity.startActivityForResult(continuation.intent, continuation.requestCode)
     }
   }
@@ -420,11 +421,11 @@ class PatientSummaryScreen(
   }
 
   override fun goToPreviousScreen() {
-    screenRouter.pop()
+    router.pop()
   }
 
   override fun goToHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreenKey, direction = BACKWARD)
+    router.clearHistoryAndPush(HomeScreenKey.wrap())
   }
 
   override fun showUpdatePhoneDialog(patientUuid: UUID) {
@@ -513,7 +514,7 @@ class PatientSummaryScreen(
   }
 
   override fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID) {
-    screenRouter.push(TeleconsultRecordScreenKey(patientUuid, teleconsultRecordId))
+    router.push(TeleconsultRecordScreenKey(patientUuid, teleconsultRecordId).wrap())
   }
 
   interface Injector {

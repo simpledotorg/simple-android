@@ -24,12 +24,13 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.router.screen.RouterDirection
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.teleconsultlog.prescription.medicines.TeleconsultMedicinesConfig
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
@@ -90,7 +91,10 @@ class TeleconsultSharePrescriptionScreen constructor(
     get() = binding!!.patientNameTextView
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
 
   @Inject
   lateinit var userClock: UserClock
@@ -125,7 +129,7 @@ class TeleconsultSharePrescriptionScreen constructor(
             backClicks(),
             imageSavedMessageEvents
         )
-        .compose(RequestPermissions(runtimePermissions, screenRouter.streamScreenResults().ofType()))
+        .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
         .compose(ReportAnalyticsEvents())
   }
 
@@ -225,7 +229,7 @@ class TeleconsultSharePrescriptionScreen constructor(
   }
 
   override fun openHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreenKey, RouterDirection.REPLACE)
+    router.clearHistoryAndPush(HomeScreenKey.wrap())
   }
 
   override fun sharePrescriptionAsImage(imageUri: Uri) {
@@ -233,7 +237,7 @@ class TeleconsultSharePrescriptionScreen constructor(
   }
 
   override fun goToPreviousScreen() {
-    screenRouter.pop()
+    router.pop()
   }
 
   private fun sharePrescription(imageUri: Uri) {

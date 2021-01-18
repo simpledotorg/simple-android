@@ -41,4 +41,15 @@ class TheActivityEffectHandlerTest {
     verify(uiActions).showHomeScreen()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when the show forgot pin create pin screen effect is received, the forgot pin create new pin screen must be shown`() {
+    // when
+    testCase.dispatch(ShowForgotPinCreatePinScreen)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showForgotPinCreateNewPinScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

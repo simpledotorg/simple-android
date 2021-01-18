@@ -44,6 +44,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .addTransformer(ClearPatientData::class.java, clearPatientData())
         .addTransformer(ShowAccessDeniedScreen::class.java, openAccessDeniedScreen())
         .addAction(ShowHomeScreen::class.java, uiActions::showHomeScreen, schedulers.ui())
+        .addAction(ShowForgotPinCreatePinScreen::class.java, uiActions::showForgotPinCreateNewPinScreen, schedulers.ui())
         .build()
   }
 

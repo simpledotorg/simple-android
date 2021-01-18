@@ -23,3 +23,5 @@ object ClearPatientData: TheActivityEffect()
 object ShowAccessDeniedScreen: TheActivityEffect()
 
 object ShowHomeScreen: TheActivityEffect()
+
+object ShowForgotPinCreatePinScreen: TheActivityEffect()

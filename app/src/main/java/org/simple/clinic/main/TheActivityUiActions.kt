@@ -9,4 +9,5 @@ interface TheActivityUiActions {
   fun redirectToLogin()
   fun showAccessDeniedScreen(fullName: String)
   fun showHomeScreen()
+  fun showForgotPinCreateNewPinScreen()
 }

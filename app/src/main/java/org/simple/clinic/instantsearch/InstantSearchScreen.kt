@@ -29,12 +29,15 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
@@ -60,7 +63,10 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   lateinit var effectHandlerFactory: InstantSearchEffectHandler.Factory
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -184,7 +190,7 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
       searchQueryEditText.showKeyboard()
     }
     instantSearchToolbar.setNavigationOnClickListener {
-      screenRouter.pop()
+      router.pop()
     }
 
     searchResultsView.adapter = allPatientsAdapter
@@ -211,19 +217,19 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   }
 
   override fun openPatientSummary(patientId: UUID) {
-    screenRouter.push(PatientSummaryScreenKey(
+    router.push(PatientSummaryScreenKey(
         patientUuid = patientId,
         intention = OpenIntention.ViewExistingPatient,
         screenCreatedTimestamp = Instant.now(utcClock)
-    ))
+    ).wrap())
   }
 
   override fun openLinkIdWithPatientScreen(patientId: UUID, identifier: Identifier) {
-    screenRouter.push(PatientSummaryScreenKey(
+    router.push(PatientSummaryScreenKey(
         patientUuid = patientId,
         intention = OpenIntention.LinkIdWithPatient(identifier),
         screenCreatedTimestamp = Instant.now(utcClock)
-    ))
+    ).wrap())
   }
 
   override fun openBpPassportSheet(identifier: Identifier) {
@@ -277,13 +283,15 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
 
   @SuppressLint("CheckResult")
   private fun setupAlertResults() {
-    screenRouter.streamScreenResults()
+    screenResults
+        .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(ALERT_FACILITY_CHANGE) { intent ->
           AlertFacilityChangeSheet.readContinuationExtra<Continuation.ContinueToScreen>(intent).screenKey
         }
         .takeUntil(detaches)
-        .subscribe(screenRouter::push)
+        .map(FullScreenKey::wrap)
+        .subscribe(router::push)
   }
 
   private fun allPatientsItemClicks(): Observable<UiEvent> {
@@ -314,8 +322,8 @@ class InstantSearchScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   }
 
   private fun blankBpPassportResults(): Observable<UiEvent> {
-    return screenRouter
-        .streamScreenResults()
+    return screenResults
+        .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(BP_PASSPORT_SHEET, BpPassportSheet.Companion::blankBpPassportResult)
         .map(::BlankBpPassportResultReceived)

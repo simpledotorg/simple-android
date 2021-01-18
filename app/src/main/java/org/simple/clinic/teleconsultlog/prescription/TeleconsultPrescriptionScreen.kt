@@ -13,11 +13,12 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenTeleconsultPrescriptionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.teleconsultlog.shareprescription.TeleconsultSharePrescriptionScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
@@ -46,7 +47,7 @@ class TeleconsultPrescriptionScreen constructor(
     get() = binding!!.nextButton
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var effectHandler: TeleconsultPrescriptionEffectHandler.Factory
@@ -123,7 +124,7 @@ class TeleconsultPrescriptionScreen constructor(
   }
 
   override fun goBackToPreviousScreen() {
-    screenRouter.pop()
+    router.pop()
   }
 
   override fun showSignatureRequiredError() {
@@ -135,7 +136,7 @@ class TeleconsultPrescriptionScreen constructor(
   }
 
   override fun openSharePrescriptionScreen(patientUuid: UUID, medicalInstructions: String) {
-    screenRouter.push(TeleconsultSharePrescriptionScreenKey(patientUuid, medicalInstructions))
+    router.push(TeleconsultSharePrescriptionScreenKey(patientUuid, medicalInstructions).wrap())
   }
 
   private fun backClicks(): Observable<UiEvent> {

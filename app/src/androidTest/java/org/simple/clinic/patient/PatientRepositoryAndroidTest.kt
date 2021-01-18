@@ -3952,27 +3952,45 @@ class PatientRepositoryAndroidTest {
     val patientWithCurrentFacilityAsAssignedFacility = UUID.fromString("d47ae2e7-7453-4a6f-806e-88eb130823d8")
     createPatientWithNameAndAssignedFacilityID(
         patientUuid = patientWithCurrentFacilityAsAssignedFacility,
-        patientName = "Test Name",
+        patientName = "Abhishek Priyanka",
+        assignedFacilityId = currentFacility.uuid)
+
+    val patient2WithCurrentFacilityAsAssignedFacility = UUID.fromString("2b5ea68e-e8aa-4bc3-9eae-1d56a1f108bf")
+    createPatientWithNameAndAssignedFacilityID(
+        patientUuid = patient2WithCurrentFacilityAsAssignedFacility,
+        patientName = "Anjali Priyanka",
+        assignedFacilityId = currentFacility.uuid)
+
+    val patient3WithCurrentFacilityAsAssignedFacility = UUID.fromString("f05b4541-85a5-4b49-86f6-cbd837bdc0b1")
+    createPatientWithNameAndAssignedFacilityID(
+        patientUuid = patient3WithCurrentFacilityAsAssignedFacility,
+        patientName = "Priyanka Singh",
         assignedFacilityId = currentFacility.uuid)
 
     val patientWithAnotherFacilityAsAssignedFacility = UUID.fromString("f6cfd657-bf32-40c1-9dd2-4c956fd910a8")
     createPatientWithNameAndAssignedFacilityID(
         patientUuid = patientWithAnotherFacilityAsAssignedFacility,
-        patientName = "Tahello Name",
+        patientName = "Priyanka Gandhi",
         assignedFacilityId = facility2.uuid
     )
 
     //when
-    val searchResults = searchResults("T", currentFacility.uuid)
-    val searchResults2 = searchResults("T", facility2.uuid)
+    val searchResults = searchResults("Pri", currentFacility.uuid)
+    val searchResults2 = searchResults("Pri", facility2.uuid)
 
     //then
     assertThat(searchResults).containsExactly(
-        patientWithCurrentFacilityAsAssignedFacility, patientWithAnotherFacilityAsAssignedFacility
+        patient3WithCurrentFacilityAsAssignedFacility,
+        patient2WithCurrentFacilityAsAssignedFacility,
+        patientWithCurrentFacilityAsAssignedFacility,
+        patientWithAnotherFacilityAsAssignedFacility
     )
 
     assertThat(searchResults2).containsExactly(
-        patientWithAnotherFacilityAsAssignedFacility, patientWithCurrentFacilityAsAssignedFacility
+        patientWithAnotherFacilityAsAssignedFacility,
+        patient3WithCurrentFacilityAsAssignedFacility,
+        patient2WithCurrentFacilityAsAssignedFacility,
+        patientWithCurrentFacilityAsAssignedFacility
     )
   }
 

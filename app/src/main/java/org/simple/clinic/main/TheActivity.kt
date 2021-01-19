@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.WindowManager
-import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
@@ -48,14 +47,7 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.user.UnauthorizeUser
-import org.simple.clinic.user.User
-import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
-import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
-import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
-import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
@@ -67,25 +59,6 @@ import java.time.Instant
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
-
-@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-fun initialScreenKey(
-    user: User
-): FullScreenKey {
-  val userDisapproved = user.status == UserStatus.DisapprovedForSyncing
-
-  val canMoveToHomeScreen = when (user.loggedInStatus) {
-    RESETTING_PIN -> false
-    LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED, UNAUTHORIZED -> true
-  }
-
-  return when {
-    canMoveToHomeScreen && !userDisapproved -> HomeScreenKey
-    userDisapproved -> AccessDeniedScreenKey(user.fullName)
-    user.loggedInStatus == RESETTING_PIN -> ForgotPinCreateNewPinScreenKey()
-    else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
-  }
-}
 
 class TheActivity : AppCompatActivity(), TheActivityUi {
 

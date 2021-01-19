@@ -23,6 +23,7 @@ import org.simple.clinic.deeplink.ShowPatientNotFound
 import org.simple.clinic.deeplink.ShowTeleconsultNotAllowed
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.empty.EmptyScreenKey
 import org.simple.clinic.feature.Features
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
@@ -168,10 +169,8 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   private val disposables = CompositeDisposable()
 
   private val router by unsafeLazy {
-    val currentUser = userSession.loggedInUser().blockingFirst().get()
-
     Router(
-        initialScreenKey = initialScreenKey(currentUser).wrap(),
+        initialScreenKey = EmptyScreenKey().wrap(),
         fragmentManager = supportFragmentManager,
         containerId = android.R.id.content
     )
@@ -205,6 +204,18 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     super.onCreate(savedInstanceState)
     router.onReady(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)
+
+    if (savedInstanceState == null) {
+      loadInitialScreen()
+    }
+  }
+
+  private fun loadInitialScreen() {
+    val currentUser = userSession.loggedInUser().blockingFirst().get()
+
+    val initialScreen = initialScreenKey(currentUser)
+
+    router.clearHistoryAndPush(initialScreen.wrap())
   }
 
   @SuppressLint("CheckResult")

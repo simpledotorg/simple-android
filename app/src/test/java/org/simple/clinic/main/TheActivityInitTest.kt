@@ -11,14 +11,14 @@ class TheActivityInitTest {
   private val spec = InitSpec(TheActivityInit())
 
   @Test
-  fun `when the screen is created, the screen lock must be verified`() {
+  fun `when the screen is created, the info required to decide the initial screen must be loaded`() {
     val model = TheActivityModel.createForAlreadyLoggedInUser()
 
     spec
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
-            hasEffects(LoadAppLockInfo)
+            hasEffects(LoadInitialScreenInfo)
         ))
   }
 }

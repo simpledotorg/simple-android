@@ -12,7 +12,7 @@ class TheActivityInit : Init<TheActivityModel, TheActivityEffect> {
         ListenForUserVerifications,
         ListenForUserUnauthorizations,
         ListenForUserDisapprovals,
-        LoadAppLockInfo
+        LoadInitialScreenInfo
     )
   }
 }

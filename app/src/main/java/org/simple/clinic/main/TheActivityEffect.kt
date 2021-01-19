@@ -2,7 +2,7 @@ package org.simple.clinic.main
 
 sealed class TheActivityEffect
 
-object LoadAppLockInfo : TheActivityEffect()
+object LoadInitialScreenInfo : TheActivityEffect()
 
 object ClearLockAfterTimestamp : TheActivityEffect()
 

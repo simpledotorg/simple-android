@@ -19,7 +19,7 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
 
   override fun update(model: TheActivityModel, event: TheActivityEvent): Next<TheActivityModel, TheActivityEffect> {
     return when (event) {
-      is AppLockInfoLoaded -> handleScreenLock(event)
+      is InitialScreenInfoLoaded -> decideInitialScreen(event)
       UserWasJustVerified -> dispatch(ShowUserLoggedOutOnOtherDeviceAlert)
       UserWasUnauthorized -> dispatch(RedirectToLoginScreen)
       UserWasDisapproved -> dispatch(ClearPatientData)
@@ -27,7 +27,7 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
     }
   }
 
-  private fun handleScreenLock(event: AppLockInfoLoaded): Next<TheActivityModel, TheActivityEffect> {
+  private fun decideInitialScreen(event: InitialScreenInfoLoaded): Next<TheActivityModel, TheActivityEffect> {
     val userOptional = event.user
 
     return if (userOptional.isPresent()) {

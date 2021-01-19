@@ -14,4 +14,16 @@
     <item name="cornerSize">50%</item>
   </style>
 
+  <style name="ShapeAppearance.Simple.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+    <item name="cornerSize">@dimen/spacing_0</item>
+  </style>
+
+  <style name="ShapeAppearance.Simple.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+    <item name="cornerSize">@dimen/spacing_4</item>
+  </style>
+
+  <style name="ShapeAppearance.Simple.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+    <item name="cornerSize">@dimen/spacing_2</item>
+  </style>
+
 </resources>

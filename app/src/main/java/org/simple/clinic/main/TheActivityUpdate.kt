@@ -6,6 +6,7 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
+import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Optional
 import java.time.Instant
 
@@ -31,15 +32,27 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
     val userOptional = event.user
 
     return if (userOptional.isPresent()) {
-      val effect = screenLockEffect(
-          currentTimestamp = event.currentTimestamp,
-          lockAtTimestamp = event.lockAtTimestamp,
-          user = userOptional.get()
-      )
+      val effect = initialScreenEffect(userOptional.get())
 
       dispatch(effect)
     } else {
       noChange()
+    }
+  }
+
+  private fun initialScreenEffect(user: User): TheActivityEffect {
+    val userDisapproved = user.status == UserStatus.DisapprovedForSyncing
+
+    val canMoveToHomeScreen = when (user.loggedInStatus) {
+      LoggedInStatus.RESETTING_PIN -> false
+      LoggedInStatus.LOGGED_IN, LoggedInStatus.OTP_REQUESTED, LoggedInStatus.RESET_PIN_REQUESTED, LoggedInStatus.UNAUTHORIZED -> true
+    }
+
+    return when {
+      canMoveToHomeScreen && !userDisapproved -> ShowHomeScreen
+      userDisapproved -> ShowAccessDeniedScreen
+      user.loggedInStatus == LoggedInStatus.RESETTING_PIN -> ShowForgotPinCreatePinScreen
+      else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
     }
   }
 

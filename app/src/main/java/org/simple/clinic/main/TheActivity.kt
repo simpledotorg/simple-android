@@ -23,6 +23,7 @@ import org.simple.clinic.deeplink.ShowPatientNotFound
 import org.simple.clinic.deeplink.ShowTeleconsultNotAllowed
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.empty.EmptyScreenKey
 import org.simple.clinic.feature.Feature.LogSavedStateSizes
 import org.simple.clinic.feature.Features
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
@@ -275,8 +276,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
         onKeyChange = this::onScreenChanged
     ))
 
-    val currentUser: User = userSession.loggedInUser().blockingFirst().get()
-    return screenRouter.installInContext(baseContext, initialScreenKey(currentUser))
+    return screenRouter.installInContext(baseContext, EmptyScreenKey())
   }
 
   private fun setupDiGraph() {

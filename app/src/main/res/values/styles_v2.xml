@@ -291,21 +291,6 @@
     <item name="titleTextAppearance">@style/Clinic.V2.TextAppearance.H6.White100</item>
   </style>
 
-  <style name="Clinic.V2.ToolbarButton">
-    <item name="android:textColor">?attr/colorOnPrimary</item>
-    <item name="android:layout_width">wrap_content</item>
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:minWidth">0dp</item>
-    <item name="android:minHeight">0dp</item>
-    <item name="android:paddingStart">18dp</item>
-    <item name="android:paddingTop">@dimen/spacing_12</item>
-    <item name="android:paddingEnd">18dp</item>
-    <item name="android:paddingBottom">@dimen/spacing_12</item>
-    <item name="android:background">@drawable/background_rounded_clearbutton</item>
-    <item name="android:foreground">?selectableItemBackground</item>
-    <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.Button2</item>
-  </style>
-
   <style name="Clinic.V2.TextAppearance.Button1" parent="TextAppearance.AppCompat.Widget.Button">
     <item name="android:textAllCaps">true</item>
     <item name="android:fontFamily">sans-serif-medium</item>

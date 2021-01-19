@@ -1,22 +1,18 @@
 package org.simple.clinic.main
 
 import com.spotify.mobius.First
-import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
+import org.simple.clinic.mobius.first
 
 class TheActivityInit : Init<TheActivityModel, TheActivityEffect> {
 
   override fun init(model: TheActivityModel): First<TheActivityModel, TheActivityEffect> {
-    val effects = mutableSetOf(
+    return first(
+        model,
         ListenForUserVerifications,
         ListenForUserUnauthorizations,
-        ListenForUserDisapprovals
+        ListenForUserDisapprovals,
+        LoadAppLockInfo
     )
-
-    if (!model.isFreshLogin) {
-      effects.add(LoadAppLockInfo)
-    }
-
-    return first(model, effects)
   }
 }

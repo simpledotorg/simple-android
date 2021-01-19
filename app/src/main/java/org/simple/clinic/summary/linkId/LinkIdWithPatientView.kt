@@ -81,6 +81,9 @@ class LinkIdWithPatientView(
   private val idTextView
     get() = binding!!.idTextView
 
+  private val idPatientNameTextView
+    get() = binding!!.idPatientNameTextView
+
   private val contentContainer
     get() = binding!!.contentContainer
 
@@ -178,6 +181,10 @@ class LinkIdWithPatientView(
         .popSpan()
         .append(resources.getString(R.string.linkidwithpatient_to_patient_text))
         .build()
+  }
+
+  override fun renderPatientName(patientName: String) {
+    idPatientNameTextView.text = String.format(resources.getString(R.string.linkidwithpatient_patient_text), patientName)
   }
 
   override fun closeSheetWithIdLinked() {

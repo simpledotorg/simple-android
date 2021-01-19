@@ -1,7 +1,6 @@
 package org.simple.clinic.summary.linkId
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
@@ -58,18 +57,6 @@ class LinkIdWithPatientViewLogicTest {
   }
 
   @Test
-  fun `when the view is created, the identifier must be displayed`() {
-    // when
-    whenever(patientRepository.patientImmediate (patientUuid)).thenReturn(patient)
-    setupController()
-    uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
-
-    // then
-    verify(ui, atLeastOnce()).renderIdentifierText(identifier)
-    verifyNoMoreInteractions(ui, uiActions)
-  }
-
-  @Test
   fun `when add is clicked, id should be added to patient and sheet should close`() {
     // given
     val businessId = TestData.businessId(uuid = identifierUuid, patientUuid = patientUuid, identifier = identifier)
@@ -95,7 +82,7 @@ class LinkIdWithPatientViewLogicTest {
         assigningUser = user
     )
 
-    verify(ui, atLeastOnce()).renderIdentifierText(identifier)
+    verify(ui).renderPatientName(patientName)
     verify(uiActions).closeSheetWithIdLinked()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -109,7 +96,7 @@ class LinkIdWithPatientViewLogicTest {
     uiEvents.onNext(LinkIdWithPatientCancelClicked)
 
     // then
-    verify(ui, atLeastOnce()).renderIdentifierText(identifier)
+    verify(ui).renderPatientName(patientName)
     verify(uiActions).closeSheetWithoutIdLinked()
     verifyNoMoreInteractions(ui, uiActions)
 

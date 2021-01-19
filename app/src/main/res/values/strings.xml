@@ -431,6 +431,7 @@
   <string name="linkidwithpatient_button_yes">Yes</string>
   <string name="linkidwithpatient_button_back">Back</string>
   <string name="linkidwithpatient_text">Add BP Passport to</string>
+  <string name="linkidwithpatient_patient_text">Patient %1$s?</string>
   <string name="linkidwithpatient_to_patient_text">\u0020to\u00A0patient?</string>
 
   <!-- Add ID to Patient: Search -->

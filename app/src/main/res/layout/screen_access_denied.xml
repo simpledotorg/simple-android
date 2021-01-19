@@ -41,20 +41,10 @@
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/logoutButton"
-      style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+      style="@style/Widget.Simple.Button.Toolbar"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:backgroundTint="@color/black_opacity_24"
-      android:insetTop="@dimen/spacing_0"
-      android:insetBottom="@dimen/spacing_0"
-      android:minWidth="0dp"
-      android:minHeight="0dp"
-      android:paddingStart="@dimen/spacing_8"
-      android:paddingTop="2dp"
-      android:paddingEnd="@dimen/spacing_8"
-      android:paddingBottom="2dp"
       android:text="@string/applock_logout"
-      android:textAppearance="?attr/textAppearanceButton"
       android:visibility="gone"
       tools:ignore="UnusedAttribute"
       tools:visibility="visible" />

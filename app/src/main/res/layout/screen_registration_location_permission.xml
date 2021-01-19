@@ -18,17 +18,14 @@
       app:title="@string/registrationlocation_screen_title"
       tools:ignore="UnusedAttribute">
 
-      <TextView
+      <com.google.android.material.button.MaterialButton
         android:id="@+id/skipButton"
-        style="@style/Clinic.V2.ToolbarButton"
+        style="@style/Widget.Simple.Button.Toolbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|center_vertical"
-        android:paddingStart="@dimen/spacing_16"
-        android:paddingEnd="@dimen/spacing_16"
-        android:stateListAnimator="@null"
-        android:text="@string/registrationlocation_skip_permission"
-        tools:ignore="UnusedAttribute" />
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:text="@string/registrationlocation_skip_permission" />
 
     </com.google.android.material.appbar.MaterialToolbar>
 

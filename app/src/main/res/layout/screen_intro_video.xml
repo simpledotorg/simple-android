@@ -7,13 +7,14 @@
   android:background="?android:attr/colorBackground"
   android:theme="@style/ThemeOverlay.Simple.IntroVideoScreen">
 
-  <TextView
+  <com.google.android.material.button.MaterialButton
     android:id="@+id/skipButton"
-    style="@style/Clinic.V2.ToolbarButton"
+    style="@style/Widget.Simple.Button.Toolbar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_gravity="end"
-    android:layout_marginTop="@dimen/spacing_8"
+    android:layout_marginTop="@dimen/spacing_16"
     android:layout_marginEnd="@dimen/spacing_8"
-    android:gravity="end|center_vertical"
     android:text="@string/screenintrovideo_skip"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="parent"

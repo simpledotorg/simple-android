@@ -27,26 +27,31 @@
       android:tint="?attr/colorOnToolbarPrimary"
       app:srcCompat="@drawable/ic_arrow_back_24dp" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/editPatientButton"
-      style="@style/Clinic.V2.ToolbarButton"
+      style="@style/Widget.Simple.Button.Toolbar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_alignParentEnd="true"
-      android:layout_marginTop="@dimen/spacing_4"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_marginTop="@dimen/spacing_16"
       android:layout_marginEnd="@dimen/spacing_8"
       android:text="@string/patientsummary_edit"
       android:visibility="invisible"
       tools:ignore="RelativeOverlap"
       tools:visibility="visible" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/contactTextView"
-      style="@style/Clinic.V2.ToolbarButton"
+      style="@style/Widget.Simple.Button.Toolbar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_alignParentTop="true"
-      android:layout_marginTop="@dimen/spacing_4"
+      android:layout_marginTop="@dimen/spacing_16"
       android:layout_toStartOf="@id/editPatientButton"
-      android:drawablePadding="@dimen/spacing_4"
       android:visibility="invisible"
-      app:drawableStartCompat="@drawable/ic_summary_call_icon"
+      app:icon="@drawable/ic_summary_call_icon"
+      app:iconTint="@null"
       tools:ignore="RelativeOverlap"
       tools:text="1111111111"
       tools:visibility="visible" />

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="TextAppearance.Simple.Headline3" parent="TextAppearance.MaterialComponents.Headline3">
+    <item name="android:textSize">40sp</item>
+    <item name="android:letterSpacing">0.0</item>
+    <item name="android:fontFamily">sans-serif</item>
+
+    <item name="fontFamily">sans-serif</item>
+    <item name="lineHeight">56sp</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Headline4" parent="TextAppearance.MaterialComponents.Headline3">
+    <item name="android:textSize">32sp</item>
+    <item name="android:letterSpacing">0.00625</item>
+    <item name="android:fontFamily">sans-serif</item>
+
+    <item name="fontFamily">sans-serif</item>
+    <item name="lineHeight">48sp</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
+    <item name="android:textSize">24sp</item>
+    <item name="android:letterSpacing">0.0</item>
+    <item name="android:fontFamily">sans-serif</item>
+
+    <item name="fontFamily">sans-serif</item>
+    <item name="lineHeight">32sp</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Headline5.Numeric">
+    <item name="android:letterSpacing">0.0625</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+    <item name="android:textSize">20sp</item>
+    <item name="android:letterSpacing">0.01</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+
+    <item name="fontFamily">sans-serif-medium</item>
+    <item name="lineHeight">28sp</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Headline6.Numeric">
+    <item name="android:letterSpacing">0.05</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+    <item name="android:textSize">16sp</item>
+    <item name="android:letterSpacing">0.0125</item>
+    <item name="android:fontFamily">sans-serif</item>
+
+    <item name="fontFamily">sans-serif</item>
+    <item name="lineHeight">24sp</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Subtitle1.Medium">
+    <item name="android:fontFamily">sans-serif-medium</item>
+
+    <item name="fontFamily">sans-serif-medium</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
+    <item name="android:textSize">14sp</item>
+    <item name="android:letterSpacing">0.0142</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+
+    <item name="fontFamily">sans-serif-medium</item>
+    <item name="lineHeight">20sp</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Body0" parent="TextAppearance.MaterialComponents.Body1">
+    <item name="android:textSize">18sp</item>
+    <item name="android:letterSpacing">0.011</item>
+    <item name="android:fontFamily">sans-serif</item>
+
+    <item name="fontFamily">sans-serif</item>
+    <item name="lineHeight">28sp</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Body0.Medium">
+    <item name="android:letterSpacing">0.0083</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+
+    <item name="fontFamily">sans-serif-medium</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Body0.Numeric">
+    <item name="android:letterSpacing">0.1111</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Body1" parent="TextAppearance.MaterialComponents.Body1">
+    <item name="android:textSize">16sp</item>
+    <item name="android:letterSpacing">0.0312</item>
+    <item name="android:fontFamily">sans-serif</item>
+
+    <item name="fontFamily">sans-serif</item>
+    <item name="lineHeight">24sp</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Body1.Numeric">
+    <item name="android:letterSpacing">0.0937</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Body2" parent="TextAppearance.MaterialComponents.Body2">
+    <item name="android:textSize">14sp</item>
+    <item name="android:letterSpacing">0.0142</item>
+    <item name="android:fontFamily">sans-serif</item>
+
+    <item name="fontFamily">sans-serif</item>
+    <item name="lineHeight">20sp</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Body2.Numeric">
+    <item name="android:letterSpacing">0.107</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Body2.Bold">
+    <item name="android:textStyle">bold</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+
+    <item name="fontFamily">sans-serif-medium</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Button" parent="TextAppearance.MaterialComponents.Button">
+    <item name="android:textSize">14sp</item>
+    <item name="android:letterSpacing">0.0714</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+
+    <item name="fontFamily">sans-serif-medium</item>
+    <item name="lineHeight">16sp</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Button.Big">
+    <item name="android:textSize">16sp</item>
+    <item name="android:letterSpacing">0.0781</item>
+
+    <item name="lineHeight">20sp</item>
+  </style>
+
+  <style name="TextAppearance.Simple.Tag" parent="TextAppearance.MaterialComponents.Body2">
+    <item name="android:textSize">14sp</item>
+    <item name="android:letterSpacing">0.0571</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+
+    <item name="fontFamily">sans-serif-medium</item>
+    <item name="lineHeight">20sp</item>
+  </style>
+</resources>

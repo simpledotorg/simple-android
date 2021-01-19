@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- AppBar -->
+  <style name="Widget.Simple.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.PrimarySurface">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Blue0Primary</item>
+  </style>
+
+  <!-- Toolbar -->
+  <style name="Widget.Simple.Toolbar" parent="Widget.MaterialComponents.Toolbar.PrimarySurface">
+    <item name="contentInsetStartWithNavigation">64dp</item>
+    <item name="android:elevation">@dimen/elevation_toolbar</item>
+    <item name="titleTextAppearance">?attr/textAppearanceHeadline6</item>
+    <item name="titleTextColor">?attr/colorOnPrimary</item>
+    <item name="navigationIconTint">?attr/colorOnPrimary</item>
+  </style>
+
+  <!-- Buttons -->
+  <style name="Widget.Simple.Button" parent="Widget.MaterialComponents.Button">
+    <item name="android:insetTop">@dimen/spacing_0</item>
+    <item name="android:insetBottom">@dimen/spacing_0</item>
+    <item name="iconPadding">@dimen/spacing_8</item>
+    <item name="iconGravity">textStart</item>
+    <item name="android:textAppearance">?attr/textAppearanceButtonBig</item>
+  </style>
+
+  <style name="Widget.Simple.Button.Blue2">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Blue2Primary</item>
+  </style>
+
+  <style name="Widget.Simple.Button.Green1">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Green1Primary</item>
+  </style>
+
+  <style name="Widget.Simple.Button.Red2">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Red2Primary</item>
+  </style>
+
+  <style name="Widget.Simple.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+    <item name="android:insetTop">@dimen/spacing_0</item>
+    <item name="android:insetBottom">@dimen/spacing_0</item>
+    <item name="android:textAppearance">?attr/textAppearanceButton</item>
+  </style>
+
+  <style name="Widget.Simple.Button.TextButton.MediumEmphasis">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.MediumEmphasisPrimary</item>
+  </style>
+
+  <style name="Widget.Simple.Button.TextButton.Red1">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Red1Primary</item>
+  </style>
+
+  <style name="Widget.Simple.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+    <item name="android:insetTop">@dimen/spacing_0</item>
+    <item name="android:insetBottom">@dimen/spacing_0</item>
+    <item name="iconPadding">@dimen/spacing_8</item>
+    <item name="iconGravity">textStart</item>
+    <item name="strokeColor">@color/mtrl_btn_stroke_color_selector</item>
+    <item name="android:textAppearance">?attr/textAppearanceButtonBig</item>
+  </style>
+
+  <style name="Widget.Simple.Button.OutlinedButton.HighEmphasis">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.HighEmphasisPrimary</item>
+  </style>
+
+  <style name="Widget.Simple.Button.TextButton.Dialog" parent="Widget.MaterialComponents.Button.TextButton.Dialog" />
+
+  <style name="Widget.Simple.Button.TextButton.Dialog.MediumEmphasis">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.MediumEmphasisPrimary</item>
+  </style>
+
+  <style name="Widget.Simple.Button.TextButton.Dialog.Red1">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Red1Primary</item>
+  </style>
+
+  <!-- Dialog -->
+  <style name="MaterialAlertDialog.Simple.Title.Text" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+    <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+  </style>
+
+  <style name="MaterialAlertDialog.Simple.Body.Text" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
+    <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+  </style>
+
+</resources>

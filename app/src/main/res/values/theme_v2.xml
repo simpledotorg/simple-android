@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="Base.Theme.Simple" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <!-- Dialog Themes -->
+    <item name="alertDialogTheme">@style/ThemeOverlay.Simple.Light.Dialog.Alert</item>
+    <item name="materialAlertDialogTheme">@style/ThemeOverlay.Simple.MaterialAlertDialog</item>
+    <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Simple.BottomSheetDialog</item>
+
+    <!-- Framework, AppCompat, Design or Material Widget Styles -->
+    <item name="appBarLayoutStyle">@style/Widget.Simple.AppBarLayout</item>
+    <item name="borderlessButtonStyle">@style/Widget.Simple.Button.TextButton</item>
+    <item name="materialButtonStyle">@style/Widget.Simple.Button</item>
+    <item name="materialButtonOutlinedStyle">@style/Widget.Simple.Button.OutlinedButton</item>
+    <item name="toolbarStyle">@style/Widget.Simple.Toolbar</item>
+
+    <!-- Text Appearances -->
+    <item name="textAppearanceHeadline3">@style/TextAppearance.Simple.Headline3</item>
+    <item name="textAppearanceHeadline4">@style/TextAppearance.Simple.Headline4</item>
+    <item name="textAppearanceHeadline5">@style/TextAppearance.Simple.Headline5</item>
+    <item name="textAppearanceHeadline5Numeric">@style/TextAppearance.Simple.Headline5.Numeric</item>
+    <item name="textAppearanceHeadline6">@style/TextAppearance.Simple.Headline6</item>
+    <item name="textAppearanceHeadline6Numeric">@style/TextAppearance.Simple.Headline6.Numeric</item>
+    <item name="textAppearanceSubtitle1">@style/TextAppearance.Simple.Subtitle1</item>
+    <item name="textAppearanceSubtitle1Medium">@style/TextAppearance.Simple.Subtitle1.Medium</item>
+    <item name="textAppearanceSubtitle2">@style/TextAppearance.Simple.Subtitle2</item>
+    <item name="textAppearanceBody0">@style/TextAppearance.Simple.Body0</item>
+    <item name="textAppearanceBody0Medium">@style/TextAppearance.Simple.Body0.Medium</item>
+    <item name="textAppearanceBody0Numeric">@style/TextAppearance.Simple.Body0.Numeric</item>
+    <item name="textAppearanceBody1">@style/TextAppearance.Simple.Body1</item>
+    <item name="textAppearanceBody1Numeric">@style/TextAppearance.Simple.Body1.Numeric</item>
+    <item name="textAppearanceBody2">@style/TextAppearance.Simple.Body2</item>
+    <item name="textAppearanceBody2Numeric">@style/TextAppearance.Simple.Body2.Numeric</item>
+    <item name="textAppearanceBody2Bold">@style/TextAppearance.Simple.Body2.Bold</item>
+    <item name="textAppearanceButton">@style/TextAppearance.Simple.Button</item>
+    <item name="textAppearanceButtonBig">@style/TextAppearance.Simple.Button.Big</item>
+    <item name="textAppearanceTag">@style/TextAppearance.Simple.Tag</item>
+
+    <!-- Shape Appearances -->
+    <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Simple.SmallComponent</item>
+    <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Simple.MediumComponent</item>
+    <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Simple.LargeComponent</item>
+  </style>
+
+  <style name="Theme.Simple" parent="Base.Theme.Simple">
+    <item name="colorPrimary">@color/simple_light_blue_500</item>
+    <item name="colorPrimaryVariant">@color/simple_light_blue_100</item>
+    <item name="colorOnPrimary">@color/white</item>
+
+    <item name="colorSecondary">@color/simple_green_500</item>
+    <item name="colorSecondaryVariant">@color/simple_green_200</item>
+
+    <item name="colorSurface">@color/white</item>
+    <item name="colorOnSurface">@color/simple_dark_grey</item>
+
+    <item name="colorError">@color/simple_red_500</item>
+    <item name="colorOnError">@color/white</item>
+
+    <item name="scrimBackground">@color/scrim_color</item>
+
+    <item name="android:statusBarColor">@color/simple_dark_blue_900</item>
+    <item name="android:colorBackground">@color/simple_light_grey</item>
+    <item name="android:windowBackground">@color/simple_light_grey</item>
+
+    <!-- Custom Attrs -->
+    <item name="colorToolbarPrimary">@color/simple_dark_blue_800</item>
+    <item name="colorToolbarPrimaryVariant">@color/simple_dark_blue_900</item>
+
+    <item name="colorLowEmphasis">@color/color_low_emphasis</item>
+    <item name="colorMediumEmphasis">@color/color_medium_emphasis</item>
+    <item name="colorHighEmphasis">@color/color_high_emphasis</item>
+  </style>
+
+  <!-- TODO: Remove this once `BottomSheetActivity` usage is replaced by `BottomSheetDialogFragment` -->
+  <style name="Theme.Simple.BottomSheetActivity">
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:colorBackgroundCacheHint">@null</item>
+    <item name="android:windowTranslucentStatus">true</item>
+  </style>
+
+</resources>

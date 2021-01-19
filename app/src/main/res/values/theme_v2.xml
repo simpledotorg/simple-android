@@ -55,7 +55,7 @@
     <item name="colorOnPrimary">@color/white</item>
 
     <item name="colorSecondary">@color/simple_green_500</item>
-    <item name="colorSecondaryVariant">@color/simple_green_200</item>
+    <item name="colorSecondaryVariant">@color/simple_green_100</item>
 
     <item name="colorSurface">@color/white</item>
     <item name="colorOnSurface">@color/simple_dark_grey</item>

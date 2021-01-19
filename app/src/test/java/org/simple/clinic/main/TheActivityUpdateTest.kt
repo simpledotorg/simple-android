@@ -29,7 +29,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))
@@ -50,7 +50,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))
@@ -71,7 +71,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))
@@ -92,7 +92,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))
@@ -113,7 +113,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))
@@ -134,7 +134,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))
@@ -155,7 +155,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))
@@ -176,7 +176,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))
@@ -197,7 +197,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))
@@ -218,7 +218,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))
@@ -239,7 +239,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))
@@ -260,7 +260,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))
@@ -281,7 +281,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))
@@ -302,7 +302,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))
@@ -323,7 +323,7 @@ class TheActivityUpdateTest {
     spec
         .given(freshLoginModel)
         .whenEvent(InitialScreenInfoLoaded(
-            user = Optional.of(user),
+            user = user,
             currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             lockAtTimestamp = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
         ))

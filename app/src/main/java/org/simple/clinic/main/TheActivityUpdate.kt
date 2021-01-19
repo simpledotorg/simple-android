@@ -1,7 +1,6 @@
 package org.simple.clinic.main
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.user.User
@@ -29,15 +28,9 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
   }
 
   private fun decideInitialScreen(event: InitialScreenInfoLoaded): Next<TheActivityModel, TheActivityEffect> {
-    val userOptional = event.user
+    val effect = initialScreenEffect(event.user)
 
-    return if (userOptional.isPresent()) {
-      val effect = initialScreenEffect(userOptional.get())
-
-      dispatch(effect)
-    } else {
-      noChange()
-    }
+    return dispatch(effect)
   }
 
   private fun initialScreenEffect(user: User): TheActivityEffect {

@@ -8,7 +8,7 @@ import java.time.Instant
 sealed class TheActivityEvent : UiEvent
 
 data class InitialScreenInfoLoaded(
-    val user: Optional<User>,
+    val user: User,
     val currentTimestamp: Instant,
     val lockAtTimestamp: Optional<Instant>
 ) : TheActivityEvent()

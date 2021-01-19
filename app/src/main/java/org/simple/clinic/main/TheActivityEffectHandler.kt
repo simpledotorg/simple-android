@@ -13,7 +13,6 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterTrue
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.clinic.util.toOptional
 import java.time.Instant
 
 class TheActivityEffectHandler @AssistedInject constructor(
@@ -52,7 +51,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { userSession.loggedInUserImmediate().toOptional() }
+          .map { userSession.loggedInUserImmediate() }
           .map {
             InitialScreenInfoLoaded(
                 user = it,

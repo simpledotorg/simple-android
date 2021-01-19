@@ -7,7 +7,6 @@
   <color name="grey3">#dadde0</color>
   <color name="grey4">#f0f2f5</color>
 
-  <color name="white100">#ffffff</color>
   <color name="white72">#b8ffffff</color>
   <color name="white48">#7affffff</color>
   <color name="white24">#3dffffff</color>
@@ -34,7 +33,6 @@
 
   <color name="teal">#2FA7AE</color>
 
-  <color name="launcher_background">@color/white100</color>
   <color name="facility_search_query_highlight">@color/blue2</color>
   <color name="status_bar">#0a2e52</color>
   <color name="settings_divider_background">@color/grey3</color>

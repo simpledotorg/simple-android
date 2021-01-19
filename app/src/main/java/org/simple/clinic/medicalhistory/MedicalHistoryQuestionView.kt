@@ -58,7 +58,7 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
 
   private fun CheckBox.updateCheckBoxVisualsBasedOnCheckedState() {
     if (isChecked) {
-      setTextColor(ContextCompat.getColor(context, R.color.white100))
+      setTextColor(ContextCompat.getColor(context, R.color.white))
       setCompoundDrawableStart(R.drawable.ic_done_16dp)
       setHorizontalPadding(R.dimen.medicalhistory_selected_padding)
     } else {

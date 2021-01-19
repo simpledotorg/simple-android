@@ -98,7 +98,7 @@
   </style>
 
   <style name="Clinic.V2.TextAppearance.Body0Left.Numeric.White100">
-    <item name="android:textColor">@color/white100</item>
+    <item name="android:textColor">@color/white</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.Body0Left.Grey0">
@@ -237,7 +237,7 @@
   </style>
 
   <style name="Clinic.V2.TextAppearance.Body2Left.White100">
-    <item name="android:textColor">@color/white100</item>
+    <item name="android:textColor">@color/white</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.Body2Left.White72">
@@ -323,7 +323,7 @@
   </style>
 
   <style name="Clinic.V2.TextAppearance.H6.White100">
-    <item name="android:textColor">@color/white100</item>
+    <item name="android:textColor">@color/white</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.H5">
@@ -388,7 +388,7 @@
   </style>
 
   <style name="Clinic.V2.TextAppearance.Button2.White100">
-    <item name="android:textColor">@color/white100</item>
+    <item name="android:textColor">@color/white</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.TextFieldLarge">
@@ -523,7 +523,7 @@
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:animateFirstView">false</item>
-    <item name="android:background">@color/white100</item>
+    <item name="android:background">@color/white</item>
     <item name="android:elevation">3dp</item>
     <item name="android:inAnimation">@anim/registrationfacilities_toolbar_entry</item>
     <item name="android:outAnimation">@anim/registrationfacilities_toolbar_exit</item>
@@ -539,7 +539,7 @@
   <style name="Clinic.V2.FacilitySelection.ToolbarWithSearch">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
-    <item name="android:background">@color/white100</item>
+    <item name="android:background">@color/white</item>
     <item name="android:elevation">3dp</item>
     <item name="contentInsetStartWithNavigation">58dp</item>
     <item name="navigationIcon">@drawable/ic_arrow_back_24dp</item>
@@ -585,7 +585,7 @@
 
   <style name="Clinic.V2.TextInputLayout.FilledBox" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
     <item name="hintTextColor">?attr/colorSecondary</item>
-    <item name="boxBackgroundColor">@color/white100</item>
+    <item name="boxBackgroundColor">@color/white</item>
     <item name="boxStrokeColor">?attr/colorSecondary</item>
     <item name="boxCornerRadiusTopEnd">@dimen/spacing_0</item>
     <item name="boxCornerRadiusTopStart">@dimen/spacing_0</item>
@@ -605,7 +605,7 @@
 
   <style name="Clinic.V2.TextInputLayout.FilledBox.PatientEntry">
     <item name="hintTextColor">?attr/colorSecondary</item>
-    <item name="boxBackgroundColor">@color/white100</item>
+    <item name="boxBackgroundColor">@color/white</item>
     <item name="boxStrokeColor">?attr/colorSecondary</item>
     <item name="boxCornerRadiusTopEnd">@dimen/spacing_0</item>
     <item name="boxCornerRadiusTopStart">@dimen/spacing_0</item>
@@ -616,7 +616,7 @@
   </style>
 
   <style name="Clinic.V2.TextInputLayout.ToolbarSearch" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-    <item name="boxBackgroundColor">@color/white100</item>
+    <item name="boxBackgroundColor">@color/white</item>
     <item name="boxStrokeColor">@color/grey3</item>
     <item name="hintEnabled">false</item>
     <item name="endIconTint">@color/grey1</item>
@@ -637,8 +637,8 @@
 
   <style name="Clinic.V2.MaterialButton.Blue1">
     <item name="backgroundTint">@color/blue1</item>
-    <item name="android:textColor">@color/white100</item>
-    <item name="iconTint">@color/white100</item>
+    <item name="android:textColor">@color/white</item>
+    <item name="iconTint">@color/white</item>
   </style>
 
   <style name="Clinic.V2.MaterialButton.Blue2">

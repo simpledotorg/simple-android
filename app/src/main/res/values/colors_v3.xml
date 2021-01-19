@@ -18,5 +18,9 @@
   <color name="simple_red_500">#FF3355</color>
   <color name="simple_red_100">#FFD6DD</color>
 
+
+  <color name="white">#FFFFFF</color>
   <color name="black_24">#3D000000</color>
+
+  <color name="launcher_background">@color/white</color>
 </resources>

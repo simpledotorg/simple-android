@@ -41,7 +41,11 @@
     <item name="colorPrimary">@color/color_on_surface_34</item>
   </style>
 
-  <style name="ThemeOverlay.Simple.Light.Dialog.Alert" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+  <style name="ThemeOverlay.Simple.Dialog" parent="ThemeOverlay.MaterialComponents.Dialog">
+    <item name="colorSecondary">@color/simple_light_blue_500</item>
+    <item name="materialButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog</item>
+  </style>
+
   <style name="ThemeOverlay.Simple.Dialog.Alert" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
     <item name="buttonBarNeutralButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.OnSurface34</item>
     <item name="buttonBarNegativeButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.OnSurface34</item>

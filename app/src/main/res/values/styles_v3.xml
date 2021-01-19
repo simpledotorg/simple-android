@@ -71,6 +71,8 @@
 
   <style name="Widget.Simple.Button.TextButton.Dialog" parent="Widget.MaterialComponents.Button.TextButton.Dialog" />
 
+  <style name="Widget.Simple.Button.TextButton.Dialog.Flush" parent="Widget.MaterialComponents.Button.TextButton.Dialog.Flush" />
+
   <style name="Widget.Simple.Button.TextButton.Dialog.OnSurface34">
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.OnSurface34Primary</item>
   </style>

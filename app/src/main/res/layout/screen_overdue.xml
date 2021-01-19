@@ -36,22 +36,26 @@
       app:srcCompat="@drawable/illustration_overdue" />
 
     <TextView
-      style="@style/Clinic.V2.TextAppearance.H6.Grey1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_32"
       android:layout_marginEnd="@dimen/spacing_32"
       android:text="@string/overdue_no_patients"
+      android:textAppearance="?attr/textAppearanceHeadline6"
+      android:textColor="@color/color_on_surface_67"
       tools:ignore="UnusedAttribute" />
 
     <TextView
-      style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_32"
       android:layout_marginTop="@dimen/spacing_12"
       android:layout_marginEnd="@dimen/spacing_32"
-      android:text="@string/overdue_empty_desc" />
+      android:text="@string/overdue_empty_desc"
+      android:textAlignment="center"
+      android:textAppearance="?attr/textAppearanceSubtitle1"
+      android:textColor="@color/color_on_surface_67" />
+
   </LinearLayout>
 
 </org.simple.clinic.home.overdue.OverdueScreen>

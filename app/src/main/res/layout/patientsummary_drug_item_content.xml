@@ -14,16 +14,17 @@
     android:layout_width="@dimen/spacing_16"
     android:layout_height="@dimen/spacing_16"
     android:contentDescription="@null"
-    app:srcCompat="@drawable/prescription_drug"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/prescription_drug" />
 
   <TextView
     android:id="@+id/prescribedDrugDate"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="@color/color_on_surface_67"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="parent"
@@ -35,7 +36,8 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_12"
     android:layout_marginEnd="@dimen/spacing_8"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.Grey0"
+    android:textAppearance="?attr/textAppearanceBody0"
+    android:textColor="?attr/colorOnSurface"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toStartOf="@id/prescribedDrugDate"
     app:layout_constraintStart_toEndOf="@id/drugIcon"

@@ -1,76 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/registrationconfirmpin_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/window_background_auth"
   tools:ignore="Overdraw">
 
   <RelativeLayout
     android:id="@+id/registrationconfirmpin_logo_container"
-    style="@style/Clinic.LoginLogoContainer">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorToolbarPrimary">
 
     <ImageButton
       android:id="@+id/backButton"
-      style="@style/Clinic.LoginBackButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:padding="@dimen/spacing_12"
       app:srcCompat="@drawable/ic_arrow_back_24dp"
       tools:ignore="ContentDescription" />
 
     <ImageView
-      style="@style/Clinic.V2.LogoWithType.Large"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_centerHorizontal="true"
+      android:layout_marginTop="@dimen/spacing_40"
+      android:layout_marginBottom="@dimen/spacing_44"
+      app:srcCompat="@drawable/logo_large"
       tools:ignore="ContentDescription" />
+
   </RelativeLayout>
 
   <View
-    style="@style/Clinic.LoginLogoContainerOverflow"
-    android:layout_below="@+id/registrationconfirmpin_logo_container" />
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/spacing_48"
+    android:layout_below="@+id/registrationconfirmpin_logo_container"
+    android:background="?attr/colorToolbarPrimary" />
 
-  <androidx.cardview.widget.CardView
+  <com.google.android.material.card.MaterialCardView
     android:id="@+id/registrationconfirmpin_card"
-    style="@style/Clinic.LoginCard"
-    android:layout_below="@+id/registrationconfirmpin_logo_container">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/registrationconfirmpin_logo_container"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_24">
 
     <LinearLayout
-      style="@style/Clinic.CardContentContainer.Login"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
       android:animateLayoutChanges="true"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingStart="@dimen/spacing_24"
+      android:paddingTop="@dimen/spacing_24"
+      android:paddingEnd="@dimen/spacing_24"
       android:paddingBottom="@dimen/spacing_12">
 
       <TextView
-        style="@style/Clinic.LoginCardTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:labelFor="@+id/confirmPinEditText"
-        android:text="@string/registrationconfirmpin_confirm_pin_label" />
+        android:text="@string/registrationconfirmpin_confirm_pin_label"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="?attr/colorOnSurface" />
 
       <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/confirmPinEditText"
-        style="@style/Clinic.StaggeredEditText.Pin"
+        style="@style/Widget.Simple.TextField.PinEntry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
+        android:gravity="center"
         android:imeOptions="actionDone"
         android:maxLength="4" />
 
       <TextView
         android:id="@+id/pinHintTextView"
-        style="@style/Clinic.RegistrationPinHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
         android:layout_marginBottom="@dimen/spacing_16"
-        android:background="@color/white"
         android:text="@string/registrationconfirmpin_hint"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/color_on_surface_67"
         android:visibility="visible" />
 
       <LinearLayout
         android:id="@+id/errorStateViewGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
-          style="@style/Clinic.V2.RegistrationInputError"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/spacing_8"
-          android:text="@string/registrationconfirmpin_error_pin_mismatch" />
+          android:text="@string/registrationconfirmpin_error_pin_mismatch"
+          android:textAppearance="?attr/textAppearanceBody2"
+          android:textColor="?attr/colorError" />
 
         <com.google.android.material.button.MaterialButton
           android:id="@+id/resetPinButton"
@@ -78,9 +109,12 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/spacing_12"
-          android:minHeight="0dp"
           android:text="@string/registrationconfirmpin_reset_pin" />
+
       </LinearLayout>
+
     </LinearLayout>
-  </androidx.cardview.widget.CardView>
+
+  </com.google.android.material.card.MaterialCardView>
+
 </RelativeLayout>

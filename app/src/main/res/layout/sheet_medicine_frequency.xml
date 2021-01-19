@@ -6,14 +6,16 @@
   android:layout_height="wrap_content"
   android:paddingStart="@dimen/spacing_16"
   android:paddingEnd="@dimen/spacing_16"
-  android:paddingBottom="@dimen/spacing_16">
+  android:paddingBottom="@dimen/spacing_16"
+  tools:background="?attr/colorSurface">
 
   <TextView
     android:id="@+id/medicineFrequencyTitleTextView"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_16"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    android:textColor="?attr/colorOnSurface"
     app:layout_constraintBottom_toTopOf="@+id/medicineFrequencyRadioGroup"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -35,15 +37,16 @@
       android:layout_height="wrap_content"
       android:padding="@dimen/spacing_16"
       android:text="@string/sheet_medicine_frequency_od"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
-      android:textColor="@drawable/radio_button_selected" />
+      android:textAppearance="?attr/textAppearanceBody1"
+      android:textColor="@drawable/radio_button_selected"
+      tools:checked="true" />
 
     <View
       android:id="@+id/medicineFrequencyOdDivider"
       android:layout_width="match_parent"
       android:layout_height="@dimen/spacing_1"
       android:layout_marginTop="@dimen/spacing_8"
-      android:background="@color/grey4" />
+      android:background="@drawable/divider" />
 
     <com.google.android.material.radiobutton.MaterialRadioButton
       android:id="@+id/medicineFrequencyBdRadioButton"
@@ -52,7 +55,7 @@
       android:layout_marginTop="@dimen/spacing_8"
       android:padding="@dimen/spacing_16"
       android:text="@string/sheet_medicine_frequency_bd"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+      android:textAppearance="?attr/textAppearanceBody1"
       android:textColor="@drawable/radio_button_selected" />
 
     <View
@@ -60,7 +63,7 @@
       android:layout_width="match_parent"
       android:layout_height="@dimen/spacing_1"
       android:layout_marginTop="@dimen/spacing_8"
-      android:background="@color/grey4" />
+      android:background="@drawable/divider" />
 
     <com.google.android.material.radiobutton.MaterialRadioButton
       android:id="@+id/medicineFrequencyTdsRadioButton"
@@ -69,7 +72,7 @@
       android:layout_marginTop="@dimen/spacing_8"
       android:padding="@dimen/spacing_16"
       android:text="@string/sheet_medicine_frequency_tds"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+      android:textAppearance="?attr/textAppearanceBody1"
       android:textColor="@drawable/radio_button_selected" />
 
     <View
@@ -77,7 +80,7 @@
       android:layout_width="match_parent"
       android:layout_height="@dimen/spacing_1"
       android:layout_marginTop="@dimen/spacing_8"
-      android:background="@color/grey4" />
+      android:background="@drawable/divider" />
 
     <com.google.android.material.radiobutton.MaterialRadioButton
       android:id="@+id/medicineFrequencyQdsRadioButton"
@@ -86,14 +89,13 @@
       android:layout_marginTop="@dimen/spacing_8"
       android:padding="@dimen/spacing_16"
       android:text="@string/sheet_medicine_frequency_qds"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+      android:textAppearance="?attr/textAppearanceBody1"
       android:textColor="@drawable/radio_button_selected" />
 
   </RadioGroup>
 
   <com.google.android.material.button.MaterialButton
     android:id="@+id/saveMedicineFrequencyButton"
-    style="?attr/materialButtonStyle"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_16"

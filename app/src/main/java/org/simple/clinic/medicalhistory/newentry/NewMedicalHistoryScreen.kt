@@ -55,8 +55,8 @@ class NewMedicalHistoryScreen(
   private val toolbar
     get() = binding!!.toolbar
 
-  private val nextButtonFrame
-    get() = binding!!.nextButtonFrame
+  private val nextButton
+    get() = binding!!.nextButton
 
   private val heartAttackQuestionView
     get() = binding!!.heartAttackQuestionView
@@ -139,10 +139,9 @@ class NewMedicalHistoryScreen(
     super.onRestoreInstanceState(mobiusDelegate.onRestoreInstanceState(state))
   }
 
-  private fun saveClicks() =
-      nextButtonFrame.button
-          .clicks()
-          .map { SaveMedicalHistoryClicked() }
+  private fun saveClicks() = nextButton
+      .clicks()
+      .map { SaveMedicalHistoryClicked() }
 
   override fun openPatientSummaryScreen(patientUuid: UUID) {
     screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewNewPatient, Instant.now(utcClock)))

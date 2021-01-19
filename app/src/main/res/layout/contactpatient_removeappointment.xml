@@ -6,35 +6,38 @@
   android:layout_height="match_parent"
   android:clipChildren="false"
   android:clipToPadding="false"
-  tools:background="@color/white100"
+  tools:background="?attr/colorSurface"
   tools:context="org.simple.clinic.contactpatient.views.RemoveAppointmentView"
   tools:parentTag="org.simple.clinic.contactpatient.views.RemoveAppointmentView">
 
-  <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
-    android:id="@+id/removeAppointmentToolbar"
-    android:layout_width="0dp"
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/removeAppointmentAppBar"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:elevation="@dimen/elevation_toolbar"
-    app:contentInsetStartWithNavigation="@dimen/spacing_56"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:navigationIcon="@drawable/ic_close_24dp"
-    app:navigationIconTint="@color/grey0"
-    app:title="@string/contactpatient_select_a_reason"
-    app:titleTextAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
-    app:titleTextColor="?attr/colorOnSurface" />
+    android:theme="@style/ThemeOverlay.Simple.WhitePrimary">
+
+    <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/removeAppointmentToolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:contentInsetStartWithNavigation="@dimen/spacing_56"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:navigationIcon="@drawable/ic_close_24dp"
+      app:navigationIconTint="?attr/colorOnPrimary"
+      app:title="@string/contactpatient_select_a_reason"
+      app:titleTextColor="?attr/colorOnSurface" />
+
+  </com.google.android.material.appbar.AppBarLayout>
 
   <com.google.android.material.button.MaterialButton
     android:id="@+id/removeAppointmentDone"
-    style="?attr/materialButtonStyle"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/spacing_16"
     android:enabled="false"
     android:text="@string/contactpatient_done"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
     app:icon="@drawable/ic_done_24dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +51,7 @@
     app:layout_constraintBottom_toTopOf="@id/removeAppointmentDone"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/removeAppointmentToolbar"
+    app:layout_constraintTop_toBottomOf="@id/removeAppointmentAppBar"
     tools:listitem="@layout/contactpatient_removeappointment_reasonitem" />
 
 </merge>

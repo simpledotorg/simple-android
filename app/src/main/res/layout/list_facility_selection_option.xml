@@ -1,19 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView style="@style/Clinic.V2.FacilitySelection.CardView"
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools">
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginStart="@dimen/spacing_8"
+  android:layout_marginTop="@dimen/spacing_8"
+  android:layout_marginEnd="@dimen/spacing_8">
 
-  <LinearLayout style="@style/Clinic.V2.FacilitySelection.FacilityContainer">
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_16">
 
     <TextView
       android:id="@+id/facilityNameTextView"
-      style="@style/Clinic.V2.FacilitySelection.FacilityName"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAppearance="?attr/textAppearanceBody1"
+      android:textColor="?attr/colorPrimary"
       tools:text="Facility name" />
+
+    <Space
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/spacing_4" />
 
     <TextView
       android:id="@+id/facilityAddressTextView"
-      style="@style/Clinic.V2.FacilitySelection.FacilityAddress"
-      android:layout_marginBottom="@dimen/spacing_16"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAppearance="?attr/textAppearanceBody2"
+      android:textColor="@color/color_on_surface_67"
       tools:text="A really long address for this facility to test line wrapping" />
+
   </LinearLayout>
-</androidx.cardview.widget.CardView>
+
+</com.google.android.material.card.MaterialCardView>

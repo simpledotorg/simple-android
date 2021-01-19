@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView android:id="@+id/prescribeddrug_item_protocoldrug_rootlayout"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/prescribeddrug_item_protocoldrug_rootlayout"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:background="@color/white100"
   android:clickable="true"
   android:focusable="true"
-  android:foreground="?selectableItemBackground"
   android:orientation="vertical"
   app:cardCornerRadius="0dp">
 
@@ -21,23 +19,29 @@
 
     <TextView
       android:id="@+id/protocoldrug_item_name"
-      style="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginEnd="@dimen/spacing_8"
       android:layout_weight="1"
+      android:textAppearance="?attr/textAppearanceBody1"
+      android:textColor="?attr/colorOnSurface"
       tools:text="Amlodipine" />
 
     <TextView
       android:id="@+id/protocoldrug_item_dosage"
-      style="@style/Clinic.V2.TextAppearance.Body1Left.Blue1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:textAppearance="?attr/textAppearanceBody1"
+      android:textColor="?attr/colorPrimary"
       tools:text="10 mg" />
+
   </LinearLayout>
 
   <View
     android:id="@+id/protocoldrug_item_divider"
-    style="@style/Clinic.V2.ListSeparator"
-    android:layout_gravity="bottom" />
-</androidx.cardview.widget.CardView>
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/spacing_1"
+    android:layout_gravity="bottom"
+    android:background="@drawable/divider" />
+
+</com.google.android.material.card.MaterialCardView>

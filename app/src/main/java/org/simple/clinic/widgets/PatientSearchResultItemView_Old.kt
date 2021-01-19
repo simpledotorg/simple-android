@@ -3,7 +3,7 @@ package org.simple.clinic.widgets
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import androidx.cardview.widget.CardView
+import com.google.android.material.card.MaterialCardView
 import kotlinx.android.synthetic.main.view_patient_search_result.view.*
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
@@ -25,7 +25,7 @@ import javax.inject.Named
 class PatientSearchResultItemView_Old(
     context: Context,
     attributeSet: AttributeSet
-) : CardView(context, attributeSet) {
+) : MaterialCardView(context, attributeSet) {
 
   @Inject
   @Named("full_date")

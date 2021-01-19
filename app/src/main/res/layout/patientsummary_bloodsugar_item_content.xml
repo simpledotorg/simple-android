@@ -18,11 +18,11 @@
     android:layout_marginStart="@dimen/spacing_12"
     android:layout_marginTop="@dimen/spacing_4"
     android:layout_marginBottom="@dimen/spacing_4"
-    app:srcCompat="@drawable/ic_blood_sugar_outline"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toStartOf="@id/flow"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/ic_blood_sugar_outline"
     tools:ignore="ContentDescription" />
 
   <androidx.constraintlayout.helper.widget.Flow
@@ -45,7 +45,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="?attr/colorOnSurface"
     tools:ignore="MissingConstraints"
     tools:text="120 mg/dL FBS" />
 
@@ -54,7 +55,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="@string/bloodsugar_level_high"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="?attr/colorError"
     android:visibility="gone"
     tools:ignore="MissingConstraints"
     tools:visibility="visible" />
@@ -64,7 +66,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="@string/patientsummary_edit"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Blue1"
+    android:textAppearance="?attr/textAppearanceButton"
+    android:textColor="?attr/colorPrimary"
     android:visibility="gone"
     tools:ignore="MissingConstraints"
     tools:visibility="visible" />
@@ -76,7 +79,8 @@
     android:layout_marginStart="@dimen/spacing_8"
     android:layout_marginEnd="@dimen/spacing_12"
     android:textAlignment="viewEnd"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="@color/color_on_surface_67"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="@id/flow"

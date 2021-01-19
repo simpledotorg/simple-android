@@ -9,37 +9,72 @@
   <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:background="@color/grey4">
+    android:animateLayoutChanges="true">
 
-    <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
-      android:id="@+id/toolbarViewFlipper"
-      style="@style/Clinic.V2.FacilitySelection.ToolbarFlipper"
-      app:debug_displayedChild="0">
+    <com.google.android.material.appbar.AppBarLayout
+      android:id="@+id/appbarLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
 
-      <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarViewWithoutSearch"
-        style="@style/Clinic.V2.FacilitySelection.ToolbarWithoutSearch"
-        app:title="@string/facilitypicker_screen_title" />
+      <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
+        android:id="@+id/toolbarViewFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateFirstView="false"
+        android:background="?attr/colorSurface"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:inAnimation="@anim/registrationfacilities_toolbar_entry"
+        android:outAnimation="@anim/registrationfacilities_toolbar_exit"
+        app:debug_displayedChild="0">
 
-      <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
-        android:id="@+id/toolbarViewWithSearch"
-        style="@style/Clinic.V2.FacilitySelection.ToolbarWithSearch">
+        <com.google.android.material.appbar.MaterialToolbar
+          android:id="@+id/toolbarViewWithoutSearch"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          app:navigationIcon="@drawable/ic_arrow_back_24dp"
+          app:navigationIconTint="?attr/colorOnPrimary"
+          app:title="@string/facilitypicker_screen_title" />
 
-        <EditText
-          android:id="@+id/searchEditText"
-          style="@style/Clinic.V2.FacilitySelection.SearchField"
-          android:hint="@string/facilitypicker_search_hint"
-          android:importantForAutofill="no"
-          tools:ignore="UnusedAttribute" />
-      </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
-    </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
+        <com.google.android.material.appbar.MaterialToolbar
+          android:id="@+id/toolbarViewWithSearch"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:theme="@style/ThemeOverlay.Simple.FacilityPicker.Search"
+          app:contentInsetStartWithNavigation="@dimen/spacing_56"
+          app:navigationIcon="@drawable/ic_arrow_back_24dp"
+          app:navigationIconTint="?attr/colorOnPrimary">
+
+          <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Simple.TextField.Layout.Search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+              android:id="@+id/searchEditText"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="@string/facilitypicker_search_hint"
+              android:importantForAutofill="no"
+              android:inputType="textPostalAddress"
+              android:textAppearance="?attr/textAppearanceBody0"
+              android:textColor="?attr/colorOnSurface"
+              android:textColorHint="@color/color_on_surface_67"
+              tools:ignore="UnusedAttribute" />
+
+          </com.google.android.material.textfield.TextInputLayout>
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+      </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
       android:id="@+id/progressView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_below="@+id/toolbarViewFlipper"
+      android:layout_below="@+id/appbarLayout"
       android:orientation="vertical"
       android:visibility="gone">
 
@@ -60,17 +95,20 @@
       <include layout="@layout/list_facility_selection_progress" />
 
       <include layout="@layout/list_facility_selection_progress" />
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/facilityRecyclerView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_below="@+id/toolbarViewFlipper"
+      android:layout_below="@+id/appbarLayout"
       android:clipToPadding="false"
       android:paddingBottom="@dimen/spacing_8"
       android:scrollbarStyle="insideOverlay"
       android:scrollbars="vertical"
       tools:listitem="@layout/list_facility_selection_option" />
+
   </RelativeLayout>
+
 </merge>

@@ -3,18 +3,24 @@
   <issue id="GoogleAppIndexingWarning" severity="informational" />
   <issue id="AllowBackup" severity="informational" />
   <issue id="UnusedResources">
-    <ignore path="src/main/res/values/colors_material.xml" />
-    <ignore path="src/main/res/values/colors_v2.xml" />
-
     <!-- TODO: Remove these once Material theming migration is finished -->
-    <ignore path="src/main/res/values/colors_v3.xml" />
+    <ignore path="src/main/res/color/contact_doctor_button.xml" />
+    <ignore path="src/main/res/color/material_button_background.xml" />
+    <ignore path="src/main/res/color/selectcountry_radio_button.xml" />
+    <ignore path="src/main/res/values/dimens.xml" />
+    <ignore path="src/main/res/values/colors.xml" />
+    <ignore path="src/main/res/values/colors_v2.xml" />
+    <ignore path="src/main/res/values/colors_material.xml" />
+    <ignore path="src/main/res/values/styles.xml" />
+    <ignore path="src/main/res/values/styles_v2.xml" />
     <ignore path="src/main/res/values/styles_v3.xml" />
-    <ignore path="src/main/res/values/theme_overlay.xml" />
-    <ignore path="src/main/res/values/type.xml" />
     <ignore path="src/main/res/values/theme_v2.xml" />
-    <ignore path="src/main/res/color/color_low_emphasis.xml" />
-    <ignore path="src/main/res/color/color_medium_emphasis.xml" />
-    <ignore path="src/main/res/color/color_high_emphasis.xml" />
+    <ignore path="src/main/res/values/theme_material.xml" />
+    <ignore path="src/main/res/values/theme_overlay.xml" />
+
+    <ignore path="src/main/res/color/color_on_surface_11.xml" />
+    <ignore path="src/main/res/color/color_on_surface_34.xml" />
+    <ignore path="src/main/res/color/color_on_surface_67.xml" />
     <ignore path="src/main/res/color/mtrl_btn_stroke_color_selector.xml" />
 
     <ignore regexp="ShapeAppearance.Simple.LargeComponent" />

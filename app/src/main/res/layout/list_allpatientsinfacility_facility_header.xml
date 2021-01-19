@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView android:id="@+id/facilityLabel"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/facilityLabel"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:layout_margin="@dimen/spacing_16"
   android:orientation="vertical"
   android:textAllCaps="true"
-  android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
+  android:textAppearance="?attr/textAppearanceTag"
+  android:textColor="@color/color_on_surface_67"
   tools:text="All patients: CHC Buchho" />

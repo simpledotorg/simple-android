@@ -34,7 +34,7 @@
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
     android:supportsRtl="true"
-    android:theme="@style/Clinic.V2.Theme"
+    android:theme="@style/Theme.Simple"
     tools:ignore="AllowBackup,GoogleAppIndexingWarning, LockedOrientationActivity"
     tools:replace="android:allowBackup">
 
@@ -67,22 +67,22 @@
 
     <activity
       android:name=".drugs.selection.entry.CustomPrescriptionEntrySheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".bp.entry.BloodPressureEntrySheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".bp.assignbppassport.BpPassportSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".scheduleappointment.ScheduleAppointmentSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
@@ -91,17 +91,17 @@
 
     <activity
       android:name=".bloodsugar.selection.type.BloodSugarTypePickerSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".bloodsugar.entry.BloodSugarEntrySheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".facility.change.confirm.ConfirmFacilityChangeSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
@@ -110,32 +110,32 @@
 
     <activity
       android:name=".registration.confirmfacility.ConfirmFacilitySheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".facility.alertchange.AlertFacilityChangeSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".contactpatient.ContactPatientBottomSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".drugs.selection.dosage.DosagePickerSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".summary.teleconsultation.contactdoctor.ContactDoctorSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".teleconsultlog.medicinefrequency.MedicineFrequencySheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
@@ -162,16 +162,16 @@
 
     <activity
       android:name=".signature.SignatureActivity"
-      android:theme="@style/Clinic.V2.Theme.TranslucentBackground" />
+      android:theme="@style/Theme.Simple.TranslucentBackground" />
 
     <activity
       android:name=".teleconsultlog.drugduration.DrugDurationSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".summary.teleconsultation.status.TeleconsultStatusSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity

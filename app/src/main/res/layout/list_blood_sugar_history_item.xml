@@ -42,12 +42,12 @@
     android:layout_width="@dimen/spacing_16"
     android:layout_height="@dimen/spacing_16"
     android:layout_gravity="center_vertical"
-    app:srcCompat="@drawable/ic_blood_sugar_outline"
     app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
     app:layout_constraintEnd_toStartOf="@id/flow"
     app:layout_constraintHorizontal_bias="0"
     app:layout_constraintStart_toEndOf="@id/startGuideline"
     app:layout_constraintTop_toBottomOf="@id/topGuideline"
+    app:srcCompat="@drawable/ic_blood_sugar_outline"
     tools:ignore="ContentDescription" />
 
   <androidx.constraintlayout.helper.widget.Flow
@@ -70,7 +70,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="?attr/colorOnSurface"
     tools:ignore="MissingConstraints"
     tools:text="150 mg/dL RBS" />
 
@@ -79,7 +80,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="@string/bloodsugar_level_high"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="?attr/colorError"
     android:visibility="gone"
     tools:ignore="MissingConstraints"
     tools:visibility="visible" />
@@ -89,7 +91,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="@string/patientsummary_edit"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Blue1"
+    android:textAppearance="?attr/textAppearanceButton"
+    android:textColor="?attr/colorPrimary"
     android:visibility="gone"
     tools:ignore="MissingConstraints"
     tools:visibility="visible" />
@@ -100,7 +103,8 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_8"
     android:textAlignment="viewEnd"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center.Grey1"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="@color/color_on_surface_67"
     app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
     app:layout_constraintEnd_toStartOf="@id/endGuideline"
     app:layout_constraintHorizontal_bias="1"

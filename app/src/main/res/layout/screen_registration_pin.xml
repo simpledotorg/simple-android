@@ -5,63 +5,97 @@
   android:id="@+id/registrationpin_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/window_background_auth"
   tools:ignore="Overdraw">
 
   <RelativeLayout
     android:id="@+id/registrationpin_logo_container"
-    style="@style/Clinic.LoginLogoContainer">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorToolbarPrimary">
 
     <ImageButton
       android:id="@+id/backButton"
-      style="@style/Clinic.LoginBackButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:padding="@dimen/spacing_16"
       app:srcCompat="@drawable/ic_arrow_back_24dp"
       tools:ignore="ContentDescription" />
 
     <ImageView
       android:id="@+id/registrationpin_applogo"
-      style="@style/Clinic.V2.LogoWithType.Large"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_centerHorizontal="true"
+      android:layout_marginTop="@dimen/spacing_44"
+      android:layout_marginBottom="@dimen/spacing_40"
+      app:srcCompat="@drawable/logo_large"
       tools:ignore="ContentDescription" />
+
   </RelativeLayout>
 
   <View
-    style="@style/Clinic.LoginLogoContainerOverflow"
-    android:layout_below="@+id/registrationpin_logo_container" />
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/spacing_48"
+    android:layout_below="@+id/registrationpin_logo_container"
+    android:background="?attr/colorToolbarPrimary" />
 
-  <androidx.cardview.widget.CardView
+  <com.google.android.material.card.MaterialCardView
     android:id="@+id/registrationpin_card"
-    style="@style/Clinic.LoginCard"
-    android:layout_below="@+id/registrationpin_logo_container">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/registrationpin_logo_container"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_24">
 
     <LinearLayout
       android:id="@+id/registrationpin_card_content"
-      style="@style/Clinic.CardContentContainer.Login">
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:padding="@dimen/spacing_24">
 
       <TextView
-        style="@style/Clinic.LoginCardTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:labelFor="@+id/pinEditText"
-        android:text="@string/registrationpin_pin_label" />
+        android:text="@string/registrationpin_pin_label"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="?attr/colorOnSurface" />
 
       <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/pinEditText"
-        style="@style/Clinic.StaggeredEditText.Pin"
-        android:layout_marginTop="@dimen/spacing_8"
+        style="@style/Widget.Simple.TextField.PinEntry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:gravity="center"
         android:imeOptions="actionDone"
         android:maxLength="4" />
 
       <TextView
         android:id="@+id/pinHintTextView"
-        style="@style/Clinic.RegistrationPinHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/registrationpin_pin_hint" />
+        android:layout_marginTop="@dimen/spacing_16"
+        android:text="@string/registrationpin_pin_hint"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/color_on_surface_67" />
 
       <TextView
         android:id="@+id/errorTextView"
-        style="@style/Clinic.V2.RegistrationInputError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/colorError"
         android:visibility="gone"
         tools:text="A really long error message to test wrapping on this TextView." />
+
     </LinearLayout>
-  </androidx.cardview.widget.CardView>
+
+  </com.google.android.material.card.MaterialCardView>
+
 </RelativeLayout>

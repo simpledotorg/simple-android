@@ -5,36 +5,34 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <androidx.appcompat.widget.Toolbar
-    android:id="@+id/toolbar"
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/appbar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:title="@string/registrationlocation_screen_title"
-    tools:ignore="UnusedAttribute" />
+    android:layout_height="wrap_content">
 
-  <FrameLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignTop="@+id/toolbar"
-    android:layout_alignBottom="@+id/toolbar"
-    android:layout_alignParentEnd="true"
-    android:layout_marginEnd="@dimen/spacing_12"
-    android:elevation="@dimen/elevation_toolbar"
-    tools:ignore="UnusedAttribute">
-
-    <TextView
-      android:id="@+id/skipButton"
-      style="@style/Clinic.V2.ToolbarButton"
-      android:layout_width="wrap_content"
+    <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:paddingStart="@dimen/spacing_16"
-      android:paddingEnd="@dimen/spacing_16"
-      android:stateListAnimator="@null"
-      android:text="@string/registrationlocation_skip_permission"
-      tools:ignore="UnusedAttribute" />
-  </FrameLayout>
+      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      app:title="@string/registrationlocation_screen_title"
+      tools:ignore="UnusedAttribute">
+
+      <TextView
+        android:id="@+id/skipButton"
+        style="@style/Clinic.V2.ToolbarButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:paddingStart="@dimen/spacing_16"
+        android:paddingEnd="@dimen/spacing_16"
+        android:stateListAnimator="@null"
+        android:text="@string/registrationlocation_skip_permission"
+        tools:ignore="UnusedAttribute" />
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+  </com.google.android.material.appbar.AppBarLayout>
 
   <ImageView
     android:layout_width="match_parent"
@@ -44,14 +42,12 @@
     app:srcCompat="@drawable/illustration_location"
     tools:ignore="ContentDescription" />
 
-  <androidx.cardview.widget.CardView
+  <com.google.android.material.card.MaterialCardView
     android:id="@+id/registrationlocation_rationale_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:background="@color/white"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="1dp">
+    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Simple.LocationPermission">
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -63,17 +59,19 @@
       android:paddingBottom="@dimen/spacing_24">
 
       <TextView
-        style="@style/Clinic.V2.TextAppearance.H6.Grey0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/registrationlocation_permission_rationale_title" />
+        android:text="@string/registrationlocation_permission_rationale_title"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="?attr/colorOnSurface" />
 
       <TextView
-        style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_12"
-        android:text="@string/registrationlocation_permission_rationale_description" />
+        android:text="@string/registrationlocation_permission_rationale_description"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="@color/color_on_surface_67" />
 
       <com.google.android.material.button.MaterialButton
         android:id="@+id/allowAccessButton"
@@ -88,6 +86,7 @@
         tools:ignore="UnusedAttribute" />
 
     </LinearLayout>
-  </androidx.cardview.widget.CardView>
+
+  </com.google.android.material.card.MaterialCardView>
 
 </org.simple.clinic.registration.location.RegistrationLocationPermissionScreen>

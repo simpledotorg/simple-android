@@ -2,22 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
+  android:layout_height="wrap_content"
   android:layout_marginBottom="@dimen/spacing_8"
-  android:orientation="vertical">
+  android:orientation="vertical"
+  tools:background="?attr/colorSurface">
 
   <TextView
     android:id="@+id/drugNameTextView"
-    style="@style/Clinic.V2.TextAppearance.H6.Grey0"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_12"
     android:layout_marginStart="@dimen/spacing_24"
     android:layout_marginTop="@dimen/spacing_24"
+    android:layout_marginBottom="@dimen/spacing_12"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    android:textColor="?attr/colorOnSurface"
     tools:text="Telmisartan dosage" />
 
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/recyclerView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    tools:listitem="@layout/prescribed_drug_with_dosage_list_item" />
+
 </LinearLayout>

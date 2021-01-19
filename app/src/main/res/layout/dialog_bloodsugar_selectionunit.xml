@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/bloodSugarUnitGroup"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
+  android:layout_height="wrap_content"
   android:paddingStart="@dimen/spacing_16"
-  android:paddingEnd="@dimen/spacing_16">
+  android:paddingEnd="@dimen/spacing_16"
+  tools:background="?attr/colorSurface">
 
   <com.google.android.material.radiobutton.MaterialRadioButton
     android:id="@+id/bloodSugarUnitMg"
@@ -12,7 +14,8 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/spacing_16"
     android:text="@string/bloodsugarentry_mg_dl"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.Grey0" />
+    android:textAppearance="?attr/textAppearanceBody0"
+    android:textColor="?attr/colorOnSurface" />
 
   <com.google.android.material.radiobutton.MaterialRadioButton
     android:id="@+id/bloodSugarUnitMmol"
@@ -20,6 +23,7 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/spacing_16"
     android:text="@string/bloodsugarentry_mmol_l"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.Grey0" />
+    android:textAppearance="?attr/textAppearanceBody0"
+    android:textColor="?attr/colorOnSurface" />
 
 </RadioGroup>

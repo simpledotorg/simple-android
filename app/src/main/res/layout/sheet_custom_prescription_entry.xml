@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/rootLayout"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:gravity="center_horizontal"
-  android:orientation="vertical">
+  android:orientation="vertical"
+  tools:background="?attr/colorSurface">
 
   <RelativeLayout
     android:layout_width="match_parent"
@@ -13,13 +15,14 @@
 
     <TextView
       android:id="@+id/enterMedicineTextView"
-      style="@style/Clinic.V2.TextAppearance.H6.Grey0"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerHorizontal="true"
       android:layout_marginTop="@dimen/spacing_24"
       android:layout_marginBottom="@dimen/spacing_24"
       android:text="@string/customprescription_enter_medicine"
+      android:textAppearance="?attr/textAppearanceHeadline6"
+      android:textColor="?attr/colorOnSurface"
       android:visibility="gone"
       tools:visibility="gone" />
 
@@ -36,23 +39,24 @@
       android:ellipsize="end"
       android:lines="1"
       android:text="@string/customprescription_edit_medicine"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+      android:textAppearance="?attr/textAppearanceHeadline6"
+      android:textColor="?attr/colorOnSurface"
       android:visibility="gone"
       tools:ignore="UnusedAttribute"
       tools:visibility="visible" />
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/removeMedicineButton"
-      style="@style/Clinic.V2.TextButton.Red1"
+      style="@style/Widget.Simple.Button.TextButton.Red1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentEnd="true"
       android:layout_centerVertical="true"
       android:layout_marginEnd="@dimen/spacing_16"
       android:text="@string/bloodpressureentry_remove"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button2"
       android:visibility="gone"
       tools:visibility="visible" />
+
   </RelativeLayout>
 
   <LinearLayout
@@ -65,23 +69,21 @@
     android:orientation="horizontal">
 
     <com.google.android.material.textfield.TextInputLayout
-      style="@style/Clinic.V2.TextInputLayout.FilledBox.Dense"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_weight="1">
 
       <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/drugNameEditText"
-        style="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/customprescription_drug_name_hint"
         android:imeOptions="actionNext"
         android:inputType="textCapWords" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-      style="@style/Clinic.V2.TextInputLayout.FilledBox.Dense"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_8"
@@ -89,20 +91,22 @@
 
       <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/drugDosageEditText"
-        style="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/customprescription_drug_dosage_hint"
         android:imeOptions="actionDone"
         android:inputType="textCapSentences" />
+
     </com.google.android.material.textfield.TextInputLayout>
+
   </LinearLayout>
 
   <com.google.android.material.button.MaterialButton
     android:id="@+id/saveButton"
-    style="@style/Clinic.Button.Flat"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/customprescription_save_drug"
+    app:cornerRadius="@dimen/spacing_0"
     tools:ignore="UnusedAttribute" />
+
 </org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener>

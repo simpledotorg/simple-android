@@ -97,9 +97,9 @@ sealed class BloodSugarHistoryListItem : PagingItemAdapter.Item<Event> {
 
     private fun dateTimeTextAppearance(context: Context): TextAppearanceSpan {
       return if (bloodSugarTime != null) {
-        TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Caption_Grey1)
+        TextAppearanceSpan(context, R.style.TextAppearance_MaterialComponents_Caption)
       } else {
-        TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body2Left_Grey1)
+        TextAppearanceSpan(context, R.style.TextAppearance_Simple_Body2)
       }
     }
   }

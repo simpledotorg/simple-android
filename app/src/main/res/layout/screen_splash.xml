@@ -4,7 +4,8 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/blue0">
+  android:background="?android:attr/colorBackground"
+  android:theme="@style/ThemeOverlay.Simple.SplashScreen">
 
   <ImageView
     android:id="@+id/splashSimpleLogo"
@@ -26,26 +27,22 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent" />
 
-  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+  <FrameLayout
     android:id="@+id/nextButtonFrame"
-    style="@style/Clinic.V2.BottomAlignedButtonFrame"
+    style="@style/Widget.Simple.Button.Frame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:clipToPadding="false"
-    app:buttonBackgroundDisabled="@color/grey2"
-    app:buttonBackgroundEnabled="@color/blue1"
-    app:frameBackgroundDisabled="@color/grey3"
-    app:frameBackgroundEnabled="@color/blue2"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent">
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/nextButton"
-      style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_margin="@dimen/spacing_4"
       android:text="@string/screensplash_next" />
 
-  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
+  </FrameLayout>
 
 </org.simple.clinic.splash.SplashScreen>

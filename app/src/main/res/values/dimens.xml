@@ -21,6 +21,7 @@
   <dimen name="spacing_64">64dp</dimen>
   <dimen name="spacing_96">96dp</dimen>
   <dimen name="spacing_128">128dp</dimen>
+  <dimen name="spacing_192">192dp</dimen>
   <dimen name="spacing_200">200dp</dimen>
 
   <dimen name="textsize_12">12sp</dimen>

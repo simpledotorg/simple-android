@@ -3,9 +3,9 @@ package org.simple.clinic.login.applock
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -21,7 +21,7 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), AppLockScreenUi, AppLockUiActions {
+class AppLockScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), AppLockScreenUi, AppLockUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

@@ -6,6 +6,20 @@
   tools:context="org.simple.clinic.recentpatientsview.RecentPatientsView"
   tools:parentTag="org.simple.clinic.recentpatientsview.RecentPatientsView">
 
+  <TextView
+    android:id="@+id/noRecentPatientsTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_8"
+    android:layout_marginEnd="@dimen/spacing_8"
+    android:layout_marginBottom="104dp"
+    android:background="@drawable/results_row_empty_state_background"
+    android:padding="@dimen/spacing_16"
+    android:text="@string/patients_recentpatients_no_recent_patients"
+    android:textAppearance="?attr/textAppearanceSubtitle1"
+    android:textColor="@color/color_on_surface_67"
+    android:visibility="gone" />
+
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/recentRecyclerView"
     android:layout_width="match_parent"
@@ -13,15 +27,4 @@
     android:clipToPadding="false"
     android:paddingBottom="@dimen/spacing_96" />
 
-  <TextView
-    android:id="@+id/noRecentPatientsTextView"
-    style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="104dp"
-    android:layout_marginEnd="@dimen/spacing_8"
-    android:layout_marginStart="@dimen/spacing_8"
-    android:background="@drawable/results_row_empty_state_background"
-    android:padding="@dimen/spacing_16"
-    android:text="@string/patients_recentpatients_no_recent_patients" />
 </merge>

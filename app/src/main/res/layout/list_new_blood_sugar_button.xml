@@ -4,20 +4,14 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content">
 
-  <TextView
+  <com.google.android.material.button.MaterialButton
     android:id="@+id/newBloodSugarButton"
+    style="?attr/borderlessButtonStyle"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:drawablePadding="@dimen/spacing_8"
-    android:gravity="center_vertical"
-    android:paddingStart="@dimen/spacing_8"
-    android:paddingTop="@dimen/spacing_10"
-    android:paddingEnd="@dimen/spacing_12"
-    android:paddingBottom="@dimen/spacing_10"
     android:text="@string/bloodsugarhistory_add_blood_sugar_button"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1"
-    app:drawableStartCompat="@drawable/ic_add_circle_blue1_24dp"
+    app:icon="@drawable/ic_add_circle_blue1_24dp"
+    app:iconPadding="@dimen/spacing_8"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />

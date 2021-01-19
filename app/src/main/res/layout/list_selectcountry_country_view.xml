@@ -4,19 +4,17 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:orientation="vertical"
-  tools:background="@color/white100">
+  tools:background="?attr/colorSurface">
 
-  <RadioButton
+  <com.google.android.material.radiobutton.MaterialRadioButton
     android:id="@+id/countryButton"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
     android:padding="@dimen/spacing_16"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
-    android:textColor="@color/selectcountry_radio_button"
+    android:textAppearance="?attr/textAppearanceBody1"
     tools:ignore="RtlSymmetry"
-    tools:text="India"
-    tools:textColor="@color/grey0" />
+    tools:text="India" />
 
   <View
     android:id="@+id/divider"
@@ -24,5 +22,6 @@
     android:layout_height="1dp"
     android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginEnd="@dimen/spacing_16"
-    android:background="@color/grey4" />
+    android:background="@drawable/divider" />
+
 </LinearLayout>

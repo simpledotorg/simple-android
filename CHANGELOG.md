@@ -2,6 +2,7 @@
 
 ## Next Release
 ### Internal
+- Disable strict mode crash for VM policy
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 13 Jan 2020] Migrate `TheActivity` to the new navigation framework
 

@@ -112,7 +112,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textAppearance="?attr/textAppearanceBody2"
-          android:textColor="@color/white_opacity_70"
+          android:textColor="@color/color_on_toolbar_primary_72"
           tools:text="\u2022 ID: 123456789012" />
 
       </LinearLayout>

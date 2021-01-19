@@ -421,8 +421,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         .editorActions() { it == EditorInfo.IME_ACTION_DONE }
         .map { SaveClicked }
 
-    val saveButtonClicks = saveButtonFrame
-        .button
+    val saveButtonClicks = saveButton
         .clicks()
         .map { SaveClicked }
 

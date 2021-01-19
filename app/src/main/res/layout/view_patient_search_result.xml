@@ -3,7 +3,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  tools:context="org.simple.clinic.widgets.PatientSearchResultItemView_Old"
+  tools:context="org.simple.clinic.widgets.PatientSearchResultItemView"
   tools:layout_margin="@dimen/spacing_8"
   tools:parentTag="androidx.cardview.widget.CardView">
 
@@ -37,15 +37,16 @@
         android:layout_marginBottom="@dimen/spacing_4"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.Emphasis.Blue1"
+        android:textAppearance="?attr/textAppearanceBody0Medium"
+        android:textColor="?attr/colorPrimary"
         tools:text="Anshu Acharya, M, 43" />
 
       <TextView
         android:id="@+id/addressLabel"
-        style="@style/Clinic.V2.TextAppearance.Body2Left.Grey0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/gray_950"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/colorOnSurface"
         tools:text="House No. 14, Street No. 10/11, Guru Gobind Singh Nagar, Bathinda" />
 
       <LinearLayout
@@ -55,17 +56,19 @@
         android:layout_marginTop="@dimen/spacing_12">
 
         <TextView
-          style="@style/Clinic.V2.TextAppearance.Body2Bold.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/patientsearchresults_item_phone_number" />
+          android:text="@string/patientsearchresults_item_phone_number"
+          android:textAppearance="?attr/textAppearanceBody2Bold"
+          android:textColor="@color/color_on_surface_67" />
 
         <org.simple.clinic.widgets.TintableCompoundDrawableTextView
           android:id="@+id/phoneNumberTextView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1"
+          android:textAppearance="?attr/textAppearanceBody2Numeric"
+          android:textColor="@color/color_on_surface_67"
           tools:text="98*****365" />
 
       </LinearLayout>
@@ -77,17 +80,19 @@
         android:layout_marginTop="@dimen/spacing_12">
 
         <TextView
-          style="@style/Clinic.V2.TextAppearance.Body2Bold.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/patientsearchresults_item_birthdate" />
+          android:text="@string/patientsearchresults_item_birthdate"
+          android:textAppearance="?attr/textAppearanceBody2Bold"
+          android:textColor="@color/color_on_surface_67" />
 
         <TextView
           android:id="@+id/dateOfBirthTextView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+          android:textAppearance="?attr/textAppearanceBody2"
+          android:textColor="@color/color_on_surface_67"
           tools:text="24-Mar-1975" />
 
       </LinearLayout>
@@ -100,20 +105,23 @@
         android:orientation="horizontal">
 
         <TextView
-          style="@style/Clinic.V2.TextAppearance.Body2Bold.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/patientsearchresults_item_last_seen" />
+          android:text="@string/patientsearchresults_item_last_seen"
+          android:textAppearance="?attr/textAppearanceBody2Bold"
+          android:textColor="@color/color_on_surface_67" />
 
         <TextView
           android:id="@+id/visitedTextView"
-          style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
           android:ellipsize="end"
           android:maxLines="1"
+          android:textAppearance="?attr/textAppearanceBody2"
+          android:textColor="@color/color_on_surface_67"
           tools:text="12-Jul-2018" />
+
       </LinearLayout>
 
       <LinearLayout
@@ -125,13 +133,18 @@
 
         <TextView
           android:id="@+id/lastSeenTextView"
-          style="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:ellipsize="end"
           android:maxLines="1"
+          android:textAppearance="?attr/textAppearanceBody2"
+          android:textColor="?attr/colorError"
           tools:text="PHC Obvious" />
+
       </LinearLayout>
+
     </LinearLayout>
+
   </LinearLayout>
+
 </merge>

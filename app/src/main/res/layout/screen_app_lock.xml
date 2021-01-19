@@ -5,23 +5,34 @@
   android:id="@+id/applock_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/window_background_auth"
   tools:ignore="Overdraw">
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/spacing_192"
+    android:background="?attr/colorToolbarPrimary"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
 
   <LinearLayout
     android:id="@+id/applock_logo_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?colorPrimary"
     android:orientation="vertical"
     android:paddingStart="@dimen/spacing_24"
     android:paddingTop="@dimen/spacing_4"
     android:paddingEnd="@dimen/spacing_24"
-    android:paddingBottom="@dimen/spacing_16">
+    android:paddingBottom="@dimen/spacing_16"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
     <TextView
       android:id="@+id/facilityTextView"
-      style="@style/Clinic.V2.FacilityNameTextView"
+      style="@style/Widget.Simple.ExpandedToolbar.FacilityName"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
       android:layout_marginStart="@dimen/spacing_24"
       android:layout_marginEnd="@dimen/spacing_24"
@@ -40,7 +51,7 @@
         android:layout_weight="1"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/white"
+        android:textColor="?attr/colorOnToolbarPrimary"
         android:textSize="@dimen/textsize_20"
         tools:text="A really long person name" />
 
@@ -57,23 +68,24 @@
         android:paddingEnd="@dimen/spacing_8"
         android:paddingBottom="2dp"
         android:text="@string/applock_logout"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100"
         android:textColor="?attr/colorOnPrimary"
         android:visibility="gone"
         app:cornerRadius="@dimen/spacing_0"
         tools:ignore="UnusedAttribute" />
-    </LinearLayout>
-  </LinearLayout>
 
-  <View
-    android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:layout_alignTop="@id/pinEntryCardView"
-    android:background="?colorPrimary" />
+    </LinearLayout>
+
+  </LinearLayout>
 
   <org.simple.clinic.security.pin.PinEntryCardView
     android:id="@+id/pinEntryCardView"
-    style="@style/Clinic.LoginCard"
-    android:layout_below="@+id/applock_logo_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/applock_logo_container"
     app:verificationMethod="local" />
+
 </org.simple.clinic.login.applock.AppLockScreen>

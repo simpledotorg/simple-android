@@ -6,13 +6,20 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <androidx.appcompat.widget.Toolbar
-    android:id="@+id/toolBar"
+  <com.google.android.material.appbar.AppBarLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:tag="Tool bar Scan Simple ID"
-    app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:title="@string/scansimpleid_title" />
+    app:layout_constraintTop_toTopOf="parent">
+
+    <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/toolBar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:tag="Tool bar Scan Simple ID"
+      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      app:title="@string/scansimpleid_title" />
+
+  </com.google.android.material.appbar.AppBarLayout>
 
   <FrameLayout
     android:id="@+id/qrCodeScannerViewContainer"
@@ -24,7 +31,7 @@
     android:id="@+id/searchingContainer"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:background="@color/scrim_color"
+    android:background="?attr/scrimBackground"
     android:translationZ="@dimen/spacing_8"
     android:visibility="gone"
     app:layout_constraintBottom_toBottomOf="parent"
@@ -34,7 +41,6 @@
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
       android:id="@+id/searchingProgress"
-      style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
@@ -42,13 +48,12 @@
 
   </FrameLayout>
 
-  <androidx.cardview.widget.CardView
+  <com.google.android.material.card.MaterialCardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginBottom="@dimen/spacing_16"
-    android:background="@color/white100"
     android:visibility="visible"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="@+id/qrCodeScannerViewContainer"
@@ -63,13 +68,14 @@
       android:orientation="vertical">
 
       <TextView
-        style="@style/Clinic.V2.TextAppearance.H6.Grey0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_8"
         android:layout_marginEnd="@dimen/spacing_8"
         android:gravity="center"
-        android:text="@string/scansimpleid_type_bp_passport_number" />
+        android:text="@string/scansimpleid_type_bp_passport_number"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="?attr/colorOnSurface" />
 
       <FrameLayout
         android:layout_width="match_parent"
@@ -77,23 +83,29 @@
         android:focusable="false"
         android:focusableInTouchMode="true">
 
-        <EditText
-          android:id="@+id/shortCodeText"
+        <com.google.android.material.textfield.TextInputLayout
+          style="@style/Widget.Simple.TextField.Layout.Large.ShortCodeEntry"
           android:layout_width="@dimen/spacing_128"
           android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:ems="10"
-          android:hint="@string/scansimpleid_hint_short_code"
-          android:imeOptions="actionSearch"
-          android:inputType="number"
-          android:textAlignment="center"
-          android:textSize="@dimen/textsize_20" />
+          android:layout_gravity="center">
+
+          <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/shortCodeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/scansimpleid_hint_short_code"
+            android:imeOptions="actionSearch"
+            android:inputType="number"
+            android:textAppearance="?attr/textAppearanceHeadline6" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
       </FrameLayout>
 
       <TextView
         android:id="@+id/shortCodeErrorText"
-        style="@style/Clinic.V2.TextAppearance.TextInputLayoutError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_8"
@@ -101,10 +113,14 @@
         android:layout_marginEnd="@dimen/spacing_8"
         android:layout_marginBottom="@dimen/spacing_4"
         android:gravity="center_horizontal"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/colorError"
         android:visibility="gone"
         tools:text="@string/scansimpleid_shortcode_error_not_required_length"
         tools:visibility="visible" />
+
     </LinearLayout>
-  </androidx.cardview.widget.CardView>
+
+  </com.google.android.material.card.MaterialCardView>
 
 </org.simple.clinic.scanid.ScanSimpleIdScreen>

@@ -1,39 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/loginpin_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/loginpin_root"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="@color/window_background_auth">
-
-  <FrameLayout
-    android:id="@+id/loginpin_logo_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?colorPrimary">
-
-    <ImageButton
-      android:id="@+id/backButton"
-      style="@style/Clinic.LoginBackButton"
-      android:contentDescription="@string/loginpin_go_back"
-      app:srcCompat="@drawable/ic_arrow_back_24dp" />
-
-    <TextView
-      android:id="@+id/phoneNumberTextView"
-      style="@style/Clinic.LoginPinPhoneNumber"
-      tools:text="1234567890" />
-  </FrameLayout>
+  android:layout_height="match_parent">
 
   <View
     android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:layout_alignTop="@+id/pinEntryCardView"
-    android:background="?colorPrimary" />
+    android:layout_height="@dimen/spacing_192"
+    android:background="?attr/colorToolbarPrimary"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <ImageView
+    android:id="@+id/backButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:contentDescription="@string/loginpin_go_back"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    android:padding="@dimen/spacing_16"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/ic_arrow_back_24dp"
+    tools:ignore="UnusedAttribute" />
+
+  <TextView
+    android:id="@+id/phoneNumberTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_40"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    android:textColor="?attr/colorOnPrimary"
+    app:layout_constraintBottom_toTopOf="@id/pinEntryCardView"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="1234567890" />
 
   <org.simple.clinic.security.pin.PinEntryCardView
     android:id="@+id/pinEntryCardView"
-    style="@style/Clinic.LoginCard"
-    android:layout_below="@+id/loginpin_logo_container"
-    app:verificationMethod="serverLogin"/>
-</RelativeLayout>
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginTop="@dimen/spacing_44"
+    android:layout_marginEnd="@dimen/spacing_24"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/phoneNumberTextView"
+    app:verificationMethod="serverLogin" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

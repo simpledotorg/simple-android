@@ -6,12 +6,18 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <androidx.appcompat.widget.Toolbar
-    android:id="@+id/toolbar"
+  <com.google.android.material.appbar.AppBarLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:title="@string/help_title" />
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      app:title="@string/help_title" />
+
+  </com.google.android.material.appbar.AppBarLayout>
 
   <FrameLayout
     android:layout_width="match_parent"
@@ -31,10 +37,11 @@
 
       <TextView
         android:id="@+id/errorMessageTextView"
-        style="@style/Clinic.V2.TextAppearance.H6.Grey1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/help_no_connection" />
+        android:text="@string/help_no_connection"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="@color/color_on_surface_67" />
 
       <com.google.android.material.button.MaterialButton
         android:id="@+id/tryAgainButton"
@@ -44,17 +51,19 @@
         android:layout_marginStart="@dimen/spacing_40"
         android:layout_marginTop="@dimen/spacing_24"
         android:layout_marginEnd="@dimen/spacing_40"
-        android:text="@string/help_try_again"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+        android:text="@string/help_try_again" />
+
     </LinearLayout>
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
       android:id="@+id/progressBar"
-      style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
+      android:indeterminate="true"
       android:visibility="gone"
       tools:visibility="visible" />
+
   </FrameLayout>
+
 </org.simple.clinic.home.help.HelpScreen>

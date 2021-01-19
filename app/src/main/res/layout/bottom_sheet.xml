@@ -14,7 +14,7 @@
     android:id="@+id/bottomsheet_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_opacity_50" />
+    android:background="?attr/scrimBackground" />
 
   <!--
       A negative bottom-margin is required because CardView
@@ -26,9 +26,9 @@
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:layout_marginBottom="-4dp"
-    android:background="@color/white"
     android:elevation="20dp"
     app:cardCornerRadius="4dp"
     app:contentPaddingBottom="4dp"
     tools:ignore="UnusedAttribute" />
+
 </FrameLayout>

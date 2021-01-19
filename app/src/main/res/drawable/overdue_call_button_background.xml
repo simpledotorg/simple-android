@@ -2,6 +2,6 @@
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
   android:inset="@dimen/spacing_12">
   <shape android:shape="oval">
-    <solid android:color="@color/blue1" />
+    <solid android:color="?attr/colorPrimary" />
   </shape>
 </inset>

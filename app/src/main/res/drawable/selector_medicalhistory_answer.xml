@@ -2,18 +2,18 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
   <item android:state_checked="true">
-    <inset android:insetBottom="14dp" android:insetTop="14dp">
+    <inset android:insetTop="14dp" android:insetBottom="14dp">
       <shape android:shape="rectangle">
-        <solid android:color="?colorSecondary" />
+        <solid android:color="?attr/colorPrimary" />
         <corners android:radius="16dp" />
       </shape>
     </inset>
   </item>
 
   <item android:state_checked="false">
-    <inset android:insetBottom="14dp" android:insetTop="14dp">
+    <inset android:insetTop="14dp" android:insetBottom="14dp">
       <shape android:shape="rectangle">
-        <solid android:color="@color/blue2" />
+        <solid android:color="?attr/colorPrimaryVariant" />
         <corners android:radius="16dp" />
       </shape>
     </inset>

@@ -1,76 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen android:id="@+id/applock_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/applock_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/window_background_auth"
   tools:ignore="Overdraw">
 
   <LinearLayout
     android:id="@+id/logoContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?colorPrimary"
+    android:background="?attr/colorToolbarPrimary"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/spacing_16"
-    android:paddingEnd="@dimen/spacing_24"
     android:paddingStart="@dimen/spacing_24"
-    android:paddingTop="@dimen/spacing_4">
+    android:paddingTop="@dimen/spacing_16"
+    android:paddingEnd="@dimen/spacing_24"
+    android:paddingBottom="@dimen/spacing_16">
 
     <TextView
       android:id="@+id/facilityNameTextView"
-      style="@style/Clinic.V2.FacilityNameTextView"
+      style="@style/Widget.Simple.ExpandedToolbar.FacilityName"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
-      android:layout_marginEnd="@dimen/spacing_24"
       android:layout_marginStart="@dimen/spacing_24"
+      android:layout_marginEnd="@dimen/spacing_24"
       tools:text="A really long facility name that does not fit" />
 
     <TextView
       android:id="@+id/userFullNameTextView"
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      android:layout_marginTop="@dimen/spacing_32"
+      android:layout_marginTop="@dimen/spacing_24"
       android:layout_weight="1"
       android:ellipsize="end"
       android:gravity="center"
       android:maxLines="1"
-      android:textColor="@color/white"
-      android:textSize="@dimen/textsize_20"
+      android:textAppearance="?attr/textAppearanceHeadline6"
+      android:textColor="?attr/colorOnToolbarPrimary"
       tools:text="A really long person name" />
+
   </LinearLayout>
 
   <View
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:layout_alignTop="@+id/forgotpin_createpin_card"
-    android:background="?colorPrimary" />
+    android:background="?attr/colorToolbarPrimary" />
 
-  <androidx.cardview.widget.CardView
+  <com.google.android.material.card.MaterialCardView
     android:id="@+id/forgotpin_createpin_card"
-    style="@style/Clinic.LoginCard"
-    android:layout_below="@+id/logoContainer">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/logoContainer"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_24">
 
     <LinearLayout
       android:id="@+id/forgotpin_createpin_pin_container"
-      style="@style/Clinic.CardContentContainer.Login">
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:animateLayoutChanges="true"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:padding="@dimen/spacing_24">
 
       <TextView
-        style="@style/Clinic.LoginPinLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:labelFor="@+id/forgotpin_createpin_pin"
-        android:text="@string/forgotpin_create_new_pin" />
+        android:text="@string/forgotpin_create_new_pin"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="?attr/colorOnSurface" />
 
       <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/createPinEditText"
-        style="@style/Clinic.StaggeredEditText.Pin"
+        style="@style/Widget.Simple.TextField.PinEntry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:gravity="center"
         android:imeOptions="actionDone"
         android:maxLength="4" />
 
       <TextView
         android:id="@+id/createPinErrorTextView"
-        style="@style/Clinic.V2.LoginPinErrorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
         android:text="@string/forgotpin_create_new_pin_invalid_pin"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/colorError"
+        android:visibility="gone"
         tools:visibility="visible" />
+
     </LinearLayout>
-  </androidx.cardview.widget.CardView>
+
+  </com.google.android.material.card.MaterialCardView>
+
 </org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen>

@@ -6,16 +6,23 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <androidx.appcompat.widget.Toolbar
-    android:id="@+id/toolbar"
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/appbar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:navigationIcon="@drawable/ic_arrow_back_24dp" />
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:navigationIcon="@drawable/ic_arrow_back_24dp" />
+
+  </com.google.android.material.appbar.AppBarLayout>
 
   <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/toolbar">
+    android:layout_below="@+id/appbar">
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -25,14 +32,13 @@
       android:orientation="vertical"
       android:paddingBottom="@dimen/spacing_4">
 
-      <androidx.cardview.widget.CardView
+      <com.google.android.material.card.MaterialCardView
         android:id="@+id/diagnosisViewContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_8"
         android:layout_marginTop="@dimen/spacing_8"
         android:layout_marginEnd="@dimen/spacing_8"
-        android:background="@color/white100"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -48,7 +54,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/newmedicalhistory_diagnosis"
-            android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Emphasis.Grey0" />
+            android:textAppearance="?attr/textAppearanceSubtitle1Medium"
+            android:textColor="?attr/colorOnSurface" />
 
           <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
             android:id="@+id/hypertensionDiagnosisView"
@@ -60,16 +67,17 @@
             android:id="@+id/diabetesDiagnosisView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        </LinearLayout>
-      </androidx.cardview.widget.CardView>
 
-      <androidx.cardview.widget.CardView
+        </LinearLayout>
+
+      </com.google.android.material.card.MaterialCardView>
+
+      <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_8"
         android:layout_marginTop="@dimen/spacing_8"
-        android:layout_marginEnd="@dimen/spacing_8"
-        android:background="@color/white100">
+        android:layout_marginEnd="@dimen/spacing_8">
 
         <LinearLayout
           android:layout_width="match_parent"
@@ -83,7 +91,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/newmedicalhistory_history"
-            android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Emphasis.Grey0" />
+            android:textAppearance="?attr/textAppearanceSubtitle1Medium"
+            android:textColor="?attr/colorOnSurface" />
 
           <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
             android:id="@+id/heartAttackQuestionView"
@@ -107,27 +116,28 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             tools:visibility="visible" />
+
         </LinearLayout>
-      </androidx.cardview.widget.CardView>
+
+      </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
+
   </ScrollView>
 
-  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+  <FrameLayout
     android:id="@+id/nextButtonFrame"
-    style="@style/Clinic.V2.BottomAlignedButtonFrame"
-    app:buttonBackgroundDisabled="@color/grey2"
-    app:buttonBackgroundEnabled="@color/blue1"
-    app:frameBackgroundDisabled="@color/grey3"
-    app:frameBackgroundEnabled="@color/blue2">
+    style="@style/Widget.Simple.Button.Frame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true">
 
     <com.google.android.material.button.MaterialButton
-      android:id="@+id/newmedicalhistory_save"
-      style="?attr/materialButtonStyle"
+      android:id="@+id/nextButton"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_margin="@dimen/spacing_8"
-      android:text="@string/newmedicalhistory_next"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
-  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
+      android:text="@string/newmedicalhistory_next" />
+
+  </FrameLayout>
+
 </org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen>

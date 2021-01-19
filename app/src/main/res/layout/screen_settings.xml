@@ -6,12 +6,18 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <androidx.appcompat.widget.Toolbar
-    android:id="@+id/toolbar"
+  <com.google.android.material.appbar.AppBarLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:title="@string/settings_title" />
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      app:title="@string/settings_title" />
+
+  </com.google.android.material.appbar.AppBarLayout>
 
   <ScrollView
     android:layout_width="match_parent"
@@ -44,7 +50,8 @@
         android:layout_marginTop="@dimen/settings_section_top_margin"
         android:lines="1"
         android:text="@string/settings_name"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1"
+        android:textAppearance="?attr/textAppearanceCaption"
+        android:textColor="@color/color_on_surface_67"
         app:layout_constraintStart_toEndOf="@id/accountIcon"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,7 +61,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/settings_content_top_margin"
         android:maxLines="2"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textColor="?attr/colorOnBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/userNameLabel"
         app:layout_constraintTop_toBottomOf="@id/userNameLabel"
@@ -65,7 +73,7 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/settings_divider_top_margin"
-        android:background="@color/settings_divider_background"
+        android:background="@drawable/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/userNameLabel"
         app:layout_constraintTop_toBottomOf="@id/userName" />
@@ -89,7 +97,8 @@
         android:layout_marginTop="@dimen/settings_section_top_margin"
         android:lines="1"
         android:text="@string/settings_number"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1"
+        android:textAppearance="?attr/textAppearanceCaption"
+        android:textColor="@color/color_on_surface_67"
         app:layout_constraintStart_toEndOf="@id/accountIcon"
         app:layout_constraintTop_toBottomOf="@id/userNameDivider" />
 
@@ -98,7 +107,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/settings_content_top_margin"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textColor="?attr/colorOnBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/userNumberLabel"
         app:layout_constraintTop_toBottomOf="@id/userNumberLabel"
@@ -109,7 +119,7 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/settings_divider_top_margin"
-        android:background="@color/settings_divider_background"
+        android:background="@drawable/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/userNumberLabel"
         app:layout_constraintTop_toBottomOf="@id/userNumber" />
@@ -133,7 +143,8 @@
         android:layout_marginTop="@dimen/settings_section_top_margin"
         android:lines="1"
         android:text="@string/settings_language"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1"
+        android:textAppearance="?attr/textAppearanceCaption"
+        android:textColor="@color/color_on_surface_67"
         app:layout_constraintStart_toEndOf="@id/languageIcon"
         app:layout_constraintTop_toBottomOf="@id/userPhoneDivider" />
 
@@ -144,7 +155,8 @@
         android:layout_marginTop="@dimen/settings_content_top_margin"
         android:layout_marginEnd="@dimen/spacing_8"
         android:hint="@string/settings_language_hint"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textColor="?attr/colorOnBackground"
         app:layout_constraintEnd_toStartOf="@id/changeLanguageButton"
         app:layout_constraintStart_toStartOf="@id/currentLanguageLabel"
         app:layout_constraintTop_toBottomOf="@id/currentLanguageLabel"
@@ -155,7 +167,7 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/settings_divider_top_margin"
-        android:background="@color/settings_divider_background"
+        android:background="@drawable/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/currentLanguageLabel"
         app:layout_constraintTop_toBottomOf="@id/currentLanguage" />
@@ -166,7 +178,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settings_change"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Button2"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/currentLanguageDivider"
         app:layout_constraintEnd_toEndOf="parent"
@@ -177,9 +188,9 @@
         android:id="@+id/changeLanguageWidgetGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:constraint_referenced_ids="languageIcon, currentLanguageLabel, currentLanguage, currentLanguageDivider, changeLanguageButton"
-        tools:visibility="visible"
-        android:visibility="gone"/>
+        tools:visibility="visible" />
 
       <!-- App version section -->
       <ImageView
@@ -200,7 +211,8 @@
         android:layout_marginTop="@dimen/settings_section_top_margin"
         android:lines="1"
         android:text="@string/settings_software"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1"
+        android:textAppearance="?attr/textAppearanceCaption"
+        android:textColor="@color/color_on_surface_67"
         app:layout_constraintStart_toEndOf="@id/appVersionIcon"
         app:layout_constraintTop_toBottomOf="@id/currentLanguageDivider" />
 
@@ -210,7 +222,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/settings_content_top_margin"
         android:layout_marginEnd="@dimen/spacing_8"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textColor="?attr/colorOnBackground"
         app:layout_constraintEnd_toStartOf="@id/updateAppVersionButton"
         app:layout_constraintStart_toStartOf="@id/appVersionLabel"
         app:layout_constraintTop_toBottomOf="@id/appVersionLabel"
@@ -221,7 +234,7 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/settings_divider_top_margin"
-        android:background="@color/settings_divider_background"
+        android:background="@drawable/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/appVersionLabel"
         app:layout_constraintTop_toBottomOf="@id/appVersion" />
@@ -232,7 +245,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settings_update"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Button2"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/appVersionDivider"
         app:layout_constraintEnd_toEndOf="parent"
@@ -240,6 +252,7 @@
         tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
   </ScrollView>
 
 </org.simple.clinic.settings.SettingsScreen>

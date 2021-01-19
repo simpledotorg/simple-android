@@ -3,12 +3,12 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
+  android:layout_height="wrap_content"
   android:orientation="vertical"
+  tools:background="?attr/colorSurface"
   tools:ignore="MissingPrefix">
 
   <TextView
-    style="@style/Clinic.V2.TextAppearance.H6.Grey0"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
@@ -16,9 +16,12 @@
     android:layout_marginEnd="@dimen/spacing_16"
     android:ellipsize="end"
     android:gravity="center"
-    android:text="@string/scheduleappointment_next_visit_in">
+    android:text="@string/scheduleappointment_next_visit_in"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    android:textColor="?attr/colorOnSurface">
 
     <requestFocus />
+
   </TextView>
 
   <LinearLayout
@@ -48,8 +51,8 @@
       android:layout_marginEnd="@dimen/spacing_8"
       android:layout_weight="1"
       android:gravity="center_horizontal"
-      android:textColor="@color/black_opacity_80"
-      android:textSize="@dimen/textsize_34"
+      android:textAppearance="?attr/textAppearanceHeadline4"
+      android:textColor="?attr/colorOnSurface"
       tools:text="4 weeks" />
 
     <ImageButton
@@ -66,7 +69,6 @@
 
   <TextView
     android:id="@+id/currentAppointmentDate"
-    style="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
@@ -74,6 +76,8 @@
     android:layout_marginBottom="@dimen/spacing_8"
     android:ellipsize="end"
     android:gravity="center"
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="@color/color_on_surface_67"
     tools:text="12-Nov-2019" />
 
   <com.google.android.material.button.MaterialButton
@@ -83,34 +87,35 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:layout_marginBottom="@dimen/spacing_4"
-    android:text="@string/scheduleappointment_change"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+    android:text="@string/scheduleappointment_change" />
 
   <View
     android:layout_width="match_parent"
     android:layout_height="1dp"
     android:layout_margin="@dimen/spacing_16"
-    android:background="@color/grey3" />
+    android:background="@drawable/divider" />
 
   <TextView
-    style="@style/Clinic.V2.TextAppearance.H6.Grey0"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginEnd="@dimen/spacing_16"
     android:ellipsize="end"
     android:gravity="center"
-    android:text="@string/scheduleappointment_at" />
+    android:text="@string/scheduleappointment_at"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    android:textColor="?attr/colorOnSurface" />
 
   <TextView
     android:id="@+id/selectedFacilityName"
-    style="@style/Clinic.V2.TextAppearance.H6.Grey0"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_16"
     android:layout_marginBottom="8dp"
     android:ellipsize="end"
     android:gravity="center"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    android:textColor="?attr/colorOnSurface"
     tools:text="PHC Bhatinda" />
 
   <com.google.android.material.button.MaterialButton
@@ -119,8 +124,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:text="@string/scheduleappointment_change"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+    android:text="@string/scheduleappointment_change" />
 
   <LinearLayout
     android:layout_width="match_parent"
@@ -150,10 +154,8 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_8"
       android:layout_weight="1"
-      android:backgroundTint="?attr/colorSecondary"
       android:gravity="center"
       android:text="@string/scheduleappointment_done"
-      android:textColor="@color/white"
       app:buttonState="in-progress"
       tools:ignore="ButtonStyle" />
 
@@ -168,4 +170,5 @@
       android:visibility="gone" />
 
   </LinearLayout>
+
 </LinearLayout>

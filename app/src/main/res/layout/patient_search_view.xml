@@ -10,10 +10,10 @@
 
   <com.google.android.material.progressindicator.CircularProgressIndicator
     android:id="@+id/loader"
-    style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
+    android:indeterminate="true"
     tools:visibility="visible" />
 
   <RelativeLayout
@@ -33,7 +33,8 @@
       android:layout_marginStart="@dimen/spacing_24"
       android:layout_marginEnd="@dimen/spacing_24"
       android:text="@string/patientsearchresults_empty_state"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey2" />
+      android:textAppearance="?attr/textAppearanceHeadline6"
+      android:textColor="@color/color_on_surface_34" />
 
     <View
       android:layout_width="2dp"
@@ -43,7 +44,7 @@
       android:layout_centerHorizontal="true"
       android:layout_marginTop="@dimen/spacing_16"
       android:layout_marginBottom="@dimen/spacing_12"
-      android:background="@color/grey2" />
+      android:background="@color/color_on_surface_34" />
 
     <ImageView
       android:id="@+id/searchresults_empty_state_arrow"
@@ -52,8 +53,9 @@
       android:layout_alignParentBottom="true"
       android:layout_centerHorizontal="true"
       app:srcCompat="@drawable/ic_arrow_downward_24dp"
-      app:tint="@color/grey2"
+      app:tint="@color/color_on_surface_34"
       tools:ignore="ContentDescription" />
+
   </RelativeLayout>
 
   <androidx.recyclerview.widget.RecyclerView
@@ -68,9 +70,10 @@
 
   <LinearLayout
     android:id="@+id/newPatientContainer"
-    style="@style/Clinic.V2.BottomAlignedButtonFrame.Blue2"
+    style="@style/Widget.Simple.Button.Frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
     android:elevation="20dp"
     android:orientation="vertical"
     android:visibility="gone"
@@ -85,15 +88,15 @@
       android:layout_marginBottom="@dimen/spacing_4"
       android:gravity="center_horizontal"
       android:text="@string/patientsearchresults_register_patient_rationale"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey0" />
+      android:textAppearance="?attr/textAppearanceBody2"
+      android:textColor="?attr/colorOnSurface" />
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/newPatientButton"
-      style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_margin="@dimen/spacing_8"
-      android:text="@string/patientsearchresults_register_patient"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+      android:text="@string/patientsearchresults_register_patient" />
+
   </LinearLayout>
+
 </merge>

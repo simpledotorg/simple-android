@@ -5,26 +5,30 @@
   android:id="@+id/applock_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/window_background_auth"
   tools:ignore="Overdraw">
 
   <RelativeLayout
     android:id="@+id/forgotpin_confirmpin_logo_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?colorPrimary"
+    android:background="?attr/colorToolbarPrimary"
     android:paddingTop="@dimen/spacing_4"
     android:paddingBottom="@dimen/spacing_16">
 
     <ImageButton
       android:id="@+id/backButton"
-      style="@style/Clinic.LoginBackButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:padding="@dimen/spacing_12"
       app:srcCompat="@drawable/ic_arrow_back_24dp"
       tools:ignore="ContentDescription" />
 
     <TextView
       android:id="@+id/facilityNameTextView"
-      style="@style/Clinic.V2.FacilityNameTextView"
+      style="@style/Widget.Simple.ExpandedToolbar.FacilityName"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_centerHorizontal="true"
       android:layout_marginStart="@dimen/spacing_96"
       android:layout_marginTop="@dimen/spacing_8"
@@ -40,55 +44,82 @@
       android:layout_marginTop="@dimen/spacing_32"
       android:ellipsize="end"
       android:maxLines="1"
-      android:textColor="@color/white"
-      android:textSize="@dimen/textsize_20"
+      android:textAppearance="?attr/textAppearanceHeadline6"
+      android:textColor="?attr/colorOnToolbarPrimary"
       tools:text="A really long person name" />
+
   </RelativeLayout>
 
   <View
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:layout_alignTop="@+id/forgotpin_confrimpin_card"
-    android:background="?colorPrimary" />
+    android:background="?attr/colorToolbarPrimary" />
 
-  <androidx.cardview.widget.CardView
+  <com.google.android.material.card.MaterialCardView
     android:id="@+id/forgotpin_confrimpin_card"
-    style="@style/Clinic.LoginCard"
-    android:layout_below="@+id/forgotpin_confirmpin_logo_container">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/forgotpin_confirmpin_logo_container"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_24">
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
       android:id="@+id/progressBar"
-      style="@style/Widget.Simple.CircularProgressIndicator.Indeterminate"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
+      android:indeterminate="true"
       android:visibility="invisible" />
 
     <LinearLayout
       android:id="@+id/pinEntryContainer"
-      style="@style/Clinic.CardContentContainer.Login">
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:animateLayoutChanges="true"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:padding="@dimen/spacing_24">
 
       <TextView
-        style="@style/Clinic.LoginPinLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:labelFor="@id/pinEntryEditText"
-        android:text="@string/forgotpin_confirm_pin" />
+        android:text="@string/forgotpin_confirm_pin"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="?attr/colorOnSurface" />
 
       <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/pinEntryEditText"
-        style="@style/Clinic.StaggeredEditText.Pin"
+        style="@style/Widget.Simple.TextField.PinEntry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:gravity="center"
         android:imeOptions="actionDone"
         android:maxLength="4" />
 
       <TextView
         android:id="@+id/pinErrorTextView"
-        style="@style/Clinic.V2.LoginPinErrorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
         android:text="@string/forgotpin_error_pin_mismatch"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/colorError"
         tools:visibility="visible" />
 
       <TextView
         android:id="@+id/pinEntryHintTextView"
-        style="@style/Clinic.ConfirmPinMessageText"
-        android:text="@string/forgotpin_confirm_pin_message" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:text="@string/forgotpin_confirm_pin_message"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/color_on_surface_67" />
+
     </LinearLayout>
-  </androidx.cardview.widget.CardView>
+
+  </com.google.android.material.card.MaterialCardView>
+
 </org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen>

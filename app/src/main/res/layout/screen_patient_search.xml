@@ -12,60 +12,62 @@
     layout="@layout/view_allpatientsinfacility"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/patientSearchToolbar" />
+    android:layout_below="@+id/patientSearchAppBar" />
 
   <!-- This is placed below the all patients view so that the shadow of the toolbar can be cast -->
-  <FrameLayout
-    android:id="@+id/patientSearchToolbar"
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/patientSearchAppBar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentTop="true"
-    android:background="@color/white100"
-    android:elevation="@dimen/elevation_toolbar"
-    android:padding="@dimen/spacing_8">
+    android:theme="@style/ThemeOverlay.Simple.WhitePrimary">
 
-    <com.google.android.material.textfield.TextInputLayout
-      android:id="@+id/searchQueryTextInputLayout"
-      style="@style/Clinic.V2.TextInputLayout.ToolbarSearch"
+    <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/patientSearchToolbar"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/spacing_8"
-      android:layout_marginEnd="@dimen/spacing_8"
-      app:startIconDrawable="@drawable/ic_arrow_back_24dp">
+      app:contentInsetStartWithNavigation="@dimen/spacing_56"
+      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      app:navigationIconTint="@color/color_on_surface_67">
 
-      <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/searchQueryEditText"
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchQueryTextInputLayout"
+        style="@style/Widget.Simple.TextField.Layout.Search"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@null"
-        android:hint="@string/patientsearch_hint"
-        android:imeOptions="flagNoFullscreen|actionSearch"
-        android:importantForAutofill="no"
-        android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
-        android:privateImeOptions="nm"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Grey1"
-        android:textColorHint="@color/grey1" />
+        android:layout_height="wrap_content">
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/searchQueryEditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:background="@null"
+          android:hint="@string/patientsearch_hint"
+          android:imeOptions="flagNoFullscreen|actionSearch"
+          android:importantForAutofill="no"
+          android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
+          android:privateImeOptions="nm"
+          android:textColor="?attr/colorOnSurface"
+          android:textColorHint="@color/color_on_surface_67" />
+
+      </com.google.android.material.textfield.TextInputLayout>
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+  </com.google.android.material.appbar.AppBarLayout>
+
+  <FrameLayout
+    android:id="@+id/searchButtonFrame"
+    style="@style/Widget.Simple.Button.Frame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true">
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/searchButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/patientsearch_search" />
 
   </FrameLayout>
 
-  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
-    android:id="@+id/searchButtonFrame"
-    style="@style/Clinic.V2.BottomAlignedButtonFrame"
-    app:buttonBackgroundDisabled="@color/grey2"
-    app:buttonBackgroundEnabled="@color/blue1"
-    app:frameBackgroundDisabled="@color/grey3"
-    app:frameBackgroundEnabled="@color/blue2">
-
-    <com.google.android.material.button.MaterialButton
-      android:id="@+id/patientsearch_search"
-      style="?attr/materialButtonStyle"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_margin="@dimen/spacing_8"
-      android:text="@string/patientsearch_search"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
-  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
 </org.simple.clinic.search.PatientSearchScreen>

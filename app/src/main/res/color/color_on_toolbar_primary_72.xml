@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?><!-- We are doing this, since CSL (ColorStateList) with theme attributes is not available below API 23 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:alpha="0.72" android:color="@color/white" />
+</selector>

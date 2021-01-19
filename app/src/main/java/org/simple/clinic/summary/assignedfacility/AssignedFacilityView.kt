@@ -7,7 +7,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
+import com.google.android.material.card.MaterialCardView
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -30,7 +30,7 @@ import javax.inject.Inject
 class AssignedFacilityView(
     context: Context,
     attrs: AttributeSet
-) : CardView(context, attrs), AssignedFacilityUi, UiActions, PatientSummaryChildView {
+) : MaterialCardView(context, attrs), AssignedFacilityUi, UiActions, PatientSummaryChildView {
 
   private var binding: PatientsummaryAssignedFacilityContentBinding? = null
 

@@ -5,23 +5,30 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
-    android:id="@+id/toolbar"
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/appbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white100"
-    android:foreground="?selectableItemBackground"
-    app:contentInsetStartWithNavigation="56dp"
-    app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:navigationIconTint="@color/grey0"
-    app:title="Anish Acharya with a really long surname"
-    app:titleTextAppearance="@style/Clinic.V2.TextAppearance.SearchResultsTitle"
-    app:titleTextColor="?attr/colorOnSurface"
-    tools:ignore="UnusedAttribute" />
+    android:theme="@style/ThemeOverlay.Simple.WhitePrimary">
+
+    <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:contentInsetStartWithNavigation="56dp"
+      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      app:navigationIconTint="?attr/colorOnPrimary"
+      app:title="Anish Acharya with a really long surname"
+      app:titleTextAppearance="@style/TextAppearance.Simple.Body0"
+      app:titleTextColor="?attr/colorOnPrimary"
+      tools:ignore="UnusedAttribute" />
+
+  </com.google.android.material.appbar.AppBarLayout>
 
   <org.simple.clinic.searchresultsview.PatientSearchView
     android:id="@+id/searchResultsView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@+id/toolbar" />
+
 </org.simple.clinic.search.results.PatientSearchResultsScreen>

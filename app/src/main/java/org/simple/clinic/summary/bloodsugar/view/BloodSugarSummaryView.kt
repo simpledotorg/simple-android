@@ -8,8 +8,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import com.f2prateek.rx.preferences2.Preference
+import com.google.android.material.card.MaterialCardView
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
@@ -74,7 +74,7 @@ import javax.inject.Named
 class BloodSugarSummaryView(
     context: Context,
     attributes: AttributeSet
-) : CardView(context, attributes), BloodSugarSummaryViewUi, UiActions, PatientSummaryChildView {
+) : MaterialCardView(context, attributes), BloodSugarSummaryViewUi, UiActions, PatientSummaryChildView {
 
   private var binding: PatientsummaryBloodsugarsummaryContentBinding? = null
 

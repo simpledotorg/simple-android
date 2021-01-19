@@ -3,12 +3,17 @@ package org.simple.clinic.summary
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
+import android.text.SpannedString
+import android.text.style.BulletSpan
+import android.text.style.ForegroundColorSpan
 import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.text.buildSpannedString
+import androidx.core.text.inSpans
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
@@ -51,8 +56,6 @@ import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorShe
 import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder_Old
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreenKey
-import org.simple.clinic.util.Truss
-import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.messagesender.WhatsAppMessageSender
@@ -359,15 +362,21 @@ class PatientSummaryScreen(
     bpPassportTextView.text = when (bpPassport) {
       null -> ""
       else -> {
+        val identifierColor = ContextCompat.getColor(context, R.color.color_on_toolbar_primary_72)
+
+        val identifierNumericSpan = TextAppearanceSpan(context, R.style.TextAppearance_Simple_Body2_Numeric)
+        val identifierColorSpan = ForegroundColorSpan(identifierColor)
+
         val identifier = bpPassport.identifier
-        val numericSpan = TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body2Left_Numeric_White72)
-        Truss()
-            .append(identifier.displayType(resources))
-            .append(": ")
-            .pushSpan(numericSpan)
-            .append(identifier.displayValue())
-            .popSpan()
-            .build()
+        val bpPassportLabel = identifier.displayType(resources)
+
+        buildSpannedString {
+          append("$bpPassportLabel: ")
+
+          inSpans(identifierNumericSpan, identifierColorSpan) {
+            append(identifier.displayValue())
+          }
+        }
       }
     }
   }
@@ -377,19 +386,30 @@ class PatientSummaryScreen(
 
     bangladeshNationalIdTextView.text = when (bangladeshNationalId) {
       null -> ""
-      else -> {
-        val identifier = bangladeshNationalId.identifier
-        val numericSpan = TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body2Left_Numeric_White72)
+      else -> generateAlternativeId(bangladeshNationalId, isBpPassportVisible)
+    }
+  }
 
-        val formattedIdentifier = Truss()
-            .append(context.getString(R.string.patientsummary_bangladesh_national_id))
-            .append(": ")
-            .pushSpan(numericSpan)
-            .append(identifier.displayValue())
-            .popSpan()
-            .build()
+  private fun generateAlternativeId(bangladeshNationalId: BusinessId, isBpPassportVisible: Boolean): SpannedString {
+    val identifierColor = ContextCompat.getColor(context, R.color.color_on_toolbar_primary_72)
+    val bangladeshNationalIdLabel = context.getString(R.string.patientsummary_bangladesh_national_id)
 
-        if (isBpPassportVisible) "${Unicode.bullet} $formattedIdentifier" else formattedIdentifier
+    val identifierNumericSpan = TextAppearanceSpan(context, R.style.TextAppearance_Simple_Body2_Numeric)
+    val identifierColorSpan = ForegroundColorSpan(identifierColor)
+
+    val identifier = bangladeshNationalId.identifier
+
+    return buildSpannedString {
+      if (isBpPassportVisible) {
+        inSpans(BulletSpan(16, identifierColor)) {
+          append("$bangladeshNationalIdLabel: ")
+        }
+      } else {
+        append("$bangladeshNationalIdLabel: ")
+      }
+
+      inSpans(identifierNumericSpan, identifierColorSpan) {
+        append(identifier.displayValue())
       }
     }
   }

@@ -28,13 +28,14 @@
     tools:ignore="ContentDescription"
     tools:src="@drawable/bp_reading_high" />
 
-  <org.simple.clinic.widgets.TintableCompoundDrawableTextView
+  <TextView
     android:id="@+id/readingsTextView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
     android:layout_marginStart="@dimen/spacing_12"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="?attr/colorOnSurface"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toStartOf="@id/editButton"
     app:layout_constraintStart_toEndOf="@id/heartImageView"
@@ -43,11 +44,12 @@
 
   <TextView
     android:id="@+id/bpHighTextView"
-    style="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_8"
     android:text="@string/bloodpressure_level_high"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="?attr/colorError"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toStartOf="@id/editButton"
     app:layout_constraintStart_toEndOf="@id/readingsTextView"
@@ -55,11 +57,12 @@
 
   <TextView
     android:id="@+id/editButton"
-    style="@style/Clinic.V2.TextAppearance.Button2.Blue1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_8"
     android:text="@string/patientsummary_edit"
+    android:textAppearance="?attr/textAppearanceButton"
+    android:textColor="?attr/colorPrimary"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toStartOf="@id/dateTimeTextView"
     app:layout_constraintStart_toEndOf="@id/bpHighTextView"
@@ -71,7 +74,8 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/spacing_12"
     android:textAlignment="viewEnd"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="@color/color_on_surface_67"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="@id/editButton"

@@ -102,7 +102,7 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : Constrain
   private fun setIntroOneTextView() {
     val introOneFormattedString = Truss()
         .append(context.getString(R.string.screenonboarding_intro_1))
-        .pushSpan(TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Subtitle1Left_Emphasis_Grey0))
+        .pushSpan(TextAppearanceSpan(context, R.style.TextAppearance_Simple_Subtitle1_Medium))
         .append(context.getString(R.string.screenonboarding_intro_1_hypertension))
         .popSpan()
         .build()
@@ -113,11 +113,11 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : Constrain
   private fun setIntroTwoTextView() {
     val introTwoFormattedString = Truss()
         .append(context.getString(R.string.screenonboarding_intro_2))
-        .pushSpan(TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Subtitle1Left_Emphasis_Grey0))
+        .pushSpan(TextAppearanceSpan(context, R.style.TextAppearance_Simple_Subtitle1_Medium))
         .append(context.getString(R.string.screenonboarding_intro_2_bp))
         .popSpan()
         .append(context.getString(R.string.screenonboarding_intro_2_and))
-        .pushSpan(TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Subtitle1Left_Emphasis_Grey0))
+        .pushSpan(TextAppearanceSpan(context, R.style.TextAppearance_Simple_Subtitle1_Medium))
         .append(context.getString(R.string.screenonboarding_intro_2_medicines))
         .popSpan()
         .build()
@@ -128,7 +128,7 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : Constrain
   private fun setIntroThreeTextView() {
     val introThreeFormattedString = Truss()
         .append(context.getString(R.string.screenonboarding_intro_3))
-        .pushSpan(TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Subtitle1Left_Emphasis_Grey0))
+        .pushSpan(TextAppearanceSpan(context, R.style.TextAppearance_Simple_Subtitle1_Medium))
         .append(context.getString(R.string.screenonboarding_intro_3_reminder))
         .popSpan()
         .append(context.getString(R.string.screenonboarding_intro_3_visits))

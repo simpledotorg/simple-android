@@ -245,7 +245,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
   }
 
   override fun onBackgroundClick() {
-    if (systolicEditText.text.isBlank() && diastolicEditText.text.isBlank()) {
+    if (systolicEditText.text.isNullOrBlank() && diastolicEditText.text.isNullOrBlank()) {
       super.onBackgroundClick()
     }
   }

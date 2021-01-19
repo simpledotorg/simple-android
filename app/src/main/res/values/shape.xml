@@ -9,9 +9,17 @@
     <item name="cornerSizeBottomRight">@dimen/spacing_0</item>
   </style>
 
-  <style name="ShapeAppearanceOverlay.Clinic.V2.UnitPreferenceButton" parent="">
+  <style name="ShapeAppearanceOverlay.Simple.UnitPreferenceButton" parent="">
     <item name="cornerFamily">rounded</item>
     <item name="cornerSize">50%</item>
+  </style>
+
+  <style name="ShapeAppearanceOverlay.Simple.LocationPermission" parent="">
+    <item name="cornerFamily">rounded</item>
+    <item name="cornerSizeTopLeft">@dimen/spacing_4</item>
+    <item name="cornerSizeTopRight">@dimen/spacing_4</item>
+    <item name="cornerSizeBottomLeft">@dimen/spacing_0</item>
+    <item name="cornerSizeBottomRight">@dimen/spacing_0</item>
   </style>
 
   <style name="ShapeAppearance.Simple.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
@@ -24,6 +32,11 @@
 
   <style name="ShapeAppearance.Simple.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
     <item name="cornerSize">@dimen/spacing_2</item>
+  </style>
+
+  <style name="ShapeAppearanceOverlay.Simple.MaterialCardView" parent="">
+    <item name="cornerFamily">rounded</item>
+    <item name="cornerRadius">2dp</item>
   </style>
 
 </resources>

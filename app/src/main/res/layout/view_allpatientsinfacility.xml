@@ -18,21 +18,23 @@
       android:id="@+id/noPatientsLabel"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/spacing_56"
       android:layout_marginStart="@dimen/spacing_56"
+      android:layout_marginEnd="@dimen/spacing_56"
       android:gravity="center"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey1"
+      android:textAppearance="?attr/textAppearanceHeadline6"
+      android:textColor="@color/color_on_surface_67"
       tools:text="No patients at CHC Bhucho" />
 
     <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/spacing_32"
       android:layout_marginStart="@dimen/spacing_32"
       android:layout_marginTop="@dimen/spacing_12"
+      android:layout_marginEnd="@dimen/spacing_32"
       android:gravity="center"
       android:text="@string/allpatientsinfacility_nopatients_message"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1" />
+      android:textAppearance="?attr/textAppearanceSubtitle1"
+      android:textColor="@color/color_on_surface_67" />
 
   </LinearLayout>
 
@@ -42,11 +44,11 @@
     android:layout_height="match_parent"
     android:visibility="gone"
     app:fastScrollPopupBackgroundSize="@dimen/allpatientsinfacility_fastscrollpopup_size"
-    app:fastScrollPopupBgColor="@color/blue1"
-    app:fastScrollPopupTextColor="@color/white100"
+    app:fastScrollPopupBgColor="?attr/colorPrimary"
+    app:fastScrollPopupTextColor="?attr/colorOnPrimary"
     app:fastScrollPopupTextSize="@dimen/textsize_24"
-    app:fastScrollThumbColor="@color/blue1"
-    app:fastScrollTrackColor="@color/transparent"
+    app:fastScrollThumbColor="?attr/colorPrimary"
+    app:fastScrollTrackColor="@android:color/transparent"
     tools:listitem="@layout/list_patient_search_old" />
 
 </org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView>

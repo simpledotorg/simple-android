@@ -6,7 +6,7 @@
   android:layout_height="wrap_content"
   android:clipChildren="false"
   android:clipToPadding="false"
-  tools:background="@color/white100"
+  tools:background="?attr/colorSurface"
   tools:context="org.simple.clinic.contactpatient.views.SetAppointmentReminderView"
   tools:ignore="MissingPrefix"
   tools:parentTag="org.simple.clinic.contactpatient.views.SetAppointmentReminderView">
@@ -20,11 +20,11 @@
     android:maxLines="1"
     android:paddingTop="@dimen/spacing_24"
     android:text="@string/contactpatient_call_later_in"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    android:textColor="?attr/colorOnSurface"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
-
 
   <ImageButton
     android:id="@+id/previousDateStepper"
@@ -35,11 +35,11 @@
     android:layout_marginEnd="9dp"
     android:background="?attr/selectableItemBackgroundBorderless"
     android:padding="@dimen/spacing_12"
-    app:srcCompat="@drawable/ic_remove_circle_outline_32dp"
     android:tint="@color/appointment_date_stepper"
     app:layout_constraintEnd_toStartOf="@+id/selectedAppointmentDate"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/calLaterInLabel"
+    app:srcCompat="@drawable/ic_remove_circle_outline_32dp"
     tools:ignore="ContentDescription" />
 
   <TextView
@@ -49,8 +49,8 @@
     android:layout_marginTop="5dp"
     android:layout_marginEnd="8dp"
     android:gravity="center_horizontal"
-    android:textColor="@color/black_opacity_80"
-    android:textSize="@dimen/textsize_34"
+    android:textAppearance="?attr/textAppearanceHeadline4"
+    android:textColor="?attr/colorOnSurface"
     app:layout_constraintEnd_toStartOf="@+id/nextDateStepper"
     app:layout_constraintStart_toEndOf="@+id/previousDateStepper"
     app:layout_constraintTop_toTopOf="@+id/nextDateStepper"
@@ -64,11 +64,11 @@
     android:layout_marginEnd="44dp"
     android:background="?attr/selectableItemBackgroundBorderless"
     android:padding="@dimen/spacing_12"
-    app:srcCompat="@drawable/ic_add_circle_outline_32dp"
     android:tint="@color/appointment_date_stepper"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="@+id/selectedAppointmentDate"
     app:layout_constraintTop_toBottomOf="@+id/calLaterInLabel"
+    app:srcCompat="@drawable/ic_add_circle_outline_32dp"
     tools:ignore="ContentDescription" />
 
   <com.google.android.material.button.MaterialButton
@@ -77,7 +77,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_24"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Blue1"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/selectedAppointmentDate"
@@ -85,7 +84,6 @@
 
   <com.google.android.material.button.MaterialButton
     android:id="@+id/saveReminder"
-    style="?attr/materialButtonStyle"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
@@ -93,7 +91,6 @@
     android:layout_marginEnd="16dp"
     android:layout_marginBottom="@dimen/spacing_16"
     android:text="@string/contactpatient_done"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"

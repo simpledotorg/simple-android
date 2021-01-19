@@ -109,13 +109,14 @@ class DebugClinicApp : ClinicApp() {
                 .penaltyDeathOnNetwork()
                 .build()
         )
+
+    // TODO: Enable `penaltyDeath` once the crash issues are resolved on Android 11
     StrictMode.setVmPolicy(
         StrictMode.VmPolicy.Builder()
             .detectLeakedClosableObjects()
             .detectLeakedRegistrationObjects()
             .detectLeakedSqlLiteObjects()
             .penaltyLog()
-            .penaltyDeath()
             .build()
     )
   }

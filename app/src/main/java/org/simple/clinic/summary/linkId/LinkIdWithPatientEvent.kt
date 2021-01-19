@@ -19,3 +19,5 @@ object IdentifierAddedToPatient : LinkIdWithPatientEvent()
 object LinkIdWithPatientAddClicked : LinkIdWithPatientEvent() {
   override val analyticsName = "LinkIdWithPatient:Add Clicked"
 }
+
+data class PatientNameReceived(val patientName: String) : LinkIdWithPatientEvent()

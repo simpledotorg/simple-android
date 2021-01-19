@@ -3,7 +3,7 @@ package org.simple.clinic.editpatient
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import org.simple.clinic.R
@@ -29,7 +29,7 @@ class ConfirmDiscardChangesDialog : AppCompatDialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle_Destructive)
+    return MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_Simple_MaterialAlertDialog_Destructive)
         .setMessage(R.string.patientedit_confirm_discard_title)
         .setPositiveButton(R.string.patientedit_confirm_discard_ok) { _, _ ->
           screenRouter.pop()

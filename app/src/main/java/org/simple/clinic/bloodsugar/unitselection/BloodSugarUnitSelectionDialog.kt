@@ -11,6 +11,7 @@ import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.checkedChanges
 import io.reactivex.Observable
@@ -115,9 +116,8 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 
-  @SuppressLint("CheckResult")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireContext())
+    return MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.blood_sugar_unit_selection_choose)
         .setView(layout)
         .setPositiveButton(R.string.blood_sugar_unit_selection_done, null)

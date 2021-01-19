@@ -4,7 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.fragment.app.FragmentManager
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.appcompat.app.AppCompatDialogFragment
 import android.view.View
 import org.simple.clinic.R
@@ -23,7 +23,7 @@ class LoggedOutOnOtherDeviceDialog : AppCompatDialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireContext())
+    return MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.patients_loggedoutalert_title)
         .setMessage(R.string.patients_loggedoutalert_message)
         .setPositiveButton(R.string.patients_loggedoutalert_dismiss) { _, _ ->

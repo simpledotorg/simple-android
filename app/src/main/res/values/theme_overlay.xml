@@ -140,4 +140,8 @@
     <item name="colorOnSurface">@color/white</item>
   </style>
 
+  <style name="ThemeOverlay.Simple.ToolbarButton" parent="">
+    <item name="colorPrimary">@color/black_24</item>
+  </style>
+
 </resources>

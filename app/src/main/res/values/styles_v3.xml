@@ -256,4 +256,20 @@
     <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Simple.UnitPreferenceButton</item>
   </style>
 
+  <style name="Widget.Simple.Button.Toolbar" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+    <item name="android:insetTop">@dimen/spacing_0</item>
+    <item name="android:insetBottom">@dimen/spacing_0</item>
+    <item name="android:minWidth">@dimen/spacing_0</item>
+    <item name="android:minHeight">@dimen/spacing_24</item>
+    <item name="android:paddingStart">@dimen/spacing_8</item>
+    <item name="android:paddingEnd">@dimen/spacing_8</item>
+    <item name="android:paddingTop">@dimen/spacing_4</item>
+    <item name="android:paddingBottom">@dimen/spacing_4</item>
+    <item name="android:textColor">?attr/colorOnPrimary</item>
+    <item name="android:textAppearance">?attr/textAppearanceButton</item>
+    <item name="iconPadding">@dimen/spacing_4</item>
+    <item name="iconGravity">textStart</item>
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.ToolbarButton</item>
+  </style>
+
 </resources>

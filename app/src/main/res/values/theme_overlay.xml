@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <style name="ThemeOverlay.Simple.WhitePrimary" parent="">
-    <item name="colorPrimary">@color/white</item>
-    <item name="colorOnPrimary">@color/simple_dark_grey</item>
+  <!-- colorSurface and colorOnSurface from main theme -->
+  <style name="ThemeOverlay.Simple.SurfacePrimary" parent="">
+    <item name="colorPrimary">?attr/colorSurface</item>
+    <item name="colorOnPrimary">?attr/colorOnSurface</item>
   </style>
 
   <style name="ThemeOverlay.Simple.Blue0Primary" parent="">

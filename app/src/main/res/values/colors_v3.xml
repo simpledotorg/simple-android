@@ -23,9 +23,15 @@
   <color name="simple_yellow_100">#FFF8E0</color>
 
   <color name="white">#FFFFFF</color>
+  <color name="white_72">#B8FFFFFF</color>
 
   <color name="black">#000000</color>
   <color name="black_24">#3D000000</color>
+
+  <color name="scrim_color">#52000000</color>
+  <color name="translucent_background">#52000000</color>
+
+  <color name="transparent">#00000000</color>
 
   <color name="facility_search_query_highlight">@color/simple_light_blue_100</color>
 

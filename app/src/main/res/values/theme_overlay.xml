@@ -43,7 +43,7 @@
 
   <style name="ThemeOverlay.Simple.Dialog" parent="ThemeOverlay.MaterialComponents.Dialog">
     <item name="colorSecondary">@color/simple_light_blue_500</item>
-    <item name="materialButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog</item>
+    <item name="materialButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.Flush</item>
   </style>
 
   <style name="ThemeOverlay.Simple.Dialog.Alert" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">

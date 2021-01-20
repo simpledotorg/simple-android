@@ -16,19 +16,12 @@
     android:layout_height="match_parent"
     android:background="?attr/scrimBackground" />
 
-  <!--
-      A negative bottom-margin is required because CardView
-      doesn't let us change the radius of specific corners.
-   -->
-  <androidx.cardview.widget.CardView
+  <com.google.android.material.card.MaterialCardView
     android:id="@+id/bottomsheet_content_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:layout_marginBottom="-4dp"
-    android:elevation="20dp"
-    app:cardCornerRadius="4dp"
-    app:contentPaddingBottom="4dp"
-    tools:ignore="UnusedAttribute" />
+    app:cardElevation="20dp"
+    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Simple.BottomSheet" />
 
 </FrameLayout>

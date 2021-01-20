@@ -1,6 +1,9 @@
 package org.simple.clinic.widgets
 
 import android.content.Context
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.BackgroundColorSpan
 import android.util.AttributeSet
 import com.google.android.material.card.MaterialCardView
 import kotlinx.android.synthetic.main.view_patient_search_result.view.*
@@ -13,6 +16,7 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.patient.displayLetterRes
+import org.simple.clinic.router.util.resolveColor
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
 import java.time.LocalDate
@@ -44,7 +48,7 @@ class PatientSearchResultItemView(
   }
 
   fun render(model: PatientSearchResultViewModel, currentFacilityId: UUID, searchQuery: String?) {
-    renderPatientNameAgeAndGender(model.fullName, model.gender, DateOfBirth.fromPatientSearchResultViewModel(model, userClock))
+    renderPatientNameAgeAndGender(searchQuery, model)
     renderPatientAddress(model.address)
     renderPatientDateOfBirth(model.dateOfBirth)
     renderPatientPhoneNumber(model.phoneNumber)
@@ -90,13 +94,37 @@ class PatientSearchResultItemView(
     addressLabel.text = address.completeAddress
   }
 
-  private fun renderPatientNameAgeAndGender(fullName: String, gender: Gender, dateOfBirth: DateOfBirth) {
-    genderLabel.setImageResource(gender.displayIconRes)
-
+  private fun getPatientName(searchQuery: String?, patientSearchResult: PatientSearchResultViewModel, dateOfBirth: DateOfBirth): Name {
+    val canHighlight = !searchQuery.isNullOrBlank() && patientSearchResult.fullName.contains(searchQuery, ignoreCase = true)
+    genderLabel.setImageResource(patientSearchResult.gender.displayIconRes)
     val ageValue = dateOfBirth.estimateAge(userClock)
+    val genderLetter = resources.getString(patientSearchResult.gender.displayLetterRes)
+    val patientNameAgeAndGender = resources.getString(R.string.patientsummary_toolbar_title, patientSearchResult.fullName, genderLetter, ageValue.toString())
+    return if (canHighlight) {
+      val indexOfPatientName = patientSearchResult.fullName.indexOf(searchQuery!!, ignoreCase = true)
+      Name.Highlighted(
+          patientName = patientNameAgeAndGender,
+          highlightStart = indexOfPatientName,
+          highlightEnd = indexOfPatientName + searchQuery.length)
+    } else {
+      Name.Plain(patientNameAgeAndGender)
+    }
+  }
 
-    val genderLetter = resources.getString(gender.displayLetterRes)
-    patientNameAgeGenderLabel.text = resources.getString(R.string.patientsummary_toolbar_title, fullName, genderLetter, ageValue.toString())
+  private fun renderPatientNameAgeAndGender(searchQuery: String?, model: PatientSearchResultViewModel) {
+
+    val patientName = when (val name = getPatientName(searchQuery, model, DateOfBirth.fromPatientSearchResultViewModel(model, userClock))) {
+      is Name.Highlighted -> {
+        val highlightName = SpannableStringBuilder(name.patientName)
+        val highlightColor = context.resolveColor(colorRes = R.color.simple_light_blue_100)
+        highlightName.setSpan(BackgroundColorSpan(highlightColor), name.highlightStart, name.highlightEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        highlightName
+      }
+      is Name.Plain -> {
+        name.patientName
+      }
+    }
+    patientNameAgeGenderLabel.text = patientName
   }
 
   data class PatientSearchResultViewModel(
@@ -109,6 +137,11 @@ class PatientSearchResultItemView(
       val phoneNumber: String?,
       val lastSeen: PatientSearchResult.LastSeen?
   )
+
+  sealed class Name(open val patientName: String) {
+    data class Highlighted(override val patientName: String, val highlightStart: Int, val highlightEnd: Int) : Name(patientName)
+    data class Plain(override val patientName: String) : Name(patientName)
+  }
 
   interface Injector {
     fun inject(target: PatientSearchResultItemView)

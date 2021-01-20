@@ -6,11 +6,12 @@ import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.core.text.buildSpannedString
+import androidx.core.text.inSpans
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureLevel
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.databinding.PatientsummaryBpitemContentBinding
-import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.visibleOrGone
 
 class BloodPressureItemView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
@@ -85,11 +86,11 @@ class BloodPressureItemView(context: Context, attrs: AttributeSet) : FrameLayout
     } else {
       bpDate
     }
-    val dateTimeFormattedString = Truss()
-        .pushSpan(dateTimeTextAppearanceSpan)
-        .append(bpDateTime)
-        .popSpan()
-        .build()
+    val dateTimeFormattedString = buildSpannedString {
+      inSpans(dateTimeTextAppearanceSpan) {
+        append(bpDateTime)
+      }
+    }
 
     dateTimeTextView.text = dateTimeFormattedString
   }

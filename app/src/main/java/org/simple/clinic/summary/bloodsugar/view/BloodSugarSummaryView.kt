@@ -36,7 +36,6 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.summary.BLOOD_SUGAR_REQCODE_ALERT_FACILITY_CHANGE
@@ -120,9 +119,6 @@ class BloodSugarSummaryView(
   lateinit var screenResults: ScreenResultBus
 
   @Inject
-  lateinit var crashReporter: CrashReporter
-
-  @Inject
   @Named("full_date")
   lateinit var dateFormatter: DateTimeFormatter
 
@@ -163,7 +159,7 @@ class BloodSugarSummaryView(
   }
 
   private val delegate: MobiusDelegate<BloodSugarSummaryViewModel, BloodSugarSummaryViewEvent, BloodSugarSummaryViewEffect> by unsafeLazy {
-    MobiusDelegate(
+    MobiusDelegate.forView(
         events = events,
         defaultModel = BloodSugarSummaryViewModel.create(screenKey.patientUuid),
         init = BloodSugarSummaryViewInit(),
@@ -172,8 +168,7 @@ class BloodSugarSummaryView(
         modelUpdateListener = { model ->
           modelUpdateCallback?.invoke(model)
           uiRenderer.render(model)
-        },
-        crashReporter = crashReporter
+        }
     )
   }
 
@@ -188,8 +183,6 @@ class BloodSugarSummaryView(
       return
     }
     context.injector<BloodSugarSummaryViewInjector>().inject(this)
-
-    delegate.prepare()
 
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
     openEntrySheetAfterTypeIsSelected(screenDestroys)

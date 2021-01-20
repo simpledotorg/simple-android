@@ -144,4 +144,13 @@
     <item name="colorPrimary">@color/black_24</item>
   </style>
 
+  <style name="ThemeOverlay.Simple.UserApprovalSnackbar" parent="">
+    <item name="colorSurface">@color/simple_dark_grey</item>
+    <item name="colorOnSurface">@color/white</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.UserApprovalSnackbar.Action" parent="">
+    <item name="colorPrimary">@color/simple_green_200</item>
+  </style>
+
 </resources>

@@ -216,11 +216,12 @@
   </androidx.core.widget.NestedScrollView>
 
   <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/buttonFrame"
+    android:id="@+id/doneButtonFrame"
     style="@style/Widget.Simple.Button.Frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true">
+    android:layout_alignParentBottom="true"
+    android:visibility="visible">
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/teleconsultButton"
@@ -252,19 +253,24 @@
       app:layout_constraintTop_toTopOf="parent"
       app:layout_goneMarginStart="@dimen/spacing_0" />
 
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <FrameLayout
+    android:id="@+id/logTeleconsultButtonFrame"
+    style="@style/Widget.Simple.Button.Frame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:theme="@style/ThemeOverlay.Simple.LogTeleconsultButtonFrame"
+    android:visibility="gone">
+
     <com.google.android.material.button.MaterialButton
       android:id="@+id/logTeleconsultButton"
-      style="@style/Widget.Simple.Button.Green1"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/patientsummary_log_teleconsult"
-      android:visibility="gone"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
+      android:text="@string/patientsummary_log_teleconsult" />
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+  </FrameLayout>
 
   <org.simple.clinic.summary.linkId.LinkIdWithPatientView
     android:id="@+id/linkIdWithPatientView"

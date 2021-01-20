@@ -515,12 +515,11 @@ class PatientSummaryScreen(
   }
 
   override fun hideDoneButton() {
-    doneButton.visibility = View.GONE
+    doneButtonFrame.visibility = View.GONE
   }
 
   override fun showTeleconsultLogButton() {
-    logTeleconsultButton.visibility = View.VISIBLE
-    buttonFrame.setBackgroundColor(ContextCompat.getColor(context, R.color.green3))
+    logTeleconsultButtonFrame.visibility = View.VISIBLE
   }
 
   override fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID) {

@@ -153,4 +153,9 @@
     <item name="colorPrimary">@color/simple_green_200</item>
   </style>
 
+  <style name="ThemeOverlay.Simple.LogTeleconsultButtonFrame" parent="">
+    <item name="colorPrimary">@color/simple_green_500</item>
+    <item name="colorPrimaryVariant">@color/simple_green_100</item>
+  </style>
+
 </resources>

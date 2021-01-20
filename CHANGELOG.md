@@ -18,6 +18,9 @@
 - [In Progress: 22 Jan 2021] Migrate app to use ViewBinding
 
 
+## Features
+- Highlight patient name and number in Instant search
+
 ## On Demo
 ### Internal
 - Rename `newbranch` script to `newbranch.sh`

@@ -4,9 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import dagger.BindsInstance
 import dagger.Subcomponent
 import org.simple.clinic.deeplink.DeepLinkActivity
-import org.simple.clinic.di.AssistedInjectModule
 
-@Subcomponent(modules = [AssistedInjectModule::class])
+@Subcomponent
 interface DeepLinkComponent {
 
   fun inject(target: DeepLinkActivity)

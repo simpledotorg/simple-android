@@ -1,8 +1,9 @@
 package org.simple.clinic.summary.prescribeddrugs
 
 import com.spotify.mobius.rx2.RxMobius
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -16,7 +17,7 @@ class DrugSummaryEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: DrugSummaryUiActions
 ) {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(uiActions: DrugSummaryUiActions): DrugSummaryEffectHandler
   }

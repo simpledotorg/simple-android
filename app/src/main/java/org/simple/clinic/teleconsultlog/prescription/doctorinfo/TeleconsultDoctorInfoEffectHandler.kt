@@ -2,8 +2,9 @@ package org.simple.clinic.teleconsultlog.prescription.doctorinfo
 
 import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.main.TypedPreference
@@ -22,7 +23,7 @@ class TeleconsultDoctorInfoEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: TeleconsultDoctorInfoUiActions
 ) {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(uiActions: TeleconsultDoctorInfoUiActions): TeleconsultDoctorInfoEffectHandler
   }

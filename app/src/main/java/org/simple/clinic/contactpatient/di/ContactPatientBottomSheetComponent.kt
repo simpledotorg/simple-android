@@ -5,9 +5,8 @@ import dagger.BindsInstance
 import dagger.Subcomponent
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.contactpatient.views.SetAppointmentReminderView
-import org.simple.clinic.di.AssistedInjectModule
 
-@Subcomponent(modules = [AssistedInjectModule::class])
+@Subcomponent
 interface ContactPatientBottomSheetComponent : SetAppointmentReminderView.Injector {
 
   fun inject(target: ContactPatientBottomSheet)

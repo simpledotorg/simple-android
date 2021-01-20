@@ -2,8 +2,9 @@ package org.simple.clinic.newentry
 
 import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -55,7 +56,7 @@ class PatientEntryEffectHandler @AssistedInject constructor(
     @Assisted private val validationActions: PatientEntryValidationActions
 ) {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface InjectionFactory {
     fun create(
         ui: PatientEntryUi,

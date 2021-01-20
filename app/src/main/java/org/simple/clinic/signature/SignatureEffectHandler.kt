@@ -1,8 +1,9 @@
 package org.simple.clinic.signature
 
 import com.spotify.mobius.rx2.RxMobius
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -12,7 +13,7 @@ class SignatureEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: SignatureUiActions
 ) {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(uiActions: SignatureUiActions): SignatureEffectHandler
   }

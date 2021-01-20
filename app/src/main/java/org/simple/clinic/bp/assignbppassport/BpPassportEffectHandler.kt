@@ -1,8 +1,9 @@
 package org.simple.clinic.bp.assignbppassport
 
 import com.spotify.mobius.rx2.RxMobius
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -13,7 +14,7 @@ class BpPassportEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: BpPassportUiActions
 ) {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(uiActions: BpPassportUiActions): BpPassportEffectHandler
   }

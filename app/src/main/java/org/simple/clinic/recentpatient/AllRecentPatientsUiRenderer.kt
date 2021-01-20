@@ -1,7 +1,8 @@
 package org.simple.clinic.recentpatient
 
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.util.UserClock
 import java.time.format.DateTimeFormatter
@@ -13,7 +14,7 @@ class AllRecentPatientsUiRenderer @AssistedInject constructor(
     @Assisted private val ui: AllRecentPatientsUi
 ) : ViewRenderer<AllRecentPatientsModel> {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(ui: AllRecentPatientsUi): AllRecentPatientsUiRenderer
   }

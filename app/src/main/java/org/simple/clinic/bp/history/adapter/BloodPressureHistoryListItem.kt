@@ -3,6 +3,8 @@ package org.simple.clinic.bp.history.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.text.style.TextAppearanceSpan
+import androidx.core.text.buildSpannedString
+import androidx.core.text.inSpans
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -10,7 +12,6 @@ import org.simple.clinic.bp.history.adapter.Event.AddNewBpClicked
 import org.simple.clinic.bp.history.adapter.Event.BloodPressureHistoryItemClicked
 import org.simple.clinic.databinding.ListBpHistoryItemBinding
 import org.simple.clinic.databinding.ListNewBpButtonBinding
-import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.visibleOrGone
@@ -41,11 +42,11 @@ sealed class BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
     override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
       val binding = holder.binding as ListBpHistoryItemBinding
       val context = holder.itemView.context
-      val formattedBPDateTime = Truss()
-          .pushSpan(dateTimeTextAppearance(context))
-          .append(bloodPressureDateTime(context))
-          .popSpan()
-          .build()
+      val formattedBPDateTime = buildSpannedString {
+        inSpans(dateTimeTextAppearance(context)) {
+          append(bloodPressureDateTime(context))
+        }
+      }
 
       if (isBpHigh) {
         binding.heartImageView.setImageResource(R.drawable.bp_reading_high)

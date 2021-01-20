@@ -66,7 +66,6 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.scrollToChild
-import org.simple.clinic.widgets.setCompoundDrawableStartWithTint
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
@@ -274,10 +273,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         false
       }
     }
-
-    // Compound drawable tinting is only supported in API23+. AppCompatTextView does not have
-    // support for compound drawable tinting either, so we need to do this in code.
-    identifierTextView.setCompoundDrawableStartWithTint(R.drawable.patient_id_card, R.color.grey1)
 
     setConsentText()
     setConsentLabelText()

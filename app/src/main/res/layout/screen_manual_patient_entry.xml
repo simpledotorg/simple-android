@@ -133,8 +133,8 @@
           android:padding="@dimen/spacing_4"
           android:textAppearance="?attr/textAppearanceBody1Numeric"
           android:textColor="?attr/colorOnBackground"
-          tools:drawableStart="@drawable/patient_id_card"
-          tools:drawableTint="@color/color_on_surface_67"
+          app:drawableStartCompat="@drawable/patient_id_card"
+          app:drawableTint="@color/color_on_surface_67"
           tools:text="123 4567" />
 
       </LinearLayout>

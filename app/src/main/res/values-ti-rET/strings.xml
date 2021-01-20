@@ -364,10 +364,6 @@
   <string name="help_try_again">መሊስካ/ኪ ፈትን/ኒ</string>
 
   <!-- Link Id Sheet-->
-  <string name="linkidwithpatient_button_add">ዝቕፅል</string>
-  <string name="linkidwithpatient_button_cancel"> ሰርዝ</string>
-  <string name="linkidwithpatient_add_id_text">%1$s\u0020ወስኽ</string>
-  <string name="linkidwithpatient_to_patient_text">\u0020 ናብ\ተሓካሚ ዩ00ኤ0?</string>
 
   <!-- Add ID to Patient: Search -->
 

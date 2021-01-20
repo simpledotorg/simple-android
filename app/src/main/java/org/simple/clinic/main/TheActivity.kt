@@ -7,7 +7,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.annotation.VisibleForTesting
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
@@ -373,7 +373,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   private fun showPatientNotFoundErrorDialog() {
-    AlertDialog.Builder(this, R.style.Clinic_V2_DialogStyle)
+    MaterialAlertDialogBuilder(this)
         .setTitle(R.string.deeplink_patient_profile_not_found)
         .setMessage(R.string.deeplink_patient_profile_not_found_desc)
         .setPositiveButton(R.string.deeplink_patient_profile_not_found_positive_action, null)
@@ -381,7 +381,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   private fun showNoPatientUuidErrorDialog() {
-    AlertDialog.Builder(this, R.style.Clinic_V2_DialogStyle)
+    MaterialAlertDialogBuilder(this)
         .setTitle(R.string.deeplink_no_patient)
         .setMessage(R.string.deeplink_no_patient_desc)
         .setPositiveButton(R.string.deeplink_no_patient_positive_action, null)
@@ -390,7 +390,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
 
   private fun showTeleconsultNotAllowedErrorDialog() {
-    AlertDialog.Builder(this, R.style.Clinic_V2_DialogStyle)
+    MaterialAlertDialogBuilder(this)
         .setTitle(R.string.deeplink_medical_officer_not_authorised_to_log_teleconsult)
         .setMessage(R.string.deeplink_please_check_with_your_supervisor)
         .setPositiveButton(R.string.deeplink_okay_positive_action, null)

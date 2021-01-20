@@ -2,7 +2,7 @@ package org.simple.clinic.medicalhistory
 
 import android.app.Dialog
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import org.simple.clinic.R
@@ -21,7 +21,7 @@ class SelectDiagnosisErrorDialog : AppCompatDialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle)
+    return MaterialAlertDialogBuilder(requireContext())
         .setTitle(getString(R.string.select_diagnosis_error_diagnosis_required))
         .setMessage(getString(R.string.select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes))
         .setPositiveButton(getString(R.string.select_diagnosis_error_ok), null)

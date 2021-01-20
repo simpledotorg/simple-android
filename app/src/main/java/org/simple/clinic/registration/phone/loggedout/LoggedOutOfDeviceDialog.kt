@@ -8,8 +8,8 @@ import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
@@ -78,7 +78,7 @@ class LoggedOutOfDeviceDialog : AppCompatDialogFragment(), LoggedOutOfDeviceDial
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireContext())
+    return MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.registration_loggedout_dialog_title)
         .setMessage(R.string.registration_loggedout_dialog_message)
         .setPositiveButton(R.string.registration_loggedout_dialog_confirm, null)

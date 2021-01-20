@@ -5,10 +5,10 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.WindowManager
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import org.simple.clinic.BuildConfig
@@ -156,8 +156,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   override fun showDisallowedToRunError(reason: Disallowed.Reason) {
-    val dialog = AlertDialog
-        .Builder(this, R.style.Clinic_V2_DialogStyle)
+    val dialog = MaterialAlertDialogBuilder(this)
         .setTitle(R.string.setup_cannot_run)
         .setMessage(R.string.setup_rooted)
         .setCancelable(false)

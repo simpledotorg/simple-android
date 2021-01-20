@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!-- AppBar -->
-  <style name="Widget.Simple.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.PrimarySurface">
+  <style name="Widget.Simple.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Primary">
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Blue0Primary</item>
   </style>
 
   <!-- Toolbar -->
-  <style name="Widget.Simple.Toolbar" parent="Widget.MaterialComponents.Toolbar.PrimarySurface">
+  <style name="Widget.Simple.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
     <item name="contentInsetStartWithNavigation">64dp</item>
     <item name="android:elevation">@dimen/elevation_toolbar</item>
     <item name="titleTextAppearance">?attr/textAppearanceHeadline6</item>
@@ -15,7 +15,7 @@
   </style>
 
   <!-- TabLayout -->
-  <style name="Widget.Simple.TabLayout" parent="Widget.MaterialComponents.TabLayout.PrimarySurface">
+  <style name="Widget.Simple.TabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
     <item name="tabSelectedTextColor">?attr/colorOnSurface</item>
     <item name="tabIndicatorColor">?attr/colorError</item>
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TabLayout</item>
@@ -70,6 +70,8 @@
   </style>
 
   <style name="Widget.Simple.Button.TextButton.Dialog" parent="Widget.MaterialComponents.Button.TextButton.Dialog" />
+
+  <style name="Widget.Simple.Button.TextButton.Dialog.Flush" parent="Widget.MaterialComponents.Button.TextButton.Dialog.Flush" />
 
   <style name="Widget.Simple.Button.TextButton.Dialog.OnSurface34">
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.OnSurface34Primary</item>

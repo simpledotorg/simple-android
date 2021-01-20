@@ -1,12 +1,11 @@
 package org.simple.clinic.bp.entry.confirmremovebloodpressure
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
@@ -70,9 +69,8 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment(), ConfirmRemov
     )
   }
 
-  @SuppressLint("CheckResult")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle_Destructive)
+    return MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_Simple_MaterialAlertDialog_Destructive)
         .setTitle(R.string.bloodpressureentry_remove_bp_title)
         .setMessage(R.string.bloodpressureentry_remove_bp_message)
         .setPositiveButton(R.string.bloodpressureentry_remove_bp_confirm) { _, _ ->

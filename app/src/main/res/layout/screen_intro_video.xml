@@ -39,7 +39,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_24"
     android:textAppearance="?attr/textAppearanceBody2"
-    android:textColor="@color/color_on_surface_34"
+    android:textColor="@color/intro_video_subtitle"
     app:layout_constraintBottom_toTopOf="@+id/introVideoImageView"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"

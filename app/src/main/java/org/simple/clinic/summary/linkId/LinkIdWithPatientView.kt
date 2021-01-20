@@ -17,9 +17,6 @@ import org.simple.clinic.databinding.LinkIdWithPatientViewBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
-import org.simple.clinic.util.Truss
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.animateBottomSheetIn

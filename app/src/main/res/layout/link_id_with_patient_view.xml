@@ -17,6 +17,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     app:cardElevation="20dp"
+    app:rippleColor="@android:color/transparent"
     app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Simple.BottomSheet">
 
     <RelativeLayout

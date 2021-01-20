@@ -81,6 +81,9 @@ class LinkIdWithPatientView(
   private val idTextView
     get() = binding!!.idTextView
 
+  private val idPatientNameTextView
+    get() = binding!!.idPatientNameTextView
+
   private val contentContainer
     get() = binding!!.contentContainer
 
@@ -165,19 +168,8 @@ class LinkIdWithPatientView(
 
   fun uiEvents(): Observable<UiEvent> = upstreamUiEvents.hide()
 
-  override fun renderIdentifierText(identifier: Identifier) {
-    val identifierType = identifier.displayType(resources)
-    val identifierValue = identifier.displayValue()
-
-    val identifierTextAppearanceSpan = TextAppearanceWithLetterSpacingSpan(context, R.style.Clinic_V2_TextAppearance_Body0Left_NumericBold_Grey0)
-
-    idTextView.text = Truss()
-        .append(resources.getString(R.string.linkidwithpatient_add_id_text, identifierType))
-        .pushSpan(identifierTextAppearanceSpan)
-        .append(identifierValue)
-        .popSpan()
-        .append(resources.getString(R.string.linkidwithpatient_to_patient_text))
-        .build()
+  override fun renderPatientName(patientName: String) {
+    idPatientNameTextView.text = String.format(resources.getString(R.string.linkidwithpatient_patient_text), patientName)
   }
 
   override fun closeSheetWithIdLinked() {

@@ -33,30 +33,33 @@
       android:orientation="vertical"
       android:padding="@dimen/spacing_16">
 
-      <ImageView
-        android:id="@+id/linkidwithpatient_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_margin="@dimen/spacing_8"
-        app:srcCompat="@drawable/patient_id_card"
-        app:tint="@color/color_on_surface_67"
-        tools:ignore="ContentDescription" />
-
       <TextView
         android:id="@+id/idTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_8"
-        android:layout_toEndOf="@+id/linkidwithpatient_icon"
-        android:textAppearance="?attr/textAppearanceBody0"
+        android:layout_marginHorizontal="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:gravity="center"
+        android:text="@string/linkidwithpatient_text"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="?attr/colorOnSurface"/>
+
+      <TextView
+        android:id="@+id/idPatientNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/idTextView"
+        android:layout_marginHorizontal="@dimen/spacing_16"
+        android:layout_marginVertical="@dimen/spacing_24"
+        android:gravity="center"
+        android:textAppearance="?attr/textAppearanceHeadline6"
         android:textColor="?attr/colorOnSurface"
-        tools:text="Add BP Passport id 512 6789121 to patient" />
+        tools:text="Patient Smith" />
 
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/idTextView"
+        android:layout_below="@id/idPatientNameTextView"
         android:layout_marginTop="@dimen/spacing_16"
         android:clipChildren="false"
         android:clipToPadding="false"
@@ -69,7 +72,7 @@
           android:layout_height="wrap_content"
           android:layout_marginEnd="@dimen/spacing_8"
           android:layout_weight="1"
-          android:text="@string/linkidwithpatient_button_cancel"
+          android:text="@string/linkidwithpatient_button_back"
           tools:ignore="ButtonStyle" />
 
         <com.google.android.material.button.MaterialButton
@@ -79,7 +82,7 @@
           android:layout_marginStart="@dimen/spacing_8"
           android:layout_weight="1"
           android:gravity="center"
-          android:text="@string/linkidwithpatient_button_add" />
+          android:text="@string/linkidwithpatient_button_yes" />
 
       </LinearLayout>
 

@@ -28,6 +28,7 @@ class LinkIdWithPatientEffectHandler @AssistedInject constructor(
       .addAction(CloseSheetWithOutIdLinked::class.java, uiActions::closeSheetWithoutIdLinked, schedulersProvider.ui())
       .addAction(CloseSheetWithLinkedId::class.java, uiActions::closeSheetWithIdLinked, schedulersProvider.ui())
       .addTransformer(AddIdentifierToPatient::class.java, addIdentifierToPatient())
+      .addTransformer(GetPatientNameFromId::class.java, getPatientNameFromId())
       .build()
 
   private fun addIdentifierToPatient(): ObservableTransformer<AddIdentifierToPatient, LinkIdWithPatientEvent> {
@@ -45,5 +46,15 @@ class LinkIdWithPatientEffectHandler @AssistedInject constructor(
           }
           .map { IdentifierAddedToPatient }
     }
+  }
+
+  private fun getPatientNameFromId(): ObservableTransformer<GetPatientNameFromId, LinkIdWithPatientEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { patientRepository.patientImmediate(it.patientUuid)!!.fullName }
+          .map(::PatientNameReceived)
+    }
+
   }
 }

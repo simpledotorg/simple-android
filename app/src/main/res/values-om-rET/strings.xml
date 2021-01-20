@@ -365,10 +365,6 @@
   <string name="help_try_again">Deebisii yaali</string>
 
   <!-- Link Id Sheet-->
-  <string name="linkidwithpatient_button_add">Kan itti aanu</string>
-  <string name="linkidwithpatient_button_cancel">Adda kuti</string>
-  <string name="linkidwithpatient_add_id_text">%1$s\u0020dabali</string>
-  <string name="linkidwithpatient_to_patient_text">Dhukkubataau0020 hanga\u00A0?</string>
 
   <!-- Add ID to Patient: Search -->
 

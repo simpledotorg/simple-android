@@ -197,6 +197,7 @@
     <item name="android:imeOptions">actionDone</item>
     <item name="android:minWidth">168dp</item>
     <item name="android:textStyle">bold</item>
+    <item name="android:inputType">numberPassword</item>
     <item name="pinAnimationType">none</item>
     <item name="pinCharacterMask">\u25CF</item>
     <item name="pinCharacterSpacing">@dimen/spacing_8</item>
@@ -207,6 +208,7 @@
 
   <style name="Widget.Simple.TextField.PinEntry.Otp">
     <item name="pinCharacterMask">@null</item>
+    <item name="android:inputType">number</item>
   </style>
 
   <style name="Widget.Simple.TextField.Layout.Large.ShortCodeEntry">

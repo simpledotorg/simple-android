@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.text.style.TextAppearanceSpan
 import android.view.View
+import androidx.core.text.buildSpannedString
+import androidx.core.text.inSpans
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
@@ -11,7 +13,6 @@ import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.databinding.ListBloodSugarHistoryItemBinding
 import org.simple.clinic.databinding.ListNewBloodSugarButtonBinding
-import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.visibleOrGone
@@ -42,11 +43,11 @@ sealed class BloodSugarHistoryListItem : PagingItemAdapter.Item<Event> {
       val binding = holder.binding as ListBloodSugarHistoryItemBinding
       val context = holder.itemView.context
       val bloodSugarReading = measurement.reading
-      val formattedBPDateTime = Truss()
-          .pushSpan(dateTimeTextAppearance(context))
-          .append(bloodSugarDateTime(context))
-          .popSpan()
-          .build()
+      val formattedBPDateTime = buildSpannedString {
+        inSpans(dateTimeTextAppearance(context)) {
+          append(bloodSugarDateTime(context))
+        }
+      }
 
       val displayUnit = context.getString(bloodSugarReading.displayUnit(bloodSugarUnitPreference))
       val displayType = context.getString(bloodSugarReading.displayType)

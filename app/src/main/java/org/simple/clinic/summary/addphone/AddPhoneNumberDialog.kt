@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.jakewharton.rxbinding3.view.clicks
@@ -110,7 +111,7 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi, UiActi
     binding = DialogPatientsummaryAddphoneBinding.inflate(layoutInflater)
     layout = binding?.root
 
-    return AlertDialog.Builder(requireContext())
+    return MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.patientsummary_addphone_dialog_title)
         .setMessage(R.string.patientsummary_addphone_dialog_message)
         .setView(layout)

@@ -3,7 +3,7 @@ package org.simple.clinic.login.applock
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import org.simple.clinic.R
@@ -40,7 +40,7 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle_Destructive)
+    return MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_Simple_MaterialAlertDialog_Destructive)
         .setTitle(R.string.applock_reset_pin_alert_title)
         .setMessage(R.string.applock_reset_pin_alert_message)
         .setPositiveButton(R.string.applock_reset_pin_alert_confirm) { _, _ -> screenRouter.push(ForgotPinCreateNewPinScreenKey()) }

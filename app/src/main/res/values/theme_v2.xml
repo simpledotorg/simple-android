@@ -3,7 +3,8 @@
 
   <style name="Base.Theme.Simple" parent="Theme.MaterialComponents.Light.NoActionBar">
     <!-- Dialog Themes -->
-    <item name="alertDialogTheme">@style/ThemeOverlay.Simple.Light.Dialog.Alert</item>
+    <item name="alertDialogTheme">@style/ThemeOverlay.Simple.Dialog.Alert</item>
+    <item name="android:datePickerDialogTheme">@style/ThemeOverlay.Simple.Dialog</item>
     <item name="materialAlertDialogTheme">@style/ThemeOverlay.Simple.MaterialAlertDialog</item>
     <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Simple.BottomSheetDialog</item>
 

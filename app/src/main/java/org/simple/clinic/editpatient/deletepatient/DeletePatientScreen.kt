@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Parcelable
 import android.util.AttributeSet
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.constraintlayout.widget.ConstraintLayout
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -84,7 +84,7 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   }
 
   private val deleteConfirmationDialog by unsafeLazy {
-    AlertDialog.Builder(context, R.style.Clinic_V2_DialogStyle_Destructive)
+    MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_Simple_MaterialAlertDialog_Destructive)
         .setTitle(R.string.deletereason_confirm_title)
         .setNegativeButton(R.string.deletereason_confirm_negative, null)
         .create()

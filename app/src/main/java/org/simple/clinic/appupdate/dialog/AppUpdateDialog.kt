@@ -5,9 +5,9 @@ import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.R
 
@@ -27,7 +27,7 @@ class AppUpdateDialog : DialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireContext())
+    return MaterialAlertDialogBuilder(requireContext())
         .setTitle(getString(R.string.appupdatedialog_title))
         .setMessage(getString(R.string.appupdatedialog_body))
         .setPositiveButton(getString(R.string.appupdatedialog_positive_button_text)) { _, _ ->

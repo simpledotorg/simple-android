@@ -2,7 +2,7 @@ package org.simple.clinic.sync.indicator.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import org.simple.clinic.R
@@ -39,7 +39,7 @@ class SyncIndicatorFailureDialog : AppCompatDialogFragment() {
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val message = requireArguments().getString(KEY_MESSAGE)
 
-    return AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle)
+    return MaterialAlertDialogBuilder(requireContext())
         .setMessage(message)
         .setPositiveButton(R.string.syncindicator_dialog_button_text, null)
         .create()

@@ -5,13 +5,13 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.annotation.ColorRes
+import androidx.annotation.AttrRes
 import androidx.annotation.IdRes
-import androidx.core.content.ContextCompat
 import flow.Direction
 import flow.KeyChanger
 import flow.State
 import flow.TraversalCallback
+import org.simple.clinic.router.util.resolveColor
 import timber.log.Timber
 
 /**
@@ -22,7 +22,7 @@ import timber.log.Timber
 class FullScreenKeyChanger(
     private val activity: Activity,
     @IdRes private val screenLayoutContainerRes: Int,
-    @ColorRes private val screenBackgroundRes: Int,
+    @AttrRes private val screenBackgroundAttr: Int,
     private val onKeyChange: (FullScreenKey?, FullScreenKey) -> Unit = { _, _ -> }
 ) : BaseViewGroupKeyChanger<FullScreenKey>(), KeyChanger {
 
@@ -56,7 +56,8 @@ class FullScreenKeyChanger(
     container.addView(contentView)
 
     if (contentView.background == null) {
-      container.setBackgroundColor(ContextCompat.getColor(incomingContext, screenBackgroundRes))
+      val backgroundColor = incomingContext.resolveColor(attrRes = screenBackgroundAttr)
+      container.setBackgroundColor(backgroundColor)
     } else {
       container.background = contentView.background
       contentView.background = null

@@ -272,4 +272,17 @@
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.ToolbarButton</item>
   </style>
 
+  <style name="Widget.Simple.Chip.Answer" parent="Widget.MaterialComponents.Chip.Choice">
+    <item name="checkedIconEnabled">true</item>
+    <item name="checkedIconVisible">true</item>
+    <item name="chipIconSize">@dimen/spacing_16</item>
+    <item name="checkedIconTint">?attr/colorOnPrimary</item>
+    <item name="chipBackgroundColor">@color/answer_chip_background</item>
+    <item name="chipStartPadding">@dimen/spacing_8</item>
+    <item name="chipEndPadding">@dimen/spacing_8</item>
+    <item name="android:textColor">@color/answer_chip_text</item>
+    <item name="android:minWidth">@dimen/spacing_56</item>
+    <item name="android:textAlignment">center</item>
+  </style>
+
 </resources>

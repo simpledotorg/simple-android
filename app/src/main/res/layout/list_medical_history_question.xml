@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/newmedicalhistory_item_frame"
   android:layout_width="match_parent"
@@ -29,47 +30,29 @@
       android:textColor="?attr/colorOnSurface"
       tools:text="Kidney disease" />
 
-    <LinearLayout
+    <com.google.android.material.chip.ChipGroup
+      android:id="@+id/chipGroup"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
-      android:gravity="center"
-      android:orientation="horizontal">
+      app:chipSpacingHorizontal="@dimen/spacing_16">
 
-      <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/yesCheckBox"
+      <com.google.android.material.chip.Chip
+        android:id="@+id/yesChip"
+        style="@style/Widget.Simple.Chip.Answer"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@drawable/selector_medicalhistory_answer"
-        android:button="@null"
-        android:drawablePadding="@dimen/spacing_4"
-        android:gravity="center"
-        android:paddingStart="@dimen/medicalhistory_unselected_padding"
-        android:paddingTop="@dimen/medicalhistory_answer_vertical_padding"
-        android:paddingEnd="@dimen/medicalhistory_unselected_padding"
-        android:paddingBottom="@dimen/medicalhistory_answer_vertical_padding"
+        android:layout_height="wrap_content"
         android:text="@string/newmedicalhistory_yes"
-        android:textAllCaps="false"
-        android:textAppearance="?attr/textAppearanceBody2" />
+        tools:checked="true" />
 
-      <CheckBox
-        android:id="@+id/noCheckBox"
+      <com.google.android.material.chip.Chip
+        android:id="@+id/noChip"
+        style="@style/Widget.Simple.Chip.Answer"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/spacing_12"
-        android:background="@drawable/selector_medicalhistory_answer"
-        android:button="@null"
-        android:drawablePadding="@dimen/spacing_4"
-        android:gravity="center"
-        android:paddingStart="@dimen/medicalhistory_unselected_padding"
-        android:paddingTop="@dimen/medicalhistory_answer_vertical_padding"
-        android:paddingEnd="@dimen/medicalhistory_unselected_padding"
-        android:paddingBottom="@dimen/medicalhistory_answer_vertical_padding"
-        android:text="@string/newmedicalhistory_no"
-        android:textAllCaps="false"
-        android:textAppearance="?attr/textAppearanceBody2" />
+        android:layout_height="wrap_content"
+        android:text="@string/newmedicalhistory_no" />
 
-    </LinearLayout>
+    </com.google.android.material.chip.ChipGroup>
 
   </LinearLayout>
 

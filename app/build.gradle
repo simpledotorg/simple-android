@@ -360,9 +360,6 @@ dependencies {
   implementation project(":simple-platform")
   implementation project(":simple-visuals")
 
-  compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$versions.assistedInject"
-  kapt "com.squareup.inject:assisted-inject-processor-dagger2:$versions.assistedInject"
-
   debugImplementation "com.facebook.flipper:flipper:$versions.flipper"
   debugImplementation "com.facebook.flipper:flipper-network-plugin:$versions.flipper"
   debugImplementation "com.facebook.soloader:soloader:$versions.soloader"

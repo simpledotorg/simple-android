@@ -77,7 +77,7 @@ sealed class BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
 
     private fun dateTimeTextAppearance(context: Context?): TextAppearanceSpan {
       return if (bpTime != null) {
-        TextAppearanceSpan(context, R.style.TextAppearance_MaterialComponents_Caption)
+        TextAppearanceSpan(context, R.style.TextAppearance_Simple_Caption)
       } else {
         TextAppearanceSpan(context, R.style.TextAppearance_Simple_Body2)
       }

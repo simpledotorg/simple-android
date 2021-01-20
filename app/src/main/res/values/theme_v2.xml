@@ -42,6 +42,7 @@
     <item name="textAppearanceButton">@style/TextAppearance.Simple.Button</item>
     <item name="textAppearanceButtonBig">@style/TextAppearance.Simple.Button.Big</item>
     <item name="textAppearanceTag">@style/TextAppearance.Simple.Tag</item>
+    <item name="textAppearanceCaption">@style/TextAppearance.Simple.Caption</item>
 
     <!-- Shape Appearances -->
     <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Simple.SmallComponent</item>

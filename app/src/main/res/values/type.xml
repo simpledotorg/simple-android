@@ -158,4 +158,8 @@
     <item name="fontFamily">sans-serif-medium</item>
     <item name="lineHeight">20sp</item>
   </style>
+
+  <style name="TextAppearance.Simple.Caption" parent="TextAppearance.MaterialComponents.Caption">
+    <item name="android:textColor">@null</item>
+  </style>
 </resources>

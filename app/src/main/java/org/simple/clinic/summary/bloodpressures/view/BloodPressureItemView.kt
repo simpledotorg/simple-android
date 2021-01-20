@@ -76,7 +76,7 @@ class BloodPressureItemView(context: Context, attrs: AttributeSet) : FrameLayout
 
   private fun renderDateTime(bpDate: String, bpTime: String?) {
     val dateTimeTextAppearanceSpan = if (bpTime != null) {
-      TextAppearanceSpan(context, R.style.TextAppearance_MaterialComponents_Caption)
+      TextAppearanceSpan(context, R.style.TextAppearance_Simple_Caption)
     } else {
       TextAppearanceSpan(context, R.style.TextAppearance_Simple_Body2)
     }

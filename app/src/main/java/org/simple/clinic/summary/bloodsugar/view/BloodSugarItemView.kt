@@ -96,7 +96,7 @@ class BloodSugarItemView(
 
   private fun renderDateTime(bloodSugarDate: String, bloodSugarTime: String?) {
     val dateTimeTextAppearanceSpan = if (bloodSugarTime != null) {
-      TextAppearanceSpan(context, R.style.TextAppearance_MaterialComponents_Caption)
+      TextAppearanceSpan(context, R.style.TextAppearance_Simple_Caption)
     } else {
       TextAppearanceSpan(context, R.style.TextAppearance_Simple_Body2)
     }

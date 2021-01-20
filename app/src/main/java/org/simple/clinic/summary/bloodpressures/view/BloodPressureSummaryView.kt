@@ -28,7 +28,6 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.summary.BP_REQCODE_ALERT_FACILITY_CHANGE
@@ -118,9 +117,6 @@ class BloodPressureSummaryView(
   lateinit var timeFormatter: DateTimeFormatter
 
   @Inject
-  lateinit var crashReporter: CrashReporter
-
-  @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
 
   private val viewEvents = PublishSubject.create<BloodPressureSummaryViewEvent>()
@@ -144,7 +140,8 @@ class BloodPressureSummaryView(
 
   private val delegate: MobiusDelegate<BloodPressureSummaryViewModel, BloodPressureSummaryViewEvent, BloodPressureSummaryViewEffect> by unsafeLazy {
     val screenKey = screenKeyProvider.keyFor<PatientSummaryScreenKey>(this)
-    MobiusDelegate(
+
+    MobiusDelegate.forView(
         events = events,
         defaultModel = BloodPressureSummaryViewModel.create(screenKey.patientUuid),
         init = BloodPressureSummaryViewInit(bloodPressureSummaryConfig),
@@ -153,9 +150,7 @@ class BloodPressureSummaryView(
         modelUpdateListener = { model ->
           modelUpdateCallback?.invoke(model)
           uiRenderer.render(model)
-        },
-        crashReporter = crashReporter
-    )
+        })
   }
 
   var bpRecorded: BpRecorded? = null
@@ -171,8 +166,6 @@ class BloodPressureSummaryView(
       return
     }
     context.injector<BloodPressureSummaryViewInjector>().inject(this)
-
-    delegate.prepare()
 
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
 

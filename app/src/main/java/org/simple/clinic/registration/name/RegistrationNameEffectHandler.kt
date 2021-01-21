@@ -1,8 +1,9 @@
 package org.simple.clinic.registration.name
 
 import com.spotify.mobius.rx2.RxMobius
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.registration.name.RegistrationNameValidationResult.Blank
 import org.simple.clinic.registration.name.RegistrationNameValidationResult.Valid
@@ -13,7 +14,7 @@ class RegistrationNameEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: RegistrationNameUiActions
 ) {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(uiActions: RegistrationNameUiActions): RegistrationNameEffectHandler
   }

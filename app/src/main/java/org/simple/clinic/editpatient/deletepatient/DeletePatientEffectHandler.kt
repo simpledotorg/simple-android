@@ -1,8 +1,9 @@
 package org.simple.clinic.editpatient.deletepatient
 
 import com.spotify.mobius.rx2.RxMobius
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -13,7 +14,7 @@ class DeletePatientEffectHandler @AssistedInject constructor(
     @Assisted val uiActions: UiActions
 ) {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(uiActions: UiActions): DeletePatientEffectHandler
   }

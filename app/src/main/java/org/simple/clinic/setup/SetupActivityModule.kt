@@ -6,7 +6,6 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.DatabaseMaintenanceRunAt
 import org.simple.clinic.main.TypedPreference.Type.FallbackCountry
@@ -17,7 +16,6 @@ import java.net.URI
 import java.time.Instant
 
 @Module(includes = [
-  AssistedInjectModule::class,
   SetupActivityConfigModule::class
 ])
 class SetupActivityModule {

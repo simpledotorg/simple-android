@@ -3,10 +3,9 @@ package org.simple.clinic.teleconsultlog.medicinefrequency.di
 import androidx.appcompat.app.AppCompatActivity
 import dagger.BindsInstance
 import dagger.Subcomponent
-import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequencySheet
 
-@Subcomponent(modules = [AssistedInjectModule::class])
+@Subcomponent
 interface MedicineFrequencyComponent {
 
   fun inject(target: MedicineFrequencySheet)

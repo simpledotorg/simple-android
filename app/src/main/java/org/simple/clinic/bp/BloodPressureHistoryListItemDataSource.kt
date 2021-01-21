@@ -5,8 +5,9 @@ import androidx.paging.PagedList
 import androidx.paging.PositionalDataSource
 import androidx.paging.toObservable
 import androidx.room.InvalidationTracker
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import org.simple.clinic.AppDatabase
@@ -149,7 +150,7 @@ class BloodPressureHistoryListItemDataSourceFactory @AssistedInject constructor(
   private val disposable = CompositeDisposable()
   private var dataSource: BloodPressureHistoryListItemDataSource? = null
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(
         source: PositionalDataSource<BloodPressureMeasurement>

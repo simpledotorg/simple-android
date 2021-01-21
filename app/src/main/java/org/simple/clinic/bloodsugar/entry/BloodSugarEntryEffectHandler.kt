@@ -2,8 +2,9 @@ package org.simple.clinic.bloodsugar.entry
 
 import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
@@ -47,7 +48,7 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
     private val uuidGenerator: UuidGenerator,
     private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>
 ) {
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(ui: BloodSugarEntryUi): BloodSugarEntryEffectHandler
   }

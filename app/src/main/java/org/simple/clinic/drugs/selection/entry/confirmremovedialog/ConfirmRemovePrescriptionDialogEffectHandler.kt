@@ -1,8 +1,9 @@
 package org.simple.clinic.drugs.selection.entry.confirmremovedialog
 
 import com.spotify.mobius.rx2.RxMobius
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -14,7 +15,7 @@ class ConfirmRemovePrescriptionDialogEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: UiActions
 ) {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(uiActions: UiActions): ConfirmRemovePrescriptionDialogEffectHandler
   }

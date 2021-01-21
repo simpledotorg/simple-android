@@ -3,10 +3,9 @@ package org.simple.clinic.scanid
 import androidx.appcompat.app.AppCompatActivity
 import dagger.BindsInstance
 import dagger.Subcomponent
-import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 
-@Subcomponent(modules = [AssistedInjectModule::class])
+@Subcomponent
 interface ScanBpPassportActivityComponent :
     ScanSimpleIdScreen.Injector,
     QrCodeScannerView.Injector {

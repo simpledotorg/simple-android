@@ -1,8 +1,9 @@
 package org.simple.clinic.forgotpin.confirmpin
 
 import com.spotify.mobius.rx2.RxMobius
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -25,7 +26,7 @@ class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: ForgotPinConfirmPinUiActions
 ) {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(uiActions: ForgotPinConfirmPinUiActions): ForgotPinConfirmPinEffectHandler
   }

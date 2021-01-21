@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import dagger.BindsInstance
 import dagger.Subcomponent
 import org.simple.clinic.deniedaccess.AccessDeniedScreenInjector
-import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.facilitypicker.FacilityPickerView
 import org.simple.clinic.introvideoscreen.IntroVideoScreenInjector
 import org.simple.clinic.login.pin.LoginPinScreen
@@ -23,7 +22,6 @@ import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.selectcountry.SelectCountryScreenInjector
 
 @Subcomponent(modules = [
-  AssistedInjectModule::class,
   FragmentScreenKeyModule::class
 ])
 interface AuthenticationActivityComponent :

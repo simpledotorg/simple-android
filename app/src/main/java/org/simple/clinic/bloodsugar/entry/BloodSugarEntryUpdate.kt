@@ -4,8 +4,9 @@ import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.HbA1c
@@ -27,7 +28,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
     private val inputDatePaddingCharacter: UserInputDatePaddingCharacter,
     private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>
 ) : Update<BloodSugarEntryModel, BloodSugarEntryEvent, BloodSugarEntryEffect> {
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(dateInUserTimeZone: LocalDate): BloodSugarEntryUpdate
   }

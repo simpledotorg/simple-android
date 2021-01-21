@@ -2,8 +2,9 @@ package org.simple.clinic.teleconsultlog.shareprescription
 
 import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.main.TypedPreference
@@ -24,7 +25,7 @@ class TeleconsultSharePrescriptionEffectHandler @AssistedInject constructor(
     private val teleconsultSharePrescriptionRepository: TeleconsultSharePrescriptionRepository
 ) {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(uiActions: TeleconsultSharePrescriptionUiActions): TeleconsultSharePrescriptionEffectHandler
   }

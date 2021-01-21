@@ -13,7 +13,6 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenInjector
 import org.simple.clinic.bp.history.BloodPressureHistoryScreenInjector
 import org.simple.clinic.deniedaccess.AccessDeniedScreenInjector
-import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.di.PagingModule
 import org.simple.clinic.drugs.selection.EditMedicinesScreen
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
@@ -135,7 +134,6 @@ interface TheActivityComponent :
 
 @Module(includes = [
   PatientsModule::class,
-  AssistedInjectModule::class,
   PagingModule::class,
   InputFieldsFactoryModule::class,
   FlowScreenKeyModule::class

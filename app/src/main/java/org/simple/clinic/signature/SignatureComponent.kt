@@ -3,9 +3,8 @@ package org.simple.clinic.signature
 import androidx.appcompat.app.AppCompatActivity
 import dagger.BindsInstance
 import dagger.Subcomponent
-import org.simple.clinic.di.AssistedInjectModule
 
-@Subcomponent(modules = [AssistedInjectModule::class])
+@Subcomponent
 interface SignatureComponent {
 
   fun inject(target: SignatureActivity)

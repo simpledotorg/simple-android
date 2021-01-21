@@ -4,6 +4,7 @@
 ### Internal
 - Disable strict mode crash for VM policy
 - Redesign `LinkIdWithPatientView`
+- Move to Dagger assisted inject
 - [In Progress: 19 Jan 2021] Material Theming Migration
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 13 Jan 2020] Migrate `TheActivity` to the new navigation framework

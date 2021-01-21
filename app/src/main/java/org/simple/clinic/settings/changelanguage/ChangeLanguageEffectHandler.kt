@@ -1,8 +1,9 @@
 package org.simple.clinic.settings.changelanguage
 
 import com.spotify.mobius.rx2.RxMobius
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.settings.SettingsRepository
@@ -17,7 +18,7 @@ class ChangeLanguageEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: UiActions
 ) {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(uiActions: UiActions): ChangeLanguageEffectHandler
   }

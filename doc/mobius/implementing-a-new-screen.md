@@ -130,7 +130,7 @@ class ChangeLanguageEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: UiActions
 ) {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(uiActions: UiActions): ChangeLanguageEffectHandler
   }

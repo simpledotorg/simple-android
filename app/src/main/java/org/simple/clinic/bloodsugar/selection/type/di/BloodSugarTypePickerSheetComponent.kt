@@ -4,9 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import dagger.BindsInstance
 import dagger.Subcomponent
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
-import org.simple.clinic.di.AssistedInjectModule
 
-@Subcomponent(modules = [AssistedInjectModule::class])
+@Subcomponent
 interface BloodSugarTypePickerSheetComponent {
 
   fun inject(target: BloodSugarTypePickerSheet)

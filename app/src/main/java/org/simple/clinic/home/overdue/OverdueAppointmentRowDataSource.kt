@@ -5,8 +5,9 @@ import androidx.paging.PagedList
 import androidx.paging.PositionalDataSource
 import androidx.paging.toObservable
 import androidx.room.InvalidationTracker
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import org.simple.clinic.AppDatabase
@@ -79,7 +80,7 @@ class OverdueAppointmentRowDataSource(
       @Assisted private val source: PositionalDataSource<OverdueAppointment>
   ) : DataSource.Factory<Int, OverdueAppointmentRow>() {
 
-    @AssistedInject.Factory
+    @AssistedFactory
     interface InjectionFactory {
       fun create(
           currentFacility: Facility,

@@ -5,9 +5,8 @@ import dagger.BindsInstance
 import dagger.Subcomponent
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog
-import org.simple.clinic.di.AssistedInjectModule
 
-@Subcomponent(modules = [AssistedInjectModule::class])
+@Subcomponent
 interface BloodPressureEntryComponent : ConfirmRemoveBloodPressureDialog.Injector {
 
   fun inject(target: BloodPressureEntrySheet)

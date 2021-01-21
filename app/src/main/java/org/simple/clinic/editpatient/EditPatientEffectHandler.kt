@@ -1,8 +1,9 @@
 package org.simple.clinic.editpatient
 
 import com.spotify.mobius.rx2.RxMobius
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.Maybe
 import io.reactivex.Observable
@@ -53,7 +54,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
     @Assisted private val ui: EditPatientUi
 ) {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(ui: EditPatientUi): EditPatientEffectHandler
   }

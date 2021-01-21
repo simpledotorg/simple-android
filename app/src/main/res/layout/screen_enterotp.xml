@@ -44,9 +44,8 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
-      android:textAppearance="?attr/textAppearanceHeadline6"
+      android:textAppearance="?attr/textAppearanceHeadline6Numeric"
       android:textColor="?attr/colorOnToolbarPrimary"
-      android:textSize="@dimen/textsize_20"
       tools:text="+91 1111111111" />
 
   </LinearLayout>

@@ -35,8 +35,8 @@
       android:layout_weight="1"
       android:ellipsize="end"
       android:maxLines="1"
+      android:textAppearance="?attr/textAppearanceHeadline6"
       android:textColor="?attr/colorOnToolbarPrimary"
-      android:textSize="@dimen/textsize_20"
       tools:text="Gangadhar Vidyadhar Mayadhar Omkarnath Shastri" />
 
     <com.google.android.material.button.MaterialButton

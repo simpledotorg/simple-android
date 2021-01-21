@@ -164,12 +164,12 @@ data class PatientSearchResult(
 
     @Query("""
         SELECT * FROM (
-            SELECT searchResult.*, 0 priority, INSTR(P.fullName, :name) namePosition FROM 
+            SELECT searchResult.*, 0 priority, INSTR(lower(P.fullName), lower(:name)) namePosition FROM 
             PatientSearchResult searchResult
             LEFT JOIN Patient P ON P.uuid = searchResult.uuid
             WHERE P.deletedAt IS NULL AND P.assignedFacilityId = :facilityId AND namePosition > 0
             UNION
-            SELECT searchResult.*, 1 priority, INSTR(P.fullName, :name) namePosition FROM 
+            SELECT searchResult.*, 1 priority, INSTR(lower(P.fullName), lower(:name)) namePosition FROM 
             PatientSearchResult searchResult
             LEFT JOIN Patient P ON P.uuid = searchResult.uuid
             WHERE P.deletedAt IS NULL AND P.assignedFacilityId != :facilityId AND namePosition > 0

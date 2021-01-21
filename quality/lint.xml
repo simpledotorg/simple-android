@@ -2,9 +2,6 @@
 <lint>
   <issue id="GoogleAppIndexingWarning" severity="informational" />
   <issue id="AllowBackup" severity="informational" />
-  <issue id="UnusedResources">
-    <ignore path="src/main/res/values/dimens.xml" />
-  </issue>
 
   <!-- Ignore this for now due to time constraints. Switch to static images later. -->
   <issue id="VectorPath">

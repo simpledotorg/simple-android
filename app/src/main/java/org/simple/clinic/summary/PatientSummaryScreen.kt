@@ -425,7 +425,7 @@ class PatientSummaryScreen(
   }
 
   override fun goToHomeScreen() {
-    router.clearHistoryAndPush(HomeScreenKey.wrap())
+    router.clearHistoryAndPush(HomeScreenKey)
   }
 
   override fun showUpdatePhoneDialog(patientUuid: UUID) {

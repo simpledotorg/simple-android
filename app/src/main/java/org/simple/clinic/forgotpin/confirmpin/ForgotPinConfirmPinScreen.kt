@@ -168,7 +168,7 @@ class ForgotPinConfirmPinScreen(
   }
 
   override fun goToHomeScreen() {
-    router.clearHistoryAndPush(HomeScreenKey.wrap())
+    router.clearHistoryAndPush(HomeScreenKey)
   }
 
   private fun showError(@StringRes errorMessageResId: Int) {

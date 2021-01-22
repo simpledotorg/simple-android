@@ -2,16 +2,13 @@ package org.simple.clinic.home
 
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.R
-import org.simple.clinic.router.screen.FullScreenKey
+import org.simple.clinic.navigation.v2.ScreenKey
 
 @Parcelize
-object HomeScreenKey : FullScreenKey {
+object HomeScreenKey : ScreenKey() {
 
   @IgnoredOnParcel
   override val analyticsName = "Home"
 
-  override fun layoutRes(): Int {
-    return R.layout.screen_home
-  }
+  override fun instantiateFragment() = HomeScreen()
 }

@@ -156,7 +156,7 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   }
 
   override fun showHomeScreen() {
-    router.clearHistoryAndPush(HomeScreenKey.wrap())
+    router.clearHistoryAndPush(HomeScreenKey)
   }
 
   private fun adapterEvents(): Observable<DeletePatientEvent> {

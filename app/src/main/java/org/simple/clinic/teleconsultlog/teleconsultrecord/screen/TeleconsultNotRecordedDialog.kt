@@ -10,7 +10,6 @@ import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import javax.inject.Inject
 
 class TeleconsultNotRecordedDialog : DialogFragment() {
@@ -43,7 +42,7 @@ class TeleconsultNotRecordedDialog : DialogFragment() {
   }
 
   private fun navigateToHomeScreen() {
-    router.clearHistoryAndPush(HomeScreenKey.wrap())
+    router.clearHistoryAndPush(HomeScreenKey)
   }
 
   interface Injector {

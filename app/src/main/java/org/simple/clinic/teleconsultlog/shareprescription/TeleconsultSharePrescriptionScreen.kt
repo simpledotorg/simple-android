@@ -25,7 +25,6 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.PatientProfile
@@ -229,7 +228,7 @@ class TeleconsultSharePrescriptionScreen constructor(
   }
 
   override fun openHomeScreen() {
-    router.clearHistoryAndPush(HomeScreenKey.wrap())
+    router.clearHistoryAndPush(HomeScreenKey)
   }
 
   override fun sharePrescriptionAsImage(imageUri: Uri) {

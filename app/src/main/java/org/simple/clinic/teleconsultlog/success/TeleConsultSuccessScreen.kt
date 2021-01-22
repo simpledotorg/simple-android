@@ -118,7 +118,7 @@ class TeleConsultSuccessScreen(
   }
 
   override fun goToHomeScreen() {
-    router.clearHistoryAndPush(HomeScreenKey.wrap())
+    router.clearHistoryAndPush(HomeScreenKey)
   }
 
   override fun goToPrescriptionScreen(patientUuid: UUID, teleconsultRecordId: UUID) {

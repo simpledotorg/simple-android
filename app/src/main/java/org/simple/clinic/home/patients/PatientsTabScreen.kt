@@ -29,6 +29,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
+import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.MobiusDelegate
@@ -37,7 +38,7 @@ import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.scanid.ScanBpPassportActivity
+import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
@@ -52,8 +53,6 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
-
-const val REQUEST_CODE_SCAN_BP_PASSPORT = 100
 
 class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientsTabUi, PatientsTabUiActions {
 
@@ -237,9 +236,8 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
   }
 
   override fun openScanSimpleIdCardScreen() {
-    val intent = ScanBpPassportActivity.intent(activity)
-
-    activity.startActivityForResult(intent, REQUEST_CODE_SCAN_BP_PASSPORT)
+    // This is dependent on this screen being used within `org.simple.clinic.home.HomeScreen`
+    router.pushExpectingResult(HomeScreen.ScanPassportRequest, ScanSimpleIdScreenKey())
   }
 
   override fun hideSyncIndicator() {

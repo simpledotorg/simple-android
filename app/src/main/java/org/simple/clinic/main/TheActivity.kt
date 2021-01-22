@@ -32,6 +32,7 @@ import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.router.ScreenResultBus
@@ -67,7 +68,7 @@ import javax.inject.Inject
 @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 fun initialScreenKey(
     user: User
-): FullScreenKey {
+): ScreenKey {
   val userDisapproved = user.status == UserStatus.DisapprovedForSyncing
 
   val canMoveToHomeScreen = when (user.loggedInStatus) {
@@ -77,8 +78,8 @@ fun initialScreenKey(
 
   return when {
     canMoveToHomeScreen && !userDisapproved -> HomeScreenKey
-    userDisapproved -> AccessDeniedScreenKey(user.fullName)
-    user.loggedInStatus == RESETTING_PIN -> ForgotPinCreateNewPinScreenKey()
+    userDisapproved -> AccessDeniedScreenKey(user.fullName).wrap()
+    user.loggedInStatus == RESETTING_PIN -> ForgotPinCreateNewPinScreenKey().wrap()
     else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
   }
 }
@@ -215,7 +216,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
     val initialScreen = initialScreenKey(currentUser)
 
-    router.clearHistoryAndPush(initialScreen.wrap())
+    router.clearHistoryAndPush(initialScreen)
   }
 
   @SuppressLint("CheckResult")

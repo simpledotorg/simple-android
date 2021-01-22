@@ -11,10 +11,10 @@ import com.jakewharton.rxbinding3.widget.editorActions
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.sheet_drug_duration.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.SheetDrugDurationBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
@@ -31,6 +31,17 @@ import java.util.UUID
 import javax.inject.Inject
 
 class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiActions {
+
+  private lateinit var binding: SheetDrugDurationBinding
+
+  private val drugDurationTitleTextView
+    get() = binding.drugDurationTitleTextView
+
+  private val drugDurationEditText
+    get() = binding.drugDurationEditText
+
+  private val drugDurationErrorTextView
+    get() = binding.drugDurationErrorTextView
 
   @Inject
   lateinit var locale: Locale
@@ -109,7 +120,10 @@ class DrugDurationSheet : BottomSheetActivity(), DrugDurationUi, DrugDurationUiA
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.sheet_drug_duration)
+
+    binding = SheetDrugDurationBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
     delegate.onRestoreInstanceState(savedInstanceState)
 
     drugDurationTitleTextView.text = getString(R.string.drug_duration_title, drugDuration.name, drugDuration.dosage)

@@ -195,10 +195,10 @@ class ShortCodeSearchResultScreen(
     val screenKey = if (features.isEnabled(Feature.InstantSearch)) {
       InstantSearchScreenKey(additionalIdentifier = null)
     } else {
-      PatientSearchScreenKey(additionalIdentifier = null)
+      PatientSearchScreenKey(additionalIdentifier = null).wrap()
     }
 
-    router.push(screenKey.wrap())
+    router.push(screenKey)
   }
 
   override fun showLoading() {

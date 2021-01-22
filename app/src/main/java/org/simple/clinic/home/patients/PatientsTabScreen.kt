@@ -191,10 +191,10 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
     val screenKey = if (features.isEnabled(Feature.InstantSearch)) {
       InstantSearchScreenKey(additionalIdentifier)
     } else {
-      PatientSearchScreenKey(additionalIdentifier)
+      PatientSearchScreenKey(additionalIdentifier).wrap()
     }
 
-    router.push(screenKey.wrap())
+    router.push(screenKey)
   }
 
   private fun showStatus(@IdRes statusViewId: Int) {

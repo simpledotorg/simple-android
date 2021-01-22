@@ -211,10 +211,10 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     val screenKey = if (features.isEnabled(Feature.InstantSearch)) {
       InstantSearchScreenKey(additionalIdentifier)
     } else {
-      PatientSearchScreenKey(additionalIdentifier)
+      PatientSearchScreenKey(additionalIdentifier).wrap()
     }
 
-    router.push(screenKey.wrap())
+    router.push(screenKey)
   }
 
   override fun openPatientSummary(patientId: UUID) {

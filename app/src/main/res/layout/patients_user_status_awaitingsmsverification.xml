@@ -5,32 +5,42 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:layout_gravity="bottom"
-  android:background="@color/black"
-  android:padding="@dimen/spacing_12"
-  tools:ignore="Overdraw"
-  tools:showIn="@layout/screen_patients">
+  android:background="?attr/colorSurface"
+  android:paddingStart="@dimen/spacing_16"
+  android:paddingTop="@dimen/spacing_16"
+  android:paddingEnd="@dimen/spacing_8"
+  android:paddingBottom="@dimen/spacing_16"
+  android:theme="@style/ThemeOverlay.Simple.UserApprovalSnackbar"
+  tools:ignore="Overdraw">
 
   <TextView
     android:id="@+id/awaitingVerificationTitle"
-    style="@style/Clinic.UserApprovalStatusTitle"
-    android:layout_marginStart="@dimen/spacing_12"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_toStartOf="@+id/enterCodeButton"
-    android:text="@string/patients_awaiting_sms_verification_title" />
+    android:text="@string/patients_awaiting_sms_verification_title"
+    android:textAppearance="?attr/textAppearanceSubtitle1"
+    android:textColor="?attr/colorOnSurface" />
 
   <TextView
-    style="@style/Clinic.UserApprovalStatusMessage"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_below="@+id/awaitingVerificationTitle"
     android:layout_alignStart="@+id/awaitingVerificationTitle"
     android:layout_marginTop="@dimen/spacing_4"
     android:layout_toStartOf="@+id/enterCodeButton"
-    android:text="@string/patients_awaiting_sms_verification_message" />
+    android:text="@string/patients_awaiting_sms_verification_message"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="@color/snackbar_subtitle" />
 
   <com.google.android.material.button.MaterialButton
     android:id="@+id/enterCodeButton"
-    style="@style/Clinic.SnackbarAction"
+    style="?attr/borderlessButtonStyle"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentEnd="true"
     android:layout_centerVertical="true"
-    android:text="@string/patients_enter_code" />
+    android:text="@string/patients_enter_code"
+    android:theme="@style/ThemeOverlay.Simple.UserApprovalSnackbar.Action" />
+
 </RelativeLayout>

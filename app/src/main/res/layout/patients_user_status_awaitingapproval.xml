@@ -6,10 +6,10 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:layout_gravity="bottom"
-  android:background="@color/black"
+  android:background="?attr/colorSurface"
   android:padding="@dimen/spacing_16"
-  tools:ignore="Overdraw"
-  tools:showIn="@layout/screen_patients">
+  android:theme="@style/ThemeOverlay.Simple.UserApprovalSnackbar"
+  tools:ignore="Overdraw">
 
   <ImageView
     android:id="@+id/patients_user_awaitingapproval_icon"
@@ -20,15 +20,22 @@
 
   <TextView
     android:id="@+id/patients_user_awaitingapproval_title"
-    style="@style/Clinic.UserApprovalStatusTitle"
-    android:layout_marginStart="@dimen/spacing_12"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
     android:layout_toEndOf="@+id/patients_user_awaitingapproval_icon"
-    android:text="@string/patients_user_awaiting_approval_title" />
+    android:text="@string/patients_user_awaiting_approval_title"
+    android:textAppearance="?attr/textAppearanceSubtitle1"
+    android:textColor="?attr/colorOnSurface" />
 
   <TextView
-    style="@style/Clinic.UserApprovalStatusMessage"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_below="@+id/patients_user_awaitingapproval_title"
     android:layout_alignStart="@+id/patients_user_awaitingapproval_title"
     android:layout_marginTop="@dimen/spacing_4"
-    android:text="@string/patients_user_awaiting_approval_message" />
+    android:text="@string/patients_user_awaiting_approval_message"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="@color/snackbar_subtitle" />
+
 </RelativeLayout>

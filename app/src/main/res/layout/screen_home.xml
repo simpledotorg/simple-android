@@ -53,10 +53,13 @@
 
         </FrameLayout>
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
           android:id="@+id/helpButton"
-          style="@style/Clinic.V2.ToolbarButton"
+          style="@style/Widget.Simple.Button.Toolbar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
           android:layout_gravity="end"
+          android:layout_marginEnd="@dimen/spacing_16"
           android:text="@string/home_help"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent"

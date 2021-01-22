@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <dimen name="elevation_toolbar">6dp</dimen>
-  <dimen name="elevation_cardview">4dp</dimen>
-  <dimen name="corner_radius_button">2dp</dimen>
 
   <dimen name="spacing_0">0dp</dimen>
   <dimen name="spacing_1">1dp</dimen>
@@ -24,18 +22,7 @@
   <dimen name="spacing_192">192dp</dimen>
   <dimen name="spacing_200">200dp</dimen>
 
-  <dimen name="textsize_12">12sp</dimen>
-  <dimen name="textsize_14">14sp</dimen>
-  <dimen name="textsize_16">16sp</dimen>
-  <dimen name="textsize_18">18sp</dimen>
-  <dimen name="textsize_20">20sp</dimen>
-  <dimen name="textsize_24">24sp</dimen>
-  <dimen name="textsize_34">34sp</dimen>
-
-
-  <dimen name="medicalhistory_selected_padding">10dp</dimen>
-  <dimen name="medicalhistory_unselected_padding">20dp</dimen>
-  <dimen name="medicalhistory_answer_vertical_padding">20dp</dimen>
+  <dimen name="fast_scroll_pop_up_text_size">24sp</dimen>
 
   <dimen name="pinentry_content_bottom_spacing_with_forgot_pin">@dimen/spacing_12</dimen>
   <dimen name="pinentry_content_bottom_spacing_without_forgot_pin">@dimen/spacing_24</dimen>

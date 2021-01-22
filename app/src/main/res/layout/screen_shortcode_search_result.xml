@@ -13,7 +13,8 @@
       android:id="@+id/toolBar"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      app:navigationIcon="@drawable/ic_arrow_back_24dp" />
+      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      app:titleTextAppearance="?attr/textAppearanceBody0Numeric" />
 
   </com.google.android.material.appbar.AppBarLayout>
 

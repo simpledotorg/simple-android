@@ -7,8 +7,8 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.annotation.VisibleForTesting
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -271,7 +271,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     screenRouter.registerKeyChanger(FullScreenKeyChanger(
         activity = this,
         screenLayoutContainerRes = android.R.id.content,
-        screenBackgroundRes = R.color.window_background,
+        screenBackgroundAttr = android.R.attr.windowBackground,
         onKeyChange = this::onScreenChanged
     ))
 

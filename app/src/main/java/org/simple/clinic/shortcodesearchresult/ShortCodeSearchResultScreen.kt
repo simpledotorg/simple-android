@@ -28,8 +28,6 @@ import org.simple.clinic.searchresultsview.PatientSearchResults
 import org.simple.clinic.searchresultsview.SearchResultsItemType
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
-import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
-import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
@@ -156,7 +154,7 @@ class ShortCodeSearchResultScreen(
   }
 
   private fun setupToolBar() {
-    toolBar.title = formatShortCodeForDisplay(context, screenKey.shortCode)
+    toolBar.title = formatShortCodeForDisplay(screenKey.shortCode)
 
     with(toolBar) {
       setNavigationOnClickListener { screenRouter.pop() }
@@ -222,10 +220,7 @@ class ShortCodeSearchResultScreen(
     emptyStateView.visibility = View.VISIBLE
   }
 
-  private fun formatShortCodeForDisplay(
-      textSpan: TextAppearanceWithLetterSpacingSpan,
-      shortCode: String
-  ): CharSequence {
+  private fun formatShortCodeForDisplay(shortCode: String): CharSequence {
     // TODO (vs): 14/12/20 Make this change
     // This is duplicated in `Identifier.displayValue()`, but unifying
     // it requires us to change the screen key of this screen to accept
@@ -234,19 +229,8 @@ class ShortCodeSearchResultScreen(
     // screen to Mobius.
     val prefix = shortCode.substring(0, 3)
     val suffix = shortCode.substring(3)
-    val formattedShortCode = "$prefix${Unicode.nonBreakingSpace}$suffix"
 
-    return Truss()
-        .pushSpan(textSpan)
-        .append(formattedShortCode)
-        .popSpan()
-        .build()
-
-  }
-
-  private fun formatShortCodeForDisplay(context: Context, shortCode: String): CharSequence {
-    val textSpacingSpan = TextAppearanceWithLetterSpacingSpan(context, R.style.TextAppearance_Simple_Body0_Numeric)
-    return formatShortCodeForDisplay(textSpacingSpan, shortCode)
+    return "$prefix${Unicode.nonBreakingSpace}$suffix"
   }
 
   interface Injector {

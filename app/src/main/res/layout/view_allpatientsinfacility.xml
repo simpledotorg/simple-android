@@ -46,7 +46,7 @@
     app:fastScrollPopupBackgroundSize="@dimen/allpatientsinfacility_fastscrollpopup_size"
     app:fastScrollPopupBgColor="?attr/colorPrimary"
     app:fastScrollPopupTextColor="?attr/colorOnPrimary"
-    app:fastScrollPopupTextSize="@dimen/textsize_24"
+    app:fastScrollPopupTextSize="@dimen/fast_scroll_pop_up_text_size"
     app:fastScrollThumbColor="?attr/colorPrimary"
     app:fastScrollTrackColor="@android:color/transparent"
     tools:listitem="@layout/list_patient_search_old" />

@@ -5,35 +5,42 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:layout_gravity="bottom"
-  android:background="@color/black"
+  android:background="?attr/colorSurface"
   android:paddingStart="@dimen/spacing_16"
   android:paddingTop="@dimen/spacing_16"
-  android:paddingEnd="@dimen/spacing_12"
+  android:paddingEnd="@dimen/spacing_8"
   android:paddingBottom="@dimen/spacing_16"
-  tools:ignore="Overdraw"
-  tools:showIn="@layout/screen_patients">
+  android:theme="@style/ThemeOverlay.Simple.UserApprovalSnackbar"
+  tools:ignore="Overdraw">
 
   <TextView
     android:id="@+id/patients_user_approved_title"
-    style="@style/Clinic.UserApprovalStatusTitle"
-    android:layout_marginStart="@dimen/spacing_12"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_toStartOf="@+id/dismissApprovedStatusButton"
-    android:text="@string/patients_user_approved_title" />
+    android:text="@string/patients_user_approved_title"
+    android:textAppearance="?attr/textAppearanceSubtitle1"
+    android:textColor="?attr/colorOnSurface" />
 
   <TextView
-    style="@style/Clinic.UserApprovalStatusMessage"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_below="@+id/patients_user_approved_title"
     android:layout_alignStart="@+id/patients_user_approved_title"
     android:layout_marginTop="@dimen/spacing_4"
     android:layout_toStartOf="@+id/dismissApprovedStatusButton"
-    android:text="@string/patients_user_approved_message" />
+    android:text="@string/patients_user_approved_message"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="@color/snackbar_subtitle" />
 
   <com.google.android.material.button.MaterialButton
     android:id="@+id/dismissApprovedStatusButton"
-    style="@style/Clinic.SnackbarAction"
+    style="?attr/borderlessButtonStyle"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentEnd="true"
     android:layout_centerVertical="true"
-    android:text="@string/patients_dismiss_user_approved_status" />
+    android:text="@string/patients_dismiss_user_approved_status"
+    android:theme="@style/ThemeOverlay.Simple.UserApprovalSnackbar.Action" />
+
 </RelativeLayout>

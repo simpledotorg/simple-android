@@ -27,26 +27,31 @@
       android:tint="?attr/colorOnToolbarPrimary"
       app:srcCompat="@drawable/ic_arrow_back_24dp" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/editPatientButton"
-      style="@style/Clinic.V2.ToolbarButton"
+      style="@style/Widget.Simple.Button.Toolbar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_alignParentEnd="true"
-      android:layout_marginTop="@dimen/spacing_4"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_marginTop="@dimen/spacing_16"
       android:layout_marginEnd="@dimen/spacing_8"
       android:text="@string/patientsummary_edit"
       android:visibility="invisible"
       tools:ignore="RelativeOverlap"
       tools:visibility="visible" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/contactTextView"
-      style="@style/Clinic.V2.ToolbarButton"
+      style="@style/Widget.Simple.Button.Toolbar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_alignParentTop="true"
-      android:layout_marginTop="@dimen/spacing_4"
+      android:layout_marginTop="@dimen/spacing_16"
       android:layout_toStartOf="@id/editPatientButton"
-      android:drawablePadding="@dimen/spacing_4"
       android:visibility="invisible"
-      app:drawableStartCompat="@drawable/ic_summary_call_icon"
+      app:icon="@drawable/ic_summary_call_icon"
+      app:iconTint="@null"
       tools:ignore="RelativeOverlap"
       tools:text="1111111111"
       tools:visibility="visible" />
@@ -107,7 +112,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textAppearance="?attr/textAppearanceBody2"
-          android:textColor="@color/white_opacity_70"
+          android:textColor="@color/color_on_toolbar_primary_72"
           tools:text="\u2022 ID: 123456789012" />
 
       </LinearLayout>
@@ -211,11 +216,12 @@
   </androidx.core.widget.NestedScrollView>
 
   <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/buttonFrame"
+    android:id="@+id/doneButtonFrame"
     style="@style/Widget.Simple.Button.Frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true">
+    android:layout_alignParentBottom="true"
+    android:visibility="visible">
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/teleconsultButton"
@@ -247,19 +253,24 @@
       app:layout_constraintTop_toTopOf="parent"
       app:layout_goneMarginStart="@dimen/spacing_0" />
 
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <FrameLayout
+    android:id="@+id/logTeleconsultButtonFrame"
+    style="@style/Widget.Simple.Button.Frame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:theme="@style/ThemeOverlay.Simple.LogTeleconsultButtonFrame"
+    android:visibility="gone">
+
     <com.google.android.material.button.MaterialButton
       android:id="@+id/logTeleconsultButton"
-      style="@style/Widget.Simple.Button.Green1"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/patientsummary_log_teleconsult"
-      android:visibility="gone"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
+      android:text="@string/patientsummary_log_teleconsult" />
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+  </FrameLayout>
 
   <org.simple.clinic.summary.linkId.LinkIdWithPatientView
     android:id="@+id/linkIdWithPatientView"

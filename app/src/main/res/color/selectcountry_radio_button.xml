@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?><!-- We are doing this, since CSL (ColorStateList) with theme attributes is not available below API 23 -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-  <item android:color="@color/simple_light_blue_500" android:state_checked="true" />
-  <item android:color="@color/simple_dark_grey" />
-</selector>

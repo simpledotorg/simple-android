@@ -10,10 +10,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.view_teleconsult_medicines.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ListItemTeleconsultMedicineBinding
+import org.simple.clinic.databinding.ViewTeleconsultMedicinesBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
@@ -41,6 +41,20 @@ class TeleconsultMedicinesView(
     attrs: AttributeSet?
 ) : ConstraintLayout(context, attrs), TeleconsultMedicinesUi, TeleconsultMedicinesUiActions {
 
+  private var binding: ViewTeleconsultMedicinesBinding? = null
+
+  private val medicinesEditButton
+    get() = binding!!.medicinesEditButton
+
+  private val medicinesRecyclerView
+    get() = binding!!.medicinesRecyclerView
+
+  private val medicinesRequiredErrorTextView
+    get() = binding!!.medicinesRequiredErrorTextView
+
+  private val emptyMedicinesTextView
+    get() = binding!!.emptyMedicinesTextView
+
   @Inject
   lateinit var effectHandlerFactory: TeleconsultMedicinesEffectHandler.Factory
 
@@ -65,7 +79,8 @@ class TeleconsultMedicinesView(
   }
 
   init {
-    LayoutInflater.from(context).inflate(R.layout.view_teleconsult_medicines, this)
+    val layoutInflater = LayoutInflater.from(context)
+    binding = ViewTeleconsultMedicinesBinding.inflate(layoutInflater, this, true)
   }
 
   private val screenKey by unsafeLazy {
@@ -113,6 +128,7 @@ class TeleconsultMedicinesView(
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
+    binding = null
     delegate.stop()
   }
 

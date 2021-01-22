@@ -6,7 +6,7 @@ import com.android.tools.lint.detector.api.CURRENT_API
 @Suppress("UnstableApiUsage")
 class SimpleIssueRegistry : IssueRegistry() {
 
-  override val issues = listOf(ImageSrcDetector.ImageSrcIssue)
+  override val issues = listOf(ImageSrcDetector.ImageSrcIssue, CardViewDetector.CardViewIssue)
 
   override val api: Int
     get() = CURRENT_API

@@ -9,6 +9,7 @@
 - Change `InstantSearchScreen` to a fragment
 - Change `ScanSimpleIdScreen` to a fragment
 - Change `HomeScreen` to a fragment
+- Remove `ScanBpPassportActivity`
 - [In Progress: 20 Jan 2021] Material Theming Migration
 - [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
 - [In Progress: 13 Jan 2020] Migrate `TheActivity` to the new navigation framework

@@ -31,8 +31,8 @@ import org.simple.clinic.drugs.PresribedDrugsRefillClicked
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -45,7 +45,7 @@ import javax.inject.Inject
 class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), EditMedicinesUi, EditMedicinesUiActions {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var effectHandlerFactory: EditMedicinesEffectHandler.Factory
@@ -117,7 +117,7 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
 
     context.injector<Injector>().inject(this)
 
-    toolbar.setNavigationOnClickListener { screenRouter.pop() }
+    toolbar.setNavigationOnClickListener { router.pop() }
     recyclerView.layoutManager = LinearLayoutManager(context)
     recyclerView.adapter = groupieAdapter
 
@@ -200,7 +200,7 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
   }
 
   override fun goBackToPatientSummary() {
-    screenRouter.pop()
+    router.pop()
   }
 
   override fun showDosageSelectionSheet(drugName: String, patientUuid: UUID, prescribedDrugUuid: UUID?) {

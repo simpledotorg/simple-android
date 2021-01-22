@@ -17,7 +17,7 @@ import org.simple.clinic.databinding.ListChangeLanguageViewBinding
 import org.simple.clinic.databinding.ScreenChangeLanguageBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.settings.Language
 import org.simple.clinic.settings.changelanguage.ChangeLanguageListItem.Event.ListItemClicked
 import org.simple.clinic.util.unsafeLazy
@@ -30,7 +30,7 @@ class ChangeLanguageScreen(
 ) : ConstraintLayout(context, attributeSet), ChangeLanguageUi, UiActions {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -92,7 +92,7 @@ class ChangeLanguageScreen(
     context.injector<Injector>().inject(this)
 
     setupLanguagesList()
-    toolbar.setNavigationOnClickListener { screenRouter.pop() }
+    toolbar.setNavigationOnClickListener { router.pop() }
   }
 
   private fun setupLanguagesList() {
@@ -149,7 +149,7 @@ class ChangeLanguageScreen(
   }
 
   override fun goBackToPreviousScreen() {
-    screenRouter.pop()
+    router.pop()
   }
 
   override fun restartActivity() {

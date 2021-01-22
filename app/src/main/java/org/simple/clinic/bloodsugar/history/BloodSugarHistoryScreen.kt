@@ -27,14 +27,15 @@ import org.simple.clinic.databinding.ListNewBloodSugarButtonBinding
 import org.simple.clinic.databinding.ScreenBloodSugarHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.TYPE_PICKER_SHEET
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfig
 import org.simple.clinic.util.UserClock
@@ -70,7 +71,10 @@ class BloodSugarHistoryScreen(
   lateinit var timeFormatter: DateTimeFormatter
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
 
   @Inject
   lateinit var effectHandlerFactory: BloodSugarHistoryScreenEffectHandler.Factory
@@ -208,7 +212,7 @@ class BloodSugarHistoryScreen(
 
   private fun handleToolbarBackClick() {
     toolbar.setNavigationOnClickListener {
-      screenRouter.pop()
+      router.pop()
     }
   }
 
@@ -226,7 +230,8 @@ class BloodSugarHistoryScreen(
 
   @SuppressLint("CheckResult")
   private fun openEntrySheetAfterTypeIsSelected(onDestroys: Observable<ScreenDestroyed>) {
-    screenRouter.streamScreenResults()
+    screenResults
+        .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(TYPE_PICKER_SHEET) { intent -> intent }
         .takeUntil(onDestroys)

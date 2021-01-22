@@ -19,7 +19,6 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientSearchCriteria
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -31,9 +30,6 @@ private typealias RegisterNewPatientClicked = () -> Unit
 private typealias SearchResultClicked = (UUID) -> Unit
 
 class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), SearchResultsUi {
-
-  @Inject
-  lateinit var screenRouter: ScreenRouter
 
   @Inject
   lateinit var effectHandler: SearchResultsEffectHandler

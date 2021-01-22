@@ -15,7 +15,6 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
@@ -38,9 +37,6 @@ class TeleconsultPatientInfoView constructor(
 
   @Inject
   lateinit var effectHandler: TeleconsultPatientInfoEffectHandler
-
-  @Inject
-  lateinit var screenRouter: ScreenRouter
 
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider

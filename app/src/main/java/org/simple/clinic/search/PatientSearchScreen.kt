@@ -21,9 +21,10 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.databinding.ScreenPatientSearchBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.PatientSearchCriteria
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -43,7 +44,7 @@ class PatientSearchScreen(
 ) : RelativeLayout(context, attrs), PatientSearchUi, PatientSearchUiActions {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -116,7 +117,7 @@ class PatientSearchScreen(
     context.injector<Injector>().inject(this)
 
     searchQueryTextInputLayout.setStartIconOnClickListener {
-      screenRouter.pop()
+      router.pop()
     }
     searchQueryEditText.showKeyboard()
 
@@ -180,7 +181,7 @@ class PatientSearchScreen(
   }
 
   override fun openSearchResultsScreen(criteria: PatientSearchCriteria) {
-    screenRouter.push(PatientSearchResultsScreenKey(criteria))
+    router.push(PatientSearchResultsScreenKey(criteria).wrap())
   }
 
   override fun setEmptyTextFieldErrorVisible(visible: Boolean) {
@@ -190,11 +191,11 @@ class PatientSearchScreen(
   }
 
   override fun openPatientSummary(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreenKey(
+    router.push(PatientSummaryScreenKey(
         patientUuid = patientUuid,
         intention = OpenIntention.ViewExistingPatient,
         screenCreatedTimestamp = Instant.now(utcClock)
-    ))
+    ).wrap())
   }
 
   override fun showAllPatientsInFacility() {

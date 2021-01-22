@@ -23,6 +23,7 @@ import org.simple.clinic.databinding.ListNewBpButtonBinding
 import org.simple.clinic.databinding.ScreenBpHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -56,7 +57,7 @@ class BloodPressureHistoryScreen(
   lateinit var config: PatientSummaryConfig
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var effectHandler: BloodPressureHistoryScreenEffectHandler.Factory
@@ -165,7 +166,7 @@ class BloodPressureHistoryScreen(
 
   private fun handleToolbarBackClick() {
     toolbar.setNavigationOnClickListener {
-      screenRouter.pop()
+      router.pop()
     }
   }
 

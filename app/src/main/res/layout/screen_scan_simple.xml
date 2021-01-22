@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.scanid.ScanSimpleIdScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/scanBpPassportView"
@@ -123,4 +123,4 @@
 
   </com.google.android.material.card.MaterialCardView>
 
-</org.simple.clinic.scanid.ScanSimpleIdScreen>
+</androidx.constraintlayout.widget.ConstraintLayout>

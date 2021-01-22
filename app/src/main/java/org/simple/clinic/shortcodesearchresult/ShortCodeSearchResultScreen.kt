@@ -21,8 +21,9 @@ import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.searchresultsview.PatientSearchResults
 import org.simple.clinic.searchresultsview.SearchResultsItemType
@@ -46,7 +47,7 @@ class ShortCodeSearchResultScreen(
   lateinit var utcClock: UtcClock
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var effectHandlerFactory: ShortCodeSearchResultEffectHandler.Factory
@@ -157,8 +158,8 @@ class ShortCodeSearchResultScreen(
     toolBar.title = formatShortCodeForDisplay(screenKey.shortCode)
 
     with(toolBar) {
-      setNavigationOnClickListener { screenRouter.pop() }
-      setOnClickListener { screenRouter.pop() }
+      setNavigationOnClickListener { router.pop() }
+      setOnClickListener { router.pop() }
     }
   }
 
@@ -183,21 +184,21 @@ class ShortCodeSearchResultScreen(
   }
 
   override fun openPatientSummary(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreenKey(
+    router.push(PatientSummaryScreenKey(
         patientUuid = patientUuid,
         intention = OpenIntention.ViewExistingPatient,
         screenCreatedTimestamp = Instant.now(utcClock)
-    ))
+    ).wrap())
   }
 
   override fun openPatientSearch() {
     val screenKey = if (features.isEnabled(Feature.InstantSearch)) {
       InstantSearchScreenKey(additionalIdentifier = null)
     } else {
-      PatientSearchScreenKey(additionalIdentifier = null)
+      PatientSearchScreenKey(additionalIdentifier = null).wrap()
     }
 
-    screenRouter.push(screenKey)
+    router.push(screenKey)
   }
 
   override fun showLoading() {

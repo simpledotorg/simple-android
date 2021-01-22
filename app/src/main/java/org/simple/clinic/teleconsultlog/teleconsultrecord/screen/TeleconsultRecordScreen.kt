@@ -8,19 +8,21 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenTeleconsultRecordBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.HandlesBack
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.router.screen.BackPressInterceptCallback
-import org.simple.clinic.router.screen.BackPressInterceptor
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessScreenKey
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.No
@@ -39,7 +41,7 @@ import javax.inject.Inject
 class TeleconsultRecordScreen(
     context: Context,
     attrs: AttributeSet
-) : ConstraintLayout(context, attrs), TeleconsultRecordUi, UiActions {
+) : ConstraintLayout(context, attrs), TeleconsultRecordUi, UiActions, HandlesBack {
 
   private var binding: ScreenTeleconsultRecordBinding? = null
 
@@ -59,7 +61,7 @@ class TeleconsultRecordScreen(
     get() = binding!!.patientConsentedCheckBox
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var effectHandlerFactory: TeleconsultRecordEffectHandler.Factory
@@ -78,6 +80,8 @@ class TeleconsultRecordScreen(
       R.id.teleconsultTypeVideoRadioButton to Video,
       R.id.teleconsultTypeMessageRadioButton to Message
   )
+
+  private val hardwareBackClicks = PublishSubject.create<BackClicked>()
 
   private val events by unsafeLazy {
     Observable
@@ -166,14 +170,14 @@ class TeleconsultRecordScreen(
   }
 
   override fun goBackToPreviousScreen() {
-    screenRouter.pop()
+    router.pop()
   }
 
   override fun navigateToTeleconsultSuccessScreen() {
-    screenRouter.push(TeleConsultSuccessScreenKey(
+    router.push(TeleConsultSuccessScreenKey(
         patientUuid = screenKey.patientUuid,
         teleconsultRecordId = screenKey.teleconsultRecordId
-    ))
+    ).wrap())
   }
 
   override fun showTeleconsultNotRecordedWarning() {
@@ -204,22 +208,19 @@ class TeleconsultRecordScreen(
         }
   }
 
-  private fun backClicks(): Observable<UiEvent> {
-    val hardwareBackKeyClicks = Observable.create<Unit> { emitter ->
-      val interceptor = object : BackPressInterceptor {
-        override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
-          emitter.onNext(Unit)
-          callback.markBackPressIntercepted()
-        }
-      }
-      emitter.setCancellable { screenRouter.unregisterBackPressInterceptor(interceptor) }
-      screenRouter.registerBackPressInterceptor(interceptor)
-    }
-
-    return toolbar
+  private fun backClicks(): Observable<TeleconsultRecordEvent> {
+    val toolbarBackClicks = toolbar
         .navigationClicks()
-        .mergeWith(hardwareBackKeyClicks)
         .map { BackClicked }
+
+    return toolbarBackClicks
+        .mergeWith(hardwareBackClicks)
+        .cast()
+  }
+
+  override fun onBackPressed(): Boolean {
+    hardwareBackClicks.onNext(BackClicked)
+    return true
   }
 
   private fun answerForBoolean(value: Boolean): Answer {

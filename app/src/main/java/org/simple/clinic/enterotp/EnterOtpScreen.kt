@@ -18,7 +18,7 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.ScreenEnterotpBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -31,7 +31,7 @@ class EnterOtpScreen(
 ) : RelativeLayout(context, attributeSet), EnterOtpUi, EnterOtpUiActions {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var country: Country
@@ -148,7 +148,7 @@ class EnterOtpScreen(
 
   override fun goBack() {
     hideKeyboard()
-    screenRouter.pop()
+    router.pop()
   }
 
   override fun showUnexpectedError() {

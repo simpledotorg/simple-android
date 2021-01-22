@@ -179,11 +179,6 @@
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustResize" />
 
-    <activity
-      android:name=".scanid.ScanBpPassportActivity"
-      android:screenOrientation="portrait"
-      android:windowSoftInputMode="adjustResize" />
-
     <receiver
       android:name=".login.OtpSmsReceiver"
       android:exported="true"

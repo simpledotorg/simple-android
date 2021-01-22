@@ -18,9 +18,11 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.teleconsultlog.drugduration.DrugDuration
 import org.simple.clinic.teleconsultlog.drugduration.DrugDurationSheet
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequencySheet
@@ -28,8 +30,8 @@ import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequencySheet
 import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreenKey
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.DividerItemDecorator
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
@@ -43,7 +45,10 @@ class TeleconsultMedicinesView(
   lateinit var effectHandlerFactory: TeleconsultMedicinesEffectHandler.Factory
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -153,7 +158,7 @@ class TeleconsultMedicinesView(
   }
 
   override fun openEditMedicines(patientUuid: UUID) {
-    screenRouter.push(PrescribedDrugsScreenKey(patientUuid))
+    router.push(PrescribedDrugsScreenKey(patientUuid).wrap())
   }
 
   override fun openDrugDurationSheet(prescription: PrescribedDrug) {
@@ -199,7 +204,8 @@ class TeleconsultMedicinesView(
   }
 
   private fun drugDurationChanges(): Observable<UiEvent> {
-    return screenRouter.streamScreenResults()
+    return screenResults
+        .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(DRUG_DURATION_SHEET) { intent ->
           DrugDurationSheet.readSavedDrugDuration(intent)
@@ -208,7 +214,8 @@ class TeleconsultMedicinesView(
   }
 
   private fun drugFrequencyChanges(): Observable<UiEvent> {
-    return screenRouter.streamScreenResults()
+    return screenResults
+        .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(DRUG_FREQUENCY_SHEET) { intent ->
           MedicineFrequencySheet.readSavedDrugFrequency(intent)

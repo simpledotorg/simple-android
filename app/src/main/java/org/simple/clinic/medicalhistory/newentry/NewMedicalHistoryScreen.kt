@@ -23,7 +23,8 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.mobius.ViewRenderer
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
@@ -39,7 +40,7 @@ class NewMedicalHistoryScreen(
 ) : RelativeLayout(context, attrs), NewMedicalHistoryUi, NewMedicalHistoryUiActions {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -112,7 +113,7 @@ class NewMedicalHistoryScreen(
     context.injector<Injector>().inject(this)
 
     toolbar.setNavigationOnClickListener {
-      screenRouter.pop()
+      router.pop()
     }
 
     post {
@@ -144,7 +145,7 @@ class NewMedicalHistoryScreen(
       .map { SaveMedicalHistoryClicked() }
 
   override fun openPatientSummaryScreen(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewNewPatient, Instant.now(utcClock)))
+    router.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewNewPatient, Instant.now(utcClock)).wrap())
   }
 
   override fun setPatientName(patientName: String) {

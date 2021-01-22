@@ -21,9 +21,12 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.summary.DRUGS_REQCODE_ALERT_FACILITY_CHANGE
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
@@ -68,7 +71,10 @@ class DrugSummaryView(
   lateinit var timestampGenerator: RelativeTimestampGenerator
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -146,13 +152,15 @@ class DrugSummaryView(
 
   @SuppressLint("CheckResult")
   private fun setupAlertResults(screenDestroys: Observable<ScreenDestroyed>) {
-    screenRouter.streamScreenResults()
+    screenResults
+        .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(DRUGS_REQCODE_ALERT_FACILITY_CHANGE) { intent ->
           AlertFacilityChangeSheet.readContinuationExtra<ContinueToScreen>(intent).screenKey
         }
         .takeUntil(screenDestroys)
-        .subscribe(screenRouter::push)
+        .map(FullScreenKey::wrap)
+        .subscribe(router::push)
   }
 
   override fun populatePrescribedDrugs(prescribedDrugs: List<PrescribedDrug>) {

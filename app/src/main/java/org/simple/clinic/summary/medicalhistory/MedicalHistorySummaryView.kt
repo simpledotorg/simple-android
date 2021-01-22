@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.MedicalhistorySummaryViewBinding
 import org.simple.clinic.di.injector
@@ -24,7 +23,6 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -62,9 +60,6 @@ class MedicalHistorySummaryView(
     get() = binding!!.diagnosisViewContainer
 
   private val internalEvents = PublishSubject.create<MedicalHistorySummaryEvent>()
-
-  @Inject
-  lateinit var screenRouter: ScreenRouter
 
   @Inject
   lateinit var activity: AppCompatActivity

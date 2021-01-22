@@ -10,10 +10,10 @@ import com.jakewharton.rxbinding3.widget.checkedChanges
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.sheet_medicine_frequency.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.SheetMedicineFrequencyBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
@@ -31,6 +31,17 @@ import java.util.UUID
 import javax.inject.Inject
 
 class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiActions {
+
+  private lateinit var binding: SheetMedicineFrequencyBinding
+
+  private val medicineFrequencyRadioGroup
+    get() = binding.medicineFrequencyRadioGroup
+
+  private val medicineFrequencyTitleTextView
+    get() = binding.medicineFrequencyTitleTextView
+
+  private val saveMedicineFrequencyButton
+    get() = binding.saveMedicineFrequencyButton
 
   @Inject
   lateinit var locale: Locale
@@ -100,7 +111,8 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.sheet_medicine_frequency)
+    binding = SheetMedicineFrequencyBinding.inflate(layoutInflater)
+    setContentView(binding.root)
     medicineFrequencyTitleTextView.text = getString(R.string.drug_duration_title, medicineFrequencyExtra.name, medicineFrequencyExtra.dosage)
   }
 

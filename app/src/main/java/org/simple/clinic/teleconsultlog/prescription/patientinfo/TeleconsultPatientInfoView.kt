@@ -3,10 +3,11 @@ package org.simple.clinic.teleconsultlog.prescription.patientinfo
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.FrameLayout
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.view_teleconsult_patient_info.view.*
 import org.simple.clinic.R
+import org.simple.clinic.databinding.ViewTeleconsultPatientInfoBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
@@ -27,6 +28,17 @@ class TeleconsultPatientInfoView constructor(
     context: Context,
     attrs: AttributeSet?
 ) : FrameLayout(context, attrs), TeleconsultPatientInfoUi {
+
+  private var binding: ViewTeleconsultPatientInfoBinding? = null
+
+  private val patientAddressTextView
+    get() = binding!!.patientAddressTextView
+
+  private val patientNameTextView
+    get() = binding!!.patientNameTextView
+
+  private val prescriptionDateTextView
+    get() = binding!!.prescriptionDateTextView
 
   @Inject
   lateinit var userClock: UserClock
@@ -59,7 +71,8 @@ class TeleconsultPatientInfoView constructor(
   }
 
   init {
-    inflate(context, R.layout.view_teleconsult_patient_info, this)
+    var layoutInflater = LayoutInflater.from(context)
+    binding = ViewTeleconsultPatientInfoBinding.inflate(layoutInflater, this, true)
   }
 
   override fun onAttachedToWindow() {
@@ -69,6 +82,7 @@ class TeleconsultPatientInfoView constructor(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

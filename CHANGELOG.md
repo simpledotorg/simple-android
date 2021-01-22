@@ -12,7 +12,8 @@
 - Remove `ScanBpPassportActivity`
 - Migrate `TheActivity` to the new navigation framework
 - [In Progress: 20 Jan 2021] Material Theming Migration
-- [In Progress: 23 Dec 2020] Migrate app to use ViewBinding
+- [In Progress: 22 Jan 2021] Migrate app to use ViewBinding
+
 
 ## On Demo
 ### Internal

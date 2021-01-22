@@ -40,7 +40,7 @@ class EnterOtpUpdate(
   ): Next<EnterOtpModel, EnterOtpEffect> {
     val updatedModel = model.loginFinished()
     return when (val result = event.result) {
-      LoginResult.Success -> next(updatedModel, ClearLoginEntry, TriggerSync, GoBack)
+      LoginResult.Success -> next(updatedModel, ClearLoginEntry, TriggerSync)
       else -> next(model.loginFailed(AsyncOpError.from(result)), ClearPin as EnterOtpEffect)
     }
   }

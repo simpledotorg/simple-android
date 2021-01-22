@@ -9,22 +9,22 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenAppLockBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.router.screen.BackPressInterceptCallback
-import org.simple.clinic.router.screen.BackPressInterceptor
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.navigation.v2.HandlesBack
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.security.pin.PinAuthenticated
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class AppLockScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), AppLockScreenUi, AppLockUiActions {
+class AppLockScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), AppLockScreenUi, AppLockUiActions, HandlesBack {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -52,10 +52,12 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(co
   private val facilityTextView
     get() = binding!!.facilityTextView
 
+  private val backClicks = PublishSubject.create<AppLockBackClicked>()
+
   private val events by unsafeLazy {
     Observable
         .merge(
-            backClicks(),
+            backClicks,
             forgotPinClicks(),
             pinAuthentications()
         )
@@ -113,17 +115,9 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(co
     pinEditText.showKeyboard()
   }
 
-  private fun backClicks(): Observable<AppLockBackClicked> {
-    return Observable.create { emitter ->
-      val interceptor = object : BackPressInterceptor {
-        override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
-          emitter.onNext(AppLockBackClicked)
-          callback.markBackPressIntercepted()
-        }
-      }
-      emitter.setCancellable { screenRouter.unregisterBackPressInterceptor(interceptor) }
-      screenRouter.registerBackPressInterceptor(interceptor)
-    }
+  override fun onBackPressed(): Boolean {
+    backClicks.onNext(AppLockBackClicked)
+    return true
   }
 
   private fun forgotPinClicks() =
@@ -146,7 +140,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(co
   }
 
   override fun restorePreviousScreen() {
-    screenRouter.pop()
+    router.pop()
   }
 
   override fun exitApp() {

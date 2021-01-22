@@ -11,13 +11,13 @@ import org.simple.clinic.databinding.ScreenTeleconsultSuccessBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.router.screen.RouterDirection.BACKWARD
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
@@ -44,7 +44,7 @@ class TeleConsultSuccessScreen(
   lateinit var effectHandler: TeleConsultSuccessEffectHandler.Factory
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var userClock: UserClock
@@ -94,7 +94,7 @@ class TeleConsultSuccessScreen(
 
   private fun backClicks() {
     toolbar.setNavigationOnClickListener {
-      screenRouter.pop()
+      router.pop()
     }
   }
 
@@ -118,11 +118,11 @@ class TeleConsultSuccessScreen(
   }
 
   override fun goToHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreenKey, direction = BACKWARD)
+    router.clearHistoryAndPush(HomeScreenKey)
   }
 
   override fun goToPrescriptionScreen(patientUuid: UUID, teleconsultRecordId: UUID) {
-    screenRouter.push(TeleconsultPrescriptionScreenKey(patientUuid = patientUuid, teleconsultRecordId = teleconsultRecordId))
+    router.push(TeleconsultPrescriptionScreenKey(patientUuid = patientUuid, teleconsultRecordId = teleconsultRecordId).wrap())
   }
 
   override fun showPatientInfo(patient: Patient) {

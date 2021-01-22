@@ -33,6 +33,8 @@ import org.simple.clinic.databinding.ScreenManualPatientEntryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AgeField
 import org.simple.clinic.newentry.form.AlternativeIdInputField
@@ -56,7 +58,6 @@ import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton
@@ -77,7 +78,7 @@ import javax.inject.Inject
 class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientEntryUi, PatientEntryValidationActions {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var crashReporter: CrashReporter
@@ -258,7 +259,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
     context.injector<Injector>().inject(this)
 
-    backButton.setOnClickListener { screenRouter.pop() }
+    backButton.setOnClickListener { router.pop() }
   }
 
   override fun setupUi(inputFields: InputFields) {
@@ -475,7 +476,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   override fun openMedicalHistoryEntryScreen() {
     hideKeyboard()
-    screenRouter.push(NewMedicalHistoryScreenKey())
+    router.push(NewMedicalHistoryScreenKey().wrap())
   }
 
   override fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility) {

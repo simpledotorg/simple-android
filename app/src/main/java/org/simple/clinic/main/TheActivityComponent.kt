@@ -32,13 +32,15 @@ import org.simple.clinic.instantsearch.InstantSearchScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
-import org.simple.clinic.navigation.di.FlowScreenKeyModule
+import org.simple.clinic.navigation.di.FragmentScreenKeyModule
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.newentry.country.di.InputFieldsFactoryModule
 import org.simple.clinic.onboarding.OnboardingScreenInjector
 import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.recentpatientsview.RecentPatientsView
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.searchresultsview.PatientSearchView
@@ -66,6 +68,7 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultNotR
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreen
 import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.simple.clinic.widgets.PatientSearchResultItemView_Old
+import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 
 @Subcomponent(modules = [TheActivityModule::class])
 interface TheActivityComponent :
@@ -120,14 +123,17 @@ interface TheActivityComponent :
     ChangeLanguageScreen.Injector,
     TeleconsultSharePrescriptionScreen.Injector,
     PatientSearchResultItemView.Injector,
-    InstantSearchScreen.Injector {
+    InstantSearchScreen.Injector,
+    ScanSimpleIdScreen.Injector,
+    QrCodeScannerView.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory
   interface Factory {
     fun create(
         @BindsInstance activity: AppCompatActivity,
-        @BindsInstance screenRouter: ScreenRouter
+        @BindsInstance router: Router,
+        @BindsInstance screenResults: ScreenResultBus
     ): TheActivityComponent
   }
 }
@@ -136,7 +142,7 @@ interface TheActivityComponent :
   PatientsModule::class,
   PagingModule::class,
   InputFieldsFactoryModule::class,
-  FlowScreenKeyModule::class
+  FragmentScreenKeyModule::class
 ])
 class TheActivityModule {
 

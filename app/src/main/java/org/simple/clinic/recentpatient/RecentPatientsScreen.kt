@@ -13,7 +13,8 @@ import org.simple.clinic.databinding.RecentPatientItemViewBinding
 import org.simple.clinic.databinding.RecentPatientsScreenBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
@@ -30,7 +31,7 @@ class RecentPatientsScreen(
 ) : LinearLayout(context, attrs), AllRecentPatientsUi, AllRecentPatientsUiActions {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -110,7 +111,7 @@ class RecentPatientsScreen(
 
   private fun setupScreen() {
     toolbar.setNavigationOnClickListener {
-      screenRouter.pop()
+      router.pop()
     }
 
     recyclerView.apply {
@@ -126,12 +127,13 @@ class RecentPatientsScreen(
   }
 
   override fun openPatientSummary(patientUuid: UUID) {
-    screenRouter.push(
+    router.push(
         PatientSummaryScreenKey(
             patientUuid = patientUuid,
             intention = OpenIntention.ViewExistingPatient,
             screenCreatedTimestamp = Instant.now(utcClock)
-        ))
+        ).wrap()
+    )
   }
 
   override fun updateRecentPatients(allItemTypes: List<RecentPatientItem>) {

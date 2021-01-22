@@ -17,7 +17,6 @@ import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.databinding.ViewTeleconsultDoctorInfoBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.signature.SignatureActivity
 import org.simple.clinic.user.User
 import org.simple.clinic.util.unsafeLazy
@@ -52,9 +51,6 @@ class TeleconsultDoctorInfoView(
 
   private val instructionsEditText
     get() = binding!!.instructionsEditText
-
-  @Inject
-  lateinit var screenRouter: ScreenRouter
 
   @Inject
   lateinit var effectHandlerFactory: TeleconsultDoctorInfoEffectHandler.Factory

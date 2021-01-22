@@ -16,14 +16,17 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
@@ -42,7 +45,10 @@ class PatientSearchResultsScreen(
 ) : RelativeLayout(context, attrs), PatientSearchResultsUi, PatientSearchResultsUiActions {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -127,13 +133,15 @@ class PatientSearchResultsScreen(
 
   @SuppressLint("CheckResult")
   private fun setupAlertResults(screenDestroys: Observable<ScreenDestroyed>) {
-    screenRouter.streamScreenResults()
+    screenResults
+        .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(ALERT_FACILITY_CHANGE) { intent ->
           AlertFacilityChangeSheet.readContinuationExtra<ContinueToScreen>(intent).screenKey
         }
         .takeUntil(screenDestroys)
-        .subscribe(screenRouter::push)
+        .map(FullScreenKey::wrap)
+        .subscribe(router::push)
   }
 
   private fun searchResultClicks(): Observable<UiEvent> {
@@ -155,10 +163,10 @@ class PatientSearchResultsScreen(
   private fun setupScreen() {
     hideKeyboard()
     toolbar.setNavigationOnClickListener {
-      screenRouter.pop()
+      router.pop()
     }
     toolbar.setOnClickListener {
-      screenRouter.pop()
+      router.pop()
     }
 
     toolbar.title = generateToolbarTitleForCriteria(screenKey.criteria)
@@ -172,11 +180,11 @@ class PatientSearchResultsScreen(
   }
 
   override fun openPatientSummaryScreen(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
+    router.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewExistingPatient, Instant.now(utcClock)).wrap())
   }
 
   override fun openLinkIdWithPatientScreen(patientUuid: UUID, identifier: Identifier) {
-    screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.LinkIdWithPatient(identifier), Instant.now(utcClock)))
+    router.push(PatientSummaryScreenKey(patientUuid, OpenIntention.LinkIdWithPatient(identifier), Instant.now(utcClock)).wrap())
   }
 
   override fun openPatientEntryScreen(facility: Facility) {

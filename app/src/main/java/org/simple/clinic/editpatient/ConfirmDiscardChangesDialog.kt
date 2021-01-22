@@ -8,13 +8,13 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.navigation.v2.Router
 import javax.inject.Inject
 
 class ConfirmDiscardChangesDialog : AppCompatDialogFragment() {
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var router: Router
 
   companion object {
     fun show(fragmentManager: FragmentManager) {
@@ -32,7 +32,7 @@ class ConfirmDiscardChangesDialog : AppCompatDialogFragment() {
     return MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_Simple_MaterialAlertDialog_Destructive)
         .setMessage(R.string.patientedit_confirm_discard_title)
         .setPositiveButton(R.string.patientedit_confirm_discard_ok) { _, _ ->
-          screenRouter.pop()
+          router.pop()
         }
         .setNegativeButton(R.string.patientedit_confirm_discard_cancel, null)
         .create()

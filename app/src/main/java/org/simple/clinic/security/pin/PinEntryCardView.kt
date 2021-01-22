@@ -8,10 +8,10 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import androidx.cardview.widget.CardView
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
+import com.google.android.material.card.MaterialCardView
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -35,7 +35,7 @@ import java.time.Duration
 import java.time.Instant
 import javax.inject.Inject
 
-class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context, attrs), PinEntryUi, UiActions {
+class PinEntryCardView(context: Context, attrs: AttributeSet) : MaterialCardView(context, attrs), PinEntryUi, UiActions {
 
   companion object {
     private const val MILLIS_IN_SECOND = 1000L

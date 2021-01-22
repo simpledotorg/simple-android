@@ -11,6 +11,8 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RelativeLayout
+import androidx.core.text.buildSpannedString
+import androidx.core.text.inSpans
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -55,7 +57,6 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.util.Truss
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton
@@ -66,7 +67,6 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.scrollToChild
-import org.simple.clinic.widgets.setCompoundDrawableStartWithTint
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
@@ -275,10 +275,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       }
     }
 
-    // Compound drawable tinting is only supported in API23+. AppCompatTextView does not have
-    // support for compound drawable tinting either, so we need to do this in code.
-    identifierTextView.setCompoundDrawableStartWithTint(R.drawable.patient_id_card, R.color.grey1)
-
     setConsentText()
     setConsentLabelText()
 
@@ -340,14 +336,15 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   private fun setConsentText() {
-    val consentText = Truss()
-        .pushSpan(StyleSpan(BOLD))
-        .append(resources.getString(R.string.patiententry_consent_header))
-        .popSpan()
-        .append(resources.getString(R.string.patiententry_consent_first_para))
-        .append("\n\n")
-        .append(resources.getString(R.string.patiententry_consent_second_para))
-        .build()
+    val consentText = buildSpannedString {
+      inSpans(StyleSpan(BOLD)) {
+        append(resources.getString(R.string.patiententry_consent_header))
+      }
+
+      append(resources.getString(R.string.patiententry_consent_first_para))
+      append("\n\n")
+      append(resources.getString(R.string.patiententry_consent_second_para))
+    }
     consentTextView.text = consentText
   }
 

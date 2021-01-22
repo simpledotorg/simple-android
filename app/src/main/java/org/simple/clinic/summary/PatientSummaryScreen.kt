@@ -5,13 +5,11 @@ import android.content.Context
 import android.os.Parcelable
 import android.text.SpannedString
 import android.text.style.BulletSpan
-import android.text.style.ForegroundColorSpan
 import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import com.jakewharton.rxbinding3.view.clicks
@@ -362,18 +360,14 @@ class PatientSummaryScreen(
     bpPassportTextView.text = when (bpPassport) {
       null -> ""
       else -> {
-        val identifierColor = ContextCompat.getColor(context, R.color.color_on_toolbar_primary_72)
-
         val identifierNumericSpan = TextAppearanceSpan(context, R.style.TextAppearance_Simple_Body2_Numeric)
-        val identifierColorSpan = ForegroundColorSpan(identifierColor)
-
         val identifier = bpPassport.identifier
         val bpPassportLabel = identifier.displayType(resources)
 
         buildSpannedString {
           append("$bpPassportLabel: ")
 
-          inSpans(identifierNumericSpan, identifierColorSpan) {
+          inSpans(identifierNumericSpan) {
             append(identifier.displayValue())
           }
         }
@@ -391,24 +385,20 @@ class PatientSummaryScreen(
   }
 
   private fun generateAlternativeId(bangladeshNationalId: BusinessId, isBpPassportVisible: Boolean): SpannedString {
-    val identifierColor = ContextCompat.getColor(context, R.color.color_on_toolbar_primary_72)
     val bangladeshNationalIdLabel = context.getString(R.string.patientsummary_bangladesh_national_id)
-
     val identifierNumericSpan = TextAppearanceSpan(context, R.style.TextAppearance_Simple_Body2_Numeric)
-    val identifierColorSpan = ForegroundColorSpan(identifierColor)
-
     val identifier = bangladeshNationalId.identifier
 
     return buildSpannedString {
       if (isBpPassportVisible) {
-        inSpans(BulletSpan(16, identifierColor)) {
+        inSpans(BulletSpan(16)) {
           append("$bangladeshNationalIdLabel: ")
         }
       } else {
         append("$bangladeshNationalIdLabel: ")
       }
 
-      inSpans(identifierNumericSpan, identifierColorSpan) {
+      inSpans(identifierNumericSpan) {
         append(identifier.displayValue())
       }
     }
@@ -515,12 +505,11 @@ class PatientSummaryScreen(
   }
 
   override fun hideDoneButton() {
-    doneButton.visibility = View.GONE
+    doneButtonFrame.visibility = View.GONE
   }
 
   override fun showTeleconsultLogButton() {
-    logTeleconsultButton.visibility = View.VISIBLE
-    buttonFrame.setBackgroundColor(ContextCompat.getColor(context, R.color.green3))
+    logTeleconsultButtonFrame.visibility = View.VISIBLE
   }
 
   override fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID) {

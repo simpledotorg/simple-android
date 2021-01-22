@@ -42,6 +42,7 @@
     <item name="textAppearanceButton">@style/TextAppearance.Simple.Button</item>
     <item name="textAppearanceButtonBig">@style/TextAppearance.Simple.Button.Big</item>
     <item name="textAppearanceTag">@style/TextAppearance.Simple.Tag</item>
+    <item name="textAppearanceCaption">@style/TextAppearance.Simple.Caption</item>
 
     <!-- Shape Appearances -->
     <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Simple.SmallComponent</item>
@@ -55,7 +56,7 @@
     <item name="colorOnPrimary">@color/white</item>
 
     <item name="colorSecondary">@color/simple_green_500</item>
-    <item name="colorSecondaryVariant">@color/simple_green_200</item>
+    <item name="colorSecondaryVariant">@color/simple_green_100</item>
 
     <item name="colorSurface">@color/white</item>
     <item name="colorOnSurface">@color/simple_dark_grey</item>

@@ -43,8 +43,8 @@
       android:layout_alignBottom="@+id/searchresults_empty_state_arrow"
       android:layout_centerHorizontal="true"
       android:layout_marginTop="@dimen/spacing_16"
-      android:layout_marginBottom="@dimen/spacing_12"
-      android:background="@color/color_on_surface_34" />
+      android:layout_marginBottom="20dp"
+      android:background="@drawable/search_results_empty_arrow_stem" />
 
     <ImageView
       android:id="@+id/searchresults_empty_state_arrow"

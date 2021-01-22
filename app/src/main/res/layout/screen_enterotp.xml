@@ -37,16 +37,15 @@
       android:maxLines="1"
       android:text="@string/enterotp_check_sms_sent_to"
       android:textAppearance="?attr/textAppearanceBody2"
-      android:textColor="@color/white_opacity_70" />
+      android:textColor="@color/white_72" />
 
     <TextView
       android:id="@+id/userPhoneNumberTextView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
-      android:textAppearance="?attr/textAppearanceHeadline6"
+      android:textAppearance="?attr/textAppearanceHeadline6Numeric"
       android:textColor="?attr/colorOnToolbarPrimary"
-      android:textSize="@dimen/textsize_20"
       tools:text="+91 1111111111" />
 
   </LinearLayout>
@@ -122,7 +121,7 @@
         android:layout_height="wrap_content"
         android:text="@string/enterotp_sms_sent"
         android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="@color/green0"
+        android:textColor="@color/simple_green_600"
         android:visibility="gone"
         tools:visibility="visible" />
 

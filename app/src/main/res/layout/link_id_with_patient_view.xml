@@ -11,21 +11,14 @@
     android:layout_height="match_parent"
     android:background="?attr/scrimBackground" />
 
-  <!--
-      A negative bottom-margin is required because CardView
-      doesn't let us change the radius of specific corners.
-   -->
   <com.google.android.material.card.MaterialCardView
     android:id="@+id/contentContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:layout_marginBottom="-4dp"
-    android:background="?attr/colorSurface"
-    android:elevation="20dp"
-    app:cardCornerRadius="4dp"
-    app:contentPaddingBottom="4dp"
-    tools:ignore="UnusedAttribute">
+    app:cardElevation="20dp"
+    app:rippleColor="@android:color/transparent"
+    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Simple.BottomSheet">
 
     <RelativeLayout
       android:layout_width="match_parent"
@@ -38,11 +31,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/spacing_16"
-        android:layout_marginTop="@dimen/spacing_24"
+        android:layout_marginTop="@dimen/spacing_8"
         android:gravity="center"
         android:text="@string/linkidwithpatient_text"
         android:textAppearance="?attr/textAppearanceHeadline6"
-        android:textColor="?attr/colorOnSurface"/>
+        android:textColor="?attr/colorOnSurface" />
 
       <TextView
         android:id="@+id/idPatientNameTextView"
@@ -50,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/idTextView"
         android:layout_marginHorizontal="@dimen/spacing_16"
-        android:layout_marginVertical="@dimen/spacing_24"
+        android:layout_marginTop="@dimen/spacing_24"
         android:gravity="center"
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:textColor="?attr/colorOnSurface"
@@ -60,20 +53,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/idPatientNameTextView"
-        android:layout_marginTop="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_32"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
           android:id="@+id/cancelButton"
-          style="@style/Widget.Simple.Button.OutlinedButton.OnSurface67"
+          style="?attr/materialButtonOutlinedStyle"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_marginEnd="@dimen/spacing_8"
           android:layout_weight="1"
-          android:text="@string/linkidwithpatient_button_back"
-          tools:ignore="ButtonStyle" />
+          android:text="@string/linkidwithpatient_button_back" />
 
         <com.google.android.material.button.MaterialButton
           android:id="@+id/addButton"
@@ -81,7 +73,6 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
           android:layout_weight="1"
-          android:gravity="center"
           android:text="@string/linkidwithpatient_button_yes" />
 
       </LinearLayout>

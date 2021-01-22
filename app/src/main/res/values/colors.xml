@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="color_primary">@color/blue0</color>
-  <color name="color_primary_dark">@color/status_bar</color>
-  <color name="color_accent">@color/blue1</color>
-  <color name="color_error">@color/red1</color>
+  <color name="simple_dark_blue_900">#0A2E52</color>
+  <color name="simple_dark_blue_800">#0C3966</color>
 
-  <color name="ripple_grey1">@color/grey1_opacity_26</color>
+  <color name="simple_light_blue_500">#0075EB</color>
+  <color name="simple_light_blue_100">#E0F0FF</color>
 
-  <color name="window_background">@color/grey4</color>
-  <color name="window_background_auth">#EBEFF0</color>
+  <color name="simple_green_600">#007A31</color>
+  <color name="simple_green_500">#00B849</color>
+  <color name="simple_green_200">#5CFF9D</color>
+  <color name="simple_green_100">#E0FFED</color>
 
-  <color name="textinputlayout_error">@color/color_error</color>
-  <color name="snackbar_action">@color/green2</color>
+  <color name="simple_dark_grey">#2F363D</color>
+  <color name="simple_light_grey">#F0F2F5</color>
+
+  <color name="simple_teal">#2FA7AE</color>
+
+  <color name="simple_red_500">#FF3355</color>
+  <color name="simple_red_100">#FFD6DD</color>
+
+  <color name="simple_yellow_500">#FFC800</color>
+  <color name="simple_yellow_100">#FFF8E0</color>
+
+  <color name="white">#FFFFFF</color>
+  <color name="white_72">#B8FFFFFF</color>
+
+  <color name="black">#000000</color>
+  <color name="black_24">#3D000000</color>
+
+  <color name="scrim_color">#52000000</color>
+  <color name="translucent_background">#52000000</color>
+
+  <color name="transparent">#00000000</color>
+
+  <color name="facility_search_query_highlight">@color/simple_light_blue_100</color>
+
+  <color name="launcher_background">@color/white</color>
 </resources>

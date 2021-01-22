@@ -7,12 +7,13 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.text.buildSpannedString
+import androidx.core.text.inSpans
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.databinding.PatientsummaryBloodsugarItemContentBinding
-import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.visibleOrGone
 
 class BloodSugarItemView(
@@ -96,7 +97,7 @@ class BloodSugarItemView(
 
   private fun renderDateTime(bloodSugarDate: String, bloodSugarTime: String?) {
     val dateTimeTextAppearanceSpan = if (bloodSugarTime != null) {
-      TextAppearanceSpan(context, R.style.TextAppearance_MaterialComponents_Caption)
+      TextAppearanceSpan(context, R.style.TextAppearance_Simple_Caption)
     } else {
       TextAppearanceSpan(context, R.style.TextAppearance_Simple_Body2)
     }
@@ -106,11 +107,11 @@ class BloodSugarItemView(
       bloodSugarDate
     }
 
-    dateTimeTextView.text = Truss()
-        .pushSpan(dateTimeTextAppearanceSpan)
-        .append(bloodSugarDateTime)
-        .popSpan()
-        .build()
+    dateTimeTextView.text = buildSpannedString {
+      inSpans(dateTimeTextAppearanceSpan) {
+        append(bloodSugarDateTime)
+      }
+    }
   }
 
   override fun onDetachedFromWindow() {

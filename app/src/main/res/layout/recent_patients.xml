@@ -16,6 +16,7 @@
     android:background="@drawable/results_row_empty_state_background"
     android:padding="@dimen/spacing_16"
     android:text="@string/patients_recentpatients_no_recent_patients"
+    android:textAlignment="center"
     android:textAppearance="?attr/textAppearanceSubtitle1"
     android:textColor="@color/color_on_surface_67"
     android:visibility="gone" />

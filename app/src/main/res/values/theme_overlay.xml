@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <style name="ThemeOverlay.Simple.WhitePrimary" parent="">
-    <item name="colorPrimary">@color/white</item>
-    <item name="colorOnPrimary">@color/simple_dark_grey</item>
+  <!-- colorSurface and colorOnSurface from main theme -->
+  <style name="ThemeOverlay.Simple.SurfacePrimary" parent="">
+    <item name="colorPrimary">?attr/colorSurface</item>
+    <item name="colorOnPrimary">?attr/colorOnSurface</item>
   </style>
 
   <style name="ThemeOverlay.Simple.Blue0Primary" parent="">
@@ -33,27 +34,19 @@
     <item name="colorOnPrimary">@color/simple_red_500</item>
   </style>
 
-  <style name="ThemeOverlay.Simple.OnSurface67Primary" parent="">
-    <item name="colorPrimary">@color/color_on_surface_67</item>
-  </style>
-
   <style name="ThemeOverlay.Simple.OnSurface34Primary" parent="">
     <item name="colorPrimary">@color/color_on_surface_34</item>
   </style>
 
   <style name="ThemeOverlay.Simple.Dialog" parent="ThemeOverlay.MaterialComponents.Dialog">
     <item name="colorSecondary">@color/simple_light_blue_500</item>
-    <item name="materialButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog</item>
+    <item name="materialButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.Flush</item>
   </style>
 
   <style name="ThemeOverlay.Simple.Dialog.Alert" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
     <item name="buttonBarNeutralButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.OnSurface34</item>
     <item name="buttonBarNegativeButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.OnSurface34</item>
     <item name="buttonBarPositiveButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog</item>
-  </style>
-
-  <style name="ThemeOverlay.Simple.Dialog.Alert.Destructive">
-    <item name="buttonBarPositiveButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.Red1</item>
   </style>
 
   <style name="ThemeOverlay.Simple.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
@@ -138,6 +131,24 @@
     <item name="android:colorBackground">@color/simple_dark_blue_800</item>
     <item name="colorOnBackground">@color/white</item>
     <item name="colorOnSurface">@color/white</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.ToolbarButton" parent="">
+    <item name="colorPrimary">@color/black_24</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.UserApprovalSnackbar" parent="">
+    <item name="colorSurface">@color/simple_dark_grey</item>
+    <item name="colorOnSurface">@color/white</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.UserApprovalSnackbar.Action" parent="">
+    <item name="colorPrimary">@color/simple_green_200</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.LogTeleconsultButtonFrame" parent="">
+    <item name="colorPrimary">@color/simple_green_500</item>
+    <item name="colorPrimaryVariant">@color/simple_green_100</item>
   </style>
 
 </resources>

@@ -1,15 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-
-  <item>
-    <shape android:shape="oval">
-      <solid android:color="@color/blue1" />
-    </shape>
-  </item>
-
-  <item>
-    <inset
-      android:drawable="@drawable/ic_call_9dp"
-      android:inset="@dimen/spacing_4" />
-  </item>
-</layer-list>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+  android:width="18dp"
+  android:height="18dp"
+  android:viewportWidth="18"
+  android:viewportHeight="18">
+  <path
+    android:fillColor="#0075EB"
+    android:pathData="M9,9m-9,0a9,9 0,1 1,18 0a9,9 0,1 1,-18 0" />
+  <path
+    android:fillColor="#0075EB"
+    android:pathData="M3,3h12v12h-12z" />
+  <path
+    android:fillColor="#ffffff"
+    android:pathData="M12.6109,10.634L11.3409,10.489C11.0359,10.454 10.7359,10.559 10.5209,10.774L9.6009,11.694C8.1859,10.974 7.0259,9.819 6.3059,8.399L7.2309,7.474C7.4459,7.259 7.5509,6.959 7.5159,6.654L7.3709,5.394C7.3109,4.889 6.8859,4.509 6.3759,4.509H5.5109C4.9459,4.509 4.4759,4.979 4.5109,5.544C4.7759,9.814 8.1909,13.224 12.4559,13.489C13.0209,13.524 13.4909,13.054 13.4909,12.489V11.624C13.4959,11.119 13.1159,10.694 12.6109,10.634Z" />
+</vector>

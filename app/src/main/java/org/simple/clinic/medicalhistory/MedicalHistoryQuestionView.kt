@@ -5,16 +5,12 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.CheckBox
 import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ListMedicalHistoryQuestionBinding
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
-import org.simple.clinic.widgets.setCompoundDrawableStart
-import org.simple.clinic.widgets.setHorizontalPadding
 
 @SuppressLint("ClickableViewAccessibility")
 class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
@@ -24,11 +20,11 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
   private val contentLayout
     get() = binding!!.contentLayout
 
-  private val yesCheckBox
-    get() = binding!!.yesCheckBox
+  private val yesChip
+    get() = binding!!.yesChip
 
-  private val noCheckBox
-    get() = binding!!.noCheckBox
+  private val noChip
+    get() = binding!!.noChip
 
   private val dividerView
     get() = binding!!.dividerView
@@ -49,23 +45,8 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
   }
 
   private fun updateCheckboxesFromAnswer(answer: Answer) {
-    yesCheckBox.isChecked = answer == Yes
-    noCheckBox.isChecked = answer == No
-
-    yesCheckBox.updateCheckBoxVisualsBasedOnCheckedState()
-    noCheckBox.updateCheckBoxVisualsBasedOnCheckedState()
-  }
-
-  private fun CheckBox.updateCheckBoxVisualsBasedOnCheckedState() {
-    if (isChecked) {
-      setTextColor(ContextCompat.getColor(context, R.color.white100))
-      setCompoundDrawableStart(R.drawable.ic_done_16dp)
-      setHorizontalPadding(R.dimen.medicalhistory_selected_padding)
-    } else {
-      setTextColor(ContextCompat.getColor(context, R.color.blue1))
-      setCompoundDrawableStart(null)
-      setHorizontalPadding(R.dimen.medicalhistory_unselected_padding)
-    }
+    yesChip.isChecked = answer == Yes
+    noChip.isChecked = answer == No
   }
 
   fun hideDivider() {
@@ -81,17 +62,17 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
       answer: Answer,
       answerChangeListener: (MedicalHistoryQuestion, Answer) -> Unit
   ) {
-    yesCheckBox.setOnCheckedChangeListener(null)
-    noCheckBox.setOnCheckedChangeListener(null)
+    yesChip.setOnCheckedChangeListener(null)
+    noChip.setOnCheckedChangeListener(null)
 
     labelTextView.setText(question.questionRes)
     updateCheckboxesFromAnswer(answer)
 
-    yesCheckBox.setOnCheckedChangeListener { _, checked ->
+    yesChip.setOnCheckedChangeListener { _, checked ->
       val newAnswer = if (checked) Yes else Unanswered
       answerChangeListener.invoke(question, newAnswer)
     }
-    noCheckBox.setOnCheckedChangeListener { _, checked ->
+    noChip.setOnCheckedChangeListener { _, checked ->
       val newAnswer = if (checked) No else Unanswered
       answerChangeListener.invoke(question, newAnswer)
     }

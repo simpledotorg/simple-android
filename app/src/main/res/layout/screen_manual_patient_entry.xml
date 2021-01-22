@@ -133,8 +133,8 @@
           android:padding="@dimen/spacing_4"
           android:textAppearance="?attr/textAppearanceBody1Numeric"
           android:textColor="?attr/colorOnBackground"
-          tools:drawableStart="@drawable/patient_id_card"
-          tools:drawableTint="@color/color_on_surface_67"
+          app:drawableStartCompat="@drawable/patient_id_card"
+          app:drawableTint="@color/color_on_surface_67"
           tools:text="123 4567" />
 
       </LinearLayout>
@@ -153,8 +153,8 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="-2dp"
           android:text="@string/patiententry_gender_female"
-          android:textColor="@color/patiententry_radio_button"
-          android:textSize="@dimen/textsize_16" />
+          android:textAppearance="?attr/textAppearanceBody2"
+          android:textColor="@color/patiententry_radio_button" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
           android:id="@+id/maleRadioButton"
@@ -162,8 +162,8 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_16"
           android:text="@string/patiententry_gender_male"
-          android:textColor="@color/patiententry_radio_button"
-          android:textSize="@dimen/textsize_16" />
+          android:textAppearance="?attr/textAppearanceBody2"
+          android:textColor="@color/patiententry_radio_button" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
           android:id="@+id/transgenderRadioButton"
@@ -173,8 +173,8 @@
           android:ellipsize="end"
           android:maxLines="1"
           android:text="@string/patiententry_gender_transgender"
-          android:textColor="@color/patiententry_radio_button"
-          android:textSize="@dimen/textsize_16" />
+          android:textAppearance="?attr/textAppearanceBody2"
+          android:textColor="@color/patiententry_radio_button" />
 
       </RadioGroup>
 

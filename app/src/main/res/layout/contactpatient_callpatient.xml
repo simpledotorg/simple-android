@@ -76,7 +76,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_16"
     android:text="@string/contactpatient_agreed_to_visit"
-    app:drawableStartCompat="@drawable/ic_radio_button_unchecked_green1_24dp"
+    app:drawableStartCompat="@drawable/ic_radio_button_unchecked_green"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/resultOfCallLabel" />
@@ -98,7 +98,7 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:text="@string/contactpatient_remind_call_later"
-    app:drawableStartCompat="@drawable/ic_radio_button_unchecked_yellow0_24dp"
+    app:drawableStartCompat="@drawable/ic_radio_button_unchecked_yellow"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/agreedToVisitSeparator" />
@@ -120,7 +120,7 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:text="@string/contactpatient_remove_from_list"
-    app:drawableStartCompat="@drawable/ic_radio_button_unchecked_red1_24dp"
+    app:drawableStartCompat="@drawable/ic_radio_button_unchecked_red"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/remindToCallLaterSeparator" />

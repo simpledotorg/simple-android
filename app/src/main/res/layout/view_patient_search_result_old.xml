@@ -5,7 +5,7 @@
   android:layout_height="wrap_content"
   tools:context="org.simple.clinic.widgets.PatientSearchResultItemView_Old"
   tools:layout_margin="@dimen/spacing_8"
-  tools:parentTag="androidx.cardview.widget.CardView">
+  tools:parentTag="com.google.android.material.card.MaterialCardView">
 
   <LinearLayout
     android:layout_width="match_parent"

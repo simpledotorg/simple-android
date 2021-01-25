@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.f2prateek.rx.preferences2.Preference
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetAlertFacilityChangeBinding
@@ -18,6 +20,8 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
+import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.FullScreenKey
 import java.util.Locale
 import javax.inject.Inject
@@ -39,6 +43,11 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
+
+  private val subscriptions = CompositeDisposable()
 
   override fun defaultModel() = AlertFacilityChangeModel()
 
@@ -110,15 +119,24 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
       changeButton.setOnClickListener {
         openFacilityChangeScreen()
       }
+
+      listenForFacilityChangeResults()
     }
   }
 
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    super.onActivityResult(requestCode, resultCode, data)
+  private fun listenForFacilityChangeResults() {
+    val subscription = screenResults
+        .streamResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == FACILITY_CHANGE }
+        .subscribe { result -> closeSheetWithResult(result.resultCode) }
 
-    if (requestCode == FACILITY_CHANGE) {
-      closeSheetWithResult(resultCode)
-    }
+    subscriptions.add(subscription)
+  }
+
+  override fun onDestroyView() {
+    subscriptions.clear()
+    super.onDestroyView()
   }
 
   private fun closeSheetWithResult(resultCode: Int) {

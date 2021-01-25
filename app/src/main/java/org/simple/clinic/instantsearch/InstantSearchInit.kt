@@ -7,16 +7,19 @@ import com.spotify.mobius.Init
 class InstantSearchInit : Init<InstantSearchModel, InstantSearchEffect> {
 
   override fun init(model: InstantSearchModel): First<InstantSearchModel, InstantSearchEffect> {
+    var modelToEmit = model
     val effects = mutableSetOf<InstantSearchEffect>()
 
-    if (model.hasAdditionalIdentifier)
-      effects.add(OpenBpPassportSheet(model.additionalIdentifier!!))
+    if (modelToEmit.hasAdditionalIdentifier && !modelToEmit.bpPassportSheetAlreadyOpened) {
+      effects.add(OpenBpPassportSheet(modelToEmit.additionalIdentifier!!))
+      modelToEmit = modelToEmit.bpPassportSheetOpened()
+    }
 
-    if (model.hasFacility)
-      effects.add(ValidateSearchQuery(model.searchQuery.orEmpty()))
+    if (modelToEmit.hasFacility)
+      effects.add(ValidateSearchQuery(modelToEmit.searchQuery.orEmpty()))
     else
       effects.add(LoadCurrentFacility)
 
-    return first(model, effects)
+    return first(modelToEmit, effects)
   }
 }

@@ -7,6 +7,7 @@ import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.util.matchers.IterableNotContaining.Companion.doesNotContain
 import java.util.UUID
 
 class InstantSearchInitTest {
@@ -35,7 +36,7 @@ class InstantSearchInitTest {
     initSpec
         .whenInit(defaultModel)
         .then(assertThatFirst(
-            hasModel(defaultModel),
+            hasModel(defaultModel.bpPassportSheetOpened()),
             hasEffects(LoadCurrentFacility, OpenBpPassportSheet(identifier))
         ))
   }
@@ -48,6 +49,7 @@ class InstantSearchInitTest {
         name = "PHC Obvious"
     )
     val facilityLoadedModel = defaultModel
+        .bpPassportSheetOpened()
         .facilityLoaded(facility)
         .searchQueryChanged("Pa")
 
@@ -55,7 +57,19 @@ class InstantSearchInitTest {
         .whenInit(facilityLoadedModel)
         .then(assertThatFirst(
             hasModel(facilityLoadedModel),
-            hasEffects(ValidateSearchQuery("Pa"), OpenBpPassportSheet(identifier))
+            hasEffects(ValidateSearchQuery("Pa"))
+        ))
+  }
+
+  @Test
+  fun `when screen is restored after receiving the BP Passport sheet result, then do not open bp passport sheet`() {
+    val model = defaultModel.bpPassportSheetOpened()
+
+    initSpec
+        .whenInit(model)
+        .then(assertThatFirst(
+            hasModel(model),
+            hasEffects(doesNotContain(OpenBpPassportSheet(identifier)))
         ))
   }
 }

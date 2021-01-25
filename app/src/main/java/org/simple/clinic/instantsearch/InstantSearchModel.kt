@@ -56,4 +56,8 @@ data class InstantSearchModel(
   fun searchResultsLoaded(): InstantSearchModel {
     return copy(instantSearchProgressState = InstantSearchProgressState.DONE)
   }
+
+  fun bpPassportSheetOpened(): InstantSearchModel {
+    return copy(bpPassportSheetAlreadyOpened = true)
+  }
 }

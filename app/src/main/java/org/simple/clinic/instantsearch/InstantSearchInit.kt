@@ -9,7 +9,7 @@ class InstantSearchInit : Init<InstantSearchModel, InstantSearchEffect> {
   override fun init(model: InstantSearchModel): First<InstantSearchModel, InstantSearchEffect> {
     val effects = mutableSetOf<InstantSearchEffect>()
 
-    if (model.hasAdditionalIdentifier)
+    if (model.hasAdditionalIdentifier && !model.bpPassportSheetAlreadyOpened)
       effects.add(OpenBpPassportSheet(model.additionalIdentifier!!))
 
     if (model.hasFacility)

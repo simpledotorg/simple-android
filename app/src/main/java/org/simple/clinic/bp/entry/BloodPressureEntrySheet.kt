@@ -6,7 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
@@ -14,8 +16,11 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
+import com.spotify.mobius.Init
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
@@ -35,12 +40,12 @@ import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -55,7 +60,16 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, RemoveBloodPressureListener {
+class BloodPressureEntrySheet :
+    BaseBottomSheet<
+        BloodPressureEntrySheet.Key,
+        SheetBloodPressureEntryBinding,
+        BloodPressureEntryModel,
+        BloodPressureEntryEvent,
+        BloodPressureEntryEffect,
+        BloodPressureEntryUiRenderer>(),
+    BloodPressureEntryUi,
+    RemoveBloodPressureListener {
 
   @Inject
   @Named("exact_date")
@@ -107,6 +121,37 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
 
   @Inject
   lateinit var effectHandlerFactory: BloodPressureEntryEffectHandler.Factory
+
+  override fun defaultModel() = BloodPressureEntryModel.create(screenKey.openAs, LocalDate.now(userClock).year)
+
+  override fun uiRenderer() = BloodPressureEntryUiRenderer(this)
+
+  override fun bindView(inflater: LayoutInflater, container: ViewGroup?) =
+      SheetBloodPressureEntryBinding.inflate(layoutInflater, container, false)
+
+  override fun events() = Observable
+      .mergeArray(
+          systolicTextChanges(),
+          diastolicTextChanges(),
+          imeDoneClicks(),
+          diastolicBackspaceClicks(),
+          removeClicks(),
+          bpDateClicks(),
+          backClicks(),
+          hardwareBackPresses(),
+          screenTypeChanges(),
+          dayTextChanges(),
+          monthTextChanges(),
+          yearTextChanges()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<BloodPressureEntryEvent>()
+
+  override fun createUpdate() = BloodPressureEntryUpdate(dateValidator, LocalDate.now(userTimeZone), userInputDatePaddingCharacter)
+
+  override fun createInit() = BloodPressureEntryInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
   private lateinit var component: BloodPressureEntryComponent
 

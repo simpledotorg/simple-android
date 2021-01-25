@@ -191,12 +191,6 @@ class BloodPressureEntrySheet :
   private val bloodPressureEntryLayout
     get() = binding.bloodPressureEntryLayout
 
-  override fun onBackgroundClick() {
-    if (systolicEditText.text.isNullOrBlank() && diastolicEditText.text.isNullOrBlank()) {
-      super.onBackgroundClick()
-    }
-  }
-
   private fun systolicTextChanges() = systolicEditText
       .textChanges()
       .map(CharSequence::toString)

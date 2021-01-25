@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
+import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
@@ -18,6 +19,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -32,6 +34,7 @@ import org.simple.clinic.databinding.SheetBloodPressureEntryBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.unsafeLazy
@@ -490,4 +493,18 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
 
   private fun getPaddedString(value: String): String =
       value.padStart(length = 2, padChar = userInputDatePaddingCharacter.value)
+
+  @Parcelize
+  data class Key(
+      val openAs: OpenAs
+  ) : ScreenKey() {
+
+    override val analyticsName = "Blood Pressure Entry"
+
+    override fun instantiateFragment(): Fragment {
+
+    }
+
+    override val type = ScreenType.Modal
+  }
 }

@@ -18,7 +18,9 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
@@ -46,6 +48,9 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
 
   @Inject
   lateinit var screenResults: ScreenResultBus
+
+  @Inject
+  lateinit var router: Router
 
   private val subscriptions = CompositeDisposable()
 
@@ -144,9 +149,7 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
       isFacilitySwitchedPreference.set(false)
       closeSheetWithContinuation()
     } else {
-      val intent = Intent()
-      setResult(resultCode, intent)
-      finish()
+      router.popWithResult(Succeeded(FacilityChanged()))
     }
   }
 
@@ -177,6 +180,9 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
   interface Injector {
     fun inject(target: AlertFacilityChangeSheet)
   }
+
+  @Parcelize
+  class FacilityChanged : Parcelable
 }
 
 sealed class Continuation : Parcelable {

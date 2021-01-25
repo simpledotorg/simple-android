@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
-import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
@@ -438,9 +437,7 @@ class BloodPressureEntrySheet :
 
     override val analyticsName = "Blood Pressure Entry"
 
-    override fun instantiateFragment(): Fragment {
-
-    }
+    override fun instantiateFragment() = BloodPressureEntrySheet()
 
     override val type = ScreenType.Modal
   }

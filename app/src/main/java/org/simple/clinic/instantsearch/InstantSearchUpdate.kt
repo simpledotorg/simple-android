@@ -106,7 +106,7 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
     if (!model.hasSearchQuery) return noChange()
 
     val effect = if (event.patientsSearchResults.isNotEmpty())
-      ShowPatientSearchResults(event.patientsSearchResults, model.facility!!)
+      ShowPatientSearchResults(event.patientsSearchResults, model.facility!!, model.searchQuery!!)
     else
       ShowNoSearchResults
 

@@ -7,7 +7,7 @@ import java.util.UUID
 
 interface InstantSearchUiActions {
   fun showAllPatients(patients: List<PatientSearchResult>, facility: Facility)
-  fun showPatientsSearchResults(patients: List<PatientSearchResult>, facility: Facility)
+  fun showPatientsSearchResults(patients: List<PatientSearchResult>, facility: Facility, searchQuery: String)
   fun openPatientSummary(patientId: UUID)
   fun openLinkIdWithPatientScreen(patientId: UUID, identifier: Identifier)
   fun openBpPassportSheet(identifier: Identifier)

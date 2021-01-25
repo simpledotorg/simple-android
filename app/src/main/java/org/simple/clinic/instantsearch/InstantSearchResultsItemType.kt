@@ -19,29 +19,35 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
 
     fun from(
         patientSearchResults: List<PatientSearchResult>,
-        currentFacility: Facility
+        currentFacility: Facility,
+        searchQuery: String?
     ): List<InstantSearchResultsItemType> {
       val (assignedFacilityPatients, nearbyFacilitiesPatients) = patientSearchResults
           .partition { it.assignedFacilityId == currentFacility.uuid }
 
-      val assignedFacilityPatientsGroup = generateAssignedFacilityPatientsGroup(assignedFacilityPatients, currentFacility)
-      val nearbyFacilitiesPatientsGroup = generateNearbyFacilitiesPatientsGroup(nearbyFacilitiesPatients, currentFacility)
+      val assignedFacilityPatientsGroup = generateAssignedFacilityPatientsGroup(assignedFacilityPatients, currentFacility, searchQuery)
+      val nearbyFacilitiesPatientsGroup = generateNearbyFacilitiesPatientsGroup(nearbyFacilitiesPatients, currentFacility, searchQuery)
 
       return assignedFacilityPatientsGroup + nearbyFacilitiesPatientsGroup
     }
 
     private fun generateAssignedFacilityPatientsGroup(
         assignedFacilityPatients: List<PatientSearchResult>,
-        currentFacility: Facility
+        currentFacility: Facility,
+        searchQuery: String?
     ) = if (assignedFacilityPatients.isNotEmpty()) {
-      listOf(AssignedFacilityHeader(currentFacility.name)) + SearchResult.forSearchResults(assignedFacilityPatients, currentFacility.uuid)
+      listOf(AssignedFacilityHeader(currentFacility.name)) + SearchResult.forSearchResults(assignedFacilityPatients, currentFacility.uuid, searchQuery)
     } else {
       emptyList()
     }
 
-    private fun generateNearbyFacilitiesPatientsGroup(nearbyFacilitiesPatients: List<PatientSearchResult>, currentFacility: Facility) =
+    private fun generateNearbyFacilitiesPatientsGroup(
+        nearbyFacilitiesPatients: List<PatientSearchResult>,
+        currentFacility: Facility,
+        searchQuery: String?
+    ) =
         if (nearbyFacilitiesPatients.isNotEmpty()) {
-          listOf(NearbyFacilitiesHeader) + SearchResult.forSearchResults(nearbyFacilitiesPatients, currentFacility.uuid)
+          listOf(NearbyFacilitiesHeader) + SearchResult.forSearchResults(nearbyFacilitiesPatients, currentFacility.uuid, searchQuery)
         } else {
           emptyList()
         }
@@ -81,17 +87,19 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
 
   data class SearchResult(
       val searchResultViewModel: PatientSearchResultViewModel,
-      val currentFacilityId: UUID
+      val currentFacilityId: UUID,
+      val searchQuery: String?
   ) : InstantSearchResultsItemType() {
 
     companion object {
       fun forSearchResults(
           searchResults: List<PatientSearchResult>,
-          currentFacilityId: UUID
+          currentFacilityId: UUID,
+          searchQuery: String?
       ): List<SearchResult> {
         return searchResults
             .map(::mapPatientSearchResultToViewModel)
-            .map { searchResultViewModel -> SearchResult(searchResultViewModel, currentFacilityId) }
+            .map { searchResultViewModel -> SearchResult(searchResultViewModel, currentFacilityId, searchQuery) }
       }
 
       private fun mapPatientSearchResultToViewModel(searchResult: PatientSearchResult): PatientSearchResultViewModel {
@@ -117,7 +125,7 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
       binding.patientSearchResultView.setOnClickListener {
         subject.onNext(Event.ResultClicked(searchResultViewModel.uuid))
       }
-      binding.patientSearchResultView.render(searchResultViewModel, currentFacilityId)
+      binding.patientSearchResultView.render(searchResultViewModel, currentFacilityId, searchQuery)
     }
   }
 

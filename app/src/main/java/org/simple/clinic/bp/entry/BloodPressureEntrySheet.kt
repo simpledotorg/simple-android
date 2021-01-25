@@ -2,7 +2,6 @@ package org.simple.clinic.bp.entry
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
@@ -14,13 +13,10 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
-import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.toObservable
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
@@ -31,7 +27,6 @@ import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodP
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog.RemoveBloodPressureListener
 import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
 import org.simple.clinic.databinding.SheetBloodPressureEntryBinding
-import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -39,9 +34,6 @@ import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
-import org.simple.clinic.util.withLocale
-import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.displayedChildResId
@@ -78,8 +70,6 @@ class BloodPressureEntrySheet :
 
   @Inject
   lateinit var router: Router
-
-  private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
 
   enum class ScreenType {
     BP_ENTRY,
@@ -200,34 +190,6 @@ class BloodPressureEntrySheet :
 
   private val bloodPressureEntryLayout
     get() = binding.bloodPressureEntryLayout
-
-  override fun attachBaseContext(baseContext: Context) {
-    setupDiGraph()
-
-    val wrappedContext = baseContext
-        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
-        .wrap { ViewPumpContextWrapper.wrap(it) }
-
-    super.attachBaseContext(wrappedContext)
-    applyOverrideConfiguration(Configuration())
-  }
-
-  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
-  }
-
-  private fun setupDiGraph() {
-    component = ClinicApp.appComponent
-        .bloodPressureEntryComponent()
-        .create(activity = this)
-
-    component.inject(this)
-  }
-
-  override fun onDestroy() {
-    screenDestroys.onNext(ScreenDestroyed())
-    super.onDestroy()
-  }
 
   override fun onBackgroundClick() {
     if (systolicEditText.text.isNullOrBlank() && diastolicEditText.text.isNullOrBlank()) {

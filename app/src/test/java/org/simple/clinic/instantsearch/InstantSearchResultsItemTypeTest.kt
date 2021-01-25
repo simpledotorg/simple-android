@@ -12,6 +12,8 @@ class InstantSearchResultsItemTypeTest {
   private val currentFacilityUuid = UUID.fromString("69cf85c8-6788-4071-b985-0536ae606b70")
   private val otherFacilityUuid = UUID.fromString("28ed7dca-828e-4178-942f-fd6937f37155")
   private val currentFacility = TestData.facility(currentFacilityUuid)
+  private val searchQueryReceived = "A"
+  private val searchQueryEmpty = ""
 
   @Test
   fun `list items must be generated from the search results`() {
@@ -28,7 +30,8 @@ class InstantSearchResultsItemTypeTest {
     // when
     val listItems = InstantSearchResultsItemType.from(
         patientSearchResults = searchResults,
-        currentFacility = currentFacility
+        currentFacility = currentFacility,
+        searchQuery = searchQueryReceived
     )
 
     // then
@@ -45,8 +48,9 @@ class InstantSearchResultsItemTypeTest {
                 phoneNumber = patientSearchResult1.phoneNumber,
                 lastSeen = patientSearchResult1.lastSeen
             ),
-            currentFacilityId = currentFacilityUuid
-        ),
+            currentFacilityId = currentFacilityUuid,
+            searchQuery = searchQueryReceived
+         ),
         InstantSearchResultsItemType.NearbyFacilitiesHeader,
         InstantSearchResultsItemType.SearchResult(
             searchResultViewModel = PatientSearchResultItemView.PatientSearchResultViewModel(
@@ -59,7 +63,8 @@ class InstantSearchResultsItemTypeTest {
                 phoneNumber = patientSearchResult2.phoneNumber,
                 lastSeen = patientSearchResult2.lastSeen
             ),
-            currentFacilityId = currentFacilityUuid
+            currentFacilityId = currentFacilityUuid,
+            searchQuery = searchQueryReceived
         )
     )
     assertThat(listItems).isEqualTo(expected)
@@ -80,7 +85,8 @@ class InstantSearchResultsItemTypeTest {
     // when
     val listItems = InstantSearchResultsItemType.from(
         patientSearchResults = searchResults,
-        currentFacility = currentFacility
+        currentFacility = currentFacility,
+        searchQuery = searchQueryEmpty
     )
 
     // then
@@ -97,7 +103,8 @@ class InstantSearchResultsItemTypeTest {
                 phoneNumber = patientSearchResult1.phoneNumber,
                 lastSeen = patientSearchResult1.lastSeen
             ),
-            currentFacilityId = currentFacilityUuid
+            currentFacilityId = currentFacilityUuid,
+            searchQuery = searchQueryEmpty
         ),
         InstantSearchResultsItemType.SearchResult(
             searchResultViewModel = PatientSearchResultItemView.PatientSearchResultViewModel(
@@ -110,7 +117,8 @@ class InstantSearchResultsItemTypeTest {
                 phoneNumber = patientSearchResult2.phoneNumber,
                 lastSeen = patientSearchResult2.lastSeen
             ),
-            currentFacilityId = currentFacilityUuid
+            currentFacilityId = currentFacilityUuid,
+            searchQuery = searchQueryEmpty
         )
     )
     assertThat(listItems).isEqualTo(expected)
@@ -131,7 +139,8 @@ class InstantSearchResultsItemTypeTest {
     // when
     val listItems = InstantSearchResultsItemType.from(
         patientSearchResults = searchResults,
-        currentFacility = currentFacility
+        currentFacility = currentFacility,
+        searchQuery = searchQueryEmpty
     )
 
     // then
@@ -148,7 +157,9 @@ class InstantSearchResultsItemTypeTest {
                 phoneNumber = patientSearchResult1.phoneNumber,
                 lastSeen = patientSearchResult1.lastSeen
             ),
-            currentFacilityId = currentFacilityUuid
+            currentFacilityId = currentFacilityUuid,
+            searchQuery = searchQueryEmpty
+
         ),
         InstantSearchResultsItemType.SearchResult(
             searchResultViewModel = PatientSearchResultItemView.PatientSearchResultViewModel(
@@ -161,7 +172,8 @@ class InstantSearchResultsItemTypeTest {
                 phoneNumber = patientSearchResult2.phoneNumber,
                 lastSeen = patientSearchResult2.lastSeen
             ),
-            currentFacilityId = currentFacilityUuid
+            currentFacilityId = currentFacilityUuid,
+            searchQuery = searchQueryEmpty
         )
     )
     assertThat(listItems).isEqualTo(expected)
@@ -175,7 +187,8 @@ class InstantSearchResultsItemTypeTest {
     // when
     val listItems = InstantSearchResultsItemType.from(
         patientSearchResults = searchResults,
-        currentFacility = currentFacility
+        currentFacility = currentFacility,
+        searchQuery = searchQueryEmpty
     )
 
     // then

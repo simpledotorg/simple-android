@@ -92,6 +92,7 @@ class InstantSearchUpdateTest {
         uuid = UUID.fromString("34eb57a9-d80a-4f43-9f89-1e2dade3de3f"),
         name = "PHC Obvious"
     )
+    val searchQuery = "Pat"
     val searchQueryModel = defaultModel
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
@@ -101,7 +102,7 @@ class InstantSearchUpdateTest {
         .whenEvent(SearchResultsLoaded(patients))
         .then(assertThatNext(
             hasModel(searchQueryModel.searchResultsLoaded()),
-            hasEffects(ShowPatientSearchResults(patients, facility))
+            hasEffects(ShowPatientSearchResults(patients, facility, searchQuery))
         ))
   }
 

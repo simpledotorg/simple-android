@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.fragment.app.Fragment
 import com.f2prateek.rx.preferences2.Preference
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import kotlinx.android.parcel.Parcelize
@@ -14,6 +15,7 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetAlertFacilityChangeBinding
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.feature.Features
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
@@ -149,6 +151,21 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
 
   private fun openFacilityChangeScreen() {
     startActivityForResult(FacilityChangeActivity.intent(this), FACILITY_CHANGE)
+  }
+
+  @Parcelize
+  data class Key(
+      val currentFacilityName: String,
+      val continuation: Continuation
+  ) : ScreenKey() {
+
+    override val analyticsName = "Alert Facility Change"
+
+    override val type = ScreenType.Modal
+
+    override fun instantiateFragment(): Fragment {
+
+    }
   }
 }
 

@@ -13,6 +13,7 @@
 - Migrate `TheActivity` to the new navigation framework
 - Add `CardViewDetector` lint for warning when using androidx/appcompat `CardView`
 - Add `TextViewTextSizeDetector` lint for warning when using `TextView#textSize`
+- Bump AGP to v4.1.2
 - [In Progress: 20 Jan 2021] Material Theming Migration
 - [In Progress: 22 Jan 2021] Migrate app to use ViewBinding
 

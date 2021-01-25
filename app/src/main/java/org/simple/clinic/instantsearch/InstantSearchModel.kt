@@ -10,7 +10,8 @@ data class InstantSearchModel(
     val facility: Facility?,
     val searchQuery: String?,
     val additionalIdentifier: Identifier?,
-    val instantSearchProgressState: InstantSearchProgressState?
+    val instantSearchProgressState: InstantSearchProgressState?,
+    val bpPassportSheetAlreadyOpened: Boolean
 ) : Parcelable {
 
   val hasFacility: Boolean
@@ -27,7 +28,8 @@ data class InstantSearchModel(
         facility = null,
         searchQuery = null,
         additionalIdentifier = additionalIdentifier,
-        instantSearchProgressState = null
+        instantSearchProgressState = null,
+        bpPassportSheetAlreadyOpened = false
     )
   }
 

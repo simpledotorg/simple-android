@@ -346,16 +346,16 @@ class BloodPressureEntrySheet :
   }
 
   override fun showConfirmRemoveBloodPressureDialog(uuid: UUID) {
-    ConfirmRemoveBloodPressureDialog.show(uuid, supportFragmentManager)
+    ConfirmRemoveBloodPressureDialog.show(uuid, parentFragmentManager)
   }
 
   override fun showBpEntryScreen() {
     viewFlipper.inAnimation = AnimationUtils
-        .loadAnimation(this, R.anim.measurementinput_reading_entry_from_left)
+        .loadAnimation(requireContext(), R.anim.measurementinput_reading_entry_from_left)
         .apply { interpolator = FastOutSlowInInterpolator() }
 
     viewFlipper.outAnimation = AnimationUtils
-        .loadAnimation(this, R.anim.measurementinput_date_exit_to_right)
+        .loadAnimation(requireContext(), R.anim.measurementinput_date_exit_to_right)
         .apply { interpolator = FastOutSlowInInterpolator() }
 
     viewFlipper.displayedChildResId = R.id.bloodpressureentry_flipper_bp_entry
@@ -363,11 +363,11 @@ class BloodPressureEntrySheet :
 
   override fun showDateEntryScreen() {
     viewFlipper.inAnimation = AnimationUtils
-        .loadAnimation(this, R.anim.measurementinput_date_entry_from_right)
+        .loadAnimation(requireContext(), R.anim.measurementinput_date_entry_from_right)
         .apply { interpolator = FastOutSlowInInterpolator() }
 
     viewFlipper.outAnimation = AnimationUtils
-        .loadAnimation(this, R.anim.measurementinput_reading_exit_to_left)
+        .loadAnimation(requireContext(), R.anim.measurementinput_reading_exit_to_left)
         .apply { interpolator = FastOutSlowInInterpolator() }
 
     viewFlipper.displayedChildResId = R.id.bloodpressureentry_flipper_date_entry

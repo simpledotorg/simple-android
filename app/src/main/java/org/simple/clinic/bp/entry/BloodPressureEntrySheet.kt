@@ -1,11 +1,11 @@
 package org.simple.clinic.bp.entry
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +16,8 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
-import com.spotify.mobius.Init
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.toObservable
@@ -39,7 +37,9 @@ import org.simple.clinic.databinding.SheetBloodPressureEntryBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
@@ -81,6 +81,9 @@ class BloodPressureEntrySheet :
   @Inject
   lateinit var features: Features
 
+  @Inject
+  lateinit var router: Router
+
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
 
   enum class ScreenType {
@@ -90,7 +93,6 @@ class BloodPressureEntrySheet :
 
   companion object {
     private const val KEY_OPEN_AS = "openAs"
-    private const val EXTRA_WAS_BP_SAVED = "wasBpSaved"
 
     fun intentForNewBp(context: Context, patientUuid: UUID): Intent {
       return Intent(context, BloodPressureEntrySheet::class.java)
@@ -102,8 +104,9 @@ class BloodPressureEntrySheet :
           .putExtra(KEY_OPEN_AS, Update(bloodPressureMeasurementUuid))
     }
 
-    fun wasBloodPressureSaved(data: Intent): Boolean {
-      return data.getBooleanExtra(EXTRA_WAS_BP_SAVED, false)
+    fun wasBloodPressureSaved(result: Succeeded): Boolean {
+      val savedBpResult = result.result as BloodPressureSavedResult
+      return savedBpResult.saved
     }
   }
 
@@ -500,7 +503,8 @@ class BloodPressureEntrySheet :
   }
 
   override fun dismiss() {
-    finish()
+    val result = BloodPressureSavedResult.notSaved()
+    router.popWithResult(Succeeded(result))
   }
 
   override fun showProgress() {
@@ -523,10 +527,8 @@ class BloodPressureEntrySheet :
   }
 
   private fun markBpAsSavedAndFinish() {
-    val intent = Intent()
-    intent.putExtra(EXTRA_WAS_BP_SAVED, true)
-    setResult(Activity.RESULT_OK, intent)
-    finish()
+    val result = BloodPressureSavedResult.saved()
+    router.popWithResult(Succeeded(result))
   }
 
   private fun showBpErrorMessage(message: String) {
@@ -551,5 +553,15 @@ class BloodPressureEntrySheet :
     }
 
     override val type = ScreenType.Modal
+  }
+
+  @Parcelize
+  data class BloodPressureSavedResult(val saved: Boolean) : Parcelable {
+
+    companion object {
+      fun saved() = BloodPressureSavedResult(true)
+
+      fun notSaved() = BloodPressureSavedResult(false)
+    }
   }
 }

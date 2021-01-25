@@ -12,6 +12,7 @@ import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
+import com.spotify.mobius.EventSource
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -27,6 +28,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation
+import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -82,6 +84,8 @@ class InstantSearchScreen :
 
   private val subscriptions = CompositeDisposable()
 
+  private val bpPassportSheetResultsEventSource = DeferredEventSource<InstantSearchEvent>()
+
   private val instantSearchToolbar
     get() = binding.instantSearchToolbar
 
@@ -136,9 +140,12 @@ class InstantSearchScreen :
           allPatientsItemClicks(),
           searchItemClicks(),
           searchQueryChanges(),
-          registerNewPatientClicks(),
-          blankBpPassportResults()
+          registerNewPatientClicks()
       ).cast<InstantSearchEvent>()
+
+  override fun additionalEventSources(): List<EventSource<InstantSearchEvent>> {
+    return listOf(bpPassportSheetResultsEventSource)
+  }
 
   override fun createUpdate() = InstantSearchUpdate()
 
@@ -171,7 +178,8 @@ class InstantSearchScreen :
     subscriptions.addAll(
         setupAlertResults(),
         hideKeyboardOnSearchResultsScroll(),
-        hideKeyboardOnImeAction()
+        hideKeyboardOnImeAction(),
+        blankBpPassportResults()
     )
   }
 
@@ -289,12 +297,13 @@ class InstantSearchScreen :
         .map { RegisterNewPatientClicked }
   }
 
-  private fun blankBpPassportResults(): Observable<UiEvent> {
+  private fun blankBpPassportResults(): Disposable {
     return screenResults
         .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(BP_PASSPORT_SHEET, BpPassportSheet.Companion::blankBpPassportResult)
         .map(::BlankBpPassportResultReceived)
+        .subscribe(bpPassportSheetResultsEventSource::notify)
   }
 
   private fun hideKeyboardOnSearchResultsScroll(): Disposable {

@@ -1,10 +1,8 @@
 package org.simple.clinic.bp.entry
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +17,6 @@ import com.jakewharton.rxbinding3.widget.textChanges
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
@@ -36,14 +33,12 @@ import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
 import org.simple.clinic.databinding.SheetBloodPressureEntryBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -158,43 +153,6 @@ class BloodPressureEntrySheet :
 
   private lateinit var component: BloodPressureEntryComponent
 
-  private val uiRenderer = BloodPressureEntryUiRenderer(this)
-
-  private val delegate by unsafeLazy {
-    val openAs = intent.extras!!.getParcelable<OpenAs>(KEY_OPEN_AS)!!
-    val defaultModel = BloodPressureEntryModel.create(openAs, LocalDate.now(userClock).year)
-
-    MobiusDelegate.forActivity(
-        events.ofType(),
-        defaultModel,
-        BloodPressureEntryUpdate(dateValidator, LocalDate.now(userTimeZone), userInputDatePaddingCharacter),
-        effectHandlerFactory.create(this).build(),
-        BloodPressureEntryInit(),
-        uiRenderer::render
-    )
-  }
-
-  private val events: Observable<UiEvent> by unsafeLazy {
-    Observable.mergeArray(
-        systolicTextChanges(),
-        diastolicTextChanges(),
-        imeDoneClicks(),
-        diastolicBackspaceClicks(),
-        removeClicks(),
-        bpDateClicks(),
-        backClicks(),
-        hardwareBackPresses(),
-        screenTypeChanges(),
-        dayTextChanges(),
-        monthTextChanges(),
-        yearTextChanges()
-    )
-        .compose(ReportAnalyticsEvents())
-        .share()
-  }
-
-  private lateinit var binding: SheetBloodPressureEntryBinding
-
   private val systolicEditText
     get() = binding.systolicEditText
 
@@ -243,15 +201,6 @@ class BloodPressureEntrySheet :
   private val bloodPressureEntryLayout
     get() = binding.bloodPressureEntryLayout
 
-  @SuppressLint("CheckResult")
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    binding = SheetBloodPressureEntryBinding.inflate(layoutInflater)
-    setContentView(binding.root)
-
-    delegate.onRestoreInstanceState(savedInstanceState)
-  }
-
   override fun attachBaseContext(baseContext: Context) {
     setupDiGraph()
 
@@ -273,21 +222,6 @@ class BloodPressureEntrySheet :
         .create(activity = this)
 
     component.inject(this)
-  }
-
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
-
-  override fun onStop() {
-    delegate.stop()
-    super.onStop()
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    delegate.onSaveInstanceState(outState)
-    super.onSaveInstanceState(outState)
   }
 
   override fun onDestroy() {

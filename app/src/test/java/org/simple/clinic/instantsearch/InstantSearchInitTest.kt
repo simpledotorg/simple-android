@@ -2,14 +2,11 @@ package org.simple.clinic.instantsearch
 
 import com.spotify.mobius.test.FirstMatchers.hasEffects
 import com.spotify.mobius.test.FirstMatchers.hasModel
-import com.spotify.mobius.test.FirstMatchers.hasNoEffects
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
-import org.hamcrest.TypeSafeDiagnosingMatcher
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.util.matchers.IterableNotContaining
 import org.simple.clinic.util.matchers.IterableNotContaining.Companion.doesNotContain
 import java.util.UUID
 
@@ -39,7 +36,7 @@ class InstantSearchInitTest {
     initSpec
         .whenInit(defaultModel)
         .then(assertThatFirst(
-            hasModel(defaultModel),
+            hasModel(defaultModel.bpPassportSheetOpened()),
             hasEffects(LoadCurrentFacility, OpenBpPassportSheet(identifier))
         ))
   }
@@ -52,6 +49,7 @@ class InstantSearchInitTest {
         name = "PHC Obvious"
     )
     val facilityLoadedModel = defaultModel
+        .bpPassportSheetOpened()
         .facilityLoaded(facility)
         .searchQueryChanged("Pa")
 
@@ -59,7 +57,7 @@ class InstantSearchInitTest {
         .whenInit(facilityLoadedModel)
         .then(assertThatFirst(
             hasModel(facilityLoadedModel),
-            hasEffects(ValidateSearchQuery("Pa"), OpenBpPassportSheet(identifier))
+            hasEffects(ValidateSearchQuery("Pa"))
         ))
   }
 

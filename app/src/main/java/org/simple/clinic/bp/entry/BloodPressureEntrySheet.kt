@@ -24,8 +24,8 @@ import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog.RemoveBloodPressureListener
-import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
 import org.simple.clinic.databinding.SheetBloodPressureEntryBinding
+import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -140,8 +140,6 @@ class BloodPressureEntrySheet :
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
-  private lateinit var component: BloodPressureEntryComponent
-
   private val systolicEditText
     get() = binding.systolicEditText
 
@@ -189,6 +187,11 @@ class BloodPressureEntrySheet :
 
   private val bloodPressureEntryLayout
     get() = binding.bloodPressureEntryLayout
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
 
   private fun systolicTextChanges() = systolicEditText
       .textChanges()
@@ -450,5 +453,9 @@ class BloodPressureEntrySheet :
 
       fun notSaved() = BloodPressureSavedResult(false)
     }
+  }
+
+  interface Injector {
+    fun inject(target: BloodPressureEntrySheet)
   }
 }

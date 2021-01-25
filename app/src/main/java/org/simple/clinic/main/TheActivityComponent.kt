@@ -11,6 +11,8 @@ import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.RxActivityLifecycle
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenInjector
+import org.simple.clinic.bp.entry.BloodPressureEntrySheet
+import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog
 import org.simple.clinic.bp.history.BloodPressureHistoryScreenInjector
 import org.simple.clinic.deniedaccess.AccessDeniedScreenInjector
 import org.simple.clinic.di.PagingModule
@@ -125,7 +127,9 @@ interface TheActivityComponent :
     PatientSearchResultItemView.Injector,
     InstantSearchScreen.Injector,
     ScanSimpleIdScreen.Injector,
-    QrCodeScannerView.Injector {
+    QrCodeScannerView.Injector,
+    BloodPressureEntrySheet.Injector,
+    ConfirmRemoveBloodPressureDialog.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

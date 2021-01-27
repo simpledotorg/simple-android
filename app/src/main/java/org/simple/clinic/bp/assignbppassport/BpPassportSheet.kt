@@ -28,7 +28,6 @@ class BpPassportSheet :
 
   companion object {
     private const val KEY_BP_PASSPORT_NUMBER = "bpPassportNumber"
-    private const val BP_PASSPORT_RESULT = "bpPassportResult"
 
     fun intent(
         context: Context,
@@ -39,8 +38,8 @@ class BpPassportSheet :
       return intent
     }
 
-    fun blankBpPassportResult(data: Intent): BlankBpPassportResult? {
-      return data.getParcelableExtra(BP_PASSPORT_RESULT)
+    fun blankBpPassportResult(result: Succeeded): BlankBpPassportResult {
+      return (result.result as BlankBpPassportResult)
     }
   }
 

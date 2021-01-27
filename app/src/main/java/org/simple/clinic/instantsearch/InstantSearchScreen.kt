@@ -2,6 +2,7 @@ package org.simple.clinic.instantsearch
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.subjects.PublishSubject
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.screen_instant_search.*
 import org.simple.clinic.R
 import org.simple.clinic.bp.assignbppassport.BpPassportSheet
@@ -29,7 +32,10 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.mobius.DeferredEventSource
+import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenResult
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.PatientEntryScreenKey
@@ -59,7 +65,8 @@ class InstantSearchScreen :
         InstantSearchEvent,
         InstantSearchEffect>(),
     InstantSearchUi,
-    InstantSearchUiActions {
+    InstantSearchUiActions,
+    ExpectsResult {
 
   companion object {
     private const val BP_PASSPORT_SHEET = 1333
@@ -127,6 +134,8 @@ class InstantSearchScreen :
       )
   )
 
+  private val blankBpPassportResults = PublishSubject.create<UiEvent>()
+
   override fun defaultModel() = InstantSearchModel.create(screenKey.additionalIdentifier)
 
   override fun uiRenderer() = InstantSearchUiRenderer(this)
@@ -139,7 +148,8 @@ class InstantSearchScreen :
           allPatientsItemClicks(),
           searchItemClicks(),
           searchQueryChanges(),
-          registerNewPatientClicks()
+          registerNewPatientClicks(),
+          blankBpPassportResults
       ).cast<InstantSearchEvent>()
 
   override fun additionalEventSources(): List<EventSource<InstantSearchEvent>> {
@@ -269,6 +279,13 @@ class InstantSearchScreen :
         .subscribe(router::push)
   }
 
+  override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
+    if (requestType == BlankBpPassport && result is Succeeded) {
+      val bpPassportResult = BpPassportSheet.blankBpPassportResult(result)
+      blankBpPassportResults.onNext(BlankBpPassportResultReceived(bpPassportResult))
+    }
+  }
+
   private fun allPatientsItemClicks(): Observable<UiEvent> {
     return allPatientsAdapter
         .itemEvents
@@ -321,4 +338,7 @@ class InstantSearchScreen :
   interface Injector {
     fun inject(target: InstantSearchScreen)
   }
+
+  @Parcelize
+  private object BlankBpPassport : Parcelable
 }

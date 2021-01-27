@@ -67,7 +67,6 @@ class InstantSearchScreen :
     ExpectsResult {
 
   companion object {
-    private const val BP_PASSPORT_SHEET = 1333
     private const val ALERT_FACILITY_CHANGE = 1444
   }
 
@@ -93,9 +92,6 @@ class InstantSearchScreen :
 
   private val searchQueryEditText
     get() = binding.searchQueryEditText
-
-  private val searchQueryTextInputLayout
-    get() = binding.searchQueryTextInputLayout
 
   private val searchResultsView
     get() = binding.searchResultsView

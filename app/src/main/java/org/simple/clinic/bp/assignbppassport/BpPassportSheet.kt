@@ -1,7 +1,5 @@
 package org.simple.clinic.bp.assignbppassport
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,16 +25,6 @@ class BpPassportSheet :
         BpPassportEffect>(), BpPassportUiActions {
 
   companion object {
-    private const val KEY_BP_PASSPORT_NUMBER = "bpPassportNumber"
-
-    fun intent(
-        context: Context,
-        bpPassportNumber: Identifier
-    ): Intent {
-      val intent = Intent(context, BpPassportSheet::class.java)
-      intent.putExtra(KEY_BP_PASSPORT_NUMBER, bpPassportNumber)
-      return intent
-    }
 
     fun blankBpPassportResult(result: Succeeded): BlankBpPassportResult {
       return (result.result as BlankBpPassportResult)

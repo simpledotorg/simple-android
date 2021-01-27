@@ -13,7 +13,6 @@ import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
-import com.spotify.mobius.EventSource
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -31,7 +30,6 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation
-import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenResult
@@ -223,8 +221,7 @@ class InstantSearchScreen :
   }
 
   override fun openBpPassportSheet(identifier: Identifier) {
-    val intent = BpPassportSheet.intent(requireContext(), identifier)
-    activity.startActivityForResult(intent, BP_PASSPORT_SHEET)
+    router.pushExpectingResult(BlankBpPassport, BpPassportSheet.Key(identifier))
   }
 
   override fun showNoPatientsInFacility(facility: Facility) {

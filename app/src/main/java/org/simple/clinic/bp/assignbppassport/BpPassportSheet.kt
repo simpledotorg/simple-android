@@ -5,14 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetBpPassportBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
@@ -137,5 +140,19 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
   override fun onSaveInstanceState(outState: Bundle) {
     delegate.onSaveInstanceState(outState)
     super.onSaveInstanceState(outState)
+  }
+
+  @Parcelize
+  data class Key(
+      val identifier: Identifier
+  ) : ScreenKey() {
+
+    override val analyticsName = "Blank BP passport sheet"
+
+    override fun instantiateFragment(): Fragment {
+
+    }
+
+    override val type = ScreenType.Modal
   }
 }

@@ -48,9 +48,9 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F> 
 
   abstract fun defaultModel(): M
 
-  abstract fun uiRenderer(): ViewRenderer<M>
-
   abstract fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): B
+
+  open fun uiRenderer(): ViewRenderer<M> = NoopViewRenderer()
 
   open fun events(): Observable<E> = Observable.never()
 

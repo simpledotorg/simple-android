@@ -61,10 +61,11 @@
     <item name="buttonBarPositiveButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.Red1</item>
   </style>
 
-  <style name="ThemeOverlay.Simple.BottomSheetDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+  <style name="ThemeOverlay.Simple.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
     <item name="android:windowIsFloating">false</item>
     <item name="android:statusBarColor">@android:color/transparent</item>
     <item name="android:windowSoftInputMode">adjustResize</item>
+    <item name="materialButtonStyle">@style/Widget.Simple.Button</item>
   </style>
 
   <!-- Widget Specific Theme Overlays -->

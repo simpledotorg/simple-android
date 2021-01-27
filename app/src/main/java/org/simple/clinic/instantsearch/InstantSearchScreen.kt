@@ -90,8 +90,6 @@ class InstantSearchScreen :
 
   private val subscriptions = CompositeDisposable()
 
-  private val bpPassportSheetResultsEventSource = DeferredEventSource<InstantSearchEvent>()
-
   private val instantSearchToolbar
     get() = binding.instantSearchToolbar
 
@@ -152,10 +150,6 @@ class InstantSearchScreen :
           blankBpPassportResults
       ).cast<InstantSearchEvent>()
 
-  override fun additionalEventSources(): List<EventSource<InstantSearchEvent>> {
-    return listOf(bpPassportSheetResultsEventSource)
-  }
-
   override fun createUpdate() = InstantSearchUpdate()
 
   override fun createInit() = InstantSearchInit()
@@ -187,8 +181,7 @@ class InstantSearchScreen :
     subscriptions.addAll(
         setupAlertResults(),
         hideKeyboardOnSearchResultsScroll(),
-        hideKeyboardOnImeAction(),
-        blankBpPassportResults()
+        hideKeyboardOnImeAction()
     )
   }
 
@@ -311,15 +304,6 @@ class InstantSearchScreen :
     return newPatientButton
         .clicks()
         .map { RegisterNewPatientClicked }
-  }
-
-  private fun blankBpPassportResults(): Disposable {
-    return screenResults
-        .streamResults()
-        .ofType<ActivityResult>()
-        .extractSuccessful(BP_PASSPORT_SHEET, BpPassportSheet.Companion::blankBpPassportResult)
-        .map(::BlankBpPassportResultReceived)
-        .subscribe(bpPassportSheetResultsEventSource::notify)
   }
 
   private fun hideKeyboardOnSearchResultsScroll(): Disposable {

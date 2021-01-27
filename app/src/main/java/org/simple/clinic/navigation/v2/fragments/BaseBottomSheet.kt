@@ -6,7 +6,6 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.spotify.mobius.EventSource
@@ -25,7 +24,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.overrideCancellation
 import org.simple.clinic.util.unsafeLazy
 
-abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, R : ViewRenderer<M>> : BottomSheetDialogFragment() {
+abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F> : BottomSheetDialogFragment() {
 
   companion object {
     private const val KEY_MODEL = "org.simple.clinic.navigation.v2.fragments.BaseScreen.KEY_MODEL"
@@ -51,9 +50,9 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
 
   abstract fun defaultModel(): M
 
-  abstract fun uiRenderer(): R
-
   abstract fun bindView(inflater: LayoutInflater, container: ViewGroup?): B
+
+  open fun uiRenderer(): ViewRenderer<M> = NoopViewRenderer()
 
   open fun events(): Observable<E> = Observable.never()
 

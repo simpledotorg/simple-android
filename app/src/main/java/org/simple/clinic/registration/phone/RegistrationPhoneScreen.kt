@@ -36,8 +36,7 @@ class RegistrationPhoneScreen :
         ScreenRegistrationPhoneBinding,
         RegistrationPhoneModel,
         RegistrationPhoneEvent,
-        RegistrationPhoneEffect,
-        RegistrationPhoneUiRenderer>(),
+        RegistrationPhoneEffect>(),
     RegistrationPhoneUi,
     RegistrationPhoneUiActions {
 

@@ -109,11 +109,6 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".facility.alertchange.AlertFacilityChangeSheet"
-      android:theme="@style/Theme.Simple.BottomSheetActivity"
-      android:windowSoftInputMode="adjustResize" />
-
-    <activity
       android:name=".contactpatient.ContactPatientBottomSheet"
       android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />

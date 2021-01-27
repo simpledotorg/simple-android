@@ -15,6 +15,7 @@
 - Add `TextViewTextSizeDetector` lint for warning when using `TextView#textSize`
 - Bump AGP to v4.1.2
 - Fix bottom sheet dialog theme
+- Add `NoopViewRenderer`
 - [In Progress: 20 Jan 2021] Material Theming Migration
 - [In Progress: 22 Jan 2021] Migrate app to use ViewBinding
 

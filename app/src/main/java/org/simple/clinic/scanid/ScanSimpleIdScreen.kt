@@ -37,8 +37,7 @@ class ScanSimpleIdScreen :
         ScreenScanSimpleBinding,
         ScanSimpleIdModel,
         ScanSimpleIdEvent,
-        ScanSimpleIdEffect,
-        ScanSimpleIdUiRenderer>(),
+        ScanSimpleIdEffect>(),
     ScanSimpleIdUi,
     ScanSimpleIdUiActions {
 

@@ -15,12 +15,14 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetAlertFacilityChangeBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.navigation.v2.Succeeded
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
@@ -149,15 +151,24 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
       isFacilitySwitchedPreference.set(false)
       closeSheetWithContinuation()
     } else {
-      router.popWithResult(Succeeded(FacilityChanged()))
+      router.pop()
     }
   }
 
   private fun closeSheetWithContinuation() {
-    val intent = Intent()
-    intent.putExtra(EXTRA_CONTINUE_TO, continuation)
-    setResult(Activity.RESULT_OK, intent)
-    finish()
+    when (continuation) {
+      is ContinueToScreen -> {
+        val screenKey = (continuation as ContinueToScreen).screenKey
+        router.replaceTop(screenKey.wrap())
+      }
+      is ContinueToActivity -> {
+        val (intent, requestCode) = (continuation as ContinueToActivity).run {
+          intent to requestCode
+        }
+        requireActivity().startActivityForResult(intent, requestCode)
+        router.pop()
+      }
+    }
   }
 
   private fun openFacilityChangeScreen() {
@@ -180,9 +191,6 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
   interface Injector {
     fun inject(target: AlertFacilityChangeSheet)
   }
-
-  @Parcelize
-  class FacilityChanged : Parcelable
 }
 
 sealed class Continuation : Parcelable {

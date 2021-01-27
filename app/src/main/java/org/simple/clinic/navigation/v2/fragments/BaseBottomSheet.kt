@@ -65,13 +65,6 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
 
   open fun additionalEventSources(): List<EventSource<E>> = emptyList()
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    // TODO : It's not necessary since we applied the default style in theme.
-    //  Once we can verify the bottom sheet with new navigation framework. We can remove this.
-    setStyle(DialogFragment.STYLE_NORMAL, org.simple.clinic.R.style.ThemeOverlay_Simple_BottomSheetDialog)
-  }
-
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     _binding = bindView(inflater, container)
 

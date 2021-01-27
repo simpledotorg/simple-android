@@ -15,13 +15,11 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetBpPassportBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import javax.inject.Inject
 
@@ -68,24 +66,6 @@ class BpPassportSheet :
   private val bpPassportNumberTextview
     get() = binding.bpPassportNumberTextview
 
-  private val events: Observable<BpPassportEvent> by unsafeLazy {
-    Observable
-        .merge(
-            registerNewPatientClicks(),
-            addToExistingPatientClicks()
-        )
-  }
-
-  private val delegate by unsafeLazy {
-
-    MobiusDelegate.forActivity(
-        events = events,
-        defaultModel = BpPassportModel.create(identifier = bpPassportIdentifier),
-        update = BpPassportUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-    )
-  }
-
   private val bpPassportIdentifier: Identifier by lazy {
     screenKey.identifier
   }
@@ -110,11 +90,7 @@ class BpPassportSheet :
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    binding = SheetBpPassportBinding.inflate(layoutInflater)
-    setContentView(binding.root)
-
     bpPassportNumberTextview.text = getString(R.string.sheet_bp_passport_number, bpPassportIdentifier.displayValue())
-    delegate.onRestoreInstanceState(savedInstanceState)
   }
 
   override fun sendBpPassportResult(blankBpPassportResult: BlankBpPassportResult) {
@@ -150,21 +126,6 @@ class BpPassportSheet :
 
     super.attachBaseContext(wrappedContext)
     applyOverrideConfiguration(Configuration())
-  }
-
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
-
-  override fun onStop() {
-    super.onStop()
-    delegate.stop()
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    delegate.onSaveInstanceState(outState)
-    super.onSaveInstanceState(outState)
   }
 
   @Parcelize

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
@@ -110,9 +109,7 @@ class BpPassportSheet :
 
     override val analyticsName = "Blank BP passport sheet"
 
-    override fun instantiateFragment(): Fragment {
-
-    }
+    override fun instantiateFragment() = BpPassportSheet()
 
     override val type = ScreenType.Modal
   }

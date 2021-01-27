@@ -30,7 +30,6 @@ import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.summary.BP_REQCODE_ALERT_FACILITY_CHANGE
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
@@ -170,7 +169,6 @@ class BloodPressureSummaryView(
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
 
     setupBpRecordedEvents(screenDestroys)
-    alertFacilityChangeSheetClosed(screenDestroys)
   }
 
   override fun onAttachedToWindow() {
@@ -221,13 +219,10 @@ class BloodPressureSummaryView(
 
   override fun openBloodPressureEntrySheet(patientUuid: UUID, currentFacility: Facility) {
     val bpEntrySheetIntent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
-    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intent(
-        context,
-        currentFacility.name,
-        ContinueToActivity(bpEntrySheetIntent, SUMMARY_REQCODE_BP_ENTRY)
-    )
-
-    activity.startActivityForResult(alertFacilityChangeIntent, BP_REQCODE_ALERT_FACILITY_CHANGE)
+    router.push(AlertFacilityChangeSheet.Key(
+        currentFacilityName = currentFacility.name,
+        continuation = ContinueToActivity(bpEntrySheetIntent, SUMMARY_REQCODE_BP_ENTRY)
+    ))
   }
 
   override fun openBloodPressureUpdateSheet(bpUuid: UUID) {
@@ -253,18 +248,6 @@ class BloodPressureSummaryView(
         }
         .takeUntil(screenDestroys)
         .subscribe { bpRecorded?.invoke() }
-  }
-
-  @SuppressLint("CheckResult")
-  private fun alertFacilityChangeSheetClosed(onDestroys: Observable<ScreenDestroyed>) {
-    screenResults
-        .streamResults()
-        .ofType<ActivityResult>()
-        .extractSuccessful(BP_REQCODE_ALERT_FACILITY_CHANGE) { intent ->
-          AlertFacilityChangeSheet.readContinuationExtra<ContinueToActivity>(intent)
-        }
-        .takeUntil(onDestroys)
-        .subscribe { activity.startActivityForResult(it.intent, it.requestCode) }
   }
 
   private fun addNewBpClicked(): Observable<BloodPressureSummaryViewEvent> {

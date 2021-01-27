@@ -71,25 +71,6 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
 
   companion object {
     const val FACILITY_CHANGE = 101
-    private const val CURRENT_FACILITY_NAME = "current_facility"
-    private const val CONTINUE_TO = "continue_to"
-
-    private const val EXTRA_CONTINUE_TO = "extra_continue_to"
-
-    fun intent(
-        context: Context,
-        currentFacilityName: String,
-        continuation: Continuation
-    ): Intent {
-      val intent = Intent(context, AlertFacilityChangeSheet::class.java)
-      intent.putExtra(CURRENT_FACILITY_NAME, currentFacilityName)
-      intent.putExtra(CONTINUE_TO, continuation)
-      return intent
-    }
-
-    fun <T : Parcelable> readContinuationExtra(intent: Intent): T {
-      return intent.getParcelableExtra<T>(EXTRA_CONTINUE_TO)!!
-    }
   }
 
   private val currentFacilityName

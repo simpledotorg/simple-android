@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
@@ -16,13 +18,19 @@ import org.simple.clinic.databinding.SheetBpPassportBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.BottomSheetActivity
 import javax.inject.Inject
 
-class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
+class BpPassportSheet :
+    BaseBottomSheet<
+        BpPassportSheet.Key,
+        SheetBpPassportBinding,
+        BpPassportModel,
+        BpPassportEvent,
+        BpPassportEffect>(), BpPassportUiActions {
 
   companion object {
     private const val KEY_BP_PASSPORT_NUMBER = "bpPassportNumber"
@@ -46,8 +54,6 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
   lateinit var effectHandlerFactory: BpPassportEffectHandler.Factory
 
   private lateinit var component: BpPassportSheetComponent
-
-  private lateinit var binding: SheetBpPassportBinding
 
   private val registerNewPatientButton
     get() = binding.registerNewPatientButton
@@ -77,8 +83,26 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
   }
 
   private val bpPassportIdentifier: Identifier by lazy {
-    intent.getParcelableExtra(KEY_BP_PASSPORT_NUMBER)!!
+    screenKey.identifier
   }
+
+  override fun defaultModel() = BpPassportModel.create(bpPassportIdentifier)
+
+  override fun bindView(inflater: LayoutInflater, container: ViewGroup?): SheetBpPassportBinding {
+    return SheetBpPassportBinding.inflate(layoutInflater, container, false)
+  }
+
+  override fun events(): Observable<BpPassportEvent> {
+    return Observable
+        .merge(
+            registerNewPatientClicks(),
+            addToExistingPatientClicks()
+        )
+  }
+
+  override fun createUpdate() = BpPassportUpdate()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

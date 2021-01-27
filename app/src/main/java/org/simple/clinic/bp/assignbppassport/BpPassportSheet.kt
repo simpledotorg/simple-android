@@ -2,25 +2,20 @@ package org.simple.clinic.bp.assignbppassport
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
-import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetBpPassportBinding
-import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.util.wrap
 import javax.inject.Inject
 
 class BpPassportSheet :
@@ -54,8 +49,6 @@ class BpPassportSheet :
 
   @Inject
   lateinit var effectHandlerFactory: BpPassportEffectHandler.Factory
-
-  private lateinit var component: BpPassportSheetComponent
 
   private val registerNewPatientButton
     get() = binding.registerNewPatientButton
@@ -107,25 +100,6 @@ class BpPassportSheet :
     return registerNewPatientButton
         .clicks()
         .map { RegisterNewPatientClicked }
-  }
-
-  private fun setUpDiGraph() {
-    component = ClinicApp.appComponent
-        .bpPassportSheetComponent()
-        .create(activity = this)
-
-    component.inject(this)
-  }
-
-  override fun attachBaseContext(newBase: Context) {
-    setUpDiGraph()
-
-    val wrappedContext = newBase
-        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
-        .wrap { ViewPumpContextWrapper.wrap(it) }
-
-    super.attachBaseContext(wrappedContext)
-    applyOverrideConfiguration(Configuration())
   }
 
   @Parcelize

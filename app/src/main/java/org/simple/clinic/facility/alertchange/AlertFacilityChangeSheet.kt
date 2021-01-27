@@ -172,7 +172,7 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
   }
 
   private fun openFacilityChangeScreen() {
-    startActivityForResult(FacilityChangeActivity.intent(this), FACILITY_CHANGE)
+    startActivityForResult(FacilityChangeActivity.intent(requireContext()), FACILITY_CHANGE)
   }
 
   @Parcelize

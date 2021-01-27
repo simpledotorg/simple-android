@@ -50,9 +50,9 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
 
   abstract fun defaultModel(): M
 
-  abstract fun uiRenderer(): ViewRenderer<M>
-
   abstract fun bindView(inflater: LayoutInflater, container: ViewGroup?): B
+
+  open fun uiRenderer(): ViewRenderer<M> = NoopViewRenderer()
 
   open fun events(): Observable<E> = Observable.never()
 

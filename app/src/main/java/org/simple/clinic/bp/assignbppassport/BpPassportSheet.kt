@@ -1,6 +1,5 @@
 package org.simple.clinic.bp.assignbppassport
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -17,7 +16,9 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetBpPassportBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.unsafeLazy
@@ -49,6 +50,9 @@ class BpPassportSheet :
       return data.getParcelableExtra(BP_PASSPORT_RESULT)
     }
   }
+
+  @Inject
+  lateinit var router: Router
 
   @Inject
   lateinit var effectHandlerFactory: BpPassportEffectHandler.Factory
@@ -114,10 +118,7 @@ class BpPassportSheet :
   }
 
   override fun sendBpPassportResult(blankBpPassportResult: BlankBpPassportResult) {
-    val intent = Intent()
-    intent.putExtra(BP_PASSPORT_RESULT, blankBpPassportResult)
-    setResult(Activity.RESULT_OK, intent)
-    finish()
+    router.popWithResult(Succeeded(blankBpPassportResult))
   }
 
   private fun addToExistingPatientClicks(): Observable<BpPassportEvent> {

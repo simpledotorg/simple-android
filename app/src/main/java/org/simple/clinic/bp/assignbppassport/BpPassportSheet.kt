@@ -1,5 +1,6 @@
 package org.simple.clinic.bp.assignbppassport
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetBpPassportBinding
+import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
@@ -68,6 +70,11 @@ class BpPassportSheet :
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     bpPassportNumberTextview.text = getString(R.string.sheet_bp_passport_number, bpPassportIdentifier.displayValue())
@@ -99,5 +106,9 @@ class BpPassportSheet :
     override fun instantiateFragment() = BpPassportSheet()
 
     override val type = ScreenType.Modal
+  }
+
+  interface Injector {
+    fun inject(target: BpPassportSheet)
   }
 }

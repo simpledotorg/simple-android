@@ -1,50 +1,45 @@
 package org.simple.clinic.bp.assignbppassport
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
-import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
-import org.simple.clinic.ClinicApp
+import io.reactivex.rxkotlin.cast
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetBpPassportBinding
-import org.simple.clinic.di.InjectorProviderContextWrapper
-import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.di.injector
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
+import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.BottomSheetActivity
 import javax.inject.Inject
 
-class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
+class BpPassportSheet :
+    BaseBottomSheet<
+        BpPassportSheet.Key,
+        SheetBpPassportBinding,
+        BpPassportModel,
+        BpPassportEvent,
+        BpPassportEffect>(), BpPassportUiActions {
 
   companion object {
-    private const val KEY_BP_PASSPORT_NUMBER = "bpPassportNumber"
-    private const val BP_PASSPORT_RESULT = "bpPassportResult"
 
-    fun intent(
-        context: Context,
-        bpPassportNumber: Identifier
-    ): Intent {
-      val intent = Intent(context, BpPassportSheet::class.java)
-      intent.putExtra(KEY_BP_PASSPORT_NUMBER, bpPassportNumber)
-      return intent
-    }
-
-    fun blankBpPassportResult(data: Intent): BlankBpPassportResult? {
-      return data.getParcelableExtra(BP_PASSPORT_RESULT)
+    fun blankBpPassportResult(result: Succeeded): BlankBpPassportResult {
+      return (result.result as BlankBpPassportResult)
     }
   }
 
   @Inject
+  lateinit var router: Router
+
+  @Inject
   lateinit var effectHandlerFactory: BpPassportEffectHandler.Factory
-
-  private lateinit var component: BpPassportSheetComponent
-
-  private lateinit var binding: SheetBpPassportBinding
 
   private val registerNewPatientButton
     get() = binding.registerNewPatientButton
@@ -55,42 +50,40 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
   private val bpPassportNumberTextview
     get() = binding.bpPassportNumberTextview
 
-  private val events: Observable<BpPassportEvent> by unsafeLazy {
-    Observable
-        .merge(
-            registerNewPatientClicks(),
-            addToExistingPatientClicks()
-        )
-  }
-
-  private val delegate by unsafeLazy {
-
-    MobiusDelegate.forActivity(
-        events = events,
-        defaultModel = BpPassportModel.create(identifier = bpPassportIdentifier),
-        update = BpPassportUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-    )
-  }
-
   private val bpPassportIdentifier: Identifier by lazy {
-    intent.getParcelableExtra(KEY_BP_PASSPORT_NUMBER)!!
+    screenKey.identifier
   }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    binding = SheetBpPassportBinding.inflate(layoutInflater)
-    setContentView(binding.root)
+  override fun defaultModel() = BpPassportModel.create(bpPassportIdentifier)
 
+  override fun bindView(inflater: LayoutInflater, container: ViewGroup?): SheetBpPassportBinding {
+    return SheetBpPassportBinding.inflate(layoutInflater, container, false)
+  }
+
+  override fun events(): Observable<BpPassportEvent> = Observable
+      .merge(
+          registerNewPatientClicks(),
+          addToExistingPatientClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast()
+
+  override fun createUpdate() = BpPassportUpdate()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     bpPassportNumberTextview.text = getString(R.string.sheet_bp_passport_number, bpPassportIdentifier.displayValue())
-    delegate.onRestoreInstanceState(savedInstanceState)
   }
 
   override fun sendBpPassportResult(blankBpPassportResult: BlankBpPassportResult) {
-    val intent = Intent()
-    intent.putExtra(BP_PASSPORT_RESULT, blankBpPassportResult)
-    setResult(Activity.RESULT_OK, intent)
-    finish()
+    router.popWithResult(Succeeded(blankBpPassportResult))
   }
 
   private fun addToExistingPatientClicks(): Observable<BpPassportEvent> {
@@ -105,37 +98,19 @@ class BpPassportSheet : BottomSheetActivity(), BpPassportUiActions {
         .map { RegisterNewPatientClicked }
   }
 
-  private fun setUpDiGraph() {
-    component = ClinicApp.appComponent
-        .bpPassportSheetComponent()
-        .create(activity = this)
+  @Parcelize
+  data class Key(
+      val identifier: Identifier
+  ) : ScreenKey() {
 
-    component.inject(this)
+    override val analyticsName = "Blank BP passport sheet"
+
+    override fun instantiateFragment() = BpPassportSheet()
+
+    override val type = ScreenType.Modal
   }
 
-  override fun attachBaseContext(newBase: Context) {
-    setUpDiGraph()
-
-    val wrappedContext = newBase
-        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
-        .wrap { ViewPumpContextWrapper.wrap(it) }
-
-    super.attachBaseContext(wrappedContext)
-    applyOverrideConfiguration(Configuration())
-  }
-
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
-
-  override fun onStop() {
-    super.onStop()
-    delegate.stop()
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    delegate.onSaveInstanceState(outState)
-    super.onSaveInstanceState(outState)
+  interface Injector {
+    fun inject(target: BpPassportSheet)
   }
 }

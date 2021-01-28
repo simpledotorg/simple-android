@@ -1,6 +1,7 @@
 package org.simple.clinic.facility.alertchange
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -93,12 +94,21 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
     context.injector<Injector>().inject(this)
   }
 
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    return super.onCreateDialog(savedInstanceState).apply {
+      window!!.setDimAmount(0F)
+    }
+  }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
     if (isFacilitySwitchedPreference.get().not()) {
       view.postDelayed(::closeSheetWithContinuation, 100)
     } else {
+      requireDialog().window!!.setDimAmount(0.32F)
+      binding.root.visibility = View.VISIBLE
+      
       facilityName.text = getString(R.string.alertfacilitychange_facility_name, currentFacilityName)
       yesButton.setOnClickListener {
         closeSheetWithResult(Activity.RESULT_OK)

@@ -107,10 +107,8 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
     if (isFacilitySwitchedPreference.get().not()) {
       view.postDelayed(::closeSheetWithContinuation, 100)
     } else {
-      val backgroundDimAmount = requireContext().resolveFloat(android.R.attr.backgroundDimAmount)
-      requireDialog().window!!.setDimAmount(backgroundDimAmount)
-      binding.root.visibility = View.VISIBLE
-      
+      showDialogUi()
+
       facilityName.text = getString(R.string.alertfacilitychange_facility_name, currentFacilityName)
       yesButton.setOnClickListener {
         closeSheetWithResult(Activity.RESULT_OK)
@@ -122,6 +120,12 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
 
       listenForFacilityChangeResults()
     }
+  }
+
+  private fun showDialogUi() {
+    val backgroundDimAmount = requireContext().resolveFloat(android.R.attr.backgroundDimAmount)
+    requireDialog().window!!.setDimAmount(backgroundDimAmount)
+    binding.root.visibility = View.VISIBLE
   }
 
   private fun listenForFacilityChangeResults() {

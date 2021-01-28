@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetBpPassportBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
@@ -58,13 +60,13 @@ class BpPassportSheet :
     return SheetBpPassportBinding.inflate(layoutInflater, container, false)
   }
 
-  override fun events(): Observable<BpPassportEvent> {
-    return Observable
-        .merge(
-            registerNewPatientClicks(),
-            addToExistingPatientClicks()
-        )
-  }
+  override fun events(): Observable<BpPassportEvent> = Observable
+      .merge(
+          registerNewPatientClicks(),
+          addToExistingPatientClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast()
 
   override fun createUpdate() = BpPassportUpdate()
 

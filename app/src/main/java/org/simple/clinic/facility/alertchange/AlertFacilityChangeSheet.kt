@@ -97,7 +97,7 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
     super.onViewCreated(view, savedInstanceState)
 
     if (isFacilitySwitchedPreference.get().not()) {
-      closeSheetWithContinuation()
+      view.postDelayed(::closeSheetWithContinuation, 100)
     } else {
       facilityName.text = getString(R.string.alertfacilitychange_facility_name, currentFacilityName)
       yesButton.setOnClickListener {

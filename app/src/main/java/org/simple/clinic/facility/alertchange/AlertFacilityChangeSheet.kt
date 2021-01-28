@@ -28,6 +28,7 @@ import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.FullScreenKey
+import org.simple.clinic.router.util.resolveFloat
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
@@ -106,7 +107,8 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
     if (isFacilitySwitchedPreference.get().not()) {
       view.postDelayed(::closeSheetWithContinuation, 100)
     } else {
-      requireDialog().window!!.setDimAmount(0.32F)
+      val backgroundDimAmount = requireContext().resolveFloat(android.R.attr.backgroundDimAmount)
+      requireDialog().window!!.setDimAmount(backgroundDimAmount)
       binding.root.visibility = View.VISIBLE
       
       facilityName.text = getString(R.string.alertfacilitychange_facility_name, currentFacilityName)

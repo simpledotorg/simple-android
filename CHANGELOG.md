@@ -22,7 +22,7 @@
 ## Features
 - Highlight patient name and number in Instant search
 
-## On Demo
+## 2021-01-25-7605
 ### Internal
 - Rename `newbranch` script to `newbranch.sh`
 - Purge the QA environment before running the instrumented tests instead of after in CI

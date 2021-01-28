@@ -4,7 +4,6 @@ import dagger.Component
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
 import org.simple.clinic.bloodsugar.selection.type.di.BloodSugarTypePickerSheetComponent
-import org.simple.clinic.bp.assignbppassport.BpPassportSheetComponent
 import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
 import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
 import org.simple.clinic.deeplink.di.DeepLinkComponent
@@ -57,7 +56,6 @@ interface AppComponent {
   fun contactDoctorComponent(): ContactDoctorComponent.Factory
   fun teleconsultStatusComponent(): TeleconsultStatusComponent.Factory
   fun authenticationActivityComponent(): AuthenticationActivityComponent.Factory
-  fun bpPassportSheetComponent(): BpPassportSheetComponent.Factory
 }
 
 @Scope

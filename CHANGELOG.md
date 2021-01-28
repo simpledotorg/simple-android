@@ -2,6 +2,9 @@
 
 ## Next Release
 ### Internal
+- Change `AlertFacilityChangeSheet` to `BaseBottomSheet`
+- Change `FacilityChangeScreen` to `BaseBottomSheet`
+- Change `ConfirmFacilityChangeScreen` to `BaseBottomSheet`
 - [In Progress: 20 Jan 2021] Material Theming Migration
 - [In Progress: 28 Jan 2021] Migrate app to use ViewBinding
 

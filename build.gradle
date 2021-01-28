@@ -56,7 +56,7 @@ buildscript {
       playCore                 : '1.6.1',
       fastScroll               : '2.0.0',
       mixpanel                 : '5.6.4',
-      mobius                   : '1.3.0',
+      mobius                   : '1.5.3',
       guava                    : '28.1-jre', // Used by the 'mobius-migration' library ONLY in tests
       uuidGenerator            : '3.2.0',
       flipper                  : '0.37.0',

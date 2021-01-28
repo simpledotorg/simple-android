@@ -20,7 +20,6 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.screen_instant_search.*
 import org.simple.clinic.R
 import org.simple.clinic.bp.assignbppassport.BpPassportSheet
 import org.simple.clinic.databinding.ListPatientSearchBinding
@@ -101,6 +100,15 @@ class InstantSearchScreen :
 
   private val instantSearchProgressIndicator
     get() = binding.instantSearchProgressIndicator
+
+  private val noPatientsInFacilityContainer
+    get() = binding.noPatientsInFacilityContainer
+
+  private val noPatientsInFacilityTextView
+    get() = binding.noPatientsInFacilityTextView
+
+  private val noSearchResultsContainer
+    get() = binding.noSearchResultsContainer
 
   private val allPatientsAdapter = ItemAdapter(
       diffCallback = InstantSearchResultsItemType.DiffCallback(),

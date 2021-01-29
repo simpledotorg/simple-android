@@ -287,8 +287,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private fun showOrHideInputFields(inputFields: InputFields) {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,
-        AgeField::class.java to ageEditTextInputLayout,
-        DateOfBirthField::class.java to dateOfBirthInputLayout,
         LandlineOrMobileField::class.java to phoneNumberInputLayout,
         GenderField::class.java to genderRadioGroup,
         AlternativeIdInputField::class.java to alternativeIdInputLayout,

@@ -9,7 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenFacilityChangeBinding
@@ -21,6 +24,8 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
@@ -51,6 +56,11 @@ class FacilityChangeScreen :
   @Inject
   lateinit var router: Router
 
+  @Inject
+  lateinit var screenResults: ScreenResultBus
+
+  private val subscriptions = CompositeDisposable()
+
   override fun defaultModel() = FacilityChangeModel.create()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
@@ -74,6 +84,12 @@ class FacilityChangeScreen :
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
+    subscriptions.add(handleFacilityChangeConfirmation())
+  }
+
+  override fun onDetach() {
+    subscriptions.clear()
+    super.onDetach()
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,13 +107,17 @@ class FacilityChangeScreen :
     }
   }
 
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    super.onActivityResult(requestCode, resultCode, data)
-    if (requestCode == OPEN_CONFIRMATION_SHEET && resultCode == Activity.RESULT_OK) {
-      exitAfterChange()
-    } else {
-      goBack()
-    }
+  private fun handleFacilityChangeConfirmation(): Disposable {
+    return screenResults
+        .streamResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == OPEN_CONFIRMATION_SHEET }
+        .subscribe {
+          if (it.resultCode == Activity.RESULT_OK)
+            exitAfterChange()
+          else
+            goBack()
+        }
   }
 
   private fun exitAfterChange() {
@@ -110,7 +130,7 @@ class FacilityChangeScreen :
 
   override fun openConfirmationSheet(facility: Facility) {
     startActivityForResult(
-        ConfirmFacilityChangeSheet.intent(this, facility),
+        ConfirmFacilityChangeSheet.intent(requireContext(), facility),
         OPEN_CONFIRMATION_SHEET
     )
   }

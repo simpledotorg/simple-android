@@ -18,7 +18,7 @@ import org.simple.clinic.databinding.SheetAlertFacilityChangeBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
-import org.simple.clinic.facility.change.FacilityChangeActivity
+import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
@@ -169,7 +169,7 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
   }
 
   private fun openFacilityChangeScreen() {
-    startActivityForResult(FacilityChangeActivity.intent(requireContext()), FACILITY_CHANGE)
+    startActivityForResult(FacilityChangeScreen.intent(requireContext()), FACILITY_CHANGE)
   }
 
   @Parcelize

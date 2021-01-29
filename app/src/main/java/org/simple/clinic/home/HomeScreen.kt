@@ -17,7 +17,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenHomeBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.facility.change.FacilityChangeActivity
+import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeTab.OVERDUE
@@ -178,7 +178,7 @@ class HomeScreen :
   }
 
   override fun openFacilitySelection() {
-    activity.startActivity(FacilityChangeActivity.intent(requireContext()))
+    activity.startActivity(FacilityChangeScreen.intent(requireContext()))
   }
 
   override fun showOverdueAppointmentCount(count: Int) {

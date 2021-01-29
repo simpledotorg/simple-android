@@ -29,7 +29,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
 
-class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi, FacilityChangeUiActions {
+class FacilityChangeScreen : AppCompatActivity(), FacilityChangeUi, FacilityChangeUiActions {
 
   @Inject
   lateinit var locale: Locale
@@ -117,7 +117,7 @@ class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi, FacilityCh
   }
 
   private fun setupUiComponents() {
-    facilityPickerView.backClicked = this@FacilityChangeActivity::finish
+    facilityPickerView.backClicked = this@FacilityChangeScreen::finish
   }
 
   private fun facilityClicks(): Observable<UiEvent> {
@@ -168,7 +168,7 @@ class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi, FacilityCh
     private const val OPEN_CONFIRMATION_SHEET = 1210
 
     fun intent(context: Context): Intent {
-      return Intent(context, FacilityChangeActivity::class.java)
+      return Intent(context, FacilityChangeScreen::class.java)
     }
   }
 }

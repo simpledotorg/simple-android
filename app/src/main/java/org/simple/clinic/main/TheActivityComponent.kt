@@ -21,6 +21,7 @@ import org.simple.clinic.editpatient.EditPatientScreen
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenInjector
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
+import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.facilitypicker.FacilityPickerView
 import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
@@ -129,7 +130,8 @@ interface TheActivityComponent :
     ScanSimpleIdScreen.Injector,
     QrCodeScannerView.Injector,
     BpPassportSheet.Injector,
-    AlertFacilityChangeSheet.Injector {
+    AlertFacilityChangeSheet.Injector,
+    FacilityChangeScreen.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

@@ -11,13 +11,12 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.ClinicApp
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenFacilityChangeBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.ConfirmFacilityChangeSheet
-import org.simple.clinic.facility.change.confirm.FacilityChangeComponent
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -70,6 +69,11 @@ class FacilityChangeScreen :
   private val facilityPickerView
     get() = binding.facilityPickerView
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -80,8 +84,6 @@ class FacilityChangeScreen :
   }
 
   override fun attachBaseContext(baseContext: Context) {
-    setupDi()
-
     val wrappedContext = baseContext
         .wrap { ViewPumpContextWrapper.wrap(it) }
         .wrap { InjectorProviderContextWrapper.wrap(it, component) }
@@ -92,14 +94,6 @@ class FacilityChangeScreen :
 
   override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
     super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
-  }
-
-  private fun setupDi() {
-    component = ClinicApp.appComponent
-        .facilityChangeComponent()
-        .create(activity = this)
-
-    component.inject(this)
   }
 
   private fun setupUiComponents() {
@@ -148,8 +142,11 @@ class FacilityChangeScreen :
     override fun instantiateFragment() = FacilityChangeScreen()
   }
 
+  interface Injector {
+    fun inject(target: FacilityChangeScreen)
+  }
+
   companion object {
-    lateinit var component: FacilityChangeComponent
     private const val OPEN_CONFIRMATION_SHEET = 1210
 
     fun intent(context: Context): Intent {

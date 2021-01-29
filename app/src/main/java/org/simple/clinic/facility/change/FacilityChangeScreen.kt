@@ -3,17 +3,15 @@ package org.simple.clinic.facility.change
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenFacilityChangeBinding
-import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.ConfirmFacilityChangeSheet
@@ -21,8 +19,6 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.RuntimePermissions
-import org.simple.clinic.util.withLocale
-import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
@@ -74,26 +70,9 @@ class FacilityChangeScreen :
     context.injector<Injector>().inject(this)
   }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
-    binding = ScreenFacilityChangeBinding.inflate(layoutInflater)
-    setContentView(binding.root)
-
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     setupUiComponents()
-  }
-
-  override fun attachBaseContext(baseContext: Context) {
-    val wrappedContext = baseContext
-        .wrap { ViewPumpContextWrapper.wrap(it) }
-        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
-
-    super.attachBaseContext(wrappedContext)
-    applyOverrideConfiguration(Configuration())
-  }
-
-  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   private fun setupUiComponents() {

@@ -6,9 +6,11 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenFacilityChangeBinding
@@ -18,6 +20,7 @@ import org.simple.clinic.facility.change.confirm.ConfirmFacilityChangeSheet
 import org.simple.clinic.facility.change.confirm.FacilityChangeComponent
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
@@ -149,6 +152,15 @@ class FacilityChangeActivity : AppCompatActivity(), FacilityChangeUi, FacilityCh
         ConfirmFacilityChangeSheet.intent(this, facility),
         OPEN_CONFIRMATION_SHEET
     )
+  }
+
+  @Parcelize
+  class Key : ScreenKey() {
+
+    override val analyticsName = "Change Facility"
+
+    override fun instantiateFragment(): Fragment {
+    }
   }
 
   companion object {

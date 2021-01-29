@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,9 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.ConfirmFacilityChangeSheet
 import org.simple.clinic.feature.Features
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.UiEvent
@@ -44,6 +47,9 @@ class FacilityChangeScreen :
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var router: Router
 
   override fun defaultModel() = FacilityChangeModel.create()
 
@@ -76,7 +82,7 @@ class FacilityChangeScreen :
   }
 
   private fun setupUiComponents() {
-    facilityPickerView.backClicked = this@FacilityChangeScreen::finish
+    facilityPickerView.backClicked = router::pop
   }
 
   private fun facilityClicks(): Observable<UiEvent> {
@@ -95,15 +101,11 @@ class FacilityChangeScreen :
   }
 
   private fun exitAfterChange() {
-    val intent = Intent()
-    setResult(Activity.RESULT_OK, intent)
-    finish()
+    router.popWithResult(Succeeded(FacilityChanged))
   }
 
   override fun goBack() {
-    val intent = Intent()
-    setResult(Activity.RESULT_CANCELED, intent)
-    finish()
+    router.pop()
   }
 
   override fun openConfirmationSheet(facility: Facility) {
@@ -124,6 +126,9 @@ class FacilityChangeScreen :
   interface Injector {
     fun inject(target: FacilityChangeScreen)
   }
+
+  @Parcelize
+  object FacilityChanged : Parcelable
 
   companion object {
     private const val OPEN_CONFIRMATION_SHEET = 1210

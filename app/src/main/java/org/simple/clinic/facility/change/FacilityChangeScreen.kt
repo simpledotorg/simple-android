@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.ReportAnalyticsEvents
@@ -20,11 +19,9 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.ConfirmFacilityChangeSheet
 import org.simple.clinic.facility.change.confirm.FacilityChangeComponent
 import org.simple.clinic.feature.Features
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.RuntimePermissions
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.UiEvent
@@ -70,25 +67,6 @@ class FacilityChangeScreen :
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
-  private val events by unsafeLazy {
-    facilityClicks()
-        .compose(ReportAnalyticsEvents())
-        .share()
-  }
-
-  private val delegate by unsafeLazy {
-    val uiRenderer = FacilityChangeUiRenderer(this)
-
-    MobiusDelegate.forActivity(
-        events = events.ofType(),
-        defaultModel = FacilityChangeModel.create(),
-        update = FacilityChangeUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = FacilityChangeInit(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
   private val facilityPickerView
     get() = binding.facilityPickerView
 
@@ -99,8 +77,6 @@ class FacilityChangeScreen :
     setContentView(binding.root)
 
     setupUiComponents()
-
-    delegate.onRestoreInstanceState(savedInstanceState)
   }
 
   override fun attachBaseContext(baseContext: Context) {
@@ -116,21 +92,6 @@ class FacilityChangeScreen :
 
   override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
     super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
-  }
-
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
-
-  override fun onStop() {
-    delegate.stop()
-    super.onStop()
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    delegate.onSaveInstanceState(outState)
-    super.onSaveInstanceState(outState)
   }
 
   private fun setupDi() {

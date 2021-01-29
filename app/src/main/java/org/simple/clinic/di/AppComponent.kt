@@ -9,7 +9,6 @@ import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
 import org.simple.clinic.deeplink.di.DeepLinkComponent
 import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
 import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetComponent
-import org.simple.clinic.facility.change.confirm.FacilityChangeComponent
 import org.simple.clinic.facility.change.confirm.di.ConfirmFacilityChangeComponent
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
@@ -45,7 +44,6 @@ interface AppComponent {
   fun bloodSugarTypePickerSheetComponent(): BloodSugarTypePickerSheetComponent.Factory
   fun customPrescriptionEntrySheetComponent(): CustomPrescriptionEntrySheetComponent.Factory
   fun confirmFacilityChangeComponent(): ConfirmFacilityChangeComponent.Factory
-  fun facilityChangeComponent(): FacilityChangeComponent.Factory
   fun patientContactBottomSheetComponent(): ContactPatientBottomSheetComponent.Factory
   fun deepLinkComponent(): DeepLinkComponent.Factory
   fun signatureComponent(): SignatureComponent.Factory

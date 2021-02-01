@@ -46,6 +46,8 @@ class ConfirmFacilityChangeSheet :
       intent.putExtra(SELECTED_FACILITY, facility)
       return intent
     }
+
+    fun wasFacilityChanged(result: Succeeded) = result.result is Confirmed
   }
 
   @Inject

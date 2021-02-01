@@ -1,6 +1,5 @@
 package org.simple.clinic.facility.change
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
@@ -8,10 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenFacilityChangeBinding
@@ -19,12 +15,12 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.ConfirmFacilityChangeSheet
 import org.simple.clinic.feature.Features
+import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResult
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
@@ -38,7 +34,8 @@ class FacilityChangeScreen :
         FacilityChangeEvent,
         FacilityChangeEffect>(),
     FacilityChangeUi,
-    FacilityChangeUiActions {
+    FacilityChangeUiActions,
+    ExpectsResult {
 
   @Inject
   lateinit var locale: Locale
@@ -54,11 +51,6 @@ class FacilityChangeScreen :
 
   @Inject
   lateinit var router: Router
-
-  @Inject
-  lateinit var screenResults: ScreenResultBus
-
-  private val subscriptions = CompositeDisposable()
 
   override fun defaultModel() = FacilityChangeModel.create()
 
@@ -83,17 +75,26 @@ class FacilityChangeScreen :
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
-    subscriptions.add(handleFacilityChangeConfirmation())
-  }
-
-  override fun onDetach() {
-    subscriptions.clear()
-    super.onDetach()
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setupUiComponents()
+  }
+
+  override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
+    if (requestType == ConfirmFacility && result is Succeeded) {
+      val facilityChangeConfirmed = ConfirmFacilityChangeSheet.wasFacilityChanged(result)
+
+      handleFacilityChangeConfirmed(facilityChangeConfirmed)
+    }
+  }
+
+  private fun handleFacilityChangeConfirmed(facilityChangeConfirmed: Boolean) {
+    if (facilityChangeConfirmed)
+      exitAfterChange()
+    else
+      goBack()
   }
 
   private fun setupUiComponents() {
@@ -106,19 +107,6 @@ class FacilityChangeScreen :
     }
   }
 
-  private fun handleFacilityChangeConfirmation(): Disposable {
-    return screenResults
-        .streamResults()
-        .ofType<ActivityResult>()
-        .filter { it.requestCode == OPEN_CONFIRMATION_SHEET }
-        .subscribe {
-          if (it.resultCode == Activity.RESULT_OK)
-            exitAfterChange()
-          else
-            goBack()
-        }
-  }
-
   private fun exitAfterChange() {
     router.popWithResult(Succeeded(FacilityChanged))
   }
@@ -128,10 +116,7 @@ class FacilityChangeScreen :
   }
 
   override fun openConfirmationSheet(facility: Facility) {
-    startActivityForResult(
-        ConfirmFacilityChangeSheet.intent(requireContext(), facility),
-        OPEN_CONFIRMATION_SHEET
-    )
+    router.pushExpectingResult(ConfirmFacility, ConfirmFacilityChangeSheet.Key(facility))
   }
 
   @Parcelize
@@ -147,9 +132,8 @@ class FacilityChangeScreen :
   }
 
   @Parcelize
-  object FacilityChanged : Parcelable
+  object ConfirmFacility : Parcelable
 
-  companion object {
-    private const val OPEN_CONFIRMATION_SHEET = 1210
-  }
+  @Parcelize
+  object FacilityChanged : Parcelable
 }

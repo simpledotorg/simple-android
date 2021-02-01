@@ -6,17 +6,16 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.sync_indicator.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
 import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
@@ -57,6 +56,9 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
         modelUpdateListener = uiRenderer::render
     )
   }
+
+  private lateinit var statusTextView: TextView
+  private lateinit var rootLayout: LinearLayout
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {

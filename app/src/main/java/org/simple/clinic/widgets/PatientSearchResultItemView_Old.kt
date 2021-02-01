@@ -3,8 +3,10 @@ package org.simple.clinic.widgets
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.google.android.material.card.MaterialCardView
-import kotlinx.android.synthetic.main.view_patient_search_result.view.*
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.patient.Age
@@ -33,6 +35,16 @@ class PatientSearchResultItemView_Old(
 
   @Inject
   lateinit var userClock: UserClock
+
+  private lateinit var lastSeenContainer: LinearLayout
+  private lateinit var lastSeenTextView: TextView
+  private lateinit var phoneNumberContainer: LinearLayout
+  private lateinit var phoneNumberTextView: TextView
+  private lateinit var dateOfBirthContainer: LinearLayout
+  private lateinit var dateOfBirthTextView: TextView
+  private lateinit var addressLabel: TextView
+  private lateinit var genderLabel: ImageView
+  private lateinit var patientNameAgeGenderLabel: TextView
 
   override fun onFinishInflate() {
     super.onFinishInflate()

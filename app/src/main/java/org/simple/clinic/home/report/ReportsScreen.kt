@@ -4,9 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.webkit.WebView
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.screen_report.view.*
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
@@ -30,6 +31,9 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
         modelUpdateListener = uiRenderer::render
     )
   }
+
+  private lateinit var webView: WebView
+  private lateinit var noReportView: LinearLayout
 
   @SuppressLint("SetJavaScriptEnabled")
   override fun onFinishInflate() {

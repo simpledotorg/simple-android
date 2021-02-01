@@ -3,7 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.sentry.android.gradle'
 apply plugin: 'com.google.firebase.firebase-perf'
@@ -202,10 +202,6 @@ android {
     coreLibraryDesugaringEnabled true
     targetCompatibility JavaVersion.VERSION_1_8
     sourceCompatibility JavaVersion.VERSION_1_8
-  }
-
-  androidExtensions {
-    experimental = true
   }
 
   sourceSets {

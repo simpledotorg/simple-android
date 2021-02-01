@@ -8,17 +8,17 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.google.android.material.button.MaterialButton
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.patients_user_status_approved.view.*
-import kotlinx.android.synthetic.main.patients_user_status_awaitingsmsverification.view.*
-import kotlinx.android.synthetic.main.screen_patients.view.*
-import kotlinx.android.synthetic.main.view_simple_video.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.ActivityLifecycle
@@ -48,6 +48,7 @@ import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
 import org.simple.clinic.widgets.indexOfChildId
 import java.time.Instant
 import java.util.UUID
@@ -122,6 +123,19 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
         additionalEventSources = listOf(deferredEvents)
     )
   }
+
+  private lateinit var homeIllustration: ImageView
+  private lateinit var userStatusViewflipper: ViewFlipperWithLayoutEditorPreview
+  private lateinit var searchPatientsButton: MaterialButton
+  private lateinit var dismissApprovedStatusButton: MaterialButton
+  private lateinit var enterCodeButton: MaterialButton
+  private lateinit var scanSimpleCardButton: MaterialButton
+  private lateinit var videoTitleText: TextView
+  private lateinit var simpleVideoImage: ImageView
+  private lateinit var syncIndicator: LinearLayout
+  private lateinit var illustrationLayout: ViewFlipperWithLayoutEditorPreview
+  private lateinit var simpleVideoDuration: TextView
+  private lateinit var simpleVideoLayout: LinearLayout
 
   override fun onFinishInflate() {
     super.onFinishInflate()

@@ -4,9 +4,10 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.recent_patients.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.RecentPatientItemViewBinding
@@ -47,6 +48,9 @@ class RecentPatientsView(
 
   @Inject
   lateinit var config: PatientConfig
+
+  private lateinit var recentRecyclerView: RecyclerView
+  private lateinit var noRecentPatientsTextView: TextView
 
   private val recentAdapter = ItemAdapter(
       diffCallback = RecentPatientItemTypeDiffCallback(),

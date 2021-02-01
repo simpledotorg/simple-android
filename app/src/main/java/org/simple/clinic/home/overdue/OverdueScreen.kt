@@ -4,13 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_overdue.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
@@ -89,6 +90,9 @@ class OverdueScreen(
         modelUpdateListener = { /* Nothing to do here */ }
     )
   }
+
+  private lateinit var overdueRecyclerView: RecyclerView
+  private lateinit var viewForEmptyList: LinearLayout
 
   override fun onFinishInflate() {
     super.onFinishInflate()

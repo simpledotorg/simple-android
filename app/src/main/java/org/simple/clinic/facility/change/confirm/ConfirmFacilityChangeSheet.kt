@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
@@ -20,15 +22,22 @@ import org.simple.clinic.facility.change.confirm.di.ConfirmFacilityChangeCompone
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
 
-class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeUiActions {
+class ConfirmFacilityChangeSheet :
+    BaseBottomSheet<
+        ConfirmFacilityChangeSheet.Key,
+        SheetConfirmFacilityChangeBinding,
+        ConfirmFacilityChangeModel,
+        ConfirmFacilityChangeEvent,
+        ConfirmFacilityChangeEffect>(),
+    ConfirmFacilityChangeUiActions {
 
   companion object {
     lateinit var component: ConfirmFacilityChangeComponent
@@ -53,6 +62,14 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
 
   @Inject
   lateinit var features: Features
+
+  override fun defaultModel(): ConfirmFacilityChangeModel {
+    return ConfirmFacilityChangeModel.create()
+  }
+
+  override fun bindView(inflater: LayoutInflater, container: ViewGroup?): SheetConfirmFacilityChangeBinding {
+    return SheetConfirmFacilityChangeBinding.inflate(inflater, container, false)
+  }
 
   private val selectedFacility: Facility by lazy {
     intent.getParcelableExtra<Facility>(SELECTED_FACILITY)!!

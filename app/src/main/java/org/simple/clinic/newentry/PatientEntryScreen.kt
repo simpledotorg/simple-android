@@ -210,10 +210,14 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   // FIXME This is temporally coupled to `scrollToFirstFieldWithError()`.
   private val allTextInputFields: List<EditText> by unsafeLazy {
+    val ageOrDateOfBirthEditText = if (ageEditTextInputLayout.visibility == View.VISIBLE) {
+      ageEditText
+    } else {
+      dateOfBirthEditText
+    }
     listOf(
         fullNameEditText,
-        ageEditText,
-        dateOfBirthEditText,
+        ageOrDateOfBirthEditText,
         phoneNumberEditText,
         colonyOrVillageEditText,
         districtEditText,

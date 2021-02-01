@@ -106,8 +106,23 @@ android {
 
   flavorDimensions 'track'
 
+  buildFeatures {
+    // Enables Jetpack Compose for this module
+    compose true
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
   kotlinOptions {
+    useIR = true
     jvmTarget = 1.8
+  }
+
+  composeOptions {
+    kotlinCompilerExtensionVersion "$versions.compose"
   }
 
   productFlavors {
@@ -394,6 +409,19 @@ dependencies {
   implementation "com.google.android.gms:play-services-mlkit-barcode-scanning:$versions.mlKitBarcode"
 
   implementation "androidx.fragment:fragment:$versions.fragment"
+
+  implementation "androidx.compose.ui:ui:$versions.compose"
+  // Tooling support (Previews, etc.)
+  implementation "androidx.compose.ui:ui-tooling:$versions.compose"
+  // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
+  implementation "androidx.compose.foundation:foundation:$versions.compose"
+  // Material Design
+  implementation "androidx.compose.material:material:$versions.compose"
+  // Material design icons
+  implementation "androidx.compose.material:material-icons-core:$versions.compose"
+  implementation "androidx.compose.material:material-icons-extended:$versions.compose"
+  // Integration with observables
+  implementation "androidx.compose.runtime:runtime-rxjava2:$versions.compose"
 }
 
 // This must always be present at the bottom of this file, as per:

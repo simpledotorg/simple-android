@@ -36,9 +36,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.newentry.country.InputFields
-import org.simple.clinic.newentry.form.AgeField
 import org.simple.clinic.newentry.form.AlternativeIdInputField
-import org.simple.clinic.newentry.form.DateOfBirthField
 import org.simple.clinic.newentry.form.DistrictField
 import org.simple.clinic.newentry.form.GenderField
 import org.simple.clinic.newentry.form.LandlineOrMobileField
@@ -183,9 +181,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   private val streetAddressEditText
     get() = binding!!.streetAddressEditText
-
-  private val saveButtonFrame
-    get() = binding!!.saveButtonFrame
 
   private val consentSwitch
     get() = binding!!.consentSwitch

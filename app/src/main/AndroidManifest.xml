@@ -95,11 +95,6 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".facility.change.confirm.ConfirmFacilityChangeSheet"
-      android:theme="@style/Theme.Simple.BottomSheetActivity"
-      android:windowSoftInputMode="adjustResize" />
-
-    <activity
       android:name=".registration.confirmfacility.ConfirmFacilitySheet"
       android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />

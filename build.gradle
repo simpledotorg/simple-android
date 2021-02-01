@@ -97,7 +97,7 @@ buildscript {
 
   dependencies {
     classpath 'com.android.tools.build:gradle:7.0.0-alpha05'
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.21-2"
     classpath "io.sentry:sentry-android-gradle-plugin:$versions.sentryGradlePlugin"
     classpath "com.google.gms:google-services:$versions.googleServices"
     classpath "com.google.firebase:perf-plugin:$versions.firebasePerformancePlugin"

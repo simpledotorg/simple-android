@@ -2,7 +2,6 @@ package org.simple.clinic.facility.change
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -152,9 +151,5 @@ class FacilityChangeScreen :
 
   companion object {
     private const val OPEN_CONFIRMATION_SHEET = 1210
-
-    fun intent(context: Context): Intent {
-      return Intent(context, FacilityChangeScreen::class.java)
-    }
   }
 }

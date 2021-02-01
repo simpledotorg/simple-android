@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
@@ -19,6 +20,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetConfirmFacilityChangeBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.di.ConfirmFacilityChangeComponent
 import org.simple.clinic.feature.Features
@@ -108,6 +110,19 @@ class ConfirmFacilityChangeSheet :
   private val yesButton
     get() = binding.yesButton
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    facilityName.text = getString(R.string.confirmfacilitychange_facility_name, selectedFacility.name)
+    cancelButton.setOnClickListener {
+      closeSheetAfterCancel()
+    }
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -173,6 +188,10 @@ class ConfirmFacilityChangeSheet :
     val intent = Intent()
     setResult(Activity.RESULT_OK, intent)
     finish()
+  }
+
+  interface Injector {
+    fun inject(target: ConfirmFacilityChangeSheet)
   }
 
   @Parcelize

@@ -1,6 +1,5 @@
 package org.simple.clinic.facility.alertchange
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -10,8 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.f2prateek.rx.preferences2.Preference
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.ofType
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetAlertFacilityChangeBinding
@@ -21,24 +18,28 @@ import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResult
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.util.resolveFloat
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
-class AlertFacilityChangeSheet : BaseBottomSheet<
-    AlertFacilityChangeSheet.Key,
-    SheetAlertFacilityChangeBinding,
-    AlertFacilityChangeModel,
-    AlertFacilityChangeEvent,
-    AlertFacilityChangeEffect>() {
+class AlertFacilityChangeSheet :
+    BaseBottomSheet<
+        AlertFacilityChangeSheet.Key,
+        SheetAlertFacilityChangeBinding,
+        AlertFacilityChangeModel,
+        AlertFacilityChangeEvent,
+        AlertFacilityChangeEffect>(),
+    ExpectsResult {
 
   @Inject
   lateinit var locale: Locale
@@ -56,8 +57,6 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
   @Inject
   lateinit var router: Router
 
-  private val subscriptions = CompositeDisposable()
-
   override fun defaultModel() = AlertFacilityChangeModel()
 
   override fun uiRenderer(): ViewRenderer<AlertFacilityChangeModel> {
@@ -70,10 +69,6 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
 
   override fun bindView(inflater: LayoutInflater, container: ViewGroup?) =
       SheetAlertFacilityChangeBinding.inflate(inflater, container, false)
-
-  companion object {
-    const val FACILITY_CHANGE = 101
-  }
 
   private val currentFacilityName
     get() = screenKey.currentFacilityName
@@ -111,14 +106,12 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
 
       facilityName.text = getString(R.string.alertfacilitychange_facility_name, currentFacilityName)
       yesButton.setOnClickListener {
-        closeSheetWithResult(Activity.RESULT_OK)
+        proceedToNextScreen()
       }
 
       changeButton.setOnClickListener {
         openFacilityChangeScreen()
       }
-
-      listenForFacilityChangeResults()
     }
   }
 
@@ -128,28 +121,15 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
     binding.root.visibility = View.VISIBLE
   }
 
-  private fun listenForFacilityChangeResults() {
-    val subscription = screenResults
-        .streamResults()
-        .ofType<ActivityResult>()
-        .filter { it.requestCode == FACILITY_CHANGE }
-        .subscribe { result -> closeSheetWithResult(result.resultCode) }
-
-    subscriptions.add(subscription)
-  }
-
-  override fun onDestroyView() {
-    subscriptions.clear()
-    super.onDestroyView()
-  }
-
-  private fun closeSheetWithResult(resultCode: Int) {
-    if (resultCode == Activity.RESULT_OK) {
-      isFacilitySwitchedPreference.set(false)
-      closeSheetWithContinuation()
-    } else {
-      router.pop()
+  override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
+    if (requestType == ChangeCurrentFacility && result is Succeeded) {
+      proceedToNextScreen()
     }
+  }
+
+  private fun proceedToNextScreen() {
+    isFacilitySwitchedPreference.set(false)
+    closeSheetWithContinuation()
   }
 
   private fun closeSheetWithContinuation() {
@@ -169,7 +149,7 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
   }
 
   private fun openFacilityChangeScreen() {
-    startActivityForResult(FacilityChangeScreen.intent(requireContext()), FACILITY_CHANGE)
+    router.pushExpectingResult(ChangeCurrentFacility, FacilityChangeScreen.Key())
   }
 
   @Parcelize
@@ -188,6 +168,9 @@ class AlertFacilityChangeSheet : BaseBottomSheet<
   interface Injector {
     fun inject(target: AlertFacilityChangeSheet)
   }
+
+  @Parcelize
+  object ChangeCurrentFacility : Parcelable
 }
 
 sealed class Continuation : Parcelable {

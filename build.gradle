@@ -84,7 +84,8 @@ buildscript {
       lint                     : '27.1.1',
       rootbeer                 : '5fef9f62f9',
       mlKitBarcode             : '16.1.2',
-      fragment                 : '1.2.5'
+      fragment                 : '1.2.5',
+      compose                  : '1.0.0-alpha11'
   ]
 
   repositories {

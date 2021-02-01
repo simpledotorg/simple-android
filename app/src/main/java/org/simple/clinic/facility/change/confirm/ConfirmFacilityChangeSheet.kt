@@ -83,9 +83,7 @@ class ConfirmFacilityChangeSheet :
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
-  private val selectedFacility: Facility by lazy {
-    intent.getParcelableExtra<Facility>(SELECTED_FACILITY)!!
-  }
+  private val selectedFacility: Facility by unsafeLazy { screenKey.facility }
 
   private val events: Observable<UiEvent> by unsafeLazy {
     positiveButtonClicks()

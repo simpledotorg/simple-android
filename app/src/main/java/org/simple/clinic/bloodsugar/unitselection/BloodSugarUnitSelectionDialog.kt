@@ -125,15 +125,7 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
   }
 
   private fun radioButtonClicks(): Observable<BloodSugarUnitSelectionEvent> {
-    return bloodSugarUnitGroup
-        .checkedChanges()
-        .map { checkedId ->
-          when (checkedId) {
-            R.id.bloodSugarUnitMg -> SaveBloodSugarUnitPreference(BloodSugarUnitPreference.Mg)
-            R.id.bloodSugarUnitMmol -> SaveBloodSugarUnitPreference(BloodSugarUnitPreference.Mmol)
-            else -> SaveBloodSugarUnitPreference(BloodSugarUnitPreference.Mg)
-          }
-        }
+    return Observable.empty()
   }
 
   override fun onStart() {

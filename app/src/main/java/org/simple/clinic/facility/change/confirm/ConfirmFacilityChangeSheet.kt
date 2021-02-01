@@ -1,9 +1,9 @@
 package org.simple.clinic.facility.change.confirm
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +19,9 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.di.ConfirmFacilityChangeComponent
 import org.simple.clinic.feature.Features
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
@@ -58,6 +60,9 @@ class ConfirmFacilityChangeSheet :
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var router: Router
 
   override fun defaultModel(): ConfirmFacilityChangeModel {
     return ConfirmFacilityChangeModel.create()
@@ -102,19 +107,18 @@ class ConfirmFacilityChangeSheet :
   }
 
   private fun closeSheetAfterCancel() {
-    val intent = Intent()
-    setResult(Activity.RESULT_CANCELED, intent)
-    finish()
+    router.pop()
   }
 
   private fun positiveButtonClicks(): Observable<UiEvent> =
       yesButton.clicks().map { FacilityChangeConfirmed(selectedFacility) }
 
   override fun closeSheet() {
-    val intent = Intent()
-    setResult(Activity.RESULT_OK, intent)
-    finish()
+    router.popWithResult(Succeeded(Confirmed))
   }
+
+  @Parcelize
+  object Confirmed : Parcelable
 
   interface Injector {
     fun inject(target: ConfirmFacilityChangeSheet)

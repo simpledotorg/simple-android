@@ -20,6 +20,8 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
+import org.simple.clinic.home.HomeScreen.ScreenRequest.ChangeCurrentFacility
+import org.simple.clinic.home.HomeScreen.ScreenRequest.ScanPassportRequest
 import org.simple.clinic.home.HomeTab.OVERDUE
 import org.simple.clinic.home.HomeTab.PATIENTS
 import org.simple.clinic.home.HomeTab.REPORTS
@@ -141,7 +143,16 @@ class HomeScreen :
   }
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
-    if (requestType is ScanPassportRequest && result is Succeeded) {
+    when (requestType as ScreenRequest) {
+      ScanPassportRequest -> handleScanResults(result)
+      ChangeCurrentFacility -> {
+        // We don't really do anything with the result here
+      }
+    }
+  }
+
+  private fun handleScanResults(result: ScreenResult) {
+    if (result is Succeeded) {
       val scanResult = ScanSimpleIdScreen.readScanResult(result)
 
       scanResults.onNext(BusinessIdScanned.fromScanResult(scanResult))
@@ -178,7 +189,7 @@ class HomeScreen :
   }
 
   override fun openFacilitySelection() {
-    activity.startActivity(FacilityChangeScreen.intent(requireContext()))
+    router.pushExpectingResult(ChangeCurrentFacility, FacilityChangeScreen.Key())
   }
 
   override fun showOverdueAppointmentCount(count: Int) {
@@ -224,6 +235,12 @@ class HomeScreen :
     fun inject(target: HomeScreen)
   }
 
-  @Parcelize
-  object ScanPassportRequest : Parcelable
+  sealed class ScreenRequest : Parcelable {
+
+    @Parcelize
+    object ScanPassportRequest : ScreenRequest()
+
+    @Parcelize
+    object ChangeCurrentFacility : ScreenRequest()
+  }
 }

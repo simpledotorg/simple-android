@@ -7,9 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.list_blood_sugar_type.*
-import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
+import org.simple.clinic.databinding.ListBloodSugarTypeBinding
 import org.simple.clinic.widgets.visibleOrGone
 
 typealias OnBloodSugarTypeSelected = (BloodSugarMeasurementType) -> Unit
@@ -19,8 +18,9 @@ class BloodSugarTypeAdapter(
 ) : ListAdapter<BloodSugarTypeListItem, BloodSugarTypeViewHolder>(BloodSugarTypeDiffer()) {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BloodSugarTypeViewHolder {
-    val layout = LayoutInflater.from(parent.context).inflate(R.layout.list_blood_sugar_type, parent, false)
-    val viewHolder = BloodSugarTypeViewHolder(layout)
+    val layout = LayoutInflater.from(parent.context)
+    val binding = ListBloodSugarTypeBinding.inflate(layout, parent, false)
+    val viewHolder = BloodSugarTypeViewHolder(binding)
     viewHolder.itemView.setOnClickListener {
       onBloodSugarTypeSelected(viewHolder.bloodSugarTypeItem.measurementType)
     }
@@ -35,13 +35,15 @@ class BloodSugarTypeAdapter(
   }
 }
 
-class BloodSugarTypeViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+class BloodSugarTypeViewHolder(
+    val binding: ListBloodSugarTypeBinding
+) : RecyclerView.ViewHolder(binding.root) {
 
   lateinit var bloodSugarTypeItem: BloodSugarTypeListItem
 
   fun render(isDividerVisible: Boolean) {
-    itemName.text = bloodSugarTypeItem.name
-    divider.visibleOrGone(isDividerVisible)
+    binding.itemName.text = bloodSugarTypeItem.name
+    binding.divider.visibleOrGone(isDividerVisible)
   }
 }
 

@@ -5,10 +5,11 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.BackgroundColorSpan
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import com.google.android.material.card.MaterialCardView
-import kotlinx.android.synthetic.main.view_patient_search_result.view.*
 import org.simple.clinic.R
+import org.simple.clinic.databinding.ViewPatientSearchResultBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.DateOfBirth
@@ -31,6 +32,41 @@ class PatientSearchResultItemView(
     attributeSet: AttributeSet
 ) : MaterialCardView(context, attributeSet) {
 
+  private lateinit var binding: ViewPatientSearchResultBinding
+
+  private val lastSeenContainer
+    get() = binding.lastSeenContainer
+
+  private val lastSeenTextView
+    get() = binding.lastSeenTextView
+
+  private val visitedContainer
+    get() = binding.visitedContainer
+
+  private val visitedTextView
+    get() = binding.visitedTextView
+
+  private val phoneNumberContainer
+    get() = binding.phoneNumberContainer
+
+  private val phoneNumberTextView
+    get() = binding.phoneNumberTextView
+
+  private val dateOfBirthContainer
+    get() = binding.dateOfBirthContainer
+
+  private val dateOfBirthTextView
+    get() = binding.dateOfBirthTextView
+
+  private val addressLabel
+    get() = binding.addressLabel
+
+  private val genderLabel
+    get() = binding.genderLabel
+
+  private val patientNameAgeGenderLabel
+    get() = binding.patientNameAgeGenderLabel
+
   @Inject
   @Named("full_date")
   lateinit var dateTimeFormatter: DateTimeFormatter
@@ -40,7 +76,8 @@ class PatientSearchResultItemView(
 
   override fun onFinishInflate() {
     super.onFinishInflate()
-    inflate(context, R.layout.view_patient_search_result, this)
+    val layoutInflater = LayoutInflater.from(context)
+    binding = ViewPatientSearchResultBinding.inflate(layoutInflater, this)
     if (isInEditMode) {
       return
     }

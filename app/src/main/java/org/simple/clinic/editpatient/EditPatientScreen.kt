@@ -20,9 +20,9 @@ import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.patient_edit_bp_passport_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.PatientEditBpPassportViewBinding
 import org.simple.clinic.databinding.ScreenEditPatientBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.editpatient.EditPatientValidationError.AgeExceedsMaxLimit
@@ -414,9 +414,10 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   private fun inflateBpPassportView(identifier: String) {
-    val bpPassportView = LayoutInflater.from(context).inflate(R.layout.patient_edit_bp_passport_view, bpPassportsContainer, false)
+    val layoutInflater = LayoutInflater.from(context)
+    val bpPassportView = PatientEditBpPassportViewBinding.inflate(layoutInflater, this, false)
     bpPassportView.bpPassportIdentifier.text = identifier
-    bpPassportsContainer.addView(bpPassportView)
+    bpPassportsContainer.addView(bpPassportView.root)
   }
 
   override fun setPatientName(name: String) {

@@ -18,7 +18,7 @@
 - Add `NoopViewRenderer`
 - Migrate `BpPassportSheet` to `BaseBottomSheet`
 - [In Progress: 20 Jan 2021] Material Theming Migration
-- [In Progress: 22 Jan 2021] Migrate app to use ViewBinding
+- [In Progress: 28 Jan 2021] Migrate app to use ViewBinding
 
 ## Features
 - Highlight patient name and number in Instant search

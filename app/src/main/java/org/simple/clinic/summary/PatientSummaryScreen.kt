@@ -19,10 +19,10 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.screen_patient_summary.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
+import org.simple.clinic.databinding.ScreenPatientSummaryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.facility.Facility
@@ -74,6 +74,77 @@ class PatientSummaryScreen(
     context: Context,
     attrs: AttributeSet
 ) : RelativeLayout(context, attrs), PatientSummaryScreenUi, PatientSummaryUiActions, PatientSummaryChildView, HandlesBack {
+
+  private var binding: ScreenPatientSummaryBinding? = null
+
+  private val rootLayout
+    get() = binding!!.rootLayout
+
+  private val drugSummaryView
+    get() = binding!!.drugSummaryView
+
+  private val bloodPressureSummaryView
+    get() = binding!!.bloodPressureSummaryView
+
+  private val bloodSugarSummaryView
+    get() = binding!!.bloodSugarSummaryView
+
+  private val assignedFacilityView
+    get() = binding!!.assignedFacilityView
+
+  private val medicalHistorySummaryView
+    get() = binding!!.medicalHistorySummaryView
+
+  private val summaryLoadingProgressBar
+    get() = binding!!.summaryLoadingProgressBar
+
+  private val summaryViewsContainer
+    get() = binding!!.summaryViewsContainer
+
+  private val editPatientButton
+    get() = binding!!.editPatientButton
+
+  private val doneButton
+    get() = binding!!.doneButton
+
+  private val teleconsultButton
+    get() = binding!!.teleconsultButton
+
+  private val logTeleconsultButton
+    get() = binding!!.logTeleconsultButton
+
+  private val logTeleconsultButtonFrame
+    get() = binding!!.logTeleconsultButtonFrame
+
+  private val backButton
+    get() = binding!!.backButton
+
+  private val linkIdWithPatientView
+    get() = binding!!.linkIdWithPatientView
+
+  private val contactTextView
+    get() = binding!!.contactTextView
+
+  private val facilityNameAndDateTextView
+    get() = binding!!.facilityNameAndDateTextView
+
+  private val labelRegistered
+    get() = binding!!.labelRegistered
+
+  private val addressTextView
+    get() = binding!!.addressTextView
+
+  private val fullNameTextView
+    get() = binding!!.fullNameTextView
+
+  private val bpPassportTextView
+    get() = binding!!.bpPassportTextView
+
+  private val bangladeshNationalIdTextView
+    get() = binding!!.bangladeshNationalIdTextView
+
+  private val doneButtonFrame
+    get() = binding!!.doneButtonFrame
 
   @Inject
   lateinit var router: Router
@@ -158,6 +229,8 @@ class PatientSummaryScreen(
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
+    binding = ScreenPatientSummaryBinding.bind(this)
+
     if (isInEditMode) {
       return
     }
@@ -214,6 +287,7 @@ class PatientSummaryScreen(
 
   override fun onDetachedFromWindow() {
     mobiusDelegate.stop()
+    binding = null
     super.onDetachedFromWindow()
   }
 

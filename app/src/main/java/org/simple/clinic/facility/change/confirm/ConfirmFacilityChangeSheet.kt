@@ -1,7 +1,6 @@
 package org.simple.clinic.facility.change.confirm
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -36,17 +35,6 @@ class ConfirmFacilityChangeSheet :
     ConfirmFacilityChangeUiActions {
 
   companion object {
-    private const val SELECTED_FACILITY = "selected_facility"
-
-    fun intent(
-        context: Context,
-        facility: Facility
-    ): Intent {
-      val intent = Intent(context, ConfirmFacilityChangeSheet::class.java)
-      intent.putExtra(SELECTED_FACILITY, facility)
-      return intent
-    }
-
     fun wasFacilityChanged(result: Succeeded) = result.result is Confirmed
   }
 

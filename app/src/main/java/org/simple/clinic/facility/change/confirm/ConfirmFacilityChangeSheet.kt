@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetConfirmFacilityChangeBinding
@@ -17,6 +19,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.di.ConfirmFacilityChangeComponent
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
@@ -145,5 +148,16 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
     val intent = Intent()
     setResult(Activity.RESULT_OK, intent)
     finish()
+  }
+
+  @Parcelize
+  data class Key(val facility: Facility) : ScreenKey() {
+
+    override val analyticsName = "Confirm Facility Change"
+
+    override val type = ScreenType.Modal
+
+    override fun instantiateFragment(): Fragment {
+    }
   }
 }

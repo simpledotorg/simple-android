@@ -16,7 +16,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetConfirmFacilityChangeBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.change.confirm.di.ConfirmFacilityChangeComponent
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -37,8 +36,6 @@ class ConfirmFacilityChangeSheet :
     ConfirmFacilityChangeUiActions {
 
   companion object {
-    lateinit var component: ConfirmFacilityChangeComponent
-
     private const val SELECTED_FACILITY = "selected_facility"
 
     fun intent(

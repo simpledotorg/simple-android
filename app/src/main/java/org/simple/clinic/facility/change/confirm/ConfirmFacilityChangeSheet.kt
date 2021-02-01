@@ -7,7 +7,6 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -131,7 +130,6 @@ class ConfirmFacilityChangeSheet :
 
     override val type = ScreenType.Modal
 
-    override fun instantiateFragment(): Fragment {
-    }
+    override fun instantiateFragment() = ConfirmFacilityChangeSheet()
   }
 }

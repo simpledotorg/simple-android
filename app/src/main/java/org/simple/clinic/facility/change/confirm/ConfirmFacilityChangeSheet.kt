@@ -11,10 +11,12 @@ import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetConfirmFacilityChangeBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.Facility
@@ -70,6 +72,16 @@ class ConfirmFacilityChangeSheet :
   override fun bindView(inflater: LayoutInflater, container: ViewGroup?): SheetConfirmFacilityChangeBinding {
     return SheetConfirmFacilityChangeBinding.inflate(inflater, container, false)
   }
+
+  override fun events() = positiveButtonClicks()
+      .compose(ReportAnalyticsEvents())
+      .cast<ConfirmFacilityChangeEvent>()
+
+  override fun createUpdate() = ConfirmFacilityChangeUpdate()
+
+  override fun createInit() = ConfirmFacilityChangeInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
   private val selectedFacility: Facility by lazy {
     intent.getParcelableExtra<Facility>(SELECTED_FACILITY)!!

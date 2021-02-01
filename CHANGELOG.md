@@ -2,6 +2,11 @@
 
 ## Next Release
 ### Internal
+- [In Progress: 20 Jan 2021] Material Theming Migration
+- [In Progress: 28 Jan 2021] Migrate app to use ViewBinding
+
+## On Demo
+### Internal
 - Disable strict mode crash for VM policy
 - Redesign `LinkIdWithPatientView`
 - Move to Dagger assisted inject
@@ -17,8 +22,6 @@
 - Fix bottom sheet dialog theme
 - Add `NoopViewRenderer`
 - Migrate `BpPassportSheet` to `BaseBottomSheet`
-- [In Progress: 20 Jan 2021] Material Theming Migration
-- [In Progress: 28 Jan 2021] Migrate app to use ViewBinding
 
 ## Features
 - Highlight patient name and number in Instant search

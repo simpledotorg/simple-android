@@ -1,5 +1,6 @@
 package org.simple.clinic.util
 
+import android.os.Parcel
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
@@ -16,13 +17,12 @@ import kotlinx.android.parcel.Parcelize
  * This class is based on the Java [Optional](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html)
  * class, but which forces the [Parcelable] interface on its types.
  **/
-@Parcelize
 data class ParcelableOptional<T : Parcelable>(
     private val value: T?
 ) : Parcelable {
 
   companion object {
-    fun <T : Parcelable> of(value: T?) = ParcelableOptional(value)
+    fun <T : Parcelable> of(value: T?) = ParcelableOptional<T>(value)
   }
 
   fun get(): T {
@@ -50,8 +50,16 @@ data class ParcelableOptional<T : Parcelable>(
 
     return value
   }
+
+  override fun describeContents(): Int {
+    return 0
+  }
+
+  override fun writeToParcel(dest: Parcel?, flags: Int) {
+
+  }
 }
 
 fun <T : Parcelable> Optional<T>.parcelable(): ParcelableOptional<T> {
-  return ParcelableOptional(this.toNullable())
+  return ParcelableOptional<T>(this.toNullable())
 }

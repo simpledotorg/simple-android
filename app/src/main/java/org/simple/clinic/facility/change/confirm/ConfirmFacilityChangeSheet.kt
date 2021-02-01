@@ -99,8 +99,6 @@ class ConfirmFacilityChangeSheet :
     )
   }
 
-  private lateinit var binding: SheetConfirmFacilityChangeBinding
-
   private val facilityName
     get() = binding.facilityName
 

@@ -364,6 +364,10 @@
   <string name="help_try_again">আবার চেষ্টা করুন</string>
 
   <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_yes">হ্যাঁ</string>
+  <string name="linkidwithpatient_button_back">ফিরুন</string>
+  <string name="linkidwithpatient_text">এতে BP পাসপোর্ট যোগ করুন</string>
+  <string name="linkidwithpatient_patient_text">রোগী %1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 
@@ -383,7 +387,7 @@
   <string name="appupdatedialog_negative_button_text">এখন নয়</string>
 
   <!-- All Patients In Facility View-->
-  <string name="allpatientsinfacility_nopatients_message">আপনি এখানে আপনার ফেসিলিটিতে নিবন্ধিত সমস্ত রোগীকে দেখতে পাবেন।</string>
+  <string name="allpatientsinfacility_nopatients_message">আপনি এখানে আপনার ক্লিনিকের জন্য হাইপারটেনশনের রিপোর্ট দেখতে পাবেন।</string>
   <string name="allpatientsinfacility_nopatients_title">%1$s-তে কোনও রোগী নেই</string>
   <string name="allpatientsinfacility_foundpatients_header">সমস্ত রোগী: %1$s</string>
 
@@ -513,7 +517,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">\"ভিজিটে আসতে সম্মত হয়েছেন\"\ বলে রোগীকে চিহ্নিত করুন</string>
+  <string name="contactpatient_agreed_to_visit">\&quot;ভিজিটে আসতে সম্মত হয়েছেন&quot;\ বলে রোগীকে চিহ্নিত করুন</string>
   <string name="contactpatient_remind_call_later">পরে কল করার জন্য মনে করিয়ে দিন…</string>
   <string name="contactpatient_remove_from_list">সময়াতীতের তালিকা থেকে সরান…</string>
   <string name="contactpatient_result_of_call">কলের ফলাফল</string>
@@ -678,5 +682,8 @@
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s কে অর্পণ করা হয়েছে</string>
   <string name="patientinstantsearch_nearby_facilities_header">কাছাকাছি কেন্দ্রগুলি থেকে</string>
+  <string name="patientsearch_error_no_patients_in_facility">আপনি এখানে আপনার ফেসালিটিতে নিবন্ধিত সমস্ত রোগীকে দেখতে পাবেন</string>
+  <string name="patientsearch_error_no_search_results">কোনও রোগী খুঁজে পাওয়া যায়নি</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading">%1$s-এ কোনও রোগী নেই</string>
 
 </resources>

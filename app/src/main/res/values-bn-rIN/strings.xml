@@ -364,6 +364,10 @@
   <string name="help_try_again">আবার চেষ্টা করুন</string>
 
   <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_yes">হ্যাঁ</string>
+  <string name="linkidwithpatient_button_back">ফিরুন</string>
+  <string name="linkidwithpatient_text">এতে BP পাসপোর্ট জুড়ুন</string>
+  <string name="linkidwithpatient_patient_text">রোগী %1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 
@@ -678,5 +682,8 @@
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s-এ অ্যাসাইন করা হয়েছিল</string>
   <string name="patientinstantsearch_nearby_facilities_header">কাছাকাছি কেন্দ্রগুলি থেকে</string>
+  <string name="patientsearch_error_no_patients_in_facility">আপনি এখানে আপনার ফেসালিটিতে নিবন্ধিত সমস্ত রোগীকে দেখতে পাবেন</string>
+  <string name="patientsearch_error_no_search_results">কোনো রোগী খুঁজে পাওয়া যায়নি</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading">%1$s-এ কোনও রোগী নেই</string>
 
 </resources>

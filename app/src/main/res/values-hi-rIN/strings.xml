@@ -372,7 +372,7 @@
   <string name="linkidwithpatient_button_yes">हाँ</string>
   <string name="linkidwithpatient_button_back">वापस जाएँ</string>
   <string name="linkidwithpatient_text">बीपी पासपोर्ट को इसमें जोड़ें</string>
-  <string name="linkidwithpatient_patient_text">%1$s?</string>
+  <string name="linkidwithpatient_patient_text">रोगी %1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 

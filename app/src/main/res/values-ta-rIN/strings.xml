@@ -364,6 +364,10 @@
   <string name="help_try_again">மீண்டும் முயலவும்</string>
 
   <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_yes">ஆம்</string>
+  <string name="linkidwithpatient_button_back">மீண்டும்</string>
+  <string name="linkidwithpatient_text">பிபி பாஸ்போர்ட்டை இதில் சேர்</string>
+  <string name="linkidwithpatient_patient_text">நோயாளி %1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 
@@ -678,5 +682,8 @@
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s-க்கு ஒதுக்கப்பட்டது</string>
   <string name="patientinstantsearch_nearby_facilities_header">அருகாமை மையங்களில் இருந்து</string>
+  <string name="patientsearch_error_no_patients_in_facility">உங்கள் மையத்தில் பதிவு செய்துள்ள அனைத்து நோயாளிகளையும் இங்கே காண முடியும்</string>
+  <string name="patientsearch_error_no_search_results">இந்த பெயரில் எந்த நோயாளியும் பதிவு செய்யப்படவில்லை</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading">%1$s-இல் நோயாளிகள் இல்லை</string>
 
 </resources>

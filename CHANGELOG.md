@@ -9,7 +9,7 @@
 - [In Progress: 28 Jan 2021] Migrate app to use ViewBinding
 
 ### Changes
-- Updated translations: `mr-IN`, `ta-IN`, `bn-BD`, `ti-ET`, `am_ET`, `kn_IN`, `bn_IN`, `hi_IN`
+- Updated translations: `mr-IN`, `ta-IN`, `bn-BD`, `ti-ET`, `am_ET`, `kn_IN`, `bn_IN`, `hi_IN`, `te-IN`
 
 ### Fixes
 - Fix App crash when returning to the register patient screen before completing registration when patient date of birth is entered

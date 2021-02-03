@@ -176,6 +176,17 @@ class PatientRepository @Inject constructor(
         )
   }
 
+  fun updatePatientStatusToMigrated(patientUuid: UUID) {
+    database
+        .patientDao()
+        .updatePatientStatus(
+            uuid = patientUuid,
+            newStatus = PatientStatus.Migrated,
+            newSyncStatus = PENDING,
+            newUpdatedAt = Instant.now(utcClock)
+        )
+  }
+
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PatientProfile> {
     return database.patientDao().recordsWithSyncStatus(syncStatus)
   }

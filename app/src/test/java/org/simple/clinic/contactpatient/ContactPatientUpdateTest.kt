@@ -588,22 +588,6 @@ class ContactPatientUpdateTest {
   }
 
   @Test
-  fun `when the appointment is removed because the patient has moved to a private practitioner, the appointment must be cancelled`() {
-    val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
-        .overdueAppointmentLoaded(Just(overdueAppointment))
-        .removeAppointmentReasonSelected(MovedToPrivatePractitioner)
-
-    spec
-        .given(model)
-        .whenEvent(RemoveAppointmentDoneClicked)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(CancelAppointment(appointmentUuid = appointmentUuid, reason = AppointmentCancelReason.MovedToPrivatePractitioner) as ContactPatientEffect)
-        ))
-  }
-
-  @Test
   fun `when the appointment is removed for any other reason, the appointment must be cancelled`() {
     val model = defaultModel()
         .patientProfileLoaded(patientProfile)

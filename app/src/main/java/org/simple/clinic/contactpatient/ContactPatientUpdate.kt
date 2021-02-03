@@ -60,6 +60,7 @@ class ContactPatientUpdate(
       PatientMarkedAsVisited,
       PatientMarkedAsDead,
       AppointmentMarkedAsCancelled -> dispatch(CloseScreen)
+      is PatientMarkAsMigrated -> dispatch(CancelAppointment(model.appointmentUuid, event.appointmentCancelReason))
     }
   }
 

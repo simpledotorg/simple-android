@@ -651,6 +651,26 @@ class ContactPatientUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when the patient is marked as migrated, then appointment should be cancelled`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Optional.of(overdueAppointment))
+
+    val appointmentCancelReason = AppointmentCancelReason.MovedToPrivatePractitioner
+
+    spec
+        .given(model)
+        .whenEvent(PatientMarkAsMigrated(appointmentCancelReason))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(CancelAppointment(appointmentUuid, appointmentCancelReason))
+            )
+        )
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       remindAppointmentsIn: List<TimeToAppointment> = this.timeToAppointments,

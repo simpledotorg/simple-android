@@ -28,6 +28,7 @@ import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
@@ -633,6 +634,23 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when the done button is clicked, then patient must be marked as moved to private`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Optional.of(overdueAppointment))
+        .removeAppointmentReasonSelected(MovedToPrivatePractitioner)
+
+    spec
+        .given(model)
+        .whenEvent(RemoveAppointmentDoneClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(MarkPatientAsMovedToPrivate(patientUuid = patientUuid))
+            )
+        )
+  }
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       remindAppointmentsIn: List<TimeToAppointment> = this.timeToAppointments,

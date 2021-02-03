@@ -15,7 +15,6 @@ import org.simple.clinic.contactpatient.UiMode.RemoveAppointment
 import org.simple.clinic.contactpatient.UiMode.SetAppointmentReminder
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
-import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentCancelReason.Other
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
@@ -73,7 +72,7 @@ class ContactPatientUpdate(
       NotResponding -> CancelAppointment(appointmentUuid = appointmentUuid, reason = PatientNotResponding)
       PhoneNumberNotWorking -> CancelAppointment(appointmentUuid = appointmentUuid, reason = InvalidPhoneNumber)
       TransferredToAnotherFacility -> CancelAppointment(appointmentUuid = appointmentUuid, reason = TransferredToAnotherPublicHospital)
-      MovedToPrivatePractitioner -> CancelAppointment(appointmentUuid = appointmentUuid, reason = AppointmentCancelReason.MovedToPrivatePractitioner)
+      MovedToPrivatePractitioner -> MarkPatientAsMovedToPrivate(patientUuid = model.patientUuid)
       OtherReason -> CancelAppointment(appointmentUuid = appointmentUuid, reason = Other)
     }
 

@@ -237,4 +237,19 @@ class ContactPatientEffectHandlerTest {
     testCase.assertOutgoingEvents(AppointmentMarkedAsCancelled)
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when the patient is marked as moved to private effect is received, then the patient must be marked as migrated`() {
+    // given
+    val appointmentCancelReason = AppointmentCancelReason.MovedToPrivatePractitioner
+
+    // when
+    testCase.dispatch(MarkPatientAsMovedToPrivate(patientUuid = patientUuid))
+
+    // then
+    verify(patientRepository).updatePatientStatusToMigrated(patientUuid)
+    verifyNoMoreInteractions(patientRepository)
+    testCase.assertOutgoingEvents(PatientMarkAsMigrated(appointmentCancelReason))
+    verifyZeroInteractions(uiActions)
+  }
 }

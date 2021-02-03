@@ -43,3 +43,7 @@ data class CancelAppointment(
     val appointmentUuid: UUID,
     val reason: AppointmentCancelReason
 ): ContactPatientEffect()
+
+data class MarkPatientAsMovedToPrivate(
+    val patientUuid : UUID
+): ContactPatientEffect()

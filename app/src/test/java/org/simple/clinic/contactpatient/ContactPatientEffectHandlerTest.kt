@@ -252,4 +252,16 @@ class ContactPatientEffectHandlerTest {
     testCase.assertOutgoingEvents(PatientMarkAsMigrated(appointmentCancelReason))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when the patient is transferred to another facility effect is received, then the patient must be marked as migrated`() {
+    // when
+    testCase.dispatch(MarkPatientAsTransferredToAnotherFacility(patientUuid = patientUuid))
+
+    // then
+    verify(patientRepository).updatePatientStatusToMigrated(patientUuid)
+    verifyNoMoreInteractions(patientRepository)
+    testCase.assertOutgoingEvents(PatientMarkAsMigrated(AppointmentCancelReason.TransferredToAnotherPublicHospital))
+    verifyZeroInteractions(uiActions)
+  }
 }

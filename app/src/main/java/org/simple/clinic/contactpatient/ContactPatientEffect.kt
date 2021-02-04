@@ -47,3 +47,7 @@ data class CancelAppointment(
 data class MarkPatientAsMovedToPrivate(
     val patientUuid : UUID
 ): ContactPatientEffect()
+
+data class MarkPatientAsTransferredToAnotherFacility(
+    val patientUuid: UUID
+) : ContactPatientEffect()

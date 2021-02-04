@@ -8,6 +8,9 @@
 - [In Progress: 20 Jan 2021] Material Theming Migration
 - [In Progress: 28 Jan 2021] Migrate app to use ViewBinding
 
+### Changes
+- Updated translations: `mr-IN`
+
 ## On Demo
 ### Internal
 - Disable strict mode crash for VM policy

@@ -655,6 +655,25 @@ class ContactPatientUpdateTest {
         )
   }
 
+
+  @Test
+  fun `when the done button is clicked, then mark the patient as transferred to a different facility`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Optional.of(overdueAppointment))
+        .removeAppointmentReasonSelected(TransferredToAnotherFacility)
+
+    spec
+        .given(model)
+        .whenEvent(RemoveAppointmentDoneClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(MarkPatientAsTransferredToAnotherFacility(patientUuid = patientUuid))
+            )
+        )
+  }
+  
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       remindAppointmentsIn: List<TimeToAppointment> = this.timeToAppointments,

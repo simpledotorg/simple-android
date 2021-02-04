@@ -18,7 +18,6 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentCancelReason.Other
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
-import org.simple.clinic.overdue.AppointmentCancelReason.TransferredToAnotherPublicHospital
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
@@ -72,7 +71,7 @@ class ContactPatientUpdate(
       Died -> MarkPatientAsDead(patientUuid = model.patientUuid, appointmentUuid = appointmentUuid)
       NotResponding -> CancelAppointment(appointmentUuid = appointmentUuid, reason = PatientNotResponding)
       PhoneNumberNotWorking -> CancelAppointment(appointmentUuid = appointmentUuid, reason = InvalidPhoneNumber)
-      TransferredToAnotherFacility -> CancelAppointment(appointmentUuid = appointmentUuid, reason = TransferredToAnotherPublicHospital)
+      TransferredToAnotherFacility -> MarkPatientAsTransferredToAnotherFacility(patientUuid = model.patientUuid)
       MovedToPrivatePractitioner -> MarkPatientAsMovedToPrivate(patientUuid = model.patientUuid)
       OtherReason -> CancelAppointment(appointmentUuid = appointmentUuid, reason = Other)
     }
@@ -91,7 +90,7 @@ class ContactPatientUpdate(
   private fun showManualDatePicker(model: ContactPatientModel): Next<ContactPatientModel, ContactPatientEffect> {
     val earliestPossibleAppointmentDate = model.potentialAppointments.first().scheduledFor
     val latestPossibleAppointmentDate = model.potentialAppointments.last().scheduledFor
-    
+
     val datePickerBounds = earliestPossibleAppointmentDate..latestPossibleAppointmentDate
 
     return dispatch(ShowManualDatePicker(model.selectedAppointmentDate, datePickerBounds))

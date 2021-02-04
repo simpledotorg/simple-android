@@ -9,7 +9,7 @@
 - [In Progress: 28 Jan 2021] Migrate app to use ViewBinding
 
 ### Changes
-- Updated translations: `mr-IN`
+- Updated translations: `mr-IN`, `ta-IN`
 
 ## On Demo
 ### Internal

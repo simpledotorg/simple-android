@@ -5,10 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ClinicApp
@@ -21,6 +22,7 @@ import org.simple.clinic.facility.change.confirm.FacilityChangeComponent
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
@@ -29,7 +31,15 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
 
-class FacilityChangeScreen : AppCompatActivity(), FacilityChangeUi, FacilityChangeUiActions {
+class FacilityChangeScreen :
+    BaseScreen<
+        FacilityChangeScreen.Key,
+        ScreenFacilityChangeBinding,
+        FacilityChangeModel,
+        FacilityChangeEvent,
+        FacilityChangeEffect>(),
+    FacilityChangeUi,
+    FacilityChangeUiActions {
 
   @Inject
   lateinit var locale: Locale
@@ -42,6 +52,23 @@ class FacilityChangeScreen : AppCompatActivity(), FacilityChangeUi, FacilityChan
 
   @Inject
   lateinit var features: Features
+
+  override fun defaultModel() = FacilityChangeModel.create()
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenFacilityChangeBinding.inflate(layoutInflater, container, false)
+
+  override fun events() = facilityClicks()
+      .compose(ReportAnalyticsEvents())
+      .cast<FacilityChangeEvent>()
+
+  override fun createInit() = FacilityChangeInit()
+
+  override fun createUpdate() = FacilityChangeUpdate()
+
+  override fun uiRenderer() = FacilityChangeUiRenderer(this)
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
   private val events by unsafeLazy {
     facilityClicks()
@@ -61,8 +88,6 @@ class FacilityChangeScreen : AppCompatActivity(), FacilityChangeUi, FacilityChan
         modelUpdateListener = uiRenderer::render
     )
   }
-
-  private lateinit var binding: ScreenFacilityChangeBinding
 
   private val facilityPickerView
     get() = binding.facilityPickerView
@@ -159,8 +184,7 @@ class FacilityChangeScreen : AppCompatActivity(), FacilityChangeUi, FacilityChan
 
     override val analyticsName = "Change Facility"
 
-    override fun instantiateFragment(): Fragment {
-    }
+    override fun instantiateFragment() = FacilityChangeScreen()
   }
 
   companion object {

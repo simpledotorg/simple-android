@@ -83,14 +83,14 @@ data class RemoveAppointmentReasonSelected(
     get() = "Contact Patient:Appointment cancel reason selected:$reason"
 }
 
-object PatientMarkedAsVisited: ContactPatientEvent()
+object PatientMarkedAsVisited : ContactPatientEvent()
 
-object PatientMarkedAsDead: ContactPatientEvent()
+object PatientMarkedAsDead : ContactPatientEvent()
 
-object AppointmentMarkedAsCancelled: ContactPatientEvent()
+object AppointmentMarkedAsCancelled : ContactPatientEvent()
 
-object RemoveAppointmentDoneClicked: ContactPatientEvent()
+object RemoveAppointmentDoneClicked : ContactPatientEvent()
 
-object RemoveFromOverdueListClicked: ContactPatientEvent()
+object RemoveFromOverdueListClicked : ContactPatientEvent()
 
-data class PatientMarkAsMigrated(val appointmentCancelReason: AppointmentCancelReason): ContactPatientEvent()
+data class PatientMarkAsMigrated(val appointmentCancelReason: AppointmentCancelReason) : ContactPatientEvent()

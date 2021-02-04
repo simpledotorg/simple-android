@@ -364,6 +364,10 @@
   <string name="help_try_again">መሊስካ/ኪ ፈትን/ኒ</string>
 
   <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_yes">እወ</string>
+  <string name="linkidwithpatient_button_back">ተመለስ</string>
+  <string name="linkidwithpatient_text">ናይ BP ፓስፖርት ናብዚ ደምር</string>
+  <string name="linkidwithpatient_patient_text">ተሓካሚ %1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 
@@ -678,5 +682,8 @@
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">ዝተመደቦ ናብ %1$s</string>
   <string name="patientinstantsearch_nearby_facilities_header">ካብ ቀረባ ትካላት</string>
+  <string name="patientsearch_error_no_patients_in_facility">ኩሎም ኣብ ናትካ ትካል ዝተመዝገቡ ተሓከምቲ ኣብዚ ክትርእዮም ትኽእል ኢኻ</string>
+  <string name="patientsearch_error_no_search_results">ዝዛመዱ ሕሙማት የለውን</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading">ተሓከምቲ ኣብዚ የለዉን  %1$s</string>
 
 </resources>

@@ -364,6 +364,10 @@
   <string name="help_try_again">ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ</string>
 
   <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_yes">ಹೌದು</string>
+  <string name="linkidwithpatient_button_back">ಹಿಂದೆ</string>
+  <string name="linkidwithpatient_text">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಸೇರಿಸಿ</string>
+  <string name="linkidwithpatient_patient_text">ರೋಗಿ %1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 
@@ -678,5 +682,8 @@
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s ಗೆ ನಿಯೋಜಿಸಲಾಗಿದೆ</string>
   <string name="patientinstantsearch_nearby_facilities_header">ಹತ್ತಿರದ ಸೌಲಭ್ಯ ಕೇಂದ್ರಗಳಿಂದ</string>
+  <string name="patientsearch_error_no_patients_in_facility">ನಿಮ್ಮ ಸೌಲಭ್ಯದಲ್ಲಿ ನೋಂದಾಯಿಸಿಕೊಂಡ ಎಲ್ಲಾ ರೋಗಿಗಳನ್ನು ನಿಮಗೆ ಇಲ್ಲಿ ನೋಡಲು ಸಾಧ್ಯವಾಗುತ್ತದೆ</string>
+  <string name="patientsearch_error_no_search_results">ಯಾವುದೇ ರೋಗಿ ಹೊಂದಾಣಿಕೆಯಾಗುತ್ತಿಲ್ಲ</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading">%1$s ನಲ್ಲಿ ಯಾವುದೇ ರೋಗಿಗಳಿಲ್ಲ</string>
 
 </resources>

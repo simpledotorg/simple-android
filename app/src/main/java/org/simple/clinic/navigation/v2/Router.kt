@@ -71,6 +71,14 @@ class Router(
     executeStateChange(newHistory, Direction.Forward, null)
   }
 
+  fun replaceTop(screenKey: ScreenKey) {
+    val newHistory = history
+        .removeLast()
+        .add(Normal(screenKey))
+
+    executeStateChange(newHistory, Direction.Replace, null)
+  }
+
   fun pushExpectingResult(
       requestType: Parcelable,
       key: ScreenKey

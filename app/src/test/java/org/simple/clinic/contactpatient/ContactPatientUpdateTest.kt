@@ -19,7 +19,6 @@ import org.simple.clinic.contactpatient.UiMode.RemoveAppointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
-import org.simple.clinic.overdue.AppointmentCancelReason.TransferredToAnotherPublicHospital
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
@@ -572,22 +571,6 @@ class ContactPatientUpdateTest {
   }
 
   @Test
-  fun `when the appointment is removed because the patient was transferred to another facility, the appointment must be cancelled`() {
-    val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
-        .overdueAppointmentLoaded(Just(overdueAppointment))
-        .removeAppointmentReasonSelected(TransferredToAnotherFacility)
-
-    spec
-        .given(model)
-        .whenEvent(RemoveAppointmentDoneClicked)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(CancelAppointment(appointmentUuid = appointmentUuid, reason = TransferredToAnotherPublicHospital) as ContactPatientEffect)
-        ))
-  }
-
-  @Test
   fun `when the appointment is removed for any other reason, the appointment must be cancelled`() {
     val model = defaultModel()
         .patientProfileLoaded(patientProfile)
@@ -673,7 +656,7 @@ class ContactPatientUpdateTest {
             )
         )
   }
-  
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       remindAppointmentsIn: List<TimeToAppointment> = this.timeToAppointments,

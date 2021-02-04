@@ -6,7 +6,6 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
@@ -25,14 +24,10 @@ import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
@@ -106,9 +101,6 @@ class PatientSearchResultsScreen(
 
     context.injector<Injector>().inject(this)
     setupScreen()
-
-    val screenDestroys = detaches().map { ScreenDestroyed() }
-    setupAlertResults(screenDestroys)
   }
 
   override fun onAttachedToWindow() {
@@ -129,19 +121,6 @@ class PatientSearchResultsScreen(
 
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
-  }
-
-  @SuppressLint("CheckResult")
-  private fun setupAlertResults(screenDestroys: Observable<ScreenDestroyed>) {
-    screenResults
-        .streamResults()
-        .ofType<ActivityResult>()
-        .extractSuccessful(ALERT_FACILITY_CHANGE) { intent ->
-          AlertFacilityChangeSheet.readContinuationExtra<ContinueToScreen>(intent).screenKey
-        }
-        .takeUntil(screenDestroys)
-        .map(FullScreenKey::wrap)
-        .subscribe(router::push)
   }
 
   private fun searchResultClicks(): Observable<UiEvent> {
@@ -188,17 +167,13 @@ class PatientSearchResultsScreen(
   }
 
   override fun openPatientEntryScreen(facility: Facility) {
-    activity.startActivityForResult(
-        AlertFacilityChangeSheet.intent(context, facility.name, ContinueToScreen(PatientEntryScreenKey())),
-        ALERT_FACILITY_CHANGE
-    )
+    router.push(AlertFacilityChangeSheet.Key(
+        currentFacilityName = facility.name,
+        continuation = ContinueToScreen(PatientEntryScreenKey())
+    ))
   }
 
   interface Injector {
     fun inject(target: PatientSearchResultsScreen)
-  }
-
-  companion object {
-    private const val ALERT_FACILITY_CHANGE = 1122
   }
 }

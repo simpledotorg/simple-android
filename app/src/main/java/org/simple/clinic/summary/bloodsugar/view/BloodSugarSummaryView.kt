@@ -38,7 +38,6 @@ import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.summary.BLOOD_SUGAR_REQCODE_ALERT_FACILITY_CHANGE
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -59,7 +58,6 @@ import org.simple.clinic.summary.bloodsugar.UiActions
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -186,7 +184,6 @@ class BloodSugarSummaryView(
 
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
     openEntrySheetAfterTypeIsSelected(screenDestroys)
-    alertFacilityChangeSheetClosed(screenDestroys)
   }
 
   override fun onAttachedToWindow() {
@@ -227,12 +224,10 @@ class BloodSugarSummaryView(
 
   override fun showBloodSugarTypeSelector(currentFacility: Facility) {
     val intent = BloodSugarTypePickerSheet.intent(context)
-    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intent(
-        context,
-        currentFacility.name,
-        ContinueToActivity(intent, TYPE_PICKER_SHEET)
-    )
-    activity.startActivityForResult(alertFacilityChangeIntent, BLOOD_SUGAR_REQCODE_ALERT_FACILITY_CHANGE)
+    router.push(AlertFacilityChangeSheet.Key(
+        currentFacilityName = currentFacility.name,
+        continuation = ContinueToActivity(intent, TYPE_PICKER_SHEET)
+    ))
   }
 
   override fun showSeeAllButton() {
@@ -266,19 +261,6 @@ class BloodSugarSummaryView(
         .map { it.data!! }
         .subscribe(::showBloodSugarEntrySheet)
   }
-
-  @SuppressLint("CheckResult")
-  private fun alertFacilityChangeSheetClosed(onDestroys: Observable<ScreenDestroyed>) {
-    screenResults
-        .streamResults()
-        .ofType<ActivityResult>()
-        .extractSuccessful(BLOOD_SUGAR_REQCODE_ALERT_FACILITY_CHANGE) { intent ->
-          AlertFacilityChangeSheet.readContinuationExtra<ContinueToActivity>(intent)
-        }
-        .takeUntil(onDestroys)
-        .subscribe { activity.startActivityForResult(it.intent, it.requestCode) }
-  }
-
 
   private fun showBloodSugarEntrySheet(intent: Intent) {
     val patientUuid = screenKey.patientUuid

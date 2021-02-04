@@ -27,7 +27,6 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
-import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.home.HomeScreenKey
@@ -241,7 +240,6 @@ class PatientSummaryScreen(
     rootLayout.hideKeyboard()
 
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
-    alertFacilityChangeSheetClosed(screenDestroys)
     setupChildViewVisibility(screenDestroys)
   }
 
@@ -342,25 +340,6 @@ class PatientSummaryScreen(
         ScheduleAppointmentSheet.readExtra<ScheduleAppointmentSheetExtra>(intent)
       }
       .map { ScheduledAppointment(it.sheetOpenedFrom) }
-
-  @SuppressLint("CheckResult")
-  private fun alertFacilityChangeSheetClosed(onDestroys: Observable<ScreenDestroyed>) {
-    screenResults
-        .streamResults()
-        .ofType<ActivityResult>()
-        .extractSuccessful(SUMMARY_REQCODE_ALERT_FACILITY_CHANGE) { intent ->
-          AlertFacilityChangeSheet.readContinuationExtra<Continuation>(intent)
-        }
-        .takeUntil(onDestroys)
-        .subscribe(::openContinuation)
-  }
-
-  private fun openContinuation(continuation: Continuation) {
-    when (continuation) {
-      is ContinueToScreen -> router.push(continuation.screenKey.wrap())
-      is ContinueToActivity -> activity.startActivityForResult(continuation.intent, continuation.requestCode)
-    }
-  }
 
   private fun identifierLinkedEvents(): Observable<UiEvent> {
     return linkIdWithPatientView
@@ -485,13 +464,11 @@ class PatientSummaryScreen(
       currentFacility: Facility
   ) {
     val scheduleAppointmentIntent = ScheduleAppointmentSheet.intent(context, patientUuid, ScheduleAppointmentSheetExtra(sheetOpenedFrom))
-    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intent(
-        context,
-        currentFacility.name,
-        ContinueToActivity(scheduleAppointmentIntent, SUMMARY_REQCODE_SCHEDULE_APPOINTMENT)
-    )
 
-    activity.startActivityForResult(alertFacilityChangeIntent, SUMMARY_REQCODE_ALERT_FACILITY_CHANGE)
+    router.push(AlertFacilityChangeSheet.Key(
+        currentFacilityName = currentFacility.name,
+        continuation = ContinueToActivity(scheduleAppointmentIntent, SUMMARY_REQCODE_SCHEDULE_APPOINTMENT)
+    ))
   }
 
   override fun goToPreviousScreen() {
@@ -535,12 +512,11 @@ class PatientSummaryScreen(
       patientSummaryProfile: PatientSummaryProfile,
       currentFacility: Facility
   ) {
-    val intentForAlertSheet = AlertFacilityChangeSheet.intent(
-        context,
-        currentFacility.name,
-        ContinueToScreen(createEditPatientScreenKey(patientSummaryProfile))
-    )
-    activity.startActivityForResult(intentForAlertSheet, SUMMARY_REQCODE_ALERT_FACILITY_CHANGE)
+
+    router.push(AlertFacilityChangeSheet.Key(
+        currentFacilityName = currentFacility.name,
+        continuation = ContinueToScreen(createEditPatientScreenKey(patientSummaryProfile))
+    ))
   }
 
   override fun showDiagnosisError() {

@@ -27,3 +27,16 @@ fun Context.resolveColor(
   }
   return ContextCompat.getColor(this, colorRes ?: 0)
 }
+
+fun Context.resolveFloat(attrRes: Int, fallback: (() -> Float)? = null): Float {
+  val a = theme.obtainStyledAttributes(intArrayOf(attrRes))
+  try {
+    val result = a.getFloat(0, 0f)
+    if (result == 0f && fallback != null) {
+      return fallback()
+    }
+    return result
+  } finally {
+    a.recycle()
+  }
+}

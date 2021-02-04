@@ -39,12 +39,9 @@ import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -181,7 +178,6 @@ class InstantSearchScreen :
     searchResultsView.adapter = allPatientsAdapter
 
     subscriptions.addAll(
-        setupAlertResults(),
         hideKeyboardOnSearchResultsScroll(),
         hideKeyboardOnImeAction()
     )
@@ -248,10 +244,10 @@ class InstantSearchScreen :
   }
 
   override fun openPatientEntryScreen(facility: Facility) {
-    activity.startActivityForResult(
-        AlertFacilityChangeSheet.intent(requireContext(), facility.name, Continuation.ContinueToScreen(PatientEntryScreenKey())),
-        ALERT_FACILITY_CHANGE
-    )
+    router.push(AlertFacilityChangeSheet.Key(
+        currentFacilityName = facility.name,
+        continuation = Continuation.ContinueToScreen(PatientEntryScreenKey())
+    ))
   }
 
   override fun showSearchProgress() {
@@ -260,17 +256,6 @@ class InstantSearchScreen :
 
   override fun hideSearchProgress() {
     instantSearchProgressIndicator.visibility = View.GONE
-  }
-
-  private fun setupAlertResults(): Disposable {
-    return screenResults
-        .streamResults()
-        .ofType<ActivityResult>()
-        .extractSuccessful(ALERT_FACILITY_CHANGE) { intent ->
-          AlertFacilityChangeSheet.readContinuationExtra<Continuation.ContinueToScreen>(intent).screenKey
-        }
-        .map(FullScreenKey::wrap)
-        .subscribe(router::push)
   }
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {

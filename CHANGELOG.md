@@ -8,7 +8,7 @@
 - Show custom error screen for drug stock web view when there is no internet connection
 
 ### Changes
-- Update translations: `mr-IN`, `bn-IN`, `ti-ET`, `te-IN`, `pa-IN`
+- Update translations: `mr-IN`, `bn-IN`, `ti-ET`, `te-IN`, `pa-IN`, `hi-IN`
 - Change "Preferred facility" to "Assigned facility"
 - Show 'CHANGE' button in appointment reminder bottom sheet
 

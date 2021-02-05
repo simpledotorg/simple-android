@@ -9,7 +9,7 @@
 - [In Progress: 28 Jan 2021] Migrate app to use ViewBinding
 
 ### Changes
-- Updated translations: `mr-IN`, `ta-IN`, `bn-BD`, `ti-ET`, `am_ET`, `kn_IN`
+- Updated translations: `mr-IN`, `ta-IN`, `bn-BD`, `ti-ET`, `am_ET`, `kn_IN`, `bn_IN`
 
 ## On Demo
 ### Internal

@@ -364,6 +364,10 @@
   <string name="help_try_again">फिर से कोशिश करें</string>
 
   <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_yes">हाँ</string>
+  <string name="linkidwithpatient_button_back">वापस जाएँ</string>
+  <string name="linkidwithpatient_text">बीपी पासपोर्ट को इसमें जोड़ें</string>
+  <string name="linkidwithpatient_patient_text">रोगी %1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 
@@ -678,5 +682,8 @@
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s को असाइन किया गया</string>
   <string name="patientinstantsearch_nearby_facilities_header">निकट के अस्पताल की ओर से</string>
+  <string name="patientsearch_error_no_patients_in_facility">आप अपने सुविधा में पंजीकृत सभी रोगियों को यहाँ देख सकेंगे</string>
+  <string name="patientsearch_error_no_search_results">इस नाम का कोई रोगी मौजूद नहीं है</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading">%1$s में कोई रोगी नहीं है</string>
 
 </resources>

@@ -11,6 +11,9 @@
 ### Changes
 - Updated translations: `mr-IN`, `ta-IN`, `bn-BD`, `ti-ET`, `am_ET`, `kn_IN`, `bn_IN`, `hi_IN`
 
+### Fixes
+- Fix App crash when returning to the register patient screen before completing registration when patient date of birth is entered
+
 ## On Demo
 ### Internal
 - Disable strict mode crash for VM policy
@@ -29,7 +32,7 @@
 - Add `NoopViewRenderer`
 - Migrate `BpPassportSheet` to `BaseBottomSheet`
 
-## Features
+### Features
 - Highlight patient name and number in Instant search
 
 ## 2021-01-25-7605

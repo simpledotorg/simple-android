@@ -36,9 +36,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.newentry.country.InputFields
-import org.simple.clinic.newentry.form.AgeField
 import org.simple.clinic.newentry.form.AlternativeIdInputField
-import org.simple.clinic.newentry.form.DateOfBirthField
 import org.simple.clinic.newentry.form.DistrictField
 import org.simple.clinic.newentry.form.GenderField
 import org.simple.clinic.newentry.form.LandlineOrMobileField
@@ -184,9 +182,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val streetAddressEditText
     get() = binding!!.streetAddressEditText
 
-  private val saveButtonFrame
-    get() = binding!!.saveButtonFrame
-
   private val consentSwitch
     get() = binding!!.consentSwitch
 
@@ -210,10 +205,14 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   // FIXME This is temporally coupled to `scrollToFirstFieldWithError()`.
   private val allTextInputFields: List<EditText> by unsafeLazy {
+    val ageOrDateOfBirthEditText = if (ageEditTextInputLayout.visibility == View.VISIBLE) {
+      ageEditText
+    } else {
+      dateOfBirthEditText
+    }
     listOf(
         fullNameEditText,
-        ageEditText,
-        dateOfBirthEditText,
+        ageOrDateOfBirthEditText,
         phoneNumberEditText,
         colonyOrVillageEditText,
         districtEditText,
@@ -287,8 +286,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private fun showOrHideInputFields(inputFields: InputFields) {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,
-        AgeField::class.java to ageEditTextInputLayout,
-        DateOfBirthField::class.java to dateOfBirthInputLayout,
         LandlineOrMobileField::class.java to phoneNumberInputLayout,
         GenderField::class.java to genderRadioGroup,
         AlternativeIdInputField::class.java to alternativeIdInputLayout,

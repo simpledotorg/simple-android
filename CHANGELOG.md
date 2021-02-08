@@ -32,6 +32,7 @@
 - Fix bottom sheet dialog theme
 - Add `NoopViewRenderer`
 - Migrate `BpPassportSheet` to `BaseBottomSheet`
+- Inject user's country code in `SentryCrashReporter`
 
 ### Features
 - Highlight patient name and number in Instant search

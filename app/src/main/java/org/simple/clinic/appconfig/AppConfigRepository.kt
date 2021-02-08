@@ -2,11 +2,13 @@ package org.simple.clinic.appconfig
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.toOptional
 import javax.inject.Inject
 
 /**
@@ -24,6 +26,10 @@ class AppConfigRepository @Inject constructor(
 
   fun currentCountry(): Optional<Country> {
     return selectedCountryPreference.get()
+  }
+
+  fun currentCountryObservable(): Observable<Optional<Country>> {
+    return selectedCountryPreference.asObservable()
   }
 
   fun fetchAppManifest(): Single<ManifestFetchResult> {

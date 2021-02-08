@@ -1,11 +1,11 @@
 package org.simple.clinic.summary
 
-import com.xwray.groupie.Item
-import com.xwray.groupie.ViewHolder
+import androidx.viewbinding.ViewBinding
+import com.xwray.groupie.viewbinding.BindableItem
 import io.reactivex.subjects.Subject
 import org.simple.clinic.widgets.UiEvent
 
-abstract class GroupieItemWithUiEvents<VH : ViewHolder>(adapterId: Long) : Item<VH>(adapterId) {
+abstract class GroupieItemWithUiEvents<B : ViewBinding>(adapterId: Long) : BindableItem<B>(adapterId) {
 
   abstract var uiEvents: Subject<UiEvent>
 }

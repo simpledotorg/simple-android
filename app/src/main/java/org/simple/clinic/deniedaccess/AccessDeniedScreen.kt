@@ -1,7 +1,9 @@
 package org.simple.clinic.deniedaccess
 
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import org.simple.clinic.databinding.ScreenAccessDeniedBinding
@@ -32,19 +34,8 @@ class AccessDeniedScreen : BaseScreen<
     context.injector<AccessDeniedScreenInjector>().inject(this)
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-
-    binding = ScreenAccessDeniedBinding.bind(this)
-
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     userFullNameText.text = screenKey.fullName
-  }
-
-  override fun onDetachedFromWindow() {
-    binding = null
-    super.onDetachedFromWindow()
   }
 }

@@ -97,11 +97,10 @@ class ShortCodeSearchResultScreen :
     )
   }
 
-  private var viewBinding: ScreenShortcodeSearchResultBinding? = null
   private var patientSearchViewBinding: PatientSearchViewBinding? = null
 
   private val toolBar
-    get() = viewBinding!!.toolBar
+    get() = binding.toolBar
 
   private val newPatientButton
     get() = patientSearchViewBinding!!.newPatientButton

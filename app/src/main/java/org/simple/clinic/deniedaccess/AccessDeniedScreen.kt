@@ -1,47 +1,41 @@
 package org.simple.clinic.deniedaccess
 
 import android.content.Context
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import org.simple.clinic.databinding.ScreenAccessDeniedBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import javax.inject.Inject
 
-class AccessDeniedScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
-
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
+class AccessDeniedScreen : BaseScreen<
+    AccessDeniedScreenKey,
+    ScreenAccessDeniedBinding,
+    AccessDeniedModel,
+    AccessDeniedEvent,
+    AccessDeniedEffect>() {
 
   @Inject
   lateinit var activity: AppCompatActivity
 
-  private val screenKey by unsafeLazy {
-    screenKeyProvider.keyFor<AccessDeniedScreenKey>(this)
-  }
-
-  private var binding: ScreenAccessDeniedBinding? = null
-
   private val userFullNameText
-    get() = binding!!.userFullNameText
+    get() = binding.userFullNameText
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
+  override fun defaultModel() = AccessDeniedModel()
 
-    binding = ScreenAccessDeniedBinding.bind(this)
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenAccessDeniedBinding.inflate(layoutInflater, container, false)
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<AccessDeniedScreenInjector>().inject(this)
-
-    userFullNameText.text = screenKey.fullName
   }
 
-  override fun onDetachedFromWindow() {
-    binding = null
-    super.onDetachedFromWindow()
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    userFullNameText.text = screenKey.fullName
   }
 }

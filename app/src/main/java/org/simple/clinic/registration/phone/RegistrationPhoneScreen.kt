@@ -20,7 +20,6 @@ import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.injector
 import org.simple.clinic.login.pin.LoginPinScreenKey
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.name.RegistrationNameScreenKey
 import org.simple.clinic.registration.phone.loggedout.LoggedOutOfDeviceDialog
@@ -156,7 +155,7 @@ class RegistrationPhoneScreen :
   }
 
   override fun showAccessDeniedScreen(number: String) {
-    router.clearHistoryAndPush(AccessDeniedScreenKey(number).wrap())
+    router.clearHistoryAndPush(AccessDeniedScreenKey(number))
   }
 
   interface Injector {

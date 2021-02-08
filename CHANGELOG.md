@@ -23,6 +23,7 @@
 - Add `NoopViewRenderer`
 - Migrate `BpPassportSheet` to `BaseBottomSheet`
 - Migrate `ShortCodeSearchResultScreen` to a fragment
+- Change `AccessDeniedScreen` to a fragment
 
 ## Features
 - Highlight patient name and number in Instant search

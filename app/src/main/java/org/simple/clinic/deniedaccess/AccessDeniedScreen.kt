@@ -1,16 +1,18 @@
 package org.simple.clinic.deniedaccess
 
-import android.content.Context
-import android.util.AttributeSet
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import org.simple.clinic.databinding.ScreenAccessDeniedBinding
-import org.simple.clinic.di.injector
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
-class AccessDeniedScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
+class AccessDeniedScreen : BaseScreen<
+    AccessDeniedScreenKey,
+    ScreenAccessDeniedBinding,
+    AccessDeniedModel,
+    AccessDeniedEvent,
+    AccessDeniedEffect>() {
 
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider

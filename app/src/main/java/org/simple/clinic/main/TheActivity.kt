@@ -38,7 +38,6 @@ import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -78,7 +77,7 @@ fun initialScreenKey(
 
   return when {
     canMoveToHomeScreen && !userDisapproved -> HomeScreenKey
-    userDisapproved -> AccessDeniedScreenKey(user.fullName).wrap()
+    userDisapproved -> AccessDeniedScreenKey(user.fullName)
     user.loggedInStatus == RESETTING_PIN -> ForgotPinCreateNewPinScreenKey().wrap()
     else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
   }
@@ -340,7 +339,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   override fun showAccessDeniedScreen(fullName: String) {
-    router.clearHistoryAndPush(AccessDeniedScreenKey(fullName).wrap())
+    router.clearHistoryAndPush(AccessDeniedScreenKey(fullName))
   }
 
   private fun showPatientSummaryForDeepLink(deepLinkResult: OpenPatientSummary) {

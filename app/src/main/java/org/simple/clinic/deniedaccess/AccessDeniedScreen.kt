@@ -1,5 +1,7 @@
 package org.simple.clinic.deniedaccess
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import org.simple.clinic.databinding.ScreenAccessDeniedBinding
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -17,6 +19,11 @@ class AccessDeniedScreen : BaseScreen<
 
   private val userFullNameText
     get() = binding.userFullNameText
+
+  override fun defaultModel() = AccessDeniedModel()
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenAccessDeniedBinding.inflate(layoutInflater, container, false)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

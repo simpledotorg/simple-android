@@ -294,6 +294,7 @@
   <string name="registration_loggedout_dialog_message">Please login again to continue</string>
   <string name="registration_loggedout_dialog_confirm">Okay</string>
   <string name="registrationphone_country_code" translatable="false">+%1$s</string>
+  <string name="registrationphone_next">Next</string>
 
   <string name="registrationname_name_label">Tell us your full name</string>
   <string name="registrationname_error_empty_name">Please enter your full name</string>

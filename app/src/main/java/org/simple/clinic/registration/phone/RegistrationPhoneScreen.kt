@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
@@ -63,6 +64,9 @@ class RegistrationPhoneScreen :
   private val progressView
     get() = binding.progressView
 
+  private val nextButton
+    get() = binding.nextButton
+
   @Inject
   lateinit var uuidGenerator: UuidGenerator
 
@@ -104,10 +108,17 @@ class RegistrationPhoneScreen :
           .map(CharSequence::toString)
           .map(::RegistrationPhoneNumberTextChanged)
 
-  private fun doneClicks() =
-      phoneNumberEditText
-          .editorActions { it == EditorInfo.IME_ACTION_DONE }
-          .map { RegistrationPhoneDoneClicked() }
+  private fun doneClicks(): Observable<RegistrationPhoneDoneClicked> {
+    val nextClicks = nextButton
+        .clicks()
+        .map { RegistrationPhoneDoneClicked() }
+
+    val imeActionClicks = phoneNumberEditText
+        .editorActions { it == EditorInfo.IME_ACTION_DONE }
+        .map { RegistrationPhoneDoneClicked() }
+
+    return imeActionClicks.mergeWith(nextClicks)
+  }
 
   override fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
     phoneNumberEditText.setTextAndCursor(ongoingEntry.phoneNumber)

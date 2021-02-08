@@ -364,6 +364,10 @@
   <string name="help_try_again">మళ్లీ ప్రయత్నించండి</string>
 
   <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_yes">అవును</string>
+  <string name="linkidwithpatient_button_back">వెనుకకు</string>
+  <string name="linkidwithpatient_text">దీనికి బిపి పాస్‌పోర్ట్‌ను జోడించండి</string>
+  <string name="linkidwithpatient_patient_text">రోగి %1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 
@@ -678,5 +682,8 @@
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$sకు కేటాయించబడ్డారు</string>
   <string name="patientinstantsearch_nearby_facilities_header">సమీప వైద్య సదుపాయ సంస్థల నుండి</string>
+  <string name="patientsearch_error_no_patients_in_facility">ఇక్కడ మీ కేంద్రంలో నమోదు చేసుకున్న అందరు రోగులను మీరు చూడగలరు</string>
+  <string name="patientsearch_error_no_search_results">సరిపోలిన రోగులు లేరు</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading">%1$sలో రోగులు లేరు</string>
 
 </resources>

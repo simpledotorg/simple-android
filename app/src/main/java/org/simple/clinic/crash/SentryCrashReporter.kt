@@ -1,10 +1,12 @@
 package org.simple.clinic.crash
 
+import android.annotation.SuppressLint
 import android.app.Application
 import io.reactivex.schedulers.Schedulers.io
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
 import io.sentry.event.BreadcrumbBuilder
+import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.platform.crash.Breadcrumb
 import org.simple.clinic.platform.crash.Breadcrumb.Priority.ASSERT
@@ -23,12 +25,14 @@ typealias SentryBreadcrumbLevel = io.sentry.event.Breadcrumb.Level
 
 class SentryCrashReporter @Inject constructor(
     private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository
+    private val facilityRepository: FacilityRepository,
+    private val appConfigRepository: AppConfigRepository
 ) : CrashReporter {
 
   override fun init(appContext: Application) {
     Sentry.init(AndroidSentryClientFactory(appContext))
     identifyUserAndCurrentFacility()
+    identifyCurrentCountryCode()
   }
 
   @Suppress("CheckResult")
@@ -50,6 +54,18 @@ class SentryCrashReporter @Inject constructor(
         .map { it.uuid }
         .subscribe(
             { Sentry.getContext().addTag("facilityUuid", it.toString()) },
+            { report(it) })
+  }
+
+  @SuppressLint("CheckResult")
+  private fun identifyCurrentCountryCode() {
+    appConfigRepository
+        .currentCountryObservable()
+        .map { it.get().isoCountryCode }
+        .subscribe(
+            {
+              Sentry.getContext().addTag("countryCode", it.toString())
+            },
             { report(it) })
   }
 

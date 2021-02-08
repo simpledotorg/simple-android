@@ -366,7 +366,7 @@
   <!-- Link Id Sheet-->
   <string name="linkidwithpatient_button_yes">እወ</string>
   <string name="linkidwithpatient_button_back">ተመለስ</string>
-  <string name="linkidwithpatient_text">ናይ BP ፓስፖርት ናብዚ ደምር</string>
+  <string name="linkidwithpatient_text">ናይ ጸቕጢ ደም ፓስፖርት ናብዚ ደምር</string>
   <string name="linkidwithpatient_patient_text">ተሓካሚ %1$s?</string>
 
   <!-- Add ID to Patient: Search -->

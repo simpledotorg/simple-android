@@ -1,13 +1,14 @@
 package org.simple.clinic.shortcodesearchresult
 
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.RelativeLayout
+import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -20,10 +21,9 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.searchresultsview.PatientSearchResults
 import org.simple.clinic.searchresultsview.SearchResultsItemType
@@ -31,17 +31,21 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class ShortCodeSearchResultScreen(
-    context: Context,
-    attributes: AttributeSet
-) : RelativeLayout(context, attributes), ShortCodeSearchResultUi, UiActions {
+class ShortCodeSearchResultScreen :
+    BaseScreen<
+        ShortCodeSearchResultScreenKey,
+        ScreenShortcodeSearchResultBinding,
+        ShortCodeSearchResultState,
+        ShortCodeSearchResultEvent,
+        ShortCodeSearchResultEffect>(),
+    ShortCodeSearchResultUi,
+    UiActions {
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -54,9 +58,6 @@ class ShortCodeSearchResultScreen(
 
   @Inject
   lateinit var features: Features
-
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
 
   private val adapter = ItemAdapter(
       diffCallback = SearchResultsItemType.DiffCallback(),
@@ -73,35 +74,10 @@ class ShortCodeSearchResultScreen(
       )
   )
 
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            searchPatientClicks(),
-            patientItemClicks()
-        )
-        .compose(ReportAnalyticsEvents())
-  }
-
-  private val screenKey by unsafeLazy { screenKeyProvider.keyFor<ShortCodeSearchResultScreenKey>(this) }
-
-  private val delegate by unsafeLazy {
-    val uiRenderer = UiRenderer(this)
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = ShortCodeSearchResultState.fetchingPatients(screenKey.shortCode),
-        update = ShortCodeSearchResultUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render,
-        init = ShortCodeSearchResultInit()
-    )
-  }
-
-  private var viewBinding: ScreenShortcodeSearchResultBinding? = null
   private var patientSearchViewBinding: PatientSearchViewBinding? = null
 
   private val toolBar
-    get() = viewBinding!!.toolBar
+    get() = binding.toolBar
 
   private val newPatientButton
     get() = patientSearchViewBinding!!.newPatientButton
@@ -118,40 +94,48 @@ class ShortCodeSearchResultScreen(
   private val emptyStateView
     get() = patientSearchViewBinding!!.emptyStateView
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-    hideKeyboard()
+  override fun defaultModel() = ShortCodeSearchResultState.fetchingPatients(screenKey.shortCode)
 
-    viewBinding = ScreenShortcodeSearchResultBinding.bind(this)
-    patientSearchViewBinding = PatientSearchViewBinding.bind(viewBinding!!.root)
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenShortcodeSearchResultBinding.inflate(layoutInflater, container, false)
 
+  override fun uiRenderer() = UiRenderer(this)
+
+  override fun events() = Observable
+      .merge(
+          searchPatientClicks(),
+          patientItemClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<ShortCodeSearchResultEvent>()
+
+  override fun createUpdate() = ShortCodeSearchResultUpdate()
+
+  override fun createInit() = ShortCodeSearchResultInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    return super.onCreateView(inflater, container, savedInstanceState).also {
+      patientSearchViewBinding = PatientSearchViewBinding.bind(binding.root)
+    }
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    patientSearchViewBinding = null
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    (view as ViewGroup).hideKeyboard()
     setupToolBar()
     setupScreen()
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    viewBinding = null
-    patientSearchViewBinding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun setupToolBar() {

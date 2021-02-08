@@ -1,10 +1,7 @@
 package org.simple.clinic.shortcodesearchresult
 
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
 import android.view.View
-import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
@@ -23,6 +20,7 @@ import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.searchresultsview.PatientSearchResults
@@ -33,15 +31,19 @@ import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
-import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class ShortCodeSearchResultScreen(
-    context: Context,
-    attributes: AttributeSet
-) : RelativeLayout(context, attributes), ShortCodeSearchResultUi, UiActions {
+class ShortCodeSearchResultScreen :
+    BaseScreen<
+        ShortCodeSearchResultScreenKey,
+        ScreenShortcodeSearchResultBinding,
+        ShortCodeSearchResultState,
+        ShortCodeSearchResultEvent,
+        ShortCodeSearchResultEffect>(),
+    ShortCodeSearchResultUi,
+    UiActions {
 
   @Inject
   lateinit var utcClock: UtcClock

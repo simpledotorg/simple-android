@@ -6,9 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import kotterknife.bindView
 import org.simple.clinic.BuildConfig
-import org.simple.clinic.R
+import org.simple.clinic.databinding.BottomSheetBinding
 import org.simple.clinic.util.disablePendingTransitions
 
 /**
@@ -21,8 +20,13 @@ import org.simple.clinic.util.disablePendingTransitions
  */
 abstract class BottomSheetActivity : AppCompatActivity() {
 
-  private val backgroundView by bindView<View>(R.id.bottomsheet_background)
-  private val contentContainer by bindView<ViewGroup>(R.id.bottomsheet_content_container)
+  private lateinit var bottomSheetBinding: BottomSheetBinding
+
+  private val backgroundView
+    get() = bottomSheetBinding.bottomsheetBackground
+
+  private val contentContainer
+    get() = bottomSheetBinding.bottomsheetContentContainer
 
   override fun onCreate(savedInstanceState: Bundle?) {
     disablePendingTransitions()
@@ -31,7 +35,9 @@ abstract class BottomSheetActivity : AppCompatActivity() {
     if (BuildConfig.DISABLE_SCREENSHOT) {
       window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
     }
-    super.setContentView(R.layout.bottom_sheet)
+
+    bottomSheetBinding = BottomSheetBinding.inflate(layoutInflater)
+    super.setContentView(bottomSheetBinding.root)
 
     contentContainer.setOnClickListener {
       // Swallow clicks to avoid dismissing the sheet accidentally.

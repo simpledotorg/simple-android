@@ -330,7 +330,7 @@ dependencies {
   }
   implementation "com.xwray:groupie:$versions.groupie"
   implementation "com.xwray:groupie-viewbinding:$versions.groupie"
-  implementation "com.xwray:groupie-kotlin-android-extensions:$versions.groupie"
+
   implementation "com.mikepenz:itemanimators:$versions.itemAnimators@aar"
   implementation "org.mindrot:jbcrypt:$versions.jbcrypt"
   implementation "com.squareup.flow:flow:$versions.flow"

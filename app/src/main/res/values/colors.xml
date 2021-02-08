@@ -35,5 +35,5 @@
 
   <color name="facility_search_query_highlight">@color/simple_light_blue_100</color>
 
-  <color name="launcher_background">@color/white</color>
+  <color name="ic_launcher_background">@color/white</color>
 </resources>

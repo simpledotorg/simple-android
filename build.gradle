@@ -20,7 +20,7 @@ buildscript {
       sentry                   : '1.7.22',
       sentryGradlePlugin       : '1.7.36',
       slf4j                    : '1.7.25',
-      groupie                  : '2.3.0',
+      groupie                  : '2.9.0',
       flow                     : '1.0.0-alpha3',
       rxJava                   : '2.2.16',
       rxAndroid                : '2.1.1',

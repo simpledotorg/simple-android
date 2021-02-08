@@ -13,7 +13,6 @@ buildscript {
       timber                   : '4.7.0',
       dagger                   : '2.31.1',
       butterKnife              : '8.8.1',
-      kotterKnife              : 'e157638df1',
       coreTesting              : '2.0.0',
       moshi                    : '1.9.2',
       retrofit                 : '2.9.0',

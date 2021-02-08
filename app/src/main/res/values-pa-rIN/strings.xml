@@ -364,6 +364,10 @@
   <string name="help_try_again">ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
 
   <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_yes">ਹਾਂ</string>
+  <string name="linkidwithpatient_button_back">ਵਾਪਸ</string>
+  <string name="linkidwithpatient_text">ਵਿੱਚ ਬੀਪੀ ਪਾਸਪੋਰਟ ਸ਼ਾਮਲ ਕਰੋ</string>
+  <string name="linkidwithpatient_patient_text">ਮਰੀਜ਼ %1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 
@@ -678,5 +682,8 @@
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s ਨੂੰ ਸਪੁਰਦ ਕੀਤਾ ਹੈ</string>
   <string name="patientinstantsearch_nearby_facilities_header">ਨਜ਼ਦੀਕੀ ਸੁਵਿਧਾਵਾਂ ਤੋਂ</string>
+  <string name="patientsearch_error_no_patients_in_facility">ਤੁਸੀਂ ਇੱਥੇ ਆਪਣੀ ਸਹੂਲਤ ਤੇ ਰਜਿਸਟਰ ਕੀਤੇ ਸਾਰੇ ਮਰੀਜ਼ਾਂ ਨੂੰ ਦੇਖਣ ਦੇ ਯੋਗ ਹੋਵੋਗੇ</string>
+  <string name="patientsearch_error_no_search_results">ਕੋਈ ਮਰੀਜ਼ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ ਹਨ</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading">%1$s ਵਿੱਚ ਕੋਈ ਮਰੀਜ਼ ਨਹੀਂ ਹਨ</string>
 
 </resources>

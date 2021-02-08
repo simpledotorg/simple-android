@@ -24,7 +24,6 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.searchresultsview.PatientSearchResults
 import org.simple.clinic.searchresultsview.SearchResultsItemType
@@ -60,9 +59,6 @@ class ShortCodeSearchResultScreen :
   @Inject
   lateinit var features: Features
 
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
   private val adapter = ItemAdapter(
       diffCallback = SearchResultsItemType.DiffCallback(),
       bindings = mapOf(
@@ -87,8 +83,6 @@ class ShortCodeSearchResultScreen :
         )
         .compose(ReportAnalyticsEvents())
   }
-
-  private val screenKey by unsafeLazy { screenKeyProvider.keyFor<ShortCodeSearchResultScreenKey>(this) }
 
   private val delegate by unsafeLazy {
     val uiRenderer = UiRenderer(this)

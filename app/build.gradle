@@ -305,9 +305,7 @@ dependencies {
 
   implementation "com.google.dagger:dagger:$versions.dagger"
   kapt "com.google.dagger:dagger-compiler:$versions.dagger"
-  implementation("com.github.JakeWharton:kotterknife:$versions.kotterKnife") {
-    exclude group: 'com.android.support'
-  }
+
   implementation "io.reactivex.rxjava2:rxjava:$versions.rxJava"
   implementation "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid"
   implementation "com.jakewharton.rxbinding2:rxbinding:$versions.rxBinding"
@@ -331,7 +329,8 @@ dependencies {
     exclude group: "com.fasterxml.jackson.core", module: "jackson-core"
   }
   implementation "com.xwray:groupie:$versions.groupie"
-  implementation "com.xwray:groupie-kotlin-android-extensions:$versions.groupie"
+  implementation "com.xwray:groupie-viewbinding:$versions.groupie"
+
   implementation "com.mikepenz:itemanimators:$versions.itemAnimators@aar"
   implementation "org.mindrot:jbcrypt:$versions.jbcrypt"
   implementation "com.squareup.flow:flow:$versions.flow"

@@ -7,7 +7,7 @@
 - Change `ConfirmFacilityChangeScreen` to `BaseBottomSheet`
 - Migrate `ShortCodeSearchResultScreen` to a fragment
 - [In Progress: 20 Jan 2021] Material Theming Migration
-- [In Progress: 28 Jan 2021] Migrate app to use ViewBinding
+- [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
 ### Changes
 - Updated translations: `mr-IN`, `ta-IN`, `bn-BD`, `ti-ET`, `am_ET`, `kn_IN`, `bn_IN`, `hi_IN`, `te-IN`, `pa-IN`

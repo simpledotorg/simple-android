@@ -1,9 +1,11 @@
 package org.simple.clinic.deniedaccess
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import org.simple.clinic.databinding.ScreenAccessDeniedBinding
+import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import javax.inject.Inject
 
@@ -25,6 +27,11 @@ class AccessDeniedScreen : BaseScreen<
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenAccessDeniedBinding.inflate(layoutInflater, container, false)
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<AccessDeniedScreenInjector>().inject(this)
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -32,8 +39,6 @@ class AccessDeniedScreen : BaseScreen<
     }
 
     binding = ScreenAccessDeniedBinding.bind(this)
-
-    context.injector<AccessDeniedScreenInjector>().inject(this)
 
     userFullNameText.text = screenKey.fullName
   }

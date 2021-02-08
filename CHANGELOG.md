@@ -6,6 +6,7 @@
 - Change `FacilityChangeScreen` to `BaseBottomSheet`
 - Change `ConfirmFacilityChangeScreen` to `BaseBottomSheet`
 - Migrate `ShortCodeSearchResultScreen` to a fragment
+- Change `AccessDeniedScreen` to a fragment
 - [In Progress: 20 Jan 2021] Material Theming Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 

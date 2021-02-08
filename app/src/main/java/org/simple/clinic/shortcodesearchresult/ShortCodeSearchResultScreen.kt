@@ -1,5 +1,6 @@
 package org.simple.clinic.shortcodesearchresult
 
+import android.content.Context
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
@@ -138,6 +139,11 @@ class ShortCodeSearchResultScreen :
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -147,9 +153,7 @@ class ShortCodeSearchResultScreen :
 
     viewBinding = ScreenShortcodeSearchResultBinding.bind(this)
     patientSearchViewBinding = PatientSearchViewBinding.bind(viewBinding!!.root)
-
-    context.injector<Injector>().inject(this)
-
+    
     setupToolBar()
     setupScreen()
   }

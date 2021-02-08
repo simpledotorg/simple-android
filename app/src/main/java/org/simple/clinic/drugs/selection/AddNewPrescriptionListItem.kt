@@ -2,7 +2,7 @@ package org.simple.clinic.drugs.selection
 
 import android.view.View
 import com.google.android.material.button.MaterialButton
-import com.xwray.groupie.ViewHolder
+import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
@@ -27,7 +27,7 @@ class AddNewPrescriptionListItem : GroupieItemWithUiEvents<AddNewPrescriptionLis
     // Nothing to see here.
   }
 
-  class AddNewViewHolder(rootView: View) : ViewHolder(rootView) {
+  class AddNewViewHolder(rootView: View) : GroupieViewHolder(rootView) {
     val addNewPrescriptionButton by bindView<MaterialButton>(R.id.prescribeddrug_item_addnewprescription)
   }
 }

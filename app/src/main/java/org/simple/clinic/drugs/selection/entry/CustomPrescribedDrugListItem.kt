@@ -4,7 +4,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.TextView
-import com.xwray.groupie.ViewHolder
+import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
@@ -37,7 +37,7 @@ data class CustomPrescribedDrugListItem(
 
   }
 
-  class DrugViewHolder(rootView: View) : ViewHolder(rootView) {
+  class DrugViewHolder(rootView: View) : GroupieViewHolder(rootView) {
     val nameTextView by bindView<TextView>(R.id.prescribeddrug_item_customdrug_name)
     val dosageTextView by bindView<TextView>(R.id.prescribeddrug_item_customdrug_dosage)
     val dividerView by bindView<View>(R.id.protocoldrug_item_divider)

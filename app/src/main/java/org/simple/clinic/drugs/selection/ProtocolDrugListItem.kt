@@ -4,7 +4,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.TextView
-import com.xwray.groupie.ViewHolder
+import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
@@ -37,7 +37,7 @@ data class ProtocolDrugListItem(
     holder.dividerView.visibility = if (hideDivider) GONE else VISIBLE
   }
 
-  class DrugViewHolder(rootView: View, val uiEvents: Subject<UiEvent>) : ViewHolder(rootView) {
+  class DrugViewHolder(rootView: View, val uiEvents: Subject<UiEvent>) : GroupieViewHolder(rootView) {
     val nameTextView by bindView<TextView>(R.id.protocoldrug_item_name)
     val dosageTextView by bindView<TextView>(R.id.protocoldrug_item_dosage)
     val dividerView by bindView<View>(R.id.protocoldrug_item_divider)

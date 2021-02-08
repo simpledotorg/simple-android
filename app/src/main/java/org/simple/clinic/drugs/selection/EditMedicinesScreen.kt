@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.ViewHolder
+import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -76,7 +76,7 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
   private val refillMedicineButton
     get() = binding!!.prescribeddrugsRefill
 
-  private val groupieAdapter = GroupAdapter<ViewHolder>()
+  private val groupieAdapter = GroupAdapter<GroupieViewHolder>()
 
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
 
@@ -165,7 +165,7 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
     doneButton.visibility = GONE
   }
 
-  override fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewHolder>>) {
+  override fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out GroupieViewHolder>>) {
     // Replace the default fade animator with another animator that
     // plays change animations together instead of sequentially.
     if (groupieAdapter.itemCount != 0) {

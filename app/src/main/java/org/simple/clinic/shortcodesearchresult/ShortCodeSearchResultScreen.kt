@@ -1,10 +1,13 @@
 package org.simple.clinic.shortcodesearchresult
 
 import android.os.Parcelable
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -75,6 +78,7 @@ class ShortCodeSearchResultScreen :
       )
   )
 
+
   private val events by unsafeLazy {
     Observable
         .merge(
@@ -119,6 +123,27 @@ class ShortCodeSearchResultScreen :
 
   private val emptyStateView
     get() = patientSearchViewBinding!!.emptyStateView
+
+  override fun defaultModel() = ShortCodeSearchResultState.fetchingPatients(screenKey.shortCode)
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenShortcodeSearchResultBinding.inflate(layoutInflater, container, false)
+
+  override fun uiRenderer() = UiRenderer(this)
+
+  override fun events() = Observable
+      .merge(
+          searchPatientClicks(),
+          patientItemClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<ShortCodeSearchResultEvent>()
+
+  override fun createUpdate() = ShortCodeSearchResultUpdate()
+
+  override fun createInit() = ShortCodeSearchResultInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
   override fun onFinishInflate() {
     super.onFinishInflate()

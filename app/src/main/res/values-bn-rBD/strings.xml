@@ -366,7 +366,7 @@
   <!-- Link Id Sheet-->
   <string name="linkidwithpatient_button_yes">হ্যাঁ</string>
   <string name="linkidwithpatient_button_back">ফিরুন</string>
-  <string name="linkidwithpatient_text">এতে BP পাসপোর্ট যোগ করুন</string>
+  <string name="linkidwithpatient_text">এতে বিপি পাসপোর্ট যোগ করুন</string>
   <string name="linkidwithpatient_patient_text">রোগী %1$s?</string>
 
   <!-- Add ID to Patient: Search -->

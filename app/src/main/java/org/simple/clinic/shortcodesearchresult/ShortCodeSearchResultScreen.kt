@@ -21,7 +21,6 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -32,7 +31,6 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
@@ -75,29 +73,6 @@ class ShortCodeSearchResultScreen :
           }
       )
   )
-
-
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            searchPatientClicks(),
-            patientItemClicks()
-        )
-        .compose(ReportAnalyticsEvents())
-  }
-
-  private val delegate by unsafeLazy {
-    val uiRenderer = UiRenderer(this)
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = ShortCodeSearchResultState.fetchingPatients(screenKey.shortCode),
-        update = ShortCodeSearchResultUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render,
-        init = ShortCodeSearchResultInit()
-    )
-  }
 
   private var patientSearchViewBinding: PatientSearchViewBinding? = null
 

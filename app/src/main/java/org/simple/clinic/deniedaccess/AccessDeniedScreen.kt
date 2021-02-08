@@ -24,10 +24,8 @@ class AccessDeniedScreen : BaseScreen<
     screenKeyProvider.keyFor<AccessDeniedScreenKey>(this)
   }
 
-  private var binding: ScreenAccessDeniedBinding? = null
-
   private val userFullNameText
-    get() = binding!!.userFullNameText
+    get() = binding.userFullNameText
 
   override fun onFinishInflate() {
     super.onFinishInflate()

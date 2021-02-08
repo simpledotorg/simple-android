@@ -3,8 +3,6 @@ package org.simple.clinic.deniedaccess
 import androidx.appcompat.app.AppCompatActivity
 import org.simple.clinic.databinding.ScreenAccessDeniedBinding
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
 class AccessDeniedScreen : BaseScreen<
@@ -15,14 +13,7 @@ class AccessDeniedScreen : BaseScreen<
     AccessDeniedEffect>() {
 
   @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
-  @Inject
   lateinit var activity: AppCompatActivity
-
-  private val screenKey by unsafeLazy {
-    screenKeyProvider.keyFor<AccessDeniedScreenKey>(this)
-  }
 
   private val userFullNameText
     get() = binding.userFullNameText

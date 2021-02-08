@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewbinding.ViewBinding
 import com.jakewharton.rxbinding3.view.clicks
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.xwray.groupie.GroupAdapter
@@ -165,7 +166,7 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
     doneButton.visibility = GONE
   }
 
-  override fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out GroupieViewHolder>>) {
+  override fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewBinding>>) {
     // Replace the default fade animator with another animator that
     // plays change animations together instead of sequentially.
     if (groupieAdapter.itemCount != 0) {

@@ -1,6 +1,7 @@
 package org.simple.clinic.shortcodesearchresult
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,7 @@ import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -144,16 +146,20 @@ class ShortCodeSearchResultScreen :
     context.injector<Injector>().inject(this)
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    return super.onCreateView(inflater, container, savedInstanceState).also {
+      patientSearchViewBinding = PatientSearchViewBinding.bind(binding.root)
     }
-    hideKeyboard()
+  }
 
-    viewBinding = ScreenShortcodeSearchResultBinding.bind(this)
-    patientSearchViewBinding = PatientSearchViewBinding.bind(viewBinding!!.root)
-    
+  override fun onDestroyView() {
+    super.onDestroyView()
+    patientSearchViewBinding = null
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    (view as ViewGroup).hideKeyboard()
     setupToolBar()
     setupScreen()
   }

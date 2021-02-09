@@ -104,6 +104,10 @@
     <item name="editTextStyle">@style/Widget.Simple.TextField</item>
   </style>
 
+  <style name="ThemeOverlay.Simple.TextField.AutoComplete">
+    <item name="autoCompleteTextViewStyle">@style/Widget.Simple.TextField.AutoComplete</item>
+  </style>
+
   <style name="ThemeOverlay.Simple.TabLayout" parent="">
     <item name="colorPrimary">@color/simple_dark_blue_800</item>
     <item name="colorSurface">@color/simple_dark_grey</item>

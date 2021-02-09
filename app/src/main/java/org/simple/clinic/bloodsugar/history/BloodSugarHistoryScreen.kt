@@ -132,14 +132,13 @@ class BloodSugarHistoryScreen(
   private val uiRenderer = BloodSugarHistoryScreenUiRenderer(this)
 
   private val delegate: MobiusDelegate<BloodSugarHistoryScreenModel, BloodSugarHistoryScreenEvent, BloodSugarHistoryScreenEffect> by unsafeLazy {
-    MobiusDelegate(
+    MobiusDelegate.forView(
         events = events,
         defaultModel = BloodSugarHistoryScreenModel.create(screenKey.patientUuid),
         init = BloodSugarHistoryScreenInit(),
         update = BloodSugarHistoryScreenUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render,
-        crashReporter = crashReporter
+        modelUpdateListener = uiRenderer::render
     )
   }
 
@@ -155,8 +154,6 @@ class BloodSugarHistoryScreen(
 
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
     openEntrySheetAfterTypeIsSelected(screenDestroys)
-
-    delegate.prepare()
 
     handleToolbarBackClick()
     setupBloodSugarHistoryList()

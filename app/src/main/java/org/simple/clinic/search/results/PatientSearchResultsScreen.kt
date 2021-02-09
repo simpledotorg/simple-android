@@ -2,6 +2,8 @@ package org.simple.clinic.search.results
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -59,13 +61,14 @@ class PatientSearchResultsScreen :
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
 
-  private var binding: ScreenPatientSearchResultsBinding? = null
-
   private val searchResultsView
-    get() = binding!!.searchResultsView
+    get() = binding.searchResultsView
 
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenPatientSearchResultsBinding.inflate(layoutInflater, container, false)
 
   private val screenKey by unsafeLazy { screenKeyProvider.keyFor<PatientSearchResultsScreenKey>(this) }
 
@@ -99,8 +102,6 @@ class PatientSearchResultsScreen :
       return
     }
 
-    binding = ScreenPatientSearchResultsBinding.bind(this)
-
     context.injector<Injector>().inject(this)
     setupScreen()
   }
@@ -113,7 +114,6 @@ class PatientSearchResultsScreen :
 
   override fun onDetachedFromWindow() {
     delegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 

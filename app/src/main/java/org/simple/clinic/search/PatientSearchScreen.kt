@@ -181,7 +181,7 @@ class PatientSearchScreen(
   }
 
   override fun openSearchResultsScreen(criteria: PatientSearchCriteria) {
-    router.push(PatientSearchResultsScreenKey(criteria).wrap())
+    router.push(PatientSearchResultsScreenKey(criteria))
   }
 
   override fun setEmptyTextFieldErrorVisible(visible: Boolean) {

@@ -1,10 +1,7 @@
 package org.simple.clinic.search.results
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
-import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -17,6 +14,7 @@ import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchCriteria
@@ -29,15 +27,19 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class PatientSearchResultsScreen(
-    context: Context,
-    attrs: AttributeSet
-) : RelativeLayout(context, attrs), PatientSearchResultsUi, PatientSearchResultsUiActions {
+class PatientSearchResultsScreen :
+    BaseScreen<
+        PatientSearchResultsScreenKey,
+        ScreenPatientSearchResultsBinding,
+        PatientSearchResultsModel,
+        PatientSearchResultsEvent,
+        PatientSearchResultsEffect>(),
+    PatientSearchResultsUi,
+    PatientSearchResultsUiActions {
 
   @Inject
   lateinit var router: Router

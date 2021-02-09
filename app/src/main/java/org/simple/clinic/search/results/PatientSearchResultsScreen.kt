@@ -17,7 +17,6 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
@@ -58,9 +57,6 @@ class PatientSearchResultsScreen :
   @Inject
   lateinit var effectHandlerInjectionFactory: PatientSearchResultsEffectHandler.InjectionFactory
 
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
   private val searchResultsView
     get() = binding.searchResultsView
 
@@ -69,8 +65,6 @@ class PatientSearchResultsScreen :
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenPatientSearchResultsBinding.inflate(layoutInflater, container, false)
-
-  private val screenKey by unsafeLazy { screenKeyProvider.keyFor<PatientSearchResultsScreenKey>(this) }
 
   private val events by unsafeLazy {
     Observable

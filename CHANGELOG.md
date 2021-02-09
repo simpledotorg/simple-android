@@ -22,6 +22,7 @@
 - Fix bottom sheet dialog theme
 - Add `NoopViewRenderer`
 - Migrate `BpPassportSheet` to `BaseBottomSheet`
+- Migrate `ShortCodeSearchResultScreen` to a fragment
 
 ## Features
 - Highlight patient name and number in Instant search

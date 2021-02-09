@@ -253,7 +253,7 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
   }
 
   override fun openShortCodeSearchScreen(shortCode: String) {
-    router.push(ShortCodeSearchResultScreenKey(shortCode).wrap())
+    router.push(ShortCodeSearchResultScreenKey(shortCode))
   }
 
   override fun openPatientSummary(patientId: UUID) {

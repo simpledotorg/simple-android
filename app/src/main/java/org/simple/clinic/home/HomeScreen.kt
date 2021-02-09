@@ -203,7 +203,7 @@ class HomeScreen :
   }
 
   override fun openShortCodeSearchScreen(shortCode: String) {
-    router.push(ShortCodeSearchResultScreenKey(shortCode).wrap())
+    router.push(ShortCodeSearchResultScreenKey(shortCode))
   }
 
   override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {

@@ -11,6 +11,7 @@
 - Remove deprecated Mobius delegate usage in `BloodSugarHistoryScreen`
 - Bump MDC to v1.3.0
 - Change `PatientSearchResultsScreen` to a fragment
+- Bump ConstraintLayout to v2.0.4
 - [In Progress: 20 Jan 2021] Material Theming Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 

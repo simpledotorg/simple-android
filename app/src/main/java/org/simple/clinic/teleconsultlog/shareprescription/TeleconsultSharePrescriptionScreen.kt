@@ -6,11 +6,14 @@ import android.graphics.Canvas
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.Parcelable
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
@@ -21,6 +24,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
@@ -154,6 +158,38 @@ class TeleconsultSharePrescriptionScreen :
           }
       )
   )
+
+  override fun defaultModel(): TeleconsultSharePrescriptionModel {
+    return TeleconsultSharePrescriptionModel.create(screenKey.patientUuid, LocalDate.now(userClock))
+  }
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): ScreenTeleconsultSharePrescriptionBinding {
+    return ScreenTeleconsultSharePrescriptionBinding.inflate(layoutInflater, container, false)
+  }
+
+  override fun uiRenderer(): ViewRenderer<TeleconsultSharePrescriptionModel> {
+    return TeleconsultSharePrescriptionUiRenderer(this)
+  }
+
+  override fun events(): Observable<TeleconsultSharePrescriptionEvent> {
+    return Observable
+        .mergeArray(
+            downloadClicks(),
+            shareClicks(),
+            doneClicks(),
+            backClicks(),
+            imageSavedMessageEvents
+        )
+        .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
+        .compose(ReportAnalyticsEvents())
+        .cast()
+  }
+
+  override fun createUpdate() = TeleconsultSharePrescriptionUpdate()
+
+  override fun createInit() = TeleconsultSharePrescriptionInit()
+
+  override fun createEffectHandler() = effectHandler.create(this).build()
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()

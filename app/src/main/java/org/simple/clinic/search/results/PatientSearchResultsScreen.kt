@@ -1,6 +1,7 @@
 package org.simple.clinic.search.results
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -108,6 +109,11 @@ class PatientSearchResultsScreen :
     )
   }
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -115,7 +121,6 @@ class PatientSearchResultsScreen :
       return
     }
 
-    context.injector<Injector>().inject(this)
     setupScreen()
   }
 

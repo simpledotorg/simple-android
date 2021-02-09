@@ -225,7 +225,7 @@ class TeleconsultSharePrescriptionScreen :
     val medicalInstructions = screenKey.medicalInstructions
 
     if (medicalInstructions.isNullOrBlank()) {
-      instructionsTextView.text = context.getString(R.string.screen_teleconsult_share_prescription_instructions_empty)
+      instructionsTextView.text = requireContext().getString(R.string.screen_teleconsult_share_prescription_instructions_empty)
     } else {
       instructionsTextView.text = medicalInstructions
     }
@@ -258,7 +258,7 @@ class TeleconsultSharePrescriptionScreen :
   }
 
   override fun setMedicalRegistrationId(medicalRegistrationId: String) {
-    medicalRegistrationIdTextView.text = context.getString(
+    medicalRegistrationIdTextView.text = requireContext().getString(
         R.string.screen_teleconsult_share_prescription_medical_registration_id,
         medicalRegistrationId
     )
@@ -281,7 +281,10 @@ class TeleconsultSharePrescriptionScreen :
     sharingIntent.type = "image/png"
     sharingIntent.putExtra(Intent.EXTRA_STREAM, imageUri)
     sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    context.startActivity(Intent.createChooser(sharingIntent, context.getString(R.string.screen_teleconsult_share_prescription_image_using)))
+    requireContext().startActivity(Intent.createChooser(
+        sharingIntent,
+        requireContext().getString(R.string.screen_teleconsult_share_prescription_image_using)
+    ))
   }
 
   override fun renderPrescriptionDate(prescriptionDate: LocalDate) {
@@ -293,10 +296,10 @@ class TeleconsultSharePrescriptionScreen :
     patientAddressTextView.text = patientProfile.address.completeAddress
     val ageValue = DateOfBirth.fromPatient(patientProfile.patient, userClock).estimateAge(userClock)
     val patientGender = patientProfile.patient.gender
-    patientNameTextView.text = context.getString(
+    patientNameTextView.text = requireContext().getString(
         R.string.screen_teleconsult_share_prescription_patient_details,
         patientProfile.patient.fullName,
-        context.getString(patientGender.displayLetterRes),
+        requireContext().getString(patientGender.displayLetterRes),
         ageValue.toString()
     )
   }
@@ -311,7 +314,7 @@ class TeleconsultSharePrescriptionScreen :
   }
 
   override fun showImageSavedToast() {
-    val message = context.getString(R.string.screen_teleconsult_share_prescription_image_saved)
+    val message = requireContext().getString(R.string.screen_teleconsult_share_prescription_image_saved)
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
     imageSavedMessageEvents.onNext(ImageSavedMessageShown)

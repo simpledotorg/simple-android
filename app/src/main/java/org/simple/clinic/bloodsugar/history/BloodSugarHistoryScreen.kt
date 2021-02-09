@@ -33,7 +33,6 @@ import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.summary.TYPE_PICKER_SHEET
@@ -78,9 +77,6 @@ class BloodSugarHistoryScreen(
 
   @Inject
   lateinit var effectHandlerFactory: BloodSugarHistoryScreenEffectHandler.Factory
-
-  @Inject
-  lateinit var crashReporter: CrashReporter
 
   @Inject
   lateinit var config: BloodSugarSummaryConfig
@@ -132,14 +128,13 @@ class BloodSugarHistoryScreen(
   private val uiRenderer = BloodSugarHistoryScreenUiRenderer(this)
 
   private val delegate: MobiusDelegate<BloodSugarHistoryScreenModel, BloodSugarHistoryScreenEvent, BloodSugarHistoryScreenEffect> by unsafeLazy {
-    MobiusDelegate(
+    MobiusDelegate.forView(
         events = events,
         defaultModel = BloodSugarHistoryScreenModel.create(screenKey.patientUuid),
         init = BloodSugarHistoryScreenInit(),
         update = BloodSugarHistoryScreenUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render,
-        crashReporter = crashReporter
+        modelUpdateListener = uiRenderer::render
     )
   }
 
@@ -155,8 +150,6 @@ class BloodSugarHistoryScreen(
 
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
     openEntrySheetAfterTypeIsSelected(screenDestroys)
-
-    delegate.prepare()
 
     handleToolbarBackClick()
     setupBloodSugarHistoryList()

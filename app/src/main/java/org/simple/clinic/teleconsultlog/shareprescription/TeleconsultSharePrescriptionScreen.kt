@@ -1,16 +1,13 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.Parcelable
-import android.util.AttributeSet
 import android.view.View
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
@@ -25,6 +22,7 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.PatientProfile
@@ -45,11 +43,14 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
-
-class TeleconsultSharePrescriptionScreen constructor(
-    context: Context,
-    attributeSet: AttributeSet?
-) : ConstraintLayout(context, attributeSet), TeleconsultSharePrescriptionUi, TeleconsultSharePrescriptionUiActions {
+class TeleconsultSharePrescriptionScreen :
+    BaseScreen<
+        TeleconsultSharePrescriptionScreenKey,
+        ScreenTeleconsultSharePrescriptionBinding,
+        TeleconsultSharePrescriptionModel,
+        TeleconsultSharePrescriptionEvent,
+        TeleconsultSharePrescriptionEffect>(),
+    TeleconsultSharePrescriptionUi, TeleconsultSharePrescriptionUiActions {
 
   private var binding: ScreenTeleconsultSharePrescriptionBinding? = null
 

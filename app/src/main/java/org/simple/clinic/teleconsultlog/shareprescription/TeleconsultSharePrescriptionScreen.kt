@@ -55,43 +55,41 @@ class TeleconsultSharePrescriptionScreen :
         TeleconsultSharePrescriptionEffect>(),
     TeleconsultSharePrescriptionUi, TeleconsultSharePrescriptionUiActions {
 
-  private var binding: ScreenTeleconsultSharePrescriptionBinding? = null
-
   private val medicinesRecyclerView
-    get() = binding!!.medicinesRecyclerView
+    get() = binding.medicinesRecyclerView
 
   private val instructionsTextView
-    get() = binding!!.instructionsTextView
+    get() = binding.instructionsTextView
 
   private val shareButton
-    get() = binding!!.shareButton
+    get() = binding.shareButton
 
   private val layoutSharePrescription
-    get() = binding!!.layoutSharePrescription
+    get() = binding.layoutSharePrescription
 
   private val downloadButton
-    get() = binding!!.downloadButton
+    get() = binding.downloadButton
 
   private val doneButton
-    get() = binding!!.doneButton
+    get() = binding.doneButton
 
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   private val signatureImageView
-    get() = binding!!.signatureImageView
+    get() = binding.signatureImageView
 
   private val prescriptionDateTextView
-    get() = binding!!.prescriptionDateTextView
+    get() = binding.prescriptionDateTextView
 
   private val medicalRegistrationIdTextView
-    get() = binding!!.medicalRegistrationIdTextView
+    get() = binding.medicalRegistrationIdTextView
 
   private val patientAddressTextView
-    get() = binding!!.patientAddressTextView
+    get() = binding.patientAddressTextView
 
   private val patientNameTextView
-    get() = binding!!.patientNameTextView
+    get() = binding.patientNameTextView
 
   @Inject
   lateinit var router: Router

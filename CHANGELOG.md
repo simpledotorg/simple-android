@@ -9,6 +9,7 @@
 - Change `AccessDeniedScreen` to a fragment
 - Migrate `TeleconsultSharePrescriptionScreen` to a fragment
 - Remove deprecated Mobius delegate usage in `BloodSugarHistoryScreen`
+- Bump MDC to v1.3.0
 - [In Progress: 20 Jan 2021] Material Theming Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 

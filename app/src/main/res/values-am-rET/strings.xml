@@ -237,6 +237,8 @@
   <string name="registration_loggedout_dialog_title"> ወጥተዋል</string>
   <string name="registration_loggedout_dialog_message">ለመቀጠል እባክዎ እንደገና ይግቡ</string>
   <string name="registration_loggedout_dialog_confirm">እሺ</string>
+  <string name="registrationphone_next">ቀጣይ</string>
+
   <string name="registrationname_name_label">ሙሉ ስምዎን ይንገሩን</string>
   <string name="registrationname_error_empty_name">እባክዎ ሙሉ ስምዎን ያስገቡ</string>
 
@@ -364,6 +366,10 @@
   <string name="help_try_again">ድጋሚ ይሞክሩ</string>
 
   <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_yes">አዎ</string>
+  <string name="linkidwithpatient_button_back">ወደኋላ</string>
+  <string name="linkidwithpatient_text">የ ደም ግፊት ፓስፖርት ይጨምሩ</string>
+  <string name="linkidwithpatient_patient_text">ታካሚ %1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 
@@ -678,5 +684,8 @@
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">ለ %1$s ተመድቧል</string>
   <string name="patientinstantsearch_nearby_facilities_header">በአቅራቢያ ካሉ ተቋማት</string>
+  <string name="patientsearch_error_no_patients_in_facility">እዚህ በተቋሙ የተመዘገቡትን ህመምተኞች በሙሉ ማየት ይችላሉ</string>
+  <string name="patientsearch_error_no_search_results">ከታካሚው ጋር አይዛመድም</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading">ታካሚ በ %1$s ዉስጥ የለም</string>
 
 </resources>

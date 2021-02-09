@@ -277,9 +277,7 @@ dependencies {
 
   implementation "androidx.appcompat:appcompat:$versions.supportLib"
   implementation "androidx.recyclerview:recyclerview:$versions.recyclerView"
-  implementation("com.google.android.material:material:$versions.material") {
-    exclude group: 'androidx.constraintlayout', module: 'constraintlayout'
-  }
+  implementation("com.google.android.material:material:$versions.material")
   implementation "androidx.cardview:cardview:$versions.cardview"
   implementation "androidx.constraintlayout:constraintlayout:$versions.constraintLayout"
   implementation "androidx.room:room-runtime:$versions.room"

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenPatientSearchResultsBinding
@@ -65,6 +66,24 @@ class PatientSearchResultsScreen :
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenPatientSearchResultsBinding.inflate(layoutInflater, container, false)
+
+  override fun defaultModel() = PatientSearchResultsModel.create(screenKey.criteria)
+
+  override fun uiRenderer() = PatientSearchResultsUiRenderer(this)
+
+  override fun events() = Observable
+      .merge(
+          searchResultClicks(),
+          registerNewPatientClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<PatientSearchResultsEvent>()
+
+  override fun createUpdate() = PatientSearchResultsUpdate()
+
+  override fun createInit() = PatientSearchResultsInit()
+
+  override fun createEffectHandler() = effectHandlerInjectionFactory.create(this).build()
 
   private val events by unsafeLazy {
     Observable

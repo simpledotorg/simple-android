@@ -8,14 +8,12 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenPatientSearchResultsBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -28,7 +26,6 @@ import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
@@ -86,29 +83,6 @@ class PatientSearchResultsScreen :
   override fun createInit() = PatientSearchResultsInit()
 
   override fun createEffectHandler() = effectHandlerInjectionFactory.create(this).build()
-
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            searchResultClicks(),
-            registerNewPatientClicks()
-        )
-        .compose(ReportAnalyticsEvents())
-        .share()
-  }
-
-  private val delegate by unsafeLazy {
-    val uiRenderer = PatientSearchResultsUiRenderer(this)
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = PatientSearchResultsModel.create(screenKey.criteria),
-        update = PatientSearchResultsUpdate(),
-        effectHandler = effectHandlerInjectionFactory.create(this).build(),
-        init = PatientSearchResultsInit(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

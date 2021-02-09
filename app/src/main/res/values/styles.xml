@@ -141,6 +141,12 @@
     <item name="android:paddingBottom">6dp</item>
   </style>
 
+  <style name="Widget.Simple.TextField.AutoComplete" parent="Widget.MaterialComponents.AutoCompleteTextView.FilledBox.Dense">
+    <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+    <item name="android:paddingTop">26dp</item>
+    <item name="android:paddingBottom">6dp</item>
+  </style>
+
   <style name="Widget.Simple.TextField.Layout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
     <item name="boxBackgroundColor">@android:color/transparent</item>
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField</item>
@@ -182,6 +188,10 @@
     <item name="startIconTint">@color/color_on_surface_67</item>
     <item name="endIconMode">clear_text</item>
     <item name="endIconDrawable">@drawable/ic_clear_circular_16dp</item>
+  </style>
+
+  <style name="Widget.Simple.TextField.Layout.PatientEntry.AutoComplete">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField.AutoComplete</item>
   </style>
 
   <style name="Widget.Simple.TextField.PinEntry" parent="">

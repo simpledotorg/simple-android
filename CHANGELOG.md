@@ -31,6 +31,9 @@
 - Change `ConfirmFacilityChangeScreen` to `BaseBottomSheet`
 - Change `PatientSearchResultsScreen` to a fragment
 
+### Changes
+- Updated the app icon
+
 ## Features
 - Highlight patient name and number in Instant search
 

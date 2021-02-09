@@ -2,7 +2,6 @@ package org.simple.clinic.search.results
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -120,25 +119,6 @@ class PatientSearchResultsScreen :
     super.onViewCreated(view, savedInstanceState)
     setupScreen()
     searchResultsView.searchWithCriteria(screenKey.criteria)
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun searchResultClicks(): Observable<UiEvent> {

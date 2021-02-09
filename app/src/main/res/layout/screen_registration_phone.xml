@@ -135,4 +135,18 @@
 
   </com.google.android.material.card.MaterialCardView>
 
+  <FrameLayout
+    style="@style/Widget.Simple.Button.Frame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent">
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/nextButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/registrationphone_next" />
+
+  </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

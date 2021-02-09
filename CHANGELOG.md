@@ -7,6 +7,7 @@
 - Change `ConfirmFacilityChangeScreen` to `BaseBottomSheet`
 - Migrate `ShortCodeSearchResultScreen` to a fragment
 - Change `AccessDeniedScreen` to a fragment
+- Migrate `TeleconsultSharePrescriptionScreen` to a fragment
 - Remove deprecated Mobius delegate usage in `BloodSugarHistoryScreen`
 - [In Progress: 20 Jan 2021] Material Theming Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding

@@ -29,6 +29,7 @@
 - Change `AlertFacilityChangeSheet` to `BaseBottomSheet`
 - Change `FacilityChangeScreen` to `BaseBottomSheet`
 - Change `ConfirmFacilityChangeScreen` to `BaseBottomSheet`
+- Change `PatientSearchResultsScreen` to a fragment
 
 ## Features
 - Highlight patient name and number in Instant search

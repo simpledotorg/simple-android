@@ -1,5 +1,6 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -181,6 +182,11 @@ class TeleconsultSharePrescriptionScreen :
 
   override fun createEffectHandler() = effectHandler.create(this).build()
 
+  override fun onAttach(context: Context) {
+    context.injector<Injector>().inject(this)
+    super.onAttach(context)
+  }
+
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     delegate.start()
@@ -203,7 +209,6 @@ class TeleconsultSharePrescriptionScreen :
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) return
-    context.injector<Injector>().inject(this)
 
     binding = ScreenTeleconsultSharePrescriptionBinding.bind(this)
 

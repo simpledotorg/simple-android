@@ -25,6 +25,7 @@
 - Migrate `ShortCodeSearchResultScreen` to a fragment
 - Change `AccessDeniedScreen` to a fragment
 - Remove deprecated Mobius delegate usage in `BloodSugarHistoryScreen`
+- Migrate `TeleconsultSharePrescriptionScreen` to a fragment
 
 ## Features
 - Highlight patient name and number in Instant search

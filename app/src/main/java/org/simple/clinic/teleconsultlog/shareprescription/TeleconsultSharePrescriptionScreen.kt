@@ -6,14 +6,15 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.net.Uri
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
@@ -23,9 +24,9 @@ import org.simple.clinic.databinding.ScreenTeleconsultSharePrescriptionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.home.HomeScreenKey
-import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.displayLetterRes
@@ -34,7 +35,6 @@ import org.simple.clinic.teleconsultlog.prescription.medicines.TeleconsultMedici
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
@@ -45,49 +45,50 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
-
-class TeleconsultSharePrescriptionScreen constructor(
-    context: Context,
-    attributeSet: AttributeSet?
-) : ConstraintLayout(context, attributeSet), TeleconsultSharePrescriptionUi, TeleconsultSharePrescriptionUiActions {
-
-  private var binding: ScreenTeleconsultSharePrescriptionBinding? = null
+class TeleconsultSharePrescriptionScreen :
+    BaseScreen<
+        TeleconsultSharePrescriptionScreenKey,
+        ScreenTeleconsultSharePrescriptionBinding,
+        TeleconsultSharePrescriptionModel,
+        TeleconsultSharePrescriptionEvent,
+        TeleconsultSharePrescriptionEffect>(),
+    TeleconsultSharePrescriptionUi, TeleconsultSharePrescriptionUiActions {
 
   private val medicinesRecyclerView
-    get() = binding!!.medicinesRecyclerView
+    get() = binding.medicinesRecyclerView
 
   private val instructionsTextView
-    get() = binding!!.instructionsTextView
+    get() = binding.instructionsTextView
 
   private val shareButton
-    get() = binding!!.shareButton
+    get() = binding.shareButton
 
   private val layoutSharePrescription
-    get() = binding!!.layoutSharePrescription
+    get() = binding.layoutSharePrescription
 
   private val downloadButton
-    get() = binding!!.downloadButton
+    get() = binding.downloadButton
 
   private val doneButton
-    get() = binding!!.doneButton
+    get() = binding.doneButton
 
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   private val signatureImageView
-    get() = binding!!.signatureImageView
+    get() = binding.signatureImageView
 
   private val prescriptionDateTextView
-    get() = binding!!.prescriptionDateTextView
+    get() = binding.prescriptionDateTextView
 
   private val medicalRegistrationIdTextView
-    get() = binding!!.medicalRegistrationIdTextView
+    get() = binding.medicalRegistrationIdTextView
 
   private val patientAddressTextView
-    get() = binding!!.patientAddressTextView
+    get() = binding.patientAddressTextView
 
   private val patientNameTextView
-    get() = binding!!.patientNameTextView
+    get() = binding.patientNameTextView
 
   @Inject
   lateinit var router: Router
@@ -111,39 +112,7 @@ class TeleconsultSharePrescriptionScreen constructor(
   @Inject
   lateinit var runtimePermissions: RuntimePermissions
 
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
-  private val screenKey by unsafeLazy {
-    screenKeyProvider.keyFor<TeleconsultSharePrescriptionScreenKey>(this)
-  }
-
   private val imageSavedMessageEvents = PublishSubject.create<UiEvent>()
-  private val events: Observable<UiEvent> by unsafeLazy {
-    Observable
-        .mergeArray(
-            downloadClicks(),
-            shareClicks(),
-            doneClicks(),
-            backClicks(),
-            imageSavedMessageEvents
-        )
-        .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
-        .compose(ReportAnalyticsEvents())
-  }
-
-  private val delegate by unsafeLazy {
-    val uiRenderer = TeleconsultSharePrescriptionUiRenderer(this)
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = TeleconsultSharePrescriptionModel.create(screenKey.patientUuid, LocalDate.now(userClock)),
-        init = TeleconsultSharePrescriptionInit(),
-        update = TeleconsultSharePrescriptionUpdate(),
-        effectHandler = effectHandler.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
 
   private val teleconsultSharePrescriptionMedicinesAdapter = ItemAdapter(
       diffCallback = TeleconsultSharePrescriptionDiffCallback(),
@@ -154,31 +123,45 @@ class TeleconsultSharePrescriptionScreen constructor(
       )
   )
 
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
+  override fun defaultModel(): TeleconsultSharePrescriptionModel {
+    return TeleconsultSharePrescriptionModel.create(screenKey.patientUuid, LocalDate.now(userClock))
   }
 
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): ScreenTeleconsultSharePrescriptionBinding {
+    return ScreenTeleconsultSharePrescriptionBinding.inflate(layoutInflater, container, false)
   }
 
-  override fun onSaveInstanceState(): Parcelable {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  override fun uiRenderer(): ViewRenderer<TeleconsultSharePrescriptionModel> {
+    return TeleconsultSharePrescriptionUiRenderer(this)
   }
 
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+  override fun events(): Observable<TeleconsultSharePrescriptionEvent> {
+    return Observable
+        .mergeArray(
+            downloadClicks(),
+            shareClicks(),
+            doneClicks(),
+            backClicks(),
+            imageSavedMessageEvents
+        )
+        .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
+        .compose(ReportAnalyticsEvents())
+        .cast()
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) return
+  override fun createUpdate() = TeleconsultSharePrescriptionUpdate()
+
+  override fun createInit() = TeleconsultSharePrescriptionInit()
+
+  override fun createEffectHandler() = effectHandler.create(this).build()
+
+  override fun onAttach(context: Context) {
     context.injector<Injector>().inject(this)
+    super.onAttach(context)
+  }
 
-    binding = ScreenTeleconsultSharePrescriptionBinding.bind(this)
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
     showMedicalInstructions()
     medicinesRecyclerView.adapter = teleconsultSharePrescriptionMedicinesAdapter
@@ -188,7 +171,7 @@ class TeleconsultSharePrescriptionScreen constructor(
     val medicalInstructions = screenKey.medicalInstructions
 
     if (medicalInstructions.isNullOrBlank()) {
-      instructionsTextView.text = context.getString(R.string.screen_teleconsult_share_prescription_instructions_empty)
+      instructionsTextView.text = requireContext().getString(R.string.screen_teleconsult_share_prescription_instructions_empty)
     } else {
       instructionsTextView.text = medicalInstructions
     }
@@ -221,7 +204,7 @@ class TeleconsultSharePrescriptionScreen constructor(
   }
 
   override fun setMedicalRegistrationId(medicalRegistrationId: String) {
-    medicalRegistrationIdTextView.text = context.getString(
+    medicalRegistrationIdTextView.text = requireContext().getString(
         R.string.screen_teleconsult_share_prescription_medical_registration_id,
         medicalRegistrationId
     )
@@ -244,7 +227,10 @@ class TeleconsultSharePrescriptionScreen constructor(
     sharingIntent.type = "image/png"
     sharingIntent.putExtra(Intent.EXTRA_STREAM, imageUri)
     sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    context.startActivity(Intent.createChooser(sharingIntent, context.getString(R.string.screen_teleconsult_share_prescription_image_using)))
+    requireContext().startActivity(Intent.createChooser(
+        sharingIntent,
+        requireContext().getString(R.string.screen_teleconsult_share_prescription_image_using)
+    ))
   }
 
   override fun renderPrescriptionDate(prescriptionDate: LocalDate) {
@@ -256,10 +242,10 @@ class TeleconsultSharePrescriptionScreen constructor(
     patientAddressTextView.text = patientProfile.address.completeAddress
     val ageValue = DateOfBirth.fromPatient(patientProfile.patient, userClock).estimateAge(userClock)
     val patientGender = patientProfile.patient.gender
-    patientNameTextView.text = context.getString(
+    patientNameTextView.text = requireContext().getString(
         R.string.screen_teleconsult_share_prescription_patient_details,
         patientProfile.patient.fullName,
-        context.getString(patientGender.displayLetterRes),
+        requireContext().getString(patientGender.displayLetterRes),
         ageValue.toString()
     )
   }
@@ -274,7 +260,7 @@ class TeleconsultSharePrescriptionScreen constructor(
   }
 
   override fun showImageSavedToast() {
-    val message = context.getString(R.string.screen_teleconsult_share_prescription_image_saved)
+    val message = requireContext().getString(R.string.screen_teleconsult_share_prescription_image_saved)
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
     imageSavedMessageEvents.onNext(ImageSavedMessageShown)
@@ -320,4 +306,3 @@ class TeleconsultSharePrescriptionScreen constructor(
     fun inject(target: TeleconsultSharePrescriptionScreen)
   }
 }
-

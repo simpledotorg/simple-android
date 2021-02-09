@@ -24,6 +24,7 @@
 - Migrate `BpPassportSheet` to `BaseBottomSheet`
 - Migrate `ShortCodeSearchResultScreen` to a fragment
 - Change `AccessDeniedScreen` to a fragment
+- Remove deprecated Mobius delegate usage in `BloodSugarHistoryScreen`
 
 ## Features
 - Highlight patient name and number in Instant search

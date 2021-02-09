@@ -1,9 +1,10 @@
 package org.simple.clinic.search.results
 
-import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.Observable
@@ -30,6 +31,7 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -114,20 +116,16 @@ class PatientSearchResultsScreen :
     context.injector<Injector>().inject(this)
   }
 
-  @SuppressLint("CheckResult")
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     setupScreen()
+    searchResultsView.searchWithCriteria(screenKey.criteria)
   }
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     delegate.start()
-    searchResultsView.searchWithCriteria(screenKey.criteria)
+
   }
 
   override fun onDetachedFromWindow() {
@@ -160,7 +158,7 @@ class PatientSearchResultsScreen :
   }
 
   private fun setupScreen() {
-    hideKeyboard()
+    binding.root.hideKeyboard()
     toolbar.setNavigationOnClickListener {
       router.pop()
     }

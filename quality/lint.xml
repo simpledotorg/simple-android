@@ -21,6 +21,12 @@
     <ignore path="src/main/res/drawable/ic_homescreen_india" />
   </issue>
 
+  <issue id="UnusedResources">
+    <ignore regexp="Widget.Simple.TextField.Layout.PatientEntry.AutoComplete" />
+    <ignore regexp="Widget.Simple.TextField.AutoComplete" />
+    <ignore regexp="ThemeOverlay.Simple.TextField.AutoComplete" />
+  </issue>
+
   <issue id="ParcelCreator" severity="informational" />
   <issue id="GradleDependency" severity="informational" />
 

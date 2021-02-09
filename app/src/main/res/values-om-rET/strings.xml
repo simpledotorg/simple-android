@@ -237,6 +237,8 @@
   <string name="registration_loggedout_dialog_title">Keessaa baatee jirta</string>
   <string name="registration_loggedout_dialog_message">Maaloo itti fufuudhaaf deebi’ii seeni</string>
   <string name="registration_loggedout_dialog_confirm">Hayyee</string>
+  <string name="registrationphone_next">Kan itti aanu</string>
+
   <string name="registrationname_name_label">Maqaa kee guutuu nutti himi</string>
   <string name="registrationname_error_empty_name">Maaloo maqaa kee guutuu galchi</string>
 
@@ -365,6 +367,10 @@
   <string name="help_try_again">Deebisii yaali</string>
 
   <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_yes">Eeyyee</string>
+  <string name="linkidwithpatient_button_back">Gara Duuba</string>
+  <string name="linkidwithpatient_text">Passport kan Dhiibbaa Dhiigaa dabali</string>
+  <string name="linkidwithpatient_patient_text">Dhukkubsataa %1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 
@@ -679,5 +685,8 @@
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">Gara %1$s qajeelfame</string>
   <string name="patientinstantsearch_nearby_facilities_header">Dhaabbilee dhiyeenyaa irra</string>
+  <string name="patientsearch_error_no_patients_in_facility">Dhukkubsattoota asitti galmaa\'an hundaa arguu ni dandeessa.</string>
+  <string name="patientsearch_error_no_search_results">Dhukkubsataan firoomu hin jiru</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading">Dhukkubsataan %1$s keessa hin jiru</string>
 
 </resources>

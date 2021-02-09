@@ -109,6 +109,23 @@ allprojects {
   repositories {
     google()
     mavenCentral()
+
+    // Left to support migration away from JCenter, do not add any new dependency inclusions here.
+    // See: https://jeroenmols.com/blog/2021/02/04/migratingjcenter/
+    jcenter() {
+      content {
+        // :app
+        includeModule("com.facebook.flipper", "flipper")
+        includeModule("com.facebook.flipper", "flipper-network-plugin")
+        includeModule("io.requery", "sqlite-android")
+        includeModule("ru.egslava", "MaskedEditText")
+        includeModule("com.xwray", "groupie")
+        includeModule("com.xwray", "groupie-viewbinding")
+
+        // :lint
+        includeModule("org.jetbrains.trove4j", "trove4j")
+      }
+    }
   }
 }
 

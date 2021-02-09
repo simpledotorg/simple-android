@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.net.Uri
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
@@ -211,6 +212,10 @@ class TeleconsultSharePrescriptionScreen :
     if (isInEditMode) return
 
     binding = ScreenTeleconsultSharePrescriptionBinding.bind(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
     showMedicalInstructions()
     medicinesRecyclerView.adapter = teleconsultSharePrescriptionMedicinesAdapter

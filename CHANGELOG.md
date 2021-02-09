@@ -12,6 +12,7 @@
 
 ### Changes
 - Updated translations: `mr-IN`, `ta-IN`, `bn-BD`, `ti-ET`, `am_ET`, `kn_IN`, `bn_IN`, `hi_IN`, `te-IN`, `pa-IN`
+- Add next button to phone number registration screen
 
 ### Fixes
 - Fix App crash when returning to the register patient screen before completing registration when patient date of birth is entered

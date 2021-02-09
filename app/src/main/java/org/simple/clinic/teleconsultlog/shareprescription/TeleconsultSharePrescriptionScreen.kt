@@ -24,7 +24,6 @@ import org.simple.clinic.databinding.ScreenTeleconsultSharePrescriptionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.home.HomeScreenKey
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -36,7 +35,6 @@ import org.simple.clinic.teleconsultlog.prescription.medicines.TeleconsultMedici
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
@@ -115,31 +113,6 @@ class TeleconsultSharePrescriptionScreen :
   lateinit var runtimePermissions: RuntimePermissions
 
   private val imageSavedMessageEvents = PublishSubject.create<UiEvent>()
-  private val events: Observable<UiEvent> by unsafeLazy {
-    Observable
-        .mergeArray(
-            downloadClicks(),
-            shareClicks(),
-            doneClicks(),
-            backClicks(),
-            imageSavedMessageEvents
-        )
-        .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
-        .compose(ReportAnalyticsEvents())
-  }
-
-  private val delegate by unsafeLazy {
-    val uiRenderer = TeleconsultSharePrescriptionUiRenderer(this)
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = TeleconsultSharePrescriptionModel.create(screenKey.patientUuid, LocalDate.now(userClock)),
-        init = TeleconsultSharePrescriptionInit(),
-        update = TeleconsultSharePrescriptionUpdate(),
-        effectHandler = effectHandler.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
 
   private val teleconsultSharePrescriptionMedicinesAdapter = ItemAdapter(
       diffCallback = TeleconsultSharePrescriptionDiffCallback(),

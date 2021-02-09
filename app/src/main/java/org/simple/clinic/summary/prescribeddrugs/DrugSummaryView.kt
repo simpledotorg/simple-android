@@ -1,14 +1,11 @@
 package org.simple.clinic.summary.prescribeddrugs
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.card.MaterialCardView
-import com.jakewharton.rxbinding3.view.detaches
-import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
@@ -22,21 +19,15 @@ import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.FullScreenKey
-import org.simple.clinic.summary.DRUGS_REQCODE_ALERT_FACILITY_CHANGE
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
@@ -145,22 +136,6 @@ class DrugSummaryView(
     }
 
     context.injector<DrugSummaryViewInjector>().inject(this)
-
-    val screenDestroys = detaches().map { ScreenDestroyed() }
-    setupAlertResults(screenDestroys)
-  }
-
-  @SuppressLint("CheckResult")
-  private fun setupAlertResults(screenDestroys: Observable<ScreenDestroyed>) {
-    screenResults
-        .streamResults()
-        .ofType<ActivityResult>()
-        .extractSuccessful(DRUGS_REQCODE_ALERT_FACILITY_CHANGE) { intent ->
-          AlertFacilityChangeSheet.readContinuationExtra<ContinueToScreen>(intent).screenKey
-        }
-        .takeUntil(screenDestroys)
-        .map(FullScreenKey::wrap)
-        .subscribe(router::push)
   }
 
   override fun populatePrescribedDrugs(prescribedDrugs: List<PrescribedDrug>) {
@@ -173,13 +148,10 @@ class DrugSummaryView(
   }
 
   override fun showUpdatePrescribedDrugsScreen(patientUuid: UUID, currentFacility: Facility) {
-    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intent(
-        context,
-        currentFacility.name,
-        ContinueToScreen(PrescribedDrugsScreenKey(patientUuid))
-    )
-
-    activity.startActivityForResult(alertFacilityChangeIntent, DRUGS_REQCODE_ALERT_FACILITY_CHANGE)
+    router.push(AlertFacilityChangeSheet.Key(
+        currentFacilityName = currentFacility.name,
+        continuation = ContinueToScreen(PrescribedDrugsScreenKey(patientUuid))
+    ))
   }
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {

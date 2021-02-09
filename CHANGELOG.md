@@ -26,6 +26,9 @@
 - Change `AccessDeniedScreen` to a fragment
 - Remove deprecated Mobius delegate usage in `BloodSugarHistoryScreen`
 - Migrate `TeleconsultSharePrescriptionScreen` to a fragment
+- Change `AlertFacilityChangeSheet` to `BaseBottomSheet`
+- Change `FacilityChangeScreen` to `BaseBottomSheet`
+- Change `ConfirmFacilityChangeScreen` to `BaseBottomSheet`
 
 ## Features
 - Highlight patient name and number in Instant search

@@ -237,7 +237,7 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   override fun openScanSimpleIdCardScreen() {
     // This is dependent on this screen being used within `org.simple.clinic.home.HomeScreen`
-    router.pushExpectingResult(HomeScreen.ScanPassportRequest, ScanSimpleIdScreenKey())
+    router.pushExpectingResult(HomeScreen.ScreenRequest.ScanPassportRequest, ScanSimpleIdScreenKey())
   }
 
   override fun hideSyncIndicator() {

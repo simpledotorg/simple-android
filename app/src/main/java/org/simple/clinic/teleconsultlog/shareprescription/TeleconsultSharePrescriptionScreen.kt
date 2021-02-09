@@ -27,7 +27,6 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.displayLetterRes
@@ -115,13 +114,6 @@ class TeleconsultSharePrescriptionScreen :
 
   @Inject
   lateinit var runtimePermissions: RuntimePermissions
-
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
-  private val screenKey by unsafeLazy {
-    screenKeyProvider.keyFor<TeleconsultSharePrescriptionScreenKey>(this)
-  }
 
   private val imageSavedMessageEvents = PublishSubject.create<UiEvent>()
   private val events: Observable<UiEvent> by unsafeLazy {

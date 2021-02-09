@@ -33,7 +33,6 @@ import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.summary.TYPE_PICKER_SHEET
@@ -78,9 +77,6 @@ class BloodSugarHistoryScreen(
 
   @Inject
   lateinit var effectHandlerFactory: BloodSugarHistoryScreenEffectHandler.Factory
-
-  @Inject
-  lateinit var crashReporter: CrashReporter
 
   @Inject
   lateinit var config: BloodSugarSummaryConfig

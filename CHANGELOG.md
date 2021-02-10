@@ -16,6 +16,7 @@
 ### Changes
 - Updated translations: `mr-IN`, `ta-IN`, `bn-BD`, `ti-ET`, `am-ET`, `kn-IN`, `bn-IN`, `hi-IN`, `te-IN`, `pa-IN`, `te-IN`, `om-ET`, `ta-IN`
 - Add next button to phone number registration screen
+- Change prescribed drugs toolbar title to `Medicines`
 
 ### Fixes
 - Fix App crash when returning to the register patient screen before completing registration when patient date of birth is entered

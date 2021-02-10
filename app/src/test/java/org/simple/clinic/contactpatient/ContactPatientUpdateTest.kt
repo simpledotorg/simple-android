@@ -19,7 +19,6 @@ import org.simple.clinic.contactpatient.UiMode.RemoveAppointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
-import org.simple.clinic.overdue.AppointmentCancelReason.TransferredToAnotherPublicHospital
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
@@ -28,6 +27,7 @@ import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
@@ -571,38 +571,6 @@ class ContactPatientUpdateTest {
   }
 
   @Test
-  fun `when the appointment is removed because the patient was transferred to another facility, the appointment must be cancelled`() {
-    val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
-        .overdueAppointmentLoaded(Just(overdueAppointment))
-        .removeAppointmentReasonSelected(TransferredToAnotherFacility)
-
-    spec
-        .given(model)
-        .whenEvent(RemoveAppointmentDoneClicked)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(CancelAppointment(appointmentUuid = appointmentUuid, reason = TransferredToAnotherPublicHospital) as ContactPatientEffect)
-        ))
-  }
-
-  @Test
-  fun `when the appointment is removed because the patient has moved to a private practitioner, the appointment must be cancelled`() {
-    val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
-        .overdueAppointmentLoaded(Just(overdueAppointment))
-        .removeAppointmentReasonSelected(MovedToPrivatePractitioner)
-
-    spec
-        .given(model)
-        .whenEvent(RemoveAppointmentDoneClicked)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(CancelAppointment(appointmentUuid = appointmentUuid, reason = AppointmentCancelReason.MovedToPrivatePractitioner) as ContactPatientEffect)
-        ))
-  }
-
-  @Test
   fun `when the appointment is removed for any other reason, the appointment must be cancelled`() {
     val model = defaultModel()
         .patientProfileLoaded(patientProfile)
@@ -631,6 +599,62 @@ class ContactPatientUpdateTest {
             hasModel(model.changeUiModeTo(RemoveAppointment)),
             hasNoEffects()
         ))
+  }
+
+  @Test
+  fun `when the done button is clicked, then patient must be marked as moved to private`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Optional.of(overdueAppointment))
+        .removeAppointmentReasonSelected(MovedToPrivatePractitioner)
+
+    spec
+        .given(model)
+        .whenEvent(RemoveAppointmentDoneClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(MarkPatientAsMovedToPrivate(patientUuid = patientUuid))
+            )
+        )
+  }
+
+  @Test
+  fun `when the patient is marked as migrated, then appointment should be cancelled`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Optional.of(overdueAppointment))
+
+    val appointmentCancelReason = AppointmentCancelReason.MovedToPrivatePractitioner
+
+    spec
+        .given(model)
+        .whenEvent(PatientMarkAsMigrated(appointmentCancelReason))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(CancelAppointment(appointmentUuid, appointmentCancelReason))
+            )
+        )
+  }
+
+
+  @Test
+  fun `when the done button is clicked, then mark the patient as transferred to a different facility`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Optional.of(overdueAppointment))
+        .removeAppointmentReasonSelected(TransferredToAnotherFacility)
+
+    spec
+        .given(model)
+        .whenEvent(RemoveAppointmentDoneClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(MarkPatientAsTransferredToAnotherFacility(patientUuid = patientUuid))
+            )
+        )
   }
 
   private fun defaultModel(

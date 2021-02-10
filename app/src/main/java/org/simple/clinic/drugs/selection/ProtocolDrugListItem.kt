@@ -29,6 +29,7 @@ data class ProtocolDrugListItem(
 
   override fun bind(viewBinding: ListPrescribeddrugsProtocolDrugBinding, position: Int) {
     viewBinding.protocoldrugItemName.text = drugName
+    viewBinding.protocoldrugItemName.isChecked = prescribedDrug != null
 
     viewBinding.protocoldrugItemDosage.visibleOrGone(prescribedDrug != null)
     viewBinding.protocoldrugItemDosage.text = prescribedDrug?.dosage

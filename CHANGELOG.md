@@ -19,7 +19,7 @@
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
 ### Changes
-- Updated translations: `mr-IN`, `ta-IN`, `bn-BD`, `ti-ET`, `am-ET`, `kn-IN`, `bn-IN`, `hi-IN`, `te-IN`, `pa-IN`, `te-IN`
+- Updated translations: `ta-IN`, `bn-BD`, `ti-ET`, `am-ET`, `kn-IN`, `bn-IN`, `hi-IN`, `te-IN`, `pa-IN`, `te-IN`, `mr-IN`
 - Add next button to phone number registration screen
 - Updated the app icon
 

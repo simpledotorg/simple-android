@@ -237,6 +237,8 @@
   <string name="registration_loggedout_dialog_title">आप लॉग आउट हो चुके हैं</string>
   <string name="registration_loggedout_dialog_message">कृपया जारी रखने के लिए फिर से लॉग इन करें</string>
   <string name="registration_loggedout_dialog_confirm">ठीक है</string>
+  <string name="registrationphone_next">आगे</string>
+
   <string name="registrationname_name_label">हमें अपना पूरा नाम बताएं</string>
   <string name="registrationname_error_empty_name">कृपया अपना पूरा नाम दर्ज करें</string>
 

@@ -10,6 +10,7 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.ProtocolDrugClicked
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.visibleOrGone
 
 data class ProtocolDrugListItem(
     val id: Int,
@@ -28,7 +29,10 @@ data class ProtocolDrugListItem(
 
   override fun bind(viewBinding: ListPrescribeddrugsProtocolDrugBinding, position: Int) {
     viewBinding.protocoldrugItemName.text = drugName
+
+    viewBinding.protocoldrugItemDosage.visibleOrGone(prescribedDrug != null)
     viewBinding.protocoldrugItemDosage.text = prescribedDrug?.dosage
+
     viewBinding.root.setOnClickListener {
       uiEvents.onNext(ProtocolDrugClicked(drugName, prescribedDrug))
     }

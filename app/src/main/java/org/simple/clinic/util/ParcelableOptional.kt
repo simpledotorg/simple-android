@@ -1,7 +1,7 @@
 package org.simple.clinic.util
 
+import android.os.Parcel
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 
 /**
  * We already have an [Optional] class that we use for representing
@@ -16,12 +16,21 @@ import kotlinx.android.parcel.Parcelize
  * This class is based on the Java [Optional](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html)
  * class, but which forces the [Parcelable] interface on its types.
  **/
-@Parcelize
 data class ParcelableOptional<T : Parcelable>(
     private val value: T?
 ) : Parcelable {
 
-  companion object {
+  constructor(parcel: Parcel) : this(parcel.readParcelable(ParcelableOptional::class.java.classLoader))
+
+  companion object CREATOR : Parcelable.Creator<ParcelableOptional<Parcelable>> {
+    override fun createFromParcel(parcel: Parcel): ParcelableOptional<Parcelable> {
+      return ParcelableOptional(parcel)
+    }
+
+    override fun newArray(size: Int): Array<ParcelableOptional<Parcelable>?> {
+      return arrayOfNulls(size)
+    }
+
     fun <T : Parcelable> of(value: T?) = ParcelableOptional(value)
   }
 
@@ -49,6 +58,14 @@ data class ParcelableOptional<T : Parcelable>(
     if (value == null) throw failureSupplier()
 
     return value
+  }
+
+  override fun writeToParcel(parcel: Parcel, flags: Int) {
+    parcel.writeParcelable(value, flags)
+  }
+
+  override fun describeContents(): Int {
+    return 0
   }
 }
 

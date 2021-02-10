@@ -400,6 +400,7 @@
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">None</string>
+  <string name="prescribed_drugs_dosage_remove">Remove</string>
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s dosage</string>
 
   <!--Scan Simple ID-->

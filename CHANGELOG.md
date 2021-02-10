@@ -18,6 +18,8 @@
 - Add next button to phone number registration screen
 - Change prescribed drugs toolbar title to `Medicines`
 - Fix downloaded prescription background color
+- Updated the app icon
+- Change UI for adding protocol/custom drugs
 
 ### Fixes
 - Fix App crash when returning to the register patient screen before completing registration when patient date of birth is entered

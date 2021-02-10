@@ -7,6 +7,9 @@
 - Add `Widget.Simple.TextField.Layout.PatientEntry.AutoComplete` style
 - Bump Kotlin to v1.4.30
 - Remove [JCenter](https://bintray.com/) from Maven repository sources
+- Set patient status to `migrated` whenever an overdue appointment is removed for one of the following reasons
+    - "Transferred to another public health facility"
+    - "Moved to private practitioner"
 - [In Progress: 20 Jan 2021] Material Theming Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 

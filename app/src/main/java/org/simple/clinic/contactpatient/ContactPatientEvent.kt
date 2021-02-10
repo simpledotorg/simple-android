@@ -2,6 +2,7 @@ package org.simple.clinic.contactpatient
 
 import android.Manifest
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.util.None
@@ -82,12 +83,14 @@ data class RemoveAppointmentReasonSelected(
     get() = "Contact Patient:Appointment cancel reason selected:$reason"
 }
 
-object PatientMarkedAsVisited: ContactPatientEvent()
+object PatientMarkedAsVisited : ContactPatientEvent()
 
-object PatientMarkedAsDead: ContactPatientEvent()
+object PatientMarkedAsDead : ContactPatientEvent()
 
-object AppointmentMarkedAsCancelled: ContactPatientEvent()
+object AppointmentMarkedAsCancelled : ContactPatientEvent()
 
-object RemoveAppointmentDoneClicked: ContactPatientEvent()
+object RemoveAppointmentDoneClicked : ContactPatientEvent()
 
-object RemoveFromOverdueListClicked: ContactPatientEvent()
+object RemoveFromOverdueListClicked : ContactPatientEvent()
+
+data class PatientMarkAsMigrated(val appointmentCancelReason: AppointmentCancelReason) : ContactPatientEvent()

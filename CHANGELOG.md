@@ -2,15 +2,7 @@
 
 ## Next Release
 ### Internal
-- Change `AlertFacilityChangeSheet` to `BaseBottomSheet`
-- Change `FacilityChangeScreen` to `BaseBottomSheet`
-- Change `ConfirmFacilityChangeScreen` to `BaseBottomSheet`
-- Migrate `ShortCodeSearchResultScreen` to a fragment
-- Change `AccessDeniedScreen` to a fragment
-- Migrate `TeleconsultSharePrescriptionScreen` to a fragment
-- Remove deprecated Mobius delegate usage in `BloodSugarHistoryScreen`
 - Bump MDC to v1.3.0
-- Change `PatientSearchResultsScreen` to a fragment
 - Bump ConstraintLayout to v2.0.4
 - Add `Widget.Simple.TextField.Layout.PatientEntry.AutoComplete` style
 - Bump Kotlin to v1.4.30
@@ -21,7 +13,6 @@
 ### Changes
 - Updated translations: `mr-IN`, `ta-IN`, `bn-BD`, `ti-ET`, `am-ET`, `kn-IN`, `bn-IN`, `hi-IN`, `te-IN`, `pa-IN`, `te-IN`, `om-ET`, `ta-IN`
 - Add next button to phone number registration screen
-- Updated the app icon
 
 ### Fixes
 - Fix App crash when returning to the register patient screen before completing registration when patient date of birth is entered
@@ -44,6 +35,17 @@
 - Add `NoopViewRenderer`
 - Migrate `BpPassportSheet` to `BaseBottomSheet`
 - Inject user's country code in `SentryCrashReporter`
+- Migrate `ShortCodeSearchResultScreen` to a fragment
+- Change `AccessDeniedScreen` to a fragment
+- Remove deprecated Mobius delegate usage in `BloodSugarHistoryScreen`
+- Migrate `TeleconsultSharePrescriptionScreen` to a fragment
+- Change `AlertFacilityChangeSheet` to `BaseBottomSheet`
+- Change `FacilityChangeScreen` to `BaseBottomSheet`
+- Change `ConfirmFacilityChangeScreen` to `BaseBottomSheet`
+- Change `PatientSearchResultsScreen` to a fragment
+
+### Changes
+- Updated the app icon
 
 ### Features
 - Highlight patient name and number in Instant search

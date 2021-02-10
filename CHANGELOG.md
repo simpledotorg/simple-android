@@ -19,6 +19,7 @@
 
 ### Fixes
 - Fix App crash when returning to the register patient screen before completing registration when patient date of birth is entered
+- Fix prescription entry sheet UI
 
 ## On Demo
 ### Internal

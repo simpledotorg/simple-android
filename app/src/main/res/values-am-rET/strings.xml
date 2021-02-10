@@ -369,7 +369,7 @@
   <string name="linkidwithpatient_button_yes">አዎ</string>
   <string name="linkidwithpatient_button_back">ወደኋላ</string>
   <string name="linkidwithpatient_text">የ ደም ግፊት ፓስፖርት ይጨምሩ</string>
-  <string name="linkidwithpatient_patient_text">ታካሚ %1$s?</string>
+  <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 

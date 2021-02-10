@@ -367,7 +367,7 @@
   <string name="linkidwithpatient_button_yes">होय</string>
   <string name="linkidwithpatient_button_back">मागे</string>
   <string name="linkidwithpatient_text">यावर बीपी पासपोर्ट जोडा</string>
-  <string name="linkidwithpatient_patient_text">रूग्ण %1$s?</string>
+  <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 

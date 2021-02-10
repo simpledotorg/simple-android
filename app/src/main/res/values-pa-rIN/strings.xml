@@ -367,7 +367,7 @@
   <string name="linkidwithpatient_button_yes">ਹਾਂ</string>
   <string name="linkidwithpatient_button_back">ਵਾਪਸ</string>
   <string name="linkidwithpatient_text">ਵਿੱਚ ਬੀਪੀ ਪਾਸਪੋਰਟ ਸ਼ਾਮਲ ਕਰੋ</string>
-  <string name="linkidwithpatient_patient_text">ਮਰੀਜ਼ %1$s?</string>
+  <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 

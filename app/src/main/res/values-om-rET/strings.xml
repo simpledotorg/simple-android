@@ -370,7 +370,7 @@
   <string name="linkidwithpatient_button_yes">Eeyyee</string>
   <string name="linkidwithpatient_button_back">Gara Duuba</string>
   <string name="linkidwithpatient_text">Passport kan Dhiibbaa Dhiigaa dabali</string>
-  <string name="linkidwithpatient_patient_text">Dhukkubsataa %1$s?</string>
+  <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 

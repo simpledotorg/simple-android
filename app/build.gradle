@@ -336,7 +336,6 @@ dependencies {
 
   implementation "com.google.android.gms:play-services-auth:$versions.playServicesAuth"
   implementation "io.github.inflationx:viewpump:$versions.viewPump"
-  implementation "com.facebook.shimmer:shimmer:$versions.fbShimmer"
   implementation "com.alimuzaffar.lib:pinentryedittext:$versions.pinEntryEditText"
   implementation "info.debatty:java-string-similarity:$versions.javaStringSimilarity"
   debugImplementation "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary"

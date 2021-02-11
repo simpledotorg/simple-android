@@ -36,7 +36,6 @@ import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.home.HomeScreenKey
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
@@ -64,7 +63,6 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.toLocalDateAtZone
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -186,41 +184,6 @@ class PatientSummaryScreen :
 
   private val snackbarActionClicks = PublishSubject.create<PatientSummaryEvent>()
   private val hardwareBackClicks = PublishSubject.create<Unit>()
-
-  private val events: Observable<PatientSummaryEvent> by unsafeLazy {
-    Observable
-        .mergeArray(
-            backClicks(),
-            doneClicks(),
-            bloodPressureSaves(),
-            appointmentScheduleSheetClosed(),
-            identifierLinkedEvents(),
-            identifierLinkCancelledEvents(),
-            editButtonClicks(),
-            phoneNumberClicks(),
-            contactDoctorClicks(),
-            snackbarActionClicks,
-            logTeleconsultClicks()
-        )
-        .compose(ReportAnalyticsEvents())
-        .cast<PatientSummaryEvent>()
-  }
-
-  private val viewRenderer = PatientSummaryViewRenderer(this)
-
-  private val mobiusDelegate: MobiusDelegate<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> by unsafeLazy {
-    MobiusDelegate.forView(
-        events = events,
-        defaultModel = PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid),
-        init = PatientSummaryInit(),
-        update = PatientSummaryUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = { model ->
-          modelUpdateCallback?.invoke(model)
-          viewRenderer.render(model)
-        }
-    )
-  }
 
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)

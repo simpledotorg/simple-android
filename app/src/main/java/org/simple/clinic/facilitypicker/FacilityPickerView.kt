@@ -80,6 +80,9 @@ class FacilityPickerView(
   private val progressView
     get() = binding!!.progressView
 
+  private val progressIndicator
+    get() = binding!!.progressIndicator
+
   init {
     val layoutInflater = LayoutInflater.from(context)
     binding = ViewFacilitypickerBinding.inflate(layoutInflater, this)
@@ -147,11 +150,11 @@ class FacilityPickerView(
   }
 
   override fun showProgressIndicator() {
-    progressView.visibility = RelativeLayout.VISIBLE
+    progressIndicator.visibility = RelativeLayout.VISIBLE
   }
 
   override fun hideProgressIndicator() {
-    progressView.visibility = RelativeLayout.GONE
+    progressIndicator.visibility = RelativeLayout.GONE
   }
 
   override fun updateFacilities(facilityItems: List<FacilityListItem>) {

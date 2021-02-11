@@ -98,5 +98,8 @@ data class PatientAddress(
 
     @Query("SELECT COUNT(uuid) FROM PatientAddress")
     abstract fun count(): Int
+
+    @Query("SELECT DISTINCT colonyOrVillage FROM PatientAddress ORDER BY colonyOrVillage ASC")
+    abstract fun getColonyOrVillages(): List<String>?
   }
 }

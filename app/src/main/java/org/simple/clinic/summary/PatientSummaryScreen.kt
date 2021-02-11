@@ -9,6 +9,8 @@ import android.text.style.BulletSpan
 import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
@@ -265,7 +267,7 @@ class PatientSummaryScreen :
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
-    context.injector<Injector>().inject(this)
+    requireContext().injector<Injector>().inject(this)
   }
 
   override fun onSaveInstanceState(): Parcelable {
@@ -420,7 +422,7 @@ class PatientSummaryScreen :
     if (registeredFacilityName != null) {
       val recordedAt = patientSummaryProfile.patient.recordedAt
       val recordedDate = dateFormatter.format(recordedAt.toLocalDateAtZone(userClock.zone))
-      val facilityNameAndDate = context.getString(R.string.patientsummary_registered_facility, recordedDate, registeredFacilityName)
+      val facilityNameAndDate = requireContext().getString(R.string.patientsummary_registered_facility, recordedDate, registeredFacilityName)
 
       facilityNameAndDateTextView.visibility = View.VISIBLE
       labelRegistered.visibility = View.VISIBLE
@@ -456,7 +458,7 @@ class PatientSummaryScreen :
     bpPassportTextView.text = when (bpPassport) {
       null -> ""
       else -> {
-        val identifierNumericSpan = TextAppearanceSpan(context, R.style.TextAppearance_Simple_Body2_Numeric)
+        val identifierNumericSpan = TextAppearanceSpan(requireContext(), R.style.TextAppearance_Simple_Body2_Numeric)
         val identifier = bpPassport.identifier
         val bpPassportLabel = identifier.displayType(resources)
 
@@ -481,8 +483,8 @@ class PatientSummaryScreen :
   }
 
   private fun generateAlternativeId(bangladeshNationalId: BusinessId, isBpPassportVisible: Boolean): SpannedString {
-    val bangladeshNationalIdLabel = context.getString(R.string.patientsummary_bangladesh_national_id)
-    val identifierNumericSpan = TextAppearanceSpan(context, R.style.TextAppearance_Simple_Body2_Numeric)
+    val bangladeshNationalIdLabel = requireContext().getString(R.string.patientsummary_bangladesh_national_id)
+    val identifierNumericSpan = TextAppearanceSpan(requireContext(), R.style.TextAppearance_Simple_Body2_Numeric)
     val identifier = bangladeshNationalId.identifier
 
     return buildSpannedString {
@@ -505,7 +507,7 @@ class PatientSummaryScreen :
       sheetOpenedFrom: AppointmentSheetOpenedFrom,
       currentFacility: Facility
   ) {
-    val scheduleAppointmentIntent = ScheduleAppointmentSheet.intent(context, patientUuid, ScheduleAppointmentSheetExtra(sheetOpenedFrom))
+    val scheduleAppointmentIntent = ScheduleAppointmentSheet.intent(requireContext(), patientUuid, ScheduleAppointmentSheetExtra(sheetOpenedFrom))
 
     router.push(AlertFacilityChangeSheet.Key(
         currentFacilityName = currentFacility.name,
@@ -573,8 +575,8 @@ class PatientSummaryScreen :
   }
 
   override fun openContactDoctorSheet(patientUuid: UUID) {
-    val intent = ContactDoctorSheet.intent(context, patientUuid)
-    context.startActivity(intent)
+    val intent = ContactDoctorSheet.intent(requireContext(), patientUuid)
+    requireContext().startActivity(intent)
   }
 
   override fun showTeleconsultButton() {

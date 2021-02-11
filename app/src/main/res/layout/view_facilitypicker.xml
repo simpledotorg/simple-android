@@ -40,7 +40,7 @@
           android:id="@+id/toolbarViewWithSearch"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:theme="@style/ThemeOverlay.Simple.FacilityPicker.Search"
+          android:theme="@style/ThemeOverlay.Simple.SurfacePrimary"
           app:contentInsetStartWithNavigation="@dimen/spacing_56"
           app:navigationIcon="@drawable/ic_arrow_back_24dp"
           app:navigationIconTint="?attr/colorOnPrimary">

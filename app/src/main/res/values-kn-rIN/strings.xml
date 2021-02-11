@@ -237,6 +237,8 @@
   <string name="registration_loggedout_dialog_title">ನೀವು ಲಾಗ್ ಔಟ್ ಆಗಿರುವಿರಿ</string>
   <string name="registration_loggedout_dialog_message">ಮುಂದುವರೆಯಲು ದಯವಿಟ್ಟು ಮತ್ತೊಮ್ಮೆ ಲಾಗಿನ್ ಮಾಡಿ</string>
   <string name="registration_loggedout_dialog_confirm">ಸರಿ</string>
+  <string name="registrationphone_next">ಮುಂದಿನ</string>
+
   <string name="registrationname_name_label">ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರನ್ನು ನಮಗೆ ತಿಳಿಸಿ</string>
   <string name="registrationname_error_empty_name">ದಯವಿಟ್ಟು ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
 

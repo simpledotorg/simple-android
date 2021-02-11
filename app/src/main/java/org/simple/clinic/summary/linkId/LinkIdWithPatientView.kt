@@ -166,7 +166,7 @@ class LinkIdWithPatientView(
   fun uiEvents(): Observable<UiEvent> = upstreamUiEvents.hide()
 
   override fun renderPatientName(patientName: String) {
-    idPatientNameTextView.text = String.format(resources.getString(R.string.linkidwithpatient_patient_text), patientName)
+    idPatientNameTextView.text = resources.getString(R.string.linkidwithpatient_patient_text, patientName)
   }
 
   override fun closeSheetWithIdLinked() {

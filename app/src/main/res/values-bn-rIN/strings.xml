@@ -369,7 +369,7 @@
   <string name="linkidwithpatient_button_yes">হ্যাঁ</string>
   <string name="linkidwithpatient_button_back">ফিরুন</string>
   <string name="linkidwithpatient_text">এতে বিপি পাসপোর্ট জুড়ুন</string>
-  <string name="linkidwithpatient_patient_text">রোগী %1$s?</string>
+  <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 

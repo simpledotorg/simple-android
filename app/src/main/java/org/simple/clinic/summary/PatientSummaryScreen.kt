@@ -37,7 +37,6 @@ import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
@@ -179,9 +178,6 @@ class PatientSummaryScreen :
   @Inject
   lateinit var whatsAppMessageSender: WhatsAppMessageSender
 
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val snackbarActionClicks = PublishSubject.create<PatientSummaryEvent>()
@@ -207,10 +203,6 @@ class PatientSummaryScreen :
   }
 
   private val viewRenderer = PatientSummaryViewRenderer(this)
-
-  private val screenKey: PatientSummaryScreenKey by unsafeLazy {
-    screenKeyProvider.keyFor(this)
-  }
 
   private val mobiusDelegate: MobiusDelegate<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> by unsafeLazy {
     MobiusDelegate.forView(

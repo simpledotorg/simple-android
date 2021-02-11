@@ -270,14 +270,6 @@ class PatientSummaryScreen :
     requireContext().injector<Injector>().inject(this)
   }
 
-  override fun onSaveInstanceState(): Parcelable {
-    return mobiusDelegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable) {
-    super.onRestoreInstanceState(mobiusDelegate.onRestoreInstanceState(state))
-  }
-
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
@@ -321,16 +313,6 @@ class PatientSummaryScreen :
 
       emitter.setCancellable { summaryChildView.registerSummaryModelUpdateCallback(null) }
     }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    mobiusDelegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    mobiusDelegate.stop()
-    super.onDetachedFromWindow()
   }
 
   private fun editButtonClicks(): Observable<UiEvent> = editPatientButton.clicks().map { PatientSummaryEditClicked }

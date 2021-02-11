@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.text.SpannedString
 import android.text.style.BulletSpan
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import com.spotify.mobius.Init
 import com.spotify.mobius.Update
 import io.reactivex.Observable
@@ -63,6 +65,7 @@ import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.isVisible
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.visibleOrGone
@@ -273,18 +276,13 @@ class PatientSummaryScreen :
     super.onRestoreInstanceState(mobiusDelegate.onRestoreInstanceState(state))
   }
 
-  @SuppressLint("CheckResult")
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-
-    if (isInEditMode) {
-      return
-    }
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()
 
-    val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
+    val screenDestroys: Observable<ScreenDestroyed> = view.detaches().map { ScreenDestroyed() }
     setupChildViewVisibility(screenDestroys)
   }
 

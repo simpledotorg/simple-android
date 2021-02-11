@@ -71,9 +71,6 @@ class FacilityPickerView(
   private val toolbarViewWithSearch
     get() = binding!!.toolbarViewWithSearch
 
-  private val toolbarViewWithoutSearch
-    get() = binding!!.toolbarViewWithoutSearch
-
   private val facilityRecyclerView
     get() = binding!!.facilityRecyclerView
 
@@ -82,9 +79,6 @@ class FacilityPickerView(
 
   private val progressView
     get() = binding!!.progressView
-
-  private val toolbarViewFlipper
-    get() = binding!!.toolbarViewFlipper
 
   init {
     val layoutInflater = LayoutInflater.from(context)
@@ -97,7 +91,6 @@ class FacilityPickerView(
     context.injector<Injector>().inject(this)
 
     toolbarViewWithSearch.setNavigationOnClickListener { backClicked?.invoke() }
-    toolbarViewWithoutSearch.setNavigationOnClickListener { backClicked?.invoke() }
 
     facilityRecyclerView.layoutManager = LinearLayoutManager(context)
     facilityRecyclerView.adapter = recyclerViewAdapter

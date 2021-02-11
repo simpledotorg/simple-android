@@ -14,59 +14,35 @@
     <com.google.android.material.appbar.AppBarLayout
       android:id="@+id/appbarLayout"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content">
+      android:layout_height="wrap_content"
+      android:theme="@style/ThemeOverlay.Simple.SurfacePrimary">
 
-      <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
-        android:id="@+id/toolbarViewFlipper"
+      <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarViewWithSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:animateFirstView="false"
-        android:background="?attr/colorSurface"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:inAnimation="@anim/registrationfacilities_toolbar_entry"
-        android:outAnimation="@anim/registrationfacilities_toolbar_exit"
-        app:debug_displayedChild="0">
+        app:contentInsetStartWithNavigation="@dimen/spacing_56"
+        app:navigationIcon="@drawable/ic_arrow_back_24dp">
 
-        <com.google.android.material.appbar.MaterialToolbar
-          android:id="@+id/toolbarViewWithoutSearch"
+        <com.google.android.material.textfield.TextInputLayout
+          style="@style/Widget.Simple.TextField.Layout.Search"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          app:navigationIcon="@drawable/ic_arrow_back_24dp"
-          app:navigationIconTint="?attr/colorOnPrimary"
-          app:title="@string/facilitypicker_screen_title" />
+          android:layout_height="wrap_content">
 
-        <com.google.android.material.appbar.MaterialToolbar
-          android:id="@+id/toolbarViewWithSearch"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:theme="@style/ThemeOverlay.Simple.SurfacePrimary"
-          app:contentInsetStartWithNavigation="@dimen/spacing_56"
-          app:navigationIcon="@drawable/ic_arrow_back_24dp"
-          app:navigationIconTint="?attr/colorOnPrimary">
-
-          <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Simple.TextField.Layout.Search"
+          <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/searchEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:hint="@string/facilitypicker_search_hint"
+            android:importantForAutofill="no"
+            android:inputType="textPostalAddress"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="@color/color_on_surface_67"
+            tools:ignore="UnusedAttribute" />
 
-            <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/searchEditText"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:hint="@string/facilitypicker_search_hint"
-              android:importantForAutofill="no"
-              android:inputType="textPostalAddress"
-              android:textAppearance="?attr/textAppearanceBody0"
-              android:textColor="?attr/colorOnSurface"
-              android:textColorHint="@color/color_on_surface_67"
-              tools:ignore="UnusedAttribute" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-          </com.google.android.material.textfield.TextInputLayout>
-
-        </com.google.android.material.appbar.MaterialToolbar>
-
-      </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
+      </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -5,12 +5,17 @@ import android.os.Parcelable
 import android.text.SpannedString
 import android.text.style.BulletSpan
 import android.text.style.TextAppearanceSpan
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.Init
+import com.spotify.mobius.Update
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -27,6 +32,7 @@ import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
@@ -218,6 +224,49 @@ class PatientSummaryScreen :
           viewRenderer.render(model)
         }
     )
+  }
+
+  override fun defaultModel(): PatientSummaryModel {
+    return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
+  }
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): ScreenPatientSummaryBinding {
+    return ScreenPatientSummaryBinding.inflate(layoutInflater, container, false)
+  }
+
+  override fun uiRenderer(): ViewRenderer<PatientSummaryModel> {
+    return PatientSummaryViewRenderer(this)
+  }
+
+  override fun events(): Observable<PatientSummaryEvent> {
+    return Observable
+        .mergeArray(
+            backClicks(),
+            doneClicks(),
+            bloodPressureSaves(),
+            appointmentScheduleSheetClosed(),
+            identifierLinkedEvents(),
+            identifierLinkCancelledEvents(),
+            editButtonClicks(),
+            phoneNumberClicks(),
+            contactDoctorClicks(),
+            snackbarActionClicks,
+            logTeleconsultClicks()
+        )
+        .compose(ReportAnalyticsEvents())
+        .cast()
+  }
+
+  override fun createUpdate(): Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
+    return PatientSummaryUpdate()
+  }
+
+  override fun createInit(): Init<PatientSummaryModel, PatientSummaryEffect> {
+    return PatientSummaryInit()
+  }
+
+  override fun createEffectHandler(): ObservableTransformer<PatientSummaryEffect, PatientSummaryEvent> {
+    return effectHandlerFactory.create(this).build()
   }
 
   override fun onSaveInstanceState(): Parcelable {

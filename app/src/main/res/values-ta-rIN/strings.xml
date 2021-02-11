@@ -369,7 +369,7 @@
   <string name="linkidwithpatient_button_yes">ஆம்</string>
   <string name="linkidwithpatient_button_back">மீண்டும்</string>
   <string name="linkidwithpatient_text">பிபி பாஸ்போர்ட்டை இதில் சேர்</string>
-  <string name="linkidwithpatient_patient_text">நோயாளி %1$s?</string>
+  <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 

@@ -369,7 +369,7 @@
   <string name="linkidwithpatient_button_yes">అవును</string>
   <string name="linkidwithpatient_button_back">వెనుకకు</string>
   <string name="linkidwithpatient_text">దీనికి బిపి పాస్‌పోర్ట్‌ను జోడించండి</string>
-  <string name="linkidwithpatient_patient_text">రోగి %1$s?</string>
+  <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 

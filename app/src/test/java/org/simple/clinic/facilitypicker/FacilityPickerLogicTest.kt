@@ -76,7 +76,6 @@ class FacilityPickerLogicTest {
         discardOlderThan = config.staleLocationThreshold
     )
     verify(ui, times(3)).showProgressIndicator()
-    verify(ui, times(2)).showToolbarWithoutSearchField()
     verifyNoMoreInteractions(ui)
   }
 
@@ -95,7 +94,6 @@ class FacilityPickerLogicTest {
     inOrder.verify(ui, times(3)).showProgressIndicator()
     inOrder.verify(ui).hideProgressIndicator()
     inOrder.verify(ui).updateFacilities(emptyList())
-    inOrder.verify(ui).showToolbarWithoutSearchField()
     inOrder.verifyNoMoreInteractions()
   }
 
@@ -119,7 +117,6 @@ class FacilityPickerLogicTest {
     val expectedFacilityListItems = listItemBuilder.build(facilities, searchQuery, null, config.proximityThresholdForNearbyFacilities)
     verify(ui, times(3)).showProgressIndicator()
     verify(ui, times(2)).hideProgressIndicator()
-    verify(ui, times(3)).showToolbarWithSearchField()
     verify(ui, times(2)).updateFacilities(expectedFacilityListItems)
     verifyNoMoreInteractions(ui)
   }
@@ -143,7 +140,6 @@ class FacilityPickerLogicTest {
     // then
     verify(ui, times(3)).showProgressIndicator()
     verify(ui, times(2)).hideProgressIndicator()
-    verify(ui, times(3)).showToolbarWithSearchField()
     verify(ui).updateFacilities(listItemBuilder.build(listOf(phcObvious, chcNilenso), "", null, config.proximityThresholdForNearbyFacilities))
     verify(ui).updateFacilities(listItemBuilder.build(listOf(phcObvious, chcNilenso), "HC", null, config.proximityThresholdForNearbyFacilities))
     verifyNoMoreInteractions(ui)
@@ -154,7 +150,6 @@ class FacilityPickerLogicTest {
 
     // then
     verify(ui).hideProgressIndicator()
-    verify(ui).showToolbarWithSearchField()
     verify(ui).updateFacilities(listItemBuilder.build(listOf(phcObvious), "PHC", null, config.proximityThresholdForNearbyFacilities))
     verifyNoMoreInteractions(ui)
 
@@ -164,7 +159,6 @@ class FacilityPickerLogicTest {
 
     // then
     verify(ui).hideProgressIndicator()
-    verify(ui).showToolbarWithSearchField()
     verify(ui).updateFacilities(listItemBuilder.build(listOf(chcNilenso), "CHC", null, config.proximityThresholdForNearbyFacilities))
     verifyNoMoreInteractions(ui)
   }
@@ -189,7 +183,6 @@ class FacilityPickerLogicTest {
     val expectedFacilityListItems = listItemBuilder.build(facilities, searchQuery, null, config.proximityThresholdForNearbyFacilities)
     verify(ui, times(3)).showProgressIndicator()
     verify(ui, times(4)).hideProgressIndicator()
-    verify(ui, times(5)).showToolbarWithSearchField()
     verify(ui, times(4)).updateFacilities(expectedFacilityListItems)
     verifyNoMoreInteractions(ui)
 
@@ -210,7 +203,6 @@ class FacilityPickerLogicTest {
     // then
     verify(ui, times(3)).showProgressIndicator()
     verify(ui).hideProgressIndicator()
-    verify(ui, times(2)).showToolbarWithSearchField()
     verify(ui).updateFacilities(listItemBuilder.build(listOf(facility1), "", null, config.proximityThresholdForNearbyFacilities))
     verify(uiActions).dispatchSelectedFacility(facility1)
     verifyNoMoreInteractions(ui, uiActions)
@@ -227,7 +219,6 @@ class FacilityPickerLogicTest {
 
     // then
     verify(ui, times(3)).showProgressIndicator()
-    verify(ui, times(2)).showToolbarWithSearchField()
     verify(ui).hideProgressIndicator()
     verify(ui).updateFacilities(emptyList())
     verifyNoMoreInteractions(ui)

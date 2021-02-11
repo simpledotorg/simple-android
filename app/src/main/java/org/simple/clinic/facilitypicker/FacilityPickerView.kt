@@ -28,7 +28,6 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
-import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
@@ -160,14 +159,6 @@ class FacilityPickerView(
 
   override fun hideProgressIndicator() {
     progressView.visibility = RelativeLayout.GONE
-  }
-
-  override fun showToolbarWithSearchField() {
-    toolbarViewFlipper.displayedChildResId = R.id.toolbarViewWithSearch
-  }
-
-  override fun showToolbarWithoutSearchField() {
-    toolbarViewFlipper.displayedChildResId = R.id.toolbarViewWithoutSearch
   }
 
   override fun updateFacilities(facilityItems: List<FacilityListItem>) {

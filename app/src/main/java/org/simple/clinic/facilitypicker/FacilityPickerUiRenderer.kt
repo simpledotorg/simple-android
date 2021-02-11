@@ -25,18 +25,6 @@ class FacilityPickerUiRenderer @AssistedInject constructor(
     } else {
       ui.showProgressIndicator()
     }
-
-    if (model.hasLoadedTotalFacilityCount) {
-      switchToolbarType(model)
-    }
-  }
-
-  private fun switchToolbarType(model: FacilityPickerModel) {
-    if (model.totalFacilityCount!! > 0) {
-      ui.showToolbarWithSearchField()
-    } else {
-      ui.showToolbarWithoutSearchField()
-    }
   }
 
   private fun renderFacilities(model: FacilityPickerModel) {

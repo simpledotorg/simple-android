@@ -77,9 +77,6 @@ class FacilityPickerView(
   private val searchEditText
     get() = binding!!.searchEditText
 
-  private val progressView
-    get() = binding!!.progressView
-
   private val progressIndicator
     get() = binding!!.progressIndicator
 

@@ -54,34 +54,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
-      android:id="@+id/progressView"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_below="@+id/appbarLayout"
-      android:orientation="vertical"
-      android:visibility="gone">
-
-      <include layout="@layout/list_facility_selection_progress" />
-
-      <include layout="@layout/list_facility_selection_progress" />
-
-      <include layout="@layout/list_facility_selection_progress" />
-
-      <include layout="@layout/list_facility_selection_progress" />
-
-      <include layout="@layout/list_facility_selection_progress" />
-
-      <include layout="@layout/list_facility_selection_progress" />
-
-      <include layout="@layout/list_facility_selection_progress" />
-
-      <include layout="@layout/list_facility_selection_progress" />
-
-      <include layout="@layout/list_facility_selection_progress" />
-
-    </LinearLayout>
-
     <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/facilityRecyclerView"
       android:layout_width="match_parent"

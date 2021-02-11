@@ -82,76 +82,74 @@ class PatientSummaryScreen :
     PatientSummaryChildView,
     HandlesBack {
 
-  private var binding: ScreenPatientSummaryBinding? = null
-
   private val rootLayout
-    get() = binding!!.rootLayout
+    get() = binding.rootLayout
 
   private val drugSummaryView
-    get() = binding!!.drugSummaryView
+    get() = binding.drugSummaryView
 
   private val bloodPressureSummaryView
-    get() = binding!!.bloodPressureSummaryView
+    get() = binding.bloodPressureSummaryView
 
   private val bloodSugarSummaryView
-    get() = binding!!.bloodSugarSummaryView
+    get() = binding.bloodSugarSummaryView
 
   private val assignedFacilityView
-    get() = binding!!.assignedFacilityView
+    get() = binding.assignedFacilityView
 
   private val medicalHistorySummaryView
-    get() = binding!!.medicalHistorySummaryView
+    get() = binding.medicalHistorySummaryView
 
   private val summaryLoadingProgressBar
-    get() = binding!!.summaryLoadingProgressBar
+    get() = binding.summaryLoadingProgressBar
 
   private val summaryViewsContainer
-    get() = binding!!.summaryViewsContainer
+    get() = binding.summaryViewsContainer
 
   private val editPatientButton
-    get() = binding!!.editPatientButton
+    get() = binding.editPatientButton
 
   private val doneButton
-    get() = binding!!.doneButton
+    get() = binding.doneButton
 
   private val teleconsultButton
-    get() = binding!!.teleconsultButton
+    get() = binding.teleconsultButton
 
   private val logTeleconsultButton
-    get() = binding!!.logTeleconsultButton
+    get() = binding.logTeleconsultButton
 
   private val logTeleconsultButtonFrame
-    get() = binding!!.logTeleconsultButtonFrame
+    get() = binding.logTeleconsultButtonFrame
 
   private val backButton
-    get() = binding!!.backButton
+    get() = binding.backButton
 
   private val linkIdWithPatientView
-    get() = binding!!.linkIdWithPatientView
+    get() = binding.linkIdWithPatientView
 
   private val contactTextView
-    get() = binding!!.contactTextView
+    get() = binding.contactTextView
 
   private val facilityNameAndDateTextView
-    get() = binding!!.facilityNameAndDateTextView
+    get() = binding.facilityNameAndDateTextView
 
   private val labelRegistered
-    get() = binding!!.labelRegistered
+    get() = binding.labelRegistered
 
   private val addressTextView
-    get() = binding!!.addressTextView
+    get() = binding.addressTextView
 
   private val fullNameTextView
-    get() = binding!!.fullNameTextView
+    get() = binding.fullNameTextView
 
   private val bpPassportTextView
-    get() = binding!!.bpPassportTextView
+    get() = binding.bpPassportTextView
 
   private val bangladeshNationalIdTextView
-    get() = binding!!.bangladeshNationalIdTextView
+    get() = binding.bangladeshNationalIdTextView
 
   private val doneButtonFrame
-    get() = binding!!.doneButtonFrame
+    get() = binding.doneButtonFrame
 
   @Inject
   lateinit var router: Router
@@ -272,7 +270,6 @@ class PatientSummaryScreen :
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
-    binding = ScreenPatientSummaryBinding.bind(this)
 
     if (isInEditMode) {
       return
@@ -329,7 +326,6 @@ class PatientSummaryScreen :
 
   override fun onDetachedFromWindow() {
     mobiusDelegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 

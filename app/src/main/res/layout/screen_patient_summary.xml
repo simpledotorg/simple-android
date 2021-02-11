@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.summary.PatientSummaryScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/rootLayout"
@@ -279,4 +279,4 @@
     android:elevation="@dimen/patientsummary_elevation_linkidwithpatient"
     android:visibility="gone" />
 
-</org.simple.clinic.summary.PatientSummaryScreen>
+</RelativeLayout>

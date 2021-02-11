@@ -18,7 +18,6 @@ import org.simple.clinic.databinding.ItemOverdueListPatientBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UserClock
@@ -146,7 +145,7 @@ class OverdueScreen(
             patientUuid = patientUuid,
             intention = OpenIntention.ViewExistingPatient,
             screenCreatedTimestamp = Instant.now(utcClock)
-        ).wrap()
+        )
     )
   }
 

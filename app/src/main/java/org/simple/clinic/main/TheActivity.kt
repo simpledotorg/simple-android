@@ -348,7 +348,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
             patientUuid = deepLinkResult.patientUuid,
             intention = OpenIntention.ViewExistingPatient,
             screenCreatedTimestamp = Instant.now(utcClock)
-        ).wrap()
+        )
     )
   }
 
@@ -358,7 +358,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
             patientUuid = deepLinkResult.patientUuid,
             intention = OpenIntention.ViewExistingPatientWithTeleconsultLog(deepLinkResult.teleconsultRecordId),
             screenCreatedTimestamp = Instant.now(utcClock)
-        ).wrap()
+        )
     )
   }
 

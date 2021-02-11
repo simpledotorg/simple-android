@@ -257,7 +257,7 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
   }
 
   override fun openPatientSummary(patientId: UUID) {
-    router.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)).wrap())
+    router.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
   }
 
   private fun showHomeScreenBackground(@IdRes viewId: Int) {

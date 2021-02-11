@@ -1,19 +1,15 @@
 package org.simple.clinic.summary
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Parcelable
 import android.text.SpannedString
 import android.text.style.BulletSpan
 import android.text.style.TextAppearanceSpan
-import android.util.AttributeSet
 import android.view.View
-import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import com.jakewharton.rxbinding3.view.clicks
-import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
@@ -34,6 +30,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -60,7 +57,6 @@ import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.isVisible
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.visibleOrGone
@@ -69,10 +65,17 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientSummaryScreen(
-    context: Context,
-    attrs: AttributeSet
-) : RelativeLayout(context, attrs), PatientSummaryScreenUi, PatientSummaryUiActions, PatientSummaryChildView, HandlesBack {
+class PatientSummaryScreen :
+    BaseScreen<
+        PatientSummaryScreenKey,
+        ScreenPatientSummaryBinding,
+        PatientSummaryModel,
+        PatientSummaryEvent,
+        PatientSummaryEffect>(),
+    PatientSummaryScreenUi,
+    PatientSummaryUiActions,
+    PatientSummaryChildView,
+    HandlesBack {
 
   private var binding: ScreenPatientSummaryBinding? = null
 

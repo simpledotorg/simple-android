@@ -172,7 +172,7 @@ class ShortCodeSearchResultScreen :
         patientUuid = patientUuid,
         intention = OpenIntention.ViewExistingPatient,
         screenCreatedTimestamp = Instant.now(utcClock)
-    ).wrap())
+    ))
   }
 
   override fun openPatientSearch() {

@@ -16,11 +16,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import com.jakewharton.rxbinding3.view.clicks
-import com.jakewharton.rxbinding3.view.detaches
 import com.spotify.mobius.Init
 import com.spotify.mobius.Update
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -63,7 +64,6 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.toLocalDateAtZone
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.isVisible
@@ -184,6 +184,7 @@ class PatientSummaryScreen :
 
   private val snackbarActionClicks = PublishSubject.create<PatientSummaryEvent>()
   private val hardwareBackClicks = PublishSubject.create<Unit>()
+  private val subscriptions = CompositeDisposable()
 
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
@@ -233,20 +234,22 @@ class PatientSummaryScreen :
     requireContext().injector<Injector>().inject(this)
   }
 
+  override fun onDestroyView() {
+    super.onDestroyView()
+    subscriptions.clear()
+  }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()
 
-    val screenDestroys: Observable<ScreenDestroyed> = view.detaches().map { ScreenDestroyed() }
-    setupChildViewVisibility(screenDestroys)
+    subscriptions.add(setupChildViewVisibility())
   }
 
   @SuppressLint("CheckResult")
-  private fun setupChildViewVisibility(
-      screenDestroys: Observable<ScreenDestroyed>
-  ) {
+  private fun setupChildViewVisibility(): Disposable {
     val modelUpdates: List<Observable<PatientSummaryChildModel>> =
         listOf(
             this,
@@ -257,11 +260,10 @@ class PatientSummaryScreen :
             medicalHistorySummaryView
         ).map(::createSummaryChildModelStream)
 
-    Observable
+    return Observable
         .combineLatest(modelUpdates) { models -> models.map { it as PatientSummaryChildModel } }
         .filter { models -> models.all(PatientSummaryChildModel::readyToRender) }
         .take(1)
-        .takeUntil(screenDestroys)
         .subscribe {
           summaryLoadingProgressBar.visibility = GONE
           summaryViewsContainer.visibility = VISIBLE

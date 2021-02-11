@@ -1,6 +1,7 @@
 package org.simple.clinic.summary
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Parcelable
 import android.text.SpannedString
 import android.text.style.BulletSpan
@@ -259,6 +260,11 @@ class PatientSummaryScreen :
     return effectHandlerFactory.create(this).build()
   }
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onSaveInstanceState(): Parcelable {
     return mobiusDelegate.onSaveInstanceState(super.onSaveInstanceState())
   }
@@ -274,8 +280,6 @@ class PatientSummaryScreen :
     if (isInEditMode) {
       return
     }
-
-    context.injector<Injector>().inject(this)
 
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()

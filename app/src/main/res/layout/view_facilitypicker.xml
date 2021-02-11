@@ -44,6 +44,14 @@
 
       </com.google.android.material.appbar.MaterialToolbar>
 
+      <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:theme="@style/ThemeOverlay.Simple.Blue1Primary"
+        android:visibility="gone" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout

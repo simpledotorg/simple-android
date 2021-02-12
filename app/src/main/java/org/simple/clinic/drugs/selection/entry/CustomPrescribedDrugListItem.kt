@@ -26,6 +26,8 @@ data class CustomPrescribedDrugListItem(
 
   override fun bind(viewBinding: ListPrescribeddrugsCustomDrugBinding, position: Int) {
     viewBinding.prescribeddrugItemCustomdrugName.text = prescription.name
+    viewBinding.prescribeddrugItemCustomdrugName.isChecked = true
+
     viewBinding.prescribeddrugItemCustomdrugDosage.text = prescription.dosage
     viewBinding.protocoldrugItemDivider.visibility = if (hideDivider) GONE else VISIBLE
 

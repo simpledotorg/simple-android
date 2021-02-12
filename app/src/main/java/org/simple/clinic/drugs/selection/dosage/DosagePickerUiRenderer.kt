@@ -13,7 +13,7 @@ class DosagePickerUiRenderer(
   }
 
   private fun renderDosages(model: DosagePickerModel) {
-    val dosageListItems = DosageListItem.from(model.protocolDrugs!!)
+    val dosageListItems = DosageListItem.from(model.protocolDrugs!!, model.hasExistingPrescription)
 
     ui.populateDosageList(dosageListItems)
   }

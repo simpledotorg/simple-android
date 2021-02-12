@@ -90,7 +90,7 @@ class DosagePickerSheetLogicTest {
     verify(ui).populateDosageList(listOf(
         DosageListItem.WithDosage(protocolDrug1),
         DosageListItem.WithDosage(protocolDrug2),
-        DosageListItem.WithoutDosage
+        DosageListItem.WithoutDosage(hasExistingPrescription = false)
     ))
     verifyNoMoreInteractions(ui)
     verifyZeroInteractions(uiActions)

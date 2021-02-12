@@ -8,16 +8,17 @@ import org.simple.clinic.databinding.PrescribedDrugWithDosageListItemBinding
 import org.simple.clinic.drugs.selection.dosage.DosageListItem.WithDosage
 import org.simple.clinic.drugs.selection.dosage.DosageListItem.WithoutDosage
 import org.simple.clinic.protocol.ProtocolDrug
+import org.simple.clinic.router.util.resolveColor
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
 sealed class DosageListItem : ItemAdapter.Item<DosageListItem.Event> {
 
   companion object {
-    fun from(protocolDrugs: List<ProtocolDrug>): List<DosageListItem> {
+    fun from(protocolDrugs: List<ProtocolDrug>, hasExistingPrescription: Boolean): List<DosageListItem> {
       return protocolDrugs
           .map(::WithDosage)
-          .plus(WithoutDosage)
+          .plus(WithoutDosage(hasExistingPrescription))
     }
   }
 
@@ -26,21 +27,32 @@ sealed class DosageListItem : ItemAdapter.Item<DosageListItem.Event> {
     override fun layoutResId() = R.layout.prescribed_drug_with_dosage_list_item
 
     override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
+      val context = holder.itemView.context
       val binding = holder.binding as PrescribedDrugWithDosageListItemBinding
 
       binding.dosageTextView.text = protocolDrug.dosage
+      binding.dosageTextView.setTextColor(context.resolveColor(colorRes = R.color.color_on_surface_67))
+
       holder.itemView.setOnClickListener { subject.onNext(Event.DosageClicked(protocolDrug)) }
     }
   }
 
-  object WithoutDosage : DosageListItem() {
+  data class WithoutDosage(val hasExistingPrescription: Boolean) : DosageListItem() {
 
     override fun layoutResId() = R.layout.prescribed_drug_with_dosage_list_item
 
     override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
+      val context = holder.itemView.context
       val binding = holder.binding as PrescribedDrugWithDosageListItemBinding
 
-      binding.dosageTextView.text = holder.itemView.context.getString(R.string.prescribed_drugs_dosage_none)
+      if (hasExistingPrescription) {
+        binding.dosageTextView.setTextColor(context.resolveColor(attrRes = R.attr.colorError))
+        binding.dosageTextView.text = holder.itemView.context.getString(R.string.prescribed_drugs_dosage_remove)
+      } else {
+        binding.dosageTextView.setTextColor(context.resolveColor(colorRes = R.color.color_on_surface_67))
+        binding.dosageTextView.text = holder.itemView.context.getString(R.string.prescribed_drugs_dosage_none)
+      }
+
       holder.itemView.setOnClickListener { subject.onNext(Event.NoneClicked) }
     }
   }

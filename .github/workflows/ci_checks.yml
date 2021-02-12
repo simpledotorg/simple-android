@@ -83,7 +83,7 @@ jobs:
     runs-on: [ubuntu-latest]
     strategy:
       matrix:
-        buildType: ['Sandbox', 'Staging', 'Security', 'Production']
+        buildType: ['Production']
     steps:
       - uses: actions/checkout@v2
 

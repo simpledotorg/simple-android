@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.Bundle
@@ -291,7 +292,9 @@ class TeleconsultSharePrescriptionScreen :
     val bitmapWidth = (sourceWidth * scaleFactor).toInt()
     val bitmapHeight = (sourceHeight * scaleFactor).toInt()
     val bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888)
-    val canvas = Canvas(bitmap)
+    val canvas = Canvas(bitmap).apply {
+      drawColor(Color.WHITE)
+    }
 
     val matrix = Matrix().apply {
       postScale(scaleFactor, scaleFactor)

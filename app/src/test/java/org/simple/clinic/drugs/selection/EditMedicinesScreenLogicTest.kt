@@ -84,7 +84,7 @@ class EditMedicinesScreenLogicTest {
         uiEvents.ofType(),
         EditMedicinesModel.create(patientUuid),
         EditMedicinesInit(),
-        EditMedicinesUpdate(LocalDate.of(2020,11,12), ZoneOffset.UTC),
+        EditMedicinesUpdate(LocalDate.of(2020, 11, 12), ZoneOffset.UTC),
         effectHandler.build(),
         editMedicinesUiRenderer::render
     )
@@ -157,15 +157,15 @@ class EditMedicinesScreenLogicTest {
             drugName = amlodipine10mg.name,
             prescribedDrug = amlodipine10mgPrescription,
             hideDivider = false),
+        CustomPrescribedDrugListItem(telmisartan9000mgPrescription, false),
+        CustomPrescribedDrugListItem(reesesPrescription, false),
+        CustomPrescribedDrugListItem(fooPrescription, false),
+        CustomPrescribedDrugListItem(barPrescription, false),
         ProtocolDrugListItem(
             id = 1,
             drugName = telmisartan40mg.name,
             prescribedDrug = null,
-            hideDivider = false),
-        CustomPrescribedDrugListItem(telmisartan9000mgPrescription, false),
-        CustomPrescribedDrugListItem(reesesPrescription, false),
-        CustomPrescribedDrugListItem(fooPrescription, false),
-        CustomPrescribedDrugListItem(barPrescription, true))
+            hideDivider = true))
 
     verify(ui).populateDrugsList(expectedUiModels)
   }

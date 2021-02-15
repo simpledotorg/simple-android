@@ -74,11 +74,10 @@ class EditMedicinesUiRendererTest {
         ProtocolDrugListItem(
             id = 0,
             drugName = amlodipine10mg.name,
-            prescribedDrug = amlodipine10mgPrescription,
-            hideDivider = false),
-        CustomPrescribedDrugListItem(telmisartan40mgPrescription, false),
-        CustomPrescribedDrugListItem(fooPrescription, false),
-        CustomPrescribedDrugListItem(barPrescription, true))
+            prescribedDrug = amlodipine10mgPrescription),
+        CustomPrescribedDrugListItem(telmisartan40mgPrescription),
+        CustomPrescribedDrugListItem(fooPrescription),
+        CustomPrescribedDrugListItem(barPrescription))
 
     verify(ui).populateDrugsList(drugsList)
     verify(ui).showDoneButton()
@@ -139,11 +138,10 @@ class EditMedicinesUiRendererTest {
         ProtocolDrugListItem(
             id = 0,
             drugName = amlodipine10mg.name,
-            prescribedDrug = amlodipine10mgPrescription,
-            hideDivider = false),
-        CustomPrescribedDrugListItem(telmisartan40mgPrescription, false),
-        CustomPrescribedDrugListItem(fooPrescription, false),
-        CustomPrescribedDrugListItem(barPrescription, true))
+            prescribedDrug = amlodipine10mgPrescription),
+        CustomPrescribedDrugListItem(telmisartan40mgPrescription),
+        CustomPrescribedDrugListItem(fooPrescription),
+        CustomPrescribedDrugListItem(barPrescription))
 
     verify(ui).populateDrugsList(drugsList)
     verify(ui).showDoneButton()
@@ -204,11 +202,10 @@ class EditMedicinesUiRendererTest {
         ProtocolDrugListItem(
             id = 0,
             drugName = amlodipine10mg.name,
-            prescribedDrug = amlodipine10mgPrescription,
-            hideDivider = false),
-        CustomPrescribedDrugListItem(telmisartan40mgPrescription, false),
-        CustomPrescribedDrugListItem(fooPrescription, false),
-        CustomPrescribedDrugListItem(barPrescription, true))
+            prescribedDrug = amlodipine10mgPrescription),
+        CustomPrescribedDrugListItem(telmisartan40mgPrescription),
+        CustomPrescribedDrugListItem(fooPrescription),
+        CustomPrescribedDrugListItem(barPrescription))
 
     verify(ui).populateDrugsList(drugsList)
     verify(ui).showRefillMedicineButton()

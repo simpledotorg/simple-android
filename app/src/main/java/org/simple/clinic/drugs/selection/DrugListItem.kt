@@ -1,6 +1,5 @@
 package org.simple.clinic.drugs.selection
 
-import android.view.View
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
@@ -28,8 +27,7 @@ sealed class DrugListItem(open val prescribedDrug: PrescribedDrug? = null) : Ite
 data class ProtocolDrugListItem(
     val id: Int,
     val drugName: String,
-    override val prescribedDrug: PrescribedDrug?,
-    val hideDivider: Boolean
+    override val prescribedDrug: PrescribedDrug?
 ) : DrugListItem(prescribedDrug) {
 
   override fun layoutResId() = R.layout.list_prescribeddrugs_protocol_drug
@@ -46,14 +44,11 @@ data class ProtocolDrugListItem(
     viewBinding.root.setOnClickListener {
       subject.onNext(DrugListItemClicked.PrescribedDrugClicked(drugName, prescribedDrug))
     }
-    viewBinding.protocoldrugItemDivider.visibility = if (hideDivider) View.GONE else View.VISIBLE
-
   }
 }
 
 data class CustomPrescribedDrugListItem(
-    override val prescribedDrug: PrescribedDrug,
-    val hideDivider: Boolean
+    override val prescribedDrug: PrescribedDrug
 ) : DrugListItem(prescribedDrug) {
 
   override fun layoutResId() = R.layout.list_prescribeddrugs_custom_drug
@@ -65,7 +60,6 @@ data class CustomPrescribedDrugListItem(
     viewBinding.prescribeddrugItemCustomdrugName.isChecked = true
 
     viewBinding.prescribeddrugItemCustomdrugDosage.text = prescribedDrug.dosage
-    viewBinding.protocoldrugItemDivider.visibility = if (hideDivider) View.GONE else View.VISIBLE
 
     viewBinding.root.setOnClickListener {
       subject.onNext(DrugListItemClicked.CustomPrescriptionClicked(prescribedDrug))

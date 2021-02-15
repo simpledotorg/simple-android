@@ -34,20 +34,10 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
 
     val protocolDrugSelectionItems = protocolDrugSelectionItems(protocolDrugs, prescribedProtocolDrugs)
     val customPrescribedDrugItems = customPrescribedDrugItems(prescribedCustomDrugs)
-    val drugsList = protocolDrugSelectionItems + customPrescribedDrugItems
-    val sortedDrugsList = drugsList
-    	.sortedBy { it.prescribedDrug?.name }
+    val drugsList = (protocolDrugSelectionItems + customPrescribedDrugItems)
+        .sortedBy { it.prescribedDrug?.name }
         .sortedByDescending { it.prescribedDrug != null }
-        .mapIndexed { index, item ->
-          val hideDivider = index == drugsList.lastIndex
-          when (item) {
-            is ProtocolDrugListItem -> item.copy(hideDivider = hideDivider)
-            is CustomPrescribedDrugListItem -> item.copy(hideDivider = hideDivider)
-            else -> throw IllegalArgumentException("Unknown drug item view type")
-          }
-        }
-
-    ui.populateDrugsList(sortedDrugsList)
+    ui.populateDrugsList(drugsList)
   }
 
   private fun customPrescribedDrugItems(
@@ -56,8 +46,7 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
     return prescribedCustomDrugs
         .map { prescribedDrug ->
           CustomPrescribedDrugListItem(
-              prescribedDrug = prescribedDrug,
-              hideDivider = false
+              prescribedDrug = prescribedDrug
           )
         }
   }
@@ -73,8 +62,7 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
           ProtocolDrugListItem(
               id = index,
               drugName = drugAndDosages.drugName,
-              prescribedDrug = matchingPrescribedDrug,
-              hideDivider = false)
+              prescribedDrug = matchingPrescribedDrug)
         }
   }
 }

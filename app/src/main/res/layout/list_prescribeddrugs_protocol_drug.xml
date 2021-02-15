@@ -44,11 +44,4 @@
 
   </LinearLayout>
 
-  <View
-    android:id="@+id/protocoldrug_item_divider"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/spacing_1"
-    android:layout_gravity="bottom"
-    android:background="@drawable/divider" />
-
 </com.google.android.material.card.MaterialCardView>

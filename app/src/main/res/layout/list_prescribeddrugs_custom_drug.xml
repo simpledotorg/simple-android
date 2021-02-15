@@ -1,49 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/prescribeddrug_item_customdrug_rootlayout"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
+  android:background="?attr/selectableItemBackground"
   android:clickable="true"
   android:focusable="true"
-  android:foreground="?selectableItemBackground"
-  android:orientation="vertical"
-  app:cardCornerRadius="0dp"
-  app:cardElevation="0dp">
+  android:gravity="center_vertical"
+  android:orientation="horizontal"
+  android:paddingStart="@dimen/spacing_12"
+  android:paddingEnd="@dimen/spacing_16"
+  tools:background="?attr/colorSurface">
 
-  <LinearLayout
-    android:layout_width="match_parent"
+  <com.google.android.material.checkbox.MaterialCheckBox
+    android:id="@+id/prescribeddrug_item_customdrug_name"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingStart="@dimen/spacing_12"
-    android:paddingEnd="@dimen/spacing_16">
+    android:layout_weight="1"
+    android:background="@android:color/transparent"
+    android:clickable="false"
+    android:paddingStart="@dimen/spacing_8"
+    android:paddingEnd="@dimen/spacing_8"
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="?attr/colorOnSurface"
+    tools:text="Amlodipine" />
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-      android:id="@+id/prescribeddrug_item_customdrug_name"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:background="@android:color/transparent"
-      android:clickable="false"
-      android:paddingStart="@dimen/spacing_8"
-      android:paddingEnd="@dimen/spacing_8"
-      android:textAppearance="?attr/textAppearanceBody1"
-      android:textColor="?attr/colorOnSurface"
-      tools:text="Amlodipine" />
+  <TextView
+    android:id="@+id/prescribeddrug_item_customdrug_dosage"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:drawablePadding="@dimen/spacing_4"
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="?attr/colorPrimary"
+    app:drawableEndCompat="@drawable/ic_expand_more_24"
+    app:drawableTint="?attr/colorPrimary"
+    tools:text="10 mg" />
 
-    <TextView
-      android:id="@+id/prescribeddrug_item_customdrug_dosage"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:drawablePadding="@dimen/spacing_4"
-      android:textAppearance="?attr/textAppearanceBody1"
-      android:textColor="?attr/colorPrimary"
-      app:drawableEndCompat="@drawable/ic_expand_more_24"
-      app:drawableTint="?attr/colorPrimary"
-      tools:text="10 mg" />
-
-  </LinearLayout>
-
-</com.google.android.material.card.MaterialCardView>
+</LinearLayout>

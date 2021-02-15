@@ -3,8 +3,8 @@ package org.simple.clinic.drugs.selection
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,7 +47,7 @@ import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
-class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), EditMedicinesUi, EditMedicinesUiActions {
+class EditMedicinesScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), EditMedicinesUi, EditMedicinesUiActions {
 
   @Inject
   lateinit var router: Router
@@ -136,6 +136,7 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
     context.injector<Injector>().inject(this)
 
     toolbar.setNavigationOnClickListener { router.pop() }
+    recyclerView.setHasFixedSize(false)
     recyclerView.layoutManager = LinearLayoutManager(context)
     recyclerView.adapter = adapter
 

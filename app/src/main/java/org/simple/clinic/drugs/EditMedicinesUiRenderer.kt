@@ -2,9 +2,9 @@ package org.simple.clinic.drugs
 
 import org.simple.clinic.drugs.EditMedicineButtonState.REFILL_MEDICINE
 import org.simple.clinic.drugs.EditMedicineButtonState.SAVE_MEDICINE
+import org.simple.clinic.drugs.selection.CustomPrescribedDrugListItem
 import org.simple.clinic.drugs.selection.EditMedicinesUi
 import org.simple.clinic.drugs.selection.ProtocolDrugListItem
-import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 
@@ -36,20 +36,8 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
     val customPrescribedDrugItems = customPrescribedDrugItems(prescribedCustomDrugs)
     val drugsList = protocolDrugSelectionItems + customPrescribedDrugItems
     val sortedDrugsList = drugsList
-        .sortedBy {
-          when (it) {
-            is ProtocolDrugListItem -> it.prescribedDrug?.name
-            is CustomPrescribedDrugListItem -> it.prescription.name
-            else -> throw IllegalArgumentException("Unknown drug item view type")
-          }
-        }
-        .sortedByDescending {
-          when (it) {
-            is ProtocolDrugListItem -> it.prescribedDrug != null
-            is CustomPrescribedDrugListItem -> true
-            else -> throw IllegalArgumentException("Unknown drug item view type")
-          }
-        }
+    	.sortedBy { it.prescribedDrug?.name }
+        .sortedByDescending { it.prescribedDrug != null }
         .mapIndexed { index, item ->
           val hideDivider = index == drugsList.lastIndex
           when (item) {
@@ -68,7 +56,7 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
     return prescribedCustomDrugs
         .map { prescribedDrug ->
           CustomPrescribedDrugListItem(
-              prescription = prescribedDrug,
+              prescribedDrug = prescribedDrug,
               hideDivider = false
           )
         }

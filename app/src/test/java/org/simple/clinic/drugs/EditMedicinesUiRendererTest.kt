@@ -8,8 +8,8 @@ import org.simple.clinic.TestData
 import org.simple.clinic.drugs.EditMedicineButtonState.REFILL_MEDICINE
 import org.simple.clinic.drugs.EditMedicineButtonState.SAVE_MEDICINE
 import org.simple.clinic.drugs.selection.EditMedicinesUi
+import org.simple.clinic.drugs.selection.CustomPrescribedDrugListItem
 import org.simple.clinic.drugs.selection.ProtocolDrugListItem
-import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import java.util.UUID
 

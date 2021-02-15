@@ -27,7 +27,6 @@ import org.simple.clinic.drugs.EditMedicinesUpdate
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.ProtocolDrugClicked
-import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository

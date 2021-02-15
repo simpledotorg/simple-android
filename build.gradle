@@ -34,7 +34,7 @@ buildscript {
       jbcrypt                  : '0.3m',
       workManager              : '2.2.0',
       faker                    : '1.2.8',
-      truth                    : '1.0',
+      truth                    : '1.1.2',
       junit                    : '4.12',
       mockitoKotlin            : '2.2.0',
       junitParams              : '1.1.1',

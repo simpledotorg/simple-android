@@ -5,6 +5,7 @@
 - Migrate `PatientSummaryScreen` to a fragment
 - Bump Dagger to v2.32
 - Bump Google truth to v1.1.2
+- Bump WorkManager to v2.5.0
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 

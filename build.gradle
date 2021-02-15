@@ -32,7 +32,7 @@ buildscript {
       maskedEditText           : '1.0.5',
       itemAnimators            : '1.0.2',
       jbcrypt                  : '0.3m',
-      workManager              : '2.2.0',
+      workManager              : '2.5.0',
       faker                    : '1.2.8',
       truth                    : '1.1.2',
       junit                    : '4.12',

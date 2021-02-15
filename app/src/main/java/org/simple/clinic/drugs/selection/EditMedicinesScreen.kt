@@ -40,6 +40,7 @@ import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
@@ -137,6 +138,8 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
     toolbar.setNavigationOnClickListener { router.pop() }
     recyclerView.layoutManager = LinearLayoutManager(context)
     recyclerView.adapter = adapter
+
+    recyclerView.addItemDecoration(DividerItemDecorator(context, marginStart = 0, marginEnd = 0))
 
     val fadeAnimator = DefaultItemAnimator()
     fadeAnimator.supportsChangeAnimations = false

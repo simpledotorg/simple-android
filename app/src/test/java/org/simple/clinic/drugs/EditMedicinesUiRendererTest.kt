@@ -11,6 +11,7 @@ import org.simple.clinic.drugs.selection.EditMedicinesUi
 import org.simple.clinic.drugs.selection.CustomPrescribedDrugListItem
 import org.simple.clinic.drugs.selection.ProtocolDrugListItem
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
+import java.time.Instant
 import java.util.UUID
 
 class EditMedicinesUiRendererTest {
@@ -35,25 +36,29 @@ class EditMedicinesUiRendererTest {
         uuid = UUID.fromString("90e28866-90f6-48a0-add1-cf44aa43209c"),
         name = "Amlodipine",
         dosage = "10mg",
-        isProtocolDrug = true
+        isProtocolDrug = true,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val telmisartan40mgPrescription = TestData.prescription(
         uuid = UUID.fromString("ac3cfff0-2ebf-4c9c-adab-a41cc8a0bbeb"),
         name = "Telmisartan",
         dosage = "40mg",
-        isProtocolDrug = true
+        isProtocolDrug = true,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val fooPrescription = TestData.prescription(
         uuid = UUID.fromString("68dc8060-bed4-4e1b-9891-7d77cad9639e"),
         name = "Foo",
         dosage = "2 pills",
-        isProtocolDrug = false
+        isProtocolDrug = false,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val barPrescription = TestData.prescription(
         uuid = UUID.fromString("b5eb5dfa-f131-4d9f-a2d2-41d56aa109da"),
         name = "Bar",
         dosage = null,
-        isProtocolDrug = false
+        isProtocolDrug = false,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val prescriptions = listOf(
         amlodipine10mgPrescription,
@@ -99,25 +104,29 @@ class EditMedicinesUiRendererTest {
         uuid = UUID.fromString("90e28866-90f6-48a0-add1-cf44aa43209c"),
         name = "Amlodipine",
         dosage = "10mg",
-        isProtocolDrug = true
+        isProtocolDrug = true,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val telmisartan40mgPrescription = TestData.prescription(
         uuid = UUID.fromString("ac3cfff0-2ebf-4c9c-adab-a41cc8a0bbeb"),
         name = "Telmisartan",
         dosage = "40mg",
-        isProtocolDrug = true
+        isProtocolDrug = true,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val fooPrescription = TestData.prescription(
         uuid = UUID.fromString("68dc8060-bed4-4e1b-9891-7d77cad9639e"),
         name = "Foo",
         dosage = "2 pills",
-        isProtocolDrug = false
+        isProtocolDrug = false,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val barPrescription = TestData.prescription(
         uuid = UUID.fromString("b5eb5dfa-f131-4d9f-a2d2-41d56aa109da"),
         name = "Bar",
         dosage = null,
-        isProtocolDrug = false
+        isProtocolDrug = false,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val prescriptions = listOf(
         amlodipine10mgPrescription,
@@ -163,25 +172,29 @@ class EditMedicinesUiRendererTest {
         uuid = UUID.fromString("90e28866-90f6-48a0-add1-cf44aa43209c"),
         name = "Amlodipine",
         dosage = "10mg",
-        isProtocolDrug = true
+        isProtocolDrug = true,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val telmisartan40mgPrescription = TestData.prescription(
         uuid = UUID.fromString("ac3cfff0-2ebf-4c9c-adab-a41cc8a0bbeb"),
         name = "Telmisartan",
         dosage = "40mg",
-        isProtocolDrug = true
+        isProtocolDrug = true,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val fooPrescription = TestData.prescription(
         uuid = UUID.fromString("68dc8060-bed4-4e1b-9891-7d77cad9639e"),
         name = "Foo",
         dosage = "2 pills",
-        isProtocolDrug = false
+        isProtocolDrug = false,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val barPrescription = TestData.prescription(
         uuid = UUID.fromString("b5eb5dfa-f131-4d9f-a2d2-41d56aa109da"),
         name = "Bar",
         dosage = null,
-        isProtocolDrug = false
+        isProtocolDrug = false,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val prescriptions = listOf(
         amlodipine10mgPrescription,

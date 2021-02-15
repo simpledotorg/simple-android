@@ -35,8 +35,8 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
     val protocolDrugSelectionItems = protocolDrugSelectionItems(protocolDrugs, prescribedProtocolDrugs)
     val customPrescribedDrugItems = customPrescribedDrugItems(prescribedCustomDrugs)
     val drugsList = (protocolDrugSelectionItems + customPrescribedDrugItems)
-        .sortedBy { it.prescribedDrug?.name }
-        .sortedByDescending { it.prescribedDrug != null }
+        .sortedByDescending { it.prescribedDrug?.updatedAt }
+
     ui.populateDrugsList(drugsList)
   }
 

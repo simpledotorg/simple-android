@@ -198,7 +198,7 @@
   <string name="timestamp_days_ago">%s ದಿನಗಳ ಹಿಂದೆ</string>
 
   <!-- Prescribed drugs -->
-  <string name="patient_prescribeddrugs_screen_title">ಬಿಪಿ ಔಷಧಗಳು</string>
+  <string name="patient_prescribeddrugs_screen_title">ಔಷಧಗಳು</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">ಇನ್ನೊಂದು ಔಷಧವನ್ನು ಸೇರಿಸಿ</string>
 
   <string name="customprescription_enter_medicine">ಔಷಧವನ್ನು ನಮೂದಿಸಿ</string>
@@ -341,6 +341,7 @@
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ಯಾವುದೂ ಅಲ್ಲ</string>
+  <string name="prescribed_drugs_dosage_remove">ತೆಗೆದುಹಾಕಿ</string>
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s ಡೋಸೇಜ್</string>
 
   <!--Scan Simple ID-->

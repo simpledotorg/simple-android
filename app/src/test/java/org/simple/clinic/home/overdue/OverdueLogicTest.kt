@@ -75,6 +75,7 @@ class OverdueLogicTest {
         schedulers = TestSchedulersProvider.trampoline(),
         appointmentRepository = repository,
         currentFacilityChanges = Observable.just(facility),
+        currentFacility = { facility },
         dataSourceFactory = overdueAppointmentRowDataSourceFactoryInjectionFactory,
         uiActions = uiActions
     )

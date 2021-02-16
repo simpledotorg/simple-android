@@ -9,11 +9,13 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import javax.inject.Provider
 
 class OverdueEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val appointmentRepository: AppointmentRepository,
     private val currentFacilityChanges: Observable<Facility>,
+    private val currentFacility: Provider<Facility>,
     private val dataSourceFactory: OverdueAppointmentRowDataSource.Factory.InjectionFactory,
     @Assisted private val uiActions: OverdueUiActions
 ) {

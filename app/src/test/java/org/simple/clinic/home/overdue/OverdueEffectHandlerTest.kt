@@ -23,6 +23,7 @@ class OverdueEffectHandlerTest {
       schedulers = TestSchedulersProvider.trampoline(),
       appointmentRepository = mock(),
       currentFacilityChanges = Observable.just(facility),
+      currentFacility = { facility },
       dataSourceFactory = mock(),
       uiActions = uiActions
   ).build()

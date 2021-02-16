@@ -4,7 +4,6 @@ import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
@@ -14,7 +13,6 @@ import javax.inject.Provider
 class OverdueEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val appointmentRepository: AppointmentRepository,
-    private val currentFacilityChanges: Observable<Facility>,
     private val currentFacility: Provider<Facility>,
     private val dataSourceFactory: OverdueAppointmentRowDataSource.Factory.InjectionFactory,
     @Assisted private val uiActions: OverdueUiActions

@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -22,7 +21,6 @@ class OverdueEffectHandlerTest {
   private val effectHandler = OverdueEffectHandler(
       schedulers = TestSchedulersProvider.trampoline(),
       appointmentRepository = mock(),
-      currentFacilityChanges = Observable.just(facility),
       currentFacility = { facility },
       dataSourceFactory = mock(),
       uiActions = uiActions

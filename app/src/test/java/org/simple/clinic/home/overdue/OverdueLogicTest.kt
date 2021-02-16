@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -74,7 +73,6 @@ class OverdueLogicTest {
     val effectHandler = OverdueEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         appointmentRepository = repository,
-        currentFacilityChanges = Observable.just(facility),
         currentFacility = { facility },
         dataSourceFactory = overdueAppointmentRowDataSourceFactoryInjectionFactory,
         uiActions = uiActions

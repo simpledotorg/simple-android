@@ -35,5 +35,5 @@ class AppSqliteOpenHelperFactory(inMemory: Boolean = false) : SupportSQLiteOpenH
         }
       })
 
-  override fun create(configuration: SupportSQLiteOpenHelper.Configuration?) = factory.create(configuration)!!
+  override fun create(configuration: SupportSQLiteOpenHelper.Configuration) = factory.create(configuration)!!
 }

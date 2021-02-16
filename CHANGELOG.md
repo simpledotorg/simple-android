@@ -3,6 +3,9 @@
 ## Next Release
 ### Internal
 - Migrate `PatientSummaryScreen` to a fragment
+- Bump Dagger to v2.32
+- Bump Google truth to v1.1.2
+- Bump WorkManager to v2.5.0
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
@@ -20,6 +23,7 @@
     - "Transferred to another public health facility"
     - "Moved to private practitioner"
 - Build only the `PRODUCTION` release APK as part of the CI checks
+
 
 ### Changes
 - Updated translations: `mr-IN`, `ta-IN`, `bn-BD`, `ti-ET`, `am-ET`, `kn-IN`, `bn-IN`, `hi-IN`, `te-IN`, `pa-IN`, `te-IN`, `om-ET`, `ta-IN`

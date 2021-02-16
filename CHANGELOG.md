@@ -2,6 +2,11 @@
 
 ## Next Release
 ### Internal
+- [In Progress: 20 Jan 2021] Material Theme-ing Migration
+- [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
+
+## On Demo
+### Internal
 - Bump Material Design Components to v1.3.0
 - Bump ConstraintLayout to v2.0.4
 - Add `Widget.Simple.TextField.Layout.PatientEntry.AutoComplete` style
@@ -11,8 +16,6 @@
     - "Transferred to another public health facility"
     - "Moved to private practitioner"
 - Build only the `PRODUCTION` release APK as part of the CI checks
-- [In Progress: 20 Jan 2021] Material Theming Migration
-- [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
 ### Changes
 - Updated translations: `mr-IN`, `ta-IN`, `bn-BD`, `ti-ET`, `am-ET`, `kn-IN`, `bn-IN`, `hi-IN`, `te-IN`, `pa-IN`, `te-IN`, `om-ET`, `ta-IN`

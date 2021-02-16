@@ -198,7 +198,7 @@
   <string name="timestamp_days_ago">Guyyoota %s dura</string>
 
   <!-- Prescribed drugs -->
-  <string name="patient_prescribeddrugs_screen_title">Dawaawwan BP</string>
+  <string name="patient_prescribeddrugs_screen_title">Dawaawwan</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">Dawaa biraa galchi</string>
 
   <string name="customprescription_enter_medicine">Dawaa galchi</string>
@@ -342,6 +342,7 @@
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">Hin jiru</string>
+  <string name="prescribed_drugs_dosage_remove">Balleessi</string>
   <string name="prescribed_drug_with_dosages_sheet_drug_name">Hamma fudhanna%s</string>
 
   <!--Scan Simple ID-->
@@ -687,6 +688,6 @@
   <string name="patientinstantsearch_nearby_facilities_header">Dhaabbilee dhiyeenyaa irra</string>
   <string name="patientsearch_error_no_patients_in_facility">Dhukkubsattoota asitti galmaa\'an hundaa arguu ni dandeessa.</string>
   <string name="patientsearch_error_no_search_results">Dhukkubsataan firoomu hin jiru</string>
-  <string name="patientsearch_error_no_patients_in_facility_heading">Dhukkubsataan %1$s keessa hin jiru</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading"> Dhukkubsataan %1$s keessa hin jiru</string>
 
 </resources>

@@ -38,11 +38,9 @@ class OverdueEffectHandler @AssistedInject constructor(
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, OverdueEvent> {
     return ObservableTransformer { effects ->
       effects
-          .switchMap {
-            currentFacilityChanges
-                .subscribeOn(schedulers.io())
-                .map(::CurrentFacilityLoaded)
-          }
+          .observeOn(schedulers.io())
+          .map { currentFacility.get() }
+          .map(::CurrentFacilityLoaded)
     }
   }
 

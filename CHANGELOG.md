@@ -7,7 +7,7 @@
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
 ### Changes
-- Updated translations: `bn-IN`
+- Updated translations: `bn-IN`, `ti-ET`
 
 ## On Demo
 ### Internal

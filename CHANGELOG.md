@@ -2,6 +2,7 @@
 
 ## Next Release
 ### Internal
+- Migrate `PatientSummaryScreen` to a fragment
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
@@ -22,7 +23,6 @@
 - Add next button to phone number registration screen
 - Change prescribed drugs toolbar title to `Medicines`
 - Fix downloaded prescription background color
-- Updated the app icon
 - Change UI for adding protocol/custom drugs
 
 ### Fixes

@@ -1,10 +1,10 @@
 package org.simple.clinic.summary
 
 import android.os.Parcelable
+import androidx.fragment.app.Fragment
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.R
-import org.simple.clinic.router.screen.FullScreenKey
+import org.simple.clinic.navigation.v2.ScreenKey
 import java.time.Instant
 import java.util.Objects
 import java.util.UUID
@@ -15,13 +15,13 @@ data class PatientSummaryScreenKey(
     val intention: OpenIntention,
     // TODO(vs): 2019-10-18 Move this to the UI model when migrating to Mobius
     val screenCreatedTimestamp: Instant
-) : FullScreenKey, Parcelable {
+) : ScreenKey(), Parcelable {
 
   @IgnoredOnParcel
   override val analyticsName = "Patient Summary"
 
-  override fun layoutRes(): Int {
-    return R.layout.screen_patient_summary
+  override fun instantiateFragment(): Fragment {
+    return PatientSummaryScreen()
   }
 
   override fun equals(other: Any?): Boolean {

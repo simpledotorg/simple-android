@@ -33,7 +33,6 @@ import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenResult
 import org.simple.clinic.navigation.v2.Succeeded
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchResult
@@ -209,7 +208,7 @@ class InstantSearchScreen :
         patientUuid = patientId,
         intention = OpenIntention.ViewExistingPatient,
         screenCreatedTimestamp = Instant.now(utcClock)
-    ).wrap())
+    ))
   }
 
   override fun openLinkIdWithPatientScreen(patientId: UUID, identifier: Identifier) {
@@ -217,7 +216,7 @@ class InstantSearchScreen :
         patientUuid = patientId,
         intention = OpenIntention.LinkIdWithPatient(identifier),
         screenCreatedTimestamp = Instant.now(utcClock)
-    ).wrap())
+    ))
   }
 
   override fun openBpPassportSheet(identifier: Identifier) {

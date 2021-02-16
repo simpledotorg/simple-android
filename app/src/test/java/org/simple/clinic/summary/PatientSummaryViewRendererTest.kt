@@ -36,7 +36,7 @@ class PatientSummaryViewRendererTest {
   private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, UUID.fromString("6fdf088e-f6aa-40e9-9cc2-22e197b83470"))
   private val ui = mock<PatientSummaryScreenUi>()
 
-  private val uiRenderer = PatientSummaryViewRenderer(ui)
+  private val uiRenderer = PatientSummaryViewRenderer(ui, modelUpdateCallback = { /* no-op */ })
 
   @Test
   fun `when the facility supports diabetes management, the diabetes widget must be shown`() {

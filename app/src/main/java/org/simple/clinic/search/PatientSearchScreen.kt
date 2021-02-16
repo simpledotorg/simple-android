@@ -22,7 +22,6 @@ import org.simple.clinic.databinding.ScreenPatientSearchBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
@@ -195,7 +194,7 @@ class PatientSearchScreen(
         patientUuid = patientUuid,
         intention = OpenIntention.ViewExistingPatient,
         screenCreatedTimestamp = Instant.now(utcClock)
-    ).wrap())
+    ))
   }
 
   override fun showAllPatientsInFacility() {

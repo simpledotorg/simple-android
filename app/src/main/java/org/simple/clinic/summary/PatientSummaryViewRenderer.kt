@@ -3,10 +3,13 @@ package org.simple.clinic.summary
 import org.simple.clinic.mobius.ViewRenderer
 
 class PatientSummaryViewRenderer(
-    private val ui: PatientSummaryScreenUi
+    private val ui: PatientSummaryScreenUi,
+    private val modelUpdateCallback: PatientSummaryModelUpdateCallback
 ) : ViewRenderer<PatientSummaryModel> {
 
   override fun render(model: PatientSummaryModel) {
+    modelUpdateCallback?.invoke(model)
+
     with(ui) {
       if (model.hasLoadedPatientSummaryProfile) {
         populatePatientProfile(model.patientSummaryProfile!!)

@@ -195,7 +195,9 @@ class PatientSummaryScreen :
   }
 
   override fun uiRenderer(): ViewRenderer<PatientSummaryModel> {
-    return PatientSummaryViewRenderer(this)
+    return PatientSummaryViewRenderer(ui = this) { model ->
+      modelUpdateCallback?.invoke(model)
+    }
   }
 
   override fun events(): Observable<PatientSummaryEvent> {

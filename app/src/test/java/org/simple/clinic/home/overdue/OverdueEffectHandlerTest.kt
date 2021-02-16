@@ -3,6 +3,7 @@ package org.simple.clinic.home.overdue
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
@@ -45,5 +46,15 @@ class OverdueEffectHandlerTest {
 
     verify(uiActions).openPatientSummary(patientUuid)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the load current facility effect is received, then the current facility must be loaded`() {
+    // when
+    effectHandlerTestCase.dispatch(LoadCurrentFacility)
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
+    verifyZeroInteractions(uiActions)
   }
 }

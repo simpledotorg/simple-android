@@ -198,7 +198,7 @@
   <string name="timestamp_days_ago">%s రోజుల క్రితం</string>
 
   <!-- Prescribed drugs -->
-  <string name="patient_prescribeddrugs_screen_title">బిపి మందులు</string>
+  <string name="patient_prescribeddrugs_screen_title">మందులు</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">మరో మందును జోడించు</string>
 
   <string name="customprescription_enter_medicine">మందులను నమోదు చేయండి</string>
@@ -341,6 +341,7 @@
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ఏదీ కాదు</string>
+  <string name="prescribed_drugs_dosage_remove">తీసివేయి</string>
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s మోతాదు</string>
 
   <!--Scan Simple ID-->

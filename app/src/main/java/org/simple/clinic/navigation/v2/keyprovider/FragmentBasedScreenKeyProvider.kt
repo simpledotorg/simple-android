@@ -14,10 +14,10 @@ class FragmentBasedScreenKeyProvider @Inject constructor() : ScreenKeyProvider {
   override fun <T> keyFor(view: View): T {
     val fragment = FragmentManager.findFragment<Fragment>(view)
 
-    if (fragment !is ScreenFragmentCompat) {
-      throw IllegalStateException("Use screen key provider *only* if you're wrapping older screens. Otherwise, use `ScreenKey#key` instead`.")
+    return if (fragment is ScreenFragmentCompat) {
+      ScreenKey.key<ScreenKeyCompat>(fragment).key as T
+    } else {
+      ScreenKey.key<ScreenKey>(fragment) as T
     }
-
-    return ScreenKey.key<ScreenKeyCompat>(fragment).key as T
   }
 }

@@ -137,7 +137,7 @@ class RecentPatientsView(
             patientUuid = patientUuid,
             intention = OpenIntention.ViewExistingPatient,
             screenCreatedTimestamp = Instant.now(utcClock)
-        ).wrap()
+        )
     )
   }
 

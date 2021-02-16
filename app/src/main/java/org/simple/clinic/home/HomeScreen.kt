@@ -228,7 +228,7 @@ class HomeScreen :
   }
 
   override fun openPatientSummary(patientId: UUID) {
-    router.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)).wrap())
+    router.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
   }
 
   interface Injector {

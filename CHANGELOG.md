@@ -2,6 +2,7 @@
 
 ## Next Release
 ### Internal
+- Load the current facility as a direct call instead of a reactive one in `OverdueEffectHandler`
 - Migrate `PatientSummaryScreen` to a fragment
 - Bump Dagger to v2.32
 - Bump Google truth to v1.1.2

@@ -14,7 +14,7 @@ class LinkIdWithPatientUpdate : Update<LinkIdWithPatientModel, LinkIdWithPatient
       )
       LinkIdWithPatientCancelClicked -> dispatch(CloseSheetWithOutIdLinked)
       IdentifierAddedToPatient -> next(model.saved(), CloseSheetWithLinkedId)
-      LinkIdWithPatientAddClicked -> dispatch(AddIdentifierToPatient(
+      LinkIdWithPatientAddClicked -> next(model.saving(), AddIdentifierToPatient(
           patientUuid = model.patientUuid!!,
           identifier = model.identifier!!
       ))

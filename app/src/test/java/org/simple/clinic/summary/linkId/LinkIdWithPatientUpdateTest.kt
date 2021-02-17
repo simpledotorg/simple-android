@@ -57,4 +57,23 @@ class LinkIdWithPatientUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when add identifier is clicked, then update UI`() {
+    val patientFetchedModel = defaultModel.linkIdWithPatientViewShown(patientUuid, identifier)
+    updateSpec
+        .given(patientFetchedModel)
+        .whenEvent(LinkIdWithPatientAddClicked)
+        .then(
+            assertThatNext(
+                hasModel(patientFetchedModel.saving()),
+                hasEffects(
+                    AddIdentifierToPatient(
+                        patientUuid = patientUuid,
+                        identifier = identifier
+                    )
+                )
+            )
+        )
+  }
 }

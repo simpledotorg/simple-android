@@ -83,7 +83,8 @@ class LinkIdWithPatientViewLogicTest {
         assigningUser = user
     )
 
-    verify(ui, times(2)).renderPatientName(patientName)
+    verify(ui, times(3)).renderPatientName(patientName)
+    verify(ui).showAddButtonProgress()
     verify(ui, times(4)).hideAddButtonProgress()
     verify(uiActions).closeSheetWithIdLinked()
     verifyNoMoreInteractions(ui, uiActions)

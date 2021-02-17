@@ -3,7 +3,7 @@ package org.simple.clinic.home.overdue
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import io.reactivex.Observable
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -21,7 +21,7 @@ class OverdueEffectHandlerTest {
   private val effectHandler = OverdueEffectHandler(
       schedulers = TestSchedulersProvider.trampoline(),
       appointmentRepository = mock(),
-      currentFacilityChanges = Observable.just(facility),
+      currentFacility = { facility },
       dataSourceFactory = mock(),
       uiActions = uiActions
   ).build()
@@ -45,5 +45,15 @@ class OverdueEffectHandlerTest {
 
     verify(uiActions).openPatientSummary(patientUuid)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the load current facility effect is received, then the current facility must be loaded`() {
+    // when
+    effectHandlerTestCase.dispatch(LoadCurrentFacility)
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
+    verifyZeroInteractions(uiActions)
   }
 }

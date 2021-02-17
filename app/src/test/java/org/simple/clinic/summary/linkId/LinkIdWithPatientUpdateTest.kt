@@ -44,4 +44,17 @@ class LinkIdWithPatientUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when identifier is added to patient, then update UI and close sheet`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(IdentifierAddedToPatient)
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.saved()),
+                hasEffects(CloseSheetWithLinkedId)
+            )
+        )
+  }
 }

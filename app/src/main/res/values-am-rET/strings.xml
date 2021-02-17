@@ -198,7 +198,7 @@
   <string name="timestamp_days_ago">ከ %s ቀናት በፊት</string>
 
   <!-- Prescribed drugs -->
-  <string name="patient_prescribeddrugs_screen_title">የደም ግፊት መድኃኒቶች</string>
+  <string name="patient_prescribeddrugs_screen_title">መድኃኒቶች</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">ሌላ መድሃኒት ያክሉ</string>
 
   <string name="customprescription_enter_medicine">መድሃኒት ያስገቡ</string>
@@ -341,6 +341,7 @@
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ምንም</string>
+  <string name="prescribed_drugs_dosage_remove">ያስወግዱ</string>
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s የመድኃኒት መጠን</string>
 
   <!--Scan Simple ID-->

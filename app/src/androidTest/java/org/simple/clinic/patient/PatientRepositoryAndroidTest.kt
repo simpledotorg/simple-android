@@ -1335,6 +1335,24 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
+  fun verify_only_list_of_colonies_or_villages_are_received_from_patient_address() {
+    val address1 = testData.patientAddress(colonyOrVillage = "Sharma Courts")
+    val address01 = testData.patientAddress(colonyOrVillage = "Sharma Courts")
+    val address2 = testData.patientAddress(colonyOrVillage = "7111 Jain Mountains")
+    val address02 = testData.patientAddress(colonyOrVillage = "7111 Jain Mountains")
+    val address3 = testData.patientAddress(colonyOrVillage = "138 residency road")
+    val address03 = testData.patientAddress(colonyOrVillage = "138 residency road")
+
+    val addresses = listOf(address1, address2, address3, address01, address02, address03)
+    database.addressDao().save(addresses)
+
+    val expectedListOfColoniesOrVillages = listOf(address3.colonyOrVillage, address2.colonyOrVillage, address1.colonyOrVillage)
+
+    val listOfColoniesOrVillages = patientRepository.allColoniesOrVillagesInPatientAddress()
+    assertThat(listOfColoniesOrVillages).isEqualTo(expectedListOfColoniesOrVillages)
+  }
+
+  @Test
   fun verify_only_appointments_with_correct_facility_ID_are_included_when_fetching_recent_patients() {
     val fromFacilityUuid = UUID.fromString("25fc9220-3fcb-43b4-8f47-fb67ad275094")
     val toFacilityUuid = UUID.fromString("7d314030-97a2-4075-a0f7-15363fe17070")

@@ -566,6 +566,10 @@ class PatientRepository @Inject constructor(
           .recentPatients(facilityUuid, Scheduled, Manual, PatientStatus.Active)
           .toObservable()
 
+  fun allColoniesOrVillagesInPatientAddress(): List<String>? =
+      database.addressDao()
+          .getColonyOrVillages()
+
   override fun pendingSyncRecordCount(): Observable<Int> {
     return database.patientDao()
         .patientCount(PENDING)

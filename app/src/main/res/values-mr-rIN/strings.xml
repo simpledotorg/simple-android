@@ -198,7 +198,7 @@
   <string name="timestamp_days_ago">%s दिवसांपूर्वी</string>
 
   <!-- Prescribed drugs -->
-  <string name="patient_prescribeddrugs_screen_title">बीपीची औषधे</string>
+  <string name="patient_prescribeddrugs_screen_title">औषधे</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">दुसरे औषध जोडा</string>
 
   <string name="customprescription_enter_medicine">औषध प्रविष्‍ट करा</string>
@@ -237,6 +237,8 @@
   <string name="registration_loggedout_dialog_title">तुम्‍ही लॉग आउट केले आहे</string>
   <string name="registration_loggedout_dialog_message">कृपया सुरू ठेवण्‍यासाठी पुन्‍हा लॉगइन करा</string>
   <string name="registration_loggedout_dialog_confirm">ठीक आहे</string>
+  <string name="registrationphone_next">पुढील</string>
+
   <string name="registrationname_name_label">कृपया तुमचे संपूर्ण नाव आम्‍हाला सांगा</string>
   <string name="registrationname_error_empty_name">कृपया तुमचे संपूर्ण नाव प्रविष्‍ट करा</string>
 
@@ -339,6 +341,7 @@
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">काही नाही</string>
+  <string name="prescribed_drugs_dosage_remove">काढून टाका</string>
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s डोस</string>
 
   <!--Scan Simple ID-->

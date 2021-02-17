@@ -33,4 +33,8 @@ data class LinkIdWithPatientModel(
   fun patientNameFetched(patientName: String): LinkIdWithPatientModel {
     return copy(patientName = patientName)
   }
+
+  fun saving(): LinkIdWithPatientModel {
+    return copy(buttonState = ButtonState.SAVING)
+  }
 }

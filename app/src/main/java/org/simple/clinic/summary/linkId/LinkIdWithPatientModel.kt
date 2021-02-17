@@ -9,7 +9,8 @@ import java.util.UUID
 data class LinkIdWithPatientModel(
     val patientUuid: UUID?,
     val identifier: Identifier?,
-    val patientName: String?
+    val patientName: String?,
+    val buttonState: ButtonState?
 ) : Parcelable {
 
   companion object {
@@ -17,7 +18,8 @@ data class LinkIdWithPatientModel(
     fun create() = LinkIdWithPatientModel(
         patientUuid = null,
         identifier = null,
-        patientName = null
+        patientName = null,
+        buttonState = null
     )
   }
 

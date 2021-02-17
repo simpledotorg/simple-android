@@ -35,9 +35,9 @@ class StorageModule {
     // internally.
     val sqliteThreadPoolCount = SQLiteGlobal.getWALConnectionPoolSize() / 2
     val queryExecutor = ThreadPools.create(
-        corePoolSize = 1,
+        corePoolSize = sqliteThreadPoolCount,
         maxPoolSize = sqliteThreadPoolCount,
-        threadPrefix = "room-query-"
+        threadPrefix = "room-query"
     )
 
     return Room.databaseBuilder(appContext, AppDatabase::class.java, "red-db")

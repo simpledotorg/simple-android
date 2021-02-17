@@ -12,6 +12,7 @@
     - "Moved to private practitioner"
 - Build only the `PRODUCTION` release APK as part of the CI checks
 - Load the current facility as a direct call instead of a reactive one in `OverdueEffectHandler`
+- Fix the Room query thread pool executor to run all available threads
 - [In Progress: 20 Jan 2021] Material Theming Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 

@@ -18,7 +18,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ProgressMaterialButton
+import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.animateBottomSheetIn
@@ -181,6 +181,10 @@ class LinkIdWithPatientView(
 
   override fun showAddButtonProgress() {
     addButton.setButtonState(InProgress)
+  }
+
+  override fun hideAddButtonProgress() {
+    addButton.setButtonState(Enabled)
   }
 
   fun show(runBefore: () -> Unit) {

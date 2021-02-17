@@ -32,6 +32,7 @@ class LinkIdWithPatientUiRendererTest {
 
     // then
     verify(ui).renderPatientName(patientName)
+    verify(ui).hideAddButtonProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -47,6 +48,21 @@ class LinkIdWithPatientUiRendererTest {
     // then
     verify(ui).renderPatientName(patientName)
     verify(ui).showAddButtonProgress()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when identifier is added to patient, then hide button progress`() {
+    // given
+    val buttonSavingStateModel = patientNameFetchedModel
+        .saved()
+
+    // when
+    linkIdWithPatientUiRenderer.render(buttonSavingStateModel)
+
+    // then
+    verify(ui).renderPatientName(patientName)
+    verify(ui).hideAddButtonProgress()
     verifyNoMoreInteractions(ui)
   }
 }

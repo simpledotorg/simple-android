@@ -587,7 +587,6 @@
   <string name="assigned_facility_view_change">Jijjiiri</string>
 
   <!-- Facility Picker -->
-  <string name="facilitypicker_screen_title">Kilinikii kee filadhu</string>
   <string name="facilitypicker_search_hint">Kilinikii kee barbaadi</string>
   <!-- Street, District, State -->
   <string name="facilitypicker_header_suggested_facilities">Kilinikiiwwan eeraman</string>

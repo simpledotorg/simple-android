@@ -585,7 +585,6 @@
   <string name="assigned_facility_view_change">மாற்றவும்</string>
 
   <!-- Facility Picker -->
-  <string name="facilitypicker_screen_title">உங்கள் கிளினிக்கைத் தேர்ந்தெடுக்கவும்</string>
   <string name="facilitypicker_search_hint">உங்கள் கிளினிக்கைத் தேடவும்</string>
   <!-- Street, District, State -->
   <string name="facilitypicker_header_suggested_facilities">பரிந்துரைக்கப்படும் கிளினிக்குகள்</string>

@@ -123,11 +123,6 @@
     <item name="android:colorBackground">@color/white</item>
   </style>
 
-  <style name="ThemeOverlay.Simple.FacilityPicker.Search" parent="">
-    <item name="colorPrimary">@color/white</item>
-    <item name="colorOnPrimary">@color/color_on_surface_67</item>
-  </style>
-
   <style name="ThemeOverlay.Simple.DeletePatient" parent="">
     <item name="android:colorBackground">@color/white</item>
   </style>

@@ -28,7 +28,6 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
-import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
@@ -72,20 +71,14 @@ class FacilityPickerView(
   private val toolbarViewWithSearch
     get() = binding!!.toolbarViewWithSearch
 
-  private val toolbarViewWithoutSearch
-    get() = binding!!.toolbarViewWithoutSearch
-
   private val facilityRecyclerView
     get() = binding!!.facilityRecyclerView
 
   private val searchEditText
     get() = binding!!.searchEditText
 
-  private val progressView
-    get() = binding!!.progressView
-
-  private val toolbarViewFlipper
-    get() = binding!!.toolbarViewFlipper
+  private val progressIndicator
+    get() = binding!!.progressIndicator
 
   init {
     val layoutInflater = LayoutInflater.from(context)
@@ -98,7 +91,6 @@ class FacilityPickerView(
     context.injector<Injector>().inject(this)
 
     toolbarViewWithSearch.setNavigationOnClickListener { backClicked?.invoke() }
-    toolbarViewWithoutSearch.setNavigationOnClickListener { backClicked?.invoke() }
 
     facilityRecyclerView.layoutManager = LinearLayoutManager(context)
     facilityRecyclerView.adapter = recyclerViewAdapter
@@ -155,19 +147,11 @@ class FacilityPickerView(
   }
 
   override fun showProgressIndicator() {
-    progressView.visibility = RelativeLayout.VISIBLE
+    progressIndicator.visibility = RelativeLayout.VISIBLE
   }
 
   override fun hideProgressIndicator() {
-    progressView.visibility = RelativeLayout.GONE
-  }
-
-  override fun showToolbarWithSearchField() {
-    toolbarViewFlipper.displayedChildResId = R.id.toolbarViewWithSearch
-  }
-
-  override fun showToolbarWithoutSearchField() {
-    toolbarViewFlipper.displayedChildResId = R.id.toolbarViewWithoutSearch
+    progressIndicator.visibility = RelativeLayout.GONE
   }
 
   override fun updateFacilities(facilityItems: List<FacilityListItem>) {

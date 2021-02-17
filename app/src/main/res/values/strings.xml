@@ -666,7 +666,6 @@
   <string name="assigned_facility_view_change">Change</string>
 
   <!-- Facility Picker -->
-  <string name="facilitypicker_screen_title">Select your clinic</string>
   <string name="facilitypicker_search_hint">Search for your clinic</string>
   <string name="facilitypicker_facility_address_without_street" translatable="false">%s, %s</string>   <!-- District, State -->
   <string name="facilitypicker_facility_address_with_street" translatable="false">%s, %s, %s</string>  <!-- Street, District, State -->

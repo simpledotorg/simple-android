@@ -1,6 +1,7 @@
 package org.simple.clinic.drugs.selection.dosage
 
 import android.annotation.SuppressLint
+import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
@@ -46,14 +47,25 @@ sealed class DosageListItem : ItemAdapter.Item<DosageListItem.Event> {
       val binding = holder.binding as PrescribedDrugWithDosageListItemBinding
 
       if (hasExistingPrescription) {
-        binding.dosageTextView.setTextColor(context.resolveColor(attrRes = R.attr.colorError))
-        binding.dosageTextView.text = holder.itemView.context.getString(R.string.prescribed_drugs_dosage_remove)
+        setDosageTextAndColor(
+            binding = binding,
+            text = holder.itemView.context.getString(R.string.prescribed_drugs_dosage_remove),
+            color = context.resolveColor(attrRes = R.attr.colorError)
+        )
       } else {
-        binding.dosageTextView.setTextColor(context.resolveColor(colorRes = R.color.color_on_surface_67))
-        binding.dosageTextView.text = holder.itemView.context.getString(R.string.prescribed_drugs_dosage_none)
+        setDosageTextAndColor(
+            binding = binding,
+            text = holder.itemView.context.getString(R.string.prescribed_drugs_dosage_none),
+            color = context.resolveColor(colorRes = R.color.color_on_surface_67)
+        )
       }
 
       holder.itemView.setOnClickListener { subject.onNext(Event.NoneClicked) }
+    }
+
+    private fun setDosageTextAndColor(binding: PrescribedDrugWithDosageListItemBinding, text: String, @ColorInt color: Int) {
+      binding.dosageTextView.setTextColor(color)
+      binding.dosageTextView.text = text
     }
   }
 

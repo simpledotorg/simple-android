@@ -5,17 +5,17 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.view.View
-import androidx.annotation.DrawableRes
-import androidx.core.content.ContextCompat
+import androidx.core.content.res.use
 import androidx.recyclerview.widget.RecyclerView
-import org.simple.clinic.R
+import timber.log.Timber
 import kotlin.math.roundToInt
+
+private val ATTRS = intArrayOf(android.R.attr.listDivider)
 
 class DividerItemDecorator(
     val context: Context,
     val marginStart: Int,
     val marginEnd: Int,
-    @DrawableRes val dividerDrawable: Int = R.drawable.divider
 ) : RecyclerView.ItemDecoration() {
 
   private val mBounds = Rect()
@@ -23,7 +23,12 @@ class DividerItemDecorator(
   private var divider: Drawable? = null
 
   init {
-    divider = ContextCompat.getDrawable(context, dividerDrawable)
+    context.obtainStyledAttributes(ATTRS).use {
+      divider = it.getDrawable(0)
+    }
+    if (divider == null) {
+      Timber.w("@android:attr/listDivider was not set in the theme used")
+    }
   }
 
   override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {

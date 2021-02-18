@@ -34,6 +34,7 @@
 - Fix downloaded prescription background color
 - Change UI for adding protocol/custom drugs
 - Show toolbar progress indicator in facility picker screen
+- Update sorting order of prescribed drugs
 
 ### Fixes
 - Fix App crash when returning to the register patient screen before completing registration when patient date of birth is entered

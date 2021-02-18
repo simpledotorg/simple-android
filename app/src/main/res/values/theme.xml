@@ -71,6 +71,7 @@
     <item name="android:colorBackground">@color/simple_light_grey</item>
     <item name="android:windowBackground">@color/simple_light_grey</item>
     <item name="android:backgroundDimAmount">0.32</item>
+    <item name="android:listDivider">@drawable/divider</item>
 
     <!-- Custom Attrs -->
     <item name="colorToolbarPrimary">@color/simple_dark_blue_800</item>

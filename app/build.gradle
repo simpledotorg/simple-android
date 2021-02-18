@@ -326,8 +326,6 @@ dependencies {
   implementation("io.sentry:sentry-android:$versions.sentry") {
     exclude group: "com.fasterxml.jackson.core", module: "jackson-core"
   }
-  implementation "com.xwray:groupie:$versions.groupie"
-  implementation "com.xwray:groupie-viewbinding:$versions.groupie"
 
   implementation "com.mikepenz:itemanimators:$versions.itemAnimators@aar"
   implementation "org.mindrot:jbcrypt:$versions.jbcrypt"

@@ -14,7 +14,7 @@
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
 ### Changes
-- Updated translations: `bn-IN`, `ti-ET`, `om-ET`, `bn-BD`, `te-IN`, `kn-IN`, `mr-IN`
+- Updated translations: `bn-IN`, `ti-ET`, `om-ET`, `bn-BD`, `te-IN`, `kn-IN`, `mr-IN`, `hi-IN`
 - Show progress when linking bp passport to patient
 - Show progress when saving medical history for new patient
 

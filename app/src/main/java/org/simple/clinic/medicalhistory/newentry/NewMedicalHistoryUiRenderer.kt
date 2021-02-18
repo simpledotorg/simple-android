@@ -1,7 +1,7 @@
 package org.simple.clinic.medicalhistory.newentry
 
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
@@ -37,7 +37,7 @@ class NewMedicalHistoryUiRenderer(
 
     ui.showDiagnosisRequiredError(model.showDiagnosisRequiredError)
 
-    if (model.nextButtonState == ButtonState.SAVING) {
+    if (model.registeringPatient) {
       ui.showNextButtonProgress()
     } else {
       ui.hideNextButtonProgress()

@@ -13,4 +13,5 @@ interface NewMedicalHistoryUi {
   fun showDiabetesHistorySection()
   fun hideDiabetesHistorySection()
   fun showNextButtonProgress()
+  fun hideNextButtonProgress()
 }

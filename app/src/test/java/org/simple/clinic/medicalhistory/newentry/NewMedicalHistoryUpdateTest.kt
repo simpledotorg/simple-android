@@ -215,7 +215,7 @@ class NewMedicalHistoryUpdateTest {
   }
 
   @Test
-  fun `when the patient is registered, trigger a sync`() {
+  fun `when the patient is registered, then update ui and trigger a sync`() {
     val model = defaultModel
         .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
@@ -229,7 +229,7 @@ class NewMedicalHistoryUpdateTest {
         .whenEvent(PatientRegistered(patientUuid))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.saved()),
                 hasEffects(TriggerSync(patientUuid) as NewMedicalHistoryEffect)
             )
         )

@@ -9,7 +9,7 @@ class LinkIdWithPatientUiRenderer(private val ui: LinkIdWithPatientViewUi) : Vie
       ui.renderPatientName(model.patientName!!)
     }
 
-    if (model.addButtonState == ButtonState.SAVING) {
+    if (model.addingIdToPatient) {
       ui.showAddButtonProgress()
     } else {
       ui.hideAddButtonProgress()

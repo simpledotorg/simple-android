@@ -37,6 +37,10 @@ class NewMedicalHistoryUiRenderer(
 
     ui.showDiagnosisRequiredError(model.showDiagnosisRequiredError)
 
+    renderNextButton(model)
+  }
+
+  private fun renderNextButton(model: NewMedicalHistoryModel) {
     if (model.registeringPatient) {
       ui.showNextButtonProgress()
     } else {

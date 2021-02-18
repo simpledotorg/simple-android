@@ -66,7 +66,7 @@ class LinkIdWithPatientUpdateTest {
         .whenEvent(LinkIdWithPatientAddClicked)
         .then(
             assertThatNext(
-                hasModel(patientFetchedModel.saving()),
+                hasModel(patientFetchedModel.linkingIdToPatient()),
                 hasEffects(
                     AddIdentifierToPatient(
                         patientUuid = patientUuid,

@@ -40,7 +40,7 @@ class LinkIdWithPatientUiRendererTest {
   fun `when identifier is being to patient, then show button progress`() {
     // given
     val buttonSavingStateModel = patientNameFetchedModel
-        .saving()
+        .linkingIdToPatient()
 
     // when
     linkIdWithPatientUiRenderer.render(buttonSavingStateModel)

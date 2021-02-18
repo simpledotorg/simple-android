@@ -34,7 +34,7 @@ data class LinkIdWithPatientModel(
     return copy(patientName = patientName)
   }
 
-  fun saving(): LinkIdWithPatientModel {
+  fun linkingIdToPatient(): LinkIdWithPatientModel {
     return copy(addButtonState = ButtonState.SAVING)
   }
 

@@ -8,9 +8,9 @@
 - Bump Google truth to v1.1.2
 - Bump WorkManager to v2.5.0
 - Fix the Room query thread pool executor to run all available threads
+- Load list of `colonyOrVillage` from the `PatientAddress` table
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
-- Load list of `colonyOrVillage` from the `PatientAddress` table
 
 ### Changes
 - Updated translations: `bn-IN`, `ti-ET`, `om-ET`, `bn-BD`

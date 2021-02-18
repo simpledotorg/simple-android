@@ -520,8 +520,8 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">ರೋಗಿಯನ್ನು \"ಭೇಟಿಮಾಡಲು ಒಪ್ಪಿದ್ದಾರೆ\" ಎಂದು ಗುರುತಿಸಿ</string>
-  <string name="contactpatient_remind_call_later">ನಂತರ ಕರೆ ಮಾಡಲು ನೆನಪಿಸಿ…</string>
+  <string name="contactpatient_agreed_to_visit">ರೋಗಿಯನ್ನು \&quot;ಭೇಟಿಮಾಡಲು ಒಪ್ಪಿದ್ದಾರೆ\&quot; ಎಂದು ಗುರುತಿಸಿ</string>
+  <string name="contactpatient_remind_call_later">ನಂತರ ಕರೆ ಮಾಡಲು ನೆನಪಿಸಿ...</string>
   <string name="contactpatient_remove_from_list">ಬಾಕಿ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಿ…</string>
   <string name="contactpatient_result_of_call">ಕರೆಯ ಫಲಿತಾಂಶ</string>
   <string name="contactpatient_call_normal">ಸಾಮಾನ್ಯ</string>

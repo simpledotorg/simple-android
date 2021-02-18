@@ -3,22 +3,24 @@ package org.simple.clinic.drugs.selection
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewbinding.ViewBinding
 import com.jakewharton.rxbinding3.view.clicks
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.subjects.PublishSubject
+import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ListPrescribeddrugsCustomDrugBinding
+import org.simple.clinic.databinding.ListPrescribeddrugsNewCustomDrugBinding
+import org.simple.clinic.databinding.ListPrescribeddrugsProtocolDrugBinding
 import org.simple.clinic.databinding.ScreenPatientPrescribedDrugsEntryBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.drugs.AddNewPrescriptionClicked
+import org.simple.clinic.drugs.CustomPrescriptionClicked
 import org.simple.clinic.drugs.EditMedicinesEffect
 import org.simple.clinic.drugs.EditMedicinesEffectHandler
 import org.simple.clinic.drugs.EditMedicinesEvent
@@ -29,21 +31,23 @@ import org.simple.clinic.drugs.EditMedicinesUpdate
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PresribedDrugsRefillClicked
+import org.simple.clinic.drugs.ProtocolDrugClicked
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.DividerItemDecorator
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
-class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), EditMedicinesUi, EditMedicinesUiActions {
+class EditMedicinesScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), EditMedicinesUi, EditMedicinesUiActions {
 
   @Inject
   lateinit var router: Router
@@ -77,9 +81,20 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
   private val refillMedicineButton
     get() = binding!!.prescribeddrugsRefill
 
-  private val groupieAdapter = GroupAdapter<GroupieViewHolder>()
-
-  private val adapterUiEvents = PublishSubject.create<UiEvent>()
+  private val adapter = ItemAdapter(
+      diffCallback = DrugListItem.Differ(),
+      bindings = mapOf(
+          R.layout.list_prescribeddrugs_protocol_drug to { layoutInflater, parent ->
+            ListPrescribeddrugsProtocolDrugBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_prescribeddrugs_custom_drug to { layoutInflater, parent ->
+            ListPrescribeddrugsCustomDrugBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_prescribeddrugs_new_custom_drug to { layoutInflater, parent ->
+            ListPrescribeddrugsNewCustomDrugBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
 
   private val patientUuid by unsafeLazy {
     val screenKey = screenKeyProvider.keyFor<PrescribedDrugsScreenKey>(this)
@@ -88,8 +103,10 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
 
   private val events by unsafeLazy {
     Observable
-        .merge(
-            adapterUiEvents,
+        .mergeArray(
+            protocolDrugClicks(),
+            customDrugClicks(),
+            addNewCustomDrugClicks(),
             doneClicks(),
             refillMedicineClicks())
         .compose(ReportAnalyticsEvents())
@@ -119,8 +136,11 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
     context.injector<Injector>().inject(this)
 
     toolbar.setNavigationOnClickListener { router.pop() }
+    recyclerView.setHasFixedSize(false)
     recyclerView.layoutManager = LinearLayoutManager(context)
-    recyclerView.adapter = groupieAdapter
+    recyclerView.adapter = adapter
+
+    recyclerView.addItemDecoration(DividerItemDecorator(context, marginStart = 0, marginEnd = 0))
 
     val fadeAnimator = DefaultItemAnimator()
     fadeAnimator.supportsChangeAnimations = false
@@ -166,23 +186,19 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
     doneButton.visibility = GONE
   }
 
-  override fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewBinding>>) {
+  override fun populateDrugsList(protocolDrugItems: List<DrugListItem>) {
     // Replace the default fade animator with another animator that
     // plays change animations together instead of sequentially.
-    if (groupieAdapter.itemCount != 0) {
+    if (adapter.itemCount != 0) {
       val animator = SlideUpAlphaAnimator().withInterpolator(FastOutSlowInInterpolator())
       animator.supportsChangeAnimations = false
       recyclerView.itemAnimator = animator
     }
 
-    val newAdapterItems = protocolDrugItems + AddNewPrescriptionListItem()
+    val newAdapterItems = protocolDrugItems + AddNewPrescriptionListItem
 
-    // Not the best way for registering click listeners,
-    // but Groupie doesn't seem to have a better option.
-    newAdapterItems.forEach { it.uiEvents = adapterUiEvents }
-
-    val hasNewItems = (groupieAdapter.itemCount == 0).not() && groupieAdapter.itemCount < newAdapterItems.size
-    groupieAdapter.update(newAdapterItems)
+    val hasNewItems = (adapter.itemCount == 0).not() && adapter.itemCount < newAdapterItems.size
+    adapter.submitList(newAdapterItems)
 
     // Scroll to end to show newly added prescriptions.
     if (hasNewItems) {
@@ -210,6 +226,27 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : LinearLayout(
 
   override fun showUpdateCustomPrescriptionSheet(prescribedDrug: PrescribedDrug) {
     activity.startActivity(CustomPrescriptionEntrySheet.intentForUpdatingPrescription(context, prescribedDrug.patientUuid, prescribedDrug.uuid))
+  }
+
+  private fun protocolDrugClicks(): Observable<UiEvent> {
+    return adapter
+        .itemEvents
+        .ofType<DrugListItemClicked.PrescribedDrugClicked>()
+        .map { ProtocolDrugClicked(it.drugName, it.prescribedDrug) }
+  }
+
+  private fun customDrugClicks(): Observable<UiEvent> {
+    return adapter
+        .itemEvents
+        .ofType<DrugListItemClicked.CustomPrescriptionClicked>()
+        .map { CustomPrescriptionClicked(it.prescribedDrug) }
+  }
+
+  private fun addNewCustomDrugClicks(): Observable<UiEvent> {
+    return adapter
+        .itemEvents
+        .ofType<DrugListItemClicked.AddNewPrescriptionClicked>()
+        .map { AddNewPrescriptionClicked }
   }
 
   interface Injector {

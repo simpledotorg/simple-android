@@ -19,7 +19,6 @@ buildscript {
       sentry                   : '1.7.22',
       sentryGradlePlugin       : '1.7.36',
       slf4j                    : '1.7.25',
-      groupie                  : '2.9.0',
       flow                     : '1.0.0-alpha3',
       rxJava                   : '2.2.16',
       rxAndroid                : '2.1.1',
@@ -118,8 +117,6 @@ allprojects {
         includeModule("com.facebook.flipper", "flipper-network-plugin")
         includeModule("io.requery", "sqlite-android")
         includeModule("ru.egslava", "MaskedEditText")
-        includeModule("com.xwray", "groupie")
-        includeModule("com.xwray", "groupie-viewbinding")
 
         // :lint
         includeModule("org.jetbrains.trove4j", "trove4j")

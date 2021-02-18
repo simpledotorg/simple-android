@@ -27,7 +27,6 @@ import org.simple.clinic.drugs.EditMedicinesUpdate
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.ProtocolDrugClicked
-import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
@@ -38,6 +37,7 @@ import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.UUID
@@ -84,7 +84,7 @@ class EditMedicinesScreenLogicTest {
         uiEvents.ofType(),
         EditMedicinesModel.create(patientUuid),
         EditMedicinesInit(),
-        EditMedicinesUpdate(LocalDate.of(2020,11,12), ZoneOffset.UTC),
+        EditMedicinesUpdate(LocalDate.of(2020, 11, 12), ZoneOffset.UTC),
         effectHandler.build(),
         editMedicinesUiRenderer::render
     )
@@ -112,31 +112,36 @@ class EditMedicinesScreenLogicTest {
         uuid = UUID.fromString("90e28866-90f6-48a0-add1-cf44aa43209c"),
         name = "Amlodipine",
         dosage = "10mg",
-        isProtocolDrug = true
+        isProtocolDrug = true,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val telmisartan9000mgPrescription = TestData.prescription(
         uuid = UUID.fromString("ac3cfff0-2ebf-4c9c-adab-a41cc8a0bbeb"),
         name = "Telmisartan",
         dosage = "9000mg",
-        isProtocolDrug = false
+        isProtocolDrug = false,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val reesesPrescription = TestData.prescription(
         uuid = UUID.fromString("34e466e2-3995-47b4-b1af-f4d7ea58d18c"),
         name = "Reese's",
         dosage = "5 packets",
-        isProtocolDrug = false
+        isProtocolDrug = false,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val fooPrescription = TestData.prescription(
         uuid = UUID.fromString("68dc8060-bed4-4e1b-9891-7d77cad9639e"),
         name = "Foo",
         dosage = "2 pills",
-        isProtocolDrug = false
+        isProtocolDrug = false,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val barPrescription = TestData.prescription(
         uuid = UUID.fromString("b5eb5dfa-f131-4d9f-a2d2-41d56aa109da"),
         name = "Bar",
         dosage = null,
-        isProtocolDrug = false
+        isProtocolDrug = false,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
 
     val prescriptions = listOf(
@@ -155,17 +160,15 @@ class EditMedicinesScreenLogicTest {
         ProtocolDrugListItem(
             id = 0,
             drugName = amlodipine10mg.name,
-            prescribedDrug = amlodipine10mgPrescription,
-            hideDivider = false),
+            prescribedDrug = amlodipine10mgPrescription),
+        CustomPrescribedDrugListItem(telmisartan9000mgPrescription),
+        CustomPrescribedDrugListItem(reesesPrescription),
+        CustomPrescribedDrugListItem(fooPrescription),
+        CustomPrescribedDrugListItem(barPrescription),
         ProtocolDrugListItem(
             id = 1,
             drugName = telmisartan40mg.name,
-            prescribedDrug = null,
-            hideDivider = false),
-        CustomPrescribedDrugListItem(telmisartan9000mgPrescription, false),
-        CustomPrescribedDrugListItem(reesesPrescription, false),
-        CustomPrescribedDrugListItem(fooPrescription, false),
-        CustomPrescribedDrugListItem(barPrescription, true))
+            prescribedDrug = null))
 
     verify(ui).populateDrugsList(expectedUiModels)
   }

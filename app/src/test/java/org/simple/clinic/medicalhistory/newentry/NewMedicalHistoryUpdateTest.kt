@@ -229,7 +229,7 @@ class NewMedicalHistoryUpdateTest {
         .whenEvent(PatientRegistered(patientUuid))
         .then(
             assertThatNext(
-                hasModel(model.saved()),
+                hasModel(model.patientRegistered()),
                 hasEffects(TriggerSync(patientUuid) as NewMedicalHistoryEffect)
             )
         )

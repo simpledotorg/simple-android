@@ -67,7 +67,7 @@ data class NewMedicalHistoryModel(
     return copy(buttonState = ButtonState.SAVING)
   }
 
-  fun saved(): NewMedicalHistoryModel {
+  fun patientRegistered(): NewMedicalHistoryModel {
     return copy(buttonState = ButtonState.SAVED)
   }
 }

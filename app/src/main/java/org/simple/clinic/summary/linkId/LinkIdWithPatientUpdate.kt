@@ -13,8 +13,8 @@ class LinkIdWithPatientUpdate : Update<LinkIdWithPatientModel, LinkIdWithPatient
           model.linkIdWithPatientViewShown(event.patientUuid, event.identifier), GetPatientNameFromId(event.patientUuid)
       )
       LinkIdWithPatientCancelClicked -> dispatch(CloseSheetWithOutIdLinked)
-      IdentifierAddedToPatient -> dispatch(CloseSheetWithLinkedId)
-      LinkIdWithPatientAddClicked -> dispatch(AddIdentifierToPatient(
+      IdentifierAddedToPatient -> next(model.linkedIdToPatient(), CloseSheetWithLinkedId)
+      LinkIdWithPatientAddClicked -> next(model.linkingIdToPatient(), AddIdentifierToPatient(
           patientUuid = model.patientUuid!!,
           identifier = model.identifier!!
       ))

@@ -44,4 +44,36 @@ class LinkIdWithPatientUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when identifier is added to patient, then update UI and close sheet`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(IdentifierAddedToPatient)
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.linkedIdToPatient()),
+                hasEffects(CloseSheetWithLinkedId)
+            )
+        )
+  }
+
+  @Test
+  fun `when add identifier is clicked, then update UI`() {
+    val patientFetchedModel = defaultModel.linkIdWithPatientViewShown(patientUuid, identifier)
+    updateSpec
+        .given(patientFetchedModel)
+        .whenEvent(LinkIdWithPatientAddClicked)
+        .then(
+            assertThatNext(
+                hasModel(patientFetchedModel.linkingIdToPatient()),
+                hasEffects(
+                    AddIdentifierToPatient(
+                        patientUuid = patientUuid,
+                        identifier = identifier
+                    )
+                )
+            )
+        )
+  }
 }

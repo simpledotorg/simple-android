@@ -137,7 +137,7 @@ class NewMedicalHistoryUpdateTest {
         .whenEvent(SaveMedicalHistoryClicked())
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.saving()),
                 hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry) as NewMedicalHistoryEffect)
             )
         )

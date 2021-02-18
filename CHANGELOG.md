@@ -13,7 +13,7 @@
 - Load list of `colonyOrVillage` from the `PatientAddress` table
 
 ### Changes
-- Updated translations: `bn-IN`, `ti-ET`, `om-ET`
+- Updated translations: `bn-IN`, `ti-ET`, `om-ET`, `bn-BD`
 
 ## On Demo
 ### Internal

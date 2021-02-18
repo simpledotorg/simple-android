@@ -37,7 +37,7 @@ class NewMedicalHistoryUiRenderer(
 
     ui.showDiagnosisRequiredError(model.showDiagnosisRequiredError)
 
-    if (model.buttonState == ButtonState.SAVING) {
+    if (model.nextButtonState == ButtonState.SAVING) {
       ui.showNextButtonProgress()
     } else {
       ui.hideNextButtonProgress()

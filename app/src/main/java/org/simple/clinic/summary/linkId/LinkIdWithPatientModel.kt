@@ -10,7 +10,7 @@ data class LinkIdWithPatientModel(
     val patientUuid: UUID?,
     val identifier: Identifier?,
     val patientName: String?,
-    val buttonState: ButtonState?
+    val addButtonState: ButtonState?
 ) : Parcelable {
 
   companion object {
@@ -19,7 +19,7 @@ data class LinkIdWithPatientModel(
         patientUuid = null,
         identifier = null,
         patientName = null,
-        buttonState = null
+        addButtonState = null
     )
   }
 
@@ -35,10 +35,10 @@ data class LinkIdWithPatientModel(
   }
 
   fun saving(): LinkIdWithPatientModel {
-    return copy(buttonState = ButtonState.SAVING)
+    return copy(addButtonState = ButtonState.SAVING)
   }
 
   fun saved(): LinkIdWithPatientModel {
-    return copy(buttonState = ButtonState.SAVED)
+    return copy(addButtonState = ButtonState.SAVED)
   }
 }

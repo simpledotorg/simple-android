@@ -122,7 +122,7 @@ class NewMedicalHistoryUiRendererTest {
   fun `when patient is being saved, then show next button progress`() {
     // given
     val model = defaultModel
-        .saving()
+        .registeringPatient()
 
     // when
     uiRenderer.render(model)

@@ -29,7 +29,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
 
   private fun saveClicked(model: NewMedicalHistoryModel): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
     return if (!model.facilityDiabetesManagementEnabled || model.hasAnsweredBothDiagnosisQuestions) {
-      next(model.saving(), RegisterPatient(model.ongoingMedicalHistoryEntry))
+      next(model.registeringPatient(), RegisterPatient(model.ongoingMedicalHistoryEntry))
     } else {
       next(model.diagnosisRequired())
     }

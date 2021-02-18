@@ -132,11 +132,12 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true">
 
-    <com.google.android.material.button.MaterialButton
+    <org.simple.clinic.widgets.ProgressMaterialButton
       android:id="@+id/nextButton"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/newmedicalhistory_next" />
+      android:text="@string/newmedicalhistory_next"
+      app:buttonState="enabled" />
 
   </FrameLayout>
 

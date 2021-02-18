@@ -353,7 +353,7 @@
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending"> ምስናይ ንውሳነ ይፅበይ ኣሎ</string>
   <string name="syncindicator_status_failed">ምስናይ ፈሺሉ ኣሎ</string>
-  <string name="syncindicator_status_syncing">ኣብ ምስናይ</string>
+  <string name="syncindicator_status_syncing">ኣብ ምስናይ…</string>
   <string name="syncindicator_status_synced_just_now">ሕጂ ገና ተሳንዩ</string>
   <string name="syncindicator_status_synced_min_ago">ቅድሚ %s ደቒቕ ተሳንዩ</string>
   <string name="syncindicator_dialog_error_network">ናይ ተሓካሚ መዛግብቲ  ንክሳነየልካ ፅቡቕ ዝሰርሕ ኢንተርኔት ከም ዘለካ ኣረጋግፅ</string>
@@ -429,7 +429,7 @@
   <string name="changelanguage_done">ተሰሪሑ</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">ሓንሳብ ፅናሕ…..</string>
+  <string name="placeholder_loading_title">ሓንሳብ ፅናሕ…</string>
   <string name="placeholder_loading_message">ምትዕርራይ ናይ ዳታ ቤዝ ኣብ መስርሕ ኣሎ እዚ ሓደ ደቐቕ ጥራይ’ዩ ዝወስድ</string>
 
   <!-- Select Country Screen -->

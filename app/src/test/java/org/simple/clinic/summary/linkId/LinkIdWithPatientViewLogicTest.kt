@@ -3,6 +3,7 @@ package org.simple.clinic.summary.linkId
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -82,7 +83,9 @@ class LinkIdWithPatientViewLogicTest {
         assigningUser = user
     )
 
-    verify(ui).renderPatientName(patientName)
+    verify(ui, times(3)).renderPatientName(patientName)
+    verify(ui).showAddButtonProgress()
+    verify(ui, times(4)).hideAddButtonProgress()
     verify(uiActions).closeSheetWithIdLinked()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -97,6 +100,7 @@ class LinkIdWithPatientViewLogicTest {
 
     // then
     verify(ui).renderPatientName(patientName)
+    verify(ui, times(3)).hideAddButtonProgress()
     verify(uiActions).closeSheetWithoutIdLinked()
     verifyNoMoreInteractions(ui, uiActions)
 

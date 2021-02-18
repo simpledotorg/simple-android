@@ -67,13 +67,14 @@
           android:layout_weight="1"
           android:text="@string/linkidwithpatient_button_back" />
 
-        <com.google.android.material.button.MaterialButton
+        <org.simple.clinic.widgets.ProgressMaterialButton
           android:id="@+id/addButton"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"
           android:layout_weight="1"
-          android:text="@string/linkidwithpatient_button_yes" />
+          android:text="@string/linkidwithpatient_button_yes"
+          app:buttonState="enabled" />
 
       </LinearLayout>
 

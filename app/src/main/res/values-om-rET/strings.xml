@@ -501,18 +501,18 @@
   <string name="accessdeniedscreen_description">Hayyamni Salphaa hin hayyamane Maaloo kuni dogongora jettee yaadda taanan hogganaa kee qunnami.\n\n hayyamni kee yoo siif deebi’e, Salphaa balleessi fii Play store irraa buufadhu.</string>
 
   <!-- Confirm Facility change sheet -->
-  <string name="confirmfacilitychange_title">Iddoo gara ….jijjiiri</string>
+  <string name="confirmfacilitychange_title">Iddoo gara ....jijjiiri</string>
   <string name="confirmfacilitychange_negative_button">Adda kuti</string>
   <string name="confirmfacilitychange_positive_button">Eeyyee</string>
   <string name="confirmfacilitychange_facility_name">%s?</string>
 
   <!-- Registration Confirm Facility Change Sheet -->
-  <string name="registrationconfirmfacility_title">Ati bakka ….jirtaa?</string>
+  <string name="registrationconfirmfacility_title">Ati bakka ....jirtaa?</string>
   <string name="registrationconfirmfacility_positive_button">Eeyyee</string>
   <string name="registrationconfirmfacility_negative_button">Adda kuti</string>
 
   <!-- Alert facility change -->
-  <string name="alertfacilitychange_title">Ati bakka …..jirtaa</string>
+  <string name="alertfacilitychange_title">Ati bakka .....jirtaa</string>
   <string name="alertfacilitychange_yes_button">Eeyyee</string>
   <string name="alertfacilitychange_change_button">Jijjiiri</string>
   <string name="alertfacilitychange_facility_name">%s?</string>

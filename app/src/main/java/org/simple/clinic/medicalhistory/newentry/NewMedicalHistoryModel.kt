@@ -62,4 +62,8 @@ data class NewMedicalHistoryModel(
   fun clearDiagnosisRequiredError(): NewMedicalHistoryModel {
     return copy(showDiagnosisRequiredError = false)
   }
+
+  fun saving(): NewMedicalHistoryModel {
+    return copy(buttonState = ButtonState.SAVING)
+  }
 }

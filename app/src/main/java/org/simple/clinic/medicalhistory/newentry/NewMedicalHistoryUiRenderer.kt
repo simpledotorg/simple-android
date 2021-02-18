@@ -36,5 +36,9 @@ class NewMedicalHistoryUiRenderer(
     }
 
     ui.showDiagnosisRequiredError(model.showDiagnosisRequiredError)
+
+    if (model.buttonState == ButtonState.SAVING) {
+      ui.showNextButtonProgress()
+    }
   }
 }

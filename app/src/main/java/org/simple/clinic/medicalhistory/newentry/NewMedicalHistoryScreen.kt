@@ -28,6 +28,7 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
 import java.util.UUID
@@ -200,6 +201,10 @@ class NewMedicalHistoryScreen(
   override fun showDiagnosisRequiredError(showError: Boolean) {
     if (showError)
       SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun showNextButtonProgress() {
+    nextButton.setButtonState(InProgress)
   }
 
   interface Injector {

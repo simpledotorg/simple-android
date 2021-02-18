@@ -114,6 +114,22 @@ class NewMedicalHistoryUiRendererTest {
     verifyNoMoreInteractions(ui)
   }
 
+  @Test
+  fun `when patient is being saved, then show next button progress`() {
+    // given
+    val model = defaultModel
+        .saving()
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyImplicitRenders()
+    verify(ui).showDiagnosisRequiredError(false)
+    verify(ui).showNextButtonProgress()
+    verifyNoMoreInteractions(ui)
+  }
+
   private fun verifyImplicitRenders() {
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_HEART_ATTACK, Unanswered)
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_STROKE, Unanswered)

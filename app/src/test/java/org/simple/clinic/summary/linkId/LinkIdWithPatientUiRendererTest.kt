@@ -55,7 +55,7 @@ class LinkIdWithPatientUiRendererTest {
   fun `when identifier is added to patient, then hide button progress`() {
     // given
     val buttonSavingStateModel = patientNameFetchedModel
-        .saved()
+        .linkedIdToPatient()
 
     // when
     linkIdWithPatientUiRenderer.render(buttonSavingStateModel)

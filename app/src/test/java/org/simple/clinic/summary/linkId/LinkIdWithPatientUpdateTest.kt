@@ -52,7 +52,7 @@ class LinkIdWithPatientUpdateTest {
         .whenEvent(IdentifierAddedToPatient)
         .then(
             assertThatNext(
-                hasModel(defaultModel.saved()),
+                hasModel(defaultModel.linkedIdToPatient()),
                 hasEffects(CloseSheetWithLinkedId)
             )
         )

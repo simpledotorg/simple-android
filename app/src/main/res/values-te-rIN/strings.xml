@@ -353,7 +353,7 @@
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">సింక్ పెండింగ్‌లో ఉంది</string>
   <string name="syncindicator_status_failed">సింక్ విఫలమైంది</string>
-  <string name="syncindicator_status_syncing">సింక్ చేస్తోంది…</string>
+  <string name="syncindicator_status_syncing">సింక్ చేస్తోంది...</string>
   <string name="syncindicator_status_synced_just_now">ఇప్పుడే సింక్ అయింది</string>
   <string name="syncindicator_status_synced_min_ago">%s నిమి క్రితం సింక్ చేసారు</string>
   <string name="syncindicator_dialog_error_network">రోగి రికార్డ్‌లను సింక్ చేయడం కోసం మీ వద్ద పని చేస్తున్న ఇంటర్నెట్ కనెక్షన్ ఉండాలి.</string>
@@ -520,9 +520,9 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">రోగి \"సందర్శించడానికి అంగీకరించారు\" అని గుర్తుపెట్టండి</string>
+  <string name="contactpatient_agreed_to_visit">రోగి \&quot;సందర్శించడానికి అంగీకరించారు\&quot; అని గుర్తుపెట్టండి</string>
   <string name="contactpatient_remind_call_later">కాల్ చేయాలని తర్వాత గుర్తు చేయండి…</string>
-  <string name="contactpatient_remove_from_list">గడువు దాటిన జాబితా నుండి తీసివేయి…</string>
+  <string name="contactpatient_remove_from_list">గడువు దాటిన జాబితా నుండి తీసివేయి...</string>
   <string name="contactpatient_result_of_call">కాల్ ఫలితం</string>
   <string name="contactpatient_call_normal">సాధారణం</string>
   <string name="contactpatient_call_secure">సురక్షితం</string>

@@ -1,8 +1,10 @@
 package org.simple.clinic.drugs.selection
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
@@ -156,12 +158,8 @@ class EditMedicinesScreen :
     context.injector<Injector>().inject(this)
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     toolbar.setNavigationOnClickListener { router.pop() }
     recyclerView.setHasFixedSize(false)
     recyclerView.layoutManager = LinearLayoutManager(context)
@@ -172,6 +170,13 @@ class EditMedicinesScreen :
     val fadeAnimator = DefaultItemAnimator()
     fadeAnimator.supportsChangeAnimations = false
     recyclerView.itemAnimator = fadeAnimator
+  }
+
+  override fun onFinishInflate() {
+    super.onFinishInflate()
+    if (isInEditMode) {
+      return
+    }
   }
 
   override fun onAttachedToWindow() {

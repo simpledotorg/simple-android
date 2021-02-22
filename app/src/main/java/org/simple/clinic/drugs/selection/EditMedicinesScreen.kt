@@ -172,31 +172,6 @@ class EditMedicinesScreen :
     recyclerView.itemAnimator = fadeAnimator
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
-  }
-
   private fun doneClicks() = doneButton.clicks().map { PrescribedDrugsDoneClicked }
 
   private fun refillMedicineClicks() = refillMedicineButton.clicks().map { PresribedDrugsRefillClicked }

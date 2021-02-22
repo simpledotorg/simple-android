@@ -25,8 +25,6 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
     return when (event) {
       is CurrentFacilityLoaded -> next(
           model.facilityLoaded(event.facility)
-              .loadingAllPatients(),
-          LoadAllPatients(event.facility)
       )
       is AllPatientsLoaded -> allPatientsLoaded(model, event)
       is SearchResultsLoaded -> searchResultsLoaded(model, event)

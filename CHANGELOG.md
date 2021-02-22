@@ -56,6 +56,7 @@
 - Change `FacilityChangeScreen` to `BaseBottomSheet`
 - Change `ConfirmFacilityChangeScreen` to `BaseBottomSheet`
 - Change `PatientSearchResultsScreen` to a fragment
+- Stop loading all patients after current facility is loaded in `InstantSearchScreen`
 
 ### Changes
 - Updated the app icon

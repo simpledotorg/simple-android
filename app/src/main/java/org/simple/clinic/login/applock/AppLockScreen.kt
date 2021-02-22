@@ -1,5 +1,6 @@
 package org.simple.clinic.login.applock
 
+import android.content.Context
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -108,6 +109,11 @@ class AppLockScreen :
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     delegate.start()
@@ -131,8 +137,6 @@ class AppLockScreen :
     if (isInEditMode) {
       return
     }
-
-    context.injector<Injector>().inject(this)
 
     logoutButton.setOnClickListener {
       Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show()

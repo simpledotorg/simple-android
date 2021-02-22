@@ -16,7 +16,7 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
-import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen_Old
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
@@ -150,7 +150,7 @@ class DrugSummaryView(
   override fun showUpdatePrescribedDrugsScreen(patientUuid: UUID, currentFacility: Facility) {
     router.push(AlertFacilityChangeSheet.Key(
         currentFacilityName = currentFacility.name,
-        continuation = ContinueToScreen_Old(PrescribedDrugsScreenKey(patientUuid))
+        continuation = ContinueToScreen(PrescribedDrugsScreenKey(patientUuid))
     ))
   }
 

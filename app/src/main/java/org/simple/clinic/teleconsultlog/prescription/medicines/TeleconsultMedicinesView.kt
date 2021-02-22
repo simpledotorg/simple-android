@@ -19,7 +19,6 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
@@ -174,7 +173,7 @@ class TeleconsultMedicinesView(
   }
 
   override fun openEditMedicines(patientUuid: UUID) {
-    router.push(PrescribedDrugsScreenKey(patientUuid).wrap())
+    router.push(PrescribedDrugsScreenKey(patientUuid))
   }
 
   override fun openDrugDurationSheet(prescription: PrescribedDrug) {

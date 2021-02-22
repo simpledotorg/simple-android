@@ -1,10 +1,9 @@
 package org.simple.clinic.drugs.selection
 
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,6 +35,7 @@ import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -47,7 +47,13 @@ import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
-class EditMedicinesScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), EditMedicinesUi, EditMedicinesUiActions {
+class EditMedicinesScreen :
+    BaseScreen<
+        PrescribedDrugsScreenKey,
+        ScreenPatientPrescribedDrugsEntryBinding,
+        EditMedicinesModel,
+        EditMedicinesEvent,
+        EditMedicinesEffect>(), EditMedicinesUi, EditMedicinesUiActions {
 
   @Inject
   lateinit var router: Router

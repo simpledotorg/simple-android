@@ -51,6 +51,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_STROKE, No)
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_KIDNEY_DISEASE, Unanswered)
     verify(ui).showDiagnosisRequiredError(false)
+    verify(ui).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -72,6 +73,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, No)
     verify(ui).showDiagnosisRequiredError(false)
+    verify(ui).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -91,6 +93,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).showDiabetesHistorySection()
     verify(ui).renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, Yes)
     verify(ui).showDiagnosisRequiredError(false)
+    verify(ui).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -111,6 +114,23 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
     verify(ui).showDiagnosisRequiredError(true)
+    verify(ui).hideNextButtonProgress()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient is being saved, then show next button progress`() {
+    // given
+    val model = defaultModel
+        .registeringPatient()
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyImplicitRenders()
+    verify(ui).showDiagnosisRequiredError(false)
+    verify(ui).showNextButtonProgress()
     verifyNoMoreInteractions(ui)
   }
 

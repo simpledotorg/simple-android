@@ -15,6 +15,7 @@
 ### Changes
 - Updated translations: `bn-IN`, `ti-ET`, `om-ET`, `bn-BD`, `te-IN`, `kn-IN`, `mr-IN`
 - Show progress when linking bp passport to patient
+- Show progress when saving medical history for new patient
 
 ## On Demo
 ### Internal

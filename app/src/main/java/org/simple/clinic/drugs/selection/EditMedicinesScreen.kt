@@ -76,19 +76,17 @@ class EditMedicinesScreen :
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
 
-  private var binding: ScreenPatientPrescribedDrugsEntryBinding? = null
-
   private val toolbar
-    get() = binding!!.prescribeddrugsToolbar
+    get() = binding.prescribeddrugsToolbar
 
   private val recyclerView
-    get() = binding!!.prescribeddrugsRecyclerview
+    get() = binding.prescribeddrugsRecyclerview
 
   private val doneButton
-    get() = binding!!.prescribeddrugsDone
+    get() = binding.prescribeddrugsDone
 
   private val refillMedicineButton
-    get() = binding!!.prescribeddrugsRefill
+    get() = binding.prescribeddrugsRefill
 
   private val adapter = ItemAdapter(
       diffCallback = DrugListItem.Differ(),
@@ -163,8 +161,6 @@ class EditMedicinesScreen :
       return
     }
 
-    binding = ScreenPatientPrescribedDrugsEntryBinding.bind(this)
-
     context.injector<Injector>().inject(this)
 
     toolbar.setNavigationOnClickListener { router.pop() }
@@ -186,7 +182,6 @@ class EditMedicinesScreen :
 
   override fun onDetachedFromWindow() {
     delegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 
@@ -239,9 +234,7 @@ class EditMedicinesScreen :
   }
 
   private fun scrollListToLastPosition() {
-    if (binding != null) {
-      recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount - 1)
-    }
+    recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount - 1)
   }
 
   override fun showNewPrescriptionEntrySheet(patientUuid: UUID) {

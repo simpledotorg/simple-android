@@ -38,7 +38,6 @@ import org.simple.clinic.drugs.PresribedDrugsRefillClicked
 import org.simple.clinic.drugs.ProtocolDrugClicked
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.UserClock
@@ -103,30 +102,6 @@ class EditMedicinesScreen :
 
   private val patientUuid by unsafeLazy {
     screenKey.patientUuid
-  }
-
-  private val events by unsafeLazy {
-    Observable
-        .mergeArray(
-            protocolDrugClicks(),
-            customDrugClicks(),
-            addNewCustomDrugClicks(),
-            doneClicks(),
-            refillMedicineClicks())
-        .compose(ReportAnalyticsEvents())
-  }
-
-  private val uiRenderer = EditMedicinesUiRenderer(this)
-
-  private val delegate: MobiusDelegate<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect> by unsafeLazy {
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = EditMedicinesModel.create(patientUuid),
-        update = EditMedicinesUpdate(LocalDate.now(userClock), userClock.zone),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = EditMedicinesInit(),
-        modelUpdateListener = uiRenderer::render
-    )
   }
 
   override fun defaultModel() = EditMedicinesModel.create(patientUuid = patientUuid)

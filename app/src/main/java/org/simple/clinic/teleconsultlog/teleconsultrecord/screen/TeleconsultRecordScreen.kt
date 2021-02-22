@@ -1,10 +1,7 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
@@ -19,6 +16,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Patient
@@ -38,10 +36,16 @@ import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-class TeleconsultRecordScreen(
-    context: Context,
-    attrs: AttributeSet
-) : ConstraintLayout(context, attrs), TeleconsultRecordUi, UiActions, HandlesBack {
+class TeleconsultRecordScreen :
+    BaseScreen<
+        TeleconsultRecordScreenKey,
+        ScreenTeleconsultRecordBinding,
+        TeleconsultRecordModel,
+        TeleconsultRecordEvent,
+        TeleconsultRecordEffect>(),
+    TeleconsultRecordUi,
+    UiActions,
+    HandlesBack {
 
   private var binding: ScreenTeleconsultRecordBinding? = null
 

@@ -48,22 +48,20 @@ class TeleconsultRecordScreen :
     UiActions,
     HandlesBack {
 
-  private var binding: ScreenTeleconsultRecordBinding? = null
-
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   private val teleconsultTypeRadioGroup
-    get() = binding!!.teleconsultTypeRadioGroup
+    get() = binding.teleconsultTypeRadioGroup
 
   private val patientTookMedicineCheckBox
-    get() = binding!!.patientTookMedicineCheckBox
+    get() = binding.patientTookMedicineCheckBox
 
   private val doneButton
-    get() = binding!!.doneButton
+    get() = binding.doneButton
 
   private val patientConsentedCheckBox
-    get() = binding!!.patientConsentedCheckBox
+    get() = binding.patientConsentedCheckBox
 
   @Inject
   lateinit var router: Router
@@ -141,7 +139,6 @@ class TeleconsultRecordScreen :
 
   override fun onDetachedFromWindow() {
     delegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 
@@ -156,8 +153,6 @@ class TeleconsultRecordScreen :
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) return
-
-    binding = ScreenTeleconsultRecordBinding.bind(this)
 
     context.injector<Injector>().inject(this)
   }

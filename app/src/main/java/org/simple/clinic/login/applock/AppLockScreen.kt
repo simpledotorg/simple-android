@@ -1,10 +1,13 @@
 package org.simple.clinic.login.applock
 
 import android.os.Parcelable
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.ReportAnalyticsEvents
@@ -84,6 +87,28 @@ class AppLockScreen :
         modelUpdateListener = uiRenderer::render
     )
   }
+
+  override fun defaultModel() = AppLockModel.create()
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenAppLockBinding.inflate(layoutInflater, container, false)
+
+  override fun uiRenderer() = AppLockUiRenderer(this)
+
+  override fun events() = Observable
+      .merge(
+          backClicks,
+          forgotPinClicks(),
+          pinAuthentications()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<AppLockEvent>()
+
+  override fun createUpdate() = AppLockUpdate()
+
+  override fun createInit() = AppLockInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()

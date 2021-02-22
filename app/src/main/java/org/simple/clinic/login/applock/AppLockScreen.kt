@@ -43,25 +43,23 @@ class AppLockScreen :
   @Inject
   lateinit var effectHandlerFactory: AppLockEffectHandler.Factory
 
-  private var binding: ScreenAppLockBinding? = null
-
   private val logoutButton
-    get() = binding!!.logoutButton
+    get() = binding.logoutButton
 
   private val pinEntryCardView
-    get() = binding!!.pinEntryCardView
+    get() = binding.pinEntryCardView
 
   private val pinEditText
-    get() = binding!!.pinEntryCardView.pinEditText
+    get() = binding.pinEntryCardView.pinEditText
 
   private val forgotPinButton
-    get() = binding!!.pinEntryCardView.forgotPinButton
+    get() = binding.pinEntryCardView.forgotPinButton
 
   private val fullNameTextView
-    get() = binding!!.fullNameTextView
+    get() = binding.fullNameTextView
 
   private val facilityTextView
-    get() = binding!!.facilityTextView
+    get() = binding.facilityTextView
 
   private val backClicks = PublishSubject.create<AppLockBackClicked>()
 
@@ -117,7 +115,6 @@ class AppLockScreen :
 
   override fun onDetachedFromWindow() {
     delegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 
@@ -134,8 +131,6 @@ class AppLockScreen :
     if (isInEditMode) {
       return
     }
-
-    binding = ScreenAppLockBinding.bind(this)
 
     context.injector<Injector>().inject(this)
 

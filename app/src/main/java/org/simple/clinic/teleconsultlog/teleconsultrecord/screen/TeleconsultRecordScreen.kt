@@ -1,5 +1,6 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
+import android.content.Context
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -132,6 +133,11 @@ class TeleconsultRecordScreen :
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     delegate.start()
@@ -153,8 +159,6 @@ class TeleconsultRecordScreen :
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) return
-
-    context.injector<Injector>().inject(this)
   }
 
   override fun renderPatientDetails(patient: Patient) {

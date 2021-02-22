@@ -1,8 +1,10 @@
 package org.simple.clinic.drugs.selection
 
 import android.os.Parcelable
+import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -130,6 +133,29 @@ class EditMedicinesScreen :
         modelUpdateListener = uiRenderer::render
     )
   }
+
+  override fun defaultModel() = EditMedicinesModel.create(patientUuid = patientUuid)
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenPatientPrescribedDrugsEntryBinding.inflate(layoutInflater, container, false)
+
+  override fun uiRenderer() = EditMedicinesUiRenderer(this)
+
+  override fun events() = Observable
+      .mergeArray(
+          protocolDrugClicks(),
+          customDrugClicks(),
+          addNewCustomDrugClicks(),
+          doneClicks(),
+          refillMedicineClicks())
+      .compose(ReportAnalyticsEvents())
+      .cast<EditMedicinesEvent>()
+
+  override fun createUpdate() = EditMedicinesUpdate(LocalDate.now(userClock), userClock.zone)
+
+  override fun createInit() = EditMedicinesInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
   override fun onFinishInflate() {
     super.onFinishInflate()

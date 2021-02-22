@@ -145,6 +145,10 @@ class AlertFacilityChangeSheet :
         requireActivity().startActivityForResult(intent, requestCode)
         router.pop()
       }
+      is Continuation.ContinueToScreen -> {
+        val screenKey = (continuation as Continuation.ContinueToScreen).screenKey
+        router.replaceTop(screenKey)
+      }
     }
   }
 
@@ -177,6 +181,9 @@ sealed class Continuation : Parcelable {
 
   @Parcelize
   data class ContinueToScreen_Old(val screenKey: FullScreenKey) : Continuation()
+
+  @Parcelize
+  data class ContinueToScreen(val screenKey: ScreenKey) : Continuation()
 
   @Parcelize
   data class ContinueToActivity(val intent: Intent, val requestCode: Int) : Continuation()

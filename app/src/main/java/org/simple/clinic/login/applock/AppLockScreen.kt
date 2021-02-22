@@ -15,12 +15,10 @@ import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenAppLockBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.security.pin.PinAuthenticated
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -64,29 +62,6 @@ class AppLockScreen :
     get() = binding.facilityTextView
 
   private val backClicks = PublishSubject.create<AppLockBackClicked>()
-
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            backClicks,
-            forgotPinClicks(),
-            pinAuthentications()
-        )
-        .compose(ReportAnalyticsEvents())
-  }
-
-  private val delegate by unsafeLazy {
-    val uiRenderer = AppLockUiRenderer(this)
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = AppLockModel.create(),
-        init = AppLockInit(),
-        update = AppLockUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
 
   override fun defaultModel() = AppLockModel.create()
 

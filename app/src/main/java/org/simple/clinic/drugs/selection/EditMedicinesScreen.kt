@@ -2,7 +2,6 @@ package org.simple.clinic.drugs.selection
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -162,10 +161,10 @@ class EditMedicinesScreen :
     super.onViewCreated(view, savedInstanceState)
     toolbar.setNavigationOnClickListener { router.pop() }
     recyclerView.setHasFixedSize(false)
-    recyclerView.layoutManager = LinearLayoutManager(context)
+    recyclerView.layoutManager = LinearLayoutManager(requireContext())
     recyclerView.adapter = adapter
 
-    recyclerView.addItemDecoration(DividerItemDecorator(context, marginStart = 0, marginEnd = 0))
+    recyclerView.addItemDecoration(DividerItemDecorator(requireContext(), marginStart = 0, marginEnd = 0))
 
     val fadeAnimator = DefaultItemAnimator()
     fadeAnimator.supportsChangeAnimations = false
@@ -217,7 +216,7 @@ class EditMedicinesScreen :
   }
 
   override fun showNewPrescriptionEntrySheet(patientUuid: UUID) {
-    activity.startActivity(CustomPrescriptionEntrySheet.intentForAddNewPrescription(context, patientUuid))
+    activity.startActivity(CustomPrescriptionEntrySheet.intentForAddNewPrescription(requireContext(), patientUuid))
   }
 
   override fun goBackToPatientSummary() {
@@ -225,11 +224,11 @@ class EditMedicinesScreen :
   }
 
   override fun showDosageSelectionSheet(drugName: String, patientUuid: UUID, prescribedDrugUuid: UUID?) {
-    activity.startActivity(DosagePickerSheet.intent(context, drugName, patientUuid, prescribedDrugUuid))
+    activity.startActivity(DosagePickerSheet.intent(requireContext(), drugName, patientUuid, prescribedDrugUuid))
   }
 
   override fun showUpdateCustomPrescriptionSheet(prescribedDrug: PrescribedDrug) {
-    activity.startActivity(CustomPrescriptionEntrySheet.intentForUpdatingPrescription(context, prescribedDrug.patientUuid, prescribedDrug.uuid))
+    activity.startActivity(CustomPrescriptionEntrySheet.intentForUpdatingPrescription(requireContext(), prescribedDrug.patientUuid, prescribedDrug.uuid))
   }
 
   private fun protocolDrugClicks(): Observable<UiEvent> {

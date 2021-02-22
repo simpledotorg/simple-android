@@ -1,6 +1,8 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
 import android.os.Parcelable
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
@@ -115,6 +117,30 @@ class TeleconsultRecordScreen :
         modelUpdateListener = uiRenderer::render
     )
   }
+
+  override fun defaultModel() = TeleconsultRecordModel.create(
+      patientUuid = screenKey.patientUuid,
+      teleconsultRecordId = screenKey.teleconsultRecordId
+  )
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenTeleconsultRecordBinding.inflate(layoutInflater, container, false)
+
+  override fun uiRenderer() = TeleconsultRecordUiRenderer(this)
+
+  override fun events() = Observable
+      .merge(
+          doneClicks(),
+          backClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<TeleconsultRecordEvent>()
+
+  override fun createUpdate() = TeleconsultRecordUpdate()
+
+  override fun createInit() = TeleconsultRecordInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()

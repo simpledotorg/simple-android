@@ -507,7 +507,7 @@
   <string name="confirmfacilitychange_facility_name">%s?</string>
 
   <!-- Registration Confirm Facility Change Sheet -->
-  <string name="registrationconfirmfacility_title">Ati bakka ….jirtaa?</string>
+  <string name="registrationconfirmfacility_title">Ati bakka jirtaa?</string>
   <string name="registrationconfirmfacility_positive_button">Eeyyee</string>
   <string name="registrationconfirmfacility_negative_button">Adda kuti</string>
 

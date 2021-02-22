@@ -507,12 +507,12 @@
   <string name="confirmfacilitychange_facility_name">%s?</string>
 
   <!-- Registration Confirm Facility Change Sheet -->
-  <string name="registrationconfirmfacility_title">Ati bakka ….jirtaa?</string>
+  <string name="registrationconfirmfacility_title">Ati bakka jirtaa?</string>
   <string name="registrationconfirmfacility_positive_button">Eeyyee</string>
   <string name="registrationconfirmfacility_negative_button">Adda kuti</string>
 
   <!-- Alert facility change -->
-  <string name="alertfacilitychange_title">Ati bakka …..jirtaa</string>
+  <string name="alertfacilitychange_title">Ati bakka jirtaa</string>
   <string name="alertfacilitychange_yes_button">Eeyyee</string>
   <string name="alertfacilitychange_change_button">Jijjiiri</string>
   <string name="alertfacilitychange_facility_name">%s?</string>

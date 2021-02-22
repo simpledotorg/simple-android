@@ -1,8 +1,10 @@
 package org.simple.clinic.login.applock
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -137,7 +139,10 @@ class AppLockScreen :
     if (isInEditMode) {
       return
     }
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     logoutButton.setOnClickListener {
       Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show()
     }

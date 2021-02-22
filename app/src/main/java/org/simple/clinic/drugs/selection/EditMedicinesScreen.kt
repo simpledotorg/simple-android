@@ -39,7 +39,6 @@ import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
@@ -73,9 +72,6 @@ class EditMedicinesScreen :
   @Inject
   lateinit var userClock: UserClock
 
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
   private val toolbar
     get() = binding.prescribeddrugsToolbar
 
@@ -104,7 +100,6 @@ class EditMedicinesScreen :
   )
 
   private val patientUuid by unsafeLazy {
-    val screenKey = screenKeyProvider.keyFor<PrescribedDrugsScreenKey>(this)
     screenKey.patientUuid
   }
 

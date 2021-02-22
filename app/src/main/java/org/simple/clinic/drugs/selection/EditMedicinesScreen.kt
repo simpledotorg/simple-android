@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.selection
 
+import android.content.Context
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View.GONE
@@ -150,13 +151,16 @@ class EditMedicinesScreen :
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
-
-    context.injector<Injector>().inject(this)
 
     toolbar.setNavigationOnClickListener { router.pop() }
     recyclerView.setHasFixedSize(false)

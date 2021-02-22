@@ -8,13 +8,11 @@ import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenTeleconsultRecordBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
@@ -31,7 +29,6 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.A
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Message
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Video
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
@@ -82,31 +79,6 @@ class TeleconsultRecordScreen :
   )
 
   private val hardwareBackClicks = PublishSubject.create<BackClicked>()
-
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            doneClicks(),
-            backClicks()
-        )
-        .compose(ReportAnalyticsEvents())
-  }
-
-  private val delegate by unsafeLazy {
-    val uiRenderer = TeleconsultRecordUiRenderer(this)
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = TeleconsultRecordModel.create(
-            patientUuid = screenKey.patientUuid,
-            teleconsultRecordId = screenKey.teleconsultRecordId
-        ),
-        init = TeleconsultRecordInit(),
-        update = TeleconsultRecordUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
 
   override fun defaultModel() = TeleconsultRecordModel.create(
       patientUuid = screenKey.patientUuid,

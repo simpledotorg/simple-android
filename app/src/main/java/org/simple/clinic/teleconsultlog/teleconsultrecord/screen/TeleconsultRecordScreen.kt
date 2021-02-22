@@ -19,7 +19,6 @@ import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
@@ -78,9 +77,6 @@ class TeleconsultRecordScreen :
   @Inject
   lateinit var activity: AppCompatActivity
 
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
   private val radioIdToTeleconsultationType = mapOf(
       R.id.teleconsultTypeAudioRadioButton to Audio,
       R.id.teleconsultTypeVideoRadioButton to Video,
@@ -96,10 +92,6 @@ class TeleconsultRecordScreen :
             backClicks()
         )
         .compose(ReportAnalyticsEvents())
-  }
-
-  private val screenKey by unsafeLazy {
-    screenKeyProvider.keyFor<TeleconsultRecordScreenKey>(this)
   }
 
   private val delegate by unsafeLazy {

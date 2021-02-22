@@ -14,7 +14,8 @@ data class NewMedicalHistoryModel(
     val ongoingPatientEntry: OngoingNewPatientEntry?,
     val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry,
     val currentFacility: Facility?,
-    val showDiagnosisRequiredError: Boolean
+    val showDiagnosisRequiredError: Boolean,
+    val nextButtonState: ButtonState?
 ) : Parcelable {
 
   val hasLoadedPatientEntry: Boolean
@@ -32,12 +33,16 @@ data class NewMedicalHistoryModel(
   val hasAnsweredBothDiagnosisQuestions: Boolean
     get() = !(ongoingMedicalHistoryEntry.diagnosedWithHypertension == Unanswered || ongoingMedicalHistoryEntry.hasDiabetes == Unanswered)
 
+  val registeringPatient: Boolean
+    get() = nextButtonState == ButtonState.SAVING
+
   companion object {
     fun default(): NewMedicalHistoryModel = NewMedicalHistoryModel(
         ongoingPatientEntry = null,
         ongoingMedicalHistoryEntry = OngoingMedicalHistoryEntry(),
         currentFacility = null,
-        showDiagnosisRequiredError = false
+        showDiagnosisRequiredError = false,
+        nextButtonState = null
     )
   }
 
@@ -59,5 +64,13 @@ data class NewMedicalHistoryModel(
 
   fun clearDiagnosisRequiredError(): NewMedicalHistoryModel {
     return copy(showDiagnosisRequiredError = false)
+  }
+
+  fun registeringPatient(): NewMedicalHistoryModel {
+    return copy(nextButtonState = ButtonState.SAVING)
+  }
+
+  fun patientRegistered(): NewMedicalHistoryModel {
+    return copy(nextButtonState = ButtonState.SAVED)
   }
 }

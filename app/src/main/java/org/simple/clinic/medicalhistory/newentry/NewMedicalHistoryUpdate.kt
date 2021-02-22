@@ -6,8 +6,8 @@ import com.spotify.mobius.Update
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
@@ -19,7 +19,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
     return when (event) {
       is NewMedicalHistoryAnswerToggled -> answerToggled(model, event.question, event.answer)
       is SaveMedicalHistoryClicked -> saveClicked(model)
-      is PatientRegistered -> dispatch(TriggerSync(event.patientUuid))
+      is PatientRegistered -> next(model.patientRegistered(), TriggerSync(event.patientUuid))
       is OngoingPatientEntryLoaded -> next(model.ongoingPatientEntryLoaded(event.ongoingNewPatientEntry))
       is CurrentFacilityLoaded -> currentFacilityLoaded(event, model)
       is SyncTriggered -> dispatch(OpenPatientSummaryScreen(event.registeredPatientUuid))
@@ -29,7 +29,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
 
   private fun saveClicked(model: NewMedicalHistoryModel): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
     return if (!model.facilityDiabetesManagementEnabled || model.hasAnsweredBothDiagnosisQuestions) {
-      dispatch(RegisterPatient(model.ongoingMedicalHistoryEntry))
+      next(model.registeringPatient(), RegisterPatient(model.ongoingMedicalHistoryEntry))
     } else {
       next(model.diagnosisRequired())
     }

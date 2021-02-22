@@ -13,7 +13,7 @@ import org.simple.clinic.databinding.ScreenPatientSearchResultsBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
-import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen_Old
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.PatientEntryScreenKey
@@ -140,7 +140,7 @@ class PatientSearchResultsScreen :
   override fun openPatientEntryScreen(facility: Facility) {
     router.push(AlertFacilityChangeSheet.Key(
         currentFacilityName = facility.name,
-        continuation = ContinueToScreen(PatientEntryScreenKey())
+        continuation = ContinueToScreen_Old(PatientEntryScreenKey())
     ))
   }
 

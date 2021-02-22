@@ -14,7 +14,7 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetAlertFacilityChangeBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
-import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen_Old
 import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.ViewRenderer
@@ -134,8 +134,8 @@ class AlertFacilityChangeSheet :
 
   private fun closeSheetWithContinuation() {
     when (continuation) {
-      is ContinueToScreen -> {
-        val screenKey = (continuation as ContinueToScreen).screenKey
+      is ContinueToScreen_Old -> {
+        val screenKey = (continuation as ContinueToScreen_Old).screenKey
         router.replaceTop(screenKey.wrap())
       }
       is ContinueToActivity -> {
@@ -176,7 +176,7 @@ class AlertFacilityChangeSheet :
 sealed class Continuation : Parcelable {
 
   @Parcelize
-  data class ContinueToScreen(val screenKey: FullScreenKey) : Continuation()
+  data class ContinueToScreen_Old(val screenKey: FullScreenKey) : Continuation()
 
   @Parcelize
   data class ContinueToActivity(val intent: Intent, val requestCode: Int) : Continuation()

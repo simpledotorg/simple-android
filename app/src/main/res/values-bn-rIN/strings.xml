@@ -429,7 +429,7 @@
   <string name="changelanguage_done">সম্পন্ন</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">দয়া করে অপেক্ষা করুন</string>
+  <string name="placeholder_loading_title">দয়া করে অপেক্ষা করুন…</string>
   <string name="placeholder_loading_message">ডাটাবেস রক্ষণাবেক্ষণ চলছে। এটি সম্পন্ন হতে এক মিনিট সময় নেবে।</string>
 
   <!-- Select Country Screen -->

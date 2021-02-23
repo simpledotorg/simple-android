@@ -320,7 +320,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   override fun showAppLockScreen() {
-    router.push(AppLockScreenKey.wrap())
+    router.push(AppLockScreenKey)
   }
 
   // This is here because we need to show the same alert in multiple

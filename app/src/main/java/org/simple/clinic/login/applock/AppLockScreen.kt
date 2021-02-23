@@ -1,27 +1,38 @@
 package org.simple.clinic.login.applock
 
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenAppLockBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.security.pin.PinAuthenticated
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class AppLockScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), AppLockScreenUi, AppLockUiActions, HandlesBack {
+class AppLockScreen :
+    BaseScreen<
+        AppLockScreenKey,
+        ScreenAppLockBinding,
+        AppLockModel,
+        AppLockEvent,
+        AppLockEffect
+        >(),
+    AppLockScreenUi,
+    AppLockUiActions,
+    HandlesBack {
 
   @Inject
   lateinit var router: Router
@@ -32,80 +43,55 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(co
   @Inject
   lateinit var effectHandlerFactory: AppLockEffectHandler.Factory
 
-  private var binding: ScreenAppLockBinding? = null
-
   private val logoutButton
-    get() = binding!!.logoutButton
+    get() = binding.logoutButton
 
   private val pinEntryCardView
-    get() = binding!!.pinEntryCardView
+    get() = binding.pinEntryCardView
 
   private val pinEditText
-    get() = binding!!.pinEntryCardView.pinEditText
+    get() = binding.pinEntryCardView.pinEditText
 
   private val forgotPinButton
-    get() = binding!!.pinEntryCardView.forgotPinButton
+    get() = binding.pinEntryCardView.forgotPinButton
 
   private val fullNameTextView
-    get() = binding!!.fullNameTextView
+    get() = binding.fullNameTextView
 
   private val facilityTextView
-    get() = binding!!.facilityTextView
+    get() = binding.facilityTextView
 
   private val backClicks = PublishSubject.create<AppLockBackClicked>()
 
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            backClicks,
-            forgotPinClicks(),
-            pinAuthentications()
-        )
-        .compose(ReportAnalyticsEvents())
-  }
+  override fun defaultModel() = AppLockModel.create()
 
-  private val delegate by unsafeLazy {
-    val uiRenderer = AppLockUiRenderer(this)
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenAppLockBinding.inflate(layoutInflater, container, false)
 
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = AppLockModel.create(),
-        init = AppLockInit(),
-        update = AppLockUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
+  override fun uiRenderer() = AppLockUiRenderer(this)
 
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
+  override fun events() = Observable
+      .merge(
+          backClicks,
+          forgotPinClicks(),
+          pinAuthentications()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<AppLockEvent>()
 
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
+  override fun createUpdate() = AppLockUpdate()
 
-  override fun onSaveInstanceState(): Parcelable {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
+  override fun createInit() = AppLockInit()
 
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
-  }
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-
-    binding = ScreenAppLockBinding.bind(this)
-
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     logoutButton.setOnClickListener {
       Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show()
     }

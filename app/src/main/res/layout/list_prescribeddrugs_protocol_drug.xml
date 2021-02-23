@@ -34,7 +34,7 @@
     android:drawablePadding="@dimen/spacing_4"
     android:textAppearance="?attr/textAppearanceBody1"
     android:textColor="?attr/colorPrimary"
-    app:drawableEndCompat="@drawable/ic_expand_more_24"
+    app:drawableEndCompat="@drawable/ic_chevron_right_blue1_24dp"
     app:drawableTint="?attr/colorPrimary"
     tools:text="10 mg" />
 

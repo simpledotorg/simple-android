@@ -17,6 +17,7 @@
 - Updated translations: `bn-IN`, `ti-ET`, `om-ET`, `bn-BD`, `te-IN`, `kn-IN`, `mr-IN`, `hi-IN`
 - Show progress when linking bp passport to patient
 - Show progress when saving medical history for new patient
+- Change prescriptions end icon to a chevron icon instead of dropdown
 
 ## On Demo
 ### Internal

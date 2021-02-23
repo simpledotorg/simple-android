@@ -40,7 +40,6 @@ import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -557,7 +556,7 @@ class PatientSummaryScreen :
   }
 
   override fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID) {
-    router.push(TeleconsultRecordScreenKey(patientUuid, teleconsultRecordId).wrap())
+    router.push(TeleconsultRecordScreenKey(patientUuid, teleconsultRecordId))
   }
 
   interface Injector {

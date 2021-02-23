@@ -1,25 +1,22 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenTeleconsultRecordBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
@@ -32,33 +29,36 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.A
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Message
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Video
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-class TeleconsultRecordScreen(
-    context: Context,
-    attrs: AttributeSet
-) : ConstraintLayout(context, attrs), TeleconsultRecordUi, UiActions, HandlesBack {
-
-  private var binding: ScreenTeleconsultRecordBinding? = null
+class TeleconsultRecordScreen :
+    BaseScreen<
+        TeleconsultRecordScreenKey,
+        ScreenTeleconsultRecordBinding,
+        TeleconsultRecordModel,
+        TeleconsultRecordEvent,
+        TeleconsultRecordEffect>(),
+    TeleconsultRecordUi,
+    UiActions,
+    HandlesBack {
 
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   private val teleconsultTypeRadioGroup
-    get() = binding!!.teleconsultTypeRadioGroup
+    get() = binding.teleconsultTypeRadioGroup
 
   private val patientTookMedicineCheckBox
-    get() = binding!!.patientTookMedicineCheckBox
+    get() = binding.patientTookMedicineCheckBox
 
   private val doneButton
-    get() = binding!!.doneButton
+    get() = binding.doneButton
 
   private val patientConsentedCheckBox
-    get() = binding!!.patientConsentedCheckBox
+    get() = binding.patientConsentedCheckBox
 
   @Inject
   lateinit var router: Router
@@ -72,9 +72,6 @@ class TeleconsultRecordScreen(
   @Inject
   lateinit var activity: AppCompatActivity
 
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
   private val radioIdToTeleconsultationType = mapOf(
       R.id.teleconsultTypeAudioRadioButton to Audio,
       R.id.teleconsultTypeVideoRadioButton to Video,
@@ -83,70 +80,42 @@ class TeleconsultRecordScreen(
 
   private val hardwareBackClicks = PublishSubject.create<BackClicked>()
 
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            doneClicks(),
-            backClicks()
-        )
-        .compose(ReportAnalyticsEvents())
-  }
+  override fun defaultModel() = TeleconsultRecordModel.create(
+      patientUuid = screenKey.patientUuid,
+      teleconsultRecordId = screenKey.teleconsultRecordId
+  )
 
-  private val screenKey by unsafeLazy {
-    screenKeyProvider.keyFor<TeleconsultRecordScreenKey>(this)
-  }
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenTeleconsultRecordBinding.inflate(layoutInflater, container, false)
 
-  private val delegate by unsafeLazy {
-    val uiRenderer = TeleconsultRecordUiRenderer(this)
+  override fun uiRenderer() = TeleconsultRecordUiRenderer(this)
 
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = TeleconsultRecordModel.create(
-            patientUuid = screenKey.patientUuid,
-            teleconsultRecordId = screenKey.teleconsultRecordId
-        ),
-        init = TeleconsultRecordInit(),
-        update = TeleconsultRecordUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
+  override fun events() = Observable
+      .merge(
+          doneClicks(),
+          backClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<TeleconsultRecordEvent>()
 
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
+  override fun createUpdate() = TeleconsultRecordUpdate()
 
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
+  override fun createInit() = TeleconsultRecordInit()
 
-  override fun onSaveInstanceState(): Parcelable {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
-  }
-
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) return
-
-    binding = ScreenTeleconsultRecordBinding.bind(this)
-
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
   }
 
   override fun renderPatientDetails(patient: Patient) {
     val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
     val patientGender = patient.gender
-    toolbar.title = context.getString(
+    toolbar.title = requireContext().getString(
         R.string.screen_teleconsult_record_patient_details,
         patient.fullName,
-        context.getString(patientGender.displayLetterRes),
+        requireContext().getString(patientGender.displayLetterRes),
         ageValue.toString()
     )
   }

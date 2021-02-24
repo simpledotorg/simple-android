@@ -16,7 +16,7 @@
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
 ### Changes
-- Updated translations: `bn-IN`, `ti-ET`, `om-ET`, `bn-BD`, `te-IN`, `kn-IN`, `mr-IN`, `hi-IN`, `pa-IN`
+- Updated translations: `bn-IN`, `ti-ET`, `om-ET`, `bn-BD`, `te-IN`, `kn-IN`, `mr-IN`, `hi-IN`, `pa-IN`, `am-ET`
 - Show progress when linking bp passport to patient
 - Show progress when saving medical history for new patient
 - Change prescriptions end icon to a chevron icon instead of dropdown

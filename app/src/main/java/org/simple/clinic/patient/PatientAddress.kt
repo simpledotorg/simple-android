@@ -100,6 +100,6 @@ data class PatientAddress(
     abstract fun count(): Int
 
     @Query("SELECT DISTINCT colonyOrVillage FROM PatientAddress ORDER BY colonyOrVillage ASC")
-    abstract fun getColonyOrVillages(): List<String>?
+    abstract fun getColonyOrVillages(): List<String>
   }
 }

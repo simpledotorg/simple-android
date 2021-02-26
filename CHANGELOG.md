@@ -25,6 +25,7 @@
 - Implement village type ahead in patient entry/edit screens
 - Show overdue count in home screen tabs
 - Filter results in village type ahead in patient entry/edit screens
+- Change "Preferred facility" to "Assigned facility"
 
 ## 2021-03-15-7672
 ### Fixes

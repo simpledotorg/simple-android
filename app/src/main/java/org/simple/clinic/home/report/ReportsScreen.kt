@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_report.view.*
@@ -17,6 +18,9 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
 
   @Inject
   lateinit var effectHandler: ReportsEffectHandler
+
+  @Inject
+  lateinit var webViewClient: WebViewClient
 
   private val delegate by unsafeLazy {
     val uiRenderer = ReportsUiRenderer(this)
@@ -39,9 +43,10 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
       return
     }
 
-    webView.settings.javaScriptEnabled = true
-
     context.injector<Injector>().inject(this)
+
+    webView.webViewClient = webViewClient
+    webView.settings.javaScriptEnabled = true
   }
 
   override fun onAttachedToWindow() {

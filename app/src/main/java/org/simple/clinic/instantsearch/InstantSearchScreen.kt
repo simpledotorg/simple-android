@@ -245,7 +245,7 @@ class InstantSearchScreen :
   override fun openPatientEntryScreen(facility: Facility) {
     router.push(AlertFacilityChangeSheet.Key(
         currentFacilityName = facility.name,
-        continuation = Continuation.ContinueToScreen(PatientEntryScreenKey())
+        continuation = Continuation.ContinueToScreen_Old(PatientEntryScreenKey())
     ))
   }
 

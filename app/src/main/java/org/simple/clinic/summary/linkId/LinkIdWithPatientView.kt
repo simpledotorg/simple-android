@@ -3,8 +3,13 @@ package org.simple.clinic.summary.linkId
 import android.annotation.SuppressLint
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.Init
+import com.spotify.mobius.Update
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -14,7 +19,6 @@ import org.simple.clinic.databinding.LinkIdWithPatientViewBinding
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
-import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
@@ -118,6 +122,29 @@ class LinkIdWithPatientView :
         modelUpdateListener = uiRenderer::render
     )
   }
+
+  override fun defaultModel() = LinkIdWithPatientModel.create()
+
+  override fun bindView(inflater: LayoutInflater, container: ViewGroup?) =
+      LinkIdWithPatientViewBinding.inflate(layoutInflater, container, false)
+
+  override fun uiRenderer() = LinkIdWithPatientUiRenderer(this)
+
+  override fun events() = Observable
+      .merge(
+          viewShows(),
+          addClicks(),
+          cancelClicks(),
+          downstreamUiEvents
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<LinkIdWithPatientEvent>()
+
+  override fun createUpdate() = LinkIdWithPatientUpdate()
+
+  override fun createEffectHandler() = effectHandlerFactory
+      .create(this)
+      .build()
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()

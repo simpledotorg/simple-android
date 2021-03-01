@@ -272,7 +272,7 @@
 
   </FrameLayout>
 
-  <org.simple.clinic.summary.linkId.LinkIdWithPatientView
+  <org.simple.clinic.summary.linkId.LinkIdWithPatientSheet
     android:id="@+id/linkIdWithPatientView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

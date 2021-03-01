@@ -17,6 +17,6 @@ data class LinkIdWithPatientSheetKey(
   override val type = ScreenType.Modal
 
   override fun instantiateFragment(): Fragment {
-    return LinkIdWithPatientView()
+    return LinkIdWithPatientSheet()
   }
 }

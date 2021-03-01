@@ -19,7 +19,7 @@ import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-class LinkIdWithPatientView :
+class LinkIdWithPatientSheet :
     BaseBottomSheet<
         LinkIdWithPatientSheetKey,
         LinkIdWithPatientViewBinding,
@@ -110,6 +110,6 @@ class LinkIdWithPatientView :
   }
 
   interface Injector {
-    fun inject(target: LinkIdWithPatientView)
+    fun inject(target: LinkIdWithPatientSheet)
   }
 }

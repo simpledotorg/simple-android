@@ -1,6 +1,7 @@
 package org.simple.clinic.summary.linkId
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.LinkIdWithPatientViewBinding
+import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
@@ -132,6 +134,11 @@ class LinkIdWithPatientView :
       .create(this)
       .build()
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     delegate.start()
@@ -157,8 +164,6 @@ class LinkIdWithPatientView :
     if (isInEditMode) {
       return
     }
-
-    context.injector<Injector>().inject(this)
 
     backgroundView.setOnClickListener {
       // Intentionally done to swallow click events.

@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -274,7 +275,13 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   override fun showColonyOrVillagesList(colonyOrVillageList: List<String>) {
+    ArrayAdapter<String>(context, R.layout.village_typeahead_list_item,  R.id.villageTypeAheadItemTextView, colonyOrVillageList).also { adapter ->
+      colonyOrVillageEditText.setAdapter(adapter)
+    }
 
+    colonyOrVillageEditText.setOnClickListener {
+      colonyOrVillageEditText.showDropDown()
+    }
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.util.Log
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import io.reactivex.Observable
@@ -38,6 +39,7 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
   @SuppressLint("SetJavaScriptEnabled")
   override fun onFinishInflate() {
     super.onFinishInflate()
+    Log.i("RJS", "onFinishInflate from reports screen")
 
     if (isInEditMode) {
       return

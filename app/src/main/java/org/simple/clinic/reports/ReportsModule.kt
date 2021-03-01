@@ -1,5 +1,6 @@
 package org.simple.clinic.reports
 
+import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
@@ -26,12 +27,21 @@ class ReportsModule {
       userSession: UserSession,
       okHttpClient: OkHttpClient
   ): WebViewClient {
-    val accessToken = userSession.accessToken().get()
-    val userDetails = userSession.userFacilityDetails()!!
+
 
     return object : WebViewClient() {
       override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
         try {
+          if(!userSession.isUserPresentLocally()) {
+            return null
+          } else {
+            Log.i("RJS", "must have a userSession locally")
+            Log.i("RJS", userSession.accessToken().get())
+          }
+
+          val accessToken = userSession.accessToken().get()
+          val userDetails = userSession.userFacilityDetails()!!
+
           val url = request?.url?.toString() ?: return null
           val okHttpRequest = Request.Builder()
               .url(url)

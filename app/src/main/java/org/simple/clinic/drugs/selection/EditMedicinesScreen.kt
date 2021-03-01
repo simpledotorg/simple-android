@@ -1,16 +1,20 @@
 package org.simple.clinic.drugs.selection
 
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -34,9 +38,8 @@ import org.simple.clinic.drugs.PresribedDrugsRefillClicked
 import org.simple.clinic.drugs.ProtocolDrugClicked
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
@@ -47,7 +50,13 @@ import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
-class EditMedicinesScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), EditMedicinesUi, EditMedicinesUiActions {
+class EditMedicinesScreen :
+    BaseScreen<
+        PrescribedDrugsScreenKey,
+        ScreenPatientPrescribedDrugsEntryBinding,
+        EditMedicinesModel,
+        EditMedicinesEvent,
+        EditMedicinesEffect>(), EditMedicinesUi, EditMedicinesUiActions {
 
   @Inject
   lateinit var router: Router
@@ -64,22 +73,17 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   @Inject
   lateinit var userClock: UserClock
 
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
-  private var binding: ScreenPatientPrescribedDrugsEntryBinding? = null
-
   private val toolbar
-    get() = binding!!.prescribeddrugsToolbar
+    get() = binding.prescribeddrugsToolbar
 
   private val recyclerView
-    get() = binding!!.prescribeddrugsRecyclerview
+    get() = binding.prescribeddrugsRecyclerview
 
   private val doneButton
-    get() = binding!!.prescribeddrugsDone
+    get() = binding.prescribeddrugsDone
 
   private val refillMedicineButton
-    get() = binding!!.prescribeddrugsRefill
+    get() = binding.prescribeddrugsRefill
 
   private val adapter = ItemAdapter(
       diffCallback = DrugListItem.Differ(),
@@ -97,73 +101,49 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   )
 
   private val patientUuid by unsafeLazy {
-    val screenKey = screenKeyProvider.keyFor<PrescribedDrugsScreenKey>(this)
     screenKey.patientUuid
   }
 
-  private val events by unsafeLazy {
-    Observable
-        .mergeArray(
-            protocolDrugClicks(),
-            customDrugClicks(),
-            addNewCustomDrugClicks(),
-            doneClicks(),
-            refillMedicineClicks())
-        .compose(ReportAnalyticsEvents())
-  }
+  override fun defaultModel() = EditMedicinesModel.create(patientUuid = patientUuid)
 
-  private val uiRenderer = EditMedicinesUiRenderer(this)
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenPatientPrescribedDrugsEntryBinding.inflate(layoutInflater, container, false)
 
-  private val delegate: MobiusDelegate<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect> by unsafeLazy {
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = EditMedicinesModel.create(patientUuid),
-        update = EditMedicinesUpdate(LocalDate.now(userClock), userClock.zone),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = EditMedicinesInit(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
+  override fun uiRenderer() = EditMedicinesUiRenderer(this)
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
+  override fun events() = Observable
+      .mergeArray(
+          protocolDrugClicks(),
+          customDrugClicks(),
+          addNewCustomDrugClicks(),
+          doneClicks(),
+          refillMedicineClicks())
+      .compose(ReportAnalyticsEvents())
+      .cast<EditMedicinesEvent>()
 
-    binding = ScreenPatientPrescribedDrugsEntryBinding.bind(this)
+  override fun createUpdate() = EditMedicinesUpdate(LocalDate.now(userClock), userClock.zone)
 
+  override fun createInit() = EditMedicinesInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     toolbar.setNavigationOnClickListener { router.pop() }
     recyclerView.setHasFixedSize(false)
-    recyclerView.layoutManager = LinearLayoutManager(context)
+    recyclerView.layoutManager = LinearLayoutManager(requireContext())
     recyclerView.adapter = adapter
 
-    recyclerView.addItemDecoration(DividerItemDecorator(context, marginStart = 0, marginEnd = 0))
+    recyclerView.addItemDecoration(DividerItemDecorator(requireContext(), marginStart = 0, marginEnd = 0))
 
     val fadeAnimator = DefaultItemAnimator()
     fadeAnimator.supportsChangeAnimations = false
     recyclerView.itemAnimator = fadeAnimator
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun doneClicks() = doneButton.clicks().map { PrescribedDrugsDoneClicked }
@@ -207,13 +187,11 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   }
 
   private fun scrollListToLastPosition() {
-    if (binding != null) {
-      recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount - 1)
-    }
+    recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount - 1)
   }
 
   override fun showNewPrescriptionEntrySheet(patientUuid: UUID) {
-    activity.startActivity(CustomPrescriptionEntrySheet.intentForAddNewPrescription(context, patientUuid))
+    activity.startActivity(CustomPrescriptionEntrySheet.intentForAddNewPrescription(requireContext(), patientUuid))
   }
 
   override fun goBackToPatientSummary() {
@@ -221,11 +199,11 @@ class EditMedicinesScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   }
 
   override fun showDosageSelectionSheet(drugName: String, patientUuid: UUID, prescribedDrugUuid: UUID?) {
-    activity.startActivity(DosagePickerSheet.intent(context, drugName, patientUuid, prescribedDrugUuid))
+    activity.startActivity(DosagePickerSheet.intent(requireContext(), drugName, patientUuid, prescribedDrugUuid))
   }
 
   override fun showUpdateCustomPrescriptionSheet(prescribedDrug: PrescribedDrug) {
-    activity.startActivity(CustomPrescriptionEntrySheet.intentForUpdatingPrescription(context, prescribedDrug.patientUuid, prescribedDrug.uuid))
+    activity.startActivity(CustomPrescriptionEntrySheet.intentForUpdatingPrescription(requireContext(), prescribedDrug.patientUuid, prescribedDrug.uuid))
   }
 
   private fun protocolDrugClicks(): Observable<UiEvent> {

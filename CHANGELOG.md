@@ -11,6 +11,7 @@
 - Load list of `colonyOrVillage` from the `PatientAddress` table
 - Stop loading all patients after current facility is loaded in `InstantSearchScreen`
 - Change `TeleconsultRecordScreen` to a fragment
+- Change `EditMedicinesScreen` to a fragment
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 

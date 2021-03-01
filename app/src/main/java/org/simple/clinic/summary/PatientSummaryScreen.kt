@@ -35,7 +35,7 @@ import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
-import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen_Old
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.HandlesBack
@@ -507,7 +507,7 @@ class PatientSummaryScreen :
 
     router.push(AlertFacilityChangeSheet.Key(
         currentFacilityName = currentFacility.name,
-        continuation = ContinueToScreen(createEditPatientScreenKey(patientSummaryProfile))
+        continuation = ContinueToScreen_Old(createEditPatientScreenKey(patientSummaryProfile))
     ))
   }
 

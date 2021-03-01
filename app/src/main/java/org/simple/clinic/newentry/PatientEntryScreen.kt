@@ -283,6 +283,10 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     showOrHideGenderRadioButtons(inputFields)
   }
 
+  override fun showColonyOrVillagesList(colonyOrVillageList: List<String>) {
+
+  }
+
   private fun showOrHideInputFields(inputFields: InputFields) {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,

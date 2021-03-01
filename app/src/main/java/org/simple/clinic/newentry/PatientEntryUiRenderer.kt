@@ -19,6 +19,10 @@ class PatientEntryUiRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntry
     val patientEntry = model.patientEntry
     identifierValueChangedCallback.pass(patientEntry.identifier.toOptional()) { renderIdentifier(patientEntry.identifier) }
 
+    if (model.hasColonyOrVillagesList) {
+      ui.showColonyOrVillagesList(model.colonyOrVillagesList!!)
+    }
+
     val personalDetails = patientEntry.personalDetails ?: return
     changeDateOfBirthAndAgeVisibility(personalDetails)
 

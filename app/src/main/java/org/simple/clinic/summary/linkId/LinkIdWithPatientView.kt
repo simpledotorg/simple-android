@@ -1,11 +1,8 @@
 package org.simple.clinic.summary.linkId
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.FrameLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -14,9 +11,10 @@ import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.LinkIdWithPatientViewBinding
-import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
@@ -61,10 +59,16 @@ import javax.inject.Inject
  * background click handling) will have to be reimplemented here.
  * - Unlike other bottom sheets, this one will not cover the status bar.
  */
-class LinkIdWithPatientView(
-    context: Context,
-    attributeSet: AttributeSet
-) : FrameLayout(context, attributeSet), LinkIdWithPatientViewUi, LinkIdWithPatientUiActions {
+class LinkIdWithPatientView :
+    BaseBottomSheet<
+        LinkIdWithPatientSheetKey,
+        LinkIdWithPatientViewBinding,
+        LinkIdWithPatientModel,
+        LinkIdWithPatientEvent,
+        LinkIdWithPatientEffect
+        >(),
+    LinkIdWithPatientViewUi,
+    LinkIdWithPatientUiActions {
 
   private var binding: LinkIdWithPatientViewBinding? = null
 

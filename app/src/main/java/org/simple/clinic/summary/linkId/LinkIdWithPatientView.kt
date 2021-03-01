@@ -1,8 +1,6 @@
 package org.simple.clinic.summary.linkId
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
@@ -22,8 +20,6 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.animateBottomSheetIn
-import org.simple.clinic.widgets.animateBottomSheetOut
 import javax.inject.Inject
 
 /**
@@ -173,22 +169,6 @@ class LinkIdWithPatientView :
 
   override fun hideAddButtonProgress() {
     addButton.setButtonState(Enabled)
-  }
-
-  fun show(runBefore: () -> Unit) {
-    animateBottomSheetIn(
-        backgroundView = backgroundView,
-        contentContainer = contentContainer,
-        startAction = runBefore
-    )
-  }
-
-  fun hide(runAfter: () -> Unit) {
-    animateBottomSheetOut(
-        backgroundView = backgroundView,
-        contentContainer = contentContainer,
-        endAction = runAfter
-    )
   }
 
   interface Injector {

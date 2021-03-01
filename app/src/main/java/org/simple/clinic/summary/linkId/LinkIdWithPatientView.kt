@@ -13,49 +13,12 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.LinkIdWithPatientViewBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-/**
- *
- * One thing different about this bottom sheet, and the others is that
- * if this sheet is closed without linking the passport with the patient,
- * the summary sheet should also be closed.
- *
- * There was a weird bug happening where [Flow] would attempt to recreate
- * the state of the activity when it resumed before the command to pop the
- * summary screen would be invoked, which caused the link ID sheet to open
- * twice.
- *
- * There was a workaround to fix this by rewriting [Flow]'s history
- * before opening the [LinkIdWithPatientSheet] to one where the open
- * intention was [ViewExistingPatient], but it was a very wrong hack since
- * we might also need to use the original intention later.
- *
- * In addition, the screen result from [LinkIdWithBottomSheet] was being
- * delivered to [TheActivity] **BEFORE** the [PatientSummaryScreen] could
- * subscribe to the results stream, which would not allow the screen to
- * close when the [LinkIdWithBottomSheet] was closed as well. We cannot use
- * the imperative  * way of delivering results via the [ScreenRouter] because
- * that instance is scoped to [TheActivity] and is not accessible to
- * [LinkIdWithBottomSheet].
- *
- * Since this feature was a little time sensitive, instead of spending
- * time to make it work as a [BottomSheetActivity], we made the decision to
- * implement it as a child view of [PatientSummaryScreen] instead. This
- * means that [Flow] neither tries to recreate the history as well as the
- * summary screen can directly observe the results from
- * [LinkIdWithPatientView].
- *
- * A consequence of this, is that:
- * - All behaviour that comes with the [BottomSheetActivity] (animations,
- * background click handling) will have to be reimplemented here.
- * - Unlike other bottom sheets, this one will not cover the status bar.
- */
 class LinkIdWithPatientView :
     BaseBottomSheet<
         LinkIdWithPatientSheetKey,

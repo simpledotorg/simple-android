@@ -4,7 +4,6 @@ import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
-import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -26,7 +25,7 @@ class InstantSearchUpdateTest {
   private val defaultModel = InstantSearchModel.create(identifier)
 
   @Test
-  fun `when current facility is loaded, then update the model`() {
+  fun `when current facility is loaded, then update the model and load all patients`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("a613b2fc-c91c-40a3-9e8b-6da7010ce51b"),
         name = "PHC Obvious"
@@ -36,8 +35,8 @@ class InstantSearchUpdateTest {
         .given(defaultModel)
         .whenEvent(CurrentFacilityLoaded(facility))
         .then(assertThatNext(
-            hasModel(defaultModel.facilityLoaded(facility)),
-            hasNoEffects()
+            hasModel(defaultModel.facilityLoaded(facility).loadingAllPatients()),
+            hasEffects(LoadAllPatients(facility))
         ))
   }
 
@@ -146,16 +145,6 @@ class InstantSearchUpdateTest {
                 HideNoSearchResults,
                 SearchWithCriteria(PatientSearchCriteria.Name("Pat", identifier), facility)
             )
-        ))
-  }
-
-  @Test
-  fun `when search query is changed and facility is not loaded, then do nothing`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(SearchQueryChanged("Pat"))
-        .then(assertThatNext(
-            hasNothing()
         ))
   }
 

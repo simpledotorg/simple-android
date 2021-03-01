@@ -9,7 +9,6 @@
 - Bump WorkManager to v2.5.0
 - Fix the Room query thread pool executor to run all available threads
 - Load list of `colonyOrVillage` from the `PatientAddress` table
-- Stop loading all patients after current facility is loaded in `InstantSearchScreen`
 - Change `TeleconsultRecordScreen` to a fragment
 - Change `EditMedicinesScreen` to a fragment
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration

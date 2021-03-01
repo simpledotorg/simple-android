@@ -8,6 +8,7 @@ import android.text.style.StyleSpan
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RelativeLayout
@@ -284,7 +285,13 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   override fun showColonyOrVillagesList(colonyOrVillageList: List<String>) {
+    ArrayAdapter<String>(context, R.layout.village_typeahead_list_item, R.id.villageTypeAheadItemTextView, colonyOrVillageList).also { adapter ->
+      colonyOrVillageEditText.setAdapter(adapter)
+    }
 
+    colonyOrVillageEditText.setOnClickListener {
+      colonyOrVillageEditText.showDropDown()
+    }
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {

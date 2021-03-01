@@ -142,11 +142,6 @@ data class PatientSearchResult(
             PatientSearchResult searchResult
             LEFT JOIN Patient P ON P.uuid = searchResult.uuid
             WHERE P.status = :status AND P.deletedAt IS NULL AND P.assignedFacilityId = :facilityUuid
-            UNION
-            SELECT searchResult.*, 0 priority FROM 
-            PatientSearchResult searchResult
-            LEFT JOIN Patient P ON P.uuid = searchResult.uuid
-            WHERE P.status = :status AND P.deletedAt IS NULL AND P.assignedFacilityId != :facilityUuid
             )
         ORDER BY priority DESC, fullName COLLATE NOCASE
     """)

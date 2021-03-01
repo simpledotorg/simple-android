@@ -25,23 +25,17 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
     return when (event) {
       is CurrentFacilityLoaded -> next(
           model.facilityLoaded(event.facility)
+              .loadingAllPatients(),
+          LoadAllPatients(event.facility)
       )
       is AllPatientsLoaded -> allPatientsLoaded(model, event)
       is SearchResultsLoaded -> searchResultsLoaded(model, event)
       is SearchQueryValidated -> searchQueryValidated(model, event)
       is SearchResultClicked -> searchResultClicked(model, event)
-      is SearchQueryChanged -> searchQueryChanged(model, event)
+      is SearchQueryChanged -> next(model.searchQueryChanged(event.searchQuery), ValidateSearchQuery(event.searchQuery))
       SavedNewOngoingPatientEntry -> dispatch(OpenPatientEntryScreen(model.facility!!))
       RegisterNewPatientClicked -> registerNewPatient(model)
       is BlankBpPassportResultReceived -> blankBpPassportResult(model, event)
-    }
-  }
-
-  private fun searchQueryChanged(model: InstantSearchModel, event: SearchQueryChanged): Next<InstantSearchModel, InstantSearchEffect> {
-    return if (model.hasFacility) {
-      next(model.searchQueryChanged(event.searchQuery), ValidateSearchQuery(event.searchQuery))
-    } else {
-      noChange()
     }
   }
 

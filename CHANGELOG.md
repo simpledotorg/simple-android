@@ -60,6 +60,7 @@
 
 ### Changes
 - Updated the app icon
+- Stop loading patients from other facilities in the alphabetical patient log
 
 ### Features
 - Highlight patient name and number in Instant search

@@ -11,6 +11,7 @@
 - Load list of `colonyOrVillage` from the `PatientAddress` table
 - Change `TeleconsultRecordScreen` to a fragment
 - Change `EditMedicinesScreen` to a fragment
+- Only load the alphabetical patient log once when the screen is opened
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
@@ -19,6 +20,7 @@
 - Show progress when linking bp passport to patient
 - Show progress when saving medical history for new patient
 - Change prescriptions end icon to a chevron icon instead of dropdown
+- Stop loading patients from other facilities in the alphabetical patient log
 
 ## 2021-02-26-7647
 ### Internal

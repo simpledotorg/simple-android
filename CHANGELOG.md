@@ -11,7 +11,6 @@
 - Load list of `colonyOrVillage` from the `PatientAddress` table
 - Stop loading all patients after current facility is loaded in `InstantSearchScreen`
 - Change `TeleconsultRecordScreen` to a fragment
-- Change `AppLockScreen` to a fragment
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
@@ -21,7 +20,11 @@
 - Show progress when saving medical history for new patient
 - Change prescriptions end icon to a chevron icon instead of dropdown
 
-## On Demo
+## 2021-02-26-7647
+### Internal
+- Change `AppLockScreen` to a fragment
+
+## 2021-02-22-7641
 ### Internal
 - Bump Material Design Components to v1.3.0
 - Bump ConstraintLayout to v2.0.4

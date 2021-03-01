@@ -1,6 +1,10 @@
 # CHANGELOG
 
 ## Next Release
+- [In Progress: 20 Jan 2021] Material Theme-ing Migration
+- [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
+
+## On Demo
 ### Internal
 - Load the current facility as a direct call instead of a reactive one in `OverdueEffectHandler`
 - Migrate `PatientSummaryScreen` to a fragment
@@ -11,8 +15,6 @@
 - Load list of `colonyOrVillage` from the `PatientAddress` table
 - Stop loading all patients after current facility is loaded in `InstantSearchScreen`
 - Change `TeleconsultRecordScreen` to a fragment
-- [In Progress: 20 Jan 2021] Material Theme-ing Migration
-- [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
 ### Changes
 - Updated translations: `bn-IN`, `ti-ET`, `om-ET`, `bn-BD`, `te-IN`, `kn-IN`, `mr-IN`, `hi-IN`, `pa-IN`, `am-ET`

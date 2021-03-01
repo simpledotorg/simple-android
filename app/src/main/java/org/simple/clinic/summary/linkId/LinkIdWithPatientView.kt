@@ -139,37 +139,6 @@ class LinkIdWithPatientView :
     context.injector<Injector>().inject(this)
   }
 
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
-  }
-
-  @SuppressLint("CheckResult")
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-
-    if (isInEditMode) {
-      return
-    }
-
-    backgroundView.setOnClickListener {
-      // Intentionally done to swallow click events.
-    }
-  }
-
   private fun viewShows(): Observable<UiEvent> {
     return downstreamUiEvents
         .ofType<LinkIdWithPatientViewShown>()

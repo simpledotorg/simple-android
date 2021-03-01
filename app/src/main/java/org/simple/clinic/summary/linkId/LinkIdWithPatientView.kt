@@ -5,10 +5,7 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
-import com.spotify.mobius.Init
-import com.spotify.mobius.Update
 import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -74,25 +71,14 @@ class LinkIdWithPatientView :
     LinkIdWithPatientViewUi,
     LinkIdWithPatientUiActions {
 
-  private var binding: LinkIdWithPatientViewBinding? = null
-
-  private val backgroundView
-    get() = binding!!.backgroundView
-
   private val addButton
-    get() = binding!!.addButton
+    get() = binding.addButton
 
   private val cancelButton
-    get() = binding!!.cancelButton
-
-  private val idTextView
-    get() = binding!!.idTextView
+    get() = binding.cancelButton
 
   private val idPatientNameTextView
-    get() = binding!!.idPatientNameTextView
-
-  private val contentContainer
-    get() = binding!!.contentContainer
+    get() = binding.idPatientNameTextView
 
   @Inject
   lateinit var effectHandlerFactory: LinkIdWithPatientEffectHandler.Factory
@@ -153,7 +139,6 @@ class LinkIdWithPatientView :
 
   override fun onDetachedFromWindow() {
     delegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 
@@ -168,8 +153,6 @@ class LinkIdWithPatientView :
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
-    val layoutInflater = LayoutInflater.from(context)
-    binding = LinkIdWithPatientViewBinding.inflate(layoutInflater, this)
 
     if (isInEditMode) {
       return
@@ -185,7 +168,7 @@ class LinkIdWithPatientView :
   private fun viewShows(): Observable<UiEvent> {
     return downstreamUiEvents
         .ofType<LinkIdWithPatientViewShown>()
-        .map { it as UiEvent }
+        .map { it }
   }
 
   private fun addClicks(): Observable<UiEvent> {

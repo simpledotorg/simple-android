@@ -275,6 +275,7 @@ dependencies {
   kaptAndroidTest "com.google.dagger:dagger-compiler:$versions.dagger"
 
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+  implementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
 
   implementation "androidx.recyclerview:recyclerview:$versions.recyclerView"
   implementation("com.google.android.material:material:$versions.material")

@@ -4085,11 +4085,11 @@ class PatientRepositoryAndroidTest {
     val searchResults = searchResults(currentFacility)
 
     //then
-    assertThat(searchResults).containsExactly(
-        "Patient 1",
-        "Patient 4",
-        "Patient 2",
-        "Patient 5"
-    )
+    assertThat(searchResults)
+        .containsExactly(
+            "Patient 1",
+            "Patient 4"
+        )
+        .inOrder()
   }
 }

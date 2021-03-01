@@ -273,6 +273,10 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     deletePatient.setOnClickListener { router.push(DeletePatientScreenKey(screenKey.patient.uuid).wrap()) }
   }
 
+  override fun showColonyOrVillagesList(colonyOrVillageList: List<String>) {
+
+  }
+
   private fun showOrHideInputFields(inputFields: InputFields) {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,

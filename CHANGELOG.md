@@ -14,14 +14,15 @@
 - Bump WorkManager to v2.5.0
 - Fix the Room query thread pool executor to run all available threads
 - Load list of `colonyOrVillage` from the `PatientAddress` table
-- Stop loading all patients after current facility is loaded in `InstantSearchScreen`
 - Change `TeleconsultRecordScreen` to a fragment
+- Only load the alphabetical patient log once when the screen is opened
 
 ### Changes
 - Updated translations: `bn-IN`, `ti-ET`, `om-ET`, `bn-BD`, `te-IN`, `kn-IN`, `mr-IN`, `hi-IN`, `pa-IN`, `am-ET`
 - Show progress when linking bp passport to patient
 - Show progress when saving medical history for new patient
 - Change prescriptions end icon to a chevron icon instead of dropdown
+- Stop loading patients from other facilities in the alphabetical patient log
 
 ## 2021-02-26-7647
 ### Internal

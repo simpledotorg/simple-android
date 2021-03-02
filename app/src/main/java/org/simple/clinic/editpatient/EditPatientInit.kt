@@ -15,11 +15,15 @@ class EditPatientInit(
     private val bangladeshNationalId: BusinessId?
 ) : Init<EditPatientModel, EditPatientEffect> {
   override fun init(model: EditPatientModel): First<EditPatientModel, EditPatientEffect> {
-    val effects = setOf(
+    val effects = mutableSetOf(
         PrefillFormEffect(patient, address, phoneNumber, bangladeshNationalId),
         FetchBpPassportsEffect(patient.uuid),
-        LoadInputFields
+        LoadInputFields,
     )
+
+    if (!model.hasColonyOrVillagesList) {
+      effects.add(FetchColonyOrVillagesEffect)
+    }
 
     return first(model, effects)
   }

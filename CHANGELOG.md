@@ -1,6 +1,11 @@
 # CHANGELOG
 
 ## Next Release
+## Internal
+- [In Progress: 20 Jan 2021] Material Theme-ing Migration
+- [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
+
+## On Demo
 ### Internal
 - Load the current facility as a direct call instead of a reactive one in `OverdueEffectHandler`
 - Migrate `PatientSummaryScreen` to a fragment
@@ -13,8 +18,6 @@
 - Change `EditMedicinesScreen` to a fragment
 - Only load the alphabetical patient log once when the screen is opened
 - Improve performance of the instant search queries by ~50%
-- [In Progress: 20 Jan 2021] Material Theme-ing Migration
-- [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
 ### Changes
 - Updated translations: `bn-IN`, `ti-ET`, `om-ET`, `bn-BD`, `te-IN`, `kn-IN`, `mr-IN`, `hi-IN`, `pa-IN`, `am-ET`

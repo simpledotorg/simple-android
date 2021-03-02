@@ -165,6 +165,9 @@ class PatientEntryScreenLogicTest {
 
   @Test
   fun `when save button is clicked then a patient record should be created from the form input`() {
+    val colonyOrVillages = listOf("colony1", "colony2", "colony3", "colony4")
+    whenever(patientRepository.allColoniesOrVillagesInPatientAddress()).thenReturn(colonyOrVillages)
+
     whenever(patientRepository.ongoingEntry()).doReturn(OngoingNewPatientEntry())
     whenever(patientRegisteredCount.get()).doReturn(0)
     screenCreated()
@@ -195,6 +198,7 @@ class PatientEntryScreenLogicTest {
         ),
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
     ))
+    verify(patientRepository).allColoniesOrVillagesInPatientAddress()
     verifyNoMoreInteractions(patientRepository)
     verify(patientRegisteredCount).get()
     verify(patientRegisteredCount).set(1)
@@ -205,6 +209,9 @@ class PatientEntryScreenLogicTest {
   @Test
   fun `when bangladesh national id is entered and save is clicked then patient should get registered`() {
     val bangladeshNationalId = Identifier("123456789012", BangladeshNationalId)
+
+    val colonyOrVillages = listOf("colony1", "colony2", "colony3", "colony4")
+    whenever(patientRepository.allColoniesOrVillagesInPatientAddress()).thenReturn(colonyOrVillages)
 
     whenever(patientRepository.ongoingEntry()).doReturn(OngoingNewPatientEntry())
     whenever(patientRegisteredCount.get()).doReturn(0)
@@ -238,6 +245,7 @@ class PatientEntryScreenLogicTest {
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890"),
         alternativeId = bangladeshNationalId
     ))
+    verify(patientRepository).allColoniesOrVillagesInPatientAddress()
     verifyNoMoreInteractions(patientRepository)
     verify(patientRegisteredCount).get()
     verify(patientRegisteredCount).set(1)

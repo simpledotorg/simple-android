@@ -439,4 +439,16 @@ class PatientEntryUpdateTest {
             hasEffects(SetupUi(inputFields) as PatientEntryEffect)
         ))
   }
+
+  @Test
+  fun `when the colony or villages list is updated, then update the model`() {
+    val colonyOrVillages = listOf("colony1", "colony2", "colony3", "colony4")
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(ColonyOrVillagesFetched(colonyOrVillages))
+        .then(assertThatNext(
+            hasModel(defaultModel.colonyOrVillageListUpdated(colonyOrVillages)),
+            hasNoEffects()
+        ))
+  }
 }

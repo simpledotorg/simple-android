@@ -20,7 +20,8 @@ data class EditPatientModel(
     val savedAddress: PatientAddress,
     val savedPhoneNumber: PatientPhoneNumber?,
     val savedBangladeshNationalId: BusinessId?,
-    val saveButtonState: EditPatientState?
+    val saveButtonState: EditPatientState?,
+    val colonyOrVillagesList: List<String>?
 ) : Parcelable {
   companion object {
     fun from(
@@ -40,9 +41,12 @@ data class EditPatientModel(
           saveButtonState
       )
       val ongoingEntry = savedEntry.copy()
-      return EditPatientModel(savedEntry, ongoingEntry, patient, address, phoneNumber, bangladeshNationalId, saveButtonState)
+      return EditPatientModel(savedEntry, ongoingEntry, patient, address, phoneNumber, bangladeshNationalId, saveButtonState, null)
     }
   }
+
+  val hasColonyOrVillagesList: Boolean
+    get() = !colonyOrVillagesList.isNullOrEmpty()
 
   fun updateName(name: String): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.updateName(name))
@@ -79,4 +83,7 @@ data class EditPatientModel(
 
   fun buttonStateChanged(buttonState: EditPatientState?): EditPatientModel =
       copy(saveButtonState = buttonState)
+
+  fun updateColonyOrVillagesList(colonyOrVillages: List<String>): EditPatientModel =
+      copy(colonyOrVillagesList = colonyOrVillages)
 }

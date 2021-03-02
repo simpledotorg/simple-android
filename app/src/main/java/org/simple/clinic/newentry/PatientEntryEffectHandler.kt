@@ -81,7 +81,16 @@ class PatientEntryEffectHandler @AssistedInject constructor(
         .addAction(OpenMedicalHistoryEntryScreen::class.java, ui::openMedicalHistoryEntryScreen, schedulersProvider.ui())
         .addTransformer(LoadInputFields::class.java, loadInputFields())
         .addConsumer(SetupUi::class.java, { ui.setupUi(it.inputFields) }, schedulersProvider.ui())
+        .addTransformer(FetchColonyOrVillagesEffect::class.java, fetchColonyOrVillages())
         .build()
+  }
+
+  private fun fetchColonyOrVillages(): ObservableTransformer<FetchColonyOrVillagesEffect, PatientEntryEvent> {
+    return ObservableTransformer { fetchColonyOrVillagesEffect ->
+      fetchColonyOrVillagesEffect
+          .map { patientRepository.allColoniesOrVillagesInPatientAddress() }
+          .map(::ColonyOrVillagesFetched)
+    }
   }
 
   private fun fetchOngoingEntryTransformer(scheduler: Scheduler): ObservableTransformer<FetchPatientEntry, PatientEntryEvent> {

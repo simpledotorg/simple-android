@@ -304,4 +304,17 @@ class EditPatientEffectHandlerTest {
     verify(ui).setupUi(inputFields)
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when fetch colony or village names effect is received, then load colony or village names`() {
+    // given
+    val colonyOrVillages = listOf("colony1", "colony2", "colony3", "colony4")
+    whenever(patientRepository.allColoniesOrVillagesInPatientAddress()).thenReturn(colonyOrVillages)
+    // when
+    testCase.dispatch(FetchColonyOrVillagesEffect)
+
+    //then
+    testCase.assertOutgoingEvents(ColonyOrVillagesFetched(colonyOrVillages))
+    verifyZeroInteractions(ui)
+  }
 }

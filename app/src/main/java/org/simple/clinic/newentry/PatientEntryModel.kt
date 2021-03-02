@@ -13,11 +13,15 @@ import org.simple.clinic.util.isNotEmpty
 data class PatientEntryModel(
     val patientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry(),
     val isSelectingGenderForTheFirstTime: Boolean = true,
-    val nextButtonState: ButtonState? = null
+    val nextButtonState: ButtonState? = null,
+    val colonyOrVillagesList: List<String>? = null
 ) : Parcelable {
   companion object {
     val DEFAULT = PatientEntryModel()
   }
+
+  val hasColonyOrVillagesList: Boolean
+    get() = !colonyOrVillagesList.isNullOrEmpty()
 
   fun patientEntryFetched(patientEntry: OngoingNewPatientEntry): PatientEntryModel =
       copy(patientEntry = patientEntry)
@@ -66,4 +70,7 @@ data class PatientEntryModel(
 
   fun buttonStateChanged(buttonState: ButtonState): PatientEntryModel =
       copy(nextButtonState = buttonState)
+
+  fun colonyOrVillageListUpdated(colonyOrVillages: List<String>?): PatientEntryModel =
+      copy(colonyOrVillagesList = colonyOrVillages)
 }

@@ -1,5 +1,6 @@
 package org.simple.clinic.newentry
 
+import org.simple.clinic.editpatient.EditPatientEvent
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
@@ -71,3 +72,5 @@ data class ReminderConsentChanged(val reminderConsent: ReminderConsent) : Patien
 data class AlternativeIdChanged(val identifier: Identifier) : PatientEntryEvent()
 
 data class InputFieldsLoaded(val inputFields: InputFields) : PatientEntryEvent()
+
+data class ColonyOrVillagesFetched(val colonyOrVillages: List<String>) : PatientEntryEvent()

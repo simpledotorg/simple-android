@@ -245,13 +245,13 @@
 
       <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/colonyOrVillageInputLayout"
-        style="@style/Widget.Simple.TextField.Layout.PatientEntry"
+        style="@style/Widget.Simple.TextField.Layout.PatientEntry.AutoComplete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_4"
         android:layout_marginTop="@dimen/spacing_16">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
           android:id="@+id/colonyOrVillageEditText"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"

@@ -6,9 +6,6 @@ import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.LinkIdWithPatientViewBinding
@@ -46,9 +43,6 @@ class LinkIdWithPatientSheet :
   @Inject
   lateinit var effectHandlerFactory: LinkIdWithPatientEffectHandler.Factory
 
-  val downstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
-  private val upstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
-
   override fun defaultModel() = LinkIdWithPatientModel.create()
 
   override fun bindView(inflater: LayoutInflater, container: ViewGroup?) =
@@ -58,10 +52,8 @@ class LinkIdWithPatientSheet :
 
   override fun events() = Observable
       .merge(
-          viewShows(),
           addClicks(),
-          cancelClicks(),
-          downstreamUiEvents
+          cancelClicks()
       )
       .compose(ReportAnalyticsEvents())
       .cast<LinkIdWithPatientEvent>()
@@ -77,12 +69,6 @@ class LinkIdWithPatientSheet :
     context.injector<Injector>().inject(this)
   }
 
-  private fun viewShows(): Observable<UiEvent> {
-    return downstreamUiEvents
-        .ofType<LinkIdWithPatientViewShown>()
-        .map { it }
-  }
-
   private fun addClicks(): Observable<UiEvent> {
     return addButton.clicks().map { LinkIdWithPatientAddClicked }
   }
@@ -90,8 +76,6 @@ class LinkIdWithPatientSheet :
   private fun cancelClicks(): Observable<UiEvent> {
     return cancelButton.clicks().map { LinkIdWithPatientCancelClicked }
   }
-
-  fun uiEvents(): Observable<UiEvent> = upstreamUiEvents.hide()
 
   override fun renderPatientName(patientName: String) {
     idPatientNameTextView.text = resources.getString(R.string.linkidwithpatient_patient_text, patientName)

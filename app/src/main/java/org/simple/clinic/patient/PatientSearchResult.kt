@@ -174,17 +174,17 @@ data class PatientSearchResult(
     fun searchByName(name: String, facilityId: UUID): List<PatientSearchResult>
 
     @Query("""
-        SELECT * FROM (
-            SELECT searchResult.*, 0 priority, INSTR(phoneNumber, :phoneNumber) phoneNumberPosition FROM 
-            PatientSearchResult searchResult
-            LEFT JOIN Patient P ON P.uuid = searchResult.uuid
-            WHERE P.deletedAt IS NULL AND P.assignedFacilityId = :facilityId AND phoneNumberPosition > 0
-            UNION
-            SELECT searchResult.*, 1 priority, INSTR(phoneNumber, :phoneNumber) phoneNumberPosition FROM 
-            PatientSearchResult searchResult                                       
-            LEFT JOIN Patient P ON P.uuid = searchResult.uuid
-            WHERE P.deletedAt IS NULL AND P.assignedFacilityId != :facilityId AND phoneNumberPosition > 0
-            )
+        SELECT 
+            searchResult.*, 
+            (
+                CASE
+                    WHEN P.assignedFacilityId = :facilityId THEN 0
+                    ELSE 1
+                END
+            ) AS priority, 
+            INSTR(phoneNumber, :phoneNumber) phoneNumberPosition FROM PatientSearchResult searchResult
+        LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+        WHERE P.deletedAt IS NULL AND phoneNumberPosition > 0
         ORDER BY priority ASC, phoneNumberPosition ASC
     """)
     fun searchByPhoneNumber2(phoneNumber: String, facilityId: UUID): List<PatientSearchResult>

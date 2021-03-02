@@ -298,6 +298,8 @@
 
   <string name="registrationname_name_label">Tell us your full name</string>
   <string name="registrationname_error_empty_name">Please enter your full name</string>
+  <string name="registrationname_next">Next</string>
+
 
   <string name="registrationpin_pin_label">Create your security PIN</string>
   <string name="registrationpin_pin_hint">Remember your PIN, you’ll need it later</string>

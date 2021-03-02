@@ -13,6 +13,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.LinkIdWithPatientViewBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
@@ -38,6 +39,9 @@ class LinkIdWithPatientSheet :
 
   private val idPatientNameTextView
     get() = binding.idPatientNameTextView
+
+  @Inject
+  lateinit var router: Router
 
   @Inject
   lateinit var effectHandlerFactory: LinkIdWithPatientEffectHandler.Factory
@@ -98,7 +102,7 @@ class LinkIdWithPatientSheet :
   }
 
   override fun closeSheetWithoutIdLinked() {
-    upstreamUiEvents.onNext(LinkIdWithPatientCancelled)
+    router.popUntilInclusive(screenKey.openedFrom)
   }
 
   override fun showAddButtonProgress() {

@@ -16,4 +16,5 @@ interface PatientEntryUi {
   fun nextButtonShowInProgress()
   fun enableNextButton()
   fun setupUi(inputFields: InputFields)
+  fun showColonyOrVillagesList(colonyOrVillageList: List<String>)
 }

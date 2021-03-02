@@ -40,6 +40,7 @@ class PatientEntryUpdate(
       is SaveClicked -> onSaveClicked(model)
       is PatientEntrySaved -> next(model.buttonStateChanged(ButtonState.SAVED), OpenMedicalHistoryEntryScreen)
       is InputFieldsLoaded -> dispatch(SetupUi(event.inputFields))
+      is ColonyOrVillagesFetched -> next(model.colonyOrVillageListUpdated(event.colonyOrVillages))
     }
   }
 

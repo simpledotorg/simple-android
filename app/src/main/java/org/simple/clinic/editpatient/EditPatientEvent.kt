@@ -70,3 +70,5 @@ data class AlternativeIdChanged(val alternativeId: String) : EditPatientEvent() 
 }
 
 data class InputFieldsLoaded(val inputFields: InputFields) : EditPatientEvent()
+
+data class ColonyOrVillagesFetched(val colonyOrVillages: List<String>) : EditPatientEvent()

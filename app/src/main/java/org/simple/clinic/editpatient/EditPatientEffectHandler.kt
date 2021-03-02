@@ -1,10 +1,10 @@
 package org.simple.clinic.editpatient
 
 import com.spotify.mobius.rx2.RxMobius
+import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.Lazy
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -73,9 +73,19 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .addTransformer(FetchBpPassportsEffect::class.java, fetchBpPassports(schedulersProvider.io()))
         .addTransformer(SavePatientEffect::class.java, savePatientTransformer(schedulersProvider.io()))
         .addTransformer(LoadInputFields::class.java, loadInputFields())
-        .addConsumer(SetupUi::class.java, { ui.setupUi(it.inputFields)}, schedulersProvider.ui())
+        .addConsumer(SetupUi::class.java, { ui.setupUi(it.inputFields) }, schedulersProvider.ui())
+        .addTransformer(FetchColonyOrVillagesEffect::class.java, fetchColonyOrVillages())
         .build()
   }
+
+  private fun fetchColonyOrVillages(): ObservableTransformer<FetchColonyOrVillagesEffect, EditPatientEvent> {
+    return ObservableTransformer { fetchColonyOrVillagesEffect ->
+      fetchColonyOrVillagesEffect
+          .map { patientRepository.allColoniesOrVillagesInPatientAddress() }
+          .map(::ColonyOrVillagesFetched)
+    }
+  }
+
 
   private fun displayBpPassports(bpPassports: List<BusinessId>) {
     val identifiers = bpPassports.map { it.identifier.displayValue() }

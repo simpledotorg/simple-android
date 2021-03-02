@@ -100,6 +100,20 @@ class PatientEntryEffectHandlerTest {
     verifyZeroInteractions(validationActions)
   }
 
+  @Test
+  fun `when fetch colony or village names effect is received, then load colony or village names`() {
+    // given
+    val colonyOrVillages = listOf("colony1", "colony2", "colony3", "colony4")
+    whenever(patientRepository.allColoniesOrVillagesInPatientAddress()).thenReturn(colonyOrVillages)
+    // when
+    setupTestCase()
+    testCase.dispatch(FetchColonyOrVillagesEffect)
+
+    //then
+    testCase.assertOutgoingEvents(ColonyOrVillagesFetched(colonyOrVillages))
+    verifyZeroInteractions(ui)
+  }
+
   private fun setupTestCase() {
     whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))
     whenever(patientRepository.ongoingEntry()).thenReturn(entry)

@@ -22,6 +22,8 @@ data class SavePatient(val entry: OngoingNewPatientEntry) : PatientEntryEffect()
 
 object OpenMedicalHistoryEntryScreen : PatientEntryEffect()
 
-object LoadInputFields: PatientEntryEffect()
+object LoadInputFields : PatientEntryEffect()
 
-data class SetupUi(val inputFields: InputFields): PatientEntryEffect()
+data class SetupUi(val inputFields: InputFields) : PatientEntryEffect()
+
+object FetchColonyOrVillagesEffect : PatientEntryEffect()

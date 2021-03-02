@@ -566,7 +566,7 @@ class PatientRepository @Inject constructor(
           .recentPatients(facilityUuid, Scheduled, Manual, PatientStatus.Active)
           .toObservable()
 
-  fun allColoniesOrVillagesInPatientAddress(): List<String>? =
+  fun allColoniesOrVillagesInPatientAddress(): List<String> =
       database.addressDao()
           .getColonyOrVillages()
 

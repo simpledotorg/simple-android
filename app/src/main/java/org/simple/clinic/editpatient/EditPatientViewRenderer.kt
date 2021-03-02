@@ -21,6 +21,10 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
     ui.setDateOfBirthAndAgeVisibility(fieldToShow)
 
     manageButtonState(model)
+
+    if (model.hasColonyOrVillagesList) {
+      ui.showColonyOrVillagesList(model.colonyOrVillagesList!!)
+    }
   }
 
   private fun manageButtonState(model: EditPatientModel) {

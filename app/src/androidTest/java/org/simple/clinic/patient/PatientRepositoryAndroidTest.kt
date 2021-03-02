@@ -3920,11 +3920,12 @@ class PatientRepositoryAndroidTest {
         .map { it.uuid }
 
     //then
-    assertThat(searchResults).containsExactly(
-        patient2WithCurrentFacilityAsAssignedFacility,
-        patientWithCurrentFacilityAsAssignedFacility,
-        patientWithAnotherFacilityAsAssignedFacility
-    )
+    assertThat(searchResults)
+        .containsExactly(
+            patientWithCurrentFacilityAsAssignedFacility,
+            patient2WithCurrentFacilityAsAssignedFacility,
+            patientWithAnotherFacilityAsAssignedFacility
+        ).inOrder()
   }
 
   @Test
@@ -3987,19 +3988,23 @@ class PatientRepositoryAndroidTest {
     val searchResults2 = searchResults("Pri", facility2.uuid)
 
     //then
-    assertThat(searchResults).containsExactly(
-        patient3WithCurrentFacilityAsAssignedFacility,
-        patient2WithCurrentFacilityAsAssignedFacility,
-        patientWithCurrentFacilityAsAssignedFacility,
-        patientWithAnotherFacilityAsAssignedFacility
-    )
+    assertThat(searchResults)
+        .containsExactly(
+            patient3WithCurrentFacilityAsAssignedFacility,
+            patient2WithCurrentFacilityAsAssignedFacility,
+            patientWithCurrentFacilityAsAssignedFacility,
+            patientWithAnotherFacilityAsAssignedFacility
+        )
+        .inOrder()
 
-    assertThat(searchResults2).containsExactly(
-        patientWithAnotherFacilityAsAssignedFacility,
-        patient3WithCurrentFacilityAsAssignedFacility,
-        patient2WithCurrentFacilityAsAssignedFacility,
-        patientWithCurrentFacilityAsAssignedFacility
-    )
+    assertThat(searchResults2)
+        .containsExactly(
+            patientWithAnotherFacilityAsAssignedFacility,
+            patient3WithCurrentFacilityAsAssignedFacility,
+            patient2WithCurrentFacilityAsAssignedFacility,
+            patientWithCurrentFacilityAsAssignedFacility
+        )
+        .inOrder()
   }
 
   @Test

@@ -11,6 +11,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.simple.clinic.user.UserSession
 import retrofit2.Retrofit
+import timber.log.Timber
 import javax.inject.Named
 
 @Module
@@ -35,8 +36,8 @@ class ReportsModule {
           if(!userSession.isUserPresentLocally()) {
             return null
           } else {
-            Log.i("RJS", "must have a userSession locally")
-            Log.i("RJS", userSession.accessToken().get())
+            Timber.i("must have a userSession locally")
+            Timber.i("current token: " + userSession.accessToken().get())
           }
 
           val accessToken = userSession.accessToken().get()

@@ -98,7 +98,7 @@ class LinkIdWithPatientSheet :
   }
 
   override fun closeSheetWithIdLinked() {
-    upstreamUiEvents.onNext(LinkIdWithPatientLinked)
+    router.pop()
   }
 
   override fun closeSheetWithoutIdLinked() {

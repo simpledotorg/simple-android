@@ -465,7 +465,9 @@ class PatientSummaryScreen :
   }
 
   override fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier) {
-    router.push(LinkIdWithPatientSheetKey(patientUuid, identifier))
+    router.push(LinkIdWithPatientSheetKey(patientUuid = patientUuid,
+        identifier = identifier,
+        openedFrom = screenKey))
   }
 
   override fun hideLinkIdWithPatientView() {

@@ -24,6 +24,10 @@ data class History(val requests: List<NavRequest>) : Parcelable {
     return removeUntil { it != key }
   }
 
+  fun removeUntilInclusive(key: ScreenKey): History {
+    return removeUntil { it != key }.removeLast()
+  }
+
   inline fun removeUntil(predicate: (ScreenKey) -> Boolean): History {
     val newRequests = requests.dropLastWhile { navRequest -> predicate(navRequest.key) }
 

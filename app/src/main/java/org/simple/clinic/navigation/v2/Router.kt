@@ -106,6 +106,12 @@ class Router(
     executeStateChange(newHistory, Direction.Backward, null)
   }
 
+  fun popUntilInclusive(key: ScreenKey) {
+    val newHistory = history.removeUntilInclusive(key)
+
+    executeStateChange(newHistory, Direction.Backward, null)
+  }
+
   fun replaceKeyOfSameType(
       keyToPush: ScreenKey
   ) {

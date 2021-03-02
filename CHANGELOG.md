@@ -16,6 +16,7 @@
 - Load list of `colonyOrVillage` from the `PatientAddress` table
 - Change `TeleconsultRecordScreen` to a fragment
 - Only load the alphabetical patient log once when the screen is opened
+- Improve performance of the instant search queries by ~50%
 
 ### Changes
 - Updated translations: `bn-IN`, `ti-ET`, `om-ET`, `bn-BD`, `te-IN`, `kn-IN`, `mr-IN`, `hi-IN`, `pa-IN`, `am-ET`

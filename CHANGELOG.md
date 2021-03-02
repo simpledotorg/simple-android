@@ -18,6 +18,7 @@
 - Change `EditMedicinesScreen` to a fragment
 - Only load the alphabetical patient log once when the screen is opened
 - Improve performance of the instant search queries by ~50%
+- Add `Router#popUntilInclusive`
 
 ### Changes
 - Updated translations: `bn-IN`, `ti-ET`, `om-ET`, `bn-BD`, `te-IN`, `kn-IN`, `mr-IN`, `hi-IN`, `pa-IN`, `am-ET`

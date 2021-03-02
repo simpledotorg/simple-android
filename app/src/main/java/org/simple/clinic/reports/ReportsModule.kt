@@ -37,7 +37,7 @@ class ReportsModule {
             return null
           } else {
             Timber.i("must have a userSession locally")
-            Timber.i("current token: " + userSession.accessToken().get())
+            Timber.i("current token: $userSession.accessToken().get()")
           }
 
           val accessToken = userSession.accessToken().get()

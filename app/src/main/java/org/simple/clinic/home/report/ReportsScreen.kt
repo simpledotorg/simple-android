@@ -13,6 +13,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.visibleOrGone
+import timber.log.Timber
 import javax.inject.Inject
 
 class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs), ReportsUi {
@@ -39,7 +40,7 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
   @SuppressLint("SetJavaScriptEnabled")
   override fun onFinishInflate() {
     super.onFinishInflate()
-    Log.i("RJS", "onFinishInflate from reports screen")
+    Timber.i("onFinishInflate from reports screen")
 
     if (isInEditMode) {
       return

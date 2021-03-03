@@ -19,6 +19,6 @@
   <View
     android:layout_width="match_parent"
     android:layout_height="1dp"
-    android:layout_marginHorizontal="@dimen/spacing_12"
+    android:layout_marginStart="@dimen/spacing_12"
     android:background="@drawable/divider" />
 </LinearLayout>

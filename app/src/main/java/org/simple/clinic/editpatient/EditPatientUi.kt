@@ -29,5 +29,5 @@ interface EditPatientUi {
   fun showProgress()
   fun hideProgress()
   fun setupUi(inputFields: InputFields)
-  fun showColonyOrVillagesList(colonyOrVillageList: List<String>)
+  fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>)
 }

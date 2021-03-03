@@ -274,7 +274,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     deletePatient.setOnClickListener { router.push(DeletePatientScreenKey(screenKey.patient.uuid).wrap()) }
   }
 
-  override fun showColonyOrVillagesList(colonyOrVillageList: List<String>) {
+  override fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>) {
     ArrayAdapter<String>(context, R.layout.village_typeahead_list_item,  R.id.villageTypeAheadItemTextView, colonyOrVillageList).also { adapter ->
       colonyOrVillageEditText.setAdapter(adapter)
     }

@@ -37,6 +37,7 @@ import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen_Old
 import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
@@ -185,6 +186,8 @@ class PatientSummaryScreen :
   private val hardwareBackClicks = PublishSubject.create<Unit>()
   private val subscriptions = CompositeDisposable()
 
+  private val appointmentScheduleSheetClosed = DeferredEventSource<PatientSummaryEvent>()
+
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
   }
@@ -205,7 +208,6 @@ class PatientSummaryScreen :
             backClicks(),
             doneClicks(),
             bloodPressureSaves(),
-            appointmentScheduleSheetClosed(),
             identifierLinkedEvents(),
             identifierLinkCancelledEvents(),
             editButtonClicks(),
@@ -230,6 +232,10 @@ class PatientSummaryScreen :
     return effectHandlerFactory.create(this).build()
   }
 
+  override fun additionalEventSources() = listOf(
+      appointmentScheduleSheetClosed
+  )
+
   override fun onAttach(context: Context) {
     super.onAttach(context)
     requireContext().injector<Injector>().inject(this)
@@ -246,7 +252,10 @@ class PatientSummaryScreen :
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()
 
-    subscriptions.add(setupChildViewVisibility())
+    subscriptions.addAll(
+        setupChildViewVisibility(),
+        appointmentScheduleSheetClosed()
+    )
   }
 
   @SuppressLint("CheckResult")
@@ -331,7 +340,9 @@ class PatientSummaryScreen :
       .extractSuccessful(SUMMARY_REQCODE_SCHEDULE_APPOINTMENT) { intent ->
         ScheduleAppointmentSheet.readExtra<ScheduleAppointmentSheetExtra>(intent)
       }
-      .map { ScheduledAppointment(it.sheetOpenedFrom) }
+      .subscribe {
+        appointmentScheduleSheetClosed.notify(ScheduledAppointment(it!!.sheetOpenedFrom))
+      }
 
   private fun identifierLinkedEvents(): Observable<UiEvent> {
     return linkIdWithPatientView

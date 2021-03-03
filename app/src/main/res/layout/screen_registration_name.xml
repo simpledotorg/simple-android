@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/registrationname_root"
@@ -7,45 +7,50 @@
   android:layout_height="match_parent"
   tools:ignore="Overdraw">
 
-  <FrameLayout
-    android:id="@+id/registrationname_logo_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/colorToolbarPrimary">
-
-    <ImageButton
-      android:id="@+id/backButton"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:background="?attr/selectableItemBackgroundBorderless"
-      android:padding="@dimen/spacing_16"
-      app:srcCompat="@drawable/ic_arrow_back_24dp"
-      tools:ignore="ContentDescription" />
-
-    <ImageView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginTop="@dimen/spacing_40"
-      android:layout_marginBottom="@dimen/spacing_44"
-      app:srcCompat="@drawable/logo_large"
-      tools:ignore="ContentDescription" />
-
-  </FrameLayout>
-
   <View
     android:layout_width="match_parent"
-    android:layout_height="@dimen/spacing_48"
-    android:layout_below="@+id/registrationname_logo_container"
-    android:background="?attr/colorToolbarPrimary" />
+    android:layout_height="@dimen/spacing_192"
+    android:background="?attr/colorToolbarPrimary"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <ImageView
+    android:id="@+id/backButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:padding="@dimen/spacing_16"
+    app:layout_constraintBottom_toTopOf="@id/app_simple_logo"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/ic_arrow_back_24dp"
+    tools:ignore="ContentDescription" />
+
+  <ImageView
+    android:id="@+id/app_simple_logo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="@dimen/spacing_40"
+    android:layout_marginBottom="@dimen/spacing_44"
+    app:layout_constraintBottom_toTopOf="@id/registrationname_card"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/logo_large"
+    tools:ignore="ContentDescription" />
 
   <com.google.android.material.card.MaterialCardView
     android:id="@+id/registrationname_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/registrationname_logo_container"
     android:layout_marginStart="@dimen/spacing_24"
-    android:layout_marginEnd="@dimen/spacing_24">
+    android:layout_marginTop="@dimen/spacing_44"
+    android:layout_marginEnd="@dimen/spacing_24"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/app_simple_logo">
 
     <LinearLayout
       android:id="@+id/cardViewContentLayout"
@@ -97,4 +102,17 @@
 
   </com.google.android.material.card.MaterialCardView>
 
-</RelativeLayout>
+  <FrameLayout
+    style="@style/Widget.Simple.Button.Frame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent">
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/nextButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/registrationname_next" />
+
+  </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

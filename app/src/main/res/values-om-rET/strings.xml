@@ -241,6 +241,8 @@
 
   <string name="registrationname_name_label">Maqaa kee guutuu nutti himi</string>
   <string name="registrationname_error_empty_name">Maaloo maqaa kee guutuu galchi</string>
+  <string name="registrationname_next">Kan itti aanu</string>
+
 
   <string name="registrationpin_pin_label">PIN kee iccitii uumi</string>
   <string name="registrationpin_pin_hint">PIN kee yaadadhu</string>

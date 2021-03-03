@@ -7,6 +7,7 @@
 
 ### Changes
 - Show next button in the registration screens
+- Implement village type ahead in patient entry/edit screens
 
 ## On Demo
 ### Internal
@@ -20,15 +21,19 @@
 - Change `TeleconsultRecordScreen` to a fragment
 - Change `EditMedicinesScreen` to a fragment
 - Only load the alphabetical patient log once when the screen is opened
-- Improve performance of the instant search queries by ~50%
 - Add `Router#popUntilInclusive`
-- Implement village type ahead in patient entry/edit screens
 
 ### Changes
 - Updated translations: `bn-IN`, `ti-ET`, `om-ET`, `bn-BD`, `te-IN`, `kn-IN`, `mr-IN`, `hi-IN`, `pa-IN`, `am-ET`
 - Show progress when linking bp passport to patient
 - Show progress when saving medical history for new patient
 - Change prescriptions end icon to a chevron icon instead of dropdown
+
+## 2021-03-03-7655
+### Internal
+- Improve performance of the instant search queries by ~50%
+
+### Changes
 - Stop loading patients from other facilities in the alphabetical patient log
 
 ### Fixes

@@ -284,7 +284,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     showOrHideGenderRadioButtons(inputFields)
   }
 
-  override fun showColonyOrVillagesList(colonyOrVillageList: List<String>) {
+  override fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>) {
     ArrayAdapter<String>(context, R.layout.village_typeahead_list_item, R.id.villageTypeAheadItemTextView, colonyOrVillageList).also { adapter ->
       colonyOrVillageEditText.setAdapter(adapter)
     }

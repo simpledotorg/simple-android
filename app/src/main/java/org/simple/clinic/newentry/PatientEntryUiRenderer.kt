@@ -20,7 +20,7 @@ class PatientEntryUiRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntry
     identifierValueChangedCallback.pass(patientEntry.identifier.toOptional()) { renderIdentifier(patientEntry.identifier) }
 
     if (model.hasColonyOrVillagesList) {
-      ui.showColonyOrVillagesList(model.colonyOrVillagesList!!)
+      ui.setColonyOrVillagesAutoComplete(model.colonyOrVillagesList!!)
     }
 
     val personalDetails = patientEntry.personalDetails ?: return

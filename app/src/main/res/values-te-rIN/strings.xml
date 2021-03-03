@@ -241,6 +241,8 @@
 
   <string name="registrationname_name_label">మీ పూర్తి పేరును మాకు చెప్పండి</string>
   <string name="registrationname_error_empty_name">మీ పూర్తి పేరును నమోదు చేయండి</string>
+  <string name="registrationname_next">తదుపరి</string>
+
 
   <string name="registrationpin_pin_label">మీ భద్రతా PIN సృష్టించండి</string>
   <string name="registrationpin_pin_hint">మీ PIN గుర్తుపెట్టుకోండి, ఇది మీకు తర్వాత అవసరం ఉంటుంది</string>

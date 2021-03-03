@@ -31,6 +31,9 @@
 - Change prescriptions end icon to a chevron icon instead of dropdown
 - Stop loading patients from other facilities in the alphabetical patient log
 
+### Fixes
+- Fix cannot exit patient summary screen after scheduling an appointment
+
 ## 2021-02-26-7647
 ### Internal
 - Change `AppLockScreen` to a fragment

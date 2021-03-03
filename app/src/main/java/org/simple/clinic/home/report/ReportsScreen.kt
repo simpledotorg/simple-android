@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.util.Log
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import io.reactivex.Observable
@@ -22,7 +23,7 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
   lateinit var effectHandler: ReportsEffectHandler
 
   @Inject
-  lateinit var webViewClient: WebViewClient
+  lateinit var webViewDataProvider: WebViewDataProvider
 
   private val delegate by unsafeLazy {
     val uiRenderer = ReportsUiRenderer(this)
@@ -48,8 +49,9 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
 
     context.injector<Injector>().inject(this)
 
-    webView.webViewClient = webViewClient
     webView.settings.javaScriptEnabled = true
+    webView.addJavascriptInterface(webViewDataProvider, "injectedObject")
+    WebView.setWebContentsDebuggingEnabled(true)
   }
 
   override fun onAttachedToWindow() {
@@ -72,7 +74,8 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
 
   override fun showReport(html: String) {
     showWebview(true)
-    webView.loadDataWithBaseURL(null, html, "text/html", Charsets.UTF_8.name(), null)
+//    webView.loadDataWithBaseURL(null, html, "text/html", Charsets.UTF_8.name(), null)
+    webView.loadUrl("file:///android_asset/reports.html")
   }
 
   override fun showNoReportsAvailable() {

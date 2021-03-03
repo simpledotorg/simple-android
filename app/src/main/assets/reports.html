@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: auto;">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,shrink-to-fit=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <title>User Analytics</title>
+
+    <style type="text/css">html *{-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none}html,body{height:100%;scroll-behavior:smooth}body{background:#F0F2F5;margin:0;padding:8px 0;font-family:Roboto, sans-serif;color:#2F363D;font-weight:400}.card{background:#fff;position:relative;margin:0 0 16px 0;padding:16px;border-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,0.04),0 2px 4px rgba(0,0,0,0.08)}.card .card-footer{margin:16px -16px -16px -16px;padding:16px 16px 24px 16px;border-radius:0 0 4px 4px}.card .card-header{margin:-16px -16px 16px -16px;padding:16px;border-radius:4px 4px 0 0;min-height:200px;display:block}.card .card-footer-button a{text-align:center;font-weight:bold;font-size:20px;padding:16px 0;border-top:1px solid #F0F2F5;display:block;margin:2em 0 -16px 0}.card h3,.card h4{margin:0;font-size:20px;line-height:1.3;color:#2F363D;font-weight:500}.info{padding:20px;margin:-20px;display:block;float:right}.info span{display:block;width:22px;height:22px;line-height:22px;font-size:18px;font-weight:bolder;border-radius:100px;border:3px solid #0075EB;text-align:center}.card h4{font-weight:300;font-size:15px}.card h5{margin:6px 0 0 0;font-size:14px;text-transform:uppercase;font-weight:500;color:#ADB2B8;letter-spacing:0.1em}.big{font-size:80px;text-align:center;margin:32px 0;letter-spacing:-0.05em}svg{width:100%}p,ul.big-list li{margin-top:0.2em;line-height:1.4;font-size:18px}p.footnote{font-size:14px;padding:16px}a:link,a:visited{text-decoration:none;font-weight:400;color:#0075EB}.icon-float{float:right;margin:-8px -8px 0 16px}.icon-float svg,.icon-float{width:90px;height:90px}footer{height:100px}body#progress{font-size:18px}.left{text-align:left}.right{text-align:right}.center{text-align:center}.cohort h6{font-size:18px;text-align:left;margin:0}.cohort p{text-align:left;padding:6px 0 0 0}.cohort-bars{width:100%;position:relative;text-align:center;min-height:46px;margin:0 -2px}.cohort-bars td{padding:12px 6px;font-weight:bold;font-size:16px}.cohort-bars .cohort-controlled{background:#00B849;color:#fff;border-radius:0 3px 3px 0}.cohort-bars .cohort-uncontrolled{background:#FF3355;color:#fff;border-radius:none}.cohort-bars .cohort-nobp{background:#dce4e8;color:#444;border-radius:3px 0 0 3px}.cohort-bars .cohort-none{background:#dce4e8;color:#444;border-radius:3px}.key{margin:24px 0 32px 0;font-size:16px}.key span{display:inline-block;width:16px;height:12px;vertical-align:middle;background:#999;margin:-3px 8px 0 0;border-radius:3px}.key span.green{background:#00B849}.key span.red{background:#FF3355}.progress-contents{padding:0 8px 100px 8px}.progress-body{position:absolute;top:0;width:100%;min-height:100%;background:#F0F2F5;z-index:100000000}a.help-back{display:block;position:fixed;top:8px;padding:8px;margin-top:16px;background:#fff;border-radius:100px;width:32px;margin-bottom:16px;box-shadow:0 2px 6px rgba(0,0,0,0.05);z-index:5000}a.help-back svg{width:28px;height:28px;position:relative;top:2px;left:2px;opacity:1}.card h3{font-weight:700;font-size:20px;color:#2F363D}.card{position:relative}.day{visibility:hidden;position:absolute;left:-100000px}.day h3.stat-day{opacity:0;transition:opacity 0.6s ease-in}.day.day-show{visibility:visible;position:relative;left:0}.day.day-show h3.stat-day{opacity:1}.card h3 span.num{letter-spacing:2px}.empty-reports{min-width:100%;height:100%;background:#F0F2F5;margin:-8px;text-align:center}.empty-reports .svg-container{margin-top:60px}.empty-reports h1{color:#6c737a;font-size:20px}.empty-reports h3{color:#6c737a;font-size:16px}sup{font-size:60%;padding-left:2px}.card-dropdown{width:100%;border:1px solid #0075EB;color:#0075EB;font-weight:bold;font-size:18px;padding:8px;height:42px;background:#fff url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAxOCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyLjAzMzMgMTQuOTQzMUw4LjkwODQ1IDE4LjA2NzlMNS43ODM2MiAxNC45NDMxQzUuNjMzMTUgMTQuNzkyMyA1LjQyODg3IDE0LjcwNzUgNS4yMTU4MyAxNC43MDc1QzUuMDAyOCAxNC43MDc1IDQuNzk4NTEgMTQuNzkyMyA0LjY0ODA1IDE0Ljk0MzFDNC4zMzM5NSAxNS4yNTcyIDQuMzMzOTUgMTUuNzY0NiA0LjY0ODA1IDE2LjA3ODZMOC4zNDQ2OSAxOS43NzUzQzguNjU4NzggMjAuMDg5NCA5LjE2NjE3IDIwLjA4OTQgOS40ODAyNiAxOS43NzUzTDEzLjE3NjkgMTYuMDc4NkMxMy40OTEgMTUuNzY0NiAxMy40OTEgMTUuMjU3MiAxMy4xNzY5IDE0Ljk0MzFDMTIuODYyOCAxNC42MzcgMTIuMzQ3NCAxNC42MjkgMTIuMDMzMyAxNC45NDMxVjE0Ljk0MzFaIiBmaWxsPSIjMDA3NUVCIi8+CjxwYXRoIGQ9Ik01Ljc5MTY0IDkuNzc1M0w4LjkxNjQ3IDYuNjUwNDdMMTIuMDQxMyA5Ljc3NTMxQzEyLjE5MTggOS45MjYxMSAxMi4zOTYxIDEwLjAxMDkgMTIuNjA5MSAxMC4wMTA5QzEyLjgyMjEgMTAuMDEwOSAxMy4wMjY0IDkuOTI2MTEgMTMuMTc2OSA5Ljc3NTMxQzEzLjQ5MSA5LjQ2MTIxIDEzLjQ5MSA4Ljk1MzgzIDEzLjE3NjkgOC42Mzk3M0w5LjQ4MDIzIDQuOTQzMDlDOS4xNjYxNCA0LjYyOSA4LjY1ODc1IDQuNjI5IDguMzQ0NjYgNC45NDMwOUw0LjY0ODAyIDguNjM5NzNDNC4zMzM5MiA4Ljk1MzgzIDQuMzMzOTIgOS40NjEyMSA0LjY0ODAyIDkuNzc1M0M0Ljk2MjExIDEwLjA4MTMgNS40Nzc1NSAxMC4wODk0IDUuNzkxNjQgOS43NzUzVjkuNzc1M1oiIGZpbGw9IiMwMDc1RUIiLz4KPC9zdmc+Cg==) no-repeat 96% 50%;margin:16px 0 8px 0;border-radius:5px;position:relative;-webkit-appearance:none}.nav-next{display:block;background:#fff url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTkuMDAwMDIgNi43MTA1MUM4LjYxMDAyIDcuMTAwNTEgOC42MTAwMiA3LjczMDUxIDkuMDAwMDIgOC4xMjA1MUwxMi44OCAxMi4wMDA1TDkuMDAwMDIgMTUuODgwNUM4LjYxMDAyIDE2LjI3MDUgOC42MTAwMiAxNi45MDA1IDkuMDAwMDIgMTcuMjkwNUM5LjM5MDAyIDE3LjY4MDUgMTAuMDIgMTcuNjgwNSAxMC40MSAxNy4yOTA1TDE1IDEyLjcwMDVDMTUuMzkgMTIuMzEwNSAxNS4zOSAxMS42ODA1IDE1IDExLjI5MDVMMTAuNDEgNi43MDA1MUMxMC4wMyA2LjMyMDUxIDkuMzkwMDIgNi4zMjA1MSA5LjAwMDAyIDYuNzEwNTFaIiBmaWxsPSIjMDA3NUVCIi8+Cjwvc3ZnPgo=) no-repeat 100% 50%}h4{text-align:center;font-size:16px;text-transform:uppercase;letter-spacing:6px;color:rgba(0,0,0,0.3);clear:both}p{text-align:center;font-size:18px;padding:0 8px}p.desc{text-align:left;font-size:18px;padding:8px 0 8px 0}.progress-table{margin-top:16px;font-size:16px;width:100%;border-collapse:collapse}.progress-table td{padding:8px 16px 8px 0;border-top:1px solid #dce4e8;text-align:right;font-size:18px}.progress-table td.no-padding{padding-right:0}.progress-table th{padding:0 0 8px 0;font-weight:normal;text-align:left;font-size:14px}.progress-table .row-label{padding-left:6px;text-align:left;font-weight:normal}.progress-table .total td{background:#F5F9FD;color:#174A57}.progress-table .total.green td{background:#E4FFEF;color:#00A541}.progress-table .total td,.progress-table .total+tr td{border-color:#77A6D2}.progress-table .total.green td,.progress-table .total.green+tr td{border-color:#00A541}span.percent{font-size:14px;display:inline-block;background:#E4FFEF;color:#00A541;border-radius:100px;padding:5px 6px;text-align:center;min-width:3em;margin:-3px 0}.updated-date{margin-top:12px;padding:0;text-align:right;font-size:14px;color:rgba(0,0,0,0.6);letter-spacing:1px}p.control-desc{line-height:1.5;font-size:18px}p.control-desc .green{color:#00B849;font-size:32px;font-weight:bold}.footnotes li{margin:0 16px 1.5em 0;line-height:1.3}.card .tip{opacity:0;color:#ADB2B8;font-weight:normal;margin-right:16px;transition:0.3s ease-in-out}.card:active .tip{opacity:1;background:rgba(255,255,255,0.8)}.bar-chart{width:100%;margin-bottom:8px;background-image:linear-gradient(to top, #fff 35px, #F0F2F5 35px, #fff 36px, #fff 55px, #F0F2F5 55px, #fff 56px, #fff 75px, #F0F2F5 75px, #fff 76px, #fff 95px, #F0F2F5 95px, #fff 96px, #fff 115px, #F0F2F5 115px, #fff 116px, #fff 135px, #F0F2F5 135px, #fff 136px, #fff 155px, #F0F2F5 155px, #fff 156px, #fff 175px, #F0F2F5 175px, #fff 176px, #fff 195px, #F0F2F5 195px, #fff 196px, #fff 215px, #F0F2F5 215px, #fff 216px, #fff 235px, #F0F2F5 235px, #fff 236px, #fff 255px, #F0F2F5 255px, #fff 256px)}.bar-chart .bar{background:#E0FFED;width:12px;margin:0 auto;position:relative;border-radius:100px;min-height:20px}.bar-chart .bar span{display:block;background:#fff;border:2px solid #00B849;height:10px;width:10px;border-radius:100px;margin-left:-1px}.bar-chart .bar-value{position:relative;height:30px;width:10px;margin:0 auto 16px auto}.bar-chart .bar-value span{font-size:14px;transform:translate(-96px, -80px) rotate(90deg);width:200px;display:block;color:#00B849;text-align:right;z-index:100000}.bar-chart tbody td{height:160px;vertical-align:bottom;text-align:center}.bar-chart tbody td:last-of-type .bar-value{font-weight:bold}.bar-chart tbody td:last-of-type .bar{background:#00B849}.trophies{text-align:center;padding-top:30px}footer p{text-align:center;font-size:18px}.trophy{display:inline-block;text-align:center;margin:0 8px 30px 8px;font-size:18px;line-height:1.3;position:relative;padding:140px 0 0 0}.trophy svg.ribbon{position:absolute;top:1px;left:50%;margin-left:-65px}.trophy svg.lock{position:relative;top:4px}.trophy span{display:block;border-radius:400px;width:94px;height:94px;position:absolute;top:19px;left:50%;margin-left:-47px;line-height:94px;font-size:42px;box-sizing:border-box;background:#8672F3;color:#5844C3;font-weight:900;text-shadow:0 1px 0 rgba(255,255,255,0.2);letter-spacing:-0.03em}.trophy em{position:absolute;top:22px;left:50%;width:86px;height:86px;margin-left:-44px;border-radius:400px;border:1px solid #fff;z-index:5000}.trophy div{font-size:90%}.trophy-10 span{background:#E8F8EF;color:#30BB67;text-indent:-3px}.trophy-25 span{background:#F1D8FD;color:#AA61CF}.trophy-50 span{background:#D7E8F8;color:#77A6D2}.trophy-100 span,.trophy-250 span,.trophy-500 span{background:#FFC800;color:#A38310;font-size:38px}.trophy-1000 span,.trophy-2000 span{background:#FF3355;color:#B00C35}.trophy-upcoming span{color:rgba(0,0,0,0.3);background:#eee}.trophy-upcoming svg.ribbon{opacity:0.4}.card .counts{display:flex;justify-content:space-between;clear:both;padding-top:16px}.card .count{display:block;padding:30px 0 30px 0;text-align:center;font-size:18px;background:#EEF7FF;margin:0 4px 4px 0;border-radius:10px}.card .count strong{display:block;padding-bottom:8px;font-size:20px}.card .count-1{background:#F3EEFB;color:#6640AB;flex:1}.card .count-2{flex:1;background:#EFF7FF;color:#44576B}.card .count:last-child{margin-right:0}.card .count-empty svg{height:160px;margin-top:0}.big-number{font-weight:500;font-size:64px;padding-bottom:8px;letter-spacing:-0.03em}.next-prev{position:absolute;top:8px;right:8px;z-index:1000000}.button-next{background:none;border:none;display:block;float:left;padding:6px 24px 6px 16px;border-radius:4px}.button-prev{background:none;border:none;display:block;float:right;padding:6px 24px 6px 16px;margin-right:-6px}.button-next:active,.button-prev:active{outline:none;background:#E9F3FF}.button-next:focus,.button-prev:focus{outline:none;background:none}.button-prev:disabled,.button-next:disabled{opacity:0.1}.day{min-height:250px}
+</style>
+</head>
+
+<body id="progress">
+<div id="progress-start" class="progress-body">
+    <div class="progress-contents">
+
+        <p class="updated-date">
+    <span>
+      Updated: 06-JAN-2021 02:34 PM
+    </span>
+        </p>
+
+        <div class="card">
+            <button onclick="console.log(injectedObject.currentFacility())">Log current facility</button>
+        </div>
+
+        <div class="card" style="min-height: 210px;">
+            <!-- daily card switcher -->
+            <div class="next-prev">
+                <button onclick="nextSlide(+1)" class="button-next">
+        <span><div class="svg-container"><svg width="0" height="0" style="width: 24px; height: 24px;" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path id="icon/navigation/arrow_back_24px_2" d="M18.7912 11.005H7.62124L12.5012 6.12499C12.8912 5.73499 12.8912 5.09499 12.5012 4.70499C12.3144 4.51774 12.0608 4.41251 11.7962 4.41251C11.5317 4.41251 11.2781 4.51774 11.0912 4.70499L4.50124 11.295C4.11124 11.685 4.11124 12.315 4.50124 12.705L11.0912 19.295C11.4812 19.685 12.1112 19.685 12.5012 19.295C12.8912 18.905 12.8912 18.275 12.5012 17.885L7.62124 13.005H18.7912C19.3412 13.005 19.7912 12.555 19.7912 12.005C19.7912 11.455 19.3412 11.005 18.7912 11.005Z" fill="#0075EB" fill-opacity="1"/>
+</svg>
+</div></span>
+                </button>
+                <button onclick="nextSlide(-1)" class="button-prev">
+        <span><div class="svg-container"><svg width="0" height="0" style="width: 24px; height: 24px;" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path id="icon/navigation/arrow_forward_24px_2" d="M5.20874 13H16.3787L11.4987 17.88C11.1087 18.27 11.1087 18.91 11.4987 19.3C11.8887 19.69 12.5187 19.69 12.9087 19.3L19.4987 12.71C19.8887 12.32 19.8887 11.69 19.4987 11.3L12.9187 4.69999C12.7319 4.51273 12.4783 4.4075 12.2137 4.4075C11.9492 4.4075 11.6956 4.51273 11.5087 4.69999C11.1187 5.08999 11.1187 5.71999 11.5087 6.10999L16.3787 11H5.20874C4.65874 11 4.20874 11.45 4.20874 12C4.20874 12.55 4.65874 13 5.20874 13Z" fill="#0075EB" fill-opacity="1"/>
+</svg>
+</div></span>
+                </button>
+            </div>
+
+            <!-- dump all statistics in a hidden div so that we can parse it in JS -->
+            <div id="statistics" data-statistics="{&quot;daily&quot;:{&quot;grouped_by_date&quot;:{&quot;follow_ups&quot;:{&quot;2020-12-08&quot;:0,&quot;2020-12-09&quot;:0,&quot;2020-12-10&quot;:0,&quot;2020-12-11&quot;:0,&quot;2020-12-12&quot;:0,&quot;2020-12-13&quot;:0,&quot;2020-12-14&quot;:0,&quot;2020-12-15&quot;:0,&quot;2020-12-16&quot;:0,&quot;2020-12-17&quot;:0,&quot;2020-12-18&quot;:0,&quot;2020-12-19&quot;:0,&quot;2020-12-20&quot;:0,&quot;2020-12-21&quot;:0,&quot;2020-12-22&quot;:0,&quot;2020-12-23&quot;:0,&quot;2020-12-24&quot;:0,&quot;2020-12-25&quot;:0,&quot;2020-12-26&quot;:0,&quot;2020-12-27&quot;:0,&quot;2020-12-28&quot;:0,&quot;2020-12-29&quot;:0,&quot;2020-12-30&quot;:0,&quot;2020-12-31&quot;:0,&quot;2021-01-01&quot;:0,&quot;2021-01-02&quot;:0,&quot;2021-01-03&quot;:0,&quot;2021-01-04&quot;:0,&quot;2021-01-05&quot;:0,&quot;2021-01-06&quot;:0},&quot;registrations&quot;:{&quot;2020-12-08&quot;:0,&quot;2020-12-09&quot;:0,&quot;2020-12-10&quot;:0,&quot;2020-12-11&quot;:0,&quot;2020-12-12&quot;:0,&quot;2020-12-13&quot;:0,&quot;2020-12-14&quot;:0,&quot;2020-12-15&quot;:0,&quot;2020-12-16&quot;:0,&quot;2020-12-17&quot;:0,&quot;2020-12-18&quot;:0,&quot;2020-12-19&quot;:0,&quot;2020-12-20&quot;:0,&quot;2020-12-21&quot;:0,&quot;2020-12-22&quot;:0,&quot;2020-12-23&quot;:0,&quot;2020-12-24&quot;:0,&quot;2020-12-25&quot;:0,&quot;2020-12-26&quot;:0,&quot;2020-12-27&quot;:0,&quot;2020-12-28&quot;:0,&quot;2020-12-29&quot;:0,&quot;2020-12-30&quot;:0,&quot;2020-12-31&quot;:0,&quot;2021-01-01&quot;:0,&quot;2021-01-02&quot;:0,&quot;2021-01-03&quot;:0,&quot;2021-01-04&quot;:0,&quot;2021-01-05&quot;:0,&quot;2021-01-06&quot;:0}}},&quot;monthly&quot;:{&quot;grouped_by_date_and_gender&quot;:{&quot;hypertension&quot;:{&quot;registrations&quot;:{},&quot;follow_ups&quot;:{}}},&quot;grouped_by_date&quot;:{&quot;hypertension&quot;:{&quot;registrations&quot;:{&quot;2020-08-01&quot;:0,&quot;2020-09-01&quot;:0,&quot;2020-10-01&quot;:0,&quot;2020-11-01&quot;:0,&quot;2020-12-01&quot;:0,&quot;2021-01-01&quot;:0},&quot;follow_ups&quot;:{&quot;2020-08-01&quot;:0,&quot;2020-09-01&quot;:0,&quot;2020-10-01&quot;:0,&quot;2020-11-01&quot;:0,&quot;2020-12-01&quot;:0,&quot;2021-01-01&quot;:0},&quot;controlled_visits&quot;:{&quot;adjusted_registrations&quot;:{},&quot;controlled_patients_rate&quot;:{},&quot;controlled_patients&quot;:{},&quot;cumulative_registrations&quot;:{},&quot;earliest_registration_period&quot;:null,&quot;missed_visits_rate&quot;:{},&quot;missed_visits&quot;:{},&quot;period_info&quot;:{},&quot;registrations&quot;:{},&quot;uncontrolled_patients&quot;:{},&quot;uncontrolled_patients_rate&quot;:{}}}}},&quot;all_time&quot;:{&quot;grouped_by_gender&quot;:{&quot;hypertension&quot;:{&quot;follow_ups&quot;:{},&quot;registrations&quot;:{}}}},&quot;cohorts&quot;:[{&quot;results_in&quot;:&quot;Q4-2020&quot;,&quot;patients_registered&quot;:&quot;Q3-2020&quot;,&quot;registered&quot;:0,&quot;controlled&quot;:0,&quot;no_bp&quot;:0,&quot;uncontrolled&quot;:0},{&quot;results_in&quot;:&quot;Q3-2020&quot;,&quot;patients_registered&quot;:&quot;Q2-2020&quot;,&quot;registered&quot;:0,&quot;controlled&quot;:0,&quot;no_bp&quot;:0,&quot;uncontrolled&quot;:0},{&quot;results_in&quot;:&quot;Q2-2020&quot;,&quot;patients_registered&quot;:&quot;Q1-2020&quot;,&quot;registered&quot;:0,&quot;controlled&quot;:0,&quot;no_bp&quot;:0,&quot;uncontrolled&quot;:0},{&quot;results_in&quot;:&quot;Q1-2020&quot;,&quot;patients_registered&quot;:&quot;Q4-2019&quot;,&quot;registered&quot;:0,&quot;controlled&quot;:0,&quot;no_bp&quot;:0,&quot;uncontrolled&quot;:0}],&quot;trophies&quot;:{&quot;locked_trophy_value&quot;:10,&quot;unlocked_trophy_values&quot;:[]},&quot;metadata&quot;:{&quot;is_diabetes_enabled&quot;:false,&quot;last_updated_at&quot;:&quot;06-JAN-2021 02:34 PM&quot;,&quot;formatted_next_date&quot;:&quot;07-JAN-2021&quot;,&quot;today_string&quot;:&quot;Today&quot;}}" style="display: none">
+            </div>
+            <!-- daily stats view -->
+            <div id="daily-stats-card">
+                <div class="day count-empty" style="display: none">
+                    <h3 class="stat-day"></h3>
+                    <div class="svg-container"><svg width="64" height="64" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="2" width="42" height="42">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8 2.66663C10.4267 2.66663 12.4467 4.39329 12.9 6.69329C14.6333 6.81329 16 8.23996 16 9.99996C16 11.84 14.5067 13.3333 12.6667 13.3333H4C1.79333 13.3333 0 11.54 0 9.33329C0 7.27329 1.56 5.57329 3.56667 5.35996C4.4 3.75996 6.07333 2.66663 8 2.66663ZM9.33333 11.3336V8.66689H11.3333L8.24 5.56689C8.10667 5.43355 7.9 5.43355 7.76667 5.56689L4.66667 8.66689H6.66667V11.3336H9.33333Z" fill="white"/>
+                        </mask>
+                        <g mask="url(#mask0)">
+                            <rect width="16" height="16" fill="#E0B000"/>
+                        </g>
+                    </svg>
+                    </div>
+                    <p>Tap "Sync" on the home screen for new data.</p>
+                </div>
+
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">06-JAN-2021</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">05-JAN-2021</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">04-JAN-2021</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">03-JAN-2021</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">02-JAN-2021</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">01-JAN-2021</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">31-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">30-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">29-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">28-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">27-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">26-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">25-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">24-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">23-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">22-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">21-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">20-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">19-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">18-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">17-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">16-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">15-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">14-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">13-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">12-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">11-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">10-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">09-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+                <div class="day">
+                    <h3 class="stat-day">
+                        <span class="num">08-DEC-2020</span>
+                    </h3>
+
+                    <div class="counts">
+                        <div class="count count-1">
+                            <strong>Registered</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+
+                        <div class="count count-2">
+                            <strong>Follow-up</strong>
+                            <div class="big-number">
+                                0
+                            </div>
+                            Patients
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- monthly registered patients view -->
+        <div class="card">
+            <a href="#"  onclick="openWindow('progress-help-registered', 'progress-start'); return false" class="info"><span>?</span></a>
+            <h3>Registered patients</h3>
+
+
+            <form>
+                <select class="card-dropdown registrations" onchange='filterDataByGender("registrations")'>
+
+
+                    <option value="hypertension:all">All</option>
+                    <option value="hypertension:male">
+                        Male
+                    </option>
+                    <option value="hypertension:female">
+                        Female
+                    </option>
+                    <option value="hypertension:transgender">
+                        Transgender
+                    </option>
+
+                </select>
+            </form>
+
+
+            <!-- load up the tables for totals and diabetes only if diabetes is on -->
+
+            <!-- gender-wise tables -->
+            <table class="progress-table registrations diabetes:male" style="display: none">
+                <tr class="total">
+                    <td class="row-label">All-time</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">January</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">December</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">November</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">October</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">September</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">August</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+            <!-- gender-wise tables -->
+            <table class="progress-table registrations diabetes:female" style="display: none">
+                <tr class="total">
+                    <td class="row-label">All-time</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">January</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">December</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">November</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">October</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">September</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">August</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+            <!-- gender-wise tables -->
+            <table class="progress-table registrations diabetes:transgender" style="display: none">
+                <tr class="total">
+                    <td class="row-label">All-time</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">January</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">December</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">November</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">October</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">September</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">August</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+
+            <!-- hypertension-only -->
+            <!-- the "all genders" table -->
+            <table class="progress-table registrations hypertension:all"
+                   style="">
+
+                <tr class="total">
+                    <td class="row-label">All-time</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">January</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">December</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">November</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">October</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">September</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">August</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+
+            <!-- gender-wise tables -->
+            <table class="progress-table registrations hypertension:male" style="display: none">
+                <tr class="total">
+                    <td class="row-label">All-time</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">January</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">December</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">November</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">October</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">September</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">August</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+            <!-- gender-wise tables -->
+            <table class="progress-table registrations hypertension:female" style="display: none">
+                <tr class="total">
+                    <td class="row-label">All-time</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">January</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">December</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">November</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">October</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">September</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">August</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+            <!-- gender-wise tables -->
+            <table class="progress-table registrations hypertension:transgender" style="display: none">
+                <tr class="total">
+                    <td class="row-label">All-time</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">January</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">December</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">November</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">October</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">September</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">August</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <!-- monthly follow-up patients view -->
+        <div class="card">
+            <a href="#"  onclick="openWindow('progress-help-followup', 'progress-start'); return false" class="info"><span>?</span></a>
+            <h3>Follow-up patients</h3>
+
+
+            <form>
+                <select class="card-dropdown follow_ups" onchange='filterDataByGender("follow_ups")'>
+
+
+                    <option value="hypertension:all">All</option>
+                    <option value="hypertension:male">
+                        Male
+                    </option>
+                    <option value="hypertension:female">
+                        Female
+                    </option>
+                    <option value="hypertension:transgender">
+                        Transgender
+                    </option>
+
+                </select>
+            </form>
+
+
+            <!-- load up the tables for totals and diabetes only if diabetes is on -->
+
+            <!-- gender-wise tables -->
+            <table class="progress-table follow_ups diabetes:male" style="display: none">
+                <tr class="total">
+                    <td class="row-label">All-time</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">January</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">December</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">November</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">October</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">September</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">August</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+            <!-- gender-wise tables -->
+            <table class="progress-table follow_ups diabetes:female" style="display: none">
+                <tr class="total">
+                    <td class="row-label">All-time</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">January</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">December</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">November</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">October</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">September</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">August</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+            <!-- gender-wise tables -->
+            <table class="progress-table follow_ups diabetes:transgender" style="display: none">
+                <tr class="total">
+                    <td class="row-label">All-time</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">January</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">December</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">November</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">October</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">September</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">August</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+
+            <!-- hypertension-only -->
+            <!-- the "all genders" table -->
+            <table class="progress-table follow_ups hypertension:all"
+                   style="">
+
+                <tr class="total">
+                    <td class="row-label">All-time</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">January</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">December</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">November</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">October</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">September</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">August</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+
+            <!-- gender-wise tables -->
+            <table class="progress-table follow_ups hypertension:male" style="display: none">
+                <tr class="total">
+                    <td class="row-label">All-time</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">January</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">December</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">November</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">October</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">September</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">August</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+            <!-- gender-wise tables -->
+            <table class="progress-table follow_ups hypertension:female" style="display: none">
+                <tr class="total">
+                    <td class="row-label">All-time</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">January</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">December</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">November</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">October</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">September</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">August</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+            <!-- gender-wise tables -->
+            <table class="progress-table follow_ups hypertension:transgender" style="display: none">
+                <tr class="total">
+                    <td class="row-label">All-time</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">January</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">December</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">November</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">October</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">September</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td class="row-label no-padding">August</td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <!-- monthly hypertension control view -->
+        <div class="card">
+            <a href="#"  onclick="openWindow('progress-help-controlled', 'progress-start'); return false" class="info"><span>?</span></a>
+            <h3>Hypertension controlled</h3>
+            <p class="desc">
+                How many patients with hypertension BP <140/90 in the last 3 months?
+            </p>
+
+            <p class="desc control-desc">
+                <strong>December 2020</strong>
+                <br>0 of 0 patients
+                <br><strong class="green">0%</strong>
+            </p>
+
+            <table class="bar-chart">
+                <tbody>
+                <tr>
+                    <td class="bar-row">
+                        <div class="bar-value"><span><b class="tip">Jan-2020</b> 0%</span></div>
+                        <div style="height: 0px;" class="bar"><span></span></div>
+                    </td>
+                    <td class="bar-row">
+                        <div class="bar-value"><span><b class="tip">Feb-2020</b> 0%</span></div>
+                        <div style="height: 0px;" class="bar"><span></span></div>
+                    </td>
+                    <td class="bar-row">
+                        <div class="bar-value"><span><b class="tip">Mar-2020</b> 0%</span></div>
+                        <div style="height: 0px;" class="bar"><span></span></div>
+                    </td>
+                    <td class="bar-row">
+                        <div class="bar-value"><span><b class="tip">Apr-2020</b> 0%</span></div>
+                        <div style="height: 0px;" class="bar"><span></span></div>
+                    </td>
+                    <td class="bar-row">
+                        <div class="bar-value"><span><b class="tip">May-2020</b> 0%</span></div>
+                        <div style="height: 0px;" class="bar"><span></span></div>
+                    </td>
+                    <td class="bar-row">
+                        <div class="bar-value"><span><b class="tip">Jun-2020</b> 0%</span></div>
+                        <div style="height: 0px;" class="bar"><span></span></div>
+                    </td>
+                    <td class="bar-row">
+                        <div class="bar-value"><span><b class="tip">Jul-2020</b> 0%</span></div>
+                        <div style="height: 0px;" class="bar"><span></span></div>
+                    </td>
+                    <td class="bar-row">
+                        <div class="bar-value"><span><b class="tip">Aug-2020</b> 0%</span></div>
+                        <div style="height: 0px;" class="bar"><span></span></div>
+                    </td>
+                    <td class="bar-row">
+                        <div class="bar-value"><span><b class="tip">Sep-2020</b> 0%</span></div>
+                        <div style="height: 0px;" class="bar"><span></span></div>
+                    </td>
+                    <td class="bar-row">
+                        <div class="bar-value"><span><b class="tip">Oct-2020</b> 0%</span></div>
+                        <div style="height: 0px;" class="bar"><span></span></div>
+                    </td>
+                    <td class="bar-row">
+                        <div class="bar-value"><span><b class="tip">Nov-2020</b> 0%</span></div>
+                        <div style="height: 0px;" class="bar"><span></span></div>
+                    </td>
+                    <td class="bar-row">
+                        <div class="bar-value"><span><b class="tip">Dec-2020</b> 0%</span></div>
+                        <div style="height: 0px;" class="bar"><span></span></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <p class="center" style="margin: 12px 0 0 0; text-align: center;">Last 12 months</p>
+        </div>
+
+        <div class="card">
+            <a href="#" onclick="openWindow('progress-cohort', 'progress-start'); return false" class="nav-next">Cohort report</a>
+        </div>
+
+        <!-- all trophies view -->
+
+        <!-- footer -->
+        <footer>
+            <h4 style="padding-top: 60px;">Notes</h4>
+            <p>Data is for all activity at CHC Ballianwali. If data appears out of date, tap the "Sync pending" link on the home screen.</p>
+            <h4 style="padding-top: 60px;">Thank You</h4>
+            <p>Thank you for all of your hard work treating patients with hypertension. Your work saves lives from heart attacks and strokes.</p>
+            <div style="height: 100px;"></div>
+        </footer>
+    </div>
+</div>
+
+<div id="progress-help-registered" class="progress-body" style="display: none;">
+    <div class="progress-contents">
+        <a href="#" onclick="closeWindow('progress-help-registered', 'progress-start'); return false" class="help-back">
+            <div class="svg-container"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="icon/navigation/arrow_back_24px">
+                    <path id="icon/navigation/arrow_back_24px_2" d="M18.7912 11.005H7.62124L12.5012 6.12499C12.8912 5.73499 12.8912 5.09499 12.5012 4.70499C12.3144 4.51774 12.0608 4.41251 11.7962 4.41251C11.5317 4.41251 11.2781 4.51774 11.0912 4.70499L4.50124 11.295C4.11124 11.685 4.11124 12.315 4.50124 12.705L11.0912 19.295C11.4812 19.685 12.1112 19.685 12.5012 19.295C12.8912 18.905 12.8912 18.275 12.5012 17.885L7.62124 13.005H18.7912C19.3412 13.005 19.7912 12.555 19.7912 12.005C19.7912 11.455 19.3412 11.005 18.7912 11.005Z" fill="#0075EB" fill-opacity="1"/>
+                </g>
+            </svg>
+            </div>
+        </a>
+
+        <h2 style="padding-top: 80px; padding-left: 8px;">Definition</h2>
+
+        <div class="card">
+            <h3 style="margin-bottom: 1em;">Registered patients</h3>
+            <p class="desc" style="margin-bottom: 1em;">
+                Patients who were registered into Simple by staff at this facility. The patient's "Preferred facility" could be any facility.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="progress-help-followup" class="progress-body" style="display: none;">
+    <div class="progress-contents">
+        <a href="#" onclick="closeWindow('progress-help-followup', 'progress-start'); return false" class="help-back">
+            <div class="svg-container"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="icon/navigation/arrow_back_24px">
+                    <path id="icon/navigation/arrow_back_24px_2" d="M18.7912 11.005H7.62124L12.5012 6.12499C12.8912 5.73499 12.8912 5.09499 12.5012 4.70499C12.3144 4.51774 12.0608 4.41251 11.7962 4.41251C11.5317 4.41251 11.2781 4.51774 11.0912 4.70499L4.50124 11.295C4.11124 11.685 4.11124 12.315 4.50124 12.705L11.0912 19.295C11.4812 19.685 12.1112 19.685 12.5012 19.295C12.8912 18.905 12.8912 18.275 12.5012 17.885L7.62124 13.005H18.7912C19.3412 13.005 19.7912 12.555 19.7912 12.005C19.7912 11.455 19.3412 11.005 18.7912 11.005Z" fill="#0075EB" fill-opacity="1"/>
+                </g>
+            </svg>
+            </div>
+        </a>
+
+        <h2 style="padding-top: 80px; padding-left: 8px;">Definition</h2>
+
+        <div class="card">
+            <h3 style="margin-bottom: 1em;">Follow-up patients</h3>
+            <p class="desc" style="margin-bottom: 1em;">
+                Patients with a BP or blood sugar measure recorded at this facility. The follow-up patients count is not affected by where the patient was registered or what the patient's "Preferred Facility" is.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="progress-help-controlled" class="progress-body" style="display: none;">
+    <div class="progress-contents">
+        <a href="#" onclick="closeWindow('progress-help-controlled', 'progress-start'); return false" class="help-back">
+            <div class="svg-container"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="icon/navigation/arrow_back_24px">
+                    <path id="icon/navigation/arrow_back_24px_2" d="M18.7912 11.005H7.62124L12.5012 6.12499C12.8912 5.73499 12.8912 5.09499 12.5012 4.70499C12.3144 4.51774 12.0608 4.41251 11.7962 4.41251C11.5317 4.41251 11.2781 4.51774 11.0912 4.70499L4.50124 11.295C4.11124 11.685 4.11124 12.315 4.50124 12.705L11.0912 19.295C11.4812 19.685 12.1112 19.685 12.5012 19.295C12.8912 18.905 12.8912 18.275 12.5012 17.885L7.62124 13.005H18.7912C19.3412 13.005 19.7912 12.555 19.7912 12.005C19.7912 11.455 19.3412 11.005 18.7912 11.005Z" fill="#0075EB" fill-opacity="1"/>
+                </g>
+            </svg>
+            </div>
+        </a>
+
+        <h2 style="padding-top: 80px; padding-left: 8px;">Definition</h2>
+
+        <div class="card">
+            <h3 style="margin-bottom: 1em;">Hypertension controlled</h3>
+            <p class="desc" style="margin-bottom: 1em;">
+                <b>Numerator</b><br>
+                Patients with at least one BP measure recorded in the last 3 months at <em>any facility</em>. At the most recent visit the patient had BP&nbsp;&lt;140 and &lt;90.
+            </p>
+            <p class="desc">
+                <b>Denominator</b><br>
+                All patients diagnosed with hypertension who have this facility as their "Preferred Facility." Patients registered in the most recent 3 months are excluded, so the facility has the opportunity to get their BP controlled.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="progress-cohort" class="progress-body" style="display: none;">
+    <div class="progress-contents">
+        <a href="#" onclick="closeWindow('progress-cohort', 'progress-start'); return false" class="help-back">
+            <div class="svg-container"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="icon/navigation/arrow_back_24px">
+                    <path id="icon/navigation/arrow_back_24px_2" d="M18.7912 11.005H7.62124L12.5012 6.12499C12.8912 5.73499 12.8912 5.09499 12.5012 4.70499C12.3144 4.51774 12.0608 4.41251 11.7962 4.41251C11.5317 4.41251 11.2781 4.51774 11.0912 4.70499L4.50124 11.295C4.11124 11.685 4.11124 12.315 4.50124 12.705L11.0912 19.295C11.4812 19.685 12.1112 19.685 12.5012 19.295C12.8912 18.905 12.8912 18.275 12.5012 17.885L7.62124 13.005H18.7912C19.3412 13.005 19.7912 12.555 19.7912 12.005C19.7912 11.455 19.3412 11.005 18.7912 11.005Z" fill="#0075EB" fill-opacity="1"/>
+                </g>
+            </svg>
+            </div>
+        </a>
+
+        <h2 style="padding-top: 80px; padding-left: 8px;">Hypertension cohort report</h2>
+        <p class="left">Cohort reports show the outcome for newly registered patients with hypertension in their first few months of treatment.</p>
+        <div class="key">
+            <p class="left" style="color: #007A31;"><span class="key-color green"></span> Patients visited with BP &lt;140/90</p>
+            <p class="left" style="color: #FF3355;"><span class="key-color red"></span> Patients visited with BP &ge;140/90</p>
+            <p class="left" style="color: #6C737A;"><span class="key-color grey"></span> Patients with no BP measure</p>
+        </div>
+
+        <div class="card cohort">
+            <h6>
+                0 Patients&nbsp;
+                registered in Q3-2020
+            </h6>
+
+            <div style="font-size: 16px; margin: 8px 0 12px 0;">  Result from last visit in Q4-2020</div>
+            <table class="cohort-bars">
+                <tr>
+                    <td class="cohort-none"> No patients</td>
+                </tr>
+            </table>
+        </div>
+        <div class="card cohort">
+            <h6>
+                0 Patients&nbsp;
+                registered in Q2-2020
+            </h6>
+
+            <div style="font-size: 16px; margin: 8px 0 12px 0;">  Result from last visit in Q3-2020</div>
+            <table class="cohort-bars">
+                <tr>
+                    <td class="cohort-none"> No patients</td>
+                </tr>
+            </table>
+        </div>
+        <div class="card cohort">
+            <h6>
+                0 Patients&nbsp;
+                registered in Q1-2020
+            </h6>
+
+            <div style="font-size: 16px; margin: 8px 0 12px 0;">  Result from last visit in Q2-2020</div>
+            <table class="cohort-bars">
+                <tr>
+                    <td class="cohort-none"> No patients</td>
+                </tr>
+            </table>
+        </div>
+        <div class="card cohort">
+            <h6>
+                0 Patients&nbsp;
+                registered in Q4-2019
+            </h6>
+
+            <div style="font-size: 16px; margin: 8px 0 12px 0;">  Result from last visit in Q1-2020</div>
+            <table class="cohort-bars">
+                <tr>
+                    <td class="cohort-none"> No patients</td>
+                </tr>
+            </table>
+        </div>
+
+        <h3 style="padding-top: 40px; padding-left: 8px;"> Notes</h3>
+        <ul class="footnotes">
+            <li><strong> Numerator:</strong> Latest follow-up visit at any facility in quarter after registration.</li>
+            <li><strong> Denominator:</strong> All HTN patients assigned to this facility, registered in the quarter.</li>
+            <li>If a patient has multiple visits, their last BP is used to calculate BP control.</li>
+        </ul>
+    </div>
+</div>
+</body>
+
+<!-- always insert JS here -->
+<script type="text/javascript">function statistics(){if(document.getElementById("statistics")){let t=document.getElementById("statistics");return JSON.parse(t.attributes.getNamedItem("data-statistics").value)}return null}function dailyStatistics(){return Object.entries(statistics().daily.grouped_by_date)}function formatDate(t){return t.toJSON().slice(0,10)}function today(){let t=new Date;return t.setMinutes(t.getMinutes()-t.getTimezoneOffset()),t}function yesterday(){const t=today();return new Date(t.setDate(t.getDate()-1))}function todayString(){return statistics().metadata.today_string}function formattedTomorrowDate(){return statistics().metadata.formatted_next_date}function dailyStatisticsDates(){const t=dailyStatistics().map(([t,e])=>e);return Object.keys(Object.assign(...t))}function latestDateInDailyStatistics(){const t=dailyStatisticsDates().map(t=>Date.parse(t));return new Date(Math.max.apply(null,t))}function $syncNudgeCard(){return document.querySelector("#daily-stats-card > .count-empty")}function $allDaysInCarousel(){return document.getElementsByClassName("day")}function $nextSlideButton(){return document.getElementsByClassName("button-next")[0]}function $prevSlideButton(){return document.getElementsByClassName("button-prev")[0]}function syncNudgeCardPosition(){const t=$syncNudgeCard(),e=$allDaysInCarousel();for(let[s,n]of Object.entries(e))if(n===t)return parseInt(s)+1;return-1}function showSyncNudge(t){let e=!1,s=$syncNudgeCard();for(let t of dailyStatisticsDates())if(t===formatDate(today())){e=!0,s.classList.remove("day");break}e||t!==syncNudgeCardPosition()||(s.classList.add("day"),s.style.display="block")}function updateDateAtEndOfCarousel(){const t=formatDate(latestDateInDailyStatistics()),e=formatDate(today()),s=formatDate(yesterday()),n=$allDaysInCarousel()[0].querySelector(".stat-day");t!==e&&t!==s?t<s&&(n.innerHTML=formattedTomorrowDate()):n.innerHTML=todayString()}function showDailyProgressCards(t){const e=$allDaysInCarousel();let s=$nextSlideButton(),n=$prevSlideButton();s.disabled=!1,n.disabled=!1,t===e.length&&(s.disabled=!0),1===t&&(n.disabled=!0);for(let t=0;t<e.length;t++)e[t].classList.remove("day-show");e[window.lastSlidePositionForProgressCards-1].classList.add("day-show")}function refreshCarousel(t){showSyncNudge(t),showDailyProgressCards(t),updateDateAtEndOfCarousel()}function nextSlide(t){refreshCarousel(window.lastSlidePositionForProgressCards+=t)}function filterDataByGender(t){let e=document.getElementsByClassName("progress-table "+t);const s=document.getElementsByClassName("card-dropdown "+t)[0].selectedOptions[0].value;let n=document.getElementsByClassName("progress-table "+t+" "+s);for(let t=0;t<e.length;t++)e[t].style.display="none";n[0].style.display="inline-table"}function openWindow(t,e){if(document.getElementById(t).style.display="block",e){let t=document.getElementById(e);t.style.display="none",t.style.height="0"}document.body.scrollTop=0,document.documentElement.scrollTop=0}function closeWindow(t,e){if(document.getElementById(t).style.display="none",e){let t=document.getElementById(e);t.style.display="block",t.style.height="auto"}}window.onload=function(){null!==statistics()&&(window.lastSlidePositionForProgressCards=1,refreshCarousel(window.lastSlidePositionForProgressCards))};</script>
+</html>

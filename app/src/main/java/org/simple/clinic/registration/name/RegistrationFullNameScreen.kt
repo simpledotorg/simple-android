@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
@@ -43,6 +44,9 @@ class RegistrationFullNameScreen :
 
   private val validationErrorTextView
     get() = binding.validationErrorTextView
+
+  private val nextButton
+    get() = binding.nextButton
 
   @Inject
   lateinit var router: Router
@@ -98,10 +102,17 @@ class RegistrationFullNameScreen :
           .map { it.trim() }
           .map(::RegistrationFullNameTextChanged)
 
-  private fun doneClicks() =
-      fullNameEditText
-          .editorActions() { it == EditorInfo.IME_ACTION_DONE }
-          .map { RegistrationFullNameDoneClicked() }
+  private fun doneClicks(): Observable<RegistrationFullNameDoneClicked> {
+    val nextClicked = nextButton
+        .clicks()
+        .map { RegistrationFullNameDoneClicked() }
+
+    val imeActionClicks = fullNameEditText
+        .editorActions() { it == EditorInfo.IME_ACTION_DONE }
+        .map { RegistrationFullNameDoneClicked() }
+
+    return imeActionClicks.mergeWith(nextClicked)
+  }
 
   override fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
     fullNameEditText.setTextAndCursor(ongoingEntry.fullName)

@@ -27,8 +27,6 @@
   <dimen name="pinentry_content_bottom_spacing_with_forgot_pin">@dimen/spacing_12</dimen>
   <dimen name="pinentry_content_bottom_spacing_without_forgot_pin">@dimen/spacing_24</dimen>
 
-  <dimen name="patientsummary_elevation_linkidwithpatient">@dimen/elevation_toolbar</dimen>
-
   <dimen name="registrationfacilities_header_top_spacing_with_previous_section">0dp</dimen>
 
   <dimen name="allpatientsinfacility_fastscrollpopup_size">48dp</dimen>

@@ -7,8 +7,8 @@ import java.util.UUID
 
 @Parcelize
 data class LinkIdWithPatientModel(
-    val patientUuid: UUID?,
-    val identifier: Identifier?,
+    val patientUuid: UUID,
+    val identifier: Identifier,
     val patientName: String?,
     val addButtonState: ButtonState?
 ) : Parcelable {

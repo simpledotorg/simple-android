@@ -53,7 +53,7 @@ import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
-import org.simple.clinic.summary.linkId.LinkIdWithPatientSheetKey
+import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
 import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder_Old
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog

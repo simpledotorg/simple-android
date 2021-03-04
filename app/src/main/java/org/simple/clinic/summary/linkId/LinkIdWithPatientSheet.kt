@@ -3,15 +3,21 @@ package org.simple.clinic.summary.linkId
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.LinkIdWithPatientViewBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
+import org.simple.clinic.patient.PatientUuid
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
@@ -101,5 +107,21 @@ class LinkIdWithPatientSheet :
 
   interface Injector {
     fun inject(target: LinkIdWithPatientSheet)
+  }
+
+  @Parcelize
+  data class LinkIdWithPatientSheetKey(
+      val patientUuid: PatientUuid,
+      val identifier: Identifier,
+      val openedFrom: ScreenKey
+  ) : ScreenKey() {
+
+    override val analyticsName = "Link ID With Patient Sheet"
+
+    override val type = ScreenType.Modal
+
+    override fun instantiateFragment(): Fragment {
+      return LinkIdWithPatientSheet()
+    }
   }
 }

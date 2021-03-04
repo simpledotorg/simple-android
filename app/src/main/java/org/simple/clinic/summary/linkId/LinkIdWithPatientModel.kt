@@ -29,10 +29,6 @@ data class LinkIdWithPatientModel(
   val addingIdToPatient: Boolean
     get() = addButtonState == ButtonState.SAVING
 
-  fun linkIdWithPatientViewShown(patientUuid: UUID, identifier: Identifier): LinkIdWithPatientModel {
-    return copy(patientUuid = patientUuid, identifier = identifier)
-  }
-
   fun patientNameFetched(patientName: String): LinkIdWithPatientModel {
     return copy(patientName = patientName)
   }

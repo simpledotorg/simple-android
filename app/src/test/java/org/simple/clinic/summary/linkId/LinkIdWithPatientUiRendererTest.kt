@@ -20,7 +20,6 @@ class LinkIdWithPatientUiRendererTest {
 
   private val patientNameFetchedModel = LinkIdWithPatientModel
       .create(patientUuid, identifier)
-      .linkIdWithPatientViewShown(patientUuid, identifier)
       .patientNameFetched(patientName)
 
   private val linkIdWithPatientUiRenderer = LinkIdWithPatientUiRenderer(ui)

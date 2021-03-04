@@ -3,6 +3,7 @@ package org.simple.clinic.summary.linkId
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -23,7 +24,7 @@ class LinkIdWithPatientUpdateTest {
         .whenEvent(LinkIdWithPatientViewShown(patientUuid, identifier))
         .then(
             assertThatNext(
-                hasModel(defaultModel.linkIdWithPatientViewShown(patientUuid, identifier)),
+                hasNoModel(),
                 hasEffects(GetPatientNameFromId(patientUuid))
             )
         )
@@ -33,13 +34,12 @@ class LinkIdWithPatientUpdateTest {
   fun `when the patient details are loaded, then update the UI`() {
     val patientName = "TestName"
 
-    val linkIdWithPatientViewShownModel = defaultModel.linkIdWithPatientViewShown(patientUuid, identifier)
     updateSpec
-        .given(linkIdWithPatientViewShownModel)
+        .given(defaultModel)
         .whenEvent(PatientNameReceived(patientName))
         .then(
             assertThatNext(
-                hasModel(linkIdWithPatientViewShownModel.patientNameFetched(patientName)),
+                hasModel(defaultModel.patientNameFetched(patientName)),
                 hasNoEffects()
             )
         )
@@ -60,7 +60,8 @@ class LinkIdWithPatientUpdateTest {
 
   @Test
   fun `when add identifier is clicked, then update UI`() {
-    val patientFetchedModel = defaultModel.linkIdWithPatientViewShown(patientUuid, identifier)
+    val patientFetchedModel = defaultModel.patientNameFetched("Patient")
+
     updateSpec
         .given(patientFetchedModel)
         .whenEvent(LinkIdWithPatientAddClicked)

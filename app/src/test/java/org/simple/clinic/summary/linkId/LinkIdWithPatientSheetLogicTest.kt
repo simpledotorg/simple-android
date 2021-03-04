@@ -26,7 +26,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class LinkIdWithPatientViewLogicTest {
+class LinkIdWithPatientSheetLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -72,7 +72,6 @@ class LinkIdWithPatientViewLogicTest {
 
     // when
     setupController()
-    uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
     uiEvents.onNext(LinkIdWithPatientAddClicked)
 
     // then
@@ -85,7 +84,7 @@ class LinkIdWithPatientViewLogicTest {
 
     verify(ui, times(3)).renderPatientName(patientName)
     verify(ui).showAddButtonProgress()
-    verify(ui, times(4)).hideAddButtonProgress()
+    verify(ui, times(3)).hideAddButtonProgress()
     verify(uiActions).closeSheetWithIdLinked()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -95,12 +94,11 @@ class LinkIdWithPatientViewLogicTest {
     // when
     whenever(patientRepository.patientImmediate(patientUuid)).thenReturn(patient)
     setupController()
-    uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
     uiEvents.onNext(LinkIdWithPatientCancelClicked)
 
     // then
     verify(ui).renderPatientName(patientName)
-    verify(ui, times(3)).hideAddButtonProgress()
+    verify(ui, times(2)).hideAddButtonProgress()
     verify(uiActions).closeSheetWithoutIdLinked()
     verifyNoMoreInteractions(ui, uiActions)
 
@@ -122,8 +120,8 @@ class LinkIdWithPatientViewLogicTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = LinkIdWithPatientModel.create(),
-        init = Init { first(it) },
+        defaultModel = LinkIdWithPatientModel.create(patientUuid, identifier),
+        init = LinkIdWithPatientInit(),
         update = LinkIdWithPatientUpdate(),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render

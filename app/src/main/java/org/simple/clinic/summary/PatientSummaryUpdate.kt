@@ -23,13 +23,10 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is PatientSummaryDoneClicked -> dispatch(LoadDataForDoneClick(model.patientUuid))
       is CurrentUserAndFacilityLoaded -> currentUserAndFacilityLoaded(model, event)
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!, model.currentFacility!!))
-      is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
       is ScheduledAppointment -> dispatch(TriggerSync(event.sheetOpenedFrom))
       is CompletedCheckForInvalidPhone -> next(model.completedCheckForInvalidPhone())
       is PatientSummaryBloodPressureSaved -> bloodPressureSaved(model.openIntention, model.patientSummaryProfile!!)
       is FetchedHasShownMissingPhoneReminder -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
-      is LinkIdWithPatientSheetShown -> next(model.shownLinkIdWithPatientView())
-      is PatientSummaryLinkIdCompleted -> dispatch(HideLinkIdWithPatientView)
       is DataForBackClickLoaded -> dataForHandlingBackLoaded(
           patientUuid = model.patientUuid,
           hasPatientDataChanged = event.hasPatientDataChangedSinceScreenCreated,

@@ -53,9 +53,7 @@ import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
-import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
-import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
-import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
+import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
 import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder_Old
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
@@ -66,7 +64,6 @@ import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
-import org.simple.clinic.widgets.isVisible
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
@@ -127,9 +124,6 @@ class PatientSummaryScreen :
 
   private val backButton
     get() = binding.backButton
-
-  private val linkIdWithPatientView
-    get() = binding.linkIdWithPatientView
 
   private val contactTextView
     get() = binding.contactTextView
@@ -208,8 +202,6 @@ class PatientSummaryScreen :
             backClicks(),
             doneClicks(),
             bloodPressureSaves(),
-            identifierLinkedEvents(),
-            identifierLinkCancelledEvents(),
             editButtonClicks(),
             phoneNumberClicks(),
             contactDoctorClicks(),
@@ -313,11 +305,7 @@ class PatientSummaryScreen :
     return backButton.clicks()
         .mergeWith(hardwareBackClicks)
         .map {
-          if (linkIdWithPatientView.isVisible) {
-            PatientSummaryLinkIdCancelled
-          } else {
-            PatientSummaryBackClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp)
-          }
+          PatientSummaryBackClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp)
         }
   }
 
@@ -343,20 +331,6 @@ class PatientSummaryScreen :
       .subscribe {
         appointmentScheduleSheetClosed.notify(ScheduledAppointment(it!!.sheetOpenedFrom))
       }
-
-  private fun identifierLinkedEvents(): Observable<UiEvent> {
-    return linkIdWithPatientView
-        .uiEvents()
-        .ofType<LinkIdWithPatientLinked>()
-        .map { PatientSummaryLinkIdCompleted }
-  }
-
-  private fun identifierLinkCancelledEvents(): Observable<UiEvent> {
-    return linkIdWithPatientView
-        .uiEvents()
-        .ofType<LinkIdWithPatientCancelled>()
-        .map { PatientSummaryLinkIdCancelled }
-  }
 
   private fun phoneNumberClicks(): Observable<UiEvent> {
     return contactTextView.clicks().map { ContactPatientClicked }
@@ -491,12 +465,9 @@ class PatientSummaryScreen :
   }
 
   override fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier) {
-    linkIdWithPatientView.downstreamUiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
-    linkIdWithPatientView.show { linkIdWithPatientView.visibility = View.VISIBLE }
-  }
-
-  override fun hideLinkIdWithPatientView() {
-    linkIdWithPatientView.hide { linkIdWithPatientView.visibility = View.GONE }
+    router.push(LinkIdWithPatientSheetKey(patientUuid = patientUuid,
+        identifier = identifier,
+        openedFrom = screenKey))
   }
 
   override fun showEditButton() {

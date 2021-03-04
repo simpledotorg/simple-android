@@ -1,10 +1,10 @@
 package org.simple.clinic.summary
 
 import com.spotify.mobius.rx2.RxMobius
+import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
@@ -65,14 +65,12 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadPatientSummaryProfile::class.java, loadPatientSummaryProfile(schedulersProvider.io()))
         .addTransformer(LoadCurrentUserAndFacility::class.java, loadUserAndCurrentFacility())
         .addConsumer(HandleEditClick::class.java, { uiActions.showEditPatientScreen(it.patientSummaryProfile, it.currentFacility) }, schedulersProvider.ui())
-        .addAction(HandleLinkIdCancelled::class.java, { uiActions.goToPreviousScreen() }, schedulersProvider.ui())
         .addAction(GoBackToPreviousScreen::class.java, { uiActions.goToPreviousScreen() }, schedulersProvider.ui())
         .addAction(GoToHomeScreen::class.java, { uiActions.goToHomeScreen() }, schedulersProvider.ui())
         .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io(), schedulersProvider.ui()))
         .addTransformer(MarkReminderAsShown::class.java, markReminderAsShown(schedulersProvider.io()))
         .addConsumer(ShowAddPhonePopup::class.java, { uiActions.showAddPhoneDialog(it.patientUuid) }, schedulersProvider.ui())
-        .addTransformer(ShowLinkIdWithPatientView::class.java, showLinkIdWithPatientView(schedulersProvider.ui()))
-        .addAction(HideLinkIdWithPatientView::class.java, { uiActions.hideLinkIdWithPatientView() }, schedulersProvider.ui())
+        .addConsumer(ShowLinkIdWithPatientView::class.java, { uiActions.showLinkIdWithPatientView(it.patientUuid, it.identifier) }, schedulersProvider.ui())
         .addConsumer(
             ShowScheduleAppointmentSheet::class.java,
             { uiActions.showScheduleAppointmentSheet(it.patientUuid, it.sheetOpenedFrom, it.currentFacility) },
@@ -222,17 +220,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
             DataForDoneClickLoaded(countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid), diagnosisRecorded = medicalHistory.diagnosisRecorded)
           }
-    }
-  }
-
-  private fun showLinkIdWithPatientView(
-      scheduler: Scheduler
-  ): ObservableTransformer<ShowLinkIdWithPatientView, PatientSummaryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(scheduler)
-          .doOnNext { uiActions.showLinkIdWithPatientView(it.patientUuid, it.identifier) }
-          .map { LinkIdWithPatientSheetShown }
     }
   }
 

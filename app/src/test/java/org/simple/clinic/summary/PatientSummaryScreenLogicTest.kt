@@ -210,26 +210,6 @@ class PatientSummaryScreenLogicTest {
     )
   }
 
-  @Test
-  fun `when the link id with patient is cancelled, the patient summary screen must be closed`() {
-    startMobiusLoop(LinkIdWithPatient(Identifier("abcd", BpPassport)))
-
-    uiEvents.onNext(PatientSummaryLinkIdCancelled)
-
-    verify(uiActions).goToPreviousScreen()
-  }
-
-  @Test
-  fun `when the link id with patient is completed, the link id screen must be closed`() {
-    val openIntention = LinkIdWithPatient(identifier = Identifier("id", BpPassport))
-    startMobiusLoop(openIntention)
-
-    uiEvents.onNext(PatientSummaryLinkIdCompleted)
-
-    verify(uiActions).hideLinkIdWithPatientView()
-    verify(uiActions, never()).goToPreviousScreen()
-  }
-
   private fun startMobiusLoop(openIntention: OpenIntention) {
     val effectHandler = PatientSummaryEffectHandler(
         schedulersProvider = TrampolineSchedulersProvider(),

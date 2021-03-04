@@ -122,7 +122,7 @@ class LinkIdWithPatientSheetLogicTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = LinkIdWithPatientModel.create(),
+        defaultModel = LinkIdWithPatientModel.create(patientUuid, identifier),
         init = Init { first(it) },
         update = LinkIdWithPatientUpdate(),
         effectHandler = effectHandler.build(),

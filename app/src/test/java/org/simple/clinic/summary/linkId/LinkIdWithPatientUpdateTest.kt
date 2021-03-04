@@ -12,9 +12,9 @@ import java.util.UUID
 
 class LinkIdWithPatientUpdateTest {
   private val updateSpec = UpdateSpec<LinkIdWithPatientModel, LinkIdWithPatientEvent, LinkIdWithPatientEffect>(LinkIdWithPatientUpdate())
-  private val defaultModel = LinkIdWithPatientModel.create()
   private val patientUuid = UUID.fromString("e2770294-fe11-4f66-ab8d-0da30382d957")
   private val identifier = TestData.identifier(type = Identifier.IdentifierType.BpPassport, value = "435645")
+  private val defaultModel = LinkIdWithPatientModel.create(patientUuid, identifier)
 
   @Test
   fun `when the screen is shown, then load the patient details`() {

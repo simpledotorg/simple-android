@@ -15,9 +15,9 @@ data class LinkIdWithPatientModel(
 
   companion object {
 
-    fun create() = LinkIdWithPatientModel(
-        patientUuid = null,
-        identifier = null,
+    fun create(patientUuid: UUID, identifier: Identifier) = LinkIdWithPatientModel(
+        patientUuid = patientUuid,
+        identifier = identifier,
         patientName = null,
         addButtonState = null
     )

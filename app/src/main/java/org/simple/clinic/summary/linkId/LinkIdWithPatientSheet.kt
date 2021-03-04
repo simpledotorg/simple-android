@@ -43,7 +43,7 @@ class LinkIdWithPatientSheet :
   @Inject
   lateinit var effectHandlerFactory: LinkIdWithPatientEffectHandler.Factory
 
-  override fun defaultModel() = LinkIdWithPatientModel.create()
+  override fun defaultModel() = LinkIdWithPatientModel.create(screenKey.patientUuid, screenKey.identifier)
 
   override fun bindView(inflater: LayoutInflater, container: ViewGroup?) =
       LinkIdWithPatientViewBinding.inflate(layoutInflater, container, false)

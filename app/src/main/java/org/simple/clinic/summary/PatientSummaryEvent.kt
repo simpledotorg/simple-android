@@ -28,8 +28,6 @@ data class CurrentUserAndFacilityLoaded(val user: User, val facility: Facility) 
 
 object PatientSummaryEditClicked : PatientSummaryEvent()
 
-object PatientSummaryLinkIdCancelled : PatientSummaryEvent()
-
 data class ScheduledAppointment(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEvent() {
   override val analyticsName = "Patient Summary:Schedule Appointment Sheet Closed"
 }
@@ -37,10 +35,6 @@ data class ScheduledAppointment(val sheetOpenedFrom: AppointmentSheetOpenedFrom)
 object CompletedCheckForInvalidPhone : PatientSummaryEvent()
 
 object PatientSummaryBloodPressureSaved : PatientSummaryEvent()
-
-object LinkIdWithPatientSheetShown : PatientSummaryEvent()
-
-object PatientSummaryLinkIdCompleted : PatientSummaryEvent()
 
 data class DataForBackClickLoaded(
     val hasPatientDataChangedSinceScreenCreated: Boolean,

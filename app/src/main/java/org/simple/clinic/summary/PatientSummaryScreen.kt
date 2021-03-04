@@ -470,10 +470,6 @@ class PatientSummaryScreen :
         openedFrom = screenKey))
   }
 
-  override fun hideLinkIdWithPatientView() {
-    // TODO: Remove this
-  }
-
   override fun showEditButton() {
     editPatientButton.visibility = View.VISIBLE
   }

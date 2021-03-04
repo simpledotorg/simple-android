@@ -17,8 +17,6 @@ data class HandleEditClick(
     val currentFacility: Facility
 ) : PatientSummaryEffect()
 
-object HandleLinkIdCancelled: PatientSummaryEffect()
-
 object GoBackToPreviousScreen: PatientSummaryEffect()
 
 object GoToHomeScreen: PatientSummaryEffect()
@@ -30,8 +28,6 @@ data class MarkReminderAsShown(val patientUuid: UUID): PatientSummaryEffect()
 data class ShowAddPhonePopup(val patientUuid: UUID): PatientSummaryEffect()
 
 data class ShowLinkIdWithPatientView(val patientUuid: UUID, val identifier: Identifier): PatientSummaryEffect()
-
-object HideLinkIdWithPatientView : PatientSummaryEffect()
 
 data class ShowScheduleAppointmentSheet(
     val patientUuid: UUID,

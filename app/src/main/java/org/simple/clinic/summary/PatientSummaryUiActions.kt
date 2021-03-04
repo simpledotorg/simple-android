@@ -10,16 +10,17 @@ interface PatientSummaryUiActions {
       sheetOpenedFrom: AppointmentSheetOpenedFrom,
       currentFacility: Facility
   )
+
   fun showEditPatientScreen(
       patientSummaryProfile: PatientSummaryProfile,
       currentFacility: Facility
   )
+
   fun goToPreviousScreen()
   fun goToHomeScreen()
   fun showUpdatePhoneDialog(patientUuid: UUID)
   fun showAddPhoneDialog(patientUuid: UUID)
   fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier)
-  fun hideLinkIdWithPatientView()
   fun showDiagnosisError()
   fun openPatientContactSheet(patientUuid: UUID)
   fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID)

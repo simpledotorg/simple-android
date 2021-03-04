@@ -14,7 +14,6 @@ data class PatientSummaryModel(
     val patientSummaryProfile: PatientSummaryProfile?,
     val currentFacility: Facility?,
     val hasCheckedForInvalidPhone: Boolean,
-    val linkIdWithPatientViewShown: Boolean,
     val userLoggedInStatus: User.LoggedInStatus?,
     val medicalOfficers: List<MedicalOfficer>?
 ) : Parcelable, PatientSummaryChildModel {
@@ -27,7 +26,6 @@ data class PatientSummaryModel(
           patientSummaryProfile = null,
           currentFacility = null,
           hasCheckedForInvalidPhone = false,
-          linkIdWithPatientViewShown = false,
           userLoggedInStatus = null,
           medicalOfficers = null
       )
@@ -72,10 +70,6 @@ data class PatientSummaryModel(
 
   fun completedCheckForInvalidPhone(): PatientSummaryModel {
     return copy(hasCheckedForInvalidPhone = true)
-  }
-
-  fun shownLinkIdWithPatientView(): PatientSummaryModel {
-    return copy(linkIdWithPatientViewShown = true)
   }
 
   fun userLoggedInStatusLoaded(loggedInStatus: User.LoggedInStatus?): PatientSummaryModel {

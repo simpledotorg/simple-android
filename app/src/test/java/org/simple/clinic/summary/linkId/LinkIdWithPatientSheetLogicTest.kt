@@ -84,7 +84,7 @@ class LinkIdWithPatientSheetLogicTest {
 
     verify(ui, times(3)).renderPatientName(patientName)
     verify(ui).showAddButtonProgress()
-    verify(ui, times(4)).hideAddButtonProgress()
+    verify(ui, times(3)).hideAddButtonProgress()
     verify(uiActions).closeSheetWithIdLinked()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -98,7 +98,7 @@ class LinkIdWithPatientSheetLogicTest {
 
     // then
     verify(ui).renderPatientName(patientName)
-    verify(ui, times(3)).hideAddButtonProgress()
+    verify(ui, times(2)).hideAddButtonProgress()
     verify(uiActions).closeSheetWithoutIdLinked()
     verifyNoMoreInteractions(ui, uiActions)
 
@@ -121,7 +121,7 @@ class LinkIdWithPatientSheetLogicTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = LinkIdWithPatientModel.create(patientUuid, identifier),
-        init = Init { first(it) },
+        init = LinkIdWithPatientInit(),
         update = LinkIdWithPatientUpdate(),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render

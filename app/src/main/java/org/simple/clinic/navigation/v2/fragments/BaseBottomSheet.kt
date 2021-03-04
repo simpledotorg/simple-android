@@ -6,7 +6,10 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.viewbinding.ViewBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.spotify.mobius.EventSource
 import com.spotify.mobius.Init
@@ -48,6 +51,19 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
   protected val binding: B
     get() = _binding!!
 
+  private var behavior: BottomSheetBehavior<FrameLayout>? = null
+  private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+    override fun onStateChanged(bottomSheet: View, newState: Int) {
+      if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+        behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+      }
+    }
+
+    override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+    }
+  }
+
   abstract fun defaultModel(): M
 
   abstract fun bindView(inflater: LayoutInflater, container: ViewGroup?): B
@@ -71,7 +87,10 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val dialog = super.onCreateDialog(savedInstanceState)
+    val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+
+    behavior = dialog.behavior
+    behavior?.addBottomSheetCallback(bottomSheetCallback)
 
     // This is needed because the router is not aware of the changes
     // in the history when the bottom sheet dialog is dismissed in the
@@ -101,6 +120,8 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
     super.onDestroyView()
     controller.disconnect()
     _binding = null
+    behavior?.removeBottomSheetCallback(bottomSheetCallback)
+    behavior = null
   }
 
   override fun onResume() {

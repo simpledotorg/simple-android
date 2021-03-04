@@ -7,17 +7,17 @@ import java.util.UUID
 
 @Parcelize
 data class LinkIdWithPatientModel(
-    val patientUuid: UUID?,
-    val identifier: Identifier?,
+    val patientUuid: UUID,
+    val identifier: Identifier,
     val patientName: String?,
     val addButtonState: ButtonState?
 ) : Parcelable {
 
   companion object {
 
-    fun create() = LinkIdWithPatientModel(
-        patientUuid = null,
-        identifier = null,
+    fun create(patientUuid: UUID, identifier: Identifier) = LinkIdWithPatientModel(
+        patientUuid = patientUuid,
+        identifier = identifier,
         patientName = null,
         addButtonState = null
     )
@@ -28,10 +28,6 @@ data class LinkIdWithPatientModel(
 
   val addingIdToPatient: Boolean
     get() = addButtonState == ButtonState.SAVING
-
-  fun linkIdWithPatientViewShown(patientUuid: UUID, identifier: Identifier): LinkIdWithPatientModel {
-    return copy(patientUuid = patientUuid, identifier = identifier)
-  }
 
   fun patientNameFetched(patientName: String): LinkIdWithPatientModel {
     return copy(patientName = patientName)

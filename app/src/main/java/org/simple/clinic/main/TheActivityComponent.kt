@@ -57,7 +57,7 @@ import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.assignedfacility.AssignedFacilityView
 import org.simple.clinic.summary.bloodpressures.view.BloodPressureSummaryViewInjector
 import org.simple.clinic.summary.bloodsugar.view.BloodSugarSummaryViewInjector
-import org.simple.clinic.summary.linkId.LinkIdWithPatientView
+import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet
 import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryViewInjector
 import org.simple.clinic.summary.prescribeddrugs.DrugSummaryViewInjector
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
@@ -104,7 +104,7 @@ interface TheActivityComponent :
     PatientEntryScreen.Injector,
     UpdatePhoneNumberDialog.Injector,
     EditPatientScreen.Injector,
-    LinkIdWithPatientView.Injector,
+    LinkIdWithPatientSheet.Injector,
     AppLockScreen.Injector,
     PatientSearchView.Injector,
     TeleConsultSuccessScreen.Injector,

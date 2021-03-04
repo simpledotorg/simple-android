@@ -3,6 +3,7 @@ package org.simple.clinic.summary.linkId
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -12,34 +13,20 @@ import java.util.UUID
 
 class LinkIdWithPatientUpdateTest {
   private val updateSpec = UpdateSpec<LinkIdWithPatientModel, LinkIdWithPatientEvent, LinkIdWithPatientEffect>(LinkIdWithPatientUpdate())
-  private val defaultModel = LinkIdWithPatientModel.create()
   private val patientUuid = UUID.fromString("e2770294-fe11-4f66-ab8d-0da30382d957")
   private val identifier = TestData.identifier(type = Identifier.IdentifierType.BpPassport, value = "435645")
-
-  @Test
-  fun `when the screen is shown, then load the patient details`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(LinkIdWithPatientViewShown(patientUuid, identifier))
-        .then(
-            assertThatNext(
-                hasModel(defaultModel.linkIdWithPatientViewShown(patientUuid, identifier)),
-                hasEffects(GetPatientNameFromId(patientUuid))
-            )
-        )
-  }
+  private val defaultModel = LinkIdWithPatientModel.create(patientUuid, identifier)
 
   @Test
   fun `when the patient details are loaded, then update the UI`() {
     val patientName = "TestName"
 
-    val linkIdWithPatientViewShownModel = defaultModel.linkIdWithPatientViewShown(patientUuid, identifier)
     updateSpec
-        .given(linkIdWithPatientViewShownModel)
+        .given(defaultModel)
         .whenEvent(PatientNameReceived(patientName))
         .then(
             assertThatNext(
-                hasModel(linkIdWithPatientViewShownModel.patientNameFetched(patientName)),
+                hasModel(defaultModel.patientNameFetched(patientName)),
                 hasNoEffects()
             )
         )
@@ -60,7 +47,8 @@ class LinkIdWithPatientUpdateTest {
 
   @Test
   fun `when add identifier is clicked, then update UI`() {
-    val patientFetchedModel = defaultModel.linkIdWithPatientViewShown(patientUuid, identifier)
+    val patientFetchedModel = defaultModel.patientNameFetched("Patient")
+
     updateSpec
         .given(patientFetchedModel)
         .whenEvent(LinkIdWithPatientAddClicked)

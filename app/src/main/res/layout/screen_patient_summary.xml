@@ -272,11 +272,4 @@
 
   </FrameLayout>
 
-  <org.simple.clinic.summary.linkId.LinkIdWithPatientView
-    android:id="@+id/linkIdWithPatientView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:elevation="@dimen/patientsummary_elevation_linkidwithpatient"
-    android:visibility="gone" />
-
 </RelativeLayout>

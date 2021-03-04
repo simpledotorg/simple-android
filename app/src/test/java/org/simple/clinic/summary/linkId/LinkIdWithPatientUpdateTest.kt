@@ -18,19 +18,6 @@ class LinkIdWithPatientUpdateTest {
   private val defaultModel = LinkIdWithPatientModel.create(patientUuid, identifier)
 
   @Test
-  fun `when the screen is shown, then load the patient details`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(LinkIdWithPatientViewShown(patientUuid, identifier))
-        .then(
-            assertThatNext(
-                hasNoModel(),
-                hasEffects(GetPatientNameFromId(patientUuid))
-            )
-        )
-  }
-
-  @Test
   fun `when the patient details are loaded, then update the UI`() {
     val patientName = "TestName"
 

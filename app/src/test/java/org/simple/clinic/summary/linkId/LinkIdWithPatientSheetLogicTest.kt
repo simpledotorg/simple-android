@@ -72,7 +72,6 @@ class LinkIdWithPatientSheetLogicTest {
 
     // when
     setupController()
-    uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
     uiEvents.onNext(LinkIdWithPatientAddClicked)
 
     // then
@@ -95,7 +94,6 @@ class LinkIdWithPatientSheetLogicTest {
     // when
     whenever(patientRepository.patientImmediate(patientUuid)).thenReturn(patient)
     setupController()
-    uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
     uiEvents.onNext(LinkIdWithPatientCancelClicked)
 
     // then

@@ -60,6 +60,8 @@ class LinkIdWithPatientSheet :
 
   override fun createUpdate() = LinkIdWithPatientUpdate()
 
+  override fun createInit() = LinkIdWithPatientInit()
+
   override fun createEffectHandler() = effectHandlerFactory
       .create(this)
       .build()

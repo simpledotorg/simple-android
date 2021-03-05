@@ -22,11 +22,13 @@ open class AppUpdateModule {
   fun checkAppUpdate(
       application: Application,
       appUpdateConfig: Observable<AppUpdateConfig>,
+      updateManager: PlayUpdateManager,
       features: Features
   ): CheckAppUpdateAvailability {
     return CheckAppUpdateAvailability(
         appContext = application,
         config = appUpdateConfig,
+        updateManager = updateManager,
         features = features
     )
   }

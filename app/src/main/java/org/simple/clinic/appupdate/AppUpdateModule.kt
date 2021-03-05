@@ -1,6 +1,8 @@
 package org.simple.clinic.appupdate
 
 import android.app.Application
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
@@ -13,6 +15,8 @@ open class AppUpdateModule {
   @Provides
   fun appUpdateConfig(reader: ConfigReader) = AppUpdateConfig.read(reader)
 
+  @Provides
+  fun appUpdateManager(application: Application): AppUpdateManager = AppUpdateManagerFactory.create(application)
 
   @Provides
   fun checkAppUpdate(

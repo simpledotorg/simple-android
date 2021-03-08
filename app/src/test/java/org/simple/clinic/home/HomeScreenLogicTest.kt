@@ -14,7 +14,11 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.remoteconfig.DefaultValueConfigReader
+import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -105,11 +109,16 @@ class HomeScreenLogicTest {
 
     val uiRenderer = HomeScreenUiRenderer(ui)
 
+    val features = Features(
+        remoteConfigService = NoOpRemoteConfigService(DefaultValueConfigReader()),
+        overrides = mapOf(Feature.OverdueCount to true)
+    )
+
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = HomeScreenModel.create(),
         init = HomeScreenInit(),
-        update = HomeScreenUpdate(),
+        update = HomeScreenUpdate(features),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )

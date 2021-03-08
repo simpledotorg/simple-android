@@ -241,6 +241,8 @@
 
   <string name="registrationname_name_label">हमें अपना पूरा नाम बताएं</string>
   <string name="registrationname_error_empty_name">कृपया अपना पूरा नाम दर्ज करें</string>
+  <string name="registrationname_next">आगे</string>
+
 
   <string name="registrationpin_pin_label">अपना सुरक्षा PIN बनाएं</string>
   <string name="registrationpin_pin_hint">अपना PIN याद रखें, बाद में आपको इसकी ज़रूरत पड़ेगी</string>

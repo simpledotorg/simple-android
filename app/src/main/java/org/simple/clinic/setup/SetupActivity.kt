@@ -16,9 +16,12 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ActivitySetupBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.empty.EmptyScreenKey
 import org.simple.clinic.feature.Features
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
@@ -55,6 +58,14 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
   private val screenResults = ScreenResultBus()
 
+  private val router by unsafeLazy {
+    Router(
+        initialScreenKey = EmptyScreenKey().wrap(),
+        fragmentManager = supportFragmentManager,
+        containerId = R.id.screen_host_view
+    )
+  }
+
   private val delegate by unsafeLazy {
     MobiusDelegate.forActivity(
         events = Observable.never(),
@@ -82,6 +93,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
     navController = findNavController(R.id.screen_host_view)
 
+    router.onReady(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 
@@ -96,8 +108,15 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
+    router.onSaveInstanceState(outState)
     delegate.onSaveInstanceState(outState)
     super.onSaveInstanceState(outState)
+  }
+
+  override fun onBackPressed() {
+    if (!router.onBackPressed()) {
+      super.onBackPressed()
+    }
   }
 
   override fun attachBaseContext(baseContext: Context) {
@@ -168,7 +187,10 @@ class SetupActivity : AppCompatActivity(), UiActions {
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
         .setupActivityComponent()
-        .create(activity = this)
+        .create(
+            activity = this,
+            router = router
+        )
 
     component.inject(this)
   }

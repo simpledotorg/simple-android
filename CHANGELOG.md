@@ -3,6 +3,7 @@
 ## Next Release
 ### Internal
 - Migrate `LinkIdWithPatientView` to `LinkIdWithPatientSheet`
+- Convert `screen_patient_summary` to use `ConstraintLayout`
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 

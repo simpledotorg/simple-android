@@ -241,6 +241,8 @@
 
   <string name="registrationname_name_label">আপনার পুরো নামটি আমাদের বলুন</string>
   <string name="registrationname_error_empty_name">অনুগ্রহ করে আপনার পুরো নামটি লিখুন</string>
+  <string name="registrationname_next">পরবর্তী</string>
+
 
   <string name="registrationpin_pin_label">আপনার সুরক্ষা পিনটি তৈরি করুন</string>
   <string name="registrationpin_pin_hint">আপনার পিনটি মনে রাখবেন, এটি আপনার পরে প্রয়োজন হতে পারে</string>

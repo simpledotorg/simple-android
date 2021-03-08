@@ -10,7 +10,7 @@ class HomeScreenUpdate : Update<HomeScreenModel, HomeScreenEvent, HomeScreenEffe
   override fun update(model: HomeScreenModel, event: HomeScreenEvent): Next<HomeScreenModel, HomeScreenEffect> {
     return when (event) {
       HomeFacilitySelectionClicked -> dispatch(OpenFacilitySelection)
-      is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility))
+      is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility), LoadOverdueAppointmentCount(event.facility))
       is OverdueAppointmentCountLoaded -> next(model.overdueAppointmentCountLoaded(event.overdueAppointmentCount))
       is BusinessIdScanned.ByShortCode -> dispatch(OpenShortCodeSearchScreen(event.shortCode))
       is BusinessIdScanned.ByPatientFound -> dispatch(OpenPatientSummary(event.patientId))

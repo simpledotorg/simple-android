@@ -198,7 +198,7 @@
   <string name="timestamp_days_ago">%s நாட்களுக்கு முன்பு</string>
 
   <!-- Prescribed drugs -->
-  <string name="patient_prescribeddrugs_screen_title">பிபி மருந்துகள்</string>
+  <string name="patient_prescribeddrugs_screen_title">மருந்துகள்</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">மற்றொரு மருந்தைச் சேர்க்கவும்</string>
 
   <string name="customprescription_enter_medicine">மருந்தை எழுதவும்</string>
@@ -241,6 +241,8 @@
 
   <string name="registrationname_name_label">உங்கள் பெயரைக் கூறவும்</string>
   <string name="registrationname_error_empty_name">உங்கள் பெயரை எழுதவும்</string>
+  <string name="registrationname_next">அடுத்து</string>
+
 
   <string name="registrationpin_pin_label">உங்கள் பாதுகாப்பு PIN-ஐ உருவாக்கவும்</string>
   <string name="registrationpin_pin_hint">உங்கள் PIN-ஐ நினைவில்கொள்ளவும், பிறகு அது தேவைப்படலாம்</string>
@@ -341,6 +343,7 @@
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ஏதுமில்லை</string>
+  <string name="prescribed_drugs_dosage_remove">அகற்றவும்</string>
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s அளவு</string>
 
   <!--Scan Simple ID-->

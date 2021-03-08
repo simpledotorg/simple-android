@@ -10,6 +10,7 @@
 - Updated translations: `bn-BD`, `te-IN`, `hi-IN`
 - Show next button in the registration screens
 - Implement village type ahead in patient entry/edit screens
+- Updated translations: `ta-IN`
 
 ## On Demo
 ### Internal

@@ -7,10 +7,9 @@
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
 ### Changes
-- Updated translations: `bn-BD`, `te-IN`, `hi-IN`
+- Updated translations: `bn-BD`, `te-IN`, `hi-IN`, `ta-IN`, `mr-IN`
 - Show next button in the registration screens
 - Implement village type ahead in patient entry/edit screens
-- Updated translations: `ta-IN`
 
 ## On Demo
 ### Internal

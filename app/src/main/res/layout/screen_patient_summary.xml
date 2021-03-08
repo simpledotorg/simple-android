@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/rootLayout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:orientation="vertical">
+  android:orientation="vertical"
+  tools:context=".summary.PatientSummaryScreen">
 
   <RelativeLayout
     android:id="@+id/patientsummary_header"
@@ -13,6 +14,8 @@
     android:layout_height="wrap_content"
     android:background="?attr/colorToolbarPrimary"
     android:elevation="@dimen/elevation_toolbar"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
     tools:ignore="UnusedAttribute">
 
     <ImageButton
@@ -121,30 +124,26 @@
 
   </RelativeLayout>
 
-  <FrameLayout
-    android:layout_width="match_parent"
+  <com.google.android.material.progressindicator.CircularProgressIndicator
+    android:id="@+id/summaryLoadingProgressBar"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_above="@id/buttonFrame"
-    android:layout_below="@id/patientsummary_header">
-
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-      android:id="@+id/summaryLoadingProgressBar"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:indeterminate="true"
-      android:visibility="visible"
-      tools:visibility="invisible" />
-
-  </FrameLayout>
+    android:indeterminate="true"
+    android:visibility="visible"
+    app:layout_constraintBottom_toTopOf="@id/buttonFrameBarrier"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/patientsummary_header"
+    tools:visibility="invisible" />
 
   <androidx.core.widget.NestedScrollView
     android:id="@+id/summaryViewsContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_above="@+id/buttonFrame"
+    android:layout_height="0dp"
     android:layout_below="@+id/patientsummary_header"
     android:visibility="invisible"
+    app:layout_constraintBottom_toTopOf="@id/buttonFrameBarrier"
+    app:layout_constraintTop_toBottomOf="@id/patientsummary_header"
     tools:visibility="visible">
 
     <LinearLayout
@@ -215,13 +214,20 @@
 
   </androidx.core.widget.NestedScrollView>
 
+  <androidx.constraintlayout.widget.Barrier
+    android:id="@+id/buttonFrameBarrier"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:barrierDirection="top"
+    app:constraint_referenced_ids="doneButtonFrame, logTeleconsultButtonFrame" />
+
   <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/doneButtonFrame"
     style="@style/Widget.Simple.Button.Frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:visibility="visible">
+    android:visibility="visible"
+    app:layout_constraintBottom_toBottomOf="parent">
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/teleconsultButton"
@@ -260,9 +266,9 @@
     style="@style/Widget.Simple.Button.Frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
     android:theme="@style/ThemeOverlay.Simple.LogTeleconsultButtonFrame"
-    android:visibility="gone">
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent">
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/logTeleconsultButton"
@@ -272,4 +278,4 @@
 
   </FrameLayout>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

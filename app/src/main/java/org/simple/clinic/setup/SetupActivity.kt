@@ -27,6 +27,7 @@ import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.setup.runcheck.Disallowed
+import org.simple.clinic.splash.SplashScreen.SplashScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.disablePendingTransitions
@@ -159,10 +160,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   private fun navigateToSplashScreen() {
-    if (navController.currentDestination?.id == R.id.placeholderScreen &&
-        navController.currentDestination?.id != R.id.splashScreen) {
-      navController.navigate(R.id.action_placeholderScreen_to_splashScreen)
-    }
+    router.clearHistoryAndPush(SplashScreenKey.wrap())
   }
 
   override fun showCountrySelectionScreen() {

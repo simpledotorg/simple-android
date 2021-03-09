@@ -6,24 +6,26 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.activity.placeholder.PlaceholderScreen.PlaceHolderScreenKey
 import org.simple.clinic.databinding.ActivitySetupBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.setup.runcheck.Disallowed
+import org.simple.clinic.splash.SplashScreen.SplashScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.disablePendingTransitions
@@ -55,6 +57,14 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
   private val screenResults = ScreenResultBus()
 
+  private val router by unsafeLazy {
+    Router(
+        initialScreenKey = PlaceHolderScreenKey.wrap(),
+        fragmentManager = supportFragmentManager,
+        containerId = R.id.screen_host_view
+    )
+  }
+
   private val delegate by unsafeLazy {
     MobiusDelegate.forActivity(
         events = Observable.never(),
@@ -65,8 +75,6 @@ class SetupActivity : AppCompatActivity(), UiActions {
         modelUpdateListener = { /* Nothing to do here */ }
     )
   }
-
-  private lateinit var navController: NavController
 
   private lateinit var binding: ActivitySetupBinding
 
@@ -80,8 +88,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
     binding = ActivitySetupBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    navController = findNavController(R.id.screen_host_view)
-
+    router.onReady(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 
@@ -96,8 +103,15 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
+    router.onSaveInstanceState(outState)
     delegate.onSaveInstanceState(outState)
     super.onSaveInstanceState(outState)
+  }
+
+  override fun onBackPressed() {
+    if (!router.onBackPressed()) {
+      super.onBackPressed()
+    }
   }
 
   override fun attachBaseContext(baseContext: Context) {
@@ -140,10 +154,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   private fun navigateToSplashScreen() {
-    if (navController.currentDestination?.id == R.id.placeholderScreen &&
-        navController.currentDestination?.id != R.id.splashScreen) {
-      navController.navigate(R.id.action_placeholderScreen_to_splashScreen)
-    }
+    router.clearHistoryAndPush(SplashScreenKey.wrap())
   }
 
   override fun showCountrySelectionScreen() {
@@ -168,7 +179,10 @@ class SetupActivity : AppCompatActivity(), UiActions {
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
         .setupActivityComponent()
-        .create(activity = this)
+        .create(
+            activity = this,
+            router = router
+        )
 
     component.inject(this)
   }

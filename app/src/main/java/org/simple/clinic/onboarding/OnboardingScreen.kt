@@ -11,12 +11,14 @@ import androidx.core.text.inSpans
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenOnboardingBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registerorlogin.AuthenticationActivity
+import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.util.resolveColor
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
@@ -156,5 +158,13 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : Constrain
     }
 
     introThreeTextView.text = introThreeFormattedString
+  }
+
+  @Parcelize
+  object OnboardingScreenKey : FullScreenKey {
+
+    override val analyticsName = "Onboarding Screen"
+
+    override fun layoutRes() = R.layout.screen_onboarding
   }
 }

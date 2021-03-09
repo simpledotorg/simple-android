@@ -4,36 +4,35 @@ import android.app.Application
 import android.os.Build
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.VisibleForTesting.PRIVATE
-import com.google.android.play.core.appupdate.AppUpdateInfo
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE
-import com.google.android.play.core.install.model.UpdateAvailability
 import io.reactivex.Observable
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.appupdate.AppUpdateState.AppUpdateStateError
 import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
-import org.simple.clinic.feature.Feature.*
+import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailable
 import org.simple.clinic.feature.Features
 import javax.inject.Inject
 
 class CheckAppUpdateAvailability @Inject constructor(
     private val appContext: Application,
     private val config: Observable<AppUpdateConfig>,
+    private val updateManager: UpdateManager,
     private val versionUpdateCheck: (Int, Application, AppUpdateConfig) -> Boolean = isVersionApplicableForUpdate,
     private val features: Features
 ) {
 
   fun listen(): Observable<AppUpdateState> {
-    return appUpdateCallback()
+    return updateManager
+        .updateInfo()
         .flatMap(this::shouldNudgeForUpdate)
         .onErrorReturn(::AppUpdateStateError)
   }
 
   fun listenAllUpdates(): Observable<AppUpdateState> {
-    return appUpdateCallback()
+    return updateManager
+        .updateInfo()
         .map {
-          if (it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(FLEXIBLE)) {
+          if (it.isUpdateAvailable && it.isFlexibleUpdateType) {
             ShowAppUpdate
           } else {
             DontShowAppUpdate
@@ -42,31 +41,10 @@ class CheckAppUpdateAvailability @Inject constructor(
         .onErrorReturn(::AppUpdateStateError)
   }
 
-  private fun appUpdateCallback(): Observable<AppUpdateInfo> {
-    val appUpdateManager = AppUpdateManagerFactory.create(appContext)
-    val appUpdateInfoTask = appUpdateManager.appUpdateInfo
-
-    return Observable.create<AppUpdateInfo> { emitter ->
-      var cancelled = false
-
-      appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-        emitter.onNext(appUpdateInfo)
-      }
-
-      appUpdateInfoTask.addOnFailureListener { exception ->
-        if (cancelled.not()) {
-          emitter.onError(exception)
-        }
-      }
-
-      emitter.setCancellable { cancelled = true }
-    }
-  }
-
   @VisibleForTesting(otherwise = PRIVATE)
-  fun shouldNudgeForUpdate(appUpdateInfo: AppUpdateInfo): Observable<AppUpdateState> {
+  fun shouldNudgeForUpdate(updateInfo: UpdateInfo): Observable<AppUpdateState> {
     val checkUpdate = config
-        .map { checkForUpdate(appUpdateInfo, it) }
+        .map { checkForUpdate(updateInfo, it) }
 
     val shouldShow = checkUpdate
         .filter { showUpdate -> showUpdate }
@@ -79,11 +57,11 @@ class CheckAppUpdateAvailability @Inject constructor(
     return Observable.mergeArray(shouldShow, doNotShow)
   }
 
-  private fun checkForUpdate(appUpdateInfo: AppUpdateInfo, config: AppUpdateConfig): Boolean {
+  private fun checkForUpdate(updateInfo: UpdateInfo, config: AppUpdateConfig): Boolean {
     return features.isEnabled(NotifyAppUpdateAvailable)
-        && appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-        && appUpdateInfo.isUpdateTypeAllowed(FLEXIBLE)
-        && versionUpdateCheck(appUpdateInfo.availableVersionCode(), appContext, config)
+        && updateInfo.isUpdateAvailable
+        && updateInfo.isFlexibleUpdateType
+        && versionUpdateCheck(updateInfo.availableVersionCode, appContext, config)
   }
 }
 

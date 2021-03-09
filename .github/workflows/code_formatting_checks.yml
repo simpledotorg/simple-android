@@ -5,6 +5,7 @@ name: Code formatting
 on:
   schedule:
     - cron: "30 23 * * 0-4"
+  workflow_dispatch:
 
 jobs:
   fix_code_formatting:

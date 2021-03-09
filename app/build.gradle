@@ -297,10 +297,6 @@ dependencies {
   implementation "androidx.paging:paging-runtime-ktx:$versions.paging"
   implementation "androidx.paging:paging-rxjava2-ktx:$versions.paging"
 
-  // If we add navigation-fragment-ktx or navigation-ui-ktx in future, we can remove this.
-  // Because this gets added as a transitive dependency.
-  implementation "androidx.navigation:navigation-runtime-ktx:$versions.navigation"
-
   implementation "com.google.dagger:dagger:$versions.dagger"
   kapt "com.google.dagger:dagger-compiler:$versions.dagger"
 

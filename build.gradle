@@ -50,7 +50,7 @@ buildscript {
       firebasePerformance      : '19.0.8',
       firebasePerformancePlugin: '1.3.1',
       googleServices           : '4.3.3',
-      playCore                 : '1.6.1',
+      playCore                 : '1.10.0',
       fastScroll               : '2.0.0',
       mixpanel                 : '5.6.4',
       mobius                   : '1.3.0',

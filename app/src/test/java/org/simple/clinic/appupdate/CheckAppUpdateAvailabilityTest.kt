@@ -2,8 +2,6 @@ package org.simple.clinic.appupdate
 
 import android.app.Application
 import android.app.PendingIntent
-import com.google.android.play.core.appupdate.AppUpdateInfo
-import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.nhaarman.mockitokotlin2.mock
 import io.reactivex.subjects.PublishSubject
@@ -36,22 +34,18 @@ class CheckAppUpdateAvailabilityTest {
       isInAppUpdateEnabled: Boolean,
       appUpdateState: AppUpdateState
   ) {
-    val packageName = "org.simple.clinic"
-    val immediateUpdateIntent = mock<PendingIntent>()
 
-    val appUpdateInfo = AppUpdateInfo(
-        packageName,
-        availableVersionCode,
-        updateAvailabilityState,
-        InstallStatus.DOWNLOADED,
-        immediateUpdateIntent,
-        flexibleUpdateIntent
+    val isUpdateAvailable = updateAvailabilityState == UpdateAvailability.UPDATE_AVAILABLE
+    val updateInfo = UpdateInfo(
+        availableVersionCode = availableVersionCode,
+        isUpdateAvailable = isUpdateAvailable,
+        isFlexibleUpdateType = flexibleUpdateIntent != null
     )
 
     setup(isFeatureEnabled = isInAppUpdateEnabled)
 
     val testObserver = checkUpdateAvailable
-        .shouldNudgeForUpdate(appUpdateInfo)
+        .shouldNudgeForUpdate(updateInfo)
         .test()
 
     configProvider.onNext(AppUpdateConfig(1))
@@ -135,6 +129,7 @@ class CheckAppUpdateAvailabilityTest {
     checkUpdateAvailable = CheckAppUpdateAvailability(
         appContext = mock(),
         config = configProvider,
+        updateManager = mock(),
         versionUpdateCheck = versionCodeCheck,
         features = features
     )

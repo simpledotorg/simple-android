@@ -8,9 +8,16 @@ import com.airbnb.lottie.LottieDrawable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ScreenSplashBinding
+import org.simple.clinic.di.injector
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.router.screen.FullScreenKey
+import javax.inject.Inject
 
 class SplashScreen(context: Context, attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet) {
+
+  @Inject
+  lateinit var router: Router
 
   private var binding: ScreenSplashBinding? = null
 
@@ -27,6 +34,8 @@ class SplashScreen(context: Context, attributeSet: AttributeSet) : ConstraintLay
       return
     }
 
+    context.injector<Injector>().inject(this)
+
     with(splashLottieView) {
       setAnimation("splash_animation.json")
       repeatCount = LottieDrawable.INFINITE
@@ -41,6 +50,10 @@ class SplashScreen(context: Context, attributeSet: AttributeSet) : ConstraintLay
   override fun onDetachedFromWindow() {
     binding = null
     super.onDetachedFromWindow()
+  }
+
+  interface Injector {
+    fun inject(target: SplashScreen)
   }
 
   @Parcelize

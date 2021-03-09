@@ -182,34 +182,6 @@ class PatientSummaryScreenLogicTest {
         listOf(LinkIdWithPatient(identifier), false))
   }
 
-
-  @Test
-  @Parameters(method = "params for testing link id with patient bottom sheet")
-  fun `link id with patient bottom sheet should only open when patient summary is created with link id intent`(
-      openIntention: OpenIntention,
-      shouldShowLinkIdSheet: Boolean,
-      identifier: Identifier?
-  ) {
-    startMobiusLoop(openIntention)
-
-    if (shouldShowLinkIdSheet) {
-      verify(uiActions).showLinkIdWithPatientView(patientUuid, identifier!!)
-    } else {
-      verify(uiActions, never()).showLinkIdWithPatientView(any(), any())
-    }
-  }
-
-  @Suppress("Unused")
-  private fun `params for testing link id with patient bottom sheet`(): List<Any> {
-    val identifier = Identifier("1f79f976-f1bc-4c8a-8a53-ad646ce09fdb", BpPassport)
-
-    return listOf(
-        listOf(LinkIdWithPatient(identifier), true, identifier),
-        listOf(ViewExistingPatient, false, null),
-        listOf(ViewNewPatient, false, null)
-    )
-  }
-
   private fun startMobiusLoop(openIntention: OpenIntention) {
     val effectHandler = PatientSummaryEffectHandler(
         schedulersProvider = TrampolineSchedulersProvider(),

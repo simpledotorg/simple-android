@@ -1,11 +1,11 @@
 package org.simple.clinic.summary
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.mobius.dispatch
-import org.simple.clinic.mobius.next
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
@@ -18,7 +18,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
 
   override fun update(model: PatientSummaryModel, event: PatientSummaryEvent): Next<PatientSummaryModel, PatientSummaryEffect> {
     return when (event) {
-      is PatientSummaryProfileLoaded -> next(model.patientSummaryProfileLoaded(event.patientSummaryProfile))
+      is PatientSummaryProfileLoaded -> patientSummaryProfileLoaded(model, event)
       is PatientSummaryBackClicked -> dispatch(LoadDataForBackClick(model.patientUuid, event.screenCreatedTimestamp))
       is PatientSummaryDoneClicked -> dispatch(LoadDataForDoneClick(model.patientUuid))
       is CurrentUserAndFacilityLoaded -> currentUserAndFacilityLoaded(model, event)
@@ -49,6 +49,19 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       LogTeleconsultClicked -> logTeleconsultClicked(model)
       is MedicalOfficersLoaded -> next(model.medicalOfficersLoaded(event.medicalOfficers))
     }
+  }
+
+  private fun patientSummaryProfileLoaded(
+      model: PatientSummaryModel,
+      event: PatientSummaryProfileLoaded
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val effects = mutableSetOf<PatientSummaryEffect>()
+    if (model.openIntention is LinkIdWithPatient &&
+        !event.patientSummaryProfile.hasBpPassport(model.openIntention.identifier)) {
+      effects.add(ShowLinkIdWithPatientView(model.patientUuid, model.openIntention.identifier))
+    }
+
+    return next(model.patientSummaryProfileLoaded(event.patientSummaryProfile), effects)
   }
 
   private fun logTeleconsultClicked(model: PatientSummaryModel): Next<PatientSummaryModel, PatientSummaryEffect> {

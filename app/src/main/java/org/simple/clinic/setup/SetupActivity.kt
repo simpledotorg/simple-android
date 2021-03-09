@@ -6,8 +6,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
@@ -78,8 +76,6 @@ class SetupActivity : AppCompatActivity(), UiActions {
     )
   }
 
-  private lateinit var navController: NavController
-
   private lateinit var binding: ActivitySetupBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,8 +87,6 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
     binding = ActivitySetupBinding.inflate(layoutInflater)
     setContentView(binding.root)
-
-    navController = findNavController(R.id.screen_host_view)
 
     router.onReady(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)

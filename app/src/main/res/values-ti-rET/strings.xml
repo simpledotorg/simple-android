@@ -241,6 +241,8 @@
 
   <string name="registrationname_name_label">ሙሉእ ሽምካ/ኪ ንገረና/ርና</string>
   <string name="registrationname_error_empty_name">ሙሉእ ሽም ኣእትው/ዊ</string>
+  <string name="registrationname_next">ዝቕፅል</string>
+
 
   <string name="registrationpin_pin_label">ናይ ድሕነት ውልቃዊ ቁፅሪ መንነት ፍጠር/ሪ</string>
   <string name="registrationpin_pin_hint">ውልቃዊ ቁፅሪ መንነትካ/ኪ ዘክር፡ ደሓር ከድልየካ’ዩ</string>

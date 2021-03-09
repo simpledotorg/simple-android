@@ -198,7 +198,7 @@
   <string name="timestamp_days_ago">ከ %s ቀናት በፊት</string>
 
   <!-- Prescribed drugs -->
-  <string name="patient_prescribeddrugs_screen_title">የደም ግፊት መድኃኒቶች</string>
+  <string name="patient_prescribeddrugs_screen_title">መድኃኒቶች</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">ሌላ መድሃኒት ያክሉ</string>
 
   <string name="customprescription_enter_medicine">መድሃኒት ያስገቡ</string>
@@ -241,6 +241,8 @@
 
   <string name="registrationname_name_label">ሙሉ ስምዎን ይንገሩን</string>
   <string name="registrationname_error_empty_name">እባክዎ ሙሉ ስምዎን ያስገቡ</string>
+  <string name="registrationname_next">ቀጣይ</string>
+
 
   <string name="registrationpin_pin_label">የደህንነት PIN ዎን ይፍጠሩ</string>
   <string name="registrationpin_pin_hint">PIN ዎን ያስታውሱ ፣ በኋላ ላይ ያስፈልግዎታል</string>
@@ -341,6 +343,7 @@
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ምንም</string>
+  <string name="prescribed_drugs_dosage_remove">ያስወግዱ</string>
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s የመድኃኒት መጠን</string>
 
   <!--Scan Simple ID-->
@@ -499,7 +502,7 @@
   <string name="accessdeniedscreen_description">ወደ ሲምፕል መዳረሻ ተከልክሏል። ይህ ስህተት ነው ብለው ካመኑ እባክዎ ተቆጣጣሪዎን ያነጋግሩ።  ሲምፕል መዳረሻዎ ከተመለሰ ፣ የበፊቱን ሲምፕል ያስወግዱ እና ደግመው ከ Play ማከማቻው ይጫኑት።</string>
 
   <!-- Confirm Facility change sheet -->
-  <string name="confirmfacilitychange_title">ተቋሙን ወደ ……ለውጥ</string>
+  <string name="confirmfacilitychange_title">ተቋምን ወደ</string>
   <string name="confirmfacilitychange_negative_button">ይቅር</string>
   <string name="confirmfacilitychange_positive_button">አዎ</string>
   <string name="confirmfacilitychange_facility_name">%s?</string>

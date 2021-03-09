@@ -5,9 +5,12 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.R
 import org.simple.clinic.await.Await
 import org.simple.clinic.await.Checkpoint
 import org.simple.clinic.databinding.ScreenPlaceholderBinding
+import org.simple.clinic.router.screen.FullScreenKey
 import java.util.concurrent.TimeUnit.SECONDS
 
 class PlaceholderScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -47,5 +50,13 @@ class PlaceholderScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
   private fun showLoadingUi() {
     loadingTextLayout.visibility = VISIBLE
     loadingProgressBar.visibility = VISIBLE
+  }
+
+  @Parcelize
+  object PlaceHolderScreenKey : FullScreenKey {
+
+    override val analyticsName = "Placeholder Screen"
+
+    override fun layoutRes() = R.layout.screen_placeholder
   }
 }

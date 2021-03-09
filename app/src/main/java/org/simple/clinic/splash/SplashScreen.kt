@@ -5,8 +5,10 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
 import com.airbnb.lottie.LottieDrawable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ScreenSplashBinding
+import org.simple.clinic.router.screen.FullScreenKey
 
 class SplashScreen(context: Context, attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet) {
 
@@ -39,5 +41,13 @@ class SplashScreen(context: Context, attributeSet: AttributeSet) : ConstraintLay
   override fun onDetachedFromWindow() {
     binding = null
     super.onDetachedFromWindow()
+  }
+
+  @Parcelize
+  object SplashScreenKey : FullScreenKey {
+
+    override val analyticsName = "Splash Screen"
+
+    override fun layoutRes() = R.layout.screen_splash
   }
 }

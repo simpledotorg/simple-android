@@ -72,8 +72,6 @@ buildscript {
       // When bumping this dependency, verify whether `org.simple.clinic.feature.Feature.ChangeLanguage`
       // can be enabled again.
       appcompat                : '1.2.0',
-
-      navigation               : '2.3.0',
       lottie                   : '3.4.0',
       desugarJdk               : '1.0.9',
       signaturePad             : '1.3.1',
@@ -81,7 +79,8 @@ buildscript {
       lint                     : '27.1.1',
       rootbeer                 : '5fef9f62f9',
       mlKitBarcode             : '16.1.2',
-      fragment                 : '1.2.5'
+      fragment                 : '1.2.5',
+      androidXCoreKtx          : '1.3.2'
   ]
 
   repositories {

@@ -384,6 +384,8 @@ dependencies {
   implementation "com.google.android.gms:play-services-mlkit-barcode-scanning:$versions.mlKitBarcode"
 
   implementation "androidx.fragment:fragment:$versions.fragment"
+
+  implementation "androidx.core:core-ktx:$versions.androidXCoreKtx"
 }
 
 // This must always be present at the bottom of this file, as per:

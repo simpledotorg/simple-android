@@ -3,7 +3,6 @@ package org.simple.clinic.splash
 import android.content.Context
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.navigation.findNavController
 import com.airbnb.lottie.LottieDrawable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
@@ -11,6 +10,7 @@ import org.simple.clinic.databinding.ScreenSplashBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.onboarding.OnboardingScreen.OnboardingScreenKey
 import org.simple.clinic.router.screen.FullScreenKey
 import javax.inject.Inject
 
@@ -43,7 +43,7 @@ class SplashScreen(context: Context, attributeSet: AttributeSet) : ConstraintLay
     }
 
     nextButton.setOnClickListener {
-      findNavController().navigate(R.id.action_splashScreen_to_onboardingScreen)
+      router.clearHistoryAndPush(OnboardingScreenKey.wrap())
     }
   }
 

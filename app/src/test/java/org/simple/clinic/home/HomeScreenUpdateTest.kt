@@ -5,13 +5,21 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.remoteconfig.DefaultValueConfigReader
+import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 import java.util.UUID
 
 class HomeScreenUpdateTest {
 
   private val defaultModel = HomeScreenModel.create()
-  private val updateSpec = UpdateSpec(HomeScreenUpdate())
+  private val features = Features(
+      remoteConfigService = NoOpRemoteConfigService(DefaultValueConfigReader()),
+      overrides = mapOf(Feature.OverdueCount to true)
+  )
+  private val updateSpec = UpdateSpec(HomeScreenUpdate(features))
 
   @Test
   fun `when the patient short code is entered, the short code search screen must be opened`() {

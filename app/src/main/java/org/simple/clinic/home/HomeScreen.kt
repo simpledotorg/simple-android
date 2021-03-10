@@ -76,6 +76,9 @@ class HomeScreen :
   @Inject
   lateinit var features: Features
 
+  @Inject
+  lateinit var homeScreenUpdate: HomeScreenUpdate
+
   private val homeScreenRootLayout
     get() = binding.homeScreenRootLayout
 
@@ -113,7 +116,7 @@ class HomeScreen :
       .compose(ReportAnalyticsEvents())
       .cast<HomeScreenEvent>()
 
-  override fun createUpdate() = HomeScreenUpdate()
+  override fun createUpdate() = homeScreenUpdate
 
   override fun createInit() = HomeScreenInit()
 

@@ -2,6 +2,7 @@ package org.simple.clinic.home
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -13,7 +14,11 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.remoteconfig.DefaultValueConfigReader
+import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -61,8 +66,10 @@ class HomeScreenLogicTest {
     setupController(Observable.just(facility1, facility2))
 
     // then
-    verify(ui).setFacility("CHC Buchho")
-    verify(ui).setFacility("CHC Nathana")
+    verify(ui, times(2)).setFacility("CHC Buchho")
+    verify(ui, times(2)).setFacility("CHC Nathana")
+    verify(ui, times(2)).showOverdueAppointmentCount(3)
+    verify(ui).removeOverdueAppointmentCount()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -82,7 +89,8 @@ class HomeScreenLogicTest {
     uiEvents.onNext(HomeFacilitySelectionClicked)
 
     // then
-    verify(ui).setFacility("CHC Buchho")
+    verify(ui, times(2)).setFacility("CHC Buchho")
+    verify(ui).removeOverdueAppointmentCount()
     verify(uiActions).openFacilitySelection()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -101,11 +109,16 @@ class HomeScreenLogicTest {
 
     val uiRenderer = HomeScreenUiRenderer(ui)
 
+    val features = Features(
+        remoteConfigService = NoOpRemoteConfigService(DefaultValueConfigReader()),
+        overrides = mapOf(Feature.OverdueCount to true)
+    )
+
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = HomeScreenModel.create(),
         init = HomeScreenInit(),
-        update = HomeScreenUpdate(),
+        update = HomeScreenUpdate(features),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )

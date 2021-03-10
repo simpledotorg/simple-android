@@ -13,4 +13,11 @@ fun SupportSQLiteDatabase.inTransaction(block: SupportSQLiteDatabase.() -> Unit)
   }
 }
 
-fun Cursor.string(column: String): String? = getString(getColumnIndex(column))
+fun Cursor.string(column: String): String? {
+  val columnIndex = getColumnIndex(column)
+  return if (columnIndex > 0) {
+    getString(getColumnIndex(column))
+  } else {
+    null
+  }
+}

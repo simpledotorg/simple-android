@@ -1,14 +1,18 @@
 package org.simple.clinic.widgets.qrcodescanner
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.AspectRatio
+import androidx.camera.core.CameraControl
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -24,6 +28,7 @@ import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+
 
 class QrCodeScannerView
 constructor(
@@ -81,6 +86,7 @@ constructor(
     }, ContextCompat.getMainExecutor(context))
   }
 
+  @SuppressLint("ClickableViewAccessibility")
   private fun startCamera(cameraProvider: ProcessCameraProvider) {
     // Get screen metrics used to setup camera for full screen resolution
     val metrics = DisplayMetrics().also { previewView.display.getRealMetrics(it) }
@@ -112,8 +118,27 @@ constructor(
 
     cameraProvider.unbindAll()
 
-    cameraProvider.bindToLifecycle(activity, cameraSelector, preview, analyzer)
+    val camera = cameraProvider.bindToLifecycle(activity, cameraSelector, preview, analyzer)
     preview.setSurfaceProvider(previewView.surfaceProvider)
+
+    previewView.setOnTouchListener { _, motionEvent ->
+      when (motionEvent.action) {
+        MotionEvent.ACTION_DOWN -> true
+        MotionEvent.ACTION_UP -> {
+          processTapToFocus(motionEvent, camera.cameraControl)
+          true
+        }
+        else -> false
+      }
+    }
+  }
+
+  private fun processTapToFocus(motionEvent: MotionEvent, cameraControl: CameraControl) {
+    val meteringPointFactory = previewView.meteringPointFactory
+    val point = meteringPointFactory.createPoint(motionEvent.x, motionEvent.y)
+    val action = FocusMeteringAction.Builder(point).build()
+
+    cameraControl.startFocusAndMetering(action)
   }
 
   /**

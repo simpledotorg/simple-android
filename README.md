@@ -134,6 +134,13 @@ The code styles which the project uses have been exported as an IntelliJ code st
 
 An Android Studio plugin that provides some quality of life improvements like live templates can be found [HERE](https://github.com/simpledotorg/simple-android-idea-plugin).
 
+## Building an APK with a different build variant
+
+There are currently 2 ways to build an app pointing to different environments:
+
+1. Changing the `qa` API URL in `gradle.properties` file to point to the environment you want. These builds will be debuggable and require us to clone the project and build it using [Android Studio](https://developer.android.com/studio). [*Warning*: These changes should not be commited back to `master` branch]
+2. Use Bitrise workflows to build APKs of different build variants. These builds will not be debuggable, unless for `build-debuggable-sandbox-apk`.
+
 ## Build and deploy Simple Server
 
 Simple Server is in a separate repository, and you should follow the [instructions there](https://github.com/simpledotorg/simple-server/blob/master/README.md).

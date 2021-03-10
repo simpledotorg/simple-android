@@ -18,10 +18,6 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
       effects.add(CheckForInvalidPhone(model.patientUuid))
     }
 
-    if (model.openIntention is LinkIdWithPatient) {
-      effects.add(ShowLinkIdWithPatientView(model.patientUuid, model.openIntention.identifier))
-    }
-
     if (model.hasMedicalOfficers.not()) {
       effects.add(LoadMedicalOfficers)
     }

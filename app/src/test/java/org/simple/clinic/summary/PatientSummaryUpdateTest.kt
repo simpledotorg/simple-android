@@ -27,7 +27,8 @@ class PatientSummaryUpdateTest {
   private val patient = TestData.patient(patientUuid)
   private val patientAddress = TestData.patientAddress(patient.addressUuid)
   private val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
-  private val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", BpPassport))
+  private val bpPassportIdentifier = Identifier("526 780", BpPassport)
+  private val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = bpPassportIdentifier)
   private val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
   private val facility = TestData.facility(uuid = UUID.fromString("f7666e67-2c8b-4ef4-9e6d-72bfcbb65db0"))
 
@@ -82,6 +83,27 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when the patient summary profile is loaded and link id with patient is present, then show link id sheet`() {
+    val linkIdWithPatientModel = PatientSummaryModel.from(LinkIdWithPatient(bpPassportIdentifier), patientUuid)
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        alternativeId = bangladeshNationalId,
+        facility = facility,
+        bpPassport = null
+    )
+
+    updateSpec
+        .given(linkIdWithPatientModel)
+        .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
+        .then(assertThatNext(
+            hasModel(linkIdWithPatientModel.patientSummaryProfileLoaded(patientSummaryProfile)),
+            hasEffects(ShowLinkIdWithPatientView(patientUuid, bpPassportIdentifier))
         ))
   }
 

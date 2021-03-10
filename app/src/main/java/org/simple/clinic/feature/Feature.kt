@@ -22,5 +22,6 @@ enum class Feature(
    **/
   ChangeLanguage(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M),
   MLKitQrCodeScanner(true, "ml_kit_qr_code_scanner"),
-  InstantSearch(true, "instant_search")
+  InstantSearch(true, "instant_search"),
+  OverdueCount(true, "overdue_count")
 }

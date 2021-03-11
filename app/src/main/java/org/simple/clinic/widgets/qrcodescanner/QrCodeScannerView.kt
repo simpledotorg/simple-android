@@ -106,23 +106,24 @@ constructor(
 
     val preview = Preview.Builder().build()
 
+    val analyzer = ImageAnalysis.Builder()
+        .setTargetAspectRatio(screenAspectRatio)
+        .setTargetRotation(rotation)
+        .build()
+
     val googlePlayServicesAvailability = googleApiAvailability.isGooglePlayServicesAvailable(context)
     val isGooglePlayServicesAvailable = googlePlayServicesAvailability == ConnectionResult.SUCCESS
 
     val isMLKitQrCodeScannerEnabled = features.isEnabled(Feature.MLKitQrCodeScanner)
     val qrCodeAnalyzer = if (isMLKitQrCodeScannerEnabled && isGooglePlayServicesAvailable) {
-      MLKitQrCodeAnalyzer(bitmapUtils, scans::onNext)
+      MLKitQrCodeAnalyzer(bitmapUtils, scans::onNext, mlKitUnavailable = {
+        setQrCodeAnalyzer(analyzer, ZxingQrCodeAnalyzer(scans::onNext))
+      })
     } else {
       ZxingQrCodeAnalyzer(scans::onNext)
     }
 
-    val analyzer = ImageAnalysis.Builder()
-        .setTargetAspectRatio(screenAspectRatio)
-        .setTargetRotation(rotation)
-        .build()
-        .also {
-          it.setAnalyzer(cameraExecutor, qrCodeAnalyzer)
-        }
+    setQrCodeAnalyzer(analyzer, qrCodeAnalyzer)
 
     cameraProvider.unbindAll()
 
@@ -139,6 +140,11 @@ constructor(
         else -> false
       }
     }
+  }
+
+  private fun setQrCodeAnalyzer(analyzer: ImageAnalysis, qrCodeAnalyzer: ImageAnalysis.Analyzer) {
+    analyzer.clearAnalyzer()
+    analyzer.setAnalyzer(cameraExecutor, qrCodeAnalyzer)
   }
 
   private fun processTapToFocus(motionEvent: MotionEvent, cameraControl: CameraControl) {

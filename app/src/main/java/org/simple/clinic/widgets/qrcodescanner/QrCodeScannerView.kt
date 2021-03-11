@@ -17,6 +17,8 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.databinding.ViewQrcodeScannerBinding
@@ -58,6 +60,9 @@ constructor(
 
   @Inject
   lateinit var bitmapUtils: BitmapUtils
+
+  @Inject
+  lateinit var googleApiAvailability: GoogleApiAvailability
 
   private val scans = PublishSubject.create<String>()
 
@@ -101,8 +106,11 @@ constructor(
 
     val preview = Preview.Builder().build()
 
+    val googlePlayServicesAvailability = googleApiAvailability.isGooglePlayServicesAvailable(context)
+    val isGooglePlayServicesAvailable = googlePlayServicesAvailability == ConnectionResult.SUCCESS
+
     val isMLKitQrCodeScannerEnabled = features.isEnabled(Feature.MLKitQrCodeScanner)
-    val qrCodeAnalyzer = if (isMLKitQrCodeScannerEnabled) {
+    val qrCodeAnalyzer = if (isMLKitQrCodeScannerEnabled && isGooglePlayServicesAvailable) {
       MLKitQrCodeAnalyzer(bitmapUtils, scans::onNext)
     } else {
       ZxingQrCodeAnalyzer(scans::onNext)

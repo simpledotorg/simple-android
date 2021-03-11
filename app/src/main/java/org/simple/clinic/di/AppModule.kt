@@ -7,6 +7,7 @@ import android.content.res.Resources
 import android.os.Vibrator
 import androidx.work.WorkManager
 import com.f2prateek.rx.preferences2.Preference
+import com.google.android.gms.common.GoogleApiAvailability
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.appconfig.AppConfigModule
@@ -133,4 +134,7 @@ class AppModule(private val appContext: Application) {
   @Provides
   @AppScope
   fun providesPackageManager(): PackageManager = appContext.packageManager
+
+  @Provides
+  fun providesGoogleApiAvailability() = GoogleApiAvailability.getInstance()
 }

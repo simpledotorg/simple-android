@@ -10,7 +10,7 @@ jobs:
   # https://github.com/ReactiveCircus/android-emulator-runner
   qa_android_tests:
     # This job only runs for pull request comments and when the comment starts with `/instrumentedTests`
-    if: contains(github.event.comment.html_url, '/pull/') && startsWith(github.event.comment.body, '/instrumentedTests')
+    if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/instrumentedTests') && github.event.comment.author_association == 'MEMBER'
     runs-on: [ macos-latest ]
     steps:
       - uses: actions/checkout@v2

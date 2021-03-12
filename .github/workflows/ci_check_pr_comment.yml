@@ -36,11 +36,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN  }}
           fetch-depth: 0
       - name: Rebase
         uses: cirrus-actions/rebase@1.4
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN  }}
 
   qa_purge_env:
     runs-on: [ ubuntu-latest ]

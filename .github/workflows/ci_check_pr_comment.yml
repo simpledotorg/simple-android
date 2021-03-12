@@ -30,9 +30,9 @@ jobs:
           script: ./gradlew connectedQaDebugAndroidTest
 
   rebase_pr:
-    runs-on: [ ubuntu-latest ]
     # This job only runs for pull request comments and when the comment starts with `/rebase`
-    if: contains(github.event.comment.html_url, '/pull/') && startsWith(github.event.comment.body, '/rebase') && github.event.comment.author_association == 'MEMBER'
+    if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/rebase') && github.event.comment.author_association == 'MEMBER'
+    runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
         with:

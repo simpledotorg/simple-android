@@ -27,6 +27,7 @@
 
 ### Fixes
 - Fix cannot exit patient summary screen after scheduling an appointment
+- Fix prescribed drugs list going beyond screen bounds
 
 ## 2021-02-26-7647
 ### Internal

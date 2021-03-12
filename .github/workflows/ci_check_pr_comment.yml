@@ -32,7 +32,7 @@ jobs:
   rebase_pr:
     runs-on: [ ubuntu-latest ]
     # This job only runs for pull request comments and when the comment starts with `/rebase`
-    if: contains(github.event.comment.html_url, '/pull/') && startsWith(github.event.comment.body, '/rebase')
+    if: contains(github.event.comment.html_url, '/pull/') && startsWith(github.event.comment.body, '/rebase') && github.event.comment.author_association == 'MEMBER'
     steps:
       - uses: actions/checkout@v2
         with:

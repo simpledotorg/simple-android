@@ -10,7 +10,15 @@ jobs:
   # https://github.com/ReactiveCircus/android-emulator-runner
   qa_android_tests:
     # This job only runs for pull request comments and when the comment starts with `/instrumentedTests`
-    if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/instrumentedTests') && github.event.comment.author_association == 'MEMBER'
+    if: |
+      github.event.issue.pull_request != '' &&
+      contains(github.event.comment.body, '/instrumentedTests') &&
+      (
+        (github.event.issue.author_association == 'OWNER') ||
+        (github.event.issue.author_association == 'COLLABORATOR') ||
+        (github.event.issue.author_association == 'CONTRIBUTOR') ||
+        (github.event.issue.author_association == 'MEMBER')
+      )
     runs-on: [ macos-latest ]
     steps:
       - uses: actions/checkout@v2
@@ -31,7 +39,15 @@ jobs:
 
   rebase_pr:
     # This job only runs for pull request comments and when the comment starts with `/rebase`
-    if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/rebase') && github.event.comment.author_association == 'MEMBER'
+    if: |
+      github.event.issue.pull_request != '' &&
+      contains(github.event.comment.body, '/rebase') &&
+      (
+        (github.event.issue.author_association == 'OWNER') ||
+        (github.event.issue.author_association == 'COLLABORATOR') ||
+        (github.event.issue.author_association == 'CONTRIBUTOR') ||
+        (github.event.issue.author_association == 'MEMBER')
+      )
     runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2

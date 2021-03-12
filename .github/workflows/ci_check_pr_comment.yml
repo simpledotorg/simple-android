@@ -32,15 +32,17 @@ jobs:
   rebase_pr:
     runs-on: [ ubuntu-latest ]
     # This job only runs for pull request comments and when the comment starts with `/rebase`
-    if: contains(github.event.comment.html_url, '/pull/') && startsWith(github.event.comment.body, '/rebase')
+    if: contains(github.event.comment.html_url, '/pull/') && startsWith(github.event.comment.body, '/rebase') && github.event.comment.author_association == 'MEMBER'
     steps:
       - uses: actions/checkout@v2
         with:
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN  }}
+          persist-credentials: false
           fetch-depth: 0
       - name: Rebase
         uses: cirrus-actions/rebase@1.4
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN  }}
 
   qa_purge_env:
     runs-on: [ ubuntu-latest ]

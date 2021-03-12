@@ -8,6 +8,7 @@
 - Add option to manually trigger GH Actions
 - Migrate `SetupActivity` to the new navigation framework
 - Show link id sheet after patient summary profile is loaded and link id is present
+- Use personal access token for rebase action
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 

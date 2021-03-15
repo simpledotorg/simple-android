@@ -27,6 +27,9 @@
 - Filter results in village type ahead in patient entry/edit screens
 - Change "Preferred facility" to "Assigned facility"
 
+### Fixes
+- Fix separator between Age & DOB fields not visible in patient entry & edit screens
+
 ## 2021-03-15-7672
 ### Fixes
 - Fix prescribed drugs list going beyond screen bounds

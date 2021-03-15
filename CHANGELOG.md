@@ -20,6 +20,7 @@
 - Implement village type ahead in patient entry/edit screens
 - Show overdue count in home screen tabs
 
+## 2021-03-15-7672
 ### Fixes
 - Fix prescribed drugs list going beyond screen bounds
 

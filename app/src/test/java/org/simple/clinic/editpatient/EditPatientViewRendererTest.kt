@@ -3,7 +3,6 @@ package org.simple.clinic.editpatient
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
@@ -44,7 +43,7 @@ class EditPatientViewRendererTest {
 
     // then
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
-    verify(ui).showColonyOrVillagesList(colonyOrVillages)
+    verify(ui).setColonyOrVillagesAutoComplete(colonyOrVillages)
     verify(ui).showProgress()
     verifyNoMoreInteractions(ui)
   }

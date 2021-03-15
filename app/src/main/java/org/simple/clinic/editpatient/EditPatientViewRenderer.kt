@@ -23,7 +23,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
     manageButtonState(model)
 
     if (model.hasColonyOrVillagesList) {
-      ui.showColonyOrVillagesList(model.colonyOrVillagesList!!)
+      ui.setColonyOrVillagesAutoComplete(model.colonyOrVillagesList!!)
     }
   }
 

@@ -222,6 +222,15 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private val hardwareBackPressEvents = PublishSubject.create<BackClicked>()
 
+  private val villageTypeAheadAdapter by unsafeLazy {
+    ArrayAdapter<String>(
+        context,
+        R.layout.village_typeahead_list_item,
+        R.id.villageTypeAheadItemTextView,
+        mutableListOf()
+    )
+  }
+
   private val events: Observable<EditPatientEvent>
     get() = Observable.mergeArray(
         saveClicks(),
@@ -263,6 +272,8 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     binding = ScreenEditPatientBinding.bind(this)
 
     context.injector<Injector>().inject(this)
+
+    colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
   }
 
   override fun setupUi(inputFields: InputFields) {
@@ -275,13 +286,8 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   override fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>) {
-    ArrayAdapter<String>(context, R.layout.village_typeahead_list_item,  R.id.villageTypeAheadItemTextView, colonyOrVillageList).also { adapter ->
-      colonyOrVillageEditText.setAdapter(adapter)
-    }
-
-    colonyOrVillageEditText.setOnClickListener {
-      colonyOrVillageEditText.showDropDown()
-    }
+    villageTypeAheadAdapter.clear()
+    villageTypeAheadAdapter.addAll(colonyOrVillageList)
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {

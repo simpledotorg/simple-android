@@ -55,7 +55,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16"
-        android:paddingStart="@dimen/spacing_4">
+        android:paddingStart="@dimen/spacing_4"
+        android:gravity="center_vertical">
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/ageEditTextInputLayout"
@@ -80,7 +81,6 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_16"
-          android:layout_marginTop="@dimen/spacing_24"
           android:layout_marginEnd="@dimen/spacing_16"
           android:text="@string/patiententry_dateofbirth_and_age_separator"
           android:textAllCaps="true"

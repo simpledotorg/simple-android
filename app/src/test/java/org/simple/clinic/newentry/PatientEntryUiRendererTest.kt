@@ -21,7 +21,7 @@ class PatientEntryUiRendererTest {
     uiRenderer.render(colonyOrVillagesFetchedState)
 
     // then
-    verify(ui).showColonyOrVillagesList(colonyOrVillages)
+    verify(ui).setColonyOrVillagesAutoComplete(colonyOrVillages)
     verify(ui).hideIdentifierSection()
     verifyNoMoreInteractions(ui)
   }

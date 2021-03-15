@@ -204,6 +204,15 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val saveButton
     get() = binding!!.saveButton
 
+  private val villageTypeAheadAdapter by unsafeLazy {
+    ArrayAdapter<String>(
+        context,
+        R.layout.village_typeahead_list_item,
+        R.id.villageTypeAheadItemTextView,
+        mutableListOf()
+    )
+  }
+
   // FIXME This is temporally coupled to `scrollToFirstFieldWithError()`.
   private val allTextInputFields: List<EditText> by unsafeLazy {
     val ageOrDateOfBirthEditText = if (ageEditTextInputLayout.visibility == View.VISIBLE) {
@@ -260,6 +269,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     context.injector<Injector>().inject(this)
 
     backButton.setOnClickListener { router.pop() }
+
+    colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
   }
 
   override fun setupUi(inputFields: InputFields) {
@@ -284,14 +295,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     showOrHideGenderRadioButtons(inputFields)
   }
 
-  override fun showColonyOrVillagesList(colonyOrVillageList: List<String>) {
-    ArrayAdapter<String>(context, R.layout.village_typeahead_list_item, R.id.villageTypeAheadItemTextView, colonyOrVillageList).also { adapter ->
-      colonyOrVillageEditText.setAdapter(adapter)
-    }
-
-    colonyOrVillageEditText.setOnClickListener {
-      colonyOrVillageEditText.showDropDown()
-    }
+  override fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>) {
+    villageTypeAheadAdapter.clear()
+    villageTypeAheadAdapter.addAll(colonyOrVillageList)
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {

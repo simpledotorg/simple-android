@@ -11,6 +11,11 @@
 - Use personal access token for rebase action
 - Fix PR comment commands running condition
 - Add recipe for integrating a new sync resource
+- Bump ML Kit barcode dependency
+- Bump CameraX dependencies
+- BP passport scanner improvements
+  - Added tap to focus in QR code scanner preview
+  - Switch to `ZxingQrCodeAnalyzer` when ML Kit is unavailable 
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 

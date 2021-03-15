@@ -1,18 +1,24 @@
 package org.simple.clinic.widgets.qrcodescanner
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.AspectRatio
+import androidx.camera.core.CameraControl
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.databinding.ViewQrcodeScannerBinding
@@ -24,6 +30,7 @@ import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+
 
 class QrCodeScannerView
 constructor(
@@ -54,6 +61,9 @@ constructor(
   @Inject
   lateinit var bitmapUtils: BitmapUtils
 
+  @Inject
+  lateinit var googleApiAvailability: GoogleApiAvailability
+
   private val scans = PublishSubject.create<String>()
 
   private val cameraExecutor = Executors.newSingleThreadExecutor()
@@ -81,6 +91,7 @@ constructor(
     }, ContextCompat.getMainExecutor(context))
   }
 
+  @SuppressLint("ClickableViewAccessibility")
   private fun startCamera(cameraProvider: ProcessCameraProvider) {
     // Get screen metrics used to setup camera for full screen resolution
     val metrics = DisplayMetrics().also { previewView.display.getRealMetrics(it) }
@@ -95,25 +106,53 @@ constructor(
 
     val preview = Preview.Builder().build()
 
-    val isMLKitQrCodeScannerEnabled = features.isEnabled(Feature.MLKitQrCodeScanner)
-    val qrCodeAnalyzer = if (isMLKitQrCodeScannerEnabled) {
-      MLKitQrCodeAnalyzer(bitmapUtils, scans::onNext)
-    } else {
-      ZxingQrCodeAnalyzer(scans::onNext)
-    }
-
     val analyzer = ImageAnalysis.Builder()
         .setTargetAspectRatio(screenAspectRatio)
         .setTargetRotation(rotation)
         .build()
-        .also {
-          it.setAnalyzer(cameraExecutor, qrCodeAnalyzer)
-        }
+
+    val googlePlayServicesAvailability = googleApiAvailability.isGooglePlayServicesAvailable(context)
+    val isGooglePlayServicesAvailable = googlePlayServicesAvailability == ConnectionResult.SUCCESS
+
+    val isMLKitQrCodeScannerEnabled = features.isEnabled(Feature.MLKitQrCodeScanner)
+    val qrCodeAnalyzer = if (isMLKitQrCodeScannerEnabled && isGooglePlayServicesAvailable) {
+      MLKitQrCodeAnalyzer(bitmapUtils, scans::onNext, mlKitUnavailable = {
+        setQrCodeAnalyzer(analyzer, ZxingQrCodeAnalyzer(scans::onNext))
+      })
+    } else {
+      ZxingQrCodeAnalyzer(scans::onNext)
+    }
+
+    setQrCodeAnalyzer(analyzer, qrCodeAnalyzer)
 
     cameraProvider.unbindAll()
 
-    cameraProvider.bindToLifecycle(activity, cameraSelector, preview, analyzer)
+    val camera = cameraProvider.bindToLifecycle(activity, cameraSelector, preview, analyzer)
     preview.setSurfaceProvider(previewView.surfaceProvider)
+
+    previewView.setOnTouchListener { _, motionEvent ->
+      when (motionEvent.action) {
+        MotionEvent.ACTION_DOWN -> true
+        MotionEvent.ACTION_UP -> {
+          processTapToFocus(motionEvent, camera.cameraControl)
+          true
+        }
+        else -> false
+      }
+    }
+  }
+
+  private fun setQrCodeAnalyzer(analyzer: ImageAnalysis, qrCodeAnalyzer: ImageAnalysis.Analyzer) {
+    analyzer.clearAnalyzer()
+    analyzer.setAnalyzer(cameraExecutor, qrCodeAnalyzer)
+  }
+
+  private fun processTapToFocus(motionEvent: MotionEvent, cameraControl: CameraControl) {
+    val meteringPointFactory = previewView.meteringPointFactory
+    val point = meteringPointFactory.createPoint(motionEvent.x, motionEvent.y)
+    val action = FocusMeteringAction.Builder(point).build()
+
+    cameraControl.startFocusAndMetering(action)
   }
 
   /**

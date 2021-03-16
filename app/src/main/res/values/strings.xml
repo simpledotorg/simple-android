@@ -664,7 +664,7 @@
   <string name="screenintrovideo_skip">Skip</string>
 
   <!-- Assigned Facility -->
-  <string name="assigned_facility_view_title">Preferred facility</string>
+  <string name="assigned_facility_view_title">Assigned facility</string>
   <string name="assigned_facility_view_change">Change</string>
 
   <!-- Facility Picker -->

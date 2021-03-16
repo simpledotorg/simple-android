@@ -75,7 +75,8 @@
         android:id="@+id/patientedit_age_and_dob_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16">
+        android:layout_marginTop="@dimen/spacing_16"
+        android:gravity="center_vertical">
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/ageInputLayout"
@@ -100,7 +101,6 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_16"
-          android:layout_marginTop="@dimen/spacing_24"
           android:layout_marginEnd="@dimen/spacing_16"
           android:background="?android:attr/windowBackground"
           android:text="@string/patientedit_dateofbirth_and_age_separator"

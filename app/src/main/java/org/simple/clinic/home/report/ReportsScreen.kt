@@ -40,6 +40,7 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
     }
 
     webView.settings.javaScriptEnabled = true
+    webView.webViewClient = ReportsWebViewClient()
 
     context.injector<Injector>().inject(this)
   }

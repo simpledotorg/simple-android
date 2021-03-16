@@ -2,6 +2,7 @@ package org.simple.clinic.home.report
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class ReportsUpdate : Update<ReportsModel, ReportsEvent, ReportsEffect> {
@@ -10,6 +11,7 @@ class ReportsUpdate : Update<ReportsModel, ReportsEvent, ReportsEffect> {
       is ReportsLoaded -> {
         next(model.reportsContentLoaded(event.reportsContent))
       }
+      WebBackClicked -> dispatch(LoadReports)
     }
   }
 }

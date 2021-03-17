@@ -584,7 +584,7 @@
   <string name="screenintrovideo_skip">ዝለል</string>
 
   <!-- Assigned Facility -->
-  <string name="assigned_facility_view_title">የሚመረጥ አከባቢ</string>
+  <string name="assigned_facility_view_title">የተመደቡበት ተቋም</string>
   <string name="assigned_facility_view_change">ለውጥ</string>
 
   <!-- Facility Picker -->

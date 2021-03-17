@@ -2,6 +2,17 @@
 
 ## Next Release
 ### Internal
+- [In Progress: 20 Jan 2021] Material Theme-ing Migration
+- [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
+
+### Changes
+- Change "Preferred facility" to "Assigned facility"
+
+### Fixes
+- Fix separator between Age & DOB fields not visible in patient entry & edit screens
+
+## On Demo
+### Internal
 - Migrate `LinkIdWithPatientView` to `LinkIdWithPatientSheet`
 - Convert `screen_patient_summary` to use `ConstraintLayout`
 - Bump Play Core to v1.10.0
@@ -16,8 +27,6 @@
 - BP passport scanner improvements
   - Added tap to focus in QR code scanner preview
   - Switch to `ZxingQrCodeAnalyzer` when ML Kit is unavailable 
-- [In Progress: 20 Jan 2021] Material Theme-ing Migration
-- [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
 ### Changes
 - Updated translations: `bn-BD`, `te-IN`, `hi-IN`, `ta-IN`, `mr-IN`, `bn-IN`, `ti-ET`, `am-ET`, `pa-IN`, `om-ET`
@@ -25,10 +34,6 @@
 - Implement village type ahead in patient entry/edit screens
 - Show overdue count in home screen tabs
 - Filter results in village type ahead in patient entry/edit screens
-- Change "Preferred facility" to "Assigned facility"
-
-### Fixes
-- Fix separator between Age & DOB fields not visible in patient entry & edit screens
 
 ## 2021-03-15-7672
 ### Fixes

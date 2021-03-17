@@ -584,7 +584,7 @@
   <string name="screenintrovideo_skip">छोड़ें</string>
 
   <!-- Assigned Facility -->
-  <string name="assigned_facility_view_title">पसंदीदा सुविधा</string>
+  <string name="assigned_facility_view_title">असाइन किया गया सुविधा</string>
   <string name="assigned_facility_view_change">बदलें</string>
 
   <!-- Facility Picker -->

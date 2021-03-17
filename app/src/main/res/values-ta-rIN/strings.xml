@@ -584,7 +584,7 @@
   <string name="screenintrovideo_skip">தவிர்க்கவும்</string>
 
   <!-- Assigned Facility -->
-  <string name="assigned_facility_view_title">விரும்பும் வசதி</string>
+  <string name="assigned_facility_view_title">ஒதுக்கப்பட்ட வசதி</string>
   <string name="assigned_facility_view_change">மாற்றவும்</string>
 
   <!-- Facility Picker -->

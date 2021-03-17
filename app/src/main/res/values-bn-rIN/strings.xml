@@ -584,7 +584,7 @@
   <string name="screenintrovideo_skip">ছেড়ে যান/ পরেরটায় যান</string>
 
   <!-- Assigned Facility -->
-  <string name="assigned_facility_view_title">পছন্দসই ফেসিলিটি</string>
+  <string name="assigned_facility_view_title">অর্পিত সুবিধা</string>
   <string name="assigned_facility_view_change">পরিবর্তন</string>
 
   <!-- Facility Picker -->

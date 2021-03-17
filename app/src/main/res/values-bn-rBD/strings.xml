@@ -522,7 +522,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">\"ভিজিটে আসতে সম্মত হয়েছেন\"\ বলে রোগীকে চিহ্নিত করুন</string>
+  <string name="contactpatient_agreed_to_visit">\&quot;ভিজিটে আসতে সম্মত হয়েছেন&quot;\ বলে রোগীকে চিহ্নিত করুন</string>
   <string name="contactpatient_remind_call_later">পরে কল করার জন্য মনে করিয়ে দিন…</string>
   <string name="contactpatient_remove_from_list">সময়াতীতের তালিকা থেকে সরান…</string>
   <string name="contactpatient_result_of_call">কলের ফলাফল</string>
@@ -584,7 +584,7 @@
   <string name="screenintrovideo_skip">ছেড়ে যান</string>
 
   <!-- Assigned Facility -->
-  <string name="assigned_facility_view_title">পছন্দসই সুবিধা</string>
+  <string name="assigned_facility_view_title">অর্পিত সুবিধা</string>
   <string name="assigned_facility_view_change">পরিবর্তন</string>
 
   <!-- Facility Picker -->

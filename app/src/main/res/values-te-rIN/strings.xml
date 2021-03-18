@@ -584,7 +584,7 @@
   <string name="screenintrovideo_skip">దాటవేయి</string>
 
   <!-- Assigned Facility -->
-  <string name="assigned_facility_view_title">ప్రాధాన్య సౌకర్యం</string>
+  <string name="assigned_facility_view_title">కేటాయించబడ్డ సదుపాయం</string>
   <string name="assigned_facility_view_change">మార్చు</string>
 
   <!-- Facility Picker -->

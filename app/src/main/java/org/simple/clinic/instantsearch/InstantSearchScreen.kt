@@ -168,7 +168,7 @@ class InstantSearchScreen :
     // This improves the experience by showing the keyboard only if we have arrived here by searching
     // for a patient by the name
     if (screenKey.additionalIdentifier == null) {
-      searchQueryEditText.showKeyboard()
+      showKeyboard()
     }
     instantSearchToolbar.setNavigationOnClickListener {
       router.pop()
@@ -255,6 +255,10 @@ class InstantSearchScreen :
 
   override fun hideSearchProgress() {
     instantSearchProgressIndicator.visibility = View.GONE
+  }
+
+  override fun showKeyboard() {
+    searchQueryEditText.showKeyboard()
   }
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {

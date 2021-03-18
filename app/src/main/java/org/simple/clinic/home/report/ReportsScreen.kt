@@ -6,6 +6,8 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.screen_report.view.*
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
@@ -18,11 +20,19 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
   @Inject
   lateinit var effectHandler: ReportsEffectHandler
 
+  private val webViewBackClicks = PublishSubject.create<ReportsEvent>()
+
+  private val events: Observable<ReportsEvent> by unsafeLazy {
+    Observable
+        .mergeArray(webViewBackClicks)
+        .cast()
+  }
+
   private val delegate by unsafeLazy {
     val uiRenderer = ReportsUiRenderer(this)
 
     MobiusDelegate.forView(
-        events = Observable.never(),
+        events = events,
         defaultModel = ReportsModel.create(),
         init = ReportsInit(),
         update = ReportsUpdate(),
@@ -40,6 +50,9 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
     }
 
     webView.settings.javaScriptEnabled = true
+    webView.webViewClient = ReportsWebViewClient(
+        backClicked = { webViewBackClicks.onNext(WebBackClicked) }
+    )
 
     context.injector<Injector>().inject(this)
   }
@@ -54,7 +67,7 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
     super.onDetachedFromWindow()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 

@@ -43,6 +43,9 @@ class SetAppointmentReminderView(
   private val selectedAppointmentRelativeDate
     get() = binding!!.selectedAppointmentRelativeDate
 
+  private val selectedAppointmentActualDate
+    get() = binding!!.selectedAppointmentActualDate
+
   @Inject
   @Named("date_for_user_input")
   lateinit var dateFormatter: DateTimeFormatter
@@ -73,6 +76,7 @@ class SetAppointmentReminderView(
       selectedDate: LocalDate
   ) {
     selectedAppointmentRelativeDate.text = displayTextForReminderPeriod(selectedAppointmentReminderPeriod)
+    selectedAppointmentActualDate.text = dateFormatter.format(selectedDate)
     actualAppointmentDateButton.text = dateFormatter.format(selectedDate)
   }
 

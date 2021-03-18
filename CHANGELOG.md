@@ -6,7 +6,7 @@
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
 ### Changes
-- Update translations: `mr-IN`, `bn-IN`, `ti-ET`, `te-IN`
+- Update translations: `mr-IN`, `bn-IN`, `ti-ET`, `te-IN`, `pa-IN`
 - Change "Preferred facility" to "Assigned facility"
 
 ### Fixes

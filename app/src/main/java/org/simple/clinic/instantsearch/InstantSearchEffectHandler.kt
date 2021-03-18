@@ -1,10 +1,10 @@
 package org.simple.clinic.instantsearch
 
 import com.spotify.mobius.rx2.RxMobius
+import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
@@ -41,6 +41,7 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addAction(HideNoSearchResults::class.java, uiActions::hideNoSearchResults, schedulers.ui())
       .addTransformer(SaveNewOngoingPatientEntry::class.java, saveNewOngoingPatientEntry())
       .addConsumer(OpenPatientEntryScreen::class.java, { uiActions.openPatientEntryScreen(it.facility) }, schedulers.ui())
+      .addAction(ShowKeyboard::class.java, { uiActions.showKeyboard() }, schedulers.ui())
       .build()
 
   private fun saveNewOngoingPatientEntry(): ObservableTransformer<SaveNewOngoingPatientEntry, InstantSearchEvent> {

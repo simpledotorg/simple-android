@@ -9,6 +9,7 @@
 ### Changes
 - Update translations: `mr-IN`, `bn-IN`, `ti-ET`, `te-IN`, `pa-IN`
 - Change "Preferred facility" to "Assigned facility"
+- Show 'CHANGE' button in appointment reminder bottom sheet
 
 ### Fixes
 - Fix separator between Age & DOB fields not visible in patient entry & edit screens

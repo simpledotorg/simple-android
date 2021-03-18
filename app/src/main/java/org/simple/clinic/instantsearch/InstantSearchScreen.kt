@@ -287,7 +287,13 @@ class InstantSearchScreen :
         .textChanges()
         .skipInitialValue()
         .debounce(500, TimeUnit.MILLISECONDS)
-        .map { SearchQueryChanged(it.toString()) }
+        .map { searchQuery ->
+          val trimmedSearchQuery = searchQuery
+              .trim()
+              .toString()
+
+          SearchQueryChanged(trimmedSearchQuery)
+        }
   }
 
   private fun registerNewPatientClicks(): Observable<UiEvent> {

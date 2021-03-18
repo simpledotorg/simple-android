@@ -36,14 +36,14 @@
     android:background="?attr/selectableItemBackgroundBorderless"
     android:padding="@dimen/spacing_12"
     android:tint="@color/appointment_date_stepper"
-    app:layout_constraintEnd_toStartOf="@+id/selectedAppointmentDate"
+    app:layout_constraintEnd_toStartOf="@+id/selectedAppointmentRelativeDate"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/calLaterInLabel"
     app:srcCompat="@drawable/ic_remove_circle_outline_32dp"
     tools:ignore="ContentDescription" />
 
   <TextView
-    android:id="@+id/selectedAppointmentDate"
+    android:id="@+id/selectedAppointmentRelativeDate"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
@@ -66,7 +66,7 @@
     android:padding="@dimen/spacing_12"
     android:tint="@color/appointment_date_stepper"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toEndOf="@+id/selectedAppointmentDate"
+    app:layout_constraintStart_toEndOf="@+id/selectedAppointmentRelativeDate"
     app:layout_constraintTop_toBottomOf="@+id/calLaterInLabel"
     app:srcCompat="@drawable/ic_add_circle_outline_32dp"
     tools:ignore="ContentDescription" />
@@ -79,7 +79,7 @@
     android:layout_marginTop="@dimen/spacing_24"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/selectedAppointmentDate"
+    app:layout_constraintTop_toBottomOf="@id/selectedAppointmentRelativeDate"
     tools:text="8-Dec-2019" />
 
   <com.google.android.material.button.MaterialButton

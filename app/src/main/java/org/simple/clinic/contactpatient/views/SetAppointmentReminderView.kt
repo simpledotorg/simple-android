@@ -40,8 +40,8 @@ class SetAppointmentReminderView(
   private val actualAppointmentDateButton
     get() = binding!!.actualAppointmentDateButton
 
-  private val selectedAppointmentDate
-    get() = binding!!.selectedAppointmentDate
+  private val selectedAppointmentRelativeDate
+    get() = binding!!.selectedAppointmentRelativeDate
 
   @Inject
   @Named("date_for_user_input")
@@ -72,7 +72,7 @@ class SetAppointmentReminderView(
       selectedAppointmentReminderPeriod: TimeToAppointment,
       selectedDate: LocalDate
   ) {
-    selectedAppointmentDate.text = displayTextForReminderPeriod(selectedAppointmentReminderPeriod)
+    selectedAppointmentRelativeDate.text = displayTextForReminderPeriod(selectedAppointmentReminderPeriod)
     actualAppointmentDateButton.text = dateFormatter.format(selectedDate)
   }
 

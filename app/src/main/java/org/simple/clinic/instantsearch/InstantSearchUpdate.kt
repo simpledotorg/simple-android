@@ -44,7 +44,7 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
       event: BlankBpPassportResultReceived
   ): Next<InstantSearchModel, InstantSearchEffect> {
     return when (event.blankBpPassportResult) {
-      AddToExistingPatient -> noChange()
+      AddToExistingPatient -> dispatch(ShowKeyboard)
       RegisterNewPatient -> registerNewPatient(model)
     }
   }

@@ -47,7 +47,7 @@ class SetAppointmentReminderView(
     get() = binding!!.selectedAppointmentActualDate
 
   @Inject
-  @Named("date_for_user_input")
+  @Named("full_date")
   lateinit var dateFormatter: DateTimeFormatter
 
   var decrementStepperClicked: DecrementStepperClicked? = null

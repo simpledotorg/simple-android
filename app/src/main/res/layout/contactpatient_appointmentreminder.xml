@@ -84,15 +84,15 @@
     tools:ignore="ContentDescription" />
 
   <com.google.android.material.button.MaterialButton
-    android:id="@+id/actualAppointmentDateButton"
+    android:id="@+id/changeAppointmentButton"
     style="?attr/borderlessButtonStyle"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/spacing_24"
+    android:layout_marginTop="@dimen/spacing_8"
+    android:text="@string/contactpatient_change"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/selectedAppointmentRelativeDate"
-    tools:text="8-Dec-2019" />
+    app:layout_constraintTop_toBottomOf="@id/selectedAppointmentActualDate" />
 
   <com.google.android.material.button.MaterialButton
     android:id="@+id/saveReminder"
@@ -106,6 +106,6 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/actualAppointmentDateButton" />
+    app:layout_constraintTop_toBottomOf="@id/changeAppointmentButton" />
 
 </merge>

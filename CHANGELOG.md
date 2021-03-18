@@ -2,6 +2,7 @@
 
 ## Next Release
 ### Internal
+- Trim start and end white spaces for instant search query
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 - Add drug stock option in progress
@@ -11,6 +12,7 @@
 - Update translations: `mr-IN`, `bn-IN`, `bn-BD`, `ti-ET`, `te-IN`, `pa-IN`, `hi-IN`, `om-ET`
 - Change "Preferred facility" to "Assigned facility"
 - Show 'CHANGE' button in appointment reminder bottom sheet
+- Highlight search field and show keyboard when 'Add to existing patient' option is selected
 
 ### Fixes
 - Fix separator between Age & DOB fields not visible in patient entry & edit screens

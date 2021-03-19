@@ -1,6 +1,7 @@
 package org.simple.clinic.instantsearch
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputLayout.END_ICON_NONE
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
@@ -29,6 +31,8 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation
+import org.simple.clinic.feature.Feature.InstantSearchQrCode
+import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenResult
@@ -38,6 +42,7 @@ import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.router.util.resolveColor
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
@@ -80,10 +85,16 @@ class InstantSearchScreen :
   @Inject
   lateinit var utcClock: UtcClock
 
+  @Inject
+  lateinit var features: Features
+
   private val subscriptions = CompositeDisposable()
 
   private val instantSearchToolbar
     get() = binding.instantSearchToolbar
+
+  private val searchQueryTextInputLayout
+    get() = binding.searchQueryTextInputLayout
 
   private val searchQueryEditText
     get() = binding.searchQueryEditText
@@ -164,6 +175,20 @@ class InstantSearchScreen :
 
     instantSearchToolbar.setNavigationOnClickListener {
       router.pop()
+    }
+
+    if (features.isEnabled(InstantSearchQrCode)) {
+      with(searchQueryTextInputLayout) {
+        setEndIconDrawable(R.drawable.ic_qr_code_scanner)
+        setEndIconTintList(
+            ColorStateList.valueOf(context.resolveColor(attrRes = R.attr.colorPrimary))
+        )
+        setEndIconOnClickListener {
+          // TODO: Open QR code scanner
+        }
+      }
+    } else {
+      searchQueryTextInputLayout.endIconMode = END_ICON_NONE
     }
 
     searchResultsView.adapter = allPatientsAdapter

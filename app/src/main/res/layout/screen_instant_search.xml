@@ -25,7 +25,9 @@
         android:id="@+id/searchQueryTextInputLayout"
         style="@style/Widget.Simple.TextField.Layout.Search"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.Simple.Blue1Primary"
+        app:endIconMode="custom">
 
         <com.google.android.material.textfield.TextInputEditText
           android:id="@+id/searchQueryEditText"

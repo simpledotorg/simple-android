@@ -43,6 +43,7 @@ import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.util.resolveColor
+import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -185,7 +186,7 @@ class InstantSearchScreen :
             ColorStateList.valueOf(context.resolveColor(attrRes = R.attr.colorPrimary))
         )
         setEndIconOnClickListener {
-          // TODO: Open QR code scanner
+          router.pushExpectingResult(BpPassportScan, ScanSimpleIdScreenKey())
         }
       }
     } else {
@@ -343,4 +344,7 @@ class InstantSearchScreen :
 
   @Parcelize
   private object BlankBpPassport : Parcelable
+
+  @Parcelize
+  private object BpPassportScan : Parcelable
 }

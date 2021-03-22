@@ -531,6 +531,7 @@
   <string name="contactpatient_help_text">ደህንነቱ የተጠበቀ ጥሪዎች ቁጥርዎን ይደብቃሉ እና ክፍያ ነፃ ናቸው</string>
   <string name="contactpatient_patientdetails">%1$s ፣ %2$s ፣ %3$s</string>
   <string name="contactpatient_call_later_in">በኋላ ይደውሉ</string>
+  <string name="contactpatient_change">ለውጥ</string>
   <string name="contactpatient_done">ተጠናቅቋል</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s ቀን</item>
@@ -584,7 +585,7 @@
   <string name="screenintrovideo_skip">ዝለል</string>
 
   <!-- Assigned Facility -->
-  <string name="assigned_facility_view_title">የሚመረጥ አከባቢ</string>
+  <string name="assigned_facility_view_title">የተመደቡበት ተቋም</string>
   <string name="assigned_facility_view_change">ለውጥ</string>
 
   <!-- Facility Picker -->

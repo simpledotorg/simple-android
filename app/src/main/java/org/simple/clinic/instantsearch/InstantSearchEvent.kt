@@ -3,6 +3,7 @@ package org.simple.clinic.instantsearch
 import org.simple.clinic.bp.assignbppassport.BlankBpPassportResult
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -38,4 +39,6 @@ data class BlankBpPassportResultReceived(val blankBpPassportResult: BlankBpPassp
 sealed class BpPassportScanned : InstantSearchEvent() {
 
   data class ByPatientFound(val patientId: UUID) : BpPassportScanned()
+
+  data class ByPatientNotFound(val identifier: Identifier) : BpPassportScanned()
 }

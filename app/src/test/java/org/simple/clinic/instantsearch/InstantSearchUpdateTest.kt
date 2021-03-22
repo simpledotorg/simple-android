@@ -11,6 +11,7 @@ import org.simple.clinic.bp.assignbppassport.AddToExistingPatient
 import org.simple.clinic.bp.assignbppassport.RegisterNewPatient
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import java.util.UUID
 
@@ -317,6 +318,32 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenPatientSummary(patientId))
+        ))
+  }
+
+  @Test
+  fun `when bp passport is scanned and patient is not found, then open bp passport sheet`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
+    )
+    val facilityLoadedModel = defaultModel
+        .facilityLoaded(facility)
+
+    val identifier = Identifier(
+        value = "e0db3c71-aa4a-42d8-9f36-256e1a194f69",
+        type = BpPassport
+    )
+
+    val expectedModel = facilityLoadedModel
+        .additionalIdentifierUpdated(additionalIdentifier = identifier)
+        .bpPassportSheetOpened()
+
+    updateSpec
+        .given(facilityLoadedModel)
+        .whenEvent(BpPassportScanned.ByPatientNotFound(identifier))
+        .then(assertThatNext(
+            hasModel(expectedModel),
+            hasEffects(OpenBpPassportSheet(identifier))
         ))
   }
 }

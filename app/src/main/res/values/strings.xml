@@ -611,6 +611,7 @@
   <string name="contactpatient_help_text">Secure calls hide your number and are toll free</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">Call later in</string>
+  <string name="contactpatient_change">Change</string>
   <string name="contactpatient_done">Done</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s day</item>

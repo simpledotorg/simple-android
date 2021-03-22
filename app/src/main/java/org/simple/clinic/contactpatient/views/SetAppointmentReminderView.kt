@@ -37,14 +37,17 @@ class SetAppointmentReminderView(
   private val saveReminder
     get() = binding!!.saveReminder
 
-  private val actualAppointmentDateButton
-    get() = binding!!.actualAppointmentDateButton
+  private val changeAppointmentButton
+    get() = binding!!.changeAppointmentButton
 
-  private val selectedAppointmentDate
-    get() = binding!!.selectedAppointmentDate
+  private val selectedAppointmentRelativeDate
+    get() = binding!!.selectedAppointmentRelativeDate
+
+  private val selectedAppointmentActualDate
+    get() = binding!!.selectedAppointmentActualDate
 
   @Inject
-  @Named("date_for_user_input")
+  @Named("full_date")
   lateinit var dateFormatter: DateTimeFormatter
 
   var decrementStepperClicked: DecrementStepperClicked? = null
@@ -65,15 +68,15 @@ class SetAppointmentReminderView(
     previousDateStepper.setOnClickListener { decrementStepperClicked?.invoke() }
     nextDateStepper.setOnClickListener { incrementStepperClicked?.invoke() }
     saveReminder.setOnClickListener { doneClicked?.invoke() }
-    actualAppointmentDateButton.setOnClickListener { appointmentDateClicked?.invoke() }
+    changeAppointmentButton.setOnClickListener { appointmentDateClicked?.invoke() }
   }
 
   fun renderSelectedAppointmentDate(
       selectedAppointmentReminderPeriod: TimeToAppointment,
       selectedDate: LocalDate
   ) {
-    selectedAppointmentDate.text = displayTextForReminderPeriod(selectedAppointmentReminderPeriod)
-    actualAppointmentDateButton.text = dateFormatter.format(selectedDate)
+    selectedAppointmentRelativeDate.text = displayTextForReminderPeriod(selectedAppointmentReminderPeriod)
+    selectedAppointmentActualDate.text = dateFormatter.format(selectedDate)
   }
 
   private fun displayTextForReminderPeriod(timeToAppointment: TimeToAppointment): CharSequence {

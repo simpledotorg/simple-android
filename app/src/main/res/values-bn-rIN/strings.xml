@@ -531,6 +531,7 @@
   <string name="contactpatient_help_text">সুরক্ষিত কলগুলো আপনার নম্বরটিকে গোপন করে এবং এগুলো টোল ফ্রি</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">পরে ফোন করুন</string>
+  <string name="contactpatient_change">পরিবর্তন</string>
   <string name="contactpatient_done">সম্পন্ন হয়েছে</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s দিন</item>

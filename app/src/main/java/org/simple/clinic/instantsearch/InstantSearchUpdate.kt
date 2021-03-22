@@ -38,6 +38,7 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
       is BlankBpPassportResultReceived -> blankBpPassportResult(model, event)
       is BpPassportScanned.ByPatientFound -> dispatch(OpenPatientSummary(event.patientId))
       is BpPassportScanned.ByPatientNotFound -> patientNotFoundAfterBpPassportScan(model, event)
+      is BpPassportScanned.ByShortCode -> dispatch(OpenShortCodeSearchScreen(event.shortCode))
     }
   }
 

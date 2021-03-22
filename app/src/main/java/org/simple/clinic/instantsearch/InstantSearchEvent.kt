@@ -41,4 +41,6 @@ sealed class BpPassportScanned : InstantSearchEvent() {
   data class ByPatientFound(val patientId: UUID) : BpPassportScanned()
 
   data class ByPatientNotFound(val identifier: Identifier) : BpPassportScanned()
+
+  data class ByShortCode(val shortCode: String) : BpPassportScanned()
 }

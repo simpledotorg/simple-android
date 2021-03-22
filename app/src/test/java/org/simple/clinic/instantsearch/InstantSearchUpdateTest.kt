@@ -346,4 +346,23 @@ class InstantSearchUpdateTest {
             hasEffects(OpenBpPassportSheet(identifier))
         ))
   }
+
+  @Test
+  fun `when short code is entered, then open short code search`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
+    )
+    val facilityLoadedModel = defaultModel
+        .facilityLoaded(facility)
+
+    val shortCode = "123 4567"
+
+    updateSpec
+        .given(facilityLoadedModel)
+        .whenEvent(BpPassportScanned.ByShortCode(shortCode))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenShortCodeSearchScreen(shortCode))
+        ))
+  }
 }

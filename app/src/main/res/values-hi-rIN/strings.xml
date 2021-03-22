@@ -372,7 +372,7 @@
   <string name="linkidwithpatient_button_yes">हाँ</string>
   <string name="linkidwithpatient_button_back">वापस जाएँ</string>
   <string name="linkidwithpatient_text">बीपी पासपोर्ट को इसमें जोड़ें</string>
-  <string name="linkidwithpatient_patient_text">%1$s?</string>
+  <string name="linkidwithpatient_patient_text">रोगी %1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 
@@ -531,6 +531,7 @@
   <string name="contactpatient_help_text">सुरक्षित कॉल से आपका नंबर छिपा रहता है और यह नंबर टोल फ़्री होता है</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">इतनी देर बाद कॉल करें</string>
+  <string name="contactpatient_change">बदलें</string>
   <string name="contactpatient_done">पूरा हुआ</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s दिन</item>
@@ -584,7 +585,7 @@
   <string name="screenintrovideo_skip">छोड़ें</string>
 
   <!-- Assigned Facility -->
-  <string name="assigned_facility_view_title">पसंदीदा सुविधा</string>
+  <string name="assigned_facility_view_title">असाइन किया गया सुविधा</string>
   <string name="assigned_facility_view_change">बदलें</string>
 
   <!-- Facility Picker -->

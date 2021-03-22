@@ -34,3 +34,8 @@ data class BlankBpPassportResultReceived(val blankBpPassportResult: BlankBpPassp
 
   override val analyticsName: String = "Instant Search : Blank BP Passport Result Received"
 }
+
+sealed class BpPassportScanned : InstantSearchEvent() {
+
+  data class ByPatientFound(val patientId: UUID) : BpPassportScanned()
+}

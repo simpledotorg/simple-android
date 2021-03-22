@@ -300,4 +300,23 @@ class InstantSearchUpdateTest {
             hasEffects(ShowKeyboard)
         ))
   }
+
+  @Test
+  fun `when bp passport is scanned and patient is found, then open patient summary`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
+    )
+    val facilityLoadedModel = defaultModel
+        .facilityLoaded(facility)
+
+    val patientId = UUID.fromString("feb3b4c5-b286-4995-be10-24b382ffd8bb")
+
+    updateSpec
+        .given(facilityLoadedModel)
+        .whenEvent(BpPassportScanned.ByPatientFound(patientId))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenPatientSummary(patientId))
+        ))
+  }
 }

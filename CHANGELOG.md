@@ -5,6 +5,7 @@
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 - Add drug stock option in progress
+- Show custom error screen for drug stock web view when there is no internet connection
 
 ### Changes
 - Update translations: `mr-IN`, `bn-IN`, `ti-ET`, `te-IN`, `pa-IN`

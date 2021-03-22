@@ -241,6 +241,8 @@
 
   <string name="registrationname_name_label">ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರನ್ನು ನಮಗೆ ತಿಳಿಸಿ</string>
   <string name="registrationname_error_empty_name">ದಯವಿಟ್ಟು ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+  <string name="registrationname_next">ಮುಂದಿನ</string>
+
 
   <string name="registrationpin_pin_label">ನಿಮ್ಮ ಸೆಕ್ಯೂರಿಟಿ PIN ರಚಿಸಿ</string>
   <string name="registrationpin_pin_hint">ನಿಮ್ಮ PIN ಜ್ಞಾಪಕದಲ್ಲಿಡಿ, ನಂತರ ನಿಮಗೆ ಅದು ಅಗತ್ಯವಿರುತ್ತದೆ</string>
@@ -529,6 +531,7 @@
   <string name="contactpatient_help_text">ಸುರಕ್ಷಿತ ಕರೆಗಳು ನಿಮ್ಮ ಸಂಖ್ಯೆಯನ್ನು ಮರೆಮಾಡುತ್ತವೆ ಮತ್ತು ಅವು ಶುಲ್ಕ ರಹಿತವಾಗಿರುತ್ತವೆ</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">ನಂತರ ಇಷ್ಟು ಸಮಯದಲ್ಲಿ ಕರೆ ಮಾಡಿ</string>
+  <string name="contactpatient_change">ಬದಲಾಯಿಸಿ</string>
   <string name="contactpatient_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s ದಿನ</item>
@@ -582,7 +585,7 @@
   <string name="screenintrovideo_skip">ಸ್ಕಿಪ್ ಮಾಡಿ</string>
 
   <!-- Assigned Facility -->
-  <string name="assigned_facility_view_title">ಆದ್ಯತೆಯ ಸೌಲಭ್ಯ</string>
+  <string name="assigned_facility_view_title">ನಿಯೋಜಿತ ಸೌಲಭ್ಯ</string>
   <string name="assigned_facility_view_change">ಬದಲಾಯಿಸಿ</string>
 
   <!-- Facility Picker -->

@@ -43,6 +43,7 @@ import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.util.resolveColor
+import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
@@ -276,6 +277,10 @@ class InstantSearchScreen :
 
   override fun showKeyboard() {
     searchQueryEditText.showKeyboard()
+  }
+
+  override fun openShortCodeSearchScreen(shortCode: String) {
+    router.push(ShortCodeSearchResultScreenKey(shortCode))
   }
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {

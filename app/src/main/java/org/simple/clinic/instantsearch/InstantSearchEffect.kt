@@ -40,3 +40,5 @@ data class SaveNewOngoingPatientEntry(val ongoingNewPatientEntry: OngoingNewPati
 data class OpenPatientEntryScreen(val facility: Facility) : InstantSearchEffect()
 
 object ShowKeyboard : InstantSearchEffect()
+
+data class OpenShortCodeSearchScreen(val shortCode: String) : InstantSearchEffect()

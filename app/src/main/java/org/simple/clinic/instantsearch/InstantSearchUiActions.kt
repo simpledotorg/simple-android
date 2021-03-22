@@ -17,4 +17,5 @@ interface InstantSearchUiActions {
   fun hideNoSearchResults()
   fun openPatientEntryScreen(facility: Facility)
   fun showKeyboard()
+  fun openShortCodeSearchScreen(shortCode: String)
 }

@@ -531,6 +531,7 @@
   <string name="contactpatient_help_text">সুরক্ষিত কলগুলো আপনার নম্বরটিকে গোপন করে এবং এগুলো টোল ফ্রি</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">পরে ফোন করুন</string>
+  <string name="contactpatient_change">পরিবর্তন</string>
   <string name="contactpatient_done">সম্পন্ন</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s দিন</item>
@@ -584,7 +585,7 @@
   <string name="screenintrovideo_skip">ছেড়ে যান</string>
 
   <!-- Assigned Facility -->
-  <string name="assigned_facility_view_title">পছন্দসই সুবিধা</string>
+  <string name="assigned_facility_view_title">বরাদ্দকৃত সুবিধা</string>
   <string name="assigned_facility_view_change">পরিবর্তন</string>
 
   <!-- Facility Picker -->

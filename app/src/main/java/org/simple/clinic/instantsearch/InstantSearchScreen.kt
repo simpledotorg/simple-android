@@ -43,6 +43,7 @@ import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.util.resolveColor
+import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
@@ -144,6 +145,7 @@ class InstantSearchScreen :
   )
 
   private val blankBpPassportResults = PublishSubject.create<UiEvent>()
+  private val bpPassportScanResults = PublishSubject.create<UiEvent>()
 
   override fun defaultModel() = InstantSearchModel.create(screenKey.additionalIdentifier)
 
@@ -158,7 +160,8 @@ class InstantSearchScreen :
           searchItemClicks(),
           searchQueryChanges(),
           registerNewPatientClicks(),
-          blankBpPassportResults
+          blankBpPassportResults,
+          bpPassportScanResults
       ).cast<InstantSearchEvent>()
 
   override fun createUpdate() = InstantSearchUpdate()
@@ -288,6 +291,9 @@ class InstantSearchScreen :
     if (requestType == BlankBpPassport && result is Succeeded) {
       val bpPassportResult = BpPassportSheet.blankBpPassportResult(result)
       blankBpPassportResults.onNext(BlankBpPassportResultReceived(bpPassportResult))
+    } else if (requestType == BpPassportScan && result is Succeeded) {
+      val scanResult = ScanSimpleIdScreen.readScanResult(result)
+      bpPassportScanResults.onNext(BpPassportScanned.fromResult(scanResult))
     }
   }
 

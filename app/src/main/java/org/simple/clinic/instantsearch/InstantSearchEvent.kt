@@ -4,6 +4,10 @@ import org.simple.clinic.bp.assignbppassport.BlankBpPassportResult
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.scanid.EnteredShortCode
+import org.simple.clinic.scanid.PatientFound
+import org.simple.clinic.scanid.PatientNotFound
+import org.simple.clinic.scanid.ScanResult
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -37,6 +41,17 @@ data class BlankBpPassportResultReceived(val blankBpPassportResult: BlankBpPassp
 }
 
 sealed class BpPassportScanned : InstantSearchEvent() {
+
+  companion object {
+
+    fun fromResult(scanResult: ScanResult): BpPassportScanned {
+      return when (scanResult) {
+        is EnteredShortCode -> ByShortCode(scanResult.shortCode)
+        is PatientFound -> ByPatientFound(scanResult.patientId)
+        is PatientNotFound -> ByPatientNotFound(scanResult.identifier)
+      }
+    }
+  }
 
   data class ByPatientFound(val patientId: UUID) : BpPassportScanned()
 

@@ -296,4 +296,16 @@ class InstantSearchEffectHandlerTest {
     verify(uiActions).openPatientEntryScreen(facility)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show keyboard effect is received, then show keyboard`() {
+    // when
+    testCase.dispatch(ShowKeyboard)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showKeyboard()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

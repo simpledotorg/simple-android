@@ -532,6 +532,7 @@
   <string name="contactpatient_help_text">Bilbila kee eeggadhu lakkoofsa kee dhoksi fii bilisaan</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">Booda ol waami</string>
+  <string name="contactpatient_change">Jijjiiri</string>
   <string name="contactpatient_done">Taasifameera</string>
   <plurals name="contactpatient_days">
     <item quantity="one">Guyyaa %s</item>
@@ -585,7 +586,7 @@
   <string name="screenintrovideo_skip">Irra utaali</string>
 
   <!-- Assigned Facility -->
-  <string name="assigned_facility_view_title">Iddoo filatama</string>
+  <string name="assigned_facility_view_title">qajeelfame Iddoo</string>
   <string name="assigned_facility_view_change">Jijjiiri</string>
 
   <!-- Facility Picker -->

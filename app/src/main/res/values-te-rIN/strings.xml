@@ -531,6 +531,7 @@
   <string name="contactpatient_help_text">సురక్షిత కాల్స్‌లో మీ నంబర్ కనిపించదు, ఇవి టోల్-ఫ్రీ</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">తర్వాత కాల్ చేయండి</string>
+  <string name="contactpatient_change">మార్చు</string>
   <string name="contactpatient_done">పూర్తయింది</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s రోజు</item>

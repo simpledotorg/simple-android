@@ -531,6 +531,7 @@
   <string name="contactpatient_help_text">ਸੁਰੱਖਿਅਤ ਕਾਲਾਂ ਤੁਹਾਡੇ ਨੰਬਰ ਨੂੰ ਲੁਕਾਉਂਦੀਆਂ ਹਨ ਅਤੇ ਟੌਲ ਫ੍ਰੀ ਹਨ</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">ਮਗਰੋਂ ਕਾਲ ਕਰੋ</string>
+  <string name="contactpatient_change">ਬਦਲੋ</string>
   <string name="contactpatient_done">ਹੋ ਗਿਆ</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s ਦਿਨ</item>

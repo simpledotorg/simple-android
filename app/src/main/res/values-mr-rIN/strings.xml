@@ -531,6 +531,7 @@
   <string name="contactpatient_help_text">सुरक्षित कॉल्‍स तुमचे नंबर लपवतात आणि टोल फ्री आहेत</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">मध्‍ये नंतर कॉल करा</string>
+  <string name="contactpatient_change">बदला</string>
   <string name="contactpatient_done">पूर्ण झाले</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s दिवस</item>

@@ -2,7 +2,6 @@ package org.simple.clinic.instantsearch
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
-import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -286,7 +285,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when add to existing patient is selected in blank bp passport sheet, then do nothing`() {
+  fun `when add to existing patient is selected in blank bp passport sheet, then show keyboard`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
     )
@@ -298,7 +297,7 @@ class InstantSearchUpdateTest {
         .whenEvent(BlankBpPassportResultReceived(AddToExistingPatient))
         .then(assertThatNext(
             hasNoModel(),
-            hasNoEffects()
+            hasEffects(ShowKeyboard)
         ))
   }
 }

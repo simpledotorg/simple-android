@@ -16,6 +16,8 @@ import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
+import java.time.format.DateTimeFormatter
+import javax.inject.Named
 
 class NewMedicalHistoryEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: NewMedicalHistoryUiActions,
@@ -25,7 +27,8 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
     private val dataSync: DataSync,
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
-    private val uuidGenerator: UuidGenerator
+    private val uuidGenerator: UuidGenerator,
+    @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
 ) {
 
   @AssistedFactory
@@ -65,7 +68,8 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
                     addressUuid = uuidGenerator.v4(),
                     supplyUuidForBpPassport = uuidGenerator::v4,
                     supplyUuidForAlternativeId = uuidGenerator::v4,
-                    supplyUuidForPhoneNumber = uuidGenerator::v4
+                    supplyUuidForPhoneNumber = uuidGenerator::v4,
+                    dateOfBirthFormatter = dateOfBirthFormatter
                 ) to ongoingMedicalHistoryEntry
           }
           .flatMapSingle { (registeredPatient, ongoingMedicalHistoryEntry) ->

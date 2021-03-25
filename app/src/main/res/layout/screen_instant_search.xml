@@ -21,28 +21,49 @@
       app:navigationIcon="@drawable/ic_arrow_back_24dp"
       app:navigationIconTint="?attr/colorOnPrimary">
 
-      <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/searchQueryTextInputLayout"
-        style="@style/Widget.Simple.TextField.Layout.Search"
+      <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.Simple.Blue1Primary"
-        app:endIconMode="custom">
+        android:gravity="center_vertical">
 
-        <com.google.android.material.textfield.TextInputEditText
-          android:id="@+id/searchQueryEditText"
-          android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/searchQueryTextInputLayout"
+          style="@style/Widget.Simple.TextField.Layout.Search"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:hint="@string/patientsearch_hint"
-          android:imeOptions="actionSearch"
-          android:importantForAutofill="no"
-          android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
-          android:textAppearance="?attr/textAppearanceBody0"
-          android:textColor="?attr/colorOnSurface"
-          android:textColorHint="@color/color_on_surface_67"
-          tools:ignore="UnusedAttribute" />
+          android:layout_weight="1"
+          android:theme="@style/ThemeOverlay.Simple.Blue1Primary"
+          app:endIconMode="custom">
 
-      </com.google.android.material.textfield.TextInputLayout>
+          <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/searchQueryEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/patientsearch_hint"
+            android:imeOptions="actionSearch"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
+            android:textAppearance="?attr/textAppearanceBody0"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="@color/color_on_surface_67"
+            tools:ignore="UnusedAttribute" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+          android:id="@+id/qrCodeScannerButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:background="?attr/selectableItemBackgroundBorderless"
+          android:contentDescription="@null"
+          android:padding="@dimen/spacing_16"
+          android:theme="@style/ThemeOverlay.Simple.Blue1Primary"
+          android:visibility="gone"
+          app:srcCompat="@drawable/ic_qr_code_scanner"
+          app:tint="?attr/colorPrimary"
+          tools:visibility="visible" />
+
+      </LinearLayout>
 
     </com.google.android.material.appbar.MaterialToolbar>
 

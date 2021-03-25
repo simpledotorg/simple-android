@@ -120,6 +120,9 @@ class InstantSearchScreen :
   private val noSearchResultsContainer
     get() = binding.noSearchResultsContainer
 
+  private val qrCodeScannerButton
+    get() = binding.qrCodeScannerButton
+
   private val allPatientsAdapter = ItemAdapter(
       diffCallback = InstantSearchResultsItemType.DiffCallback(),
       bindings = mapOf(

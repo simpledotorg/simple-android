@@ -85,7 +85,7 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
       prefillDates
           .map(::convertToLocalDate)
           .observeOn(scheduler)
-          .doOnNext { setDateOnInputFields(it) }
+          .doOnNext { ui.setDateOnInputFields(it) }
           .doOnNext { ui.showDateOnDateButton(it) }
           .map { DatePrefilled(it) }
     }
@@ -94,14 +94,6 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
   private fun convertToLocalDate(prefillDate: PrefillDate): LocalDate {
     val instant = if (prefillDate is PrefillSpecificDate) prefillDate.date else Instant.now(userClock)
     return instant.toLocalDateAtZone(userClock.zone)
-  }
-
-  private fun setDateOnInputFields(dateToSet: LocalDate) {
-    ui.setDateOnInputFields(
-        dateToSet.dayOfMonth.toString(),
-        dateToSet.monthValue.toString(),
-        dateToSet.year.toString()
-    )
   }
 
   private fun fetchBloodPressureMeasurement(

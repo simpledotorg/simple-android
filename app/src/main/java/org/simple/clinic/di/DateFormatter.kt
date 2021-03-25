@@ -6,6 +6,9 @@ import javax.inject.Qualifier
 annotation class DateFormatter(val value: Type) {
 
   enum class Type {
-    FileDateTime
+    FileDateTime,
+    Day,
+    Month,
+    FullYear
   }
 }

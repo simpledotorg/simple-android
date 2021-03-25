@@ -3,7 +3,10 @@ package org.simple.clinic.di
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.di.DateFormatter.Type.Day
 import org.simple.clinic.di.DateFormatter.Type.FileDateTime
+import org.simple.clinic.di.DateFormatter.Type.FullYear
+import org.simple.clinic.di.DateFormatter.Type.Month
 import org.threeten.extra.chrono.EthiopicChronology
 import java.time.chrono.Chronology
 import java.time.chrono.IsoChronology
@@ -87,6 +90,36 @@ class DateFormatterModule {
     }
 
     return DateTimeFormatter.ofPattern(pattern, locale)
+        .withChronology(chronology)
+  }
+
+  @Provides
+  @DateFormatter(Day)
+  fun providesFormatterForDay(
+      locale: Locale,
+      chronology: Chronology
+  ): DateTimeFormatter {
+    return DateTimeFormatter.ofPattern("dd", locale)
+        .withChronology(chronology)
+  }
+
+  @Provides
+  @DateFormatter(Month)
+  fun providesFormatterForMonth(
+      locale: Locale,
+      chronology: Chronology
+  ): DateTimeFormatter {
+    return DateTimeFormatter.ofPattern("MM", locale)
+        .withChronology(chronology)
+  }
+
+  @Provides
+  @DateFormatter(FullYear)
+  fun providesFormatterForFullYear(
+      locale: Locale,
+      chronology: Chronology
+  ): DateTimeFormatter {
+    return DateTimeFormatter.ofPattern("yyyy", locale)
         .withChronology(chronology)
   }
 }

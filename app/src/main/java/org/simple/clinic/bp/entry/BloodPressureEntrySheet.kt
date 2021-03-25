@@ -457,12 +457,6 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
     dateErrorTextView.visibility = View.GONE
   }
 
-  override fun setDateOnInputFields(dayOfMonth: String, month: String, fourDigitYear: String) {
-    dayEditText.setTextAndCursor(getPaddedString(dayOfMonth))
-    monthEditText.setTextAndCursor(getPaddedString(month))
-    yearEditText.setTextAndCursor(fourDigitYear)
-  }
-
   override fun setDateOnInputFields(date: LocalDate) {
     dayEditText.setTextAndCursor(dayDateFormatter.format(date))
     monthEditText.setTextAndCursor(monthDateFormatter.format(date))

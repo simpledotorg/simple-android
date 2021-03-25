@@ -69,8 +69,7 @@ class PatientRepositoryTest {
         searchPatientByName = searchPatientByName,
         config = config,
         reportsRepository = mock(),
-        businessIdMetaDataMoshiAdapter = mock(),
-        dateOfBirthFormat = dateOfBirthFormat
+        businessIdMetaDataMoshiAdapter = mock()
     )
 
     whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))

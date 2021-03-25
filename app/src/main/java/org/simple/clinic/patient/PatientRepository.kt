@@ -38,7 +38,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
-import javax.inject.Named
 
 typealias PatientUuid = UUID
 
@@ -49,8 +48,7 @@ class PatientRepository @Inject constructor(
     private val searchPatientByName: SearchPatientByName,
     private val config: PatientConfig,
     private val reportsRepository: ReportsRepository,
-    private val businessIdMetaDataMoshiAdapter: JsonAdapter<BusinessIdMetaData>,
-    @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
+    private val businessIdMetaDataMoshiAdapter: JsonAdapter<BusinessIdMetaData>
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()

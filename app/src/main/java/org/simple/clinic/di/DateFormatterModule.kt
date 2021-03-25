@@ -24,8 +24,16 @@ class DateFormatterModule {
 
   @Provides
   @Named("full_date")
-  fun provideDateFormatterForFullDate(locale: Locale, chronology: Chronology): DateTimeFormatter {
-    return DateTimeFormatter.ofPattern("d-MMM-yyyy", locale)
+  fun provideDateFormatterForFullDate(
+      locale: Locale,
+      chronology: Chronology,
+      country: Country
+  ): DateTimeFormatter {
+    val pattern = when (country.isoCountryCode) {
+      Country.ETHIOPIA -> "d-MM-yyyy"
+      else -> "d-MMM-yyyy"
+    }
+    return DateTimeFormatter.ofPattern(pattern, locale)
         .withChronology(chronology)
   }
 
@@ -45,8 +53,17 @@ class DateFormatterModule {
 
   @Provides
   @Named("exact_date")
-  fun providesFormatterForFullReadableDate(locale: Locale, chronology: Chronology): DateTimeFormatter {
-    return DateTimeFormatter.ofPattern("d MMMM, yyyy", locale)
+  fun providesFormatterForFullReadableDate(
+      locale: Locale,
+      chronology: Chronology,
+      country: Country
+  ): DateTimeFormatter {
+    val pattern = when (country.isoCountryCode) {
+      Country.ETHIOPIA -> "d-MM-yyyy"
+      else -> "d MMMM, yyyy"
+    }
+
+    return DateTimeFormatter.ofPattern(pattern, locale)
         .withChronology(chronology)
   }
 
@@ -59,8 +76,17 @@ class DateFormatterModule {
 
   @Provides
   @DateFormatter(FileDateTime)
-  fun provideFormatterForFileDateTime(locale: Locale, chronology: Chronology): DateTimeFormatter {
-    return DateTimeFormatter.ofPattern("d MMM yyyy h.mm.ss a", locale)
+  fun provideFormatterForFileDateTime(
+      locale: Locale,
+      chronology: Chronology,
+      country: Country
+  ): DateTimeFormatter {
+    val pattern = when (country.isoCountryCode) {
+      Country.ETHIOPIA -> "d-MM-yyyy h.mm.ss a"
+      else -> "d MMM yyyy h.mm.ss a"
+    }
+
+    return DateTimeFormatter.ofPattern(pattern, locale)
         .withChronology(chronology)
   }
 }

@@ -531,6 +531,7 @@
   <string name="contactpatient_help_text">பாதுகாப்பான அழைப்புகள் உங்கள் எண்ணை மறைத்துவிடும், இந்த அழைப்புகள் இலவசம்</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">பின்னர் அழைக்கவும்</string>
+  <string name="contactpatient_change">மாற்றவும்</string>
   <string name="contactpatient_done">முடிந்தது</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s நாள்</item>
@@ -584,7 +585,7 @@
   <string name="screenintrovideo_skip">தவிர்க்கவும்</string>
 
   <!-- Assigned Facility -->
-  <string name="assigned_facility_view_title">விரும்பும் வசதி</string>
+  <string name="assigned_facility_view_title">ஒதுக்கப்பட்ட வசதி</string>
   <string name="assigned_facility_view_change">மாற்றவும்</string>
 
   <!-- Facility Picker -->

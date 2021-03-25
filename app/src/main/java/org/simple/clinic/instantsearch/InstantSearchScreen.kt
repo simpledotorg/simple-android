@@ -1,7 +1,6 @@
 package org.simple.clinic.instantsearch
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -10,7 +9,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.textfield.TextInputLayout.END_ICON_NONE
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
@@ -42,7 +40,6 @@ import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.util.resolveColor
 import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
@@ -53,6 +50,7 @@ import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
+import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -185,18 +183,9 @@ class InstantSearchScreen :
       router.pop()
     }
 
-    if (features.isEnabled(InstantSearchQrCode)) {
-      with(searchQueryTextInputLayout) {
-        setEndIconDrawable(R.drawable.ic_qr_code_scanner)
-        setEndIconTintList(
-            ColorStateList.valueOf(context.resolveColor(attrRes = R.attr.colorPrimary))
-        )
-        setEndIconOnClickListener {
-          router.pushExpectingResult(BpPassportScan, ScanSimpleIdScreenKey())
-        }
-      }
-    } else {
-      searchQueryTextInputLayout.endIconMode = END_ICON_NONE
+    qrCodeScannerButton.visibleOrGone(features.isEnabled(InstantSearchQrCode))
+    qrCodeScannerButton.setOnClickListener {
+      router.pushExpectingResult(BpPassportScan, ScanSimpleIdScreenKey())
     }
 
     searchResultsView.adapter = allPatientsAdapter

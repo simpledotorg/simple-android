@@ -531,6 +531,7 @@
   <string name="contactpatient_help_text">ውሕስነት ዘለዎም ፃውዒታት ስልኪ ቁፅሪ ይሓብኡ ከም’ኡ’ውን ክሳራ ኣየስዕቡን</string>
   <string name="contactpatient_patientdetails">%1$s,%2$s,%3$s</string>
   <string name="contactpatient_call_later_in">ደሓር ደውል ኣብ</string>
+  <string name="contactpatient_change">ለውጢ</string>
   <string name="contactpatient_done">ተሰሪሑ</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%sመዓልቲ</item>

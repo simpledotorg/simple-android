@@ -37,6 +37,10 @@ import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveB
 import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
 import org.simple.clinic.bloodsugar.unitselection.BloodSugarUnitSelectionDialog
 import org.simple.clinic.databinding.SheetBloodSugarEntryBinding
+import org.simple.clinic.di.DateFormatter
+import org.simple.clinic.di.DateFormatter.Type.Day
+import org.simple.clinic.di.DateFormatter.Type.FullYear
+import org.simple.clinic.di.DateFormatter.Type.Month
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
@@ -113,6 +117,18 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  @DateFormatter(Day)
+  lateinit var dayDateFormatter: DateTimeFormatter
+
+  @Inject
+  @DateFormatter(Month)
+  lateinit var monthDateFormatter: DateTimeFormatter
+
+  @Inject
+  @DateFormatter(FullYear)
+  lateinit var fullYearDateFormatter: DateTimeFormatter
 
   private lateinit var component: BloodSugarEntryComponent
 
@@ -411,6 +427,12 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     dayEditText.setTextAndCursor(getPaddedString(dayOfMonth))
     monthEditText.setTextAndCursor(getPaddedString(month))
     yearEditText.setTextAndCursor(fourDigitYear)
+  }
+
+  override fun setDateOnInputFields(date: LocalDate) {
+    dayEditText.setTextAndCursor(dayDateFormatter.format(date))
+    monthEditText.setTextAndCursor(monthDateFormatter.format(date))
+    yearEditText.setTextAndCursor(fullYearDateFormatter.format(date))
   }
 
   override fun showDateOnDateButton(date: LocalDate) {

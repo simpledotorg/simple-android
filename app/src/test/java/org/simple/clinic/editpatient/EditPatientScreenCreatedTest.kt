@@ -183,10 +183,15 @@ class EditPatientScreenCreatedTest {
         minimumRequiredLengthLandlinesOrMobile = 6,
         maximumAllowedLengthLandlinesOrMobile = 12
     )
+
     MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         events = Observable.never<EditPatientEvent>(),
         defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT),
-        init = EditPatientInit(patient, address, phoneNumber, null),
+        init = EditPatientInit(patient = patient,
+            address = address,
+            phoneNumber = phoneNumber,
+            bangladeshNationalId = null,
+            isVillageTypeAheadEnabled = true),
         update = EditPatientUpdate(
             numberValidator = numberValidator,
             dobValidator = UserInputDateValidator(userClock, dateOfBirthFormat),

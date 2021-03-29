@@ -2,13 +2,15 @@
 
 ## Next Release
 ### Internal
+- [In Progress: 20 Jan 2021] Material Theme-ing Migration
+- [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
+
+## Demo
+### Internal
 - Trim start and end white spaces for instant search query
 - Add drug stock option in progress
 - Show custom error screen for drug stock web view when there is no internet connection
-- Add feature flag for village type ahead search
 - Remove date of birth `DateTimeFormatter` as constructor param from `PatientRepository`
-- [In Progress: 20 Jan 2021] Material Theme-ing Migration
-- [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
 ### Features
 - Open BP passport scanning from search screen
@@ -21,9 +23,15 @@
 
 ### Fixes
 - Fix separator between Age & DOB fields not visible in patient entry & edit screens
+
+## 2021-03-22-7688
+### Internal
+- Add feature flag for village type ahead search
+
+### Fixes
 - Fix village type ahead crash when creating/editing patient
 
-## On Demo
+## 2021-03-22-7681
 ### Internal
 - Migrate `LinkIdWithPatientView` to `LinkIdWithPatientSheet`
 - Convert `screen_patient_summary` to use `ConstraintLayout`

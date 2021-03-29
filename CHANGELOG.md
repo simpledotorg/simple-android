@@ -22,6 +22,9 @@
   - Switch to `ZxingQrCodeAnalyzer` when ML Kit is unavailable
  - Add feature flag for village type ahead search
 
+### Fixes
+ - Fix village type ahead crash when creating/editing patient
+
 ### Changes
 - Updated translations: `bn-BD`, `te-IN`, `hi-IN`, `ta-IN`, `mr-IN`, `bn-IN`, `ti-ET`, `am-ET`, `pa-IN`, `om-ET`
 - Show next button in the registration screens

@@ -115,7 +115,7 @@ class PatientEntryScreenLogicTest {
     fixture = MobiusTestFixture(
         uiEvents,
         PatientEntryModel.DEFAULT,
-        PatientEntryInit(),
+        PatientEntryInit(isVillageTypeAheadEnabled = true),
         PatientEntryUpdate(numberValidator, dobValidator, ageValidator),
         effectHandler.build(),
         PatientEntryUiRenderer(ui)::render

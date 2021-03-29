@@ -39,6 +39,25 @@ class EditPatientInitTest {
   }
 
   @Test
+  fun `when screen is created and village type ahead is not enabled, then do not fetch colony or villages`() {
+    val patientUuid = UUID.fromString("e40f42f4-0867-4891-ac77-95df5fe1fdef")
+    val defaultModel = EditPatientModel.from(patient, patientAddress, patientPhoneNumber, dateOfBirthFormat, bangladeshNationalId, EditPatientState.NOT_SAVING_PATIENT)
+    val initSpec = InitSpec(EditPatientInit(patient = patient,
+        address = patientAddress,
+        phoneNumber = patientPhoneNumber,
+        bangladeshNationalId = bangladeshNationalId,
+        isVillageTypeAheadEnabled = false))
+
+    initSpec.whenInit(defaultModel).then(assertThatFirst(
+        hasModel(defaultModel),
+        hasEffects(PrefillFormEffect(patient, patientAddress, patientPhoneNumber, bangladeshNationalId),
+            FetchBpPassportsEffect(patientUuid),
+            LoadInputFields
+        )
+    ))
+  }
+
+  @Test
   fun `when screen is restored, then don't fetch colony or villages`() {
     val colonyOrVillages = listOf("Colony1", "Colony2", "Colony3", "Colony4")
 

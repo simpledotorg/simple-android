@@ -17,7 +17,11 @@ class EditPatientInitTest {
   private val patientPhoneNumber = TestData.patientPhoneNumber(UUID.fromString("f204b770-83c5-4145-9ca7-c2273be2bbdc"), number = "9999999999")
   private val bangladeshNationalId = TestData.businessId(UUID.fromString("c9be5e5d-770c-4f37-a9de-2c304dfebfcd"))
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-  private val initSpec = InitSpec(EditPatientInit(patient, patientAddress, patientPhoneNumber, bangladeshNationalId))
+  private val initSpec = InitSpec(EditPatientInit(patient = patient,
+      address = patientAddress,
+      phoneNumber = patientPhoneNumber,
+      bangladeshNationalId = bangladeshNationalId,
+      isVillageTypeAheadEnabled = true))
 
   @Test
   fun `when screen is created, then load initial data`() {

@@ -5,9 +5,13 @@ import com.spotify.mobius.test.FirstMatchers.hasModel
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
+import org.simple.clinic.remoteconfig.DefaultValueConfigReader
+import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 
 class PatientEntryInitTest {
-  private val initSpec = InitSpec(PatientEntryInit())
+  private val initSpec = InitSpec(PatientEntryInit(isVillageTypeAheadEnabled = true))
   private val defaultModel = PatientEntryModel.DEFAULT
 
   @Test

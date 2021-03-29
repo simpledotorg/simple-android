@@ -19,7 +19,8 @@
 - Bump CameraX dependencies
 - BP passport scanner improvements
   - Added tap to focus in QR code scanner preview
-  - Switch to `ZxingQrCodeAnalyzer` when ML Kit is unavailable 
+  - Switch to `ZxingQrCodeAnalyzer` when ML Kit is unavailable
+ - Add feature flag for village type ahead search
 
 ### Changes
 - Updated translations: `bn-BD`, `te-IN`, `hi-IN`, `ta-IN`, `mr-IN`, `bn-IN`, `ti-ET`, `am-ET`, `pa-IN`, `om-ET`

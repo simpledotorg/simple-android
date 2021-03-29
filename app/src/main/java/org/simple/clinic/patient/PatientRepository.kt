@@ -38,7 +38,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
-import javax.inject.Named
 
 typealias PatientUuid = UUID
 
@@ -49,8 +48,7 @@ class PatientRepository @Inject constructor(
     private val searchPatientByName: SearchPatientByName,
     private val config: PatientConfig,
     private val reportsRepository: ReportsRepository,
-    private val businessIdMetaDataMoshiAdapter: JsonAdapter<BusinessIdMetaData>,
-    @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
+    private val businessIdMetaDataMoshiAdapter: JsonAdapter<BusinessIdMetaData>
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
@@ -278,7 +276,8 @@ class PatientRepository @Inject constructor(
       addressUuid: UUID,
       supplyUuidForBpPassport: () -> UUID,
       supplyUuidForAlternativeId: () -> UUID,
-      supplyUuidForPhoneNumber: () -> UUID
+      supplyUuidForPhoneNumber: () -> UUID,
+      dateOfBirthFormatter: DateTimeFormatter
   ): PatientProfile {
     val patientProfile = convertOngoingPatientEntryToPatientProfile(
         patientEntry = patientEntry,
@@ -288,7 +287,8 @@ class PatientRepository @Inject constructor(
         addressUuid = addressUuid,
         supplyUuidForBpPassport = supplyUuidForBpPassport,
         supplyUuidForAlternativeId = supplyUuidForAlternativeId,
-        supplyUuidForPhoneNumber = supplyUuidForPhoneNumber
+        supplyUuidForPhoneNumber = supplyUuidForPhoneNumber,
+        dateOfBirthFormatter = dateOfBirthFormatter
     )
 
     saveRecords(listOf(patientProfile))
@@ -304,7 +304,8 @@ class PatientRepository @Inject constructor(
       addressUuid: UUID,
       supplyUuidForBpPassport: () -> UUID,
       supplyUuidForAlternativeId: () -> UUID,
-      supplyUuidForPhoneNumber: () -> UUID
+      supplyUuidForPhoneNumber: () -> UUID,
+      dateOfBirthFormatter: DateTimeFormatter
   ): PatientProfile {
     return with(patientEntry) {
       requireNotNull(personalDetails)
@@ -318,7 +319,7 @@ class PatientRepository @Inject constructor(
           fullName = personalDetails.fullName,
           gender = personalDetails.gender!!,
           dateOfBirth = dateOfBirth?.let {
-            dateOfBirthFormat.parse(dateOfBirth, LocalDate::from)
+            dateOfBirthFormatter.parse(dateOfBirth, LocalDate::from)
           },
           age = personalDetails.age?.let { ageString ->
             Age(ageString.toInt(), Instant.now(utcClock))

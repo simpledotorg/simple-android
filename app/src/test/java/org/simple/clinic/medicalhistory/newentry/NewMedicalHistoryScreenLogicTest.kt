@@ -36,6 +36,8 @@ import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import java.util.UUID
 
 class NewMedicalHistoryScreenLogicTest {
@@ -54,6 +56,8 @@ class NewMedicalHistoryScreenLogicTest {
   private val facility = TestData.facility(uuid = UUID.fromString("6fc07446-c508-47e7-998e-8c475f9114d1"))
   private val patientUuid = UUID.fromString("d4f0fb3a-0146-4bc6-afec-95b76c61edca")
   private val medicalHistoryUuid = UUID.fromString("779ae5fb-667b-435e-888c-8386397ed1f1")
+
+  private val dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
   private lateinit var testFixture: MobiusTestFixture<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect>
 
@@ -101,7 +105,8 @@ class NewMedicalHistoryScreenLogicTest {
         addressUuid = eq(addressUuid),
         supplyUuidForBpPassport = any(),
         supplyUuidForAlternativeId = any(),
-        supplyUuidForPhoneNumber = any()
+        supplyUuidForPhoneNumber = any(),
+        dateOfBirthFormatter = eq(dateOfBirthFormatter)
     )).thenReturn(savedPatient)
 
     // when
@@ -124,7 +129,8 @@ class NewMedicalHistoryScreenLogicTest {
           addressUuid = eq(addressUuid),
           supplyUuidForBpPassport = any(),
           supplyUuidForAlternativeId = any(),
-          supplyUuidForPhoneNumber = any()
+          supplyUuidForPhoneNumber = any(),
+          dateOfBirthFormatter = eq(dateOfBirthFormatter)
       )
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
@@ -162,7 +168,8 @@ class NewMedicalHistoryScreenLogicTest {
         addressUuid = eq(addressUuid),
         supplyUuidForBpPassport = any(),
         supplyUuidForAlternativeId = any(),
-        supplyUuidForPhoneNumber = any()
+        supplyUuidForPhoneNumber = any(),
+        dateOfBirthFormatter = eq(dateOfBirthFormatter)
     )).thenReturn(savedPatient)
 
     // when
@@ -180,7 +187,8 @@ class NewMedicalHistoryScreenLogicTest {
           addressUuid = eq(addressUuid),
           supplyUuidForBpPassport = any(),
           supplyUuidForAlternativeId = any(),
-          supplyUuidForPhoneNumber = any()
+          supplyUuidForPhoneNumber = any(),
+          dateOfBirthFormatter = eq(dateOfBirthFormatter)
       )
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
@@ -219,7 +227,8 @@ class NewMedicalHistoryScreenLogicTest {
         addressUuid = eq(addressUuid),
         supplyUuidForBpPassport = any(),
         supplyUuidForAlternativeId = any(),
-        supplyUuidForPhoneNumber = any()
+        supplyUuidForPhoneNumber = any(),
+        dateOfBirthFormatter = eq(dateOfBirthFormatter)
     )).thenReturn(savedPatient)
 
     // when
@@ -251,7 +260,8 @@ class NewMedicalHistoryScreenLogicTest {
           addressUuid = eq(addressUuid),
           supplyUuidForBpPassport = any(),
           supplyUuidForAlternativeId = any(),
-          supplyUuidForPhoneNumber = any()
+          supplyUuidForPhoneNumber = any(),
+          dateOfBirthFormatter = eq(dateOfBirthFormatter)
       )
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
@@ -283,7 +293,8 @@ class NewMedicalHistoryScreenLogicTest {
         dataSync = mock(),
         currentUser = Lazy { user },
         currentFacility = Lazy { facility },
-        uuidGenerator = uuidGenerator
+        uuidGenerator = uuidGenerator,
+        dateOfBirthFormatter = dateOfBirthFormatter
     ).build()
 
     testFixture = MobiusTestFixture(

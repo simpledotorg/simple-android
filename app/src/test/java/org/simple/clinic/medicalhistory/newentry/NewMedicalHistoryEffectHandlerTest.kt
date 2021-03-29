@@ -13,6 +13,8 @@ import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import java.util.UUID
 
 class NewMedicalHistoryEffectHandlerTest {
@@ -23,6 +25,8 @@ class NewMedicalHistoryEffectHandlerTest {
   private val facility = TestData.facility(uuid = UUID.fromString("5b9629f3-042b-4b0a-8bd6-f7658130eee7"))
   private val medicalHistoryUuid = UUID.fromString("b0ea3e17-2c6b-4afd-a52b-98a49dfe8147")
 
+  private val dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+
   private val effectHandler = NewMedicalHistoryEffectHandler(
       uiActions = uiActions,
       schedulersProvider = TrampolineSchedulersProvider(),
@@ -31,7 +35,8 @@ class NewMedicalHistoryEffectHandlerTest {
       dataSync = dataSync,
       currentUser = Lazy { user },
       currentFacility = Lazy { facility },
-      uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
+      uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
+      dateOfBirthFormatter = dateOfBirthFormatter
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())

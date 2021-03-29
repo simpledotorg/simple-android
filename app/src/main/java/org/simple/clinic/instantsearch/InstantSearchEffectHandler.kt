@@ -42,7 +42,12 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addTransformer(SaveNewOngoingPatientEntry::class.java, saveNewOngoingPatientEntry())
       .addConsumer(OpenPatientEntryScreen::class.java, { uiActions.openPatientEntryScreen(it.facility) }, schedulers.ui())
       .addAction(ShowKeyboard::class.java, { uiActions.showKeyboard() }, schedulers.ui())
+      .addConsumer(OpenShortCodeSearchScreen::class.java, ::openShortCodeSearch, schedulers.ui())
       .build()
+
+  private fun openShortCodeSearch(effect: OpenShortCodeSearchScreen) {
+    uiActions.openShortCodeSearchScreen(effect.shortCode)
+  }
 
   private fun saveNewOngoingPatientEntry(): ObservableTransformer<SaveNewOngoingPatientEntry, InstantSearchEvent> {
     return ObservableTransformer { effects ->

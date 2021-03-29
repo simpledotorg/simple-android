@@ -13,7 +13,7 @@
 - Open BP passport scanning from search screen
 
 ### Changes
-- Update translations: `mr-IN`, `bn-IN`, `bn-BD`, `ti-ET`, `te-IN`, `pa-IN`, `hi-IN`, `om-ET`, `ta-IN`, `kn-IN`, `am-ET`
+- Update translations: `mr-IN`, `bn-BD`, `ti-ET`, `te-IN`, `pa-IN`, `hi-IN`, `om-ET`, `ta-IN`, `kn-IN`, `am-ET`, `bn-IN`
 - Change "Preferred facility" to "Assigned facility"
 - Show 'CHANGE' button in appointment reminder bottom sheet
 - Highlight search field and show keyboard when 'Add to existing patient' option is selected

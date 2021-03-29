@@ -12,7 +12,8 @@ class EditPatientInit(
     private val patient: Patient,
     private val address: PatientAddress,
     private val phoneNumber: PatientPhoneNumber?,
-    private val bangladeshNationalId: BusinessId?
+    private val bangladeshNationalId: BusinessId?,
+    private val isVillageTypeAheadEnabled: Boolean
 ) : Init<EditPatientModel, EditPatientEffect> {
   override fun init(model: EditPatientModel): First<EditPatientModel, EditPatientEffect> {
     val effects = mutableSetOf(
@@ -21,7 +22,7 @@ class EditPatientInit(
         LoadInputFields,
     )
 
-    if (!model.hasColonyOrVillagesList) {
+    if (!model.hasColonyOrVillagesList && isVillageTypeAheadEnabled) {
       effects.add(FetchColonyOrVillagesEffect)
     }
 

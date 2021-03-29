@@ -3,10 +3,11 @@
 ## Next Release
 ### Internal
 - Trim start and end white spaces for instant search query
-- [In Progress: 20 Jan 2021] Material Theme-ing Migration
-- [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 - Add drug stock option in progress
 - Show custom error screen for drug stock web view when there is no internet connection
+- Add feature flag for village type ahead search
+- [In Progress: 20 Jan 2021] Material Theme-ing Migration
+- [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
 ### Changes
 - Update translations: `mr-IN`, `bn-IN`, `bn-BD`, `ti-ET`, `te-IN`, `pa-IN`, `hi-IN`, `om-ET`, `ta-IN`, `kn-IN`, `am-ET`

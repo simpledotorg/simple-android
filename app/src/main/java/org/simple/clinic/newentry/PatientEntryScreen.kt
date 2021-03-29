@@ -32,6 +32,8 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.ScreenManualPatientEntryBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
@@ -96,6 +98,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   @Inject
   lateinit var effectHandlerInjectionFactory: PatientEntryEffectHandler.InjectionFactory
+
+  @Inject
+  lateinit var features: Features
 
   private var binding: ScreenManualPatientEntryBinding? = null
 
@@ -250,7 +255,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     MobiusDelegate.forView(
         events = events.ofType(),
         defaultModel = PatientEntryModel.DEFAULT,
-        init = PatientEntryInit(),
+        init = PatientEntryInit(isVillageTypeAheadEnabled = features.isEnabled(Feature.VillageTypeAhead)),
         update = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator),
         effectHandler = effectHandlerInjectionFactory.create(ui = this, validationActions = this).build(),
         modelUpdateListener = uiRenderer::render
@@ -270,7 +275,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
     backButton.setOnClickListener { router.pop() }
 
-    colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
+    if (features.isEnabled(Feature.VillageTypeAhead)) {
+      colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
+    }
   }
 
   override fun setupUi(inputFields: InputFields) {

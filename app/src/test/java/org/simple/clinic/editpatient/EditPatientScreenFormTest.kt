@@ -30,7 +30,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengt
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
-import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
@@ -824,10 +823,15 @@ class EditPatientScreenFormTest {
         minimumRequiredLengthLandlinesOrMobile = 6,
         maximumAllowedLengthLandlinesOrMobile = 12
     )
+
     val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         events = uiEvents,
         defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT),
-        init = EditPatientInit(patient, address, phoneNumber, null),
+        init = EditPatientInit(patient = patient,
+            address = address,
+            phoneNumber = phoneNumber,
+            bangladeshNationalId = null,
+            isVillageTypeAheadEnabled = true),
         update = EditPatientUpdate(
             numberValidator = numberValidator,
             dobValidator = UserInputDateValidator(userClock, dateOfBirthFormat),

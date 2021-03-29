@@ -42,6 +42,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengt
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenKey
 import org.simple.clinic.feature.Feature.DeletePatient
+import org.simple.clinic.feature.Feature.VillageTypeAhead
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.HandlesBack
@@ -253,10 +254,16 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   private val delegate by unsafeLazy {
     val (patient, address, phoneNumber, bangladeshNationalId) = screenKey
 
+    val init = EditPatientInit(patient = patient,
+        address = address,
+        phoneNumber = phoneNumber,
+        bangladeshNationalId = bangladeshNationalId,
+        isVillageTypeAheadEnabled = features.isEnabled(VillageTypeAhead))
+
     MobiusDelegate.forView(
         events = events,
         defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, bangladeshNationalId, EditPatientState.NOT_SAVING_PATIENT),
-        init = EditPatientInit(patient, address, phoneNumber, bangladeshNationalId),
+        init = init,
         update = EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator),
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = viewRenderer::render
@@ -273,7 +280,9 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
     context.injector<Injector>().inject(this)
 
-    colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
+    if (features.isEnabled(VillageTypeAhead)) {
+      colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
+    }
   }
 
   override fun setupUi(inputFields: InputFields) {

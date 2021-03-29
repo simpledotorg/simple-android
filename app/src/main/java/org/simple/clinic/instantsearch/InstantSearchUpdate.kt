@@ -36,7 +36,20 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
       SavedNewOngoingPatientEntry -> dispatch(OpenPatientEntryScreen(model.facility!!))
       RegisterNewPatientClicked -> registerNewPatient(model)
       is BlankBpPassportResultReceived -> blankBpPassportResult(model, event)
+      is BpPassportScanned.ByPatientFound -> dispatch(OpenPatientSummary(event.patientId))
+      is BpPassportScanned.ByPatientNotFound -> patientNotFoundAfterBpPassportScan(model, event)
+      is BpPassportScanned.ByShortCode -> dispatch(OpenShortCodeSearchScreen(event.shortCode))
     }
+  }
+
+  private fun patientNotFoundAfterBpPassportScan(
+      model: InstantSearchModel,
+      event: BpPassportScanned.ByPatientNotFound
+  ): Next<InstantSearchModel, InstantSearchEffect> {
+    return next(
+        model.additionalIdentifierUpdated(event.identifier).bpPassportSheetOpened(),
+        OpenBpPassportSheet(event.identifier)
+    )
   }
 
   private fun blankBpPassportResult(

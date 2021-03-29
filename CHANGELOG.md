@@ -9,6 +9,9 @@
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
+### Features
+- Open BP passport scanning from search screen
+
 ### Changes
 - Update translations: `mr-IN`, `bn-IN`, `bn-BD`, `ti-ET`, `te-IN`, `pa-IN`, `hi-IN`, `om-ET`, `ta-IN`, `kn-IN`, `am-ET`
 - Change "Preferred facility" to "Assigned facility"

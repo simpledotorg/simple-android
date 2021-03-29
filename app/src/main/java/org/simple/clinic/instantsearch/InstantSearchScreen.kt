@@ -29,6 +29,8 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation
+import org.simple.clinic.feature.Feature.InstantSearchQrCode
+import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenResult
@@ -38,6 +40,9 @@ import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.scanid.ScanSimpleIdScreen
+import org.simple.clinic.scanid.ScanSimpleIdScreenKey
+import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
@@ -45,6 +50,7 @@ import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
+import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -80,10 +86,16 @@ class InstantSearchScreen :
   @Inject
   lateinit var utcClock: UtcClock
 
+  @Inject
+  lateinit var features: Features
+
   private val subscriptions = CompositeDisposable()
 
   private val instantSearchToolbar
     get() = binding.instantSearchToolbar
+
+  private val searchQueryTextInputLayout
+    get() = binding.searchQueryTextInputLayout
 
   private val searchQueryEditText
     get() = binding.searchQueryEditText
@@ -105,6 +117,9 @@ class InstantSearchScreen :
 
   private val noSearchResultsContainer
     get() = binding.noSearchResultsContainer
+
+  private val qrCodeScannerButton
+    get() = binding.qrCodeScannerButton
 
   private val allPatientsAdapter = ItemAdapter(
       diffCallback = InstantSearchResultsItemType.DiffCallback(),
@@ -131,6 +146,7 @@ class InstantSearchScreen :
   )
 
   private val blankBpPassportResults = PublishSubject.create<UiEvent>()
+  private val bpPassportScanResults = PublishSubject.create<UiEvent>()
 
   override fun defaultModel() = InstantSearchModel.create(screenKey.additionalIdentifier)
 
@@ -145,7 +161,8 @@ class InstantSearchScreen :
           searchItemClicks(),
           searchQueryChanges(),
           registerNewPatientClicks(),
-          blankBpPassportResults
+          blankBpPassportResults,
+          bpPassportScanResults
       ).cast<InstantSearchEvent>()
 
   override fun createUpdate() = InstantSearchUpdate()
@@ -162,16 +179,13 @@ class InstantSearchScreen :
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    // When a scanned BP Passport does not result in a match, we bring up a bottom sheet which asks
-    // whether this is a new registration or an existing patient. If we show the keyboard in these
-    // cases, the UI is janky since the keyboard pops up and immediately another bottom sheet pops up.
-    // This improves the experience by showing the keyboard only if we have arrived here by searching
-    // for a patient by the name
-    if (screenKey.additionalIdentifier == null) {
-      showKeyboard()
-    }
     instantSearchToolbar.setNavigationOnClickListener {
       router.pop()
+    }
+
+    qrCodeScannerButton.visibleOrGone(features.isEnabled(InstantSearchQrCode))
+    qrCodeScannerButton.setOnClickListener {
+      router.pushExpectingResult(BpPassportScan, ScanSimpleIdScreenKey())
     }
 
     searchResultsView.adapter = allPatientsAdapter
@@ -261,10 +275,17 @@ class InstantSearchScreen :
     searchQueryEditText.showKeyboard()
   }
 
+  override fun openShortCodeSearchScreen(shortCode: String) {
+    router.push(ShortCodeSearchResultScreenKey(shortCode))
+  }
+
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
     if (requestType == BlankBpPassport && result is Succeeded) {
       val bpPassportResult = BpPassportSheet.blankBpPassportResult(result)
       blankBpPassportResults.onNext(BlankBpPassportResultReceived(bpPassportResult))
+    } else if (requestType == BpPassportScan && result is Succeeded) {
+      val scanResult = ScanSimpleIdScreen.readScanResult(result)
+      bpPassportScanResults.onNext(BpPassportScanned.fromResult(scanResult))
     }
   }
 
@@ -321,4 +342,7 @@ class InstantSearchScreen :
 
   @Parcelize
   private object BlankBpPassport : Parcelable
+
+  @Parcelize
+  private object BpPassportScan : Parcelable
 }

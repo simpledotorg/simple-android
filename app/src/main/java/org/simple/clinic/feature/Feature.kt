@@ -24,5 +24,6 @@ enum class Feature(
   MLKitQrCodeScanner(true, "ml_kit_qr_code_scanner"),
   InstantSearch(true, "instant_search"),
   OverdueCount(true, "overdue_count"),
-  VillageTypeAhead(false, "village_type_ahead")
+  VillageTypeAhead(false, "village_type_ahead"),
+  InstantSearchQrCode(true, "instant_search_qr_code")
 }

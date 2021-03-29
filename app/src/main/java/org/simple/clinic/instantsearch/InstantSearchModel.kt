@@ -60,4 +60,8 @@ data class InstantSearchModel(
   fun bpPassportSheetOpened(): InstantSearchModel {
     return copy(bpPassportSheetAlreadyOpened = true)
   }
+
+  fun additionalIdentifierUpdated(additionalIdentifier: Identifier): InstantSearchModel {
+    return copy(additionalIdentifier = additionalIdentifier)
+  }
 }

@@ -20,14 +20,14 @@ class InstantSearchInitTest {
   private val defaultModel = InstantSearchModel.create(identifier)
 
   @Test
-  fun `when screen is created, then load current facility`() {
+  fun `when screen is created, then load current facility and show keyboard`() {
     val model = InstantSearchModel.create(additionalIdentifier = null)
 
     initSpec
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
-            hasEffects(LoadCurrentFacility)
+            hasEffects(LoadCurrentFacility, ShowKeyboard)
         ))
   }
 

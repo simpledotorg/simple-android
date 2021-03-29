@@ -17,6 +17,7 @@
 
 ### Fixes
 - Fix separator between Age & DOB fields not visible in patient entry & edit screens
+- Fix village type ahead crash when creating/editing patient
 
 ## On Demo
 ### Internal

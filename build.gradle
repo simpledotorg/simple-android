@@ -63,9 +63,9 @@ buildscript {
       quarantine               : '0.3.0',
       jackson                  : '2.10.2',
       logback                  : '1.2.3',
-      camerax                  : '1.0.0-rc03',
-      cameraView               : '1.0.0-alpha22',
-      cameraLifecycle          : '1.0.0-rc03',
+      camerax                  : '1.0.0-rc04',
+      cameraView               : '1.0.0-alpha23',
+      cameraLifecycle          : '1.0.0-rc04',
       zxing                    : '3.3.3',
       paging                   : '2.1.2',
 

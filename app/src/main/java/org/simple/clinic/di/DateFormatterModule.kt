@@ -34,11 +34,7 @@ class DateFormatterModule {
       chronology: Chronology,
       country: Country
   ): DateTimeFormatter {
-    val pattern = when (country.isoCountryCode) {
-      Country.ETHIOPIA -> "d-MM-yyyy"
-      else -> "d-MMM-yyyy"
-    }
-    return DateTimeFormatter.ofPattern(pattern, locale)
+    return DateTimeFormatter.ofPattern(country.fullDatePattern, locale)
         .withChronology(chronology)
   }
 
@@ -63,12 +59,7 @@ class DateFormatterModule {
       chronology: Chronology,
       country: Country
   ): DateTimeFormatter {
-    val pattern = when (country.isoCountryCode) {
-      Country.ETHIOPIA -> "d-MM-yyyy"
-      else -> "d MMMM, yyyy"
-    }
-
-    return DateTimeFormatter.ofPattern(pattern, locale)
+    return DateTimeFormatter.ofPattern(country.exactDatePattern, locale)
         .withChronology(chronology)
   }
 
@@ -86,12 +77,7 @@ class DateFormatterModule {
       chronology: Chronology,
       country: Country
   ): DateTimeFormatter {
-    val pattern = when (country.isoCountryCode) {
-      Country.ETHIOPIA -> "d-MM-yyyy h.mm.ss a"
-      else -> "d MMM yyyy h.mm.ss a"
-    }
-
-    return DateTimeFormatter.ofPattern(pattern, locale)
+    return DateTimeFormatter.ofPattern(country.fileDateTimePattern, locale)
         .withChronology(chronology)
   }
 

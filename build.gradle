@@ -34,7 +34,7 @@ buildscript {
       workManager              : '2.5.0',
       faker                    : '1.2.8',
       truth                    : '1.1.2',
-      junit                    : '4.12',
+      junit                    : '4.13.2',
       mockitoKotlin            : '2.2.0',
       junitParams              : '1.1.1',
       sqliteAndroid            : '3.32.2',

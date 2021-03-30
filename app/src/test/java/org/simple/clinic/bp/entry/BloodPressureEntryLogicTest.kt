@@ -536,11 +536,7 @@ class BloodPressureEntrySheetLogicTest {
 
     sheetCreatedForNew(patientUuid)
 
-    verify(ui).setDateOnInputFields(
-        dayOfMonth = "23",
-        month = "4",
-        fourDigitYear = "2018"
-    )
+    verify(ui).setDateOnInputFields(currentDate)
   }
 
   @Test
@@ -553,10 +549,7 @@ class BloodPressureEntrySheetLogicTest {
 
     sheetCreatedForUpdate(existingBp.uuid)
 
-    verify(ui, times(1)).setDateOnInputFields(
-        dayOfMonth = "23",
-        month = "4",
-        fourDigitYear = "2018")
+    verify(ui, times(1)).setDateOnInputFields(recordedAtDate)
   }
 
   @Suppress("Unused")
@@ -576,11 +569,7 @@ class BloodPressureEntrySheetLogicTest {
 
     verify(ui).showDateOnDateButton(today)
 
-    verify(ui).setDateOnInputFields(
-        today.dayOfMonth.toString(),
-        today.month.value.toString(),
-        today.year.toString()
-    )
+    verify(ui).setDateOnInputFields(today)
     verify(ui).hideRemoveBpButton()
     verify(ui).showEnterNewBloodPressureTitle()
     verify(ui, times(3)).hideProgress()
@@ -598,11 +587,7 @@ class BloodPressureEntrySheetLogicTest {
 
     verify(ui).showDateOnDateButton(recordedDate)
 
-    verify(ui).setDateOnInputFields(
-        recordedDate.dayOfMonth.toString(),
-        recordedDate.month.value.toString(),
-        recordedDate.year.toString()
-    )
+    verify(ui).setDateOnInputFields(recordedDate)
     verify(ui).setSystolic(bp.reading.systolic.toString())
     verify(ui).setDiastolic(bp.reading.diastolic.toString())
     verify(ui).showRemoveBpButton()

@@ -11,6 +11,7 @@ enum class Feature(
   DeletePatient(true, "delete_patient_feature_enabled"),
   SecureCalling(false, "phonenumbermasker_masking_enabled"),
   LogSavedStateSizes(false, "log_saved_state_sizes_enabled"),
+
   /**
    * API levels 21 and 22 cause a framework level crash in appcompat 1.2.0 when overriding
    * the configuration locale if a WebView is present in the layout. Since critical features
@@ -25,5 +26,6 @@ enum class Feature(
   InstantSearch(true, "instant_search"),
   OverdueCount(true, "overdue_count"),
   VillageTypeAhead(false, "village_type_ahead"),
-  InstantSearchQrCode(true, "instant_search_qr_code")
+  InstantSearchQrCode(true, "instant_search_qr_code"),
+  EthiopianCalendar(true, "ethiopian_calendar")
 }

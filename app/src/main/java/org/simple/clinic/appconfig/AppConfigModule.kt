@@ -27,13 +27,4 @@ class AppConfigModule {
     val countryPreferenceConverter = MoshiObjectPreferenceConverter(moshi, Country::class.java)
     return rxSharedPreferences.getOptional("preference_selected_country_v1", countryPreferenceConverter)
   }
-
-  @Provides
-  fun providesCountry(appConfigRepository: AppConfigRepository): Country {
-    val selectedCountry = appConfigRepository.currentCountry().toNullable()
-
-    requireNotNull(selectedCountry) { "There is no stored country available!" }
-
-    return selectedCountry
-  }
 }

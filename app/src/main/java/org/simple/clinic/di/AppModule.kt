@@ -12,6 +12,7 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.appconfig.AppLockModule
+import org.simple.clinic.appconfig.CountryModule
 import org.simple.clinic.appupdate.AppUpdateModule
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.di.network.HttpInterceptorsModule
@@ -87,7 +88,8 @@ import javax.inject.Named
   SyncConfigModule::class,
   AppLockModule::class,
   TeleconsultPrescriptionModule::class,
-  InstantSearchConfigModule::class
+  InstantSearchConfigModule::class,
+  CountryModule::class
 ])
 class AppModule(private val appContext: Application) {
 

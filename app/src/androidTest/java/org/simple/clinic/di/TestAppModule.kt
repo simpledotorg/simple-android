@@ -4,8 +4,10 @@ import android.app.Application
 import android.content.res.Resources
 import dagger.Module
 import dagger.Provides
+import org.simple.clinic.BuildConfig
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.AppConfigModule
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.onboarding.OnboardingModule
@@ -16,6 +18,7 @@ import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.util.scheduler.DefaultSchedulersProvider
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import java.net.URI
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.Locale
@@ -59,4 +62,14 @@ class TestAppModule(private val application: Application) {
 
   @Provides
   fun testData(): TestData = TestData
+
+  @Provides
+  fun providesCountry(): Country {
+    return Country(
+        isoCountryCode = "IN",
+        endpoint = URI.create(BuildConfig.MANIFEST_ENDPOINT),
+        displayName = "India",
+        isdCode = "91"
+    )
+  }
 }

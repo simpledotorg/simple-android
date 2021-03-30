@@ -5,7 +5,10 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.businessid.Identifier
+import org.threeten.extra.chrono.EthiopicChronology
 import java.net.URI
+import java.time.chrono.Chronology
+import java.time.chrono.IsoChronology
 
 @JsonClass(generateAdapter = true)
 @Parcelize
@@ -35,6 +38,12 @@ data class Country(
 
   val areWhatsAppRemindersSupported: Boolean
     get() = isoCountryCode == INDIA
+
+  val chronology: Chronology
+    get() = when (isoCountryCode) {
+      ETHIOPIA -> EthiopicChronology.INSTANCE
+      else -> IsoChronology.INSTANCE
+    }
 
   companion object {
     const val INDIA = "IN"

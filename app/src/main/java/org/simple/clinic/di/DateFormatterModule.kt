@@ -9,7 +9,6 @@ import org.simple.clinic.di.DateFormatter.Type.FullYear
 import org.simple.clinic.di.DateFormatter.Type.Month
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
-import org.threeten.extra.chrono.EthiopicChronology
 import java.time.chrono.Chronology
 import java.time.chrono.IsoChronology
 import java.time.format.DateTimeFormatter
@@ -21,12 +20,10 @@ class DateFormatterModule {
 
   @Provides
   fun providesChronology(country: Country, features: Features): Chronology {
-    if (!features.isEnabled(Feature.EthiopianCalendar))
-      return IsoChronology.INSTANCE
-
-    return when (country.isoCountryCode) {
-      Country.ETHIOPIA -> return EthiopicChronology.INSTANCE
-      else -> IsoChronology.INSTANCE
+    return if (features.isEnabled(Feature.EthiopianCalendar)) {
+      country.chronology
+    } else {
+      IsoChronology.INSTANCE
     }
   }
 

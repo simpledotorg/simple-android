@@ -36,7 +36,7 @@ import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.overrideCancellation
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
+import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog_Old
 import java.time.LocalDate
 import java.util.Locale
 import java.util.UUID
@@ -204,7 +204,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
       preselectedDate: LocalDate,
       dateBounds: ClosedRange<LocalDate>
   ) {
-    ThreeTenBpDatePickerDialog(
+    ThreeTenBpDatePickerDialog_Old(
         context = requireContext(),
         preselectedDate = preselectedDate,
         allowedDateRange = dateBounds,

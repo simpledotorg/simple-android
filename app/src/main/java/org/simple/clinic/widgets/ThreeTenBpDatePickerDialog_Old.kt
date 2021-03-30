@@ -17,7 +17,7 @@ import java.time.LocalDate
  * So when we convert from LocalDate to the DatePicker (and vice versa), we have to adjust the
  * month accordingly.
  **/
-class ThreeTenBpDatePickerDialog(
+class ThreeTenBpDatePickerDialog_Old(
     context: Context,
     preselectedDate: LocalDate,
     allowedDateRange: ClosedRange<LocalDate>,

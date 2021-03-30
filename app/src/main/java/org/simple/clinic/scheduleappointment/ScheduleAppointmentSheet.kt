@@ -34,7 +34,7 @@ import org.simple.clinic.summary.teleconsultation.status.TeleconsultStatusSheet
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
-import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
+import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog_Old
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -239,7 +239,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
   override fun showManualDateSelector(date: LocalDate) {
     val today = LocalDate.now(userClock)
 
-    ThreeTenBpDatePickerDialog(
+    ThreeTenBpDatePickerDialog_Old(
         context = requireContext(),
         preselectedDate = date,
         allowedDateRange = today.plusDays(1)..today.plusYears(1),

@@ -29,6 +29,10 @@ import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodP
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog.RemoveBloodPressureListener
 import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
 import org.simple.clinic.databinding.SheetBloodPressureEntryBinding
+import org.simple.clinic.di.DateFormatter
+import org.simple.clinic.di.DateFormatter.Type.Day
+import org.simple.clinic.di.DateFormatter.Type.FullYear
+import org.simple.clinic.di.DateFormatter.Type.Month
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
@@ -104,6 +108,18 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
 
   @Inject
   lateinit var effectHandlerFactory: BloodPressureEntryEffectHandler.Factory
+
+  @Inject
+  @DateFormatter(Day)
+  lateinit var dayDateFormatter: DateTimeFormatter
+
+  @Inject
+  @DateFormatter(Month)
+  lateinit var monthDateFormatter: DateTimeFormatter
+
+  @Inject
+  @DateFormatter(FullYear)
+  lateinit var fullYearDateFormatter: DateTimeFormatter
 
   private lateinit var component: BloodPressureEntryComponent
 
@@ -441,10 +457,10 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
     dateErrorTextView.visibility = View.GONE
   }
 
-  override fun setDateOnInputFields(dayOfMonth: String, month: String, fourDigitYear: String) {
-    dayEditText.setTextAndCursor(getPaddedString(dayOfMonth))
-    monthEditText.setTextAndCursor(getPaddedString(month))
-    yearEditText.setTextAndCursor(fourDigitYear)
+  override fun setDateOnInputFields(date: LocalDate) {
+    dayEditText.setTextAndCursor(dayDateFormatter.format(date))
+    monthEditText.setTextAndCursor(monthDateFormatter.format(date))
+    yearEditText.setTextAndCursor(fullYearDateFormatter.format(date))
   }
 
   override fun showDateOnDateButton(date: LocalDate) {

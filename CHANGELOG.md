@@ -21,6 +21,7 @@
 - Change "Preferred facility" to "Assigned facility"
 - Show 'CHANGE' button in appointment reminder bottom sheet
 - Highlight search field and show keyboard when 'Add to existing patient' option is selected
+- [Ethiopia] Show dates in Ethiopian calendar
 
 ### Fixes
 - Fix separator between Age & DOB fields not visible in patient entry & edit screens

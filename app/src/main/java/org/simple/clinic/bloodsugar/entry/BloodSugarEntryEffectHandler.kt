@@ -2,10 +2,10 @@ package org.simple.clinic.bloodsugar.entry
 
 import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
+import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -120,8 +120,8 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
       prefillDates
           .map(::convertToLocalDate)
           .observeOn(scheduler)
-          .doOnNext { setDateOnInputFields(it) }
-          .doOnNext { ui.showDateOnDateButton(it) }
+          .doOnNext(ui::setDateOnInputFields)
+          .doOnNext(ui::showDateOnDateButton)
           .map { DatePrefilled(it) }
     }
   }
@@ -129,14 +129,6 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
   private fun convertToLocalDate(prefillDate: PrefillDate): LocalDate {
     val instant = if (prefillDate is PrefillSpecificDate) prefillDate.date else Instant.now(userClock)
     return instant.toLocalDateAtZone(userClock.zone)
-  }
-
-  private fun setDateOnInputFields(dateToSet: LocalDate) {
-    ui.setDateOnInputFields(
-        dateToSet.dayOfMonth.toString(),
-        dateToSet.monthValue.toString(),
-        dateToSet.year.toString()
-    )
   }
 
   private fun showDateValidationError(result: UserInputDateValidator.Result) {

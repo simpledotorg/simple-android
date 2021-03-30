@@ -1,6 +1,8 @@
 package org.simple.clinic.drugs.selection
 
 import androidx.recyclerview.widget.DiffUtil
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.ShapeAppearanceModel
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ListPrescribeddrugsCustomDrugBinding
@@ -8,6 +10,7 @@ import org.simple.clinic.databinding.ListPrescribeddrugsNewCustomDrugBinding
 import org.simple.clinic.databinding.ListPrescribeddrugsProtocolDrugBinding
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.dp
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.visibleOrGone
 
@@ -41,10 +44,24 @@ data class ProtocolDrugListItem(
     viewBinding.protocoldrugItemDosage.visibleOrGone(prescribedDrug != null)
     viewBinding.protocoldrugItemDosage.text = prescribedDrug?.dosage
 
+    viewBinding.prescribeddrugItemProtocoldrugRootlayout.shapeAppearanceModel = topMostCardShapeAppearanceModel(isTopMostCard = holder.adapterPosition == 0)
+
     viewBinding.root.setOnClickListener {
       subject.onNext(DrugListItemClicked.PrescribedDrugClicked(drugName, prescribedDrug))
     }
   }
+}
+
+private fun topMostCardShapeAppearanceModel(isTopMostCard: Boolean) = if (isTopMostCard) {
+  ShapeAppearanceModel()
+      .toBuilder()
+      .setTopLeftCorner(CornerFamily.ROUNDED, 4.dp.toFloat())
+      .setTopRightCorner(CornerFamily.ROUNDED, 4.dp.toFloat())
+      .build()
+} else {
+  ShapeAppearanceModel()
+      .toBuilder()
+      .build()
 }
 
 data class CustomPrescribedDrugListItem(
@@ -64,6 +81,9 @@ data class CustomPrescribedDrugListItem(
     viewBinding.root.setOnClickListener {
       subject.onNext(DrugListItemClicked.CustomPrescriptionClicked(prescribedDrug))
     }
+
+    viewBinding.prescribeddrugItemCustomdrugRootlayout.shapeAppearanceModel = topMostCardShapeAppearanceModel(isTopMostCard = holder.adapterPosition == 0)
+
   }
 }
 

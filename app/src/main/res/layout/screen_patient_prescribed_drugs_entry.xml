@@ -22,7 +22,8 @@
 
   </com.google.android.material.appbar.AppBarLayout>
 
-  <com.google.android.material.card.MaterialCardView
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/prescribeddrugs_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_margin="@dimen/spacing_8"
@@ -30,15 +31,8 @@
     android:paddingBottom="@dimen/spacing_16"
     app:layout_constraintBottom_toTopOf="@id/buttonFrame"
     app:layout_constraintTop_toBottomOf="@id/prescribeddrugs_appbar"
-    app:layout_constraintVertical_bias="0">
-
-    <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/prescribeddrugs_recyclerview"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      tools:listitem="@layout/list_prescribeddrugs_protocol_drug" />
-
-  </com.google.android.material.card.MaterialCardView>
+    app:layout_constraintVertical_bias="0"
+    tools:listitem="@layout/list_prescribeddrugs_protocol_drug" />
 
   <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/buttonFrame"

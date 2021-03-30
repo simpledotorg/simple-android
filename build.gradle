@@ -38,7 +38,7 @@ buildscript {
       mockitoKotlin            : '2.2.0',
       junitParams              : '1.1.1',
       sqliteAndroid            : '3.32.2',
-      playServicesAuth         : '16.0.1',
+      playServicesAuth         : '19.0.0',
       playServicesVision       : '16.2.0',
       viewPump                 : '2.0.3',
       pinEntryEditText         : '2.0.6',

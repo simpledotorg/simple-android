@@ -34,5 +34,6 @@
   <color name="transparent">#00000000</color>
 
   <color name="facility_search_query_highlight">#52FFC800</color>
+  <color name="instant_search_query_highlight">#52FFC800</color>
 
 </resources>

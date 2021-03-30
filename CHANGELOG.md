@@ -2,9 +2,18 @@
 
 ## Next Release
 ### Internal
+- Make entire prescribed drugs list scrollable
+- Bump AGP to v4.1.3
+- Bump Kotlin to v1.4.32
+- Bump Dagger to v2.33
+- Bump LeakCanary to v2.6
+- Bump CameraX dependencies
+- Bump Fragment to v1.3.2
+- Bump PlayServices Auth to v19.0.0
+- Bump Moshi to v1.11.0
+- Bump JUnit to v4.13.2
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
-- Make entire prescribed drugs list scrollable
 
 ## Demo
 ### Internal

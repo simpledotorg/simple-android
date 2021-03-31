@@ -40,6 +40,7 @@
       android:background="?selectableItemBackgroundBorderless"
       android:padding="@dimen/spacing_12"
       android:tint="@color/appointment_date_stepper"
+      android:tintMode="src_in"
       app:srcCompat="@drawable/ic_remove_circle_outline_32dp"
       tools:ignore="ContentDescription" />
 
@@ -62,6 +63,7 @@
       android:background="?selectableItemBackgroundBorderless"
       android:padding="@dimen/spacing_12"
       android:tint="@color/appointment_date_stepper"
+      android:tintMode="src_in"
       app:srcCompat="@drawable/ic_add_circle_outline_32dp"
       tools:ignore="ContentDescription" />
 

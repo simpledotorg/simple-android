@@ -203,7 +203,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
       dateBounds: ClosedRange<LocalDate>
   ) {
     ThreeTenBpDatePickerDialog(
-        context = this,
+        context = requireContext(),
         preselectedDate = preselectedDate,
         allowedDateRange = dateBounds,
         clock = userClock,

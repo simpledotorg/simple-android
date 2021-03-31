@@ -13,6 +13,7 @@
 - Bump Moshi to v1.11.0
 - Bump JUnit to v4.13.2
 - Change facility picker and instant search highlight background color to yellow
+- Update Ethiopian date separator pattern
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 

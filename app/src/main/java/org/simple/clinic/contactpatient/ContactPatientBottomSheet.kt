@@ -1,10 +1,13 @@
 package org.simple.clinic.contactpatient
 
+import android.app.Dialog
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
@@ -28,6 +31,7 @@ import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.overrideCancellation
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
 import java.time.LocalDate
@@ -128,6 +132,14 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     super.onAttach(context)
 
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+
+    dialog.overrideCancellation(::backPressed)
+
+    return dialog
   }
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -238,6 +250,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   override fun disableRemoveAppointmentDoneButton() {
     removeAppointmentView.disableRemoveAppointmentDoneButton()
+  }
+
+  private fun backPressed() {
+    hotEvents.onNext(BackClicked)
   }
 
   private fun normalCallClicks(): Observable<ContactPatientEvent> {

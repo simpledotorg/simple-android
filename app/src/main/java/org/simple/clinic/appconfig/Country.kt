@@ -47,19 +47,19 @@ data class Country(
 
   val fullDatePattern: String
     get() = when (isoCountryCode) {
-      ETHIOPIA -> "d-MM-yyyy"
+      ETHIOPIA -> "dd/MM/yyyy"
       else -> "d-MMM-yyyy"
     }
 
   val exactDatePattern: String
     get() = when (isoCountryCode) {
-      ETHIOPIA -> "d-MM-yyyy"
+      ETHIOPIA -> "dd/MM/yyyy"
       else -> "d MMMM, yyyy"
     }
 
   val fileDateTimePattern: String
     get() = when (isoCountryCode) {
-      ETHIOPIA -> "d-MM-yyyy h.mm.ss a"
+      ETHIOPIA -> "dd MM yyyy h.mm.ss a"
       else -> "d MMM yyyy h.mm.ss a"
     }
 

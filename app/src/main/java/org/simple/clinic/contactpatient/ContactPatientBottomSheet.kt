@@ -2,24 +2,19 @@ package org.simple.clinic.contactpatient
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.ClinicApp
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
 import org.simple.clinic.databinding.SheetContactPatientBinding
-import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Feature.SecureCalling
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -35,8 +30,6 @@ import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.util.withLocale
-import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
 import java.time.LocalDate
 import java.util.Locale
@@ -83,8 +76,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   @Inject
   lateinit var features: Features
-
-  private lateinit var component: ContactPatientBottomSheetComponent
 
   private val patientUuid by unsafeLazy { screenKey.patientId }
 
@@ -154,29 +145,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   override fun onBackgroundClick() {
     finish()
-  }
-
-  override fun attachBaseContext(baseContext: Context) {
-    setupDiGraph()
-
-    val wrappedContext = baseContext
-        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
-        .wrap { ViewPumpContextWrapper.wrap(it) }
-
-    super.attachBaseContext(wrappedContext)
-    applyOverrideConfiguration(Configuration())
-  }
-
-  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
-  }
-
-  private fun setupDiGraph() {
-    component = ClinicApp.appComponent
-        .patientContactBottomSheetComponent()
-        .create(activity = this)
-
-    component.inject(this)
   }
 
   override fun onBackPressed() {

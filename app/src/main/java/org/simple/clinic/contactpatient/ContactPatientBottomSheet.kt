@@ -1,8 +1,6 @@
 package org.simple.clinic.contactpatient
 
 import android.content.Context
-import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -44,16 +42,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     ContactPatientEvent,
     ContactPatientEffect>(), ContactPatientUi, ContactPatientUiActions {
 
-  companion object {
-    private const val KEY_PATIENT_UUID = "patient_uuid"
-
-    fun intent(context: Context, patientUuid: UUID): Intent {
-      return Intent(context, ContactPatientBottomSheet::class.java).apply {
-        putExtra(KEY_PATIENT_UUID, patientUuid)
-      }
-    }
-  }
-
   @Inject
   lateinit var phoneCaller: PhoneCaller
 
@@ -83,13 +71,9 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   private val patientUuid by unsafeLazy { screenKey.patientId }
 
-  private val uiRenderer by unsafeLazy { ContactPatientUiRenderer(this, userClock) }
-
   private val permissionResults: Subject<ActivityPermissionResult> = PublishSubject.create()
 
   private val hotEvents: PublishSubject<ContactPatientEvent> = PublishSubject.create()
-
-  private lateinit var binding: SheetContactPatientBinding
 
   private val callPatientView
     get() = binding.callPatientView
@@ -144,21 +128,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     super.onAttach(context)
 
     context.injector<Injector>().inject(this)
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
-    binding = SheetContactPatientBinding.inflate(layoutInflater)
-    setContentView(binding.root)
-  }
-
-  override fun onBackgroundClick() {
-    finish()
-  }
-
-  override fun onBackPressed() {
-    hotEvents.onNext(BackClicked)
   }
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

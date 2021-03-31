@@ -14,6 +14,7 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetContactPatientBinding
+import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.SecureCalling
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
@@ -138,6 +139,12 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   override fun createEffectHandler() = effectHandlerFactory.create(this)
       .build()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+
+    context.injector<Injector>().inject(this)
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -368,5 +375,9 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     override val type = ScreenType.Modal
 
     override fun instantiateFragment() = ContactPatientBottomSheet()
+  }
+
+  interface Injector {
+    fun inject(target: ContactPatientBottomSheet)
   }
 }

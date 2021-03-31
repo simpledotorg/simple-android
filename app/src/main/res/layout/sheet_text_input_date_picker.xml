@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  tools:background="?attr/colorSurface">
+
+  <TextView
+    android:id="@+id/enterDateTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:gravity="center_horizontal"
+    android:lines="1"
+    android:text="@string/sheet_text_input_date_picker_enter_a_date"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    android:textColor="?attr/colorOnSurface"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:ignore="UnusedAttribute" />
+
+  <ImageButton
+    android:id="@+id/imageTextInputSheetClose"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackgroundBorderless"
+    android:padding="@dimen/spacing_12"
+    android:tint="@color/simple_light_blue_500"
+    android:tintMode="src_in"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/enterDateTextView"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.1"
+    app:srcCompat="@drawable/ic_close_24dp"
+    tools:ignore="ContentDescription" />
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/userDateLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:paddingBottom="@dimen/spacing_8"
+    app:layout_constraintTop_toBottomOf="@+id/enterDateTextView"
+    tools:background="?attr/colorSurface">
+
+    <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/dayTextFieldLayout"
+      style="@style/Widget.Simple.TextField.Layout.Large.MeasurementInput.Date"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintEnd_toStartOf="@+id/daySeparator"
+      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintHorizontal_chainStyle="packed"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@+id/monthTextFieldLayout">
+
+      <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/dayEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        tools:ignore="UnusedAttribute"
+        tools:text="12">
+
+        <requestFocus />
+
+      </com.google.android.material.textfield.TextInputEditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+      android:id="@+id/dayLabel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:labelFor="@+id/day_EditText"
+      android:text="@string/sheet_text_input_date_picker_day"
+      android:textAppearance="?attr/textAppearanceBody2"
+      android:textColor="@color/color_on_surface_67"
+      app:layout_constraintEnd_toEndOf="@+id/dayTextFieldLayout"
+      app:layout_constraintStart_toStartOf="@+id/dayTextFieldLayout"
+      app:layout_constraintTop_toBottomOf="@+id/dayTextFieldLayout" />
+
+    <TextView
+      android:id="@+id/daySeparator"
+      style="@style/Widget.Simple.MeasurementInputSeparator"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toBottomOf="@+id/monthTextFieldLayout"
+      app:layout_constraintEnd_toStartOf="@+id/monthTextFieldLayout"
+      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintStart_toEndOf="@+id/dayTextFieldLayout"
+      app:layout_constraintTop_toTopOf="@+id/monthTextFieldLayout" />
+
+    <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/monthTextFieldLayout"
+      style="@style/Widget.Simple.TextField.Layout.Large.MeasurementInput.Date"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintEnd_toStartOf="@+id/monthSeparator"
+      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintStart_toEndOf="@+id/daySeparator"
+      app:layout_constraintTop_toTopOf="parent">
+
+      <org.simple.clinic.widgets.EditTextWithBackspaceListener
+        android:id="@+id/monthEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        tools:ignore="UnusedAttribute"
+        tools:text="09" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+      android:id="@+id/monthLabel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:labelFor="@id/monthEditText"
+      android:text="@string/sheet_text_input_date_picker_month"
+      android:textAppearance="?attr/textAppearanceBody2"
+      android:textColor="@color/color_on_surface_67"
+      app:layout_constraintEnd_toEndOf="@+id/monthTextFieldLayout"
+      app:layout_constraintStart_toStartOf="@+id/monthTextFieldLayout"
+      app:layout_constraintTop_toBottomOf="@+id/monthTextFieldLayout" />
+
+    <TextView
+      android:id="@+id/monthSeparator"
+      style="@style/Widget.Simple.MeasurementInputSeparator"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toBottomOf="@+id/monthTextFieldLayout"
+      app:layout_constraintEnd_toStartOf="@+id/yearTextFieldLayout"
+      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintStart_toEndOf="@+id/monthTextFieldLayout"
+      app:layout_constraintTop_toTopOf="@+id/yearTextFieldLayout" />
+
+    <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/yearTextFieldLayout"
+      style="@style/Widget.Simple.TextField.Layout.Large.MeasurementInput.Date"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintStart_toEndOf="@+id/monthSeparator"
+      app:layout_constraintTop_toTopOf="@+id/monthTextFieldLayout">
+
+      <org.simple.clinic.widgets.EditTextWithBackspaceListener
+        android:id="@+id/yearEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        tools:ignore="UnusedAttribute"
+        tools:text="2020" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+      android:id="@+id/yearLabel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/spacing_24"
+      android:gravity="center_horizontal"
+      android:labelFor="@id/yearEditText"
+      android:text="@string/sheet_text_input_date_picker_year"
+      android:textAppearance="?attr/textAppearanceBody2"
+      android:textColor="@color/color_on_surface_67"
+      app:layout_constraintEnd_toEndOf="@+id/yearTextFieldLayout"
+      app:layout_constraintStart_toStartOf="@+id/yearTextFieldLayout"
+      app:layout_constraintTop_toBottomOf="@+id/yearTextFieldLayout" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <TextView
+    android:id="@+id/dateErrorTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:paddingBottom="@dimen/spacing_12"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="?attr/colorError"
+    android:visibility="gone"
+    app:layout_constraintTop_toBottomOf="@+id/userDateLayout"
+    tools:text="Error" />
+</androidx.constraintlayout.widget.ConstraintLayout>

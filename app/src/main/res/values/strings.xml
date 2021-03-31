@@ -788,4 +788,10 @@
   <string name="patientsearch_error_no_search_results">No patients match</string>
   <string name="patientsearch_error_no_patients_in_facility_heading">No patients in %1$s</string>
 
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">Enter a date</string>
+  <string name="sheet_text_input_date_picker_day">Day</string>
+  <string name="sheet_text_input_date_picker_month">Month</string>
+  <string name="sheet_text_input_date_picker_year">Year</string>
+
 </resources>

@@ -6,11 +6,13 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.fragment.app.Fragment
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
@@ -19,6 +21,7 @@ import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Feature.SecureCalling
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.patient.Gender
@@ -394,6 +397,18 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
       emitter.setCancellable { removeAppointmentView.doneClicked = null }
 
       removeAppointmentView.doneClicked = { emitter.onNext(RemoveAppointmentDoneClicked) }
+    }
+  }
+
+  @Parcelize
+  data class Key(val patientId: UUID) : ScreenKey() {
+
+    override val analyticsName = "Contact Patient Bottom Sheet"
+
+    override val type = ScreenType.Modal
+
+    override fun instantiateFragment(): Fragment {
+
     }
   }
 }

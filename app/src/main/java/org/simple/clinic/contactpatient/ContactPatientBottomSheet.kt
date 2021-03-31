@@ -22,7 +22,6 @@ import org.simple.clinic.databinding.SheetContactPatientBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Feature.SecureCalling
 import org.simple.clinic.feature.Features
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.overdue.AppointmentConfig
@@ -95,46 +94,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   private val hotEvents: PublishSubject<ContactPatientEvent> = PublishSubject.create()
 
-  private val events: Observable<ContactPatientEvent> by unsafeLazy {
-    Observable
-        .mergeArray(
-            normalCallClicks(),
-            secureCallClicks(),
-            agreedToVisitClicks(),
-            remindToCallLaterClicks(),
-            nextReminderDateClicks(),
-            previousReminderDateClicks(),
-            appointmentDateClicks(),
-            saveReminderDateClicks(),
-            removeFromOverdueListClicks(),
-            removeAppointmentCloseClicks(),
-            removeAppointmentDoneClicks(),
-            removeAppointmentReasonSelections(),
-            hotEvents
-        )
-        .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, permissionResults))
-        .compose(ReportAnalyticsEvents())
-        .cast()
-
-  }
-
-  private val delegate by unsafeLazy {
-    MobiusDelegate.forActivity(
-        events = events,
-        defaultModel = ContactPatientModel.create(
-            patientUuid = patientUuid,
-            appointmentConfig = appointmentConfig,
-            userClock = userClock,
-            mode = UiMode.CallPatient,
-            secureCallFeatureEnabled = features.isEnabled(SecureCalling) && phoneMaskConfig.proxyPhoneNumber.isNotBlank()
-        ),
-        update = ContactPatientUpdate(phoneMaskConfig),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = ContactPatientInit(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
   private lateinit var binding: SheetContactPatientBinding
 
   private val callPatientView
@@ -191,23 +150,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
     binding = SheetContactPatientBinding.inflate(layoutInflater)
     setContentView(binding.root)
-
-    delegate.onRestoreInstanceState(savedInstanceState)
-  }
-
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
-
-  override fun onStop() {
-    delegate.stop()
-    super.onStop()
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    delegate.onSaveInstanceState(outState)
-    super.onSaveInstanceState(outState)
   }
 
   override fun onBackgroundClick() {

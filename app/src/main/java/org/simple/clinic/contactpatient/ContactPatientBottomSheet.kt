@@ -16,6 +16,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetContactPatientBinding
 import org.simple.clinic.feature.Feature.SecureCalling
 import org.simple.clinic.feature.Features
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.overdue.AppointmentConfig
@@ -75,6 +76,9 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var router: Router
 
   private val patientUuid by unsafeLazy { screenKey.patientId }
 
@@ -188,7 +192,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   }
 
   override fun closeSheet() {
-    finish()
+    router.pop()
   }
 
   override fun renderSelectedAppointmentDate(

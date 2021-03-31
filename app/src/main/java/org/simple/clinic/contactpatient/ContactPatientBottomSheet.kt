@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
@@ -364,8 +363,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
     override val type = ScreenType.Modal
 
-    override fun instantiateFragment(): Fragment {
-
-    }
+    override fun instantiateFragment() = ContactPatientBottomSheet()
   }
 }

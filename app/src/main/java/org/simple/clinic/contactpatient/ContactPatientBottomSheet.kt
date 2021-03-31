@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
@@ -22,6 +24,7 @@ import org.simple.clinic.feature.Feature.SecureCalling
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.patient.Gender
@@ -35,14 +38,18 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
 import java.time.LocalDate
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
-class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, ContactPatientUiActions {
+class ContactPatientBottomSheet : BaseBottomSheet<
+    ContactPatientBottomSheet.Key,
+    SheetContactPatientBinding,
+    ContactPatientModel,
+    ContactPatientEvent,
+    ContactPatientEffect>(), ContactPatientUi, ContactPatientUiActions {
 
   companion object {
     private const val KEY_PATIENT_UUID = "patient_uuid"
@@ -80,7 +87,7 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
 
   private lateinit var component: ContactPatientBottomSheetComponent
 
-  private val patientUuid by unsafeLazy { intent.getSerializableExtra(KEY_PATIENT_UUID) as UUID }
+  private val patientUuid by unsafeLazy { screenKey.patientId }
 
   private val uiRenderer by unsafeLazy { ContactPatientUiRenderer(this, userClock) }
 
@@ -138,6 +145,46 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
 
   private val removeAppointmentView
     get() = binding.removeAppointmentView
+
+  override fun defaultModel() = ContactPatientModel.create(
+      patientUuid = patientUuid,
+      appointmentConfig = appointmentConfig,
+      userClock = userClock,
+      mode = UiMode.CallPatient,
+      secureCallFeatureEnabled = features.isEnabled(SecureCalling) && phoneMaskConfig.proxyPhoneNumber.isNotBlank()
+  )
+
+  override fun bindView(inflater: LayoutInflater, container: ViewGroup?) =
+      SheetContactPatientBinding.inflate(inflater, container, false)
+
+  override fun uiRenderer() = ContactPatientUiRenderer(this, userClock)
+
+  override fun events() = Observable
+      .mergeArray(
+          normalCallClicks(),
+          secureCallClicks(),
+          agreedToVisitClicks(),
+          remindToCallLaterClicks(),
+          nextReminderDateClicks(),
+          previousReminderDateClicks(),
+          appointmentDateClicks(),
+          saveReminderDateClicks(),
+          removeFromOverdueListClicks(),
+          removeAppointmentCloseClicks(),
+          removeAppointmentDoneClicks(),
+          removeAppointmentReasonSelections(),
+          hotEvents
+      )
+      .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, permissionResults))
+      .compose(ReportAnalyticsEvents())
+      .cast<ContactPatientEvent>()
+
+  override fun createUpdate() = ContactPatientUpdate(phoneMaskConfig)
+
+  override fun createInit() = ContactPatientInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this)
+      .build()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

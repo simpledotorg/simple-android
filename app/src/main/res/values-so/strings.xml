@@ -535,7 +535,7 @@
   <string name="contactpatient_done">La dhameeyay</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s day</item>
-    <item quantity="other">%s Maalmo</item>
+    <item quantity="other">%s aalmo</item>
   </plurals>
   <plurals name="contactpatient_weeks">
     <item quantity="one">%s week</item>

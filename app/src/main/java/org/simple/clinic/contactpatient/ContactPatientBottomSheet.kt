@@ -1,24 +1,26 @@
 package org.simple.clinic.contactpatient
 
+import android.app.Dialog
 import android.content.Context
-import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import io.github.inflationx.viewpump.ViewPumpContextWrapper
+import android.view.ViewGroup
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import org.simple.clinic.ClinicApp
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
 import org.simple.clinic.databinding.SheetContactPatientBinding
-import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.SecureCalling
 import org.simple.clinic.feature.Features
-import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.patient.Gender
@@ -29,27 +31,20 @@ import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.overrideCancellation
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.util.withLocale
-import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
 import java.time.LocalDate
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
-class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, ContactPatientUiActions {
-
-  companion object {
-    private const val KEY_PATIENT_UUID = "patient_uuid"
-
-    fun intent(context: Context, patientUuid: UUID): Intent {
-      return Intent(context, ContactPatientBottomSheet::class.java).apply {
-        putExtra(KEY_PATIENT_UUID, patientUuid)
-      }
-    }
-  }
+class ContactPatientBottomSheet : BaseBottomSheet<
+    ContactPatientBottomSheet.Key,
+    SheetContactPatientBinding,
+    ContactPatientModel,
+    ContactPatientEvent,
+    ContactPatientEffect>(), ContactPatientUi, ContactPatientUiActions {
 
   @Inject
   lateinit var phoneCaller: PhoneCaller
@@ -75,57 +70,14 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
   @Inject
   lateinit var features: Features
 
-  private lateinit var component: ContactPatientBottomSheetComponent
+  @Inject
+  lateinit var router: Router
 
-  private val patientUuid by unsafeLazy { intent.getSerializableExtra(KEY_PATIENT_UUID) as UUID }
-
-  private val uiRenderer by unsafeLazy { ContactPatientUiRenderer(this, userClock) }
+  private val patientUuid by unsafeLazy { screenKey.patientId }
 
   private val permissionResults: Subject<ActivityPermissionResult> = PublishSubject.create()
 
   private val hotEvents: PublishSubject<ContactPatientEvent> = PublishSubject.create()
-
-  private val events: Observable<ContactPatientEvent> by unsafeLazy {
-    Observable
-        .mergeArray(
-            normalCallClicks(),
-            secureCallClicks(),
-            agreedToVisitClicks(),
-            remindToCallLaterClicks(),
-            nextReminderDateClicks(),
-            previousReminderDateClicks(),
-            appointmentDateClicks(),
-            saveReminderDateClicks(),
-            removeFromOverdueListClicks(),
-            removeAppointmentCloseClicks(),
-            removeAppointmentDoneClicks(),
-            removeAppointmentReasonSelections(),
-            hotEvents
-        )
-        .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, permissionResults))
-        .compose(ReportAnalyticsEvents())
-        .cast()
-
-  }
-
-  private val delegate by unsafeLazy {
-    MobiusDelegate.forActivity(
-        events = events,
-        defaultModel = ContactPatientModel.create(
-            patientUuid = patientUuid,
-            appointmentConfig = appointmentConfig,
-            userClock = userClock,
-            mode = UiMode.CallPatient,
-            secureCallFeatureEnabled = features.isEnabled(SecureCalling) && phoneMaskConfig.proxyPhoneNumber.isNotBlank()
-        ),
-        update = ContactPatientUpdate(phoneMaskConfig),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = ContactPatientInit(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
-  private lateinit var binding: SheetContactPatientBinding
 
   private val callPatientView
     get() = binding.callPatientView
@@ -136,59 +88,58 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
   private val removeAppointmentView
     get() = binding.removeAppointmentView
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+  override fun defaultModel() = ContactPatientModel.create(
+      patientUuid = patientUuid,
+      appointmentConfig = appointmentConfig,
+      userClock = userClock,
+      mode = UiMode.CallPatient,
+      secureCallFeatureEnabled = features.isEnabled(SecureCalling) && phoneMaskConfig.proxyPhoneNumber.isNotBlank()
+  )
 
-    binding = SheetContactPatientBinding.inflate(layoutInflater)
-    setContentView(binding.root)
+  override fun bindView(inflater: LayoutInflater, container: ViewGroup?) =
+      SheetContactPatientBinding.inflate(inflater, container, false)
 
-    delegate.onRestoreInstanceState(savedInstanceState)
+  override fun uiRenderer() = ContactPatientUiRenderer(this, userClock)
+
+  override fun events() = Observable
+      .mergeArray(
+          normalCallClicks(),
+          secureCallClicks(),
+          agreedToVisitClicks(),
+          remindToCallLaterClicks(),
+          nextReminderDateClicks(),
+          previousReminderDateClicks(),
+          appointmentDateClicks(),
+          saveReminderDateClicks(),
+          removeFromOverdueListClicks(),
+          removeAppointmentCloseClicks(),
+          removeAppointmentDoneClicks(),
+          removeAppointmentReasonSelections(),
+          hotEvents
+      )
+      .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, permissionResults))
+      .compose(ReportAnalyticsEvents())
+      .cast<ContactPatientEvent>()
+
+  override fun createUpdate() = ContactPatientUpdate(phoneMaskConfig)
+
+  override fun createInit() = ContactPatientInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this)
+      .build()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+
+    context.injector<Injector>().inject(this)
   }
 
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
 
-  override fun onStop() {
-    delegate.stop()
-    super.onStop()
-  }
+    dialog.overrideCancellation(::backPressed)
 
-  override fun onSaveInstanceState(outState: Bundle) {
-    delegate.onSaveInstanceState(outState)
-    super.onSaveInstanceState(outState)
-  }
-
-  override fun onBackgroundClick() {
-    finish()
-  }
-
-  override fun attachBaseContext(baseContext: Context) {
-    setupDiGraph()
-
-    val wrappedContext = baseContext
-        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
-        .wrap { ViewPumpContextWrapper.wrap(it) }
-
-    super.attachBaseContext(wrappedContext)
-    applyOverrideConfiguration(Configuration())
-  }
-
-  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
-  }
-
-  private fun setupDiGraph() {
-    component = ClinicApp.appComponent
-        .patientContactBottomSheetComponent()
-        .create(activity = this)
-
-    component.inject(this)
-  }
-
-  override fun onBackPressed() {
-    hotEvents.onNext(BackClicked)
+    return dialog
   }
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -229,7 +180,7 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
   }
 
   override fun closeSheet() {
-    finish()
+    router.pop()
   }
 
   override fun renderSelectedAppointmentDate(
@@ -244,7 +195,7 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
       dateBounds: ClosedRange<LocalDate>
   ) {
     ThreeTenBpDatePickerDialog(
-        context = this,
+        context = requireContext(),
         preselectedDate = preselectedDate,
         allowedDateRange = dateBounds,
         clock = userClock,
@@ -299,6 +250,10 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
 
   override fun disableRemoveAppointmentDoneButton() {
     removeAppointmentView.disableRemoveAppointmentDoneButton()
+  }
+
+  private fun backPressed() {
+    hotEvents.onNext(BackClicked)
   }
 
   private fun normalCallClicks(): Observable<ContactPatientEvent> {
@@ -395,5 +350,19 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
 
       removeAppointmentView.doneClicked = { emitter.onNext(RemoveAppointmentDoneClicked) }
     }
+  }
+
+  @Parcelize
+  data class Key(val patientId: UUID) : ScreenKey() {
+
+    override val analyticsName = "Contact Patient Bottom Sheet"
+
+    override val type = ScreenType.Modal
+
+    override fun instantiateFragment() = ContactPatientBottomSheet()
+  }
+
+  interface Injector {
+    fun inject(target: ContactPatientBottomSheet)
   }
 }

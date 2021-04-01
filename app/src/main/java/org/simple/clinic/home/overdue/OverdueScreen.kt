@@ -120,7 +120,7 @@ class OverdueScreen(
   }
 
   override fun openPhoneMaskBottomSheet(patientUuid: UUID) {
-    activity.startActivity(ContactPatientBottomSheet.intent(context, patientUuid))
+    router.push(ContactPatientBottomSheet.Key(patientUuid))
   }
 
   @SuppressLint("CheckResult")

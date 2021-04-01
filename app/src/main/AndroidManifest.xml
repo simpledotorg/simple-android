@@ -100,11 +100,6 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".contactpatient.ContactPatientBottomSheet"
-      android:theme="@style/Theme.Simple.BottomSheetActivity"
-      android:windowSoftInputMode="adjustResize" />
-
-    <activity
       android:name=".drugs.selection.dosage.DosagePickerSheet"
       android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />

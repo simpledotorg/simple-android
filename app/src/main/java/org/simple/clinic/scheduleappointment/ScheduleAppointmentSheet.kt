@@ -6,12 +6,15 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -25,6 +28,7 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
@@ -36,7 +40,6 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -49,7 +52,12 @@ import javax.inject.Inject
 import javax.inject.Named
 import org.simple.clinic.scheduleappointment.ButtonState as NextButtonState
 
-class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, ScheduleAppointmentUiActions {
+class ScheduleAppointmentSheet : BaseBottomSheet<
+    ScheduleAppointmentSheet.Key,
+    SheetScheduleAppointmentBinding,
+    ScheduleAppointmentModel,
+    ScheduleAppointmentEvent,
+    ScheduleAppointmentEffect>(), ScheduleAppointmentUi, ScheduleAppointmentUiActions {
 
   companion object {
     private const val REQCODE_FACILITY_SELECT = 100
@@ -166,6 +174,43 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
         additionalEventSources = listOf(facilityChanges)
     )
   }
+
+  override fun defaultModel() = ScheduleAppointmentModel.create(
+      patientUuid = screenKey.patientId,
+      timeToAppointments = config.scheduleAppointmentsIn,
+      userClock = userClock,
+      doneButtonState = ButtonState.SAVED,
+      nextButtonState = NextButtonState.SCHEDULED
+  )
+
+  override fun bindView(inflater: LayoutInflater, container: ViewGroup?) =
+      SheetScheduleAppointmentBinding.inflate(layoutInflater, container, false)
+
+  override fun uiRenderer() = ScheduleAppointmentUiRenderer(this)
+
+  override fun events() = Observable
+      .mergeArray(
+          decrementClicks(),
+          incrementClicks(),
+          notNowClicks(),
+          doneClicks(),
+          appointmentDateClicks(),
+          nextClicks(),
+          calendarDateSelectedEvents
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<ScheduleAppointmentEvent>()
+
+  override fun createUpdate() = ScheduleAppointmentUpdate(
+      currentDate = LocalDate.now(userClock),
+      defaulterAppointmentPeriod = config.appointmentDuePeriodForDefaulters
+  )
+
+  override fun createInit() = ScheduleAppointmentInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun additionalEventSources() = listOf(facilityChanges)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

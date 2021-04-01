@@ -69,6 +69,10 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     fun <T : Parcelable> readExtra(intent: Intent): T? {
       return intent.getParcelableExtra<T>(KEY_EXTRA)!!
     }
+
+    fun sheetOpenedFrom(result: Succeeded): AppointmentSheetOpenedFrom {
+      return result.result as AppointmentSheetOpenedFrom
+    }
   }
 
   @Inject

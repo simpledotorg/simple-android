@@ -34,13 +34,16 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
-import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen_Old
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenResult
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -81,7 +84,8 @@ class PatientSummaryScreen :
     PatientSummaryScreenUi,
     PatientSummaryUiActions,
     PatientSummaryChildView,
-    HandlesBack {
+    HandlesBack,
+    ExpectsResult {
 
   private val rootLayout
     get() = binding.rootLayout
@@ -244,10 +248,14 @@ class PatientSummaryScreen :
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()
 
-    subscriptions.addAll(
-        setupChildViewVisibility(),
-        appointmentScheduleSheetClosed()
-    )
+    subscriptions.add(setupChildViewVisibility())
+  }
+
+  override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
+    if (requestType == ScreenRequest.ScheduleAppointmentSheet && result is Succeeded) {
+      val sheetOpenedFrom = ScheduleAppointmentSheet.sheetOpenedFrom(result)
+      appointmentScheduleSheetClosed.notify(ScheduledAppointment(sheetOpenedFrom))
+    }
   }
 
   @SuppressLint("CheckResult")
@@ -329,7 +337,7 @@ class PatientSummaryScreen :
         ScheduleAppointmentSheet.readExtra<ScheduleAppointmentSheetExtra>(intent)
       }
       .subscribe {
-        appointmentScheduleSheetClosed.notify(ScheduledAppointment(it!!.sheetOpenedFrom))
+
       }
 
   private fun phoneNumberClicks(): Observable<UiEvent> {
@@ -440,11 +448,9 @@ class PatientSummaryScreen :
       sheetOpenedFrom: AppointmentSheetOpenedFrom,
       currentFacility: Facility
   ) {
-    val scheduleAppointmentIntent = ScheduleAppointmentSheet.intent(requireContext(), patientUuid, ScheduleAppointmentSheetExtra(sheetOpenedFrom))
-
-    router.push(AlertFacilityChangeSheet.Key(
+    router.pushExpectingResult(ScreenRequest.ScheduleAppointmentSheet, AlertFacilityChangeSheet.Key(
         currentFacilityName = currentFacility.name,
-        continuation = ContinueToActivity(scheduleAppointmentIntent, SUMMARY_REQCODE_SCHEDULE_APPOINTMENT)
+        continuation = ContinueToScreen(ScheduleAppointmentSheet.Key(patientUuid, sheetOpenedFrom))
     ))
   }
 
@@ -543,6 +549,12 @@ class PatientSummaryScreen :
 
   interface Injector {
     fun inject(target: PatientSummaryScreen)
+  }
+
+  sealed class ScreenRequest : Parcelable {
+
+    @Parcelize
+    object ScheduleAppointmentSheet : ScreenRequest()
   }
 }
 

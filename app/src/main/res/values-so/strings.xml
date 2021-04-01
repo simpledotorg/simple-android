@@ -1,0 +1,694 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="app_name">Fudud</string>
+
+  <!-- Common -->
+  <string name="gender_female">Dheddig</string>
+  <string name="gender_male">Lab</string>
+  <string name="gender_transgender">Labeeb</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_male_letter">M</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_female_letter">F</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_trans_letter">T</string>
+  <string name="api_unexpected_error">Waxbaa qaldamay. Fadlan iskuday markale.</string>
+  <string name="api_network_error">Malaha khad internet</string>
+  <string name="api_server_error">Cilad saafarka! Fadlan iskuday markale</string>
+
+  <!-- Country names -->
+  <string name="country_india">Hindi</string>
+  <string name="country_bangladesh">Bangladesh</string>
+  <string name="country_ethiopia">Ethiopia</string>
+
+  <!-- Home -->
+  <string name="home_help">Caawimaad</string>
+  <string name="home_settings">Setinka</string>
+
+  <!--Business id Identifier -->
+  <string name="identifiertype_bp_passport">Baasaboorka BP</string>
+  <string name="identifiertype_bangladesh_national_id">Lambarka Aqoonsiga Qaranka</string>
+  <string name="identifiertype_ethiopia_medical_record_number">Lambarka Diiwaanka Caafimaadka</string>
+  <string name="identifiertype_unknown">Kaarka aqoonsiga</string>
+
+  <!-- Patient search -->
+  <string name="patientsearch_search">Xigga</string>
+  <string name="patientsearch_error_empty_fullname">Gali magaca buuxa ama lambarka taleefanka bukaanka</string>
+  <string name="patientsearch_hint">Magaca ama lambarka taleefanka</string>
+
+  <!-- Patient search results -->
+  <string name="patientsearchresults_empty_state">Ma jiro bukaan u dhigma</string>
+  <string name="patientsearchresults_register_patient_rationale">Kuma jiro bukaanka liiskan?</string>
+  <string name="patientsearchresults_register_patient_rationale_for_empty_state">Bukaanka ma diwaan gashana</string>
+  <string name="patientsearchresults_register_patient">U diwaangali sidii bukaan cusub</string>
+  <string name="patientsearchresults_register_patient_for_empty_state">Diwaan gali bukaanka</string>
+  <string name="patientsearchresults_item_last_seen">Booqday</string>
+  <string name="patientsearchresults_current_facility_header">Waxaa booqday %s</string>
+  <string name="patientsearchresults_other_results_header">Natiijooyin kale</string>
+  <string name="patientsearchresults_no_patients_match">Ma jiro bukaan u dhigma</string>
+  <string name="patientsearchresults_item_phone_number">Telefoonka</string>
+  <string name="patientsearchresults_item_birthdate">Taariikhda dhalashada</string>
+
+  <!-- Manual patient entry -->
+  <string name="patiententry_contentdescription_up_button">Ku laabo raadinta</string>
+  <string name="patiententry_full_name">Magaca bukaanka</string>
+  <string name="patiententry_phone_number">Lambarka telefoonka</string>
+  <string name="patiententry_bangladesh_national_id">Lambarka Aqoonsiga Qaranka</string>
+  <string name="patiententry_ethiopia_medical_record_number">Lambarka Diiwaanka Caafimaadka</string>
+  <string name="patiententry_date_of_birth_unfocused">Taariikhda dhalashada</string>
+  <string name="patiententry_date_of_birth_focused">Taariikhda dhalashada: DD/MM/YYYY</string>
+  <string name="patiententry_dateofbirth_and_age_separator">Ama</string>
+  <string name="patiententry_age">Da\'da</string>
+  <string name="patiententry_street_address">Cinwaanka guriga</string>
+  <string name="patiententry_street_house_road_number">Lambarka guriga ama wadada</string>
+  <string name="patiententry_village_colony_ward">Xaafada / deegaan / Qeybta xaafada</string>
+  <string name="patiententry_village_ward">Xaafada / Qeybta xaafada</string>
+  <string name="patiententry_kebele">Kebele</string>
+  <string name="patiententry_zone">Union</string>
+  <string name="patiententry_district">Gobalka</string>
+  <string name="patiententry_woreda">Qeybta</string>
+  <string name="patiententry_upazila">Upazila</string>
+  <string name="patiententry_state">Wadanka</string>
+  <string name="patiententry_region">Gobalka</string>
+  <string name="patiententry_doornumber_streetname">Lambarka albaabka, magaca dariiqa</string>
+  <string name="patiententry_division_area">Tuulada iyo deegaanka</string>
+  <string name="patiententry_save_patient">Xigga</string>
+  <string name="patiententry_error_empty_fullname">Gali magaca buuxa ee bukaanka</string>
+  <string name="patiententry_error_empty_gender">Xullo jinsiga bukaanka</string>
+  <string name="patiententry_error_empty_colony_or_village">Loo baahan yahay</string>
+  <string name="patiententry_error_empty_district">Loo baahan yahay</string>
+  <string name="patiententry_error_state_empty">Loo baahan yahay</string>
+  <string name="patiententry_error_both_dateofbirth_and_age_empty">Gali da\'da bukaanka</string>
+  <string name="patiententry_error_invalid_dateofbirth">Gali taariikhda dhalashada bukaanka MM/BB/SS</string>
+  <string name="patiententry_error_dateofbirth_is_in_future">Hagaaji taariikhda dhalashada bukaanka</string>
+  <string name="patiententry_error_phonenumber_blank">Lambarka taleefanka ma noqon karo mid madhan</string>
+  <string name="patiententry_error_phonenumber_length_less">Lambarka taleefanka kama yaraan karo%1$s lambar</string>
+  <string name="patiententry_error_phonenumber_length_more">Lambarka taleefanka kama badnaan karo %1$s lambar</string>
+  <string name="patiententry_identifier">Baasaboorka BP</string>
+  <string name="patiententry_consent_header">Ogolaanshi:\u0020</string>
+  <string name="patiententry_consent_first_para">Adiga oo taabanaya hoosta, waxaad xaqiijineysaa in xog kasta oo bukaan ah oo aad halkan gasho lagu helay ogolaansho ku habboon oo la oggol yahay. Tan macnaheedu waa in bukaanku ama masuulka sharciga ah uu ogyahay inaad ku dareyso xogtooda shaqsi barnaamijka, fahmay waxa xogta la aruurinayo, uuna ogyahay in lagala soo xiriiri karo fariinta gaaban, WhatsApp, ama qaabab kale iyadoo la adeegsanayo lambarka taleefanka ee ku jira barnaamijka. .</string>
+  <string name="patiententry_consent_second_para">Qof kasta oo aad idman, ama daryeel caafimaad bixiyaha aad u shaqeysid, wuxuu heli doonaa xogta bukaanka iyo macluumaadka aad gasho halkan. Adiga oo adeegsanaya barnaamijka waxaad xaqiijineysaa in bukaanku ama masuulka sharciga ah uu fahmayo cidda marin u yeelan doonta xogta laga helay barnaamijkan isla markaana ogolaanaya marinkaas</string>
+  <string name="patiententry_consent_whatsapp_sms_reminders">Xasuusimaha WhatsApp / Fariinta gaaban</string>
+  <string name="patiententry_consent_sms_reminders">Xasuusimaha Fariinta gaaban</string>
+  <string name="patiententry_age_exceeds_max_limit_error">Da\'du ma noqon karto wax ka weyn 120 sano</string>
+  <string name="patiententry_age_exceeds_min_limit_error">Da\'du ma noqon karto 0 sano</string>
+
+  <string name="patientedit_save_patient">Keydi</string>
+  <string name="patientedit_bp_passports_label">Baasaboorada BP</string>
+  <string name="patientedit_confirm_discard_title">Iska dhaaf isbedelada?</string>
+  <string name="patientedit_confirm_discard_ok">Iska dhaaf</string>
+  <string name="patientedit_confirm_discard_cancel">Baaji</string>
+  <string name="patientedit_delete_patient">Tirtir</string>
+
+  <!-- Home: Tabs -->
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="tab_patient">Bukaanada</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_overdue">Waqtigiisa dhamaaday</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_progress">Hormarka</string>
+
+  <string name="home_search_patient_name_phone">Gali magaca bukaanka</string>
+  <string name="patients_user_awaiting_approval_title">Sugaya ogolaanshaha</string>
+  <string name="patients_user_awaiting_approval_message">Marka laguu oggolaado, waxaad marin u heli doontaa diiwaanada bukaan socodka ee rugtaada caafimaadka.</string>
+  <string name="patients_user_approved_title">Waa laguu oggolaaday!</string>
+  <string name="patients_awaiting_sms_verification_title">Sugida xaqiijinta fariinta gaaban</string>
+  <string name="patients_user_approved_message">Hadda waad arki kartaa dhammaan macluumaadka bukaanka ee rugtaada caafimaad</string>
+  <string name="patients_awaiting_sms_verification_message">Marka la xaqiijiyo, waxaad heli doontaa diiwaanada bukaan socodka ee rugtaada caafimaadka.</string>
+  <string name="patients_dismiss_user_approved_status">Waan helay</string>
+  <string name="patients_enter_code">Geli Koodhka</string>
+  <string name="patients_you_are_now_logged_in">Xaqiijinta ayaa guuleysatay! Diiwaanada bukaan socodka ayaa hada muuqda.</string>
+  <string name="patients_loggedoutalert_title">Kaliya waxaad ka gali kartaa hal aalad markiiba</string>
+  <string name="patients_loggedoutalert_message">Waxaa lagaa saaray aaladaadi hore.</string>
+  <string name="patients_loggedoutalert_dismiss">Waan helay</string>
+  <string name="patients_scan_simple_card">Iskaan garee baasaboorka BP</string>
+  <string name="patients_recentpatients_title">Hadda</string>
+  <string name="patients_recentpatients_no_recent_patients">Ma lahan bukaanno dhow</string>
+  <string name="patients_recentpatients_see_all">Arag dhamaan</string>
+  <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+
+  <!-- Blood pressure entry -->
+  <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Dhiig kar</string>
+  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">Tafatir dhiig karka</string>
+  <string name="bloodpressureentry_sheet_title_enter_date">Taariikhda booqashada</string>
+  <string name="bloodpressureentry_remove">Saar</string>
+  <string name="bloodpressureentry_systolic">Wadna garaaca</string>
+  <string name="bloodpressureentry_diastolic">Wadna garaacita oo joogsada</string>
+  <string name="bloodpressureentry_day">Maalinta</string>
+  <string name="bloodpressureentry_month">Bisha</string>
+  <string name="bloodpressureentry_year">Sanadka</string>
+  <string name="bloodpressureentry_error_systolic_more">Wadna garaaca waa in uu ka bataa joogsiga Wadna garaaca</string>
+  <string name="bloodpressureentry_error_systolic_70">Wadna garaaca kama yaraan karo 70</string>
+  <string name="bloodpressureentry_error_systolic_300">Wadna garaaca kama badnaan karo 300</string>
+  <string name="bloodpressureentry_error_diastolic_40">Joogsiga wadna garaaca kama yaraan karo  40</string>
+  <string name="bloodpressureentry_error_diastolic_180">Joogsiga wadna garaaca kama badnaan karo 180</string>
+  <string name="bloodpressureentry_error_systolic_empty">Gej cadaadiska  wadna garaaca iyo joogsiga wadna garaaca </string>
+  <string name="bloodpressureentry_error_diastolic_empty">Gej cadaadiska  wadna garaaca iyo joogsiga wadna garaaca </string>
+  <string name="bloodpressureentry_error_date_invalid_pattern">Gali taariikh sax ah oo ah DD/MM/YYYY</string>
+  <string name="bloodpressureentry_error_date_is_in_future">Taariikhdu ma noqon karto mustaqbalka</string>
+  <string name="bloodpressureentry_remove_bp_title">Ka saar BP</string>
+  <string name="bloodpressureentry_remove_bp_message">Ma hubtaa inaad rabto inaad ka saarto duubistaan cadaadiska dhiigga?</string>
+  <string name="bloodpressureentry_remove_bp_confirm">Saar</string>
+  <string name="bloodpressureentry_remove_bp_cancel">Baaji</string>
+
+  <!-- Patient summary -->
+  <string name="patientsummary_contentdescription_up_button">Gadaal u laabo</string>
+  <string name="patientsummary_prescriptions_add">Daawooyin</string>
+  <string name="patientsummary_prescriptions_update">Tafatir daawooyinkan</string>
+  <string name="patientsummary_bp_add_new">Dhiig kar</string>
+  <string name="patientsummary_finish_saving_patient">Keydi</string>
+  <string name="patientsummary_finish_refill_medicine">Dib u buuxi daawada</string>
+  <string name="patientsummary_bp_none_added">Ma jiro dhiig kar lagu daray</string>
+  <string name="patientsummary_edit">Tafatir</string>
+
+  <string name="patientsummary_updatephone_dialog_title">Cusboonaysii lambarka taleefanka</string>
+  <string name="patientsummary_updatephone_dialog_message">Lambarka taleefanka bukaanka waxaa horey loogu calaamadiyey inuu khaldan yahay</string>
+  <string name="patientsummary_updatephone_phone_hint">Lambarka telefoonka</string>
+  <string name="patientsummary_updatephone_save">Keydi</string>
+  <string name="patientsummary_updatephone_cancel">Ka bood</string>
+  <string name="patientsummary_addphone_dialog_title">Cusboonaysii lambarka taleefanka</string>
+  <string name="patientsummary_addphone_dialog_message">Lambarka taleefanka bukaanka ayaa la galiyay inta lagu jirey diwaan gelinta</string>
+  <string name="patientsummary_addphone_phone_hint">Lambarka telefoonka</string>
+  <string name="patientsummary_addphone_save">Keydi</string>
+  <string name="patientsummary_addphone_cancel">Ka bood</string>
+  <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
+  <string name="patientsummary_bangladesh_national_id">Kaarka aqoonsiga</string>
+
+  <string name="patientsummary_teleconsult">Tele-consult</string>
+  <string name="patientsummary_log_teleconsult">Gal Teleconsult</string>
+
+  <string name="patientsummary_registered_faciliy_title">La diwaan geliyay</string>
+  <string name="patientsummary_registered_facility">%1$s  %2$s</string>
+
+  <string name="bloodpressuresummaryview_see_all_button">Arag dhamaan</string>
+
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_low">Hoos</string>
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_high">Kor</string>
+
+  <string name="bloodsugar_level_low">Hoos</string>
+  <string name="bloodsugar_level_high">Kor</string>
+
+  <string name="timestamp_today">Maanta</string>
+  <string name="timestamp_yesterday">Shalay</string>
+  <!--suppress PluralsCandidate -->
+  <string name="timestamp_days_ago">%s maalmo hore</string>
+
+  <!-- Prescribed drugs -->
+  <string name="patient_prescribeddrugs_screen_title">Daawooyin</string>
+  <string name="patient_prescribeddrugs_add_custom_prescription">Ku dar daawo kale</string>
+
+  <string name="customprescription_enter_medicine">Geli daawo</string>
+  <string name="customprescription_edit_medicine">Tafatir daawada</string>
+  <string name="customprescription_save_drug">Keydi</string>
+  <string name="customprescription_drug_name_hint">Magaca daawada</string>
+  <string name="customprescription_drug_dosage_hint">Qiyaas qaadashada daawada</string>
+
+  <string name="customprescription_delete_title">Saar daawada</string>
+  <string name="customprescription_delete_message">Ma hubtaa inaad rabto inaad ka saarto daawadan?</string>
+  <string name="customprescription_delete_confirm">Saar</string>
+  <string name="customprescription_delete_cancel">Baaji</string>
+
+  <!-- Login -->
+  <string name="loginpin_go_back">Ku noqo shaashadda lambarka taleefanka</string>
+
+  <!-- App lock -->
+  <string name="applock_logout">Adi ma aha?</string>
+  <string name="applock_reset_pin_alert_title">Dib u hagaaji lambarka sirta ah ee amniga?</string>
+  <string name="applock_reset_pin_alert_message">Ma hubtaa inaad rabto inaad dib u samayso lambarkaaga sirta ah ee amniga?</string>
+  <string name="applock_reset_pin_alert_confirm">Dib u samee</string>
+  <string name="applock_reset_pin_alert_cancel">Baaji</string>
+
+  <!-- PIN entry -->
+  <string name="pinentry_forgotpin">Hilmaan lambarka sirta ah?</string>
+  <string name="pinentry_error_incorrect_pin_on_first_attempt">Fadlan ha u eekaysiinin lambarka sirta ah ee hore</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">Lambarka sirta ah oo khaldan, %s isku dayitaan ayaa ku dhiman</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">Waxaad samaysay %s isku dayo khaldan</string>
+  <string name="pinentry_pin_number_hint">Lambarka sirta ah ee amniga</string>
+  <string name="pinentry_bruteforcelock_timer_label">Isku day markale hadaw</string>
+  <!-- minutes:seconds -->
+
+  <!-- Registration -->
+  <string name="registrationphone_phone_number_label">Lambarkaaga taleefanka</string>
+  <string name="registrationphone_error_invalid_number">Hubi lambarka taleefanka. Waxay umuuqataa inay aad u gaabantahay.</string>
+  <string name="registration_loggedout_dialog_title">Waa lagaa saaray</string>
+  <string name="registration_loggedout_dialog_message">Fadlan mar labaad soo gal si aad u sii wadato</string>
+  <string name="registration_loggedout_dialog_confirm">Haye</string>
+  <string name="registrationphone_next">Xigga</string>
+
+  <string name="registrationname_name_label">Magacaaga oo buuxa noo sheeg</string>
+  <string name="registrationname_error_empty_name">Fadlan geli magacaaga oo buuxa</string>
+  <string name="registrationname_next">Xigga</string>
+
+
+  <string name="registrationpin_pin_label">Sameyso lambar sir ah</string>
+  <string name="registrationpin_pin_hint">Xusuusnaw lambarkaaga sirta ah, waxaad u baahan doontaa hadaw</string>
+  <string name="registrationpin_error_incomplete_pin">Lambarka amniga wuu gaaban yahay. Fadlan gali 4 lambar.</string>
+
+  <string name="registrationconfirmpin_confirm_pin_label">Geli lambarka AMNIGA markale</string>
+  <string name="registrationconfirmpin_error_pin_mismatch">Ha u eekaysiinin lambarka sirta ah ee hore</string>
+  <string name="registrationconfirmpin_reset_pin">Dib u samee lambar sir ah</string>
+
+  <string name="registrationlocation_screen_title">Helitaanka goobta</string>
+  <string name="registrationlocation_skip_permission">Ka bood</string>
+  <string name="registrationlocation_permission_rationale_description">Goobtaadu waxay naga caawin doontaa inaan helno rugtaada caafimaad</string>
+  <string name="registrationlocation_permission_rationale_title">Si dhakhso leh u hel rugtaada caafimaadka</string>
+  <string name="registrationlocation_allow_access">Ogolaw helitaanka goobta</string>
+
+  <!-- Onboarding -->
+  <string name="onboarding_get_started">Bilaw</string>
+  <string name="screenonboarding_intro_1">Raad \&amp; find \nthousands of patients \nwith</string>
+  <string name="screenonboarding_intro_1_hypertension">\ dhiig kar</string>
+  <string name="screenonboarding_intro_2">Hay diwaanada\n</string>
+  <string name="screenonboarding_intro_2_bp">Dhiib kar \n</string>
+  <string name="screenonboarding_intro_2_and">\&amp;</string>
+  <string name="screenonboarding_intro_2_medicines">\ daawooyin</string>
+  <string name="screenonboarding_intro_3">Bukaanka wuxuu qaatay</string>
+  <string name="screenonboarding_intro_3_reminder">\nfariimaha xasuusinta ah</string>
+  <string name="screenonboarding_intro_3_visits">\ninaad ku soo noqotid booqashooyinka</string>
+
+  <!-- Overdue List -->
+  <string name="overdue_no_patients">Ma jiraan bukaanno daahay</string>
+  <string name="overdue_empty_desc">Waxaad awoodi doontaa inaad wacdo bukaanada ka baaqda booqashadooda jadwalka ah ee akhriska cadaadiska dhiigga karka ee soo socda.</string>
+  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_diagnosis_diabetes">Sokorow</string>
+  <string name="overdue_list_item_diagnosis_hypertension">Dhiig kar</string>
+  <string name="overdue_list_item_diagnosis_none">Midna</string>
+  <plurals name="overdue_list_item_appointment_overdue_days">
+    <item quantity="one">%s day overdue</item>
+    <item quantity="other">%s days overdue</item>
+  </plurals>
+  <string name="overduelist_diagnosis_label">Dx</string>
+  <string name="overduelist_visited">Booqday</string>
+  <string name="overduelist_high_risk">Halis sare</string>
+  <string name="overduelist_transferred">Loo gudbiyay</string>
+
+  <!-- Facility change -->
+
+  <!-- Enter OTP -->
+  <string name="enterotp_check_sms_sent_to">Hubi fariinta gaaban ee laguu soo diray</string>
+  <string name="enterotp_enter_verification_code">Gali koodhka xaqiijinta</string>
+  <string name="enterotp_incorrect_code">Koodh khaldan, fadlan isku day markale</string>
+  <string name="enterotp_resend_sms">Dib usoo dir fariinta gaaban</string>
+  <string name="enterotp_sms_sent">Fariin gaaban oo cusub oo xaqiijin ah ayaa lasoo diray</string>
+
+  <!-- Schedule appointment -->
+  <string name="scheduleappointment_next_visit_in">U qorshee soo booqashada xigta</string>
+  <string name="scheduleappointment_not_now">Hadda ma aha</string>
+  <string name="scheduleappointment_done">La dhameeyay</string>
+  <string name="scheduleappointment_next">Xigga</string>
+  <plurals name="scheduleappointment_appointment_in_days">
+    <item quantity="one">%s day</item>
+    <item quantity="other">%s maalmo</item>
+  </plurals>
+  <plurals name="scheduleappointment_appointment_in_weeks">
+    <item quantity="one">%s week</item>
+    <item quantity="other">%s todobaadyo</item>
+  </plurals>
+  <plurals name="scheduleappointment_appointment_in_months">
+    <item quantity="one">%s month</item>
+    <item quantity="other">%s billo</item>
+  </plurals>
+
+  <!-- Forgot PIN -->
+  <string name="forgotpin_create_new_pin">Abuur nambarka amniga cusub</string>
+  <string name="forgotpin_create_new_pin_invalid_pin">Lambarka amniga wuu gaaban yahay. Fadlan gali 4 lambar.</string>
+  <string name="forgotpin_confirm_pin">Geli lambarka SIRTA markale</string>
+  <string name="forgotpin_confirm_pin_message">Geli lambarkaaga SIRTA ah markale si aad u xaqiijiso</string>
+  <string name="forgotpin_error_pin_mismatch">Fadlan ha u eekaysiinin lambarka sirta ah ee hore</string>
+
+  <!-- Reports -->
+  <string name="reports_come_back_later">Gadaal usoo laabo markale</string>
+  <string name="reports_you_will_be_able_to_see">Waxaad awoodi doontaa inaad ku aragto warbixinnada dhiig-karka ee rugtaada caafimaad halkan.</string>
+
+  <!-- Medical History -->
+  <!--suppress UnusedResources used in enum -->
+  <string name="medicalhistory_question_heartattack">Wadna xanuun</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_stroke">Dhiig fadhiisi</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_kidney">Cudurada kalyaha</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_diagnosed_with_hypertension">Dhiig kar</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_diabetes">Sokorow</string>
+  <string name="newmedicalhistory_next">Xigga</string>
+  <string name="newmedicalhistory_yes">Haa</string>
+  <string name="newmedicalhistory_no">Maya</string>
+  <string name="newmedicalhistory_history">Taariikh</string>
+  <string name="newmedicalhistory_diagnosis">Baaritaan (Loo baahanyahay)</string>
+
+  <!--Prescribed Drug with Dosages Sheet-->
+  <string name="prescribed_drugs_dosage_none">Midna</string>
+  <string name="prescribed_drugs_dosage_remove">Saar</string>
+  <string name="prescribed_drug_with_dosages_sheet_drug_name">%s qiyaas qaadashada daawo</string>
+
+  <!--Scan Simple ID-->
+  <string name="scansimpleid_title">Iskaan garee kaarka aqoonsiga</string>
+  <string name="scansimpleid_shortcode_error_empty">Geli lambarka baasaboorka BP</string>
+  <string name="scansimpleid_shortcode_error_not_required_length">Dhererka lambarka Baasaboorka BP wuxuu ka yar yahay 7 lambar</string>
+  <string name="scansimpleid_type_bp_passport_number">ama qor lambarka Baasaboorka BP</string>
+
+  <!--- Sync Indicator-->
+  <string name="syncindicator_status_pending">Hawlgalinta ayaa hakad la galiyay</string>
+  <string name="syncindicator_status_failed">Hawlgalinta ayaa guul daraysatay</string>
+  <string name="syncindicator_status_syncing">Hawlgalinaya…</string>
+  <string name="syncindicator_status_synced_just_now">La hawlgaliyay hadda</string>
+  <string name="syncindicator_status_synced_min_ago">La hawl galiyay %s daqiiqad ka hor</string>
+  <string name="syncindicator_dialog_error_network">Hubso inaad haysato xiriir internet oo shaqeynaya si aad uwaafajiso diiwaanada bukaanka.</string>
+  <string name="syncindicator_dialog_button_text">Haye</string>
+  <string name="syncindicator_dialog_error_server">Hawlgalinta saafarka ayaa hoos u dhacaya xilligan. Fadlan isku day mar dambe ama la xiriir kormeerahaaga.</string>
+
+  <!-- Help Screen -->
+  <string name="help_title">Caawimaad</string>
+  <string name="help_no_connection">Malaha khad internet</string>
+  <string name="help_something_went_wrong">Waxbaa qaldamay</string>
+  <string name="help_try_again">Iskuday markale</string>
+
+  <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_yes">Haa</string>
+  <string name="linkidwithpatient_button_back">Gadaal</string>
+  <string name="linkidwithpatient_text">Ku dar baasaboorka BP</string>
+  <string name="linkidwithpatient_patient_text">%1$s?</string>
+
+  <!-- Add ID to Patient: Search -->
+
+  <!-- Recent Patients -->
+  <string name="recent_patients_toolbar_title">Hadda</string>
+
+  <!-- Recent Patients Item View -->
+  <string name="recent_patients_itemview_last_seen">Booqday:\u0020</string>
+  <string name="recent_patients_itemview_new_registration">Diwaan gelin cusub</string>
+
+  <!-- Add ID to Patient: Search Results-->
+
+  <!-- App update : Dialog -->
+  <string name="appupdatedialog_title">Cusboonaysii app ka</string>
+  <string name="appupdatedialog_body">Waxaa lagu geyn doonaa Google Play Store si aad u cusbooneysiiso Simple.</string>
+  <string name="appupdatedialog_positive_button_text">Cusboonaysii</string>
+  <string name="appupdatedialog_negative_button_text">Hadda ma aha</string>
+
+  <!-- All Patients In Facility View-->
+  <string name="allpatientsinfacility_nopatients_message">Waxaad awoodi doontaa inaad halkan ku aragto dhammaan bukaanada ka diiwaangashan xaruntaada.</string>
+  <string name="allpatientsinfacility_nopatients_title">Malaha bukaano %1$s</string>
+  <string name="allpatientsinfacility_foundpatients_header">Dhamaan bukaanada: %1$s</string>
+
+  <!--Registration loader screen -->
+  <string name="registrationloader_error_unexpected_title">Waxbaa qaldamay</string>
+  <string name="registrationloader_error_unexpected_message">Fadlan iskuday markale waqti kadib ama laxiriir kormeerahaaga.</string>
+  <string name="registrationloader_error_internet_connection_title">Malaha khad internet</string>
+  <!--suppress UnusedResources -->
+  <string name="registrationloader_retry">Isku day markale</string>
+
+  <!-- Short code search -->
+  <string name="shortcodesearchresult_enter_patient_name_button">Geli magaca bukaanka</string>
+
+  <!-- Simple video -->
+  <string name="simple_video_watch_video">Daawo Fiidyawga</string>
+  <string name="simple_video_how_to_use_the_simple_app">Sida loo isticmaalo app ka Simple</string>
+  <string name="simple_video_duration">%s daqiiqo</string>
+
+  <!-- Settings -->
+  <string name="settings_title">Setinka</string>
+  <string name="settings_user_name_icon_content">Magaca Astaanta adeesadaha  setinka</string>
+  <string name="settings_user_phone_icon_content">Lambarka telefoonka Astaanta adeesadaha setinka</string>
+  <string name="settings_current_language_icon_content">Luuqada astaanta setinka ee hadda</string>
+  <string name="settings_app_version_icon_content">Nooca astaanta setinka app ka</string>
+  <string name="settings_name">Magaca</string>
+  <string name="settings_number">Lambarka telefoonka</string>
+  <string name="settings_language">Luuqada</string>
+  <string name="settings_change">Baddel</string>
+  <string name="settings_language_hint">Xullo luuqad</string>
+  <string name="settings_software">Cusboonaysii</string>
+  <string name="settings_update">Cusboonaysii</string>
+  <string name="settings_software_version">Nooca %1$s</string>
+
+  <!-- Change language screen -->
+  <string name="changelanguage_title">Xullo luuqadaada</string>
+  <string name="changelanguage_done">La dhameeyay</string>
+
+  <!-- Placeholder -->
+  <string name="placeholder_loading_title">Fadlan sug…</string>
+  <string name="placeholder_loading_message">Dayactirka keydka macluumaadka ayaa socda. Tani waxay qaadan doontaa oo kaliya daqiiqad.</string>
+
+  <!-- Select Country Screen -->
+  <string name="selectcountry_logo_contentdescription">Sumada Simple</string>
+  <string name="selectcountry_next">Xigga</string>
+  <string name="selectcountry_title">Xullo wadankaaga</string>
+  <string name="selectcountry_networkerror">Malaha khadka internetka!</string>
+  <string name="selectcountry_servererror">Cilad saafarka! Fadlan iskuday markale hadhow!</string>
+  <string name="selectcountry_genericerror">Waxbaa qaldamay! Fadlan iskuday markale hadhow!</string>
+  <string name="selectcountry_retry">Iskuday markale</string>
+  <string name="scheduleappointment_at">Barta</string>
+  <string name="scheduleappointment_change">Baddel</string>
+
+  <!-- BloodSugar type picker -->
+  <string name="bloodsugartype_picker_title">Xullo cabir</string>
+  <string name="bloodsugartype_picker_desc">Choose ‘RBS’ if you are not sure.</string>
+  <string name="bloodsugartype_rbs">Sonkorta dhiiga oo aan kala sooc lahayn (RBS)</string>
+  <string name="bloodsugartype_fbs">Ku soomintaanka sonkorta dhiiga (FBS)</string>
+  <string name="bloodsugartype_ppbs">Sonkorta dhiigga ka dib cuntadar (PPBS)</string>
+  <string name="bloodsugarentry_sheet_title_enter_date">Taariikhda booqashada</string>
+  <string name="bloodsugarentry_day">Maalin</string>
+  <string name="bloodsugarentry_month">Bisha</string>
+  <string name="bloodsugarentry_year">Sanadka</string>
+  <string name="bloodsugarentry_error_lower_limit">Qadar kama yaraan karo 30 mg/dL</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">Qadar kama yaraan karo  3\u0025</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">Qadar kama yaraan karo 1.66 mmol/L</string>
+  <string name="bloodsugarentry_error_higher_limit">Qadarku kama badan karo 30 mg/dL 1000 mg/dL</string>
+  <string name="bloodsugarentry_error_higher_limit_hba1c">Qiyaastu kam badan karto 25\u0025</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">Qiyaastu kam badan karto 55.49 mmol/L</string>
+  <string name="bloodsugarentry_error_empty">Qiyaastu ma madnaan karto</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">Gali taariikh sax ah oo ah DD/MM/YYYY</string>
+  <string name="bloodsugarentry_error_date_is_in_future">Taariikhdu ma noqon karto mustaqbalka</string>
+  <string name="bloodsugarentry_random_title">Sonkorta dhiiga oo aan kala sooc lahayn</string>
+  <string name="bloodsugarentry_post_prandial_title">Sonkorta dhiigga ka dib cuntada</string>
+  <string name="bloodsugarentry_fasting_title">Ku soomitaanka sonkorta dhiiga</string>
+  <string name="bloodsugarentry_remove">Saar</string>
+  <string name="bloodsugarentry_edit_random_title">Tafatir sonkorta dhiiga oo aan kala sooc lahayn</string>
+  <string name="bloodsugarentry_edit_post_prandial_title">Tafatir sonkorta dhiiga oo aan kala sooc lahayn</string>
+  <string name="bloodsugarentry_edit_fasting_title">Tafatir ku soomitaanka sonkorta dhiiga</string>
+  <string name="bloodsugarentry_edit_hba1c_title">Tafatir HbA1c</string>
+
+  <!-- Confirm remove blood sugar dialog -->
+  <string name="bloodsugarentry_remove_blood_sugar_title">Ka saar Dhiig Sokorowga</string>
+  <string name="bloodsugarentry_remove_blood_sugar_message">Ma hubtaa inaad rabto inaad ka saarto diwaanka sonkorta dhiiga?</string>
+  <string name="bloodsugarentry_remove_blood_sugar_confirm">Saar</string>
+  <string name="bloodsugarentry_remove_blood_sugar_cancel">Baaji</string>
+
+  <!-- Blood Sugar Summary view -->
+  <string name="bloodsugarsummaryview_no_blood_sugars">Ma jiraan sonkor dhiig oo lagu daray</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">Sokorow</string>
+  <!-- Blood Pressure History screen -->
+  <string name="bloodpressurehistory_add_bp_button">Dhiig kar</string>
+  <string name="bloodpressurehistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
+  <!-- Blood Sugar History screen -->
+  <string name="bloodsugarhistory_add_blood_sugar_button">Sokorow</string>
+  <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
+  <!-- Summary CV History view -->
+  <string name="medicalhistorysummaryview_history">Taariikh</string>
+  <string name="medicalhistorysummaryview_diagnosis">Baaritaan (Loo baahanyahay)</string>
+
+  <!-- Summary prescriptions view -->
+  <string name="drugsummaryview_no_medicines">Ma jiraan daawooyin lagu daray</string>
+
+  <!-- Access Denied screen -->
+  <string name="accessdeniedscreen_title_access_denied">Gelitaanka waa loo diiday</string>
+  <string name="accessdeniedscreen_description">Gelitaanka Simple waa la diiday. Fadlan la xiriir kormeerahaaga haddii aad u malaynayso inay taasi qalad tahay. \n\nHaddii gelitaankaaga dib loo soo celiyo, iska tirtir Simple oo ka soo dejiso dukaanka Play store.</string>
+
+  <!-- Confirm Facility change sheet -->
+  <string name="confirmfacilitychange_title">U wareeji xarunta</string>
+  <string name="confirmfacilitychange_negative_button">Baaji</string>
+  <string name="confirmfacilitychange_positive_button">Haa</string>
+  <string name="confirmfacilitychange_facility_name">%s?</string>
+
+  <!-- Registration Confirm Facility Change Sheet -->
+  <string name="registrationconfirmfacility_title">Ma waxaad joogtaa?</string>
+  <string name="registrationconfirmfacility_positive_button">Haa</string>
+  <string name="registrationconfirmfacility_negative_button">Baaji</string>
+
+  <!-- Alert facility change -->
+  <string name="alertfacilitychange_title">Ma waxaad joogtaa</string>
+  <string name="alertfacilitychange_yes_button">Haa</string>
+  <string name="alertfacilitychange_change_button">Baddel</string>
+  <string name="alertfacilitychange_facility_name">%s?</string>
+
+  <!-- Prescribed Drug Summary -->
+  <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
+
+  <!-- Contact patient -->
+  <string name="contactpatient_agreed_to_visit">Ku calaamadee bukaanka \"Loo ogolaaday inuu soo booqdo\"</string>
+  <string name="contactpatient_remind_call_later">I xasuusi inaan mardambe waco</string>
+  <string name="contactpatient_remove_from_list">Ka saar liiska muddada dhaafay</string>
+  <string name="contactpatient_result_of_call">Natiijada wicitaanka</string>
+  <string name="contactpatient_call_normal">Caadi</string>
+  <string name="contactpatient_call_secure">Aamin</string>
+  <string name="contactpatient_help_text">Wicitaano aamin ah qari lambarkaaga waana khad bilaash ah</string>
+  <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
+  <string name="contactpatient_call_later_in">Mar dambe soo wac</string>
+  <string name="contactpatient_change">Baddel</string>
+  <string name="contactpatient_done">La dhameeyay</string>
+  <plurals name="contactpatient_days">
+    <item quantity="one">%s day</item>
+    <item quantity="other">%s aalmo</item>
+  </plurals>
+  <plurals name="contactpatient_weeks">
+    <item quantity="one">%s week</item>
+    <item quantity="other">%s todobaadyo</item>
+  </plurals>
+  <plurals name="contactpatient_months">
+    <item quantity="one">%s month</item>
+    <item quantity="other">%s billo </item>
+  </plurals>
+  <string name="contactpatient_select_a_reason">Dooro sababta</string>
+  <string name="contactpatient_patient_already_visited">Bukaanku horay ayuu usoo booqday</string>
+  <string name="contactpatient_patient_is_not_responding">Bukaanku ma jawaabayo</string>
+  <string name="contactpatient_invalid_phone_number">Lambarka taleefanka ma shaqaynayo</string>
+  <string name="contactpatient_public_hospital_transfer">Waxaa loo wareejiyay xarun caafimaad dadwayne oo kale</string>
+  <string name="contactpatient_moved_to_private">U wareegay dhakhtar gaar ah</string>
+  <string name="contactpatient_patient_died">Dhintay</string>
+  <string name="contactpatient_other_reason">Sabab kale</string>
+
+  <!-- Deep link -->
+  <string name="deeplink_patient_profile_not_found">Muuqaalka bukaanka lama heli karo</string>
+  <string name="deeplink_patient_profile_not_found_desc">Fadlan hubi intarneetkaaga oo cusboonaysii bukaanada</string>
+  <string name="deeplink_patient_profile_not_found_positive_action">Haye</string>
+  <string name="deeplink_no_patient">Bukaanka lama heli karo</string>
+  <string name="deeplink_no_patient_desc">Bilaw la hadalka dhakhtarka onleenka ah oo waydii shaqaalaha daryeelka caafimaad macluumaadka bukaanka</string>
+  <string name="deeplink_no_patient_positive_action">Haye</string>
+
+  <!-- Delete patient -->
+  <string name="deletepatient_select_a_reason">Dooro sababta</string>
+  <string name="deletereason_duplicate_patient">Kani waa bukaan nuqul laga sameeyay</string>
+  <string name="deletereason_accidental_registration">Bukaanka si khaldan ayaa loo diwaangeliyay</string>
+  <string name="deletereason_died">Dhintay</string>
+  <string name="deletereason_confirm_title">Tirtir bukaanka</string>
+  <string name="deletereason_confirm_message">Tani waxay saari doontaa %1$s</string>
+  <string name="deletereason_confirm_positive">Tirtir</string>
+  <string name="deletereason_confirm_negative">Baaji</string>
+
+  <!-- Splash screen -->
+  <string name="screensplash_next">Xigga</string>
+
+  <!-- Contact doctor sheet -->
+  <string name="contactdoctor_new_title">Dhakhaatiirta la heli karo</string>
+  <string name="contactdoctor_new_subtitle">Isticmaal WhatsApp  hadii ay suuragal tahay</string>
+
+  <!-- Intro Video Screen -->
+  <string name="screenintrovideo_how_to_use_simple_app">Sida loo isticmaalo app-ka fudud</string>
+  <string name="screenintrovideo_watch_video">Daawo Fiidyawga</string>
+  <string name="screenintrovideo_skip">Ka bood</string>
+
+  <!-- Assigned Facility -->
+  <string name="assigned_facility_view_title">Xarunta loo qoondeeyay</string>
+  <string name="assigned_facility_view_change">Baddel</string>
+
+  <!-- Facility Picker -->
+  <string name="facilitypicker_search_hint">Raadi rugtaada caafimaad</string>
+  <!-- Street, District, State -->
+  <string name="facilitypicker_header_suggested_facilities">Rugaha caafimaad ee lasoo jeediyay</string>
+  <string name="facilitypicker_header_all_facilities">Dhamaan rugaha caafimaad</string>
+
+  <!--  TeleMedicine User Signature-->
+  <string name="screen_signature_sign_in_this_box">Saxeex sanduuqan</string>
+
+  <!-- Drug Duration -->
+  <string name="drug_duration_title">%1$s %2$s</string>
+  <string name="drugDurationLabel">Maalmo</string>
+  <string name="drug_duration_empty_error">Muddada daawadu ma madhnaan karto</string>
+  <string name="drug_duration_max_error">Muddada daawadu kama badan karto %1$smaalmood</string>
+
+  <!-- Teleconsultation success-->
+  <string name="screen_teleconsult_success_add_prescription">Ku dar daawada dhakhtarku qoro?</string>
+  <string name="screen_teleconsult_success_yes">Haa</string>
+  <string name="screen_teleconsult_success_no">Maya</string>
+  <string name="screen_teleconsult_success_teleconsult_recorded">La hadalka dhakhtarka onleenka ah waa la diwaangeliyay</string>
+  <string name="screen_teleconsult_success_patient_information">%1$s, %2$s, %3$s</string>
+  <string name="sheet_medicine_frequency_od">OD</string>
+  <string name="sheet_medicine_frequency_bd">BD</string>
+  <string name="sheet_medicine_frequency_tds">TDS</string>
+  <string name="sheet_medicine_frequency_qds">QDS</string>
+  <string name="sheet_medicine_frequency_save">Keydi</string>
+
+  <!-- Teleconsult Record Screen -->
+  <string name="screen_teleconsult_record">Diwaanka la hadalka dhakhtarka onleenka ah</string>
+  <string name="screen_teleconsult_record_type">Nooca la hadalka dhakhtarka onleenka ah</string>
+  <string name="screen_teleconsult_record_type_audio">Wicitaan maqal ah</string>
+  <string name="screen_teleconsult_record_type_video">Wicitaan fiidyaw ah</string>
+  <string name="screen_teleconsult_record_type_message">Fariin</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">Bukaanku wuxuu qaadanayaan daawooyinka dhiig-karka iyo sonkorowga si joogta ah</string>
+  <string name="screen_teleconsult_record_patient_consented">Bukaanku wuu ogolaaday dhakhtar la hadalka onleenka ah</string>
+  <string name="screen_teleconsult_record_done">La dhameeyay</string>
+  <string name="teleconsultnotrecordeddialog_title">Dhakhtar la hadalka onleenka ah lama diwaan gelin</string>
+  <string name="teleconsultnotrecordeddialog_body">Ma hubtaa inaad rabto inaad baajiso?</string>
+  <string name="teleconsultnotrecordeddialog_positive_button_text">Haa</string>
+  <string name="teleconsultnotrecordeddialog_negative_button_text">Maya</string>
+
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">Adigu looma oggola inaad gasho latalinta telefoonka</string>
+  <string name="deeplink_please_check_with_your_supervisor">Fadlan ka hubi kormeerahaaga</string>
+  <string name="deeplink_okay_positive_action">Haye</string>
+
+  <string name="screen_teleconsult_prescription_next">Xigga</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">Daawooyin</string>
+  <string name="view_teleconsult_medicines_add">Ku dar</string>
+  <string name="view_teleconsult_medicines_edit">Tafatir</string>
+  <string name="view_teleconsult_medicines_required_error">Kudar ugu yaraan hal daawo</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="one">%1$s maalmo</item>
+    <item quantity="other">%1$s maalmo</item>
+  </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">Tilmaamaha bukaanka</string>
+  <string name="view_teleconsult_doctor_info_registration_id">Aqoonsiga diiwaangelinta caafimaadka</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">Saxeexida dawadan waxaan ku qirayaa inaan ahay %1$s</string>
+  <string name="view_teleconsult_doctor_info_add_signature">Ku dar saxeexa</string>
+  <string name="view_teleconsult_doctor_info_signature_error">Ku dar saxeexa</string>
+
+  <string name="screen_teleconsult_share_prescription_download">Soo dejiso</string>
+  <string name="screen_teleconsult_share_prescription_share">La wadaag</string>
+  <string name="screen_teleconsult_share_prescription_done">La dhameeyay</string>
+  <string name="screen_teleconsult_share_prescription_image_using">La wadaag sawir adoo adeegsanaya</string>
+  <string name="screen_teleconsult_share_prescription_title">Daawada la qoray</string>
+  <string name="screen_teleconsult_share_prescription_image_saved">Daawada laguu qoro ayaa lagu keydsadaa Soo degsashada</string>
+
+  <!-- Select diagnosis error alert dialog -->
+  <string name="select_diagnosis_error_diagnosis_required">Baaritaanka ayaa Loo baahanyahay</string>
+  <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Xullo baaritaanka cudurka dhiig karka iyo sokorowga labadaba</string>
+  <string name="select_diagnosis_error_ok">Haye</string>
+  <string name="sheet_teleconsult_status_title">Latalin telefoonka ah ma dhammaystirtay?</string>
+  <string name="sheet_teleconsult_status_yes">Haa</string>
+  <string name="sheet_teleconsult_status_no">Maya</string>
+  <string name="sheet_teleconsult_status_waiting">Weli sugaya</string>
+  <string name="sheet_teleconsult_status_done">La dhameeyay</string>
+
+  <!-- Setup activity -->
+  <string name="setup_cannot_run">Ma shaqaynayo Barnaamijka appka</string>
+  <string name="setup_rooted">Simple laguma ordi karo qalab la jabiyay.</string>
+  <string name="setup_close">Xir</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">Dooro</string>
+  <string name="blood_sugar_unit_selection_done">LA DHAMEEYAY</string>
+
+  <!-- BP passport sheet -->
+  <string name="sheet_bp_passport_register_new_patient">Diiwaangeli bukaan cusub</string>
+  <string name="sheet_bp_passport_add_to_existing_patient">Ku dar bukaan hore</string>
+  <string name="sheet_bp_passport_number">Baasaboorka BP %1$s</string>
+
+  <!-- Instant search -->
+  <string name="patientinstantsearch_assigned_facility_header">Loo xilsaaray %1$s</string>
+  <string name="patientinstantsearch_nearby_facilities_header">Ka yimid xarumaha u dhow</string>
+  <string name="patientsearch_error_no_patients_in_facility">Waxaad awoodi doontaa inaad halkan ku aragto dhammaan bukaanada ka diiwaangashan xaruntaada</string>
+  <string name="patientsearch_error_no_search_results">Ma jiro bukaan u dhigma</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading">Bukaan majiraan %1$s</string>
+
+</resources>

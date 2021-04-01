@@ -13,6 +13,8 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenInjector
 import org.simple.clinic.bp.assignbppassport.BpPassportSheet
 import org.simple.clinic.bp.history.BloodPressureHistoryScreenInjector
+import org.simple.clinic.contactpatient.ContactPatientBottomSheet
+import org.simple.clinic.contactpatient.views.SetAppointmentReminderView
 import org.simple.clinic.deniedaccess.AccessDeniedScreenInjector
 import org.simple.clinic.di.PagingModule
 import org.simple.clinic.drugs.selection.EditMedicinesScreen
@@ -133,7 +135,9 @@ interface TheActivityComponent :
     BpPassportSheet.Injector,
     AlertFacilityChangeSheet.Injector,
     FacilityChangeScreen.Injector,
-    ConfirmFacilityChangeSheet.Injector {
+    ConfirmFacilityChangeSheet.Injector,
+    ContactPatientBottomSheet.Injector,
+    SetAppointmentReminderView.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

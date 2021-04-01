@@ -5,7 +5,6 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
 import org.simple.clinic.bloodsugar.selection.type.di.BloodSugarTypePickerSheetComponent
 import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
-import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
 import org.simple.clinic.deeplink.di.DeepLinkComponent
 import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
 import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetComponent
@@ -42,7 +41,6 @@ interface AppComponent {
   fun dosagePickerSheetComponent(): DosagePickerSheetComponent.Factory
   fun bloodSugarTypePickerSheetComponent(): BloodSugarTypePickerSheetComponent.Factory
   fun customPrescriptionEntrySheetComponent(): CustomPrescriptionEntrySheetComponent.Factory
-  fun patientContactBottomSheetComponent(): ContactPatientBottomSheetComponent.Factory
   fun deepLinkComponent(): DeepLinkComponent.Factory
   fun signatureComponent(): SignatureComponent.Factory
   fun drugDurationComponent(): DrugDurationComponent.Factory

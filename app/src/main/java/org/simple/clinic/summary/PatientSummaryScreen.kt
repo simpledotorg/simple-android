@@ -501,7 +501,7 @@ class PatientSummaryScreen :
   }
 
   override fun openPatientContactSheet(patientUuid: UUID) {
-    activity.startActivity(ContactPatientBottomSheet.intent(activity, patientUuid))
+    router.push(ContactPatientBottomSheet.Key(patientUuid))
   }
 
   override fun openContactDoctorSheet(patientUuid: UUID) {

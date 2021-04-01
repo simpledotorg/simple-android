@@ -210,7 +210,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
   private fun appointmentDateClicks() = changeAppointmentDate.clicks().map { ManuallySelectAppointmentDateClicked }
 
   private fun openFacilitySelection() {
-    startActivityForResult(Intent(this, FacilitySelectionActivity::class.java), REQCODE_FACILITY_SELECT)
+    startActivityForResult(Intent(requireContext(), FacilitySelectionActivity::class.java), REQCODE_FACILITY_SELECT)
   }
 
   override fun closeSheet() {
@@ -223,7 +223,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
   override fun openTeleconsultStatusSheet(teleconsultRecordUuid: UUID) {
     startActivityForResult(
         TeleconsultStatusSheet.intent(
-            context = this,
+            context = requireContext(),
             teleconsultRecordId = teleconsultRecordUuid
         ),
         REQUEST_CODE_TELECONSULT_STATUS_CHANGED
@@ -257,7 +257,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     val today = LocalDate.now(userClock)
 
     ThreeTenBpDatePickerDialog(
-        context = this,
+        context = requireContext(),
         preselectedDate = date,
         allowedDateRange = today.plusDays(1)..today.plusYears(1),
         clock = userClock,

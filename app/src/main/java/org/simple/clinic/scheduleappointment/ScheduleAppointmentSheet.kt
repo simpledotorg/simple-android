@@ -15,7 +15,6 @@ import com.jakewharton.rxbinding3.view.clicks
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.parcel.Parcelize
@@ -26,7 +25,6 @@ import org.simple.clinic.databinding.SheetScheduleAppointmentBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.DeferredEventSource
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.newentry.ButtonState
@@ -37,7 +35,6 @@ import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelection
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom
 import org.simple.clinic.summary.teleconsultation.status.TeleconsultStatusSheet
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
@@ -136,45 +133,6 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
   private val facilityChanges: DeferredEventSource<ScheduleAppointmentEvent> = DeferredEventSource()
   private val REQUEST_CODE_TELECONSULT_STATUS_CHANGED = 11
 
-  private val events by unsafeLazy {
-    Observable
-        .mergeArray(
-            decrementClicks(),
-            incrementClicks(),
-            notNowClicks(),
-            doneClicks(),
-            appointmentDateClicks(),
-            nextClicks(),
-            calendarDateSelectedEvents
-        )
-        .compose(ReportAnalyticsEvents())
-  }
-
-  private val delegate by unsafeLazy {
-    val patientUuid = intent.extras!!.getSerializable(KEY_PATIENT_UUID) as UUID
-
-    val uiRenderer = ScheduleAppointmentUiRenderer(this)
-
-    MobiusDelegate.forActivity(
-        events = events.ofType(),
-        defaultModel = ScheduleAppointmentModel.create(
-            patientUuid = patientUuid,
-            timeToAppointments = config.scheduleAppointmentsIn,
-            userClock = userClock,
-            doneButtonState = ButtonState.SAVED,
-            nextButtonState = NextButtonState.SCHEDULED
-        ),
-        update = ScheduleAppointmentUpdate(
-            currentDate = LocalDate.now(userClock),
-            defaulterAppointmentPeriod = config.appointmentDuePeriodForDefaulters
-        ),
-        init = ScheduleAppointmentInit(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render,
-        additionalEventSources = listOf(facilityChanges)
-    )
-  }
-
   override fun defaultModel() = ScheduleAppointmentModel.create(
       patientUuid = screenKey.patientId,
       timeToAppointments = config.scheduleAppointmentsIn,
@@ -218,26 +176,9 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     binding = SheetScheduleAppointmentBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    delegate.onRestoreInstanceState(savedInstanceState)
-
     changeFacilityButton.setOnClickListener {
       openFacilitySelection()
     }
-  }
-
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
-
-  override fun onStop() {
-    delegate.stop()
-    super.onStop()
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    delegate.onSaveInstanceState(outState)
   }
 
   override fun attachBaseContext(baseContext: Context) {

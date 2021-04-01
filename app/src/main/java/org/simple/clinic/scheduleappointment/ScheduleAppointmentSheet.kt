@@ -52,6 +52,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   companion object {
     private const val REQCODE_FACILITY_SELECT = 100
+    private const val REQUEST_CODE_TELECONSULT_STATUS_CHANGED = 11
 
     fun sheetOpenedFrom(result: Succeeded): AppointmentSheetOpenedFrom {
       return result.result as AppointmentSheetOpenedFrom
@@ -112,7 +113,6 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   private val calendarDateSelectedEvents: Subject<AppointmentCalendarDateSelected> = PublishSubject.create()
   private val facilityChanges: DeferredEventSource<ScheduleAppointmentEvent> = DeferredEventSource()
-  private val REQUEST_CODE_TELECONSULT_STATUS_CHANGED = 11
 
   override fun defaultModel() = ScheduleAppointmentModel.create(
       patientUuid = screenKey.patientId,

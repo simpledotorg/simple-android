@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -34,7 +33,6 @@ import org.simple.clinic.summary.teleconsultation.status.TeleconsultStatusSheet
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -53,22 +51,6 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   companion object {
     private const val REQCODE_FACILITY_SELECT = 100
-    private const val KEY_PATIENT_UUID = "patientUuid"
-    private const val KEY_EXTRA = "extra"
-
-    fun intent(
-        context: Context,
-        patientUuid: UUID,
-        extra: Parcelable?
-    ): Intent {
-      return Intent(context, ScheduleAppointmentSheet::class.java)
-          .putExtra(KEY_PATIENT_UUID, patientUuid)
-          .putExtra(KEY_EXTRA, extra)
-    }
-
-    fun <T : Parcelable> readExtra(intent: Intent): T? {
-      return intent.getParcelableExtra<T>(KEY_EXTRA)!!
-    }
 
     fun sheetOpenedFrom(result: Succeeded): AppointmentSheetOpenedFrom {
       return result.result as AppointmentSheetOpenedFrom
@@ -96,8 +78,6 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   @Inject
   lateinit var router: Router
-
-  private lateinit var binding: SheetScheduleAppointmentBinding
 
   private val changeFacilityButton
     get() = binding.changeFacilityButton
@@ -129,7 +109,6 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
   private val selectedFacilityName
     get() = binding.selectedFacilityName
 
-  private val onDestroys = PublishSubject.create<ScreenDestroyed>()
   private val calendarDateSelectedEvents: Subject<AppointmentCalendarDateSelected> = PublishSubject.create()
   private val facilityChanges: DeferredEventSource<ScheduleAppointmentEvent> = DeferredEventSource()
   private val REQUEST_CODE_TELECONSULT_STATUS_CHANGED = 11
@@ -178,18 +157,9 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-
-    binding = SheetScheduleAppointmentBinding.inflate(layoutInflater)
-    setContentView(binding.root)
-
     changeFacilityButton.setOnClickListener {
       openFacilitySelection()
     }
-  }
-
-  override fun onDestroy() {
-    onDestroys.onNext(ScreenDestroyed())
-    super.onDestroy()
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

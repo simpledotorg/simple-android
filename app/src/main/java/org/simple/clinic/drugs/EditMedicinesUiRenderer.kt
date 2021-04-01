@@ -36,6 +36,14 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
     val customPrescribedDrugItems = customPrescribedDrugItems(prescribedCustomDrugs)
     val drugsList = (protocolDrugSelectionItems + customPrescribedDrugItems)
         .sortedByDescending { it.prescribedDrug?.updatedAt }
+        .mapIndexed { index, drugListItem ->
+          val isTopItem = index == 0
+          when {
+            isTopItem && drugListItem is ProtocolDrugListItem -> drugListItem.withTopCorners()
+            isTopItem && drugListItem is CustomPrescribedDrugListItem -> drugListItem.withTopCorners()
+            else -> drugListItem
+          }
+        }
 
     ui.populateDrugsList(drugsList)
   }
@@ -46,7 +54,8 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
     return prescribedCustomDrugs
         .map { prescribedDrug ->
           CustomPrescribedDrugListItem(
-              prescribedDrug = prescribedDrug
+              prescribedDrug = prescribedDrug,
+              hasTopCorners = false
           )
         }
   }
@@ -59,10 +68,13 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
     return protocolDrugs
         .mapIndexed { index: Int, drugAndDosages: ProtocolDrugAndDosages ->
           val matchingPrescribedDrug = prescribedProtocolDrugs.firstOrNull { it.name == drugAndDosages.drugName }
+
           ProtocolDrugListItem(
               id = index,
               drugName = drugAndDosages.drugName,
-              prescribedDrug = matchingPrescribedDrug)
+              prescribedDrug = matchingPrescribedDrug,
+              hasTopCorners = false
+          )
         }
   }
 }

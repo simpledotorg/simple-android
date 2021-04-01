@@ -1,7 +1,6 @@
 package org.simple.clinic.drugs.selection
 
 import androidx.recyclerview.widget.DiffUtil
-import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.ShapeAppearanceModel
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
@@ -30,7 +29,8 @@ sealed class DrugListItem(open val prescribedDrug: PrescribedDrug? = null) : Ite
 data class ProtocolDrugListItem(
     val id: Int,
     val drugName: String,
-    override val prescribedDrug: PrescribedDrug?
+    override val prescribedDrug: PrescribedDrug?,
+    val hasTopCorners: Boolean
 ) : DrugListItem(prescribedDrug) {
 
   override fun layoutResId() = R.layout.list_prescribeddrugs_protocol_drug
@@ -44,28 +44,21 @@ data class ProtocolDrugListItem(
     viewBinding.protocoldrugItemDosage.visibleOrGone(prescribedDrug != null)
     viewBinding.protocoldrugItemDosage.text = prescribedDrug?.dosage
 
-    viewBinding.prescribeddrugItemProtocoldrugRootlayout.shapeAppearanceModel = topMostCardShapeAppearanceModel(isTopMostCard = holder.adapterPosition == 0)
+    viewBinding.prescribeddrugItemProtocoldrugRootlayout.shapeAppearanceModel = shapeAppearanceModel(hasTopCorners)
 
     viewBinding.root.setOnClickListener {
       subject.onNext(DrugListItemClicked.PrescribedDrugClicked(drugName, prescribedDrug))
     }
   }
-}
 
-private fun topMostCardShapeAppearanceModel(isTopMostCard: Boolean) = if (isTopMostCard) {
-  ShapeAppearanceModel()
-      .toBuilder()
-      .setTopLeftCorner(CornerFamily.ROUNDED, 4.dp.toFloat())
-      .setTopRightCorner(CornerFamily.ROUNDED, 4.dp.toFloat())
-      .build()
-} else {
-  ShapeAppearanceModel()
-      .toBuilder()
-      .build()
+  fun withTopCorners(): ProtocolDrugListItem {
+    return copy(hasTopCorners = true)
+  }
 }
 
 data class CustomPrescribedDrugListItem(
-    override val prescribedDrug: PrescribedDrug
+    override val prescribedDrug: PrescribedDrug,
+    val hasTopCorners: Boolean
 ) : DrugListItem(prescribedDrug) {
 
   override fun layoutResId() = R.layout.list_prescribeddrugs_custom_drug
@@ -82,8 +75,11 @@ data class CustomPrescribedDrugListItem(
       subject.onNext(DrugListItemClicked.CustomPrescriptionClicked(prescribedDrug))
     }
 
-    viewBinding.prescribeddrugItemCustomdrugRootlayout.shapeAppearanceModel = topMostCardShapeAppearanceModel(isTopMostCard = holder.adapterPosition == 0)
+    viewBinding.prescribeddrugItemCustomdrugRootlayout.shapeAppearanceModel = shapeAppearanceModel(hasTopCorners)
+  }
 
+  fun withTopCorners(): CustomPrescribedDrugListItem {
+    return copy(hasTopCorners = true)
   }
 }
 
@@ -96,6 +92,18 @@ object AddNewPrescriptionListItem : DrugListItem() {
 
     viewBinding.prescribeddrugItemAddnewprescription.setOnClickListener { subject.onNext(DrugListItemClicked.AddNewPrescriptionClicked) }
   }
+}
+
+private fun shapeAppearanceModel(hasTopCorners: Boolean) = if (hasTopCorners) {
+  ShapeAppearanceModel
+      .builder()
+      .setTopLeftCornerSize(4.dp.toFloat())
+      .setTopRightCornerSize(4.dp.toFloat())
+      .build()
+} else {
+  ShapeAppearanceModel
+      .builder()
+      .build()
 }
 
 sealed class DrugListItemClicked {

@@ -1,5 +1,7 @@
 package org.simple.clinic.summary
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 
 /**
@@ -14,7 +16,8 @@ import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
  * However with Mobius, we cannot do this anymore. We need a way to find out what was the event
  * that triggered the sheet to be opened and this enum will be used to track that.
  **/
-enum class AppointmentSheetOpenedFrom {
+@Parcelize
+enum class AppointmentSheetOpenedFrom : Parcelable {
   BACK_CLICK,
   DONE_CLICK
 }

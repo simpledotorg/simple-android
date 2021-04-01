@@ -20,7 +20,9 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetScheduleAppointmentBinding
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.DeferredEventSource
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.AppointmentConfig
@@ -86,6 +88,9 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var router: Router
 
   private lateinit var binding: SheetScheduleAppointmentBinding
 
@@ -214,10 +219,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
   }
 
   override fun closeSheet() {
-    val resultIntent = Intent().putExtra(KEY_EXTRA, intent.getParcelableExtra<Parcelable>(KEY_EXTRA))
-
-    setResult(Activity.RESULT_OK, resultIntent)
-    finish()
+    router.popWithResult(Succeeded(screenKey.sheetOpenedFrom))
   }
 
   override fun openTeleconsultStatusSheet(teleconsultRecordUuid: UUID) {

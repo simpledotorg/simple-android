@@ -18,6 +18,7 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetScheduleAppointmentBinding
+import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.Router
@@ -166,6 +167,11 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   override fun additionalEventSources() = listOf(facilityChanges)
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -311,5 +317,10 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     override val type = ScreenType.Modal
 
     override fun instantiateFragment() = ScheduleAppointmentSheet()
+  }
+
+  interface Injector {
+
+    fun inject(target: ScheduleAppointmentSheet)
   }
 }

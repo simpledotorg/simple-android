@@ -33,7 +33,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
-import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreenExpectingResult
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen_Old
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
@@ -435,9 +435,12 @@ class PatientSummaryScreen :
       sheetOpenedFrom: AppointmentSheetOpenedFrom,
       currentFacility: Facility
   ) {
-    router.pushExpectingResult(ScreenRequest.ScheduleAppointmentSheet, AlertFacilityChangeSheet.Key(
+    router.push(AlertFacilityChangeSheet.Key(
         currentFacilityName = currentFacility.name,
-        continuation = ContinueToScreen(ScheduleAppointmentSheet.Key(patientUuid, sheetOpenedFrom))
+        continuation = ContinueToScreenExpectingResult(
+            requestType = ScreenRequest.ScheduleAppointmentSheet,
+            screenKey = ScheduleAppointmentSheet.Key(patientUuid, sheetOpenedFrom)
+        )
     ))
   }
 

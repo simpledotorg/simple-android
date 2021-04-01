@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -309,8 +308,6 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
     override val type = ScreenType.Modal
 
-    override fun instantiateFragment(): Fragment {
-
-    }
+    override fun instantiateFragment() = ScheduleAppointmentSheet()
   }
 }

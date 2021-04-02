@@ -1,5 +1,7 @@
 package org.simple.clinic.datepicker
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.datepicker.calendar.CalendarDatePicker
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -20,3 +22,9 @@ class DatePickerKeyFactory @Inject constructor(
         maxDate = allowedDateRange.endInclusive)
   }
 }
+
+@Parcelize
+object DatePickerResult : Parcelable
+
+@Parcelize
+data class SelectedDate(val date: LocalDate) : Parcelable

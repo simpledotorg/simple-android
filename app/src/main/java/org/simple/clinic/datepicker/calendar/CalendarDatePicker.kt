@@ -5,9 +5,9 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface.BUTTON_NEGATIVE
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.fragment.app.DialogFragment
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.datepicker.SelectedDate
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -80,9 +80,6 @@ class CalendarDatePicker : DialogFragment() {
 
     override fun instantiateFragment() = CalendarDatePicker()
   }
-
-  @Parcelize
-  data class SelectedDate(val date: LocalDate) : Parcelable
 
   interface Injector {
     fun inject(target: CalendarDatePicker)

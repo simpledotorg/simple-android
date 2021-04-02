@@ -47,6 +47,7 @@ import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.recentpatientsview.RecentPatientsView
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.ScanSimpleIdScreen
+import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.searchresultsview.PatientSearchView
@@ -137,7 +138,8 @@ interface TheActivityComponent :
     FacilityChangeScreen.Injector,
     ConfirmFacilityChangeSheet.Injector,
     ContactPatientBottomSheet.Injector,
-    SetAppointmentReminderView.Injector {
+    SetAppointmentReminderView.Injector,
+    ScheduleAppointmentSheet.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

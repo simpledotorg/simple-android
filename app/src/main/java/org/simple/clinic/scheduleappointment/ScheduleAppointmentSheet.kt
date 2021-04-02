@@ -3,39 +3,37 @@ package org.simple.clinic.scheduleappointment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Parcelable
+import android.view.LayoutInflater
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
-import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import org.simple.clinic.ClinicApp
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetScheduleAppointmentBinding
-import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.DeferredEventSource
-import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
+import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
-import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom
 import org.simple.clinic.summary.teleconsultation.status.TeleconsultStatusSheet
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.util.withLocale
-import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -45,25 +43,19 @@ import javax.inject.Inject
 import javax.inject.Named
 import org.simple.clinic.scheduleappointment.ButtonState as NextButtonState
 
-class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, ScheduleAppointmentUiActions {
+class ScheduleAppointmentSheet : BaseBottomSheet<
+    ScheduleAppointmentSheet.Key,
+    SheetScheduleAppointmentBinding,
+    ScheduleAppointmentModel,
+    ScheduleAppointmentEvent,
+    ScheduleAppointmentEffect>(), ScheduleAppointmentUi, ScheduleAppointmentUiActions {
 
   companion object {
     private const val REQCODE_FACILITY_SELECT = 100
-    private const val KEY_PATIENT_UUID = "patientUuid"
-    private const val KEY_EXTRA = "extra"
+    private const val REQUEST_CODE_TELECONSULT_STATUS_CHANGED = 11
 
-    fun intent(
-        context: Context,
-        patientUuid: UUID,
-        extra: Parcelable?
-    ): Intent {
-      return Intent(context, ScheduleAppointmentSheet::class.java)
-          .putExtra(KEY_PATIENT_UUID, patientUuid)
-          .putExtra(KEY_EXTRA, extra)
-    }
-
-    fun <T : Parcelable> readExtra(intent: Intent): T? {
-      return intent.getParcelableExtra<T>(KEY_EXTRA)!!
+    fun sheetOpenedFrom(result: Succeeded): AppointmentSheetOpenedFrom {
+      return result.result as AppointmentSheetOpenedFrom
     }
   }
 
@@ -86,8 +78,8 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
   @Inject
   lateinit var features: Features
 
-  private lateinit var component: ScheduleAppointmentSheetComponent
-  private lateinit var binding: SheetScheduleAppointmentBinding
+  @Inject
+  lateinit var router: Router
 
   private val changeFacilityButton
     get() = binding.changeFacilityButton
@@ -119,104 +111,56 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
   private val selectedFacilityName
     get() = binding.selectedFacilityName
 
-  private val onDestroys = PublishSubject.create<ScreenDestroyed>()
   private val calendarDateSelectedEvents: Subject<AppointmentCalendarDateSelected> = PublishSubject.create()
   private val facilityChanges: DeferredEventSource<ScheduleAppointmentEvent> = DeferredEventSource()
-  private val REQUEST_CODE_TELECONSULT_STATUS_CHANGED = 11
 
-  private val events by unsafeLazy {
-    Observable
-        .mergeArray(
-            decrementClicks(),
-            incrementClicks(),
-            notNowClicks(),
-            doneClicks(),
-            appointmentDateClicks(),
-            nextClicks(),
-            calendarDateSelectedEvents
-        )
-        .compose(ReportAnalyticsEvents())
+  override fun defaultModel() = ScheduleAppointmentModel.create(
+      patientUuid = screenKey.patientId,
+      timeToAppointments = config.scheduleAppointmentsIn,
+      userClock = userClock,
+      doneButtonState = ButtonState.SAVED,
+      nextButtonState = NextButtonState.SCHEDULED
+  )
+
+  override fun bindView(inflater: LayoutInflater, container: ViewGroup?) =
+      SheetScheduleAppointmentBinding.inflate(layoutInflater, container, false)
+
+  override fun uiRenderer() = ScheduleAppointmentUiRenderer(this)
+
+  override fun events() = Observable
+      .mergeArray(
+          decrementClicks(),
+          incrementClicks(),
+          notNowClicks(),
+          doneClicks(),
+          appointmentDateClicks(),
+          nextClicks(),
+          calendarDateSelectedEvents
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<ScheduleAppointmentEvent>()
+
+  override fun createUpdate() = ScheduleAppointmentUpdate(
+      currentDate = LocalDate.now(userClock),
+      defaulterAppointmentPeriod = config.appointmentDuePeriodForDefaulters
+  )
+
+  override fun createInit() = ScheduleAppointmentInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun additionalEventSources() = listOf(facilityChanges)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
   }
 
-  private val delegate by unsafeLazy {
-    val patientUuid = intent.extras!!.getSerializable(KEY_PATIENT_UUID) as UUID
-
-    val uiRenderer = ScheduleAppointmentUiRenderer(this)
-
-    MobiusDelegate.forActivity(
-        events = events.ofType(),
-        defaultModel = ScheduleAppointmentModel.create(
-            patientUuid = patientUuid,
-            timeToAppointments = config.scheduleAppointmentsIn,
-            userClock = userClock,
-            doneButtonState = ButtonState.SAVED,
-            nextButtonState = NextButtonState.SCHEDULED
-        ),
-        update = ScheduleAppointmentUpdate(
-            currentDate = LocalDate.now(userClock),
-            defaulterAppointmentPeriod = config.appointmentDuePeriodForDefaulters
-        ),
-        init = ScheduleAppointmentInit(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render,
-        additionalEventSources = listOf(facilityChanges)
-    )
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
-    binding = SheetScheduleAppointmentBinding.inflate(layoutInflater)
-    setContentView(binding.root)
-
-    delegate.onRestoreInstanceState(savedInstanceState)
-
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     changeFacilityButton.setOnClickListener {
       openFacilitySelection()
     }
-  }
-
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
-
-  override fun onStop() {
-    delegate.stop()
-    super.onStop()
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    delegate.onSaveInstanceState(outState)
-  }
-
-  override fun attachBaseContext(baseContext: Context) {
-    setupDiGraph()
-
-    val wrappedContext = baseContext
-        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
-        .wrap { ViewPumpContextWrapper.wrap(it) }
-
-    super.attachBaseContext(wrappedContext)
-    applyOverrideConfiguration(Configuration())
-  }
-
-  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
-  }
-
-  private fun setupDiGraph() {
-    component = ClinicApp.appComponent
-        .scheduleAppointmentSheetComponent()
-        .create(activity = this)
-
-    component.inject(this)
-  }
-
-  override fun onDestroy() {
-    onDestroys.onNext(ScreenDestroyed())
-    super.onDestroy()
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -252,20 +196,17 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
   private fun appointmentDateClicks() = changeAppointmentDate.clicks().map { ManuallySelectAppointmentDateClicked }
 
   private fun openFacilitySelection() {
-    startActivityForResult(Intent(this, FacilitySelectionActivity::class.java), REQCODE_FACILITY_SELECT)
+    startActivityForResult(Intent(requireContext(), FacilitySelectionActivity::class.java), REQCODE_FACILITY_SELECT)
   }
 
   override fun closeSheet() {
-    val resultIntent = Intent().putExtra(KEY_EXTRA, intent.getParcelableExtra<Parcelable>(KEY_EXTRA))
-
-    setResult(Activity.RESULT_OK, resultIntent)
-    finish()
+    router.popWithResult(Succeeded(screenKey.sheetOpenedFrom))
   }
 
   override fun openTeleconsultStatusSheet(teleconsultRecordUuid: UUID) {
     startActivityForResult(
         TeleconsultStatusSheet.intent(
-            context = this,
+            context = requireContext(),
             teleconsultRecordId = teleconsultRecordUuid
         ),
         REQUEST_CODE_TELECONSULT_STATUS_CHANGED
@@ -299,7 +240,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
     val today = LocalDate.now(userClock)
 
     ThreeTenBpDatePickerDialog(
-        context = this,
+        context = requireContext(),
         preselectedDate = date,
         allowedDateRange = today.plusDays(1)..today.plusYears(1),
         clock = userClock,
@@ -341,5 +282,20 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
 
   override fun hideNextButtonProgress() {
     nextButton.setButtonState(Enabled)
+  }
+
+  @Parcelize
+  data class Key(val patientId: UUID, val sheetOpenedFrom: AppointmentSheetOpenedFrom) : ScreenKey() {
+
+    override val analyticsName = "Schedule Appointment Sheet"
+
+    override val type = ScreenType.Modal
+
+    override fun instantiateFragment() = ScheduleAppointmentSheet()
+  }
+
+  interface Injector {
+
+    fun inject(target: ScheduleAppointmentSheet)
   }
 }

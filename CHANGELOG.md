@@ -16,6 +16,7 @@
 - Update Ethiopian date separator pattern
 - Migrate `ContactPatientBottomSheet` to a `BaseBottomSheet`
 - Add Material motion in `ContactPatientBottomSheet` for handling view visibility changes
+- Migrate `ScheduleAppointmentSheet` to a `BaseBottomSheet`
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 

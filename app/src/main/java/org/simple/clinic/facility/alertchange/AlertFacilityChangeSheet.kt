@@ -149,6 +149,12 @@ class AlertFacilityChangeSheet :
         val screenKey = (continuation as Continuation.ContinueToScreen).screenKey
         router.replaceTop(screenKey)
       }
+      is Continuation.ContinueToScreenExpectingResult -> {
+        val screenKey = (continuation as Continuation.ContinueToScreenExpectingResult).screenKey
+        val requestType = (continuation as Continuation.ContinueToScreenExpectingResult).requestType
+
+        router.replaceTopExpectingResult(requestType, screenKey)
+      }
     }
   }
 
@@ -184,6 +190,9 @@ sealed class Continuation : Parcelable {
 
   @Parcelize
   data class ContinueToScreen(val screenKey: ScreenKey) : Continuation()
+
+  @Parcelize
+  data class ContinueToScreenExpectingResult(val requestType: Parcelable, val screenKey: ScreenKey) : Continuation()
 
   @Parcelize
   data class ContinueToActivity(val intent: Intent, val requestCode: Int) : Continuation()

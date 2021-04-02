@@ -19,6 +19,9 @@
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Feb 2021] Migrate app to use ViewBinding
 
+### Changes
+- Add Somali language option to language selection
+
 ### Fixes
 - Fix date stepper showing black color when it's disabled
 - Fix prescribed drugs item corner radius not being updated when order is changed

@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.transition.TransitionManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.transition.MaterialFade
+import com.google.android.material.transition.MaterialSharedAxis
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
@@ -78,6 +81,9 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   private val permissionResults: Subject<ActivityPermissionResult> = PublishSubject.create()
 
   private val hotEvents: PublishSubject<ContactPatientEvent> = PublishSubject.create()
+
+  private val contentFlipper
+    get() = binding.contentFlipper
 
   private val callPatientView
     get() = binding.callPatientView
@@ -152,10 +158,14 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   }
 
   override fun showCallResultSection() {
+    fadeIn(contentFlipper)
+
     callPatientView.callResultSectionVisible = true
   }
 
   override fun hideCallResultSection() {
+    fadeIn(contentFlipper)
+
     callPatientView.callResultSectionVisible = false
   }
 
@@ -229,12 +239,16 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   }
 
   override fun switchToSetAppointmentReminderView() {
+    sharedAxis(contentFlipper)
+
     callPatientView.visibility = GONE
     setAppointmentReminderView.visibility = VISIBLE
     removeAppointmentView.visibility = GONE
   }
 
   override fun switchToRemoveAppointmentView() {
+    sharedAxis(contentFlipper)
+
     callPatientView.visibility = GONE
     setAppointmentReminderView.visibility = GONE
     removeAppointmentView.visibility = VISIBLE
@@ -350,6 +364,20 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
       removeAppointmentView.doneClicked = { emitter.onNext(RemoveAppointmentDoneClicked) }
     }
+  }
+
+  private fun fadeIn(viewGroup: ViewGroup) {
+    val materialFade = MaterialFade().apply {
+      duration = 150
+    }
+    TransitionManager.beginDelayedTransition(viewGroup, materialFade)
+  }
+
+  private fun sharedAxis(viewGroup: ViewGroup) {
+    val sharedAxis = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
+      duration = 150
+    }
+    TransitionManager.beginDelayedTransition(viewGroup, sharedAxis)
   }
 
   @Parcelize

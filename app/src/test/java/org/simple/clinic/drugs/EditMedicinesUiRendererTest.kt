@@ -7,8 +7,8 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.EditMedicineButtonState.REFILL_MEDICINE
 import org.simple.clinic.drugs.EditMedicineButtonState.SAVE_MEDICINE
-import org.simple.clinic.drugs.selection.EditMedicinesUi
 import org.simple.clinic.drugs.selection.CustomPrescribedDrugListItem
+import org.simple.clinic.drugs.selection.EditMedicinesUi
 import org.simple.clinic.drugs.selection.ProtocolDrugListItem
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import java.time.Instant
@@ -79,10 +79,11 @@ class EditMedicinesUiRendererTest {
         ProtocolDrugListItem(
             id = 0,
             drugName = amlodipine10mg.name,
-            prescribedDrug = amlodipine10mgPrescription),
-        CustomPrescribedDrugListItem(telmisartan40mgPrescription),
-        CustomPrescribedDrugListItem(fooPrescription),
-        CustomPrescribedDrugListItem(barPrescription))
+            prescribedDrug = amlodipine10mgPrescription,
+            hasTopCorners = true),
+        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false),
+        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false),
+        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false))
 
     verify(ui).populateDrugsList(drugsList)
     verify(ui).showDoneButton()
@@ -147,10 +148,11 @@ class EditMedicinesUiRendererTest {
         ProtocolDrugListItem(
             id = 0,
             drugName = amlodipine10mg.name,
-            prescribedDrug = amlodipine10mgPrescription),
-        CustomPrescribedDrugListItem(telmisartan40mgPrescription),
-        CustomPrescribedDrugListItem(fooPrescription),
-        CustomPrescribedDrugListItem(barPrescription))
+            prescribedDrug = amlodipine10mgPrescription,
+            hasTopCorners = true),
+        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false),
+        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false),
+        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false))
 
     verify(ui).populateDrugsList(drugsList)
     verify(ui).showDoneButton()
@@ -215,10 +217,75 @@ class EditMedicinesUiRendererTest {
         ProtocolDrugListItem(
             id = 0,
             drugName = amlodipine10mg.name,
-            prescribedDrug = amlodipine10mgPrescription),
-        CustomPrescribedDrugListItem(telmisartan40mgPrescription),
-        CustomPrescribedDrugListItem(fooPrescription),
-        CustomPrescribedDrugListItem(barPrescription))
+            prescribedDrug = amlodipine10mgPrescription,
+            hasTopCorners = true),
+        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false),
+        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false),
+        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false))
+
+    verify(ui).populateDrugsList(drugsList)
+    verify(ui).showRefillMedicineButton()
+    verify(ui).hideDoneButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when custom drug is top of the list, then apply corner radius`() {
+    // given
+    val amlodipine5mg = TestData.protocolDrug(name = "Amlodipine", dosage = "5mg")
+    val amlodipine10mg = TestData.protocolDrug(name = "Amlodipine", dosage = "10mg")
+
+    val protocolDrugAndDosages = listOf(
+        ProtocolDrugAndDosages(amlodipine10mg.name, listOf(amlodipine5mg, amlodipine10mg))
+    )
+
+    val amlodipine10mgPrescription = TestData.prescription(
+        uuid = UUID.fromString("90e28866-90f6-48a0-add1-cf44aa43209c"),
+        name = "Amlodipine",
+        dosage = "10mg",
+        isProtocolDrug = true,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val telmisartan40mgPrescription = TestData.prescription(
+        uuid = UUID.fromString("ac3cfff0-2ebf-4c9c-adab-a41cc8a0bbeb"),
+        name = "Telmisartan",
+        dosage = "40mg",
+        isProtocolDrug = true,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val fooPrescription = TestData.prescription(
+        uuid = UUID.fromString("68dc8060-bed4-4e1b-9891-7d77cad9639e"),
+        name = "Foo",
+        dosage = "2 pills",
+        isProtocolDrug = false,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val barPrescription = TestData.prescription(
+        uuid = UUID.fromString("b5eb5dfa-f131-4d9f-a2d2-41d56aa109da"),
+        name = "Bar",
+        dosage = null,
+        isProtocolDrug = false,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val prescriptions = listOf(
+        telmisartan40mgPrescription,
+        fooPrescription,
+        barPrescription)
+
+    val prescribedDrugsFetchedModel = defaultModel
+        .protocolDrugsFetched(protocolDrugAndDosages)
+        .prescribedDrugsFetched(prescriptions)
+        .editMedicineDrugStateFetched(REFILL_MEDICINE)
+
+    // when
+    uiRenderer.render(prescribedDrugsFetchedModel)
+
+    // then
+    val drugsList = listOf(
+        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = true),
+        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false),
+        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false),
+        ProtocolDrugListItem(id = 0, drugName = amlodipine10mg.name, prescribedDrug = null, hasTopCorners = false))
 
     verify(ui).populateDrugsList(drugsList)
     verify(ui).showRefillMedicineButton()

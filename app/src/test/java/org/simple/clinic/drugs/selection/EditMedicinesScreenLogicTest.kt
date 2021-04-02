@@ -160,15 +160,17 @@ class EditMedicinesScreenLogicTest {
         ProtocolDrugListItem(
             id = 0,
             drugName = amlodipine10mg.name,
-            prescribedDrug = amlodipine10mgPrescription),
-        CustomPrescribedDrugListItem(telmisartan9000mgPrescription),
-        CustomPrescribedDrugListItem(reesesPrescription),
-        CustomPrescribedDrugListItem(fooPrescription),
-        CustomPrescribedDrugListItem(barPrescription),
+            prescribedDrug = amlodipine10mgPrescription,
+            hasTopCorners = true),
+        CustomPrescribedDrugListItem(prescribedDrug = telmisartan9000mgPrescription, hasTopCorners = false),
+        CustomPrescribedDrugListItem(prescribedDrug = reesesPrescription, hasTopCorners = false),
+        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false),
+        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false),
         ProtocolDrugListItem(
             id = 1,
             drugName = telmisartan40mg.name,
-            prescribedDrug = null))
+            prescribedDrug = null,
+            hasTopCorners = false))
 
     verify(ui).populateDrugsList(expectedUiModels)
   }

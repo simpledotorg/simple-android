@@ -76,11 +76,6 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".scheduleappointment.ScheduleAppointmentSheet"
-      android:theme="@style/Theme.Simple.BottomSheetActivity"
-      android:windowSoftInputMode="adjustResize" />
-
-    <activity
       android:name=".scheduleappointment.facilityselection.FacilitySelectionActivity"
       android:windowSoftInputMode="adjustResize" />
 

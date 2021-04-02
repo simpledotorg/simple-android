@@ -5,6 +5,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.DismissSheet
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.HideDateErrorMessage
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class TextInputDatePickerEffectHandler @AssistedInject constructor(
@@ -16,6 +17,7 @@ class TextInputDatePickerEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<TextInputDatePickerEffect, TextInputDatePickerEvent>()
         .addAction(DismissSheet::class.java, uiActions::dismissSheet, schedulersProvider.ui())
+        .addAction(HideDateErrorMessage::class.java, uiActions::hideErrorMessage, schedulersProvider.ui())
         .build()
   }
 }

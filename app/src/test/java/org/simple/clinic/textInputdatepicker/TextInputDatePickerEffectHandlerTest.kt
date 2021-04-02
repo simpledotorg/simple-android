@@ -7,6 +7,7 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.DismissSheet
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.HideDateErrorMessage
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 
 class TextInputDatePickerEffectHandlerTest {
@@ -34,4 +35,16 @@ class TextInputDatePickerEffectHandlerTest {
     verify(uiActions).dismissSheet()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when hide date error message is received, then hide the error text`() {
+    // when
+    effectHandlerTestCase.dispatch(HideDateErrorMessage)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).hideErrorMessage()
+    verifyNoMoreInteractions(uiActions)
+  }
+
 }

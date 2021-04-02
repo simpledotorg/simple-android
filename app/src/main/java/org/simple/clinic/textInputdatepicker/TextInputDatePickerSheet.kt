@@ -1,6 +1,7 @@
 package org.simple.clinic.textInputdatepicker
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.rxkotlin.cast
@@ -27,6 +28,9 @@ class TextInputDatePickerSheet : BaseBottomSheet<
   private val imageTextInputSheetClose
     get() = binding.imageTextInputSheetClose
 
+  private val dateErrorTextView
+    get() = binding.dateErrorTextView
+
   override fun defaultModel() = TextInputDatePickerModel.create()
 
   override fun bindView(inflater: LayoutInflater, container: ViewGroup?) = SheetTextInputDatePickerBinding.inflate(inflater, container, false)
@@ -41,6 +45,10 @@ class TextInputDatePickerSheet : BaseBottomSheet<
 
   override fun dismissSheet() {
     router.pop()
+  }
+
+  override fun hideErrorMessage() {
+    dateErrorTextView.visibility = View.GONE
   }
 
   @Parcelize

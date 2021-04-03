@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.widget.textChanges
+import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
@@ -31,17 +33,29 @@ class TextInputDatePickerSheet : BaseBottomSheet<
   private val dateErrorTextView
     get() = binding.dateErrorTextView
 
+  private val dayEditText
+    get() = binding.dayEditText
+
   override fun defaultModel() = TextInputDatePickerModel.create()
 
   override fun bindView(inflater: LayoutInflater, container: ViewGroup?) = SheetTextInputDatePickerBinding.inflate(inflater, container, false)
 
-  override fun events() = sheetCloseClicks()
+  override fun events() = Observable
+      .merge(
+          sheetCloseClicks(),
+          dayTextChanges()
+      )
       .compose(ReportAnalyticsEvents())
       .cast<TextInputDatePickerEvent>()
 
   private fun sheetCloseClicks() = imageTextInputSheetClose
       .clicks()
       .map { DismissSheetClicked }
+
+  private fun dayTextChanges() = dayEditText
+      .textChanges()
+      .map(CharSequence::toString)
+      .map(::DayChanged)
 
   override fun dismissSheet() {
     router.pop()

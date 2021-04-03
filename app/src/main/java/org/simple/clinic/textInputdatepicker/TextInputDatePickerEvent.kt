@@ -7,3 +7,5 @@ sealed class TextInputDatePickerEvent : UiEvent
 object DismissSheetClicked : TextInputDatePickerEvent() {
   override val analyticsName: String = "Text Input Date Picker:Dismiss sheet clicked"
 }
+
+data class DayChanged(val day: String) : TextInputDatePickerEvent()

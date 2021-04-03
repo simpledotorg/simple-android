@@ -9,3 +9,5 @@ object DismissSheetClicked : TextInputDatePickerEvent() {
 }
 
 data class DayChanged(val day: String) : TextInputDatePickerEvent()
+
+data class MonthChanged(val month: String): TextInputDatePickerEvent()

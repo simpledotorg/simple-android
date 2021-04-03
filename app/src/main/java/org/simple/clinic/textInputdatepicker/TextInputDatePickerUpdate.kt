@@ -12,6 +12,7 @@ class TextInputDatePickerUpdate : Update<TextInputDatePickerModel, TextInputDate
     return when (event) {
       DismissSheetClicked -> dispatch(DismissSheet)
       is DayChanged -> next(model.dayChanged(event.day), HideDateErrorMessage)
+      is MonthChanged -> next(model.monthChanged(event.month), HideDateErrorMessage)
     }
   }
 }

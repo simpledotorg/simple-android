@@ -41,4 +41,19 @@ class TextInputDatePickerUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when text changes in the month editText field, then hide the error message`() {
+    val month = "08"
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(MonthChanged(month))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.monthChanged(month)),
+                hasEffects(HideDateErrorMessage)
+            )
+        )
+  }
 }

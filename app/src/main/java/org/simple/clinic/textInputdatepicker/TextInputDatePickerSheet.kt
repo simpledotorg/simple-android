@@ -36,6 +36,9 @@ class TextInputDatePickerSheet : BaseBottomSheet<
   private val dayEditText
     get() = binding.dayEditText
 
+  private val monthEditText
+    get() = binding.monthEditText
+
   override fun defaultModel() = TextInputDatePickerModel.create()
 
   override fun bindView(inflater: LayoutInflater, container: ViewGroup?) = SheetTextInputDatePickerBinding.inflate(inflater, container, false)
@@ -43,11 +46,12 @@ class TextInputDatePickerSheet : BaseBottomSheet<
   override fun events() = Observable
       .merge(
           sheetCloseClicks(),
-          dayTextChanges()
+          dayTextChanges(),
+          monthTextChanges()
       )
       .compose(ReportAnalyticsEvents())
       .cast<TextInputDatePickerEvent>()
-
+  
   private fun sheetCloseClicks() = imageTextInputSheetClose
       .clicks()
       .map { DismissSheetClicked }
@@ -56,6 +60,11 @@ class TextInputDatePickerSheet : BaseBottomSheet<
       .textChanges()
       .map(CharSequence::toString)
       .map(::DayChanged)
+
+  private fun monthTextChanges() = monthEditText
+      .textChanges()
+      .map(CharSequence::toString)
+      .map(::MonthChanged)
 
   override fun dismissSheet() {
     router.pop()

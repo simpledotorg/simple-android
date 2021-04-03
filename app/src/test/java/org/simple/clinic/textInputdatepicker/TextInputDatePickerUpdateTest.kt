@@ -56,4 +56,19 @@ class TextInputDatePickerUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when text changes in the year editText field, then hide the error message`() {
+    val year = "2017"
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(YearChanged(year))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.yearChanged(year)),
+                hasEffects(HideDateErrorMessage)
+            )
+        )
+  }
 }

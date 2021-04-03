@@ -11,9 +11,12 @@ class TextInputDatePickerUpdate : Update<TextInputDatePickerModel, TextInputDate
   override fun update(model: TextInputDatePickerModel, event: TextInputDatePickerEvent): Next<TextInputDatePickerModel, TextInputDatePickerEffect> {
     return when (event) {
       DismissSheetClicked -> dispatch(DismissSheet)
-      is DayChanged -> next(model.dayChanged(event.day), HideDateErrorMessage)
-      is MonthChanged -> next(model.monthChanged(event.month), HideDateErrorMessage)
-      is YearChanged -> next(model.yearChanged(event.year), HideDateErrorMessage)
+      is DayChanged -> dateChanged(model.dayChanged(event.day))
+      is MonthChanged -> dateChanged(model.monthChanged(event.month))
+      is YearChanged -> dateChanged(model.yearChanged(event.year))
     }
   }
+
+  private fun dateChanged(model: TextInputDatePickerModel): Next<TextInputDatePickerModel, TextInputDatePickerEffect> =
+      next(model, HideDateErrorMessage)
 }

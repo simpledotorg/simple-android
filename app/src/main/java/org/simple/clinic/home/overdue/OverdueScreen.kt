@@ -3,7 +3,6 @@ package org.simple.clinic.home.overdue
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -133,31 +132,6 @@ class OverdueScreen : BaseScreen<
     super.onViewCreated(view, savedInstanceState)
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
-  }
-
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   override fun openPhoneMaskBottomSheet(patientUuid: UUID) {

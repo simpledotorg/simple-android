@@ -18,6 +18,7 @@
 - Add Material motion in `ContactPatientBottomSheet` for handling view visibility changes
 - Migrate `ScheduleAppointmentSheet` to a `BaseBottomSheet`
 - Migrate `PatientsTabScreen` to a fragment
+- Migrate `ReportsScreen` to a fragment
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 05 Apr 2021] Migrate app to use ViewBinding
 

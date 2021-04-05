@@ -2,8 +2,10 @@ package org.simple.clinic.home.report
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -79,17 +81,21 @@ class ReportsScreen : BaseScreen<
   }
 
   @SuppressLint("SetJavaScriptEnabled")
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    webView.settings.javaScriptEnabled = true
+    webView.webViewClient = ReportsWebViewClient(
+        backClicked = { webViewBackClicks.onNext(WebBackClicked) }
+    )
+  }
+
+  @SuppressLint("SetJavaScriptEnabled")
   override fun onFinishInflate() {
     super.onFinishInflate()
 
     if (isInEditMode) {
       return
     }
-
-    webView.settings.javaScriptEnabled = true
-    webView.webViewClient = ReportsWebViewClient(
-        backClicked = { webViewBackClicks.onNext(WebBackClicked) }
-    )
   }
 
   override fun onAttachedToWindow() {

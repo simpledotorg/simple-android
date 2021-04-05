@@ -28,7 +28,7 @@
 - Fix date stepper showing black color when it's disabled
 - Fix prescribed drugs item corner radius not being updated when order is changed
 
-## Demo
+## 2021-04-05-7697
 ### Internal
 - Trim start and end white spaces for instant search query
 - Add drug stock option in progress

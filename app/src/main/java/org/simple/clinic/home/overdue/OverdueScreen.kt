@@ -2,9 +2,13 @@ package org.simple.clinic.home.overdue
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.spotify.mobius.Update
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.screen_overdue.view.*
@@ -89,6 +93,26 @@ class OverdueScreen : BaseScreen<
         modelUpdateListener = { /* Nothing to do here */ }
     )
   }
+
+  override fun defaultModel() = OverdueModel.create()
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenOverdueBinding.inflate(layoutInflater, container, false)
+
+  override fun events() = overdueListAdapter
+      .itemEvents
+      .compose(ReportAnalyticsEvents())
+      .share()
+      .cast<OverdueEvent>()
+
+  override fun createUpdate(): Update<OverdueModel, OverdueEvent, OverdueEffect> {
+    val date = LocalDate.now(userClock)
+    return OverdueUpdate(date)
+  }
+
+  override fun createInit() = OverdueInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
   override fun onFinishInflate() {
     super.onFinishInflate()

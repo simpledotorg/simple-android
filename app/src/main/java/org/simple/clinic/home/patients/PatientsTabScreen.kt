@@ -108,11 +108,17 @@ class PatientsTabScreen : BaseScreen<
   private val searchPatientsButton
     get() = binding.searchPatientsButton
 
+  private val userStatusApproved
+    get() = binding.userStatusApproved
+
   private val dismissApprovedStatusButton
-    get() = binding.userStatusApproved.dismissApprovedStatusButton
+    get() = userStatusApproved.dismissApprovedStatusButton
+
+  private val userAwaitingSmsVerification
+    get() = binding.userAwaitingSmsVerification
 
   private val enterCodeButton
-    get() = binding.userAwaitingSmsVerification.enterCodeButton
+    get() = userAwaitingSmsVerification.enterCodeButton
 
   private val scanSimpleCardButton
     get() = binding.scanSimpleCardButton
@@ -235,15 +241,15 @@ class PatientsTabScreen : BaseScreen<
   }
 
   override fun showUserStatusAsWaiting() {
-    showUserAccountStatus(R.id.patients_user_status_awaitingapproval)
+    showUserAccountStatus(R.id.userStatusAwaitingApproval)
   }
 
   override fun showUserStatusAsApproved() {
-    showUserAccountStatus(R.id.patients_user_status_approved)
+    showUserAccountStatus(R.id.userStatusApproved)
   }
 
   override fun showUserStatusAsPendingVerification() {
-    showUserAccountStatus(R.id.patients_user_status_awaitingsmsverification)
+    showUserAccountStatus(R.id.userAwaitingSmsVerification)
   }
 
   override fun hideUserAccountStatus() {
@@ -293,11 +299,11 @@ class PatientsTabScreen : BaseScreen<
     // we are not sure if we will have variations of this training video.
     // We should make the title, duration and video thumbnail configurable in order to improve this.
     simpleVideoDuration.text = resources.getString(R.string.simple_video_duration, "5:07")
-    showHomeScreenBackground(simpleVideoLayout.simpleVideoLayout.id)
+    showHomeScreenBackground(R.id.simpleVideoLayout)
   }
 
   override fun showIllustration() {
-    showHomeScreenBackground(homeIllustration.id)
+    showHomeScreenBackground(R.id.homeIllustration)
   }
 
   override fun openYouTubeLinkForSimpleVideo() {

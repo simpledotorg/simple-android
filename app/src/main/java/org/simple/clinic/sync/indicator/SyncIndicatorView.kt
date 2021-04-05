@@ -12,11 +12,10 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.sync_indicator.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.SyncIndicatorBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
 import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
@@ -58,11 +57,19 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
     )
   }
 
+  private val binding = SyncIndicatorBinding.inflate(LayoutInflater.from(context),
+      this,
+      true)
+
+  private val rootLayout
+    get() = binding.rootLayout
+
+  private val statusTextView
+    get() = binding.statusTextView
+
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
-
-    LayoutInflater.from(context).inflate(R.layout.sync_indicator, this, true)
 
     context.injector<Injector>().inject(this)
   }

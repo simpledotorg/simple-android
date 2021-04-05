@@ -9,6 +9,7 @@ import org.junit.Test
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.DismissSheet
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.HideDateErrorMessage
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.ShowDateValidationError
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.UserEnteredDateSelected
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.InvalidPattern
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import java.time.LocalDate
@@ -98,6 +99,25 @@ class TextInputDatePickerUpdateTest {
             assertThatNext(
                 hasNoModel(),
                 hasEffects(ShowDateValidationError(InvalidPattern))
+            )
+        )
+  }
+
+  @Test
+  fun `when the validation is successful, then send the user entered date back to the previous screen`() {
+    val userEnteredDate = LocalDate.of(2020, 4, 3)
+    val model = defaultModel
+        .dayChanged(userEnteredDate.dayOfMonth.toString())
+        .monthChanged(userEnteredDate.month.value.toString())
+        .yearChanged(userEnteredDate.year.toString())
+
+    updateSpec
+        .given(model)
+        .whenEvent(DoneClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(UserEnteredDateSelected(userEnteredDate = userEnteredDate))
             )
         )
   }

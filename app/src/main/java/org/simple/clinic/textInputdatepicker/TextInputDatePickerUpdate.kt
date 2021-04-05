@@ -2,13 +2,13 @@ package org.simple.clinic.textInputdatepicker
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.dispatch
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.DismissSheet
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.HideDateErrorMessage
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.ShowDateValidationError
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.UserEnteredDateSelected
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Valid
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 
@@ -32,7 +32,8 @@ class TextInputDatePickerUpdate(
     return if (dateValidation !is Valid) {
       dispatch(setOf(ShowDateValidationError(dateValidation)))
     } else {
-      noChange()
+      val userEnteredDate = dateValidation.parsedDate
+      dispatch(setOf(UserEnteredDateSelected(userEnteredDate)))
     }
   }
 

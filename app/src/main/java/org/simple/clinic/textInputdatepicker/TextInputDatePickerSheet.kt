@@ -14,8 +14,10 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetTextInputDatePickerBinding
+import org.simple.clinic.datepicker.SelectedDate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import java.time.LocalDate
 import javax.inject.Inject
@@ -108,6 +110,10 @@ class TextInputDatePickerSheet : BaseBottomSheet<
   override fun showMaximumDateRangeError() {
     dateErrorTextView.visibility = View.VISIBLE
     dateErrorTextView.text = getString(R.string.sheet_text_input_date_picker_date_cannot_be_after_one_year)
+  }
+
+  override fun userEnteredDateSelected(userEnteredDate: LocalDate) {
+    router.popWithResult(Succeeded(SelectedDate(userEnteredDate)))
   }
 
   @Parcelize

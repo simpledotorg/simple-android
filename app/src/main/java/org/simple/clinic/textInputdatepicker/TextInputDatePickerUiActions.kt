@@ -9,4 +9,5 @@ interface TextInputDatePickerUiActions {
   fun showDateIsInPastError()
   fun showMaximumDateRangeError()
   fun userEnteredDateSelected(userEnteredDate: LocalDate)
+  fun setDateOnInputFields(date: LocalDate)
 }

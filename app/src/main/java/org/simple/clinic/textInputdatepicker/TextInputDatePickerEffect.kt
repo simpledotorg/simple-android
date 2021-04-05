@@ -12,4 +12,6 @@ sealed class TextInputDatePickerEffect {
   data class ShowDateValidationError(val dateValidation: Result) : TextInputDatePickerEffect()
 
   data class UserEnteredDateSelected(val userEnteredDate: LocalDate) : TextInputDatePickerEffect()
+
+  data class PrefilledDate(val date: LocalDate?) : TextInputDatePickerEffect()
 }

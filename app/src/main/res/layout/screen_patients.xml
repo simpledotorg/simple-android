@@ -97,6 +97,7 @@
           tools:ignore="ContentDescription" />
 
         <include
+          android:id="@+id/simpleVideoLayout"
           layout="@layout/view_simple_video"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -122,11 +123,17 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content" />
 
-    <include layout="@layout/patients_user_status_awaitingapproval" />
+    <include
+      android:id="@+id/userStatusAwaitingApproval"
+      layout="@layout/patients_user_status_awaitingapproval" />
 
-    <include layout="@layout/patients_user_status_approved" />
+    <include
+      android:id="@+id/userStatusApproved"
+      layout="@layout/patients_user_status_approved" />
 
-    <include layout="@layout/patients_user_status_awaitingsmsverification" />
+    <include
+      android:id="@+id/userAwaitingSmsVerification"
+      layout="@layout/patients_user_status_awaitingsmsverification" />
 
   </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 

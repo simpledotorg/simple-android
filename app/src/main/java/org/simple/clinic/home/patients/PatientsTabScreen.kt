@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
@@ -51,6 +52,7 @@ import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.indexOfChildId
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -101,6 +103,42 @@ class PatientsTabScreen : BaseScreen<
 
   @IdRes
   private var currentStatusViewId: Int = R.id.userStatusHiddenView
+
+  private val homeIllustration
+    get() = binding.homeIllustration
+
+  private val userStatusViewflipper
+    get() = binding.userStatusViewflipper
+
+  private val searchPatientsButton
+    get() = binding.searchPatientsButton
+
+  private val dismissApprovedStatusButton
+    get() = binding.userStatusApproved.dismissApprovedStatusButton
+
+  private val enterCodeButton
+    get() = binding.userAwaitingSmsVerification.enterCodeButton
+
+  private val scanSimpleCardButton
+    get() = binding.scanSimpleCardButton
+
+  private val simpleVideoLayout
+    get() = binding.simpleVideoLayout
+
+  private val videoTitleText
+    get() = simpleVideoLayout.videoTitleText
+
+  private val simpleVideoImage
+    get() = simpleVideoLayout.simpleVideoImage
+
+  private val simpleVideoDuration
+    get() = simpleVideoLayout.simpleVideoDuration
+
+  private val syncIndicator
+    get() = binding.syncIndicator
+
+  private val illustrationLayout
+    get() = binding.illustrationLayout
 
   private val events: Observable<UiEvent> by unsafeLazy {
     Observable
@@ -307,7 +345,7 @@ class PatientsTabScreen : BaseScreen<
     // we are not sure if we will have variations of this training video.
     // We should make the title, duration and video thumbnail configurable in order to improve this.
     simpleVideoDuration.text = resources.getString(R.string.simple_video_duration, "5:07")
-    showHomeScreenBackground(simpleVideoLayout.id)
+    showHomeScreenBackground(simpleVideoLayout.simpleVideoLayout.id)
   }
 
   override fun showIllustration() {

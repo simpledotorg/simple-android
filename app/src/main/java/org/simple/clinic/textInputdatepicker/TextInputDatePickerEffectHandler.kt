@@ -6,6 +6,7 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.DismissSheet
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.HideDateErrorMessage
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.UserEnteredDateSelected
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.ShowDateValidationError
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.DateIsInPast
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.InvalidPattern
@@ -25,6 +26,7 @@ class TextInputDatePickerEffectHandler @AssistedInject constructor(
         .addAction(DismissSheet::class.java, uiActions::dismissSheet, schedulersProvider.ui())
         .addAction(HideDateErrorMessage::class.java, uiActions::hideErrorMessage, schedulersProvider.ui())
         .addConsumer(ShowDateValidationError::class.java, ::showDateValidationErrors, schedulersProvider.ui())
+        .addConsumer(UserEnteredDateSelected::class.java, { uiActions.userEnteredDateSelected(it.userEnteredDate) }, schedulersProvider.ui())
         .build()
   }
 

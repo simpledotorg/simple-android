@@ -1,6 +1,7 @@
 package org.simple.clinic.home.overdue
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -121,13 +122,16 @@ class OverdueScreen : BaseScreen<
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
-
-    context.injector<Injector>().inject(this)
 
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)

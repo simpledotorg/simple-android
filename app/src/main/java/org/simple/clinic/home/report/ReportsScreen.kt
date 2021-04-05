@@ -2,6 +2,8 @@ package org.simple.clinic.home.report
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
@@ -44,6 +46,23 @@ class ReportsScreen : BaseScreen<
         modelUpdateListener = uiRenderer::render
     )
   }
+
+  override fun defaultModel() = ReportsModel.create()
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenReportBinding.inflate(layoutInflater, container, false)
+
+  override fun uiRenderer() = ReportsUiRenderer(this)
+
+  override fun events() = Observable
+      .mergeArray(webViewBackClicks)
+      .cast<ReportsEvent>()
+
+  override fun createUpdate() = ReportsUpdate()
+
+  override fun createInit() = ReportsInit()
+
+  override fun createEffectHandler() = effectHandler.build()
 
   @SuppressLint("SetJavaScriptEnabled")
   override fun onFinishInflate() {

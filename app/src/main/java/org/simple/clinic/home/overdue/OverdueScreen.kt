@@ -2,8 +2,10 @@ package org.simple.clinic.home.overdue
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.PagedList
@@ -127,14 +129,17 @@ class OverdueScreen : BaseScreen<
     context.injector<Injector>().inject(this)
   }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    overdueRecyclerView.adapter = overdueListAdapter
+    overdueRecyclerView.layoutManager = LinearLayoutManager(context)
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
-
-    overdueRecyclerView.adapter = overdueListAdapter
-    overdueRecyclerView.layoutManager = LinearLayoutManager(context)
   }
 
   override fun onAttachedToWindow() {

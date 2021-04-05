@@ -1,20 +1,17 @@
 package org.simple.clinic.home.patients
 
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Parcelable
-import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.RelativeLayout
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.patients_user_status_approved.view.*
 import kotlinx.android.synthetic.main.patients_user_status_awaitingsmsverification.view.*
 import kotlinx.android.synthetic.main.screen_patients.view.*
@@ -25,6 +22,7 @@ import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
+import org.simple.clinic.databinding.ScreenPatientsBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.feature.Feature
@@ -34,7 +32,9 @@ import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
@@ -48,13 +48,17 @@ import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.indexOfChildId
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientsTabUi, PatientsTabUiActions {
+class PatientsTabScreen : BaseScreen<
+    PatientsTabScreen.Key,
+    ScreenPatientsBinding,
+    PatientsTabModel,
+    PatientsTabEvent,
+    PatientsTabEffect>(), PatientsTabUi, PatientsTabUiActions {
 
   @Inject
   lateinit var router: Router
@@ -298,5 +302,13 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   interface Injector {
     fun inject(target: PatientsTabScreen)
+  }
+
+  @Parcelize
+  class Key : ScreenKey() {
+
+    override val analyticsName = "Patients"
+
+    override fun instantiateFragment() = PatientsTabScreen()
   }
 }

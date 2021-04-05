@@ -3,7 +3,6 @@ package org.simple.clinic.home.report
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.screen_report.view.*
 import org.simple.clinic.databinding.ScreenReportBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
@@ -87,33 +85,6 @@ class ReportsScreen : BaseScreen<
     webView.webViewClient = ReportsWebViewClient(
         backClicked = { webViewBackClicks.onNext(WebBackClicked) }
     )
-  }
-
-  @SuppressLint("SetJavaScriptEnabled")
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-
-    if (isInEditMode) {
-      return
-    }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   override fun showReport(html: String) {

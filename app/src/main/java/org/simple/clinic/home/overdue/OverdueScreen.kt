@@ -28,6 +28,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PagingItemAdapter
+import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -73,6 +74,12 @@ class OverdueScreen : BaseScreen<
           }
       )
   )
+
+  private val viewForEmptyList
+    get() = binding.viewForEmptyList
+
+  private val overdueRecyclerView
+    get() = binding.overdueRecyclerView
 
   private val events by unsafeLazy {
     overdueListAdapter

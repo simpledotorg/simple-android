@@ -14,6 +14,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
 class ReportsScreen : BaseScreen<
@@ -27,6 +28,12 @@ class ReportsScreen : BaseScreen<
   lateinit var effectHandler: ReportsEffectHandler
 
   private val webViewBackClicks = PublishSubject.create<ReportsEvent>()
+
+  private val webView
+    get() = binding.webView
+
+  private val noReportView
+    get() = binding.noReportView
 
   private val events: Observable<ReportsEvent> by unsafeLazy {
     Observable

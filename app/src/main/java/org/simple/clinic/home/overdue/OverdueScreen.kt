@@ -11,8 +11,8 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spotify.mobius.Update
 import io.reactivex.rxkotlin.cast
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.screen_overdue.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
@@ -80,6 +80,8 @@ class OverdueScreen : BaseScreen<
   private val overdueRecyclerView
     get() = binding.overdueRecyclerView
 
+  private val screenDestroys = PublishSubject.create<Unit>()
+
   override fun defaultModel() = OverdueModel.create()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
@@ -111,17 +113,20 @@ class OverdueScreen : BaseScreen<
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
   }
 
+  override fun onDestroyView() {
+    super.onDestroyView()
+    screenDestroys.onNext(Unit)
+  }
+
   override fun openPhoneMaskBottomSheet(patientUuid: UUID) {
     router.push(ContactPatientBottomSheet.Key(patientUuid))
   }
 
   @SuppressLint("CheckResult")
   override fun showOverdueAppointments(dataSource: OverdueAppointmentRowDataSource.Factory) {
-    val detaches = detaches()
-
     dataSource
-        .toObservable(pagedListConfig, detaches)
-        .takeUntil(detaches)
+        .toObservable(pagedListConfig, screenDestroys)
+        .takeUntil(screenDestroys)
         .doOnNext { appointmentsList ->
           val areOverdueAppointmentsAvailable = appointmentsList.isNotEmpty()
 

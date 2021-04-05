@@ -31,7 +31,6 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
@@ -47,7 +46,6 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import java.time.Instant
@@ -136,34 +134,6 @@ class PatientsTabScreen : BaseScreen<
 
   private val illustrationLayout
     get() = binding.illustrationLayout
-
-  private val events: Observable<UiEvent> by unsafeLazy {
-    Observable
-        .mergeArray(
-            activityResumes(),
-            searchButtonClicks(),
-            dismissApprovedStatusClicks(),
-            enterCodeManuallyClicks(),
-            scanCardIdButtonClicks(),
-            simpleVideoClicked()
-        )
-        .compose<UiEvent>(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
-        .compose(ReportAnalyticsEvents())
-  }
-
-  private val delegate: MobiusDelegate<PatientsTabModel, PatientsTabEvent, PatientsTabEffect> by unsafeLazy {
-    val uiRenderer = PatientsTabUiRenderer(this)
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = PatientsTabModel.create(),
-        update = PatientsTabUpdate(),
-        init = PatientsInit(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render,
-        additionalEventSources = listOf(deferredEvents)
-    )
-  }
 
   override fun defaultModel() = PatientsTabModel.create()
 

@@ -361,7 +361,7 @@ class PatientsTabScreen : BaseScreen<
   }
 
   override fun openYouTubeLinkForSimpleVideo() {
-    val packageManager = context.packageManager
+    val packageManager = requireContext().packageManager
     val appUri = "vnd.youtube:$youTubeVideoId"
     val webUri = "http://www.youtube.com/watch?v=$youTubeVideoId"
 
@@ -371,7 +371,7 @@ class PatientsTabScreen : BaseScreen<
         .firstOrNull { it.resolveActivity(packageManager) != null }
 
     if (resolvedIntent != null) {
-      context.startActivity(resolvedIntent)
+      requireContext().startActivity(resolvedIntent)
     } else {
       crashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }

@@ -8,11 +8,23 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.DismissSheet
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.HideDateErrorMessage
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.ShowDateValidationError
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.InvalidPattern
+import org.simple.clinic.util.UserInputDatePaddingCharacter
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class TextInputDatePickerUpdateTest {
 
-  private val updateSpec = UpdateSpec(TextInputDatePickerUpdate())
-  private val defaultModel = TextInputDatePickerModel.create()
+  private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+  private val updateSpec = UpdateSpec(TextInputDatePickerUpdate(
+      TextInputDatePickerValidator(dateFormatter),
+      UserInputDatePaddingCharacter.ZERO
+  ))
+  private val minDate = LocalDate.parse("2019-04-04")
+  private val maxDate = LocalDate.parse("2020-04-04")
+  private val defaultModel = TextInputDatePickerModel.create(minDate, maxDate)
 
   @Test
   fun `when close button is clicked, then close the sheet`() {
@@ -68,6 +80,24 @@ class TextInputDatePickerUpdateTest {
             assertThatNext(
                 hasModel(defaultModel.yearChanged(year)),
                 hasEffects(HideDateErrorMessage)
+            )
+        )
+  }
+
+  @Test
+  fun `when done button is clicked, then show date validation errors`() {
+    val model = defaultModel
+        .yearChanged("2019")
+        .dayChanged("04")
+        .monthChanged("34")
+
+    updateSpec
+        .given(model)
+        .whenEvent(DoneClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowDateValidationError(InvalidPattern))
             )
         )
   }

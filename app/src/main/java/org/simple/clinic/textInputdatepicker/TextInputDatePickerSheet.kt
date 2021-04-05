@@ -3,10 +3,13 @@ package org.simple.clinic.textInputdatepicker
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.toObservable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -14,6 +17,7 @@ import org.simple.clinic.databinding.SheetTextInputDatePickerBinding
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
+import java.time.LocalDate
 import javax.inject.Inject
 
 class TextInputDatePickerSheet : BaseBottomSheet<
@@ -43,20 +47,21 @@ class TextInputDatePickerSheet : BaseBottomSheet<
   private val yearEditText
     get() = binding.yearEditText
 
-  override fun defaultModel() = TextInputDatePickerModel.create()
+  override fun defaultModel() = TextInputDatePickerModel.create(screenKey.minDate, screenKey.maxDate)
 
   override fun bindView(inflater: LayoutInflater, container: ViewGroup?) = SheetTextInputDatePickerBinding.inflate(inflater, container, false)
 
   override fun events() = Observable
-      .merge(
+      .mergeArray(
           sheetCloseClicks(),
           dayTextChanges(),
           monthTextChanges(),
-          yearTextChanges()
+          yearTextChanges(),
+          imeDoneClicks()
       )
       .compose(ReportAnalyticsEvents())
       .cast<TextInputDatePickerEvent>()
-  
+
   private fun sheetCloseClicks() = imageTextInputSheetClose
       .clicks()
       .map { DismissSheetClicked }
@@ -75,6 +80,12 @@ class TextInputDatePickerSheet : BaseBottomSheet<
       .textChanges()
       .map(CharSequence::toString)
       .map(::YearChanged)
+
+  private fun imeDoneClicks() = listOf(dayEditText, monthEditText, yearEditText)
+      .map { it.editorActions { actionID -> actionID == EditorInfo.IME_ACTION_DONE } }
+      .toObservable()
+      .flatMap { it }
+      .map { DoneClicked }
 
   override fun dismissSheet() {
     router.pop()
@@ -100,7 +111,7 @@ class TextInputDatePickerSheet : BaseBottomSheet<
   }
 
   @Parcelize
-  object Key : ScreenKey() {
+  data class Key(val minDate: LocalDate, val maxDate: LocalDate) : ScreenKey() {
 
     override val analyticsName = "Text Input Date Picker"
 

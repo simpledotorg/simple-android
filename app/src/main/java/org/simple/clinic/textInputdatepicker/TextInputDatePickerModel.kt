@@ -2,19 +2,24 @@ package org.simple.clinic.textInputdatepicker
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import java.time.LocalDate
 
 @Parcelize
 data class TextInputDatePickerModel(
     val day: String,
     val month: String,
-    val year: String
+    val year: String,
+    val minDate: LocalDate,
+    val maxDate: LocalDate
 ) : Parcelable {
 
   companion object {
-    fun create() = TextInputDatePickerModel(
+    fun create(minDate: LocalDate, maxDate: LocalDate) = TextInputDatePickerModel(
         day = "",
         month = "",
-        year = ""
+        year = "",
+        minDate = minDate,
+        maxDate = maxDate
     )
   }
 

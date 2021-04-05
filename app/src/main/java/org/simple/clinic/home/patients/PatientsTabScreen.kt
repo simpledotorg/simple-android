@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
@@ -202,15 +203,18 @@ class PatientsTabScreen : BaseScreen<
     context.injector<Injector>().inject(this)
   }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    setupApprovalStatusAnimations()
+
+    homeIllustration.setImageResource(illustrationResourceId())
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
-
-    setupApprovalStatusAnimations()
-
-    homeIllustration.setImageResource(illustrationResourceId())
   }
 
   override fun onAttachedToWindow() {

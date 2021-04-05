@@ -4,12 +4,15 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Parcelable
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.patients_user_status_approved.view.*
@@ -126,6 +129,34 @@ class PatientsTabScreen : BaseScreen<
         additionalEventSources = listOf(deferredEvents)
     )
   }
+
+  override fun defaultModel() = PatientsTabModel.create()
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenPatientsBinding.inflate(layoutInflater, container, false)
+
+  override fun uiRenderer() = PatientsTabUiRenderer(this)
+
+  override fun events() = Observable
+      .mergeArray(
+          activityResumes(),
+          searchButtonClicks(),
+          dismissApprovedStatusClicks(),
+          enterCodeManuallyClicks(),
+          scanCardIdButtonClicks(),
+          simpleVideoClicked()
+      )
+      .compose<UiEvent>(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
+      .compose(ReportAnalyticsEvents())
+      .cast<PatientsTabEvent>()
+
+  override fun createUpdate() = PatientsTabUpdate()
+
+  override fun createInit() = PatientsInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun additionalEventSources() = listOf(deferredEvents)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

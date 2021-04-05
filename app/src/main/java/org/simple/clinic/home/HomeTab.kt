@@ -5,16 +5,17 @@ import org.simple.clinic.R
 import org.simple.clinic.home.overdue.OverdueScreenKey
 import org.simple.clinic.home.patients.PatientsTabScreenKey
 import org.simple.clinic.home.report.ReportsScreenKey
-import org.simple.clinic.router.screen.FullScreenKey
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.compat.wrap
 
 enum class HomeTab(
-    val key: FullScreenKey,
+    val key: ScreenKey,
     @StringRes val title: Int
 ) {
 
-  PATIENTS(PatientsTabScreenKey(), R.string.tab_patient),
+  PATIENTS(PatientsTabScreenKey().wrap(), R.string.tab_patient),
 
-  OVERDUE(OverdueScreenKey(), R.string.tab_overdue),
+  OVERDUE(OverdueScreenKey().wrap(), R.string.tab_overdue),
 
-  REPORTS(ReportsScreenKey(), R.string.tab_progress)
+  REPORTS(ReportsScreenKey().wrap(), R.string.tab_progress)
 }

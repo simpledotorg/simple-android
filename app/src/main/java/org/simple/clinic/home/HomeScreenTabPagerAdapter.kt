@@ -11,5 +11,5 @@ class HomeScreenTabPagerAdapter(
 
   override fun getItemCount(): Int = screens.size
 
-  override fun createFragment(position: Int): Fragment = HomeScreenTab.create(screens[position].key)
+  override fun createFragment(position: Int): Fragment = screens[position].key.createFragment()
 }

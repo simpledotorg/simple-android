@@ -1,6 +1,7 @@
 package org.simple.clinic.home.patients
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Parcelable
@@ -196,13 +197,16 @@ class PatientsTabScreen : BaseScreen<
 
   override fun additionalEventSources() = listOf(deferredEvents)
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
-
-    context.injector<Injector>().inject(this)
 
     setupApprovalStatusAnimations()
 

@@ -1,21 +1,25 @@
 package org.simple.clinic.home.report
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
-import android.widget.FrameLayout
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.screen_report.view.*
-import org.simple.clinic.di.injector
+import org.simple.clinic.databinding.ScreenReportBinding
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
-class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs), ReportsUi {
+class ReportsScreen : BaseScreen<
+    ReportsScreen.Key,
+    ScreenReportBinding,
+    ReportsModel,
+    ReportsEvent,
+    ReportsEffect>(), ReportsUi {
 
   @Inject
   lateinit var effectHandler: ReportsEffectHandler
@@ -92,5 +96,13 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
 
   interface Injector {
     fun inject(target: ReportsScreen)
+  }
+
+  @Parcelize
+  class Key : ScreenKey() {
+
+    override val analyticsName = "Reports"
+
+    override fun instantiateFragment() = ReportsScreen()
   }
 }

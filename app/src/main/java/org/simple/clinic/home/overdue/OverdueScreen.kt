@@ -11,7 +11,6 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spotify.mobius.Update
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.screen_overdue.view.*
 import org.simple.clinic.R
@@ -20,7 +19,6 @@ import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ItemOverdueListPatientBinding
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -28,7 +26,6 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
@@ -82,26 +79,6 @@ class OverdueScreen : BaseScreen<
 
   private val overdueRecyclerView
     get() = binding.overdueRecyclerView
-
-  private val events by unsafeLazy {
-    overdueListAdapter
-        .itemEvents
-        .compose(ReportAnalyticsEvents())
-        .share()
-  }
-
-  private val delegate by unsafeLazy {
-    val date = LocalDate.now(userClock)
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = OverdueModel.create(),
-        update = OverdueUpdate(date),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = OverdueInit(),
-        modelUpdateListener = { /* Nothing to do here */ }
-    )
-  }
 
   override fun defaultModel() = OverdueModel.create()
 

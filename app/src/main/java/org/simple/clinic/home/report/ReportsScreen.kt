@@ -1,6 +1,7 @@
 package org.simple.clinic.home.report
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.screen_report.view.*
 import org.simple.clinic.databinding.ScreenReportBinding
+import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -71,6 +73,11 @@ class ReportsScreen : BaseScreen<
 
   override fun createEffectHandler() = effectHandler.build()
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   @SuppressLint("SetJavaScriptEnabled")
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -83,8 +90,6 @@ class ReportsScreen : BaseScreen<
     webView.webViewClient = ReportsWebViewClient(
         backClicked = { webViewBackClicks.onNext(WebBackClicked) }
     )
-
-    context.injector<Injector>().inject(this)
   }
 
   override fun onAttachedToWindow() {

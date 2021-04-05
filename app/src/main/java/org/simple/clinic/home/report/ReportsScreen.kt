@@ -12,10 +12,8 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.databinding.ScreenReportBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
@@ -36,25 +34,6 @@ class ReportsScreen : BaseScreen<
 
   private val noReportView
     get() = binding.noReportView
-
-  private val events: Observable<ReportsEvent> by unsafeLazy {
-    Observable
-        .mergeArray(webViewBackClicks)
-        .cast()
-  }
-
-  private val delegate by unsafeLazy {
-    val uiRenderer = ReportsUiRenderer(this)
-
-    MobiusDelegate.forView(
-        events = events,
-        defaultModel = ReportsModel.create(),
-        init = ReportsInit(),
-        update = ReportsUpdate(),
-        effectHandler = effectHandler.build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
 
   override fun defaultModel() = ReportsModel.create()
 

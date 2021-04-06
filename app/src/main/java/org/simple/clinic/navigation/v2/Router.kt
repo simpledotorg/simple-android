@@ -193,7 +193,8 @@ class Router(
         newNavRequests = newNavRequests,
         newTopScreen = newTopScreen,
         transaction = transaction,
-        lastButOneScreen = lastButOneScreen
+        lastButOneScreen = lastButOneScreen,
+        currentTopScreen = currentTopScreen
     )
 
     transaction.commitNow()
@@ -283,13 +284,14 @@ class Router(
       newNavRequests: List<NavRequest>,
       newTopScreen: NavRequest,
       transaction: FragmentTransaction,
-      lastButOneScreen: NavRequest?
+      lastButOneScreen: NavRequest?,
+      currentTopScreen: NavRequest
   ) {
     newNavRequests.forEach { navRequest ->
       val existingFragment = fragmentManager.findFragmentByTag(navRequest.key.fragmentTag)
       when (navRequest) {
         newTopScreen -> handleAddingTopFragment(navRequest, existingFragment, transaction)
-        else -> handleRemovingOlderFragments(newTopScreen, existingFragment, transaction, navRequest, lastButOneScreen)
+        else -> handleRemovingOlderFragments(newTopScreen, existingFragment, transaction, navRequest, lastButOneScreen, currentTopScreen)
       }
     }
   }
@@ -356,10 +358,15 @@ class Router(
       existingFragment: Fragment?,
       transaction: FragmentTransaction,
       navRequest: NavRequest,
-      lastButOneScreen: NavRequest?
+      lastButOneScreen: NavRequest?,
+      currentTopScreen: NavRequest
   ) {
     when {
-      newTopScreen.key.isModal -> handleRemovingOlderFragmentForModalTop(navRequest, lastButOneScreen, existingFragment, transaction)
+      newTopScreen.key.isModal -> handleRemovingOlderFragmentForModalTop(navRequest,
+          lastButOneScreen,
+          existingFragment,
+          transaction,
+          currentTopScreen)
       else -> handleRemovingOlderFragmentForFullscreenTop(existingFragment, transaction)
     }
   }
@@ -377,12 +384,13 @@ class Router(
       navRequest: NavRequest,
       lastButOneScreen: NavRequest?,
       existingFragment: Fragment?,
-      transaction: FragmentTransaction
+      transaction: FragmentTransaction,
+      currentTopScreen: NavRequest
   ) {
     // Last but one key should not be detached since the topmost key is a modal
     // and we want the previous screen to be visible
     when {
-      navRequest == lastButOneScreen -> ensureFragmentIsPresent(existingFragment, transaction, navRequest)
+      navRequest == lastButOneScreen || currentTopScreen.key.isModal -> ensureFragmentIsPresent(existingFragment, transaction, navRequest)
       existingFragment != null && existingFragment.isShowing -> transaction.detach(existingFragment)
     }
   }

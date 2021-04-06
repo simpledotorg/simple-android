@@ -15,11 +15,14 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetTextInputDatePickerBinding
 import org.simple.clinic.datepicker.SelectedDate
+import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
+import org.simple.clinic.widgets.setTextAndCursor
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class TextInputDatePickerSheet : BaseBottomSheet<
@@ -33,6 +36,18 @@ class TextInputDatePickerSheet : BaseBottomSheet<
 
   @Inject
   lateinit var router: Router
+
+  @Inject
+  @DateFormatter(DateFormatter.Type.Day)
+  lateinit var dayDateFormatter: DateTimeFormatter
+
+  @Inject
+  @DateFormatter(DateFormatter.Type.Month)
+  lateinit var monthDateFormatter: DateTimeFormatter
+
+  @Inject
+  @DateFormatter(DateFormatter.Type.FullYear)
+  lateinit var yearDateFormatter: DateTimeFormatter
 
   private val imageTextInputSheetClose
     get() = binding.imageTextInputSheetClose
@@ -116,8 +131,14 @@ class TextInputDatePickerSheet : BaseBottomSheet<
     router.popWithResult(Succeeded(SelectedDate(userEnteredDate)))
   }
 
+  override fun setDateOnInputFields(date: LocalDate) {
+    dayEditText.setTextAndCursor(dayDateFormatter.format(date))
+    monthEditText.setTextAndCursor(monthDateFormatter.format(date))
+    yearEditText.setTextAndCursor(yearDateFormatter.format(date))
+  }
+
   @Parcelize
-  data class Key(val minDate: LocalDate, val maxDate: LocalDate) : ScreenKey() {
+  data class Key(val minDate: LocalDate, val maxDate: LocalDate, val prefilledDate: LocalDate?) : ScreenKey() {
 
     override val analyticsName = "Text Input Date Picker"
 

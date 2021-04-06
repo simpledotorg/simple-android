@@ -23,9 +23,12 @@ class TextInputDatePickerUpdateTest {
       TextInputDatePickerValidator(dateFormatter),
       UserInputDatePaddingCharacter.ZERO
   ))
-  private val minDate = LocalDate.parse("2019-04-04")
+  private val date = LocalDate.parse("2019-04-04")
   private val maxDate = LocalDate.parse("2020-04-04")
-  private val defaultModel = TextInputDatePickerModel.create(minDate, maxDate)
+  private val defaultModel = TextInputDatePickerModel.create(
+      minDate = date,
+      maxDate = maxDate,
+      prefilledDate = date)
 
   @Test
   fun `when close button is clicked, then close the sheet`() {

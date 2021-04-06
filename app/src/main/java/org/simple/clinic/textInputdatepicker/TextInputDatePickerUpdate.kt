@@ -23,7 +23,7 @@ class TextInputDatePickerUpdate(
       is MonthChanged -> dateChanged(model.monthChanged(event.month))
       is YearChanged -> dateChanged(model.yearChanged(event.year))
       DoneClicked -> onDoneClicked(model)
-      is DatePrefilled -> Next.noChange()
+      is DatePrefilled -> next(model.prefilledDate(event.prefilledDate))
     }
   }
 

@@ -10,10 +10,12 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenReportBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
@@ -27,7 +29,7 @@ class ReportsScreen : BaseScreen<
   @Inject
   lateinit var effectHandler: ReportsEffectHandler
 
-  private val webViewBackClicks = PublishSubject.create<ReportsEvent>()
+  private val webViewBackClicks = PublishSubject.create<UiEvent>()
 
   private val webView
     get() = binding.webView
@@ -44,6 +46,7 @@ class ReportsScreen : BaseScreen<
 
   override fun events() = Observable
       .mergeArray(webViewBackClicks)
+      .compose(ReportAnalyticsEvents())
       .cast<ReportsEvent>()
 
   override fun createUpdate() = ReportsUpdate()

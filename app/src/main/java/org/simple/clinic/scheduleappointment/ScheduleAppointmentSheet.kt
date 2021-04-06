@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -18,11 +19,16 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetScheduleAppointmentBinding
+import org.simple.clinic.datepicker.DatePickerKeyFactory
+import org.simple.clinic.datepicker.DatePickerResult
+import org.simple.clinic.datepicker.SelectedDate
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.DeferredEventSource
+import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResult
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.newentry.ButtonState
@@ -34,7 +40,6 @@ import org.simple.clinic.summary.teleconsultation.status.TeleconsultStatusSheet
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
-import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog_Old
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -48,7 +53,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     SheetScheduleAppointmentBinding,
     ScheduleAppointmentModel,
     ScheduleAppointmentEvent,
-    ScheduleAppointmentEffect>(), ScheduleAppointmentUi, ScheduleAppointmentUiActions {
+    ScheduleAppointmentEffect>(), ScheduleAppointmentUi, ScheduleAppointmentUiActions, ExpectsResult {
 
   companion object {
     private const val REQCODE_FACILITY_SELECT = 100
@@ -80,6 +85,9 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   @Inject
   lateinit var router: Router
+
+  @Inject
+  lateinit var datePickerKeyFactory: DatePickerKeyFactory
 
   private val changeFacilityButton
     get() = binding.changeFacilityButton
@@ -170,6 +178,14 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     }
   }
 
+  override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
+    if (requestType == DatePickerResult && result is Succeeded) {
+      val selectedDate = result.result as SelectedDate
+      val event = AppointmentCalendarDateSelected(selectedDate = selectedDate.date)
+      calendarDateSelectedEvents.onNext(event)
+    }
+  }
+
   private fun manageRequestCodes(requestCode: Int, data: Intent?) {
     when (requestCode) {
       REQCODE_FACILITY_SELECT -> updateFacilityChangeForPatient(data)
@@ -239,13 +255,12 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
   override fun showManualDateSelector(date: LocalDate) {
     val today = LocalDate.now(userClock)
 
-    ThreeTenBpDatePickerDialog_Old(
-        context = requireContext(),
+    val key = datePickerKeyFactory.key(
         preselectedDate = date,
-        allowedDateRange = today.plusDays(1)..today.plusYears(1),
-        clock = userClock,
-        datePickedListener = { pickedDate -> calendarDateSelectedEvents.onNext(AppointmentCalendarDateSelected(pickedDate)) }
-    ).show()
+        allowedDateRange = today.plusDays(1)..today.plusYears(1)
+    )
+
+    router.pushExpectingResult(DatePickerResult, key)
   }
 
   override fun showPatientFacility(facilityName: String) {

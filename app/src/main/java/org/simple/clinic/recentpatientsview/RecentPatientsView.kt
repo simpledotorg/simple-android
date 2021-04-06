@@ -3,13 +3,14 @@ package org.simple.clinic.recentpatientsview
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.recent_patients.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.RecentPatientItemViewBinding
+import org.simple.clinic.databinding.RecentPatientsBinding
 import org.simple.clinic.databinding.SeeAllItemViewBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
@@ -79,9 +80,14 @@ class RecentPatientsView(
     )
   }
 
-  init {
-    inflate(context, R.layout.recent_patients, this)
-  }
+  private val binding = RecentPatientsBinding.inflate(LayoutInflater.from(context),
+      this)
+
+  private val recentRecyclerView
+    get() = binding.recentRecyclerView
+
+  private val noRecentPatientsTextView
+    get() = binding.noRecentPatientsTextView
 
   override fun onFinishInflate() {
     super.onFinishInflate()

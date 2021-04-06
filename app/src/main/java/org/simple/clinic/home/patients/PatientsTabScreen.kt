@@ -4,27 +4,26 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.RelativeLayout
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.patients_user_status_approved.view.*
-import kotlinx.android.synthetic.main.patients_user_status_awaitingsmsverification.view.*
-import kotlinx.android.synthetic.main.screen_patients.view.*
-import kotlinx.android.synthetic.main.view_simple_video.view.*
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
+import org.simple.clinic.databinding.ScreenPatientsBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.feature.Feature
@@ -32,9 +31,10 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
@@ -46,7 +46,6 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import java.time.Instant
@@ -54,7 +53,12 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientsTabUi, PatientsTabUiActions {
+class PatientsTabScreen : BaseScreen<
+    PatientsTabScreen.Key,
+    ScreenPatientsBinding,
+    PatientsTabModel,
+    PatientsTabEvent,
+    PatientsTabEffect>(), PatientsTabUi, PatientsTabUiActions {
 
   @Inject
   lateinit var router: Router
@@ -95,63 +99,86 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
   @IdRes
   private var currentStatusViewId: Int = R.id.userStatusHiddenView
 
-  private val events: Observable<UiEvent> by unsafeLazy {
-    Observable
-        .mergeArray(
-            activityResumes(),
-            searchButtonClicks(),
-            dismissApprovedStatusClicks(),
-            enterCodeManuallyClicks(),
-            scanCardIdButtonClicks(),
-            simpleVideoClicked()
-        )
-        .compose<UiEvent>(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
-        .compose(ReportAnalyticsEvents())
-  }
+  private val homeIllustration
+    get() = binding.homeIllustration
 
-  private val delegate: MobiusDelegate<PatientsTabModel, PatientsTabEvent, PatientsTabEffect> by unsafeLazy {
-    val uiRenderer = PatientsTabUiRenderer(this)
+  private val userStatusViewflipper
+    get() = binding.userStatusViewflipper
 
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = PatientsTabModel.create(),
-        update = PatientsTabUpdate(),
-        init = PatientsInit(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render,
-        additionalEventSources = listOf(deferredEvents)
-    )
-  }
+  private val searchPatientsButton
+    get() = binding.searchPatientsButton
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
+  private val userStatusApproved
+    get() = binding.userStatusApproved
 
+  private val dismissApprovedStatusButton
+    get() = userStatusApproved.dismissApprovedStatusButton
+
+  private val userAwaitingSmsVerification
+    get() = binding.userAwaitingSmsVerification
+
+  private val enterCodeButton
+    get() = userAwaitingSmsVerification.enterCodeButton
+
+  private val scanSimpleCardButton
+    get() = binding.scanSimpleCardButton
+
+  private val simpleVideoLayout
+    get() = binding.simpleVideoLayout
+
+  private val videoTitleText
+    get() = simpleVideoLayout.videoTitleText
+
+  private val simpleVideoImage
+    get() = simpleVideoLayout.simpleVideoImage
+
+  private val simpleVideoDuration
+    get() = simpleVideoLayout.simpleVideoDuration
+
+  private val syncIndicator
+    get() = binding.syncIndicator
+
+  private val illustrationLayout
+    get() = binding.illustrationLayout
+
+  override fun defaultModel() = PatientsTabModel.create()
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenPatientsBinding.inflate(layoutInflater, container, false)
+
+  override fun uiRenderer() = PatientsTabUiRenderer(this)
+
+  override fun events() = Observable
+      .mergeArray(
+          activityResumes(),
+          searchButtonClicks(),
+          dismissApprovedStatusClicks(),
+          enterCodeManuallyClicks(),
+          scanCardIdButtonClicks(),
+          simpleVideoClicked()
+      )
+      .compose<UiEvent>(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
+      .compose(ReportAnalyticsEvents())
+      .cast<PatientsTabEvent>()
+
+  override fun createUpdate() = PatientsTabUpdate()
+
+  override fun createInit() = PatientsInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun additionalEventSources() = listOf(deferredEvents)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     setupApprovalStatusAnimations()
 
     homeIllustration.setImageResource(illustrationResourceId())
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun illustrationResourceId(): Int =
@@ -214,15 +241,15 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
   }
 
   override fun showUserStatusAsWaiting() {
-    showUserAccountStatus(R.id.patients_user_status_awaitingapproval)
+    showUserAccountStatus(R.id.userStatusAwaitingApproval)
   }
 
   override fun showUserStatusAsApproved() {
-    showUserAccountStatus(R.id.patients_user_status_approved)
+    showUserAccountStatus(R.id.userStatusApproved)
   }
 
   override fun showUserStatusAsPendingVerification() {
-    showUserAccountStatus(R.id.patients_user_status_awaitingsmsverification)
+    showUserAccountStatus(R.id.userAwaitingSmsVerification)
   }
 
   override fun hideUserAccountStatus() {
@@ -272,15 +299,15 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
     // we are not sure if we will have variations of this training video.
     // We should make the title, duration and video thumbnail configurable in order to improve this.
     simpleVideoDuration.text = resources.getString(R.string.simple_video_duration, "5:07")
-    showHomeScreenBackground(simpleVideoLayout.id)
+    showHomeScreenBackground(R.id.simpleVideoLayout)
   }
 
   override fun showIllustration() {
-    showHomeScreenBackground(homeIllustration.id)
+    showHomeScreenBackground(R.id.homeIllustration)
   }
 
   override fun openYouTubeLinkForSimpleVideo() {
-    val packageManager = context.packageManager
+    val packageManager = requireContext().packageManager
     val appUri = "vnd.youtube:$youTubeVideoId"
     val webUri = "http://www.youtube.com/watch?v=$youTubeVideoId"
 
@@ -290,7 +317,7 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
         .firstOrNull { it.resolveActivity(packageManager) != null }
 
     if (resolvedIntent != null) {
-      context.startActivity(resolvedIntent)
+      requireContext().startActivity(resolvedIntent)
     } else {
       crashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }
@@ -298,5 +325,13 @@ class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   interface Injector {
     fun inject(target: PatientsTabScreen)
+  }
+
+  @Parcelize
+  class Key : ScreenKey() {
+
+    override val analyticsName = "Patients"
+
+    override fun instantiateFragment() = PatientsTabScreen()
   }
 }

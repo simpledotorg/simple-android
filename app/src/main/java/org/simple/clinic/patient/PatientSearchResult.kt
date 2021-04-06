@@ -6,7 +6,8 @@ import androidx.room.DatabaseView
 import androidx.room.Embedded
 import androidx.room.Query
 import io.reactivex.Flowable
-import kotlinx.parcelize.Parcelize
+import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.patient.businessid.Identifier
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
@@ -17,7 +18,8 @@ import java.util.UUID
   PA.state addr_state, PA.country addr_country,
   PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
   PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt,
-  PatientLastSeen.lastSeenTime lastSeen_lastSeenOn, F.name lastSeen_lastSeenAtFacilityName, PatientLastSeen.lastSeenFacilityUuid lastSeen_lastSeenAtFacilityUuid
+  PatientLastSeen.lastSeenTime lastSeen_lastSeenOn, F.name lastSeen_lastSeenAtFacilityName, PatientLastSeen.lastSeenFacilityUuid lastSeen_lastSeenAtFacilityUuid,
+  B.identifier id_identifier, B.identifierType id_identifierType
   FROM Patient P
   INNER JOIN PatientAddress PA ON PA.uuid = P.addressUuid
   LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
@@ -54,6 +56,7 @@ import java.util.UUID
       WHERE LatestBP.uuid IS NOT NULL OR LatestBloodSugar.uuid IS NOT NULL
   ) PatientLastSeen ON PatientLastSeen.patientUuid = P.uuid
   LEFT JOIN Facility F ON F.uuid = PatientLastSeen.lastSeenFacilityUuid
+  LEFT JOIN BusinessId B ON B.patientUuid = P.uuid
 """)
 @Parcelize
 data class PatientSearchResult(
@@ -97,7 +100,10 @@ data class PatientSearchResult(
     val phoneUpdatedAt: Instant?,
 
     @Embedded(prefix = "lastSeen_")
-    val lastSeen: LastSeen?
+    val lastSeen: LastSeen?,
+
+    @Embedded(prefix = "id_")
+    val identifier: Identifier?
 ) : Parcelable {
 
   override fun toString(): String {

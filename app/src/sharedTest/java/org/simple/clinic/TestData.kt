@@ -43,6 +43,7 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion
 import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion.BpPassportMetaDataV1
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.sync.BusinessIdPayload
 import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.patient.sync.PatientPayload
@@ -230,7 +231,7 @@ object TestData {
   fun businessId(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      identifier: Identifier = Identifier(value = UUID.randomUUID().toString(), type = Identifier.IdentifierType.BpPassport),
+      identifier: Identifier = Identifier(value = UUID.randomUUID().toString(), type = BpPassport),
       meta: String = "",
       metaDataVersion: MetaDataVersion = BpPassportMetaDataV1,
       createdAt: Instant = Instant.now(),
@@ -336,7 +337,7 @@ object TestData {
   fun businessIdPayload(
       uuid: UUID = UUID.randomUUID(),
       identifier: String = UUID.randomUUID().toString(),
-      identifierType: Identifier.IdentifierType = Identifier.IdentifierType.BpPassport,
+      identifierType: Identifier.IdentifierType = BpPassport,
       metaDataVersion: MetaDataVersion = BpPassportMetaDataV1,
       meta: String = "",
       createdAt: Instant = Instant.now(),
@@ -1011,7 +1012,11 @@ object TestData {
           lastSeenAtFacilityName = "Some Facility",
           lastSeenAtFacilityUuid = UUID.randomUUID()
       ),
-      assignedFacilityId: UUID? = null
+      assignedFacilityId: UUID? = null,
+      identifier: Identifier = Identifier(
+          value = UUID.randomUUID().toString(),
+          type = BpPassport
+      )
   ): PatientSearchResult {
     return PatientSearchResult(
         uuid = uuid,
@@ -1031,7 +1036,8 @@ object TestData {
         phoneActive = phoneActive,
         phoneCreatedAt = phoneCreatedAt,
         phoneUpdatedAt = phoneUpdatedAt,
-        lastSeen = lastSeen
+        lastSeen = lastSeen,
+        identifier = identifier
     )
   }
 

@@ -2,7 +2,7 @@ package org.simple.clinic.home
 
 import androidx.annotation.StringRes
 import org.simple.clinic.R
-import org.simple.clinic.home.overdue.OverdueScreenKey
+import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.patients.PatientsTabScreen
 import org.simple.clinic.home.report.ReportsScreen
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -15,7 +15,7 @@ enum class HomeTab(
 
   PATIENTS(PatientsTabScreen.Key(), R.string.tab_patient),
 
-  OVERDUE(OverdueScreenKey().wrap(), R.string.tab_overdue),
+  OVERDUE(OverdueScreen.Key(), R.string.tab_overdue),
 
   REPORTS(ReportsScreen.Key(), R.string.tab_progress)
 }

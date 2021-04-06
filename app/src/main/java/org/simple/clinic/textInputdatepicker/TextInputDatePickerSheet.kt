@@ -1,5 +1,6 @@
 package org.simple.clinic.textInputdatepicker
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,6 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.toObservable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
@@ -16,11 +16,11 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetTextInputDatePickerBinding
 import org.simple.clinic.datepicker.SelectedDate
 import org.simple.clinic.di.DateFormatter
+import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
-import org.simple.clinic.widgets.setTextAndCursor
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -78,6 +78,11 @@ class TextInputDatePickerSheet : BaseBottomSheet<
       )
       .compose(ReportAnalyticsEvents())
       .cast<TextInputDatePickerEvent>()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
 
   private fun sheetCloseClicks() = imageTextInputSheetClose
       .clicks()
@@ -145,5 +150,9 @@ class TextInputDatePickerSheet : BaseBottomSheet<
     override fun instantiateFragment() = TextInputDatePickerSheet()
 
     override val type = ScreenType.Modal
+  }
+
+  interface Injector {
+    fun inject(target: TextInputDatePickerSheet)
   }
 }

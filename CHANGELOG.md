@@ -21,6 +21,7 @@
 - Migrate `ReportsScreen` to a fragment
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 05 Apr 2021] Migrate app to use ViewBinding
+- [In Progress: 06 Apr 2021] Add automatic performance profiling for the Room database queries
 
 ### Changes
 - Add Somali language option to language selection

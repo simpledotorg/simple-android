@@ -9,6 +9,7 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.toObservable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
@@ -21,6 +22,8 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
+import org.simple.clinic.util.UserInputDatePaddingCharacter
+import org.simple.clinic.widgets.setTextAndCursor
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -36,6 +39,15 @@ class TextInputDatePickerSheet : BaseBottomSheet<
 
   @Inject
   lateinit var router: Router
+
+  @Inject
+  lateinit var effectHandlerFactory: TextInputDatePickerEffectHandler.Factory
+
+  @Inject
+  lateinit var dateValidator: TextInputDatePickerValidator
+
+  @Inject
+  lateinit var userInputDatePaddingCharacter: UserInputDatePaddingCharacter
 
   @Inject
   @DateFormatter(DateFormatter.Type.Day)
@@ -64,7 +76,7 @@ class TextInputDatePickerSheet : BaseBottomSheet<
   private val yearEditText
     get() = binding.yearEditText
 
-  override fun defaultModel() = TextInputDatePickerModel.create(screenKey.minDate, screenKey.maxDate)
+  override fun defaultModel() = TextInputDatePickerModel.create(screenKey.minDate, screenKey.maxDate, screenKey.prefilledDate)
 
   override fun bindView(inflater: LayoutInflater, container: ViewGroup?) = SheetTextInputDatePickerBinding.inflate(inflater, container, false)
 
@@ -78,6 +90,15 @@ class TextInputDatePickerSheet : BaseBottomSheet<
       )
       .compose(ReportAnalyticsEvents())
       .cast<TextInputDatePickerEvent>()
+
+  override fun createUpdate() = TextInputDatePickerUpdate(
+      dateValidator = dateValidator,
+      inputDatePaddingCharacter = userInputDatePaddingCharacter
+  )
+
+  override fun createInit() = TextInputDatePickerInit()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

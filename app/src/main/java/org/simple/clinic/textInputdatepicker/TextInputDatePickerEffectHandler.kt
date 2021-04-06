@@ -2,6 +2,7 @@ package org.simple.clinic.textInputdatepicker
 
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
@@ -26,6 +27,11 @@ class TextInputDatePickerEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: TextInputDatePickerUiActions,
     private val userClock: UserClock
 ) {
+
+  @AssistedFactory
+  interface Factory {
+    fun create(uiActions: TextInputDatePickerUiActions): TextInputDatePickerEffectHandler
+  }
 
   fun build(): ObservableTransformer<TextInputDatePickerEffect, TextInputDatePickerEvent> {
     return RxMobius

@@ -59,3 +59,7 @@ sealed class BpPassportScanned : InstantSearchEvent() {
 
   data class ByShortCode(val shortCode: String) : BpPassportScanned()
 }
+
+object OpenQrCodeScannerClicked : InstantSearchEvent() {
+  override val analyticsName = "Instant Search Screen:Open QR code scanner"
+}

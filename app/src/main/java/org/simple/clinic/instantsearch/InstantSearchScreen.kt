@@ -162,7 +162,8 @@ class InstantSearchScreen :
           searchQueryChanges(),
           registerNewPatientClicks(),
           blankBpPassportResults,
-          bpPassportScanResults
+          bpPassportScanResults,
+          openQrCodeScannerClicks()
       ).cast<InstantSearchEvent>()
 
   override fun createUpdate() = InstantSearchUpdate()
@@ -184,9 +185,6 @@ class InstantSearchScreen :
     }
 
     qrCodeScannerButton.visibleOrGone(features.isEnabled(InstantSearchQrCode))
-    qrCodeScannerButton.setOnClickListener {
-      router.pushExpectingResult(BpPassportScan, ScanSimpleIdScreenKey())
-    }
 
     searchResultsView.adapter = allPatientsAdapter
 
@@ -325,6 +323,12 @@ class InstantSearchScreen :
     return newPatientButton
         .clicks()
         .map { RegisterNewPatientClicked }
+  }
+
+  private fun openQrCodeScannerClicks(): Observable<UiEvent> {
+    return qrCodeScannerButton
+        .clicks()
+        .map { OpenQrCodeScannerClicked }
   }
 
   private fun hideKeyboardOnSearchResultsScroll(): Disposable {

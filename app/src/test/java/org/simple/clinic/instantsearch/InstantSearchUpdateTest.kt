@@ -365,4 +365,15 @@ class InstantSearchUpdateTest {
             hasEffects(OpenShortCodeSearchScreen(shortCode))
         ))
   }
+
+  @Test
+  fun `when open qr code scanner is clicked, then open qr code scanner`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(OpenQrCodeScannerClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenQrCodeScanner)
+        ))
+  }
 }

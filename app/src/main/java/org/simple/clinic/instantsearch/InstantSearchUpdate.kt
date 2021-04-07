@@ -39,6 +39,7 @@ class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, Insta
       is BpPassportScanned.ByPatientFound -> dispatch(OpenPatientSummary(event.patientId))
       is BpPassportScanned.ByPatientNotFound -> patientNotFoundAfterBpPassportScan(model, event)
       is BpPassportScanned.ByShortCode -> dispatch(OpenShortCodeSearchScreen(event.shortCode))
+      OpenQrCodeScannerClicked -> dispatch(OpenQrCodeScanner)
     }
   }
 

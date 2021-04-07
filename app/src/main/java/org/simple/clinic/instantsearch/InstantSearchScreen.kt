@@ -172,6 +172,7 @@ class InstantSearchScreen :
           openQrCodeScannerClicks()
       )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
+      .compose(ReportAnalyticsEvents())
       .cast<InstantSearchEvent>()
 
   override fun createUpdate() = InstantSearchUpdate()

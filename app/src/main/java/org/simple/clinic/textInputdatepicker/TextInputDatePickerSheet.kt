@@ -8,6 +8,7 @@ import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetTextInputDatePickerBinding
 import org.simple.clinic.navigation.v2.Router
@@ -81,6 +82,21 @@ class TextInputDatePickerSheet : BaseBottomSheet<
 
   override fun hideErrorMessage() {
     dateErrorTextView.visibility = View.GONE
+  }
+
+  override fun showInvalidDateError() {
+    dateErrorTextView.visibility = View.VISIBLE
+    dateErrorTextView.text = getString(R.string.sheet_text_input_date_picker_enter_valid_date)
+  }
+
+  override fun showDateIsInPastError() {
+    dateErrorTextView.visibility = View.VISIBLE
+    dateErrorTextView.text = getString(R.string.sheet_text_input_date_picker_date_cannot_be_in_past)
+  }
+
+  override fun showMaximumDateRangeError() {
+    dateErrorTextView.visibility = View.VISIBLE
+    dateErrorTextView.text = getString(R.string.sheet_text_input_date_picker_date_cannot_be_after_one_year)
   }
 
   @Parcelize

@@ -793,5 +793,8 @@
   <string name="sheet_text_input_date_picker_day">Day</string>
   <string name="sheet_text_input_date_picker_month">Month</string>
   <string name="sheet_text_input_date_picker_year">Year</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">Enter a valid date in DD/MM/YYYY</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">Enter a date in the future</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">Date cannot be after one year</string>
 
 </resources>

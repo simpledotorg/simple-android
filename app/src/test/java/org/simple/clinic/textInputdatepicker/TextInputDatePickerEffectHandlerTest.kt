@@ -9,6 +9,9 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.DismissSheet
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.HideDateErrorMessage
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.DateIsInPast
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.InvalidPattern
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.MaximumAllowedDateRange
 
 class TextInputDatePickerEffectHandlerTest {
 
@@ -47,4 +50,45 @@ class TextInputDatePickerEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
   }
 
+  @Test
+  fun `when show validation error effect is received, then show invalid date error`() {
+    // given
+    val validationResult = InvalidPattern
+
+    // when
+    effectHandlerTestCase.dispatch(TextInputDatePickerEffect.ShowDateValidationError(validationResult))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).showInvalidDateError()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when show validation error effect is received, then show date is in past error`() {
+    // given
+    val validationResult = DateIsInPast
+
+    // when
+    effectHandlerTestCase.dispatch(TextInputDatePickerEffect.ShowDateValidationError(validationResult))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).showDateIsInPastError()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when show validation error effect is received, then date cannot be after one year error`() {
+    // given
+    val validationResult = MaximumAllowedDateRange
+
+    // when
+    effectHandlerTestCase.dispatch(TextInputDatePickerEffect.ShowDateValidationError(validationResult))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).showMaximumDateRangeError()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

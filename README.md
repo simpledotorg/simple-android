@@ -145,6 +145,20 @@ There are currently 2 ways to build an app pointing to different environments:
 
 Simple Server is in a separate repository, and you should follow the [instructions there](https://github.com/simpledotorg/simple-server/blob/master/README.md).
 
+## Execute SQL Queries
+
+You can use [Flipper](https://fbflipper.com/) to run SQL queries on Simple:
+
+1. Install Flipper using brew or download from their [website](https://fbflipper.com/). 
+```sh 
+brew install Flipper
+```
+2. Launch Flipper (you might have to allow Flipper to launch from System Preferences > Security > General as it’s from an unknown developer to Apple).
+3. Run the Simple app in an emulator or your physical device(as Flipper loads the data from your device's local database).
+4. In the Plugins section in the sidebar menu click on Disabled and enable the Database plugin.
+5. Click on Databases, select `red-db` and choose whichever table’s data you want to inspect.
+6. Click on SQL at the top to execute SQL queries.
+
 ## Resources
 
 Check out the following documents for more information.

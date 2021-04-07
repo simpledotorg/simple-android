@@ -279,6 +279,10 @@ class InstantSearchScreen :
     router.push(ShortCodeSearchResultScreenKey(shortCode))
   }
 
+  override fun openQrCodeScanner() {
+    router.pushExpectingResult(BpPassportScan, ScanSimpleIdScreenKey())
+  }
+
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
     if (requestType == BlankBpPassport && result is Succeeded) {
       val bpPassportResult = BpPassportSheet.blankBpPassportResult(result)

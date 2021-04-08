@@ -9,15 +9,19 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.assignbppassport.AddToExistingPatient
 import org.simple.clinic.bp.assignbppassport.RegisterNewPatient
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.remoteconfig.DefaultValueConfigReader
+import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 import java.util.UUID
 
 class InstantSearchUpdateTest {
 
-  private val updateSpec = UpdateSpec(InstantSearchUpdate())
+  private val updateSpec = UpdateSpec(InstantSearchUpdate(true))
   private val identifier = TestData.identifier(
       value = "3e5500fe-e10e-4009-a0bb-3db9009fdef6",
       type = BpPassport

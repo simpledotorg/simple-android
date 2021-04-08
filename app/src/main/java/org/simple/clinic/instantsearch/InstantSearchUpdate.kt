@@ -13,8 +13,11 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier
+import javax.inject.Inject
 
-class InstantSearchUpdate : Update<InstantSearchModel, InstantSearchEvent, InstantSearchEffect> {
+class InstantSearchUpdate @Inject constructor(
+    private val isInstantSearchByIdentifierEnabled: Boolean
+) : Update<InstantSearchModel, InstantSearchEvent, InstantSearchEffect> {
 
   /**
    * Regular expression that matches digits with interleaved white spaces

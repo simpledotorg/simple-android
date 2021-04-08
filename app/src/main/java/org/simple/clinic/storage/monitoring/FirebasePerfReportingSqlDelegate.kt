@@ -6,8 +6,9 @@ import android.os.CancellationSignal
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.google.firebase.perf.FirebasePerformance
+import javax.inject.Inject
 
-class FirebasePerfReportingSqlDelegate(
+class FirebasePerfReportingSqlDelegate @Inject constructor(
     private val firebasePerformance: FirebasePerformance,
     private val daoInformationExtractor: DaoInformationExtractor
 ) : SQLiteDatabaseSqlDelegate {

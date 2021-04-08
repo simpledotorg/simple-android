@@ -8,6 +8,7 @@ import android.os.Vibrator
 import androidx.work.WorkManager
 import com.f2prateek.rx.preferences2.Preference
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.firebase.perf.FirebasePerformance
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.appconfig.AppConfigModule
@@ -139,4 +140,7 @@ class AppModule(private val appContext: Application) {
 
   @Provides
   fun providesGoogleApiAvailability() = GoogleApiAvailability.getInstance()
+
+  @Provides
+  fun providesFirebasePerformance() = FirebasePerformance.getInstance()
 }

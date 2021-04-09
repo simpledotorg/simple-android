@@ -43,6 +43,7 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addConsumer(OpenPatientEntryScreen::class.java, { uiActions.openPatientEntryScreen(it.facility) }, schedulers.ui())
       .addAction(ShowKeyboard::class.java, { uiActions.showKeyboard() }, schedulers.ui())
       .addConsumer(OpenShortCodeSearchScreen::class.java, ::openShortCodeSearch, schedulers.ui())
+      .addAction(OpenQrCodeScanner::class.java, uiActions::openQrCodeScanner, schedulers.ui())
       .build()
 
   private fun openShortCodeSearch(effect: OpenShortCodeSearchScreen) {

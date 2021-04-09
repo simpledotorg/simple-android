@@ -1,13 +1,18 @@
 package org.simple.clinic.instantsearch
 
+import android.Manifest
 import org.simple.clinic.bp.assignbppassport.BlankBpPassportResult
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.scanid.EnteredShortCode
 import org.simple.clinic.scanid.PatientFound
 import org.simple.clinic.scanid.PatientNotFound
 import org.simple.clinic.scanid.ScanResult
+import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
+import org.simple.clinic.util.RequiresPermission
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -58,4 +63,12 @@ sealed class BpPassportScanned : InstantSearchEvent() {
   data class ByPatientNotFound(val identifier: Identifier) : BpPassportScanned()
 
   data class ByShortCode(val shortCode: String) : BpPassportScanned()
+}
+
+data class OpenQrCodeScannerClicked(
+    override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
+    override val permissionString: String = Manifest.permission.CAMERA,
+    override val permissionRequestCode: Int = 1
+) : InstantSearchEvent(), RequiresPermission {
+  override val analyticsName = "Instant Search Screen:Open QR code scanner"
 }

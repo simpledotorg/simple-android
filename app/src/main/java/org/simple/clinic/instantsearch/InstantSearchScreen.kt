@@ -21,6 +21,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.assignbppassport.BpPassportSheet
 import org.simple.clinic.databinding.ListPatientSearchBinding
 import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
@@ -45,6 +46,8 @@ import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.RequestPermissions
+import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
@@ -88,6 +91,9 @@ class InstantSearchScreen :
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var runtimePermissions: RuntimePermissions
 
   private val subscriptions = CompositeDisposable()
 
@@ -162,8 +168,12 @@ class InstantSearchScreen :
           searchQueryChanges(),
           registerNewPatientClicks(),
           blankBpPassportResults,
-          bpPassportScanResults
-      ).cast<InstantSearchEvent>()
+          bpPassportScanResults,
+          openQrCodeScannerClicks()
+      )
+      .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
+      .compose(ReportAnalyticsEvents())
+      .cast<InstantSearchEvent>()
 
   override fun createUpdate() = InstantSearchUpdate()
 
@@ -184,9 +194,6 @@ class InstantSearchScreen :
     }
 
     qrCodeScannerButton.visibleOrGone(features.isEnabled(InstantSearchQrCode))
-    qrCodeScannerButton.setOnClickListener {
-      router.pushExpectingResult(BpPassportScan, ScanSimpleIdScreenKey())
-    }
 
     searchResultsView.adapter = allPatientsAdapter
 
@@ -279,6 +286,10 @@ class InstantSearchScreen :
     router.push(ShortCodeSearchResultScreenKey(shortCode))
   }
 
+  override fun openQrCodeScanner() {
+    router.pushExpectingResult(BpPassportScan, ScanSimpleIdScreenKey())
+  }
+
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
     if (requestType == BlankBpPassport && result is Succeeded) {
       val bpPassportResult = BpPassportSheet.blankBpPassportResult(result)
@@ -321,6 +332,12 @@ class InstantSearchScreen :
     return newPatientButton
         .clicks()
         .map { RegisterNewPatientClicked }
+  }
+
+  private fun openQrCodeScannerClicks(): Observable<UiEvent> {
+    return qrCodeScannerButton
+        .clicks()
+        .map { OpenQrCodeScannerClicked() }
   }
 
   private fun hideKeyboardOnSearchResultsScroll(): Disposable {

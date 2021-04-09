@@ -139,7 +139,7 @@ class InstantSearchEffectHandlerTest {
     )
 
     // when
-    testCase.dispatch(ShowPatientSearchResults(patients, facility,searchQuery))
+    testCase.dispatch(ShowPatientSearchResults(patients, facility, searchQuery))
 
     // then
     testCase.assertNoOutgoingEvents()
@@ -321,6 +321,18 @@ class InstantSearchEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
 
     verify(uiActions).openShortCodeSearchScreen(shortCode)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open qr code scanner effect is received, then open the qr code scanner`() {
+    // when
+    testCase.dispatch(OpenQrCodeScanner)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openQrCodeScanner()
     verifyNoMoreInteractions(uiActions)
   }
 }

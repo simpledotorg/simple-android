@@ -26,6 +26,7 @@
 
 ### Changes
 - Add Somali language option to language selection
+- Request camera permissions when opening QR code scanner from instant search screen if not provided
 
 ### Fixes
 - Fix date stepper showing black color when it's disabled

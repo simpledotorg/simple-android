@@ -2,7 +2,7 @@ package org.simple.clinic.storage.monitoring
 
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 
-class DelegateableSQLiteOpenHelper(
+class DelegateableSQLiteOpenHelper private constructor(
     private val delegate: SQLiteDatabaseSqlDelegate,
     private val openHelper: SupportSQLiteOpenHelper
 ) : SupportSQLiteOpenHelper {

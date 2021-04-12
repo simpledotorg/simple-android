@@ -15,6 +15,7 @@ import org.simple.clinic.bp.assignbppassport.BpPassportSheet
 import org.simple.clinic.bp.history.BloodPressureHistoryScreenInjector
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.contactpatient.views.SetAppointmentReminderView
+import org.simple.clinic.datepicker.calendar.CalendarDatePicker
 import org.simple.clinic.deniedaccess.AccessDeniedScreenInjector
 import org.simple.clinic.di.PagingModule
 import org.simple.clinic.drugs.selection.EditMedicinesScreen
@@ -139,7 +140,8 @@ interface TheActivityComponent :
     ConfirmFacilityChangeSheet.Injector,
     ContactPatientBottomSheet.Injector,
     SetAppointmentReminderView.Injector,
-    ScheduleAppointmentSheet.Injector {
+    ScheduleAppointmentSheet.Injector,
+    CalendarDatePicker.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

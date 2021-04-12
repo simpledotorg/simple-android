@@ -3,6 +3,7 @@ package org.simple.clinic.contactpatient
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -18,11 +19,17 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetContactPatientBinding
+import org.simple.clinic.datepicker.DatePickerKeyFactory
+import org.simple.clinic.datepicker.DatePickerResult
+import org.simple.clinic.datepicker.SelectedDate
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.SecureCalling
 import org.simple.clinic.feature.Features
+import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResult
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
@@ -36,7 +43,6 @@ import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.overrideCancellation
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
 import java.time.LocalDate
 import java.util.Locale
 import java.util.UUID
@@ -47,7 +53,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     SheetContactPatientBinding,
     ContactPatientModel,
     ContactPatientEvent,
-    ContactPatientEffect>(), ContactPatientUi, ContactPatientUiActions {
+    ContactPatientEffect>(), ContactPatientUi, ContactPatientUiActions, ExpectsResult {
 
   @Inject
   lateinit var phoneCaller: PhoneCaller
@@ -75,6 +81,9 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   @Inject
   lateinit var router: Router
+
+  @Inject
+  lateinit var datePickerKeyFactory: DatePickerKeyFactory
 
   private val patientUuid by unsafeLazy { screenKey.patientId }
 
@@ -153,6 +162,14 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     permissionResults.onNext(ActivityPermissionResult(requestCode))
   }
 
+  override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
+    if (requestType == DatePickerResult && result is Succeeded) {
+      val selectedDate = result.result as SelectedDate
+      val event = ManualDateSelected(selectedDate = selectedDate.date, currentDate = LocalDate.now(userClock))
+      hotEvents.onNext(event)
+    }
+  }
+
   override fun renderPatientDetails(name: String, gender: Gender, age: Int, phoneNumber: String) {
     callPatientView.renderPatientDetails(name, gender, age, phoneNumber)
   }
@@ -204,16 +221,12 @@ class ContactPatientBottomSheet : BaseBottomSheet<
       preselectedDate: LocalDate,
       dateBounds: ClosedRange<LocalDate>
   ) {
-    ThreeTenBpDatePickerDialog(
-        context = requireContext(),
+    val key = datePickerKeyFactory.key(
         preselectedDate = preselectedDate,
-        allowedDateRange = dateBounds,
-        clock = userClock,
-        datePickedListener = { pickedDate ->
-          val event = ManualDateSelected(selectedDate = pickedDate, currentDate = LocalDate.now(userClock))
-          hotEvents.onNext(event)
-        }
-    ).show()
+        allowedDateRange = dateBounds
+    )
+
+    router.pushExpectingResult(DatePickerResult, key)
   }
 
   override fun disablePreviousReminderDateStepper() {

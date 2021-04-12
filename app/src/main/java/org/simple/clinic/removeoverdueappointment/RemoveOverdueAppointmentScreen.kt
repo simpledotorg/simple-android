@@ -15,7 +15,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.RemoveAppointmentReason
 import org.simple.clinic.contactpatient.views.RemoveAppointmentReasonItem
-import org.simple.clinic.databinding.ContactpatientRemoveappointmentReasonitemBinding
+import org.simple.clinic.databinding.RemoveappointmentReasonitemBinding
 import org.simple.clinic.databinding.ScreenRemoveOverdueAppointmentBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
@@ -41,8 +41,8 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
   private val removalReasonsAdapter = ItemAdapter(
       diffCallback = RemoveAppointmentReasonItem.DiffCallback(),
       bindings = mapOf(
-          R.layout.contactpatient_removeappointment_reasonitem to { layoutInflater, parent ->
-            ContactpatientRemoveappointmentReasonitemBinding.inflate(layoutInflater, parent, false)
+          R.layout.removeappointment_reasonitem to { layoutInflater, parent ->
+            RemoveappointmentReasonitemBinding.inflate(layoutInflater, parent, false)
           }
       )
   )

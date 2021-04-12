@@ -49,6 +49,6 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/removeAppointmentAppBar"
-    tools:listitem="@layout/contactpatient_removeappointment_reasonitem" />
+    tools:listitem="@layout/removeappointment_reasonitem" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,15 +6,19 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID
 
 class RemoveOverdueEffectHandlerTest {
 
   private val appointmentRepository = mock<AppointmentRepository>()
+  private val patientRepository = mock<PatientRepository>()
   private val effectHandler = RemoveOverdueEffectHandler(
       appointmentRepository = appointmentRepository,
+      patientRepository = patientRepository,
       schedulersProvider = TestSchedulersProvider.trampoline()
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -37,5 +41,24 @@ class RemoveOverdueEffectHandlerTest {
     verifyNoMoreInteractions(appointmentRepository)
 
     testCase.assertOutgoingEvents(PatientMarkedAsVisited)
+  }
+
+  @Test
+  fun `when mark patient as dead effect is received, then cancel appointment and update patient status`() {
+    // given
+    val patientId = UUID.fromString("6a87ea63-2ef4-4d27-b8ef-a07f1706cb67")
+    val appointmentId = UUID.fromString("0affc37a-7344-493e-8768-6175c96c905e")
+
+    // when
+    testCase.dispatch(MarkPatientAsDead(patientId, appointmentId))
+
+    // then
+    verify(appointmentRepository).cancelWithReason(appointmentId, AppointmentCancelReason.Dead)
+    verifyNoMoreInteractions(appointmentRepository)
+
+    verify(patientRepository).updatePatientStatusToDead(patientId)
+    verifyNoMoreInteractions(patientRepository)
+
+    testCase.assertOutgoingEvents(PatientMarkedAsDead)
   }
 }

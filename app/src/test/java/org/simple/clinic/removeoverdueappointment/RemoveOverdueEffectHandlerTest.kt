@@ -77,4 +77,19 @@ class RemoveOverdueEffectHandlerTest {
 
     testCase.assertOutgoingEvents(AppointmentMarkedAsCancelled)
   }
+
+  @Test
+  fun `when mark patient as moved to private effect is received, then mark patient as moved to private`() {
+    // given
+    val patientId = UUID.fromString("4968aff1-75d1-4711-b111-611dff231f23")
+
+    // when
+    testCase.dispatch(MarkPatientAsMovedToPrivate(patientId))
+
+    // then
+    verify(patientRepository).updatePatientStatusToMigrated(patientId)
+    verifyNoMoreInteractions(patientRepository)
+
+    testCase.assertOutgoingEvents(PatientMarkedAsMigrated(AppointmentCancelReason.MovedToPrivatePractitioner))
+  }
 }

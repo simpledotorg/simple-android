@@ -13,3 +13,5 @@ data class CancelAppointment(
     val appointmentUuid: UUID,
     val reason: AppointmentCancelReason
 ) : RemoveOverdueEffect()
+
+data class MarkPatientAsMovedToPrivate(val patientId: UUID) : RemoveOverdueEffect()

@@ -11,7 +11,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
@@ -187,81 +186,6 @@ class ContactPatientEffectHandlerTest {
     verify(appointmentRepository).createReminder(appointmentUuid, reminderDate)
     verifyNoMoreInteractions(appointmentRepository)
     testCase.assertOutgoingEvents(ReminderSetForAppointment)
-    verifyZeroInteractions(uiActions)
-  }
-
-  @Test
-  fun `when the mark patient as visited effect is received, the patient must be marked as visited`() {
-    // given
-    val appointmentUuid = UUID.fromString("0623a636-b4f0-4d6b-aa47-9ee89c2556da")
-
-    // when
-    testCase.dispatch(MarkPatientAsVisited(appointmentUuid))
-
-    // then
-    verify(appointmentRepository).markAsAlreadyVisited(appointmentUuid)
-    verifyNoMoreInteractions(appointmentRepository)
-    testCase.assertOutgoingEvents(PatientMarkedAsVisited)
-    verifyZeroInteractions(uiActions)
-  }
-
-  @Test
-  fun `when the mark patient as dead effect is received, the patient must be marked as dead and the appointment must be cancelled`() {
-    // given
-    val appointmentUuid = UUID.fromString("5085f7b4-9fe6-4b43-9b49-975cb6b540cf")
-
-    // when
-    testCase.dispatch(MarkPatientAsDead(patientUuid = patientUuid, appointmentUuid = appointmentUuid))
-
-    // then
-    verify(patientRepository).updatePatientStatusToDead(patientUuid)
-    verifyNoMoreInteractions(patientRepository)
-    verify(appointmentRepository).cancelWithReason(appointmentUuid, AppointmentCancelReason.Dead)
-    verifyNoMoreInteractions(appointmentRepository)
-    testCase.assertOutgoingEvents(PatientMarkedAsDead)
-    verifyZeroInteractions(uiActions)
-  }
-
-  @Test
-  fun `when the cancel appointment effect is received, the appointment must be cancelled with the given reason`() {
-    // given
-    val appointmentUuid = UUID.fromString("e9a1b50b-6dfe-4d54-aa39-49ddb2ab4bb4")
-    val reason = AppointmentCancelReason.InvalidPhoneNumber
-
-    // when
-    testCase.dispatch(CancelAppointment(appointmentUuid, reason))
-
-    // then
-    verify(appointmentRepository).cancelWithReason(appointmentUuid, reason)
-    verifyNoMoreInteractions(appointmentRepository)
-    testCase.assertOutgoingEvents(AppointmentMarkedAsCancelled)
-    verifyZeroInteractions(uiActions)
-  }
-
-  @Test
-  fun `when the patient is marked as moved to private effect is received, then the patient must be marked as migrated`() {
-    // given
-    val appointmentCancelReason = AppointmentCancelReason.MovedToPrivatePractitioner
-
-    // when
-    testCase.dispatch(MarkPatientAsMovedToPrivate(patientUuid = patientUuid))
-
-    // then
-    verify(patientRepository).updatePatientStatusToMigrated(patientUuid)
-    verifyNoMoreInteractions(patientRepository)
-    testCase.assertOutgoingEvents(PatientMarkAsMigrated(appointmentCancelReason))
-    verifyZeroInteractions(uiActions)
-  }
-
-  @Test
-  fun `when the patient is transferred to another facility effect is received, then the patient must be marked as migrated`() {
-    // when
-    testCase.dispatch(MarkPatientAsTransferredToAnotherFacility(patientUuid = patientUuid))
-
-    // then
-    verify(patientRepository).updatePatientStatusToMigrated(patientUuid)
-    verifyNoMoreInteractions(patientRepository)
-    testCase.assertOutgoingEvents(PatientMarkAsMigrated(AppointmentCancelReason.TransferredToAnotherPublicHospital))
     verifyZeroInteractions(uiActions)
   }
 

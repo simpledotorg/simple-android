@@ -101,9 +101,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   private val setAppointmentReminderView
     get() = binding.setAppointmentReminderView
 
-  private val removeAppointmentView
-    get() = binding.removeAppointmentView
-
   override fun defaultModel() = ContactPatientModel.create(
       patientUuid = patientUuid,
       appointmentConfig = appointmentConfig,
@@ -128,9 +125,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
           appointmentDateClicks(),
           saveReminderDateClicks(),
           removeFromOverdueListClicks(),
-          removeAppointmentCloseClicks(),
-          removeAppointmentDoneClicks(),
-          removeAppointmentReasonSelections(),
           hotEvents
       )
       .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, permissionResults))
@@ -249,7 +243,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   override fun switchToCallPatientView() {
     callPatientView.visibility = VISIBLE
     setAppointmentReminderView.visibility = GONE
-    removeAppointmentView.visibility = GONE
   }
 
   override fun switchToSetAppointmentReminderView() {
@@ -257,27 +250,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
     callPatientView.visibility = GONE
     setAppointmentReminderView.visibility = VISIBLE
-    removeAppointmentView.visibility = GONE
-  }
-
-  override fun switchToRemoveAppointmentView() {
-    sharedAxis(contentFlipper)
-
-    callPatientView.visibility = GONE
-    setAppointmentReminderView.visibility = GONE
-    removeAppointmentView.visibility = VISIBLE
-  }
-
-  override fun renderAppointmentRemoveReasons(reasons: List<RemoveAppointmentReason>, selectedReason: RemoveAppointmentReason?) {
-    removeAppointmentView.renderAppointmentRemoveReasons(reasons, selectedReason)
-  }
-
-  override fun enableRemoveAppointmentDoneButton() {
-    removeAppointmentView.enableRemoveAppointmentDoneButton()
-  }
-
-  override fun disableRemoveAppointmentDoneButton() {
-    removeAppointmentView.disableRemoveAppointmentDoneButton()
   }
 
   override fun openRemoveOverdueAppointmentScreen(appointmentId: UUID, patientId: UUID) {
@@ -357,30 +329,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
       emitter.setCancellable { callPatientView.removeFromOverdueListClicked = null }
 
       callPatientView.removeFromOverdueListClicked = { emitter.onNext(RemoveFromOverdueListClicked) }
-    }
-  }
-
-  private fun removeAppointmentCloseClicks(): Observable<ContactPatientEvent> {
-    return Observable.create { emitter ->
-      emitter.setCancellable { removeAppointmentView.closeClicked = null }
-
-      removeAppointmentView.closeClicked = { emitter.onNext(BackClicked) }
-    }
-  }
-
-  private fun removeAppointmentReasonSelections(): Observable<ContactPatientEvent> {
-    return Observable.create { emitter ->
-      emitter.setCancellable { removeAppointmentView.removeReasonClicked = null }
-
-      removeAppointmentView.removeReasonClicked = { emitter.onNext(RemoveAppointmentReasonSelected(it)) }
-    }
-  }
-
-  private fun removeAppointmentDoneClicks(): Observable<ContactPatientEvent> {
-    return Observable.create { emitter ->
-      emitter.setCancellable { removeAppointmentView.doneClicked = null }
-
-      removeAppointmentView.doneClicked = { emitter.onNext(RemoveAppointmentDoneClicked) }
     }
   }
 

@@ -6,7 +6,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
-import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
@@ -41,37 +40,12 @@ class ContactPatientEffectHandler @AssistedInject constructor(
         .addTransformer(MarkPatientAsAgreedToVisit::class.java, markPatientAsAgreedToVisit(schedulers.io()))
         .addConsumer(ShowManualDatePicker::class.java, { uiActions.showManualDatePicker(it.preselectedDate, it.datePickerBounds) }, schedulers.ui())
         .addTransformer(SetReminderForAppointment::class.java, setReminderForAppointment(schedulers.io()))
-        .addTransformer(MarkPatientAsVisited::class.java, markPatientAsVisited(schedulers.io()))
-        .addTransformer(MarkPatientAsDead::class.java, markPatientAsDead(schedulers.io()))
-        .addTransformer(CancelAppointment::class.java, cancelAppointment(schedulers.io()))
-        .addTransformer(MarkPatientAsMovedToPrivate::class.java, markPatientAsMovedToPrivate(schedulers.io()))
-        .addTransformer(MarkPatientAsTransferredToAnotherFacility::class.java, markPatientAsMovedToPublic(schedulers.io()))
         .addConsumer(OpenRemoveOverdueAppointmentScreen::class.java, ::openRemoveOverdueAppointmentScreen, schedulers.ui())
         .build()
   }
 
   private fun openRemoveOverdueAppointmentScreen(effect: OpenRemoveOverdueAppointmentScreen) {
     uiActions.openRemoveOverdueAppointmentScreen(effect.appointmentId, effect.patientId)
-  }
-
-  private fun markPatientAsMovedToPublic(scheduler: Scheduler): ObservableTransformer<MarkPatientAsTransferredToAnotherFacility, ContactPatientEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(scheduler)
-          .doOnNext { patientRepository.updatePatientStatusToMigrated(patientUuid = it.patientUuid) }
-          .map { AppointmentCancelReason.TransferredToAnotherPublicHospital }
-          .map(::PatientMarkAsMigrated)
-    }
-  }
-
-  private fun markPatientAsMovedToPrivate(scheduler: Scheduler): ObservableTransformer<MarkPatientAsMovedToPrivate, ContactPatientEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(scheduler)
-          .doOnNext { patientRepository.updatePatientStatusToMigrated(patientUuid = it.patientUuid) }
-          .map { AppointmentCancelReason.MovedToPrivatePractitioner }
-          .map(::PatientMarkAsMigrated)
-    }
   }
 
   private fun loadPatientProfile(
@@ -117,40 +91,6 @@ class ContactPatientEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .doOnNext { (appointmentUuid, reminderDate) -> appointmentRepository.createReminder(appointmentUuid, reminderDate) }
           .map { ReminderSetForAppointment }
-    }
-  }
-
-  private fun markPatientAsVisited(
-      scheduler: Scheduler
-  ): ObservableTransformer<MarkPatientAsVisited, ContactPatientEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(scheduler)
-          .doOnNext { appointmentRepository.markAsAlreadyVisited(it.appointmentUuid) }
-          .map { PatientMarkedAsVisited }
-    }
-  }
-
-  private fun markPatientAsDead(
-      scheduler: Scheduler
-  ): ObservableTransformer<MarkPatientAsDead, ContactPatientEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(scheduler)
-          .doOnNext { patientRepository.updatePatientStatusToDead(it.patientUuid) }
-          .doOnNext { appointmentRepository.cancelWithReason(it.appointmentUuid, AppointmentCancelReason.Dead) }
-          .map { PatientMarkedAsDead }
-    }
-  }
-
-  private fun cancelAppointment(
-      scheduler: Scheduler
-  ): ObservableTransformer<CancelAppointment, ContactPatientEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(scheduler)
-          .doOnNext { appointmentRepository.cancelWithReason(it.appointmentUuid, it.reason) }
-          .map { AppointmentMarkedAsCancelled }
     }
   }
 }

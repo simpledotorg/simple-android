@@ -53,7 +53,7 @@ class RemoveOverdueUpdateTest {
         .whenEvent(PatientMarkedAsVisited)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(GoBack)
+            hasEffects(GoBackAfterAppointmentRemoval)
         ))
   }
 
@@ -64,7 +64,7 @@ class RemoveOverdueUpdateTest {
         .whenEvent(PatientMarkedAsDead)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(GoBack)
+            hasEffects(GoBackAfterAppointmentRemoval)
         ))
   }
 
@@ -75,7 +75,7 @@ class RemoveOverdueUpdateTest {
         .whenEvent(AppointmentMarkedAsCancelled)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(GoBack)
+            hasEffects(GoBackAfterAppointmentRemoval)
         ))
   }
 

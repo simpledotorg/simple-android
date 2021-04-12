@@ -15,3 +15,5 @@ data class CancelAppointment(
 ) : RemoveOverdueEffect()
 
 data class MarkPatientAsMovedToPrivate(val patientId: UUID) : RemoveOverdueEffect()
+
+data class MarkPatientAsTransferredToAnotherFacility(val patientId: UUID) : RemoveOverdueEffect()

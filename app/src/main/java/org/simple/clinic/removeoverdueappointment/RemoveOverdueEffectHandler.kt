@@ -19,7 +19,18 @@ class RemoveOverdueEffectHandler(
       .addTransformer(MarkPatientAsDead::class.java, markPatientAsDead())
       .addTransformer(CancelAppointment::class.java, cancelAppointment())
       .addTransformer(MarkPatientAsMovedToPrivate::class.java, markPatientAsMovedToPrivate())
+      .addTransformer(MarkPatientAsTransferredToAnotherFacility::class.java, markPatientAsMovedToAnotherFacility())
       .build()
+
+  private fun markPatientAsMovedToAnotherFacility(): ObservableTransformer<MarkPatientAsTransferredToAnotherFacility, RemoveOverdueEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .doOnNext { patientRepository.updatePatientStatusToMigrated(it.patientId) }
+          .map { AppointmentCancelReason.TransferredToAnotherPublicHospital }
+          .map(::PatientMarkedAsMigrated)
+    }
+  }
 
   private fun markPatientAsMovedToPrivate(): ObservableTransformer<MarkPatientAsMovedToPrivate, RemoveOverdueEvent> {
     return ObservableTransformer { effects ->

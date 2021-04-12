@@ -92,4 +92,19 @@ class RemoveOverdueEffectHandlerTest {
 
     testCase.assertOutgoingEvents(PatientMarkedAsMigrated(AppointmentCancelReason.MovedToPrivatePractitioner))
   }
+
+  @Test
+  fun `when mark patient as transferred to another facility, then update the patient status`() {
+    // given
+    val patientId = UUID.fromString("4a807b0b-4457-439b-b370-203377027057")
+
+    // when
+    testCase.dispatch(MarkPatientAsTransferredToAnotherFacility(patientId))
+
+    // then
+    verify(patientRepository).updatePatientStatusToMigrated(patientId)
+    verifyNoMoreInteractions(patientRepository)
+
+    testCase.assertOutgoingEvents(PatientMarkedAsMigrated(AppointmentCancelReason.TransferredToAnotherPublicHospital))
+  }
 }

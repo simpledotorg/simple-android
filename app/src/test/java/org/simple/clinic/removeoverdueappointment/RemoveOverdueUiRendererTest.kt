@@ -28,4 +28,22 @@ class RemoveOverdueUiRendererTest {
     verify(ui).disableDoneButton()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when a cancel reason is selected, then done button must be enabled`() {
+    // given
+    val model = defaultModel.removeAppointmentReasonSelected(
+        RemoveAppointmentReason.AlreadyVisited)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).renderAppointmentRemoveReasons(
+        reasons = RemoveAppointmentReason.values().toList(),
+        selectedReason = RemoveAppointmentReason.AlreadyVisited
+    )
+    verify(ui).enableDoneButton()
+    verifyNoMoreInteractions(ui)
+  }
 }

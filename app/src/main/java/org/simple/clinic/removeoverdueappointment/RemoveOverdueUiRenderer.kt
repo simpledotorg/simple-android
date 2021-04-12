@@ -16,5 +16,7 @@ class RemoveOverdueUiRenderer(private val ui: RemoveOverdueUi) : ViewRenderer<Re
   private fun renderDoneButton(model: RemoveOverdueModel) {
     if (!model.hasSelectedReason)
       ui.disableDoneButton()
+    else
+      ui.enableDoneButton()
   }
 }

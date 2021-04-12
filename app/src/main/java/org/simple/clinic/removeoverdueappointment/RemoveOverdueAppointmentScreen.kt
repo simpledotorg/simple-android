@@ -2,6 +2,7 @@ package org.simple.clinic.removeoverdueappointment
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import org.simple.clinic.databinding.ScreenRemoveOverdueAppointmentBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.widgets.ItemAdapter
 import java.util.UUID
@@ -102,6 +104,10 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
     router.pop()
   }
 
+  override fun goBackAfterAppointmentRemoval() {
+    router.popWithResult(Succeeded(AppointmentRemoved()))
+  }
+
   private fun removeAppointmentReasonClicks(): Observable<RemoveOverdueEvent> {
     return removalReasonsAdapter
         .itemEvents
@@ -129,6 +135,9 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
 
     override fun instantiateFragment() = RemoveOverdueAppointmentScreen()
   }
+
+  @Parcelize
+  class AppointmentRemoved : Parcelable
 
   interface Injector {
 

@@ -158,10 +158,17 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   }
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
-    if (requestType == DatePickerResult && result is Succeeded) {
-      val selectedDate = result.result as SelectedDate
-      val event = ManualDateSelected(selectedDate = selectedDate.date, currentDate = LocalDate.now(userClock))
-      hotEvents.onNext(event)
+    if (result !is Succeeded) return
+
+    when (requestType) {
+      DatePickerResult -> {
+        val selectedDate = result.result as SelectedDate
+        val event = ManualDateSelected(selectedDate = selectedDate.date, currentDate = LocalDate.now(userClock))
+        hotEvents.onNext(event)
+      }
+      RemoveOverdueAppointmentResult -> {
+        router.pop()
+      }
     }
   }
 
@@ -253,7 +260,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   }
 
   override fun openRemoveOverdueAppointmentScreen(appointmentId: UUID, patientId: UUID) {
-    router.push(RemoveOverdueAppointmentScreen.Key(appointmentId, patientId))
+    router.pushExpectingResult(
+        RemoveOverdueAppointmentResult,
+        RemoveOverdueAppointmentScreen.Key(appointmentId, patientId)
+    )
   }
 
   private fun backPressed() {
@@ -355,6 +365,9 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
     override fun instantiateFragment() = ContactPatientBottomSheet()
   }
+
+  @Parcelize
+  object RemoveOverdueAppointmentResult : Parcelable
 
   interface Injector {
     fun inject(target: ContactPatientBottomSheet)

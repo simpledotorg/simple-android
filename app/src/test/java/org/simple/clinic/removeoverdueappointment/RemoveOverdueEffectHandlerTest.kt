@@ -130,4 +130,14 @@ class RemoveOverdueEffectHandlerTest {
     verify(uiActions).goBack()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when go back after appointment removed effect is received, then go back with a result`() {
+    // when
+    testCase.dispatch(GoBackAfterAppointmentRemoval)
+
+    // then
+    verify(uiActions).goBackAfterAppointmentRemoval()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

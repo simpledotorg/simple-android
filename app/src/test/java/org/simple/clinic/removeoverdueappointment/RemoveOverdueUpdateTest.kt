@@ -66,4 +66,15 @@ class RemoveOverdueUpdateTest {
             hasEffects(GoBack)
         ))
   }
+
+  @Test
+  fun `when appointment is cancelled, then go back to previous screen`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(AppointmentMarkedAsCancelled)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoBack)
+        ))
+  }
 }

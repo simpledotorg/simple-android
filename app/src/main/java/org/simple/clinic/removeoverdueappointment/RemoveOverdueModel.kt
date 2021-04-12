@@ -5,6 +5,7 @@ import java.util.UUID
 
 data class RemoveOverdueModel(
     val appointmentId: UUID,
+    val patientId: UUID,
     val selectedReason: RemoveAppointmentReason?
 ) {
 
@@ -13,8 +14,9 @@ data class RemoveOverdueModel(
 
   companion object {
 
-    fun create(appointmentId: UUID) = RemoveOverdueModel(
+    fun create(appointmentId: UUID, patientId: UUID) = RemoveOverdueModel(
         appointmentId = appointmentId,
+        patientId = patientId,
         selectedReason = null
     )
   }

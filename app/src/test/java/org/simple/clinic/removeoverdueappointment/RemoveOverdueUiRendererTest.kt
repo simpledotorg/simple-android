@@ -13,7 +13,8 @@ class RemoveOverdueUiRendererTest {
   private val uiRenderer = RemoveOverdueUiRenderer(ui)
 
   private val appointmentId = UUID.fromString("ce68996f-8b20-47b7-80c8-c0e6fdd5bda7")
-  private val defaultModel = RemoveOverdueModel.create(appointmentId)
+  private val patientId = UUID.fromString("06b6f782-8298-4a0c-a0e9-bc30f5055991")
+  private val defaultModel = RemoveOverdueModel.create(appointmentId, patientId)
 
   @Test
   fun `when a cancel reason is not selected, then done button must be disabled`() {

@@ -37,6 +37,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
+import org.simple.clinic.removeoverdueappointment.RemoveOverdueAppointmentScreen
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
@@ -277,6 +278,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   override fun disableRemoveAppointmentDoneButton() {
     removeAppointmentView.disableRemoveAppointmentDoneButton()
+  }
+
+  override fun openRemoveOverdueAppointmentScreen(appointmentId: UUID, patientId: UUID) {
+    router.push(RemoveOverdueAppointmentScreen.Key(appointmentId, patientId))
   }
 
   private fun backPressed() {

@@ -51,3 +51,8 @@ data class MarkPatientAsMovedToPrivate(
 data class MarkPatientAsTransferredToAnotherFacility(
     val patientUuid: UUID
 ) : ContactPatientEffect()
+
+data class OpenRemoveOverdueAppointmentScreen(
+    val appointmentId: UUID,
+    val patientId: UUID
+) : ContactPatientEffect()

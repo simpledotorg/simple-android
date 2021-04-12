@@ -264,4 +264,19 @@ class ContactPatientEffectHandlerTest {
     testCase.assertOutgoingEvents(PatientMarkAsMigrated(AppointmentCancelReason.TransferredToAnotherPublicHospital))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when open remove overdue appointment screen effect is received, then open the screen`() {
+    // given
+    val appointmentId = UUID.fromString("1b91f7e4-aa2e-4ec7-8526-15b57f6025a2")
+
+    // when
+    testCase.dispatch(OpenRemoveOverdueAppointmentScreen(appointmentId, patientUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openRemoveOverdueAppointmentScreen(appointmentId, patientUuid)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

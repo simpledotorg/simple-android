@@ -46,7 +46,12 @@ class ContactPatientEffectHandler @AssistedInject constructor(
         .addTransformer(CancelAppointment::class.java, cancelAppointment(schedulers.io()))
         .addTransformer(MarkPatientAsMovedToPrivate::class.java, markPatientAsMovedToPrivate(schedulers.io()))
         .addTransformer(MarkPatientAsTransferredToAnotherFacility::class.java, markPatientAsMovedToPublic(schedulers.io()))
+        .addConsumer(OpenRemoveOverdueAppointmentScreen::class.java, ::openRemoveOverdueAppointmentScreen, schedulers.ui())
         .build()
+  }
+
+  private fun openRemoveOverdueAppointmentScreen(effect: OpenRemoveOverdueAppointmentScreen) {
+    uiActions.openRemoveOverdueAppointmentScreen(effect.appointmentId, effect.patientId)
   }
 
   private fun markPatientAsMovedToPublic(scheduler: Scheduler): ObservableTransformer<MarkPatientAsTransferredToAnotherFacility, ContactPatientEvent> {

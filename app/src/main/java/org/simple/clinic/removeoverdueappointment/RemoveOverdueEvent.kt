@@ -5,3 +5,5 @@ sealed class RemoveOverdueEvent
 object PatientMarkedAsVisited : RemoveOverdueEvent()
 
 object PatientMarkedAsDead : RemoveOverdueEvent()
+
+object AppointmentMarkedAsCancelled : RemoveOverdueEvent()

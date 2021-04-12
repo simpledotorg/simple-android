@@ -61,4 +61,20 @@ class RemoveOverdueEffectHandlerTest {
 
     testCase.assertOutgoingEvents(PatientMarkedAsDead)
   }
+
+  @Test
+  fun `when cancel appointment effect is received, then cancel the appointment`() {
+    // given
+    val appointmentId = UUID.fromString("3a908737-17c8-44e6-b4f9-03a46a185189")
+    val cancelReason = AppointmentCancelReason.random()
+
+    // when
+    testCase.dispatch(CancelAppointment(appointmentId, cancelReason))
+
+    // then
+    verify(appointmentRepository).cancelWithReason(appointmentId, cancelReason)
+    verifyNoMoreInteractions(appointmentRepository)
+
+    testCase.assertOutgoingEvents(AppointmentMarkedAsCancelled)
+  }
 }

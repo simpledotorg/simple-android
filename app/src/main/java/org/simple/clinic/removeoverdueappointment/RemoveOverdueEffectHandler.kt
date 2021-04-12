@@ -17,7 +17,17 @@ class RemoveOverdueEffectHandler(
       .subtypeEffectHandler<RemoveOverdueEffect, RemoveOverdueEvent>()
       .addTransformer(MarkPatientAsVisited::class.java, markPatientAsVisited())
       .addTransformer(MarkPatientAsDead::class.java, markPatientAsDead())
+      .addTransformer(CancelAppointment::class.java, cancelAppointment())
       .build()
+
+  private fun cancelAppointment(): ObservableTransformer<CancelAppointment, RemoveOverdueEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .doOnNext { appointmentRepository.cancelWithReason(it.appointmentUuid, it.reason) }
+          .map { AppointmentMarkedAsCancelled }
+    }
+  }
 
   private fun markPatientAsDead(): ObservableTransformer<MarkPatientAsDead, RemoveOverdueEvent> {
     return ObservableTransformer { effects ->

@@ -15,7 +15,6 @@ import org.simple.clinic.contactpatient.RemoveAppointmentReason.NotResponding
 import org.simple.clinic.contactpatient.RemoveAppointmentReason.OtherReason
 import org.simple.clinic.contactpatient.RemoveAppointmentReason.PhoneNumberNotWorking
 import org.simple.clinic.contactpatient.RemoveAppointmentReason.TransferredToAnotherFacility
-import org.simple.clinic.contactpatient.UiMode.RemoveAppointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
@@ -431,22 +430,6 @@ class ContactPatientUpdateTest {
   }
 
   @Test
-  fun `when back is clicked while on the remove appointment view, then the call patient view must be shown`() {
-    val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
-        .overdueAppointmentLoaded(Just(overdueAppointment))
-        .changeUiModeTo(RemoveAppointment)
-
-    spec
-        .given(model)
-        .whenEvent(BackClicked)
-        .then(assertThatNext(
-            hasModel(model.changeUiModeTo(UiMode.CallPatient)),
-            hasNoEffects()
-        ))
-  }
-
-  @Test
   fun `when the appointment cancel reason is changed, the ui should be updated`() {
     val model = defaultModel()
         .patientProfileLoaded(patientProfile)
@@ -587,7 +570,7 @@ class ContactPatientUpdateTest {
   }
 
   @Test
-  fun `when remove from overdue list is clicked, the remove appointment view should be shown`() {
+  fun `when remove from overdue list is clicked, then open remove overdue appointment screen`() {
     val model = defaultModel()
         .patientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Just(overdueAppointment))
@@ -596,8 +579,8 @@ class ContactPatientUpdateTest {
         .given(model)
         .whenEvent(RemoveFromOverdueListClicked)
         .then(assertThatNext(
-            hasModel(model.changeUiModeTo(RemoveAppointment)),
-            hasNoEffects()
+            hasNoModel(),
+            hasEffects(OpenRemoveOverdueAppointmentScreen(appointmentUuid, patientUuid))
         ))
   }
 

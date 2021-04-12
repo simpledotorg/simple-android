@@ -52,7 +52,7 @@ class ContactPatientUpdate(
       BackClicked -> backClicks(model)
       is RemoveAppointmentReasonSelected -> next(model.removeAppointmentReasonSelected(event.reason))
       RemoveAppointmentDoneClicked -> removeAppointment(model)
-      RemoveFromOverdueListClicked -> next(model.changeUiModeTo(RemoveAppointment))
+      RemoveFromOverdueListClicked -> dispatch(OpenRemoveOverdueAppointmentScreen(model.appointmentUuid, model.patientUuid))
 
       PatientMarkedAsAgreedToVisit,
       ReminderSetForAppointment,

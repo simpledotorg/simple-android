@@ -8,6 +8,9 @@ data class RemoveOverdueModel(
     val selectedReason: RemoveAppointmentReason?
 ) {
 
+  val hasSelectedReason: Boolean
+    get() = selectedReason != null
+
   companion object {
 
     fun create(appointmentId: UUID) = RemoveOverdueModel(

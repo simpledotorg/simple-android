@@ -77,4 +77,15 @@ class RemoveOverdueUpdateTest {
             hasEffects(GoBack)
         ))
   }
+
+  @Test
+  fun `when close button is clicked, then go back`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CloseClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoBack)
+        ))
+  }
 }

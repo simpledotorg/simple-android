@@ -14,3 +14,5 @@ object AppointmentMarkedAsCancelled : RemoveOverdueEvent()
 data class PatientMarkedAsMigrated(val cancelReason: AppointmentCancelReason) : RemoveOverdueEvent()
 
 data class RemoveAppointmentReasonSelected(val reason: RemoveAppointmentReason) : RemoveOverdueEvent()
+
+object CloseClicked : RemoveOverdueEvent()

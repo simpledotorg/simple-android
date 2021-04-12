@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next Release
+## On Demo
 ### Internal
 - Make entire prescribed drugs list scrollable
 - Bump AGP to v4.1.3

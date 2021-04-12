@@ -3,6 +3,7 @@ package org.simple.clinic.removeoverdueappointment
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -16,10 +17,12 @@ class RemoveOverdueEffectHandlerTest {
 
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientRepository = mock<PatientRepository>()
+  private val uiActions = mock<RemoveOverdueUiActions>()
   private val effectHandler = RemoveOverdueEffectHandler(
       appointmentRepository = appointmentRepository,
       patientRepository = patientRepository,
-      schedulersProvider = TestSchedulersProvider.trampoline()
+      schedulersProvider = TestSchedulersProvider.trampoline(),
+      uiActions = uiActions
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -40,6 +43,8 @@ class RemoveOverdueEffectHandlerTest {
     verify(appointmentRepository).markAsAlreadyVisited(appointmentId)
     verifyNoMoreInteractions(appointmentRepository)
 
+    verifyZeroInteractions(uiActions)
+
     testCase.assertOutgoingEvents(PatientMarkedAsVisited)
   }
 
@@ -59,6 +64,8 @@ class RemoveOverdueEffectHandlerTest {
     verify(patientRepository).updatePatientStatusToDead(patientId)
     verifyNoMoreInteractions(patientRepository)
 
+    verifyZeroInteractions(uiActions)
+
     testCase.assertOutgoingEvents(PatientMarkedAsDead)
   }
 
@@ -75,6 +82,8 @@ class RemoveOverdueEffectHandlerTest {
     verify(appointmentRepository).cancelWithReason(appointmentId, cancelReason)
     verifyNoMoreInteractions(appointmentRepository)
 
+    verifyZeroInteractions(uiActions)
+
     testCase.assertOutgoingEvents(AppointmentMarkedAsCancelled)
   }
 
@@ -89,6 +98,8 @@ class RemoveOverdueEffectHandlerTest {
     // then
     verify(patientRepository).updatePatientStatusToMigrated(patientId)
     verifyNoMoreInteractions(patientRepository)
+
+    verifyZeroInteractions(uiActions)
 
     testCase.assertOutgoingEvents(PatientMarkedAsMigrated(AppointmentCancelReason.MovedToPrivatePractitioner))
   }
@@ -105,6 +116,18 @@ class RemoveOverdueEffectHandlerTest {
     verify(patientRepository).updatePatientStatusToMigrated(patientId)
     verifyNoMoreInteractions(patientRepository)
 
+    verifyZeroInteractions(uiActions)
+
     testCase.assertOutgoingEvents(PatientMarkedAsMigrated(AppointmentCancelReason.TransferredToAnotherPublicHospital))
+  }
+
+  @Test
+  fun `when go back effect is received, then go back`() {
+    // when
+    testCase.dispatch(GoBack)
+
+    // then
+    verify(uiActions).goBack()
+    verifyNoMoreInteractions(uiActions)
   }
 }

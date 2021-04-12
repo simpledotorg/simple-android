@@ -10,7 +10,8 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class RemoveOverdueEffectHandler(
     private val appointmentRepository: AppointmentRepository,
     private val patientRepository: PatientRepository,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    private val uiActions: RemoveOverdueUiActions
 ) {
 
   fun build(): ObservableTransformer<RemoveOverdueEffect, RemoveOverdueEvent> = RxMobius
@@ -20,6 +21,7 @@ class RemoveOverdueEffectHandler(
       .addTransformer(CancelAppointment::class.java, cancelAppointment())
       .addTransformer(MarkPatientAsMovedToPrivate::class.java, markPatientAsMovedToPrivate())
       .addTransformer(MarkPatientAsTransferredToAnotherFacility::class.java, markPatientAsMovedToAnotherFacility())
+      .addAction(GoBack::class.java, uiActions::goBack, schedulersProvider.ui())
       .build()
 
   private fun markPatientAsMovedToAnotherFacility(): ObservableTransformer<MarkPatientAsTransferredToAnotherFacility, RemoveOverdueEvent> {

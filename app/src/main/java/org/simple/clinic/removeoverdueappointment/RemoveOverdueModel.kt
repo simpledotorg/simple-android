@@ -1,14 +1,17 @@
 package org.simple.clinic.removeoverdueappointment
 
 import org.simple.clinic.contactpatient.RemoveAppointmentReason
+import java.util.UUID
 
 data class RemoveOverdueModel(
+    val appointmentId: UUID,
     val selectedReason: RemoveAppointmentReason?
 ) {
 
   companion object {
 
-    fun create() = RemoveOverdueModel(
+    fun create(appointmentId: UUID) = RemoveOverdueModel(
+        appointmentId = appointmentId,
         selectedReason = null
     )
   }

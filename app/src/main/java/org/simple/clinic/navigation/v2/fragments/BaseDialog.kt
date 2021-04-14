@@ -102,4 +102,9 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, R : ViewRenderer<
     super.onSaveInstanceState(outState)
     outState.putParcelable(KEY_MODEL, controller.model)
   }
+
+  override fun dismiss() {
+    backPressed()
+    super.dismiss()
+  }
 }

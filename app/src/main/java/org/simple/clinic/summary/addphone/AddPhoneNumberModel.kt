@@ -1,7 +1,7 @@
 package org.simple.clinic.summary.addphone
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 

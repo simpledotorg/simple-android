@@ -1,7 +1,7 @@
 package org.simple.clinic.scanid
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.scanid.ScanSearchState.NotSearching
 import org.simple.clinic.scanid.ScanSearchState.Searching
 

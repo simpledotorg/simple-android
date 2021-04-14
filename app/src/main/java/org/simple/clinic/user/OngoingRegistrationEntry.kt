@@ -1,7 +1,7 @@
 package org.simple.clinic.user
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
 @Parcelize

@@ -4,7 +4,7 @@ import android.os.Parcelable
 import com.f2prateek.rx.preferences2.Preference
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS
 import org.simple.clinic.sync.SyncProgress.SYNCING

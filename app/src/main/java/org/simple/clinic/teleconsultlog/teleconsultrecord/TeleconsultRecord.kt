@@ -9,7 +9,7 @@ import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
 import java.time.Instant

@@ -2,7 +2,7 @@ package org.simple.clinic.location
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Coordinates(

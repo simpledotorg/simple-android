@@ -1,7 +1,7 @@
 package org.simple.clinic.patient
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.businessid.Identifier
 
 sealed class PatientSearchCriteria(val additionalIdentifier: Identifier?) : Parcelable {

@@ -1,7 +1,7 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.time.Instant
 import java.util.UUID
 

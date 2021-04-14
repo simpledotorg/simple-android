@@ -1,7 +1,7 @@
 package org.simple.clinic.editpatient
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.editpatient.EditPatientValidationError.AgeExceedsMaxLimit
 import org.simple.clinic.editpatient.EditPatientValidationError.AgeExceedsMinLimit
 import org.simple.clinic.editpatient.EditPatientValidationError.BothDateOfBirthAndAgeAdsent

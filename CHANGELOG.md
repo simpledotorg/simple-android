@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Next Release
+### Internal
+- Migrate app to use ViewBinding
+- Replace `kotlin-android-extensions` with `kotlin-parcelize`
+- [In Progress: 20 Jan 2021] Material Theme-ing Migration
+- [In Progress: 08 Apr 2021] Add automatic performance profiling for the Room database queries
+
 ## On Demo
 ### Internal
 - Make entire prescribed drugs list scrollable
@@ -21,9 +28,6 @@
 - Migrate `ReportsScreen` to a fragment
 - Migrate `OverdueScreen` to a fragment
 - Add `DatePickerKeyFactory` for getting date picker key based on `Country`
-- [In Progress: 20 Jan 2021] Material Theme-ing Migration
-- [In Progress: 05 Apr 2021] Migrate app to use ViewBinding
-- [In Progress: 08 Apr 2021] Add automatic performance profiling for the Room database queries
 
 ### Changes
 - Add Somali language option to language selection

@@ -1,7 +1,7 @@
 package org.simple.clinic.main
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class TheActivityModel(val isFreshLogin: Boolean) : Parcelable {

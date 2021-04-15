@@ -1,7 +1,7 @@
 package org.simple.clinic.teleconsultlog.prescription.patientinfo
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.PatientProfile
 import java.time.LocalDate
 import java.util.UUID

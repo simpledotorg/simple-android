@@ -1,7 +1,7 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.teleconsultlog.shareprescription.DownloadButtonState.DOWNLOADING

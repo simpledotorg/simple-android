@@ -1,7 +1,7 @@
 package org.simple.clinic.sync.indicator
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
 import java.time.Duration

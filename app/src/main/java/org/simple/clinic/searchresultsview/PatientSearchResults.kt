@@ -1,7 +1,7 @@
 package org.simple.clinic.searchresultsview
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.bp.PatientToFacilityId
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult

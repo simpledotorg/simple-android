@@ -2,7 +2,7 @@ package org.simple.clinic.allpatientsinfacility
 
 import android.os.Parcelable
 import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender

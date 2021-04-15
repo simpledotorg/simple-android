@@ -1,7 +1,7 @@
 package org.simple.clinic.appupdate
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 sealed class AppUpdateState : Parcelable {
 

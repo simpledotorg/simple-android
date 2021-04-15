@@ -2,7 +2,7 @@ package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
 import android.os.Parcelable
 import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.navigation.v2.ScreenKey
 import java.util.UUID
 

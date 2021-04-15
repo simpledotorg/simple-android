@@ -2,7 +2,7 @@ package org.simple.clinic.storage
 
 import android.os.Parcelable
 import androidx.room.Embedded
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.util.UtcClock
 import java.time.Instant
 

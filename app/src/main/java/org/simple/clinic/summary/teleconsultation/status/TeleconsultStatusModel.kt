@@ -1,7 +1,7 @@
 package org.simple.clinic.summary.teleconsultation.status
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultStatus
 import java.util.UUID
 

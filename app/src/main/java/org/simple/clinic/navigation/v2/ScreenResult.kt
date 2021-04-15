@@ -2,7 +2,7 @@
 package org.simple.clinic.navigation.v2
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 sealed class ScreenResult: Parcelable
 

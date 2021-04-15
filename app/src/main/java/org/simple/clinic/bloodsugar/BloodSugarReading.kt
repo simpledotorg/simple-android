@@ -2,7 +2,7 @@ package org.simple.clinic.bloodsugar
 
 import android.os.Parcelable
 import androidx.annotation.StringRes
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference.Mg
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference.Mmol

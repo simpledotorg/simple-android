@@ -5,7 +5,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
 sealed class Answer : Parcelable {

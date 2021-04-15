@@ -2,7 +2,7 @@ package org.simple.clinic.activity.placeholder
 
 import android.app.Activity
 import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.ScreenRouter

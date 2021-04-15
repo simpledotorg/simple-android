@@ -7,7 +7,7 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.AppScope

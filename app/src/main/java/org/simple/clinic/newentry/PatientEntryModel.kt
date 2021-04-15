@@ -1,7 +1,7 @@
 package org.simple.clinic.newentry
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.ReminderConsent

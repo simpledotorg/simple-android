@@ -1,7 +1,7 @@
 package org.simple.clinic.recentpatient
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.RecentPatient
 
 @Parcelize

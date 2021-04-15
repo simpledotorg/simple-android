@@ -16,7 +16,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetContactPatientBinding
 import org.simple.clinic.datepicker.DatePickerKeyFactory

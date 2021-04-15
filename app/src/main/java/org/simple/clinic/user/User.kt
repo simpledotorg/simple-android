@@ -16,7 +16,7 @@ import com.squareup.moshi.JsonClass
 import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
 import io.reactivex.Single
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.intellij.lang.annotations.Language
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.UtcClock

@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.DialogInterface.BUTTON_NEGATIVE
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.datepicker.SelectedDate
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router

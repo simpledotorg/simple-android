@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
 import io.reactivex.Observable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.SyncStatus
 import java.time.Instant
 import java.util.UUID

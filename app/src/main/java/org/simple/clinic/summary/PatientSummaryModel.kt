@@ -1,7 +1,7 @@
 package org.simple.clinic.summary
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.user.User

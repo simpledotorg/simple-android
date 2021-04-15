@@ -2,6 +2,11 @@
 
 ## Next Release
 ### Internal
+- [In Progress: 20 Jan 2021] Material Theme-ing Migration
+- [In Progress: 08 Apr 2021] Add automatic performance profiling for the Room database queries
+
+## On Demo
+### Internal
 - Make entire prescribed drugs list scrollable
 - Bump AGP to v4.1.3
 - Bump Kotlin to v1.4.32
@@ -21,9 +26,8 @@
 - Migrate `ReportsScreen` to a fragment
 - Migrate `OverdueScreen` to a fragment
 - Add `DatePickerKeyFactory` for getting date picker key based on `Country`
-- [In Progress: 20 Jan 2021] Material Theme-ing Migration
-- [In Progress: 05 Apr 2021] Migrate app to use ViewBinding
-- [In Progress: 08 Apr 2021] Add automatic performance profiling for the Room database queries
+- Migrate app to use ViewBinding
+- Replace `kotlin-android-extensions` with `kotlin-parcelize`
 
 ### Changes
 - Add Somali language option to language selection

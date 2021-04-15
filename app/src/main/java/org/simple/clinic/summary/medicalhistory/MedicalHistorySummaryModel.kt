@@ -1,7 +1,7 @@
 package org.simple.clinic.summary.medicalhistory
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.summary.PatientSummaryChildModel

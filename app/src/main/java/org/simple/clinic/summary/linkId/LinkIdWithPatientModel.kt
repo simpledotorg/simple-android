@@ -1,7 +1,7 @@
 package org.simple.clinic.summary.linkId
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.businessid.Identifier
 import java.util.UUID
 

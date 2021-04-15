@@ -17,7 +17,7 @@ import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
 import io.reactivex.Single
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId

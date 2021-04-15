@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.f2prateek.rx.preferences2.Preference
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetAlertFacilityChangeBinding
 import org.simple.clinic.di.injector

@@ -1,7 +1,7 @@
 package org.simple.clinic.registration.phone
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 sealed class RegistrationPhoneValidationResult : Parcelable {
 

@@ -22,11 +22,6 @@
 
   </com.google.android.material.appbar.AppBarLayout>
 
-  <FrameLayout
-    android:id="@+id/qrCodeScannerViewContainer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
-
   <androidx.camera.view.PreviewView
     android:id="@+id/previewView"
     android:layout_width="match_parent"
@@ -76,7 +71,7 @@
     android:layout_marginBottom="@dimen/spacing_16"
     android:visibility="visible"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="@+id/qrCodeScannerViewContainer"
+    app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     tools:visibility="visible">
 

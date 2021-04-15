@@ -44,9 +44,7 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.qrcodescanner.BitmapUtils
-import org.simple.clinic.widgets.qrcodescanner.IQrCodeScannerView
 import org.simple.clinic.widgets.qrcodescanner.MLKitQrCodeAnalyzer
-import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 import org.simple.clinic.widgets.qrcodescanner.ZxingQrCodeAnalyzer
 import java.util.concurrent.Executors
 import javax.inject.Inject
@@ -94,9 +92,6 @@ class ScanSimpleIdScreen : BaseScreen<
   private val toolBar
     get() = binding.toolBar
 
-  private val qrCodeScannerViewContainer
-    get() = binding.qrCodeScannerViewContainer
-
   private val shortCodeText
     get() = binding.shortCodeText
 
@@ -120,8 +115,6 @@ class ScanSimpleIdScreen : BaseScreen<
 
   private val qrScans = PublishSubject.create<ScanSimpleIdEvent>()
 
-  private lateinit var qrCodeScannerView: IQrCodeScannerView
-
   override fun defaultModel() = ScanSimpleIdModel.create()
 
   override fun uiRenderer() = ScanSimpleIdUiRenderer(this)
@@ -144,10 +137,6 @@ class ScanSimpleIdScreen : BaseScreen<
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    // This needs to be instantiated here because the `onViewCreated` call of the super class
-    // will indirectly reference this instance via the `events()` method.
-    qrCodeScannerView = QrCodeScannerView(requireContext())
-
     super.onViewCreated(view, savedInstanceState)
 
     // It is possible that going back via the app bar from future screens will come back to this
@@ -155,8 +144,6 @@ class ScanSimpleIdScreen : BaseScreen<
     binding.root.hideKeyboard()
     toolBar.setNavigationOnClickListener { router.pop() }
     setupShortCodeTextField()
-
-    qrCodeScannerViewContainer.addView(qrCodeScannerView as View)
 
     cameraProviderFuture.addListener({
       val cameraProvider = cameraProviderFuture.get()

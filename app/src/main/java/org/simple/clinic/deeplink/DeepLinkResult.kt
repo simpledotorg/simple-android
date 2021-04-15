@@ -1,7 +1,7 @@
 package org.simple.clinic.deeplink
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
 sealed class DeepLinkResult : Parcelable

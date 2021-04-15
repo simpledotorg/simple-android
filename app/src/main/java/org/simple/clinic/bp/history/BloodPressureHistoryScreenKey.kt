@@ -2,7 +2,7 @@ package org.simple.clinic.bp.history
 
 import android.os.Parcelable
 import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.router.screen.FullScreenKey
 import java.util.UUID

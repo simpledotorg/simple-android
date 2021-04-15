@@ -1,7 +1,7 @@
 package org.simple.clinic.enterotp
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.activateuser.ActivateUser
 

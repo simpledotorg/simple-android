@@ -1,7 +1,7 @@
 package org.simple.clinic.registration.pin
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.registration.pin.RegistrationPinValidationResult.DoesNotMatchRequiredLength
 import org.simple.clinic.registration.pin.RegistrationPinValidationResult.NotValidated
 import org.simple.clinic.registration.pin.RegistrationPinValidationResult.Valid

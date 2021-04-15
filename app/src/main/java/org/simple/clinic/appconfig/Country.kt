@@ -3,7 +3,7 @@ package org.simple.clinic.appconfig
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.businessid.Identifier
 import org.threeten.extra.chrono.EthiopicChronology
 import java.net.URI

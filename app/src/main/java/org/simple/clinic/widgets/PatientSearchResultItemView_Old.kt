@@ -2,10 +2,11 @@ package org.simple.clinic.widgets
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import com.google.android.material.card.MaterialCardView
-import kotlinx.android.synthetic.main.view_patient_search_result.view.*
 import org.simple.clinic.R
+import org.simple.clinic.databinding.ViewPatientSearchResultOldBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.DateOfBirth
@@ -34,9 +35,39 @@ class PatientSearchResultItemView_Old(
   @Inject
   lateinit var userClock: UserClock
 
+  private lateinit var binding: ViewPatientSearchResultOldBinding
+
+  private val lastSeenContainer
+    get() = binding.lastSeenContainer
+
+  private val lastSeenTextView
+    get() = binding.lastSeenTextView
+
+  private val phoneNumberContainer
+    get() = binding.phoneNumberContainer
+
+  private val phoneNumberTextView
+    get() = binding.phoneNumberTextView
+
+  private val dateOfBirthContainer
+    get() = binding.dateOfBirthContainer
+
+  private val dateOfBirthTextView
+    get() = binding.dateOfBirthTextView
+
+  private val addressLabel
+    get() = binding.addressLabel
+
+  private val genderLabel
+    get() = binding.genderLabel
+
+  private val patientNameAgeGenderLabel
+    get() = binding.patientNameAgeGenderLabel
+
   override fun onFinishInflate() {
     super.onFinishInflate()
-    inflate(context, R.layout.view_patient_search_result_old, this)
+    val layoutInflater = LayoutInflater.from(context)
+    binding = ViewPatientSearchResultOldBinding.inflate(layoutInflater, this)
     if (isInEditMode) {
       return
     }

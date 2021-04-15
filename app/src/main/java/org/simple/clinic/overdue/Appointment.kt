@@ -12,7 +12,7 @@ import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 import java.time.Instant

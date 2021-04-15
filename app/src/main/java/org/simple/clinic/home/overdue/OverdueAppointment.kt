@@ -7,7 +7,7 @@ import androidx.room.DatabaseView
 import androidx.room.Embedded
 import androidx.room.Query
 import io.reactivex.Observable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Age

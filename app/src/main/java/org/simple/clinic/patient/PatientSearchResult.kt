@@ -6,7 +6,7 @@ import androidx.room.DatabaseView
 import androidx.room.Embedded
 import androidx.room.Query
 import io.reactivex.Flowable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID

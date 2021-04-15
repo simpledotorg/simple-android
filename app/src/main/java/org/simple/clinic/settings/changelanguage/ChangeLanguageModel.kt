@@ -1,7 +1,7 @@
 package org.simple.clinic.settings.changelanguage
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.settings.Language
 
 @Parcelize

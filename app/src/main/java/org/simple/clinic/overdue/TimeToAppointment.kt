@@ -1,7 +1,7 @@
 package org.simple.clinic.overdue
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 sealed class TimeToAppointment(val value: Int): Parcelable {
 

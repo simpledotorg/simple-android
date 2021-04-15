@@ -1,7 +1,7 @@
 package org.simple.clinic.registration.pin
 
 import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.user.OngoingRegistrationEntry
 

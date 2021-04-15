@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Query
 import io.reactivex.Flowable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.overdue.Appointment.AppointmentType
 import org.simple.clinic.overdue.Appointment.Status
 import java.time.Instant

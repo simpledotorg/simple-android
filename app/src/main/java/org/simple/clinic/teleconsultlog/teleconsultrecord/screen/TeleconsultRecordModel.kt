@@ -1,7 +1,7 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes

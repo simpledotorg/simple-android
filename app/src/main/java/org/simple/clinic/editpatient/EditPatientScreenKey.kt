@@ -1,7 +1,7 @@
 package org.simple.clinic.editpatient
 
 import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress

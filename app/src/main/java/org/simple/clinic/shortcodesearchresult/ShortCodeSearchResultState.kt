@@ -1,7 +1,7 @@
 package org.simple.clinic.shortcodesearchresult
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.plumbing.AsyncOp
 import org.simple.clinic.plumbing.AsyncOp.IN_FLIGHT
 import org.simple.clinic.plumbing.AsyncOp.SUCCEEDED

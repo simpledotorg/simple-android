@@ -1,7 +1,7 @@
 package org.simple.clinic.summary.teleconsultation.contactdoctor
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import java.util.UUID
 

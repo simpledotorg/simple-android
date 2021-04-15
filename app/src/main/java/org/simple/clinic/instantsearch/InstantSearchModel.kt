@@ -1,7 +1,7 @@
 package org.simple.clinic.instantsearch
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
 

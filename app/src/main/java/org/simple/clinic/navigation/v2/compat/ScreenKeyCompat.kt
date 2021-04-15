@@ -1,6 +1,6 @@
 package org.simple.clinic.navigation.v2.compat
 
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.router.screen.FullScreenKey
 

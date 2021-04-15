@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.airbnb.lottie.LottieDrawable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ScreenSplashBinding
 import org.simple.clinic.di.injector

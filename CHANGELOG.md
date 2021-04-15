@@ -5,6 +5,7 @@
 - Migrate app to use ViewBinding
 - Replace `kotlin-android-extensions` with `kotlin-parcelize`
 - Move QR code scanner preview view inside `ScanSimpleIdScreen`
+- Remove dialog & sheet from navigation back stack when dismissing
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Apr 2021] Add automatic performance profiling for the Room database queries
 

@@ -1,4 +1,4 @@
-package org.simple.clinic.widgets.qrcodescanner
+package org.simple.clinic.scanid.qrcodeanalyzer
 
 import android.graphics.ImageFormat.YUV_420_888
 import android.graphics.ImageFormat.YUV_422_888

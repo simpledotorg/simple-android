@@ -76,7 +76,6 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultNotR
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreen
 import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.simple.clinic.widgets.PatientSearchResultItemView_Old
-import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 
 @Subcomponent(modules = [TheActivityModule::class])
 interface TheActivityComponent :
@@ -133,7 +132,6 @@ interface TheActivityComponent :
     PatientSearchResultItemView.Injector,
     InstantSearchScreen.Injector,
     ScanSimpleIdScreen.Injector,
-    QrCodeScannerView.Injector,
     BpPassportSheet.Injector,
     AlertFacilityChangeSheet.Injector,
     FacilityChangeScreen.Injector,

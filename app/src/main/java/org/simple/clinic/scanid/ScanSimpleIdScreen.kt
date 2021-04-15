@@ -43,7 +43,7 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
-import org.simple.clinic.widgets.qrcodescanner.BitmapUtils
+import org.simple.clinic.util.BitmapUtils
 import org.simple.clinic.scanid.qrcodeanalyzer.MLKitQrCodeAnalyzer
 import org.simple.clinic.scanid.qrcodeanalyzer.ZxingQrCodeAnalyzer
 import java.util.concurrent.Executors

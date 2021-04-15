@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.simple.clinic.widgets.qrcodescanner
+package org.simple.clinic.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

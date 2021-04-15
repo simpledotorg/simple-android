@@ -9,7 +9,7 @@ import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
-import org.simple.clinic.widgets.qrcodescanner.BitmapUtils
+import org.simple.clinic.util.BitmapUtils
 
 class MLKitQrCodeAnalyzer(
     private val bitmapUtils: BitmapUtils,

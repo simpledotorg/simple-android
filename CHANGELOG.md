@@ -7,6 +7,9 @@
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Apr 2021] Add automatic performance profiling for the Room database queries
 
+### Changes
+- [In Progress: 12 Apr 2021] Show remove overdue appointment reasons in a separate screen
+
 ## On Demo
 ### Internal
 - Make entire prescribed drugs list scrollable

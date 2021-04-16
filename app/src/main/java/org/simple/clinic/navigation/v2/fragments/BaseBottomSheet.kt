@@ -138,4 +138,9 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
     super.onSaveInstanceState(outState)
     outState.putParcelable(KEY_MODEL, controller.model)
   }
+
+  override fun dismiss() {
+    backPressed()
+    super.dismiss()
+  }
 }

@@ -2,9 +2,9 @@ package org.simple.clinic.textInputdatepicker
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.DateIsInPast
-import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.InvalidPattern
-import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.MaximumAllowedDateRange
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.DateIsInPast
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.InvalidPattern
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.MaximumAllowedDateRange
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Valid
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

@@ -10,7 +10,7 @@ import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.DismissSh
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.HideDateErrorMessage
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.ShowDateValidationError
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.UserEnteredDateSelected
-import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.InvalidPattern
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.InvalidPattern
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

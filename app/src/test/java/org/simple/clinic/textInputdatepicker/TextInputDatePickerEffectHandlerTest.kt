@@ -11,9 +11,9 @@ import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.HideDateE
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.UserEnteredDateSelected
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.DateIsInPast
-import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.InvalidPattern
-import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.MaximumAllowedDateRange
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.DateIsInPast
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.InvalidPattern
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.MaximumAllowedDateRange
 import java.time.LocalDate
 
 class TextInputDatePickerEffectHandlerTest {

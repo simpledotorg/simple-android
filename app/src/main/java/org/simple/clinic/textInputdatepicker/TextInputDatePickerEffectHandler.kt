@@ -11,9 +11,9 @@ import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.HideDateE
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.PrefilledDate
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.ShowDateValidationError
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.UserEnteredDateSelected
-import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.DateIsInPast
-import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.InvalidPattern
-import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Notvalid.MaximumAllowedDateRange
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.DateIsInPast
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.InvalidPattern
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.MaximumAllowedDateRange
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.Valid
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.exhaustive

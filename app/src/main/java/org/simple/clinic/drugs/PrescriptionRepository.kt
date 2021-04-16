@@ -172,7 +172,7 @@ class PrescriptionRepository @Inject constructor(
   }
 
   fun softDeletePrescriptions(prescriptionDrugs: List<PrescribedDrug>) {
-    dao.softDelete(
+    dao.softDeleteIds(
         prescriptionIds = prescriptionDrugs.map { it.uuid },
         deleted = true,
         updatedAt = Instant.now(utcClock),

@@ -3433,7 +3433,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun querying_whether_prescription_for_patient_has_changed_should_work_as_expected() {
     fun setPrescribedDrugSyncStatusToDone(prescribedDrug: UUID) {
-      database.prescriptionDao().updateSyncStatus(listOf(prescribedDrug), DONE)
+      database.prescriptionDao().updateSyncStatusForIds(listOf(prescribedDrug), DONE)
     }
 
     val patientUuid = UUID.fromString("efd303fd-f96b-4b05-9c8a-c067b189974e")

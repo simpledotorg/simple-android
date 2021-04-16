@@ -88,7 +88,7 @@ class PrescriptionRepository @Inject constructor(
     return Completable.fromAction {
       database.runInTransaction {
         dao.softDelete(prescriptionUuid, deleted = true, updatedAt = Instant.now())
-        dao.updateSyncStatus(listOf(prescriptionUuid), SyncStatus.PENDING)
+        dao.updateSyncStatusForIds(listOf(prescriptionUuid), SyncStatus.PENDING)
       }
     }
   }
@@ -106,7 +106,7 @@ class PrescriptionRepository @Inject constructor(
       throw AssertionError()
     }
 
-    dao.updateSyncStatus(uuids = ids, newStatus = to)
+    dao.updateSyncStatusForIds(uuids = ids, newStatus = to)
   }
 
   override fun mergeWithLocalData(payloads: List<PrescribedDrugPayload>) {

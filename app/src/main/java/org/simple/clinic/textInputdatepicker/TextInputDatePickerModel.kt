@@ -1,7 +1,7 @@
 package org.simple.clinic.textInputdatepicker
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
 @Parcelize

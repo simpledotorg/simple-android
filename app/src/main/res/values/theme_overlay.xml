@@ -87,6 +87,7 @@
   </style>
 
   <style name="ThemeOverlay.Simple.TextField.Large.MeasurementInput">
+    <item name="colorSurface">@android:color/transparent</item>
     <item name="editTextStyle">@style/Widget.Simple.TextField.Large.MeasurementInput</item>
   </style>
 

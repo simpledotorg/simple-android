@@ -29,6 +29,9 @@
 - Migrate app to use ViewBinding
 - Replace `kotlin-android-extensions` with `kotlin-parcelize`
 
+### Features
+- Add `TextInputDatePicker` to schedule appointment for Ethiopia
+
 ### Changes
 - Add Somali language option to language selection
 - Request camera permissions when opening QR code scanner from instant search screen if not provided

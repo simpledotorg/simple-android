@@ -74,6 +74,7 @@ import org.simple.clinic.teleconsultlog.shareprescription.TeleconsultSharePrescr
 import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessScreen
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultNotRecordedDialog
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreen
+import org.simple.clinic.textInputdatepicker.TextInputDatePickerSheet
 import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.simple.clinic.widgets.PatientSearchResultItemView_Old
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
@@ -141,7 +142,8 @@ interface TheActivityComponent :
     ContactPatientBottomSheet.Injector,
     SetAppointmentReminderView.Injector,
     ScheduleAppointmentSheet.Injector,
-    CalendarDatePicker.Injector {
+    CalendarDatePicker.Injector,
+    TextInputDatePickerSheet.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

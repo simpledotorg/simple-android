@@ -228,7 +228,6 @@
   </style>
 
   <style name="Widget.Simple.TextField.Layout.Large.MeasurementInput">
-    <item name="boxBackgroundColor">@android:color/transparent</item>
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField.Large.MeasurementInput</item>
   </style>
 

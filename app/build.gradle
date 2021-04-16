@@ -200,6 +200,9 @@ android {
       assets.srcDirs += files("$projectDir/schemas".toString())
       java.srcDirs += sharedTestDir
     }
+    main {
+      assets.srcDirs += "${project.buildDir}/generated/assets/room_dao_metadata/"
+    }
   }
 
   packagingOptions {
@@ -229,15 +232,39 @@ android {
   }
 
   afterEvaluate {
-    def buildTypes = [
+    def assembleReleaseTasks = [
         "assembleStagingRelease",
         "assembleSandboxRelease",
         "assembleProductionRelease",
         "assembleSecurityRelease"
     ]
 
-    buildTypes.forEach { buildType ->
+    assembleReleaseTasks.forEach { buildType ->
       tasks.findByName(buildType).finalizedBy(deleteProguardMappings)
+    }
+
+    def kaptTasks = [
+        'kaptSandboxReleaseKotlin'   : 'sandboxRelease',
+        'kaptStagingReleaseKotlin'   : 'stagingRelease',
+        'kaptSecurityReleaseKotlin'  : 'securityRelease',
+        'kaptProductionReleaseKotlin': 'productionRelease'
+    ]
+
+    kaptTasks.each { buildType, sourceSetName ->
+      def taskQualifier = buildType
+          .replaceAll('kapt', '')
+          .replaceAll('Kotlin', '')
+
+      def taskName = "generate${taskQualifier}RoomMetadata"
+
+      def generateTask = task "$taskName"(type: GenerateRoomMetadataTask) {
+        sourceSet = sourceSetName
+        csvAssetName = 'db_metadata.csv'
+      }
+      tasks.findByName(buildType).finalizedBy(generateTask)
+      tasks.named("merge${taskQualifier}Assets").configure {
+        dependsOn(generateTask)
+      }
     }
   }
 }

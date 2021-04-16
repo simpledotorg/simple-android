@@ -33,6 +33,9 @@
 - Migrate `OverdueScreen` to a fragment
 - Add `DatePickerKeyFactory` for getting date picker key based on `Country`
 
+### Features
+- Add `TextInputDatePicker` to schedule appointment for Ethiopia
+
 ### Changes
 - Add Somali language option to language selection
 - Request camera permissions when opening QR code scanner from instant search screen if not provided

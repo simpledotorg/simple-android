@@ -3333,7 +3333,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun querying_whether_blood_pressures_for_patient_have_change_should_work_as_expected() {
     fun setBpSyncStatusToDone(bpUuid: UUID) {
-      database.bloodPressureDao().updateSyncStatus(listOf(bpUuid), DONE)
+      database.bloodPressureDao().updateSyncStatusForIds(listOf(bpUuid), DONE)
     }
 
     val patientUuid = UUID.fromString("a255825d-1a36-47ee-a4c8-3657bf800076")

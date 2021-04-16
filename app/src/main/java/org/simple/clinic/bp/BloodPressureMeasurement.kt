@@ -73,7 +73,7 @@ data class BloodPressureMeasurement(
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
     @Query("UPDATE bloodpressuremeasurement SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
-    fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
+    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(newMeasurements: List<BloodPressureMeasurement>)

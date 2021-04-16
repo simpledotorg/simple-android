@@ -135,7 +135,7 @@ class BloodPressureRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return dao
-        .count(SyncStatus.PENDING)
+        .countWithStatus(SyncStatus.PENDING)
         .toObservable()
   }
 }

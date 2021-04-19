@@ -13,6 +13,7 @@ import org.simple.clinic.R
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
@@ -39,6 +40,7 @@ data class Identifier(
       }
       BangladeshNationalId -> value
       EthiopiaMedicalRecordNumber -> value
+      IndiaNationalHealthId -> value
       is Unknown -> value
     }
   }
@@ -48,6 +50,7 @@ data class Identifier(
       BpPassport -> resources.getString(R.string.identifiertype_bp_passport)
       BangladeshNationalId -> resources.getString(R.string.identifiertype_bangladesh_national_id)
       EthiopiaMedicalRecordNumber -> resources.getString(R.string.identifiertype_ethiopia_medical_record_number)
+      IndiaNationalHealthId -> resources.getString(R.string.identifiertype_india_national_health_id)
       is Unknown -> resources.getString(R.string.identifiertype_unknown)
     }
   }

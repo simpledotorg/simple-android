@@ -6,11 +6,15 @@
 - Replace `kotlin-android-extensions` with `kotlin-parcelize`
 - Move QR code scanner preview view inside `ScanSimpleIdScreen`
 - Remove dialog & sheet from navigation back stack when dismissing
+- Move `TextInputDatePickerSheet` behind a feature flag
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Apr 2021] Add automatic performance profiling for the Room database queries
 
 ### Changes
 - [In Progress: 12 Apr 2021] Show remove overdue appointment reasons in a separate screen
+
+### Features
+- Add `TextInputDatePicker` to schedule appointment for Ethiopia
 
 ## On Demo
 ### Internal
@@ -33,9 +37,6 @@
 - Migrate `ReportsScreen` to a fragment
 - Migrate `OverdueScreen` to a fragment
 - Add `DatePickerKeyFactory` for getting date picker key based on `Country`
-
-### Features
-- Add `TextInputDatePicker` to schedule appointment for Ethiopia
 
 ### Changes
 - Add Somali language option to language selection

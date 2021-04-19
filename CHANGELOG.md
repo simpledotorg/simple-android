@@ -28,6 +28,7 @@
 - Add `DatePickerKeyFactory` for getting date picker key based on `Country`
 - Migrate app to use ViewBinding
 - Replace `kotlin-android-extensions` with `kotlin-parcelize`
+- Move `TextInputDatePickerSheet` behind a feature flag
 
 ### Features
 - Add `TextInputDatePicker` to schedule appointment for Ethiopia

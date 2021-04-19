@@ -76,13 +76,17 @@ data class Identifier(
     object EthiopiaMedicalRecordNumber : IdentifierType()
 
     @Parcelize
+    object IndiaNationalHealthId : IdentifierType()
+
+    @Parcelize
     data class Unknown(val actual: String) : IdentifierType()
 
     object TypeAdapter : SafeEnumTypeAdapter<IdentifierType>(
         knownMappings = mapOf(
             BpPassport to "simple_bp_passport",
             BangladeshNationalId to "bangladesh_national_id",
-            EthiopiaMedicalRecordNumber to "ethiopia_medical_record"
+            EthiopiaMedicalRecordNumber to "ethiopia_medical_record",
+            IndiaNationalHealthId to "india_national_health_id"
         ),
         unknownStringToEnumConverter = { Unknown(it) },
         unknownEnumToStringConverter = { (it as Unknown).actual }

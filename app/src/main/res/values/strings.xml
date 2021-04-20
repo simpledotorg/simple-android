@@ -154,7 +154,7 @@
   <string name="patients_loggedoutalert_title">You can only be logged in on one device at a time</string>
   <string name="patients_loggedoutalert_message">You have been logged out of your previous device.</string>
   <string name="patients_loggedoutalert_dismiss">Got it</string>
-  <string name="patients_scan_simple_card">Scan BP Passport</string>
+  <string name="patients_scan_simple_card">Scan QR code</string>
   <string name="patients_recentpatients_title">Recent</string>
   <string name="patients_recentpatients_no_recent_patients">No recent patients</string>
   <string name="patients_recentpatients_see_all">See All</string>

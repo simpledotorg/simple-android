@@ -11,6 +11,7 @@
 - [In Progress: 08 Apr 2021] Add automatic performance profiling for the Room database queries
 
 ### Changes
+- Rename `Scan BP passport` button to `Scan QR code`
 - [In Progress: 12 Apr 2021] Show remove overdue appointment reasons in a separate screen
 
 ### Features

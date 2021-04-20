@@ -10,7 +10,8 @@ import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.RemoveAppointmentReason
@@ -122,6 +123,7 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
   @Parcelize
   data class Key(val appointmentId: UUID, val patientId: UUID) : ScreenKey() {
 
+    @IgnoredOnParcel
     override val analyticsName = "Remove Overdue Appointment Screen"
 
     override fun instantiateFragment() = RemoveOverdueAppointmentScreen()

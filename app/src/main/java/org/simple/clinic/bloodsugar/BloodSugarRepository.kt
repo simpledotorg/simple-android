@@ -87,7 +87,7 @@ class BloodSugarRepository @Inject constructor(
       throw AssertionError()
     }
 
-    dao.updateSyncStatus(uuids = ids, newStatus = to)
+    dao.updateSyncStatusForIds(uuids = ids, newStatus = to)
   }
 
   override fun mergeWithLocalData(payloads: List<BloodSugarMeasurementPayload>) {

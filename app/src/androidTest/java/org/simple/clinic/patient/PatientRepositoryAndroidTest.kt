@@ -3383,7 +3383,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun querying_whether_blood_sugars_for_patient_have_changed_should_work_as_expected() {
     fun setBloodSugarSyncStatusToDone(bloodSugarUuid: UUID) {
-      database.bloodSugarDao().updateSyncStatus(listOf(bloodSugarUuid), DONE)
+      database.bloodSugarDao().updateSyncStatusForIds(listOf(bloodSugarUuid), DONE)
     }
 
     val patientUuid = UUID.fromString("8ef781b9-afd3-4bb7-8742-193e48471f09")

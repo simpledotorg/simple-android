@@ -1,7 +1,6 @@
 package org.simple.clinic.contactpatient
 
 import org.simple.clinic.contactpatient.UiMode.CallPatient
-import org.simple.clinic.contactpatient.UiMode.RemoveAppointment
 import org.simple.clinic.contactpatient.UiMode.SetAppointmentReminder
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.mobius.ViewRenderer
@@ -23,23 +22,6 @@ class ContactPatientUiRenderer(
     when (model.uiMode) {
       CallPatient -> renderCallPatientView(model)
       SetAppointmentReminder -> renderSetAppointmentReminderView(model)
-      RemoveAppointment -> renderRemoveAppointmentReminderView(model)
-    }
-  }
-
-  private fun renderRemoveAppointmentReminderView(model: ContactPatientModel) {
-    val allRemoveAppointmentReasons = RemoveAppointmentReason.values().toList()
-
-    ui.renderAppointmentRemoveReasons(reasons = allRemoveAppointmentReasons, selectedReason = model.selectedRemoveAppointmentReason)
-    toggleStateOfRemoveAppointmentDoneButton(model)
-    ui.switchToRemoveAppointmentView()
-  }
-
-  private fun toggleStateOfRemoveAppointmentDoneButton(model: ContactPatientModel) {
-    if (model.hasSelectedARemoveAppointmentReason) {
-      ui.enableRemoveAppointmentDoneButton()
-    } else {
-      ui.disableRemoveAppointmentDoneButton()
     }
   }
 

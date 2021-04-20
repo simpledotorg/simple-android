@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:clipChildren="false"
-  android:clipToPadding="false"
-  tools:background="?attr/colorSurface"
-  tools:context="org.simple.clinic.contactpatient.views.RemoveAppointmentView"
-  tools:parentTag="org.simple.clinic.contactpatient.views.RemoveAppointmentView">
+  android:background="?attr/colorSurface">
 
   <com.google.android.material.appbar.AppBarLayout
     android:id="@+id/removeAppointmentAppBar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:theme="@style/ThemeOverlay.Simple.SurfacePrimary">
+    android:theme="@style/ThemeOverlay.Simple.SurfacePrimary"
+    app:layout_constraintTop_toTopOf="parent">
 
     <com.google.android.material.appbar.MaterialToolbar
       android:id="@+id/removeAppointmentToolbar"
@@ -46,12 +43,13 @@
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/removalReasonsRecyclerView"
     android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    app:layout_constrainedHeight="true"
-    app:layout_constraintBottom_toTopOf="@id/removeAppointmentDone"
+    android:layout_height="0dp"
+    android:paddingBottom="@dimen/spacing_48"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/removeAppointmentAppBar"
-    tools:listitem="@layout/contactpatient_removeappointment_reasonitem" />
+    tools:listitem="@layout/removeappointment_reasonitem" />
 
-</merge>
+</androidx.constraintlayout.widget.ConstraintLayout>

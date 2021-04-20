@@ -211,7 +211,7 @@ class PatientRepository @Inject constructor(
   }
 
   override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
-    database.patientDao().updateSyncStatus(ids, to)
+    database.patientDao().updateSyncStatusForIds(ids, to)
   }
 
   override fun recordCount(): Observable<Int> {

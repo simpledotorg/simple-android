@@ -576,7 +576,7 @@ class PatientRepository @Inject constructor(
 
   fun recentPatients(facilityUuid: UUID, limit: Int): Observable<List<RecentPatient>> =
       database.recentPatientDao()
-          .recentPatients(facilityUuid, Scheduled, Manual, PatientStatus.Active, limit)
+          .recentPatientsWithLimit(facilityUuid, Scheduled, Manual, PatientStatus.Active, limit)
           .toObservable()
 
   fun recentPatients(facilityUuid: UUID): Observable<List<RecentPatient>> =

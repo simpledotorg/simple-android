@@ -30,7 +30,6 @@ class RemoveOverdueEffectHandler @AssistedInject constructor(
       .addTransformer(CancelAppointment::class.java, cancelAppointment())
       .addTransformer(MarkPatientAsMovedToPrivate::class.java, markPatientAsMovedToPrivate())
       .addTransformer(MarkPatientAsTransferredToAnotherFacility::class.java, markPatientAsMovedToAnotherFacility())
-      .addAction(GoBack::class.java, uiActions::goBack, schedulersProvider.ui())
       .addAction(GoBackAfterAppointmentRemoval::class.java, uiActions::goBackAfterAppointmentRemoval, schedulersProvider.ui())
       .build()
 

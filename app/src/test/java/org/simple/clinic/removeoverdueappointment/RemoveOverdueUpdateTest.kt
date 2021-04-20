@@ -80,17 +80,6 @@ class RemoveOverdueUpdateTest {
   }
 
   @Test
-  fun `when close button is clicked, then go back`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(CloseClicked)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(GoBack)
-        ))
-  }
-
-  @Test
   fun `when the appointment is removed because the patient has already visited, the patient must be marked as visited`() {
     val model = defaultModel
         .removeAppointmentReasonSelected(RemoveAppointmentReason.AlreadyVisited)

@@ -6,7 +6,6 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -67,7 +66,6 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
 
   override fun events() = Observable.merge(
       removeAppointmentReasonClicks(),
-      toolbarNavigationClicks(),
       doneClicks()
   ).compose(ReportAnalyticsEvents())
       .cast<RemoveOverdueEvent>()
@@ -85,6 +83,9 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+
+    toolbar.setNavigationOnClickListener { router.pop() }
+
     removalReasonsRecyclerView.adapter = removalReasonsAdapter
   }
 
@@ -100,10 +101,6 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
     doneButton.isEnabled = true
   }
 
-  override fun goBack() {
-    router.pop()
-  }
-
   override fun goBackAfterAppointmentRemoval() {
     router.popWithResult(Succeeded(AppointmentRemoved()))
   }
@@ -114,12 +111,6 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
         .ofType<RemoveAppointmentReasonItem.Event.Clicked>()
         .map { it.reason }
         .map(::RemoveAppointmentReasonSelected)
-  }
-
-  private fun toolbarNavigationClicks(): Observable<RemoveOverdueEvent> {
-    return toolbar
-        .navigationClicks()
-        .map { CloseClicked }
   }
 
   private fun doneClicks(): Observable<RemoveOverdueEvent> {

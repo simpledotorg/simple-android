@@ -19,6 +19,12 @@ data class RemoveAppointmentReasonSelected(val reason: RemoveAppointmentReason) 
   override val analyticsName = "Contact Patient:Appointment cancel reason selected:$reason"
 }
 
-object CloseClicked : RemoveOverdueEvent()
+object CloseClicked : RemoveOverdueEvent() {
 
-object DoneClicked: RemoveOverdueEvent()
+  override val analyticsName = "Contact Patient:Close Clicked"
+}
+
+object DoneClicked: RemoveOverdueEvent() {
+
+  override val analyticsName = "Contact Patient:Done Clicked"
+}

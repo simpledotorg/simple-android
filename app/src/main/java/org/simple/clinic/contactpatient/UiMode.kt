@@ -14,6 +14,5 @@ package org.simple.clinic.contactpatient
  **/
 enum class UiMode {
   CallPatient,
-  SetAppointmentReminder,
-  RemoveAppointment
+  SetAppointmentReminder
 }

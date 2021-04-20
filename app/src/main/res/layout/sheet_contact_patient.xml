@@ -21,10 +21,4 @@
     android:layout_gravity="bottom"
     android:visibility="gone" />
 
-  <org.simple.clinic.contactpatient.views.RemoveAppointmentView
-    android:id="@+id/removeAppointmentView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:visibility="gone" />
-
 </FrameLayout>

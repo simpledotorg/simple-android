@@ -3,21 +3,10 @@ package org.simple.clinic.contactpatient
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
-import org.simple.clinic.contactpatient.RemoveAppointmentReason.AlreadyVisited
-import org.simple.clinic.contactpatient.RemoveAppointmentReason.Died
-import org.simple.clinic.contactpatient.RemoveAppointmentReason.MovedToPrivatePractitioner
-import org.simple.clinic.contactpatient.RemoveAppointmentReason.NotResponding
-import org.simple.clinic.contactpatient.RemoveAppointmentReason.OtherReason
-import org.simple.clinic.contactpatient.RemoveAppointmentReason.PhoneNumberNotWorking
-import org.simple.clinic.contactpatient.RemoveAppointmentReason.TransferredToAnotherFacility
 import org.simple.clinic.contactpatient.UiMode.CallPatient
-import org.simple.clinic.contactpatient.UiMode.RemoveAppointment
 import org.simple.clinic.contactpatient.UiMode.SetAppointmentReminder
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
-import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
-import org.simple.clinic.overdue.AppointmentCancelReason.Other
-import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
@@ -50,40 +39,17 @@ class ContactPatientUpdate(
       }
       RemindToCallLaterClicked -> next(model.changeUiModeTo(SetAppointmentReminder))
       BackClicked -> backClicks(model)
-      is RemoveAppointmentReasonSelected -> next(model.removeAppointmentReasonSelected(event.reason))
-      RemoveAppointmentDoneClicked -> removeAppointment(model)
-      RemoveFromOverdueListClicked -> next(model.changeUiModeTo(RemoveAppointment))
+      RemoveFromOverdueListClicked -> dispatch(OpenRemoveOverdueAppointmentScreen(model.appointmentUuid, model.patientUuid))
 
       PatientMarkedAsAgreedToVisit,
-      ReminderSetForAppointment,
-      PatientMarkedAsVisited,
-      PatientMarkedAsDead,
-      AppointmentMarkedAsCancelled -> dispatch(CloseScreen)
-      is PatientMarkAsMigrated -> dispatch(CancelAppointment(model.appointmentUuid, event.appointmentCancelReason))
+      ReminderSetForAppointment -> dispatch(CloseScreen)
     }
-  }
-
-  private fun removeAppointment(model: ContactPatientModel): Next<ContactPatientModel, ContactPatientEffect> {
-    val appointmentUuid = model.appointmentUuid
-
-    val effect = when (model.selectedRemoveAppointmentReason!!) {
-      AlreadyVisited -> MarkPatientAsVisited(appointmentUuid = appointmentUuid)
-      Died -> MarkPatientAsDead(patientUuid = model.patientUuid, appointmentUuid = appointmentUuid)
-      NotResponding -> CancelAppointment(appointmentUuid = appointmentUuid, reason = PatientNotResponding)
-      PhoneNumberNotWorking -> CancelAppointment(appointmentUuid = appointmentUuid, reason = InvalidPhoneNumber)
-      TransferredToAnotherFacility -> MarkPatientAsTransferredToAnotherFacility(patientUuid = model.patientUuid)
-      MovedToPrivatePractitioner -> MarkPatientAsMovedToPrivate(patientUuid = model.patientUuid)
-      OtherReason -> CancelAppointment(appointmentUuid = appointmentUuid, reason = Other)
-    }
-
-    return dispatch(effect)
   }
 
   private fun backClicks(model: ContactPatientModel): Next<ContactPatientModel, ContactPatientEffect> {
     return when (model.uiMode) {
       CallPatient -> dispatch(CloseScreen as ContactPatientEffect)
       SetAppointmentReminder -> next(model.changeUiModeTo(CallPatient))
-      RemoveAppointment -> next(model.changeUiModeTo(CallPatient))
     }
   }
 

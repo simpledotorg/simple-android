@@ -7,7 +7,6 @@ import java.time.LocalDate
 interface ContactPatientUi {
   fun switchToCallPatientView()
   fun switchToSetAppointmentReminderView()
-  fun switchToRemoveAppointmentView()
 
   fun renderPatientDetails(name: String, gender: Gender, age: Int, phoneNumber: String)
   fun showCallResultSection()
@@ -20,8 +19,4 @@ interface ContactPatientUi {
   fun enablePreviousReminderDateStepper()
   fun disableNextReminderDateStepper()
   fun enableNextReminderDateStepper()
-
-  fun renderAppointmentRemoveReasons(reasons: List<RemoveAppointmentReason>, selectedReason: RemoveAppointmentReason?)
-  fun enableRemoveAppointmentDoneButton()
-  fun disableRemoveAppointmentDoneButton()
 }

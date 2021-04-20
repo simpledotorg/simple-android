@@ -1,18 +1,27 @@
 package org.simple.clinic.removeoverdueappointment
 
 import com.spotify.mobius.rx2.RxMobius
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import javax.inject.Inject
 
-class RemoveOverdueEffectHandler(
+class RemoveOverdueEffectHandler @AssistedInject constructor(
     private val appointmentRepository: AppointmentRepository,
     private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
-    private val uiActions: RemoveOverdueUiActions
+    @Assisted private val uiActions: RemoveOverdueUiActions
 ) {
+
+  @AssistedFactory
+  interface Factory {
+    fun create(uiActions: RemoveOverdueUiActions): RemoveOverdueEffectHandler
+  }
 
   fun build(): ObservableTransformer<RemoveOverdueEffect, RemoveOverdueEvent> = RxMobius
       .subtypeEffectHandler<RemoveOverdueEffect, RemoveOverdueEvent>()
@@ -21,7 +30,7 @@ class RemoveOverdueEffectHandler(
       .addTransformer(CancelAppointment::class.java, cancelAppointment())
       .addTransformer(MarkPatientAsMovedToPrivate::class.java, markPatientAsMovedToPrivate())
       .addTransformer(MarkPatientAsTransferredToAnotherFacility::class.java, markPatientAsMovedToAnotherFacility())
-      .addAction(GoBack::class.java, uiActions::goBack, schedulersProvider.ui())
+      .addAction(GoBackAfterAppointmentRemoval::class.java, uiActions::goBackAfterAppointmentRemoval, schedulersProvider.ui())
       .build()
 
   private fun markPatientAsMovedToAnotherFacility(): ObservableTransformer<MarkPatientAsTransferredToAnotherFacility, RemoveOverdueEvent> {

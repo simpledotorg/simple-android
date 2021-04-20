@@ -37,6 +37,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
+import org.simple.clinic.removeoverdueappointment.RemoveOverdueAppointmentScreen
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
@@ -100,9 +101,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   private val setAppointmentReminderView
     get() = binding.setAppointmentReminderView
 
-  private val removeAppointmentView
-    get() = binding.removeAppointmentView
-
   override fun defaultModel() = ContactPatientModel.create(
       patientUuid = patientUuid,
       appointmentConfig = appointmentConfig,
@@ -127,9 +125,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
           appointmentDateClicks(),
           saveReminderDateClicks(),
           removeFromOverdueListClicks(),
-          removeAppointmentCloseClicks(),
-          removeAppointmentDoneClicks(),
-          removeAppointmentReasonSelections(),
           hotEvents
       )
       .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, permissionResults))
@@ -163,10 +158,17 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   }
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
-    if (requestType == DatePickerResult && result is Succeeded) {
-      val selectedDate = result.result as SelectedDate
-      val event = ManualDateSelected(selectedDate = selectedDate.date, currentDate = LocalDate.now(userClock))
-      hotEvents.onNext(event)
+    if (result !is Succeeded) return
+
+    when (requestType) {
+      DatePickerResult -> {
+        val selectedDate = result.result as SelectedDate
+        val event = ManualDateSelected(selectedDate = selectedDate.date, currentDate = LocalDate.now(userClock))
+        hotEvents.onNext(event)
+      }
+      RemoveOverdueAppointmentResult -> {
+        router.pop()
+      }
     }
   }
 
@@ -248,7 +250,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   override fun switchToCallPatientView() {
     callPatientView.visibility = VISIBLE
     setAppointmentReminderView.visibility = GONE
-    removeAppointmentView.visibility = GONE
   }
 
   override fun switchToSetAppointmentReminderView() {
@@ -256,27 +257,13 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
     callPatientView.visibility = GONE
     setAppointmentReminderView.visibility = VISIBLE
-    removeAppointmentView.visibility = GONE
   }
 
-  override fun switchToRemoveAppointmentView() {
-    sharedAxis(contentFlipper)
-
-    callPatientView.visibility = GONE
-    setAppointmentReminderView.visibility = GONE
-    removeAppointmentView.visibility = VISIBLE
-  }
-
-  override fun renderAppointmentRemoveReasons(reasons: List<RemoveAppointmentReason>, selectedReason: RemoveAppointmentReason?) {
-    removeAppointmentView.renderAppointmentRemoveReasons(reasons, selectedReason)
-  }
-
-  override fun enableRemoveAppointmentDoneButton() {
-    removeAppointmentView.enableRemoveAppointmentDoneButton()
-  }
-
-  override fun disableRemoveAppointmentDoneButton() {
-    removeAppointmentView.disableRemoveAppointmentDoneButton()
+  override fun openRemoveOverdueAppointmentScreen(appointmentId: UUID, patientId: UUID) {
+    router.pushExpectingResult(
+        RemoveOverdueAppointmentResult,
+        RemoveOverdueAppointmentScreen.Key(appointmentId, patientId)
+    )
   }
 
   private fun backPressed() {
@@ -355,30 +342,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     }
   }
 
-  private fun removeAppointmentCloseClicks(): Observable<ContactPatientEvent> {
-    return Observable.create { emitter ->
-      emitter.setCancellable { removeAppointmentView.closeClicked = null }
-
-      removeAppointmentView.closeClicked = { emitter.onNext(BackClicked) }
-    }
-  }
-
-  private fun removeAppointmentReasonSelections(): Observable<ContactPatientEvent> {
-    return Observable.create { emitter ->
-      emitter.setCancellable { removeAppointmentView.removeReasonClicked = null }
-
-      removeAppointmentView.removeReasonClicked = { emitter.onNext(RemoveAppointmentReasonSelected(it)) }
-    }
-  }
-
-  private fun removeAppointmentDoneClicks(): Observable<ContactPatientEvent> {
-    return Observable.create { emitter ->
-      emitter.setCancellable { removeAppointmentView.doneClicked = null }
-
-      removeAppointmentView.doneClicked = { emitter.onNext(RemoveAppointmentDoneClicked) }
-    }
-  }
-
   private fun fadeIn(viewGroup: ViewGroup) {
     val materialFade = MaterialFade().apply {
       duration = 150
@@ -402,6 +365,9 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
     override fun instantiateFragment() = ContactPatientBottomSheet()
   }
+
+  @Parcelize
+  object RemoveOverdueAppointmentResult : Parcelable
 
   interface Injector {
     fun inject(target: ContactPatientBottomSheet)

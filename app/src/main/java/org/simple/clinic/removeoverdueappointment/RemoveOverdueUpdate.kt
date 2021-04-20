@@ -15,8 +15,7 @@ class RemoveOverdueUpdate : Update<RemoveOverdueModel, RemoveOverdueEvent, Remov
       is PatientMarkedAsMigrated -> dispatch(CancelAppointment(model.appointmentId, event.cancelReason))
       PatientMarkedAsVisited,
       PatientMarkedAsDead,
-      AppointmentMarkedAsCancelled,
-      CloseClicked -> dispatch(GoBack)
+      AppointmentMarkedAsCancelled -> dispatch(GoBackAfterAppointmentRemoval)
       DoneClicked -> removeAppointment(model)
     }
   }

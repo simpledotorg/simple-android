@@ -104,7 +104,7 @@ class BloodSugarRepository @Inject constructor(
       dao.count().toObservable()
 
   override fun pendingSyncRecordCount(): Observable<Int> =
-      dao.count(PENDING).toObservable()
+      dao.countWithStatus(PENDING).toObservable()
 
   fun measurement(bloodSugarMeasurementUuid: UUID): BloodSugarMeasurement? =
       dao.getOne(bloodSugarMeasurementUuid)

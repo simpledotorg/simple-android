@@ -101,7 +101,7 @@ data class BusinessId(
           IndiaNationalHealthId -> IndiaNationalHealthIdMetaDataV1
           is IdentifierType.Unknown -> null
         }
-        
+
         return Optional.ofNullable(metaDataVersion)
       }
     }

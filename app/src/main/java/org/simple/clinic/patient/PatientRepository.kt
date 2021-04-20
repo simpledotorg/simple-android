@@ -590,7 +590,7 @@ class PatientRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return database.patientDao()
-        .patientCount(PENDING)
+        .patientCountWithStatus(PENDING)
         .toObservable()
   }
 

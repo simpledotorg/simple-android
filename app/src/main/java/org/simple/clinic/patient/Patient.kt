@@ -121,7 +121,7 @@ data class Patient(
     abstract fun patientCount(): Flowable<Int>
 
     @Query("SELECT COUNT(uuid) FROM Patient WHERE syncStatus = :syncStatus")
-    abstract fun patientCount(syncStatus: SyncStatus): Flowable<Int>
+    abstract fun patientCountWithStatus(syncStatus: SyncStatus): Flowable<Int>
 
     @Query("DELETE FROM patient")
     abstract fun clear()

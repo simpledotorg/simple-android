@@ -741,7 +741,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         medicalHistoryForPatientInOtherFacilityInCurrentSyncGroup +
         medicalHistoryForPatientInOtherSyncGroup
 
-    medicalHistoryDao.save(allMedicalHistories)
+    medicalHistoryDao.saveHistories(allMedicalHistories)
     assertThat(medicalHistoryDao.getAllMedicalHistories()).containsExactlyElementsIn(allMedicalHistories)
 
     // when

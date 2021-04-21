@@ -103,7 +103,7 @@ class MedicalHistoryRepository @Inject constructor(
 
   override fun save(records: List<MedicalHistory>): Completable {
     return Completable.fromAction {
-      dao.save(records)
+      dao.saveHistories(records)
     }
   }
 
@@ -130,7 +130,7 @@ class MedicalHistoryRepository @Inject constructor(
         .filterNot { it.uuid in dirtyRecords }
         .map { toDatabaseModel(it, SyncStatus.DONE) }
 
-    dao.save(payloadsToSave)
+    dao.saveHistories(payloadsToSave)
   }
 
   override fun recordCount(): Observable<Int> {

@@ -137,6 +137,16 @@ data class Patient(
     abstract fun findPatientsWithBusinessId(identifier: String): Flowable<List<Patient>>
 
     @Query("""
+      SELECT P.* FROM Patient P
+      INNER JOIN BusinessId B ON B.patientUuid == P.uuid
+      WHERE 
+        (P.deletedAt IS NULL) AND
+        (B.identifier == :identifier AND B.deletedAt IS NULL)
+      ORDER BY B.createdAt ASC
+    """)
+    abstract fun findPatientsWithBusinessIdImmediate(identifier: String): List<Patient>
+
+    @Query("""
       UPDATE patient
       SET status = :newStatus, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
       WHERE uuid = :uuid

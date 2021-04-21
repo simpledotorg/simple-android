@@ -4398,4 +4398,49 @@ class PatientRepositoryAndroidTest {
     assertThat(searchResultsWithNoPartMatching)
         .isEmpty()
   }
+
+  @Test
+  fun querying_patients_with_same_business_id_should_work_correctly() {
+    // given
+    val patientOneUuid = UUID.fromString("8bcce0e1-7dde-494d-a063-d8c169d416ef")
+    val patientTwoUuid = UUID.fromString("bd4c89f1-fde6-4ff8-9c8b-dab0253150f7")
+
+    val identifier = TestData.identifier(
+        value = "036b4c39-f427-4e78-8c51-78cbacb8e73c",
+        type = BpPassport
+    )
+
+    val businessIdOne = TestData.businessId(
+        uuid = UUID.fromString("fc1f11ac-ea87-440b-bddf-53f0c9ad6219"),
+        patientUuid = patientOneUuid,
+        identifier = identifier
+    )
+
+    val businessIdTwo = TestData.businessId(
+        uuid = UUID.fromString("9ad066f6-ca3c-4c17-badc-e3e96c589637"),
+        patientUuid = patientTwoUuid,
+        identifier = identifier
+    )
+
+    val patientOneProfile = TestData.patientProfile(
+        patientUuid = patientOneUuid,
+        businessId = businessIdOne
+    )
+
+    val patientTwoProfile = TestData.patientProfile(
+        patientUuid = patientTwoUuid,
+        businessId = businessIdTwo
+    )
+
+    patientRepository.save(listOf(patientOneProfile, patientTwoProfile)).blockingAwait()
+
+    // when
+    val patients = patientRepository.findPatientsWithBusinessId(identifier.value).map { it.uuid }
+
+    // then
+    assertThat(patients).containsExactly(
+        patientOneUuid,
+        patientTwoUuid
+    )
+  }
 }

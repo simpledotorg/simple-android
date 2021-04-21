@@ -221,7 +221,7 @@ class AppointmentRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return appointmentDao
-        .count(SyncStatus.PENDING)
+        .countWithStatus(SyncStatus.PENDING)
         .toObservable()
   }
 

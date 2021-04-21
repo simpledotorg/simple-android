@@ -62,7 +62,7 @@ data class TeleconsultationFacilityInfo(
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
     @Query("UPDATE TeleconsultationFacilityInfo SET syncStatus = :newStatus WHERE teleconsultationFacilityId IN (:uuids)")
-    fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
+    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
 
     @Query("SELECT * FROM TeleconsultationFacilityInfo WHERE syncStatus = :syncStatus")
     fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultationFacilityInfo>

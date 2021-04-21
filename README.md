@@ -7,15 +7,15 @@ An Android app for recording blood pressure measurements.
 
 ## Pre-requisites
 
-The application currently requires JDK 1.8 to build. If you already have JDK 1.8 installed, skip this step.
+The application currently requires JDK 11 to build. If you already have JDK 11 installed, skip this step.
 
 **Check if the right JDK is already available**
 
 Run the command `java -version`. If you have the right version of the JDK installed, you should see something like:
 ```sh
-openjdk version "1.8.0_232"
-OpenJDK Runtime Environment (AdoptOpenJDK)(build 1.8.0_232-b09)
-OpenJDK 64-Bit Server VM (AdoptOpenJDK)(build 25.232-b09, mixed mode)
+openjdk version "11.0.10" 2021-01-19
+OpenJDK Runtime Environment AdoptOpenJDK (build 11.0.10+9)
+OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.10+9, mixed mode)
 ```
 
 If this command has an error, or shows a different version, you can follow the instructions below to install the JDK.
@@ -45,19 +45,21 @@ source <path to shell configuration file>
 5. Install the JDK using Homebrew.
 ```sh
 brew tap AdoptOpenJDK/openjdk
-brew cask install adoptopenjdk8
+brew cask install adoptopenjdk11
 ```
 
 6. Add the installed JDK to `jEnv`
 ```sh
-jenv add /Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home
+jenv add /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home
 ```
 
 7. Run the command `jenv versions`. You should see something like:
 ```sh
   system
-* 1.8
-  1.8.0.222
+  11
+* 11.0
+  11.0.10
+  openjdk64-11.0.10
 ```
 
 ## How to build

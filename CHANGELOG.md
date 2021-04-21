@@ -2,23 +2,16 @@
 
 ## Next Release
 ### Internal
-- Migrate app to use ViewBinding
-- Replace `kotlin-android-extensions` with `kotlin-parcelize`
 - Move QR code scanner preview view inside `ScanSimpleIdScreen`
 - Remove dialog & sheet from navigation back stack when dismissing
-- Move `TextInputDatePickerSheet` behind a feature flag
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 08 Apr 2021] Add automatic performance profiling for the Room database queries
 
 ### Changes
 - Rename `Scan BP passport` button to `Scan QR code`
 - Show remove overdue appointment reasons in a separate screen
-- [In Progress: 12 Apr 2021] Show remove overdue appointment reasons in a separate screen
 
-### Features
-- Add `TextInputDatePicker` to schedule appointment for Ethiopia
-
-## On Demo
+## 2021-04-20-7712
 ### Internal
 - Make entire prescribed drugs list scrollable
 - Bump AGP to v4.1.3
@@ -39,6 +32,13 @@
 - Migrate `ReportsScreen` to a fragment
 - Migrate `OverdueScreen` to a fragment
 - Add `DatePickerKeyFactory` for getting date picker key based on `Country`
+- Move `TextInputDatePickerSheet` behind a feature flag
+- Migrate app to use ViewBinding
+- Replace `kotlin-android-extensions` with `kotlin-parcelize`
+
+### Features
+- Show `TextInputDatePickerSheet` for Ethiopian users
+- Add Ethiopian calendar support
 
 ### Changes
 - Add Somali language option to language selection

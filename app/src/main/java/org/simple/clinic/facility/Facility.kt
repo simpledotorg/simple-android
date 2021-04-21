@@ -113,7 +113,7 @@ data class Facility(
     fun count(): Flowable<Int>
 
     @Query("SELECT COUNT(uuid) FROM facility WHERE syncStatus = :syncStatus")
-    fun count(syncStatus: SyncStatus): Flowable<Int>
+    fun countWithStatus(syncStatus: SyncStatus): Flowable<Int>
 
     @Query("DELETE FROM Facility")
     fun clear()

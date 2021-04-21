@@ -15,7 +15,7 @@ repositories {
 }
 
 sentry {
-  autoProguardConfig true
+  autoProguardConfig false
   // We can disable auto upload of proguard mappings since we use -dontobfuscate when running proguard
   autoUpload false
 }

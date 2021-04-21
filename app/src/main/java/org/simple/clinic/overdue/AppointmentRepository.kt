@@ -162,7 +162,7 @@ class AppointmentRepository @Inject constructor(
         .atStartOfDay()
         .toInstant(ZoneOffset.of(utcClock.zone.id))
 
-    appointmentDao.markAsVisited(
+    appointmentDao.markAsVisitedForPatient(
         patientUuid = patientUuid,
         updatedStatus = Visited,
         scheduledStatus = Scheduled,

@@ -235,7 +235,7 @@ data class Appointment(
       UPDATE Appointment SET status = :updatedStatus, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
       WHERE patientUuid = :patientUuid AND status = :scheduledStatus AND createdAt < :createdBefore
     """)
-    fun markAsVisited(
+    fun markAsVisitedForPatient(
         patientUuid: UUID,
         updatedStatus: Status,
         scheduledStatus: Status,

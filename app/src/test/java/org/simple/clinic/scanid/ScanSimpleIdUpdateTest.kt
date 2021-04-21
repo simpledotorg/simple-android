@@ -41,7 +41,7 @@ class ScanSimpleIdUpdateTest {
     val shortCode = "1234567"
     val model = defaultModel.shortCodeChanged(ShortCodeInput(shortCode))
 
-    val expectedScanResult = EnteredShortCode(shortCode)
+    val expectedScanResult = SearchByShortCode(shortCode)
 
     spec
         .given(model)
@@ -112,7 +112,7 @@ class ScanSimpleIdUpdateTest {
 
     val identifier = Identifier("123456", BpPassport)
 
-    val expectedScanResult = EnteredShortCode("123456")
+    val expectedScanResult = SearchByShortCode("123456")
 
     spec
         .given(defaultModel)

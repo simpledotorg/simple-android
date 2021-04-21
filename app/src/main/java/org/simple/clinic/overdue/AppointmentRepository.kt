@@ -186,7 +186,7 @@ class AppointmentRepository @Inject constructor(
       throw AssertionError()
     }
 
-    appointmentDao.updateSyncStatus(ids, to)
+    appointmentDao.updateSyncStatusForIds(ids, to)
   }
 
   override fun mergeWithLocalData(payloads: List<AppointmentPayload>) {

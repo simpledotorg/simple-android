@@ -140,7 +140,7 @@ data class Appointment(
     fun updateSyncStatus(from: SyncStatus, to: SyncStatus)
 
     @Query("UPDATE Appointment SET syncStatus = :to WHERE uuid IN (:ids)")
-    fun updateSyncStatus(ids: List<UUID>, to: SyncStatus)
+    fun updateSyncStatusForIds(ids: List<UUID>, to: SyncStatus)
 
     @Query("SELECT * FROM Appointment WHERE uuid = :id")
     fun getOne(id: UUID): Appointment?

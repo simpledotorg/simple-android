@@ -196,6 +196,16 @@ data class PatientSearchResult(
     fun searchByPhoneNumber2(phoneNumber: String, facilityId: UUID): List<PatientSearchResult>
 
     @Query("""
+         SELECT DISTINCT * FROM 
+        PatientSearchResult searchResult
+        LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+        WHERE id_identifier LIKE '%' || :numericCriteria || '%' OR phoneNumber LIKE '%' || :numericCriteria || '%'  AND P.deletedAt IS NULL
+        GROUP BY P.uuid
+        ORDER BY id_identifier, phoneNumber COLLATE NOCASE ASC LIMIT :limit
+        """)
+    fun searchByNumericCriteria(numericCriteria: String, limit: Int): List<PatientSearchResult>
+
+    @Query("""
         SELECT DISTINCT
             searchResult.*, 
             (
@@ -211,7 +221,7 @@ data class PatientSearchResult(
         GROUP BY P.uuid
         ORDER BY priority ASC, phoneNumberPosition ASC, identifierPosition ASC
         """)
-    fun searchByNumericCriteria(numericCriteria: String, facilityId: UUID): List<PatientSearchResult>
+    fun searchByNumericCriteria2(numericCriteria: String, facilityId: UUID): List<PatientSearchResult>
   }
 
   data class PatientNameAndId(val uuid: UUID, val fullName: String)

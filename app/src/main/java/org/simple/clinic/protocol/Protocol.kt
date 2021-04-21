@@ -53,7 +53,7 @@ data class Protocol(
     fun count(): Flowable<Int>
 
     @Query("SELECT COUNT(uuid) FROM Protocol WHERE syncStatus = :syncStatus")
-    fun count(syncStatus: SyncStatus): Flowable<Int>
+    fun countWithStatus(syncStatus: SyncStatus): Flowable<Int>
 
     @Query("SELECT * FROM Protocol WHERE uuid = :uuid")
     fun getOne(uuid: UUID): Protocol?

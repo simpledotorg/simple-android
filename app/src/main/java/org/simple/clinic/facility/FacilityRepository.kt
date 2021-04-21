@@ -98,7 +98,7 @@ class FacilityRepository @Inject constructor(
       throw AssertionError("IDs must not be empty!")
     }
 
-    facilityDao.updateSyncStatus(uuids = ids, newStatus = to)
+    facilityDao.updateSyncStatusForIds(uuids = ids, newStatus = to)
   }
 
   override fun recordCount(): Observable<Int> {

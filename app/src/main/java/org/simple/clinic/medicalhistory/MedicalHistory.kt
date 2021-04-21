@@ -72,7 +72,7 @@ data class MedicalHistory(
     fun updateSyncStatus(from: SyncStatus, to: SyncStatus)
 
     @Query("UPDATE MedicalHistory SET syncStatus = :to WHERE uuid IN (:ids)")
-    fun updateSyncStatus(ids: List<UUID>, to: SyncStatus)
+    fun updateSyncStatusForIds(ids: List<UUID>, to: SyncStatus)
 
     @Query("SELECT * FROM MedicalHistory WHERE uuid = :id LIMIT 1")
     fun getOne(id: UUID): MedicalHistory?

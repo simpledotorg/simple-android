@@ -3483,7 +3483,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun querying_whether_medical_history_for_patient_has_changed_should_work_as_expected() {
     fun setMedicalHistorySyncStatusToDone(medicalHistoryUuid: UUID) {
-      database.medicalHistoryDao().updateSyncStatus(listOf(medicalHistoryUuid), DONE)
+      database.medicalHistoryDao().updateSyncStatusForIds(listOf(medicalHistoryUuid), DONE)
     }
 
     val patientUuid = UUID.fromString("327b1bc3-da82-49b4-a6a5-668b7cf05ca2")

@@ -120,7 +120,7 @@ class MedicalHistoryRepository @Inject constructor(
       throw AssertionError()
     }
 
-    dao.updateSyncStatus(ids, to)
+    dao.updateSyncStatusForIds(ids, to)
   }
 
   override fun mergeWithLocalData(payloads: List<MedicalHistoryPayload>) {

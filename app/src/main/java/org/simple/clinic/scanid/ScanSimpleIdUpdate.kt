@@ -32,8 +32,8 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel,
       event: PatientSearchByIdentifierCompleted
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    val scanResult = if (event.patient.isPresent()) {
-      val patientId = event.patient.get().uuid
+    val scanResult = if (event.patients.isNotEmpty()) {
+      val patientId = event.patients.first().uuid
       PatientFound(patientId)
     } else {
       PatientNotFound(event.identifier)

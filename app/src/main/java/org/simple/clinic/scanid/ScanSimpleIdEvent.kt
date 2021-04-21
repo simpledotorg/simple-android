@@ -2,7 +2,6 @@ package org.simple.clinic.scanid
 
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.UiEvent
 
 sealed class ScanSimpleIdEvent : UiEvent
@@ -34,6 +33,6 @@ data class ScanSimpleIdScreenQrCodeScanned(val text: String) : ScanSimpleIdEvent
 }
 
 data class PatientSearchByIdentifierCompleted(
-    val patient: Optional<Patient>,
+    val patients: List<Patient>,
     val identifier: Identifier
 ) : ScanSimpleIdEvent()

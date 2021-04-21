@@ -33,12 +33,13 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
   private fun searchPatientByIdentifier(): ObservableTransformer<SearchPatientByIdentifier, ScanSimpleIdEvent> {
     return ObservableTransformer { effects ->
       effects
+          .observeOn(schedulersProvider.io())
           .map(SearchPatientByIdentifier::identifier)
-          .switchMap { identifier ->
-            patientRepository
-                .findPatientWithBusinessId(identifier.value)
-                .subscribeOn(schedulersProvider.io())
-                .map { foundPatient -> PatientSearchByIdentifierCompleted(foundPatient, identifier) }
+          .map { identifier ->
+            identifier to patientRepository.findPatientsWithBusinessId(identifier = identifier.value)
+          }
+          .map { (identifier, patients) ->
+            PatientSearchByIdentifierCompleted(patients, identifier)
           }
     }
   }

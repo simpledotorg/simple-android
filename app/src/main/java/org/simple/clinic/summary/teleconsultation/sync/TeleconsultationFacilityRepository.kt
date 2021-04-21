@@ -89,7 +89,7 @@ class TeleconsultationFacilityRepository @Inject constructor(
     return Observable.fromCallable {
       appDatabase
           .teleconsultFacilityInfoDao()
-          .count(PENDING)
+          .countWithStatus(PENDING)
     }
   }
 

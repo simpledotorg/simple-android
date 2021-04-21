@@ -50,7 +50,7 @@ data class TeleconsultationFacilityInfo(
     fun count(): Int
 
     @Query("SELECT COUNT(teleconsultationFacilityId) FROM TeleconsultationFacilityInfo WHERE syncStatus = :syncStatus")
-    fun count(syncStatus: SyncStatus): Int
+    fun countWithStatus(syncStatus: SyncStatus): Int
 
     @Query("SELECT * FROM TeleconsultationFacilityInfo WHERE teleconsultationFacilityId = :id")
     fun getOne(id: UUID): TeleconsultationFacilityInfo?

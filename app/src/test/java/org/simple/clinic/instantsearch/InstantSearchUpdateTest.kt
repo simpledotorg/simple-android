@@ -9,19 +9,15 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.assignbppassport.AddToExistingPatient
 import org.simple.clinic.bp.assignbppassport.RegisterNewPatient
-import org.simple.clinic.feature.Feature
-import org.simple.clinic.feature.Features
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.remoteconfig.DefaultValueConfigReader
-import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 import java.util.UUID
 
 class InstantSearchUpdateTest {
 
-  private val updateSpec = UpdateSpec(InstantSearchUpdate(true))
+  private val updateSpec = UpdateSpec(InstantSearchUpdate(false))
   private val identifier = TestData.identifier(
       value = "3e5500fe-e10e-4009-a0bb-3db9009fdef6",
       type = BpPassport
@@ -378,6 +374,56 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenQrCodeScanner)
+        ))
+  }
+
+  @Test
+  fun `when search query is valid with a numeric criteria and instant search by patient identifier feature flag is enabled, then load search results with numeric criteria`() {
+    val updateSpec = UpdateSpec(InstantSearchUpdate(true))
+    val facility = TestData.facility(
+        uuid = UUID.fromString("f7951ae6-e6c0-4b79-bf3e-2ddd637fa7b4"),
+        name = "PHC Obvious"
+    )
+    val numericSearchQuery = "9876"
+    val searchQueryModel = defaultModel
+        .facilityLoaded(facility)
+        .searchQueryChanged(numericSearchQuery)
+
+    updateSpec
+        .given(searchQueryModel)
+        .whenEvent(SearchQueryValidated(InstantSearchValidator.Result.Valid(numericSearchQuery)))
+        .then(assertThatNext(
+            hasModel(searchQueryModel.loadingSearchResults()),
+            hasEffects(
+                HideNoPatientsInFacility,
+                HideNoSearchResults,
+                SearchWithCriteria(PatientSearchCriteria.NumericCriteria(numericSearchQuery, identifier), facility)
+            )
+        ))
+  }
+
+  @Test
+  fun `when search query is valid with a numeric criteria and instant search by patient identifier feature flag is disabled, then load search results with phone number criteria`() {
+    val updateSpec = UpdateSpec(InstantSearchUpdate(false))
+    val facility = TestData.facility(
+        uuid = UUID.fromString("f7951ae6-e6c0-4b79-bf3e-2ddd637fa7b4"),
+        name = "PHC Obvious"
+    )
+    val numericSearchQuery = "9876"
+    val searchQueryModel = defaultModel
+        .facilityLoaded(facility)
+        .searchQueryChanged(numericSearchQuery)
+
+    updateSpec
+        .given(searchQueryModel)
+        .whenEvent(SearchQueryValidated(InstantSearchValidator.Result.Valid(numericSearchQuery)))
+        .then(assertThatNext(
+            hasModel(searchQueryModel.loadingSearchResults()),
+            hasEffects(
+                HideNoPatientsInFacility,
+                HideNoSearchResults,
+                SearchWithCriteria(PatientSearchCriteria.PhoneNumber(numericSearchQuery, identifier), facility)
+            )
         ))
   }
 }

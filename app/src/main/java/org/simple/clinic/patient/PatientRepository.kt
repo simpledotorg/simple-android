@@ -12,6 +12,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.patient.PatientSearchCriteria.Name
+import org.simple.clinic.patient.PatientSearchCriteria.NumericCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
@@ -58,6 +59,7 @@ class PatientRepository @Inject constructor(
     return when (criteria) {
       is Name -> searchByName(criteria.patientName)
       is PhoneNumber -> searchByPhoneNumber(criteria.phoneNumber)
+      is NumericCriteria -> searchByNumericCriteria(criteria.numericCriteria)
     }
   }
 
@@ -66,6 +68,7 @@ class PatientRepository @Inject constructor(
     return when (criteria) {
       is Name -> searchByName2(criteria.patientName, facilityId)
       is PhoneNumber -> searchByPhoneNumber2(criteria.phoneNumber, facilityId)
+      is NumericCriteria -> searchByNumericCriteria2(criteria.numericCriteria, facilityId)
     }
   }
 
@@ -82,6 +85,14 @@ class PatientRepository @Inject constructor(
         clock = utcClock,
         operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
       database.patientSearchDao().searchByPhoneNumber2(phoneNumber, facilityId)
+    }
+  }
+
+  private fun searchByNumericCriteria2(numericCriteria: String, facilityId: UUID): List<PatientSearchResult> {
+    return reportTimeTaken(
+        clock = utcClock,
+        operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
+      database.patientSearchDao().searchByNumericCriteria2(numericCriteria, facilityId)
     }
   }
 
@@ -149,6 +160,12 @@ class PatientRepository @Inject constructor(
     return database
         .patientSearchDao()
         .searchByPhoneNumber(phoneNumber, config.limitOfSearchResults)
+  }
+
+  private fun searchByNumericCriteria(numericCriteria: String): List<PatientSearchResult> {
+    return database
+        .patientSearchDao()
+        .searchByNumericCriteria(numericCriteria, config.limitOfSearchResults)
   }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {

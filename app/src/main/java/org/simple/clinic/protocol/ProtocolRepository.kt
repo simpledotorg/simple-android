@@ -50,7 +50,7 @@ class ProtocolRepository @Inject constructor(
   }
 
   override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
-    protocolDao.updateSyncStatus(uuids = ids, newStatus = to)
+    protocolDao.updateSyncStatusForIds(uuids = ids, newStatus = to)
   }
 
   override fun mergeWithLocalData(payloads: List<ProtocolPayload>) {

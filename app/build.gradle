@@ -15,7 +15,7 @@ repositories {
 }
 
 sentry {
-  autoProguardConfig true
+  autoProguardConfig false
   // We can disable auto upload of proguard mappings since we use -dontobfuscate when running proguard
   autoUpload false
 }
@@ -121,6 +121,9 @@ android {
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + qaMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
       buildConfigField "boolean", "ALLOW_ROOTED_DEVICE", "true"
+      buildConfigField "String", "SENTRY_DSN", "\"" + sentryDsn + "\""
+      buildConfigField "double", "SENTRY_SAMPLE_RATE", sentrySampleRate
+      buildConfigField "String", "SENTRY_ENVIRONMENT", "\"" + qaSentryEnvironment + "\""
     }
 
     staging {
@@ -132,6 +135,9 @@ android {
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + stagingMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
       buildConfigField "boolean", "ALLOW_ROOTED_DEVICE", "true"
+      buildConfigField "String", "SENTRY_DSN", "\"" + sentryDsn + "\""
+      buildConfigField "double", "SENTRY_SAMPLE_RATE", sentrySampleRate
+      buildConfigField "String", "SENTRY_ENVIRONMENT", "\"" + stagingSentryEnvironment + "\""
     }
 
     sandbox {
@@ -143,6 +149,9 @@ android {
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + sandboxMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
       buildConfigField "boolean", "ALLOW_ROOTED_DEVICE", "true"
+      buildConfigField "String", "SENTRY_DSN", "\"" + sentryDsn + "\""
+      buildConfigField "double", "SENTRY_SAMPLE_RATE", sentrySampleRate
+      buildConfigField "String", "SENTRY_ENVIRONMENT", "\"" + sandboxSentryEnvironment + "\""
     }
 
     production {
@@ -152,6 +161,9 @@ android {
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + productionMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "true"
       buildConfigField "boolean", "ALLOW_ROOTED_DEVICE", "false"
+      buildConfigField "String", "SENTRY_DSN", "\"" + sentryDsn + "\""
+      buildConfigField "double", "SENTRY_SAMPLE_RATE", sentrySampleRate
+      buildConfigField "String", "SENTRY_ENVIRONMENT", "\"" + productionSentryEnvironment + "\""
     }
 
     security {
@@ -163,6 +175,9 @@ android {
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + securityMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "true"
       buildConfigField "boolean", "ALLOW_ROOTED_DEVICE", "false"
+      buildConfigField "String", "SENTRY_DSN", sentryDsn
+      buildConfigField "double", "SENTRY_SAMPLE_RATE", sentrySampleRate
+      buildConfigField "String", "SENTRY_ENVIRONMENT", securitySentryEnvironment
     }
   }
 

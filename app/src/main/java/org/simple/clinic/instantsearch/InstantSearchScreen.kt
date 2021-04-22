@@ -22,7 +22,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bp.assignbppassport.BpPassportSheet
+import org.simple.clinic.bp.assignbppassport.ScannedQrCodeSheet
 import org.simple.clinic.databinding.ListPatientSearchBinding
 import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
 import org.simple.clinic.databinding.ScreenInstantSearchBinding
@@ -242,7 +242,7 @@ class InstantSearchScreen :
   }
 
   override fun openBpPassportSheet(identifier: Identifier) {
-    router.pushExpectingResult(BlankBpPassport, BpPassportSheet.Key(identifier))
+    router.pushExpectingResult(BlankBpPassport, ScannedQrCodeSheet.Key(identifier))
   }
 
   override fun showNoPatientsInFacility(facility: Facility) {
@@ -293,7 +293,7 @@ class InstantSearchScreen :
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
     if (requestType == BlankBpPassport && result is Succeeded) {
-      val bpPassportResult = BpPassportSheet.blankBpPassportResult(result)
+      val bpPassportResult = ScannedQrCodeSheet.blankBpPassportResult(result)
       blankBpPassportResults.onNext(BlankBpPassportResultReceived(bpPassportResult))
     } else if (requestType == BpPassportScan && result is Succeeded) {
       val scanResult = ScanSimpleIdScreen.readScanResult(result)

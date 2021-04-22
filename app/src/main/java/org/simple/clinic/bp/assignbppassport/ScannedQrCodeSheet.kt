@@ -20,9 +20,9 @@ import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.patient.businessid.Identifier
 import javax.inject.Inject
 
-class BpPassportSheet :
+class ScannedQrCodeSheet :
     BaseBottomSheet<
-        BpPassportSheet.Key,
+        ScannedQrCodeSheet.Key,
         SheetBpPassportBinding,
         BpPassportModel,
         BpPassportEvent,
@@ -105,12 +105,12 @@ class BpPassportSheet :
 
     override val analyticsName = "Blank BP passport sheet"
 
-    override fun instantiateFragment() = BpPassportSheet()
+    override fun instantiateFragment() = ScannedQrCodeSheet()
 
     override val type = ScreenType.Modal
   }
 
   interface Injector {
-    fun inject(target: BpPassportSheet)
+    fun inject(target: ScannedQrCodeSheet)
   }
 }

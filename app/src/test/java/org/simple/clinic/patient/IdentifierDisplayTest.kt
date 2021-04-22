@@ -59,7 +59,7 @@ class IdentifierDisplayTest {
         val indiaNationalHealthIdValue = "12121212121212"
         val indiaNationalHealthId = Identifier(value = indiaNationalHealthIdValue, type = IndiaNationalHealthId)
 
-        IdentifierTestData(identifier = indiaNationalHealthId, expectedDisplayValue = indiaNationalHealthIdValue)
+        IdentifierTestData(identifier = indiaNationalHealthId, expectedDisplayValue = "12\u00A01212\u00A01212\u00A01212")
       }
     }
   }

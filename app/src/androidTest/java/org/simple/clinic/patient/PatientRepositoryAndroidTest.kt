@@ -34,6 +34,7 @@ import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientSearchCriteria.Name
+import org.simple.clinic.patient.PatientSearchCriteria.NumericCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.PatientSearchResult.LastSeen
 import org.simple.clinic.patient.PatientStatus.Active
@@ -4132,5 +4133,269 @@ class PatientRepositoryAndroidTest {
             "Patient 4"
         )
         .inOrder()
+  }
+
+  @Test
+  fun searching_for_a_patient_by_numeric_criteria_must_return_list_of_patient_search_results_paritioned_by_assigned_and_not_assigned_facility() {
+    fun createPatientWithNumericCriteriaAndAssignedFacilityID(
+        patientUuid: UUID,
+        phoneNumber: String?,
+        assignedFacilityId: UUID?,
+        businessId: BusinessId?
+    ) {
+      val patientProfile = TestData
+          .patientProfile(
+              patientUuid = patientUuid,
+              generatePhoneNumber = false,
+              patientPhoneNumber = phoneNumber,
+              patientAssignedFacilityId = assignedFacilityId,
+              businessId = businessId
+          )
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+    }
+
+    fun searchResults(numericCriteria: String, assignedFacilityUUID: UUID): List<UUID> {
+      return patientRepository
+          .search2(NumericCriteria(numericCriteria), assignedFacilityUUID)
+          .map { it.uuid }
+          .toList()
+    }
+
+    // given
+    val currentFacility = TestData.facility(uuid = UUID.fromString("c0056c11-105d-4079-80fa-c745128f7fc5"), name = "CHC Bucho")
+    val facility2 = TestData.facility(uuid = UUID.fromString("532264e6-b358-445e-8b48-c6253677db24"), name = "Test")
+    database.facilityDao().save(listOf(currentFacility, facility2))
+
+    val patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumber = UUID.fromString("e8ad5b9a-2b27-4d20-9257-c9c456d5f168")
+    createPatientWithNumericCriteriaAndAssignedFacilityID(
+        patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumber,
+        phoneNumber = "1234567890",
+        assignedFacilityId = currentFacility.uuid,
+        businessId = null
+    )
+
+    val patientWithCurrentFacilityAsAssignedFacilityAndNoMatchingValue = UUID.fromString("0d955585-6887-451f-9b20-94587938a09d")
+    createPatientWithNumericCriteriaAndAssignedFacilityID(
+        patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndNoMatchingValue,
+        phoneNumber = "999999999",
+        assignedFacilityId = currentFacility.uuid,
+        businessId = null
+    )
+
+    val patientWithCurrentFacilityAsAssignedFacilityAndFirstHalfMatchingPhoneNumber = UUID.fromString("b7aa9310-6ae9-4ac2-b040-762f5cc5a505")
+    createPatientWithNumericCriteriaAndAssignedFacilityID(
+        patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndFirstHalfMatchingPhoneNumber,
+        phoneNumber = "1234533333",
+        assignedFacilityId = currentFacility.uuid,
+        businessId = null
+    )
+
+    val patientWithCurrentFacilityAsAssignedFacilityAndSecondHalfMatchingPhoneNumber = UUID.fromString("ff3552b7-83f2-47f6-b840-c6ce12de6ad5")
+    createPatientWithNumericCriteriaAndAssignedFacilityID(
+        patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndSecondHalfMatchingPhoneNumber,
+        phoneNumber = "9999967890",
+        assignedFacilityId = currentFacility.uuid,
+        businessId = null
+    )
+
+    val patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumberAndBusinessId = UUID.fromString("bd050289-29c3-4459-8d33-50e8d77469d2")
+    createPatientWithNumericCriteriaAndAssignedFacilityID(
+        patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumberAndBusinessId,
+        phoneNumber = "1234567890",
+        assignedFacilityId = currentFacility.uuid,
+        businessId = TestData.businessId(identifier = Identifier(
+            value = "1234567890",
+            type = BpPassport),
+            patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumberAndBusinessId)
+    )
+
+    createPatientWithNumericCriteriaAndAssignedFacilityID(
+        patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumberAndBusinessId,
+        phoneNumber = "1234567890",
+        assignedFacilityId = currentFacility.uuid,
+        businessId = TestData.businessId(identifier = Identifier(
+            value = "1234567890",
+            type = BpPassport),
+            patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumberAndBusinessId)
+    )
+
+    val patientWithCurrentFacilityAsAssignedFacilityAndFirstHalfMatchingBusinessId = UUID.fromString("d47ae2e7-7453-4a6f-806e-88eb130823d8")
+    createPatientWithNumericCriteriaAndAssignedFacilityID(
+        patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndFirstHalfMatchingBusinessId,
+        phoneNumber = "999999999",
+        assignedFacilityId = currentFacility.uuid,
+        businessId = TestData.businessId(identifier = Identifier(
+            value = "1234599999",
+            type = BpPassport),
+            patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndFirstHalfMatchingBusinessId)
+    )
+
+    createPatientWithNumericCriteriaAndAssignedFacilityID(
+        patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndFirstHalfMatchingBusinessId,
+        phoneNumber = "999999999",
+        assignedFacilityId = currentFacility.uuid,
+        businessId = TestData.businessId(identifier = Identifier(
+            value = "1234544499",
+            type = BpPassport),
+            patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndFirstHalfMatchingBusinessId)
+    )
+
+    val patientWithAnotherFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumber = UUID.fromString("f6cfd657-bf32-40c1-9dd2-4c956fd910a8")
+    createPatientWithNumericCriteriaAndAssignedFacilityID(
+        patientUuid = patientWithAnotherFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumber,
+        phoneNumber = "1234567890",
+        assignedFacilityId = facility2.uuid,
+        businessId = TestData.businessId(identifier = Identifier(
+            value = "9999999",
+            type = BangladeshNationalId),
+            patientUuid = patientWithAnotherFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumber)
+    )
+
+    //when
+    val searchResults = patientRepository
+        .search2(NumericCriteria("12"), currentFacility.uuid)
+        .map { it.uuid }
+
+    val searchResultsWithExactMatch = searchResults("1234567890", currentFacility.uuid)
+    val searchResultsWithFirstHalfMatching = searchResults("12345", currentFacility.uuid)
+    val searchResultsWithSecondHalfMatching = searchResults("67890", currentFacility.uuid)
+    val searchResultsWithNoPartMatching = searchResults("22222", currentFacility.uuid)
+
+    //then
+    assertThat(searchResultsWithExactMatch)
+        .containsExactly(
+            patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumber,
+            patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumberAndBusinessId,
+            patientWithAnotherFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumber)
+
+    assertThat(searchResultsWithFirstHalfMatching)
+        .containsExactly(
+            patientWithCurrentFacilityAsAssignedFacilityAndFirstHalfMatchingBusinessId,
+            patientWithCurrentFacilityAsAssignedFacilityAndFirstHalfMatchingPhoneNumber,
+            patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumber,
+            patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumberAndBusinessId,
+            patientWithAnotherFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumber
+        )
+
+    assertThat(searchResultsWithSecondHalfMatching)
+        .containsExactly(
+            patientWithCurrentFacilityAsAssignedFacilityAndSecondHalfMatchingPhoneNumber,
+            patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumber,
+            patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumberAndBusinessId,
+            patientWithAnotherFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumber
+        )
+
+    assertThat(searchResultsWithNoPartMatching)
+        .isEmpty()
+
+  }
+
+  @Test
+  fun searching_for_a_patient_by_numeric_criteria_must_return_all_patients_with_a_matching_numeric_criteria() {
+    fun createPatientWithNumericCriteria(
+        patientUuid: UUID,
+        phoneNumber: String?,
+        businessId: BusinessId?
+    ) {
+      val patientProfile = TestData
+          .patientProfile(
+              patientUuid = patientUuid,
+              generatePhoneNumber = false,
+              patientPhoneNumber = phoneNumber,
+              businessId = businessId
+          )
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+    }
+
+
+    fun searchResults(numericCriteria: String): List<UUID> {
+      return patientRepository
+          .search(NumericCriteria(numericCriteria))
+          .map { it.uuid }
+          .toList()
+    }
+
+    // given
+    val patientWithExactlyMatchingPhoneNumber = UUID.fromString("d47ae2e7-7453-4a6f-806e-88eb130823d8")
+    createPatientWithNumericCriteria(
+        patientUuid = patientWithExactlyMatchingPhoneNumber,
+        phoneNumber = "1234567890",
+        businessId = TestData.businessId(identifier = Identifier(
+            value = "56555555",
+            type = BangladeshNationalId),
+            patientUuid = patientWithExactlyMatchingPhoneNumber
+        ))
+    val patientWithFirstPartMatchingPatientIdentifier = UUID.fromString("bd050289-29c3-4459-8d33-50e8d77469d2")
+    createPatientWithNumericCriteria(
+        patientUuid = patientWithFirstPartMatchingPatientIdentifier,
+        phoneNumber = "999988888",
+        businessId = TestData.businessId(identifier = Identifier(
+            value = "`12345788888",
+            type = BangladeshNationalId),
+            patientUuid = patientWithFirstPartMatchingPatientIdentifier)
+    )
+    val patientWithLastPartMatchingPhoneNumberAndPatientIdentifier = UUID.fromString("ff3552b7-83f2-47f6-b840-c6ce12de6ad5")
+    createPatientWithNumericCriteria(
+        patientUuid = patientWithLastPartMatchingPhoneNumberAndPatientIdentifier,
+        phoneNumber = "111167890",
+        businessId = TestData.businessId(identifier = Identifier(
+            value = "`9999967890",
+            type = BangladeshNationalId),
+            patientUuid = patientWithLastPartMatchingPhoneNumberAndPatientIdentifier)
+    )
+    val patientWithMiddlePartMatchingPatientIdentifier = UUID.fromString("b7aa9310-6ae9-4ac2-b040-762f5cc5a505")
+    createPatientWithNumericCriteria(
+        patientUuid = patientWithMiddlePartMatchingPatientIdentifier,
+        phoneNumber = "999977772",
+        businessId = TestData.businessId(identifier = Identifier(
+            value = "1114567800",
+            type = BangladeshNationalId),
+            patientUuid = patientWithMiddlePartMatchingPatientIdentifier)
+    )
+    val patientWithNoPartMatchingPatientIdentifier = UUID.fromString("0d955585-6887-451f-9b20-94587938a09d")
+    createPatientWithNumericCriteria(
+        patientUuid = patientWithNoPartMatchingPatientIdentifier,
+        phoneNumber = "0000000000",
+        businessId = TestData.businessId(identifier = Identifier(
+            value = "0000000",
+            type = BangladeshNationalId),
+            patientUuid = patientWithNoPartMatchingPatientIdentifier)
+    )
+    val patientWithoutAnyNumber = UUID.fromString("e8ad5b9a-2b27-4d20-9257-c9c456d5f168")
+    createPatientWithNumericCriteria(
+        patientUuid = patientWithoutAnyNumber,
+        phoneNumber = null,
+        businessId = null
+    )
+
+    // when
+    val searchResultsWithExactMatch = searchResults("1234567890")
+    val searchResultsWithFirstPartMatching = searchResults("12345")
+    val searchResultsWithLastPartMatching = searchResults("67890")
+    val searchResultsWithMiddlePartMatching = searchResults("45678")
+    val searchResultsWithNoPartMatching = searchResults("22222")
+
+    // then
+    assertThat(searchResultsWithExactMatch)
+        .containsExactly(patientWithExactlyMatchingPhoneNumber)
+    assertThat(searchResultsWithFirstPartMatching)
+        .containsExactly(
+            patientWithFirstPartMatchingPatientIdentifier,
+            patientWithExactlyMatchingPhoneNumber
+        )
+    assertThat(searchResultsWithLastPartMatching)
+        .containsExactly(
+            patientWithLastPartMatchingPhoneNumberAndPatientIdentifier,
+            patientWithExactlyMatchingPhoneNumber
+        )
+    assertThat(searchResultsWithMiddlePartMatching)
+        .containsExactly(
+            patientWithMiddlePartMatchingPatientIdentifier,
+            patientWithExactlyMatchingPhoneNumber
+        )
+    assertThat(searchResultsWithNoPartMatching)
+        .isEmpty()
   }
 }

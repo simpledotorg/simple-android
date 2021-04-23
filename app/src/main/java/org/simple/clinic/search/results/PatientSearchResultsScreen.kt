@@ -19,6 +19,7 @@ import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
+import org.simple.clinic.patient.PatientSearchCriteria.NumericCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
@@ -126,6 +127,7 @@ class PatientSearchResultsScreen :
     return when (patientSearchCriteria) {
       is Name -> patientSearchCriteria.patientName
       is PhoneNumber -> patientSearchCriteria.phoneNumber
+      is NumericCriteria -> patientSearchCriteria.numericCriteria
     }
   }
 

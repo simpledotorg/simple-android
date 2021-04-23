@@ -6,7 +6,8 @@ import androidx.room.DatabaseView
 import androidx.room.Embedded
 import androidx.room.Query
 import io.reactivex.Flowable
-import kotlinx.parcelize.Parcelize
+import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.patient.businessid.Identifier
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
@@ -17,7 +18,8 @@ import java.util.UUID
   PA.state addr_state, PA.country addr_country,
   PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
   PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt,
-  PatientLastSeen.lastSeenTime lastSeen_lastSeenOn, F.name lastSeen_lastSeenAtFacilityName, PatientLastSeen.lastSeenFacilityUuid lastSeen_lastSeenAtFacilityUuid
+  PatientLastSeen.lastSeenTime lastSeen_lastSeenOn, F.name lastSeen_lastSeenAtFacilityName, PatientLastSeen.lastSeenFacilityUuid lastSeen_lastSeenAtFacilityUuid,
+  B.identifier id_identifier, B.identifierType id_identifierType
   FROM Patient P
   INNER JOIN PatientAddress PA ON PA.uuid = P.addressUuid
   LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
@@ -54,6 +56,7 @@ import java.util.UUID
       WHERE LatestBP.uuid IS NOT NULL OR LatestBloodSugar.uuid IS NOT NULL
   ) PatientLastSeen ON PatientLastSeen.patientUuid = P.uuid
   LEFT JOIN Facility F ON F.uuid = PatientLastSeen.lastSeenFacilityUuid
+  LEFT JOIN BusinessId B ON B.patientUuid = P.uuid
 """)
 @Parcelize
 data class PatientSearchResult(
@@ -97,7 +100,10 @@ data class PatientSearchResult(
     val phoneUpdatedAt: Instant?,
 
     @Embedded(prefix = "lastSeen_")
-    val lastSeen: LastSeen?
+    val lastSeen: LastSeen?,
+
+    @Embedded(prefix = "id_")
+    val identifier: Identifier?
 ) : Parcelable {
 
   override fun toString(): String {
@@ -188,6 +194,34 @@ data class PatientSearchResult(
         ORDER BY priority ASC, phoneNumberPosition ASC
     """)
     fun searchByPhoneNumber2(phoneNumber: String, facilityId: UUID): List<PatientSearchResult>
+
+    @Query("""
+         SELECT DISTINCT * FROM 
+        PatientSearchResult searchResult
+        LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+        WHERE id_identifier LIKE '%' || :numericCriteria || '%' OR phoneNumber LIKE '%' || :numericCriteria || '%'  AND P.deletedAt IS NULL
+        GROUP BY P.uuid
+        ORDER BY id_identifier, phoneNumber COLLATE NOCASE ASC LIMIT :limit
+        """)
+    fun searchByNumericCriteria(numericCriteria: String, limit: Int): List<PatientSearchResult>
+
+    @Query("""
+        SELECT DISTINCT
+            searchResult.*, 
+            (
+                CASE
+                    WHEN P.assignedFacilityId = :facilityId THEN 0
+                    ELSE 1
+                END
+            ) AS priority,
+            INSTR(phoneNumber, :numericCriteria) phoneNumberPosition, 
+            INSTR(id_identifier, :numericCriteria) identifierPosition FROM PatientSearchResult searchResult
+        LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+        WHERE P.deletedAt IS NULL AND phoneNumberPosition > 0 OR identifierPosition > 0
+        GROUP BY P.uuid
+        ORDER BY priority ASC, phoneNumberPosition ASC, identifierPosition ASC
+        """)
+    fun searchByNumericCriteria2(numericCriteria: String, facilityId: UUID): List<PatientSearchResult>
   }
 
   data class PatientNameAndId(val uuid: UUID, val fullName: String)

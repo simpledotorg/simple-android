@@ -10,6 +10,7 @@ data class SearchPatientWithCriteria(val criteria: PatientSearchCriteria) : Sear
   override val analyticsName: String = when (criteria) {
     is PatientSearchCriteria.Name -> "Search Results:Search By Patient Name"
     is PatientSearchCriteria.PhoneNumber -> "Search Results:Search By Patient Phone Number"
+    is PatientSearchCriteria.NumericCriteria -> "Search Results:Search By Patient Numeric Identifier"
   }
 }
 

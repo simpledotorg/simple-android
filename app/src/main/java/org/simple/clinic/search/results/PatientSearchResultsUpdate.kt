@@ -41,6 +41,7 @@ class PatientSearchResultsUpdate : Update<PatientSearchResultsModel, PatientSear
     var ongoingNewPatientEntry = when (searchCriteria) {
       is PatientSearchCriteria.Name -> OngoingNewPatientEntry.fromFullName(searchCriteria.patientName)
       is PatientSearchCriteria.PhoneNumber -> OngoingNewPatientEntry.fromPhoneNumber(searchCriteria.phoneNumber)
+      is PatientSearchCriteria.NumericCriteria -> OngoingNewPatientEntry.fromPhoneNumber(searchCriteria.numericCriteria)
     }
 
     if (searchCriteria.additionalIdentifier != null) {

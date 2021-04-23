@@ -13,6 +13,7 @@ import org.simple.clinic.R
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
@@ -39,6 +40,15 @@ data class Identifier(
       }
       BangladeshNationalId -> value
       EthiopiaMedicalRecordNumber -> value
+      IndiaNationalHealthId -> {
+        val enteredCode = value
+        val prefix = enteredCode.substring(0, 2)
+        val subString1 = enteredCode.substring(2,6)
+        val subString2 = enteredCode.substring(6,10)
+        val suffix = enteredCode.substring(10)
+
+        "$prefix${Unicode.nonBreakingSpace}$subString1${Unicode.nonBreakingSpace}$subString2${Unicode.nonBreakingSpace}$suffix"
+      }
       is Unknown -> value
     }
   }
@@ -48,6 +58,7 @@ data class Identifier(
       BpPassport -> resources.getString(R.string.identifiertype_bp_passport)
       BangladeshNationalId -> resources.getString(R.string.identifiertype_bangladesh_national_id)
       EthiopiaMedicalRecordNumber -> resources.getString(R.string.identifiertype_ethiopia_medical_record_number)
+      IndiaNationalHealthId -> resources.getString(R.string.identifiertype_india_national_health_id)
       is Unknown -> resources.getString(R.string.identifiertype_unknown)
     }
   }
@@ -76,13 +87,17 @@ data class Identifier(
     object EthiopiaMedicalRecordNumber : IdentifierType()
 
     @Parcelize
+    object IndiaNationalHealthId : IdentifierType()
+
+    @Parcelize
     data class Unknown(val actual: String) : IdentifierType()
 
     object TypeAdapter : SafeEnumTypeAdapter<IdentifierType>(
         knownMappings = mapOf(
             BpPassport to "simple_bp_passport",
             BangladeshNationalId to "bangladesh_national_id",
-            EthiopiaMedicalRecordNumber to "ethiopia_medical_record"
+            EthiopiaMedicalRecordNumber to "ethiopia_medical_record",
+            IndiaNationalHealthId to "india_national_health_id"
         ),
         unknownStringToEnumConverter = { Unknown(it) },
         unknownEnumToStringConverter = { (it as Unknown).actual }

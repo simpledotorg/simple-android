@@ -644,7 +644,12 @@ class PatientRepository @Inject constructor(
         .findPatientsWithBusinessId(identifier)
         .map { patients -> Optional.ofNullable(patients.firstOrNull()) }
         .toObservable()
+  }
 
+  fun findPatientsWithBusinessId(identifier: String): List<Patient> {
+    return database
+        .patientDao()
+        .findPatientsWithBusinessIdImmediate(identifier)
   }
 
   fun bpPassportForPatient(patientUuid: UUID): Optional<BusinessId> {

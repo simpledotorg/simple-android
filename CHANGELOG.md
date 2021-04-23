@@ -16,6 +16,7 @@
 ### Changes
 - Rename `Scan BP passport` button to `Scan QR code`
 - Show remove overdue appointment reasons in a separate screen
+- Show list of patients when multiple patients have same BP passport
 
 ## 2021-04-20-7712
 ### Internal

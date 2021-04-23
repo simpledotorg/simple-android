@@ -12,7 +12,6 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.platform.crash.NoOpCrashReporter
-import org.simple.clinic.util.Optional
 import java.util.UUID
 
 class ScanSimpleIdUpdateTest {
@@ -42,7 +41,7 @@ class ScanSimpleIdUpdateTest {
     val shortCode = "1234567"
     val model = defaultModel.shortCodeChanged(ShortCodeInput(shortCode))
 
-    val expectedScanResult = EnteredShortCode(shortCode)
+    val expectedScanResult = SearchByShortCode(shortCode)
 
     spec
         .given(model)
@@ -56,10 +55,8 @@ class ScanSimpleIdUpdateTest {
   @Test
   fun `when identifier is scanned and patient is found, then send the patient id to the parent screen`() {
     val patientId = UUID.fromString("60822507-9151-4836-944b-9cbbd1530c0b")
-    val patient = Optional.of(
-        TestData.patient(
-            uuid = patientId
-        )
+    val patient = TestData.patient(
+        uuid = patientId
     )
     val identifier = Identifier("123456", BpPassport)
 
@@ -67,7 +64,7 @@ class ScanSimpleIdUpdateTest {
 
     spec
         .given(defaultModel)
-        .whenEvent(PatientSearchByIdentifierCompleted(patient, identifier))
+        .whenEvent(PatientSearchByIdentifierCompleted(listOf(patient), identifier))
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
             hasEffects(SendScannedIdentifierResult(expectedScanResult))
@@ -76,14 +73,14 @@ class ScanSimpleIdUpdateTest {
 
   @Test
   fun `when identifier is scanned and patient is not found, then send the identifier to parent screen`() {
-    val patient = Optional.empty<Patient>()
+    val patients = emptyList<Patient>()
     val identifier = Identifier("123456", BpPassport)
 
     val expectedScanResult = PatientNotFound(identifier)
 
     spec
         .given(defaultModel)
-        .whenEvent(PatientSearchByIdentifierCompleted(patient, identifier))
+        .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
             hasEffects(SendScannedIdentifierResult(expectedScanResult))
@@ -102,6 +99,27 @@ class ScanSimpleIdUpdateTest {
         .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
         .then(assertThatNext(
             hasNothing()
+        ))
+  }
+
+  @Test
+  fun `when identifier is scanned and more than 1 patient is found, then send the short code to parent screen`() {
+    val patientId1 = UUID.fromString("60822507-9151-4836-944b-9cbbd1530c0b")
+    val patientId2 = UUID.fromString("de90d491-29ab-4bb7-938c-d436815794c6")
+
+    val patient1 = TestData.patient(uuid = patientId1)
+    val patient2 = TestData.patient(uuid = patientId2)
+
+    val identifier = Identifier("123456", BpPassport)
+
+    val expectedScanResult = SearchByShortCode("123456")
+
+    spec
+        .given(defaultModel)
+        .whenEvent(PatientSearchByIdentifierCompleted(listOf(patient1, patient2), identifier))
+        .then(assertThatNext(
+            hasModel(defaultModel.notSearching()),
+            hasEffects(SendScannedIdentifierResult(expectedScanResult))
         ))
   }
 }

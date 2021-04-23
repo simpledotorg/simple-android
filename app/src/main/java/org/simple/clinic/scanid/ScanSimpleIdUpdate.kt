@@ -5,6 +5,7 @@ import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.platform.crash.CrashReporter
@@ -32,14 +33,22 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel,
       event: PatientSearchByIdentifierCompleted
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    val scanResult = if (event.patient.isPresent()) {
-      val patientId = event.patient.get().uuid
-      PatientFound(patientId)
+    val scanResult = if (event.patients.isNotEmpty()) {
+      patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
     } else {
       PatientNotFound(event.identifier)
     }
 
     return next(model = model.notSearching(), SendScannedIdentifierResult(scanResult))
+  }
+
+  private fun patientFoundByIdentifierSearch(patients: List<Patient>, identifier: Identifier): ScanResult {
+    return if (patients.size > 1) {
+      SearchByShortCode(BpPassport.shortCode(identifier))
+    } else {
+      val patientId = patients.first().uuid
+      PatientFound(patientId)
+    }
   }
 
   private fun simpleIdQrScanned(model: ScanSimpleIdModel, event: ScanSimpleIdScreenQrCodeScanned): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
@@ -57,7 +66,7 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun shortCodeValidated(model: ScanSimpleIdModel, event: ShortCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = when (event.result) {
-      Success -> SendScannedIdentifierResult(EnteredShortCode(model.shortCode!!.shortCodeText))
+      Success -> SendScannedIdentifierResult(SearchByShortCode(model.shortCode!!.shortCodeText))
       is Failure -> ShowShortCodeValidationError(event.result)
     }
 

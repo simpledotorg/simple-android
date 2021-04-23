@@ -6,11 +6,10 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.util.RuntimePermissionResult
-import org.simple.clinic.scanid.EnteredShortCode
+import org.simple.clinic.scanid.SearchByShortCode
 import org.simple.clinic.scanid.PatientFound
 import org.simple.clinic.scanid.PatientNotFound
 import org.simple.clinic.scanid.ScanResult
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RequiresPermission
 import org.simple.clinic.widgets.UiEvent
@@ -51,7 +50,7 @@ sealed class BpPassportScanned : InstantSearchEvent() {
 
     fun fromResult(scanResult: ScanResult): BpPassportScanned {
       return when (scanResult) {
-        is EnteredShortCode -> ByShortCode(scanResult.shortCode)
+        is SearchByShortCode -> ByShortCode(scanResult.shortCode)
         is PatientFound -> ByPatientFound(scanResult.patientId)
         is PatientNotFound -> ByPatientNotFound(scanResult.identifier)
       }

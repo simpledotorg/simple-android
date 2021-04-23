@@ -30,6 +30,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation
+import org.simple.clinic.feature.Feature.InstantSearchByPatientIdentifier
 import org.simple.clinic.feature.Feature.InstantSearchQrCode
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.ExpectsResult
@@ -175,7 +176,7 @@ class InstantSearchScreen :
       .compose(ReportAnalyticsEvents())
       .cast<InstantSearchEvent>()
 
-  override fun createUpdate() = InstantSearchUpdate()
+  override fun createUpdate() = InstantSearchUpdate(features.isEnabled(InstantSearchByPatientIdentifier))
 
   override fun createInit() = InstantSearchInit()
 

@@ -21,6 +21,7 @@ data class PatientSearchResultRegisterNewPatient(
       val criteriaAnalyticsName = when (searchCriteria) {
         is PatientSearchCriteria.Name -> "Name"
         is PatientSearchCriteria.PhoneNumber -> "Phone Number"
+        is PatientSearchCriteria.NumericCriteria -> "Numeric Criteria"
       }
       return "Patient Search Results:Register New Patient:$criteriaAnalyticsName"
     }

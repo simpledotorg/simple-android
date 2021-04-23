@@ -1,5 +1,6 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.simple.rmg.RoomMetadataGenerator
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -389,3 +390,19 @@ dependencies {
 // This must always be present at the bottom of this file, as per:
 // https://console.firebase.google.com/u/2/project/simple-org/settings/general/
 apply plugin: 'com.google.gms.google-services'
+
+abstract class GenerateRoomMetadataTask extends DefaultTask {
+
+  @Input
+  abstract Property<String> getSourceSet()
+
+  @Input
+  abstract Property<String> getCsvAssetName()
+
+  @TaskAction
+  def run() {
+    RoomMetadataGenerator rmg = new RoomMetadataGenerator()
+    def outputCsvPath = "${project.buildDir}/generated/assets/room_dao_metadata/${csvAssetName.get()}"
+    rmg.run(project.projectDir.absolutePath, sourceSet.get(), outputCsvPath)
+  }
+}

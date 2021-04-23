@@ -7,6 +7,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 
 
@@ -53,6 +54,12 @@ class IdentifierDisplayTest {
         val ethiopiaMedicalRecordNumber = Identifier(value = ethiopiaMedicalRecordNumberValue, type = EthiopiaMedicalRecordNumber)
 
         IdentifierTestData(identifier = ethiopiaMedicalRecordNumber, expectedDisplayValue = ethiopiaMedicalRecordNumberValue)
+      }
+      IndiaNationalHealthId -> {
+        val indiaNationalHealthIdValue = "12121212121212"
+        val indiaNationalHealthId = Identifier(value = indiaNationalHealthIdValue, type = IndiaNationalHealthId)
+
+        IdentifierTestData(identifier = indiaNationalHealthId, expectedDisplayValue = "12\u00A01212\u00A01212\u00A01212")
       }
     }
   }

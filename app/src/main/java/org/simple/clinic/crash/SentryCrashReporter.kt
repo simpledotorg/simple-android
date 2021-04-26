@@ -17,6 +17,7 @@ import org.simple.clinic.platform.crash.Breadcrumb.Priority.VERBOSE
 import org.simple.clinic.platform.crash.Breadcrumb.Priority.WARN
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.filterAndUnwrapJust
 import java.util.Date
 import javax.inject.Inject
@@ -61,7 +62,8 @@ class SentryCrashReporter @Inject constructor(
   private fun identifyCurrentCountryCode() {
     appConfigRepository
         .currentCountryObservable()
-        .map { it.get().isoCountryCode }
+        .extractIfPresent()
+        .map { it.isoCountryCode }
         .subscribe(
             {
               Sentry.getContext().addTag("countryCode", it.toString())

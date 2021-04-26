@@ -18,6 +18,9 @@
 - Show remove overdue appointment reasons in a separate screen
 - Show list of patients when multiple patients have same BP passport
 
+### Fixes
+- Fix dead patients showing in overdue list
+
 ## 2021-04-20-7712
 ### Internal
 - Make entire prescribed drugs list scrollable

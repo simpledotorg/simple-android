@@ -75,6 +75,7 @@ import java.util.UUID
           
           WHERE 
             P.deletedAt IS NULL
+            AND P.status != 'dead'
             AND A.deletedAt IS NULL
             AND A.status = 'scheduled'
             AND PPN.number IS NOT NULL

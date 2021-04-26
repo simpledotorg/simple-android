@@ -32,6 +32,7 @@ data class Country(
       return when (isoCountryCode) {
         BANGLADESH -> Identifier.IdentifierType.BangladeshNationalId
         ETHIOPIA -> Identifier.IdentifierType.EthiopiaMedicalRecordNumber
+        INDIA -> Identifier.IdentifierType.IndiaNationalHealthId
         else -> null
       }
     }

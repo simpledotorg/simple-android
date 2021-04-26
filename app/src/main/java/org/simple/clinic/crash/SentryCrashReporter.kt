@@ -4,9 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Application
 import io.reactivex.schedulers.Schedulers.io
 import io.sentry.Sentry
-import org.simple.clinic.BuildConfig.SENTRY_DSN
-import org.simple.clinic.BuildConfig.SENTRY_ENVIRONMENT
-import org.simple.clinic.BuildConfig.SENTRY_SAMPLE_RATE
+import io.sentry.android.AndroidSentryClientFactory
+import io.sentry.event.BreadcrumbBuilder
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.platform.crash.Breadcrumb
@@ -18,11 +17,11 @@ import org.simple.clinic.platform.crash.Breadcrumb.Priority.VERBOSE
 import org.simple.clinic.platform.crash.Breadcrumb.Priority.WARN
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.extractIfPresent
+import org.simple.clinic.util.filterAndUnwrapJust
+import java.util.Date
 import javax.inject.Inject
-import io.sentry.Breadcrumb as SentryBreadcrumb
 
-typealias SentryBreadcrumbLevel = io.sentry.SentryLevel
+typealias SentryBreadcrumbLevel = io.sentry.event.Breadcrumb.Level
 
 class SentryCrashReporter @Inject constructor(
     private val userSession: UserSession,
@@ -31,11 +30,7 @@ class SentryCrashReporter @Inject constructor(
 ) : CrashReporter {
 
   override fun init(appContext: Application) {
-    Sentry.init { options ->
-      options.dsn = SENTRY_DSN
-      options.sampleRate = SENTRY_SAMPLE_RATE
-      options.environment = SENTRY_ENVIRONMENT
-    }
+    Sentry.init(AndroidSentryClientFactory(appContext))
     identifyUserAndCurrentFacility()
     identifyCurrentCountryCode()
   }
@@ -44,21 +39,21 @@ class SentryCrashReporter @Inject constructor(
   private fun identifyUserAndCurrentFacility() {
     val loggedInUserStream = userSession.loggedInUser()
         .subscribeOn(io())
-        .extractIfPresent()
+        .filterAndUnwrapJust()
         .replay()
         .refCount()
 
     loggedInUserStream
         .map { it.uuid }
         .subscribe(
-            { Sentry.setTag("userUuid", it.toString()) },
+            { Sentry.getContext().addTag("userUuid", it.toString()) },
             { report(it) })
 
     facilityRepository
         .currentFacility()
         .map { it.uuid }
         .subscribe(
-            { Sentry.setTag("facilityUuid", it.toString()) },
+            { Sentry.getContext().addTag("facilityUuid", it.toString()) },
             { report(it) })
   }
 
@@ -69,19 +64,19 @@ class SentryCrashReporter @Inject constructor(
         .map { it.get().isoCountryCode }
         .subscribe(
             {
-              Sentry.setTag("countryCode", it.toString())
+              Sentry.getContext().addTag("countryCode", it.toString())
             },
             { report(it) })
   }
 
   override fun dropBreadcrumb(breadcrumb: Breadcrumb) {
-    val sentryBreadCrumb = SentryBreadcrumb().apply {
-      level = priorityToLevel(breadcrumb.priority)
-      category = breadcrumb.tag
-      message = breadcrumb.message
-    }
-
-    Sentry.addBreadcrumb(sentryBreadCrumb)
+    val sentryBreadcrumb = BreadcrumbBuilder()
+        .setLevel(priorityToLevel(breadcrumb.priority))
+        .setCategory(breadcrumb.tag)
+        .setMessage(breadcrumb.message)
+        .setTimestamp(Date(System.currentTimeMillis()))
+        .build()
+    Sentry.getContext().recordBreadcrumb(sentryBreadcrumb)
   }
 
   private fun priorityToLevel(priority: Breadcrumb.Priority): SentryBreadcrumbLevel {
@@ -94,6 +89,6 @@ class SentryCrashReporter @Inject constructor(
   }
 
   override fun report(e: Throwable) {
-    Sentry.captureException(e)
+    Sentry.capture(e)
   }
 }

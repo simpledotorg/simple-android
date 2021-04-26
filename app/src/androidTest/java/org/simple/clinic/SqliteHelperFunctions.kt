@@ -12,7 +12,15 @@ import java.util.UUID
 
 private val dateConverter = LocalDateRoomTypeConverter()
 
-fun Cursor.string(column: String): String? = getString(getColumnIndex(column))
+fun Cursor.string(column: String): String? {
+  val columnIndex = getColumnIndex(column)
+  return if (columnIndex > -1) {
+    getString(columnIndex)
+  } else {
+    null
+  }
+}
+
 fun Cursor.boolean(column: String): Boolean? = getInt(getColumnIndex(column)) == 1
 fun Cursor.integer(columnName: String): Int? = getInt(getColumnIndex(columnName))
 fun Cursor.long(columnName: String): Long = getLong(getColumnIndex(columnName))

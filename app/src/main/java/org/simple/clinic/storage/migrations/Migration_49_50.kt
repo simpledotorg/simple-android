@@ -1,9 +1,9 @@
 package org.simple.clinic.storage.migrations
 
-import android.database.Cursor
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.storage.inTransaction
+import org.simple.clinic.storage.string
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.generateEncounterUuid
 import org.simple.clinic.util.room.InstantRoomTypeConverter
@@ -82,6 +82,4 @@ class Migration_49_50 @Inject constructor(
           }
     }
   }
-
-  private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))
 }

@@ -45,7 +45,7 @@ class ScannedQrCodeEffectHandlerTest {
   }
 
   @Test
-  fun `when send blank bp passport result effect is received, then send add to existing patient`() {
+  fun `when send scanned qr code passport result effect is received, then send add to existing patient`() {
     // when
     effectHandlerTestCase.dispatch(SendBlankScannedQrCodeResult(AddToExistingPatient))
 

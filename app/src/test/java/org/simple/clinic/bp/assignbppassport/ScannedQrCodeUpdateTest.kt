@@ -31,7 +31,7 @@ class ScannedQrCodeUpdateTest {
   }
 
   @Test
-  fun `when the ongoing patient entry is saved, then send bp passport blank result`() {
+  fun `when the ongoing patient entry is saved, then send scanned qr code blank result`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(NewOngoingPatientEntrySaved)
@@ -44,7 +44,7 @@ class ScannedQrCodeUpdateTest {
   }
   
   @Test
-  fun `when add to existing patient is clicked, then send bp passport blank result`() {
+  fun `when add to existing patient is clicked, then send scanned qr code blank result`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(AddToExistingPatientClicked)

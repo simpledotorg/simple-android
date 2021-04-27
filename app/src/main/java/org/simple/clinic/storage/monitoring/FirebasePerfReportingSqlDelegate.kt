@@ -10,7 +10,8 @@ import javax.inject.Inject
 
 class FirebasePerfReportingSqlDelegate @Inject constructor(
     private val firebasePerformance: FirebasePerformance,
-    private val daoInformationExtractor: DaoInformationExtractor
+    private val daoInformationExtractor: DaoInformationExtractor,
+    private val sampler: Sampler
 ) : SQLiteDatabaseSqlDelegate {
 
   override fun query(
@@ -90,12 +91,14 @@ class FirebasePerfReportingSqlDelegate @Inject constructor(
   private inline fun <reified R> reportTimeTaken(
       operation: () -> R
   ): R {
-    val daoInformation = daoInformationExtractor.findDaoMethodInCurrentCallStack()
+    return if (sampler.sample) {
+      val daoInformation = daoInformationExtractor.findDaoMethodInCurrentCallStack()
 
-    return if (daoInformation != null)
-      runSqlOperationWithReporting(daoInformation, operation)
-    else
-      operation()
+      if (daoInformation != null)
+        runSqlOperationWithReporting(daoInformation, operation)
+      else
+        operation()
+    } else operation()
   }
 
   private inline fun <reified R> runSqlOperationWithReporting(

@@ -6,13 +6,25 @@ import android.os.CancellationSignal
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.google.firebase.perf.FirebasePerformance
+import org.simple.clinic.remoteconfig.ConfigReader
 import javax.inject.Inject
 
-class FirebasePerfReportingSqlDelegate @Inject constructor(
+class FirebasePerfReportingSqlDelegate(
     private val firebasePerformance: FirebasePerformance,
     private val daoInformationExtractor: DaoInformationExtractor,
     private val sampler: Sampler
 ) : SQLiteDatabaseSqlDelegate {
+
+  @Inject
+  constructor(
+      firebasePerformance: FirebasePerformance,
+      daoInformationExtractor: DaoInformationExtractor,
+      remoteConfig: ConfigReader
+  ) : this(
+      firebasePerformance = firebasePerformance,
+      daoInformationExtractor = daoInformationExtractor,
+      sampler = Sampler(remoteConfig.double("room_query_profile_sample_rate", 0.0).toFloat())
+  )
 
   override fun query(
       database: SupportSQLiteDatabase,

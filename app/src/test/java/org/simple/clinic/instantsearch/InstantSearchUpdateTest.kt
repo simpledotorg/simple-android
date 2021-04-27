@@ -278,7 +278,7 @@ class InstantSearchUpdateTest {
 
     updateSpec
         .given(facilityLoadedModel)
-        .whenEvent(BlankBpPassportResultReceived(RegisterNewPatient))
+        .whenEvent(BlankScannedQrCodeResultReceived(RegisterNewPatient))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SaveNewOngoingPatientEntry(ongoingPatientEntry))
@@ -295,7 +295,7 @@ class InstantSearchUpdateTest {
 
     updateSpec
         .given(facilityLoadedModel)
-        .whenEvent(BlankBpPassportResultReceived(AddToExistingPatient))
+        .whenEvent(BlankScannedQrCodeResultReceived(AddToExistingPatient))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowKeyboard)
@@ -314,7 +314,7 @@ class InstantSearchUpdateTest {
 
     updateSpec
         .given(facilityLoadedModel)
-        .whenEvent(BpPassportScanned.ByPatientFound(patientId))
+        .whenEvent(QrCodeScanned.ByPatientFound(patientId))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenPatientSummary(patientId))
@@ -336,14 +336,14 @@ class InstantSearchUpdateTest {
 
     val expectedModel = facilityLoadedModel
         .additionalIdentifierUpdated(additionalIdentifier = identifier)
-        .bpPassportSheetOpened()
+        .scannedQrCodeSheetOpened()
 
     updateSpec
         .given(facilityLoadedModel)
-        .whenEvent(BpPassportScanned.ByPatientNotFound(identifier))
+        .whenEvent(QrCodeScanned.ByPatientNotFound(identifier))
         .then(assertThatNext(
             hasModel(expectedModel),
-            hasEffects(OpenBpPassportSheet(identifier))
+            hasEffects(OpenScannedQrCodeSheet(identifier))
         ))
   }
 
@@ -359,7 +359,7 @@ class InstantSearchUpdateTest {
 
     updateSpec
         .given(facilityLoadedModel)
-        .whenEvent(BpPassportScanned.ByShortCode(shortCode))
+        .whenEvent(QrCodeScanned.ByShortCode(shortCode))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenShortCodeSearchScreen(shortCode))

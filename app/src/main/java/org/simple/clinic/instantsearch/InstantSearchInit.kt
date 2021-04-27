@@ -10,9 +10,9 @@ class InstantSearchInit : Init<InstantSearchModel, InstantSearchEffect> {
     var modelToEmit = model
     val effects = mutableSetOf<InstantSearchEffect>()
 
-    if (modelToEmit.hasAdditionalIdentifier && !modelToEmit.bpPassportSheetAlreadyOpened) {
-      effects.add(OpenBpPassportSheet(modelToEmit.additionalIdentifier!!))
-      modelToEmit = modelToEmit.bpPassportSheetOpened()
+    if (modelToEmit.hasAdditionalIdentifier && !modelToEmit.scannedQrCodeSheetAlreadyOpened) {
+      effects.add(OpenScannedQrCodeSheet(modelToEmit.additionalIdentifier!!))
+      modelToEmit = modelToEmit.scannedQrCodeSheetOpened()
     }
 
     if (modelToEmit.hasFacility)

@@ -41,27 +41,27 @@ class InstantSearchUpdate @Inject constructor(
       is SearchQueryChanged -> next(model.searchQueryChanged(event.searchQuery), ValidateSearchQuery(event.searchQuery))
       SavedNewOngoingPatientEntry -> dispatch(OpenPatientEntryScreen(model.facility!!))
       RegisterNewPatientClicked -> registerNewPatient(model)
-      is BlankBpPassportResultReceived -> blankBpPassportResult(model, event)
-      is BpPassportScanned.ByPatientFound -> dispatch(OpenPatientSummary(event.patientId))
-      is BpPassportScanned.ByPatientNotFound -> patientNotFoundAfterBpPassportScan(model, event)
-      is BpPassportScanned.ByShortCode -> dispatch(OpenShortCodeSearchScreen(event.shortCode))
+      is BlankScannedQrCodeResultReceived -> blankScannedQrCodeResult(model, event)
+      is QrCodeScanned.ByPatientFound -> dispatch(OpenPatientSummary(event.patientId))
+      is QrCodeScanned.ByPatientNotFound -> patientNotFoundAfterQrCodeScan(model, event)
+      is QrCodeScanned.ByShortCode -> dispatch(OpenShortCodeSearchScreen(event.shortCode))
       is OpenQrCodeScannerClicked -> dispatch(OpenQrCodeScanner)
     }
   }
 
-  private fun patientNotFoundAfterBpPassportScan(
+  private fun patientNotFoundAfterQrCodeScan(
       model: InstantSearchModel,
-      event: BpPassportScanned.ByPatientNotFound
+      event: QrCodeScanned.ByPatientNotFound
   ): Next<InstantSearchModel, InstantSearchEffect> {
     return next(
-        model.additionalIdentifierUpdated(event.identifier).bpPassportSheetOpened(),
-        OpenBpPassportSheet(event.identifier)
+        model.additionalIdentifierUpdated(event.identifier).scannedQrCodeSheetOpened(),
+        OpenScannedQrCodeSheet(event.identifier)
     )
   }
 
-  private fun blankBpPassportResult(
+  private fun blankScannedQrCodeResult(
       model: InstantSearchModel,
-      event: BlankBpPassportResultReceived
+      event: BlankScannedQrCodeResultReceived
   ): Next<InstantSearchModel, InstantSearchEffect> {
     return when (event.blankScannedQRCodeResult) {
       AddToExistingPatient -> dispatch(ShowKeyboard)

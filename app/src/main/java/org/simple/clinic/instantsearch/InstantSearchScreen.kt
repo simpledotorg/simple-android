@@ -241,7 +241,7 @@ class InstantSearchScreen :
     ))
   }
 
-  override fun openBpPassportSheet(identifier: Identifier) {
+  override fun openScannedQrCodeSheet(identifier: Identifier) {
     router.pushExpectingResult(BlankBpPassport, ScannedQrCodeSheet.Key(identifier))
   }
 
@@ -294,10 +294,10 @@ class InstantSearchScreen :
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
     if (requestType == BlankBpPassport && result is Succeeded) {
       val bpPassportResult = ScannedQrCodeSheet.blankBpPassportResult(result)
-      blankBpPassportResults.onNext(BlankBpPassportResultReceived(bpPassportResult))
+      blankBpPassportResults.onNext(BlankScannedQrCodeResultReceived(bpPassportResult))
     } else if (requestType == BpPassportScan && result is Succeeded) {
       val scanResult = ScanSimpleIdScreen.readScanResult(result)
-      bpPassportScanResults.onNext(BpPassportScanned.fromResult(scanResult))
+      bpPassportScanResults.onNext(QrCodeScanned.fromResult(scanResult))
     }
   }
 

@@ -205,12 +205,12 @@ class InstantSearchEffectHandlerTest {
     )
 
     // when
-    testCase.dispatch(OpenBpPassportSheet(identifier))
+    testCase.dispatch(OpenScannedQrCodeSheet(identifier))
 
     // then
     testCase.assertNoOutgoingEvents()
 
-    verify(uiActions).openBpPassportSheet(identifier)
+    verify(uiActions).openScannedQrCodeSheet(identifier)
     verifyNoMoreInteractions(uiActions)
   }
 

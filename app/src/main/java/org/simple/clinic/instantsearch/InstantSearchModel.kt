@@ -11,7 +11,7 @@ data class InstantSearchModel(
     val searchQuery: String?,
     val additionalIdentifier: Identifier?,
     val instantSearchProgressState: InstantSearchProgressState?,
-    val bpPassportSheetAlreadyOpened: Boolean
+    val scannedQrCodeSheetAlreadyOpened: Boolean
 ) : Parcelable {
 
   val hasFacility: Boolean
@@ -29,7 +29,7 @@ data class InstantSearchModel(
         searchQuery = null,
         additionalIdentifier = additionalIdentifier,
         instantSearchProgressState = null,
-        bpPassportSheetAlreadyOpened = false
+        scannedQrCodeSheetAlreadyOpened = false
     )
   }
 
@@ -57,8 +57,8 @@ data class InstantSearchModel(
     return copy(instantSearchProgressState = InstantSearchProgressState.DONE)
   }
 
-  fun bpPassportSheetOpened(): InstantSearchModel {
-    return copy(bpPassportSheetAlreadyOpened = true)
+  fun scannedQrCodeSheetOpened(): InstantSearchModel {
+    return copy(scannedQrCodeSheetAlreadyOpened = true)
   }
 
   fun additionalIdentifierUpdated(additionalIdentifier: Identifier): InstantSearchModel {

@@ -39,16 +39,16 @@ object RegisterNewPatientClicked : InstantSearchEvent() {
   override val analyticsName: String = "Instant Search: Register New Patient"
 }
 
-data class BlankBpPassportResultReceived(val blankScannedQRCodeResult: BlankScannedQRCodeResult) : InstantSearchEvent() {
+data class BlankScannedQrCodeResultReceived(val blankScannedQRCodeResult: BlankScannedQRCodeResult) : InstantSearchEvent() {
 
   override val analyticsName: String = "Instant Search : Blank BP Passport Result Received"
 }
 
-sealed class BpPassportScanned : InstantSearchEvent() {
+sealed class QrCodeScanned : InstantSearchEvent() {
 
   companion object {
 
-    fun fromResult(scanResult: ScanResult): BpPassportScanned {
+    fun fromResult(scanResult: ScanResult): QrCodeScanned {
       return when (scanResult) {
         is SearchByShortCode -> ByShortCode(scanResult.shortCode)
         is PatientFound -> ByPatientFound(scanResult.patientId)
@@ -57,11 +57,11 @@ sealed class BpPassportScanned : InstantSearchEvent() {
     }
   }
 
-  data class ByPatientFound(val patientId: UUID) : BpPassportScanned()
+  data class ByPatientFound(val patientId: UUID) : QrCodeScanned()
 
-  data class ByPatientNotFound(val identifier: Identifier) : BpPassportScanned()
+  data class ByPatientNotFound(val identifier: Identifier) : QrCodeScanned()
 
-  data class ByShortCode(val shortCode: String) : BpPassportScanned()
+  data class ByShortCode(val shortCode: String) : QrCodeScanned()
 }
 
 data class OpenQrCodeScannerClicked(

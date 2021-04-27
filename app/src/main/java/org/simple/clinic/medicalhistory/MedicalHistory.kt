@@ -72,7 +72,7 @@ data class MedicalHistory(
     fun updateSyncStatus(from: SyncStatus, to: SyncStatus)
 
     @Query("UPDATE MedicalHistory SET syncStatus = :to WHERE uuid IN (:ids)")
-    fun updateSyncStatus(ids: List<UUID>, to: SyncStatus)
+    fun updateSyncStatusForIds(ids: List<UUID>, to: SyncStatus)
 
     @Query("SELECT * FROM MedicalHistory WHERE uuid = :id LIMIT 1")
     fun getOne(id: UUID): MedicalHistory?
@@ -84,13 +84,13 @@ data class MedicalHistory(
     fun save(history: MedicalHistory)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(histories: List<MedicalHistory>)
+    fun saveHistories(histories: List<MedicalHistory>)
 
     @Query("SELECT COUNT(uuid) FROM MedicalHistory")
     fun count(): Flowable<Int>
 
     @Query("SELECT COUNT(uuid) FROM MedicalHistory WHERE syncStatus = :syncStatus")
-    fun count(syncStatus: SyncStatus): Flowable<Int>
+    fun countWithStatus(syncStatus: SyncStatus): Flowable<Int>
 
     @Query("DELETE FROM MedicalHistory")
     fun clear()

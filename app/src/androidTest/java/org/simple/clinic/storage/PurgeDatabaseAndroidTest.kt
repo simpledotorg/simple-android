@@ -328,7 +328,7 @@ class PurgeDatabaseAndroidTest {
         syncStatus = SyncStatus.PENDING
     )
 
-    medicalHistoryDao.save(listOf(deletedMedicalHistory, deletedButUnsyncedMedicalHistory, notDeletedMedicalHistory))
+    medicalHistoryDao.saveHistories(listOf(deletedMedicalHistory, deletedButUnsyncedMedicalHistory, notDeletedMedicalHistory))
 
     assertThat(medicalHistoryDao.getOne(deletedMedicalHistory.uuid)).isEqualTo(deletedMedicalHistory)
     assertThat(medicalHistoryDao.getOne(notDeletedMedicalHistory.uuid)).isEqualTo(notDeletedMedicalHistory)

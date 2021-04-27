@@ -126,7 +126,7 @@ data class PrescribedDrug(
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
     @Query("UPDATE prescribeddrug SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
-    fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
+    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(newDrugs: List<PrescribedDrug>)
@@ -147,7 +147,7 @@ data class PrescribedDrug(
     fun count(): Flowable<Int>
 
     @Query("SELECT COUNT(uuid) FROM PrescribedDrug WHERE syncStatus = :syncStatus")
-    fun count(syncStatus: SyncStatus): Flowable<Int>
+    fun countWithStatus(syncStatus: SyncStatus): Flowable<Int>
 
     @Query("SELECT * FROM prescribeddrug WHERE patientUuid = :patientUuid AND isDeleted = 0 ORDER BY updatedAt DESC")
     fun forPatient(patientUuid: UUID): Flowable<List<PrescribedDrug>>
@@ -199,7 +199,7 @@ data class PrescribedDrug(
      * [deleted] exists only to trigger Room's Boolean type converter.
      * */
     @Query("UPDATE PrescribedDrug SET isDeleted = :deleted, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid IN (:prescriptionIds)")
-    fun softDelete(prescriptionIds: List<UUID>, deleted: Boolean, updatedAt: Instant, syncStatus: SyncStatus)
+    fun softDeleteIds(prescriptionIds: List<UUID>, deleted: Boolean, updatedAt: Instant, syncStatus: SyncStatus)
 
     @Query(""" SELECT * FROM PrescribedDrug """)
     fun getAllPrescribedDrugs(): List<PrescribedDrug>

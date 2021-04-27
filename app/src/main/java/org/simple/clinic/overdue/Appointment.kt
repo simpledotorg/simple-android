@@ -140,7 +140,7 @@ data class Appointment(
     fun updateSyncStatus(from: SyncStatus, to: SyncStatus)
 
     @Query("UPDATE Appointment SET syncStatus = :to WHERE uuid IN (:ids)")
-    fun updateSyncStatus(ids: List<UUID>, to: SyncStatus)
+    fun updateSyncStatusForIds(ids: List<UUID>, to: SyncStatus)
 
     @Query("SELECT * FROM Appointment WHERE uuid = :id")
     fun getOne(id: UUID): Appointment?
@@ -163,7 +163,7 @@ data class Appointment(
     fun count(): Flowable<Int>
 
     @Query("SELECT COUNT(uuid) FROM Appointment WHERE syncStatus = :syncStatus")
-    fun count(syncStatus: SyncStatus): Flowable<Int>
+    fun countWithStatus(syncStatus: SyncStatus): Flowable<Int>
 
     @Query("""
       UPDATE Appointment
@@ -235,7 +235,7 @@ data class Appointment(
       UPDATE Appointment SET status = :updatedStatus, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
       WHERE patientUuid = :patientUuid AND status = :scheduledStatus AND createdAt < :createdBefore
     """)
-    fun markAsVisited(
+    fun markAsVisitedForPatient(
         patientUuid: UUID,
         updatedStatus: Status,
         scheduledStatus: Status,

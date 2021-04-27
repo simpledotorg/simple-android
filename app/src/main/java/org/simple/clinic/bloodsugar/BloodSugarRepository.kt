@@ -87,7 +87,7 @@ class BloodSugarRepository @Inject constructor(
       throw AssertionError()
     }
 
-    dao.updateSyncStatus(uuids = ids, newStatus = to)
+    dao.updateSyncStatusForIds(uuids = ids, newStatus = to)
   }
 
   override fun mergeWithLocalData(payloads: List<BloodSugarMeasurementPayload>) {
@@ -104,7 +104,7 @@ class BloodSugarRepository @Inject constructor(
       dao.count().toObservable()
 
   override fun pendingSyncRecordCount(): Observable<Int> =
-      dao.count(PENDING).toObservable()
+      dao.countWithStatus(PENDING).toObservable()
 
   fun measurement(bloodSugarMeasurementUuid: UUID): BloodSugarMeasurement? =
       dao.getOne(bloodSugarMeasurementUuid)

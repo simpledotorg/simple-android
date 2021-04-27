@@ -162,7 +162,7 @@ class AppointmentRepository @Inject constructor(
         .atStartOfDay()
         .toInstant(ZoneOffset.of(utcClock.zone.id))
 
-    appointmentDao.markAsVisited(
+    appointmentDao.markAsVisitedForPatient(
         patientUuid = patientUuid,
         updatedStatus = Visited,
         scheduledStatus = Scheduled,
@@ -186,7 +186,7 @@ class AppointmentRepository @Inject constructor(
       throw AssertionError()
     }
 
-    appointmentDao.updateSyncStatus(ids, to)
+    appointmentDao.updateSyncStatusForIds(ids, to)
   }
 
   override fun mergeWithLocalData(payloads: List<AppointmentPayload>) {
@@ -221,7 +221,7 @@ class AppointmentRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return appointmentDao
-        .count(SyncStatus.PENDING)
+        .countWithStatus(SyncStatus.PENDING)
         .toObservable()
   }
 

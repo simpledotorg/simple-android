@@ -211,7 +211,7 @@ class PatientRepository @Inject constructor(
   }
 
   override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
-    database.patientDao().updateSyncStatus(ids, to)
+    database.patientDao().updateSyncStatusForIds(ids, to)
   }
 
   override fun recordCount(): Observable<Int> {
@@ -576,7 +576,7 @@ class PatientRepository @Inject constructor(
 
   fun recentPatients(facilityUuid: UUID, limit: Int): Observable<List<RecentPatient>> =
       database.recentPatientDao()
-          .recentPatients(facilityUuid, Scheduled, Manual, PatientStatus.Active, limit)
+          .recentPatientsWithLimit(facilityUuid, Scheduled, Manual, PatientStatus.Active, limit)
           .toObservable()
 
   fun recentPatients(facilityUuid: UUID): Observable<List<RecentPatient>> =
@@ -590,7 +590,7 @@ class PatientRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return database.patientDao()
-        .patientCount(PENDING)
+        .patientCountWithStatus(PENDING)
         .toObservable()
   }
 

@@ -103,7 +103,7 @@ class MedicalHistoryRepository @Inject constructor(
 
   override fun save(records: List<MedicalHistory>): Completable {
     return Completable.fromAction {
-      dao.save(records)
+      dao.saveHistories(records)
     }
   }
 
@@ -120,7 +120,7 @@ class MedicalHistoryRepository @Inject constructor(
       throw AssertionError()
     }
 
-    dao.updateSyncStatus(ids, to)
+    dao.updateSyncStatusForIds(ids, to)
   }
 
   override fun mergeWithLocalData(payloads: List<MedicalHistoryPayload>) {
@@ -130,7 +130,7 @@ class MedicalHistoryRepository @Inject constructor(
         .filterNot { it.uuid in dirtyRecords }
         .map { toDatabaseModel(it, SyncStatus.DONE) }
 
-    dao.save(payloadsToSave)
+    dao.saveHistories(payloadsToSave)
   }
 
   override fun recordCount(): Observable<Int> {
@@ -157,7 +157,7 @@ class MedicalHistoryRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return dao
-        .count(SyncStatus.PENDING)
+        .countWithStatus(SyncStatus.PENDING)
         .toObservable()
   }
 }

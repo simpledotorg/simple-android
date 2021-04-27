@@ -160,7 +160,7 @@ class MedicalHistoryRepositoryAndroidTest {
         createdAt = Instant.now(clock).minusMillis(100),
         updatedAt = Instant.now(clock))
 
-    dao.save(listOf(olderHistory, newerHistory))
+    dao.saveHistories(listOf(olderHistory, newerHistory))
 
     val foundHistory = dao.historyForPatientImmediate(patientUuid)!!
     assertThat(foundHistory).isEqualTo(newerHistory)

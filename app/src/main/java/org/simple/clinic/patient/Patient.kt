@@ -115,13 +115,13 @@ data class Patient(
     abstract fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
     @Query("UPDATE patient SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
-    abstract fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
+    abstract fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
 
     @Query("SELECT COUNT(uuid) FROM patient")
     abstract fun patientCount(): Flowable<Int>
 
     @Query("SELECT COUNT(uuid) FROM Patient WHERE syncStatus = :syncStatus")
-    abstract fun patientCount(syncStatus: SyncStatus): Flowable<Int>
+    abstract fun patientCountWithStatus(syncStatus: SyncStatus): Flowable<Int>
 
     @Query("DELETE FROM patient")
     abstract fun clear()

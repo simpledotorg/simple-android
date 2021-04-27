@@ -73,7 +73,7 @@ data class Facility(
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
     @Query("UPDATE facility SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
-    fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
+    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(newFacilities: List<Facility>)
@@ -113,7 +113,7 @@ data class Facility(
     fun count(): Flowable<Int>
 
     @Query("SELECT COUNT(uuid) FROM facility WHERE syncStatus = :syncStatus")
-    fun count(syncStatus: SyncStatus): Flowable<Int>
+    fun countWithStatus(syncStatus: SyncStatus): Flowable<Int>
 
     @Query("DELETE FROM Facility")
     fun clear()

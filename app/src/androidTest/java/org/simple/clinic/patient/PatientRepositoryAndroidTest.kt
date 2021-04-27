@@ -3333,7 +3333,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun querying_whether_blood_pressures_for_patient_have_change_should_work_as_expected() {
     fun setBpSyncStatusToDone(bpUuid: UUID) {
-      database.bloodPressureDao().updateSyncStatus(listOf(bpUuid), DONE)
+      database.bloodPressureDao().updateSyncStatusForIds(listOf(bpUuid), DONE)
     }
 
     val patientUuid = UUID.fromString("a255825d-1a36-47ee-a4c8-3657bf800076")
@@ -3383,7 +3383,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun querying_whether_blood_sugars_for_patient_have_changed_should_work_as_expected() {
     fun setBloodSugarSyncStatusToDone(bloodSugarUuid: UUID) {
-      database.bloodSugarDao().updateSyncStatus(listOf(bloodSugarUuid), DONE)
+      database.bloodSugarDao().updateSyncStatusForIds(listOf(bloodSugarUuid), DONE)
     }
 
     val patientUuid = UUID.fromString("8ef781b9-afd3-4bb7-8742-193e48471f09")
@@ -3433,7 +3433,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun querying_whether_prescription_for_patient_has_changed_should_work_as_expected() {
     fun setPrescribedDrugSyncStatusToDone(prescribedDrug: UUID) {
-      database.prescriptionDao().updateSyncStatus(listOf(prescribedDrug), DONE)
+      database.prescriptionDao().updateSyncStatusForIds(listOf(prescribedDrug), DONE)
     }
 
     val patientUuid = UUID.fromString("efd303fd-f96b-4b05-9c8a-c067b189974e")
@@ -3483,7 +3483,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun querying_whether_medical_history_for_patient_has_changed_should_work_as_expected() {
     fun setMedicalHistorySyncStatusToDone(medicalHistoryUuid: UUID) {
-      database.medicalHistoryDao().updateSyncStatus(listOf(medicalHistoryUuid), DONE)
+      database.medicalHistoryDao().updateSyncStatusForIds(listOf(medicalHistoryUuid), DONE)
     }
 
     val patientUuid = UUID.fromString("327b1bc3-da82-49b4-a6a5-668b7cf05ca2")
@@ -3511,7 +3511,7 @@ class PatientRepositoryAndroidTest {
         updatedAt = now
     )
 
-    database.medicalHistoryDao().save(listOf(medicalHistory1ForPatient, medicalHistory2ForPatient, medicalHistoryForSomeOtherPatient))
+    database.medicalHistoryDao().saveHistories(listOf(medicalHistory1ForPatient, medicalHistory2ForPatient, medicalHistoryForSomeOtherPatient))
 
     assertThat(patientRepository.hasMedicalHistoryForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
     assertThat(patientRepository.hasMedicalHistoryForPatientChangedSince(patientUuid, now)).isTrue()

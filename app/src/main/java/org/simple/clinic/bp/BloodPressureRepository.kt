@@ -78,7 +78,7 @@ class BloodPressureRepository @Inject constructor(
       throw AssertionError()
     }
 
-    dao.updateSyncStatus(uuids = ids, newStatus = to)
+    dao.updateSyncStatusForIds(uuids = ids, newStatus = to)
   }
 
   override fun mergeWithLocalData(payloads: List<BloodPressureMeasurementPayload>) {
@@ -135,7 +135,7 @@ class BloodPressureRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return dao
-        .count(SyncStatus.PENDING)
+        .countWithStatus(SyncStatus.PENDING)
         .toObservable()
   }
 }

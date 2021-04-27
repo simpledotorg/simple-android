@@ -100,7 +100,7 @@ data class RecentPatient(
     4. Order by updatedAt from final list and cap it to 10 entries.
      */
     @Query("$RECENT_PATIENT_QUERY LIMIT :limit")
-    fun recentPatients(
+    fun recentPatientsWithLimit(
         facilityUuid: UUID,
         appointmentStatus: Status,
         appointmentType: AppointmentType,

@@ -108,7 +108,7 @@ class TeleconsultRecordRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return teleconsultRecordDao
-        .count(SyncStatus.PENDING)
+        .countWithStatus(SyncStatus.PENDING)
         .toObservable()
   }
 

@@ -64,7 +64,7 @@ class TeleconsultationFacilityRepository @Inject constructor(
   }
 
   override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
-    appDatabase.teleconsultFacilityInfoDao().updateSyncStatus(ids, to)
+    appDatabase.teleconsultFacilityInfoDao().updateSyncStatusForIds(ids, to)
   }
 
   override fun mergeWithLocalData(payloads: List<TeleconsultationFacilityInfoPayload>) {
@@ -89,7 +89,7 @@ class TeleconsultationFacilityRepository @Inject constructor(
     return Observable.fromCallable {
       appDatabase
           .teleconsultFacilityInfoDao()
-          .count(PENDING)
+          .countWithStatus(PENDING)
     }
   }
 

@@ -95,7 +95,7 @@ data class BloodSugarMeasurement(
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
     @Query("UPDATE BloodSugarMeasurements SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
-    fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
+    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
 
     @Query("SELECT * FROM BloodSugarMeasurements WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): BloodSugarMeasurement?
@@ -107,7 +107,7 @@ data class BloodSugarMeasurement(
     fun count(): Flowable<Int>
 
     @Query("SELECT COUNT(uuid) FROM BloodSugarMeasurements WHERE syncStatus = :syncStatus")
-    fun count(syncStatus: SyncStatus): Flowable<Int>
+    fun countWithStatus(syncStatus: SyncStatus): Flowable<Int>
 
     @Query("""
       SELECT COUNT(uuid)

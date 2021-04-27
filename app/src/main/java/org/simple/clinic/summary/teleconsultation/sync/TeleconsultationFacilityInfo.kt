@@ -50,7 +50,7 @@ data class TeleconsultationFacilityInfo(
     fun count(): Int
 
     @Query("SELECT COUNT(teleconsultationFacilityId) FROM TeleconsultationFacilityInfo WHERE syncStatus = :syncStatus")
-    fun count(syncStatus: SyncStatus): Int
+    fun countWithStatus(syncStatus: SyncStatus): Int
 
     @Query("SELECT * FROM TeleconsultationFacilityInfo WHERE teleconsultationFacilityId = :id")
     fun getOne(id: UUID): TeleconsultationFacilityInfo?
@@ -62,7 +62,7 @@ data class TeleconsultationFacilityInfo(
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
     @Query("UPDATE TeleconsultationFacilityInfo SET syncStatus = :newStatus WHERE teleconsultationFacilityId IN (:uuids)")
-    fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
+    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
 
     @Query("SELECT * FROM TeleconsultationFacilityInfo WHERE syncStatus = :syncStatus")
     fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultationFacilityInfo>

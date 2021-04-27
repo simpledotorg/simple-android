@@ -68,7 +68,7 @@ data class TeleconsultRecord(
     fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
 
     @Query("SELECT COUNT(id) FROM TeleconsultRecord WHERE syncStatus = :syncStatus")
-    fun count(syncStatus: SyncStatus): Flowable<Int>
+    fun countWithStatus(syncStatus: SyncStatus): Flowable<Int>
 
     @Query("SELECT id FROM TeleconsultRecord WHERE syncStatus = :syncStatus")
     fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>

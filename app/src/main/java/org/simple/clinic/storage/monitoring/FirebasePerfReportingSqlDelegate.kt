@@ -91,14 +91,21 @@ class FirebasePerfReportingSqlDelegate @Inject constructor(
   private inline fun <reified R> reportTimeTaken(
       operation: () -> R
   ): R {
-    return if (sampler.sample) {
-      val daoInformation = daoInformationExtractor.findDaoMethodInCurrentCallStack()
+    return if (sampler.sample)
+      executeAndReport(operation)
+    else
+      operation()
+  }
 
-      if (daoInformation != null)
-        runSqlOperationWithReporting(daoInformation, operation)
-      else
-        operation()
-    } else operation()
+  private inline fun <reified R> executeAndReport(
+      operation: () -> R
+  ): R {
+    val daoInformation = daoInformationExtractor.findDaoMethodInCurrentCallStack()
+
+    return if (daoInformation != null)
+      runSqlOperationWithReporting(daoInformation, operation)
+    else
+      operation()
   }
 
   private inline fun <reified R> runSqlOperationWithReporting(

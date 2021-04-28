@@ -173,7 +173,6 @@
   <string name="patientsummary_addphone_save">சேமிக்கவும்</string>
   <string name="patientsummary_addphone_cancel">தவிர்க்கவும்</string>
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
-  <string name="patientsummary_bangladesh_national_id">ஐடி</string>
 
   <string name="patientsummary_teleconsult">தொலைபேசி வழி ஆலோசனை</string>
   <string name="patientsummary_log_teleconsult">தொலைபேசி ஆலோசனைக்குப் பதிவுசெய்க</string>

@@ -214,7 +214,6 @@
   <string name="patientsummary_addphone_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
   <string name="patientsummary_newbp_date_time" translatable="false">%1$s\n%2$s</string>
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
-  <string name="patientsummary_bangladesh_national_id">ID</string>
 
   <string name="patientsummary_teleconsult">Tele-consult</string>
   <string name="patientsummary_contact_doctor_diagnosis" translatable="false">*Diagnosis*:</string>

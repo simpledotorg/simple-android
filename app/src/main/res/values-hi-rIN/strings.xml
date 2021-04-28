@@ -173,7 +173,6 @@
   <string name="patientsummary_addphone_save">सहेजें</string>
   <string name="patientsummary_addphone_cancel">छोड़ें</string>
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
-  <string name="patientsummary_bangladesh_national_id">आईडी</string>
 
   <string name="patientsummary_teleconsult">फ़ोन पर राय</string>
   <string name="patientsummary_log_teleconsult">टेली कंसल्ट पर लॉग करें</string>

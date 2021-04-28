@@ -411,17 +411,17 @@ class PatientSummaryScreen :
   }
 
   private fun generateAlternativeId(alternateId: BusinessId, isBpPassportVisible: Boolean): SpannedString {
-    val bangladeshNationalIdLabel = requireContext().getString(R.string.patientsummary_bangladesh_national_id)
+    val alternateIdLabel = alternateId.identifier.displayType(resources)
     val identifierNumericSpan = TextAppearanceSpan(requireContext(), R.style.TextAppearance_Simple_Body2_Numeric)
     val identifier = alternateId.identifier
 
     return buildSpannedString {
       if (isBpPassportVisible) {
         inSpans(BulletSpan(16)) {
-          append("$bangladeshNationalIdLabel: ")
+          append("$alternateIdLabel: ")
         }
       } else {
-        append("$bangladeshNationalIdLabel: ")
+        append("$alternateIdLabel: ")
       }
 
       inSpans(identifierNumericSpan) {

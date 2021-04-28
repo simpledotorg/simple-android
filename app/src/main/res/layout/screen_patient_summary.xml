@@ -97,7 +97,7 @@
         android:layout_below="@id/addressTextView"
         android:layout_alignStart="@id/addressTextView"
         android:layout_marginTop="@dimen/spacing_4"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
           android:id="@+id/bpPassportTextView"
@@ -114,6 +114,7 @@
           android:id="@+id/alternateIdTextView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/spacing_4"
           android:textAppearance="?attr/textAppearanceBody2"
           android:textColor="@color/color_on_toolbar_primary_72"
           tools:text="\u2022 ID: 123456789012" />

@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.SpannedString
-import android.text.style.BulletSpan
 import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -406,23 +405,17 @@ class PatientSummaryScreen :
 
     alternateIdTextView.text = when (alternateId) {
       null -> ""
-      else -> generateAlternativeId(alternateId, isBpPassportVisible)
+      else -> generateAlternativeId(alternateId)
     }
   }
 
-  private fun generateAlternativeId(alternateId: BusinessId, isBpPassportVisible: Boolean): SpannedString {
+  private fun generateAlternativeId(alternateId: BusinessId): SpannedString {
     val alternateIdLabel = alternateId.identifier.displayType(resources)
     val identifierNumericSpan = TextAppearanceSpan(requireContext(), R.style.TextAppearance_Simple_Body2_Numeric)
     val identifier = alternateId.identifier
 
     return buildSpannedString {
-      if (isBpPassportVisible) {
-        inSpans(BulletSpan(16)) {
-          append("$alternateIdLabel: ")
-        }
-      } else {
-        append("$alternateIdLabel: ")
-      }
+      append("$alternateIdLabel: ")
 
       inSpans(identifierNumericSpan) {
         append(identifier.displayValue())

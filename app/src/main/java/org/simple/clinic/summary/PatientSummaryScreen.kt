@@ -401,19 +401,19 @@ class PatientSummaryScreen :
     }
   }
 
-  private fun displayAlternativeId(bangladeshNationalId: BusinessId?, isBpPassportVisible: Boolean) {
-    alternateIdTextView.visibleOrGone(bangladeshNationalId != null)
+  private fun displayAlternativeId(alternateId: BusinessId?, isBpPassportVisible: Boolean) {
+    alternateIdTextView.visibleOrGone(alternateId != null)
 
-    alternateIdTextView.text = when (bangladeshNationalId) {
+    alternateIdTextView.text = when (alternateId) {
       null -> ""
-      else -> generateAlternativeId(bangladeshNationalId, isBpPassportVisible)
+      else -> generateAlternativeId(alternateId, isBpPassportVisible)
     }
   }
 
-  private fun generateAlternativeId(bangladeshNationalId: BusinessId, isBpPassportVisible: Boolean): SpannedString {
+  private fun generateAlternativeId(alternateId: BusinessId, isBpPassportVisible: Boolean): SpannedString {
     val bangladeshNationalIdLabel = requireContext().getString(R.string.patientsummary_bangladesh_national_id)
     val identifierNumericSpan = TextAppearanceSpan(requireContext(), R.style.TextAppearance_Simple_Body2_Numeric)
-    val identifier = bangladeshNationalId.identifier
+    val identifier = alternateId.identifier
 
     return buildSpannedString {
       if (isBpPassportVisible) {

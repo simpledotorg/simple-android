@@ -1,8 +1,8 @@
 # CHANGELOG
 ## Next Release
 ### Internal
+- Add automatic performance profiling for the Room database queries
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
-- [In Progress: 21 Apr 2021] Add automatic performance profiling for the Room database queries
 
 ## On Demo
 ### Features

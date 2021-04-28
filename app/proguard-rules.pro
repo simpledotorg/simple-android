@@ -1,5 +1,13 @@
 # No obfuscation because open source
+# We depend on the convention of generated DAO names by Room in order to support performance profiling.
+# If you decide to obfuscate the final APK, please verify the performance profiling tool continues to function.
+# See: https://github.com/simpledotorg/simple-android/issues/2470
 -dontobfuscate
+
+# We process generated Room DAO metadata and use a runtime exception for performance profiling.
+# If you remove this, please ensure that the profiling does not break.
+# See: https://github.com/simpledotorg/simple-android/issues/2470
+-keepattributes SourceFile, LineNumberTable
 
 # Debug app only, will never be in release builds
 #-dontwarn org.apache.commons.cli.CommandLineParser

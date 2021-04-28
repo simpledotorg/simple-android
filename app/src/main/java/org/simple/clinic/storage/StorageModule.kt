@@ -9,7 +9,6 @@ import dagger.Provides
 import io.requery.android.database.sqlite.SQLiteGlobal
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
-import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.storage.migrations.RoomMigrationsModule
 import org.simple.clinic.storage.text.TextRecord
 import org.simple.clinic.storage.text.TextStoreModule
@@ -19,7 +18,8 @@ import org.simple.clinic.util.ThreadPools
 @Module(includes = [
   RoomMigrationsModule::class,
   SharedPreferencesModule::class,
-  TextStoreModule::class
+  TextStoreModule::class,
+  SqliteModule::class
 ])
 class StorageModule {
 
@@ -46,9 +46,6 @@ class StorageModule {
         .setQueryExecutor(queryExecutor)
         .build()
   }
-
-  @Provides
-  fun sqliteOpenHelperFactory(): SupportSQLiteOpenHelper.Factory = AppSqliteOpenHelperFactory()
 
   @Provides
   fun userDao(appDatabase: AppDatabase): User.RoomDao {

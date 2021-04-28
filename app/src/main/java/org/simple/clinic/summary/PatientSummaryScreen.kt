@@ -144,8 +144,8 @@ class PatientSummaryScreen :
   private val bpPassportTextView
     get() = binding.bpPassportTextView
 
-  private val bangladeshNationalIdTextView
-    get() = binding.bangladeshNationalIdTextView
+  private val alternateIdTextView
+    get() = binding.alternateIdTextView
 
   private val doneButtonFrame
     get() = binding.doneButtonFrame
@@ -402,9 +402,9 @@ class PatientSummaryScreen :
   }
 
   private fun displayAlternativeId(bangladeshNationalId: BusinessId?, isBpPassportVisible: Boolean) {
-    bangladeshNationalIdTextView.visibleOrGone(bangladeshNationalId != null)
+    alternateIdTextView.visibleOrGone(bangladeshNationalId != null)
 
-    bangladeshNationalIdTextView.text = when (bangladeshNationalId) {
+    alternateIdTextView.text = when (bangladeshNationalId) {
       null -> ""
       else -> generateAlternativeId(bangladeshNationalId, isBpPassportVisible)
     }

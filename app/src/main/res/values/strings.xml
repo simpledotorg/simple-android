@@ -28,7 +28,7 @@
 
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">BP Passport</string>
-  <string name="identifiertype_bangladesh_national_id">National ID number</string>
+  <string name="identifiertype_bangladesh_national_id">National ID</string>
   <string name="identifiertype_ethiopia_medical_record_number">Medical Record Number</string>
   <string name="identifiertype_unknown">ID</string>
   <string name="identifiertype_india_national_health_id">National Health ID</string>

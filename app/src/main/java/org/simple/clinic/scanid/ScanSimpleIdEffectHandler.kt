@@ -1,6 +1,7 @@
 package org.simple.clinic.scanid
 
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.moshi.Moshi
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -11,7 +12,8 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class ScanSimpleIdEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
-    @Assisted private val uiActions: ScanSimpleIdUiActions
+    @Assisted private val uiActions: ScanSimpleIdUiActions,
+    private val moshi: Moshi
 ) {
 
   @AssistedFactory
@@ -28,7 +30,20 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       .addTransformer(ValidateShortCode::class.java, validateShortCode())
       .addConsumer(SendScannedIdentifierResult::class.java, { uiActions.sendScannedId(it.scannedId) }, schedulersProvider.ui())
       .addTransformer(SearchPatientByIdentifier::class.java, searchPatientByIdentifier())
+      .addTransformer(ParseScannedJson::class.java, parseJsonIntoObject())
       .build()
+
+  private fun parseJsonIntoObject(): ObservableTransformer<ParseScannedJson, ScanSimpleIdEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val adapter = moshi.adapter(PatientPrefillInfo::class.java)
+            adapter.fromJson(it.text)
+          }
+          .map(::ScannedQRCodeJsonParsed)
+    }
+  }
 
   private fun searchPatientByIdentifier(): ObservableTransformer<SearchPatientByIdentifier, ScanSimpleIdEvent> {
     return ObservableTransformer { effects ->

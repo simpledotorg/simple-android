@@ -52,6 +52,7 @@ import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.sync.ProtocolDrugPayload
 import org.simple.clinic.protocol.sync.ProtocolPayload
+import org.simple.clinic.scanid.PatientPrefillInfo
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficerPayload
@@ -1217,4 +1218,24 @@ object TestData {
         requesterCompletionStatus = requesterCompletionStatus
     )
   }
+
+  fun patientPrefillInfo(
+      healthIdNumber: String = "1234123456785678",
+      healthIdUserName: String = "Mohit",
+      fullName: String = "Mohit Ahuja",
+      gender: String = "M",
+      state: String = "Maharashtra",
+      district: String = "Thane",
+      dateOfBirth: String = "12/12/1997",
+      address: String = "Obvious HQ"
+  ) = PatientPrefillInfo(
+      healthIdNumber = healthIdNumber,
+      healthIdUserName = healthIdUserName,
+      fullName = fullName,
+      gender = gender,
+      state = state,
+      district = district,
+      dateOfBirth = dateOfBirth,
+      address = address
+  )
 }

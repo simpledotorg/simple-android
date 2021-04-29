@@ -780,6 +780,7 @@
   <string name="sheet_bp_passport_register_new_patient">Register new patient</string>
   <string name="sheet_bp_passport_add_to_existing_patient">Add to existing patient</string>
   <string name="sheet_bp_passport_number">BP Passport %1$s</string>
+  <string name="sheet_national_health_id">National Health Id %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">Assigned to %1$s</string>

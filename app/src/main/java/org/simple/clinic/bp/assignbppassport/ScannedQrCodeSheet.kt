@@ -1,9 +1,7 @@
 package org.simple.clinic.bp.assignbppassport
 
 import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
@@ -26,7 +24,7 @@ class ScannedQrCodeSheet :
         SheetScannedQrCodeBinding,
         BpPassportModel,
         BpPassportEvent,
-        BpPassportEffect>(), BpPassportUiActions {
+        BpPassportEffect>(), BpPassportUiActions, ScannedQrCodeUi {
 
   companion object {
 
@@ -50,11 +48,13 @@ class ScannedQrCodeSheet :
   private val patientIdentifierNumberTextView
     get() = binding.patientIdentifierNumberTextView
 
-  private val bpPassportIdentifier: Identifier by lazy {
+  private val identifier: Identifier by lazy {
     screenKey.identifier
   }
 
-  override fun defaultModel() = BpPassportModel.create(bpPassportIdentifier)
+  override fun defaultModel() = BpPassportModel.create(identifier)
+
+  override fun uiRenderer() = ScannedQrCodeUiRenderer(this)
 
   override fun bindView(inflater: LayoutInflater, container: ViewGroup?): SheetScannedQrCodeBinding {
     return SheetScannedQrCodeBinding.inflate(layoutInflater, container, false)
@@ -77,9 +77,12 @@ class ScannedQrCodeSheet :
     context.injector<Injector>().inject(this)
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    patientIdentifierNumberTextView.text = getString(R.string.sheet_bp_passport_number, bpPassportIdentifier.displayValue())
+  override fun showBpPassportValue() {
+    patientIdentifierNumberTextView.text = getString(R.string.sheet_bp_passport_number, identifier.displayValue())
+  }
+
+  override fun showIndianNationalHealthIdValue() {
+    patientIdentifierNumberTextView.text = getString(R.string.sheet_national_health_id, identifier.displayValue())
   }
 
   override fun sendBpPassportResult(blankBpPassportResult: BlankBpPassportResult) {

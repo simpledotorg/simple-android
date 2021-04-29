@@ -19,11 +19,10 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.remoteconfig.ConfigReader
-import org.simple.clinic.user.User
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultStatus
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
-import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer as TeleconsultAnswer
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.moshi.InstantMoshiAdapter
 import org.simple.clinic.util.moshi.LocalDateMoshiAdapter
@@ -31,6 +30,7 @@ import org.simple.clinic.util.moshi.MoshiOptionalAdapterFactory
 import org.simple.clinic.util.moshi.URIMoshiAdapter
 import org.simple.clinic.util.moshi.UuidMoshiAdapter
 import java.util.concurrent.TimeUnit
+import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer as TeleconsultAnswer
 
 @Module
 class NetworkModule {

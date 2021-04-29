@@ -8,11 +8,11 @@ import org.junit.Test
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.businessid.Identifier
 
-class BpPassportUpdateTest {
+class ScannedQrCodeUpdateTest {
 
-  private val updateSpec = UpdateSpec(BpPassportUpdate())
+  private val updateSpec = UpdateSpec(ScannedQrCodeUpdate())
   private val identifier = Identifier("1111111", Identifier.IdentifierType.BpPassport)
-  private val defaultModel = BpPassportModel.create(identifier)
+  private val defaultModel = ScannedQrCodeModel.create(identifier)
   private val ongoingPatientEntry = OngoingNewPatientEntry(
       identifier = identifier
   )
@@ -38,7 +38,7 @@ class BpPassportUpdateTest {
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(SendBlankBpPassportResult(RegisterNewPatient))
+                hasEffects(SendBlankScannedQrCodeResult(RegisterNewPatient))
             )
         )
   }
@@ -51,7 +51,7 @@ class BpPassportUpdateTest {
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(SendBlankBpPassportResult(AddToExistingPatient))
+                hasEffects(SendBlankScannedQrCodeResult(AddToExistingPatient))
             )
         )
   }

@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
-import org.simple.clinic.bp.assignbppassport.BpPassportModel
+import org.simple.clinic.bp.assignbppassport.ScannedQrCodeModel
 import org.simple.clinic.bp.assignbppassport.ScannedQrCodeUi
 import org.simple.clinic.bp.assignbppassport.ScannedQrCodeUiRenderer
 import org.simple.clinic.patient.businessid.Identifier
@@ -19,7 +19,7 @@ class ScannedQrCodeUiRendererTest {
   @Test
   fun `when the qr code is scanned by a bp passport number, render bp passport values in scanned qr code sheet`() {
     // given
-    val defaultModel = BpPassportModel.create(Identifier(
+    val defaultModel = ScannedQrCodeModel.create(Identifier(
         value = "2bd05cc3-5c16-464d-87e1-25b6b1a8a99a",
         type = BpPassport
     ))
@@ -35,7 +35,7 @@ class ScannedQrCodeUiRendererTest {
   @Test
   fun `when the qr code is scanned by a national health id number, render national health id values in scanned qr code sheet`() {
     // given
-    val defaultModel = BpPassportModel.create(Identifier(
+    val defaultModel = ScannedQrCodeModel.create(Identifier(
         value = "28-3123-2283-6682",
         type = IndiaNationalHealthId
     ))

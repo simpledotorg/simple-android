@@ -63,7 +63,7 @@ class InstantSearchUpdate @Inject constructor(
       model: InstantSearchModel,
       event: BlankBpPassportResultReceived
   ): Next<InstantSearchModel, InstantSearchEffect> {
-    return when (event.blankBpPassportResult) {
+    return when (event.blankScannedQRCodeResult) {
       AddToExistingPatient -> dispatch(ShowKeyboard)
       RegisterNewPatient -> registerNewPatient(model)
     }

@@ -22,14 +22,14 @@ class ScannedQrCodeSheet :
     BaseBottomSheet<
         ScannedQrCodeSheet.Key,
         SheetScannedQrCodeBinding,
-        BpPassportModel,
-        BpPassportEvent,
-        BpPassportEffect>(), BpPassportUiActions, ScannedQrCodeUi {
+        ScannedQrCodeModel,
+        ScannedQrCodeEvent,
+        ScannedQrCodeEffect>(), ScannedQrCodeUiActions, ScannedQrCodeUi {
 
   companion object {
 
-    fun blankBpPassportResult(result: Succeeded): BlankBpPassportResult {
-      return (result.result as BlankBpPassportResult)
+    fun blankBpPassportResult(result: Succeeded): BlankScannedQRCodeResult {
+      return (result.result as BlankScannedQRCodeResult)
     }
   }
 
@@ -37,7 +37,7 @@ class ScannedQrCodeSheet :
   lateinit var router: Router
 
   @Inject
-  lateinit var effectHandlerFactory: BpPassportEffectHandler.Factory
+  lateinit var effectHandlerFactory: ScannedQrCodeEffectHandler.Factory
 
   private val registerNewPatientButton
     get() = binding.registerNewPatientButton
@@ -52,7 +52,7 @@ class ScannedQrCodeSheet :
     screenKey.identifier
   }
 
-  override fun defaultModel() = BpPassportModel.create(identifier)
+  override fun defaultModel() = ScannedQrCodeModel.create(identifier)
 
   override fun uiRenderer() = ScannedQrCodeUiRenderer(this)
 
@@ -60,7 +60,7 @@ class ScannedQrCodeSheet :
     return SheetScannedQrCodeBinding.inflate(layoutInflater, container, false)
   }
 
-  override fun events(): Observable<BpPassportEvent> = Observable
+  override fun events(): Observable<ScannedQrCodeEvent> = Observable
       .merge(
           registerNewPatientClicks(),
           addToExistingPatientClicks()
@@ -68,7 +68,7 @@ class ScannedQrCodeSheet :
       .compose(ReportAnalyticsEvents())
       .cast()
 
-  override fun createUpdate() = BpPassportUpdate()
+  override fun createUpdate() = ScannedQrCodeUpdate()
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
@@ -85,17 +85,17 @@ class ScannedQrCodeSheet :
     patientIdentifierNumberTextView.text = getString(R.string.sheet_national_health_id, identifier.displayValue())
   }
 
-  override fun sendBpPassportResult(blankBpPassportResult: BlankBpPassportResult) {
-    router.popWithResult(Succeeded(blankBpPassportResult))
+  override fun sendBpPassportResult(blankScannedQRCodeResult: BlankScannedQRCodeResult) {
+    router.popWithResult(Succeeded(blankScannedQRCodeResult))
   }
 
-  private fun addToExistingPatientClicks(): Observable<BpPassportEvent> {
+  private fun addToExistingPatientClicks(): Observable<ScannedQrCodeEvent> {
     return addToExistingPatientButton
         .clicks()
         .map { AddToExistingPatientClicked }
   }
 
-  private fun registerNewPatientClicks(): Observable<BpPassportEvent> {
+  private fun registerNewPatientClicks(): Observable<ScannedQrCodeEvent> {
     return registerNewPatientButton
         .clicks()
         .map { RegisterNewPatientClicked }

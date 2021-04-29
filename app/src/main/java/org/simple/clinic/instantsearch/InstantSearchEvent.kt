@@ -1,7 +1,7 @@
 package org.simple.clinic.instantsearch
 
 import android.Manifest
-import org.simple.clinic.bp.assignbppassport.BlankBpPassportResult
+import org.simple.clinic.bp.assignbppassport.BlankScannedQRCodeResult
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
@@ -39,7 +39,7 @@ object RegisterNewPatientClicked : InstantSearchEvent() {
   override val analyticsName: String = "Instant Search: Register New Patient"
 }
 
-data class BlankBpPassportResultReceived(val blankBpPassportResult: BlankBpPassportResult) : InstantSearchEvent() {
+data class BlankBpPassportResultReceived(val blankScannedQRCodeResult: BlankScannedQRCodeResult) : InstantSearchEvent() {
 
   override val analyticsName: String = "Instant Search : Blank BP Passport Result Received"
 }

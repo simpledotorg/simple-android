@@ -5,15 +5,15 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.patient.OngoingNewPatientEntry
 
-class BpPassportUpdate : Update<BpPassportModel, BpPassportEvent, BpPassportEffect> {
-  override fun update(model: BpPassportModel, event: BpPassportEvent): Next<BpPassportModel, BpPassportEffect> {
+class ScannedQrCodeUpdate : Update<ScannedQrCodeModel, ScannedQrCodeEvent, ScannedQrCodeEffect> {
+  override fun update(model: ScannedQrCodeModel, event: ScannedQrCodeEvent): Next<ScannedQrCodeModel, ScannedQrCodeEffect> {
     return when (event) {
       RegisterNewPatientClicked -> {
         val ongoingNewPatientEntry = OngoingNewPatientEntry(identifier = model.identifier)
         dispatch(SaveNewOngoingPatientEntry(ongoingNewPatientEntry))
       }
-      NewOngoingPatientEntrySaved -> dispatch(SendBlankBpPassportResult(RegisterNewPatient))
-      is AddToExistingPatientClicked -> dispatch(SendBlankBpPassportResult(AddToExistingPatient))
+      NewOngoingPatientEntrySaved -> dispatch(SendBlankScannedQrCodeResult(RegisterNewPatient))
+      is AddToExistingPatientClicked -> dispatch(SendBlankScannedQrCodeResult(AddToExistingPatient))
     }
   }
 }

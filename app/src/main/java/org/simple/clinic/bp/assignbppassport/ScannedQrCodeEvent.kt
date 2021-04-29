@@ -2,14 +2,14 @@ package org.simple.clinic.bp.assignbppassport
 
 import org.simple.clinic.widgets.UiEvent
 
-sealed class BpPassportEvent : UiEvent
+sealed class ScannedQrCodeEvent : UiEvent
 
-object NewOngoingPatientEntrySaved : BpPassportEvent()
+object NewOngoingPatientEntrySaved : ScannedQrCodeEvent()
 
-object RegisterNewPatientClicked : BpPassportEvent() {
+object RegisterNewPatientClicked : ScannedQrCodeEvent() {
   override val analyticsName = "Blank BP passport sheet:Register new patient"
 }
 
-object AddToExistingPatientClicked : BpPassportEvent() {
+object AddToExistingPatientClicked : ScannedQrCodeEvent() {
   override val analyticsName = "Blank BP passport sheet:Add to existing patient"
 }

@@ -14,9 +14,8 @@ plugins {
   id("kotlin-parcelize")
   id("io.sentry.android.gradle")
   id("com.google.firebase.firebase-perf")
+  id("install-git-hook")
 }
-
-apply(from = "../quality/install-git-hook.gradle")
 
 sentry {
   autoProguardConfig = false

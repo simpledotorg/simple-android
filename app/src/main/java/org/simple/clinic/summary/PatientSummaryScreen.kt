@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.SpannedString
-import android.text.style.BulletSpan
 import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -144,8 +143,8 @@ class PatientSummaryScreen :
   private val bpPassportTextView
     get() = binding.bpPassportTextView
 
-  private val bangladeshNationalIdTextView
-    get() = binding.bangladeshNationalIdTextView
+  private val alternateIdTextView
+    get() = binding.alternateIdTextView
 
   private val doneButtonFrame
     get() = binding.doneButtonFrame
@@ -401,28 +400,22 @@ class PatientSummaryScreen :
     }
   }
 
-  private fun displayAlternativeId(bangladeshNationalId: BusinessId?, isBpPassportVisible: Boolean) {
-    bangladeshNationalIdTextView.visibleOrGone(bangladeshNationalId != null)
+  private fun displayAlternativeId(alternateId: BusinessId?, isBpPassportVisible: Boolean) {
+    alternateIdTextView.visibleOrGone(alternateId != null)
 
-    bangladeshNationalIdTextView.text = when (bangladeshNationalId) {
+    alternateIdTextView.text = when (alternateId) {
       null -> ""
-      else -> generateAlternativeId(bangladeshNationalId, isBpPassportVisible)
+      else -> generateAlternativeId(alternateId)
     }
   }
 
-  private fun generateAlternativeId(bangladeshNationalId: BusinessId, isBpPassportVisible: Boolean): SpannedString {
-    val bangladeshNationalIdLabel = requireContext().getString(R.string.patientsummary_bangladesh_national_id)
+  private fun generateAlternativeId(alternateId: BusinessId): SpannedString {
+    val alternateIdLabel = alternateId.identifier.displayType(resources)
     val identifierNumericSpan = TextAppearanceSpan(requireContext(), R.style.TextAppearance_Simple_Body2_Numeric)
-    val identifier = bangladeshNationalId.identifier
+    val identifier = alternateId.identifier
 
     return buildSpannedString {
-      if (isBpPassportVisible) {
-        inSpans(BulletSpan(16)) {
-          append("$bangladeshNationalIdLabel: ")
-        }
-      } else {
-        append("$bangladeshNationalIdLabel: ")
-      }
+      append("$alternateIdLabel: ")
 
       inSpans(identifierNumericSpan) {
         append(identifier.displayValue())

@@ -173,7 +173,6 @@
   <string name="patientsummary_addphone_save">ሴቭ</string>
   <string name="patientsummary_addphone_cancel">ዝለል</string>
   <string name="patientsummary_toolbar_title">%1$s ፣ %2$s ፣ %3$s</string>
-  <string name="patientsummary_bangladesh_national_id">መታወቂያ</string>
 
   <string name="patientsummary_teleconsult">Tele-consult</string>
   <string name="patientsummary_log_teleconsult">በስልክ ማማከር ይግቡ</string>

@@ -2,6 +2,7 @@
 ## Next Release
 ### Internal
 - Add automatic performance profiling for the Room database queries
+- Show Indian national health ID in `PatientSummaryScreen`
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 
 ## On Demo

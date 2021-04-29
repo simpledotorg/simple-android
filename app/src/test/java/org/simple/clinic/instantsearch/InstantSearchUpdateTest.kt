@@ -191,7 +191,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when the search result is clicked from the scanning bp passport flow, open the link id with patient screen`() {
+  fun `when the search result is clicked from the scanning qr code flow, open the link id with patient screen`() {
     val patientUuid = UUID.fromString("f607be71-630d-4adb-8d3a-76fdf347fe8a")
     val identifier = TestData.identifier("123456", BpPassport)
     val facility = TestData.facility(
@@ -266,7 +266,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when register new patient is selected in blank bp passport sheet, then register new patient`() {
+  fun `when register new patient is selected in blank scanned qr code sheet, then register new patient`() {
     val ongoingPatientEntry = OngoingNewPatientEntry.fromFullName("")
         .withIdentifier(identifier)
 
@@ -286,7 +286,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when add to existing patient is selected in blank bp passport sheet, then show keyboard`() {
+  fun `when add to existing patient is selected in blank scanned qr code sheet, then show keyboard`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
     )
@@ -303,7 +303,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when bp passport is scanned and patient is found, then open patient summary`() {
+  fun `when qr code is scanned and patient is found, then open patient summary`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
     )
@@ -322,7 +322,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when bp passport is scanned and patient is not found, then open bp passport sheet`() {
+  fun `when qr code is scanned and patient is not found, then open scanned qr code sheet`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
     )

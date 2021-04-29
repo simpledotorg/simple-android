@@ -152,8 +152,8 @@ class InstantSearchScreen :
       )
   )
 
-  private val blankBpPassportResults = PublishSubject.create<UiEvent>()
-  private val bpPassportScanResults = PublishSubject.create<UiEvent>()
+  private val blankScannedQrCodeResults = PublishSubject.create<UiEvent>()
+  private val qrCodeScanResults = PublishSubject.create<UiEvent>()
 
   override fun defaultModel() = InstantSearchModel.create(screenKey.additionalIdentifier)
 
@@ -168,8 +168,8 @@ class InstantSearchScreen :
           searchItemClicks(),
           searchQueryChanges(),
           registerNewPatientClicks(),
-          blankBpPassportResults,
-          bpPassportScanResults,
+          blankScannedQrCodeResults,
+          qrCodeScanResults,
           openQrCodeScannerClicks()
       )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
@@ -242,7 +242,7 @@ class InstantSearchScreen :
   }
 
   override fun openScannedQrCodeSheet(identifier: Identifier) {
-    router.pushExpectingResult(BlankBpPassport, ScannedQrCodeSheet.Key(identifier))
+    router.pushExpectingResult(BlankScannedQrCode, ScannedQrCodeSheet.Key(identifier))
   }
 
   override fun showNoPatientsInFacility(facility: Facility) {
@@ -288,16 +288,16 @@ class InstantSearchScreen :
   }
 
   override fun openQrCodeScanner() {
-    router.pushExpectingResult(BpPassportScan, ScanSimpleIdScreenKey())
+    router.pushExpectingResult(QrCodeScan, ScanSimpleIdScreenKey())
   }
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
-    if (requestType == BlankBpPassport && result is Succeeded) {
-      val bpPassportResult = ScannedQrCodeSheet.blankBpPassportResult(result)
-      blankBpPassportResults.onNext(BlankScannedQrCodeResultReceived(bpPassportResult))
-    } else if (requestType == BpPassportScan && result is Succeeded) {
+    if (requestType == BlankScannedQrCode && result is Succeeded) {
+      val scannedQrCodeResult = ScannedQrCodeSheet.blankBpPassportResult(result)
+      blankScannedQrCodeResults.onNext(BlankScannedQrCodeResultReceived(scannedQrCodeResult))
+    } else if (requestType == QrCodeScan && result is Succeeded) {
       val scanResult = ScanSimpleIdScreen.readScanResult(result)
-      bpPassportScanResults.onNext(QrCodeScanned.fromResult(scanResult))
+      qrCodeScanResults.onNext(QrCodeScanned.fromResult(scanResult))
     }
   }
 
@@ -359,8 +359,8 @@ class InstantSearchScreen :
   }
 
   @Parcelize
-  private object BlankBpPassport : Parcelable
+  private object BlankScannedQrCode : Parcelable
 
   @Parcelize
-  private object BpPassportScan : Parcelable
+  private object QrCodeScan : Parcelable
 }

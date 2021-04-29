@@ -32,7 +32,7 @@ class InstantSearchInitTest {
   }
 
   @Test
-  fun `when screen is opened from blank bp passport scan, then load current facility and open bp passport sheet`() {
+  fun `when screen is opened from blank qr code scan, then load current facility and open scanned qr code sheet`() {
     initSpec
         .whenInit(defaultModel)
         .then(assertThatFirst(
@@ -62,7 +62,7 @@ class InstantSearchInitTest {
   }
 
   @Test
-  fun `when screen is restored after receiving the BP Passport sheet result, then do not open bp passport sheet`() {
+  fun `when screen is restored after receiving the scanned qr code sheet result, then do not open scanned qr code sheet`() {
     val model = defaultModel.scannedQrCodeSheetOpened()
 
     initSpec

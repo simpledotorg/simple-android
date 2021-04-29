@@ -28,7 +28,7 @@ class ScannedQrCodeSheet :
 
   companion object {
 
-    fun blankBpPassportResult(result: Succeeded): BlankScannedQRCodeResult {
+    fun blankScannedQrCodeResult(result: Succeeded): BlankScannedQRCodeResult {
       return (result.result as BlankScannedQRCodeResult)
     }
   }
@@ -85,7 +85,7 @@ class ScannedQrCodeSheet :
     patientIdentifierNumberTextView.text = getString(R.string.sheet_national_health_id, identifier.displayValue())
   }
 
-  override fun sendBpPassportResult(blankScannedQRCodeResult: BlankScannedQRCodeResult) {
+  override fun sendScannedQrCodeResult(blankScannedQRCodeResult: BlankScannedQRCodeResult) {
     router.popWithResult(Succeeded(blankScannedQRCodeResult))
   }
 

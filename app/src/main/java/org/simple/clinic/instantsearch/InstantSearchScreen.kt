@@ -293,7 +293,7 @@ class InstantSearchScreen :
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
     if (requestType == BlankScannedQrCode && result is Succeeded) {
-      val scannedQrCodeResult = ScannedQrCodeSheet.blankBpPassportResult(result)
+      val scannedQrCodeResult = ScannedQrCodeSheet.blankScannedQrCodeResult(result)
       blankScannedQrCodeResults.onNext(BlankScannedQrCodeResultReceived(scannedQrCodeResult))
     } else if (requestType == QrCodeScan && result is Succeeded) {
       val scanResult = ScanSimpleIdScreen.readScanResult(result)

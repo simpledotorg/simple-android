@@ -52,7 +52,7 @@ class ScannedQrCodeEffectHandlerTest {
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
 
-    verify(uiActions).sendBpPassportResult(AddToExistingPatient)
+    verify(uiActions).sendScannedQrCodeResult(AddToExistingPatient)
     verifyNoMoreInteractions(uiActions)
   }
 }

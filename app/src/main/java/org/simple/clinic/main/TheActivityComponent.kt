@@ -11,7 +11,7 @@ import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.RxActivityLifecycle
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenInjector
-import org.simple.clinic.bp.assignbppassport.ScannedQrCodeSheet
+import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.bp.history.BloodPressureHistoryScreenInjector
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.contactpatient.views.SetAppointmentReminderView

@@ -1,4 +1,4 @@
-package org.simple.clinic.bp.assignbppassport
+package org.simple.clinic.scanid.scannedqrcode
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel

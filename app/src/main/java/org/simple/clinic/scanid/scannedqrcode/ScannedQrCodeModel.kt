@@ -1,4 +1,4 @@
-package org.simple.clinic.bp.assignbppassport
+package org.simple.clinic.scanid.scannedqrcode
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

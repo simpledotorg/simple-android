@@ -1,7 +1,7 @@
 package org.simple.clinic.instantsearch
 
 import android.Manifest
-import org.simple.clinic.bp.assignbppassport.BlankScannedQRCodeResult
+import org.simple.clinic.scanid.scannedqrcode.BlankScannedQRCodeResult
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier

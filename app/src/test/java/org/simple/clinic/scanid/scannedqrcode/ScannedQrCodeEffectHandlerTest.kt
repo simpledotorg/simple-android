@@ -1,4 +1,4 @@
-package org.simple.clinic.bp.assignbppassport
+package org.simple.clinic.scanid.scannedqrcode
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify

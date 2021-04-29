@@ -3,8 +3,8 @@ package org.simple.clinic.instantsearch
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
-import org.simple.clinic.bp.assignbppassport.AddToExistingPatient
-import org.simple.clinic.bp.assignbppassport.RegisterNewPatient
+import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
+import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
 import org.simple.clinic.instantsearch.InstantSearchValidator.Result.Empty
 import org.simple.clinic.instantsearch.InstantSearchValidator.Result.LengthTooShort
 import org.simple.clinic.instantsearch.InstantSearchValidator.Result.Valid

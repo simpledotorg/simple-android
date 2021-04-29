@@ -22,7 +22,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bp.assignbppassport.ScannedQrCodeSheet
+import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.databinding.ListPatientSearchBinding
 import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
 import org.simple.clinic.databinding.ScreenInstantSearchBinding

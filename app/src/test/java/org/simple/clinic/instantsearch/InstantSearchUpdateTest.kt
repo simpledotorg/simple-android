@@ -7,8 +7,8 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.bp.assignbppassport.AddToExistingPatient
-import org.simple.clinic.bp.assignbppassport.RegisterNewPatient
+import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
+import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier

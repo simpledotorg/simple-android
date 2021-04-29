@@ -6,6 +6,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
+import com.squareup.moshi.Moshi
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.Patient
@@ -19,7 +20,8 @@ class ScanSimpleIdUpdateTest {
   private val defaultModel = ScanSimpleIdModel.create()
 
   private val spec = UpdateSpec(ScanSimpleIdUpdate(
-      crashReporter = NoOpCrashReporter()
+      crashReporter = NoOpCrashReporter(),
+      moshi = Moshi.Builder().build()
   ))
 
   @Test

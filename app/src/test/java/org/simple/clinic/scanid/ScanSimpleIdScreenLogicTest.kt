@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.spotify.mobius.Init
+import com.squareup.moshi.Moshi
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -134,7 +135,7 @@ class ScanSimpleIdScreenLogicTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         init = Init { first(it) },
-        update = ScanSimpleIdUpdate(crashReporter = NoOpCrashReporter()),
+        update = ScanSimpleIdUpdate(crashReporter = NoOpCrashReporter(), Moshi.Builder().build()),
         effectHandler = effectHandler.build(),
         defaultModel = ScanSimpleIdModel.create(),
         modelUpdateListener = { /* no-op */ }

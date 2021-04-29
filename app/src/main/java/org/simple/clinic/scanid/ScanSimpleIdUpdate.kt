@@ -3,11 +3,13 @@ package org.simple.clinic.scanid
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import com.squareup.moshi.Moshi
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.scanid.ShortCodeValidationResult.Failure
 import org.simple.clinic.scanid.ShortCodeValidationResult.Success
@@ -15,7 +17,8 @@ import java.util.UUID
 import javax.inject.Inject
 
 class ScanSimpleIdUpdate @Inject constructor(
-    private val crashReporter: CrashReporter
+    private val crashReporter: CrashReporter,
+    private val moshi: Moshi
 ) : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimpleIdEffect> {
   override fun update(model: ScanSimpleIdModel, event: ScanSimpleIdEvent): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return when (event) {
@@ -55,12 +58,39 @@ class ScanSimpleIdUpdate @Inject constructor(
     if (model.isSearching) return noChange()
 
     return try {
-      val bpPassportCode = UUID.fromString(event.text)
-      val identifier = Identifier(bpPassportCode.toString(), BpPassport)
-      next(model = model.searching(), SearchPatientByIdentifier(identifier))
-    } catch (e: IllegalArgumentException) {
-      crashReporter.report(e)
-      noChange()
+      val patientPrefillInfoDetail = parseJsonIntoObject(event.text)
+      if (patientPrefillInfoDetail != null) {
+        val identifier = Identifier(patientPrefillInfoDetail.healthIdNumber, IndiaNationalHealthId)
+        next(model = model.searching(), SearchPatientByIdentifier(identifier))
+      } else {
+        noChange()
+      }
+    } catch (e: Exception) {
+      try {
+        val bpPassportCode = UUID.fromString(event.text)
+        val identifier = Identifier(bpPassportCode.toString(), BpPassport)
+        next(model = model.searching(), SearchPatientByIdentifier(identifier))
+      } catch (e: IllegalArgumentException) {
+        crashReporter.report(e)
+        noChange()
+      }
+    }
+  }
+
+  private fun parseJsonIntoObject(text: String): PatientPrefillInfo? {
+    val adapter = moshi.adapter(PatientPrefillInfo::class.java)
+    val patientPrefillInfoDetail: PatientPrefillInfo? = adapter.fromJson(text)
+    return patientPrefillInfoDetail?.let {
+      PatientPrefillInfo(
+          it.healthIdNumber,
+          it.healthIdUserName,
+          it.fullName,
+          it.gender,
+          it.dateOfBirth,
+          it.address,
+          it.district,
+          it.state,
+      )
     }
   }
 

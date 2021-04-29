@@ -11,7 +11,7 @@ import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.databinding.SheetBpPassportBinding
+import org.simple.clinic.databinding.SheetScannedQrCodeBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class ScannedQrCodeSheet :
     BaseBottomSheet<
         ScannedQrCodeSheet.Key,
-        SheetBpPassportBinding,
+        SheetScannedQrCodeBinding,
         BpPassportModel,
         BpPassportEvent,
         BpPassportEffect>(), BpPassportUiActions {
@@ -47,8 +47,8 @@ class ScannedQrCodeSheet :
   private val addToExistingPatientButton
     get() = binding.addToExistingPatientButton
 
-  private val bpPassportNumberTextview
-    get() = binding.bpPassportNumberTextview
+  private val patientIdentifierNumberTextView
+    get() = binding.patientIdentifierNumberTextView
 
   private val bpPassportIdentifier: Identifier by lazy {
     screenKey.identifier
@@ -56,8 +56,8 @@ class ScannedQrCodeSheet :
 
   override fun defaultModel() = BpPassportModel.create(bpPassportIdentifier)
 
-  override fun bindView(inflater: LayoutInflater, container: ViewGroup?): SheetBpPassportBinding {
-    return SheetBpPassportBinding.inflate(layoutInflater, container, false)
+  override fun bindView(inflater: LayoutInflater, container: ViewGroup?): SheetScannedQrCodeBinding {
+    return SheetScannedQrCodeBinding.inflate(layoutInflater, container, false)
   }
 
   override fun events(): Observable<BpPassportEvent> = Observable
@@ -79,7 +79,7 @@ class ScannedQrCodeSheet :
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    bpPassportNumberTextview.text = getString(R.string.sheet_bp_passport_number, bpPassportIdentifier.displayValue())
+    patientIdentifierNumberTextView.text = getString(R.string.sheet_bp_passport_number, bpPassportIdentifier.displayValue())
   }
 
   override fun sendBpPassportResult(blankBpPassportResult: BlankBpPassportResult) {

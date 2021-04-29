@@ -1,3 +1,5 @@
+package plugins.git
+
 // Git hooks have to be manually copied and made executable. This task automates that.
 val gitExecutableHooks: Task = tasks.create("gitExecutableHooks") {
   doLast {

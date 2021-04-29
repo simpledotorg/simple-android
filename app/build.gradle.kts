@@ -14,7 +14,7 @@ plugins {
   id("kotlin-parcelize")
   id("io.sentry.android.gradle")
   id("com.google.firebase.firebase-perf")
-  id("install-git-hook")
+  id("plugins.git.install-hooks")
 }
 
 sentry {

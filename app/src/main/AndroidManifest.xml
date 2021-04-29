@@ -50,6 +50,18 @@
       android:name="com.google.mlkit.vision.DEPENDENCIES"
       android:value="barcode" />
 
+    <meta-data
+      android:name="io.sentry.dsn"
+      android:value="${sentryDsn}" />
+
+    <meta-data
+      android:name="io.sentry.environment"
+      android:value="${sentryEnvironment}" />
+
+    <meta-data
+      android:name="io.sentry.sample-rate"
+      android:value="0.75" />
+
     <activity
       android:name=".setup.SetupActivity"
       android:launchMode="singleTask"

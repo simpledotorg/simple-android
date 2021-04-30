@@ -703,8 +703,8 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     saveButton.setButtonState(Enabled)
   }
 
-  override fun setBangladeshNationalId(nationalId: String) {
-    alternativeIdInputEditText.setTextAndCursor(nationalId)
+  override fun setAlternateId(alternateId: String) {
+    alternativeIdInputEditText.setTextAndCursor(alternateId)
   }
 
   override fun onBackPressed(): Boolean {

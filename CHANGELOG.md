@@ -8,6 +8,7 @@
     - Firebase Performance Client to 19.1.1
     - Google Services Plugin to 4.3.5
 - Enable near realtime Firebase performance monitoring ([MORE INFO](https://firebase.google.com/docs/perf-mon/troubleshooting?authuser=0&platform=android#faq-real-time-data))
+- Refactor `BpPassportSheet` to `ScannedQrCodeSheet`
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 
 ## On Demo

@@ -1,4 +1,4 @@
-package org.simple.clinic.bp.assignbppassport
+package org.simple.clinic.scanid.scannedqrcode
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
@@ -8,11 +8,11 @@ import org.junit.Test
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.businessid.Identifier
 
-class BpPassportUpdateTest {
+class ScannedQrCodeUpdateTest {
 
-  private val updateSpec = UpdateSpec(BpPassportUpdate())
+  private val updateSpec = UpdateSpec(ScannedQrCodeUpdate())
   private val identifier = Identifier("1111111", Identifier.IdentifierType.BpPassport)
-  private val defaultModel = BpPassportModel.create(identifier)
+  private val defaultModel = ScannedQrCodeModel.create(identifier)
   private val ongoingPatientEntry = OngoingNewPatientEntry(
       identifier = identifier
   )
@@ -31,27 +31,27 @@ class BpPassportUpdateTest {
   }
 
   @Test
-  fun `when the ongoing patient entry is saved, then send bp passport blank result`() {
+  fun `when the ongoing patient entry is saved, then send scanned qr code blank result`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(NewOngoingPatientEntrySaved)
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(SendBlankBpPassportResult(RegisterNewPatient))
+                hasEffects(SendBlankScannedQrCodeResult(RegisterNewPatient))
             )
         )
   }
   
   @Test
-  fun `when add to existing patient is clicked, then send bp passport blank result`() {
+  fun `when add to existing patient is clicked, then send scanned qr code blank result`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(AddToExistingPatientClicked)
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(SendBlankBpPassportResult(AddToExistingPatient))
+                hasEffects(SendBlankScannedQrCodeResult(AddToExistingPatient))
             )
         )
   }

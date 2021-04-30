@@ -8,7 +8,7 @@
   tools:background="?attr/colorSurface">
 
   <TextView
-    android:id="@+id/bpPassportNumberTextview"
+    android:id="@+id/patientIdentifierNumberTextView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_16"
@@ -33,7 +33,7 @@
     app:layout_constraintBottom_toTopOf="@+id/addToExistingPatientButton"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/bpPassportNumberTextview" />
+    app:layout_constraintTop_toBottomOf="@+id/patientIdentifierNumberTextView" />
 
   <com.google.android.material.button.MaterialButton
     android:id="@+id/addToExistingPatientButton"

@@ -197,7 +197,7 @@ class InstantSearchEffectHandlerTest {
   }
 
   @Test
-  fun `when open bp passport sheet effect is received, then open bp passport sheet`() {
+  fun `when open scanned qr code sheet effect is received, then open scanned qr code sheet`() {
     // given
     val identifier = TestData.identifier(
         value = "08d5528b-8587-4ada-9b6a-4ff07b9b3357",
@@ -205,12 +205,12 @@ class InstantSearchEffectHandlerTest {
     )
 
     // when
-    testCase.dispatch(OpenBpPassportSheet(identifier))
+    testCase.dispatch(OpenScannedQrCodeSheet(identifier))
 
     // then
     testCase.assertNoOutgoingEvents()
 
-    verify(uiActions).openBpPassportSheet(identifier)
+    verify(uiActions).openScannedQrCodeSheet(identifier)
     verifyNoMoreInteractions(uiActions)
   }
 

@@ -93,7 +93,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
   }
 
   private fun prefillFormFields(prefillFormFieldsEffect: PrefillFormEffect) {
-    val (patient, address, phoneNumber, bangladeshNationalId) = prefillFormFieldsEffect
+    val (patient, address, phoneNumber, alternateId) = prefillFormFieldsEffect
 
     with(ui) {
       setPatientName(patient.fullName)
@@ -111,8 +111,8 @@ class EditPatientEffectHandler @AssistedInject constructor(
         setPatientPhoneNumber(phoneNumber.number)
       }
 
-      if (bangladeshNationalId != null) {
-        setBangladeshNationalId(bangladeshNationalId.identifier.value)
+      if (alternateId != null) {
+        setAlternateId(alternateId.identifier)
       }
     }
 

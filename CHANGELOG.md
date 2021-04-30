@@ -10,6 +10,7 @@
 - Enable near realtime Firebase performance monitoring ([MORE INFO](https://firebase.google.com/docs/perf-mon/troubleshooting?authuser=0&platform=android#faq-real-time-data))
 - Refactor `BpPassportSheet` to `ScannedQrCodeSheet`
 - Bump Sentry to v4.3.0
+- Show Indian national health ID in `EditPatientScreen`
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 
 ## On Demo

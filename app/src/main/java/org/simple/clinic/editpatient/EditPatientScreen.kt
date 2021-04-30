@@ -23,6 +23,7 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.PatientEditAlternateIdViewBinding
 import org.simple.clinic.databinding.PatientEditBpPassportViewBinding
 import org.simple.clinic.databinding.ScreenEditPatientBinding
 import org.simple.clinic.di.injector
@@ -66,6 +67,7 @@ import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.exhaustive
@@ -209,6 +211,12 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private val bpPassportsLabel
     get() = binding!!.bpPassportsLabel
+
+  private val alternateIdLabel
+    get() = binding!!.alternateIdLabel
+
+  private val alternateIdContainer
+    get() = binding!!.alternateIdContainer
 
   private val formScrollView
     get() = binding!!.formScrollView
@@ -703,8 +711,33 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     saveButton.setButtonState(Enabled)
   }
 
-  override fun setBangladeshNationalId(nationalId: String) {
-    alternativeIdInputEditText.setTextAndCursor(nationalId)
+  override fun setAlternateId(alternateId: Identifier) {
+    when (alternateId.type) {
+      Identifier.IdentifierType.BangladeshNationalId -> setAlternateIdTextField(alternateId)
+      Identifier.IdentifierType.EthiopiaMedicalRecordNumber -> setAlternateIdTextField(alternateId)
+      Identifier.IdentifierType.IndiaNationalHealthId -> setAlternateIdContainer(alternateId)
+      else -> throw IllegalArgumentException("Unknown alternate id: $alternateId")
+    }
+  }
+
+  private fun setAlternateIdTextField(alternateId: Identifier) {
+    alternativeIdInputEditText.setTextAndCursor(alternateId.displayValue())
+  }
+
+  private fun setAlternateIdContainer(alternateId: Identifier) {
+    alternateIdLabel.visibility = View.VISIBLE
+    alternateIdLabel.text = alternateId.displayType(resources)
+
+    alternateIdContainer.visibility = View.VISIBLE
+
+    inflateAlternateIdView(alternateId.displayValue())
+  }
+
+  private fun inflateAlternateIdView(identifier: String) {
+    val layoutInflater = LayoutInflater.from(context)
+    val alternateIdView = PatientEditAlternateIdViewBinding.inflate(layoutInflater, this, false)
+    alternateIdView.alternateIdentifier.text = identifier
+    alternateIdContainer.addView(alternateIdView.root)
   }
 
   override fun onBackPressed(): Boolean {

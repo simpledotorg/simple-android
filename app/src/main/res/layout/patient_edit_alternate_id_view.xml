@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/alternateIdentifier"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginTop="@dimen/spacing_8"
+  android:drawablePadding="@dimen/spacing_8"
+  android:gravity="center_vertical"
+  android:textAppearance="?attr/textAppearanceBody1Numeric"
+  android:textColor="?attr/colorOnSurface"
+  app:drawableStartCompat="@drawable/patient_id_card"
+  app:drawableTint="@color/color_on_surface_67"
+  tools:targetApi="m"
+  tools:text="12345678" />

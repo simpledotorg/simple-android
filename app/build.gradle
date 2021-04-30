@@ -80,6 +80,11 @@ android {
     proguardFiles getDefaultProguardFile(defaultProguardFile), 'proguard-rules.pro'
 
     vectorDrawables.useSupportLibrary = true
+
+    manifestPlaceholders = [
+        sentryDsn        : sentryDsn,
+        sentryEnvironment: sentryEnvironment
+    ]
   }
 
   buildTypes {

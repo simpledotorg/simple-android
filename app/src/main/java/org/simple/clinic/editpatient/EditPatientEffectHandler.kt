@@ -112,7 +112,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
       }
 
       if (alternateId != null) {
-        setAlternateId(alternateId.identifier.value)
+        setAlternateId(alternateId.identifier)
       }
     }
 

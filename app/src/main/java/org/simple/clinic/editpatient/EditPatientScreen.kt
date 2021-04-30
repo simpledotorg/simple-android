@@ -66,6 +66,7 @@ import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.exhaustive
@@ -703,8 +704,8 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     saveButton.setButtonState(Enabled)
   }
 
-  override fun setAlternateId(alternateId: String) {
-    alternativeIdInputEditText.setTextAndCursor(alternateId)
+  override fun setAlternateId(alternateId: Identifier) {
+    alternativeIdInputEditText.setTextAndCursor(alternateId.displayValue())
   }
 
   override fun onBackPressed(): Boolean {

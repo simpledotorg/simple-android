@@ -14,6 +14,7 @@
 - Return null for `Cursor.string` extension if the column index is less than or equal to -1
 - Add `IndiaNationalHealthId` as an identifier in `IdentifierType`
 - Add sql query for instant search by numeric criteria
+- Bump Sentry to v4.3.0
 
 ### Changes
 - Rename `Scan BP passport` button to `Scan QR code`

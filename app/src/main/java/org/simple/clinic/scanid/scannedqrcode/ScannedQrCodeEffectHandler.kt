@@ -1,4 +1,4 @@
-package org.simple.clinic.bp.assignbppassport
+package org.simple.clinic.scanid.scannedqrcode
 
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
@@ -8,26 +8,26 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
-class BpPassportEffectHandler @AssistedInject constructor(
+class ScannedQrCodeEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
-    @Assisted private val uiActions: BpPassportUiActions
+    @Assisted private val uiActions: ScannedQrCodeUiActions
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: BpPassportUiActions): BpPassportEffectHandler
+    fun create(uiActions: ScannedQrCodeUiActions): ScannedQrCodeEffectHandler
   }
 
-  fun build(): ObservableTransformer<BpPassportEffect, BpPassportEvent> {
+  fun build(): ObservableTransformer<ScannedQrCodeEffect, ScannedQrCodeEvent> {
     return RxMobius
-        .subtypeEffectHandler<BpPassportEffect, BpPassportEvent>()
+        .subtypeEffectHandler<ScannedQrCodeEffect, ScannedQrCodeEvent>()
         .addTransformer(SaveNewOngoingPatientEntry::class.java, saveNewPatientEntry())
-        .addConsumer(SendBlankBpPassportResult::class.java, { uiActions.sendBpPassportResult(it.bpPassportResult) }, schedulersProvider.ui())
+        .addConsumer(SendBlankScannedQrCodeResult::class.java, { uiActions.sendScannedQrCodeResult(it.scannedQRCodeResult) }, schedulersProvider.ui())
         .build()
   }
 
-  private fun saveNewPatientEntry(): ObservableTransformer<SaveNewOngoingPatientEntry, BpPassportEvent> {
+  private fun saveNewPatientEntry(): ObservableTransformer<SaveNewOngoingPatientEntry, ScannedQrCodeEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())

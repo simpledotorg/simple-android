@@ -1,4 +1,4 @@
-package org.simple.clinic.bp.assignbppassport
+package org.simple.clinic.scanid.scannedqrcode
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -12,11 +12,11 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 
-class BpPassportEffectHandlerTest {
+class ScannedQrCodeEffectHandlerTest {
 
   private val patientRepository = mock<PatientRepository>()
-  private val uiActions = mock<BpPassportUiActions>()
-  private val effectHandler = BpPassportEffectHandler(
+  private val uiActions = mock<ScannedQrCodeUiActions>()
+  private val effectHandler = ScannedQrCodeEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
       uiActions = uiActions
@@ -45,14 +45,14 @@ class BpPassportEffectHandlerTest {
   }
 
   @Test
-  fun `when send blank bp passport result effect is received, then send add to existing patient`() {
+  fun `when send scanned qr code passport result effect is received, then send add to existing patient`() {
     // when
-    effectHandlerTestCase.dispatch(SendBlankBpPassportResult(AddToExistingPatient))
+    effectHandlerTestCase.dispatch(SendBlankScannedQrCodeResult(AddToExistingPatient))
 
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
 
-    verify(uiActions).sendBpPassportResult(AddToExistingPatient)
+    verify(uiActions).sendScannedQrCodeResult(AddToExistingPatient)
     verifyNoMoreInteractions(uiActions)
   }
 }

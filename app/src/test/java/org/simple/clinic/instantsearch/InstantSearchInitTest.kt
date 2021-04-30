@@ -32,12 +32,12 @@ class InstantSearchInitTest {
   }
 
   @Test
-  fun `when screen is opened from blank bp passport scan, then load current facility and open bp passport sheet`() {
+  fun `when screen is opened from blank qr code scan, then load current facility and open scanned qr code sheet`() {
     initSpec
         .whenInit(defaultModel)
         .then(assertThatFirst(
-            hasModel(defaultModel.bpPassportSheetOpened()),
-            hasEffects(LoadCurrentFacility, OpenBpPassportSheet(identifier))
+            hasModel(defaultModel.scannedQrCodeSheetOpened()),
+            hasEffects(LoadCurrentFacility, OpenScannedQrCodeSheet(identifier))
         ))
   }
 
@@ -49,7 +49,7 @@ class InstantSearchInitTest {
         name = "PHC Obvious"
     )
     val facilityLoadedModel = defaultModel
-        .bpPassportSheetOpened()
+        .scannedQrCodeSheetOpened()
         .facilityLoaded(facility)
         .searchQueryChanged("Pa")
 
@@ -62,14 +62,14 @@ class InstantSearchInitTest {
   }
 
   @Test
-  fun `when screen is restored after receiving the BP Passport sheet result, then do not open bp passport sheet`() {
-    val model = defaultModel.bpPassportSheetOpened()
+  fun `when screen is restored after receiving the scanned qr code sheet result, then do not open scanned qr code sheet`() {
+    val model = defaultModel.scannedQrCodeSheetOpened()
 
     initSpec
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
-            hasEffects(doesNotContain(OpenBpPassportSheet(identifier)))
+            hasEffects(doesNotContain(OpenScannedQrCodeSheet(identifier)))
         ))
   }
 }

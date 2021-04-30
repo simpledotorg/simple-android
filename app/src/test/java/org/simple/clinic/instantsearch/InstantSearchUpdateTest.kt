@@ -7,8 +7,8 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.bp.assignbppassport.AddToExistingPatient
-import org.simple.clinic.bp.assignbppassport.RegisterNewPatient
+import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
+import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier
@@ -191,7 +191,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when the search result is clicked from the scanning bp passport flow, open the link id with patient screen`() {
+  fun `when the search result is clicked from the scanning qr code flow, open the link id with patient screen`() {
     val patientUuid = UUID.fromString("f607be71-630d-4adb-8d3a-76fdf347fe8a")
     val identifier = TestData.identifier("123456", BpPassport)
     val facility = TestData.facility(
@@ -266,7 +266,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when register new patient is selected in blank bp passport sheet, then register new patient`() {
+  fun `when register new patient is selected in blank scanned qr code sheet, then register new patient`() {
     val ongoingPatientEntry = OngoingNewPatientEntry.fromFullName("")
         .withIdentifier(identifier)
 
@@ -278,7 +278,7 @@ class InstantSearchUpdateTest {
 
     updateSpec
         .given(facilityLoadedModel)
-        .whenEvent(BlankBpPassportResultReceived(RegisterNewPatient))
+        .whenEvent(BlankScannedQrCodeResultReceived(RegisterNewPatient))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SaveNewOngoingPatientEntry(ongoingPatientEntry))
@@ -286,7 +286,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when add to existing patient is selected in blank bp passport sheet, then show keyboard`() {
+  fun `when add to existing patient is selected in blank scanned qr code sheet, then show keyboard`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
     )
@@ -295,7 +295,7 @@ class InstantSearchUpdateTest {
 
     updateSpec
         .given(facilityLoadedModel)
-        .whenEvent(BlankBpPassportResultReceived(AddToExistingPatient))
+        .whenEvent(BlankScannedQrCodeResultReceived(AddToExistingPatient))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowKeyboard)
@@ -303,7 +303,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when bp passport is scanned and patient is found, then open patient summary`() {
+  fun `when qr code is scanned and patient is found, then open patient summary`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
     )
@@ -314,7 +314,7 @@ class InstantSearchUpdateTest {
 
     updateSpec
         .given(facilityLoadedModel)
-        .whenEvent(BpPassportScanned.ByPatientFound(patientId))
+        .whenEvent(QrCodeScanned.ByPatientFound(patientId))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenPatientSummary(patientId))
@@ -322,7 +322,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when bp passport is scanned and patient is not found, then open bp passport sheet`() {
+  fun `when qr code is scanned and patient is not found, then open scanned qr code sheet`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
     )
@@ -336,14 +336,14 @@ class InstantSearchUpdateTest {
 
     val expectedModel = facilityLoadedModel
         .additionalIdentifierUpdated(additionalIdentifier = identifier)
-        .bpPassportSheetOpened()
+        .scannedQrCodeSheetOpened()
 
     updateSpec
         .given(facilityLoadedModel)
-        .whenEvent(BpPassportScanned.ByPatientNotFound(identifier))
+        .whenEvent(QrCodeScanned.ByPatientNotFound(identifier))
         .then(assertThatNext(
             hasModel(expectedModel),
-            hasEffects(OpenBpPassportSheet(identifier))
+            hasEffects(OpenScannedQrCodeSheet(identifier))
         ))
   }
 
@@ -359,7 +359,7 @@ class InstantSearchUpdateTest {
 
     updateSpec
         .given(facilityLoadedModel)
-        .whenEvent(BpPassportScanned.ByShortCode(shortCode))
+        .whenEvent(QrCodeScanned.ByShortCode(shortCode))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenShortCodeSearchScreen(shortCode))

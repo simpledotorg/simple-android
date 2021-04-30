@@ -34,7 +34,7 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addTransformer(ValidateSearchQuery::class.java, validateSearchQuery())
       .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientId) }, schedulers.ui())
       .addConsumer(OpenLinkIdWithPatientScreen::class.java, { uiActions.openLinkIdWithPatientScreen(it.patientId, it.identifier) }, schedulers.ui())
-      .addConsumer(OpenBpPassportSheet::class.java, { uiActions.openBpPassportSheet(it.identifier) }, schedulers.ui())
+      .addConsumer(OpenScannedQrCodeSheet::class.java, { uiActions.openScannedQrCodeSheet(it.identifier) }, schedulers.ui())
       .addConsumer(ShowNoPatientsInFacility::class.java, { uiActions.showNoPatientsInFacility(it.facility) }, schedulers.ui())
       .addAction(ShowNoSearchResults::class.java, { uiActions.showNoSearchResults() }, schedulers.ui())
       .addAction(HideNoPatientsInFacility::class.java, uiActions::hideNoPatientsInFacility, schedulers.ui())

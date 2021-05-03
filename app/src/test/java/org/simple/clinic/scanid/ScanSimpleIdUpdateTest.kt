@@ -45,7 +45,7 @@ class ScanSimpleIdUpdateTest {
 
     spec
         .given(model)
-        .whenEvent(ShortCodeValidated(ShortCodeValidationResult.Success))
+        .whenEvent(ShortCodeValidated(EnteredCodeValidationResult.Success))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SendScannedIdentifierResult(expectedScanResult))

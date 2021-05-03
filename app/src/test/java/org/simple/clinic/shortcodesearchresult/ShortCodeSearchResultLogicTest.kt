@@ -41,7 +41,7 @@ class ShortCodeSearchResultLogicTest {
 
   @Before
   fun setUp() {
-    val effectHandler = ShortCodeSearchResultEffectHandler(
+    val effectHandler = IdentifierSearchResultEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         uiActions = uiActions,
         patientRepository = patientRepository,

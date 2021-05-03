@@ -54,7 +54,7 @@ class IdentifierSearchResultScreen :
   lateinit var router: Router
 
   @Inject
-  lateinit var effectHandlerFactory: ShortCodeSearchResultEffectHandler.Factory
+  lateinit var effectHandlerFactory: IdentifierSearchResultEffectHandler.Factory
 
   @Inject
   lateinit var features: Features

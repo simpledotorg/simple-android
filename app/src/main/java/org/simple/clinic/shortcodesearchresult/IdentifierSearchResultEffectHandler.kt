@@ -13,7 +13,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.searchresultsview.PartitionSearchResultsByVisitedFacility
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
-class ShortCodeSearchResultEffectHandler @AssistedInject constructor(
+class IdentifierSearchResultEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val patientRepository: PatientRepository,
     private val currentFacility: Lazy<Facility>,
@@ -23,7 +23,7 @@ class ShortCodeSearchResultEffectHandler @AssistedInject constructor(
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: UiActions): ShortCodeSearchResultEffectHandler
+    fun create(uiActions: UiActions): IdentifierSearchResultEffectHandler
   }
 
   fun build(): ObservableTransformer<IdentifierSearchResultEffect, IdentifierSearchResultEvent> {

@@ -13,6 +13,7 @@
 - Show Indian national health ID in `EditPatientScreen`
 - Migrate Gradle build scripts to use Kotlin DSL
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
+- [In Progress: 03 May 2021] Show patients with national health id when searching with from scan screen
 
 ## On Demo
 ### Features

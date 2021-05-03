@@ -53,7 +53,7 @@ class ShortCodeSearchResultLogicTest {
     testFixture = MobiusTestFixture(
         events = uiEventsSubject.ofType(),
         defaultModel = fetchingPatientsState,
-        init = ShortCodeSearchResultInit(),
+        init = IdentifierSearchResultInit(),
         update = ShortCodeSearchResultUpdate(),
         effectHandler = effectHandler.build(),
         modelUpdateListener = { model ->

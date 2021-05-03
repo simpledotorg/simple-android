@@ -111,7 +111,7 @@ class IdentifierSearchResultScreen :
 
   override fun createUpdate() = ShortCodeSearchResultUpdate()
 
-  override fun createInit() = ShortCodeSearchResultInit()
+  override fun createInit() = IdentifierSearchResultInit()
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 

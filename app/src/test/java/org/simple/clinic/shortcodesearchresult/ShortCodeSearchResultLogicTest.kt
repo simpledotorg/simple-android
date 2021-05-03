@@ -37,7 +37,7 @@ class ShortCodeSearchResultLogicTest {
   private val statesFromMobiusLoop = PublishSubject.create<IdentifierSearchResultState>()
 
   lateinit var testObserver: TestObserver<IdentifierSearchResultState>
-  private lateinit var testFixture: MobiusTestFixture<IdentifierSearchResultState, IdentifierSearchResultEvent, ShortCodeSearchResultEffect>
+  private lateinit var testFixture: MobiusTestFixture<IdentifierSearchResultState, IdentifierSearchResultEvent, IdentifierSearchResultEffect>
 
   @Before
   fun setUp() {

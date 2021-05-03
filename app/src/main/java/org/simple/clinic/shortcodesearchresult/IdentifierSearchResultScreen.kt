@@ -43,7 +43,7 @@ class IdentifierSearchResultScreen :
         ScreenIdentifierSearchResultBinding,
         IdentifierSearchResultState,
         IdentifierSearchResultEvent,
-        ShortCodeSearchResultEffect>(),
+        IdentifierSearchResultEffect>(),
     ShortCodeSearchResultUi,
     UiActions {
 

@@ -5,12 +5,12 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
-class ShortCodeSearchResultUpdate : Update<IdentifierSearchResultState, IdentifierSearchResultEvent, ShortCodeSearchResultEffect> {
+class ShortCodeSearchResultUpdate : Update<IdentifierSearchResultState, IdentifierSearchResultEvent, IdentifierSearchResultEffect> {
 
   override fun update(
       model: IdentifierSearchResultState,
       event: IdentifierSearchResultEvent
-  ): Next<IdentifierSearchResultState, ShortCodeSearchResultEffect> {
+  ): Next<IdentifierSearchResultState, IdentifierSearchResultEffect> {
     return when (event) {
       is ViewPatient -> dispatch(OpenPatientSummary(event.patientUuid))
       SearchPatient -> dispatch(OpenPatientSearch)
@@ -21,7 +21,7 @@ class ShortCodeSearchResultUpdate : Update<IdentifierSearchResultState, Identifi
   private fun displaySearchResults(
       event: ShortCodeSearchCompleted,
       model: IdentifierSearchResultState
-  ): Next<IdentifierSearchResultState, ShortCodeSearchResultEffect> {
+  ): Next<IdentifierSearchResultState, IdentifierSearchResultEffect> {
     val results = event.results
 
     val updatedModel = if (results.hasNoResults)

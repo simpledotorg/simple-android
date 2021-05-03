@@ -87,7 +87,7 @@ class ScanSimpleIdScreenLogicTest {
 
     //when
     setupController()
-    uiEvents.onNext(ShortCodeSearched(shortCodeInput))
+    uiEvents.onNext(EnteredCodeSearched(shortCodeInput))
 
     //then
     verify(uiActions).showShortCodeValidationError(NotEqualToRequiredLength)
@@ -102,7 +102,7 @@ class ScanSimpleIdScreenLogicTest {
 
     //when
     setupController()
-    uiEvents.onNext(ShortCodeSearched(invalidShortCodeInput))
+    uiEvents.onNext(EnteredCodeSearched(invalidShortCodeInput))
     uiEvents.onNext(ShortCodeChanged)
 
     //then
@@ -118,7 +118,7 @@ class ScanSimpleIdScreenLogicTest {
 
     //when
     setupController()
-    uiEvents.onNext(ShortCodeSearched(emptyShortCodeInput))
+    uiEvents.onNext(EnteredCodeSearched(emptyShortCodeInput))
 
     //then
     verify(uiActions).showShortCodeValidationError(Empty)

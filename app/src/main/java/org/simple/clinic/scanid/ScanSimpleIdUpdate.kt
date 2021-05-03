@@ -26,7 +26,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       HideKeyboard -> dispatch(ShowQrCodeScannerView)
       ShortCodeChanged -> dispatch(HideShortCodeValidationError)
       is ShortCodeValidated -> shortCodeValidated(model, event)
-      is ShortCodeSearched -> next(model.shortCodeChanged(event.enteredCode), ValidateShortCode(event.enteredCode))
+      is EnteredCodeSearched -> next(model.shortCodeChanged(event.enteredCode), ValidateShortCode(event.enteredCode))
       is ScanSimpleIdScreenQrCodeScanned -> simpleIdQrScanned(model, event)
       is PatientSearchByIdentifierCompleted -> patientSearchByIdentifierCompleted(model, event)
     }

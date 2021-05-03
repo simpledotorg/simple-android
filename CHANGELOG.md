@@ -11,6 +11,7 @@
 - Refactor `BpPassportSheet` to `ScannedQrCodeSheet`
 - Bump Sentry to v4.3.0
 - Show Indian national health ID in `EditPatientScreen`
+- Migrate Gradle build scripts to use Kotlin DSL
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 
 ## On Demo

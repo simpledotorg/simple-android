@@ -48,7 +48,7 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .map { it.enteredCode.validate() }
-          .map(::ShortCodeValidated)
+          .map(::EnteredCodeValidated)
     }
   }
 }

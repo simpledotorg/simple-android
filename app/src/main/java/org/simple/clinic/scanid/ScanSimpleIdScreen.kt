@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
-import android.text.InputFilter.LengthFilter
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -36,16 +35,15 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport.SHORT_CODE_LENGTH
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
+import org.simple.clinic.scanid.qrcodeanalyzer.MLKitQrCodeAnalyzer
+import org.simple.clinic.scanid.qrcodeanalyzer.ZxingQrCodeAnalyzer
 import org.simple.clinic.scanid.ui.ShortCodeSpanWatcher
+import org.simple.clinic.util.BitmapUtils
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
-import org.simple.clinic.util.BitmapUtils
-import org.simple.clinic.scanid.qrcodeanalyzer.MLKitQrCodeAnalyzer
-import org.simple.clinic.scanid.qrcodeanalyzer.ZxingQrCodeAnalyzer
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import kotlin.math.abs

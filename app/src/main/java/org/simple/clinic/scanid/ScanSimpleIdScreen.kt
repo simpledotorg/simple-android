@@ -238,7 +238,6 @@ class ScanSimpleIdScreen : BaseScreen<
 
   private fun setupShortCodeTextField() {
     with(enteredCodeText) {
-      filters = arrayOf(LengthFilter(SHORT_CODE_LENGTH))
       addTextChangedListener(ShortCodeSpanWatcher())
     }
   }

@@ -56,4 +56,45 @@ class ShortCodeInputTest {
     assertThat(result)
         .isEqualTo(Empty)
   }
+
+  @Test
+  fun `when entered code length is equal to 14 then validation should succeed`() {
+    //given
+    val enteredCodeInput = ShortCodeInput(shortCodeText = "34567899876543")
+
+    //when
+    val result = enteredCodeInput.validate()
+
+    //then
+    assertThat(result)
+        .isEqualTo(Success)
+  }
+
+  @Parameters(value = [
+    "3",
+    "34",
+    "345",
+    "3456",
+    "34567",
+    "345678",
+    "34567890",
+    "345678900",
+    "3456789001",
+    "34567890012",
+    "345678900123",
+    "3456789001234",
+    "345678900123435",
+  ])
+  @Test
+  fun `when entered code length is more than 14 then validation should fail`(input: String) {
+    //given
+    val shortCodeInput = ShortCodeInput(shortCodeText = input)
+
+    //when
+    val result = shortCodeInput.validate()
+
+    //then
+    assertThat(result)
+        .isEqualTo(NotEqualToRequiredLength)
+  }
 }

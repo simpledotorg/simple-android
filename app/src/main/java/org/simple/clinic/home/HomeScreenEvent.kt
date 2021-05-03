@@ -24,7 +24,7 @@ sealed class BusinessIdScanned : HomeScreenEvent() {
   companion object {
     fun fromScanResult(scanResult: ScanResult): BusinessIdScanned {
       return when (scanResult) {
-        is SearchByEnteredCode -> ByShortCode(scanResult.shortCode)
+        is SearchByEnteredCode -> ByShortCode(scanResult.enteredCode)
         is PatientFound -> ByPatientFound(scanResult.patientId)
         is PatientNotFound -> ByPatientNotFound(scanResult.identifier)
       }

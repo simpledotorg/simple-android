@@ -50,7 +50,7 @@ sealed class QrCodeScanned : InstantSearchEvent() {
 
     fun fromResult(scanResult: ScanResult): QrCodeScanned {
       return when (scanResult) {
-        is SearchByEnteredCode -> ByShortCode(scanResult.shortCode)
+        is SearchByEnteredCode -> ByShortCode(scanResult.enteredCode)
         is PatientFound -> ByPatientFound(scanResult.patientId)
         is PatientNotFound -> ByPatientNotFound(scanResult.identifier)
       }

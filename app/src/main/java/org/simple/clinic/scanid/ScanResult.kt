@@ -8,7 +8,7 @@ import java.util.UUID
 sealed class ScanResult : Parcelable
 
 @Parcelize
-data class SearchByEnteredCode(val shortCode: String) : ScanResult()
+data class SearchByEnteredCode(val enteredCode: String) : ScanResult()
 
 @Parcelize
 data class PatientFound(val patientId: UUID) : ScanResult()

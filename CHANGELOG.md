@@ -17,6 +17,9 @@
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - Add a common color resource for all search string query highlights
 
+### Features
+- - [In Progress: 06 May 2021] Add NHID support in `ScanSimpleIdScreen`
+
 ### Fixes
 - Fix highlight color for instant search using phone number  
 

@@ -275,7 +275,7 @@ class ScanSimpleIdScreen : BaseScreen<
     router.popWithResult(Succeeded(scanResult))
   }
 
-  override fun showShortCodeValidationError(failure: EnteredCodeValidationResult) {
+  override fun showEnteredCodeValidationError(failure: EnteredCodeValidationResult) {
     shortCodeErrorText.visibility = View.VISIBLE
     val validationErrorMessage = if (failure == Empty) {
       R.string.scansimpleid_shortcode_error_empty

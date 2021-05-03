@@ -90,7 +90,7 @@ class ScanSimpleIdScreenLogicTest {
     uiEvents.onNext(EnteredCodeSearched(shortCodeInput))
 
     //then
-    verify(uiActions).showShortCodeValidationError(NotEqualToRequiredLength)
+    verify(uiActions).showEnteredCodeValidationError(NotEqualToRequiredLength)
     verifyNoMoreInteractions(uiActions)
   }
 
@@ -106,7 +106,7 @@ class ScanSimpleIdScreenLogicTest {
     uiEvents.onNext(EnteredCodeChanged)
 
     //then
-    verify(uiActions).showShortCodeValidationError(NotEqualToRequiredLength)
+    verify(uiActions).showEnteredCodeValidationError(NotEqualToRequiredLength)
     verify(uiActions).hideEnteredCodeValidationError()
     verifyNoMoreInteractions(uiActions)
   }
@@ -121,7 +121,7 @@ class ScanSimpleIdScreenLogicTest {
     uiEvents.onNext(EnteredCodeSearched(emptyShortCodeInput))
 
     //then
-    verify(uiActions).showShortCodeValidationError(Empty)
+    verify(uiActions).showEnteredCodeValidationError(Empty)
     verifyNoMoreInteractions(uiActions)
   }
 

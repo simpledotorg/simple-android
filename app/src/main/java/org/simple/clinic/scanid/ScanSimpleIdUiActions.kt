@@ -4,6 +4,6 @@ interface ScanSimpleIdUiActions {
   fun showQrCodeScannerView()
   fun hideQrCodeScannerView()
   fun hideEnteredCodeValidationError()
-  fun showShortCodeValidationError(failure: EnteredCodeValidationResult)
+  fun showEnteredCodeValidationError(failure: EnteredCodeValidationResult)
   fun sendScannedId(scanResult: ScanResult)
 }

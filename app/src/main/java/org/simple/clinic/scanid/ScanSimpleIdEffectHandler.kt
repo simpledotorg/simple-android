@@ -27,7 +27,7 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       .addAction(HideQrCodeScannerView::class.java, uiActions::hideQrCodeScannerView, schedulersProvider.ui())
       .addAction(HideEnteredCodeValidationError::class.java, uiActions::hideShortCodeValidationError, schedulersProvider.ui())
       .addConsumer(ShowEnteredCodeValidationError::class.java, { uiActions.showShortCodeValidationError(it.failure) }, schedulersProvider.ui())
-      .addTransformer(ValidateShortCode::class.java, validateShortCode())
+      .addTransformer(ValidateEnteredCode::class.java, validateShortCode())
       .addConsumer(SendScannedIdentifierResult::class.java, { uiActions.sendScannedId(it.scannedId) }, schedulersProvider.ui())
       .addTransformer(SearchPatientByIdentifier::class.java, searchPatientByIdentifier())
       .addTransformer(ParseScannedJson::class.java, parseJsonIntoObject())
@@ -59,7 +59,7 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun validateShortCode(): ObservableTransformer<ValidateShortCode, ScanSimpleIdEvent> {
+  private fun validateShortCode(): ObservableTransformer<ValidateEnteredCode, ScanSimpleIdEvent> {
     return ObservableTransformer { effects ->
       effects
           .map { it.enteredCode.validate() }

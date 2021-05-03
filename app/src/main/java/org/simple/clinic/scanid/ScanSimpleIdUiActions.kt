@@ -7,7 +7,7 @@ interface ScanSimpleIdUiActions {
   fun showQrCodeScannerView()
   fun hideQrCodeScannerView()
   fun hideEnteredCodeValidationError()
-  fun showShortCodeValidationError(failure: EnteredCodeValidationResult)
+  fun showEnteredCodeValidationError(failure: EnteredCodeValidationResult)
   fun openPatientSummary(patientId: UUID)
   fun openShortCodeSearch(shortCode: String)
   fun openPatientSearch(additionalIdentifier: Identifier?, initialSearchQuery: String?)

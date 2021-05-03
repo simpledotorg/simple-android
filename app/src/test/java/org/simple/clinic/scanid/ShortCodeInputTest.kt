@@ -56,4 +56,18 @@ class ShortCodeInputTest {
     assertThat(result)
         .isEqualTo(Empty)
   }
+
+  @Test
+  fun `when entered code length is equal to 14 then validation should succeed`() {
+    //given
+    val enteredCodeInput = ShortCodeInput(shortCodeText = "34567899876543")
+
+    //when
+    val result = enteredCodeInput.validate()
+
+    //then
+    assertThat(result)
+        .isEqualTo(Success)
+  }
+
 }

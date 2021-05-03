@@ -39,7 +39,7 @@ import javax.inject.Inject
 
 class IdentifierSearchResultScreen :
     BaseScreen<
-        ShortCodeSearchResultScreenKey,
+        IdentifierSearchResultScreenKey,
         ScreenShortcodeSearchResultBinding,
         ShortCodeSearchResultState,
         ShortCodeSearchResultEvent,

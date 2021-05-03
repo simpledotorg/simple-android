@@ -10,7 +10,7 @@ import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.NotEqualToRequ
 import org.simple.clinic.scanid.ShortCodeValidationResult.Success
 
 @RunWith(JUnitParamsRunner::class)
-class ShortCodeInputTest {
+class EnteredCodeInputTest {
 
   @Parameters(value = [
     "3",
@@ -24,7 +24,7 @@ class ShortCodeInputTest {
   @Test
   fun `when short code length is not equal to 7 then validation should fail`(input: String) {
     //given
-    val shortCodeInput = ShortCodeInput(shortCodeText = input)
+    val shortCodeInput = EnteredCodeInput(shortCodeText = input)
 
     //when
     val result = shortCodeInput.validate()
@@ -37,7 +37,7 @@ class ShortCodeInputTest {
   @Test
   fun `when short code length is equal to 7 then validation should succeed`() {
     //given
-    val shortCodeInput = ShortCodeInput(shortCodeText = "3456789")
+    val shortCodeInput = EnteredCodeInput(shortCodeText = "3456789")
 
     //when
     val result = shortCodeInput.validate()
@@ -50,7 +50,7 @@ class ShortCodeInputTest {
   @Test
   fun `when short code is empty, then validation should fail with empty`() {
     // when
-    val result = ShortCodeInput("").validate()
+    val result = EnteredCodeInput("").validate()
 
     // then
     assertThat(result)

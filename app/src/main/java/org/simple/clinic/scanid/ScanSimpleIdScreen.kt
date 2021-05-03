@@ -256,7 +256,7 @@ class ScanSimpleIdScreen : BaseScreen<
   private fun doneClicks(): Observable<UiEvent> {
     return shortCodeText
         .editorActionEvents { it.actionId == EditorInfo.IME_ACTION_SEARCH }
-        .map { ShortCodeSearched(ShortCodeInput(shortCodeText.text.toString())) }
+        .map { ShortCodeSearched(EnteredCodeInput(shortCodeText.text.toString())) }
   }
 
   private fun keyboardEvents(): Observable<UiEvent> {

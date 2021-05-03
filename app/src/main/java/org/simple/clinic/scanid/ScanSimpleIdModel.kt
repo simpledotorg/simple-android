@@ -7,19 +7,19 @@ import org.simple.clinic.scanid.ScanSearchState.Searching
 
 @Parcelize
 data class ScanSimpleIdModel(
-    val shortCode: ShortCodeInput?,
+    val enteredCode: EnteredCodeInput?,
     val scanSearchState: ScanSearchState
 ) : Parcelable {
 
   companion object {
-    fun create() = ScanSimpleIdModel(shortCode = null, scanSearchState = NotSearching)
+    fun create() = ScanSimpleIdModel(enteredCode = null, scanSearchState = NotSearching)
   }
 
   val isSearching: Boolean
     get() = scanSearchState == Searching
 
-  fun shortCodeChanged(shortCode: ShortCodeInput): ScanSimpleIdModel {
-    return copy(shortCode = shortCode)
+  fun shortCodeChanged(enteredCode: EnteredCodeInput): ScanSimpleIdModel {
+    return copy(enteredCode = enteredCode)
   }
 
   fun searching(): ScanSimpleIdModel {

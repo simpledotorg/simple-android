@@ -47,7 +47,7 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
   private fun validateShortCode(): ObservableTransformer<ValidateShortCode, ScanSimpleIdEvent> {
     return ObservableTransformer { effects ->
       effects
-          .map { it.shortCode.validate() }
+          .map { it.enteredCode.validate() }
           .map(::ShortCodeValidated)
     }
   }

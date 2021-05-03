@@ -41,7 +41,7 @@ class ScanSimpleIdUpdateTest {
   @Test
   fun `when the entered short code is valid, send the entered short code to the parent screen`() {
     val shortCode = "1234567"
-    val model = defaultModel.shortCodeChanged(EnteredCodeInput(shortCode))
+    val model = defaultModel.enteredCodeChanged(EnteredCodeInput(shortCode))
 
     val expectedScanResult = SearchByEnteredCode(shortCode)
 

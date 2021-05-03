@@ -25,7 +25,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       ShowKeyboard -> dispatch(HideQrCodeScannerView)
       HideKeyboard -> dispatch(ShowQrCodeScannerView)
       EnteredCodeChanged -> dispatch(HideEnteredCodeValidationError)
-      is EnteredCodeValidated -> shortCodeValidated(model, event)
+      is EnteredCodeValidated -> enteredCodeValidated(model, event)
       is EnteredCodeSearched -> next(model.enteredCodeChanged(event.enteredCode), ValidateEnteredCode(event.enteredCode))
       is ScanSimpleIdScreenQrCodeScanned -> simpleIdQrScanned(model, event)
       is PatientSearchByIdentifierCompleted -> patientSearchByIdentifierCompleted(model, event)
@@ -94,7 +94,7 @@ class ScanSimpleIdUpdate @Inject constructor(
     }
   }
 
-  private fun shortCodeValidated(model: ScanSimpleIdModel, event: EnteredCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+  private fun enteredCodeValidated(model: ScanSimpleIdModel, event: EnteredCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = when (event.result) {
       Success -> SendScannedIdentifierResult(SearchByEnteredCode(model.enteredCode!!.enteredCodeText))
       is Failure -> ShowEnteredCodeValidationError(event.result)

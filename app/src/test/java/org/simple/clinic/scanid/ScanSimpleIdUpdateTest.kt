@@ -39,11 +39,11 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when the entered short code is valid, send the entered short code to the parent screen`() {
-    val shortCode = "1234567"
-    val model = defaultModel.enteredCodeChanged(EnteredCodeInput(shortCode))
+  fun `when the entered entered code is valid, send the entered code to the parent screen`() {
+    val enteredCode = "1234567"
+    val model = defaultModel.enteredCodeChanged(EnteredCodeInput(enteredCode))
 
-    val expectedScanResult = SearchByEnteredCode(shortCode)
+    val expectedScanResult = SearchByEnteredCode(enteredCode)
 
     spec
         .given(model)
@@ -105,7 +105,7 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when identifier is scanned and more than 1 patient is found, then send the short code to parent screen`() {
+  fun `when identifier is scanned and more than 1 patient is found, then send the entered code to parent screen`() {
     val patientId1 = UUID.fromString("60822507-9151-4836-944b-9cbbd1530c0b")
     val patientId2 = UUID.fromString("de90d491-29ab-4bb7-938c-d436815794c6")
 

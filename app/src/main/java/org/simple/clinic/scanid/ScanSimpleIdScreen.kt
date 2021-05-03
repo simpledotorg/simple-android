@@ -92,8 +92,8 @@ class ScanSimpleIdScreen : BaseScreen<
   private val toolBar
     get() = binding.toolBar
 
-  private val shortCodeText
-    get() = binding.shortCodeText
+  private val enteredCodeText
+    get() = binding.enteredCodeText
 
   private val shortCodeErrorText
     get() = binding.shortCodeErrorText
@@ -237,7 +237,7 @@ class ScanSimpleIdScreen : BaseScreen<
   }
 
   private fun setupShortCodeTextField() {
-    with(shortCodeText) {
+    with(enteredCodeText) {
       filters = arrayOf(LengthFilter(SHORT_CODE_LENGTH))
       addTextChangedListener(ShortCodeSpanWatcher())
     }
@@ -248,15 +248,15 @@ class ScanSimpleIdScreen : BaseScreen<
   }
 
   private fun qrCodeChanges(): Observable<UiEvent> {
-    return shortCodeText
+    return enteredCodeText
         .textChangeEvents()
         .map { ShortCodeChanged }
   }
 
   private fun doneClicks(): Observable<UiEvent> {
-    return shortCodeText
+    return enteredCodeText
         .editorActionEvents { it.actionId == EditorInfo.IME_ACTION_SEARCH }
-        .map { ShortCodeSearched(EnteredCodeInput(shortCodeText.text.toString())) }
+        .map { ShortCodeSearched(EnteredCodeInput(enteredCodeText.text.toString())) }
   }
 
   private fun keyboardEvents(): Observable<UiEvent> {

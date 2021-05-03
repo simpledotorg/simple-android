@@ -37,7 +37,7 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class ShortCodeSearchResultScreen :
+class IdentifierSearchResultScreen :
     BaseScreen<
         ShortCodeSearchResultScreenKey,
         ScreenShortcodeSearchResultBinding,
@@ -219,6 +219,6 @@ class ShortCodeSearchResultScreen :
   }
 
   interface Injector {
-    fun inject(target: ShortCodeSearchResultScreen)
+    fun inject(target: IdentifierSearchResultScreen)
   }
 }

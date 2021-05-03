@@ -10,5 +10,5 @@ data class ShortCodeSearchResultScreenKey(val shortCode: String) : ScreenKey() {
   @IgnoredOnParcel
   override val analyticsName: String = "Shortcode Search Result Screen"
 
-  override fun instantiateFragment() = ShortCodeSearchResultScreen()
+  override fun instantiateFragment() = IdentifierSearchResultScreen()
 }

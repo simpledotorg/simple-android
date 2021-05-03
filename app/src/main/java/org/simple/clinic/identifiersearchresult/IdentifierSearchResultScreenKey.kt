@@ -1,4 +1,4 @@
-package org.simple.clinic.shortcodesearchresult
+package org.simple.clinic.identifiersearchresult
 
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize

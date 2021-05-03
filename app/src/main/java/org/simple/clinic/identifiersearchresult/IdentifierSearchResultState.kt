@@ -1,4 +1,4 @@
-package org.simple.clinic.shortcodesearchresult
+package org.simple.clinic.identifiersearchresult
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

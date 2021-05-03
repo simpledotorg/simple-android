@@ -40,7 +40,7 @@ import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.search.PatientSearchScreenKey
-import org.simple.clinic.shortcodesearchresult.IdentifierSearchResultScreenKey
+import org.simple.clinic.identifiersearchresult.IdentifierSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RequestPermissions

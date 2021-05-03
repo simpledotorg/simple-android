@@ -56,7 +56,7 @@ import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.settings.SettingsScreen
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
-import org.simple.clinic.shortcodesearchresult.IdentifierSearchResultScreen
+import org.simple.clinic.identifiersearchresult.IdentifierSearchResultScreen
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.assignedfacility.AssignedFacilityView

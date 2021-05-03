@@ -1,4 +1,4 @@
-package org.simple.clinic.shortcodesearchresult
+package org.simple.clinic.identifiersearchresult
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify

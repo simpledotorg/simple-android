@@ -1,4 +1,4 @@
-package org.simple.clinic.shortcodesearchresult
+package org.simple.clinic.identifiersearchresult
 
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.plumbing.AsyncOp

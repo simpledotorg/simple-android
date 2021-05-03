@@ -1,4 +1,4 @@
-package org.simple.clinic.shortcodesearchresult
+package org.simple.clinic.identifiersearchresult
 
 import com.spotify.mobius.First
 import com.spotify.mobius.Init

@@ -1,4 +1,4 @@
-package org.simple.clinic.shortcodesearchresult
+package org.simple.clinic.identifiersearchresult
 
 import org.simple.clinic.searchresultsview.PatientSearchResults
 import org.simple.clinic.widgets.UiEvent

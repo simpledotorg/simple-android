@@ -22,12 +22,12 @@ class EnteredCodeInputTest {
     "34567890"
   ])
   @Test
-  fun `when short code length is not equal to 7 then validation should fail`(input: String) {
+  fun `when entered code length is not equal to 7 then validation should fail`(input: String) {
     //given
-    val shortCodeInput = EnteredCodeInput(enteredCodeText = input)
+    val enteredCodeInput = EnteredCodeInput(enteredCodeText = input)
 
     //when
-    val result = shortCodeInput.validate()
+    val result = enteredCodeInput.validate()
 
     //then
     assertThat(result)
@@ -35,12 +35,12 @@ class EnteredCodeInputTest {
   }
 
   @Test
-  fun `when short code length is equal to 7 then validation should succeed`() {
+  fun `when entered code length is equal to 7 then validation should succeed`() {
     //given
-    val shortCodeInput = EnteredCodeInput(enteredCodeText = "3456789")
+    val enteredCodeInput = EnteredCodeInput(enteredCodeText = "3456789")
 
     //when
-    val result = shortCodeInput.validate()
+    val result = enteredCodeInput.validate()
 
     //then
     assertThat(result)
@@ -48,7 +48,7 @@ class EnteredCodeInputTest {
   }
 
   @Test
-  fun `when short code is empty, then validation should fail with empty`() {
+  fun `when entered code is empty, then validation should fail with empty`() {
     // when
     val result = EnteredCodeInput("").validate()
 
@@ -60,7 +60,7 @@ class EnteredCodeInputTest {
   @Test
   fun `when entered code length is equal to 14 then validation should succeed`() {
     //given
-    val enteredCodeInput = ShortCodeInput(shortCodeText = "34567899876543")
+    val enteredCodeInput = EnteredCodeInput(enteredCodeText = "34567899876543")
 
     //when
     val result = enteredCodeInput.validate()
@@ -88,10 +88,10 @@ class EnteredCodeInputTest {
   @Test
   fun `when entered code length is more than 14 then validation should fail`(input: String) {
     //given
-    val shortCodeInput = ShortCodeInput(shortCodeText = input)
+    val enteredCodeInput = EnteredCodeInput(enteredCodeText = input)
 
     //when
-    val result = shortCodeInput.validate()
+    val result = enteredCodeInput.validate()
 
     //then
     assertThat(result)

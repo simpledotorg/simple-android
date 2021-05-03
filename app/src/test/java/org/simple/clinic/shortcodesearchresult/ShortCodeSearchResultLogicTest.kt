@@ -54,7 +54,7 @@ class ShortCodeSearchResultLogicTest {
         events = uiEventsSubject.ofType(),
         defaultModel = fetchingPatientsState,
         init = IdentifierSearchResultInit(),
-        update = ShortCodeSearchResultUpdate(),
+        update = IdentifierSearchResultUpdate(),
         effectHandler = effectHandler.build(),
         modelUpdateListener = { model ->
           statesFromMobiusLoop.onNext(model)

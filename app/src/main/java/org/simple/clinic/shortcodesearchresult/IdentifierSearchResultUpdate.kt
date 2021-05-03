@@ -5,7 +5,7 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
-class ShortCodeSearchResultUpdate : Update<IdentifierSearchResultState, IdentifierSearchResultEvent, IdentifierSearchResultEffect> {
+class IdentifierSearchResultUpdate : Update<IdentifierSearchResultState, IdentifierSearchResultEvent, IdentifierSearchResultEffect> {
 
   override fun update(
       model: IdentifierSearchResultState,

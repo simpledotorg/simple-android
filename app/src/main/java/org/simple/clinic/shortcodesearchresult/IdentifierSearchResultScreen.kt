@@ -109,7 +109,7 @@ class IdentifierSearchResultScreen :
       .compose(ReportAnalyticsEvents())
       .cast<IdentifierSearchResultEvent>()
 
-  override fun createUpdate() = ShortCodeSearchResultUpdate()
+  override fun createUpdate() = IdentifierSearchResultUpdate()
 
   override fun createInit() = IdentifierSearchResultInit()
 

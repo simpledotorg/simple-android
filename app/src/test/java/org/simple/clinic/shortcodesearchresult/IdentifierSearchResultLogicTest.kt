@@ -23,7 +23,7 @@ import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
 import java.util.UUID
 
-class ShortCodeSearchResultLogicTest {
+class IdentifierSearchResultLogicTest {
   private val uiEventsSubject = PublishSubject.create<UiEvent>()
   private val patientRepository = mock<PatientRepository>()
   private val bloodPressureDao = mock<BloodPressureMeasurement.RoomDao>()

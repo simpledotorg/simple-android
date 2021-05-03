@@ -44,7 +44,7 @@ class IdentifierSearchResultScreen :
         IdentifierSearchResultState,
         IdentifierSearchResultEvent,
         IdentifierSearchResultEffect>(),
-    ShortCodeSearchResultUi,
+    IdentifierSearchResultUi,
     UiActions {
 
   @Inject

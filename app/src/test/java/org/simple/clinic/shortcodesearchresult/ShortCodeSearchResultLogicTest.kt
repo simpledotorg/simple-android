@@ -29,7 +29,7 @@ class ShortCodeSearchResultLogicTest {
   private val bloodPressureDao = mock<BloodPressureMeasurement.RoomDao>()
   private val shortCode = "1234567"
   private val fetchingPatientsState = IdentifierSearchResultState.fetchingPatients(shortCode)
-  private val ui = mock<ShortCodeSearchResultUi>()
+  private val ui = mock<IdentifierSearchResultUi>()
   private val uiActions = mock<UiActions>()
 
   private val currentFacility = TestData.facility(uuid = UUID.fromString("27a61122-ed11-490a-a3ae-b881840e9842"))

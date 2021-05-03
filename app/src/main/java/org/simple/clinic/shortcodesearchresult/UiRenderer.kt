@@ -4,7 +4,7 @@ import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.plumbing.AsyncOp
 
 class UiRenderer(
-    private val ui: ShortCodeSearchResultUi
+    private val ui: IdentifierSearchResultUi
 ) : ViewRenderer<IdentifierSearchResultState> {
 
   override fun render(model: IdentifierSearchResultState) {

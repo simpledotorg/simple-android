@@ -16,16 +16,16 @@ object HideKeyboard : ScanSimpleIdEvent() {
     get() = "Scan Simple Card:Hide keyboard"
 }
 
-object ShortCodeChanged : ScanSimpleIdEvent() {
+object EnteredCodeChanged : ScanSimpleIdEvent() {
   override val analyticsName: String
-    get() = "Scan Simple Card:Short code changed"
+    get() = "Scan Simple Card:Entered code changed"
 }
 
 data class EnteredCodeValidated(val result: EnteredCodeValidationResult) : ScanSimpleIdEvent()
 
 data class EnteredCodeSearched(val enteredCode: EnteredCodeInput) : ScanSimpleIdEvent() {
   override val analyticsName: String
-    get() = "Scan Simple Card:Short code searched"
+    get() = "Scan Simple Card:Entered code searched"
 }
 
 data class ScanSimpleIdScreenQrCodeScanned(val text: String) : ScanSimpleIdEvent() {

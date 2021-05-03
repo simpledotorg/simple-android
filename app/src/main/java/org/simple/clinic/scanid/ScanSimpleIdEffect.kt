@@ -12,7 +12,7 @@ object HideEnteredCodeValidationError : ScanSimpleIdEffect()
 
 data class ShowEnteredCodeValidationError(val failure: EnteredCodeValidationResult) : ScanSimpleIdEffect()
 
-data class ValidateShortCode(val enteredCode: EnteredCodeInput) : ScanSimpleIdEffect()
+data class ValidateEnteredCode(val enteredCode: EnteredCodeInput) : ScanSimpleIdEffect()
 
 data class SendScannedIdentifierResult(val scannedId: ScanResult) : ScanSimpleIdEffect()
 

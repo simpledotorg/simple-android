@@ -47,7 +47,7 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun patientFoundByIdentifierSearch(patients: List<Patient>, identifier: Identifier): ScanResult {
     return if (patients.size > 1) {
-      SearchByShortCode(BpPassport.shortCode(identifier))
+      SearchByEnteredCode(BpPassport.shortCode(identifier)) //todo check if
     } else {
       val patientId = patients.first().uuid
       PatientFound(patientId)
@@ -96,7 +96,7 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun shortCodeValidated(model: ScanSimpleIdModel, event: ShortCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = when (event.result) {
-      Success -> SendScannedIdentifierResult(SearchByShortCode(model.shortCode!!.shortCodeText))
+      Success -> SendScannedIdentifierResult(SearchByEnteredCode(model.shortCode!!.shortCodeText))
       is Failure -> ShowShortCodeValidationError(event.result)
     }
 

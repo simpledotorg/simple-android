@@ -2,7 +2,7 @@ package org.simple.clinic.home
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.scanid.SearchByShortCode
+import org.simple.clinic.scanid.SearchByEnteredCode
 import org.simple.clinic.scanid.PatientFound
 import org.simple.clinic.scanid.PatientNotFound
 import org.simple.clinic.scanid.ScanResult
@@ -24,7 +24,7 @@ sealed class BusinessIdScanned : HomeScreenEvent() {
   companion object {
     fun fromScanResult(scanResult: ScanResult): BusinessIdScanned {
       return when (scanResult) {
-        is SearchByShortCode -> ByShortCode(scanResult.shortCode)
+        is SearchByEnteredCode -> ByShortCode(scanResult.shortCode)
         is PatientFound -> ByPatientFound(scanResult.patientId)
         is PatientNotFound -> ByPatientNotFound(scanResult.identifier)
       }

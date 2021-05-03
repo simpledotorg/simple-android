@@ -37,7 +37,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport.SHORT_CODE_LENGTH
-import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.Empty
+import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.ui.ShortCodeSpanWatcher
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
@@ -276,7 +276,7 @@ class ScanSimpleIdScreen : BaseScreen<
     router.popWithResult(Succeeded(scanResult))
   }
 
-  override fun showShortCodeValidationError(failure: ShortCodeValidationResult) {
+  override fun showShortCodeValidationError(failure: EnteredCodeValidationResult) {
     shortCodeErrorText.visibility = View.VISIBLE
     val validationErrorMessage = if (failure == Empty) {
       R.string.scansimpleid_shortcode_error_empty

@@ -21,7 +21,7 @@ object ShortCodeChanged : ScanSimpleIdEvent() {
     get() = "Scan Simple Card:Short code changed"
 }
 
-data class ShortCodeValidated(val result: ShortCodeValidationResult) : ScanSimpleIdEvent()
+data class ShortCodeValidated(val result: EnteredCodeValidationResult) : ScanSimpleIdEvent()
 
 data class ShortCodeSearched(val enteredCode: EnteredCodeInput) : ScanSimpleIdEvent() {
   override val analyticsName: String

@@ -11,8 +11,8 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.scanid.ShortCodeValidationResult.Failure
-import org.simple.clinic.scanid.ShortCodeValidationResult.Success
+import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure
+import org.simple.clinic.scanid.EnteredCodeValidationResult.Success
 import java.util.UUID
 import javax.inject.Inject
 

@@ -10,7 +10,7 @@ object HideQrCodeScannerView : ScanSimpleIdEffect()
 
 object HideShortCodeValidationError : ScanSimpleIdEffect()
 
-data class ShowShortCodeValidationError(val failure: ShortCodeValidationResult) : ScanSimpleIdEffect()
+data class ShowShortCodeValidationError(val failure: EnteredCodeValidationResult) : ScanSimpleIdEffect()
 
 data class ValidateShortCode(val enteredCode: EnteredCodeInput) : ScanSimpleIdEffect()
 

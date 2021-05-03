@@ -12,8 +12,8 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.first
 import org.simple.clinic.platform.crash.NoOpCrashReporter
-import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.Empty
-import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.NotEqualToRequiredLength
+import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
+import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.NotEqualToRequiredLength
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture

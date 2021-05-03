@@ -16,6 +16,7 @@
 ## 2021-05-03-7756
 ### Features
 - Add Instant Search using Patient Identifiers (Bangladesh National id, Ethiopian medical record no., etc)
+- [In Progress: 04 May 2021] Add NHID support in `ScanSimpleIdScreen`
 
 ### Internal
 - Move QR code scanner preview view inside `ScanSimpleIdScreen`

@@ -83,7 +83,7 @@ class ScanSimpleIdScreenLogicTest {
   fun `when invalid (less than required length) short code is entered then show validation error`() {
     //given
     val shortCodeText = "3456"
-    val shortCodeInput = ShortCodeInput(shortCodeText)
+    val shortCodeInput = EnteredCodeInput(shortCodeText)
 
     //when
     setupController()
@@ -98,7 +98,7 @@ class ScanSimpleIdScreenLogicTest {
   fun `when short code text changes, then hide validation error`() {
     //given
     val invalidShortCode = "3456"
-    val invalidShortCodeInput = ShortCodeInput(invalidShortCode)
+    val invalidShortCodeInput = EnteredCodeInput(invalidShortCode)
 
     //when
     setupController()
@@ -114,7 +114,7 @@ class ScanSimpleIdScreenLogicTest {
   @Test
   fun `when short code is empty, then show empty error`() {
     //given
-    val emptyShortCodeInput = ShortCodeInput("")
+    val emptyShortCodeInput = EnteredCodeInput("")
 
     //when
     setupController()

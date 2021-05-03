@@ -9,7 +9,7 @@ import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.NotEqualToRequ
 import org.simple.clinic.scanid.ShortCodeValidationResult.Success
 
 @Parcelize
-data class ShortCodeInput(val shortCodeText: String) : Parcelable {
+data class EnteredCodeInput(val shortCodeText: String) : Parcelable {
 
   @IgnoredOnParcel
   private val longCodeLength = 14

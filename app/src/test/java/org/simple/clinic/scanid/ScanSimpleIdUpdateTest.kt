@@ -83,7 +83,7 @@ class ScanSimpleIdUpdateTest {
   @Test
   fun `when the entered short code is valid, then open short code search`() {
     val shortCode = "1234567"
-    val model = defaultModel.shortCodeChanged(EnteredCodeInput(shortCode))
+    val model = defaultModel.enteredCodeChanged(EnteredCodeInput(shortCode))
 
     spec
         .given(model)
@@ -166,7 +166,7 @@ class ScanSimpleIdUpdateTest {
   @Test
   fun `when entered code is not a short code, then open patient search`() {
     val shortCode = "12345678901234"
-    val model = defaultModel.shortCodeChanged(EnteredCodeInput(shortCode))
+    val model = defaultModel.enteredCodeChanged(EnteredCodeInput(shortCode))
 
     spec
         .given(model)

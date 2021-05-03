@@ -16,7 +16,7 @@ import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
 import org.simple.clinic.databinding.ListPatientSearchNoPatientsBinding
 import org.simple.clinic.databinding.ListPatientSearchOldBinding
 import org.simple.clinic.databinding.PatientSearchViewBinding
-import org.simple.clinic.databinding.ScreenShortcodeSearchResultBinding
+import org.simple.clinic.databinding.ScreenIdentifierSearchResultBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
@@ -40,7 +40,7 @@ import javax.inject.Inject
 class IdentifierSearchResultScreen :
     BaseScreen<
         IdentifierSearchResultScreenKey,
-        ScreenShortcodeSearchResultBinding,
+        ScreenIdentifierSearchResultBinding,
         ShortCodeSearchResultState,
         ShortCodeSearchResultEvent,
         ShortCodeSearchResultEffect>(),
@@ -97,7 +97,7 @@ class IdentifierSearchResultScreen :
   override fun defaultModel() = ShortCodeSearchResultState.fetchingPatients(screenKey.shortCode)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
-      ScreenShortcodeSearchResultBinding.inflate(layoutInflater, container, false)
+      ScreenIdentifierSearchResultBinding.inflate(layoutInflater, container, false)
 
   override fun uiRenderer() = UiRenderer(this)
 

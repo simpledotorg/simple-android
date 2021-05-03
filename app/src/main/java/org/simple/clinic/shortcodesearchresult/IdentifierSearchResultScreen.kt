@@ -42,7 +42,7 @@ class IdentifierSearchResultScreen :
         IdentifierSearchResultScreenKey,
         ScreenIdentifierSearchResultBinding,
         IdentifierSearchResultState,
-        ShortCodeSearchResultEvent,
+        IdentifierSearchResultEvent,
         ShortCodeSearchResultEffect>(),
     ShortCodeSearchResultUi,
     UiActions {
@@ -107,7 +107,7 @@ class IdentifierSearchResultScreen :
           patientItemClicks()
       )
       .compose(ReportAnalyticsEvents())
-      .cast<ShortCodeSearchResultEvent>()
+      .cast<IdentifierSearchResultEvent>()
 
   override fun createUpdate() = ShortCodeSearchResultUpdate()
 
@@ -147,13 +147,13 @@ class IdentifierSearchResultScreen :
     }
   }
 
-  private fun searchPatientClicks(): Observable<ShortCodeSearchResultEvent> {
+  private fun searchPatientClicks(): Observable<IdentifierSearchResultEvent> {
     return newPatientButton
         .clicks()
         .map { SearchPatient }
   }
 
-  private fun patientItemClicks(): Observable<ShortCodeSearchResultEvent> {
+  private fun patientItemClicks(): Observable<IdentifierSearchResultEvent> {
     return adapter
         .itemEvents
         .ofType<SearchResultsItemType.Event.ResultClicked>()

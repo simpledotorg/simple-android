@@ -26,16 +26,16 @@ class ShortCodeSearchResultEffectHandler @AssistedInject constructor(
     fun create(uiActions: UiActions): ShortCodeSearchResultEffectHandler
   }
 
-  fun build(): ObservableTransformer<ShortCodeSearchResultEffect, ShortCodeSearchResultEvent> {
+  fun build(): ObservableTransformer<ShortCodeSearchResultEffect, IdentifierSearchResultEvent> {
     return RxMobius
-        .subtypeEffectHandler<ShortCodeSearchResultEffect, ShortCodeSearchResultEvent>()
+        .subtypeEffectHandler<ShortCodeSearchResultEffect, IdentifierSearchResultEvent>()
         .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientId) }, schedulers.ui())
         .addAction(OpenPatientSearch::class.java, uiActions::openPatientSearch, schedulers.ui())
         .addTransformer(SearchByShortCode::class.java, searchByShortCode())
         .build()
   }
 
-  private fun searchByShortCode(): ObservableTransformer<SearchByShortCode, ShortCodeSearchResultEvent> {
+  private fun searchByShortCode(): ObservableTransformer<SearchByShortCode, IdentifierSearchResultEvent> {
     return ObservableTransformer { effects ->
       val currentFacilityStream = Observable
           .fromCallable { currentFacility.get() }

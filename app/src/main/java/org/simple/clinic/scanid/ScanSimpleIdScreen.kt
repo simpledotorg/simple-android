@@ -285,7 +285,7 @@ class ScanSimpleIdScreen : BaseScreen<
     shortCodeErrorText.text = resources.getString(validationErrorMessage)
   }
 
-  override fun hideShortCodeValidationError() {
+  override fun hideEnteredCodeValidationError() {
     shortCodeErrorText.visibility = View.GONE
   }
 

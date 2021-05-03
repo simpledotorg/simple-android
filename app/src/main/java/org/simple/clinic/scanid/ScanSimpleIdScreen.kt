@@ -96,7 +96,7 @@ class ScanSimpleIdScreen : BaseScreen<
   private val enteredCodeText
     get() = binding.enteredCodeText
 
-  private val shortCodeErrorText
+  private val enteredCodeErrorText
     get() = binding.shortCodeErrorText
 
   private val searchingContainer
@@ -288,17 +288,17 @@ class ScanSimpleIdScreen : BaseScreen<
   }
 
   override fun showEnteredCodeValidationError(failure: EnteredCodeValidationResult) {
-    shortCodeErrorText.visibility = View.VISIBLE
+    enteredCodeErrorText.visibility = View.VISIBLE
     val validationErrorMessage = if (failure == Empty) {
       R.string.scansimpleid_shortcode_error_empty
     } else {
       R.string.scansimpleid_shortcode_error_not_required_length
     }
-    shortCodeErrorText.text = resources.getString(validationErrorMessage)
+    enteredCodeErrorText.text = resources.getString(validationErrorMessage)
   }
 
   override fun hideEnteredCodeValidationError() {
-    shortCodeErrorText.visibility = View.GONE
+    enteredCodeErrorText.visibility = View.GONE
   }
 
   override fun hideQrCodeScannerView() {

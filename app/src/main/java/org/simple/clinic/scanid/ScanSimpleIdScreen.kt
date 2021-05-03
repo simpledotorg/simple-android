@@ -250,7 +250,7 @@ class ScanSimpleIdScreen : BaseScreen<
   private fun qrCodeChanges(): Observable<UiEvent> {
     return enteredCodeText
         .textChangeEvents()
-        .map { ShortCodeChanged }
+        .map { EnteredCodeChanged }
   }
 
   private fun doneClicks(): Observable<UiEvent> {

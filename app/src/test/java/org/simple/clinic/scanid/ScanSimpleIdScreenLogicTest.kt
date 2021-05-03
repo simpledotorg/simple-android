@@ -111,7 +111,7 @@ class ScanSimpleIdScreenLogicTest {
 
     //then
     verify(uiActions).showShortCodeValidationError(NotEqualToRequiredLength)
-    verify(uiActions).hideShortCodeValidationError()
+    verify(uiActions).hideEnteredCodeValidationError()
     verifyNoMoreInteractions(uiActions)
   }
 

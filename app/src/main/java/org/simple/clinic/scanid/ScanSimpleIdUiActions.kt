@@ -6,7 +6,7 @@ import java.util.UUID
 interface ScanSimpleIdUiActions {
   fun showQrCodeScannerView()
   fun hideQrCodeScannerView()
-  fun hideShortCodeValidationError()
+  fun hideEnteredCodeValidationError()
   fun showShortCodeValidationError(failure: EnteredCodeValidationResult)
   fun openPatientSummary(patientId: UUID)
   fun openShortCodeSearch(shortCode: String)

@@ -28,16 +28,16 @@ class ShortCodeSearchResultLogicTest {
   private val patientRepository = mock<PatientRepository>()
   private val bloodPressureDao = mock<BloodPressureMeasurement.RoomDao>()
   private val shortCode = "1234567"
-  private val fetchingPatientsState = ShortCodeSearchResultState.fetchingPatients(shortCode)
+  private val fetchingPatientsState = IdentifierSearchResultState.fetchingPatients(shortCode)
   private val ui = mock<ShortCodeSearchResultUi>()
   private val uiActions = mock<UiActions>()
 
   private val currentFacility = TestData.facility(uuid = UUID.fromString("27a61122-ed11-490a-a3ae-b881840e9842"))
 
-  private val statesFromMobiusLoop = PublishSubject.create<ShortCodeSearchResultState>()
+  private val statesFromMobiusLoop = PublishSubject.create<IdentifierSearchResultState>()
 
-  lateinit var testObserver: TestObserver<ShortCodeSearchResultState>
-  private lateinit var testFixture: MobiusTestFixture<ShortCodeSearchResultState, ShortCodeSearchResultEvent, ShortCodeSearchResultEffect>
+  lateinit var testObserver: TestObserver<IdentifierSearchResultState>
+  private lateinit var testFixture: MobiusTestFixture<IdentifierSearchResultState, ShortCodeSearchResultEvent, ShortCodeSearchResultEffect>
 
   @Before
   fun setUp() {

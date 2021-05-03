@@ -8,7 +8,7 @@ import org.simple.clinic.plumbing.AsyncOp.SUCCEEDED
 import org.simple.clinic.searchresultsview.PatientSearchResults
 
 @Parcelize
-data class ShortCodeSearchResultState(
+data class IdentifierSearchResultState(
     val shortCode: String,
     val fetchPatientsAsyncOp: AsyncOp,
     val patients: PatientSearchResults
@@ -16,15 +16,15 @@ data class ShortCodeSearchResultState(
   companion object {
     fun fetchingPatients(
         bpPassportNumber: String
-    ): ShortCodeSearchResultState =
-        ShortCodeSearchResultState(bpPassportNumber, IN_FLIGHT, PatientSearchResults.EMPTY_RESULTS)
+    ): IdentifierSearchResultState =
+        IdentifierSearchResultState(bpPassportNumber, IN_FLIGHT, PatientSearchResults.EMPTY_RESULTS)
   }
 
   fun patientsFetched(
       patientSearchResults: PatientSearchResults
-  ): ShortCodeSearchResultState =
+  ): IdentifierSearchResultState =
       this.copy(fetchPatientsAsyncOp = SUCCEEDED, patients = patientSearchResults)
 
-  fun noMatchingPatients(): ShortCodeSearchResultState =
+  fun noMatchingPatients(): IdentifierSearchResultState =
       this.copy(fetchPatientsAsyncOp = SUCCEEDED, patients = PatientSearchResults.EMPTY_RESULTS)
 }

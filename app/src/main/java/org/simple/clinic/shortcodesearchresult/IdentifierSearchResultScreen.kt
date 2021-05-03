@@ -41,7 +41,7 @@ class IdentifierSearchResultScreen :
     BaseScreen<
         IdentifierSearchResultScreenKey,
         ScreenIdentifierSearchResultBinding,
-        ShortCodeSearchResultState,
+        IdentifierSearchResultState,
         ShortCodeSearchResultEvent,
         ShortCodeSearchResultEffect>(),
     ShortCodeSearchResultUi,
@@ -94,7 +94,7 @@ class IdentifierSearchResultScreen :
   private val emptyStateView
     get() = patientSearchViewBinding!!.emptyStateView
 
-  override fun defaultModel() = ShortCodeSearchResultState.fetchingPatients(screenKey.shortCode)
+  override fun defaultModel() = IdentifierSearchResultState.fetchingPatients(screenKey.shortCode)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenIdentifierSearchResultBinding.inflate(layoutInflater, container, false)

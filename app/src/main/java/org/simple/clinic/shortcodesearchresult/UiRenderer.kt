@@ -5,9 +5,9 @@ import org.simple.clinic.plumbing.AsyncOp
 
 class UiRenderer(
     private val ui: ShortCodeSearchResultUi
-) : ViewRenderer<ShortCodeSearchResultState> {
+) : ViewRenderer<IdentifierSearchResultState> {
 
-  override fun render(model: ShortCodeSearchResultState) {
+  override fun render(model: IdentifierSearchResultState) {
     when (model.fetchPatientsAsyncOp) {
       AsyncOp.IN_FLIGHT -> ui.showLoading()
       AsyncOp.SUCCEEDED -> showSearchResults(model)
@@ -16,7 +16,7 @@ class UiRenderer(
     }
   }
 
-  private fun showSearchResults(model: ShortCodeSearchResultState) {
+  private fun showSearchResults(model: IdentifierSearchResultState) {
     if (model.patients.hasNoResults)
       showNoPatientsFound()
     else
@@ -31,7 +31,7 @@ class UiRenderer(
     }
   }
 
-  private fun showPatientsFound(model: ShortCodeSearchResultState) {
+  private fun showPatientsFound(model: IdentifierSearchResultState) {
     with(ui) {
       hideLoading()
       showSearchPatientButton()

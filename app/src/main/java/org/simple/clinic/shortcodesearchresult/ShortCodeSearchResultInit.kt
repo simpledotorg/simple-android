@@ -4,9 +4,9 @@ import com.spotify.mobius.First
 import com.spotify.mobius.Init
 import org.simple.clinic.mobius.first
 
-class ShortCodeSearchResultInit : Init<ShortCodeSearchResultState, ShortCodeSearchResultEffect> {
+class ShortCodeSearchResultInit : Init<IdentifierSearchResultState, ShortCodeSearchResultEffect> {
 
-  override fun init(model: ShortCodeSearchResultState): First<ShortCodeSearchResultState, ShortCodeSearchResultEffect> {
+  override fun init(model: IdentifierSearchResultState): First<IdentifierSearchResultState, ShortCodeSearchResultEffect> {
     return first(model, SearchByShortCode(model.shortCode))
   }
 }

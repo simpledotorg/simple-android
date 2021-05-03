@@ -9,17 +9,17 @@ import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.NotEqualToRe
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Success
 
 @Parcelize
-data class EnteredCodeInput(val shortCodeText: String) : Parcelable {
+data class EnteredCodeInput(val enteredCodeText: String) : Parcelable {
 
   @IgnoredOnParcel
   private val longCodeLength = 14
 
   fun validate(): EnteredCodeValidationResult {
     return when {
-      shortCodeText.isEmpty() -> Empty
-      shortCodeText.length != SHORT_CODE_LENGTH && shortCodeText.length != longCodeLength -> NotEqualToRequiredLength
-      shortCodeText.length == SHORT_CODE_LENGTH || shortCodeText.length == longCodeLength -> Success
-      else -> throw UnsupportedOperationException("Unknown situation for short code input: $shortCodeText")
+      enteredCodeText.isEmpty() -> Empty
+      enteredCodeText.length != SHORT_CODE_LENGTH && enteredCodeText.length != longCodeLength -> NotEqualToRequiredLength
+      enteredCodeText.length == SHORT_CODE_LENGTH || enteredCodeText.length == longCodeLength -> Success
+      else -> throw UnsupportedOperationException("Unknown situation for entered code input: $enteredCodeText")
     }
   }
 }

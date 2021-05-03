@@ -24,7 +24,7 @@ class EnteredCodeInputTest {
   @Test
   fun `when short code length is not equal to 7 then validation should fail`(input: String) {
     //given
-    val shortCodeInput = EnteredCodeInput(shortCodeText = input)
+    val shortCodeInput = EnteredCodeInput(enteredCodeText = input)
 
     //when
     val result = shortCodeInput.validate()
@@ -37,7 +37,7 @@ class EnteredCodeInputTest {
   @Test
   fun `when short code length is equal to 7 then validation should succeed`() {
     //given
-    val shortCodeInput = EnteredCodeInput(shortCodeText = "3456789")
+    val shortCodeInput = EnteredCodeInput(enteredCodeText = "3456789")
 
     //when
     val result = shortCodeInput.validate()

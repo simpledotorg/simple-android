@@ -88,7 +88,7 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun shortCodeValidated(model: ScanSimpleIdModel, event: ShortCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = when (event.result) {
-      Success -> SendScannedIdentifierResult(SearchByEnteredCode(model.enteredCode!!.shortCodeText))
+      Success -> SendScannedIdentifierResult(SearchByEnteredCode(model.enteredCode!!.enteredCodeText))
       is Failure -> ShowShortCodeValidationError(event.result)
     }
 

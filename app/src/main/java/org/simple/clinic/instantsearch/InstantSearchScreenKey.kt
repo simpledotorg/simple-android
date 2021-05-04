@@ -8,7 +8,8 @@ import org.simple.clinic.patient.businessid.Identifier
 
 @Parcelize
 data class InstantSearchScreenKey(
-    val additionalIdentifier: Identifier?
+    val additionalIdentifier: Identifier?,
+    val initialSearchQuery: String?
 ) : ScreenKey(), Parcelable {
 
   @IgnoredOnParcel

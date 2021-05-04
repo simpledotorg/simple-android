@@ -215,7 +215,9 @@ class PatientsTabScreen : BaseScreen<
 
   override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
     val screenKey = if (features.isEnabled(Feature.InstantSearch)) {
-      InstantSearchScreenKey(additionalIdentifier)
+      InstantSearchScreenKey(
+          additionalIdentifier = additionalIdentifier,
+          initialSearchQuery = null)
     } else {
       PatientSearchScreenKey(additionalIdentifier).wrap()
     }

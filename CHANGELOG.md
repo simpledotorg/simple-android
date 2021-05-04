@@ -14,8 +14,9 @@
 - Stop reporting `SyncEvent` to analytics
 - Bump RootBeer to v0.0.9
 - Bump AGP to v4.2.0
-- [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - Add a common color resource for all search string query highlights
+- [In Progress: 20 Jan 2021] Material Theme-ing Migration
+- [In Progress: 05 May 2021] Show patients with national health id when searching with from scan screen
 
 ### Features
 - - [In Progress: 06 May 2021] Add NHID support in `ScanSimpleIdScreen`

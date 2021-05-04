@@ -7,12 +7,12 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
-import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
+import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
 import java.util.UUID
 
 class InstantSearchUpdateTest {
@@ -25,18 +25,23 @@ class InstantSearchUpdateTest {
   private val defaultModel = InstantSearchModel.create(identifier, null)
 
   @Test
-  fun `when current facility is loaded, then update the model and load all patients`() {
+  fun `when current facility is loaded, then update the model and validate search query`() {
+    val initialSearchQuery = "1234567890123"
+    val model = InstantSearchModel.create(
+        additionalIdentifier = null,
+        initialSearchQuery = initialSearchQuery
+    )
     val facility = TestData.facility(
         uuid = UUID.fromString("a613b2fc-c91c-40a3-9e8b-6da7010ce51b"),
         name = "PHC Obvious"
     )
 
     updateSpec
-        .given(defaultModel)
+        .given(model)
         .whenEvent(CurrentFacilityLoaded(facility))
         .then(assertThatNext(
-            hasModel(defaultModel.facilityLoaded(facility).loadingAllPatients()),
-            hasEffects(LoadAllPatients(facility))
+            hasModel(model.facilityLoaded(facility)),
+            hasEffects(ValidateSearchQuery(initialSearchQuery))
         ))
   }
 

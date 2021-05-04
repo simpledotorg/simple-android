@@ -22,7 +22,7 @@ class InstantSearchUpdateTest {
       value = "3e5500fe-e10e-4009-a0bb-3db9009fdef6",
       type = BpPassport
   )
-  private val defaultModel = InstantSearchModel.create(identifier)
+  private val defaultModel = InstantSearchModel.create(identifier, null)
 
   @Test
   fun `when current facility is loaded, then update the model and load all patients`() {
@@ -177,7 +177,7 @@ class InstantSearchUpdateTest {
         name = "PHC Obvious"
     )
     val model = InstantSearchModel
-        .create(additionalIdentifier = null)
+        .create(additionalIdentifier = null, initialSearchQuery = null)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -199,7 +199,7 @@ class InstantSearchUpdateTest {
         name = "PHC Obvious"
     )
     val model = InstantSearchModel
-        .create(additionalIdentifier = identifier)
+        .create(additionalIdentifier = identifier, initialSearchQuery = null)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 

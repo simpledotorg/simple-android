@@ -88,7 +88,7 @@
         android:layout_marginStart="@dimen/spacing_8"
         android:layout_marginEnd="@dimen/spacing_8"
         android:gravity="center"
-        android:text="@string/scansimpleid_type_bp_passport_number"
+        android:text="@string/scansimpleid_type_number"
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:textColor="?attr/colorOnSurface" />
 

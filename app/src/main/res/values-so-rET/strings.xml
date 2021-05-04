@@ -349,7 +349,6 @@
   <string name="scansimpleid_title">Iskaan garee kaarka aqoonsiga</string>
   <string name="scansimpleid_shortcode_error_empty">Geli lambarka baasaboorka BP</string>
   <string name="scansimpleid_shortcode_error_not_required_length">Dhererka lambarka Baasaboorka BP wuxuu ka yar yahay 7 lambar</string>
-  <string name="scansimpleid_type_bp_passport_number">ama qor lambarka Baasaboorka BP</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Hawlgalinta ayaa hakad la galiyay</string>

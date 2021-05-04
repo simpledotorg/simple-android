@@ -349,7 +349,6 @@
   <string name="scansimpleid_title">ಕಾರ್ಡ್ ಐಡಿ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ</string>
   <string name="scansimpleid_shortcode_error_empty">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ</string>
   <string name="scansimpleid_shortcode_error_not_required_length">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಸಂಖ್ಯೆಯ ಉದ್ದ 7 ಅಂಕಿಗಳಿಗಿಂತ ಕಡಿಮೆ ಇರಬೇಕು</string>
-  <string name="scansimpleid_type_bp_passport_number">ಅಥವಾ ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ನಂಬರ್ ಟೈಪ್ ಮಾಡಿ</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ಸಿಂಕ್ ಬಾಕಿ ಇದೆ</string>

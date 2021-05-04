@@ -8,6 +8,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -17,6 +18,20 @@ import java.util.UUID
 class ScanSimpleIdUpdateTest {
 
   private val defaultModel = ScanSimpleIdModel.create()
+  private val moshi = NetworkModule().moshi()
+  private val adapter = moshi.adapter(PatientPrefillInfo::class.java)
+  private val expectedJson = """
+    {
+    "hidn":"28-3222-2283-6682",
+    "hid":"mogithduraisamy@ndhm",
+    "name":"Mogith",
+    "gender":"M",
+    "statelgd":"34",
+    "distlgd":"600",
+    "dob":"25/6/2012",
+    "address":"No.42 eswaran kovil street"
+     }
+     """
 
   private val spec = UpdateSpec(ScanSimpleIdUpdate(
       crashReporter = NoOpCrashReporter()
@@ -30,6 +45,33 @@ class ScanSimpleIdUpdateTest {
     spec
         .given(defaultModel)
         .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
+        .then(assertThatNext(
+            hasModel(defaultModel.searching()),
+            hasEffects(SearchPatientByIdentifier(identifier))
+        ))
+  }
+
+  @Test
+  fun `when the qr code is scanned and the returned string is json then parse the json into object`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned(expectedJson))
+        .then(assertThatNext(
+            hasModel(defaultModel.searching()),
+            hasEffects(ParseScannedJson(expectedJson))
+        ))
+  }
+
+  @Test
+  fun `when json is parsed then search patient with NHID`() {
+    val patientPrefillInfo: PatientPrefillInfo? = adapter.fromJson(expectedJson)
+    val indiaNationalHealthID = patientPrefillInfo!!.healthIdNumber
+
+    val identifier = Identifier(indiaNationalHealthID, Identifier.IdentifierType.IndiaNationalHealthId)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(ScannedQRCodeJsonParsed(patientPrefillInfo))
         .then(assertThatNext(
             hasModel(defaultModel.searching()),
             hasEffects(SearchPatientByIdentifier(identifier))
@@ -84,21 +126,6 @@ class ScanSimpleIdUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
             hasEffects(SendScannedIdentifierResult(expectedScanResult))
-        ))
-  }
-
-  @Test
-  fun `when searching for patient, then ignore newly scanned identifiers`() {
-    val scannedId = "9f154761-ee2f-4ee3-acd1-0038328f75ca"
-
-    val searchingModel = defaultModel
-        .searching()
-
-    spec
-        .given(searchingModel)
-        .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
-        .then(assertThatNext(
-            hasNothing()
         ))
   }
 

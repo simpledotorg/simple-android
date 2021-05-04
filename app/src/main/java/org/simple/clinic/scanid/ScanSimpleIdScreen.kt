@@ -147,7 +147,6 @@ class ScanSimpleIdScreen : BaseScreen<
     // screen with the keyboard open. So, we hide it here.
     binding.root.hideKeyboard()
     toolBar.setNavigationOnClickListener { router.pop() }
-    setupShortCodeTextField()
 
     cameraProviderFuture.addListener({
       val cameraProvider = cameraProviderFuture.get()
@@ -238,13 +237,6 @@ class ScanSimpleIdScreen : BaseScreen<
       return AspectRatio.RATIO_4_3
     }
     return AspectRatio.RATIO_16_9
-  }
-
-  private fun setupShortCodeTextField() {
-    with(enteredCodeText) {
-      filters = arrayOf(LengthFilter(SHORT_CODE_LENGTH))
-      addTextChangedListener(ShortCodeSpanWatcher())
-    }
   }
 
   private fun qrCodeScanned(qrCode: String) {

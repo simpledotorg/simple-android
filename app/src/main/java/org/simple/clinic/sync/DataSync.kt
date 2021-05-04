@@ -10,8 +10,6 @@ import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.di.AppScope
-import org.simple.clinic.platform.analytics.Analytics
-import org.simple.clinic.platform.analytics.SyncAnalyticsEvent
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.remoteconfig.RemoteConfigService
 import org.simple.clinic.user.User
@@ -159,9 +157,6 @@ class DataSync(
     return Completable
         .fromAction(sync::pull)
         .toSingleDefault<SyncResult>(SyncResult.Completed(sync))
-        .doOnSubscribe { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Started) }
-        .doOnSuccess { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Completed) }
-        .doOnError { reportSyncEvent(sync.name, "Pull", SyncAnalyticsEvent.Failed) }
         .onErrorReturn { cause -> SyncResult.Failed(sync, ErrorResolver.resolve(cause)) }
   }
 
@@ -169,16 +164,7 @@ class DataSync(
     return Completable
         .fromAction(sync::push)
         .toSingleDefault<SyncResult>(SyncResult.Completed(sync))
-        .doOnSubscribe { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Started) }
-        .doOnSuccess { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Completed) }
-        .doOnError { reportSyncEvent(sync.name, "Push", SyncAnalyticsEvent.Failed) }
         .onErrorReturn { cause -> SyncResult.Failed(sync, ErrorResolver.resolve(cause)) }
-  }
-
-  private fun reportSyncEvent(name: String, type: String, event: SyncAnalyticsEvent) {
-    val analyticsName = "$type:$name" // Ex: "Push:Patients"
-    Timber.tag("Sync").i("$analyticsName:${event.name}") // Ex: "Push:Patients:Started"
-    Analytics.reportSyncEvent(analyticsName, event)
   }
 
   private fun runAndReportErrors(task: Single<SyncResult>): Single<SyncResult> {

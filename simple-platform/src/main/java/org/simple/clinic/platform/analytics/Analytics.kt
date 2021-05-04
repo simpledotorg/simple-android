@@ -132,18 +132,6 @@ object Analytics {
     reporters.forEach { it.createEvent("PermissionResult", props) }
   }
 
-  fun reportSyncEvent(
-      syncName: String,
-      event: SyncAnalyticsEvent
-  ) {
-    val props = mapOf(
-        "name" to syncName,
-        "syncEvent" to event.name
-    )
-
-    reporters.forEach { it.createEvent("SyncEvent", props) }
-  }
-
   fun reportDatabaseOptimizationEvent(
       event: DatabaseOptimizationEvent
   ) {

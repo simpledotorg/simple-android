@@ -10,8 +10,12 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.first
 import org.simple.clinic.platform.crash.NoOpCrashReporter
+import org.simple.clinic.remoteconfig.DefaultValueConfigReader
+import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.NotEqualToRequiredLength
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -133,10 +137,15 @@ class ScanSimpleIdScreenLogicTest {
         moshi = Moshi.Builder().build()
     )
 
+    val features = Features(
+        remoteConfigService = NoOpRemoteConfigService(DefaultValueConfigReader()),
+        overrides = mapOf(Feature.IndiaNationalHealthID to true)
+    )
+
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         init = Init { first(it) },
-        update = ScanSimpleIdUpdate(crashReporter = NoOpCrashReporter()),
+        update = ScanSimpleIdUpdate(crashReporter = NoOpCrashReporter(), isIndianNHIDSupportEnabled = true),
         effectHandler = effectHandler.build(),
         defaultModel = ScanSimpleIdModel.create(),
         modelUpdateListener = { /* no-op */ }

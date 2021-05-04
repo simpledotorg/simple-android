@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
-import android.text.InputFilter.LengthFilter
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -32,17 +31,17 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenScanSimpleBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Feature.IndiaNationalHealthID
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport.SHORT_CODE_LENGTH
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.qrcodeanalyzer.MLKitQrCodeAnalyzer
 import org.simple.clinic.scanid.qrcodeanalyzer.ZxingQrCodeAnalyzer
-import org.simple.clinic.scanid.ui.ShortCodeSpanWatcher
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
@@ -82,7 +81,7 @@ class ScanSimpleIdScreen : BaseScreen<
   lateinit var effectHandlerFactory: ScanSimpleIdEffectHandler.Factory
 
   @Inject
-  lateinit var scanSimpleIdUpdate: ScanSimpleIdUpdate
+  lateinit var crashReporter: CrashReporter
 
   @Inject
   lateinit var router: Router
@@ -131,7 +130,7 @@ class ScanSimpleIdScreen : BaseScreen<
       .compose(ReportAnalyticsEvents())
       .cast<ScanSimpleIdEvent>()
 
-  override fun createUpdate() = scanSimpleIdUpdate
+  override fun createUpdate() = ScanSimpleIdUpdate(crashReporter, features.isEnabled(IndiaNationalHealthID))
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 

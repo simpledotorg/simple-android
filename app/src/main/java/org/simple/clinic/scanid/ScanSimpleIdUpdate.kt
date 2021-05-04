@@ -8,6 +8,7 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.scanid.ShortCodeValidationResult.Failure
 import org.simple.clinic.scanid.ShortCodeValidationResult.Success
@@ -26,6 +27,16 @@ class ScanSimpleIdUpdate @Inject constructor(
       is ShortCodeSearched -> next(model.shortCodeChanged(event.shortCode), ValidateShortCode(event.shortCode))
       is ScanSimpleIdScreenQrCodeScanned -> simpleIdQrScanned(model, event)
       is PatientSearchByIdentifierCompleted -> patientSearchByIdentifierCompleted(model, event)
+      is ScannedQRCodeJsonParsed -> scannedQRCodeParsed(model, event)
+    }
+  }
+
+  private fun scannedQRCodeParsed(model: ScanSimpleIdModel, event: ScannedQRCodeJsonParsed): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    return if (event.patientPrefillInfo != null) {
+      val identifier = Identifier(event.patientPrefillInfo.healthIdNumber, IndiaNationalHealthId)
+      next(model = model.searching(), SearchPatientByIdentifier(identifier))
+    } else {
+      noChange()
     }
   }
 
@@ -58,6 +69,17 @@ class ScanSimpleIdUpdate @Inject constructor(
       val bpPassportCode = UUID.fromString(event.text)
       val identifier = Identifier(bpPassportCode.toString(), BpPassport)
       next(model = model.searching(), SearchPatientByIdentifier(identifier))
+    } catch (e: Exception) {
+      searchPatientWithNhid(model, event)
+    }
+  }
+
+  private fun searchPatientWithNhid(
+      model: ScanSimpleIdModel,
+      event: ScanSimpleIdScreenQrCodeScanned
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    return try {
+      next(model = model.searching(), ParseScannedJson(event.text))
     } catch (e: IllegalArgumentException) {
       crashReporter.report(e)
       noChange()

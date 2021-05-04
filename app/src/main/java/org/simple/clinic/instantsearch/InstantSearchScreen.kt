@@ -22,7 +22,6 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.databinding.ListPatientSearchBinding
 import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
 import org.simple.clinic.databinding.ScreenInstantSearchBinding
@@ -44,6 +43,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
+import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -70,10 +70,6 @@ class InstantSearchScreen :
     InstantSearchUi,
     InstantSearchUiActions,
     ExpectsResult {
-
-  companion object {
-    private const val ALERT_FACILITY_CHANGE = 1444
-  }
 
   @Inject
   lateinit var effectHandlerFactory: InstantSearchEffectHandler.Factory

@@ -1,7 +1,7 @@
 object Versions {
   const val minSdk = 21
   const val compileSdk = 30
-  const val kotlin = "1.4.32"
+  const val kotlin = "1.5.0"
   const val agp = "4.2.0"
   const val roomMetadataGenerator = "1.1.0"
 

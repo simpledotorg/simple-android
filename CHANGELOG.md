@@ -13,6 +13,7 @@
 - Migrate Gradle build scripts to use Kotlin DSL
 - Stop reporting `SyncEvent` to analytics
 - Bump RootBeer to v0.0.9
+- Bump AGP to v4.2.0
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 
 ## 2021-05-03-7756

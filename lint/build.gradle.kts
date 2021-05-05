@@ -15,8 +15,3 @@ dependencies {
   testImplementation("com.android.tools.lint:lint-tests:${versions.lint}")
   testImplementation("junit:junit:${versions.junit}")
 }
-
-configure<JavaPluginConvention> {
-  sourceCompatibility = JavaVersion.VERSION_1_8
-  targetCompatibility = JavaVersion.VERSION_1_8
-}

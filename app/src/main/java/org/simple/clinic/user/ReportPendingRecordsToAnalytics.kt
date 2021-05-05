@@ -67,6 +67,6 @@ class ReportPendingRecordsToAnalytics @Inject constructor(
         pendingBpRecords.map { it.updatedAt } +
         pendingAppointmentRecords.map { it.updatedAt } +
         pendingPrescribedDrugRecords.map { it.updatedAt } +
-        pendingMedicalHistoryRecords.map { it.updatedAt }).min()
+        pendingMedicalHistoryRecords.map { it.updatedAt }).minOrNull()
   }
 }

@@ -10,7 +10,7 @@ enum class SyncInterval(val frequency: Duration, val backOffDelay: Duration) {
     fun mostFrequent(): Duration {
       return enumValues<SyncInterval>()
           .map { it.frequency }
-          .min()!!
+          .minOrNull()!!
     }
   }
 }

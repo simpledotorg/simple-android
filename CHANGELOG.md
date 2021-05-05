@@ -1,7 +1,7 @@
 # CHANGELOG
 ## Next Release
 ### Internal
-- Add automatic performance profiling for the Room database queries
+- Add automatic performance profiling (reported to Mixpanel) for the Room database queries
 - Show Indian national health ID in `PatientSummaryScreen`
 - Bump Firebase dependencies
     - Firebase Performance Plugin to 1.3.5

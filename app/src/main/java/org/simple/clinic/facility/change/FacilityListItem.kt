@@ -74,7 +74,7 @@ sealed class FacilityListItem : ItemAdapter.Item<FacilityListItem.FacilityItemCl
       when (name) {
         is Highlighted -> {
           val highlightedName = SpannableStringBuilder(name.text)
-          val highlightColor = ContextCompat.getColor(holder.itemView.context, R.color.facility_search_query_highlight)
+          val highlightColor = ContextCompat.getColor(holder.itemView.context, R.color.search_query_highlight)
           highlightedName.setSpan(BackgroundColorSpan(highlightColor), name.highlightStart, name.highlightEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
           binding.facilityNameTextView.text = highlightedName
         }

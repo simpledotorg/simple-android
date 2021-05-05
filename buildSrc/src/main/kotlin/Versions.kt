@@ -76,7 +76,7 @@ object Versions {
   const val signaturePad = "1.3.1"
   const val viewpager2 = "1.0.0"
   const val lint = "27.1.1"
-  const val rootbeer = "5fef9f62f9"
+  const val rootbeer = "0.0.9"
   const val mlKitBarcode = "16.1.4"
   const val fragment = "1.2.5"
   const val androidXCoreKtx = "1.3.2"

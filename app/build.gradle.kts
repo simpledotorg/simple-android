@@ -453,7 +453,7 @@ dependencies {
 
   implementation("androidx.viewpager2:viewpager2:${versions.viewpager2}")
 
-  implementation("com.github.scottyab:rootbeer:${versions.rootbeer}")
+  implementation("com.scottyab:rootbeer-lib:${versions.rootbeer}")
 
   implementation("com.google.android.gms:play-services-mlkit-barcode-scanning:${versions.mlKitBarcode}")
 

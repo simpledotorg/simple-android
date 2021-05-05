@@ -29,4 +29,17 @@ data class IndiaNHIDInfoPayload(
 
     @Json(name = "address")
     val address: String
-)
+) {
+  fun fromPayload(): IndiaNHIDInfo {
+    return IndiaNHIDInfo(
+        healthIdNumber = healthIdNumber,
+        healthIdUserName = healthIdUserName,
+        fullName = fullName,
+        gender = gender,
+        state = state,
+        district = district,
+        dateOfBirth = dateOfBirth,
+        address = address
+    )
+  }
+}

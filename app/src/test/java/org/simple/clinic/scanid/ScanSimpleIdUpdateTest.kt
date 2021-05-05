@@ -7,18 +7,16 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.platform.crash.NoOpCrashReporter
 import java.util.UUID
 
 class ScanSimpleIdUpdateTest {
 
   private val defaultModel = ScanSimpleIdModel.create()
-  private val moshi = NetworkModule().moshi()
-  private val adapter = moshi.adapter(IndiaNHIDInfo::class.java)
   private val expectedJson = """
     {
     "hidn":"28-3222-2283-6682",
@@ -63,14 +61,17 @@ class ScanSimpleIdUpdateTest {
 
   @Test
   fun `when json is parsed then search patient with NHID`() {
-    val patientPrefillInfo: IndiaNHIDInfo? = adapter.fromJson(expectedJson)
-    val indiaNationalHealthID = patientPrefillInfo!!.healthIdNumber
+    val indiaNationalHealthID = "1234123412341234"
+    val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload(
+        healthIdNumber = indiaNationalHealthID
+    )
+    val indiaNHIDInfo = indiaNHIDInfoPayload.fromPayload()
 
-    val identifier = Identifier(indiaNationalHealthID, Identifier.IdentifierType.IndiaNationalHealthId)
+    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
 
     spec
         .given(defaultModel)
-        .whenEvent(ScannedQRCodeJsonParsed(patientPrefillInfo))
+        .whenEvent(ScannedQRCodeJsonParsed(indiaNHIDInfo))
         .then(assertThatNext(
             hasModel(defaultModel.searching()),
             hasEffects(SearchPatientByIdentifier(identifier))

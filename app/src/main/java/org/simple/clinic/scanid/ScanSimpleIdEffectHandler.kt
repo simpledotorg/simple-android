@@ -38,9 +38,10 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .map {
-            val adapter = moshi.adapter(IndiaNHIDInfo::class.java)
+            val adapter = moshi.adapter(IndiaNHIDInfoPayload::class.java)
             adapter.fromJson(it.text)
           }
+          .map { it.fromPayload() }
           .map(::ScannedQRCodeJsonParsed)
     }
   }

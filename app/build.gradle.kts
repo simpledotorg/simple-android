@@ -220,7 +220,6 @@ android {
   }
 
   lintOptions {
-    lintConfig = file("${project.rootDir}/quality/lint.xml")
     isWarningsAsErrors = true
     isAbortOnError = true
     isCheckReleaseBuilds = false

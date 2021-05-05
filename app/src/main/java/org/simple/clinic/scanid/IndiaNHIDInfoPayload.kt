@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class PatientPrefillInfo(
+data class IndiaNHIDInfoPayload(
 
     @Json(name = "hidn")
     val healthIdNumber: String,

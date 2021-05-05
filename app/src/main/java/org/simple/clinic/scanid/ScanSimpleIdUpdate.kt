@@ -32,8 +32,8 @@ class ScanSimpleIdUpdate @Inject constructor(
   }
 
   private fun scannedQRCodeParsed(model: ScanSimpleIdModel, event: ScannedQRCodeJsonParsed): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    return if (event.patientPrefillInfo != null) {
-      val identifier = Identifier(event.patientPrefillInfo.healthIdNumber, IndiaNationalHealthId)
+    return if (event.indiaNHIDInfo != null) {
+      val identifier = Identifier(event.indiaNHIDInfo.healthIdNumber, IndiaNationalHealthId)
       next(model = model.searching(), SearchPatientByIdentifier(identifier))
     } else {
       noChange()

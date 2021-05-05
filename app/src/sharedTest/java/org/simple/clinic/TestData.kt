@@ -52,7 +52,8 @@ import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.sync.ProtocolDrugPayload
 import org.simple.clinic.protocol.sync.ProtocolPayload
-import org.simple.clinic.scanid.PatientPrefillInfo
+import org.simple.clinic.scanid.IndiaNHIDInfo
+import org.simple.clinic.scanid.IndiaNHIDInfoPayload
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficerPayload
@@ -1219,7 +1220,7 @@ object TestData {
     )
   }
 
-  fun patientPrefillInfo(
+  fun indiaNHIDInfoPayload(
       healthIdNumber: String = "1234123456785678",
       healthIdUserName: String = "Mohit",
       fullName: String = "Mohit Ahuja",
@@ -1228,7 +1229,7 @@ object TestData {
       district: String = "Thane",
       dateOfBirth: String = "12/12/1997",
       address: String = "Obvious HQ"
-  ) = PatientPrefillInfo(
+  ) = IndiaNHIDInfoPayload(
       healthIdNumber = healthIdNumber,
       healthIdUserName = healthIdUserName,
       fullName = fullName,

@@ -3,7 +3,6 @@ package org.simple.clinic.scanid
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoModel
-import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -19,7 +18,7 @@ class ScanSimpleIdUpdateTest {
 
   private val defaultModel = ScanSimpleIdModel.create()
   private val moshi = NetworkModule().moshi()
-  private val adapter = moshi.adapter(PatientPrefillInfo::class.java)
+  private val adapter = moshi.adapter(IndiaNHIDInfo::class.java)
   private val expectedJson = """
     {
     "hidn":"28-3222-2283-6682",
@@ -64,7 +63,7 @@ class ScanSimpleIdUpdateTest {
 
   @Test
   fun `when json is parsed then search patient with NHID`() {
-    val patientPrefillInfo: PatientPrefillInfo? = adapter.fromJson(expectedJson)
+    val patientPrefillInfo: IndiaNHIDInfo? = adapter.fromJson(expectedJson)
     val indiaNationalHealthID = patientPrefillInfo!!.healthIdNumber
 
     val identifier = Identifier(indiaNationalHealthID, Identifier.IdentifierType.IndiaNationalHealthId)

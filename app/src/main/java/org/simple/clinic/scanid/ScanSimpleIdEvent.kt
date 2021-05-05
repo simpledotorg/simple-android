@@ -37,4 +37,4 @@ data class PatientSearchByIdentifierCompleted(
     val identifier: Identifier
 ) : ScanSimpleIdEvent()
 
-data class ScannedQRCodeJsonParsed(val patientPrefillInfo: PatientPrefillInfo?): ScanSimpleIdEvent()
+data class ScannedQRCodeJsonParsed(val indiaNHIDInfo: IndiaNHIDInfo?): ScanSimpleIdEvent()

@@ -15,6 +15,10 @@
 - Bump RootBeer to v0.0.9
 - Bump AGP to v4.2.0
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
+- Add a common color resource for all search string query highlights
+
+### Fixes
+- Fix highlight color for instant search using phone number  
 
 ## 2021-05-03-7756
 ### Features

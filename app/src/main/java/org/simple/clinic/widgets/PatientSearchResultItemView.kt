@@ -142,7 +142,7 @@ class PatientSearchResultItemView(
     val patientPhoneNumber = when (val number = getPatientPhoneNumber(patientSearchResult.phoneNumber, searchQuery)) {
       is PhoneNumber.Highlighted -> {
         val highlightNumber = SpannableStringBuilder(number.patientNumber)
-        val highlightColor = context.resolveColor(colorRes = R.color.simple_light_blue_100)
+        val highlightColor = context.resolveColor(colorRes = R.color.search_query_highlight)
         highlightNumber.setSpan(BackgroundColorSpan(highlightColor), number.highlightStart, number.highlightEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         highlightNumber
       }
@@ -186,7 +186,7 @@ class PatientSearchResultItemView(
     val patientName = when (val name = getPatientName(searchQuery, model, DateOfBirth.fromPatientSearchResultViewModel(model, userClock))) {
       is Name.Highlighted -> {
         val highlightName = SpannableStringBuilder(name.patientName)
-        val highlightColor = context.resolveColor(colorRes = R.color.instant_search_query_highlight)
+        val highlightColor = context.resolveColor(colorRes = R.color.search_query_highlight)
         highlightName.setSpan(BackgroundColorSpan(highlightColor), name.highlightStart, name.highlightEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         highlightName
       }

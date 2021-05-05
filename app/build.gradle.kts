@@ -228,8 +228,6 @@ android {
 
   compileOptions {
     isCoreLibraryDesugaringEnabled = true
-    targetCompatibility = JavaVersion.VERSION_1_8
-    sourceCompatibility = JavaVersion.VERSION_1_8
   }
 
   kotlinOptions {

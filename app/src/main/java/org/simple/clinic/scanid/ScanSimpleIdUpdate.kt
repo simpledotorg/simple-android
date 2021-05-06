@@ -44,13 +44,14 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel,
       event: PatientSearchByIdentifierCompleted
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    val scanResult = if (event.patients.isNotEmpty()) {
-      patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
+    val effect = if (event.patients.isEmpty()) {
+      OpenPatientSearch(event.identifier)
     } else {
-      PatientNotFound(event.identifier)
+      val scanResult = patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
+      SendScannedIdentifierResult(scanResult)
     }
 
-    return next(model = model.notSearching(), SendScannedIdentifierResult(scanResult))
+    return next(model = model.notSearching(), effect)
   }
 
   private fun patientFoundByIdentifierSearch(patients: List<Patient>, identifier: Identifier): ScanResult {
@@ -85,7 +86,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       noChange()
     }
   }
-  
+
   private fun shortCodeValidated(model: ScanSimpleIdModel, event: EnteredCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = when (event.result) {
       Success -> SendScannedIdentifierResult(SearchByEnteredCode(model.enteredCode!!.enteredCodeText))

@@ -281,10 +281,6 @@ class ScanSimpleIdScreen : BaseScreen<
     }
   }
 
-  override fun sendScannedId(scanResult: ScanResult) {
-    router.popWithResult(Succeeded(scanResult))
-  }
-
   override fun openPatientSummary(patientId: UUID) {
     router.replaceTop(PatientSummaryScreenKey(
         patientUuid = patientId,

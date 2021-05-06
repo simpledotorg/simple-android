@@ -15,8 +15,6 @@ data class ShowEnteredCodeValidationError(val failure: EnteredCodeValidationResu
 
 data class ValidateEnteredCode(val enteredCode: EnteredCodeInput) : ScanSimpleIdEffect()
 
-data class SendScannedIdentifierResult(val scannedId: ScanResult) : ScanSimpleIdEffect()
-
 data class SearchPatientByIdentifier(val identifier: Identifier) : ScanSimpleIdEffect()
 
 data class ParseScannedJson(val text: String) : ScanSimpleIdEffect()

@@ -12,7 +12,6 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID

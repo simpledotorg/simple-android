@@ -28,7 +28,6 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
-import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.Router
@@ -265,8 +264,7 @@ class PatientsTabScreen : BaseScreen<
   }
 
   override fun openScanSimpleIdCardScreen() {
-    // This is dependent on this screen being used within `org.simple.clinic.home.HomeScreen`
-    router.pushExpectingResult(HomeScreen.ScreenRequest.ScanPassportRequest, ScanSimpleIdScreenKey())
+    router.push(ScanSimpleIdScreenKey())
   }
 
   override fun hideSyncIndicator() {

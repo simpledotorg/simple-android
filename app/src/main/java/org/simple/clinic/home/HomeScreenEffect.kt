@@ -11,9 +11,3 @@ object OpenFacilitySelection : HomeScreenEffect()
 object LoadCurrentFacility : HomeScreenEffect()
 
 data class LoadOverdueAppointmentCount(val facility: Facility) : HomeScreenEffect()
-
-data class OpenShortCodeSearchScreen(val shortCode: String) : HomeScreenEffect()
-
-data class OpenPatientSearchScreen(val additionalIdentifier: Identifier?) : HomeScreenEffect()
-
-data class OpenPatientSummary(val patientId: UUID) : HomeScreenEffect()

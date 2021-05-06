@@ -58,7 +58,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       OpenShortCodeSearch(BpPassport.shortCode(identifier))
     } else {
       val patientId = patients.first().uuid
-      SendScannedIdentifierResult(PatientFound(patientId))
+      OpenPatientSummary(patientId)
     }
   }
 

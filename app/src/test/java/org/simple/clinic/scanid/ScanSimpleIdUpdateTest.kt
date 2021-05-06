@@ -98,16 +98,14 @@ class ScanSimpleIdUpdateTest {
     val patient = TestData.patient(
         uuid = patientId
     )
-    val identifier = Identifier("123456", BpPassport)
-
-    val expectedScanResult = PatientFound(patientId)
+    val identifier = Identifier("77877995-6f2f-4591-bdb8-bd0f9c62d573", BpPassport)
 
     spec
         .given(defaultModel)
         .whenEvent(PatientSearchByIdentifierCompleted(listOf(patient), identifier))
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
-            hasEffects(SendScannedIdentifierResult(expectedScanResult))
+            hasEffects(OpenPatientSummary(patientId))
         ))
   }
 

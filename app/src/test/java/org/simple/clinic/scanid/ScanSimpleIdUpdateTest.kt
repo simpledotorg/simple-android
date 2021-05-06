@@ -83,14 +83,12 @@ class ScanSimpleIdUpdateTest {
     val shortCode = "1234567"
     val model = defaultModel.shortCodeChanged(EnteredCodeInput(shortCode))
 
-    val expectedScanResult = SearchByEnteredCode(shortCode)
-
     spec
         .given(model)
         .whenEvent(EnteredCodeValidated(EnteredCodeValidationResult.Success))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(SendScannedIdentifierResult(expectedScanResult))
+            hasEffects(OpenShortCodeSearch(shortCode))
         ))
   }
 

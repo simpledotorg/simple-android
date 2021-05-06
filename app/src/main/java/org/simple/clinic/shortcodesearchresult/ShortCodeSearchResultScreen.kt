@@ -177,7 +177,7 @@ class ShortCodeSearchResultScreen :
 
   override fun openPatientSearch() {
     val screenKey = if (features.isEnabled(Feature.InstantSearch)) {
-      InstantSearchScreenKey(additionalIdentifier = null)
+      InstantSearchScreenKey(additionalIdentifier = null, initialSearchQuery = null)
     } else {
       PatientSearchScreenKey(additionalIdentifier = null).wrap()
     }

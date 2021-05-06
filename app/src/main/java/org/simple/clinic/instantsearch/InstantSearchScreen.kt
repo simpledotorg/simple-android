@@ -41,11 +41,9 @@ import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.scanid.scannedqrcode.NationalHealthIDErrorDialog
-import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RequestPermissions
@@ -98,9 +96,6 @@ class InstantSearchScreen :
   private val instantSearchToolbar
     get() = binding.instantSearchToolbar
 
-  private val searchQueryTextInputLayout
-    get() = binding.searchQueryTextInputLayout
-
   private val searchQueryEditText
     get() = binding.searchQueryEditText
 
@@ -150,7 +145,6 @@ class InstantSearchScreen :
   )
 
   private val blankScannedQrCodeResults = PublishSubject.create<UiEvent>()
-  private val qrCodeScanResults = PublishSubject.create<UiEvent>()
 
   override fun defaultModel() = InstantSearchModel.create(screenKey.additionalIdentifier, null)
 
@@ -166,7 +160,6 @@ class InstantSearchScreen :
           searchQueryChanges(),
           registerNewPatientClicks(),
           blankScannedQrCodeResults,
-          qrCodeScanResults,
           openQrCodeScannerClicks()
       )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
@@ -280,21 +273,14 @@ class InstantSearchScreen :
     searchQueryEditText.showKeyboard()
   }
 
-  override fun openShortCodeSearchScreen(shortCode: String) {
-    router.push(ShortCodeSearchResultScreenKey(shortCode))
-  }
-
   override fun openQrCodeScanner() {
-    router.pushExpectingResult(QrCodeScan, ScanSimpleIdScreenKey())
+    router.push(ScanSimpleIdScreenKey())
   }
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
     if (requestType == BlankScannedQrCode && result is Succeeded) {
       val scannedQrCodeResult = ScannedQrCodeSheet.blankScannedQrCodeResult(result)
       blankScannedQrCodeResults.onNext(BlankScannedQrCodeResultReceived(scannedQrCodeResult))
-    } else if (requestType == QrCodeScan && result is Succeeded) {
-      val scanResult = ScanSimpleIdScreen.readScanResult(result)
-      qrCodeScanResults.onNext(QrCodeScanned.fromResult(scanResult))
     }
   }
 
@@ -361,7 +347,4 @@ class InstantSearchScreen :
 
   @Parcelize
   private object BlankScannedQrCode : Parcelable
-
-  @Parcelize
-  private object QrCodeScan : Parcelable
 }

@@ -313,21 +313,6 @@ class InstantSearchEffectHandlerTest {
   }
 
   @Test
-  fun `when open short code search effect is received, then open short code search`() {
-    // given
-    val shortCode = "123 4567"
-
-    // when
-    testCase.dispatch(OpenShortCodeSearchScreen(shortCode))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-
-    verify(uiActions).openShortCodeSearchScreen(shortCode)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
   fun `when open qr code scanner effect is received, then open the qr code scanner`() {
     // when
     testCase.dispatch(OpenQrCodeScanner)

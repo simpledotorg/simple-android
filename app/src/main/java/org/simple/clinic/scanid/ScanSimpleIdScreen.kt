@@ -35,7 +35,6 @@ import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
@@ -71,10 +70,6 @@ class ScanSimpleIdScreen : BaseScreen<
   companion object {
     private const val RATIO_4_3_VALUE = 4.0 / 3.0
     private const val RATIO_16_9_VALUE = 16.0 / 9.0
-
-    fun readScanResult(result: Succeeded): ScanResult {
-      return result.result as ScanResult
-    }
   }
 
   @Inject

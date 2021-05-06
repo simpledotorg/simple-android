@@ -47,19 +47,18 @@ class ScanSimpleIdUpdate @Inject constructor(
     val effect = if (event.patients.isEmpty()) {
       OpenPatientSearch(event.identifier)
     } else {
-      val scanResult = patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
-      SendScannedIdentifierResult(scanResult)
+      patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
     }
 
     return next(model = model.notSearching(), effect)
   }
 
-  private fun patientFoundByIdentifierSearch(patients: List<Patient>, identifier: Identifier): ScanResult {
+  private fun patientFoundByIdentifierSearch(patients: List<Patient>, identifier: Identifier): ScanSimpleIdEffect {
     return if (patients.size > 1) {
-      SearchByEnteredCode(BpPassport.shortCode(identifier)) //todo check if
+      OpenShortCodeSearch(BpPassport.shortCode(identifier))
     } else {
       val patientId = patients.first().uuid
-      PatientFound(patientId)
+      SendScannedIdentifierResult(PatientFound(patientId))
     }
   }
 

@@ -5,14 +5,15 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.spotify.mobius.Init
+import com.squareup.moshi.Moshi
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.first
 import org.simple.clinic.platform.crash.NoOpCrashReporter
-import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.Empty
-import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.NotEqualToRequiredLength
+import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
+import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.NotEqualToRequiredLength
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -82,11 +83,11 @@ class ScanSimpleIdScreenLogicTest {
   fun `when invalid (less than required length) short code is entered then show validation error`() {
     //given
     val shortCodeText = "3456"
-    val shortCodeInput = ShortCodeInput(shortCodeText)
+    val shortCodeInput = EnteredCodeInput(shortCodeText)
 
     //when
     setupController()
-    uiEvents.onNext(ShortCodeSearched(shortCodeInput))
+    uiEvents.onNext(EnteredCodeSearched(shortCodeInput))
 
     //then
     verify(uiActions).showShortCodeValidationError(NotEqualToRequiredLength)
@@ -97,12 +98,12 @@ class ScanSimpleIdScreenLogicTest {
   fun `when short code text changes, then hide validation error`() {
     //given
     val invalidShortCode = "3456"
-    val invalidShortCodeInput = ShortCodeInput(invalidShortCode)
+    val invalidShortCodeInput = EnteredCodeInput(invalidShortCode)
 
     //when
     setupController()
-    uiEvents.onNext(ShortCodeSearched(invalidShortCodeInput))
-    uiEvents.onNext(ShortCodeChanged)
+    uiEvents.onNext(EnteredCodeSearched(invalidShortCodeInput))
+    uiEvents.onNext(EnteredCodeChanged)
 
     //then
     verify(uiActions).showShortCodeValidationError(NotEqualToRequiredLength)
@@ -113,11 +114,11 @@ class ScanSimpleIdScreenLogicTest {
   @Test
   fun `when short code is empty, then show empty error`() {
     //given
-    val emptyShortCodeInput = ShortCodeInput("")
+    val emptyShortCodeInput = EnteredCodeInput("")
 
     //when
     setupController()
-    uiEvents.onNext(ShortCodeSearched(emptyShortCodeInput))
+    uiEvents.onNext(EnteredCodeSearched(emptyShortCodeInput))
 
     //then
     verify(uiActions).showShortCodeValidationError(Empty)
@@ -128,7 +129,8 @@ class ScanSimpleIdScreenLogicTest {
     val effectHandler = ScanSimpleIdEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = mock(),
-        uiActions = uiActions
+        uiActions = uiActions,
+        moshi = Moshi.Builder().build()
     )
 
     testFixture = MobiusTestFixture(

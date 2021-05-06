@@ -37,7 +37,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport.SHORT_CODE_LENGTH
-import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.Empty
+import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.ui.ShortCodeSpanWatcher
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
@@ -92,8 +92,8 @@ class ScanSimpleIdScreen : BaseScreen<
   private val toolBar
     get() = binding.toolBar
 
-  private val shortCodeText
-    get() = binding.shortCodeText
+  private val enteredCodeText
+    get() = binding.enteredCodeText
 
   private val shortCodeErrorText
     get() = binding.shortCodeErrorText
@@ -237,7 +237,7 @@ class ScanSimpleIdScreen : BaseScreen<
   }
 
   private fun setupShortCodeTextField() {
-    with(shortCodeText) {
+    with(enteredCodeText) {
       filters = arrayOf(LengthFilter(SHORT_CODE_LENGTH))
       addTextChangedListener(ShortCodeSpanWatcher())
     }
@@ -248,15 +248,15 @@ class ScanSimpleIdScreen : BaseScreen<
   }
 
   private fun qrCodeChanges(): Observable<UiEvent> {
-    return shortCodeText
+    return enteredCodeText
         .textChangeEvents()
-        .map { ShortCodeChanged }
+        .map { EnteredCodeChanged }
   }
 
   private fun doneClicks(): Observable<UiEvent> {
-    return shortCodeText
+    return enteredCodeText
         .editorActionEvents { it.actionId == EditorInfo.IME_ACTION_SEARCH }
-        .map { ShortCodeSearched(ShortCodeInput(shortCodeText.text.toString())) }
+        .map { EnteredCodeSearched(EnteredCodeInput(enteredCodeText.text.toString())) }
   }
 
   private fun keyboardEvents(): Observable<UiEvent> {
@@ -276,7 +276,7 @@ class ScanSimpleIdScreen : BaseScreen<
     router.popWithResult(Succeeded(scanResult))
   }
 
-  override fun showShortCodeValidationError(failure: ShortCodeValidationResult) {
+  override fun showShortCodeValidationError(failure: EnteredCodeValidationResult) {
     shortCodeErrorText.visibility = View.VISIBLE
     val validationErrorMessage = if (failure == Empty) {
       R.string.scansimpleid_shortcode_error_empty

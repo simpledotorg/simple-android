@@ -6,7 +6,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.util.RuntimePermissionResult
-import org.simple.clinic.scanid.SearchByShortCode
+import org.simple.clinic.scanid.SearchByEnteredCode
 import org.simple.clinic.scanid.PatientFound
 import org.simple.clinic.scanid.PatientNotFound
 import org.simple.clinic.scanid.ScanResult
@@ -50,7 +50,7 @@ sealed class QrCodeScanned : InstantSearchEvent() {
 
     fun fromResult(scanResult: ScanResult): QrCodeScanned {
       return when (scanResult) {
-        is SearchByShortCode -> ByShortCode(scanResult.shortCode)
+        is SearchByEnteredCode -> ByShortCode(scanResult.enteredCode)
         is PatientFound -> ByPatientFound(scanResult.patientId)
         is PatientNotFound -> ByPatientNotFound(scanResult.identifier)
       }

@@ -8,9 +8,10 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.scanid.ShortCodeValidationResult.Failure
-import org.simple.clinic.scanid.ShortCodeValidationResult.Success
+import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure
+import org.simple.clinic.scanid.EnteredCodeValidationResult.Success
 import java.util.UUID
 import javax.inject.Inject
 
@@ -21,11 +22,21 @@ class ScanSimpleIdUpdate @Inject constructor(
     return when (event) {
       ShowKeyboard -> dispatch(HideQrCodeScannerView)
       HideKeyboard -> dispatch(ShowQrCodeScannerView)
-      ShortCodeChanged -> dispatch(HideShortCodeValidationError)
-      is ShortCodeValidated -> shortCodeValidated(model, event)
-      is ShortCodeSearched -> next(model.shortCodeChanged(event.shortCode), ValidateShortCode(event.shortCode))
+      EnteredCodeChanged -> dispatch(HideEnteredCodeValidationError)
+      is EnteredCodeValidated -> shortCodeValidated(model, event)
+      is EnteredCodeSearched -> next(model.shortCodeChanged(event.enteredCode), ValidateEnteredCode(event.enteredCode))
       is ScanSimpleIdScreenQrCodeScanned -> simpleIdQrScanned(model, event)
       is PatientSearchByIdentifierCompleted -> patientSearchByIdentifierCompleted(model, event)
+      is ScannedQRCodeJsonParsed -> scannedQRCodeParsed(model, event)
+    }
+  }
+
+  private fun scannedQRCodeParsed(model: ScanSimpleIdModel, event: ScannedQRCodeJsonParsed): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    return if (event.indiaNHIDInfo != null) {
+      val identifier = Identifier(event.indiaNHIDInfo.healthIdNumber, IndiaNationalHealthId)
+      next(model = model.searching(), SearchPatientByIdentifier(identifier))
+    } else {
+      noChange()
     }
   }
 
@@ -44,7 +55,7 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun patientFoundByIdentifierSearch(patients: List<Patient>, identifier: Identifier): ScanResult {
     return if (patients.size > 1) {
-      SearchByShortCode(BpPassport.shortCode(identifier))
+      SearchByEnteredCode(BpPassport.shortCode(identifier)) //todo check if
     } else {
       val patientId = patients.first().uuid
       PatientFound(patientId)
@@ -58,16 +69,27 @@ class ScanSimpleIdUpdate @Inject constructor(
       val bpPassportCode = UUID.fromString(event.text)
       val identifier = Identifier(bpPassportCode.toString(), BpPassport)
       next(model = model.searching(), SearchPatientByIdentifier(identifier))
+    } catch (e: Exception) {
+      searchPatientWithNhid(model, event)
+    }
+  }
+
+  private fun searchPatientWithNhid(
+      model: ScanSimpleIdModel,
+      event: ScanSimpleIdScreenQrCodeScanned
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    return try {
+      next(model = model.searching(), ParseScannedJson(event.text))
     } catch (e: IllegalArgumentException) {
       crashReporter.report(e)
       noChange()
     }
   }
-
-  private fun shortCodeValidated(model: ScanSimpleIdModel, event: ShortCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+  
+  private fun shortCodeValidated(model: ScanSimpleIdModel, event: EnteredCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = when (event.result) {
-      Success -> SendScannedIdentifierResult(SearchByShortCode(model.shortCode!!.shortCodeText))
-      is Failure -> ShowShortCodeValidationError(event.result)
+      Success -> SendScannedIdentifierResult(SearchByEnteredCode(model.enteredCode!!.enteredCodeText))
+      is Failure -> ShowEnteredCodeValidationError(event.result)
     }
 
     return dispatch(effect)

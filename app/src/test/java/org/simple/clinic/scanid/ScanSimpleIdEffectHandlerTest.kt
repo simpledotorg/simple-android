@@ -12,6 +12,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID
@@ -111,6 +112,24 @@ class ScanSimpleIdEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
 
     verify(uiActions).openShortCodeSearch(shortCode)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open patient search effect is received, then open patient search`() {
+    // given
+    val identifier = TestData.identifier(
+        value = "a765a30e-6bd9-4f12-99da-acba91b6a479",
+        type = BpPassport
+    )
+
+    // when
+    testCase.dispatch(OpenPatientSearch(identifier))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openPatientSearch(identifier)
     verifyNoMoreInteractions(uiActions)
   }
 }

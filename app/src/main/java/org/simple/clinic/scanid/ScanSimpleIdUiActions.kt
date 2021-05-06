@@ -1,5 +1,6 @@
 package org.simple.clinic.scanid
 
+import org.simple.clinic.patient.businessid.Identifier
 import java.util.UUID
 
 interface ScanSimpleIdUiActions {
@@ -10,4 +11,5 @@ interface ScanSimpleIdUiActions {
   fun sendScannedId(scanResult: ScanResult)
   fun openPatientSummary(patientId: UUID)
   fun openShortCodeSearch(shortCode: String)
+  fun openPatientSearch(additionalIdentifier: Identifier?)
 }

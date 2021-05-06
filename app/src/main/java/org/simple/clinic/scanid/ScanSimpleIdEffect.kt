@@ -24,3 +24,5 @@ data class ParseScannedJson(val text: String) : ScanSimpleIdEffect()
 data class OpenPatientSummary(val patientId: UUID) : ScanSimpleIdEffect()
 
 data class OpenShortCodeSearch(val shortCode: String) : ScanSimpleIdEffect()
+
+data class OpenPatientSearch(val additionalIdentifier: Identifier?) : ScanSimpleIdEffect()

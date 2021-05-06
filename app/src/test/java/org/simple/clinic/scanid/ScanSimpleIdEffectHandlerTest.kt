@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import com.squareup.moshi.Moshi
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -17,10 +18,12 @@ class ScanSimpleIdEffectHandlerTest {
 
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<ScanSimpleIdUiActions>()
+  private val moshi = Moshi.Builder().build()
   private val testCase = EffectHandlerTestCase(ScanSimpleIdEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
-      uiActions = uiActions
+      uiActions = uiActions,
+      moshi = moshi
   ).build())
 
   @After
@@ -52,4 +55,31 @@ class ScanSimpleIdEffectHandlerTest {
     ))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when parse json into patient prefill info object effect is received, then parse the json`() {
+    // given
+    val expectedJson = """
+    {
+    "hidn":"1234123456785678",
+    "hid":"Mohit",
+    "name":"Mohit Ahuja",
+    "gender":"M",
+    "statelgd":"Maharashtra",
+    "distlgd":"Thane",
+    "dob":"12/12/1997",
+    "address":"Obvious HQ"
+     }
+     """
+    val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload()
+    val indiaNHIDInfo = indiaNHIDInfoPayload.fromPayload()
+
+    // when
+    testCase.dispatch(ParseScannedJson(expectedJson))
+
+    // then
+    testCase.assertOutgoingEvents(ScannedQRCodeJsonParsed(indiaNHIDInfo))
+    verifyZeroInteractions(uiActions)
+  }
+
 }

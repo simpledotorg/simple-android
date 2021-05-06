@@ -8,12 +8,14 @@ object ShowQrCodeScannerView : ScanSimpleIdEffect()
 
 object HideQrCodeScannerView : ScanSimpleIdEffect()
 
-object HideShortCodeValidationError : ScanSimpleIdEffect()
+object HideEnteredCodeValidationError : ScanSimpleIdEffect()
 
-data class ShowShortCodeValidationError(val failure: ShortCodeValidationResult) : ScanSimpleIdEffect()
+data class ShowEnteredCodeValidationError(val failure: EnteredCodeValidationResult) : ScanSimpleIdEffect()
 
-data class ValidateShortCode(val shortCode: ShortCodeInput) : ScanSimpleIdEffect()
+data class ValidateEnteredCode(val enteredCode: EnteredCodeInput) : ScanSimpleIdEffect()
 
 data class SendScannedIdentifierResult(val scannedId: ScanResult) : ScanSimpleIdEffect()
 
 data class SearchPatientByIdentifier(val identifier: Identifier) : ScanSimpleIdEffect()
+
+data class ParseScannedJson(val text: String) : ScanSimpleIdEffect()

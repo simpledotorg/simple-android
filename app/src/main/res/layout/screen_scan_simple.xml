@@ -105,7 +105,7 @@
           android:layout_gravity="center">
 
           <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/shortCodeText"
+            android:id="@+id/enteredCodeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"

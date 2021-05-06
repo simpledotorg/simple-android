@@ -3,7 +3,6 @@ package org.simple.clinic.scanid
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoModel
-import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -11,12 +10,25 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.platform.crash.NoOpCrashReporter
 import java.util.UUID
 
 class ScanSimpleIdUpdateTest {
 
   private val defaultModel = ScanSimpleIdModel.create()
+  private val expectedJson = """
+    {
+    "hidn":"28-3222-2283-6682",
+    "hid":"mogithduraisamy@ndhm",
+    "name":"Mogith",
+    "gender":"M",
+    "statelgd":"34",
+    "distlgd":"600",
+    "dob":"25/6/2012",
+    "address":"No.42 eswaran kovil street"
+     }
+     """
 
   private val spec = UpdateSpec(ScanSimpleIdUpdate(
       crashReporter = NoOpCrashReporter()
@@ -37,15 +49,45 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
+  fun `when the qr code is scanned and the returned string is json then parse the json into object`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned(expectedJson))
+        .then(assertThatNext(
+            hasModel(defaultModel.searching()),
+            hasEffects(ParseScannedJson(expectedJson))
+        ))
+  }
+
+  @Test
+  fun `when json is parsed then search patient with NHID`() {
+    val indiaNationalHealthID = "1234123412341234"
+    val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload(
+        healthIdNumber = indiaNationalHealthID
+    )
+    val indiaNHIDInfo = indiaNHIDInfoPayload.fromPayload()
+
+    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(ScannedQRCodeJsonParsed(indiaNHIDInfo))
+        .then(assertThatNext(
+            hasModel(defaultModel.searching()),
+            hasEffects(SearchPatientByIdentifier(identifier))
+        ))
+  }
+
+  @Test
   fun `when the entered short code is valid, send the entered short code to the parent screen`() {
     val shortCode = "1234567"
-    val model = defaultModel.shortCodeChanged(ShortCodeInput(shortCode))
+    val model = defaultModel.shortCodeChanged(EnteredCodeInput(shortCode))
 
-    val expectedScanResult = SearchByShortCode(shortCode)
+    val expectedScanResult = SearchByEnteredCode(shortCode)
 
     spec
         .given(model)
-        .whenEvent(ShortCodeValidated(ShortCodeValidationResult.Success))
+        .whenEvent(EnteredCodeValidated(EnteredCodeValidationResult.Success))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SendScannedIdentifierResult(expectedScanResult))
@@ -88,21 +130,6 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when searching for patient, then ignore newly scanned identifiers`() {
-    val scannedId = "9f154761-ee2f-4ee3-acd1-0038328f75ca"
-
-    val searchingModel = defaultModel
-        .searching()
-
-    spec
-        .given(searchingModel)
-        .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
-        .then(assertThatNext(
-            hasNothing()
-        ))
-  }
-
-  @Test
   fun `when identifier is scanned and more than 1 patient is found, then send the short code to parent screen`() {
     val patientId1 = UUID.fromString("60822507-9151-4836-944b-9cbbd1530c0b")
     val patientId2 = UUID.fromString("de90d491-29ab-4bb7-938c-d436815794c6")
@@ -112,7 +139,7 @@ class ScanSimpleIdUpdateTest {
 
     val identifier = Identifier("123456", BpPassport)
 
-    val expectedScanResult = SearchByShortCode("123456")
+    val expectedScanResult = SearchByEnteredCode("123456")
 
     spec
         .given(defaultModel)

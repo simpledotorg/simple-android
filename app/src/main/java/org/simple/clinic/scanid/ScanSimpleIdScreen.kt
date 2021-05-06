@@ -38,14 +38,18 @@ import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport.SHORT_CODE_LENGTH
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
+import org.simple.clinic.scanid.qrcodeanalyzer.MLKitQrCodeAnalyzer
+import org.simple.clinic.scanid.qrcodeanalyzer.ZxingQrCodeAnalyzer
 import org.simple.clinic.scanid.ui.ShortCodeSpanWatcher
+import org.simple.clinic.summary.OpenIntention
+import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.BitmapUtils
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
-import org.simple.clinic.util.BitmapUtils
-import org.simple.clinic.scanid.qrcodeanalyzer.MLKitQrCodeAnalyzer
-import org.simple.clinic.scanid.qrcodeanalyzer.ZxingQrCodeAnalyzer
+import java.time.Instant
+import java.util.UUID
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import kotlin.math.abs
@@ -274,6 +278,13 @@ class ScanSimpleIdScreen : BaseScreen<
 
   override fun sendScannedId(scanResult: ScanResult) {
     router.popWithResult(Succeeded(scanResult))
+  }
+
+  override fun openPatientSummary(patientId: UUID) {
+    router.replaceTop(PatientSummaryScreenKey(
+        patientUuid = patientId,
+        intention = OpenIntention.ViewExistingPatient,
+        screenCreatedTimestamp = Instant.now(utcClock)))
   }
 
   override fun showShortCodeValidationError(failure: EnteredCodeValidationResult) {

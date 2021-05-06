@@ -31,7 +31,12 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       .addConsumer(SendScannedIdentifierResult::class.java, { uiActions.sendScannedId(it.scannedId) }, schedulersProvider.ui())
       .addTransformer(SearchPatientByIdentifier::class.java, searchPatientByIdentifier())
       .addTransformer(ParseScannedJson::class.java, parseJsonIntoObject())
+      .addConsumer(OpenPatientSummary::class.java, ::openPatientSummary, schedulersProvider.ui())
       .build()
+
+  private fun openPatientSummary(openPatientSummary: OpenPatientSummary) {
+    uiActions.openPatientSummary(openPatientSummary.patientId)
+  }
 
   private fun parseJsonIntoObject(): ObservableTransformer<ParseScannedJson, ScanSimpleIdEvent> {
     return ObservableTransformer { effects ->

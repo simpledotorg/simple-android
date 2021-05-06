@@ -2,6 +2,8 @@ package org.simple.clinic.scanid
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import com.squareup.moshi.Moshi
@@ -82,4 +84,18 @@ class ScanSimpleIdEffectHandlerTest {
     verifyZeroInteractions(uiActions)
   }
 
+  @Test
+  fun `when open patient summary effect is received, then open patient summary`() {
+    // given
+    val patientId = UUID.fromString("9730e9a0-e62e-4556-b84e-03d593f6fe4c")
+
+    // when
+    testCase.dispatch(OpenPatientSummary(patientId))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openPatientSummary(patientId)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

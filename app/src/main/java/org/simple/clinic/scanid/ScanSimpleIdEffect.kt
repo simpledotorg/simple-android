@@ -1,6 +1,7 @@
 package org.simple.clinic.scanid
 
 import org.simple.clinic.patient.businessid.Identifier
+import java.util.UUID
 
 sealed class ScanSimpleIdEffect
 
@@ -19,3 +20,5 @@ data class SendScannedIdentifierResult(val scannedId: ScanResult) : ScanSimpleId
 data class SearchPatientByIdentifier(val identifier: Identifier) : ScanSimpleIdEffect()
 
 data class ParseScannedJson(val text: String) : ScanSimpleIdEffect()
+
+data class OpenPatientSummary(val patientId: UUID) : ScanSimpleIdEffect()

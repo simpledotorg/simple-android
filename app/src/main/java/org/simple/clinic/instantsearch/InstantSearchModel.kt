@@ -24,9 +24,9 @@ data class InstantSearchModel(
     get() = additionalIdentifier != null
 
   companion object {
-    fun create(additionalIdentifier: Identifier?) = InstantSearchModel(
+    fun create(additionalIdentifier: Identifier?, initialSearchQuery: String?) = InstantSearchModel(
         facility = null,
-        searchQuery = null,
+        searchQuery = initialSearchQuery,
         additionalIdentifier = additionalIdentifier,
         instantSearchProgressState = null,
         scannedQrCodeSheetAlreadyOpened = false

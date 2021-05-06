@@ -3,8 +3,6 @@ package org.simple.clinic.instantsearch
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
-import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
-import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
 import org.simple.clinic.instantsearch.InstantSearchValidator.Result.Empty
 import org.simple.clinic.instantsearch.InstantSearchValidator.Result.LengthTooShort
 import org.simple.clinic.instantsearch.InstantSearchValidator.Result.Valid
@@ -16,6 +14,8 @@ import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.NumericCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
+import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
 import javax.inject.Inject
 
 class InstantSearchUpdate @Inject constructor(
@@ -30,9 +30,8 @@ class InstantSearchUpdate @Inject constructor(
   override fun update(model: InstantSearchModel, event: InstantSearchEvent): Next<InstantSearchModel, InstantSearchEffect> {
     return when (event) {
       is CurrentFacilityLoaded -> next(
-          model.facilityLoaded(event.facility)
-              .loadingAllPatients(),
-          LoadAllPatients(event.facility)
+          model.facilityLoaded(event.facility),
+          ValidateSearchQuery(model.searchQuery.orEmpty())
       )
       is AllPatientsLoaded -> allPatientsLoaded(model, event)
       is SearchResultsLoaded -> searchResultsLoaded(model, event)

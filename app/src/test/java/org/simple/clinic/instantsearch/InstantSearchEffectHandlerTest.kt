@@ -388,4 +388,15 @@ class InstantSearchEffectHandlerTest {
     testCase.assertOutgoingEvents(PatientDoesNotHaveAnExistingNHID(patientId))
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show NHID error dialog effect is received, show NHID error dialog`(){
+    // when
+    testCase.dispatch(ShowNHIDErrorDialog)
+
+    //then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showNHIDErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

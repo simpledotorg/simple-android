@@ -46,6 +46,7 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addConsumer(OpenShortCodeSearchScreen::class.java, ::openShortCodeSearch, schedulers.ui())
       .addAction(OpenQrCodeScanner::class.java, uiActions::openQrCodeScanner, schedulers.ui())
       .addTransformer(CheckIfPatientAlreadyHasAnExistingNHID::class.java, checkIfPatientAlreadyHasAnExistingNHID())
+      .addAction(ShowNHIDErrorDialog::class.java, uiActions::showNHIDErrorDialog, schedulers.ui())
       .build()
 
   private fun openShortCodeSearch(effect: OpenShortCodeSearchScreen) {

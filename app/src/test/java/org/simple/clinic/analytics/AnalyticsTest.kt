@@ -99,6 +99,15 @@ class AnalyticsTest {
   }
 
   @Test
+  fun `when reporting a SQL operation without any reporters, no error should be thrown`() {
+    Analytics.reportSqlOperation(
+        dao = "UserRoomDao_Impl",
+        method = "count",
+        timeTaken = Duration.ofMillis(200)
+    )
+  }
+
+  @Test
   fun `when clearing the user without any reporters, no error should be thrown`() {
     Analytics.clearUser()
   }
@@ -215,6 +224,11 @@ class AnalyticsTest {
         sizeAfterOptimizationBytes = 50L,
         type = DatabaseOptimizationEvent.OptimizationType.PurgeDeleted
     ))
+    Analytics.reportSqlOperation(
+        dao = "UserRoomDao_Impl",
+        method = "count",
+        timeTaken = Duration.ofSeconds(2)
+    )
 
     val expected = listOf(
         Event("UserInteraction", mapOf("name" to "Test 1")),
@@ -276,6 +290,11 @@ class AnalyticsTest {
             "sizeBeforeOptimizationBytes" to 100L,
             "sizeAfterOptimizationBytes" to 50L,
             "type" to DatabaseOptimizationEvent.OptimizationType.PurgeDeleted.analyticsName
+        )),
+        Event("SqlOperation", mapOf(
+            "dao" to "UserRoomDao_Impl",
+            "method" to "count",
+            "timeTakenInMillis" to 2000L
         ))
     )
 

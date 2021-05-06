@@ -144,6 +144,20 @@ object Analytics {
     reporters.forEach { it.createEvent("DatabaseOptimized", props) }
   }
 
+  fun reportSqlOperation(
+      dao: String,
+      method: String,
+      timeTaken: Duration
+  ) {
+    val props = mapOf(
+        "dao" to dao,
+        "method" to method,
+        "timeTakenInMillis" to timeTaken.toMillis()
+    )
+
+    reporters.forEach { it.createEvent("SqlOperation", props) }
+  }
+
   enum class NetworkTransportType {
     BLUETOOTH,
     CELLULAR,

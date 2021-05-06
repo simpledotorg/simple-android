@@ -5,25 +5,28 @@ import android.database.Cursor
 import android.os.CancellationSignal
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.google.firebase.perf.FirebasePerformance
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.remoteconfig.ConfigReader
+import org.simple.clinic.util.UtcClock
+import java.time.Duration
+import java.time.Instant
 import javax.inject.Inject
 
-class FirebasePerfReportingSqlDelegate(
-    private val firebasePerformance: FirebasePerformance,
+class AnalyticsReportingSqlDelegate(
     private val daoInformationExtractor: DaoInformationExtractor,
-    private val sampler: Sampler
+    private val sampler: Sampler,
+    private val clock: UtcClock
 ) : SQLiteDatabaseSqlDelegate {
 
   @Inject
   constructor(
-      firebasePerformance: FirebasePerformance,
       daoInformationExtractor: DaoInformationExtractor,
-      remoteConfig: ConfigReader
+      remoteConfig: ConfigReader,
+      clock: UtcClock
   ) : this(
-      firebasePerformance = firebasePerformance,
       daoInformationExtractor = daoInformationExtractor,
-      sampler = Sampler(remoteConfig.double("room_query_profile_sample_rate", 0.0).toFloat())
+      sampler = Sampler(remoteConfig.double("room_query_profile_sample_rate", 0.0).toFloat()),
+      clock = clock
   )
 
   override fun query(
@@ -124,16 +127,16 @@ class FirebasePerfReportingSqlDelegate(
       daoInformation: DaoInformationExtractor.DaoMethodInformation,
       operation: () -> R
   ): R {
-    val trace = firebasePerformance
-        .newTrace("SqlOperation")
-        .apply {
-          putAttribute("dao", daoInformation.daoName)
-          putAttribute("method", daoInformation.methodName)
-        }
-
-    trace.start()
+    val operationStartTime = Instant.now(clock)
     val result = operation()
-    trace.stop()
+    val operationEndTime = Instant.now(clock)
+    val timeTakenForOperation = Duration.between(operationStartTime, operationEndTime).abs()
+
+    Analytics.reportSqlOperation(
+        dao = daoInformation.daoName,
+        method = daoInformation.methodName,
+        timeTaken = timeTakenForOperation
+    )
 
     return result
   }

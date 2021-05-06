@@ -70,13 +70,14 @@ class ScanSimpleIdUpdateTest {
     val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload(
         healthIdNumber = indiaNationalHealthID
     )
-    val indiaNHIDInfo = indiaNHIDInfoPayload.fromPayload()
+    val indiaNHIDInfo = indiaNHIDInfoPayload.toIndiaNHIDInfo()
+    val patientPrefillInfo = indiaNHIDInfoPayload.toPatientPrefillInfo()
 
     val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
 
     spec
         .given(defaultModel)
-        .whenEvent(ScannedQRCodeJsonParsed(indiaNHIDInfo))
+        .whenEvent(ScannedQRCodeJsonParsed(patientPrefillInfo, indiaNHIDInfo))
         .then(assertThatNext(
             hasModel(defaultModel.searching()),
             hasEffects(SearchPatientByIdentifier(identifier))

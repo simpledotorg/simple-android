@@ -74,13 +74,14 @@ class ScanSimpleIdEffectHandlerTest {
      }
      """
     val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload()
-    val indiaNHIDInfo = indiaNHIDInfoPayload.fromPayload()
+    val patientPrefillInfo = indiaNHIDInfoPayload.toPatientPrefillInfo()
+    val indiaNHIDInfo = indiaNHIDInfoPayload.toIndiaNHIDInfo()
 
     // when
     testCase.dispatch(ParseScannedJson(expectedJson))
 
     // then
-    testCase.assertOutgoingEvents(ScannedQRCodeJsonParsed(indiaNHIDInfo))
+    testCase.assertOutgoingEvents(ScannedQRCodeJsonParsed(patientPrefillInfo, indiaNHIDInfo))
     verifyZeroInteractions(uiActions)
   }
 

@@ -197,8 +197,6 @@ class Router(
         currentTopScreen = currentTopScreen
     )
 
-    transaction.commitNow()
-
     history = newHistory
 
     dispatchScreenResult(currentTopScreen, screenResult)
@@ -241,6 +239,8 @@ class Router(
         )
       }
     }
+
+    transaction.commitNow()
   }
 
   private fun hideOrRemoveFragment(
@@ -294,6 +294,8 @@ class Router(
         else -> handleRemovingOlderFragments(newTopScreen, existingFragment, transaction, navRequest, lastButOneScreen, currentTopScreen)
       }
     }
+
+    transaction.commitNow()
   }
 
   private fun handleAddingTopFragment(

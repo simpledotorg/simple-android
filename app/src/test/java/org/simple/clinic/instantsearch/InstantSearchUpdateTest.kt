@@ -13,6 +13,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import java.util.UUID
 
 class InstantSearchUpdateTest {
@@ -175,7 +176,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when search result is clicked, then open patient summary`() {
+  fun `when search result is clicked and has no NHID as additional identifier, then open patient summary`() {
     val patientUuid = UUID.fromString("f607be71-630d-4adb-8d3a-76fdf347fe8a")
     val facility = TestData.facility(
         uuid = UUID.fromString("885c6339-9a96-4c8d-bfea-7eea74de6862"),
@@ -192,6 +193,32 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenPatientSummary(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when search result is clicked and has NHID as additional identifier, then check if patient has an existing NHID assigned to them`() {
+    val patientUuid = UUID.fromString("f607be71-630d-4adb-8d3a-76fdf347fe8a")
+    val facility = TestData.facility(
+        uuid = UUID.fromString("885c6339-9a96-4c8d-bfea-7eea74de6862"),
+        name = "PHC Obvious"
+    )
+
+    val model = InstantSearchModel
+        .create(additionalIdentifier =
+        TestData.identifier(
+            value = "28-3123-2283-6682",
+            type = IndiaNationalHealthId),
+            initialSearchQuery = null)
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    updateSpec
+        .given(model)
+        .whenEvent(SearchResultClicked(patientUuid))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CheckIfPatientAlreadyHasAnExistingNHID(patientUuid))
         ))
   }
 

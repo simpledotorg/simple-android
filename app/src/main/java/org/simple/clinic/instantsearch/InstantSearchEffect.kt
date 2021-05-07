@@ -44,3 +44,5 @@ object ShowKeyboard : InstantSearchEffect()
 data class OpenShortCodeSearchScreen(val shortCode: String) : InstantSearchEffect()
 
 object OpenQrCodeScanner : InstantSearchEffect()
+
+data class CheckIfPatientAlreadyHasAnExistingNHID(val patientId: UUID) : InstantSearchEffect()

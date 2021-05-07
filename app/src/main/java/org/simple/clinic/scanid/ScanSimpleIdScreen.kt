@@ -288,13 +288,17 @@ class ScanSimpleIdScreen : BaseScreen<
   }
 
   override fun openPatientSearch(additionalIdentifier: Identifier?) {
-    val screenKey = if (features.isEnabled(Feature.InstantSearch)) {
+    val keyToPush = if (features.isEnabled(Feature.InstantSearch)) {
       InstantSearchScreenKey(additionalIdentifier = additionalIdentifier, initialSearchQuery = null)
     } else {
       PatientSearchScreenKey(additionalIdentifier).wrap()
     }
 
-    router.replaceTop(screenKey)
+    when (val openedFrom = screenKey.openedFrom) {
+      OpenedFrom.InstantSearchScreen -> router.replaceKeyOfSameType(keyToPush)
+      OpenedFrom.PatientsTabScreen -> router.replaceTop(keyToPush)
+      else -> throw IllegalArgumentException("Opened from unknown: $openedFrom")
+    }
   }
 
   override fun showShortCodeValidationError(failure: EnteredCodeValidationResult) {

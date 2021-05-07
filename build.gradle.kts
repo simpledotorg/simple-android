@@ -35,9 +35,6 @@ allprojects {
         includeModule("com.facebook.flipper", "flipper-network-plugin")
         includeModule("io.requery", "sqlite-android")
         includeModule("ru.egslava", "MaskedEditText")
-
-        // :lint
-        includeModule("org.jetbrains.trove4j", "trove4j")
       }
     }
   }

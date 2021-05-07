@@ -20,6 +20,7 @@
 - Update `removeUntil` predicate in `Router#replaceKeyOfSameType`
 - Fix attaching removed fragment to `FragmentTransaction` in `Router`
 - Show error dialog when assigning a NHID to a patient with an existing ID
+- Improve `ScanSimpleIdScreen` navigation
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 05 May 2021] Show patients with national health id when searching with from scan screen
 

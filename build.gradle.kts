@@ -33,7 +33,6 @@ allprojects {
         // :app
         includeModule("com.facebook.flipper", "flipper")
         includeModule("com.facebook.flipper", "flipper-network-plugin")
-        includeModule("io.requery", "sqlite-android")
         includeModule("ru.egslava", "MaskedEditText")
       }
     }

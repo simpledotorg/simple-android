@@ -15,6 +15,7 @@
 - Bump RootBeer to v0.0.9
 - Bump AGP to v4.2.0
 - Add a common color resource for all search string query highlights
+- Bump SQLite version to 3.35.5
 - [In Progress: 20 Jan 2021] Material Theme-ing Migration
 - [In Progress: 05 May 2021] Show patients with national health id when searching with from scan screen
 

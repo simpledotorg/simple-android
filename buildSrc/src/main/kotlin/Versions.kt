@@ -37,7 +37,7 @@ object Versions {
   const val junit = "4.13.2"
   const val mockitoKotlin = "2.2.0"
   const val junitParams = "1.1.1"
-  const val sqliteAndroid = "3.32.2"
+  const val sqliteAndroid = "3.35.5"
   const val playServicesAuth = "19.0.0"
   const val viewPump = "2.0.3"
   const val pinEntryEditText = "2.0.6"

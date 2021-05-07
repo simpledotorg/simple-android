@@ -483,4 +483,32 @@ class InstantSearchUpdateTest {
             hasEffects(ShowNHIDErrorDialog)
         ))
   }
+
+  @Test
+  fun `when patient does not have an existing national health id, then open link id with patient screen`() {
+    val patientUuid = UUID.fromString("f607be71-630d-4adb-8d3a-76fdf347fe8a")
+    val facility = TestData.facility(
+        uuid = UUID.fromString("885c6339-9a96-4c8d-bfea-7eea74de6862"),
+        name = "PHC Obvious"
+    )
+
+    val identifier = TestData.identifier(
+        value = "28-3123-2283-6682",
+        type = IndiaNationalHealthId)
+
+    val model = InstantSearchModel
+        .create(
+            additionalIdentifier = identifier,
+            initialSearchQuery = null)
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientDoesNotHaveAnExistingNHID(patientUuid))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenLinkIdWithPatientScreen(patientUuid, identifier))
+        ))
+  }
 }

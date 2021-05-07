@@ -39,7 +39,7 @@ class InstantSearchUpdate @Inject constructor(
       is SearchQueryValidated -> searchQueryValidated(model, event)
       is SearchResultClicked -> searchResultClicked(model, event)
       is PatientAlreadyHasAnExistingNHID -> dispatch(ShowNHIDErrorDialog)
-      is PatientDoesNotHaveAnExistingNHID -> noChange()
+      is PatientDoesNotHaveAnExistingNHID -> dispatch(OpenLinkIdWithPatientScreen(event.patientId, model.additionalIdentifier!!))
       is SearchQueryChanged -> next(model.searchQueryChanged(event.searchQuery), ValidateSearchQuery(event.searchQuery))
       SavedNewOngoingPatientEntry -> dispatch(OpenPatientEntryScreen(model.facility!!))
       RegisterNewPatientClicked -> registerNewPatient(model)

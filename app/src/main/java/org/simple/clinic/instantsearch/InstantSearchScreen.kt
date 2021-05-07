@@ -41,6 +41,7 @@ import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.scanid.scannedqrcode.NationalHealthIDErrorDialog
@@ -274,7 +275,7 @@ class InstantSearchScreen :
   }
 
   override fun openQrCodeScanner() {
-    router.push(ScanSimpleIdScreenKey())
+    router.push(ScanSimpleIdScreenKey(OpenedFrom.InstantSearchScreen))
   }
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {

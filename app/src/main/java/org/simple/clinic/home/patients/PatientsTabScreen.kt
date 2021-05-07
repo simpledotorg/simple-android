@@ -37,6 +37,7 @@ import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
@@ -264,7 +265,7 @@ class PatientsTabScreen : BaseScreen<
   }
 
   override fun openScanSimpleIdCardScreen() {
-    router.push(ScanSimpleIdScreenKey())
+    router.push(ScanSimpleIdScreenKey(OpenedFrom.PatientsTabScreen))
   }
 
   override fun hideSyncIndicator() {

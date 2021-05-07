@@ -421,7 +421,7 @@ dependencies {
   implementation("com.mikepenz:itemanimators:${versions.itemAnimators}")
   implementation("org.mindrot:jbcrypt:${versions.jbcrypt}")
   implementation("com.squareup.flow:flow:${versions.flow}")
-  implementation("io.requery:sqlite-android:${versions.sqliteAndroid}")
+  implementation("com.github.requery:sqlite-android:${versions.sqliteAndroid}")
 
   implementation("com.google.android.gms:play-services-auth:${versions.playServicesAuth}")
   implementation("io.github.inflationx:viewpump:${versions.viewPump}")

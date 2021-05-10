@@ -9,42 +9,28 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayoutMediator
 import com.jakewharton.rxbinding3.view.clicks
-import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenHomeBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.change.FacilityChangeScreen
-import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen.ScreenRequest.ChangeCurrentFacility
-import org.simple.clinic.home.HomeScreen.ScreenRequest.ScanPassportRequest
 import org.simple.clinic.home.HomeTab.OVERDUE
 import org.simple.clinic.home.HomeTab.PATIENTS
 import org.simple.clinic.home.HomeTab.REPORTS
 import org.simple.clinic.home.help.HelpScreenKey
-import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenResult
-import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.scanid.ScanSimpleIdScreen
-import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.settings.SettingsScreenKey
-import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
-import org.simple.clinic.summary.OpenIntention
-import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.hideKeyboard
-import java.time.Instant
-import java.util.UUID
 import javax.inject.Inject
 
 class HomeScreen :
@@ -99,8 +85,6 @@ class HomeScreen :
 
   private val tabs = listOf(PATIENTS, OVERDUE, REPORTS)
 
-  private val scanResults = PublishSubject.create<BusinessIdScanned>()
-
   override fun defaultModel() = HomeScreenModel.create()
 
   override fun uiRenderer() = HomeScreenUiRenderer(this)
@@ -108,11 +92,7 @@ class HomeScreen :
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenHomeBinding.inflate(layoutInflater, container, false)
 
-  override fun events() = Observable
-      .merge(
-          facilitySelectionClicks(),
-          scanResults
-      )
+  override fun events() = facilitySelectionClicks()
       .compose(ReportAnalyticsEvents())
       .cast<HomeScreenEvent>()
 
@@ -146,20 +126,7 @@ class HomeScreen :
   }
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
-    when (requestType as ScreenRequest) {
-      ScanPassportRequest -> handleScanResults(result)
-      ChangeCurrentFacility -> {
-        // We don't really do anything with the result here
-      }
-    }
-  }
 
-  private fun handleScanResults(result: ScreenResult) {
-    if (result is Succeeded) {
-      val scanResult = ScanSimpleIdScreen.readScanResult(result)
-
-      scanResults.onNext(BusinessIdScanned.fromScanResult(scanResult))
-    }
   }
 
   private fun setupToolBar() {
@@ -216,34 +183,11 @@ class HomeScreen :
     overdueTab?.removeBadge()
   }
 
-  override fun openShortCodeSearchScreen(shortCode: String) {
-    router.push(ShortCodeSearchResultScreenKey(shortCode))
-  }
-
-  override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
-    val screenKey = if (features.isEnabled(Feature.InstantSearch)) {
-      InstantSearchScreenKey(
-          additionalIdentifier = additionalIdentifier,
-          initialSearchQuery = null)
-    } else {
-      PatientSearchScreenKey(additionalIdentifier).wrap()
-    }
-
-    router.push(screenKey)
-  }
-
-  override fun openPatientSummary(patientId: UUID) {
-    router.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
-  }
-
   interface Injector {
     fun inject(target: HomeScreen)
   }
 
   sealed class ScreenRequest : Parcelable {
-
-    @Parcelize
-    object ScanPassportRequest : ScreenRequest()
 
     @Parcelize
     object ChangeCurrentFacility : ScreenRequest()

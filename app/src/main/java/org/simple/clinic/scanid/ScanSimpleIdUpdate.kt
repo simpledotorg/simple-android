@@ -44,21 +44,21 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel,
       event: PatientSearchByIdentifierCompleted
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    val scanResult = if (event.patients.isNotEmpty()) {
-      patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
+    val effect = if (event.patients.isEmpty()) {
+      OpenPatientSearch(event.identifier)
     } else {
-      PatientNotFound(event.identifier)
+      patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
     }
 
-    return next(model = model.notSearching(), SendScannedIdentifierResult(scanResult))
+    return next(model = model.notSearching(), effect)
   }
 
-  private fun patientFoundByIdentifierSearch(patients: List<Patient>, identifier: Identifier): ScanResult {
+  private fun patientFoundByIdentifierSearch(patients: List<Patient>, identifier: Identifier): ScanSimpleIdEffect {
     return if (patients.size > 1) {
-      SearchByEnteredCode(BpPassport.shortCode(identifier)) //todo check if
+      OpenShortCodeSearch(BpPassport.shortCode(identifier))
     } else {
       val patientId = patients.first().uuid
-      PatientFound(patientId)
+      OpenPatientSummary(patientId)
     }
   }
 
@@ -85,10 +85,10 @@ class ScanSimpleIdUpdate @Inject constructor(
       noChange()
     }
   }
-  
+
   private fun shortCodeValidated(model: ScanSimpleIdModel, event: EnteredCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = when (event.result) {
-      Success -> SendScannedIdentifierResult(SearchByEnteredCode(model.enteredCode!!.enteredCodeText))
+      Success -> OpenShortCodeSearch(model.enteredCode!!.enteredCodeText)
       is Failure -> ShowEnteredCodeValidationError(event.result)
     }
 

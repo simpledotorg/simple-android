@@ -458,4 +458,29 @@ class InstantSearchUpdateTest {
             )
         ))
   }
+
+  @Test
+  fun `when patient already has an existing national health id, then show national health id error dialog`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("885c6339-9a96-4c8d-bfea-7eea74de6862"),
+        name = "PHC Obvious"
+    )
+
+    val model = InstantSearchModel
+        .create(additionalIdentifier =
+        TestData.identifier(
+            value = "28-3123-2283-6682",
+            type = IndiaNationalHealthId),
+            initialSearchQuery = null)
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientAlreadyHasAnExistingNHID)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowNHIDErrorDialog)
+        ))
+  }
 }

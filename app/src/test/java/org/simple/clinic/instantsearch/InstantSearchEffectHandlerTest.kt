@@ -12,8 +12,11 @@ import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import org.simple.clinic.util.toOptional
 import java.util.UUID
 
 class InstantSearchEffectHandlerTest {
@@ -333,6 +336,56 @@ class InstantSearchEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
 
     verify(uiActions).openQrCodeScanner()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when check if patient has an existing NHID effect is received and patient does have an existing NHID, then return patient has an existing NHID event`() {
+    val patientId = UUID.fromString("f7242bcf-585d-4f4e-81ff-407ccc2d7554")
+    val businessId = UUID.fromString("6889f6fb-aa9f-4e5f-8d48-4d22420bd811")
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patientId,
+        patientName = "Pat",
+        businessId = TestData.businessId(
+            uuid = businessId,
+            identifier = Identifier(
+                value = "28-3123-2283-6682",
+                type = IndiaNationalHealthId,
+            ),
+            patientUuid = patientId))
+
+    whenever(patientRepository.patientProfileImmediate(patientId)).thenReturn(patientProfile.toOptional())
+
+    // when
+    testCase.dispatch(CheckIfPatientAlreadyHasAnExistingNHID(patientId))
+
+    //then
+    testCase.assertOutgoingEvents(PatientAlreadyHasAnExistingNHID)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when check if patient has an existing NHID effect is received and patient does not have an existing NHID, then return patient does not have an existing NHID event`() {
+    val patientId = UUID.fromString("f7242bcf-585d-4f4e-81ff-407ccc2d7554")
+    val businessId = UUID.fromString("6889f6fb-aa9f-4e5f-8d48-4d22420bd811")
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patientId,
+        patientName = "Pat",
+        businessId = TestData.businessId(
+            uuid = businessId,
+            identifier = Identifier(
+                value = "08d5528b-8587-4ada-9b6a-4ff07b9b3357",
+                type = BpPassport,
+            ),
+            patientUuid = patientId))
+
+    whenever(patientRepository.patientProfileImmediate(patientId)).thenReturn(patientProfile.toOptional())
+
+    // when
+    testCase.dispatch(CheckIfPatientAlreadyHasAnExistingNHID(patientId))
+
+    //then
+    testCase.assertOutgoingEvents(PatientDoesNotHaveAnExistingNHID(patientId))
     verifyNoMoreInteractions(uiActions)
   }
 }

@@ -14,6 +14,7 @@
 - Stop reporting `SyncEvent` to analytics
 - Bump RootBeer to v0.0.9
 - Bump AGP to v4.2.0
+- Bump Kotlin to v1.5.0
 - Add a common color resource for all search string query highlights
 - Bump SQLite version to 3.35.5
 - Update `removeUntil` predicate in `Router#replaceKeyOfSameType`

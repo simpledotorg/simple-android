@@ -1,9 +1,11 @@
 object Versions {
   const val minSdk = 21
   const val compileSdk = 30
-  const val kotlin = "1.4.32"
+  // TODO: When bumping Kotlin version to 1.5.10. Remove the kgp-leak-patcher plugin
+  const val kotlin = "1.5.0"
   const val agp = "4.2.0"
   const val roomMetadataGenerator = "1.1.0"
+  const val kgpLeakPatcher = "1.1.0"
 
   const val supportLib = "1.0.0"
   const val recyclerView = "1.0.0"
@@ -13,9 +15,9 @@ object Versions {
   const val androidXTestExt = "1.1.1"
   const val androidXTest = "1.2.0"
   const val timber = "4.7.0"
-  const val dagger = "2.33"
+  const val dagger = "2.35.1"
   const val coreTesting = "2.0.0"
-  const val moshi = "1.11.0"
+  const val moshi = "1.12.0"
   const val retrofit = "2.9.0"
   const val sentry = "4.3.0"
   const val sentryGradlePlugin = "1.7.36"

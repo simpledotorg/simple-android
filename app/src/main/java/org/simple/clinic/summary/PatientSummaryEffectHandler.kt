@@ -142,8 +142,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         patient = patientProfile.patient,
         address = patientProfile.address,
         phoneNumber = patientProfile.phoneNumbers.firstOrNull(),
-        bpPassport = patientProfile.businessIds.filter { it.identifier.type == BpPassport }.maxBy { it.createdAt },
-        alternativeId = patientProfile.businessIds.filter { it.identifier.type == country.alternativeIdentifierType }.maxBy { it.createdAt },
+        bpPassport = patientProfile.businessIds.filter { it.identifier.type == BpPassport }.maxByOrNull { it.createdAt },
+        alternativeId = patientProfile.businessIds.filter { it.identifier.type == country.alternativeIdentifierType }.maxByOrNull { it.createdAt },
         facility = facility.toNullable()
     )
   }

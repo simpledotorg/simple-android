@@ -75,7 +75,7 @@ class ScanSimpleIdEffectHandlerTest {
      """
     val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload()
     val patientPrefillInfo = indiaNHIDInfoPayload.toPatientPrefillInfo()
-    val indiaNHIDInfo = indiaNHIDInfoPayload.toIndiaNHIDInfo()
+    val indiaNHIDInfo = indiaNHIDInfoPayload.healthIdNumber
 
     // when
     testCase.dispatch(ParseScannedJson(expectedJson))

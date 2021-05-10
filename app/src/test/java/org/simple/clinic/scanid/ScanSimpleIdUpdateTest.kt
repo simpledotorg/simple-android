@@ -70,7 +70,7 @@ class ScanSimpleIdUpdateTest {
     val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload(
         healthIdNumber = indiaNationalHealthID
     )
-    val indiaNHIDInfo = indiaNHIDInfoPayload.toIndiaNHIDInfo()
+    val indiaNHIDInfo = indiaNHIDInfoPayload.healthIdNumber
     val patientPrefillInfo = indiaNHIDInfoPayload.toPatientPrefillInfo()
 
     val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)

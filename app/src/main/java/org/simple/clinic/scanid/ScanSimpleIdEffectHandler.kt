@@ -56,7 +56,7 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
             adapter.fromJson(it.text)
           }
           .map {
-            ScannedQRCodeJsonParsed(it.toPatientPrefillInfo(), it.toIndiaNHIDInfo())
+            ScannedQRCodeJsonParsed(it.toPatientPrefillInfo(), it.healthIdNumber)
           }
     }
   }

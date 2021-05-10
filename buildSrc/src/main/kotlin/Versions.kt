@@ -54,7 +54,7 @@ object Versions {
   const val playCore = "1.10.0"
   const val fastScroll = "2.0.0"
   const val mixpanel = "5.6.4"
-  const val mobius = "1.3.0"
+  const val mobius = "1.3.4"
   const val guava = "28.1-jre" // Used by the "mobius-migration" library ONLY in tests
   const val uuidGenerator = "3.2.0"
   const val flipper = "0.37.0"

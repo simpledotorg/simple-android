@@ -19,4 +19,5 @@ interface InstantSearchUiActions {
   fun showKeyboard()
   fun openShortCodeSearchScreen(shortCode: String)
   fun openQrCodeScanner()
+  fun showNHIDErrorDialog()
 }

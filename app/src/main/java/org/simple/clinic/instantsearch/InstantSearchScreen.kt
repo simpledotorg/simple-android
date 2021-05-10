@@ -44,6 +44,7 @@ import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
+import org.simple.clinic.scanid.scannedqrcode.NationalHealthIDErrorDialog
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -295,6 +296,10 @@ class InstantSearchScreen :
       val scanResult = ScanSimpleIdScreen.readScanResult(result)
       qrCodeScanResults.onNext(QrCodeScanned.fromResult(scanResult))
     }
+  }
+
+  override fun showNHIDErrorDialog() {
+    NationalHealthIDErrorDialog.show(activity.supportFragmentManager)
   }
 
   private fun allPatientsItemClicks(): Observable<UiEvent> {

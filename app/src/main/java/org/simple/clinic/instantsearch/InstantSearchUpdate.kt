@@ -16,6 +16,7 @@ import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
+import java.util.UUID
 import javax.inject.Inject
 
 class InstantSearchUpdate @Inject constructor(
@@ -37,6 +38,8 @@ class InstantSearchUpdate @Inject constructor(
       is SearchResultsLoaded -> searchResultsLoaded(model, event)
       is SearchQueryValidated -> searchQueryValidated(model, event)
       is SearchResultClicked -> searchResultClicked(model, event)
+      is PatientAlreadyHasAnExistingNHID -> dispatch(ShowNHIDErrorDialog)
+      is PatientDoesNotHaveAnExistingNHID -> dispatch(OpenLinkIdWithPatientScreen(event.patientId, model.additionalIdentifier!!))
       is SearchQueryChanged -> next(model.searchQueryChanged(event.searchQuery), ValidateSearchQuery(event.searchQuery))
       SavedNewOngoingPatientEntry -> dispatch(OpenPatientEntryScreen(model.facility!!))
       RegisterNewPatientClicked -> registerNewPatient(model)
@@ -47,6 +50,16 @@ class InstantSearchUpdate @Inject constructor(
       is OpenQrCodeScannerClicked -> dispatch(OpenQrCodeScanner)
     }
   }
+
+  private fun searchResultClicked(
+      model: InstantSearchModel,
+      event: SearchResultClicked
+  ): Next<InstantSearchModel, InstantSearchEffect> =
+      if (model.isAdditionalIdentifierAnNHID) {
+        dispatch(CheckIfPatientAlreadyHasAnExistingNHID(event.patientId))
+      } else {
+        searchResultClickedWithoutNHID(model, event.patientId)
+      }
 
   private fun patientNotFoundAfterQrCodeScan(
       model: InstantSearchModel,
@@ -82,11 +95,11 @@ class InstantSearchUpdate @Inject constructor(
     return dispatch(SaveNewOngoingPatientEntry(ongoingPatientEntry))
   }
 
-  private fun searchResultClicked(model: InstantSearchModel, event: SearchResultClicked): Next<InstantSearchModel, InstantSearchEffect> {
+  private fun searchResultClickedWithoutNHID(model: InstantSearchModel, patientId: UUID): Next<InstantSearchModel, InstantSearchEffect> {
     val effect = if (model.hasAdditionalIdentifier)
-      OpenLinkIdWithPatientScreen(event.patientId, model.additionalIdentifier!!)
+      OpenLinkIdWithPatientScreen(patientId, model.additionalIdentifier!!)
     else
-      OpenPatientSummary(event.patientId)
+      OpenPatientSummary(patientId)
 
     return dispatch(effect)
   }

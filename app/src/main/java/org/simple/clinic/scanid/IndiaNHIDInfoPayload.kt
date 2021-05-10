@@ -40,11 +40,4 @@ data class IndiaNHIDInfoPayload(
         address = address
     )
   }
-
-  fun toIndiaNHIDInfo(): IndiaNHIDInfo {
-    return IndiaNHIDInfo(
-        healthIdNumber = healthIdNumber,
-        healthIdUserName = healthIdUserName
-    )
-  }
 }

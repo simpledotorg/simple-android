@@ -124,7 +124,7 @@ class Router(
       keyToPush: ScreenKey
   ) {
     val newHistory = history
-        .removeUntil { screenKey -> !screenKey.matchesScreen(keyToPush) }
+        .removeWhile { screenKey -> !screenKey.matchesScreen(keyToPush) }
         .removeLast() // We need to remove the key which matches this key as well
         .add(Normal(keyToPush))
 

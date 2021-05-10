@@ -36,12 +36,11 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
   private val loop: MobiusLoop.Builder<M, E, F> by unsafeLazy {
     RxMobius
         .loop(createUpdate()::update, createEffectHandler())
-        .init(createInit())
         .eventSources(additionalEventSources())
   }
 
   private val controller: MobiusLoop.Controller<M, E> by unsafeLazy {
-    MobiusAndroid.controller(loop, defaultModel())
+    MobiusAndroid.controller(loop, defaultModel(), createInit())
   }
 
   protected val screenKey by unsafeLazy { ScreenKey.key<K>(this) }

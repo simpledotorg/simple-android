@@ -42,7 +42,6 @@ class MobiusTestFixture<M : Any, E, F>(
 
     val loop = createLoop(
         eventSource,
-        spyingInit(init, modelUpdateListener),
         spyingUpdate(update, modelUpdateListener),
         effectHandler,
         immediateWorkRunner,
@@ -50,7 +49,10 @@ class MobiusTestFixture<M : Any, E, F>(
         additionalEventSources
     )
 
-    controller = Mobius.controller(loop, defaultModel, immediateWorkRunner)
+    controller = Mobius.controller(loop,
+        defaultModel,
+        spyingInit(init, modelUpdateListener),
+        immediateWorkRunner)
   }
 
   fun start() {
@@ -66,7 +68,6 @@ class MobiusTestFixture<M : Any, E, F>(
 
   private fun createLoop(
     eventSource: EventSource<E>,
-    init: Init<M, F>,
     update: Update<M, E, F>,
     effectHandlerListener: EffectHandler<F, E>,
     workRunner: WorkRunner,
@@ -75,7 +76,6 @@ class MobiusTestFixture<M : Any, E, F>(
   ): MobiusLoop.Builder<M, E, F> {
     return RxMobius
         .loop(update, effectHandlerListener)
-        .init(init)
         .eventSources(eventSource, *additionalEventSources.toTypedArray())
         .eventRunner { workRunner }
         .effectRunner { workRunner }

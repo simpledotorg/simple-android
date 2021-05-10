@@ -44,9 +44,6 @@ class InstantSearchUpdate @Inject constructor(
       SavedNewOngoingPatientEntry -> dispatch(OpenPatientEntryScreen(model.facility!!))
       RegisterNewPatientClicked -> registerNewPatient(model)
       is BlankScannedQrCodeResultReceived -> blankScannedQrCodeResult(model, event)
-      is QrCodeScanned.ByPatientFound -> dispatch(OpenPatientSummary(event.patientId))
-      is QrCodeScanned.ByPatientNotFound -> patientNotFoundAfterQrCodeScan(model, event)
-      is QrCodeScanned.ByShortCode -> dispatch(OpenShortCodeSearchScreen(event.shortCode))
       is OpenQrCodeScannerClicked -> dispatch(OpenQrCodeScanner)
     }
   }
@@ -60,16 +57,6 @@ class InstantSearchUpdate @Inject constructor(
       } else {
         searchResultClickedWithoutNHID(model, event.patientId)
       }
-
-  private fun patientNotFoundAfterQrCodeScan(
-      model: InstantSearchModel,
-      event: QrCodeScanned.ByPatientNotFound
-  ): Next<InstantSearchModel, InstantSearchEffect> {
-    return next(
-        model.additionalIdentifierUpdated(event.identifier).scannedQrCodeSheetOpened(),
-        OpenScannedQrCodeSheet(event.identifier)
-    )
-  }
 
   private fun blankScannedQrCodeResult(
       model: InstantSearchModel,

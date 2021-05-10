@@ -4,9 +4,10 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.navigation.v2.ScreenKey
 
 @Parcelize
-class ScanSimpleIdScreenKey : ScreenKey() {
-
-  override val analyticsName: String = "ScanSimpleId"
+data class ScanSimpleIdScreenKey(
+    val openedFrom: OpenedFrom,
+    override val analyticsName: String = "ScanSimpleId"
+) : ScreenKey() {
 
   override fun instantiateFragment() = ScanSimpleIdScreen()
 }

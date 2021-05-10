@@ -28,10 +28,24 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       .addAction(HideEnteredCodeValidationError::class.java, uiActions::hideShortCodeValidationError, schedulersProvider.ui())
       .addConsumer(ShowEnteredCodeValidationError::class.java, { uiActions.showShortCodeValidationError(it.failure) }, schedulersProvider.ui())
       .addTransformer(ValidateEnteredCode::class.java, validateShortCode())
-      .addConsumer(SendScannedIdentifierResult::class.java, { uiActions.sendScannedId(it.scannedId) }, schedulersProvider.ui())
       .addTransformer(SearchPatientByIdentifier::class.java, searchPatientByIdentifier())
       .addTransformer(ParseScannedJson::class.java, parseJsonIntoObject())
+      .addConsumer(OpenPatientSummary::class.java, ::openPatientSummary, schedulersProvider.ui())
+      .addConsumer(OpenShortCodeSearch::class.java, ::openShortCodeSearch, schedulersProvider.ui())
+      .addConsumer(OpenPatientSearch::class.java, ::openPatientSearch, schedulersProvider.ui())
       .build()
+
+  private fun openPatientSearch(openPatientSearch: OpenPatientSearch) {
+    uiActions.openPatientSearch(openPatientSearch.additionalIdentifier)
+  }
+
+  private fun openShortCodeSearch(openShortCodeSearch: OpenShortCodeSearch) {
+    uiActions.openShortCodeSearch(openShortCodeSearch.shortCode)
+  }
+
+  private fun openPatientSummary(openPatientSummary: OpenPatientSummary) {
+    uiActions.openPatientSummary(openPatientSummary.patientId)
+  }
 
   private fun parseJsonIntoObject(): ObservableTransformer<ParseScannedJson, ScanSimpleIdEvent> {
     return ObservableTransformer { effects ->

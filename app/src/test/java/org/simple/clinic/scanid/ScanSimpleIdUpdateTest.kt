@@ -83,14 +83,12 @@ class ScanSimpleIdUpdateTest {
     val shortCode = "1234567"
     val model = defaultModel.shortCodeChanged(EnteredCodeInput(shortCode))
 
-    val expectedScanResult = SearchByEnteredCode(shortCode)
-
     spec
         .given(model)
         .whenEvent(EnteredCodeValidated(EnteredCodeValidationResult.Success))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(SendScannedIdentifierResult(expectedScanResult))
+            hasEffects(OpenShortCodeSearch(shortCode))
         ))
   }
 
@@ -100,16 +98,14 @@ class ScanSimpleIdUpdateTest {
     val patient = TestData.patient(
         uuid = patientId
     )
-    val identifier = Identifier("123456", BpPassport)
-
-    val expectedScanResult = PatientFound(patientId)
+    val identifier = Identifier("77877995-6f2f-4591-bdb8-bd0f9c62d573", BpPassport)
 
     spec
         .given(defaultModel)
         .whenEvent(PatientSearchByIdentifierCompleted(listOf(patient), identifier))
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
-            hasEffects(SendScannedIdentifierResult(expectedScanResult))
+            hasEffects(OpenPatientSummary(patientId))
         ))
   }
 
@@ -118,14 +114,12 @@ class ScanSimpleIdUpdateTest {
     val patients = emptyList<Patient>()
     val identifier = Identifier("123456", BpPassport)
 
-    val expectedScanResult = PatientNotFound(identifier)
-
     spec
         .given(defaultModel)
         .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
-            hasEffects(SendScannedIdentifierResult(expectedScanResult))
+            hasEffects(OpenPatientSearch(identifier))
         ))
   }
 
@@ -137,16 +131,14 @@ class ScanSimpleIdUpdateTest {
     val patient1 = TestData.patient(uuid = patientId1)
     val patient2 = TestData.patient(uuid = patientId2)
 
-    val identifier = Identifier("123456", BpPassport)
-
-    val expectedScanResult = SearchByEnteredCode("123456")
+    val identifier = Identifier("47d51ebf-0815-4f30-94aa-bc210b305935", BpPassport)
 
     spec
         .given(defaultModel)
         .whenEvent(PatientSearchByIdentifierCompleted(listOf(patient1, patient2), identifier))
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
-            hasEffects(SendScannedIdentifierResult(expectedScanResult))
+            hasEffects(OpenShortCodeSearch("4751081"))
         ))
   }
 }

@@ -17,9 +17,6 @@ class HomeScreenUpdate @Inject constructor(
       HomeFacilitySelectionClicked -> dispatch(OpenFacilitySelection)
       is CurrentFacilityLoaded -> currentFacilityLoaded(model, event)
       is OverdueAppointmentCountLoaded -> next(model.overdueAppointmentCountLoaded(event.overdueAppointmentCount))
-      is BusinessIdScanned.ByShortCode -> dispatch(OpenShortCodeSearchScreen(event.shortCode))
-      is BusinessIdScanned.ByPatientFound -> dispatch(OpenPatientSummary(event.patientId))
-      is BusinessIdScanned.ByPatientNotFound -> dispatch(OpenPatientSearchScreen(event.identifier))
     }
   }
 

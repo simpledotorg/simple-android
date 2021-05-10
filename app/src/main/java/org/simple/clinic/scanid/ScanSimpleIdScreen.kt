@@ -33,19 +33,27 @@ import org.simple.clinic.databinding.ScreenScanSimpleBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
+import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.Succeeded
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport.SHORT_CODE_LENGTH
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
+import org.simple.clinic.scanid.qrcodeanalyzer.MLKitQrCodeAnalyzer
+import org.simple.clinic.scanid.qrcodeanalyzer.ZxingQrCodeAnalyzer
 import org.simple.clinic.scanid.ui.ShortCodeSpanWatcher
+import org.simple.clinic.search.PatientSearchScreenKey
+import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
+import org.simple.clinic.summary.OpenIntention
+import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.BitmapUtils
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
-import org.simple.clinic.util.BitmapUtils
-import org.simple.clinic.scanid.qrcodeanalyzer.MLKitQrCodeAnalyzer
-import org.simple.clinic.scanid.qrcodeanalyzer.ZxingQrCodeAnalyzer
+import java.time.Instant
+import java.util.UUID
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import kotlin.math.abs
@@ -62,10 +70,6 @@ class ScanSimpleIdScreen : BaseScreen<
   companion object {
     private const val RATIO_4_3_VALUE = 4.0 / 3.0
     private const val RATIO_16_9_VALUE = 16.0 / 9.0
-
-    fun readScanResult(result: Succeeded): ScanResult {
-      return result.result as ScanResult
-    }
   }
 
   @Inject
@@ -272,8 +276,29 @@ class ScanSimpleIdScreen : BaseScreen<
     }
   }
 
-  override fun sendScannedId(scanResult: ScanResult) {
-    router.popWithResult(Succeeded(scanResult))
+  override fun openPatientSummary(patientId: UUID) {
+    router.replaceTop(PatientSummaryScreenKey(
+        patientUuid = patientId,
+        intention = OpenIntention.ViewExistingPatient,
+        screenCreatedTimestamp = Instant.now(utcClock)))
+  }
+
+  override fun openShortCodeSearch(shortCode: String) {
+    router.replaceTop(ShortCodeSearchResultScreenKey(shortCode))
+  }
+
+  override fun openPatientSearch(additionalIdentifier: Identifier?) {
+    val keyToPush = if (features.isEnabled(Feature.InstantSearch)) {
+      InstantSearchScreenKey(additionalIdentifier = additionalIdentifier, initialSearchQuery = null)
+    } else {
+      PatientSearchScreenKey(additionalIdentifier).wrap()
+    }
+
+    when (val openedFrom = screenKey.openedFrom) {
+      OpenedFrom.InstantSearchScreen -> router.replaceKeyOfSameType(keyToPush)
+      OpenedFrom.PatientsTabScreen -> router.replaceTop(keyToPush)
+      else -> throw IllegalArgumentException("Opened from unknown: $openedFrom")
+    }
   }
 
   override fun showShortCodeValidationError(failure: EnteredCodeValidationResult) {

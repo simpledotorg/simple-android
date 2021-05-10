@@ -9,7 +9,6 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
-import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
@@ -331,70 +330,6 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowKeyboard)
-        ))
-  }
-
-  @Test
-  fun `when qr code is scanned and patient is found, then open patient summary`() {
-    val facility = TestData.facility(
-        uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
-    )
-    val facilityLoadedModel = defaultModel
-        .facilityLoaded(facility)
-
-    val patientId = UUID.fromString("feb3b4c5-b286-4995-be10-24b382ffd8bb")
-
-    updateSpec
-        .given(facilityLoadedModel)
-        .whenEvent(QrCodeScanned.ByPatientFound(patientId))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(OpenPatientSummary(patientId))
-        ))
-  }
-
-  @Test
-  fun `when qr code is scanned and patient is not found, then open scanned qr code sheet`() {
-    val facility = TestData.facility(
-        uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
-    )
-    val facilityLoadedModel = defaultModel
-        .facilityLoaded(facility)
-
-    val identifier = Identifier(
-        value = "e0db3c71-aa4a-42d8-9f36-256e1a194f69",
-        type = BpPassport
-    )
-
-    val expectedModel = facilityLoadedModel
-        .additionalIdentifierUpdated(additionalIdentifier = identifier)
-        .scannedQrCodeSheetOpened()
-
-    updateSpec
-        .given(facilityLoadedModel)
-        .whenEvent(QrCodeScanned.ByPatientNotFound(identifier))
-        .then(assertThatNext(
-            hasModel(expectedModel),
-            hasEffects(OpenScannedQrCodeSheet(identifier))
-        ))
-  }
-
-  @Test
-  fun `when short code is entered, then open short code search`() {
-    val facility = TestData.facility(
-        uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")
-    )
-    val facilityLoadedModel = defaultModel
-        .facilityLoaded(facility)
-
-    val shortCode = "123 4567"
-
-    updateSpec
-        .given(facilityLoadedModel)
-        .whenEvent(QrCodeScanned.ByShortCode(shortCode))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(OpenShortCodeSearchScreen(shortCode))
         ))
   }
 

@@ -798,4 +798,8 @@
   <string name="sheet_text_input_date_picker_date_cannot_be_in_past">Enter a date in the future</string>
   <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">Date cannot be after one year</string>
 
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">National health ID can not be assigned to a patient with an existing national health ID</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">OK</string>
+
 </resources>

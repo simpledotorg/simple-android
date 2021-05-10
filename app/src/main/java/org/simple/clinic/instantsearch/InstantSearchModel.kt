@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 
 @Parcelize
 data class InstantSearchModel(
@@ -22,6 +23,9 @@ data class InstantSearchModel(
 
   val hasAdditionalIdentifier: Boolean
     get() = additionalIdentifier != null
+
+  val isAdditionalIdentifierAnNHID: Boolean
+    get() = additionalIdentifier?.type == IndiaNationalHealthId && hasAdditionalIdentifier
 
   companion object {
     fun create(additionalIdentifier: Identifier?, initialSearchQuery: String?) = InstantSearchModel(

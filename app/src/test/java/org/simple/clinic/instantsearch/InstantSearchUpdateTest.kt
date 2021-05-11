@@ -22,7 +22,7 @@ class InstantSearchUpdateTest {
       value = "3e5500fe-e10e-4009-a0bb-3db9009fdef6",
       type = BpPassport
   )
-  private val defaultModel = InstantSearchModel.create(identifier, null)
+  private val defaultModel = InstantSearchModel.create(identifier)
 
   @Test
   fun `when current facility is loaded, then update the model and load all patients`() {
@@ -177,7 +177,7 @@ class InstantSearchUpdateTest {
         name = "PHC Obvious"
     )
     val model = InstantSearchModel
-        .create(additionalIdentifier = null, initialSearchQuery = null)
+        .create(additionalIdentifier = null)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -202,8 +202,7 @@ class InstantSearchUpdateTest {
         .create(additionalIdentifier =
         TestData.identifier(
             value = "28-3123-2283-6682",
-            type = IndiaNationalHealthId),
-            initialSearchQuery = null)
+            type = IndiaNationalHealthId))
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -225,7 +224,7 @@ class InstantSearchUpdateTest {
         name = "PHC Obvious"
     )
     val model = InstantSearchModel
-        .create(additionalIdentifier = identifier, initialSearchQuery = null)
+        .create(additionalIdentifier = identifier)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -400,8 +399,7 @@ class InstantSearchUpdateTest {
         .create(additionalIdentifier =
         TestData.identifier(
             value = "28-3123-2283-6682",
-            type = IndiaNationalHealthId),
-            initialSearchQuery = null)
+            type = IndiaNationalHealthId))
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -428,8 +426,7 @@ class InstantSearchUpdateTest {
 
     val model = InstantSearchModel
         .create(
-            additionalIdentifier = identifier,
-            initialSearchQuery = null)
+            additionalIdentifier = identifier)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 

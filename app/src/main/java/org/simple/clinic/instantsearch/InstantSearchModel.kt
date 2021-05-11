@@ -28,9 +28,9 @@ data class InstantSearchModel(
     get() = additionalIdentifier?.type == IndiaNationalHealthId && hasAdditionalIdentifier
 
   companion object {
-    fun create(additionalIdentifier: Identifier?, initialSearchQuery: String?) = InstantSearchModel(
+    fun create(additionalIdentifier: Identifier?) = InstantSearchModel(
         facility = null,
-        searchQuery = initialSearchQuery,
+        searchQuery = null,
         additionalIdentifier = additionalIdentifier,
         instantSearchProgressState = null,
         scannedQrCodeSheetAlreadyOpened = false

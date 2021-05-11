@@ -11,6 +11,9 @@ import org.simple.clinic.scanid.EnteredCodeValidationResult.Success
 @Parcelize
 data class EnteredCodeInput(val enteredCodeText: String) : Parcelable {
 
+  val isShortCode: Boolean
+    get() = enteredCodeText.length == SHORT_CODE_LENGTH
+
   @IgnoredOnParcel
   private val longCodeLength = 14
 

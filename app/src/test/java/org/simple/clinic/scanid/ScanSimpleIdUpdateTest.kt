@@ -162,4 +162,18 @@ class ScanSimpleIdUpdateTest {
             hasEffects(OpenPatientSearch(null, "12345612345612"))
         ))
   }
+
+  @Test
+  fun `when entered code is not a short code, then open patient search`() {
+    val shortCode = "12345678901234"
+    val model = defaultModel.shortCodeChanged(EnteredCodeInput(shortCode))
+
+    spec
+        .given(model)
+        .whenEvent(EnteredCodeValidated(EnteredCodeValidationResult.Success))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = shortCode))
+        ))
+  }
 }

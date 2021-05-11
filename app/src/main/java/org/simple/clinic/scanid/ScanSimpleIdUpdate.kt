@@ -110,10 +110,19 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun shortCodeValidated(model: ScanSimpleIdModel, event: EnteredCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = when (event.result) {
-      Success -> OpenShortCodeSearch(model.enteredCode!!.enteredCodeText)
+      Success -> searchEnteredCode(model)
       is Failure -> ShowEnteredCodeValidationError(event.result)
     }
 
     return dispatch(effect)
+  }
+
+  private fun searchEnteredCode(model: ScanSimpleIdModel): ScanSimpleIdEffect {
+    val shortCodeToSearch = model.enteredCode!!.enteredCodeText
+    return if (model.enteredCode.isShortCode) {
+      OpenShortCodeSearch(shortCodeToSearch)
+    } else {
+      OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = shortCodeToSearch)
+    }
   }
 }

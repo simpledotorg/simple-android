@@ -52,7 +52,6 @@ import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.sync.ProtocolDrugPayload
 import org.simple.clinic.protocol.sync.ProtocolPayload
-import org.simple.clinic.scanid.IndiaNHIDInfo
 import org.simple.clinic.scanid.IndiaNHIDInfoPayload
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer

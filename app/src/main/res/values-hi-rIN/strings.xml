@@ -349,7 +349,6 @@
   <string name="scansimpleid_title">कार्ड आईडी स्कैन करें</string>
   <string name="scansimpleid_shortcode_error_empty">बीपी पासपोर्ट नंबर दर्ज करे</string>
   <string name="scansimpleid_shortcode_error_not_required_length">बीपी पासपोर्ट नंबर की लंबाई 7 अंकों से कम है</string>
-  <string name="scansimpleid_type_bp_passport_number">या बीपी पासपोर्ट नंबर टाइप करें</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">सिंक लंबित है</string>

@@ -349,7 +349,6 @@
   <string name="scansimpleid_title">ਕਾਰਡ ਦਾ ਆਈਡੀ ਸਕੈਨ ਕਰੋ</string>
   <string name="scansimpleid_shortcode_error_empty">ਬੀਪੀ ਪਾਸਪੋਰਟ ਨੰਬਰ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="scansimpleid_shortcode_error_not_required_length">ਬੀਪੀ ਪਾਸਪੋਰਟ ਨੰਬਰ 7 ਅੰਕਾਂ ਤੋਂ ਛੋਟਾ ਹੈ</string>
-  <string name="scansimpleid_type_bp_passport_number">ਜਾਂ ਬੀਪੀ ਪਾਸਪੋਰਟ ਨੰਬਰ ਟਾਈਪ ਕਰੋ</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ਸਿੰਕ ਕਰਨਾ ਬਕਾਇਆ ਹੈ</string>

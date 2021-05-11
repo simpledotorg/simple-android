@@ -349,7 +349,6 @@
   <string name="scansimpleid_title">ስእሊ መለለዩ ካርድ ኣብ ኮምፕዩተር ዓቅብ</string>
   <string name="scansimpleid_shortcode_error_empty">BP Passport ኣእትው</string>
   <string name="scansimpleid_shortcode_error_not_required_length"> ቁፅሪ BP Passport  ትሕቲ 7 ቁፅርታት’ዩ ዘሎ</string>
-  <string name="scansimpleid_type_bp_passport_number">ቁፅሪ BP Passport  ፀሓፍ</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending"> ምስናይ ንውሳነ ይፅበይ ኣሎ</string>

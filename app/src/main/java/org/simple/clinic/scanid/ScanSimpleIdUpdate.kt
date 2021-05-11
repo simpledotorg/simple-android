@@ -16,8 +16,10 @@ import java.util.UUID
 import javax.inject.Inject
 
 class ScanSimpleIdUpdate @Inject constructor(
-    private val crashReporter: CrashReporter
+    private val crashReporter: CrashReporter,
+    private val isIndianNHIDSupportEnabled: Boolean
 ) : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimpleIdEffect> {
+
   override fun update(model: ScanSimpleIdModel, event: ScanSimpleIdEvent): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return when (event) {
       ShowKeyboard -> dispatch(HideQrCodeScannerView)
@@ -32,8 +34,8 @@ class ScanSimpleIdUpdate @Inject constructor(
   }
 
   private fun scannedQRCodeParsed(model: ScanSimpleIdModel, event: ScannedQRCodeJsonParsed): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    return if (event.indiaNHIDInfo != null) {
-      val identifier = Identifier(event.indiaNHIDInfo.healthIdNumber, IndiaNationalHealthId)
+    return if (event.patientPrefillInfo != null && event.healthIdNumber != null) {
+      val identifier = Identifier(event.healthIdNumber, IndiaNationalHealthId)
       next(model = model.searching(), SearchPatientByIdentifier(identifier))
     } else {
       noChange()
@@ -55,7 +57,11 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun patientFoundByIdentifierSearch(patients: List<Patient>, identifier: Identifier): ScanSimpleIdEffect {
     return if (patients.size > 1) {
-      OpenShortCodeSearch(BpPassport.shortCode(identifier))
+      try {
+        OpenShortCodeSearch(BpPassport.shortCode(identifier))
+      } catch (e: Exception) {
+        OpenShortCodeSearch(identifier.value)
+      }
     } else {
       val patientId = patients.first().uuid
       OpenPatientSummary(patientId)
@@ -70,7 +76,20 @@ class ScanSimpleIdUpdate @Inject constructor(
       val identifier = Identifier(bpPassportCode.toString(), BpPassport)
       next(model = model.searching(), SearchPatientByIdentifier(identifier))
     } catch (e: Exception) {
+      searchPatientWhenNHIDEnabled(model, event, e)
+    }
+  }
+
+  private fun searchPatientWhenNHIDEnabled(
+      model: ScanSimpleIdModel,
+      event: ScanSimpleIdScreenQrCodeScanned,
+      e: Exception
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    return if (isIndianNHIDSupportEnabled) {
       searchPatientWithNhid(model, event)
+    } else {
+      crashReporter.report(e)
+      noChange()
     }
   }
 

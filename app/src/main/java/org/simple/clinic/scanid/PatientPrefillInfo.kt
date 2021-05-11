@@ -1,8 +1,6 @@
 package org.simple.clinic.scanid
 
-data class IndiaNHIDInfo(
-    val healthIdNumber: String,
-    val healthIdUserName: String,
+data class PatientPrefillInfo(
     val fullName: String,
     val gender: String,
     val state: String?,

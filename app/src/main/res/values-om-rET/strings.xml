@@ -350,7 +350,6 @@
   <string name="scansimpleid_title">Kaardii eenyummeessaa iskaan godhi</string>
   <string name="scansimpleid_shortcode_error_empty">Lakkoofsa paaspoortii PB galchi</string>
   <string name="scansimpleid_shortcode_error_not_required_length">Lakkoofsi paaspoortii PB dijitiiwwan 7 gadi</string>
-  <string name="scansimpleid_type_bp_passport_number">yookan lakoofsa paaspoortii PB katabi</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Mirkana ilaalamaa jira</string>

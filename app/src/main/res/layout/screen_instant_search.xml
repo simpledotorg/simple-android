@@ -38,7 +38,7 @@
             android:id="@+id/searchQueryEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/patientsearch_hint"
+            android:hint="@string/instantsearch_hint"
             android:imeOptions="actionSearch"
             android:importantForAutofill="no"
             android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"

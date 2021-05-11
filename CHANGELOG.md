@@ -8,6 +8,7 @@
 
 ## Features
 - Add NHID support in `PatientEntryScreen`
+- Use `PatientPrefillInfo` for prefilling patient entry information
 
 ## On Demo
 ### Internal

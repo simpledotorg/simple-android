@@ -1,6 +1,15 @@
 # CHANGELOG
 ## Next Release
 ### Internal
+- Improve `ScanSimpleIdScreen` navigation
+- [In Progress: 20 Jan 2021] Material Theme-ing Migration
+- [In Progress: 05 May 2021] Show patients with national health id when searching with from scan screen
+
+### Features
+- [In Progress: 06 May 2021] Add NHID support in `ScanSimpleIdScreen`
+
+## On Demo
+### Internal
 - Add automatic performance profiling (reported to Mixpanel) for the Room database queries
 - Show Indian national health ID in `PatientSummaryScreen`
 - Bump Firebase dependencies
@@ -20,12 +29,6 @@
 - Update `removeUntil` predicate in `Router#replaceKeyOfSameType`
 - Fix attaching removed fragment to `FragmentTransaction` in `Router`
 - Show error dialog when assigning a NHID to a patient with an existing ID
-- Improve `ScanSimpleIdScreen` navigation
-- [In Progress: 20 Jan 2021] Material Theme-ing Migration
-- [In Progress: 05 May 2021] Show patients with national health id when searching with from scan screen
-
-### Features
-- - [In Progress: 10 May 2021] Add NHID support in `ScanSimpleIdScreen`
 
 ### Fixes
 - Fix highlight color for instant search using phone number  

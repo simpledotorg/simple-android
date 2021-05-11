@@ -27,14 +27,16 @@
 
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">பிபி கடவுச்சீட்டு</string>
-  <string name="identifiertype_bangladesh_national_id">தேசிய ஐடி எண்</string>
+  <string name="identifiertype_bangladesh_national_id">தேசிய ஐடி</string>
   <string name="identifiertype_ethiopia_medical_record_number">மருத்துவப் பதிவு எண்</string>
   <string name="identifiertype_unknown">ஐடி</string>
+  <string name="identifiertype_india_national_health_id">தேசியச் சுகாதார ID</string>
 
   <!-- Patient search -->
   <string name="patientsearch_search">அடுத்து</string>
   <string name="patientsearch_error_empty_fullname">நோயாளியின் பெயர் அல்லது தொலைபேசி எண்ணை எழுதவும்</string>
   <string name="patientsearch_hint">பெயர் அல்லது தொலைபேசி எண்</string>
+  <string name="instantsearch_hint">பெயர், தொலைபேசி அல்லது ID</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">இந்த பெயரில் எந்த நோயாளியும் பதிவு செய்யப்படவில்லை</string>
@@ -109,7 +111,7 @@
   <!--suppress UnusedResources -->
   <string name="tab_progress">அளவு எடுக்கப்படுகிறது</string>
 
-  <string name="home_search_patient_name_phone">நோயாளியின் பெயரை எழுதவும்</string>
+  <string name="home_search_patient_name_phone">பெயர், தொலைபேசி அல்லது ID ஐ உள்ளிடவும்</string>
   <string name="patients_user_awaiting_approval_title">அனுமதிக்காகக் காத்திருக்கிறது</string>
   <string name="patients_user_awaiting_approval_message">அனுமதிக்கப்பட்டதும், உங்கள் கிளினிக்கிலிருந்து நோயாளியின் பதிவு விவரங்களை நீங்கள் அணுகலாம்.</string>
   <string name="patients_user_approved_title">நீங்கள் அனுமதிக்கப்பட்டுள்ளீர்கள்!</string>
@@ -122,7 +124,7 @@
   <string name="patients_loggedoutalert_title">ஒரு சமயத்தில் ஒரே ஒரு சாதனத்தில் மட்டுமே உள்நுழையலாம்</string>
   <string name="patients_loggedoutalert_message">உங்கள் முந்தைய சாதனத்திலிருந்து வெளியேறியுள்ளீர்கள்.</string>
   <string name="patients_loggedoutalert_dismiss">தெரிந்துகொண்டேன்</string>
-  <string name="patients_scan_simple_card">பிபி கடவுச்சீட்டை ஸ்கேன் செய்யவும்</string>
+  <string name="patients_scan_simple_card">ஸ்கேன் ID</string>
   <string name="patients_recentpatients_title">ரீசெண்ட்</string>
   <string name="patients_recentpatients_no_recent_patients">சமீபத்திய நோயாளிகள் இல்லை</string>
   <string name="patients_recentpatients_see_all">எல்லாவற்றையும் பார்க்கவும்</string>
@@ -346,9 +348,10 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s அளவு</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">கார்டு ஐடி-ஐ ஸ்கேன் செய்யவும்</string>
+  <string name="scansimpleid_title">BP பாஸ்போர்ட் அல்லது தேசியச் சுகாதார ID</string>
   <string name="scansimpleid_shortcode_error_empty">பிபி கடவுச்சீட்டு எண்ணை எழுதவும்</string>
-  <string name="scansimpleid_shortcode_error_not_required_length">பிபி கடவுச்சீட்டு எண் 7 இலக்கங்களுக்குள் இருக்க வேண்டும்</string>
+  <string name="scansimpleid_shortcode_error_not_required_length">செல்லுபடியாகும் BP பாஸ்போர்ட் எண் அல்லது தேசியச் சுகாதார ID ஐ உள்ளிடவும்</string>
+  <string name="scansimpleid_type_number">அல்லது எண்ணை உள்ளிடவும்</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ஒத்திசைவு நிலுவையில்</string>
@@ -681,6 +684,7 @@
   <string name="sheet_bp_passport_register_new_patient">புதிய நோயாளியைப் பதிவு செய்யவும்</string>
   <string name="sheet_bp_passport_add_to_existing_patient">பழைய நோயாளியைச் சேர்க்கவும்</string>
   <string name="sheet_bp_passport_number">பிபி கடவுச்சீட்டு %1$s</string>
+  <string name="sheet_national_health_id">தேசியச் சுகாதார Id %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s-க்கு ஒதுக்கப்பட்டது</string>
@@ -688,5 +692,18 @@
   <string name="patientsearch_error_no_patients_in_facility">உங்கள் மையத்தில் பதிவு செய்துள்ள அனைத்து நோயாளிகளையும் இங்கே காண முடியும்</string>
   <string name="patientsearch_error_no_search_results">இந்த பெயரில் எந்த நோயாளியும் பதிவு செய்யப்படவில்லை</string>
   <string name="patientsearch_error_no_patients_in_facility_heading">%1$s-இல் நோயாளிகள் இல்லை</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">தேதியை உள்ளிடவும்</string>
+  <string name="sheet_text_input_date_picker_day">நாள்</string>
+  <string name="sheet_text_input_date_picker_month">மாதம்</string>
+  <string name="sheet_text_input_date_picker_year">வருடம்</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">DD/MM/YYYY என்ற வடிவத்தில் சரியான தேதியை எழுதவும்</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">எதிர்காலத்தில் உள்ள தேதியை உள்ளிடவும்</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">ஒரு வருடத்திற்கு பிறகுள்ள தேதியை உள்ளிட முடியாது</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">ஏற்கனவே தேசியச் சுகாதார ID ஐக் கொண்ட நோயாளிக்கு தேசியச் சுகாதார ID ஐ வழங்க முடியாது</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">சரி</string>
 
 </resources>

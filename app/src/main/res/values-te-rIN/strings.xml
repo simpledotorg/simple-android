@@ -27,14 +27,16 @@
 
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">బిపి పాస్‌పోర్ట్</string>
-  <string name="identifiertype_bangladesh_national_id">జాతీయ గుర్తింపు కార్డ్ సంఖ్య</string>
+  <string name="identifiertype_bangladesh_national_id">జాతీయ ఐడి</string>
   <string name="identifiertype_ethiopia_medical_record_number">వైద్య రికార్డ్ నంబర్</string>
   <string name="identifiertype_unknown">ఐడి</string>
+  <string name="identifiertype_india_national_health_id">జాతీయ ఆరోగ్య ID</string>
 
   <!-- Patient search -->
   <string name="patientsearch_search">తదుపరి</string>
   <string name="patientsearch_error_empty_fullname">రోగి పూర్తి పేరును లేదా ఫోన్ నంబర్‌ను నమోదు చేయండి</string>
   <string name="patientsearch_hint">పేరు లేదా ఫోన్ నంబర్</string>
+  <string name="instantsearch_hint">పేరు, ఫోన్ లేదా ID</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">సరిపోలిన రోగులు లేరు</string>
@@ -109,7 +111,7 @@
   <!--suppress UnusedResources -->
   <string name="tab_progress">జరుగుతోంది</string>
 
-  <string name="home_search_patient_name_phone">రోగి పేరును నమోదు చేయండి</string>
+  <string name="home_search_patient_name_phone">పేరు, ఫోన్ లేదా IDని నమోదు చేయండి</string>
   <string name="patients_user_awaiting_approval_title">ఆమోదం పొందాలి</string>
   <string name="patients_user_awaiting_approval_message">ఆమోదం లభించిన తర్వాత మీరు మీ క్లినిక్ నుండి రోగి రికార్డ్‌లను యాక్సెస్ చేయవచ్చు.</string>
   <string name="patients_user_approved_title">మీకు ఆమోదం లభించింది!</string>
@@ -122,7 +124,7 @@
   <string name="patients_loggedoutalert_title">మీరు ఒకసారికి ఒక పరికరంలో మాత్రమే లాగిన్ చేయగలరు</string>
   <string name="patients_loggedoutalert_message">మీ మునుపటి పరికరం నుండి మీరు లాగ్ అవుట్ అయ్యారు.</string>
   <string name="patients_loggedoutalert_dismiss">అర్థమైంది</string>
-  <string name="patients_scan_simple_card">బిపి పాస్‌పోర్ట్‌ను స్కాన్ చేయండి</string>
+  <string name="patients_scan_simple_card">IDని స్కాన్ చేయండి</string>
   <string name="patients_recentpatients_title">ఇటీవల</string>
   <string name="patients_recentpatients_no_recent_patients">ఇటీవలి రోగులు లేరు</string>
   <string name="patients_recentpatients_see_all">మొత్తం చూడండి</string>
@@ -346,9 +348,10 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s మోతాదు</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">కార్డ్ ఐడిని స్కాన్ చేయండి</string>
+  <string name="scansimpleid_title">BP పాస్‌పోర్ట్ లేదా జాతీయ ఆరోగ్య ID</string>
   <string name="scansimpleid_shortcode_error_empty">బిపి పాస్‌పోర్ట్ సంఖ్యను నమోదు చేయండి</string>
-  <string name="scansimpleid_shortcode_error_not_required_length">బిపి పాస్‌పోర్ట్ సంఖ్య 7 అంకెల కంటే తక్కువ ఉంటుంది</string>
+  <string name="scansimpleid_shortcode_error_not_required_length">చెల్లుబాటు అయ్యే BP పాస్‌పోర్ట్ లేదా జాతీయ ఆరోగ్య IDని నమోదు చేయండి</string>
+  <string name="scansimpleid_type_number">లేదా నంబర్ టైప్ చేయండి</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">సింక్ పెండింగ్‌లో ఉంది</string>
@@ -681,6 +684,7 @@
   <string name="sheet_bp_passport_register_new_patient">కొత్త రోగిని నమోదు చేయండి</string>
   <string name="sheet_bp_passport_add_to_existing_patient">ఇప్పటికే ఉన్న రోగికి జోడించండి</string>
   <string name="sheet_bp_passport_number">బిపి పాస్‌పోర్ట్ %1$s</string>
+  <string name="sheet_national_health_id">జాతీయ ఆరోగ్య Id %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$sకు కేటాయించబడ్డారు</string>
@@ -688,5 +692,18 @@
   <string name="patientsearch_error_no_patients_in_facility">ఇక్కడ మీ కేంద్రంలో నమోదు చేసుకున్న అందరు రోగులను మీరు చూడగలరు</string>
   <string name="patientsearch_error_no_search_results">సరిపోలిన రోగులు లేరు</string>
   <string name="patientsearch_error_no_patients_in_facility_heading">%1$sలో రోగులు లేరు</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">తేదీని నమోదు చేయండి</string>
+  <string name="sheet_text_input_date_picker_day">రోజు</string>
+  <string name="sheet_text_input_date_picker_month">నెల</string>
+  <string name="sheet_text_input_date_picker_year">సంవత్సరం</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">DD/MM/YYYYలో చెల్లుబాటు అయ్యే తేదీని నమోదు చేయండి</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">తేదీని భవిష్యత్‌లో నమోదు చేయండి</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">తేదీ సంవత్సరం తరువాతది కాకూడదు</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">ఇదివరకే జాతీయ ఆరోగ్య ID ని కలిగి ఉన్న రోగికి జాతీయ ఆరోగ్య IDని కేటాయించలేము</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">సరే</string>
 
 </resources>

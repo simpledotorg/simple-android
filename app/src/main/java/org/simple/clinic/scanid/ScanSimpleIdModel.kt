@@ -9,13 +9,15 @@ import org.simple.clinic.scanid.ScanSearchState.Searching
 data class ScanSimpleIdModel(
     val enteredCode: EnteredCodeInput?,
     val scanSearchState: ScanSearchState,
-    val scanErrorState: ScanErrorState?
+    val scanErrorState: ScanErrorState?,
+    val patientPrefillInfo: PatientPrefillInfo?
 ) : Parcelable {
 
   companion object {
     fun create() = ScanSimpleIdModel(enteredCode = null,
         scanSearchState = NotSearching,
-        scanErrorState = null)
+        scanErrorState = null,
+        patientPrefillInfo = null)
   }
 
   val isSearching: Boolean
@@ -39,5 +41,9 @@ data class ScanSimpleIdModel(
 
   fun clearInvalidQrCodeError(): ScanSimpleIdModel {
     return copy(scanErrorState = null)
+  }
+  
+  fun patientPrefillInfoChanged(patientPrefillInfo: PatientPrefillInfo): ScanSimpleIdModel {
+    return copy(patientPrefillInfo = patientPrefillInfo)
   }
 }

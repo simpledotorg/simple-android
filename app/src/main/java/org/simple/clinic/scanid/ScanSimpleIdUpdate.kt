@@ -57,14 +57,17 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun patientFoundByIdentifierSearch(patients: List<Patient>, identifier: Identifier): ScanSimpleIdEffect {
     return if (patients.size > 1) {
-      try {
-        OpenShortCodeSearch(BpPassport.shortCode(identifier))
-      } catch (e: Exception) {
-        OpenShortCodeSearch(identifier.value)
-      }
+      multiplePatientsWithId(identifier)
     } else {
       val patientId = patients.first().uuid
       OpenPatientSummary(patientId)
+    }
+  }
+
+  private fun multiplePatientsWithId(identifier: Identifier): ScanSimpleIdEffect {
+    return when (identifier.type) {
+      BpPassport -> OpenShortCodeSearch(BpPassport.shortCode(identifier))
+      else -> OpenPatientSearch(null, initialSearchQuery = identifier.value)
     }
   }
 

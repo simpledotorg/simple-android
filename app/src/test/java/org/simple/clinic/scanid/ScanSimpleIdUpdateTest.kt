@@ -81,7 +81,7 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when the entered short code is valid, send the entered short code to the parent screen`() {
+  fun `when the entered short code is valid, then open short code search`() {
     val shortCode = "1234567"
     val model = defaultModel.shortCodeChanged(EnteredCodeInput(shortCode))
 
@@ -95,7 +95,7 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when identifier is scanned and patient is found, then send the patient id to the parent screen`() {
+  fun `when identifier is scanned and patient is found, then open patient summary`() {
     val patientId = UUID.fromString("60822507-9151-4836-944b-9cbbd1530c0b")
     val patient = TestData.patient(
         uuid = patientId
@@ -112,7 +112,7 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when identifier is scanned and patient is not found, then send the identifier to parent screen`() {
+  fun `when identifier is scanned and patient is not found, then open patient search`() {
     val patients = emptyList<Patient>()
     val identifier = Identifier("123456", BpPassport)
 

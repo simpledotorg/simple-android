@@ -130,6 +130,7 @@ class ScanSimpleIdEffectHandlerTest {
     // then
     testCase.assertNoOutgoingEvents()
 
+    verify(uiActions).openPatientSearch(identifier, null)
     verifyNoMoreInteractions(uiActions)
   }
 }

@@ -36,7 +36,8 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       .build()
 
   private fun openPatientSearch(openPatientSearch: OpenPatientSearch) {
-    uiActions.openPatientSearch(openPatientSearch.additionalIdentifier)
+    uiActions.openPatientSearch(openPatientSearch.additionalIdentifier,
+        openPatientSearch.initialSearchQuery)
   }
 
   private fun openShortCodeSearch(openShortCodeSearch: OpenShortCodeSearch) {

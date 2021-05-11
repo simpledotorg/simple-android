@@ -27,14 +27,16 @@
 
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">बीपी पासपोर्ट</string>
-  <string name="identifiertype_bangladesh_national_id">राष्ट्रीय आईडी संख्या</string>
+  <string name="identifiertype_bangladesh_national_id">राष्ट्रीय आईडी</string>
   <string name="identifiertype_ethiopia_medical_record_number">मेडिकल रिकॉर्ड संख्या</string>
   <string name="identifiertype_unknown">आईडी</string>
+  <string name="identifiertype_india_national_health_id">राष्ट्रीय स्वास्थ्य आईडी</string>
 
   <!-- Patient search -->
   <string name="patientsearch_search">आगे</string>
   <string name="patientsearch_error_empty_fullname">रोगी का पूरा नाम या फ़ोन नंबर लिखें</string>
   <string name="patientsearch_hint">नाम या फ़ोन नंबर</string>
+  <string name="instantsearch_hint">नाम, फोन या आईडी</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">इस नाम का कोई रोगी मौजूद नहीं है</string>
@@ -109,7 +111,7 @@
   <!--suppress UnusedResources -->
   <string name="tab_progress">प्रगति</string>
 
-  <string name="home_search_patient_name_phone">रोगी का नाम दर्ज करे</string>
+  <string name="home_search_patient_name_phone">नाम, फोन या आईडी दर्ज करें</string>
   <string name="patients_user_awaiting_approval_title">अनुमति की प्रतीक्षा हो रही है</string>
   <string name="patients_user_awaiting_approval_message">स्वीकृति मिलने के बाद, आप अपने क्लिनिक से रोगियों के रिकॉर्ड का एक्सेस कर सकेंगे।</string>
   <string name="patients_user_approved_title">आपको स्वीकृति मिल गई है!</string>
@@ -122,7 +124,7 @@
   <string name="patients_loggedoutalert_title">आप एक बार में केवल एक डिवाइस में लॉग इन कर सकते हैं</string>
   <string name="patients_loggedoutalert_message">आप अपने पिछले डिवाइस से लॉग आउट कर दिए गए हैं।</string>
   <string name="patients_loggedoutalert_dismiss">समझ गया/गई</string>
-  <string name="patients_scan_simple_card">बीपी पासपोर्ट को स्कैन करें</string>
+  <string name="patients_scan_simple_card">स्कैन आईडी</string>
   <string name="patients_recentpatients_title">हाल ही का</string>
   <string name="patients_recentpatients_no_recent_patients">हाल फिलहाल का कोई रोगी नहीं</string>
   <string name="patients_recentpatients_see_all">सभी देखें</string>
@@ -346,9 +348,10 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s मात्रा</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">कार्ड आईडी स्कैन करें</string>
+  <string name="scansimpleid_title">BP पासपोर्ट या राष्ट्रीय स्वास्थ्य आईडी</string>
   <string name="scansimpleid_shortcode_error_empty">बीपी पासपोर्ट नंबर दर्ज करे</string>
-  <string name="scansimpleid_shortcode_error_not_required_length">बीपी पासपोर्ट नंबर की लंबाई 7 अंकों से कम है</string>
+  <string name="scansimpleid_shortcode_error_not_required_length">एक मान्य BP पासपोर्ट संख्या या राष्ट्रीय स्वास्थ्य ID दर्ज करें</string>
+  <string name="scansimpleid_type_number">या संख्या टाइप करें</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">सिंक लंबित है</string>
@@ -370,7 +373,7 @@
   <string name="linkidwithpatient_button_yes">हाँ</string>
   <string name="linkidwithpatient_button_back">वापस जाएँ</string>
   <string name="linkidwithpatient_text">बीपी पासपोर्ट को इसमें जोड़ें</string>
-  <string name="linkidwithpatient_patient_text">रोगी %1$s?</string>
+  <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
 
@@ -520,7 +523,7 @@
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">रोगी को \"मुलाकात के लिए सहमत\" के रूप में चिन्हित करें</string>
+  <string name="contactpatient_agreed_to_visit">रोगी को \&quot;मुलाकात के लिए सहमत\&quot; के रूप में चिन्हित करें</string>
   <string name="contactpatient_remind_call_later">बाद में कॉल करना याद दिलाएं…</string>
   <string name="contactpatient_remove_from_list">अतिदेय सूची से हटाएं…</string>
   <string name="contactpatient_result_of_call">कॉल का परिणाम</string>
@@ -681,6 +684,7 @@
   <string name="sheet_bp_passport_register_new_patient">नए रोगी को रजिस्टर करें</string>
   <string name="sheet_bp_passport_add_to_existing_patient">मौजूदा रोगी में जोड़ें</string>
   <string name="sheet_bp_passport_number">बीपी पासपोर्ट %1$s</string>
+  <string name="sheet_national_health_id">राष्ट्रीय स्वास्थ्य ID %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s को असाइन किया गया</string>
@@ -688,5 +692,18 @@
   <string name="patientsearch_error_no_patients_in_facility">आप अपने सुविधा में पंजीकृत सभी रोगियों को यहाँ देख सकेंगे</string>
   <string name="patientsearch_error_no_search_results">इस नाम का कोई रोगी मौजूद नहीं है</string>
   <string name="patientsearch_error_no_patients_in_facility_heading">%1$s में कोई रोगी नहीं है</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">तारीख दर्ज करें</string>
+  <string name="sheet_text_input_date_picker_day">दिन</string>
+  <string name="sheet_text_input_date_picker_month">महीना</string>
+  <string name="sheet_text_input_date_picker_year">वर्ष</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">DD/MM/YYYY में वैध तारीख दर्ज करे</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">भविष्य में तारीख दर्ज करें</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">तारीख 1 साल बाद की नहीं हो सकती</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">राष्ट्रीय स्वास्थ्य ID, मौजूदा राष्ट्रीय स्वास्थ्य ID के साथ मरीज को निर्धारित नहीं की जा सकती है</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">ठीक है</string>
 
 </resources>

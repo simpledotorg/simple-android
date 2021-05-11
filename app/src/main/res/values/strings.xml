@@ -37,6 +37,7 @@
   <string name="patientsearch_search">Next</string>
   <string name="patientsearch_error_empty_fullname">Enter patient’s full name or phone number</string>
   <string name="patientsearch_hint">Name or phone number</string>
+  <string name="instantsearch_hint">Name, phone or ID</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">No patients match</string>
@@ -142,7 +143,7 @@
   <!--suppress UnusedResources -->
   <string name="tab_progress">Progress</string>
 
-  <string name="home_search_patient_name_phone">Enter patient\'s name</string>
+  <string name="home_search_patient_name_phone">Enter name, phone or ID</string>
   <string name="patients_user_awaiting_approval_title">Waiting for approval</string>
   <string name="patients_user_awaiting_approval_message">Once approved, you will have access to patient records from your clinic.</string>
   <string name="patients_user_approved_title">You’ve been approved!</string>
@@ -155,7 +156,7 @@
   <string name="patients_loggedoutalert_title">You can only be logged in on one device at a time</string>
   <string name="patients_loggedoutalert_message">You have been logged out of your previous device.</string>
   <string name="patients_loggedoutalert_dismiss">Got it</string>
-  <string name="patients_scan_simple_card">Scan QR code</string>
+  <string name="patients_scan_simple_card">Scan ID</string>
   <string name="patients_recentpatients_title">Recent</string>
   <string name="patients_recentpatients_no_recent_patients">No recent patients</string>
   <string name="patients_recentpatients_see_all">See All</string>

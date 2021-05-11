@@ -8,6 +8,7 @@
 - Material Theming Migration
 - Show patients with national health id when searching with from scan screen
 - Remove old patient search
+- Show `LinkIdWithPatientSheet` for Indian NHID
 
 ### Features
 - [In Progress: 06 May 2021] Add NHID support in `ScanSimpleIdScreen`

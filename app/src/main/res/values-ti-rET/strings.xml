@@ -27,14 +27,16 @@
 
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">BP Passport</string>
-  <string name="identifiertype_bangladesh_national_id">ሃገራዊ መለለዪ ቁፅሪ</string>
+  <string name="identifiertype_bangladesh_national_id">ሃገራዊ መለለዪ </string>
   <string name="identifiertype_ethiopia_medical_record_number">ቁፅሪ  መዝገብ ሕክምና</string>
   <string name="identifiertype_unknown">መለለዪ </string>
+  <string name="identifiertype_india_national_health_id">ሃገራዊ ናይ ጥዕና መለለዪ መንነት</string>
 
   <!-- Patient search -->
   <string name="patientsearch_search">ዝቕፅል</string>
   <string name="patientsearch_error_empty_fullname">ሙሉእ ሽም ተሓካሚ ወይ ስልኪ ቁፅሪ ኣእትው</string>
   <string name="patientsearch_hint">ሽም ወይ ስልኪ ቁፅሪ</string>
+  <string name="instantsearch_hint">ስም፣ ስልኪ ቑፅሪ ወይ መለለዪ መንነት</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">ዝዛመዱ ሕሙማት የለውን</string>
@@ -109,7 +111,7 @@
   <!--suppress UnusedResources -->
   <string name="tab_progress">ምዕባለ</string>
 
-  <string name="home_search_patient_name_phone">ሽም ተሓካሚ ኣእትው/ዊ</string>
+  <string name="home_search_patient_name_phone">ስም፣ ስልኪ ቑፅሪ ወይ መለለዪ መንነት የእቱ</string>
   <string name="patients_user_awaiting_approval_title">ንምፅዳቕ ኣብ ምፅባይ</string>
   <string name="patients_user_awaiting_approval_message">ምስ ጸደቐ ናይ ተሓካሚ መረዳእታታት ካብ ሕክምናኻ ምጥቃም ይከኣል</string>
   <string name="patients_user_approved_title">ፀዲቑልካ/ኪ ኣሎ!</string>
@@ -122,7 +124,7 @@
   <string name="patients_loggedoutalert_title">ኣብ ሓደ እዋን ብሓደ መሳርሒ ጥራይ ምጥቃም ይከኣል</string>
   <string name="patients_loggedoutalert_message">ካብ ናይ ቅድም መሳርሒ ወፂእካ/ኪ ኣለኻ/ኺ</string>
   <string name="patients_loggedoutalert_dismiss">ተረኺቡ</string>
-  <string name="patients_scan_simple_card">BP Passport ኣብ ኮምፕዩተር ዓቅብ</string>
+  <string name="patients_scan_simple_card">መለለዩ መንነት ኣብ ኮምፕዩተር ዓቅብ</string>
   <string name="patients_recentpatients_title">ናይ ቀረባ እዋን</string>
   <string name="patients_recentpatients_no_recent_patients">ናይ ቀረባ ግዜ ተሓካሚ/ት የለን/የላን</string>
   <string name="patients_recentpatients_see_all">ኩሉ ርኣይ</string>
@@ -346,9 +348,10 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%sዓቐን</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">ስእሊ መለለዩ ካርድ ኣብ ኮምፕዩተር ዓቅብ</string>
+  <string name="scansimpleid_title">BP ፓስፖርት ወይ ሃገራዊ ናይ ጥዕና መለለዪ መንነት</string>
   <string name="scansimpleid_shortcode_error_empty">BP Passport ኣእትው</string>
-  <string name="scansimpleid_shortcode_error_not_required_length"> ቁፅሪ BP Passport  ትሕቲ 7 ቁፅርታት’ዩ ዘሎ</string>
+  <string name="scansimpleid_shortcode_error_not_required_length">ቅኑዕ ዝኾነ ናይ BP ፓስፖርት ወይ ሃገራዊ ናይ ጥዕና መለለዪ መንነት የእቱ</string>
+  <string name="scansimpleid_type_number">ወይ ቁጽሪ ጸሓፍ</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending"> ምስናይ ንውሳነ ይፅበይ ኣሎ</string>
@@ -681,6 +684,7 @@
   <string name="sheet_bp_passport_register_new_patient">ሓድሽ ተሓካሚ መዝግብ</string>
   <string name="sheet_bp_passport_add_to_existing_patient">ምስ ዝጸንሐ ተሓካሚ ጸምብር</string>
   <string name="sheet_bp_passport_number">BP ፓስፖርት %1$s</string>
+  <string name="sheet_national_health_id">ሃገራዊ ናይ ጥዕና መለለዪ መንነት %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">ዝተመደቦ ናብ %1$s</string>
@@ -688,5 +692,18 @@
   <string name="patientsearch_error_no_patients_in_facility">ኩሎም ኣብ ናትካ ትካል ዝተመዝገቡ ተሓከምቲ ኣብዚ ክትርእዮም ትኽእል ኢኻ</string>
   <string name="patientsearch_error_no_search_results">ዝዛመዱ ሕሙማት የለውን</string>
   <string name="patientsearch_error_no_patients_in_facility_heading">ተሓከምቲ ኣብዚ የለዉን  %1$s</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">ዕለት የእቱ</string>
+  <string name="sheet_text_input_date_picker_day">መዓልቲ</string>
+  <string name="sheet_text_input_date_picker_month">ወርሒ</string>
+  <string name="sheet_text_input_date_picker_year">ዓመት</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">ቅቡል ዕለት ብ መሰረት ዕለት/ወርሒ/ዓመተ ምህረት ኣእትው/ዊ</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">ዕለት ኣብ መፃኢ የእቱ</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">ዕለት ድሕሪ ሓደ ዓመት ክኸውን ኣይኽእልን</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">ሃገራዊ ናይ ጥዕና መለለዪ መንነት ኣብዚ ሕጂ እዋን ሃገራዊ ናይ ጥዕና መለለዪ መንነት ዘለዎ ተሓካማይ ክምደበሉ ኣይክእልን</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">እሺ</string>
 
 </resources>

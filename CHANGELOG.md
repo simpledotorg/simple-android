@@ -25,7 +25,7 @@
 - [In Progress: 05 May 2021] Show patients with national health id when searching with from scan screen
 
 ### Features
-- - [In Progress: 06 May 2021] Add NHID support in `ScanSimpleIdScreen`
+- - [In Progress: 10 May 2021] Add NHID support in `ScanSimpleIdScreen`
 
 ### Fixes
 - Fix highlight color for instant search using phone number  

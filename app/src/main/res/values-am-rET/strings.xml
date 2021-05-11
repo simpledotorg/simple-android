@@ -349,7 +349,6 @@
   <string name="scansimpleid_title">የካርድ መታወቂያ ይቃኙ</string>
   <string name="scansimpleid_shortcode_error_empty">የደም ግፊት ፓስፖርት ቁጥር ያስገቡ</string>
   <string name="scansimpleid_shortcode_error_not_required_length">የደም ግፊት ፓስፖርት ቁጥር ከ 7 ቁጥሮች በታች ነው</string>
-  <string name="scansimpleid_type_bp_passport_number">ወይም የደም ግፊት ፓስፖርት ቁጥርን ያስገቡ</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ለመጣመር በመጠባበቅ ላይ </string>

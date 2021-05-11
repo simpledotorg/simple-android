@@ -55,8 +55,9 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
             val adapter = moshi.adapter(IndiaNHIDInfoPayload::class.java)
             adapter.fromJson(it.text)
           }
-          .map { it.fromPayload() }
-          .map(::ScannedQRCodeJsonParsed)
+          .map {
+            ScannedQRCodeJsonParsed(it.toPatientPrefillInfo(), it.healthIdNumber)
+          }
     }
   }
 

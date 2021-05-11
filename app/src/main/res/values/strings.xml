@@ -142,7 +142,7 @@
   <!--suppress UnusedResources -->
   <string name="tab_progress">Progress</string>
 
-  <string name="home_search_patient_name_phone">Enter patient\'s name</string>
+  <string name="home_search_patient_name_phone">Enter name, phone or ID</string>
   <string name="patients_user_awaiting_approval_title">Waiting for approval</string>
   <string name="patients_user_awaiting_approval_message">Once approved, you will have access to patient records from your clinic.</string>
   <string name="patients_user_approved_title">You’ve been approved!</string>

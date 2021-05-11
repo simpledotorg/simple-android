@@ -47,7 +47,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       event: PatientSearchByIdentifierCompleted
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = if (event.patients.isEmpty()) {
-      OpenPatientSearch(event.identifier)
+      OpenPatientSearch(event.identifier, null)
     } else {
       patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
     }

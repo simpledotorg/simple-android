@@ -7,15 +7,11 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.feature.Feature
-import org.simple.clinic.feature.Features
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.platform.crash.NoOpCrashReporter
-import org.simple.clinic.remoteconfig.DefaultValueConfigReader
-import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 import java.util.UUID
 
 class ScanSimpleIdUpdateTest {
@@ -125,7 +121,7 @@ class ScanSimpleIdUpdateTest {
         .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
-            hasEffects(OpenPatientSearch(identifier))
+            hasEffects(OpenPatientSearch(identifier, null))
         ))
   }
 

@@ -1,5 +1,6 @@
 package org.simple.clinic.allpatientsinfacility
 
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
@@ -10,7 +11,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
@@ -23,18 +24,17 @@ class AllPatientsInFacilityLogicTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository = mock<PatientRepository>()
 
-  private val effectHandler = AllPatientsInFacilityEffectHandler.createEffectHandler(
+  private val effectHandler = AllPatientsInFacilityEffectHandler(
       facilityRepository,
       patientRepository,
-      TrampolineSchedulersProvider()
-  )
+      TestSchedulersProvider.trampoline()
+  ).build()
 
   private lateinit var fixture: MobiusTestFixture<AllPatientsInFacilityModel, AllPatientsInFacilityEvent, AllPatientsInFacilityEffect>
 
   @Before
   fun setUp() {
-    whenever(facilityRepository.currentFacility())
-        .thenReturn(Observable.just(facility))
+    whenever(facilityRepository.currentFacilityImmediate()) doReturn facility
 
     fixture = MobiusTestFixture(
         Observable.never(),

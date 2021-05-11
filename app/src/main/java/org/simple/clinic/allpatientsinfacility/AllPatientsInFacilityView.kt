@@ -18,11 +18,8 @@ import org.simple.clinic.databinding.ListAllpatientsinfacilityFacilityHeaderBind
 import org.simple.clinic.databinding.ListPatientSearchOldBinding
 import org.simple.clinic.databinding.ViewAllpatientsinfacilityBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
@@ -52,13 +49,7 @@ class AllPatientsInFacilityView(
   lateinit var locale: Locale
 
   @Inject
-  lateinit var facilityRepository: FacilityRepository
-
-  @Inject
-  lateinit var patientRepository: PatientRepository
-
-  @Inject
-  lateinit var schedulersProvider: SchedulersProvider
+  lateinit var effectHandler: AllPatientsInFacilityEffectHandler
 
   @Inject
   lateinit var crashReporter: CrashReporter
@@ -70,15 +61,12 @@ class AllPatientsInFacilityView(
         .compose(ReportAnalyticsEvents())
 
   private val delegate by unsafeLazy {
-    val effectHandler = AllPatientsInFacilityEffectHandler
-        .createEffectHandler(facilityRepository, patientRepository, schedulersProvider)
-
     MobiusDelegate.forView(
         events = Observable.never(),
         defaultModel = AllPatientsInFacilityModel.FETCHING_PATIENTS,
         init = AllPatientsInFacilityInit(),
         update = AllPatientsInFacilityUpdate(),
-        effectHandler = effectHandler,
+        effectHandler = effectHandler.build(),
         modelUpdateListener = viewRenderer::render
     )
   }

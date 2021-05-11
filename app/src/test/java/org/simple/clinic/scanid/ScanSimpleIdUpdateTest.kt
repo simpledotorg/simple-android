@@ -66,7 +66,7 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when json is parsed then search patient with NHID`() {
+  fun `when json is parsed then search patient with NHID and save patient prefill info`() {
     val indiaNationalHealthID = "1234123412341234"
     val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload(
         healthIdNumber = indiaNationalHealthID
@@ -80,7 +80,7 @@ class ScanSimpleIdUpdateTest {
         .given(defaultModel)
         .whenEvent(ScannedQRCodeJsonParsed(patientPrefillInfo, indiaNHIDInfo))
         .then(assertThatNext(
-            hasModel(defaultModel.searching()),
+            hasModel(defaultModel.searching().patientPrefillInfoChanged(patientPrefillInfo)),
             hasEffects(SearchPatientByIdentifier(identifier))
         ))
   }

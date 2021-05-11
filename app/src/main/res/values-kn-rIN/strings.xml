@@ -27,14 +27,16 @@
 
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್</string>
-  <string name="identifiertype_bangladesh_national_id">ರಾಷ್ಟ್ರೀಯ ಐಡಿ ಸಂಖ್ಯೆ</string>
+  <string name="identifiertype_bangladesh_national_id">ರಾಷ್ಟ್ರೀಯ ಐಡಿ</string>
   <string name="identifiertype_ethiopia_medical_record_number">ವೈದ್ಯಕೀಯ ದಾಖಲೆ ಸಂಖ್ಯೆ</string>
   <string name="identifiertype_unknown">ಐಡಿ</string>
+  <string name="identifiertype_india_national_health_id">ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ ID</string>
 
   <!-- Patient search -->
   <string name="patientsearch_search">ಮುಂದಿನ</string>
   <string name="patientsearch_error_empty_fullname">ರೋಗಿಯ ಪೂರ್ಣ ಹೆಸರು ಅಥವಾ ಫೋನ್ ನಂಬರ್ ನಮೂದಿಸಿ</string>
   <string name="patientsearch_hint">ಹೆಸರು ಅಥವಾ ಫೋನ್ ನಂಬರ್</string>
+  <string name="instantsearch_hint">ಹೆಸರು, ಫೋನ್ ಅಥವಾ ID</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">ಯಾವುದೇ ರೋಗಿ ಹೊಂದಾಣಿಕೆಯಾಗುತ್ತಿಲ್ಲ</string>
@@ -109,7 +111,7 @@
   <!--suppress UnusedResources -->
   <string name="tab_progress">ಪ್ರಗತಿ</string>
 
-  <string name="home_search_patient_name_phone">ರೋಗಿಯ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+  <string name="home_search_patient_name_phone">ಹೆಸರು, ಫೋನ್ ಅಥವಾ ID ನಮೂದಿಸಿ</string>
   <string name="patients_user_awaiting_approval_title">ಅನುಮೋದನೆಗಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ</string>
   <string name="patients_user_awaiting_approval_message">ಒಮ್ಮೆ ಅನುಮೋದಿಸಿದ ನಂತರ, ನೀವು ನಿಮ್ಮ ಕ್ಲಿನಿಕ್‌ನ ರೋಗಿಗಳ ದಾಖಲೆಗಳಿಗೆ ಪ್ರವೇಶವನ್ನು ಹೊಂದಿರುತ್ತೀರಿ.</string>
   <string name="patients_user_approved_title">ನಿಮಗೆ ಅನುಮೋದಿಸಲಾಗಿದೆ!</string>
@@ -122,7 +124,7 @@
   <string name="patients_loggedoutalert_title">ನೀವು ಒಂದು ಸಾರಿ ಒಂದೇ ಸಾಧನದಲ್ಲಿ ಲಾಗ್ ಇನ್ ಮಾಡಬಹುದು</string>
   <string name="patients_loggedoutalert_message">ನಿಮ್ಮನ್ನು ನಿಮ್ಮ ಹಿಂದಿನ ಸಾಧನದಿಂದ ಲಾಗ್ ಔಟ್ ಮಾಡಲಾಗಿದೆ.</string>
   <string name="patients_loggedoutalert_dismiss">ಅರ್ಥವಾಯಿತು</string>
-  <string name="patients_scan_simple_card">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ</string>
+  <string name="patients_scan_simple_card">ಸ್ಕ್ಯಾನ್ ID</string>
   <string name="patients_recentpatients_title">ಇತ್ತೀಚಿನ</string>
   <string name="patients_recentpatients_no_recent_patients">ಯಾವುದೇ ಇತ್ತೀಚಿನ ರೋಗಿಗಳಿಲ್ಲ</string>
   <string name="patients_recentpatients_see_all">ಎಲ್ಲವನ್ನು ವೀಕ್ಷಿಸಿ</string>
@@ -346,9 +348,10 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s ಡೋಸೇಜ್</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">ಕಾರ್ಡ್ ಐಡಿ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ</string>
+  <string name="scansimpleid_title">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಅಥವಾ ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ ID</string>
   <string name="scansimpleid_shortcode_error_empty">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ</string>
-  <string name="scansimpleid_shortcode_error_not_required_length">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಸಂಖ್ಯೆಯ ಉದ್ದ 7 ಅಂಕಿಗಳಿಗಿಂತ ಕಡಿಮೆ ಇರಬೇಕು</string>
+  <string name="scansimpleid_shortcode_error_not_required_length">ಮಾನ್ಯವಾದ ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಸಂಖ್ಯೆ ಅಥವಾ ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ ID ನಮೂದಿಸಿ</string>
+  <string name="scansimpleid_type_number">ಅಥವಾ ಸಂಖ್ಯೆಯನ್ನು ಟೈಪ್ ಮಾಡಿ</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ಸಿಂಕ್ ಬಾಕಿ ಇದೆ</string>
@@ -681,6 +684,7 @@
   <string name="sheet_bp_passport_register_new_patient">ಹೊಸ ರೋಗಿಯನ್ನು ನೋಂದಾಯಿಸಿ</string>
   <string name="sheet_bp_passport_add_to_existing_patient">ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ರೋಗಿಗೆ ಸೇರಿಸಿ</string>
   <string name="sheet_bp_passport_number">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್‌ %1$s</string>
+  <string name="sheet_national_health_id">ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ Id %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s ಗೆ ನಿಯೋಜಿಸಲಾಗಿದೆ</string>
@@ -688,5 +692,18 @@
   <string name="patientsearch_error_no_patients_in_facility">ನಿಮ್ಮ ಸೌಲಭ್ಯದಲ್ಲಿ ನೋಂದಾಯಿಸಿಕೊಂಡ ಎಲ್ಲಾ ರೋಗಿಗಳನ್ನು ನಿಮಗೆ ಇಲ್ಲಿ ನೋಡಲು ಸಾಧ್ಯವಾಗುತ್ತದೆ</string>
   <string name="patientsearch_error_no_search_results">ಯಾವುದೇ ರೋಗಿ ಹೊಂದಾಣಿಕೆಯಾಗುತ್ತಿಲ್ಲ</string>
   <string name="patientsearch_error_no_patients_in_facility_heading">%1$s ನಲ್ಲಿ ಯಾವುದೇ ರೋಗಿಗಳಿಲ್ಲ</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">ದಿನಾಂಕ ನಮೂದಿಸಿ</string>
+  <string name="sheet_text_input_date_picker_day">ದಿನ</string>
+  <string name="sheet_text_input_date_picker_month">ತಿಂಗಳು</string>
+  <string name="sheet_text_input_date_picker_year">ವರ್ಷ</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">DD/MM/YYYY ನಲ್ಲಿ ಮಾನ್ಯ ದಿನಾಂಕವನ್ನು ನಮೂದಿಸಿ</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">ಭವಿಷ್ಯದ ದಿನಾಂಕ ನಮೂದಿಸಿ</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">ದಿನಾಂಕವು ಒಂದು ವರ್ಷದ ನಂತರ ಆಗಿರಬಾರದು</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ ID ಅನ್ನು ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ ID ಹೊಂದಿರುವ ರೋಗಿಗೆ ನಿಯೋಜಿಸಬಾರದು</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">ಸರಿ</string>
 
 </resources>

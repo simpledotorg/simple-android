@@ -27,14 +27,16 @@
 
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">የደም ግፊት ፓስፖርት</string>
-  <string name="identifiertype_bangladesh_national_id">ብሔራዊ መታወቂያ ቁጥር</string>
+  <string name="identifiertype_bangladesh_national_id">ብሔራዊ መታወቂያ</string>
   <string name="identifiertype_ethiopia_medical_record_number">የህክምና መዝገብ ቁጥር</string>
   <string name="identifiertype_unknown">መታወቂያ</string>
+  <string name="identifiertype_india_national_health_id">ብሔራዊ የጤና መታወቂያ</string>
 
   <!-- Patient search -->
   <string name="patientsearch_search">ቀጣይ</string>
   <string name="patientsearch_error_empty_fullname">የታካሚውን ሙሉ ስም ወይም የስልክ ቁጥር ያስገቡ</string>
   <string name="patientsearch_hint">ስም ወይም ስልክ ቁጥር</string>
+  <string name="instantsearch_hint">ስም፣ ስልክ ቁጥር ወይም መታወቂያ</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">ከታካሚው ጋር አይዛመድም</string>
@@ -109,7 +111,7 @@
   <!--suppress UnusedResources -->
   <string name="tab_progress">መሻሻል</string>
 
-  <string name="home_search_patient_name_phone">የታካሚውን ስም ያስገቡ</string>
+  <string name="home_search_patient_name_phone">ስም፣ ስልክ ቁጥር ወይም መታወቂያ ያስገቡ</string>
   <string name="patients_user_awaiting_approval_title">መጽደቅን በመጠባበቅ ላይ</string>
   <string name="patients_user_awaiting_approval_message">አንዴ ከፀደቀ ፣ ክሊኒክዎ ውስጥ የታካሚ ማህደርን ማግኘት ይችላሉ።</string>
   <string name="patients_user_approved_title">ጸድቆሎታል!</string>
@@ -122,7 +124,7 @@
   <string name="patients_loggedoutalert_title">በአንድ ጊዜ በአንድ መሣሪያ ላይ ብቻ ነው መግባት የሚችሉት</string>
   <string name="patients_loggedoutalert_message">ከቀዳሚው መሣሪያዎ ወጥተው ነበር</string>
   <string name="patients_loggedoutalert_dismiss">ገባኝ</string>
-  <string name="patients_scan_simple_card">የደም ግፊት ፓስፖርት ስካን ያድርጉ</string>
+  <string name="patients_scan_simple_card">መታወቂያ ይቃኙ</string>
   <string name="patients_recentpatients_title">የቅርብ</string>
   <string name="patients_recentpatients_no_recent_patients">ምንም የቅርብ ጊዜ ታካሚዎች የሉም</string>
   <string name="patients_recentpatients_see_all">ሁሉንም ይመልከቱ</string>
@@ -346,9 +348,10 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s የመድኃኒት መጠን</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">የካርድ መታወቂያ ይቃኙ</string>
+  <string name="scansimpleid_title">BP ፓስፖርት ወይም ብሔራዊ የጤና መታወቂያ</string>
   <string name="scansimpleid_shortcode_error_empty">የደም ግፊት ፓስፖርት ቁጥር ያስገቡ</string>
-  <string name="scansimpleid_shortcode_error_not_required_length">የደም ግፊት ፓስፖርት ቁጥር ከ 7 ቁጥሮች በታች ነው</string>
+  <string name="scansimpleid_shortcode_error_not_required_length">የሚሰራ የ BP ፓስፖርት ወይም ብሔራዊ የጤና መታወቂያ ያስገቡ</string>
+  <string name="scansimpleid_type_number">ወይም ቁጥር ይተይቡ</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ለመጣመር በመጠባበቅ ላይ </string>
@@ -681,6 +684,7 @@
   <string name="sheet_bp_passport_register_new_patient">አዲስ ታካሚ ይመዝግቡ</string>
   <string name="sheet_bp_passport_add_to_existing_patient">ወደ ነባር ህመምተኛ ያክሉ</string>
   <string name="sheet_bp_passport_number">የ BP  ፓስፖርት %1$s</string>
+  <string name="sheet_national_health_id">ብሔራዊ የጤና መታወቂያ %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">ለ %1$s ተመድቧል</string>
@@ -688,5 +692,18 @@
   <string name="patientsearch_error_no_patients_in_facility">እዚህ በተቋሙ የተመዘገቡትን ህመምተኞች በሙሉ ማየት ይችላሉ</string>
   <string name="patientsearch_error_no_search_results">ከታካሚው ጋር አይዛመድም</string>
   <string name="patientsearch_error_no_patients_in_facility_heading">ታካሚ በ %1$s ዉስጥ የለም</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">ቀን ያስገቡ</string>
+  <string name="sheet_text_input_date_picker_day">ቀን</string>
+  <string name="sheet_text_input_date_picker_month">ወር</string>
+  <string name="sheet_text_input_date_picker_year">አመት</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">በ ቀን/ወር/ዓመት ትክክለኛ ቀን ያስገቡ</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">ቀን ለወደፊቱ ያስገቡ</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">ቀን ከአንድ ዓመት በኋላ መሆን አይችልም</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">አሁን ነባር ብሔራዊ የጤና መታወቂያ ላለው ታካሚ ብሔራዊ የጤና መታወቂያ ሊመደብ አይችልም</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">እሺ</string>
 
 </resources>

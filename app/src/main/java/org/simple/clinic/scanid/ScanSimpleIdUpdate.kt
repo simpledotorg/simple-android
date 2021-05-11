@@ -43,7 +43,7 @@ class ScanSimpleIdUpdate @Inject constructor(
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return if (event.patientPrefillInfo != null && event.healthIdNumber != null) {
       val identifier = Identifier(event.healthIdNumber.filter { it.isDigit() }, IndiaNationalHealthId)
-      next(model = model.searching(), SearchPatientByIdentifier(identifier))
+      next(model = model.searching().patientPrefillInfoChanged(event.patientPrefillInfo), SearchPatientByIdentifier(identifier))
     } else {
       noChange()
     }

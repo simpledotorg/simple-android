@@ -118,11 +118,11 @@ class ScanSimpleIdUpdate @Inject constructor(
   }
 
   private fun searchEnteredCode(model: ScanSimpleIdModel): ScanSimpleIdEffect {
-    val shortCodeToSearch = model.enteredCode!!.enteredCodeText
+    val enteredCodeToSearch = model.enteredCode!!.enteredCodeText
     return if (model.enteredCode.isShortCode) {
-      OpenShortCodeSearch(shortCodeToSearch)
+      OpenShortCodeSearch(enteredCodeToSearch)
     } else {
-      OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = shortCodeToSearch)
+      OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredCodeToSearch)
     }
   }
 }

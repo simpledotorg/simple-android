@@ -16,7 +16,7 @@
 - [In Progress: 06 May 2021] Add NHID support in `ScanSimpleIdScreen`
 
 ### Changes
-- Update translations: `ti-ET`, `pa-IN`, `om-ET`, `bn-IN`, `te-IN`, `hi-IN`, `am-ET`, `ta-IN`
+- Update translations: `ti-ET`, `pa-IN`, `om-ET`, `bn-IN`, `te-IN`, `hi-IN`, `am-ET`, `ta-IN`, `mr-IN`
 
 ## On Demo
 ### Internal

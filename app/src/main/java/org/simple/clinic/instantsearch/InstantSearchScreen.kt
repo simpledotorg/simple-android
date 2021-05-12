@@ -43,8 +43,8 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
-import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.scanid.scannedqrcode.NationalHealthIDErrorDialog
+import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RequestPermissions
@@ -147,7 +147,7 @@ class InstantSearchScreen :
 
   private val blankScannedQrCodeResults = PublishSubject.create<UiEvent>()
 
-  override fun defaultModel() = InstantSearchModel.create(screenKey.additionalIdentifier, null)
+  override fun defaultModel() = InstantSearchModel.create(screenKey.additionalIdentifier)
 
   override fun uiRenderer() = InstantSearchUiRenderer(this)
 
@@ -184,6 +184,8 @@ class InstantSearchScreen :
     instantSearchToolbar.setNavigationOnClickListener {
       router.pop()
     }
+
+    searchQueryEditText.setText(screenKey.initialSearchQuery.orEmpty())
 
     qrCodeScannerButton.visibleOrGone(features.isEnabled(InstantSearchQrCode))
 

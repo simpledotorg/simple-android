@@ -22,26 +22,21 @@ class InstantSearchUpdateTest {
       value = "3e5500fe-e10e-4009-a0bb-3db9009fdef6",
       type = BpPassport
   )
-  private val defaultModel = InstantSearchModel.create(identifier, null)
+  private val defaultModel = InstantSearchModel.create(identifier)
 
   @Test
-  fun `when current facility is loaded, then update the model and validate search query`() {
-    val initialSearchQuery = "1234567890123"
-    val model = InstantSearchModel.create(
-        additionalIdentifier = null,
-        initialSearchQuery = initialSearchQuery
-    )
+  fun `when current facility is loaded, then update the model and load all patients`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("a613b2fc-c91c-40a3-9e8b-6da7010ce51b"),
         name = "PHC Obvious"
     )
 
     updateSpec
-        .given(model)
+        .given(defaultModel)
         .whenEvent(CurrentFacilityLoaded(facility))
         .then(assertThatNext(
-            hasModel(model.facilityLoaded(facility)),
-            hasEffects(ValidateSearchQuery(initialSearchQuery))
+            hasModel(defaultModel.facilityLoaded(facility).loadingAllPatients()),
+            hasEffects(LoadAllPatients(facility))
         ))
   }
 
@@ -182,7 +177,7 @@ class InstantSearchUpdateTest {
         name = "PHC Obvious"
     )
     val model = InstantSearchModel
-        .create(additionalIdentifier = null, initialSearchQuery = null)
+        .create(additionalIdentifier = null)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -207,8 +202,7 @@ class InstantSearchUpdateTest {
         .create(additionalIdentifier =
         TestData.identifier(
             value = "28-3123-2283-6682",
-            type = IndiaNationalHealthId),
-            initialSearchQuery = null)
+            type = IndiaNationalHealthId))
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -230,7 +224,7 @@ class InstantSearchUpdateTest {
         name = "PHC Obvious"
     )
     val model = InstantSearchModel
-        .create(additionalIdentifier = identifier, initialSearchQuery = null)
+        .create(additionalIdentifier = identifier)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -405,8 +399,7 @@ class InstantSearchUpdateTest {
         .create(additionalIdentifier =
         TestData.identifier(
             value = "28-3123-2283-6682",
-            type = IndiaNationalHealthId),
-            initialSearchQuery = null)
+            type = IndiaNationalHealthId))
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -433,8 +426,7 @@ class InstantSearchUpdateTest {
 
     val model = InstantSearchModel
         .create(
-            additionalIdentifier = identifier,
-            initialSearchQuery = null)
+            additionalIdentifier = identifier)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 

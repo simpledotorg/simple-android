@@ -122,14 +122,15 @@ class ScanSimpleIdEffectHandlerTest {
         value = "a765a30e-6bd9-4f12-99da-acba91b6a479",
         type = BpPassport
     )
+    val initialSearchQuery: String? = null
 
     // when
-    testCase.dispatch(OpenPatientSearch(identifier))
+    testCase.dispatch(OpenPatientSearch(identifier, initialSearchQuery))
 
     // then
     testCase.assertNoOutgoingEvents()
 
-    verify(uiActions).openPatientSearch(identifier)
+    verify(uiActions).openPatientSearch(identifier, null)
     verifyNoMoreInteractions(uiActions)
   }
 }

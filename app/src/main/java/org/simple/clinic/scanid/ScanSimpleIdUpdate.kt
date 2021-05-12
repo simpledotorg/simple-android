@@ -35,7 +35,7 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun scannedQRCodeParsed(model: ScanSimpleIdModel, event: ScannedQRCodeJsonParsed): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return if (event.patientPrefillInfo != null && event.healthIdNumber != null) {
-      val identifier = Identifier(event.healthIdNumber, IndiaNationalHealthId)
+      val identifier = Identifier(event.healthIdNumber.filter { it.isDigit() }, IndiaNationalHealthId)
       next(model = model.searching(), SearchPatientByIdentifier(identifier))
     } else {
       noChange()
@@ -47,7 +47,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       event: PatientSearchByIdentifierCompleted
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = if (event.patients.isEmpty()) {
-      OpenPatientSearch(event.identifier)
+      OpenPatientSearch(event.identifier, null)
     } else {
       patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
     }
@@ -57,14 +57,17 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun patientFoundByIdentifierSearch(patients: List<Patient>, identifier: Identifier): ScanSimpleIdEffect {
     return if (patients.size > 1) {
-      try {
-        OpenShortCodeSearch(BpPassport.shortCode(identifier))
-      } catch (e: Exception) {
-        OpenShortCodeSearch(identifier.value)
-      }
+      multiplePatientsWithId(identifier)
     } else {
       val patientId = patients.first().uuid
       OpenPatientSummary(patientId)
+    }
+  }
+
+  private fun multiplePatientsWithId(identifier: Identifier): ScanSimpleIdEffect {
+    return when (identifier.type) {
+      BpPassport -> OpenShortCodeSearch(BpPassport.shortCode(identifier))
+      else -> OpenPatientSearch(null, initialSearchQuery = identifier.value)
     }
   }
 
@@ -107,10 +110,19 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun shortCodeValidated(model: ScanSimpleIdModel, event: EnteredCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = when (event.result) {
-      Success -> OpenShortCodeSearch(model.enteredCode!!.enteredCodeText)
+      Success -> searchEnteredCode(model)
       is Failure -> ShowEnteredCodeValidationError(event.result)
     }
 
     return dispatch(effect)
+  }
+
+  private fun searchEnteredCode(model: ScanSimpleIdModel): ScanSimpleIdEffect {
+    val shortCodeToSearch = model.enteredCode!!.enteredCodeText
+    return if (model.enteredCode.isShortCode) {
+      OpenShortCodeSearch(shortCodeToSearch)
+    } else {
+      OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = shortCodeToSearch)
+    }
   }
 }

@@ -31,8 +31,9 @@ class InstantSearchUpdate @Inject constructor(
   override fun update(model: InstantSearchModel, event: InstantSearchEvent): Next<InstantSearchModel, InstantSearchEffect> {
     return when (event) {
       is CurrentFacilityLoaded -> next(
-          model.facilityLoaded(event.facility),
-          ValidateSearchQuery(model.searchQuery.orEmpty())
+          model.facilityLoaded(event.facility)
+              .loadingAllPatients(),
+          LoadAllPatients(event.facility)
       )
       is AllPatientsLoaded -> allPatientsLoaded(model, event)
       is SearchResultsLoaded -> searchResultsLoaded(model, event)

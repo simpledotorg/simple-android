@@ -57,7 +57,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val effects = mutableSetOf<PatientSummaryEffect>()
     if (model.openIntention is LinkIdWithPatient &&
-        !event.patientSummaryProfile.hasBpPassport(model.openIntention.identifier)) {
+        !event.patientSummaryProfile.hasIdentifier(model.openIntention.identifier)) {
       effects.add(ShowLinkIdWithPatientView(model.patientUuid, model.openIntention.identifier))
     }
 

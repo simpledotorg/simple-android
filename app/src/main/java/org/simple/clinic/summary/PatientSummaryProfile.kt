@@ -22,7 +22,7 @@ data class PatientSummaryProfile(
   val hasPhoneNumber: Boolean
     get() = phoneNumber != null
 
-  fun hasBpPassport(identifier: Identifier): Boolean {
-    return bpPassport?.identifier == identifier
+  fun hasIdentifier(identifier: Identifier): Boolean {
+    return bpPassport?.identifier == identifier || alternativeId?.identifier == identifier
   }
 }

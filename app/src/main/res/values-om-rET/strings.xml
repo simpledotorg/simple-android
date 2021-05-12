@@ -30,11 +30,13 @@
   <string name="identifiertype_bangladesh_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
   <string name="identifiertype_ethiopia_medical_record_number">Lakkoofsa Galmee Fayya</string>
   <string name="identifiertype_unknown">ID</string>
+  <string name="identifiertype_india_national_health_id">Waraqaa Eenyummaa Fayyaa Biyyaalessaa</string>
 
   <!-- Patient search -->
   <string name="patientsearch_search">Kan itti aanu</string>
   <string name="patientsearch_error_empty_fullname">Maqaa dhukkubsataa guutuu yookan lakkoofsa bilbilaa galchi</string>
   <string name="patientsearch_hint">Maqaa yookan lakkoofsa bilbilaa</string>
+  <string name="instantsearch_hint">Maqaa, bilbila yookaan Waraqaa Eenyummaa</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">Dhukkubsataan firoomu hin jiru</string>
@@ -350,6 +352,7 @@
   <string name="scansimpleid_title">Kaardii eenyummeessaa iskaan godhi</string>
   <string name="scansimpleid_shortcode_error_empty">Lakkoofsa paaspoortii PB galchi</string>
   <string name="scansimpleid_shortcode_error_not_required_length">Lakkoofsi paaspoortii PB dijitiiwwan 7 gadi</string>
+  <string name="scansimpleid_type_number">Yookaan lakkoobsa barreessi</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Mirkana ilaalamaa jira</string>
@@ -682,6 +685,7 @@
   <string name="sheet_bp_passport_register_new_patient">Dhukkubsattoota haaraa galmeessi</string>
   <string name="sheet_bp_passport_add_to_existing_patient">Dhukkumbsattoota jiranitti dabali</string>
   <string name="sheet_bp_passport_number">Paaspoortii BP%1$s</string>
+  <string name="sheet_national_health_id">Waraqaa Eenyummaa fayyaa biyyaalessaa %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">Gara %1$s qajeelfame</string>
@@ -689,5 +693,18 @@
   <string name="patientsearch_error_no_patients_in_facility">Dhukkubsattoota asitti galmaa\'an hundaa arguu ni dandeessa.</string>
   <string name="patientsearch_error_no_search_results">Dhukkubsataan firoomu hin jiru</string>
   <string name="patientsearch_error_no_patients_in_facility_heading"> Dhukkubsataan %1$s keessa hin jiru</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">Guyyaa galchi</string>
+  <string name="sheet_text_input_date_picker_day">Guyyaa</string>
+  <string name="sheet_text_input_date_picker_month">Ji’a</string>
+  <string name="sheet_text_input_date_picker_year">Waggaa</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">Guyyaa sirrii GG/JJ/WWWW keessatti galchi</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">Guyyaa gara fuulduraa galchi</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">Guyyaan waggaa tokko booda tahuu hin danda\'u</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">Waraqaan Eenyummaa Fayyaa Biyyaalessaa dhukkubsataa kanneen Waraqaa Eenyummaa Fayyaa Biyyaalessaa duraa qabaniif hin ramadamuu</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">Tole</string>
 
 </resources>

@@ -346,8 +346,6 @@
 
   <!--Scan Simple ID-->
   <string name="scansimpleid_title">कार्ड आईडी स्कैन करें</string>
-  <string name="scansimpleid_shortcode_error_empty">बीपी पासपोर्ट नंबर दर्ज करे</string>
-  <string name="scansimpleid_shortcode_error_not_required_length">बीपी पासपोर्ट नंबर की लंबाई 7 अंकों से कम है</string>
   <string name="scansimpleid_type_number">या संख्या टाइप करें</string>
 
   <!--- Sync Indicator-->

@@ -346,8 +346,6 @@
 
   <!--Scan Simple ID-->
   <string name="scansimpleid_title">স্ক্যান কার্ড আইডি</string>
-  <string name="scansimpleid_shortcode_error_empty">বিপি পাসপোর্ট নম্বর প্রবেশ করান</string>
-  <string name="scansimpleid_shortcode_error_not_required_length">বিপি পাসপোর্ট নম্বর 7 সংখ্যার কম দীর্ঘ</string>
   <string name="scansimpleid_type_number">বা নম্বর টাইপ করুন</string>
 
   <!--- Sync Indicator-->

@@ -18,7 +18,10 @@
     <ignore path="src/main/res/drawable/illustration_overdue.xml" />
     <ignore path="src/main/res/drawable/illustration_reports.xml" />
     <ignore path="src/main/res/drawable/ic_whatsapp_circular.xml" />
-    <ignore path="src/main/res/drawable/ic_homescreen_india" />
+    <ignore path="src/main/res/drawable/illustration_homescreen_default" />
+    <ignore path="src/main/res/drawable/illustration_homescreen_india" />
+    <ignore path="src/main/res/drawable/illustration_homescreen_bangladesh" />
+    <ignore path="src/main/res/drawable/illustration_homescreen_ethiopia" />
   </issue>
 
   <issue id="UnusedResources">
@@ -59,6 +62,9 @@
     <ignore path="src/main/res/drawable/illustration_location.xml" />
     <ignore path="src/main/res/drawable/illustration_overdue.xml" />
     <ignore path="src/main/res/drawable/illustration_reports.xml" />
-    <ignore path="src/main/res/drawable/ic_homescreen_india" />
+    <ignore path="src/main/res/drawable/illustration_homescreen_default" />
+    <ignore path="src/main/res/drawable/illustration_homescreen_india" />
+    <ignore path="src/main/res/drawable/illustration_homescreen_bangladesh" />
+    <ignore path="src/main/res/drawable/illustration_homescreen_ethiopia" />
   </issue>
 </lint>

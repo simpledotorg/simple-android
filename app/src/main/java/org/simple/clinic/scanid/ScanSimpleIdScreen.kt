@@ -292,7 +292,7 @@ class ScanSimpleIdScreen : BaseScreen<
     val validationErrorMessage = if (failure == Empty) {
       R.string.scansimpleid_enteredcode_error_empty
     } else {
-      R.string.scansimpleid_shortcode_error_not_required_length
+      R.string.scansimpleid_enteredcode_error_not_required_length
     }
     enteredCodeErrorText.text = resources.getString(validationErrorMessage)
   }

@@ -32,9 +32,6 @@
   <string name="identifiertype_unknown">መታወቂያ</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_search">ቀጣይ</string>
-  <string name="patientsearch_error_empty_fullname">የታካሚውን ሙሉ ስም ወይም የስልክ ቁጥር ያስገቡ</string>
-  <string name="patientsearch_hint">ስም ወይም ስልክ ቁጥር</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">ከታካሚው ጋር አይዛመድም</string>
@@ -390,9 +387,6 @@
   <string name="appupdatedialog_negative_button_text">አሁን አይሆንም</string>
 
   <!-- All Patients In Facility View-->
-  <string name="allpatientsinfacility_nopatients_message">እዚህ ተቋምዎ የተመዘገቡትን ሁሉንም ታካሚዎች ማየት ይችላሉ ፡፡</string>
-  <string name="allpatientsinfacility_nopatients_title">በ %1$s ላይ ምንም ታካሚዎች የሉም</string>
-  <string name="allpatientsinfacility_foundpatients_header">ሁሉም ታካሚዎች: %1$s</string>
 
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">የሆነ ስህተት ተከስቷል</string>

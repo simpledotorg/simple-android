@@ -32,9 +32,6 @@
   <string name="identifiertype_unknown">আইডি</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_search">পরবর্তী</string>
-  <string name="patientsearch_error_empty_fullname">রোগীর পুরো নাম বা ফোন নম্বর  লিখুন</string>
-  <string name="patientsearch_hint">নাম বা ফোন নম্বর</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">কোনো রোগী পাওয়া যায়নি</string>
@@ -390,9 +387,6 @@
   <string name="appupdatedialog_negative_button_text">এখন নয়</string>
 
   <!-- All Patients In Facility View-->
-  <string name="allpatientsinfacility_nopatients_message">আপনি এখানে আপনার ফেসিলিটিতে নিবন্ধিত সমস্ত রোগীকে দেখতে পাবেন।</string>
-  <string name="allpatientsinfacility_nopatients_title">%1$s-তে কোনও রোগী নেই</string>
-  <string name="allpatientsinfacility_foundpatients_header">সমস্ত রোগী: %1$s</string>
 
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">কিছু গন্ডগোল হয়েছে</string>

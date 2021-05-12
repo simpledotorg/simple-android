@@ -32,9 +32,6 @@
   <string name="identifiertype_unknown">ਆਈਡੀ</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_search">ਅਗਲਾ</string>
-  <string name="patientsearch_error_empty_fullname">ਮਰੀਜ਼ ਦਾ ਪੂਰਾ ਨਾਮ ਜਾਂ ਫ਼ੋਨ ਨੰਬਰ ਦਾਖ਼ਲ ਕਰੋ</string>
-  <string name="patientsearch_hint">ਨਾਮ ਜਾਂ ਫ਼ੋਨ ਨੰਬਰ</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">ਕੋਈ ਮਰੀਜ਼ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ ਹਨ</string>
@@ -390,9 +387,6 @@
   <string name="appupdatedialog_negative_button_text">ਹੁਣੇ ਨਹੀਂ</string>
 
   <!-- All Patients In Facility View-->
-  <string name="allpatientsinfacility_nopatients_message">ਤੁਸੀਂ ਇੱਥੇ ਆਪਣੀ ਫੈਸਿਲਿਟੀ ਵਿਖੇ ਰਜਿਸਟਰ ਕੀਤੇ ਸਾਰੇ ਮਰੀਜ਼ਾਂ ਨੂੰ ਦੇਖਣ ਦੇ ਯੋਗ ਹੋਵੋਗੇ।</string>
-  <string name="allpatientsinfacility_nopatients_title">%1$s \'ਤੇ ਕੋਈ ਮਰੀਜ਼ ਨਹੀਂ ਹਨ</string>
-  <string name="allpatientsinfacility_foundpatients_header">ਸਾਰੇ ਮਰੀਜ਼: %1$s</string>
 
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">ਕੁਝ ਗੜਬੜ ਹੋ ਗਈ</string>

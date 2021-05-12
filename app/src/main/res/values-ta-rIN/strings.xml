@@ -32,9 +32,6 @@
   <string name="identifiertype_unknown">ஐடி</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_search">அடுத்து</string>
-  <string name="patientsearch_error_empty_fullname">நோயாளியின் பெயர் அல்லது தொலைபேசி எண்ணை எழுதவும்</string>
-  <string name="patientsearch_hint">பெயர் அல்லது தொலைபேசி எண்</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">இந்த பெயரில் எந்த நோயாளியும் பதிவு செய்யப்படவில்லை</string>
@@ -390,9 +387,6 @@
   <string name="appupdatedialog_negative_button_text">இப்போது வேண்டாம்</string>
 
   <!-- All Patients In Facility View-->
-  <string name="allpatientsinfacility_nopatients_message">உங்கள் மையத்தில் பதிவு செய்துள்ள அனைத்து நோயாளிகளையும் இங்கே காணலாம்.</string>
-  <string name="allpatientsinfacility_nopatients_title">%1$s என்பதில் நோயாளிகள் இல்லை</string>
-  <string name="allpatientsinfacility_foundpatients_header">எல்லா நோயாளிகளும்: %1$s</string>
 
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">எதுவோ தவறாக உள்ளது</string>

@@ -9,9 +9,7 @@ import dagger.Subcomponent
 import io.reactivex.Observable
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.RxActivityLifecycle
-import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenInjector
-import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.bp.history.BloodPressureHistoryScreenInjector
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.contactpatient.views.SetAppointmentReminderView
@@ -49,9 +47,8 @@ import org.simple.clinic.recentpatientsview.RecentPatientsView
 import org.simple.clinic.removeoverdueappointment.RemoveOverdueAppointmentScreen
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.ScanSimpleIdScreen
+import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
-import org.simple.clinic.search.PatientSearchScreen
-import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.settings.SettingsScreen
@@ -102,8 +99,6 @@ interface TheActivityComponent :
     FacilityPickerView.Injector,
     ForgotPinCreateNewPinScreen.Injector,
     OverdueScreen.Injector,
-    PatientSearchResultsScreen.Injector,
-    PatientSearchScreen.Injector,
     ForgotPinConfirmPinScreen.Injector,
     HomeScreen.Injector,
     PatientEntryScreen.Injector,
@@ -126,7 +121,6 @@ interface TheActivityComponent :
     EditMedicinesScreen.Injector,
     SyncIndicatorView.Injector,
     PatientSearchResultItemView_Old.Injector,
-    AllPatientsInFacilityView.Injector,
     ShortCodeSearchResultScreen.Injector,
     SettingsScreen.Injector,
     ChangeLanguageScreen.Injector,

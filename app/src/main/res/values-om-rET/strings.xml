@@ -32,9 +32,6 @@
   <string name="identifiertype_unknown">ID</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_search">Kan itti aanu</string>
-  <string name="patientsearch_error_empty_fullname">Maqaa dhukkubsataa guutuu yookan lakkoofsa bilbilaa galchi</string>
-  <string name="patientsearch_hint">Maqaa yookan lakkoofsa bilbilaa</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">Dhukkubsataan firoomu hin jiru</string>
@@ -391,9 +388,6 @@
   <string name="appupdatedialog_negative_button_text">Amma miti</string>
 
   <!-- All Patients In Facility View-->
-  <string name="allpatientsinfacility_nopatients_message">Dhukkubsattoota galmaa’an hundumaa asitti teessoo keetti argachuu ni dandeessa</string>
-  <string name="allpatientsinfacility_nopatients_title">Dhukkubsattoota %1$s tti</string>
-  <string name="allpatientsinfacility_foundpatients_header">Dhukkubsattoota hundumaa %1$s</string>
 
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">Wanti ta’e dogongorameera</string>

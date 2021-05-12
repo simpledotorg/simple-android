@@ -18,13 +18,10 @@ import org.simple.clinic.databinding.ListPatientSearchOldBinding
 import org.simple.clinic.databinding.PatientSearchViewBinding
 import org.simple.clinic.databinding.ScreenShortcodeSearchResultBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.searchresultsview.PatientSearchResults
 import org.simple.clinic.searchresultsview.SearchResultsItemType
 import org.simple.clinic.summary.OpenIntention
@@ -176,11 +173,7 @@ class ShortCodeSearchResultScreen :
   }
 
   override fun openPatientSearch() {
-    val screenKey = if (features.isEnabled(Feature.InstantSearch)) {
-      InstantSearchScreenKey(additionalIdentifier = null, initialSearchQuery = null)
-    } else {
-      PatientSearchScreenKey(additionalIdentifier = null).wrap()
-    }
+    val screenKey = InstantSearchScreenKey(additionalIdentifier = null, initialSearchQuery = null)
 
     router.push(screenKey)
   }

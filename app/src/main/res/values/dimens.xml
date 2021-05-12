@@ -23,14 +23,10 @@
   <dimen name="spacing_192">192dp</dimen>
   <dimen name="spacing_200">200dp</dimen>
 
-  <dimen name="fast_scroll_pop_up_text_size">24sp</dimen>
-
   <dimen name="pinentry_content_bottom_spacing_with_forgot_pin">@dimen/spacing_12</dimen>
   <dimen name="pinentry_content_bottom_spacing_without_forgot_pin">@dimen/spacing_24</dimen>
 
   <dimen name="registrationfacilities_header_top_spacing_with_previous_section">0dp</dimen>
-
-  <dimen name="allpatientsinfacility_fastscrollpopup_size">48dp</dimen>
 
   <dimen name="settings_section_top_margin">19dp</dimen>
   <dimen name="settings_content_top_margin">3dp</dimen>

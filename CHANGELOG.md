@@ -1,8 +1,10 @@
 # CHANGELOG
 ## Next Release
 ### Internal
-- [In Progress: 20 Jan 2021] Material Theme-ing Migration
-- [In Progress: 05 May 2021] Show patients with national health id when searching with from scan screen
+- Improve `ScanSimpleIdScreen` navigation
+- Change labels to indicate the ID search
+- Material Theming Migration
+- Show patients with national health id when searching with from scan screen
 
 ### Features
 - - [In Progress: 06 May 2021] Add NHID support in `ScanSimpleIdScreen`
@@ -29,6 +31,7 @@
 - Fix attaching removed fragment to `FragmentTransaction` in `Router`
 - Show error dialog when assigning a NHID to a patient with an existing ID
 - Improve `ScanSimpleIdScreen` navigation
+- Bump Mobius to v1.5.3
 
 ### Fixes
 - Fix highlight color for instant search using phone number  

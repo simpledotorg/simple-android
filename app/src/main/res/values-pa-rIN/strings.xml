@@ -30,11 +30,13 @@
   <string name="identifiertype_bangladesh_national_id">ਰਾਸ਼ਟਰੀ ਆਈ ਡੀ ਸੰਖਿਆ</string>
   <string name="identifiertype_ethiopia_medical_record_number">ਮੈਡੀਕਲ ਰਿਕਾਰਡ ਨੰਬਰ</string>
   <string name="identifiertype_unknown">ਆਈਡੀ</string>
+  <string name="identifiertype_india_national_health_id">ਰਾਸ਼ਟਰੀ ਸਿਹਤ ID</string>
 
   <!-- Patient search -->
   <string name="patientsearch_search">ਅਗਲਾ</string>
   <string name="patientsearch_error_empty_fullname">ਮਰੀਜ਼ ਦਾ ਪੂਰਾ ਨਾਮ ਜਾਂ ਫ਼ੋਨ ਨੰਬਰ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="patientsearch_hint">ਨਾਮ ਜਾਂ ਫ਼ੋਨ ਨੰਬਰ</string>
+  <string name="instantsearch_hint">ਨਾਮ, ਫ਼ੋਨ ਜਾਂ ID</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">ਕੋਈ ਮਰੀਜ਼ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ ਹਨ</string>
@@ -349,6 +351,7 @@
   <string name="scansimpleid_title">ਕਾਰਡ ਦਾ ਆਈਡੀ ਸਕੈਨ ਕਰੋ</string>
   <string name="scansimpleid_shortcode_error_empty">ਬੀਪੀ ਪਾਸਪੋਰਟ ਨੰਬਰ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="scansimpleid_shortcode_error_not_required_length">ਬੀਪੀ ਪਾਸਪੋਰਟ ਨੰਬਰ 7 ਅੰਕਾਂ ਤੋਂ ਛੋਟਾ ਹੈ</string>
+  <string name="scansimpleid_type_number">ਜਾਂ ਨੰਬਰ ਟਾਈਪ ਕਰੋ</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ਸਿੰਕ ਕਰਨਾ ਬਕਾਇਆ ਹੈ</string>
@@ -681,6 +684,7 @@
   <string name="sheet_bp_passport_register_new_patient">ਨਵੇਂ ਮਰੀਜ਼ ਨੂੰ ਰਜਿਸਟਰ ਕਰੋ</string>
   <string name="sheet_bp_passport_add_to_existing_patient">ਮੌਜੂਦਾ ਮਰੀਜ਼ ਵਿੱਚ ਸ਼ਾਮਲ ਕਰੋ</string>
   <string name="sheet_bp_passport_number">ਬੀਪੀ ਪਾਸਪੋਰਟ %1$s</string>
+  <string name="sheet_national_health_id">ਰਾਸ਼ਟਰੀ ਸਿਹਤ Id %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s ਨੂੰ ਸਪੁਰਦ ਕੀਤਾ ਹੈ</string>
@@ -688,5 +692,18 @@
   <string name="patientsearch_error_no_patients_in_facility">ਤੁਸੀਂ ਇੱਥੇ ਆਪਣੀ ਸਹੂਲਤ ਤੇ ਰਜਿਸਟਰ ਕੀਤੇ ਸਾਰੇ ਮਰੀਜ਼ਾਂ ਨੂੰ ਦੇਖਣ ਦੇ ਯੋਗ ਹੋਵੋਗੇ</string>
   <string name="patientsearch_error_no_search_results">ਕੋਈ ਮਰੀਜ਼ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ ਹਨ</string>
   <string name="patientsearch_error_no_patients_in_facility_heading">%1$s ਵਿੱਚ ਕੋਈ ਮਰੀਜ਼ ਨਹੀਂ ਹਨ</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">ਮਿਤੀ ਦਾਖ਼ਲ ਕਰੋ</string>
+  <string name="sheet_text_input_date_picker_day">ਦਿਨ</string>
+  <string name="sheet_text_input_date_picker_month">ਮਹੀਨਾ</string>
+  <string name="sheet_text_input_date_picker_year">ਸਾਲ</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">DD/MM/YYYY ਵਿੱਚ ਇੱਕ ਵੈਧ ਮਿਤੀ ਦਾਖ਼ਲ ਕਰੋ</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">ਭਵਿੱਖ ਵਿੱਚ ਇੱਕ ਮਿਤੀ ਦਾਖ਼ਲ ਕਰੋ</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">ਮਿਤੀ ਇੱਕ ਸਾਲ ਤੋਂ ਬਾਅਦ ਦੀ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">ਮੌਜੂਦਾ ਰਾਸ਼ਟਰੀ ਸਿਹਤ ID ਵਾਲੇ ਮਰੀਜ਼ ਨੂੰ ਰਾਸ਼ਟਰੀ ਸਿਹਤ ID ਨਿਰਧਾਰਤ ਨਹੀਂ ਕੀਤੀ ਜਾ ਸਕਦੀ</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">ਠੀਕ ਹੈ</string>
 
 </resources>

@@ -3,7 +3,7 @@
 ### Internal
 - Improve `ScanSimpleIdScreen` navigation
 - Change labels to indicate the ID search
-- [In Progress: 20 Jan 2021] Material Theme-ing Migration
+- Material Theming Migration
 - [In Progress: 05 May 2021] Show patients with national health id when searching with from scan screen
 
 ### Features

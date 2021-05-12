@@ -1,43 +1,39 @@
 package org.simple.clinic.allpatientsinfacility
 
 import com.spotify.mobius.rx2.RxMobius
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import javax.inject.Inject
 
-object AllPatientsInFacilityEffectHandler {
-  fun createEffectHandler(
-      facilityRepository: FacilityRepository,
-      patientRepository: PatientRepository,
-      schedulersProvider: SchedulersProvider
-  ): ObservableTransformer<AllPatientsInFacilityEffect, AllPatientsInFacilityEvent> {
+class AllPatientsInFacilityEffectHandler @Inject constructor(
+    private val currentFacility: Lazy<Facility>,
+    private val patientRepository: PatientRepository,
+    private val schedulersProvider: SchedulersProvider
+) {
+
+  fun build(): ObservableTransformer<AllPatientsInFacilityEffect, AllPatientsInFacilityEvent> {
     return RxMobius
         .subtypeEffectHandler<AllPatientsInFacilityEffect, AllPatientsInFacilityEvent>()
-        .addTransformer(FetchFacilityEffect::class.java, fetchFacilityEffectHandler(facilityRepository, schedulersProvider))
-        .addTransformer(FetchPatientsEffect::class.java, fetchPatientsEffectHandler(patientRepository, schedulersProvider))
+        .addTransformer(FetchFacilityEffect::class.java, fetchFacilityEffectHandler())
+        .addTransformer(FetchPatientsEffect::class.java, fetchPatientsEffectHandler())
         .build()
   }
 
-  private fun fetchFacilityEffectHandler(
-      facilityRepository: FacilityRepository,
-      schedulersProvider: SchedulersProvider
-  ): (Observable<FetchFacilityEffect>) -> Observable<AllPatientsInFacilityEvent> {
-    return {
-      facilityRepository
-          .currentFacility()
-          .subscribeOn(schedulersProvider.io())
+  private fun fetchFacilityEffectHandler(): ObservableTransformer<FetchFacilityEffect, AllPatientsInFacilityEvent> {
+    return ObservableTransformer { facilityStream ->
+      facilityStream
+          .observeOn(schedulersProvider.io())
+          .map { currentFacility.get() }
           .map(::FacilityFetchedEvent)
     }
   }
 
-  private fun fetchPatientsEffectHandler(
-      patientRepository: PatientRepository,
-      schedulersProvider: SchedulersProvider
-  ): ObservableTransformer<FetchPatientsEffect, AllPatientsInFacilityEvent> {
+  private fun fetchPatientsEffectHandler(): ObservableTransformer<FetchPatientsEffect, AllPatientsInFacilityEvent> {
     return ObservableTransformer { fetchPatients ->
       fetchPatients
           .map { it.facility }

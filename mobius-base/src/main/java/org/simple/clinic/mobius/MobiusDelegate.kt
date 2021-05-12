@@ -98,7 +98,7 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
   )
 
   private val controller: MobiusLoop.Controller<M, E> by lazy(NONE) {
-    MobiusAndroid.controller(loop, lastKnownModel ?: defaultModel)
+    MobiusAndroid.controller(loop, lastKnownModel ?: defaultModel, init)
   }
 
   private var lastKnownModel: M? = null
@@ -109,7 +109,6 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
             { model: M, event: E -> update.update(model, event) },
             { effects -> effects.compose(effectHandler) }
         )
-        .init(init)
         .eventSources(additionalEventSources)
   }
 

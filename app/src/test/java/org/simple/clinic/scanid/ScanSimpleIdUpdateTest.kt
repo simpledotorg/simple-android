@@ -82,15 +82,15 @@ class ScanSimpleIdUpdateTest {
 
   @Test
   fun `when the entered short code is valid, then open short code search`() {
-    val shortCode = "1234567"
-    val model = defaultModel.enteredCodeChanged(EnteredCodeInput(shortCode))
+    val enteredShortCode = "1234567"
+    val model = defaultModel.enteredCodeChanged(EnteredCodeInput(enteredShortCode))
 
     spec
         .given(model)
         .whenEvent(EnteredCodeValidated(EnteredCodeValidationResult.Success))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenShortCodeSearch(shortCode))
+            hasEffects(OpenShortCodeSearch(enteredShortCode))
         ))
   }
 
@@ -165,15 +165,15 @@ class ScanSimpleIdUpdateTest {
 
   @Test
   fun `when entered code is not a short code, then open patient search`() {
-    val shortCode = "12345678901234"
-    val model = defaultModel.enteredCodeChanged(EnteredCodeInput(shortCode))
+    val enteredCode = "12345678901234"
+    val model = defaultModel.enteredCodeChanged(EnteredCodeInput(enteredCode))
 
     spec
         .given(model)
         .whenEvent(EnteredCodeValidated(EnteredCodeValidationResult.Success))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = shortCode))
+            hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredCode))
         ))
   }
 }

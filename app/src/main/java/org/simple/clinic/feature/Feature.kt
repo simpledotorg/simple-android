@@ -23,11 +23,10 @@ enum class Feature(
    **/
   ChangeLanguage(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M),
   MLKitQrCodeScanner(true, "ml_kit_qr_code_scanner"),
-  InstantSearch(true, "instant_search"),
   OverdueCount(true, "overdue_count"),
   VillageTypeAhead(false, "village_type_ahead"),
   InstantSearchQrCode(true, "instant_search_qr_code"),
   EthiopianCalendar(true, "ethiopian_calendar"),
   InstantSearchByPatientIdentifier(false, "instant_search_by_patient_identifier"),
-  IndiaNationalHealthID(true,"india_national_health_id")
+  IndiaNationalHealthID(true, "india_national_health_id")
 }

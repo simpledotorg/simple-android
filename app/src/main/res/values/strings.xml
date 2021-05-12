@@ -406,7 +406,7 @@
   <!--Scan Simple ID-->
   <string name="scansimpleid_title">BP passport or National Health ID</string>
   <string name="scansimpleid_hint_short_code" translatable="false">123 4567</string>
-  <string name="scansimpleid_shortcode_error_empty">Enter BP Passport number</string>
+  <string name="scansimpleid_enteredcode_error_empty">Enter BP Passport number or a National Health ID</string>
   <string name="scansimpleid_shortcode_error_not_required_length">Enter a valid BP Passport number or a National Health ID</string>
   <string name="scansimpleid_type_number">or type number</string>
 

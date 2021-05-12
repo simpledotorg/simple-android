@@ -290,7 +290,7 @@ class ScanSimpleIdScreen : BaseScreen<
   override fun showEnteredCodeValidationError(failure: EnteredCodeValidationResult) {
     enteredCodeErrorText.visibility = View.VISIBLE
     val validationErrorMessage = if (failure == Empty) {
-      R.string.scansimpleid_shortcode_error_empty
+      R.string.scansimpleid_enteredcode_error_empty
     } else {
       R.string.scansimpleid_shortcode_error_not_required_length
     }

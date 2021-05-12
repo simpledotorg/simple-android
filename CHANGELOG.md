@@ -4,6 +4,7 @@
 ### Internal
 - Improve `ScanSimpleIdScreen` navigation
 - Change labels to indicate the ID search
+- Bump Mobius to v1.5.3
 - Material Theming Migration
 - Show patients with national health id when searching with from scan screen
 

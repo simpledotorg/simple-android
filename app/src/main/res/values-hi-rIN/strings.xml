@@ -30,11 +30,13 @@
   <string name="identifiertype_bangladesh_national_id">राष्ट्रीय आईडी संख्या</string>
   <string name="identifiertype_ethiopia_medical_record_number">मेडिकल रिकॉर्ड संख्या</string>
   <string name="identifiertype_unknown">आईडी</string>
+  <string name="identifiertype_india_national_health_id">राष्ट्रीय स्वास्थ्य आईडी</string>
 
   <!-- Patient search -->
   <string name="patientsearch_search">आगे</string>
   <string name="patientsearch_error_empty_fullname">रोगी का पूरा नाम या फ़ोन नंबर लिखें</string>
   <string name="patientsearch_hint">नाम या फ़ोन नंबर</string>
+  <string name="instantsearch_hint">नाम, फोन या आईडी</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">इस नाम का कोई रोगी मौजूद नहीं है</string>
@@ -349,6 +351,7 @@
   <string name="scansimpleid_title">कार्ड आईडी स्कैन करें</string>
   <string name="scansimpleid_shortcode_error_empty">बीपी पासपोर्ट नंबर दर्ज करे</string>
   <string name="scansimpleid_shortcode_error_not_required_length">बीपी पासपोर्ट नंबर की लंबाई 7 अंकों से कम है</string>
+  <string name="scansimpleid_type_number">या संख्या टाइप करें</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">सिंक लंबित है</string>
@@ -681,6 +684,7 @@
   <string name="sheet_bp_passport_register_new_patient">नए रोगी को रजिस्टर करें</string>
   <string name="sheet_bp_passport_add_to_existing_patient">मौजूदा रोगी में जोड़ें</string>
   <string name="sheet_bp_passport_number">बीपी पासपोर्ट %1$s</string>
+  <string name="sheet_national_health_id">राष्ट्रीय स्वास्थ्य आईडी %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s को असाइन किया गया</string>
@@ -688,5 +692,18 @@
   <string name="patientsearch_error_no_patients_in_facility">आप अपने सुविधा में पंजीकृत सभी रोगियों को यहाँ देख सकेंगे</string>
   <string name="patientsearch_error_no_search_results">इस नाम का कोई रोगी मौजूद नहीं है</string>
   <string name="patientsearch_error_no_patients_in_facility_heading">%1$s में कोई रोगी नहीं है</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">तारीख दर्ज करें</string>
+  <string name="sheet_text_input_date_picker_day">दिन</string>
+  <string name="sheet_text_input_date_picker_month">महीना</string>
+  <string name="sheet_text_input_date_picker_year">वर्ष</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">DD/MM/YYYY में वैध तारीख दर्ज करे</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">भविष्य में तारीख दर्ज करें</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">तारीख 1 साल बाद की नहीं हो सकती</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">राष्ट्रीय स्वास्थ्य आईडी, मौजूदा राष्ट्रीय स्वास्थ्य आईडी के साथ मरीज को निर्धारित नहीं की जा सकती है</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">ठीक है</string>
 
 </resources>

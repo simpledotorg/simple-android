@@ -35,14 +35,12 @@ import org.simple.clinic.feature.Feature.IndiaNationalHealthID
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.qrcodeanalyzer.MLKitQrCodeAnalyzer
 import org.simple.clinic.scanid.qrcodeanalyzer.ZxingQrCodeAnalyzer
-import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -279,12 +277,8 @@ class ScanSimpleIdScreen : BaseScreen<
   }
 
   override fun openPatientSearch(additionalIdentifier: Identifier?, initialSearchQuery: String?) {
-    val keyToPush = if (features.isEnabled(Feature.InstantSearch)) {
-      InstantSearchScreenKey(additionalIdentifier = additionalIdentifier,
-          initialSearchQuery = initialSearchQuery)
-    } else {
-      PatientSearchScreenKey(additionalIdentifier).wrap()
-    }
+    val keyToPush = InstantSearchScreenKey(additionalIdentifier = additionalIdentifier,
+        initialSearchQuery = null)
 
     when (val openedFrom = screenKey.openedFrom) {
       OpenedFrom.InstantSearchScreen -> router.replaceKeyOfSameType(keyToPush)

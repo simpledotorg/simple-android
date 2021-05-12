@@ -32,9 +32,6 @@
   <string name="identifiertype_unknown">ಐಡಿ</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_search">ಮುಂದಿನ</string>
-  <string name="patientsearch_error_empty_fullname">ರೋಗಿಯ ಪೂರ್ಣ ಹೆಸರು ಅಥವಾ ಫೋನ್ ನಂಬರ್ ನಮೂದಿಸಿ</string>
-  <string name="patientsearch_hint">ಹೆಸರು ಅಥವಾ ಫೋನ್ ನಂಬರ್</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">ಯಾವುದೇ ರೋಗಿ ಹೊಂದಾಣಿಕೆಯಾಗುತ್ತಿಲ್ಲ</string>
@@ -390,9 +387,6 @@
   <string name="appupdatedialog_negative_button_text">ಈಗಲ್ಲ</string>
 
   <!-- All Patients In Facility View-->
-  <string name="allpatientsinfacility_nopatients_message">ನಿಮ್ಮ ಸೌಲಭ್ಯದಲ್ಲಿ ನೋಂದಾಯಿಸಿಕೊಂಡ ಎಲ್ಲಾ ರೋಗಿಗಳನ್ನು ನೀವು ಇಲ್ಲಿ ನೋಡಲು ಸಾಧ್ಯವಾಗುತ್ತದೆ.</string>
-  <string name="allpatientsinfacility_nopatients_title">%1$s ನಲ್ಲಿ ಯಾವುದೇ ರೋಗಿಗಳಿಲ್ಲ</string>
-  <string name="allpatientsinfacility_foundpatients_header">ಎಲ್ಲಾ ರೋಗಿಗಳು: %1$s</string>
 
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">ಏನೋ ತಪ್ಪಾಗಿದೆ</string>

@@ -32,9 +32,6 @@
   <string name="identifiertype_unknown">Kaarka aqoonsiga</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_search">Xigga</string>
-  <string name="patientsearch_error_empty_fullname">Gali magaca buuxa ama lambarka taleefanka bukaanka</string>
-  <string name="patientsearch_hint">Magaca ama lambarka taleefanka</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">Ma jiro bukaan u dhigma</string>
@@ -390,9 +387,6 @@
   <string name="appupdatedialog_negative_button_text">Hadda ma aha</string>
 
   <!-- All Patients In Facility View-->
-  <string name="allpatientsinfacility_nopatients_message">Waxaad awoodi doontaa inaad halkan ku aragto dhammaan bukaanada ka diiwaangashan xaruntaada.</string>
-  <string name="allpatientsinfacility_nopatients_title">Malaha bukaano %1$s</string>
-  <string name="allpatientsinfacility_foundpatients_header">Dhamaan bukaanada: %1$s</string>
 
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">Waxbaa qaldamay</string>

@@ -26,7 +26,6 @@ import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.databinding.ScreenPatientsBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.enterotp.EnterOtpScreenKey
-import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
@@ -39,7 +38,6 @@ import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
-import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -214,13 +212,9 @@ class PatientsTabScreen : BaseScreen<
       .map { SimpleVideoClicked }
 
   override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
-    val screenKey = if (features.isEnabled(Feature.InstantSearch)) {
-      InstantSearchScreenKey(
-          additionalIdentifier = additionalIdentifier,
-          initialSearchQuery = null)
-    } else {
-      PatientSearchScreenKey(additionalIdentifier).wrap()
-    }
+    val screenKey = InstantSearchScreenKey(
+        additionalIdentifier = additionalIdentifier,
+        initialSearchQuery = null)
 
     router.push(screenKey)
   }

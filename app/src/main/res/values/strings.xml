@@ -34,9 +34,6 @@
   <string name="identifiertype_india_national_health_id">National Health ID</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_search">Next</string>
-  <string name="patientsearch_error_empty_fullname">Enter patient’s full name or phone number</string>
-  <string name="patientsearch_hint">Name or phone number</string>
   <string name="instantsearch_hint">Name, phone or ID</string>
 
   <!-- Patient search results -->
@@ -453,9 +450,6 @@
   <string name="appupdatedialog_negative_button_text">Not Now</string>
 
   <!-- All Patients In Facility View-->
-  <string name="allpatientsinfacility_nopatients_message">You will be able to see all the patients registered at your facility here.</string>
-  <string name="allpatientsinfacility_nopatients_title">No patients at %1$s</string>
-  <string name="allpatientsinfacility_foundpatients_header">All Patients: %1$s</string>
 
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">Something went wrong</string>

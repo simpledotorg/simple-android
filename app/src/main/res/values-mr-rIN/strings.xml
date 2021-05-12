@@ -32,9 +32,6 @@
   <string name="identifiertype_unknown">आयडी</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_search">पुढील</string>
-  <string name="patientsearch_error_empty_fullname">रूग्णाचे संपूर्ण नाव किंवा फोन नंबर प्रविष्‍ट करा</string>
-  <string name="patientsearch_hint">नाव किंवा फोन नंबर</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">कोणतेही रूग्ण जुळत नाहीत</string>
@@ -390,9 +387,6 @@
   <string name="appupdatedialog_negative_button_text">आता नाही</string>
 
   <!-- All Patients In Facility View-->
-  <string name="allpatientsinfacility_nopatients_message">तुमच्‍या सुविधेत येथे नोंदणीकृत सर्व रूग्ण आपण पाहू शकाल.</string>
-  <string name="allpatientsinfacility_nopatients_title">%1$s येथे कोणतेही रूग्ण नाहीत</string>
-  <string name="allpatientsinfacility_foundpatients_header">सर्व रूग्ण: %1$s</string>
 
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">काहीतरी चुकले</string>

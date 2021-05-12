@@ -32,9 +32,6 @@
   <string name="identifiertype_unknown">ఐడి</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_search">తదుపరి</string>
-  <string name="patientsearch_error_empty_fullname">రోగి పూర్తి పేరును లేదా ఫోన్ నంబర్‌ను నమోదు చేయండి</string>
-  <string name="patientsearch_hint">పేరు లేదా ఫోన్ నంబర్</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">సరిపోలిన రోగులు లేరు</string>
@@ -390,9 +387,6 @@
   <string name="appupdatedialog_negative_button_text">ఇప్పుడు కాదు</string>
 
   <!-- All Patients In Facility View-->
-  <string name="allpatientsinfacility_nopatients_message">ఇక్కడ మీ కేంద్రంలో నమోదు చేసుకున్న అందరు రోగులను మీరు చూడగలరు.</string>
-  <string name="allpatientsinfacility_nopatients_title">%1$sలో రోగులు లేరు</string>
-  <string name="allpatientsinfacility_foundpatients_header">మొత్తం రోగులు: %1$s</string>
 
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">ఏదో తప్పు జరిగింది</string>

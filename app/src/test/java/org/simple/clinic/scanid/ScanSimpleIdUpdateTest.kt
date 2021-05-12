@@ -7,15 +7,11 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.feature.Feature
-import org.simple.clinic.feature.Features
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.platform.crash.NoOpCrashReporter
-import org.simple.clinic.remoteconfig.DefaultValueConfigReader
-import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 import java.util.UUID
 
 class ScanSimpleIdUpdateTest {
@@ -85,7 +81,7 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when the entered short code is valid, send the entered short code to the parent screen`() {
+  fun `when the entered short code is valid, then open short code search`() {
     val shortCode = "1234567"
     val model = defaultModel.shortCodeChanged(EnteredCodeInput(shortCode))
 
@@ -99,7 +95,7 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when identifier is scanned and patient is found, then send the patient id to the parent screen`() {
+  fun `when identifier is scanned and patient is found, then open patient summary`() {
     val patientId = UUID.fromString("60822507-9151-4836-944b-9cbbd1530c0b")
     val patient = TestData.patient(
         uuid = patientId
@@ -116,7 +112,7 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when identifier is scanned and patient is not found, then send the identifier to parent screen`() {
+  fun `when identifier is scanned and patient is not found, then open patient search`() {
     val patients = emptyList<Patient>()
     val identifier = Identifier("123456", BpPassport)
 
@@ -125,12 +121,12 @@ class ScanSimpleIdUpdateTest {
         .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
-            hasEffects(OpenPatientSearch(identifier))
+            hasEffects(OpenPatientSearch(identifier, null))
         ))
   }
 
   @Test
-  fun `when identifier is scanned and more than 1 patient is found, then send the entered BP Passport code to parent screen`() {
+  fun `when identifier is scanned and more than 1 patient is found with bp passport, then open short code search`() {
     val patientId1 = UUID.fromString("60822507-9151-4836-944b-9cbbd1530c0b")
     val patientId2 = UUID.fromString("de90d491-29ab-4bb7-938c-d436815794c6")
 
@@ -149,7 +145,7 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when identifier is scanned and more than 1 patient is found, then send the entered NHID code to parent screen`() {
+  fun `when identifier is scanned and more than 1 patient is found with id, then open patient search`() {
     val patientId1 = UUID.fromString("60822507-9151-4836-944b-9cbbd1530c0b")
     val patientId2 = UUID.fromString("de90d491-29ab-4bb7-938c-d436815794c6")
 
@@ -157,13 +153,27 @@ class ScanSimpleIdUpdateTest {
     val patient2 = TestData.patient(uuid = patientId2)
 
     val identifier = Identifier("12345612345612", IndiaNationalHealthId)
-    
+
     spec
         .given(defaultModel)
         .whenEvent(PatientSearchByIdentifierCompleted(listOf(patient1, patient2), identifier))
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
-            hasEffects(OpenShortCodeSearch("12345612345612"))
+            hasEffects(OpenPatientSearch(null, "12345612345612"))
+        ))
+  }
+
+  @Test
+  fun `when entered code is not a short code, then open patient search`() {
+    val shortCode = "12345678901234"
+    val model = defaultModel.shortCodeChanged(EnteredCodeInput(shortCode))
+
+    spec
+        .given(model)
+        .whenEvent(EnteredCodeValidated(EnteredCodeValidationResult.Success))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = shortCode))
         ))
   }
 }

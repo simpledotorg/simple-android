@@ -5,7 +5,7 @@
 - Improve `ScanSimpleIdScreen` navigation
 - Change labels to indicate the ID search
 - Material Theming Migration
-- [In Progress: 05 May 2021] Show patients with national health id when searching with from scan screen
+- Show patients with national health id when searching with from scan screen
 
 ### Features
 - [In Progress: 06 May 2021] Add NHID support in `ScanSimpleIdScreen`

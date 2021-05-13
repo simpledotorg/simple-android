@@ -1,0 +1,17 @@
+name: Auto Request Review
+
+on:
+  pull_request:
+    types: [ opened, reopened ]
+
+jobs:
+  auto-request-review:
+    name: Auto Request Review
+    if: ${{ github.event.label.name != 'work in progress' }}
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: Request Android Devs for review
+        uses: necojackarc/auto-request-review@v0.7.0
+        with:
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          config: .github/reviewers.yml

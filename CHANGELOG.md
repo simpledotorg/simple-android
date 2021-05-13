@@ -14,7 +14,7 @@
 - [In Progress: 06 May 2021] Add NHID support in `ScanSimpleIdScreen`
 
 ### Changes
-- Update translations: `ti-ET`, `pa-IN`
+- Update translations: `ti-ET`, `pa-IN`, `om-ET`
 
 ## On Demo
 ### Internal

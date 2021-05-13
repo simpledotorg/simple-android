@@ -1,0 +1,6 @@
+reviewers:
+  defaults:
+    - team:android-devs
+
+options:
+  ignore_draft: true

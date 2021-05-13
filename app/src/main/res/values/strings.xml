@@ -34,7 +34,7 @@
   <string name="identifiertype_india_national_health_id">National Health ID</string>
 
   <!-- Patient search -->
-  <string name="instantsearch_hint">Name, phone or ID</string>
+  <string name="instantsearch_hint">Name, phone, or ID</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">No patients match</string>

@@ -775,7 +775,7 @@
   <string name="sheet_bp_passport_register_new_patient">Register new patient</string>
   <string name="sheet_bp_passport_add_to_existing_patient">Add to existing patient</string>
   <string name="sheet_bp_passport_number">BP Passport %1$s</string>
-  <string name="sheet_national_health_id">National Health Id %1$s</string>
+  <string name="sheet_national_health_id">National Health ID %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">Assigned to %1$s</string>
@@ -794,7 +794,7 @@
   <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">Date cannot be after one year</string>
 
   <!-- National Health Id -->
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">National health ID can not be assigned to a patient with an existing national health ID</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">National Health ID cannot be assigned to a patient with an existing National Health ID</string>
   <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">OK</string>
 
 </resources>

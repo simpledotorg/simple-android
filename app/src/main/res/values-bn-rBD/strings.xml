@@ -30,8 +30,10 @@
   <string name="identifiertype_bangladesh_national_id">জাতীয় পরিচয়পত্র নম্বর</string>
   <string name="identifiertype_ethiopia_medical_record_number">মেডিকেল রেকর্ড নম্বর</string>
   <string name="identifiertype_unknown">আইডি</string>
+  <string name="identifiertype_india_national_health_id">জাতীয় স্বাস্থ্য পরিচয়পত্র ID</string>
 
   <!-- Patient search -->
+  <string name="instantsearch_hint">নাম, ফোন বা পরিচয়পত্র</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">কোনও রোগী খুঁজে পাওয়া যায়নি</string>
@@ -346,6 +348,7 @@
   <string name="scansimpleid_title">স্ক্যান কার্ড আইডি</string>
   <string name="scansimpleid_shortcode_error_empty">বিপি পাসপোর্ট নম্বর প্রবেশ করান</string>
   <string name="scansimpleid_shortcode_error_not_required_length">বিপি পাসপোর্ট নম্বর 7 সংখ্যার কম দীর্ঘ</string>
+  <string name="scansimpleid_type_number">বা নম্বর টাইপ করুন</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">সিঙ্ক মুলতুবি রয়েছে</string>
@@ -675,6 +678,7 @@
   <string name="sheet_bp_passport_register_new_patient">নতুন রোগী হিসাবে নিবন্ধন করুন</string>
   <string name="sheet_bp_passport_add_to_existing_patient">বিদ্যমান রোগীতে যোগ করুন</string>
   <string name="sheet_bp_passport_number">বিপি পাসপোর্ট %1$s</string>
+  <string name="sheet_national_health_id">জাতীয় স্বাস্থ্য পরিচয়পত্র Id %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s কে অর্পণ করা হয়েছে</string>
@@ -682,5 +686,18 @@
   <string name="patientsearch_error_no_patients_in_facility">আপনি এখানে আপনার ফেসালিটিতে নিবন্ধিত সমস্ত রোগীকে দেখতে পাবেন</string>
   <string name="patientsearch_error_no_search_results">কোনও রোগী খুঁজে পাওয়া যায়নি</string>
   <string name="patientsearch_error_no_patients_in_facility_heading">%1$s-এ কোনও রোগী নেই</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">একটি তারিখ লিখুন</string>
+  <string name="sheet_text_input_date_picker_day">দিন</string>
+  <string name="sheet_text_input_date_picker_month">মাস</string>
+  <string name="sheet_text_input_date_picker_year">বছর</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">DD/MM/YYYY বিন্যাসে একটি বৈধ তারিখ লিখুন</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">ভবিষ্যতের একটি তারিখ লিখুন</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">তারিখ এক বছর পরের হতে পারে না</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">একটি বিদ্যমান জাতীয় স্বাস্থ্য পরিচয়পত্র ID থাকা কোনও রোগীকে জাতীয় স্বাস্থ্য পরিচয়পত্র ID অ্যাসাইন করা যাবে না</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">ঠিক আছে</string>
 
 </resources>

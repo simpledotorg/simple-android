@@ -1,6 +1,7 @@
 package org.simple.clinic.scanid
 
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -53,11 +54,13 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .map {
-            val adapter = moshi.adapter(IndiaNHIDInfoPayload::class.java)
-            adapter.fromJson(it.text)
-          }
-          .map {
-            ScannedQRCodeJsonParsed(it.toPatientPrefillInfo(), it.healthIdNumber)
+            try {
+              val adapter = moshi.adapter(IndiaNHIDInfoPayload::class.java)
+              val payload = adapter.fromJson(it.text)
+              ScannedQRCodeJsonParsed(payload?.toPatientPrefillInfo(), payload?.healthIdNumber)
+            } catch (e: JsonDataException) {
+              InvalidQrCode
+            }
           }
     }
   }

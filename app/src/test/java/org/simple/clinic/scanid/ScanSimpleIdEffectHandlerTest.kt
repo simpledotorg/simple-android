@@ -86,6 +86,30 @@ class ScanSimpleIdEffectHandlerTest {
   }
 
   @Test
+  fun `when parsing invalid json, then show invalid qr code`() {
+    // given
+    val expectedJson = """
+    {
+    "hodn":"1234123456785678",
+    "hid":"Mohit",
+    "name":"Mohit Ahuja",
+    "gender":"M",
+    "statelgd":"Maharashtra",
+    "distlgd":"Thane",
+    "dob":"12/12/1997",
+    "address":"Obvious HQ"
+     }
+     """
+
+    // when
+    testCase.dispatch(ParseScannedJson(expectedJson))
+
+    // then
+    testCase.assertOutgoingEvents(InvalidQrCode)
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
   fun `when open patient summary effect is received, then open patient summary`() {
     // given
     val patientId = UUID.fromString("9730e9a0-e62e-4556-b84e-03d593f6fe4c")

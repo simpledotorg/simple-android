@@ -34,8 +34,6 @@ data class IndiaNHIDInfoPayload(
     return PatientPrefillInfo(
         fullName = fullName,
         gender = gender,
-        state = state,
-        district = district,
         dateOfBirth = dateOfBirth,
         address = address
     )

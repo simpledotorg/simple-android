@@ -25,8 +25,8 @@ class ScanSimpleIdUpdate @Inject constructor(
       ShowKeyboard -> dispatch(HideQrCodeScannerView)
       HideKeyboard -> dispatch(ShowQrCodeScannerView)
       EnteredCodeChanged -> dispatch(HideEnteredCodeValidationError)
-      is EnteredCodeValidated -> shortCodeValidated(model, event)
-      is EnteredCodeSearched -> next(model.shortCodeChanged(event.enteredCode), ValidateEnteredCode(event.enteredCode))
+      is EnteredCodeValidated -> enteredCodeValidated(model, event)
+      is EnteredCodeSearched -> next(model.enteredCodeChanged(event.enteredCode), ValidateEnteredCode(event.enteredCode))
       is ScanSimpleIdScreenQrCodeScanned -> simpleIdQrScanned(model, event)
       is PatientSearchByIdentifierCompleted -> patientSearchByIdentifierCompleted(model, event)
       is ScannedQRCodeJsonParsed -> scannedQRCodeParsed(model, event)
@@ -107,8 +107,8 @@ class ScanSimpleIdUpdate @Inject constructor(
       noChange()
     }
   }
-
-  private fun shortCodeValidated(model: ScanSimpleIdModel, event: EnteredCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+  
+  private fun enteredCodeValidated(model: ScanSimpleIdModel, event: EnteredCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = when (event.result) {
       Success -> searchEnteredCode(model)
       is Failure -> ShowEnteredCodeValidationError(event.result)
@@ -118,11 +118,11 @@ class ScanSimpleIdUpdate @Inject constructor(
   }
 
   private fun searchEnteredCode(model: ScanSimpleIdModel): ScanSimpleIdEffect {
-    val shortCodeToSearch = model.enteredCode!!.enteredCodeText
+    val enteredCodeToSearch = model.enteredCode!!.enteredCodeText
     return if (model.enteredCode.isShortCode) {
-      OpenShortCodeSearch(shortCodeToSearch)
+      OpenShortCodeSearch(enteredCodeToSearch)
     } else {
-      OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = shortCodeToSearch)
+      OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredCodeToSearch)
     }
   }
 }

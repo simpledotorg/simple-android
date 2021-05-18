@@ -346,8 +346,6 @@
 
   <!--Scan Simple ID-->
   <string name="scansimpleid_title">BP ፓስፖርት ወይ ሃገራዊ ናይ ጥዕና መለለዪ መንነት</string>
-  <string name="scansimpleid_shortcode_error_empty">BP Passport ኣእትው</string>
-  <string name="scansimpleid_shortcode_error_not_required_length">ቅኑዕ ዝኾነ ናይ BP ፓስፖርት ወይ ሃገራዊ ናይ ጥዕና መለለዪ መንነት የእቱ</string>
   <string name="scansimpleid_type_number">ወይ ቁጽሪ ጸሓፍ</string>
 
   <!--- Sync Indicator-->

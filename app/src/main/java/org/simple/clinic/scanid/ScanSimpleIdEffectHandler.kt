@@ -7,14 +7,16 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class ScanSimpleIdEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
-    @Assisted private val uiActions: ScanSimpleIdUiActions,
-    private val moshi: Moshi
+    private val moshi: Moshi,
+    private val country: Country,
+    @Assisted private val uiActions: ScanSimpleIdUiActions
 ) {
 
   @AssistedFactory
@@ -55,13 +57,23 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .map {
             try {
-              val adapter = moshi.adapter(IndiaNHIDInfoPayload::class.java)
-              val payload = adapter.fromJson(it.text)
-              ScannedQRCodeJsonParsed(payload?.toPatientPrefillInfo(), payload?.healthIdNumber)
+              parseJsonBasedOnCountry(it)
             } catch (e: JsonDataException) {
               InvalidQrCode
             }
           }
+    }
+  }
+
+  private fun parseJsonBasedOnCountry(effect: ParseScannedJson): ScanSimpleIdEvent {
+    return when (country.isoCountryCode) {
+      Country.INDIA -> {
+        val adapter = moshi.adapter(IndiaNHIDInfoPayload::class.java)
+        val payload = adapter.fromJson(effect.text)
+
+        ScannedQRCodeJsonParsed(payload?.toPatientPrefillInfo(), payload?.healthIdNumber)
+      }
+      else -> InvalidQrCode
     }
   }
 

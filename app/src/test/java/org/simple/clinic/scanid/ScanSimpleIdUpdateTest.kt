@@ -2,6 +2,7 @@ package org.simple.clinic.scanid
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -174,6 +175,17 @@ class ScanSimpleIdUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredCode))
+        ))
+  }
+
+  @Test
+  fun `when invalid qr code is scanned, then update model`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(InvalidQrCode)
+        .then(assertThatNext(
+            hasModel(defaultModel.notSearching().invalidQrCode()),
+            hasNoEffects()
         ))
   }
 }

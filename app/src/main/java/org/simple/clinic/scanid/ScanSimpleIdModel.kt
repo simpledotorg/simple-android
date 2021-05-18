@@ -32,4 +32,8 @@ data class ScanSimpleIdModel(
   fun notSearching(): ScanSimpleIdModel {
     return copy(scanSearchState = NotSearching)
   }
+
+  fun invalidQrCode(): ScanSimpleIdModel {
+    return copy(scanErrorState = ScanErrorState.InvalidQrCode)
+  }
 }

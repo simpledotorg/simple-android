@@ -30,6 +30,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       is ScanSimpleIdScreenQrCodeScanned -> simpleIdQrScanned(model, event)
       is PatientSearchByIdentifierCompleted -> patientSearchByIdentifierCompleted(model, event)
       is ScannedQRCodeJsonParsed -> scannedQRCodeParsed(model, event)
+      InvalidQrCode -> next(model.notSearching().invalidQrCode())
     }
   }
 
@@ -107,7 +108,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       noChange()
     }
   }
-  
+
   private fun enteredCodeValidated(model: ScanSimpleIdModel, event: EnteredCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = when (event.result) {
       Success -> searchEnteredCode(model)

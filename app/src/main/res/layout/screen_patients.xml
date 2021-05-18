@@ -64,6 +64,7 @@
         android:layout_marginTop="@dimen/spacing_16"
         android:layout_marginEnd="@dimen/spacing_16"
         android:text="@string/home_search_patient_name_phone"
+        android:textAppearance="?attr/textAppearanceBody0"
         app:icon="@drawable/ic_search_24dp"
         tools:ignore="MissingPrefix,RtlSymmetry" />
 
@@ -91,9 +92,10 @@
           android:id="@+id/homeIllustration"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/spacing_8"
           android:adjustViewBounds="true"
           android:scaleType="fitXY"
-          app:srcCompat="@drawable/ic_homescreen_default"
+          app:srcCompat="@drawable/illustration_homescreen_default"
           tools:ignore="ContentDescription" />
 
         <include

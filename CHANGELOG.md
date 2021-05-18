@@ -11,6 +11,7 @@
 - Show `LinkIdWithPatientSheet` for Indian NHID
 - Auto request reviewer for opened and re-opened PRs
 - Update National Health ID strings
+- Remove unwanted fields in `PatientPrefillInfo`
 
 ### Features
 - [In Progress: 06 May 2021] Add NHID support in `ScanSimpleIdScreen`

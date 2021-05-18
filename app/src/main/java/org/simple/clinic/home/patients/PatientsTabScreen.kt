@@ -181,10 +181,10 @@ class PatientsTabScreen : BaseScreen<
 
   private fun illustrationResourceId(): Int =
       when (country.isoCountryCode) {
-        Country.INDIA -> R.drawable.ic_homescreen_india
-        Country.BANGLADESH -> R.drawable.ic_homescreen_bangladesh
-        Country.ETHIOPIA -> R.drawable.ic_homescreen_ethiopia
-        else -> R.drawable.ic_homescreen_default
+        Country.INDIA -> R.drawable.illustration_homescreen_india
+        Country.BANGLADESH -> R.drawable.illustration_homescreen_bangladesh
+        Country.ETHIOPIA -> R.drawable.illustration_homescreen_ethiopia
+        else -> R.drawable.illustration_homescreen_default
       }
 
   private fun setupApprovalStatusAnimations() {

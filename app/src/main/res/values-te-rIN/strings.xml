@@ -346,8 +346,6 @@
 
   <!--Scan Simple ID-->
   <string name="scansimpleid_title">కార్డ్ ఐడిని స్కాన్ చేయండి</string>
-  <string name="scansimpleid_shortcode_error_empty">బిపి పాస్‌పోర్ట్ సంఖ్యను నమోదు చేయండి</string>
-  <string name="scansimpleid_shortcode_error_not_required_length">బిపి పాస్‌పోర్ట్ సంఖ్య 7 అంకెల కంటే తక్కువ ఉంటుంది</string>
   <string name="scansimpleid_type_number">లేదా నంబర్ టైప్ చేయండి</string>
 
   <!--- Sync Indicator-->

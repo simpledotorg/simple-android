@@ -346,8 +346,6 @@
 
   <!--Scan Simple ID-->
   <string name="scansimpleid_title">கார்டு ஐடி-ஐ ஸ்கேன் செய்யவும்</string>
-  <string name="scansimpleid_shortcode_error_empty">பிபி கடவுச்சீட்டு எண்ணை எழுதவும்</string>
-  <string name="scansimpleid_shortcode_error_not_required_length">பிபி கடவுச்சீட்டு எண் 7 இலக்கங்களுக்குள் இருக்க வேண்டும்</string>
   <string name="scansimpleid_type_number">அல்லது எண்ணை உள்ளிடவும்</string>
 
   <!--- Sync Indicator-->

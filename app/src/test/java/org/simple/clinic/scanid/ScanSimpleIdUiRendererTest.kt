@@ -21,6 +21,7 @@ class ScanSimpleIdUiRendererTest {
 
     // then
     verify(ui).showSearchingForPatient()
+    verify(ui).hideScanError()
     verifyNoMoreInteractions(ui)
   }
 
@@ -35,6 +36,21 @@ class ScanSimpleIdUiRendererTest {
 
     // then
     verify(ui).hideSearchingForPatient()
+    verify(ui).hideScanError()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when there is no scan error, then hide scan error`() {
+    // given
+    val defaultModel = ScanSimpleIdModel.create()
+
+    // when
+    uiRenderer.render(defaultModel)
+
+    // then
+    verify(ui).hideSearchingForPatient()
+    verify(ui).hideScanError()
     verifyNoMoreInteractions(ui)
   }
 }

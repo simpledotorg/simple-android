@@ -9,5 +9,11 @@ class ScanSimpleIdUiRenderer(private val ui: ScanSimpleIdUi) : ViewRenderer<Scan
       ui.showSearchingForPatient()
     else
       ui.hideSearchingForPatient()
+
+    renderScanQrError()
+  }
+
+  private fun renderScanQrError() {
+    ui.hideScanError()
   }
 }

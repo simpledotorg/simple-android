@@ -319,6 +319,10 @@ class ScanSimpleIdScreen : BaseScreen<
     searchingContainer.visibility = View.GONE
   }
 
+  override fun hideScanError() {
+
+  }
+
   interface Injector {
     fun inject(target: ScanSimpleIdScreen)
   }

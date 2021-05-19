@@ -12,6 +12,7 @@
 - Auto request reviewer for opened and re-opened PRs
 - Update National Health ID strings
 - Remove unwanted fields in `PatientPrefillInfo`
+- Don't auto request review if a reviewer is already assigned
 
 ### Features
 - Add NHID support in `ScanSimpleIdScreen`

@@ -45,7 +45,9 @@ class ScanSimpleIdUpdateTest {
         .given(defaultModel)
         .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
         .then(assertThatNext(
-            hasModel(defaultModel.searching()),
+            hasModel(defaultModel
+                .clearInvalidQrCodeError()
+                .searching()),
             hasEffects(SearchPatientByIdentifier(identifier))
         ))
   }
@@ -56,7 +58,9 @@ class ScanSimpleIdUpdateTest {
         .given(defaultModel)
         .whenEvent(ScanSimpleIdScreenQrCodeScanned(expectedJson))
         .then(assertThatNext(
-            hasModel(defaultModel.searching()),
+            hasModel(defaultModel
+                .clearInvalidQrCodeError()
+                .searching()),
             hasEffects(ParseScannedJson(expectedJson))
         ))
   }

@@ -75,13 +75,14 @@ class ScanSimpleIdUpdate @Inject constructor(
   private fun simpleIdQrScanned(model: ScanSimpleIdModel, event: ScanSimpleIdScreenQrCodeScanned): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     if (model.isSearching) return noChange()
 
+    val clearInvalidQrCodeModel = model.clearInvalidQrCodeError()
     return try {
       val bpPassportCode = UUID.fromString(event.text)
       val identifier = Identifier(bpPassportCode.toString(), BpPassport)
-      next(model = model.searching(), SearchPatientByIdentifier(identifier))
+      next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
     } catch (e: Exception) {
       crashReporter.report(e)
-      searchPatientWhenNHIDEnabled(model, event)
+      searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
     }
   }
 

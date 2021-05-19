@@ -108,6 +108,9 @@ class ScanSimpleIdScreen : BaseScreen<
   private val viewFinderImageView
     get() = binding.viewFinderImageView
 
+  private val scanErrorTextView
+    get() = binding.scanErrorTextView
+
   private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
   private val cameraExecutor = Executors.newSingleThreadExecutor()
   private val cameraProviderFuture by unsafeLazy {
@@ -124,7 +127,7 @@ class ScanSimpleIdScreen : BaseScreen<
       ScreenScanSimpleBinding.inflate(layoutInflater, container, false)
 
   override fun events() = Observable
-      .mergeArray(qrScans, keyboardEvents(), qrCodeChanges(), doneClicks())
+      .mergeArray(qrScans.distinctUntilChanged(), keyboardEvents(), qrCodeChanges(), doneClicks())
       .compose(ReportAnalyticsEvents())
       .cast<ScanSimpleIdEvent>()
 
@@ -317,6 +320,14 @@ class ScanSimpleIdScreen : BaseScreen<
 
   override fun hideSearchingForPatient() {
     searchingContainer.visibility = View.GONE
+  }
+
+  override fun hideScanError() {
+    scanErrorTextView.visibility = View.GONE
+  }
+
+  override fun showScanError() {
+    scanErrorTextView.visibility = View.VISIBLE
   }
 
   interface Injector {

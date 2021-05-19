@@ -2,6 +2,7 @@ package org.simple.clinic.scanid
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -44,7 +45,9 @@ class ScanSimpleIdUpdateTest {
         .given(defaultModel)
         .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
         .then(assertThatNext(
-            hasModel(defaultModel.searching()),
+            hasModel(defaultModel
+                .clearInvalidQrCodeError()
+                .searching()),
             hasEffects(SearchPatientByIdentifier(identifier))
         ))
   }
@@ -55,7 +58,9 @@ class ScanSimpleIdUpdateTest {
         .given(defaultModel)
         .whenEvent(ScanSimpleIdScreenQrCodeScanned(expectedJson))
         .then(assertThatNext(
-            hasModel(defaultModel.searching()),
+            hasModel(defaultModel
+                .clearInvalidQrCodeError()
+                .searching()),
             hasEffects(ParseScannedJson(expectedJson))
         ))
   }
@@ -174,6 +179,31 @@ class ScanSimpleIdUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredCode))
+        ))
+  }
+
+  @Test
+  fun `when invalid qr code is scanned, then update model`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(InvalidQrCode)
+        .then(assertThatNext(
+            hasModel(defaultModel.notSearching().invalidQrCode()),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when entered code is changed, then hide invalid qr code error`() {
+    val model = defaultModel
+        .invalidQrCode()
+
+    spec
+        .given(model)
+        .whenEvent(EnteredCodeChanged)
+        .then(assertThatNext(
+            hasModel(model.clearInvalidQrCodeError()),
+            hasEffects(HideEnteredCodeValidationError)
         ))
   }
 }

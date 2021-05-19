@@ -323,6 +323,10 @@ class ScanSimpleIdScreen : BaseScreen<
 
   }
 
+  override fun showScanError() {
+
+  }
+
   interface Injector {
     fun inject(target: ScanSimpleIdScreen)
   }

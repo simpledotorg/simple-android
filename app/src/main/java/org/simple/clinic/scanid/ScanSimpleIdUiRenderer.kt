@@ -10,10 +10,13 @@ class ScanSimpleIdUiRenderer(private val ui: ScanSimpleIdUi) : ViewRenderer<Scan
     else
       ui.hideSearchingForPatient()
 
-    renderScanQrError()
+    renderScanQrError(model.scanErrorState)
   }
 
-  private fun renderScanQrError() {
-    ui.hideScanError()
+  private fun renderScanQrError(scanErrorState: ScanErrorState?) {
+    when (scanErrorState) {
+      ScanErrorState.InvalidQrCode -> ui.showScanError()
+      else -> ui.hideScanError()
+    }
   }
 }

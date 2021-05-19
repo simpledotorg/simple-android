@@ -4,4 +4,5 @@ interface ScanSimpleIdUi {
   fun showSearchingForPatient()
   fun hideSearchingForPatient()
   fun hideScanError()
+  fun showScanError()
 }

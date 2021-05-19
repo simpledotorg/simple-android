@@ -53,4 +53,19 @@ class ScanSimpleIdUiRendererTest {
     verify(ui).hideScanError()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when there is scan error, then show scan error`() {
+    // given
+    val defaultModel = ScanSimpleIdModel.create()
+        .invalidQrCode()
+
+    // when
+    uiRenderer.render(defaultModel)
+
+    // then
+    verify(ui).hideSearchingForPatient()
+    verify(ui).showScanError()
+    verifyNoMoreInteractions(ui)
+  }
 }

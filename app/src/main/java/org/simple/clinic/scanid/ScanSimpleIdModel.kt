@@ -8,11 +8,14 @@ import org.simple.clinic.scanid.ScanSearchState.Searching
 @Parcelize
 data class ScanSimpleIdModel(
     val enteredCode: EnteredCodeInput?,
-    val scanSearchState: ScanSearchState
+    val scanSearchState: ScanSearchState,
+    val scanErrorState: ScanErrorState?
 ) : Parcelable {
 
   companion object {
-    fun create() = ScanSimpleIdModel(enteredCode = null, scanSearchState = NotSearching)
+    fun create() = ScanSimpleIdModel(enteredCode = null,
+        scanSearchState = NotSearching,
+        scanErrorState = null)
   }
 
   val isSearching: Boolean

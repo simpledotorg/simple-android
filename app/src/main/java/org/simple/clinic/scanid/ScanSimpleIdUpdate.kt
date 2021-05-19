@@ -80,19 +80,18 @@ class ScanSimpleIdUpdate @Inject constructor(
       val identifier = Identifier(bpPassportCode.toString(), BpPassport)
       next(model = model.searching(), SearchPatientByIdentifier(identifier))
     } catch (e: Exception) {
-      searchPatientWhenNHIDEnabled(model, event, e)
+      crashReporter.report(e)
+      searchPatientWhenNHIDEnabled(model, event)
     }
   }
 
   private fun searchPatientWhenNHIDEnabled(
       model: ScanSimpleIdModel,
-      event: ScanSimpleIdScreenQrCodeScanned,
-      e: Exception
+      event: ScanSimpleIdScreenQrCodeScanned
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return if (isIndianNHIDSupportEnabled) {
       searchPatientWithNhid(model, event)
     } else {
-      crashReporter.report(e)
       noChange()
     }
   }
@@ -101,12 +100,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel,
       event: ScanSimpleIdScreenQrCodeScanned
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    return try {
-      next(model = model.searching(), ParseScannedJson(event.text))
-    } catch (e: IllegalArgumentException) {
-      crashReporter.report(e)
-      noChange()
-    }
+    return next(model = model.searching(), ParseScannedJson(event.text))
   }
 
   private fun enteredCodeValidated(model: ScanSimpleIdModel, event: EnteredCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {

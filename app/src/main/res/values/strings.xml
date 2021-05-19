@@ -409,6 +409,7 @@
   <string name="scansimpleid_enteredcode_error_empty">Enter BP Passport number or a National Health ID</string>
   <string name="scansimpleid_enteredcode_error_not_required_length">Enter a valid BP Passport number or a National Health ID</string>
   <string name="scansimpleid_type_number">or type number</string>
+  <string name="scansimpleid_invalid_qr_code">Scan a valid health ID</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Sync pending</string>

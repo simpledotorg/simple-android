@@ -10,6 +10,8 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.TestData
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.first
@@ -133,8 +135,9 @@ class ScanSimpleIdScreenLogicTest {
     val effectHandler = ScanSimpleIdEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = mock(),
-        uiActions = uiActions,
-        moshi = Moshi.Builder().build()
+        moshi = Moshi.Builder().build(),
+        country = TestData.country(isoCountryCode = Country.INDIA),
+        uiActions = uiActions
     )
 
     val features = Features(

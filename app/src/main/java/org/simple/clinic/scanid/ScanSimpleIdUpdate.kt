@@ -24,12 +24,13 @@ class ScanSimpleIdUpdate @Inject constructor(
     return when (event) {
       ShowKeyboard -> dispatch(HideQrCodeScannerView)
       HideKeyboard -> dispatch(ShowQrCodeScannerView)
-      EnteredCodeChanged -> dispatch(HideEnteredCodeValidationError)
+      EnteredCodeChanged -> next(model.clearInvalidQrCodeError(), HideEnteredCodeValidationError)
       is EnteredCodeValidated -> enteredCodeValidated(model, event)
       is EnteredCodeSearched -> next(model.enteredCodeChanged(event.enteredCode), ValidateEnteredCode(event.enteredCode))
       is ScanSimpleIdScreenQrCodeScanned -> simpleIdQrScanned(model, event)
       is PatientSearchByIdentifierCompleted -> patientSearchByIdentifierCompleted(model, event)
       is ScannedQRCodeJsonParsed -> scannedQRCodeParsed(model, event)
+      InvalidQrCode -> next(model.notSearching().invalidQrCode())
     }
   }
 
@@ -74,24 +75,24 @@ class ScanSimpleIdUpdate @Inject constructor(
   private fun simpleIdQrScanned(model: ScanSimpleIdModel, event: ScanSimpleIdScreenQrCodeScanned): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     if (model.isSearching) return noChange()
 
+    val clearInvalidQrCodeModel = model.clearInvalidQrCodeError()
     return try {
       val bpPassportCode = UUID.fromString(event.text)
       val identifier = Identifier(bpPassportCode.toString(), BpPassport)
-      next(model = model.searching(), SearchPatientByIdentifier(identifier))
+      next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
     } catch (e: Exception) {
-      searchPatientWhenNHIDEnabled(model, event, e)
+      crashReporter.report(e)
+      searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
     }
   }
 
   private fun searchPatientWhenNHIDEnabled(
       model: ScanSimpleIdModel,
-      event: ScanSimpleIdScreenQrCodeScanned,
-      e: Exception
+      event: ScanSimpleIdScreenQrCodeScanned
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return if (isIndianNHIDSupportEnabled) {
       searchPatientWithNhid(model, event)
     } else {
-      crashReporter.report(e)
       noChange()
     }
   }
@@ -100,14 +101,9 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel,
       event: ScanSimpleIdScreenQrCodeScanned
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    return try {
-      next(model = model.searching(), ParseScannedJson(event.text))
-    } catch (e: IllegalArgumentException) {
-      crashReporter.report(e)
-      noChange()
-    }
+    return next(model = model.searching(), ParseScannedJson(event.text))
   }
-  
+
   private fun enteredCodeValidated(model: ScanSimpleIdModel, event: EnteredCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = when (event.result) {
       Success -> searchEnteredCode(model)

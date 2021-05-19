@@ -10,6 +10,7 @@ import com.squareup.moshi.Moshi
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -24,8 +25,9 @@ class ScanSimpleIdEffectHandlerTest {
   private val testCase = EffectHandlerTestCase(ScanSimpleIdEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
-      uiActions = uiActions,
-      moshi = moshi
+      moshi = moshi,
+      country = TestData.country(isoCountryCode = Country.INDIA),
+      uiActions = uiActions
   ).build())
 
   @After
@@ -82,6 +84,64 @@ class ScanSimpleIdEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(ScannedQRCodeJsonParsed(patientPrefillInfo, indiaNHIDInfo))
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `show invalid qr code, when parsing json outside specified country`() {
+    // given
+    val testCase = EffectHandlerTestCase(ScanSimpleIdEffectHandler(
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        patientRepository = patientRepository,
+        moshi = moshi,
+        country = TestData.country(isoCountryCode = Country.BANGLADESH),
+        uiActions = uiActions
+    ).build())
+
+    val expectedJson = """
+    {
+    "hidn":"1234123456785678",
+    "hid":"Mohit",
+    "name":"Mohit Ahuja",
+    "gender":"M",
+    "statelgd":"Maharashtra",
+    "distlgd":"Thane",
+    "dob":"12/12/1997",
+    "address":"Obvious HQ"
+     }
+     """
+
+    // when
+    testCase.dispatch(ParseScannedJson(expectedJson))
+
+    // then
+    testCase.assertOutgoingEvents(InvalidQrCode)
+    verifyZeroInteractions(uiActions)
+
+    testCase.dispose()
+  }
+
+  @Test
+  fun `when parsing invalid json, then show invalid qr code`() {
+    // given
+    val expectedJson = """
+    {
+    "hodn":"1234123456785678",
+    "hid":"Mohit",
+    "name":"Mohit Ahuja",
+    "gender":"M",
+    "statelgd":"Maharashtra",
+    "distlgd":"Thane",
+    "dob":"12/12/1997",
+    "address":"Obvious HQ"
+     }
+     """
+
+    // when
+    testCase.dispatch(ParseScannedJson(expectedJson))
+
+    // then
+    testCase.assertOutgoingEvents(InvalidQrCode)
     verifyZeroInteractions(uiActions)
   }
 

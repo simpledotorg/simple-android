@@ -24,7 +24,7 @@ class ScanSimpleIdUpdate @Inject constructor(
     return when (event) {
       ShowKeyboard -> dispatch(HideQrCodeScannerView)
       HideKeyboard -> dispatch(ShowQrCodeScannerView)
-      EnteredCodeChanged -> dispatch(HideEnteredCodeValidationError)
+      EnteredCodeChanged -> next(model.clearInvalidQrCodeError(), HideEnteredCodeValidationError)
       is EnteredCodeValidated -> enteredCodeValidated(model, event)
       is EnteredCodeSearched -> next(model.enteredCodeChanged(event.enteredCode), ValidateEnteredCode(event.enteredCode))
       is ScanSimpleIdScreenQrCodeScanned -> simpleIdQrScanned(model, event)

@@ -188,4 +188,18 @@ class ScanSimpleIdUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when entered code is changed, then hide invalid qr code error`() {
+    val model = defaultModel
+        .invalidQrCode()
+
+    spec
+        .given(model)
+        .whenEvent(EnteredCodeChanged)
+        .then(assertThatNext(
+            hasModel(model.clearInvalidQrCodeError()),
+            hasEffects(HideEnteredCodeValidationError)
+        ))
+  }
 }

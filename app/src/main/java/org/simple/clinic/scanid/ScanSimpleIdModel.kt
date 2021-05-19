@@ -36,4 +36,8 @@ data class ScanSimpleIdModel(
   fun invalidQrCode(): ScanSimpleIdModel {
     return copy(scanErrorState = ScanErrorState.InvalidQrCode)
   }
+
+  fun clearInvalidQrCodeError(): ScanSimpleIdModel {
+    return copy(scanErrorState = null)
+  }
 }

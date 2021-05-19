@@ -64,9 +64,9 @@ object Versions {
   const val quarantine = "0.3.0"
   const val jackson = "2.10.2"
   const val logback = "1.2.3"
-  const val camerax = "1.0.0-rc04"
-  const val cameraView = "1.0.0-alpha23"
-  const val cameraLifecycle = "1.0.0-rc04"
+  const val camerax = "1.0.0"
+  const val cameraLifecycle = "1.0.0"
+  const val cameraView = "1.0.0-alpha24"
   const val zxing = "3.3.3"
   const val paging = "2.1.2"
 

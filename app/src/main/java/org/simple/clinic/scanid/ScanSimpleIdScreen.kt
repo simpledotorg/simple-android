@@ -127,7 +127,7 @@ class ScanSimpleIdScreen : BaseScreen<
       ScreenScanSimpleBinding.inflate(layoutInflater, container, false)
 
   override fun events() = Observable
-      .mergeArray(qrScans, keyboardEvents(), qrCodeChanges(), doneClicks())
+      .mergeArray(qrScans.distinctUntilChanged(), keyboardEvents(), qrCodeChanges(), doneClicks())
       .compose(ReportAnalyticsEvents())
       .cast<ScanSimpleIdEvent>()
 

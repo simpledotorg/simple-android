@@ -19,7 +19,7 @@
 - Add NHID support in `ScanSimpleIdScreen`
 
 ### Changes
-- Update translations: `ti-ET`, `pa-IN`, `om-ET`, `bn-IN`, `te-IN`, `hi-IN`, `am-ET`, `ta-IN`, `mr-IN`, `bn-BD`, `so-ET`
+- Update translations: `ti-ET`, `pa-IN`, `om-ET`, `bn-IN`, `te-IN`, `hi-IN`, `am-ET`, `ta-IN`, `mr-IN`, `bn-BD`, `so-ET`, `kn-IN`
 - Home screen improvements
     - Update home screen illustrations
     - Change patient search button text style

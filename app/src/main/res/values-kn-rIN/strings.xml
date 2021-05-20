@@ -30,8 +30,10 @@
   <string name="identifiertype_bangladesh_national_id">ರಾಷ್ಟ್ರೀಯ ಐಡಿ ಸಂಖ್ಯೆ</string>
   <string name="identifiertype_ethiopia_medical_record_number">ವೈದ್ಯಕೀಯ ದಾಖಲೆ ಸಂಖ್ಯೆ</string>
   <string name="identifiertype_unknown">ಐಡಿ</string>
+  <string name="identifiertype_india_national_health_id">ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ ID</string>
 
   <!-- Patient search -->
+  <string name="instantsearch_hint">ಹೆಸರು, ಫೋನ್ ಅಥವಾ ID</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">ಯಾವುದೇ ರೋಗಿ ಹೊಂದಾಣಿಕೆಯಾಗುತ್ತಿಲ್ಲ</string>
@@ -344,7 +346,8 @@
 
   <!--Scan Simple ID-->
   <string name="scansimpleid_title">ಕಾರ್ಡ್ ಐಡಿ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ</string>
-
+  <string name="scansimpleid_type_number">ಅಥವಾ ಸಂಖ್ಯೆಯನ್ನು ಟೈಪ್ ಮಾಡಿ</string>
+  
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ಸಿಂಕ್ ಬಾಕಿ ಇದೆ</string>
   <string name="syncindicator_status_failed">ಸಿಂಕ್ ವಿಫಲವಾಗಿದೆ</string>
@@ -673,6 +676,7 @@
   <string name="sheet_bp_passport_register_new_patient">ಹೊಸ ರೋಗಿಯನ್ನು ನೋಂದಾಯಿಸಿ</string>
   <string name="sheet_bp_passport_add_to_existing_patient">ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ರೋಗಿಗೆ ಸೇರಿಸಿ</string>
   <string name="sheet_bp_passport_number">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್‌ %1$s</string>
+  <string name="sheet_national_health_id">ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ Id %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s ಗೆ ನಿಯೋಜಿಸಲಾಗಿದೆ</string>
@@ -680,5 +684,18 @@
   <string name="patientsearch_error_no_patients_in_facility">ನಿಮ್ಮ ಸೌಲಭ್ಯದಲ್ಲಿ ನೋಂದಾಯಿಸಿಕೊಂಡ ಎಲ್ಲಾ ರೋಗಿಗಳನ್ನು ನಿಮಗೆ ಇಲ್ಲಿ ನೋಡಲು ಸಾಧ್ಯವಾಗುತ್ತದೆ</string>
   <string name="patientsearch_error_no_search_results">ಯಾವುದೇ ರೋಗಿ ಹೊಂದಾಣಿಕೆಯಾಗುತ್ತಿಲ್ಲ</string>
   <string name="patientsearch_error_no_patients_in_facility_heading">%1$s ನಲ್ಲಿ ಯಾವುದೇ ರೋಗಿಗಳಿಲ್ಲ</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">ದಿನಾಂಕ ನಮೂದಿಸಿ</string>
+  <string name="sheet_text_input_date_picker_day">ದಿನ</string>
+  <string name="sheet_text_input_date_picker_month">ತಿಂಗಳು</string>
+  <string name="sheet_text_input_date_picker_year">ವರ್ಷ</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">DD/MM/YYYY ನಲ್ಲಿ ಮಾನ್ಯ ದಿನಾಂಕವನ್ನು ನಮೂದಿಸಿ</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">ಭವಿಷ್ಯದ ದಿನಾಂಕ ನಮೂದಿಸಿ</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">ದಿನಾಂಕವು ಒಂದು ವರ್ಷದ ನಂತರ ಆಗಿರಬಾರದು</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ ID ಅನ್ನು ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ ID ಹೊಂದಿರುವ ರೋಗಿಗೆ ನಿಯೋಜಿಸಬಾರದು</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">ಸರಿ</string>
 
 </resources>

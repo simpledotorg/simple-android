@@ -30,8 +30,10 @@
   <string name="identifiertype_bangladesh_national_id">Lambarka Aqoonsiga Qaranka</string>
   <string name="identifiertype_ethiopia_medical_record_number">Lambarka Diiwaanka Caafimaadka</string>
   <string name="identifiertype_unknown">Kaarka aqoonsiga</string>
+  <string name="identifiertype_india_national_health_id">Aqoonsiga Caafimaadka Qaran</string>
 
   <!-- Patient search -->
+  <string name="instantsearch_hint">Magaca, taleefanka ama Aqoonsiga</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">Ma jiro bukaan u dhigma</string>
@@ -344,6 +346,8 @@
 
   <!--Scan Simple ID-->
   <string name="scansimpleid_title">Iskaan garee kaarka aqoonsiga</string>
+  <string name="scansimpleid_type_number">ama lambarka nooca</string>
+
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Hawlgalinta ayaa hakad la galiyay</string>
@@ -673,6 +677,7 @@
   <string name="sheet_bp_passport_register_new_patient">Diiwaangeli bukaan cusub</string>
   <string name="sheet_bp_passport_add_to_existing_patient">Ku dar bukaan hore</string>
   <string name="sheet_bp_passport_number">Baasaboorka BP %1$s</string>
+  <string name="sheet_national_health_id">Aqoonsiga Caafimaadka Qaran %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">Loo xilsaaray %1$s</string>
@@ -680,5 +685,18 @@
   <string name="patientsearch_error_no_patients_in_facility">Waxaad awoodi doontaa inaad halkan ku aragto dhammaan bukaanada ka diiwaangashan xaruntaada</string>
   <string name="patientsearch_error_no_search_results">Ma jiro bukaan u dhigma</string>
   <string name="patientsearch_error_no_patients_in_facility_heading">Bukaan majiraan %1$s</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">Geli taariikhda</string>
+  <string name="sheet_text_input_date_picker_day">Maalin</string>
+  <string name="sheet_text_input_date_picker_month">Bisha</string>
+  <string name="sheet_text_input_date_picker_year">Sanadka</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">Gali taariikh sax ah oo ah DD/MM/YYYY</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">Geli taariikhda mustaqbalka</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">Taariikhda waa inayna ka dambaynin ha sano</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">Aqoonsiga caafimaadka qaran waa in aan la siinin bukaan haysa aqoonsi caafimaad oo hore</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">Haye</string>
 
 </resources>

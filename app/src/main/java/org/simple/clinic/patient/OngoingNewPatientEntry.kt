@@ -289,6 +289,9 @@ data class OngoingNewPatientEntry(
           Address("", district, state, "", "")
     }
 
+    val doesNotHaveDistrictAndState: Boolean
+      get() = district.isBlank() && state.isBlank()
+
     fun withColonyOrVillage(colonyOrVillage: String): Address =
         copy(colonyOrVillage = colonyOrVillage)
 

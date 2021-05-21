@@ -209,6 +209,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val saveButton
     get() = binding!!.saveButton
 
+  private val identifierTypeTextView
+    get() = binding!!.identifierTypeTextView
+
   private val villageTypeAheadAdapter by unsafeLazy {
     ArrayAdapter<String>(
         context,

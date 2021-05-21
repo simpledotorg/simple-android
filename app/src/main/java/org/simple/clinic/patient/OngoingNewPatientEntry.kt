@@ -38,6 +38,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
+import java.time.format.DateTimeFormatter
 
 /**
  * Represents user input on the UI, which is why every field is a String.
@@ -122,7 +123,7 @@ data class OngoingNewPatientEntry(
       copy(
           personalDetails = PersonalDetails(
               fullName = patientProfileInfo.fullName,
-              dateOfBirth = null,
+              dateOfBirth = patientProfileInfo.dateOfBirth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
               gender = Gender.Unknown(patientProfileInfo.gender),
               age = null),
           address = addressOrBlank().withColonyOrVillage(patientProfileInfo.address),

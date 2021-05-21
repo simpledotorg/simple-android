@@ -2,6 +2,7 @@ package org.simple.clinic.scanid
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.time.LocalDate
 
 @JsonClass(generateAdapter = true)
 data class IndiaNHIDInfoPayload(
@@ -25,7 +26,8 @@ data class IndiaNHIDInfoPayload(
     val district: String?,
 
     @Json(name = "dob")
-    val dateOfBirth: String,
+    @IndiaNHIDDateOfBirth
+    val dateOfBirth: LocalDate,
 
     @Json(name = "address")
     val address: String

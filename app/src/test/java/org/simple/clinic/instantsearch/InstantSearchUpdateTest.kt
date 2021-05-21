@@ -16,6 +16,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNatio
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
@@ -318,7 +319,44 @@ class InstantSearchUpdateTest {
     val ongoingNewPatientEntry = OngoingNewPatientEntry(
         personalDetails = OngoingNewPatientEntry.PersonalDetails(
             fullName = patientPrefillInfo.fullName,
-            dateOfBirth = null,
+            dateOfBirth = patientPrefillInfo.dateOfBirth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+            gender = Gender.Unknown("M"),
+            age = null),
+        address = OngoingNewPatientEntry.Address.BLANK.withColonyOrVillage(patientPrefillInfo.address),
+        identifier = identifier)
+
+    updateSpec
+        .given(searchQueryModel.patientPrefillInfoUpdated(patientPrefillInfo).additionalIdentifierUpdated(identifier))
+        .whenEvent(RegisterNewPatientClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SaveNewOngoingPatientEntry(ongoingNewPatientEntry))
+        ))
+  }
+
+  @Test
+  fun `when register new patient is clicked and patient prefill info is not empty and dob is in wrong format, then save it in ongoing patient entry with dob in correct format`(){
+    val facility = TestData.facility()
+    val searchQueryModel = defaultModel
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    val dateOfBirthWithWrongFormat = LocalDate.parse("2/3/2012", DateTimeFormatter.ofPattern("d/M/yyyy"))
+    val dateOfBirthWithCorrectFormat = "02/03/2012"
+
+    val indiaNationalHealthID = "28-3123-2283-6682"
+    val patientPrefillInfo = TestData.indiaNHIDInfoPayload(
+        healthIdNumber = indiaNationalHealthID,
+        dateOfBirth = dateOfBirthWithWrongFormat
+    ).toPatientPrefillInfo()
+
+    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
+
+    // ongoing new patient entry with correct format
+    val ongoingNewPatientEntry = OngoingNewPatientEntry(
+        personalDetails = OngoingNewPatientEntry.PersonalDetails(
+            fullName = patientPrefillInfo.fullName,
+            dateOfBirth = dateOfBirthWithCorrectFormat,
             gender = Gender.Unknown("M"),
             age = null),
         address = OngoingNewPatientEntry.Address.BLANK.withColonyOrVillage(patientPrefillInfo.address),

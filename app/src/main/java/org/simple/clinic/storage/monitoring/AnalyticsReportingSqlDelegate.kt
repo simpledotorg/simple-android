@@ -25,7 +25,7 @@ class AnalyticsReportingSqlDelegate(
       clock: UtcClock
   ) : this(
       daoInformationExtractor = daoInformationExtractor,
-      sampler = Sampler(remoteConfig.double("room_query_profile_sample_rate", 0.0).toFloat()),
+      sampler = Sampler(remoteConfig.double("room_query_profile_sample_rate", 0.05).toFloat()),
       clock = clock
   )
 

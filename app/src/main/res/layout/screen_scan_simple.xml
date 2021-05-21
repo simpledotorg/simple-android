@@ -133,6 +133,19 @@
       </FrameLayout>
 
       <TextView
+        android:id="@+id/enterBpPassportOrNationalHealthIDText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:layout_marginBottom="@dimen/spacing_4"
+        android:gravity="center"
+        android:text="@string/scansimpleid_bp_passport_or_national_health_id"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/colorOnSurface" />
+
+      <TextView
         android:id="@+id/shortCodeErrorText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -146,7 +159,6 @@
         android:visibility="gone"
         tools:text="@string/scansimpleid_enteredcode_error_not_required_length"
         tools:visibility="visible" />
-
     </LinearLayout>
 
   </com.google.android.material.card.MaterialCardView>

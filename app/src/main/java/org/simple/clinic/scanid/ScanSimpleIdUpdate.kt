@@ -54,7 +54,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       event: PatientSearchByIdentifierCompleted
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = if (event.patients.isEmpty()) {
-      OpenPatientSearch(event.identifier, null)
+      OpenPatientSearch(event.identifier, null, model.patientPrefillInfo)
     } else {
       patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
     }
@@ -77,7 +77,7 @@ class ScanSimpleIdUpdate @Inject constructor(
   private fun multiplePatientsWithId(identifier: Identifier): ScanSimpleIdEffect {
     return when (identifier.type) {
       BpPassport -> OpenShortCodeSearch(BpPassport.shortCode(identifier))
-      else -> OpenPatientSearch(null, initialSearchQuery = identifier.value)
+      else -> OpenPatientSearch(null, initialSearchQuery = identifier.value, null)
     }
   }
 
@@ -133,7 +133,7 @@ class ScanSimpleIdUpdate @Inject constructor(
     return if (model.enteredCode.isShortCode) {
       OpenShortCodeSearch(enteredCodeToSearch)
     } else {
-      OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredCodeToSearch)
+      OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredCodeToSearch, patientPrefillInfo = null)
     }
   }
 }

@@ -12,7 +12,9 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID
@@ -176,7 +178,7 @@ class ScanSimpleIdEffectHandlerTest {
   }
 
   @Test
-  fun `when open patient search effect is received, then open patient search`() {
+  fun `when open patient search effect is received without NHID, then open patient search without patient prefill info`() {
     // given
     val identifier = TestData.identifier(
         value = "a765a30e-6bd9-4f12-99da-acba91b6a479",
@@ -185,12 +187,33 @@ class ScanSimpleIdEffectHandlerTest {
     val initialSearchQuery: String? = null
 
     // when
-    testCase.dispatch(OpenPatientSearch(identifier, initialSearchQuery))
+    testCase.dispatch(OpenPatientSearch(identifier, initialSearchQuery, null))
 
     // then
     testCase.assertNoOutgoingEvents()
 
-    verify(uiActions).openPatientSearch(identifier, null)
+    verify(uiActions).openPatientSearch(identifier, null, null)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open patient search effect is received with NHID, then open patient search with patient prefill info`() {
+    // given
+    val indiaNationalHealthID = "12341234123412"
+    val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload(
+        healthIdNumber = indiaNationalHealthID
+    )
+    val patientPrefillInfo = indiaNHIDInfoPayload.toPatientPrefillInfo()
+
+    val identifier = Identifier(indiaNationalHealthID, Identifier.IdentifierType.IndiaNationalHealthId)
+
+    // when
+    testCase.dispatch(OpenPatientSearch(identifier, null, patientPrefillInfo))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openPatientSearch(identifier, null, patientPrefillInfo)
     verifyNoMoreInteractions(uiActions)
   }
 }

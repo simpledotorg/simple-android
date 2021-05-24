@@ -2,6 +2,14 @@
 
 ## Next Release
 ### Internal
+- Bump Kotlin to v1.5.10
+- Bump AGP to v4.2.1
+
+## Features
+- Add NHID support in `PatientEntryScreen`
+
+## On Demo
+### Internal
 - Improve `ScanSimpleIdScreen` navigation
 - Change labels to indicate the ID search
 - Bump Mobius to v1.5.3
@@ -15,13 +23,10 @@
 - Don't auto request review if a reviewer is already assigned
 - Show error text when user scans invalid QR code
 - Redact sensitive information from logs
-- Bump Kotlin to v1.5.10
-- Bump AGP to v4.2.1
 
 ### Features
 - Add NHID support in `ScanSimpleIdScreen`
 - Update title text and label in `ScanSimpleIdScreen`
-- Add NHID support in `PatientEntryScreen`
 
 ### Changes
 - Update translations: `ti-ET`, `pa-IN`, `om-ET`, `bn-IN`, `te-IN`, `hi-IN`, `am-ET`, `ta-IN`, `mr-IN`, `bn-BD`, `so-ET`, `kn-IN`

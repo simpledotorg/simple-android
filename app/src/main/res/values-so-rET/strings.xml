@@ -83,7 +83,6 @@
   <string name="patiententry_error_phonenumber_blank">Lambarka taleefanka ma noqon karo mid madhan</string>
   <string name="patiententry_error_phonenumber_length_less">Lambarka taleefanka kama yaraan karo%1$s lambar</string>
   <string name="patiententry_error_phonenumber_length_more">Lambarka taleefanka kama badnaan karo %1$s lambar</string>
-  <string name="patiententry_identifier">Baasaboorka BP</string>
   <string name="patiententry_consent_header">Ogolaanshi:\u0020</string>
   <string name="patiententry_consent_first_para">Adiga oo taabanaya hoosta, waxaad xaqiijineysaa in xog kasta oo bukaan ah oo aad halkan gasho lagu helay ogolaansho ku habboon oo la oggol yahay. Tan macnaheedu waa in bukaanku ama masuulka sharciga ah uu ogyahay inaad ku dareyso xogtooda shaqsi barnaamijka, fahmay waxa xogta la aruurinayo, uuna ogyahay in lagala soo xiriiri karo fariinta gaaban, WhatsApp, ama qaabab kale iyadoo la adeegsanayo lambarka taleefanka ee ku jira barnaamijka. .</string>
   <string name="patiententry_consent_second_para">Qof kasta oo aad idman, ama daryeel caafimaad bixiyaha aad u shaqeysid, wuxuu heli doonaa xogta bukaanka iyo macluumaadka aad gasho halkan. Adiga oo adeegsanaya barnaamijka waxaad xaqiijineysaa in bukaanku ama masuulka sharciga ah uu fahmayo cidda marin u yeelan doonta xogta laga helay barnaamijkan isla markaana ogolaanaya marinkaas</string>

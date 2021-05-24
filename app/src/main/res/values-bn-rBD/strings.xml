@@ -83,7 +83,6 @@
   <string name="patiententry_error_phonenumber_blank">ফোন নম্বর খালি থাকতে পারে না</string>
   <string name="patiententry_error_phonenumber_length_less">ফোন নম্বর %1$sটি সংখ্যার কম হতে পারে না</string>
   <string name="patiententry_error_phonenumber_length_more">ফোন নম্বর %1$sটি সংখ্যার বেশি হতে পারে না</string>
-  <string name="patiententry_identifier">বিপি পাসপোর্ট</string>
   <string name="patiententry_consent_header">সম্মতি:\u0020</string>
   <string name="patiententry_consent_first_para">নিন্মে ট্যাপ করার মাধমে আপনি নিশ্চিত হচ্ছেন যে এখানে আপনার দেওয়া যে কোনও রোগীর ডেটা যথাযথ অবহিত সম্মতিতে গ্রহণ করা হয়েছে। এর অর্থ হল রোগী বা আইনি অভিভাবক জানেন যে আপনি অ্যাপে তাদের ব্যক্তিগত ডেটা প্রদান করেছেন, কোন ডেটা সংগ্রহ করা হচ্ছে তা বুঝতে পেরেছেন এবং এটিও জানেন যে অ্যাপটিতে প্রদত্ত ফোন নম্বর ব্যবহার করে SMS, WhatsApp বা অন্যান্য পদ্ধতির মাধ্যমে তাদের সাথে যোগাযোগ করা হতে পারে।</string>
   <string name="patiententry_consent_second_para">আপনার দ্বারা অনুমোদিত যে কেউ, বা স্বাস্থ্যসেবা সরবরাহকারী যার জন্য আপনি কাজ করেন, এখানে আপনার প্রদত্ত রোগীর ডেটা এবং তথ্যে অ্যাক্সেস করতে পারবে। অ্যাপটি ব্যবহার করে আপনি নিশ্চিত করেছেন যে রোগী বা তার আইনি অভিভাবক বুঝেছেন যে এই অ্যাপ্লিকেশনটির মাধ্যমে প্রাপ্ত ডেটাতে কার অ্যাক্সেস থাকবে এবং সেই অ্যাক্সেসে রোগীর সম্মতি রয়েছে।</string>

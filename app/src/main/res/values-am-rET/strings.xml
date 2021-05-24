@@ -83,7 +83,6 @@
   <string name="patiententry_error_phonenumber_blank">የስልክ ቁጥር ባዶ ልሆን አይችልም</string>
   <string name="patiententry_error_phonenumber_length_less">የስልክ ቁጥር ከ %1$s ዲጂቶች በታች መሆን አይችልም</string>
   <string name="patiententry_error_phonenumber_length_more">የስልክ ቁጥር ከ %1$s ዲጂቶች በላይ መሆን አይችልም</string>
-  <string name="patiententry_identifier">የደም ግፊት ፓስፖርት</string>
   <string name="patiententry_consent_header">ስምምነት:\u0020</string>
   <string name="patiententry_consent_first_para">ከዚህ በታች መታ በማድረግ እዚህ ያስገቡት ማንኛውም የታካሚ መረጃ በተገቢው በተረጋገጠ ስምምነት የተገኘ መሆኑን ያረጋግጣሉ። ይህ ማለት ታካሚው ወይም የታካሚው ሞግዚት የግል መረጃ ወደ መተግበሪያው ውስጥ እንደሚገቡ ያውቃሉ፣ ምን መረጃ እየተሰበሰበ እንዳለ ይገነዘባሉ፣ እንዲሁም በመተግበሪያው ውስጥ የሚገኘውን የስልክ ቁጥር በመጠቀም በኤስኤምኤስ፣ በ WhatsApp ወይም በሌሎች መንገዶች ሊገናኙ እንደሚችሉ ያውቃሉ።</string>
   <string name="patiententry_consent_second_para">እርስዎ የፈቀዱለት ማንኛውም ሰው ወይም እርስዎ የሚሰሩለት የጤና ባለሙያ ፤ እዚህ ያስገቡትን የታካሚ መረጃዎች ማግኘት ይችላል። መተግበሪያውን በመጠቀም ታካሚው ወይም የታካሚው ሞግዚት በዚህ መተግበሪያ አማካኝነት የተገኘውን መረጃ ማን መድረስ እንደሚችል መገንዘባቸውን እና ተሰማሚነታቸውን አረጋግጠዋል።</string>

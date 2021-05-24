@@ -83,7 +83,6 @@
   <string name="patiententry_error_phonenumber_blank">ቑፅሪ ስልኪ ክፍቲ ክኽውን ኣይግባእን</string>
   <string name="patiententry_error_phonenumber_length_less">ቁፅሪ ተሌፎን ካብ %1$s ኣሃዛት ንታሕቲ ክኸውን የብሉን</string>
   <string name="patiententry_error_phonenumber_length_more">ቁፅሪ ተሌፎን ካብ %1$s ኣሃዛት ንላዕሊ ክኸውን የብሉን</string>
-  <string name="patiententry_identifier">BP Passport</string>
   <string name="patiententry_consent_header">ስምምዕ፥\ u0020</string>
   <string name="patiententry_consent_first_para">ኣብ ታሕቲ ብምትንካፍ፡ ኩሉ ኣብዚ ዘእተኻዮ/ኽዮ ናይ ተሓካሚ ሓበሬታ ብኣገባብን ስምምዕን ከም ዝረኸብካዮ/ዝረኸብኪዮ  ኣረጋግጽ/ጺ እዚ ማለት፡ ተሓካሚ ወይ ድማ ሕጋዊ ኣላዪኡ/ኣ ግላዊ ሓበሬታታቶም ከም ዝተኣከበን ኣብ ኣፕሊኬሽን ከምዝኣተወን ከምኡ ውን ብ ኣገልግሎት ሓጺር መልእኽቲ፡ ዋትስኣፕ ወይ ካልኦት ኣገባባት ብምጥቃም በቲ ዝተመዝገበ ስልኪ ቁጽሪ ከም ነዘራርቦም ይፈልጡ ማለት’ዩ።</string>
   <string name="patiententry_consent_second_para">ዝኾነ ብኣኻ ስልጣን ዝተወሃቦ ወይ’ውን እቲ ንስኻ ተቖጺርካ ትሰርሓሉ በዓል ሞያ ጥዕና፡ ነቲ ዝኣከብካዮ ናይ ተሓካሚ ሓበሬታ ክኸፍቶን ክጥቀመሉን ምዃኑ። ነዚ ኣፕሊኬሽን ብምጥቃም፡ ተሓካሚ ወይ’ውን ሕጋዊ ኣላዪ እዚ ሓበሬታ ኣብ ጥቕሚ ከም ዝውዕልን መን ከም ዝጥቀመሉን ተሰማሚዑ ኣሎ ማለት’ዩ።</string>

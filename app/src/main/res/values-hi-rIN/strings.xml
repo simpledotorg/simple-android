@@ -83,7 +83,6 @@
   <string name="patiententry_error_phonenumber_blank">फ़ोन नंबर को खाली नहीं छोड़ा जा सकता</string>
   <string name="patiententry_error_phonenumber_length_less">फ़ोन नंबर में  %1$s से कम अंक नहीं हो सकते</string>
   <string name="patiententry_error_phonenumber_length_more">फ़ोन नंबर में  %1$s से अधिक अंक नहीं हो सकते</string>
-  <string name="patiententry_identifier">बीपी पासपोर्ट</string>
   <string name="patiententry_consent_header">सहमति:\u0020</string>
   <string name="patiententry_consent_first_para">नीचे टैप करके, आप इस बात की पुष्टि करते हैं कि रोगी के संबंध में आपके द्वारा लिखा गया कोई भी डेटा उचित सूचित सहमति के अंतर्गत प्राप्त किया गया है। इसका मतलब यह है कि रोगी या कानूनी अभिभावक को इस बात की जानकारी है कि आप ऐप में उनका व्यक्तिगत डेटा लिख रहे हैं, वह इस बात को समझता है कि किस डेटा को एकत्र किया जा रहा है, और उसे यह पता है कि वे ऐप में दिए गए फ़ोन नंबर का उपयोग करके SMS, WhatsApp, या अन्य तरीकों से संपर्क कर सकते हैं।</string>
   <string name="patiententry_consent_second_para">आपके द्वारा अधिकृत कोई भी, या स्वास्थ्य सेवा प्रदाता जिसके लिए आप काम करते हैं, के पास यहां दर्ज किए गए रोगी डेटा और जानकारी तक पहुंच होगी। ऐप का उपयोग करके आप रोगी या कानूनी अभिभावक द्वारा यह समझे जाने की पुष्टि करते हैं कि इस ऐप के माध्यम से प्राप्त डेटा तक पहुंच किसके पास होगी और रोगी उस पहुँच के लिए सहमति देता है।</string>

@@ -88,7 +88,7 @@
   <string name="patiententry_error_phonenumber_blank">Phone number cannot be empty</string>
   <string name="patiententry_error_phonenumber_length_less">Phone number cannot be less than %1$s digits</string>
   <string name="patiententry_error_phonenumber_length_more">Phone number cannot be more than %1$s digits</string>
-  <string name="patiententry_identifier">BP Passport</string>
+  <string name="patiententry_identifier_bp_passport">BP Passport</string>
   <string name="patiententry_consent_header">Consent:\u0020</string>
   <string name="patiententry_consent_first_para">By tapping below, you confirm that any patient data you enter here has been obtained under appropriate informed consent. This means that the patient or legal guardian knows that you are entering their personal data into the app, understands what data is being collected, and knows that they may be contacted via SMS, WhatsApp, or other methods using the phone number provided in the app.</string>
   <string name="patiententry_consent_second_para">Anyone authorized by you, or the healthcare provider for whom you work, will have access to the patient data and information you enter here. By using the app you confirm that the patient or legal guardian understands who will have access to the data obtained through this app and consents to that access.</string>
@@ -96,6 +96,7 @@
   <string name="patiententry_consent_sms_reminders">SMS Reminders</string>
   <string name="patiententry_age_exceeds_max_limit_error">Age cannot be more than 120 years</string>
   <string name="patiententry_age_exceeds_min_limit_error">Age cannot be equal to 0 years</string>
+  <string name="patiententry_identifier_national_health_id">National Health ID</string>
 
   <!-- Edit patient -->
   <string name="patientedit_full_name" translatable="false">@string/patiententry_full_name</string>

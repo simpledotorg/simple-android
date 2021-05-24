@@ -120,7 +120,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:paddingStart="@dimen/spacing_4"
-          android:text="@string/patiententry_identifier"
+          android:text="@string/patiententry_identifier_bp_passport"
           android:textAppearance="?attr/textAppearanceBody2"
           android:textColor="@color/color_on_surface_67" />
 

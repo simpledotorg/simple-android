@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next Release
+## Demo
 ### Internal
 - Improve `ScanSimpleIdScreen` navigation
 - Change labels to indicate the ID search

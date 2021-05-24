@@ -18,6 +18,7 @@
 ### Features
 - Add NHID support in `ScanSimpleIdScreen`
 - Update title text and label in `ScanSimpleIdScreen`
+- Add NHID support in `PatientEntryScreen`
 
 ### Changes
 - Update translations: `ti-ET`, `pa-IN`, `om-ET`, `bn-IN`, `te-IN`, `hi-IN`, `am-ET`, `ta-IN`, `mr-IN`, `bn-BD`, `so-ET`, `kn-IN`

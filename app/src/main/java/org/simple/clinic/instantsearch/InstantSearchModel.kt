@@ -33,13 +33,13 @@ data class InstantSearchModel(
     get() = patientPrefillInfo != null && isAdditionalIdentifierAnNHID
 
   companion object {
-    fun create(additionalIdentifier: Identifier?) = InstantSearchModel(
+    fun create(additionalIdentifier: Identifier?, patientPrefillInfo: PatientPrefillInfo?) = InstantSearchModel(
         facility = null,
         searchQuery = null,
         additionalIdentifier = additionalIdentifier,
         instantSearchProgressState = null,
         scannedQrCodeSheetAlreadyOpened = false,
-        patientPrefillInfo = null
+        patientPrefillInfo = patientPrefillInfo
     )
   }
 

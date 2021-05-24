@@ -126,7 +126,30 @@ class ScanSimpleIdUpdateTest {
         .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
-            hasEffects(OpenPatientSearch(identifier, null))
+            hasEffects(OpenPatientSearch(identifier, null, null))
+        ))
+  }
+
+  @Test
+  fun `when NHID is scanned and patient is not found, then send the identifier to patient search screen with patient prefill info`() {
+    val patients = emptyList<Patient>()
+
+    val indiaNationalHealthID = "12341234123412"
+    val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload(
+        healthIdNumber = indiaNationalHealthID
+    )
+    val patientPrefillInfo = indiaNHIDInfoPayload.toPatientPrefillInfo()
+
+    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
+
+    val patientPrefillInfoChangedModel = defaultModel.patientPrefillInfoChanged(patientPrefillInfo)
+
+    spec
+        .given(patientPrefillInfoChangedModel)
+        .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
+        .then(assertThatNext(
+            hasModel(patientPrefillInfoChangedModel.notSearching()),
+            hasEffects(OpenPatientSearch(identifier, null, patientPrefillInfo))
         ))
   }
 
@@ -164,7 +187,7 @@ class ScanSimpleIdUpdateTest {
         .whenEvent(PatientSearchByIdentifierCompleted(listOf(patient1, patient2), identifier))
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
-            hasEffects(OpenPatientSearch(null, "12345612345612"))
+            hasEffects(OpenPatientSearch(null, "12345612345612", null))
         ))
   }
 
@@ -178,7 +201,7 @@ class ScanSimpleIdUpdateTest {
         .whenEvent(EnteredCodeValidated(EnteredCodeValidationResult.Success))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredCode))
+            hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredCode, null))
         ))
   }
 

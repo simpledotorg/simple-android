@@ -10,5 +10,5 @@ interface ScanSimpleIdUiActions {
   fun showEnteredCodeValidationError(failure: EnteredCodeValidationResult)
   fun openPatientSummary(patientId: UUID)
   fun openShortCodeSearch(shortCode: String)
-  fun openPatientSearch(additionalIdentifier: Identifier?, initialSearchQuery: String?)
+  fun openPatientSearch(additionalIdentifier: Identifier?, initialSearchQuery: String?, patientPrefillInfo: PatientPrefillInfo?)
 }

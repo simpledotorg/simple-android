@@ -177,7 +177,10 @@ class ShortCodeSearchResultScreen :
   }
 
   override fun openPatientSearch() {
-    val screenKey = InstantSearchScreenKey(additionalIdentifier = null, initialSearchQuery = null)
+    val screenKey = InstantSearchScreenKey(
+        additionalIdentifier = null,
+        initialSearchQuery = null,
+        patientPrefillInfo = null)
 
     router.push(screenKey)
   }

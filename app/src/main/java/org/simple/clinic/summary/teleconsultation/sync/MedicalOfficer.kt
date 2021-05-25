@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.util.Unicode
 import java.util.UUID
 
 @Entity
@@ -20,6 +21,10 @@ data class MedicalOfficer(
 
     val phoneNumber: String
 ) : Parcelable {
+
+  override fun toString(): String {
+    return "MedicalOfficer(${Unicode.redacted})"
+  }
 
   fun toPayload(): MedicalOfficerPayload {
     return MedicalOfficerPayload(

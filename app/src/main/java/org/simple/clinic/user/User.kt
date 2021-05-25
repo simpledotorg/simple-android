@@ -19,6 +19,7 @@ import io.reactivex.Single
 import kotlinx.parcelize.Parcelize
 import org.intellij.lang.annotations.Language
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.room.RoomEnumTypeConverter
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
@@ -88,6 +89,10 @@ data class User(
 
   fun withPhoneNumber(phoneNumber: String): User {
     return copy(phoneNumber = phoneNumber)
+  }
+
+  override fun toString(): String {
+    return "User(${Unicode.redacted})"
   }
 
   enum class LoggedInStatus {

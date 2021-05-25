@@ -14,6 +14,7 @@
 - Remove unwanted fields in `PatientPrefillInfo`
 - Don't auto request review if a reviewer is already assigned
 - Show error text when user scans invalid QR code
+- Redact sensitive information from logs
 
 ### Features
 - Add NHID support in `ScanSimpleIdScreen`

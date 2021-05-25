@@ -16,11 +16,13 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNatio
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 import java.util.UUID
 
 class InstantSearchUpdateTest {
 
-  private val updateSpec = UpdateSpec(InstantSearchUpdate(false))
+  private val dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+  private val updateSpec = UpdateSpec(InstantSearchUpdate(false, dateOfBirthFormatter))
   private val identifier = TestData.identifier(
       value = "3e5500fe-e10e-4009-a0bb-3db9009fdef6",
       type = BpPassport
@@ -382,7 +384,7 @@ class InstantSearchUpdateTest {
 
   @Test
   fun `when search query is valid with a numeric criteria and instant search by patient identifier feature flag is enabled, then load search results with numeric criteria`() {
-    val updateSpec = UpdateSpec(InstantSearchUpdate(true))
+    val updateSpec = UpdateSpec(InstantSearchUpdate(true, dateOfBirthFormatter))
     val facility = TestData.facility(
         uuid = UUID.fromString("f7951ae6-e6c0-4b79-bf3e-2ddd637fa7b4"),
         name = "PHC Obvious"
@@ -407,7 +409,7 @@ class InstantSearchUpdateTest {
 
   @Test
   fun `when search query is valid with a numeric criteria and instant search by patient identifier feature flag is disabled, then load search results with phone number criteria`() {
-    val updateSpec = UpdateSpec(InstantSearchUpdate(false))
+    val updateSpec = UpdateSpec(InstantSearchUpdate(false, dateOfBirthFormatter))
     val facility = TestData.facility(
         uuid = UUID.fromString("f7951ae6-e6c0-4b79-bf3e-2ddd637fa7b4"),
         name = "PHC Obvious"

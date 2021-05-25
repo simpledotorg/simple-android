@@ -56,9 +56,11 @@ import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Named
 
 class InstantSearchScreen :
     BaseScreen<
@@ -91,6 +93,11 @@ class InstantSearchScreen :
 
   @Inject
   lateinit var runtimePermissions: RuntimePermissions
+
+  @Inject
+  @Named("date_for_user_input")
+  lateinit var dateTimeFormatter: DateTimeFormatter
+
 
   private val subscriptions = CompositeDisposable()
 
@@ -167,7 +174,7 @@ class InstantSearchScreen :
       .compose(ReportAnalyticsEvents())
       .cast<InstantSearchEvent>()
 
-  override fun createUpdate() = InstantSearchUpdate(features.isEnabled(InstantSearchByPatientIdentifier))
+  override fun createUpdate() = InstantSearchUpdate(features.isEnabled(InstantSearchByPatientIdentifier), dateTimeFormatter)
 
   override fun createInit() = InstantSearchInit()
 

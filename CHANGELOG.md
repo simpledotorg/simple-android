@@ -15,6 +15,8 @@
 - Don't auto request review if a reviewer is already assigned
 - Show error text when user scans invalid QR code
 - Redact sensitive information from logs
+- Bump Kotlin to v1.5.10
+- Bump AGP to v4.2.1
 
 ### Features
 - Add NHID support in `ScanSimpleIdScreen`

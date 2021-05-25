@@ -1,11 +1,9 @@
 object Versions {
   const val minSdk = 21
   const val compileSdk = 30
-  // TODO: When bumping Kotlin version to 1.5.10. Remove the kgp-leak-patcher plugin
-  const val kotlin = "1.5.0"
-  const val agp = "4.2.0"
+  const val kotlin = "1.5.10"
+  const val agp = "4.2.1"
   const val roomMetadataGenerator = "1.1.0"
-  const val kgpLeakPatcher = "1.1.0"
 
   const val supportLib = "1.0.0"
   const val recyclerView = "1.0.0"

@@ -212,9 +212,6 @@ class PatientEntryScreen(
   private val saveButton
     get() = binding!!.saveButton
 
-  private val identifierTypeTextView
-    get() = binding!!.identifierTypeTextView
-
   private val villageTypeAheadAdapter by unsafeLazy {
     ArrayAdapter<String>(
         context,
@@ -484,20 +481,6 @@ class PatientEntryScreen(
   }
 
   private fun prefillIdentifier(identifier: Identifier) {
-    when (identifier.type) {
-      Identifier.IdentifierType.IndiaNationalHealthId -> prefillIndiaNationalHealthID(identifier)
-      Identifier.IdentifierType.BpPassport -> prefillBpPassport(identifier)
-      else -> throw IllegalArgumentException("Unknown alternate id: $identifier")
-    }
-  }
-
-  private fun prefillIndiaNationalHealthID(identifier: Identifier) {
-    identifierTypeTextView.text = resources.getString(R.string.patiententry_identifier_national_health_id)
-    identifierTextView.text = identifier.displayValue()
-  }
-
-  private fun prefillBpPassport(identifier: Identifier) {
-    identifierTypeTextView.text = resources.getString(R.string.patiententry_identifier_bp_passport)
     identifierTextView.text = identifier.displayValue()
   }
 

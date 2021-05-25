@@ -124,11 +124,10 @@ data class OngoingNewPatientEntry(
           personalDetails = PersonalDetails(
               fullName = patientProfileInfo.fullName,
               dateOfBirth = patientProfileInfo.dateOfBirth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-              gender = Gender.Unknown(patientProfileInfo.gender),
+              gender = patientProfileInfo.gender,
               age = null),
           address = addressOrBlank().withColonyOrVillage(patientProfileInfo.address),
           identifier = identifier)
-
 
   fun validationErrors(
       dobValidator: UserInputDateValidator,

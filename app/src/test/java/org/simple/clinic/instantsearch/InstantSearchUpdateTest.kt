@@ -320,7 +320,7 @@ class InstantSearchUpdateTest {
         personalDetails = OngoingNewPatientEntry.PersonalDetails(
             fullName = patientPrefillInfo.fullName,
             dateOfBirth = patientPrefillInfo.dateOfBirth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-            gender = Gender.Unknown("M"),
+            gender = Gender.Male,
             age = null),
         address = OngoingNewPatientEntry.Address.BLANK.withColonyOrVillage(patientPrefillInfo.address),
         identifier = identifier)
@@ -357,7 +357,7 @@ class InstantSearchUpdateTest {
         personalDetails = OngoingNewPatientEntry.PersonalDetails(
             fullName = patientPrefillInfo.fullName,
             dateOfBirth = dateOfBirthWithCorrectFormat,
-            gender = Gender.Unknown("M"),
+            gender = Gender.Male,
             age = null),
         address = OngoingNewPatientEntry.Address.BLANK.withColonyOrVillage(patientPrefillInfo.address),
         identifier = identifier)

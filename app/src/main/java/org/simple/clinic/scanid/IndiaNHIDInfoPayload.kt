@@ -17,7 +17,7 @@ data class IndiaNHIDInfoPayload(
     val fullName: String,
 
     @Json(name = "gender")
-    val gender: String,
+    val indiaNHIDGender: IndiaNHIDGender,
 
     @Json(name = "statelgd")
     val state: String?,
@@ -35,7 +35,7 @@ data class IndiaNHIDInfoPayload(
   fun toPatientPrefillInfo(): PatientPrefillInfo {
     return PatientPrefillInfo(
         fullName = fullName,
-        gender = gender,
+        gender = IndiaNHIDGender.fromIndiaNHIDToGender(indiaNHIDGender),
         dateOfBirth = dateOfBirth,
         address = address
     )

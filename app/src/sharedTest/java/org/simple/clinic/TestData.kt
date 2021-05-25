@@ -52,6 +52,7 @@ import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.sync.ProtocolDrugPayload
 import org.simple.clinic.protocol.sync.ProtocolPayload
+import org.simple.clinic.scanid.IndiaNHIDGender
 import org.simple.clinic.scanid.IndiaNHIDInfoPayload
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
@@ -1228,7 +1229,7 @@ object TestData {
       healthIdNumber: String = "1234123456785678",
       healthIdUserName: String = "Mohit",
       fullName: String = "Mohit Ahuja",
-      gender: String = "M",
+      indiaNHIDGender: IndiaNHIDGender = IndiaNHIDGender.MALE,
       state: String = "Maharashtra",
       district: String = "Thane",
       dateOfBirth: LocalDate = LocalDate.parse("12/12/1997", DateTimeFormatter.ofPattern("d/M/yyyy")),
@@ -1237,7 +1238,7 @@ object TestData {
       healthIdNumber = healthIdNumber,
       healthIdUserName = healthIdUserName,
       fullName = fullName,
-      gender = gender,
+      indiaNHIDGender = indiaNHIDGender,
       state = state,
       district = district,
       dateOfBirth = dateOfBirth,

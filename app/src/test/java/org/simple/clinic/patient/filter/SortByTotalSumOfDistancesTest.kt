@@ -24,7 +24,10 @@ class SortByTotalSumOfDistancesTest {
 
   @Suppress("Unused")
   private fun `params for sorting values`(): List<List<Any>> {
-    fun generateTestData(distances: List<List<PatientSearchContext.EditDistance>>, results: List<Int>): List<Any> {
+    fun generateTestData(
+        distances: List<List<PatientSearchContext.EditDistance>>,
+        results: List<Int>
+    ): List<Any> {
       val originalList = distances.map {
         PatientSearchContext(
             patient = PatientNameAndId(fullName = "Name", uuid = UUID.randomUUID()),

@@ -7,7 +7,7 @@ import org.simple.clinic.insert
 import java.time.Instant
 import java.util.UUID
 
-class Migration84AndroidTest: BaseDatabaseMigrationTest(
+class Migration84AndroidTest : BaseDatabaseMigrationTest(
     fromVersion = 83,
     toVersion = 84
 ) {

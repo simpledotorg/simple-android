@@ -8,7 +8,10 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.ValidNum
 
 class AddPhoneNumberUpdate : Update<AddPhoneNumberModel, AddPhoneNumberEvent, AddPhoneNumberEffect> {
 
-  override fun update(model: AddPhoneNumberModel, event: AddPhoneNumberEvent): Next<AddPhoneNumberModel, AddPhoneNumberEffect> {
+  override fun update(
+      model: AddPhoneNumberModel,
+      event: AddPhoneNumberEvent
+  ): Next<AddPhoneNumberModel, AddPhoneNumberEffect> {
     return when (event) {
       PhoneNumberAdded -> dispatch(CloseDialog)
       is PhoneNumberValidated -> phoneNumberValidated(model, event)
@@ -16,7 +19,10 @@ class AddPhoneNumberUpdate : Update<AddPhoneNumberModel, AddPhoneNumberEvent, Ad
     }
   }
 
-  private fun phoneNumberValidated(model: AddPhoneNumberModel, event: PhoneNumberValidated): Next<AddPhoneNumberModel, AddPhoneNumberEffect> {
+  private fun phoneNumberValidated(
+      model: AddPhoneNumberModel,
+      event: PhoneNumberValidated
+  ): Next<AddPhoneNumberModel, AddPhoneNumberEffect> {
     val updatedModel = model.validatedPhoneNumber(event.validationResult)
 
     return if (event.validationResult == ValidNumber) {

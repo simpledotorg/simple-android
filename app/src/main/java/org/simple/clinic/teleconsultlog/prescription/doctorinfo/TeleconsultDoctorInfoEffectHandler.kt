@@ -2,10 +2,10 @@ package org.simple.clinic.teleconsultlog.prescription.doctorinfo
 
 import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
+import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.MedicalRegistrationId

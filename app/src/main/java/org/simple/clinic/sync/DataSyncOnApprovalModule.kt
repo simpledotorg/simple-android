@@ -7,7 +7,7 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 
 @Module
 open class DataSyncOnApprovalModule {
-  
+
   @Provides
   open fun bindSyncDataOnApproval(
       userSession: UserSession,

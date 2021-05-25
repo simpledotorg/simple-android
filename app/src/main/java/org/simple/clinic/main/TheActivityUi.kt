@@ -1,5 +1,5 @@
 package org.simple.clinic.main
 
-interface TheActivityUi: TheActivityUiActions {
+interface TheActivityUi : TheActivityUiActions {
 
 }

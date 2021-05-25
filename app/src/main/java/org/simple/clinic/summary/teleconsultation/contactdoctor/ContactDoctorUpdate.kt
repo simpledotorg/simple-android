@@ -7,7 +7,10 @@ import org.simple.clinic.mobius.next
 
 class ContactDoctorUpdate : Update<ContactDoctorModel, ContactDoctorEvent, ContactDoctorEffect> {
 
-  override fun update(model: ContactDoctorModel, event: ContactDoctorEvent): Next<ContactDoctorModel, ContactDoctorEffect> {
+  override fun update(
+      model: ContactDoctorModel,
+      event: ContactDoctorEvent
+  ): Next<ContactDoctorModel, ContactDoctorEffect> {
     return when (event) {
       is MedicalOfficersLoaded -> next(model.medicalOfficersLoaded(event.medicalOfficers))
       is TeleconsultRequestCreated -> dispatch(LoadPatientTeleconsultInfo(

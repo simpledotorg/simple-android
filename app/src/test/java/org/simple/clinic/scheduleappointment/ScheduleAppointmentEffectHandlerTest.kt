@@ -144,7 +144,7 @@ class ScheduleAppointmentEffectHandlerTest {
   fun `when schedule sppointment for patient from next is received then schedule appointment`() {
     // given
     val facility = TestData.facility(uuid = UUID.fromString("e4a1f4d7-2444-4686-a6ae-3d15ddb42916"))
-    
+
     // when
     effectHandlerTestCase.dispatch(ScheduleAppointmentForPatientFromNext(
         patientUuid = patientUuid,

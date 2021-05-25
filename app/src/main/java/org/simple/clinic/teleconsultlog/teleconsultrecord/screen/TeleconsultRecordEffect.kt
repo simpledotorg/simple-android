@@ -26,4 +26,7 @@ object ShowTeleconsultNotRecordedWarning : TeleconsultRecordEffect()
 
 data class ValidateTeleconsultRecord(val teleconsultRecordId: UUID) : TeleconsultRecordEffect()
 
-data class ClonePatientPrescriptions(val patientUuid: UUID, val teleconsultRecordId: UUID) : TeleconsultRecordEffect()
+data class ClonePatientPrescriptions(
+    val patientUuid: UUID,
+    val teleconsultRecordId: UUID
+) : TeleconsultRecordEffect()

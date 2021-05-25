@@ -32,7 +32,7 @@ class TeleconsultRecordEffectHandlerTest {
   private val user = TestData.loggedInUser(
       uuid = UUID.fromString("b5a3aabe-ec33-4e0b-a7a9-b2e4bd4c4303")
   )
-  private val facility= TestData.facility(
+  private val facility = TestData.facility(
       uuid = UUID.fromString("bc578065-8fa2-4a5f-8a1d-1bd5ca014935")
   )
   private val utcClock = TestUtcClock(instant = Instant.parse("2018-01-01T00:00:00Z"))

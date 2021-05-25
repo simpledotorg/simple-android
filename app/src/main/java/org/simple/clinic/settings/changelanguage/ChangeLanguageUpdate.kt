@@ -7,7 +7,10 @@ import org.simple.clinic.mobius.next
 
 class ChangeLanguageUpdate : Update<ChangeLanguageModel, ChangeLanguageEvent, ChangeLanguageEffect> {
 
-  override fun update(model: ChangeLanguageModel, event: ChangeLanguageEvent): Next<ChangeLanguageModel, ChangeLanguageEffect> {
+  override fun update(
+      model: ChangeLanguageModel,
+      event: ChangeLanguageEvent
+  ): Next<ChangeLanguageModel, ChangeLanguageEffect> {
     return when (event) {
       is CurrentLanguageLoadedEvent -> next(model.withCurrentLanguage(event.language))
       is SupportedLanguagesLoadedEvent -> next(model.withSupportedLanguages(event.languages))

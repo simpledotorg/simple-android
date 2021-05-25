@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Parcelable
 import android.util.AttributeSet
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
@@ -19,7 +19,6 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.util.unsafeLazy
@@ -28,7 +27,10 @@ import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.dp
 import javax.inject.Inject
 
-class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs), UiActions, DeletePatientUi {
+class DeletePatientScreen(
+    context: Context,
+    attrs: AttributeSet
+) : ConstraintLayout(context, attrs), UiActions, DeletePatientUi {
 
   @Inject
   lateinit var router: Router
@@ -127,7 +129,10 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     super.onRestoreInstanceState(viewState)
   }
 
-  override fun showDeleteReasons(patientDeleteReasons: List<PatientDeleteReason>, selectedReason: PatientDeleteReason?) {
+  override fun showDeleteReasons(
+      patientDeleteReasons: List<PatientDeleteReason>,
+      selectedReason: PatientDeleteReason?
+  ) {
     deleteReasonsAdapter.submitList(DeleteReasonItem.from(patientDeleteReasons, selectedReason))
   }
 

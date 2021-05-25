@@ -19,7 +19,6 @@ import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.register.RegistrationLoadingScreenKey
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 import javax.inject.Named

@@ -7,5 +7,8 @@ import java.util.UUID
 interface UiActions {
   fun showBloodSugarTypeSelector(currentFacility: Facility)
   fun showBloodSugarHistoryScreen(patientUuid: UUID)
-  fun openBloodSugarUpdateSheet(bloodSugarMeasurementUuid: UUID, measurementType: BloodSugarMeasurementType)
+  fun openBloodSugarUpdateSheet(
+      bloodSugarMeasurementUuid: UUID,
+      measurementType: BloodSugarMeasurementType
+  )
 }

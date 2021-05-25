@@ -24,7 +24,10 @@ data class PatientSummaryDoneClicked(val patientUuid: UUID) : PatientSummaryEven
   override val analyticsName = "Patient Summary:Done Clicked"
 }
 
-data class CurrentUserAndFacilityLoaded(val user: User, val facility: Facility) : PatientSummaryEvent()
+data class CurrentUserAndFacilityLoaded(
+    val user: User,
+    val facility: Facility
+) : PatientSummaryEvent()
 
 object PatientSummaryEditClicked : PatientSummaryEvent()
 

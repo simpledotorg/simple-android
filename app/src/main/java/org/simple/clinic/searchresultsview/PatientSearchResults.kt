@@ -12,7 +12,7 @@ data class PatientSearchResults(
     val visitedCurrentFacility: List<PatientSearchResult>,
     val notVisitedCurrentFacility: List<PatientSearchResult>,
     val currentFacility: Facility?
-): Parcelable {
+) : Parcelable {
   companion object {
     val EMPTY_RESULTS = PatientSearchResults(emptyList(), emptyList(), null)
 

@@ -48,11 +48,17 @@ data class RemoveAppointmentReasonItem(
 
   class DiffCallback : DiffUtil.ItemCallback<RemoveAppointmentReasonItem>() {
 
-    override fun areItemsTheSame(oldItem: RemoveAppointmentReasonItem, newItem: RemoveAppointmentReasonItem): Boolean {
+    override fun areItemsTheSame(
+        oldItem: RemoveAppointmentReasonItem,
+        newItem: RemoveAppointmentReasonItem
+    ): Boolean {
       return oldItem.reason == newItem.reason
     }
 
-    override fun areContentsTheSame(oldItem: RemoveAppointmentReasonItem, newItem: RemoveAppointmentReasonItem): Boolean {
+    override fun areContentsTheSame(
+        oldItem: RemoveAppointmentReasonItem,
+        newItem: RemoveAppointmentReasonItem
+    ): Boolean {
       return oldItem == newItem
     }
   }

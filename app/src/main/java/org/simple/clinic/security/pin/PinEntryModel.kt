@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class PinEntryModel(
     val enteredPin: String
-): Parcelable {
+) : Parcelable {
 
   companion object {
     fun default(): PinEntryModel {

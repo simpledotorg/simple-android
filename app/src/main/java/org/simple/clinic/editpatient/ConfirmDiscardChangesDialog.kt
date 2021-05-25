@@ -3,9 +3,9 @@ package org.simple.clinic.editpatient
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router

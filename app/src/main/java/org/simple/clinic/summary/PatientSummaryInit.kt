@@ -3,7 +3,6 @@ package org.simple.clinic.summary
 import com.spotify.mobius.First
 import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
-import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 
 class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
 

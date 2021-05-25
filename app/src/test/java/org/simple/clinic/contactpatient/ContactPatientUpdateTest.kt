@@ -8,16 +8,6 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.contactpatient.RemoveAppointmentReason.AlreadyVisited
-import org.simple.clinic.contactpatient.RemoveAppointmentReason.Died
-import org.simple.clinic.contactpatient.RemoveAppointmentReason.MovedToPrivatePractitioner
-import org.simple.clinic.contactpatient.RemoveAppointmentReason.NotResponding
-import org.simple.clinic.contactpatient.RemoveAppointmentReason.OtherReason
-import org.simple.clinic.contactpatient.RemoveAppointmentReason.PhoneNumberNotWorking
-import org.simple.clinic.contactpatient.RemoveAppointmentReason.TransferredToAnotherFacility
-import org.simple.clinic.overdue.AppointmentCancelReason
-import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
-import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
@@ -26,7 +16,6 @@ import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period

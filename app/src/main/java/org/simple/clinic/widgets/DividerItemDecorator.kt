@@ -55,7 +55,12 @@ class DividerItemDecorator(
     canvas.restore()
   }
 
-  override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+  override fun getItemOffsets(
+      outRect: Rect,
+      view: View,
+      parent: RecyclerView,
+      state: RecyclerView.State
+  ) {
     if (divider == null) {
       outRect[0, 0, 0] = 0
       return

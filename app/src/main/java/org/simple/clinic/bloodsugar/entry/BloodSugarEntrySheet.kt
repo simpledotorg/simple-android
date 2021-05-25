@@ -346,7 +346,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_empty))
   }
 
-  override fun showBloodSugarHighError(measurementType: BloodSugarMeasurementType, unitPreference: BloodSugarUnitPreference) {
+  override fun showBloodSugarHighError(
+      measurementType: BloodSugarMeasurementType,
+      unitPreference: BloodSugarUnitPreference
+  ) {
     when (unitPreference) {
       Mg -> showBloodSugarHighErrorForMg(measurementType)
       Mmol -> showBloodSugarHighErrorForMmol(measurementType)
@@ -366,7 +369,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     }
   }
 
-  override fun showBloodSugarLowError(measurementType: BloodSugarMeasurementType, unitPreference: BloodSugarUnitPreference) {
+  override fun showBloodSugarLowError(
+      measurementType: BloodSugarMeasurementType,
+      unitPreference: BloodSugarUnitPreference
+  ) {
     when (unitPreference) {
       Mg -> showBloodSugarLowErrorForMg(measurementType)
       Mmol -> showBloodSugarLowErrorForMmol(measurementType)

@@ -2,8 +2,8 @@ package org.simple.clinic.newentry
 
 interface PatientEntryValidationActions {
   fun showEmptyFullNameError(show: Boolean)
-  fun showLengthTooShortPhoneNumberError(show: Boolean, requiredNumberLength : Int)
-  fun showLengthTooLongPhoneNumberError(show: Boolean, requiredNumberLength : Int)
+  fun showLengthTooShortPhoneNumberError(show: Boolean, requiredNumberLength: Int)
+  fun showLengthTooLongPhoneNumberError(show: Boolean, requiredNumberLength: Int)
   fun showMissingGenderError(show: Boolean)
   fun showEmptyColonyOrVillageError(show: Boolean)
   fun showEmptyDistrictError(show: Boolean)

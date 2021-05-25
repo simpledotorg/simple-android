@@ -44,7 +44,10 @@ class PatientEntryUpdate(
     }
   }
 
-  private fun onFieldChanged(updatedModel: PatientEntryModel, changedField: Field): PatientEntryNext =
+  private fun onFieldChanged(
+      updatedModel: PatientEntryModel,
+      changedField: Field
+  ): PatientEntryNext =
       next(updatedModel, HideValidationError(changedField))
 
   private fun onOngoingEntryFetched(
@@ -53,7 +56,10 @@ class PatientEntryUpdate(
   ): PatientEntryNext =
       next(model.patientEntryFetched(patientEntry), PrefillFields(patientEntry))
 
-  private fun onGenderChanged(model: PatientEntryModel, gender: Optional<Gender>): PatientEntryNext {
+  private fun onGenderChanged(
+      model: PatientEntryModel,
+      gender: Optional<Gender>
+  ): PatientEntryNext {
     val updatedModel = model.genderChanged(gender)
     return if (gender.isNotEmpty() && model.isSelectingGenderForTheFirstTime) {
       next(updatedModel, HideValidationError(Gender), ScrollFormOnGenderSelection)
@@ -62,7 +68,10 @@ class PatientEntryUpdate(
     }
   }
 
-  private fun onDateOfBirthFocusChanged(model: PatientEntryModel, hasFocus: Boolean): PatientEntryNext {
+  private fun onDateOfBirthFocusChanged(
+      model: PatientEntryModel,
+      hasFocus: Boolean
+  ): PatientEntryNext {
     val hasDateOfBirth = model.patientEntry.personalDetails?.dateOfBirth?.isNotBlank() == true
     return dispatch(ShowDatePatternInDateOfBirthLabel(hasFocus || hasDateOfBirth))
   }

@@ -21,4 +21,7 @@ data class LoadPatientTeleconsultInfo(
     val messageTarget: MessageTarget
 ) : ContactDoctorEffect()
 
-data class SendTeleconsultMessage(val teleconsultInfo: PatientTeleconsultationInfo, val messageTarget: MessageTarget) : ContactDoctorEffect()
+data class SendTeleconsultMessage(
+    val teleconsultInfo: PatientTeleconsultationInfo,
+    val messageTarget: MessageTarget
+) : ContactDoctorEffect()

@@ -9,7 +9,7 @@ on:
 
 jobs:
   fix_code_formatting:
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
 

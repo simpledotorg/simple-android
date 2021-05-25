@@ -1103,7 +1103,10 @@ class AppointmentRepositoryAndroidTest {
 
   @Test
   fun when_picking_overdue_appointment_then_the_latest_recorded_bp_should_be_considered() {
-    fun createBloodPressure(patientProfile: PatientProfile, recordedAt: Instant): BloodPressureMeasurement {
+    fun createBloodPressure(
+        patientProfile: PatientProfile,
+        recordedAt: Instant
+    ): BloodPressureMeasurement {
       return testData.bloodPressureMeasurement(
           patientUuid = patientProfile.patient.uuid,
           recordedAt = recordedAt
@@ -1178,7 +1181,10 @@ class AppointmentRepositoryAndroidTest {
 
   @Test
   fun when_picking_overdue_appointment_then_the_latest_recorded_blood_sugar_should_be_considered() {
-    fun createBloodSugar(patientProfile: PatientProfile, recordedAt: Instant): BloodSugarMeasurement {
+    fun createBloodSugar(
+        patientProfile: PatientProfile,
+        recordedAt: Instant
+    ): BloodSugarMeasurement {
       return testData.bloodSugarMeasurement(
           patientUuid = patientProfile.patient.uuid,
           recordedAt = recordedAt
@@ -1253,14 +1259,20 @@ class AppointmentRepositoryAndroidTest {
 
   @Test
   fun when_picking_overdue_appointment_and_blood_sugar_is_latest_compared_to_blood_pressure_then_blood_sugar_should_be_considered() {
-    fun createBloodSugar(patientProfile: PatientProfile, recordedAt: Instant): BloodSugarMeasurement {
+    fun createBloodSugar(
+        patientProfile: PatientProfile,
+        recordedAt: Instant
+    ): BloodSugarMeasurement {
       return testData.bloodSugarMeasurement(
           patientUuid = patientProfile.patient.uuid,
           recordedAt = recordedAt
       )
     }
 
-    fun createBloodPressure(patientProfile: PatientProfile, recordedAt: Instant): BloodPressureMeasurement {
+    fun createBloodPressure(
+        patientProfile: PatientProfile,
+        recordedAt: Instant
+    ): BloodPressureMeasurement {
       return testData.bloodPressureMeasurement(
           patientUuid = patientProfile.patient.uuid,
           recordedAt = recordedAt
@@ -1321,14 +1333,20 @@ class AppointmentRepositoryAndroidTest {
 
   @Test
   fun when_picking_overdue_appointment_and_blood_pressure_is_latest_compared_to_blood_sugar_then_blood_pressure_should_be_considered() {
-    fun createBloodSugar(patientProfile: PatientProfile, recordedAt: Instant): BloodSugarMeasurement {
+    fun createBloodSugar(
+        patientProfile: PatientProfile,
+        recordedAt: Instant
+    ): BloodSugarMeasurement {
       return testData.bloodSugarMeasurement(
           patientUuid = patientProfile.patient.uuid,
           recordedAt = recordedAt
       )
     }
 
-    fun createBloodPressure(patientProfile: PatientProfile, recordedAt: Instant): BloodPressureMeasurement {
+    fun createBloodPressure(
+        patientProfile: PatientProfile,
+        recordedAt: Instant
+    ): BloodPressureMeasurement {
       return testData.bloodPressureMeasurement(
           patientUuid = patientProfile.patient.uuid,
           recordedAt = recordedAt

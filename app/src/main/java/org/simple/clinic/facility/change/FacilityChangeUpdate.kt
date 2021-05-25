@@ -8,7 +8,10 @@ import org.simple.clinic.mobius.next
 
 class FacilityChangeUpdate : Update<FacilityChangeModel, FacilityChangeEvent, FacilityChangeEffect> {
 
-  override fun update(model: FacilityChangeModel, event: FacilityChangeEvent): Next<FacilityChangeModel, FacilityChangeEffect> {
+  override fun update(
+      model: FacilityChangeModel,
+      event: FacilityChangeEvent
+  ): Next<FacilityChangeModel, FacilityChangeEffect> {
     return when (event) {
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
       is FacilityChangeClicked -> facilitySelected(model, event)

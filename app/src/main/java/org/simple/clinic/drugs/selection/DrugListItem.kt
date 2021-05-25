@@ -107,7 +107,10 @@ private fun shapeAppearanceModel(hasTopCorners: Boolean) = if (hasTopCorners) {
 }
 
 sealed class DrugListItemClicked {
-  data class PrescribedDrugClicked(val drugName: String, val prescribedDrug: PrescribedDrug?) : DrugListItemClicked()
+  data class PrescribedDrugClicked(
+      val drugName: String,
+      val prescribedDrug: PrescribedDrug?
+  ) : DrugListItemClicked()
 
   data class CustomPrescriptionClicked(val prescribedDrug: PrescribedDrug) : DrugListItemClicked()
 

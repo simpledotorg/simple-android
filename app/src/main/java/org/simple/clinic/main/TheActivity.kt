@@ -105,7 +105,11 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
       }
     }
 
-    fun intentForOpenPatientSummaryWithTeleconsultLog(context: Context, patientUuid: UUID, teleconsultRecordId: UUID): Intent {
+    fun intentForOpenPatientSummaryWithTeleconsultLog(
+        context: Context,
+        patientUuid: UUID,
+        teleconsultRecordId: UUID
+    ): Intent {
       return Intent(context, TheActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         putExtra(EXTRA_DEEP_LINK_RESULT, OpenPatientSummaryWithTeleconsultLog(patientUuid, teleconsultRecordId))
@@ -297,7 +301,11 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     screenResults.send(ActivityResult(requestCode, resultCode, data))
   }
 
-  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+  override fun onRequestPermissionsResult(
+      requestCode: Int,
+      permissions: Array<out String>,
+      grantResults: IntArray
+  ) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     screenResults.send(ActivityPermissionResult(requestCode))
   }

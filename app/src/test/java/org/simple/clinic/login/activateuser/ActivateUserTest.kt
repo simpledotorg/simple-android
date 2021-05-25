@@ -8,8 +8,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 import org.simple.clinic.FakeCall
 import org.simple.clinic.TestData
-import org.simple.clinic.login.UsersApi
 import org.simple.clinic.login.LoginOtpSmsListener
+import org.simple.clinic.login.UsersApi
 import org.simple.clinic.login.activateuser.ActivateUser.Result.IncorrectPin
 import org.simple.clinic.login.activateuser.ActivateUser.Result.NetworkError
 import org.simple.clinic.login.activateuser.ActivateUser.Result.OtherError
@@ -79,7 +79,7 @@ class ActivateUserTest {
     // then
     assertThat(result).isEqualTo(NetworkError)
   }
-  
+
   @Test
   fun `when the activate request fails with any other error, return the other error result`() {
     // given

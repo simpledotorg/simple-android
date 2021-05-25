@@ -29,13 +29,12 @@ import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.DividerItemDecorator
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.dp
 import java.time.format.DateTimeFormatter
 import java.util.UUID

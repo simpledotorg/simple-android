@@ -22,7 +22,11 @@ class FakeCall<T> private constructor(
       return FakeCall(responseData = Pair(responseCode, response))
     }
 
-    fun <T> error(data: String, responseCode: Int, mediaType: MediaType = MediaType.parse("application/json")!!): FakeCall<T> {
+    fun <T> error(
+        data: String,
+        responseCode: Int,
+        mediaType: MediaType = MediaType.parse("application/json")!!
+    ): FakeCall<T> {
       return FakeCall(responseErrorData = Triple(mediaType, responseCode, data))
     }
 

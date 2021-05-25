@@ -18,7 +18,7 @@ class DbMethodLookup @VisibleForTesting(otherwise = PRIVATE) constructor(
   * for something that does not happen more than once per cold start seemed too much.
   **/
   @Inject
-  constructor(application: Application): this(
+  constructor(application: Application) : this(
       metadataCsv = application.assets.open("db_metadata.csv").reader().readText()
   )
 

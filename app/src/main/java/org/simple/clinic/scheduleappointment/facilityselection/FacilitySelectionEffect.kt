@@ -4,4 +4,4 @@ import org.simple.clinic.facility.Facility
 
 sealed class FacilitySelectionEffect
 
-data class ForwardSelectedFacility(val facility: Facility): FacilitySelectionEffect()
+data class ForwardSelectedFacility(val facility: Facility) : FacilitySelectionEffect()

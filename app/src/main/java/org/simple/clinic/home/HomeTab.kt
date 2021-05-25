@@ -6,7 +6,6 @@ import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.patients.PatientsTabScreen
 import org.simple.clinic.home.report.ReportsScreen
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.navigation.v2.compat.wrap
 
 enum class HomeTab(
     val key: ScreenKey,

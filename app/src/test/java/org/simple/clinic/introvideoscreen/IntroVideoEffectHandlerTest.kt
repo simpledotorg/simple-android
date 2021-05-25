@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 
 class IntroVideoEffectHandlerTest {

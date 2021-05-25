@@ -36,5 +36,5 @@ data class LoggedInUserPayload(
     val teleconsultPhoneNumber: String?,
 
     @Json(name = "capabilities")
-    val capabilities : User.Capabilities?
+    val capabilities: User.Capabilities?
 )

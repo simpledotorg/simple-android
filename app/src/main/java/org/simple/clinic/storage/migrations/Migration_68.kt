@@ -56,7 +56,7 @@ class Migration_68 @Inject constructor(
     // we escape it. The prepared statement here will escape it for us.
     val statement = db
         .compileStatement(
-        """
+            """
           INSERT INTO "TextRecords" ("id", "text") 
           VALUES (?, ?)
         """

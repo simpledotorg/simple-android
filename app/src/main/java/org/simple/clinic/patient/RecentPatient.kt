@@ -29,7 +29,7 @@ data class RecentPatient(
     val patientRecordedAt: Instant,
 
     val updatedAt: Instant
-): Parcelable {
+) : Parcelable {
 
   @Dao
   interface RoomDao {

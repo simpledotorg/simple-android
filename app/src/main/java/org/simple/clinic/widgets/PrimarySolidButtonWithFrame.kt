@@ -7,7 +7,10 @@ import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import org.simple.clinic.R
 
-class PrimarySolidButtonWithFrame(context: Context, attributeSet: AttributeSet) : FrameLayout(context, attributeSet) {
+class PrimarySolidButtonWithFrame(
+    context: Context,
+    attributeSet: AttributeSet
+) : FrameLayout(context, attributeSet) {
 
   val button by lazy { getChildAt(0) as Button }
 

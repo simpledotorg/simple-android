@@ -5,7 +5,6 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import javax.inject.Inject

@@ -89,7 +89,10 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
-class EditPatientScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet), EditPatientUi, HandlesBack {
+class EditPatientScreen(
+    context: Context,
+    attributeSet: AttributeSet
+) : RelativeLayout(context, attributeSet), EditPatientUi, HandlesBack {
 
   @Inject
   lateinit var router: Router

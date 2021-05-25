@@ -1,8 +1,6 @@
 package org.simple.clinic.home
 
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.patient.businessid.Identifier
-import java.util.UUID
 
 sealed class HomeScreenEffect
 

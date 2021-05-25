@@ -4,9 +4,6 @@ import org.junit.Test
 import org.simple.clinic.assertColumns
 import org.simple.clinic.assertValues
 import org.simple.clinic.insert
-import org.simple.clinic.user.User
-import org.simple.clinic.user.UserStatus
-import org.simple.clinic.util.randomOfEnum
 import java.time.Instant
 import java.util.UUID
 

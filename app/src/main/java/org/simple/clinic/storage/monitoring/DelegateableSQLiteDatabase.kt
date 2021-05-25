@@ -70,7 +70,10 @@ class DelegateableSQLiteDatabase(
 
   override fun query(query: String?) = delegate.query(database, query)
 
-  override fun query(query: String?, bindArgs: Array<out Any>?) = delegate.query(database, query, bindArgs)
+  override fun query(
+      query: String?,
+      bindArgs: Array<out Any>?
+  ) = delegate.query(database, query, bindArgs)
 
   override fun query(query: SupportSQLiteQuery?) = delegate.query(database, query)
 
@@ -83,7 +86,13 @@ class DelegateableSQLiteDatabase(
   override fun delete(table: String?, whereClause: String?, whereArgs: Array<out Any>?) =
       delegate.delete(database, table, whereClause, whereArgs)
 
-  override fun update(table: String?, conflictAlgorithm: Int, values: ContentValues?, whereClause: String?, whereArgs: Array<out Any>?) =
+  override fun update(
+      table: String?,
+      conflictAlgorithm: Int,
+      values: ContentValues?,
+      whereClause: String?,
+      whereArgs: Array<out Any>?
+  ) =
       delegate.update(database, table, conflictAlgorithm, values, whereClause, whereArgs)
 
   override fun execSQL(sql: String?) {

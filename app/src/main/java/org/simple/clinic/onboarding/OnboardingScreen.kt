@@ -25,7 +25,10 @@ import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
-class OnboardingScreen(context: Context, attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet), OnboardingUi {
+class OnboardingScreen(
+    context: Context,
+    attributeSet: AttributeSet
+) : ConstraintLayout(context, attributeSet), OnboardingUi {
 
   @Inject
   lateinit var onboardingEffectHandler: OnboardingEffectHandler.Factory

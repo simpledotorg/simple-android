@@ -103,7 +103,11 @@ class BloodSugarHistoryListItemDataSourceTest {
 
     appDatabase.bloodSugarDao().save(listOf(bloodSugarNow, bloodSugarInPast))
     dataSource.loadInitial(params, object : LoadInitialCallback<BloodSugarHistoryListItem>() {
-      override fun onResult(data: MutableList<BloodSugarHistoryListItem>, position: Int, totalCount: Int) {
+      override fun onResult(
+          data: MutableList<BloodSugarHistoryListItem>,
+          position: Int,
+          totalCount: Int
+      ) {
         assertThat(data)
             .containsExactly(
                 NewBloodSugarButton,

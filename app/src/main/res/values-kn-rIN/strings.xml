@@ -346,7 +346,7 @@
   <!--Scan Simple ID-->
   <string name="scansimpleid_title">ಕಾರ್ಡ್ ಐಡಿ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ</string>
   <string name="scansimpleid_type_number">ಅಥವಾ ಸಂಖ್ಯೆಯನ್ನು ಟೈಪ್ ಮಾಡಿ</string>
-  
+
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ಸಿಂಕ್ ಬಾಕಿ ಇದೆ</string>
   <string name="syncindicator_status_failed">ಸಿಂಕ್ ವಿಫಲವಾಗಿದೆ</string>

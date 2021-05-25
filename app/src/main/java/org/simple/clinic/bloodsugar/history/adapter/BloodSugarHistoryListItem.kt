@@ -69,7 +69,11 @@ sealed class BloodSugarHistoryListItem : PagingItemAdapter.Item<Event> {
       binding.editButton.visibleOrGone(isBloodSugarEditable)
     }
 
-    private fun renderBloodSugarLevel(binding: ListBloodSugarHistoryItemBinding, context: Context, reading: BloodSugarReading) {
+    private fun renderBloodSugarLevel(
+        binding: ListBloodSugarHistoryItemBinding,
+        context: Context,
+        reading: BloodSugarReading
+    ) {
       when {
         reading.isLow -> {
           binding.bloodSugarLevelTextView.visibility = View.VISIBLE

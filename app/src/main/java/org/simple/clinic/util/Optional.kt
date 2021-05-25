@@ -124,7 +124,7 @@ class None<T>
         imports = ["org.simple.clinic.util.Optional"]
     )
 )
-constructor(): Optional<T>(JOptional.empty()) {
+constructor() : Optional<T>(JOptional.empty()) {
 
   override fun equals(other: Any?): Boolean {
     return when {

@@ -7,7 +7,10 @@ import org.simple.clinic.mobius.next
 
 class RegistrationNameUpdate : Update<RegistrationNameModel, RegistrationNameEvent, RegistrationNameEffect> {
 
-  override fun update(model: RegistrationNameModel, event: RegistrationNameEvent): Next<RegistrationNameModel, RegistrationNameEffect> {
+  override fun update(
+      model: RegistrationNameModel,
+      event: RegistrationNameEvent
+  ): Next<RegistrationNameModel, RegistrationNameEffect> {
     return when (event) {
       is RegistrationFullNameTextChanged -> next(model.nameChanged(event.fullName))
       is NameValidated -> nameValidated(model, event)

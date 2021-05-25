@@ -61,7 +61,11 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F> 
 
   open fun additionalEventSources(): List<EventSource<E>> = emptyList()
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View? {
     _binding = bindView(inflater, container)
 
     return _binding?.root

@@ -6,7 +6,10 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.patient.OngoingNewPatientEntry
 
 class ScannedQrCodeUpdate : Update<ScannedQrCodeModel, ScannedQrCodeEvent, ScannedQrCodeEffect> {
-  override fun update(model: ScannedQrCodeModel, event: ScannedQrCodeEvent): Next<ScannedQrCodeModel, ScannedQrCodeEffect> {
+  override fun update(
+      model: ScannedQrCodeModel,
+      event: ScannedQrCodeEvent
+  ): Next<ScannedQrCodeModel, ScannedQrCodeEffect> {
     return when (event) {
       RegisterNewPatientClicked -> {
         val ongoingNewPatientEntry = OngoingNewPatientEntry(identifier = model.identifier)

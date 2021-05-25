@@ -9,7 +9,10 @@ import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 
 /** Exposes a way to set the displayed child in layout preview. */
-class ViewFlipperWithLayoutEditorPreview(context: Context, attrs: AttributeSet) : ViewFlipper(context, attrs) {
+class ViewFlipperWithLayoutEditorPreview(
+    context: Context,
+    attrs: AttributeSet
+) : ViewFlipper(context, attrs) {
 
   private var childToDisplayPostInflate: Int = 0
 

@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter
 class BangladeshInputFieldsProvider(
     private val dateTimeFormatter: DateTimeFormatter,
     private val today: LocalDate
-): InputFieldsProvider {
+) : InputFieldsProvider {
 
   override fun provide(): List<InputField<*>> {
     return listOf(

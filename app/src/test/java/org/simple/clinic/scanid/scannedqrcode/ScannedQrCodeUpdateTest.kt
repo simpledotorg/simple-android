@@ -42,7 +42,7 @@ class ScannedQrCodeUpdateTest {
             )
         )
   }
-  
+
   @Test
   fun `when add to existing patient is clicked, then send scanned qr code blank result`() {
     updateSpec

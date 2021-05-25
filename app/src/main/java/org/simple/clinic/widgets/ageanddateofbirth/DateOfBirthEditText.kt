@@ -10,7 +10,10 @@ import org.simple.clinic.newentry.MultipleFocusChangeListeners
 import timber.log.Timber
 import java.lang.reflect.Field
 
-class DateOfBirthEditText(context: Context, attrs: AttributeSet) : MaskedEditText(context, attrs), MultipleFocusChangeListeners {
+class DateOfBirthEditText(
+    context: Context,
+    attrs: AttributeSet
+) : MaskedEditText(context, attrs), MultipleFocusChangeListeners {
 
   companion object {
     val keepHintField: Field by lazy {

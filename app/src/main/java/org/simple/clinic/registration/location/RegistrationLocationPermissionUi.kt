@@ -1,4 +1,4 @@
 package org.simple.clinic.registration.location
 
-interface RegistrationLocationPermissionUi: RegistrationLocationPermissionUiActions {
+interface RegistrationLocationPermissionUi : RegistrationLocationPermissionUiActions {
 }

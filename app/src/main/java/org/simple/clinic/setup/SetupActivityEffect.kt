@@ -14,12 +14,12 @@ object InitializeDatabase : SetupActivityEffect()
 
 object ShowCountrySelectionScreen : SetupActivityEffect()
 
-object SetFallbackCountryAsCurrentCountry: SetupActivityEffect()
+object SetFallbackCountryAsCurrentCountry : SetupActivityEffect()
 
-object RunDatabaseMaintenance: SetupActivityEffect()
+object RunDatabaseMaintenance : SetupActivityEffect()
 
-object FetchDatabaseMaintenanceLastRunAtTime: SetupActivityEffect()
+object FetchDatabaseMaintenanceLastRunAtTime : SetupActivityEffect()
 
-data class ShowNotAllowedToRunMessage(val reason: Disallowed.Reason): SetupActivityEffect()
+data class ShowNotAllowedToRunMessage(val reason: Disallowed.Reason) : SetupActivityEffect()
 
-object CheckIfAppCanRun: SetupActivityEffect()
+object CheckIfAppCanRun : SetupActivityEffect()

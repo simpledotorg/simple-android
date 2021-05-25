@@ -162,7 +162,10 @@ class PrescriptionRepository @Inject constructor(
     )
   }
 
-  fun addTeleconsultationIdToDrugs(prescribedDrugs: List<PrescribedDrug>, teleconsultationId: UUID) {
+  fun addTeleconsultationIdToDrugs(
+      prescribedDrugs: List<PrescribedDrug>,
+      teleconsultationId: UUID
+  ) {
     dao.addTeleconsultationIdToDrugs(
         drugUuids = prescribedDrugs.map { it.uuid },
         teleconsultationId = teleconsultationId,

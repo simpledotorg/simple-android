@@ -10,4 +10,4 @@ data class ViewPatient(val patientUuid: UUID) : ShortCodeSearchResultEvent()
 
 object SearchPatient : ShortCodeSearchResultEvent()
 
-data class ShortCodeSearchCompleted(val results: PatientSearchResults): ShortCodeSearchResultEvent()
+data class ShortCodeSearchCompleted(val results: PatientSearchResults) : ShortCodeSearchResultEvent()

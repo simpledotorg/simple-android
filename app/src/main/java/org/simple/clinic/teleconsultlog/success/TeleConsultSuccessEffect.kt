@@ -8,5 +8,8 @@ sealed class TeleConsultSuccessEffect {
 
   object GoToHomeScreen : TeleConsultSuccessEffect()
 
-  data class GoToPrescriptionScreen(val patientUuid: UUID, val teleconsultRecordId: UUID) : TeleConsultSuccessEffect()
+  data class GoToPrescriptionScreen(
+      val patientUuid: UUID,
+      val teleconsultRecordId: UUID
+  ) : TeleConsultSuccessEffect()
 }

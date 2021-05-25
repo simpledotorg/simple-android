@@ -18,7 +18,7 @@ sealed class AsyncOpError : Parcelable {
     }
 
     fun from(activateUserResult: ActivateUser.Result): AsyncOpError {
-      return when(activateUserResult) {
+      return when (activateUserResult) {
         ActivateUser.Result.NetworkError -> NetworkError
         is ActivateUser.Result.ServerError, is ActivateUser.Result.OtherError -> OtherError
         else -> throw IllegalArgumentException("$activateUserResult is not a valid error case!")

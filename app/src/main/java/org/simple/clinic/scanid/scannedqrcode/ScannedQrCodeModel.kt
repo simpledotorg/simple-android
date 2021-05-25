@@ -7,7 +7,7 @@ import org.simple.clinic.patient.businessid.Identifier
 @Parcelize
 data class ScannedQrCodeModel(
     val identifier: Identifier
-): Parcelable {
+) : Parcelable {
 
   companion object {
     fun create(identifier: Identifier): ScannedQrCodeModel {

@@ -35,7 +35,11 @@ class ScreenRouter(
   private val keyParceler: KeyParceler = DefaultKeyParceler()
 
   companion object {
-    fun create(activity: Activity, nestedKeyChanger: NestedKeyChanger, resultBus: ScreenResultBus): ScreenRouter {
+    fun create(
+        activity: Activity,
+        nestedKeyChanger: NestedKeyChanger,
+        resultBus: ScreenResultBus
+    ): ScreenRouter {
       val flowSupplier = object : Supplier<Flow> {
         override fun get(): Flow {
           return Flow.get(activity)

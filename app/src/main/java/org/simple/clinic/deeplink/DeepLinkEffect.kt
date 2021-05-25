@@ -12,7 +12,10 @@ data class FetchPatient(val patientUuid: UUID) : DeepLinkEffect()
 
 data class NavigateToPatientSummary(val patientUuid: UUID) : DeepLinkEffect()
 
-data class NavigateToPatientSummaryWithTeleconsultLog(val patientUuid: UUID, val teleconsultRecordId: UUID) : DeepLinkEffect()
+data class NavigateToPatientSummaryWithTeleconsultLog(
+    val patientUuid: UUID,
+    val teleconsultRecordId: UUID
+) : DeepLinkEffect()
 
 object ShowPatientDoesNotExist : DeepLinkEffect()
 

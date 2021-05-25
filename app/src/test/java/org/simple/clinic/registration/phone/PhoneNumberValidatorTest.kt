@@ -38,23 +38,23 @@ class PhoneNumberValidatorTest {
   }
 
   @Test
-  fun `validate valid phone numbers from Ethiopia`(){
-    assertThat(validator.validate("987654321",LANDLINE_OR_MOBILE)).isEqualTo(ValidNumber)
-    assertThat(validator.validate("9865327861",LANDLINE_OR_MOBILE)).isEqualTo(ValidNumber)
+  fun `validate valid phone numbers from Ethiopia`() {
+    assertThat(validator.validate("987654321", LANDLINE_OR_MOBILE)).isEqualTo(ValidNumber)
+    assertThat(validator.validate("9865327861", LANDLINE_OR_MOBILE)).isEqualTo(ValidNumber)
   }
 
   @Test
-  fun `validate blank phone numbers from Ethiopia`(){
+  fun `validate blank phone numbers from Ethiopia`() {
     assertThat(validator.validate("", LANDLINE_OR_MOBILE)).isEqualTo(Blank)
   }
 
   @Test
-  fun `validate too short phone numbers from Ethiopia `(){
+  fun `validate too short phone numbers from Ethiopia `() {
     assertThat(validator.validate("123456", LANDLINE_OR_MOBILE)).isEqualTo(LengthTooShort(9))
   }
 
   @Test
-  fun `validate too long phone numbers from Ethiopia`(){
-    assertThat(validator.validate("98653278653",LANDLINE_OR_MOBILE)).isEqualTo(LengthTooLong(10))
+  fun `validate too long phone numbers from Ethiopia`() {
+    assertThat(validator.validate("98653278653", LANDLINE_OR_MOBILE)).isEqualTo(LengthTooLong(10))
   }
 }

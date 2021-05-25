@@ -105,7 +105,10 @@ object SeeAllItem : RecentPatientItemType() {
 }
 
 class RecentPatientItemTypeDiffCallback : DiffUtil.ItemCallback<RecentPatientItemType>() {
-  override fun areItemsTheSame(oldItem: RecentPatientItemType, newItem: RecentPatientItemType): Boolean {
+  override fun areItemsTheSame(
+      oldItem: RecentPatientItemType,
+      newItem: RecentPatientItemType
+  ): Boolean {
     return when {
       oldItem is SeeAllItem && newItem is SeeAllItem -> true
       oldItem is RecentPatientItem && newItem is RecentPatientItem -> oldItem.uuid == newItem.uuid
@@ -113,7 +116,10 @@ class RecentPatientItemTypeDiffCallback : DiffUtil.ItemCallback<RecentPatientIte
     }
   }
 
-  override fun areContentsTheSame(oldItem: RecentPatientItemType, newItem: RecentPatientItemType): Boolean {
+  override fun areContentsTheSame(
+      oldItem: RecentPatientItemType,
+      newItem: RecentPatientItemType
+  ): Boolean {
     return oldItem == newItem
   }
 }

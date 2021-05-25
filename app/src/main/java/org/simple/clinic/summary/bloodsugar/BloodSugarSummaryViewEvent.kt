@@ -1,7 +1,6 @@
 package org.simple.clinic.summary.bloodsugar
 
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.widgets.UiEvent
 
 sealed class BloodSugarSummaryViewEvent : UiEvent

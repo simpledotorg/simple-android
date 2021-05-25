@@ -70,7 +70,10 @@ class TeleconsultRecordRepository @Inject constructor(
     )
   }
 
-  fun updateRequesterCompletionStatus(teleconsultRecordId: UUID, teleconsultStatus: TeleconsultStatus) {
+  fun updateRequesterCompletionStatus(
+      teleconsultRecordId: UUID,
+      teleconsultStatus: TeleconsultStatus
+  ) {
     teleconsultRecordDao.updateRequesterCompletionStatus(
         teleconsultRecordId = teleconsultRecordId,
         teleconsultStatus = teleconsultStatus,

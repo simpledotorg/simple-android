@@ -19,7 +19,10 @@ class ForgotPinCreateNewUpdate : Update<ForgotPinCreateNewModel, ForgotPinCreate
     }
   }
 
-  private fun pinValidated(model: ForgotPinCreateNewModel, event: PinValidated): Next<ForgotPinCreateNewModel, ForgotPinCreateNewEffect> {
+  private fun pinValidated(
+      model: ForgotPinCreateNewModel,
+      event: PinValidated
+  ): Next<ForgotPinCreateNewModel, ForgotPinCreateNewEffect> {
     return if (event.isValid)
       dispatch(ShowConfirmPinScreen(model.pin!!))
     else

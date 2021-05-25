@@ -90,7 +90,11 @@ class OverdueAppointmentRowDataSourceTest {
     val params = LoadInitialParams(0, 20, 20, false)
     dataSource.loadInitial(params, object : PositionalDataSource.LoadInitialCallback<OverdueAppointmentRow>() {
 
-      override fun onResult(data: MutableList<OverdueAppointmentRow>, position: Int, totalCount: Int) {
+      override fun onResult(
+          data: MutableList<OverdueAppointmentRow>,
+          position: Int,
+          totalCount: Int
+      ) {
         loaded = data
       }
 

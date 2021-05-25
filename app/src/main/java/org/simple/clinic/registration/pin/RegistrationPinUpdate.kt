@@ -8,7 +8,10 @@ class RegistrationPinUpdate(
     private val requiredPinLength: Int
 ) : Update<RegistrationPinModel, RegistrationPinEvent, RegistrationPinEffect> {
 
-  override fun update(model: RegistrationPinModel, event: RegistrationPinEvent): Next<RegistrationPinModel, RegistrationPinEffect> {
+  override fun update(
+      model: RegistrationPinModel,
+      event: RegistrationPinEvent
+  ): Next<RegistrationPinModel, RegistrationPinEffect> {
     return when (event) {
       is RegistrationPinTextChanged -> next(model.pinChanged(event.pin))
       is RegistrationPinDoneClicked -> doneClicked(model)

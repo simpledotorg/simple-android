@@ -6,7 +6,6 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
-import timber.log.Timber
 
 class ReportsWebViewClient(
     private val backClicked: () -> Unit
@@ -23,13 +22,22 @@ class ReportsWebViewClient(
   }
 
   @RequiresApi(Build.VERSION_CODES.M)
-  override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+  override fun onReceivedError(
+      view: WebView?,
+      request: WebResourceRequest?,
+      error: WebResourceError?
+  ) {
     super.onReceivedError(view, request, error)
     handleError(webView = view, errorCode = error?.errorCode)
   }
 
   @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-  override fun onReceivedError(view: WebView?, errorCode: Int, description: String?, failingUrl: String?) {
+  override fun onReceivedError(
+      view: WebView?,
+      errorCode: Int,
+      description: String?,
+      failingUrl: String?
+  ) {
     super.onReceivedError(view, errorCode, description, failingUrl)
     handleError(webView = view, errorCode = errorCode)
   }

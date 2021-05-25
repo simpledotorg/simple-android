@@ -18,7 +18,11 @@ fun logSavedStateSizes(flow: Flow, keyParceler: KeyParceler, resources: Resource
 /**
  * Repurposed from [InternalLifecycleIntegration.save]
  **/
-private fun parcelables(keyManager: KeyManager, parceler: KeyParceler, history: History): List<Bundle> {
+private fun parcelables(
+    keyManager: KeyManager,
+    parceler: KeyParceler,
+    history: History
+): List<Bundle> {
   return history
       .reverseIterator<Any>()
       .asSequence()

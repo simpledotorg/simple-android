@@ -79,7 +79,8 @@ class TeleconsultSharePrescriptionRepository @Inject constructor(
           id
       )
     }
-    return contentUri ?: throw IllegalArgumentException("Failed to retrieve teleconsult prescription image")
+    return contentUri
+        ?: throw IllegalArgumentException("Failed to retrieve teleconsult prescription image")
   }
 
   @RequiresApi(Build.VERSION_CODES.Q)

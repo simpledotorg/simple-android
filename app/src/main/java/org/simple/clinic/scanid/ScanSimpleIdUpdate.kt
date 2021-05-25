@@ -20,7 +20,10 @@ class ScanSimpleIdUpdate @Inject constructor(
     private val isIndianNHIDSupportEnabled: Boolean
 ) : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimpleIdEffect> {
 
-  override fun update(model: ScanSimpleIdModel, event: ScanSimpleIdEvent): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+  override fun update(
+      model: ScanSimpleIdModel,
+      event: ScanSimpleIdEvent
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return when (event) {
       ShowKeyboard -> dispatch(HideQrCodeScannerView)
       HideKeyboard -> dispatch(ShowQrCodeScannerView)
@@ -34,7 +37,10 @@ class ScanSimpleIdUpdate @Inject constructor(
     }
   }
 
-  private fun scannedQRCodeParsed(model: ScanSimpleIdModel, event: ScannedQRCodeJsonParsed): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+  private fun scannedQRCodeParsed(
+      model: ScanSimpleIdModel,
+      event: ScannedQRCodeJsonParsed
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return if (event.patientPrefillInfo != null && event.healthIdNumber != null) {
       val identifier = Identifier(event.healthIdNumber.filter { it.isDigit() }, IndiaNationalHealthId)
       next(model = model.searching(), SearchPatientByIdentifier(identifier))
@@ -56,7 +62,10 @@ class ScanSimpleIdUpdate @Inject constructor(
     return next(model = model.notSearching(), effect)
   }
 
-  private fun patientFoundByIdentifierSearch(patients: List<Patient>, identifier: Identifier): ScanSimpleIdEffect {
+  private fun patientFoundByIdentifierSearch(
+      patients: List<Patient>,
+      identifier: Identifier
+  ): ScanSimpleIdEffect {
     return if (patients.size > 1) {
       multiplePatientsWithId(identifier)
     } else {
@@ -72,7 +81,10 @@ class ScanSimpleIdUpdate @Inject constructor(
     }
   }
 
-  private fun simpleIdQrScanned(model: ScanSimpleIdModel, event: ScanSimpleIdScreenQrCodeScanned): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+  private fun simpleIdQrScanned(
+      model: ScanSimpleIdModel,
+      event: ScanSimpleIdScreenQrCodeScanned
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     if (model.isSearching) return noChange()
 
     val clearInvalidQrCodeModel = model.clearInvalidQrCodeError()
@@ -104,7 +116,10 @@ class ScanSimpleIdUpdate @Inject constructor(
     return next(model = model.searching(), ParseScannedJson(event.text))
   }
 
-  private fun enteredCodeValidated(model: ScanSimpleIdModel, event: EnteredCodeValidated): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+  private fun enteredCodeValidated(
+      model: ScanSimpleIdModel,
+      event: EnteredCodeValidated
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     val effect = when (event.result) {
       Success -> searchEnteredCode(model)
       is Failure -> ShowEnteredCodeValidationError(event.result)

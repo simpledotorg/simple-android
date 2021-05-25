@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.viewbinding.ViewBinding
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -33,7 +32,8 @@ open class PagingItemAdapter<I : PagingItemAdapter.Item<E>, E>(
 
   override fun getItemViewType(position: Int): Int {
     val item = getItem(position)
-    return item?.layoutResId() ?: throw NullPointerException("Failed to get item at position: $position")
+    return item?.layoutResId()
+        ?: throw NullPointerException("Failed to get item at position: $position")
   }
 
   interface Item<E> {

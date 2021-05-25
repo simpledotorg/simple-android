@@ -76,7 +76,10 @@ import org.simple.clinic.widgets.topRelativeTo
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
-class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientEntryUi, PatientEntryValidationActions {
+class PatientEntryScreen(
+    context: Context,
+    attrs: AttributeSet
+) : RelativeLayout(context, attrs), PatientEntryUi, PatientEntryValidationActions {
 
   @Inject
   lateinit var router: Router

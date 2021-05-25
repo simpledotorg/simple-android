@@ -15,7 +15,10 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
 
   private val diagnosisQuestions = setOf(DIAGNOSED_WITH_HYPERTENSION, DIAGNOSED_WITH_DIABETES)
 
-  override fun update(model: NewMedicalHistoryModel, event: NewMedicalHistoryEvent): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
+  override fun update(
+      model: NewMedicalHistoryModel,
+      event: NewMedicalHistoryEvent
+  ): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
     return when (event) {
       is NewMedicalHistoryAnswerToggled -> answerToggled(model, event.question, event.answer)
       is SaveMedicalHistoryClicked -> saveClicked(model)

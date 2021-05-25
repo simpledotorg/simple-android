@@ -82,7 +82,7 @@ class SyncAndClearPatientDataTest {
             RuntimeException(),
             IOException()
         )
-        .thenAnswer {  }
+        .thenAnswer { }
     whenever(bruteForceProtection.resetFailedAttempts()) doReturn Completable.complete()
 
     val user = TestData.loggedInUser()

@@ -110,7 +110,10 @@ class NetworkAnalyticsInterceptorTest {
     "https://simple.org?param1=test|https://simple.org",
     "https://simple.org/test?param1=|https://simple.org/test"
   ])
-  fun `the url that is reported must be stripped of all query parameters`(url: String, expectedUrl: String) {
+  fun `the url that is reported must be stripped of all query parameters`(
+      url: String,
+      expectedUrl: String
+  ) {
     val request = requestBuilder(url).build()
 
     val response = responseBuilder(request).build()
@@ -387,8 +390,11 @@ class NetworkAnalyticsInterceptorTest {
   }
 
 
-
-  private class SuccessfulChain(val request: Request, val response: Response, val requestTimeMillis: Int = 0) : FakeChain() {
+  private class SuccessfulChain(
+      val request: Request,
+      val response: Response,
+      val requestTimeMillis: Int = 0
+  ) : FakeChain() {
 
     override fun proceed(request: Request): Response {
       if (requestTimeMillis > 0) {

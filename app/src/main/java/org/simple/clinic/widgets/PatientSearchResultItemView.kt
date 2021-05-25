@@ -131,7 +131,10 @@ class PatientSearchResultItemView(
     }
   }
 
-  private fun renderPatientPhoneNumber(searchQuery: String?, patientSearchResult: PatientSearchResultViewModel) {
+  private fun renderPatientPhoneNumber(
+      searchQuery: String?,
+      patientSearchResult: PatientSearchResultViewModel
+  ) {
     if (patientSearchResult.phoneNumber == null) {
       phoneNumberContainer.visibility = View.GONE
       return
@@ -164,7 +167,11 @@ class PatientSearchResultItemView(
     addressLabel.text = address.completeAddress
   }
 
-  private fun getPatientName(searchQuery: String?, patientSearchResult: PatientSearchResultViewModel, dateOfBirth: DateOfBirth): Name {
+  private fun getPatientName(
+      searchQuery: String?,
+      patientSearchResult: PatientSearchResultViewModel,
+      dateOfBirth: DateOfBirth
+  ): Name {
     val canHighlight = !searchQuery.isNullOrBlank() && patientSearchResult.fullName.contains(searchQuery, ignoreCase = true)
     genderLabel.setImageResource(patientSearchResult.gender.displayIconRes)
     val ageValue = dateOfBirth.estimateAge(userClock)
@@ -181,7 +188,10 @@ class PatientSearchResultItemView(
     }
   }
 
-  private fun renderPatientNameAgeAndGender(searchQuery: String?, model: PatientSearchResultViewModel) {
+  private fun renderPatientNameAgeAndGender(
+      searchQuery: String?,
+      model: PatientSearchResultViewModel
+  ) {
 
     val patientName = when (val name = getPatientName(searchQuery, model, DateOfBirth.fromPatientSearchResultViewModel(model, userClock))) {
       is Name.Highlighted -> {
@@ -209,12 +219,22 @@ class PatientSearchResultItemView(
   )
 
   sealed class Name(open val patientName: String) {
-    data class Highlighted(override val patientName: String, val highlightStart: Int, val highlightEnd: Int) : Name(patientName)
+    data class Highlighted(
+        override val patientName: String,
+        val highlightStart: Int,
+        val highlightEnd: Int
+    ) : Name(patientName)
+
     data class Plain(override val patientName: String) : Name(patientName)
   }
 
   sealed class PhoneNumber(open val patientNumber: String?) {
-    data class Highlighted(override val patientNumber: String, val highlightStart: Int, val highlightEnd: Int) : PhoneNumber(patientNumber)
+    data class Highlighted(
+        override val patientNumber: String,
+        val highlightStart: Int,
+        val highlightEnd: Int
+    ) : PhoneNumber(patientNumber)
+
     data class Plain(override val patientNumber: String) : PhoneNumber(patientNumber)
   }
 

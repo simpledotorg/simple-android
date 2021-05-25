@@ -6,4 +6,4 @@ sealed class ManifestFetchResult
 
 data class FetchSucceeded(val countries: List<Country>) : ManifestFetchResult()
 
-data class FetchError(val error: ResolvedError): ManifestFetchResult()
+data class FetchError(val error: ResolvedError) : ManifestFetchResult()

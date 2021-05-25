@@ -8,7 +8,10 @@ import org.simple.clinic.mobius.next
 
 class TeleconsultStatusUpdate : Update<TeleconsultStatusModel, TeleconsultStatusEvent, TeleconsultStatusEffect> {
 
-  override fun update(model: TeleconsultStatusModel, event: TeleconsultStatusEvent): Next<TeleconsultStatusModel, TeleconsultStatusEffect> {
+  override fun update(
+      model: TeleconsultStatusModel,
+      event: TeleconsultStatusEvent
+  ): Next<TeleconsultStatusModel, TeleconsultStatusEffect> {
     return when (event) {
       is TeleconsultStatusChanged -> next(model.teleconsultStatusChanged(event.teleconsultStatus))
       TeleconsultStatusUpdated -> dispatch(CloseSheet)

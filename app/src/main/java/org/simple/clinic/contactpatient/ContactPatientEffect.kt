@@ -13,9 +13,15 @@ data class DirectCallWithAutomaticDialer(val patientPhoneNumber: String) : Conta
 
 data class DirectCallWithManualDialer(val patientPhoneNumber: String) : ContactPatientEffect()
 
-data class MaskedCallWithAutomaticDialer(val patientPhoneNumber: String, val proxyPhoneNumber: String) : ContactPatientEffect()
+data class MaskedCallWithAutomaticDialer(
+    val patientPhoneNumber: String,
+    val proxyPhoneNumber: String
+) : ContactPatientEffect()
 
-data class MaskedCallWithManualDialer(val patientPhoneNumber: String, val proxyPhoneNumber: String) : ContactPatientEffect()
+data class MaskedCallWithManualDialer(
+    val patientPhoneNumber: String,
+    val proxyPhoneNumber: String
+) : ContactPatientEffect()
 
 object CloseScreen : ContactPatientEffect()
 

@@ -13,7 +13,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 /* Remember to enable the activity in the debug manifest when running this activity. */
-class WebviewTestActivity: AppCompatActivity() {
+class WebviewTestActivity : AppCompatActivity() {
 
   @Inject
   lateinit var features: Features

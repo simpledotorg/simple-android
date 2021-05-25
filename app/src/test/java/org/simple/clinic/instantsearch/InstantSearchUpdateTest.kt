@@ -10,9 +10,9 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import java.util.UUID
 
 class InstantSearchUpdateTest {

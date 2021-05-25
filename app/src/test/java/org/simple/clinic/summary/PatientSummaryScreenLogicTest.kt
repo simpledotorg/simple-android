@@ -1,6 +1,5 @@
 package org.simple.clinic.summary
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never

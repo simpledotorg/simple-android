@@ -4,16 +4,16 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
-import org.simple.clinic.TestData
 import java.util.UUID
 
 class NewMedicalHistoryUiRendererTest {

@@ -90,7 +90,10 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
     removalReasonsRecyclerView.adapter = removalReasonsAdapter
   }
 
-  override fun renderAppointmentRemoveReasons(reasons: List<RemoveAppointmentReason>, selectedReason: RemoveAppointmentReason?) {
+  override fun renderAppointmentRemoveReasons(
+      reasons: List<RemoveAppointmentReason>,
+      selectedReason: RemoveAppointmentReason?
+  ) {
     removalReasonsAdapter.submitList(RemoveAppointmentReasonItem.from(reasons, selectedReason))
   }
 

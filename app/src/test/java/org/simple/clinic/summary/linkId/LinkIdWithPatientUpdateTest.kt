@@ -3,7 +3,6 @@ package org.simple.clinic.summary.linkId
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
-import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test

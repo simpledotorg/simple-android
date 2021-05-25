@@ -23,7 +23,7 @@ class ScanSimpleIdEffectHandlerTest {
 
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<ScanSimpleIdUiActions>()
-  private val moshi = Moshi.Builder().add(IndiaNHIDDateOfBirthMoshiAdapter()).build()
+  private val moshi = Moshi.Builder().add(IndiaNHIDDateOfBirthMoshiAdapter()).add(IndiaNHIDGender.MoshiTypeAdapter()).build()
   private val testCase = EffectHandlerTestCase(ScanSimpleIdEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,

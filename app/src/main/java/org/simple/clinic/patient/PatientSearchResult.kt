@@ -19,7 +19,7 @@ import java.util.UUID
   PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
   PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt,
   PatientLastSeen.lastSeenTime lastSeen_lastSeenOn, F.name lastSeen_lastSeenAtFacilityName, PatientLastSeen.lastSeenFacilityUuid lastSeen_lastSeenAtFacilityUuid,
-  B.identifier id_identifier, B.identifierType id_identifierType
+  B.identifier id_identifier, B.identifierType id_identifierType, B.searchHelp identifierSearchHelp
   FROM Patient P
   INNER JOIN PatientAddress PA ON PA.uuid = P.addressUuid
   LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
@@ -103,7 +103,9 @@ data class PatientSearchResult(
     val lastSeen: LastSeen?,
 
     @Embedded(prefix = "id_")
-    val identifier: Identifier?
+    val identifier: Identifier?,
+
+    val identifierSearchHelp: String?
 ) : Parcelable {
 
   override fun toString(): String {

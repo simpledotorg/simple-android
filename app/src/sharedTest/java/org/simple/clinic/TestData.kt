@@ -1019,7 +1019,8 @@ object TestData {
       identifier: Identifier = Identifier(
           value = UUID.randomUUID().toString(),
           type = BpPassport
-      )
+      ),
+      identifierSearchHelp: String? = null
   ): PatientSearchResult {
     return PatientSearchResult(
         uuid = uuid,
@@ -1040,7 +1041,8 @@ object TestData {
         phoneCreatedAt = phoneCreatedAt,
         phoneUpdatedAt = phoneUpdatedAt,
         lastSeen = lastSeen,
-        identifier = identifier
+        identifier = identifier,
+        identifierSearchHelp = identifierSearchHelp
     )
   }
 

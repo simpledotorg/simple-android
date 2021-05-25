@@ -376,7 +376,7 @@ data class Patient(
 
           BI.uuid businessid_uuid, BI.patientUuid businessid_patientUuid, BI.identifier businessid_identifier,
           BI.identifierType businessid_identifierType, BI.meta businessid_meta, BI.metaVersion businessid_metaVersion,
-          BI.createdAt businessid_createdAt, BI.updatedAt businessid_updatedAt, BI.deletedAt businessid_deletedAt
+          BI.createdAt businessid_createdAt, BI.updatedAt businessid_updatedAt, BI.deletedAt businessid_deletedAt, BI.searchHelp businessid_searchHelp
         FROM Patient P
         INNER JOIN PatientAddress PA ON P.addressUuid == PA.uuid
         LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid == P.uuid

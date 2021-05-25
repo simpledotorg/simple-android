@@ -1613,9 +1613,9 @@ class PatientRepositoryAndroidTest {
   fun finding_a_patient_by_a_business_id_must_work_as_expected() {
     val patientProfileTemplate = testData.patientProfile(syncStatus = DONE, generateBusinessId = false, generatePhoneNumber = false)
 
-    val uniqueBusinessIdentifier = "unique_business_id"
-    val sharedBusinessIdentifier = "shared_business_id"
-    val deletedBusinessIdentifier = "deleted_business_id"
+    val uniqueBusinessIdentifier = "381cb64e-d958-41ee-8662-c445862f3523"
+    val sharedBusinessIdentifier = "85e8f2f1-7a4e-4f43-81c3-566ca51f5d7a"
+    val deletedBusinessIdentifier = "f272cc37-5dc8-482b-9b77-7044e6894055"
 
     val identifierType = Unknown("test_identifier")
     val metaVersion = BusinessId.MetaDataVersion.Unknown("test_version")
@@ -1639,7 +1639,8 @@ class PatientRepositoryAndroidTest {
           metaData = "",
           createdAt = now,
           updatedAt = now,
-          deletedAt = null
+          deletedAt = null,
+          searchHelp = "3816495"
       )
 
       patientProfile.copy(patient = patient, address = address, businessIds = listOf(businessId))
@@ -1664,7 +1665,8 @@ class PatientRepositoryAndroidTest {
           metaData = "",
           createdAt = now,
           updatedAt = now,
-          deletedAt = null
+          deletedAt = null,
+          searchHelp = "8582174"
       )
       val patientProfileOne = patientProfile.copy(patient = patientOne, address = addressOne, businessIds = listOf(businessIdOne))
 
@@ -1686,7 +1688,8 @@ class PatientRepositoryAndroidTest {
           metaData = "",
           createdAt = now.minusSeconds(1),
           updatedAt = now.minusSeconds(1),
-          deletedAt = null
+          deletedAt = null,
+          searchHelp = "8582174"
       )
       val patientProfileTwo = patientProfile.copy(patient = patientTwo, address = addressTwo, businessIds = listOf(businessIdTwo))
 
@@ -1711,7 +1714,8 @@ class PatientRepositoryAndroidTest {
           metaData = "",
           createdAt = now,
           updatedAt = now,
-          deletedAt = now
+          deletedAt = now,
+          searchHelp = "2723758"
       )
 
       patientProfile.copy(patient = patient, address = address, businessIds = listOf(businessId))

@@ -469,6 +469,11 @@ class PatientRepository @Inject constructor(
     val metaAndVersion = createBusinessIdMetaDataForIdentifier(identifier.type, user)
     val now = Instant.now(utcClock)
 
+    val identifierSearchHelp = when (identifier.type) {
+      BpPassport -> BpPassport.shortCode(identifier)
+      else -> identifier.value
+    }
+
     return BusinessId(
         uuid = id,
         patientUuid = patientUuid,
@@ -477,7 +482,8 @@ class PatientRepository @Inject constructor(
         metaData = metaAndVersion.metaData,
         createdAt = now,
         updatedAt = now,
-        deletedAt = null
+        deletedAt = null,
+        searchHelp = identifierSearchHelp
     )
   }
 

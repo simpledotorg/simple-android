@@ -13,6 +13,8 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncApi
 import org.simple.clinic.rules.ServerAuthenticationRule
@@ -94,10 +96,20 @@ class PatientSyncIntegrationTest {
     // given
     val totalNumberOfRecords = batchSize * 2 + 1
     val records = (1..totalNumberOfRecords).map {
+      val patientUuid = UUID.randomUUID();
+      val identifier = Identifier(value = UUID.randomUUID().toString(), type = BpPassport)
+
       TestData.patientProfile(
+          patientUuid = patientUuid,
           syncStatus = SyncStatus.PENDING,
           patientRegisteredFacilityId = currentFacilityUuid,
-          patientAssignedFacilityId = currentFacilityUuid
+          patientAssignedFacilityId = currentFacilityUuid,
+          generateBusinessId = false,
+          businessId = TestData.businessId(
+              patientUuid = patientUuid,
+              identifier = identifier,
+              identifierSearchHelp = BpPassport.shortCode(identifier)
+          )
       )
     }
     assertThat(records).containsNoDuplicates()
@@ -121,10 +133,20 @@ class PatientSyncIntegrationTest {
   fun sync_pending_records_should_not_be_overwritten_by_server_records() {
     // given
     val records = (1..batchSize).map {
+      val patientUuid = UUID.randomUUID();
+      val identifier = Identifier(value = UUID.randomUUID().toString(), type = BpPassport)
+
       TestData.patientProfile(
+          patientUuid = patientUuid,
           syncStatus = SyncStatus.PENDING,
           patientRegisteredFacilityId = currentFacilityUuid,
-          patientAssignedFacilityId = currentFacilityUuid
+          patientAssignedFacilityId = currentFacilityUuid,
+          generateBusinessId = false,
+          businessId = TestData.businessId(
+              patientUuid = patientUuid,
+              identifier = identifier,
+              identifierSearchHelp = BpPassport.shortCode(identifier)
+          )
       )
     }
     assertThat(records).containsNoDuplicates()

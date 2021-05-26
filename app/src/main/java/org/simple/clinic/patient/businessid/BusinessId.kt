@@ -63,7 +63,9 @@ data class BusinessId(
 
     val updatedAt: Instant,
 
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    val searchHelp: String
 ) : Parcelable {
 
   fun toPayload(): BusinessIdPayload {

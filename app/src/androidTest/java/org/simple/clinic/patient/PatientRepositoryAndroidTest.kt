@@ -1613,9 +1613,9 @@ class PatientRepositoryAndroidTest {
   fun finding_a_patient_by_a_business_id_must_work_as_expected() {
     val patientProfileTemplate = testData.patientProfile(syncStatus = DONE, generateBusinessId = false, generatePhoneNumber = false)
 
-    val uniqueBusinessIdentifier = "unique_business_id"
-    val sharedBusinessIdentifier = "shared_business_id"
-    val deletedBusinessIdentifier = "deleted_business_id"
+    val uniqueBusinessIdentifier = "381cb64e-d958-41ee-8662-c445862f3523"
+    val sharedBusinessIdentifier = "85e8f2f1-7a4e-4f43-81c3-566ca51f5d7a"
+    val deletedBusinessIdentifier = "f272cc37-5dc8-482b-9b77-7044e6894055"
 
     val identifierType = Unknown("test_identifier")
     val metaVersion = BusinessId.MetaDataVersion.Unknown("test_version")
@@ -1639,7 +1639,8 @@ class PatientRepositoryAndroidTest {
           metaData = "",
           createdAt = now,
           updatedAt = now,
-          deletedAt = null
+          deletedAt = null,
+          searchHelp = "3816495"
       )
 
       patientProfile.copy(patient = patient, address = address, businessIds = listOf(businessId))
@@ -1664,7 +1665,8 @@ class PatientRepositoryAndroidTest {
           metaData = "",
           createdAt = now,
           updatedAt = now,
-          deletedAt = null
+          deletedAt = null,
+          searchHelp = "8582174"
       )
       val patientProfileOne = patientProfile.copy(patient = patientOne, address = addressOne, businessIds = listOf(businessIdOne))
 
@@ -1686,7 +1688,8 @@ class PatientRepositoryAndroidTest {
           metaData = "",
           createdAt = now.minusSeconds(1),
           updatedAt = now.minusSeconds(1),
-          deletedAt = null
+          deletedAt = null,
+          searchHelp = "8582174"
       )
       val patientProfileTwo = patientProfile.copy(patient = patientTwo, address = addressTwo, businessIds = listOf(businessIdTwo))
 
@@ -1711,7 +1714,8 @@ class PatientRepositoryAndroidTest {
           metaData = "",
           createdAt = now,
           updatedAt = now,
-          deletedAt = now
+          deletedAt = now,
+          searchHelp = "2723758"
       )
 
       patientProfile.copy(patient = patient, address = address, businessIds = listOf(businessId))
@@ -4152,7 +4156,8 @@ class PatientRepositoryAndroidTest {
               generatePhoneNumber = false,
               patientPhoneNumber = phoneNumber,
               patientAssignedFacilityId = assignedFacilityId,
-              businessId = businessId
+              businessId = businessId,
+              generateBusinessId = false
           )
 
       patientRepository.save(listOf(patientProfile)).blockingAwait()
@@ -4208,9 +4213,10 @@ class PatientRepositoryAndroidTest {
         phoneNumber = "1234567890",
         assignedFacilityId = currentFacility.uuid,
         businessId = TestData.businessId(identifier = Identifier(
-            value = "1234567890",
+            value = "608a1011-c724-4898-a3b3-f46c157ebe45",
             type = BpPassport),
-            patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumberAndBusinessId)
+            patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumberAndBusinessId,
+            identifierSearchHelp = "6081011")
     )
 
     createPatientWithNumericCriteriaAndAssignedFacilityID(
@@ -4218,9 +4224,10 @@ class PatientRepositoryAndroidTest {
         phoneNumber = "1234567890",
         assignedFacilityId = currentFacility.uuid,
         businessId = TestData.businessId(identifier = Identifier(
-            value = "1234567890",
+            value = "3b7087e3-01ff-4ce1-a7a6-be2ff9d44b6a",
             type = BpPassport),
-            patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumberAndBusinessId)
+            patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumberAndBusinessId,
+            identifierSearchHelp = "3708730")
     )
 
     val patientWithCurrentFacilityAsAssignedFacilityAndFirstHalfMatchingBusinessId = UUID.fromString("d47ae2e7-7453-4a6f-806e-88eb130823d8")
@@ -4229,9 +4236,10 @@ class PatientRepositoryAndroidTest {
         phoneNumber = "999999999",
         assignedFacilityId = currentFacility.uuid,
         businessId = TestData.businessId(identifier = Identifier(
-            value = "1234599999",
+            value = "12c34cea-cae5-6b7a-82ea-6b9df7a1293d",
             type = BpPassport),
-            patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndFirstHalfMatchingBusinessId)
+            patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndFirstHalfMatchingBusinessId,
+            identifierSearchHelp = "1234567")
     )
 
     createPatientWithNumericCriteriaAndAssignedFacilityID(
@@ -4239,9 +4247,10 @@ class PatientRepositoryAndroidTest {
         phoneNumber = "999999999",
         assignedFacilityId = currentFacility.uuid,
         businessId = TestData.businessId(identifier = Identifier(
-            value = "1234544499",
+            value = "39f5ea7f-b1d6-4430-8890-4aed15ed6ffc",
             type = BpPassport),
-            patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndFirstHalfMatchingBusinessId)
+            patientUuid = patientWithCurrentFacilityAsAssignedFacilityAndFirstHalfMatchingBusinessId,
+            identifierSearchHelp = "3957164")
     )
 
     val patientWithAnotherFacilityAsAssignedFacilityAndExactlyMatchingPhoneNumber = UUID.fromString("f6cfd657-bf32-40c1-9dd2-4c956fd910a8")
@@ -4306,7 +4315,8 @@ class PatientRepositoryAndroidTest {
               patientUuid = patientUuid,
               generatePhoneNumber = false,
               patientPhoneNumber = phoneNumber,
-              businessId = businessId
+              businessId = businessId,
+              generateBusinessId = false
           )
 
       patientRepository.save(listOf(patientProfile)).blockingAwait()
@@ -4328,25 +4338,28 @@ class PatientRepositoryAndroidTest {
         businessId = TestData.businessId(identifier = Identifier(
             value = "56555555",
             type = BangladeshNationalId),
-            patientUuid = patientWithExactlyMatchingPhoneNumber
+            patientUuid = patientWithExactlyMatchingPhoneNumber,
+            identifierSearchHelp = "56555555"
         ))
     val patientWithFirstPartMatchingPatientIdentifier = UUID.fromString("bd050289-29c3-4459-8d33-50e8d77469d2")
     createPatientWithNumericCriteria(
         patientUuid = patientWithFirstPartMatchingPatientIdentifier,
         phoneNumber = "999988888",
         businessId = TestData.businessId(identifier = Identifier(
-            value = "`12345788888",
+            value = "12345788888",
             type = BangladeshNationalId),
-            patientUuid = patientWithFirstPartMatchingPatientIdentifier)
+            patientUuid = patientWithFirstPartMatchingPatientIdentifier,
+            identifierSearchHelp = "12345788888")
     )
     val patientWithLastPartMatchingPhoneNumberAndPatientIdentifier = UUID.fromString("ff3552b7-83f2-47f6-b840-c6ce12de6ad5")
     createPatientWithNumericCriteria(
         patientUuid = patientWithLastPartMatchingPhoneNumberAndPatientIdentifier,
         phoneNumber = "111167890",
         businessId = TestData.businessId(identifier = Identifier(
-            value = "`9999967890",
+            value = "9999967890",
             type = BangladeshNationalId),
-            patientUuid = patientWithLastPartMatchingPhoneNumberAndPatientIdentifier)
+            patientUuid = patientWithLastPartMatchingPhoneNumberAndPatientIdentifier,
+            identifierSearchHelp = "9999967890")
     )
     val patientWithMiddlePartMatchingPatientIdentifier = UUID.fromString("b7aa9310-6ae9-4ac2-b040-762f5cc5a505")
     createPatientWithNumericCriteria(
@@ -4355,7 +4368,8 @@ class PatientRepositoryAndroidTest {
         businessId = TestData.businessId(identifier = Identifier(
             value = "1114567800",
             type = BangladeshNationalId),
-            patientUuid = patientWithMiddlePartMatchingPatientIdentifier)
+            patientUuid = patientWithMiddlePartMatchingPatientIdentifier,
+            identifierSearchHelp = "1114567800")
     )
     val patientWithNoPartMatchingPatientIdentifier = UUID.fromString("0d955585-6887-451f-9b20-94587938a09d")
     createPatientWithNumericCriteria(
@@ -4364,7 +4378,8 @@ class PatientRepositoryAndroidTest {
         businessId = TestData.businessId(identifier = Identifier(
             value = "0000000",
             type = BangladeshNationalId),
-            patientUuid = patientWithNoPartMatchingPatientIdentifier)
+            patientUuid = patientWithNoPartMatchingPatientIdentifier,
+            identifierSearchHelp = "0000000")
     )
     val patientWithoutAnyNumber = UUID.fromString("e8ad5b9a-2b27-4d20-9257-c9c456d5f168")
     createPatientWithNumericCriteria(

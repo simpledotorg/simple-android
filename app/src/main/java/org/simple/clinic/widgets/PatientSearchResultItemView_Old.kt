@@ -126,7 +126,11 @@ class PatientSearchResultItemView_Old(
     addressLabel.text = address.completeAddress
   }
 
-  private fun renderPatientNameAgeAndGender(fullName: String, gender: Gender, dateOfBirth: DateOfBirth) {
+  private fun renderPatientNameAgeAndGender(
+      fullName: String,
+      gender: Gender,
+      dateOfBirth: DateOfBirth
+  ) {
     genderLabel.setImageResource(gender.displayIconRes)
 
     val ageValue = dateOfBirth.estimateAge(userClock)

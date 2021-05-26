@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.util.ElapsedRealtimeClock
 import java.time.Duration
 
-sealed class LocationUpdate: Parcelable {
+sealed class LocationUpdate : Parcelable {
 
   @Parcelize
   object Unavailable : LocationUpdate()
@@ -26,7 +26,7 @@ sealed class LocationUpdate: Parcelable {
       clock: ElapsedRealtimeClock,
       locationStaleAfter: Duration
   ): Boolean {
-    return when(this) {
+    return when (this) {
       Unavailable -> true
       is Available -> age(clock) <= locationStaleAfter
     }

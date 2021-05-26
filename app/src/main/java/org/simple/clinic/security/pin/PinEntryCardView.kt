@@ -35,7 +35,10 @@ import java.time.Duration
 import java.time.Instant
 import javax.inject.Inject
 
-class PinEntryCardView(context: Context, attrs: AttributeSet) : MaterialCardView(context, attrs), PinEntryUi, UiActions {
+class PinEntryCardView(
+    context: Context,
+    attrs: AttributeSet
+) : MaterialCardView(context, attrs), PinEntryUi, UiActions {
 
   companion object {
     private const val MILLIS_IN_SECOND = 1000L

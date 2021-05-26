@@ -6,7 +6,11 @@ import org.simple.clinic.remoteconfig.ConfigReader
 
 class FirebaseConfigReader(private val remoteConfig: FirebaseRemoteConfig) : ConfigReader {
 
-  private inline fun <T : Any> read(name: String, default: T, converter: (FirebaseRemoteConfigValue) -> T): T {
+  private inline fun <T : Any> read(
+      name: String,
+      default: T,
+      converter: (FirebaseRemoteConfigValue) -> T
+  ): T {
     val remoteValue = remoteConfig.getValue(name)
     return when {
       remoteValue.source == FirebaseRemoteConfig.VALUE_SOURCE_STATIC -> default

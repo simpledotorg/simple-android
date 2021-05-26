@@ -106,7 +106,10 @@ class LongTeleconsultMessageBuilder_Old @Inject constructor(
     }
   }
 
-  private fun addDiagnosisSectionToMessage(patientTeleconsultationInfo: PatientTeleconsultationInfo, message: StringBuilder) {
+  private fun addDiagnosisSectionToMessage(
+      patientTeleconsultationInfo: PatientTeleconsultationInfo,
+      message: StringBuilder
+  ) {
     val hyperTensionTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_hypertension)
     val diabetesTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_diabetes)
 

@@ -151,7 +151,7 @@ data class BloodSugarMeasurement(
     @Query(""" SELECT * FROM BloodSugarMeasurements """)
     fun getAllBloodSugarMeasurements(): List<BloodSugarMeasurement>
 
-      @Query("""
+    @Query("""
         DELETE FROM BloodSugarMeasurements
         WHERE 
             uuid NOT IN (
@@ -160,6 +160,6 @@ data class BloodSugarMeasurement(
             ) AND
             syncStatus == 'DONE'
     """)
-      fun deleteWithoutLinkedPatient()
+    fun deleteWithoutLinkedPatient()
   }
 }

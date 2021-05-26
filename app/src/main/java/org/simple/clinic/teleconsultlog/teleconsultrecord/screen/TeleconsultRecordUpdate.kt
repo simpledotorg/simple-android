@@ -8,7 +8,10 @@ import org.simple.clinic.mobius.next
 
 class TeleconsultRecordUpdate : Update<TeleconsultRecordModel, TeleconsultRecordEvent, TeleconsultRecordEffect> {
 
-  override fun update(model: TeleconsultRecordModel, event: TeleconsultRecordEvent): Next<TeleconsultRecordModel, TeleconsultRecordEffect> {
+  override fun update(
+      model: TeleconsultRecordModel,
+      event: TeleconsultRecordEvent
+  ): Next<TeleconsultRecordModel, TeleconsultRecordEffect> {
     return when (event) {
       BackClicked -> dispatch(ValidateTeleconsultRecord(model.teleconsultRecordId))
       is TeleconsultRecordLoaded -> teleconsultRecordLoaded(model, event)

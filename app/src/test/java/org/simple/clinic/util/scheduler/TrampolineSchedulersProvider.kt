@@ -5,7 +5,6 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class TrampolineSchedulersProvider
-
 @Deprecated(
     message = "Use TestSchedulersProvider instead",
     replaceWith = ReplaceWith(

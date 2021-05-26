@@ -5,16 +5,6 @@ import com.spotify.mobius.test.FirstMatchers.hasModel
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
-import org.simple.clinic.editpatient.EditPatientInit
-import org.simple.clinic.editpatient.EditPatientModel
-import org.simple.clinic.editpatient.EditPatientState
-import org.simple.clinic.editpatient.FetchBpPassportsEffect
-import org.simple.clinic.editpatient.PrefillFormEffect
-import org.simple.clinic.feature.Feature
-import org.simple.clinic.feature.Features
-import org.simple.clinic.remoteconfig.DefaultValueConfigReader
-import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
-import java.util.UUID
 
 class PatientEntryInitTest {
   private val initSpec = InitSpec(PatientEntryInit(isVillageTypeAheadEnabled = true))

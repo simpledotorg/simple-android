@@ -13,7 +13,7 @@ import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
-sealed class Gender: Parcelable {
+sealed class Gender : Parcelable {
 
   @Parcelize
   object Male : Gender()
@@ -25,10 +25,10 @@ sealed class Gender: Parcelable {
   object Transgender : Gender()
 
   @Parcelize
-  data class Unknown(val actualValue: String): Gender()
+  data class Unknown(val actualValue: String) : Gender()
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-  object TypeAdapter: SafeEnumTypeAdapter<Gender>(
+  object TypeAdapter : SafeEnumTypeAdapter<Gender>(
       knownMappings = mapOf(
           Male to "male",
           Female to "female",
@@ -58,15 +58,15 @@ sealed class Gender: Parcelable {
 }
 
 val Gender.displayLetterRes: Int
-    get() = when(this) {
-      Male -> R.string.gender_male_letter
-      Female -> R.string.gender_female_letter
-      Transgender -> R.string.gender_trans_letter
-      is Unknown -> R.string.gender_unknown_letter
-    }
+  get() = when (this) {
+    Male -> R.string.gender_male_letter
+    Female -> R.string.gender_female_letter
+    Transgender -> R.string.gender_trans_letter
+    is Unknown -> R.string.gender_unknown_letter
+  }
 
 val Gender.displayIconRes: Int
-  get() = when(this) {
+  get() = when (this) {
     Male -> R.drawable.ic_patient_male
     Female -> R.drawable.ic_patient_female
     Transgender -> R.drawable.ic_patient_transgender

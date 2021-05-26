@@ -1,6 +1,5 @@
 package org.simple.clinic.newentry
 
-import org.simple.clinic.editpatient.EditPatientEvent
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry

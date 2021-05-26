@@ -40,7 +40,11 @@ class FullScreenKeyChanger(
     return activity.findViewById(screenLayoutContainerRes)
   }
 
-  override fun inflateIncomingView(incomingContext: Context, incomingKey: FullScreenKey, frame: ViewGroup): View {
+  override fun inflateIncomingView(
+      incomingContext: Context,
+      incomingKey: FullScreenKey,
+      frame: ViewGroup
+  ): View {
     // If the backstack is changed while a screen change animation was ongoing, the screens
     // end up overlapping with each other. It's difficult to debug if it's a problem with Flow
     // or in our code. As a workaround, the window background is applied on every screen.

@@ -11,7 +11,7 @@ data class FacilityPickerModel(
     val facilities: List<Facility>?,
     val currentLocation: LocationUpdate?,
     val totalFacilityCount: Int?
-): Parcelable {
+) : Parcelable {
 
   companion object {
     fun create(): FacilityPickerModel {

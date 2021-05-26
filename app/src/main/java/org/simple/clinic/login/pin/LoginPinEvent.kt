@@ -7,7 +7,7 @@ sealed class LoginPinEvent : UiEvent
 
 data class OngoingLoginEntryLoaded(val ongoingLoginEntry: OngoingLoginEntry) : LoginPinEvent()
 
-data class LoginPinAuthenticated(val newLoginEntry: OngoingLoginEntry): LoginPinEvent() {
+data class LoginPinAuthenticated(val newLoginEntry: OngoingLoginEntry) : LoginPinEvent() {
   override val analyticsName = "Login:Pin authenticated"
 }
 

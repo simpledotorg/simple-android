@@ -18,11 +18,6 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.registration.phone.LengthBasedNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.ValidNumber
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider

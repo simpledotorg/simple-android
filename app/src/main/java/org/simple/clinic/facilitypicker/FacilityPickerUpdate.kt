@@ -11,7 +11,10 @@ class FacilityPickerUpdate(
     private val pickFrom: PickFrom
 ) : Update<FacilityPickerModel, FacilityPickerEvent, FacilityPickerEffect> {
 
-  override fun update(model: FacilityPickerModel, event: FacilityPickerEvent): Next<FacilityPickerModel, FacilityPickerEffect> {
+  override fun update(
+      model: FacilityPickerModel,
+      event: FacilityPickerEvent
+  ): Next<FacilityPickerModel, FacilityPickerEffect> {
     return when (event) {
       is LocationFetched -> next(model.locationFetched(event.update))
       is FacilitiesFetched -> next(model.queryChanged(event.query).facilitiesLoaded(event.facilities))

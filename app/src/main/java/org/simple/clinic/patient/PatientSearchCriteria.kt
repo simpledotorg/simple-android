@@ -22,5 +22,5 @@ sealed class PatientSearchCriteria(val additionalIdentifier: Identifier?) : Parc
   data class NumericCriteria(
       val numericCriteria: String,
       private val _additionalIdentifier: Identifier? = null
-  ): PatientSearchCriteria(_additionalIdentifier)
+  ) : PatientSearchCriteria(_additionalIdentifier)
 }

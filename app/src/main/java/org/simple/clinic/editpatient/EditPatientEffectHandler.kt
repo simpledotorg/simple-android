@@ -224,7 +224,10 @@ class EditPatientEffectHandler @AssistedInject constructor(
   }
 
   private fun createOrUpdatePhoneNumber(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
-    fun isPhoneNumberPresent(existingPhoneNumber: PatientPhoneNumber?, enteredPhoneNumber: String): Boolean =
+    fun isPhoneNumberPresent(
+        existingPhoneNumber: PatientPhoneNumber?,
+        enteredPhoneNumber: String
+    ): Boolean =
         existingPhoneNumber != null || enteredPhoneNumber.isNotBlank()
 
     val effectsWithPhoneNumber = savePatientEffects
@@ -297,7 +300,10 @@ class EditPatientEffectHandler @AssistedInject constructor(
   private fun updatePhoneNumber(
       phoneNumbers: Observable<Triple<UUID, PatientPhoneNumber?, String>>
   ): Observable<EditPatientEvent> {
-    fun hasExistingPhoneNumber(existingPhoneNumber: PatientPhoneNumber?, enteredPhoneNumber: String): Boolean =
+    fun hasExistingPhoneNumber(
+        existingPhoneNumber: PatientPhoneNumber?,
+        enteredPhoneNumber: String
+    ): Boolean =
         existingPhoneNumber != null && enteredPhoneNumber.isNotBlank()
 
     return phoneNumbers
@@ -314,7 +320,10 @@ class EditPatientEffectHandler @AssistedInject constructor(
   private fun createPhoneNumber(
       phoneNumbers: Observable<Triple<UUID, PatientPhoneNumber?, String>>
   ): Observable<EditPatientEvent> {
-    fun noExistingPhoneNumberButHasEnteredPhoneNumber(existingPhoneNumber: PatientPhoneNumber?, enteredPhoneNumber: String): Boolean =
+    fun noExistingPhoneNumberButHasEnteredPhoneNumber(
+        existingPhoneNumber: PatientPhoneNumber?,
+        enteredPhoneNumber: String
+    ): Boolean =
         existingPhoneNumber == null && enteredPhoneNumber.isNotBlank()
 
     return phoneNumbers

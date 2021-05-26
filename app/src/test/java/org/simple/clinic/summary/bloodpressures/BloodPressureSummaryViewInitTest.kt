@@ -2,12 +2,11 @@ package org.simple.clinic.summary.bloodpressures
 
 import com.spotify.mobius.test.FirstMatchers.hasEffects
 import com.spotify.mobius.test.FirstMatchers.hasModel
-import com.spotify.mobius.test.FirstMatchers.hasNoEffects
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
-import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.FacilityConfig
 import java.util.UUID
 
 class BloodPressureSummaryViewInitTest {

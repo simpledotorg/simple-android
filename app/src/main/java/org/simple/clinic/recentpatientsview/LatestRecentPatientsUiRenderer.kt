@@ -17,7 +17,10 @@ class LatestRecentPatientsUiRenderer @AssistedInject constructor(
 
   @AssistedFactory
   interface Factory {
-    fun create(ui: LatestRecentPatientsUi, numberOfPatientsToShow: Int): LatestRecentPatientsUiRenderer
+    fun create(
+        ui: LatestRecentPatientsUi,
+        numberOfPatientsToShow: Int
+    ): LatestRecentPatientsUiRenderer
   }
 
   override fun render(model: LatestRecentPatientsModel) {

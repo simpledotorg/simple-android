@@ -8,7 +8,7 @@ import com.squareup.moshi.ToJson
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
-sealed class UserStatus: Parcelable {
+sealed class UserStatus : Parcelable {
 
   @Parcelize
   object WaitingForApproval : UserStatus()

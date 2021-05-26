@@ -1,10 +1,10 @@
 package org.simple.clinic.recentpatient
 
 import com.spotify.mobius.rx2.RxMobius
+import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
@@ -26,7 +26,7 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<AllRecentPatientsEffect, AllRecentPatientsEvent>()
         .addTransformer(LoadAllRecentPatients::class.java, loadAllRecentPatients())
-        .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid)}, schedulersProvider.ui())
+        .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid) }, schedulersProvider.ui())
         .build()
   }
 

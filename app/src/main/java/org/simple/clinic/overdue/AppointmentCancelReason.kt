@@ -8,7 +8,7 @@ import com.squareup.moshi.ToJson
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
-sealed class AppointmentCancelReason: Parcelable {
+sealed class AppointmentCancelReason : Parcelable {
 
   /**
    * A human-readable string that can be printed when, say a reason is logged to analytics.

@@ -1,8 +1,12 @@
 package org.simple.clinic.login.activateuser
 
-import org.simple.clinic.login.UsersApi
 import org.simple.clinic.login.LoginOtpSmsListener
-import org.simple.clinic.login.activateuser.ActivateUser.Result.*
+import org.simple.clinic.login.UsersApi
+import org.simple.clinic.login.activateuser.ActivateUser.Result.IncorrectPin
+import org.simple.clinic.login.activateuser.ActivateUser.Result.NetworkError
+import org.simple.clinic.login.activateuser.ActivateUser.Result.OtherError
+import org.simple.clinic.login.activateuser.ActivateUser.Result.ServerError
+import org.simple.clinic.login.activateuser.ActivateUser.Result.Success
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.ResolvedError.NetworkRelated

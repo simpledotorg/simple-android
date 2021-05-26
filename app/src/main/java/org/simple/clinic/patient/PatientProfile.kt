@@ -3,7 +3,6 @@ package org.simple.clinic.patient
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.businessid.BusinessId
-import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import java.util.UUID
 

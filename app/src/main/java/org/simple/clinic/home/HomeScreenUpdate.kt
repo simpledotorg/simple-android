@@ -12,7 +12,10 @@ class HomeScreenUpdate @Inject constructor(
     private val features: Features
 ) : Update<HomeScreenModel, HomeScreenEvent, HomeScreenEffect> {
 
-  override fun update(model: HomeScreenModel, event: HomeScreenEvent): Next<HomeScreenModel, HomeScreenEffect> {
+  override fun update(
+      model: HomeScreenModel,
+      event: HomeScreenEvent
+  ): Next<HomeScreenModel, HomeScreenEffect> {
     return when (event) {
       HomeFacilitySelectionClicked -> dispatch(OpenFacilitySelection)
       is CurrentFacilityLoaded -> currentFacilityLoaded(model, event)
@@ -20,7 +23,10 @@ class HomeScreenUpdate @Inject constructor(
     }
   }
 
-  private fun currentFacilityLoaded(model: HomeScreenModel, event: CurrentFacilityLoaded): Next<HomeScreenModel, HomeScreenEffect> {
+  private fun currentFacilityLoaded(
+      model: HomeScreenModel,
+      event: CurrentFacilityLoaded
+  ): Next<HomeScreenModel, HomeScreenEffect> {
     val effects = mutableSetOf<HomeScreenEffect>()
 
     if (features.isEnabled(Feature.OverdueCount)) {

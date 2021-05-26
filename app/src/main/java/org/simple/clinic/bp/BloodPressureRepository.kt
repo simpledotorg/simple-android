@@ -95,13 +95,19 @@ class BloodPressureRepository @Inject constructor(
     return dao.count().toObservable()
   }
 
-  fun newestMeasurementsForPatient(patientUuid: UUID, limit: Int): Observable<List<BloodPressureMeasurement>> {
+  fun newestMeasurementsForPatient(
+      patientUuid: UUID,
+      limit: Int
+  ): Observable<List<BloodPressureMeasurement>> {
     return dao
         .newestMeasurementsForPatient(patientUuid, limit)
         .toObservable()
   }
 
-  fun newestMeasurementsForPatientImmediate(patientUuid: UUID, limit: Int): List<BloodPressureMeasurement> {
+  fun newestMeasurementsForPatientImmediate(
+      patientUuid: UUID,
+      limit: Int
+  ): List<BloodPressureMeasurement> {
     return dao.newestMeasurementsForPatientImmediate(patientUuid, limit)
   }
 

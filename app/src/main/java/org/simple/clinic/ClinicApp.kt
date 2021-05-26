@@ -46,7 +46,7 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
     Timber.plant(CrashBreadcrumbsTimberTree(crashReporter))
     RxJavaPlugins.setErrorHandler { error ->
       if (!error.canBeIgnoredSafely()) {
-        val cause = if(error is UndeliverableException) error.cause else error
+        val cause = if (error is UndeliverableException) error.cause else error
         Thread.currentThread().uncaughtExceptionHandler?.uncaughtException(Thread.currentThread(), cause!!)
       }
     }

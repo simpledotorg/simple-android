@@ -11,7 +11,7 @@ data class OngoingRegistrationEntry(
     val fullName: String? = null,
     val pin: String? = null,
     val facilityId: UUID? = null
-): Parcelable {
+) : Parcelable {
 
   fun withPhoneNumber(number: String): OngoingRegistrationEntry {
     return copy(phoneNumber = number)

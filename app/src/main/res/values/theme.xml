@@ -25,9 +25,11 @@
     <item name="textAppearanceHeadline3">@style/TextAppearance.Simple.Headline3</item>
     <item name="textAppearanceHeadline4">@style/TextAppearance.Simple.Headline4</item>
     <item name="textAppearanceHeadline5">@style/TextAppearance.Simple.Headline5</item>
-    <item name="textAppearanceHeadline5Numeric">@style/TextAppearance.Simple.Headline5.Numeric</item>
+    <item name="textAppearanceHeadline5Numeric">@style/TextAppearance.Simple.Headline5.Numeric
+    </item>
     <item name="textAppearanceHeadline6">@style/TextAppearance.Simple.Headline6</item>
-    <item name="textAppearanceHeadline6Numeric">@style/TextAppearance.Simple.Headline6.Numeric</item>
+    <item name="textAppearanceHeadline6Numeric">@style/TextAppearance.Simple.Headline6.Numeric
+    </item>
     <item name="textAppearanceSubtitle1">@style/TextAppearance.Simple.Subtitle1</item>
     <item name="textAppearanceSubtitle1Medium">@style/TextAppearance.Simple.Subtitle1.Medium</item>
     <item name="textAppearanceSubtitle2">@style/TextAppearance.Simple.Subtitle2</item>

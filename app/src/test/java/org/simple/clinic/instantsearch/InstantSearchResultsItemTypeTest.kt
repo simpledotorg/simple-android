@@ -50,7 +50,7 @@ class InstantSearchResultsItemTypeTest {
             ),
             currentFacilityId = currentFacilityUuid,
             searchQuery = searchQueryReceived
-         ),
+        ),
         InstantSearchResultsItemType.NearbyFacilitiesHeader,
         InstantSearchResultsItemType.SearchResult(
             searchResultViewModel = PatientSearchResultItemView.PatientSearchResultViewModel(

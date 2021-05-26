@@ -210,7 +210,11 @@ class InstantSearchScreen :
     searchResultsView.scrollToPosition(0)
   }
 
-  override fun showPatientsSearchResults(patients: List<PatientSearchResult>, facility: Facility, searchQuery: String) {
+  override fun showPatientsSearchResults(
+      patients: List<PatientSearchResult>,
+      facility: Facility,
+      searchQuery: String
+  ) {
     searchResultsView.visibility = View.VISIBLE
     searchResultsAdapter.submitList(InstantSearchResultsItemType.from(patients, facility, searchQuery))
 

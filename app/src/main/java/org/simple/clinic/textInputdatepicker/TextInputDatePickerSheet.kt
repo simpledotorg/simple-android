@@ -78,7 +78,10 @@ class TextInputDatePickerSheet : BaseBottomSheet<
 
   override fun defaultModel() = TextInputDatePickerModel.create(screenKey.minDate, screenKey.maxDate, screenKey.prefilledDate)
 
-  override fun bindView(inflater: LayoutInflater, container: ViewGroup?) = SheetTextInputDatePickerBinding.inflate(inflater, container, false)
+  override fun bindView(
+      inflater: LayoutInflater,
+      container: ViewGroup?
+  ) = SheetTextInputDatePickerBinding.inflate(inflater, container, false)
 
   override fun events() = Observable
       .mergeArray(
@@ -164,7 +167,11 @@ class TextInputDatePickerSheet : BaseBottomSheet<
   }
 
   @Parcelize
-  data class Key(val minDate: LocalDate, val maxDate: LocalDate, val prefilledDate: LocalDate?) : ScreenKey() {
+  data class Key(
+      val minDate: LocalDate,
+      val maxDate: LocalDate,
+      val prefilledDate: LocalDate?
+  ) : ScreenKey() {
 
     override val analyticsName = "Text Input Date Picker"
 

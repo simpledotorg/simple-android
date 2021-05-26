@@ -18,7 +18,11 @@ data class SelectableCountryItem(
 ) : ItemAdapter.Item<Event> {
 
   companion object {
-    fun from(countries: List<Country>, chosenCountry: Country?, countryDisplayNameFetcher: CountryDisplayNameFetcher): List<SelectableCountryItem> {
+    fun from(
+        countries: List<Country>,
+        chosenCountry: Country?,
+        countryDisplayNameFetcher: CountryDisplayNameFetcher
+    ): List<SelectableCountryItem> {
       return countries
           .mapIndexed { index, country ->
             val isLastCountryInList = index == countries.lastIndex

@@ -20,7 +20,10 @@ class SetupActivityUpdate(
 
   constructor(config: SetupActivityConfig) : this(databaseMaintenanceInterval = config.databaseMaintenanceTaskInterval)
 
-  override fun update(model: SetupActivityModel, event: SetupActivityEvent): Next<SetupActivityModel, SetupActivityEffect> {
+  override fun update(
+      model: SetupActivityModel,
+      event: SetupActivityEvent
+  ): Next<SetupActivityModel, SetupActivityEffect> {
     return when (event) {
       is UserDetailsFetched -> {
         val updatedModel = model

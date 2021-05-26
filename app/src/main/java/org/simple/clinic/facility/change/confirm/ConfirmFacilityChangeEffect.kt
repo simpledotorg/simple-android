@@ -8,6 +8,6 @@ data class ChangeFacilityEffect(val selectedFacility: Facility) : ConfirmFacilit
 
 object CloseSheet : ConfirmFacilityChangeEffect()
 
-object LoadCurrentFacility: ConfirmFacilityChangeEffect()
+object LoadCurrentFacility : ConfirmFacilityChangeEffect()
 
-object TouchFacilitySyncGroupSwitchedAtTime: ConfirmFacilityChangeEffect()
+object TouchFacilitySyncGroupSwitchedAtTime : ConfirmFacilityChangeEffect()

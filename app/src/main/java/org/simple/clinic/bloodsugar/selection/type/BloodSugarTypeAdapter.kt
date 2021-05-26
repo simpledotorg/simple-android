@@ -1,12 +1,10 @@
 package org.simple.clinic.bloodsugar.selection.type
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.extensions.LayoutContainer
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.databinding.ListBloodSugarTypeBinding
 import org.simple.clinic.widgets.visibleOrGone
@@ -50,11 +48,17 @@ class BloodSugarTypeViewHolder(
 data class BloodSugarTypeListItem(val name: String, val measurementType: BloodSugarMeasurementType)
 
 class BloodSugarTypeDiffer : DiffUtil.ItemCallback<BloodSugarTypeListItem>() {
-  override fun areItemsTheSame(oldItem: BloodSugarTypeListItem, newItem: BloodSugarTypeListItem): Boolean {
+  override fun areItemsTheSame(
+      oldItem: BloodSugarTypeListItem,
+      newItem: BloodSugarTypeListItem
+  ): Boolean {
     return oldItem.measurementType == newItem.measurementType
   }
 
-  override fun areContentsTheSame(oldItem: BloodSugarTypeListItem, newItem: BloodSugarTypeListItem): Boolean {
+  override fun areContentsTheSame(
+      oldItem: BloodSugarTypeListItem,
+      newItem: BloodSugarTypeListItem
+  ): Boolean {
     return oldItem == newItem
   }
 }

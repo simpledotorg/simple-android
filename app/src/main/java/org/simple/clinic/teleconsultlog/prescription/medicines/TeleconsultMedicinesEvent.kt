@@ -22,10 +22,16 @@ data class DrugFrequencyClicked(val prescription: PrescribedDrug) : TeleconsultM
   override val analyticsName: String = "Teleconsult Medicines:Drug Frequency Clicked"
 }
 
-data class DrugDurationChanged(val prescriptionUuid: UUID, val duration: Duration) : TeleconsultMedicinesEvent() {
+data class DrugDurationChanged(
+    val prescriptionUuid: UUID,
+    val duration: Duration
+) : TeleconsultMedicinesEvent() {
   override val analyticsName: String = "Teleconsult Medicines:Drug Duration Changed"
 }
 
-data class DrugFrequencyChanged(val prescriptionUuid: UUID, val frequency: MedicineFrequency) : TeleconsultMedicinesEvent() {
+data class DrugFrequencyChanged(
+    val prescriptionUuid: UUID,
+    val frequency: MedicineFrequency
+) : TeleconsultMedicinesEvent() {
   override val analyticsName: String = "Teleconsult Medicines:Drug Frequency Changed"
 }

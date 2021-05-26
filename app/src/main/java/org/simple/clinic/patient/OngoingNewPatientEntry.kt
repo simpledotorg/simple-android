@@ -202,7 +202,7 @@ data class OngoingNewPatientEntry(
     return when (dobValidator.validate(dateOfBirth)) {
       InvalidPattern -> listOf(InvalidDateOfBirth)
       DateIsInFuture -> listOf(DateOfBirthInFuture)
-      is Valid -> validateDob(ageValidator,dateOfBirth)
+      is Valid -> validateDob(ageValidator, dateOfBirth)
     }
   }
 

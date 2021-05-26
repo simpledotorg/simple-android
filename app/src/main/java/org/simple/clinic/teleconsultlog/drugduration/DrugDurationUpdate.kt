@@ -10,7 +10,10 @@ class DrugDurationUpdate @Inject constructor(
     private val validator: DrugDurationValidator
 ) : Update<DrugDurationModel, DrugDurationEvent, DrugDurationEffect> {
 
-  override fun update(model: DrugDurationModel, event: DrugDurationEvent): Next<DrugDurationModel, DrugDurationEffect> {
+  override fun update(
+      model: DrugDurationModel,
+      event: DrugDurationEvent
+  ): Next<DrugDurationModel, DrugDurationEffect> {
     return when (event) {
       is DurationChanged -> next(
           model.durationChanged(event.duration)

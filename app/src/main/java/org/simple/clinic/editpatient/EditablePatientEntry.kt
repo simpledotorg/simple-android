@@ -244,7 +244,10 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     }
   }
 
-  private fun ageValidate(ageValidator: UserInputAgeValidator, age: String): EditPatientValidationError? {
+  private fun ageValidate(
+      ageValidator: UserInputAgeValidator,
+      age: String
+  ): EditPatientValidationError? {
     return when (ageValidator.validate(age.toInt())) {
       ExceedsMaxAgeLimit -> AgeExceedsMaxLimit
       ExceedsMinAgeLimit -> AgeExceedsMinLimit

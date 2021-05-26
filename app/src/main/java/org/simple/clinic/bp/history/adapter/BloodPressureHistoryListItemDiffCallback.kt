@@ -7,7 +7,10 @@ import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem.NewBpBu
 
 class BloodPressureHistoryListItemDiffCallback : DiffUtil.ItemCallback<BloodPressureHistoryListItem>() {
 
-  override fun areItemsTheSame(oldItem: BloodPressureHistoryListItem, newItem: BloodPressureHistoryListItem): Boolean {
+  override fun areItemsTheSame(
+      oldItem: BloodPressureHistoryListItem,
+      newItem: BloodPressureHistoryListItem
+  ): Boolean {
     return when {
       oldItem is NewBpButton && newItem is NewBpButton -> true
       oldItem is BloodPressureHistoryItem && newItem is BloodPressureHistoryItem -> oldItem.measurement.uuid == newItem.measurement.uuid
@@ -16,7 +19,10 @@ class BloodPressureHistoryListItemDiffCallback : DiffUtil.ItemCallback<BloodPres
   }
 
   @SuppressLint("DiffUtilEquals")
-  override fun areContentsTheSame(oldItem: BloodPressureHistoryListItem, newItem: BloodPressureHistoryListItem): Boolean {
+  override fun areContentsTheSame(
+      oldItem: BloodPressureHistoryListItem,
+      newItem: BloodPressureHistoryListItem
+  ): Boolean {
     return oldItem == newItem
   }
 }

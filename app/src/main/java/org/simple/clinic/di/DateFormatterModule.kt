@@ -47,7 +47,10 @@ class DateFormatterModule {
 
   @Provides
   @Named("time_for_bps_recorded")
-  fun providesTimeFormatterForBPRecorded(locale: Locale, chronology: Chronology): DateTimeFormatter {
+  fun providesTimeFormatterForBPRecorded(
+      locale: Locale,
+      chronology: Chronology
+  ): DateTimeFormatter {
     return DateTimeFormatter.ofPattern("h:mm a", locale)
         .withChronology(chronology)
   }
@@ -65,7 +68,10 @@ class DateFormatterModule {
 
   @Provides
   @Named("time_for_measurement_history")
-  fun providesTimeFormatterForMeasurementHistory(locale: Locale, chronology: Chronology): DateTimeFormatter {
+  fun providesTimeFormatterForMeasurementHistory(
+      locale: Locale,
+      chronology: Chronology
+  ): DateTimeFormatter {
     return DateTimeFormatter.ofPattern("h:mm a", locale)
         .withChronology(chronology)
   }

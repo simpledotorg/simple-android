@@ -27,8 +27,8 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.NestedScrollView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import java.time.Duration
 import timber.log.Timber
+import java.time.Duration
 
 fun EditText.showKeyboard() {
   postDelayed({
@@ -108,7 +108,10 @@ fun TextView.setCompoundDrawableStart(drawable: Drawable?) {
       compoundDrawablesRelative[3])
 }
 
-fun TextView.setCompoundDrawableStartWithTint(@DrawableRes drawableRes: Int, @ColorRes tintColorRes: Int) {
+fun TextView.setCompoundDrawableStartWithTint(
+    @DrawableRes drawableRes: Int,
+    @ColorRes tintColorRes: Int
+) {
   val drawable = ResourcesCompat.getDrawable(resources, drawableRes, context.theme)!!
       .let { source ->
         val drawable = source.mutate()

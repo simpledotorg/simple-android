@@ -13,17 +13,30 @@ object LoadCurrentFacility : InstantSearchEffect()
 
 data class LoadAllPatients(val facility: Facility) : InstantSearchEffect()
 
-data class SearchWithCriteria(val criteria: PatientSearchCriteria, val facility: Facility) : InstantSearchEffect()
+data class SearchWithCriteria(
+    val criteria: PatientSearchCriteria,
+    val facility: Facility
+) : InstantSearchEffect()
 
-data class ShowAllPatients(val patients: List<PatientSearchResult>, val facility: Facility) : InstantSearchEffect()
+data class ShowAllPatients(
+    val patients: List<PatientSearchResult>,
+    val facility: Facility
+) : InstantSearchEffect()
 
-data class ShowPatientSearchResults(val patients: List<PatientSearchResult>, val facility: Facility, val searchQuery: String) : InstantSearchEffect()
+data class ShowPatientSearchResults(
+    val patients: List<PatientSearchResult>,
+    val facility: Facility,
+    val searchQuery: String
+) : InstantSearchEffect()
 
 data class ValidateSearchQuery(val searchQuery: String) : InstantSearchEffect()
 
 data class OpenPatientSummary(val patientId: UUID) : InstantSearchEffect()
 
-data class OpenLinkIdWithPatientScreen(val patientId: UUID, val identifier: Identifier) : InstantSearchEffect()
+data class OpenLinkIdWithPatientScreen(
+    val patientId: UUID,
+    val identifier: Identifier
+) : InstantSearchEffect()
 
 data class OpenScannedQrCodeSheet(val identifier: Identifier) : InstantSearchEffect()
 

@@ -242,7 +242,10 @@ class BloodSugarSummaryView(
     router.push(BloodSugarHistoryScreenKey(patientUuid).wrap())
   }
 
-  override fun openBloodSugarUpdateSheet(bloodSugarMeasurementUuid: UUID, measurementType: BloodSugarMeasurementType) {
+  override fun openBloodSugarUpdateSheet(
+      bloodSugarMeasurementUuid: UUID,
+      measurementType: BloodSugarMeasurementType
+  ) {
     val intent = BloodSugarEntrySheet.intentForUpdateBloodSugar(context, bloodSugarMeasurementUuid, measurementType)
     context.startActivity(intent)
   }

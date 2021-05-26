@@ -5,10 +5,10 @@ import io.reactivex.Completable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import org.simple.clinic.appconfig.AppConfigRepository
-import org.simple.clinic.appconfig.FetchError
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.appconfig.ManifestFetchResult
+import org.simple.clinic.appconfig.FetchError
 import org.simple.clinic.appconfig.FetchSucceeded
+import org.simple.clinic.appconfig.ManifestFetchResult
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class SelectCountryEffectHandler(

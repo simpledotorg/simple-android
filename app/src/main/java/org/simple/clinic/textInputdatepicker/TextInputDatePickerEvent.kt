@@ -11,12 +11,12 @@ object DismissSheetClicked : TextInputDatePickerEvent() {
 
 data class DayChanged(val day: String) : TextInputDatePickerEvent()
 
-data class MonthChanged(val month: String): TextInputDatePickerEvent()
+data class MonthChanged(val month: String) : TextInputDatePickerEvent()
 
-data class YearChanged(val year: String): TextInputDatePickerEvent()
+data class YearChanged(val year: String) : TextInputDatePickerEvent()
 
 object DoneClicked : TextInputDatePickerEvent() {
   override val analyticsName: String = "Text Input Date Picker:Done Clicked"
 }
 
-data class DatePrefilled(val prefilledDate: LocalDate): TextInputDatePickerEvent()
+data class DatePrefilled(val prefilledDate: LocalDate) : TextInputDatePickerEvent()

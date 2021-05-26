@@ -4,10 +4,10 @@ import org.simple.clinic.mobius.ViewRenderer
 
 class SearchResultsUiRenderer(
     private val ui: SearchResultsUi
-): ViewRenderer<SearchResultsModel> {
+) : ViewRenderer<SearchResultsModel> {
 
   override fun render(model: SearchResultsModel) {
-    if(model.hasLoadedSearchResults) {
+    if (model.hasLoadedSearchResults) {
       ui.updateSearchResults(model.patientSearchResults!!)
     }
   }

@@ -14,14 +14,18 @@ object SyncFacilities : RegistrationPhoneEffect()
 
 data class SearchForExistingUser(val number: String) : RegistrationPhoneEffect()
 
-data class ShowAccessDeniedScreen(val number: String): RegistrationPhoneEffect()
+data class ShowAccessDeniedScreen(val number: String) : RegistrationPhoneEffect()
 
-data class CreateUserLocally(val userUuid: UUID, val number: String, val status: UserStatus): RegistrationPhoneEffect()
+data class CreateUserLocally(
+    val userUuid: UUID,
+    val number: String,
+    val status: UserStatus
+) : RegistrationPhoneEffect()
 
-object ProceedToLogin: RegistrationPhoneEffect()
+object ProceedToLogin : RegistrationPhoneEffect()
 
-object LoadCurrentUserUnauthorizedStatus: RegistrationPhoneEffect()
+object LoadCurrentUserUnauthorizedStatus : RegistrationPhoneEffect()
 
-object ShowUserLoggedOutAlert: RegistrationPhoneEffect()
+object ShowUserLoggedOutAlert : RegistrationPhoneEffect()
 
-data class ContinueRegistration(val entry: OngoingRegistrationEntry): RegistrationPhoneEffect()
+data class ContinueRegistration(val entry: OngoingRegistrationEntry) : RegistrationPhoneEffect()

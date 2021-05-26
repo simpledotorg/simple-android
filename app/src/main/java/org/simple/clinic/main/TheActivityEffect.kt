@@ -16,8 +16,8 @@ object ListenForUserUnauthorizations : TheActivityEffect()
 
 object RedirectToLoginScreen : TheActivityEffect()
 
-object ListenForUserDisapprovals: TheActivityEffect()
+object ListenForUserDisapprovals : TheActivityEffect()
 
-object ClearPatientData: TheActivityEffect()
+object ClearPatientData : TheActivityEffect()
 
-object ShowAccessDeniedScreen: TheActivityEffect()
+object ShowAccessDeniedScreen : TheActivityEffect()

@@ -13,7 +13,10 @@ import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 
 @SuppressLint("ClickableViewAccessibility")
-class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
+class MedicalHistoryQuestionView(
+    context: Context,
+    attrs: AttributeSet
+) : FrameLayout(context, attrs) {
 
   private var binding: ListMedicalHistoryQuestionBinding? = null
 

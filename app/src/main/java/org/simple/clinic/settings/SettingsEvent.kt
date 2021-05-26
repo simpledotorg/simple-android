@@ -1,6 +1,5 @@
 package org.simple.clinic.settings
 
-import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.widgets.UiEvent
 
 sealed class SettingsEvent : UiEvent

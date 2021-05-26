@@ -5,7 +5,7 @@ import org.junit.Test
 import org.simple.clinic.assertValues
 import java.util.UUID
 
-class Migration78AndroidTest: BaseDatabaseMigrationTest(77, 78) {
+class Migration78AndroidTest : BaseDatabaseMigrationTest(77, 78) {
 
   @Test
   fun migrating_should_retain_the_saved_user() {

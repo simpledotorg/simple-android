@@ -9,6 +9,9 @@ object CloseSheetWithOutIdLinked : LinkIdWithPatientEffect()
 
 object CloseSheetWithLinkedId : LinkIdWithPatientEffect()
 
-data class AddIdentifierToPatient(val patientUuid: UUID, val identifier: Identifier) : LinkIdWithPatientEffect()
+data class AddIdentifierToPatient(
+    val patientUuid: UUID,
+    val identifier: Identifier
+) : LinkIdWithPatientEffect()
 
 data class GetPatientNameFromId(val patientUuid: UUID) : LinkIdWithPatientEffect()

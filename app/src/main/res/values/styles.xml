@@ -228,7 +228,8 @@
   </style>
 
   <style name="Widget.Simple.TextField.Layout.Large.MeasurementInput">
-    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField.Large.MeasurementInput</item>
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField.Large.MeasurementInput
+    </item>
   </style>
 
   <style name="Widget.Simple.TextField.Large.MeasurementInput.Date">
@@ -237,7 +238,9 @@
   </style>
 
   <style name="Widget.Simple.TextField.Layout.Large.MeasurementInput.Date">
-    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.TextField.Large.MeasurementInput.Date</item>
+    <item name="materialThemeOverlay">
+      @style/ThemeOverlay.Simple.TextField.Large.MeasurementInput.Date
+    </item>
   </style>
 
   <style name="Widget.Simple.MeasurementInputSeparator" parent="android:Widget">
@@ -256,7 +259,8 @@
     <item name="android:textColor">?attr/colorOnPrimary</item>
     <item name="android:minHeight">@dimen/spacing_32</item>
     <item name="cornerRadius">@null</item>
-    <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Simple.UnitPreferenceButton</item>
+    <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Simple.UnitPreferenceButton
+    </item>
   </style>
 
   <style name="Widget.Simple.Button.Toolbar" parent="Widget.MaterialComponents.Button.UnelevatedButton">

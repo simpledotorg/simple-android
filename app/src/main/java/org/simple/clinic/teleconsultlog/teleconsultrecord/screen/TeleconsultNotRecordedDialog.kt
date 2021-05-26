@@ -3,9 +3,9 @@ package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey

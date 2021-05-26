@@ -86,7 +86,10 @@ class BloodSugarItemView(
   }
 
   @SuppressLint("SetTextI18n")
-  private fun renderBloodSugarReading(reading: BloodSugarReading, bloodSugarUnitPreference: BloodSugarUnitPreference) {
+  private fun renderBloodSugarReading(
+      reading: BloodSugarReading,
+      bloodSugarUnitPreference: BloodSugarUnitPreference
+  ) {
     val displayUnit = context.getString(reading.displayUnit(bloodSugarUnitPreference))
     val displayType = context.getString(reading.displayType)
     val readingPrefix = reading.displayValue(bloodSugarUnitPreference)

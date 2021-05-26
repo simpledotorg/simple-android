@@ -32,7 +32,10 @@ class LocationRepository @Inject constructor(private val appContext: Application
    * on the main thread. This param makes it explicit for the caller to think about this.
    */
   @RequiresPermission(LOCATION_PERMISSION)
-  fun streamUserLocation(updateInterval: Duration, updateScheduler: Scheduler): Observable<LocationUpdate> {
+  fun streamUserLocation(
+      updateInterval: Duration,
+      updateScheduler: Scheduler
+  ): Observable<LocationUpdate> {
     val locationProvider = LocationServices.getFusedLocationProviderClient(appContext)
     val request = locationRequest(updateInterval)
 
@@ -53,7 +56,10 @@ class LocationRepository @Inject constructor(private val appContext: Application
     }
   }
 
-  private fun locationUpdates(provider: LocationProvider, request: LocationRequest): Observable<Available> {
+  private fun locationUpdates(
+      provider: LocationProvider,
+      request: LocationRequest
+  ): Observable<Available> {
     val locationChanges = Observable.create<LocationResult> { emitter ->
       val locationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
@@ -91,7 +97,10 @@ class LocationRepository @Inject constructor(private val appContext: Application
     }
   }
 
-  private fun locationStatusChanges(provider: LocationProvider, request: LocationRequest): Observable<LocationStatus> {
+  private fun locationStatusChanges(
+      provider: LocationProvider,
+      request: LocationRequest
+  ): Observable<LocationStatus> {
     return Observable.create { emitter ->
       val locationCallback = object : LocationCallback() {
         override fun onLocationAvailability(availability: LocationAvailability) {

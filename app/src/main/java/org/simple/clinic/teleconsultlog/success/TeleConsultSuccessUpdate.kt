@@ -8,7 +8,10 @@ import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessEffect.GoToHom
 import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessEffect.GoToPrescriptionScreen
 
 class TeleConsultSuccessUpdate : Update<TeleConsultSuccessModel, TeleConsultSuccessEvent, TeleConsultSuccessEffect> {
-  override fun update(model: TeleConsultSuccessModel, event: TeleConsultSuccessEvent): Next<TeleConsultSuccessModel, TeleConsultSuccessEffect> {
+  override fun update(
+      model: TeleConsultSuccessModel,
+      event: TeleConsultSuccessEvent
+  ): Next<TeleConsultSuccessModel, TeleConsultSuccessEffect> {
     return when (event) {
       is PatientDetailsLoaded -> next(model.patientDetailLoaded(event.patient))
       is NoPrescriptionClicked -> dispatch(GoToHomeScreen)

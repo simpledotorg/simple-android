@@ -55,7 +55,12 @@ sealed class FacilityListItem : ItemAdapter.Item<FacilityListItem.FacilityItemCl
   ) : FacilityListItem() {
 
     sealed class Name(open val text: String) {
-      data class Highlighted(override val text: String, val highlightStart: Int, val highlightEnd: Int) : Name(text)
+      data class Highlighted(
+          override val text: String,
+          val highlightStart: Int,
+          val highlightEnd: Int
+      ) : Name(text)
+
       data class Plain(override val text: String) : Name(text)
     }
 

@@ -11,4 +11,4 @@ object RegisterErrorRetryClicked : RegistrationLoadingEvent() {
   override val analyticsName: String = "Registration:Loading:Retry Clicked"
 }
 
-data class ConvertedRegistrationEntryToUserDetails(val user: User): RegistrationLoadingEvent()
+data class ConvertedRegistrationEntryToUserDetails(val user: User) : RegistrationLoadingEvent()

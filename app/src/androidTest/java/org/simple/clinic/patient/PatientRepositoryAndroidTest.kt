@@ -2651,7 +2651,10 @@ class PatientRepositoryAndroidTest {
           .blockingFirst()
     }
 
-    data class PatientUuidAndLatestMeasurementRecorded(val patientUuid: UUID, val lastSeen: LastSeen) {
+    data class PatientUuidAndLatestMeasurementRecorded(
+        val patientUuid: UUID,
+        val lastSeen: LastSeen
+    ) {
       constructor(patientSearchResult: PatientSearchResult) : this(patientSearchResult.uuid, patientSearchResult.lastSeen!!)
     }
 

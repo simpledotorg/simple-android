@@ -2,10 +2,10 @@ package org.simple.clinic.widgets
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import androidx.annotation.ColorInt
-import androidx.core.graphics.drawable.DrawableCompat
-import androidx.appcompat.widget.AppCompatTextView
 import android.util.AttributeSet
+import androidx.annotation.ColorInt
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.graphics.drawable.DrawableCompat
 
 /**
  * A Button which tints its compound drawable with the same color as its text.
@@ -16,7 +16,11 @@ class TintableCompoundDrawableTextView : AppCompatTextView {
     init()
   }
 
-  constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+  constructor(
+      context: Context,
+      attrs: AttributeSet,
+      defStyleAttr: Int
+  ) : super(context, attrs, defStyleAttr) {
     init()
   }
 
@@ -24,7 +28,12 @@ class TintableCompoundDrawableTextView : AppCompatTextView {
     applyColorTintToCompoundDrawables(currentTextColor)
   }
 
-  override fun setCompoundDrawablesRelativeWithIntrinsicBounds(start: Drawable?, top: Drawable?, end: Drawable?, bottom: Drawable?) {
+  override fun setCompoundDrawablesRelativeWithIntrinsicBounds(
+      start: Drawable?,
+      top: Drawable?,
+      end: Drawable?,
+      bottom: Drawable?
+  ) {
     super.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom)
     applyColorTintToCompoundDrawables(currentTextColor)
   }

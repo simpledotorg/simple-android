@@ -13,7 +13,6 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import java.time.Duration
 
 class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
     private val bloodPressureRepository: BloodPressureRepository,

@@ -117,7 +117,11 @@ class ShortCodeSearchResultScreen :
     context.injector<Injector>().inject(this)
   }
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View? {
     return super.onCreateView(inflater, container, savedInstanceState).also {
       patientSearchViewBinding = PatientSearchViewBinding.bind(binding.root)
     }

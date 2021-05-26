@@ -31,7 +31,11 @@ class TimeFunctionsTest {
 
   @Test
   @Parameters(method = "params for testing conversion of local date to instant")
-  fun `different clocks should provide correct instant`(userClock: UserClock, localDate: LocalDate, expectedInstant: Instant) {
+  fun `different clocks should provide correct instant`(
+      userClock: UserClock,
+      localDate: LocalDate,
+      expectedInstant: Instant
+  ) {
     assertThat(localDate.toUtcInstant(userClock)).isEqualTo(expectedInstant)
   }
 

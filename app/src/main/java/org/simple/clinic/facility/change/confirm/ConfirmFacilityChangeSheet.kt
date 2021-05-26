@@ -54,7 +54,10 @@ class ConfirmFacilityChangeSheet :
     return ConfirmFacilityChangeModel.create()
   }
 
-  override fun bindView(inflater: LayoutInflater, container: ViewGroup?): SheetConfirmFacilityChangeBinding {
+  override fun bindView(
+      inflater: LayoutInflater,
+      container: ViewGroup?
+  ): SheetConfirmFacilityChangeBinding {
     return SheetConfirmFacilityChangeBinding.inflate(inflater, container, false)
   }
 

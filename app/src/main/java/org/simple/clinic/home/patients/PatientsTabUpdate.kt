@@ -10,7 +10,10 @@ import java.time.Duration
 
 class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTabEffect> {
 
-  override fun update(model: PatientsTabModel, event: PatientsTabEvent): Next<PatientsTabModel, PatientsTabEffect> {
+  override fun update(
+      model: PatientsTabModel,
+      event: PatientsTabEvent
+  ): Next<PatientsTabModel, PatientsTabEffect> {
     return when (event) {
       is PatientsEnterCodeManuallyClicked -> dispatch(OpenEnterOtpScreen)
       NewPatientClicked -> dispatch(OpenPatientSearchScreen(null))

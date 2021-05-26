@@ -140,7 +140,10 @@ data class PatientSearchResult(
       ) PatientsAtFacility ON searchResults.uuid = PatientsAtFacility.uuid
       ORDER BY searchResults.fullName COLLATE NOCASE ASC
     """)
-    fun searchInFacilityAndSortByName_Old(facilityUuid: UUID, status: PatientStatus): Flowable<List<PatientSearchResult>>
+    fun searchInFacilityAndSortByName_Old(
+        facilityUuid: UUID,
+        status: PatientStatus
+    ): Flowable<List<PatientSearchResult>>
 
     @Query("""
         SELECT * FROM (
@@ -151,7 +154,10 @@ data class PatientSearchResult(
             )
         ORDER BY priority DESC, fullName COLLATE NOCASE
     """)
-    fun searchInFacilityAndSortByName(facilityUuid: UUID, status: PatientStatus): List<PatientSearchResult>
+    fun searchInFacilityAndSortByName(
+        facilityUuid: UUID,
+        status: PatientStatus
+    ): List<PatientSearchResult>
 
     @Suppress("AndroidUnresolvedRoomSqlReference")
     @Query("""
@@ -221,7 +227,10 @@ data class PatientSearchResult(
         GROUP BY P.uuid
         ORDER BY priority ASC, phoneNumberPosition ASC, identifierPosition ASC
         """)
-    fun searchByNumericCriteria2(numericCriteria: String, facilityId: UUID): List<PatientSearchResult>
+    fun searchByNumericCriteria2(
+        numericCriteria: String,
+        facilityId: UUID
+    ): List<PatientSearchResult>
   }
 
   data class PatientNameAndId(val uuid: UUID, val fullName: String)

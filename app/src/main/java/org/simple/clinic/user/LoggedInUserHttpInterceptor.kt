@@ -23,7 +23,11 @@ class LoggedInUserHttpInterceptor @Inject constructor(
     }
   }
 
-  private fun addHeaders(originalRequest: Request, accessToken: String, userFacilityDetails: UserFacilityDetails): Request {
+  private fun addHeaders(
+      originalRequest: Request,
+      accessToken: String,
+      userFacilityDetails: UserFacilityDetails
+  ): Request {
     return originalRequest.newBuilder()
         .addHeader("Authorization", "Bearer $accessToken")
         .addHeader("X-USER-ID", userFacilityDetails.userId.toString())

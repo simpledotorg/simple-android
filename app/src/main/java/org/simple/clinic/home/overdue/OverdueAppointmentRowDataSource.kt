@@ -34,7 +34,10 @@ class OverdueAppointmentRowDataSource(
     appDatabase.invalidationTracker.addObserver(invalidationObserver)
   }
 
-  override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<OverdueAppointmentRow>) {
+  override fun loadRange(
+      params: LoadRangeParams,
+      callback: LoadRangeCallback<OverdueAppointmentRow>
+  ) {
     source.loadRange(params, object : LoadRangeCallback<OverdueAppointment>() {
       override fun onResult(data: MutableList<OverdueAppointment>) {
         val listItems = OverdueAppointmentRow.from(
@@ -49,7 +52,10 @@ class OverdueAppointmentRowDataSource(
     })
   }
 
-  override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<OverdueAppointmentRow>) {
+  override fun loadInitial(
+      params: LoadInitialParams,
+      callback: LoadInitialCallback<OverdueAppointmentRow>
+  ) {
     source.loadInitial(params, object : LoadInitialCallback<OverdueAppointment>() {
       override fun onResult(data: MutableList<OverdueAppointment>, position: Int, totalCount: Int) {
         val listItems = OverdueAppointmentRow.from(

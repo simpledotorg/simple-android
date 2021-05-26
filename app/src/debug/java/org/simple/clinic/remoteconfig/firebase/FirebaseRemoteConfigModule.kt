@@ -5,9 +5,8 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.di.AppScope
-import java.time.Duration
 import timber.log.Timber
-import javax.inject.Named
+import java.time.Duration
 
 @Module
 class FirebaseRemoteConfigModule {

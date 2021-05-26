@@ -33,7 +33,10 @@ class WeightedLevenshteinSearch(
       }
   )
 
-  override fun search(searchTerm: String, names: List<PatientSearchResult.PatientNameAndId>): List<UUID> {
+  override fun search(
+      searchTerm: String,
+      names: List<PatientSearchResult.PatientNameAndId>
+  ): List<UUID> {
     val searchTermParts = stringToSearchableParts(searchTerm)
         .filter { it.length >= minimumSearchTermLength }
 

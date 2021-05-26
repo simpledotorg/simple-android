@@ -7,7 +7,10 @@ import org.simple.clinic.user.User
 
 class DeepLinkUpdate : Update<DeepLinkModel, DeepLinkEvent, DeepLinkEffect> {
 
-  override fun update(model: DeepLinkModel, event: DeepLinkEvent): Next<DeepLinkModel, DeepLinkEffect> {
+  override fun update(
+      model: DeepLinkModel,
+      event: DeepLinkEvent
+  ): Next<DeepLinkModel, DeepLinkEffect> {
     return when (event) {
       is UserFetched -> userFetched(model, event)
       is PatientFetched -> patientFetched(event, model)
@@ -25,7 +28,10 @@ class DeepLinkUpdate : Update<DeepLinkModel, DeepLinkEvent, DeepLinkEffect> {
     }
   }
 
-  private fun showLogTeleconsultScreen(model: DeepLinkModel, event: UserFetched): Next<DeepLinkModel, DeepLinkEffect> {
+  private fun showLogTeleconsultScreen(
+      model: DeepLinkModel,
+      event: UserFetched
+  ): Next<DeepLinkModel, DeepLinkEffect> {
     val effect = if (event.user?.capabilities?.canTeleconsult == User.CapabilityStatus.Yes) {
       fetchPatientDetails(model)
     } else {

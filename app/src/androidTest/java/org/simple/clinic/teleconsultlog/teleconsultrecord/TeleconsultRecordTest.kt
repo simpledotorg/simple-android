@@ -94,7 +94,7 @@ class TeleconsultRecordTest {
     )
 
     // when
-    val teleconsultRecordReceived =  teleconsultRecordDao.getAll()
+    val teleconsultRecordReceived = teleconsultRecordDao.getAll()
 
     // then
     assertThat(teleconsultRecordReceived).isEqualTo(expectedTeleconsultRecordList)

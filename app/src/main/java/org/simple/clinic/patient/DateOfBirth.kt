@@ -2,8 +2,8 @@ package org.simple.clinic.patient
 
 import androidx.room.Embedded
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.patient.DateOfBirth.Type.EXACT
+import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.simple.clinic.widgets.PatientSearchResultItemView_Old
@@ -46,15 +46,24 @@ data class DateOfBirth(
       return fromAgeOrDate(patient.age, patient.dateOfBirth, userClock)
     }
 
-    fun fromOverdueAppointment(overdueAppointment: OverdueAppointment, userClock: UserClock): DateOfBirth {
+    fun fromOverdueAppointment(
+        overdueAppointment: OverdueAppointment,
+        userClock: UserClock
+    ): DateOfBirth {
       return fromAgeOrDate(overdueAppointment.age, overdueAppointment.dateOfBirth, userClock)
     }
 
-    fun fromPatientSearchResultViewModel_Old(viewModel: PatientSearchResultItemView_Old.PatientSearchResultViewModel, userClock: UserClock): DateOfBirth {
+    fun fromPatientSearchResultViewModel_Old(
+        viewModel: PatientSearchResultItemView_Old.PatientSearchResultViewModel,
+        userClock: UserClock
+    ): DateOfBirth {
       return fromAgeOrDate(viewModel.age, viewModel.dateOfBirth, userClock)
     }
 
-    fun fromPatientSearchResultViewModel(viewModel: PatientSearchResultItemView.PatientSearchResultViewModel, userClock: UserClock): DateOfBirth {
+    fun fromPatientSearchResultViewModel(
+        viewModel: PatientSearchResultItemView.PatientSearchResultViewModel,
+        userClock: UserClock
+    ): DateOfBirth {
       return fromAgeOrDate(viewModel.age, viewModel.dateOfBirth, userClock)
     }
 

@@ -16,7 +16,10 @@ import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 sealed class DosageListItem : ItemAdapter.Item<DosageListItem.Event> {
 
   companion object {
-    fun from(protocolDrugs: List<ProtocolDrug>, hasExistingPrescription: Boolean): List<DosageListItem> {
+    fun from(
+        protocolDrugs: List<ProtocolDrug>,
+        hasExistingPrescription: Boolean
+    ): List<DosageListItem> {
       return protocolDrugs
           .map(::WithDosage)
           .plus(WithoutDosage(hasExistingPrescription))
@@ -63,7 +66,11 @@ sealed class DosageListItem : ItemAdapter.Item<DosageListItem.Event> {
       holder.itemView.setOnClickListener { subject.onNext(Event.NoneClicked) }
     }
 
-    private fun setDosageTextAndColor(binding: PrescribedDrugWithDosageListItemBinding, text: String, @ColorInt color: Int) {
+    private fun setDosageTextAndColor(
+        binding: PrescribedDrugWithDosageListItemBinding,
+        text: String,
+        @ColorInt color: Int
+    ) {
       binding.dosageTextView.setTextColor(color)
       binding.dosageTextView.text = text
     }

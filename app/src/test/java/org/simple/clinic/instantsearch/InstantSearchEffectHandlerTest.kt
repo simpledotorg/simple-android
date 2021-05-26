@@ -375,7 +375,7 @@ class InstantSearchEffectHandlerTest {
   }
 
   @Test
-  fun `when show NHID error dialog effect is received, show NHID error dialog`(){
+  fun `when show NHID error dialog effect is received, show NHID error dialog`() {
     // when
     testCase.dispatch(ShowNHIDErrorDialog)
 

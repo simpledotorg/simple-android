@@ -17,7 +17,10 @@ private val SHOW_APP_LOCK_FOR_USER_STATES = setOf(
 
 class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivityEffect> {
 
-  override fun update(model: TheActivityModel, event: TheActivityEvent): Next<TheActivityModel, TheActivityEffect> {
+  override fun update(
+      model: TheActivityModel,
+      event: TheActivityEvent
+  ): Next<TheActivityModel, TheActivityEffect> {
     return when (event) {
       is AppLockInfoLoaded -> handleScreenLock(event)
       UserWasJustVerified -> dispatch(ShowUserLoggedOutOnOtherDeviceAlert)

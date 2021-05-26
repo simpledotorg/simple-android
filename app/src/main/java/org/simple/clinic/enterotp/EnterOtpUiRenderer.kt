@@ -22,9 +22,11 @@ class EnterOtpUiRenderer(
     }
 
     when (model.otpValidationResult) {
-      NotValidated -> { /* Nothing to do here */ }
+      NotValidated -> { /* Nothing to do here */
+      }
       IsNotRequiredLength -> ui.showIncorrectOtpError()
-      Valid -> { /* Nothing to do here */ }
+      Valid -> { /* Nothing to do here */
+      }
     }
 
     loginErrorChangedCallback.pass(model.asyncOpError) { loginError ->

@@ -6,7 +6,10 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class MedicineFrequencyUpdate : Update<MedicineFrequencyModel, MedicineFrequencyEvent, MedicineFrequencyEffect> {
-  override fun update(model: MedicineFrequencyModel, event: MedicineFrequencyEvent): Next<MedicineFrequencyModel, MedicineFrequencyEffect> {
+  override fun update(
+      model: MedicineFrequencyModel,
+      event: MedicineFrequencyEvent
+  ): Next<MedicineFrequencyModel, MedicineFrequencyEffect> {
     return when (event) {
       is SaveMedicineFrequencyClicked -> dispatch(SaveMedicineFrequency(model.medicineFrequency))
       is MedicineFrequencyChanged -> next(model.medicineFrequencyChanged(event.medicineFrequency))

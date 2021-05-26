@@ -4,7 +4,7 @@ import org.simple.clinic.mobius.ViewRenderer
 
 class TheActivityUiRenderer(
     private val ui: TheActivityUi
-): ViewRenderer<TheActivityModel> {
+) : ViewRenderer<TheActivityModel> {
 
   override fun render(model: TheActivityModel) {
     /* Nothing to do here. Yet. */

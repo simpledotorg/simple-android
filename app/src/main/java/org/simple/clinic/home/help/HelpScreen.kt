@@ -17,7 +17,10 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
-class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), HelpScreenUi, HelpScreenUiActions {
+class HelpScreen(
+    context: Context,
+    attrs: AttributeSet
+) : LinearLayout(context, attrs), HelpScreenUi, HelpScreenUiActions {
 
   @Inject
   lateinit var router: Router

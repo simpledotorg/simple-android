@@ -207,7 +207,7 @@ data class PatientSearchResult(
          SELECT DISTINCT * FROM 
         PatientSearchResult searchResult
         LEFT JOIN Patient P ON P.uuid = searchResult.uuid
-        WHERE id_identifier LIKE '%' || :numericCriteria || '%' OR phoneNumber LIKE '%' || :numericCriteria || '%'  AND P.deletedAt IS NULL
+        WHERE identifierSearchHelp LIKE '%' || :numericCriteria || '%' OR phoneNumber LIKE '%' || :numericCriteria || '%'  AND P.deletedAt IS NULL
         GROUP BY P.uuid
         ORDER BY id_identifier, phoneNumber COLLATE NOCASE ASC LIMIT :limit
         """)
@@ -223,7 +223,7 @@ data class PatientSearchResult(
                 END
             ) AS priority,
             INSTR(phoneNumber, :numericCriteria) phoneNumberPosition, 
-            INSTR(id_identifier, :numericCriteria) identifierPosition FROM PatientSearchResult searchResult
+            INSTR(identifierSearchHelp, :numericCriteria) identifierPosition FROM PatientSearchResult searchResult
         LEFT JOIN Patient P ON P.uuid = searchResult.uuid
         WHERE P.deletedAt IS NULL AND phoneNumberPosition > 0 OR identifierPosition > 0
         GROUP BY P.uuid

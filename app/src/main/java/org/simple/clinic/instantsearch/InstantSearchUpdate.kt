@@ -76,7 +76,7 @@ class InstantSearchUpdate @Inject constructor(
     var ongoingPatientEntry = when (val searchCriteria = searchCriteriaFromInput(model.searchQuery.orEmpty(), model.additionalIdentifier)) {
       is Name -> OngoingNewPatientEntry.fromFullName(searchCriteria.patientName)
       is PhoneNumber -> OngoingNewPatientEntry.fromPhoneNumber(searchCriteria.phoneNumber)
-      is NumericCriteria -> OngoingNewPatientEntry.fromPhoneNumber(searchCriteria.numericCriteria)
+      is NumericCriteria -> OngoingNewPatientEntry.default()
     }
 
     if (model.hasAdditionalIdentifier) {

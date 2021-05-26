@@ -237,16 +237,18 @@ object TestData {
       metaDataVersion: MetaDataVersion = BpPassportMetaDataV1,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      identifierSearchHelp: String = ""
   ) = BusinessId(
       uuid = uuid,
       patientUuid = patientUuid,
       identifier = identifier,
-      metaData = meta,
       metaDataVersion = metaDataVersion,
+      metaData = meta,
       createdAt = createdAt,
       updatedAt = updatedAt,
-      deletedAt = deletedAt
+      deletedAt = deletedAt,
+      searchHelp = identifierSearchHelp
   )
 
   fun patientPayload(
@@ -1017,7 +1019,8 @@ object TestData {
       identifier: Identifier = Identifier(
           value = UUID.randomUUID().toString(),
           type = BpPassport
-      )
+      ),
+      identifierSearchHelp: String? = null
   ): PatientSearchResult {
     return PatientSearchResult(
         uuid = uuid,
@@ -1038,7 +1041,8 @@ object TestData {
         phoneCreatedAt = phoneCreatedAt,
         phoneUpdatedAt = phoneUpdatedAt,
         lastSeen = lastSeen,
-        identifier = identifier
+        identifier = identifier,
+        identifierSearchHelp = identifierSearchHelp
     )
   }
 

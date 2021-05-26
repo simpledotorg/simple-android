@@ -54,6 +54,10 @@ data class OngoingNewPatientEntry(
 ) : Parcelable {
 
   companion object {
+    fun default(): OngoingNewPatientEntry {
+      return OngoingNewPatientEntry()
+    }
+
     fun fromFullName(fullName: String): OngoingNewPatientEntry {
       return OngoingNewPatientEntry(
           personalDetails = PersonalDetails(

@@ -14,6 +14,7 @@ import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
@@ -212,15 +213,22 @@ data class BusinessIdPayload(
 ) {
 
   fun toDatabaseModel(patientUuid: UUID): BusinessId {
+    val identifier = Identifier(value = identifier, type = identifierType)
+    val identifierSearchHelp = when (identifier.type) {
+      BpPassport -> BpPassport.shortCode(identifier)
+      else -> identifier.value
+    }
+
     return BusinessId(
         uuid = uuid,
         patientUuid = patientUuid,
-        identifier = Identifier(value = identifier, type = identifierType),
+        identifier = identifier,
         metaDataVersion = metaDataVersion,
         metaData = metaData,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+        searchHelp = identifierSearchHelp
     )
   }
 }

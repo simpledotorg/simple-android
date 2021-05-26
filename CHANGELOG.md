@@ -24,6 +24,7 @@
 - Don't auto request review if a reviewer is already assigned
 - Show error text when user scans invalid QR code
 - Redact sensitive information from logs
+- Implement Instant Search using BP Passport Number
 
 ### Features
 - Add NHID support in `ScanSimpleIdScreen`

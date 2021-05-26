@@ -4,4 +4,4 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class FacilitySelectionModel: Parcelable
+class FacilitySelectionModel : Parcelable

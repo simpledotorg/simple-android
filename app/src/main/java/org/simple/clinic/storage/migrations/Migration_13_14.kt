@@ -1,6 +1,5 @@
 package org.simple.clinic.storage.migrations
 
-import android.database.Cursor
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.medicalhistory.MedicalHistory

@@ -9,11 +9,11 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.DismissSheet
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.HideDateErrorMessage
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.UserEnteredDateSelected
-import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.DateIsInPast
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.InvalidPattern
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.MaximumAllowedDateRange
+import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.LocalDate
 
 class TextInputDatePickerEffectHandlerTest {
@@ -27,7 +27,7 @@ class TextInputDatePickerEffectHandlerTest {
   ).build()
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
-  
+
   @After
   fun tearDown() {
     effectHandlerTestCase.dispose()

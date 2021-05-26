@@ -43,7 +43,10 @@ class SafeEnumTypeAdapterTest {
 
   @Suppress("Unused")
   private fun `params for serializing types to strings`(): List<List<Any>> {
-    fun testCase(mappings: Map<TestType, String>, cases: List<Pair<TestType?, String?>>): List<Any> {
+    fun testCase(
+        mappings: Map<TestType, String>,
+        cases: List<Pair<TestType?, String?>>
+    ): List<Any> {
       return listOf(mappings, cases)
     }
 
@@ -134,7 +137,10 @@ class SafeEnumTypeAdapterTest {
 
   @Suppress("Unused")
   private fun `params for deserializing strings to types`(): List<List<Any>> {
-    fun testCase(mappings: Map<TestType, String>, cases: List<Pair<String?, TestType?>>): List<Any> {
+    fun testCase(
+        mappings: Map<TestType, String>,
+        cases: List<Pair<String?, TestType?>>
+    ): List<Any> {
       return listOf(mappings, cases)
     }
 

@@ -33,7 +33,10 @@ object Dismiss : BloodSugarEntryEffect()
 
 object ShowDateEntryScreen : BloodSugarEntryEffect()
 
-data class ShowBloodSugarValidationError(val result: ValidationResult, val unitPreference: BloodSugarUnitPreference) : BloodSugarEntryEffect()
+data class ShowBloodSugarValidationError(
+    val result: ValidationResult,
+    val unitPreference: BloodSugarUnitPreference
+) : BloodSugarEntryEffect()
 
 data class ShowBloodSugarEntryScreen(val date: LocalDate) : BloodSugarEntryEffect()
 
@@ -67,6 +70,6 @@ data class SetBloodSugarReading(val bloodSugarReading: String) : BloodSugarEntry
 
 data class ShowConfirmRemoveBloodSugarDialog(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryEffect()
 
-object LoadBloodSugarUnitPreference: BloodSugarEntryEffect()
+object LoadBloodSugarUnitPreference : BloodSugarEntryEffect()
 
 data class ShowBloodSugarUnitSelectionDialog(val bloodSugarUnitPreference: BloodSugarUnitPreference) : BloodSugarEntryEffect()

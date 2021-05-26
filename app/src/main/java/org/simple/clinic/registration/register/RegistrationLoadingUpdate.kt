@@ -7,7 +7,10 @@ import org.simple.clinic.mobius.next
 
 class RegistrationLoadingUpdate : Update<RegistrationLoadingModel, RegistrationLoadingEvent, RegistrationLoadingEffect> {
 
-  override fun update(model: RegistrationLoadingModel, event: RegistrationLoadingEvent): Next<RegistrationLoadingModel, RegistrationLoadingEffect> {
+  override fun update(
+      model: RegistrationLoadingModel,
+      event: RegistrationLoadingEvent
+  ): Next<RegistrationLoadingModel, RegistrationLoadingEffect> {
     return when (event) {
       is UserRegistrationCompleted -> userRegistrationCompleted(event, model)
       is RegisterErrorRetryClicked -> next(model.clearRegistrationResult(), ConvertRegistrationEntryToUserDetails(model.registrationEntry))

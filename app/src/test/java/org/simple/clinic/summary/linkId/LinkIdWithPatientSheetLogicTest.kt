@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import com.spotify.mobius.Init
 import dagger.Lazy
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
@@ -16,7 +15,6 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.RxErrorsRule

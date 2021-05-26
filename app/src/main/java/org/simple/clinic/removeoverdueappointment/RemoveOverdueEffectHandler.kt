@@ -9,7 +9,6 @@ import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import javax.inject.Inject
 
 class RemoveOverdueEffectHandler @AssistedInject constructor(
     private val appointmentRepository: AppointmentRepository,

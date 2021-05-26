@@ -5,7 +5,10 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.drugs.PrescribedDrug
 
 @Parcelize
-data class ProtocolDrugAndDosages(val drugName: String, val drugs: List<ProtocolDrug>) : Parcelable {
+data class ProtocolDrugAndDosages(
+    val drugName: String,
+    val drugs: List<ProtocolDrug>
+) : Parcelable {
 
   fun matches(prescribedDrug: PrescribedDrug): Boolean {
     return drugs.any { protocolDrug ->

@@ -34,7 +34,11 @@ class RecyclerViewUserScrollDetectorTest {
     "-10, ${RecyclerView.SCROLL_STATE_DRAGGING}, true",
     "-10, ${RecyclerView.SCROLL_STATE_SETTLING}, false"
   ])
-  fun `scrolls by the user should be detected correctly`(dy: Int, scrollState: Int, expectedToBeByUser: Boolean) {
+  fun `scrolls by the user should be detected correctly`(
+      dy: Int,
+      scrollState: Int,
+      expectedToBeByUser: Boolean
+  ) {
     val scrollEvent = mock<RecyclerViewScrollEvent>()
     whenever(scrollEvent.dy).thenReturn(dy)
 

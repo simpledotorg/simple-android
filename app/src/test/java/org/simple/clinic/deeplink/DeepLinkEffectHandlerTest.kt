@@ -51,7 +51,7 @@ class DeepLinkEffectHandlerTest {
   }
 
   @Test
-  fun `when teleconsult log not allowed effect is received, then show teleconsult not allowed`(){
+  fun `when teleconsult log not allowed effect is received, then show teleconsult not allowed`() {
     // given
     testCase.dispatch(ShowTeleconsultLogNotAllowed)
 

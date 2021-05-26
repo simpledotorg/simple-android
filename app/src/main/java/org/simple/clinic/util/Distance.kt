@@ -1,6 +1,6 @@
 package org.simple.clinic.util
 
-data class Distance(val millimeters: Long): Comparable<Distance> {
+data class Distance(val millimeters: Long) : Comparable<Distance> {
 
   override operator fun compareTo(other: Distance): Int {
     return millimeters.compareTo(other.millimeters)

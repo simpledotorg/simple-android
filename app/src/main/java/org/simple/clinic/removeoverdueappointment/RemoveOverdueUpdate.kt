@@ -9,7 +9,10 @@ import org.simple.clinic.overdue.AppointmentCancelReason
 
 class RemoveOverdueUpdate : Update<RemoveOverdueModel, RemoveOverdueEvent, RemoveOverdueEffect> {
 
-  override fun update(model: RemoveOverdueModel, event: RemoveOverdueEvent): Next<RemoveOverdueModel, RemoveOverdueEffect> {
+  override fun update(
+      model: RemoveOverdueModel,
+      event: RemoveOverdueEvent
+  ): Next<RemoveOverdueModel, RemoveOverdueEffect> {
     return when (event) {
       is RemoveAppointmentReasonSelected -> next(model.removeAppointmentReasonSelected(selectedReason = event.reason))
       is PatientMarkedAsMigrated -> dispatch(CancelAppointment(model.appointmentId, event.cancelReason))

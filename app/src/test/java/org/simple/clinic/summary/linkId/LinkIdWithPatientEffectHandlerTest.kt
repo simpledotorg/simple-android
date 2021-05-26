@@ -30,7 +30,7 @@ class LinkIdWithPatientEffectHandlerTest {
   private val testCase = EffectHandlerTestCase(effectHandler.build())
 
   @After
-  fun tearDown(){
+  fun tearDown() {
     testCase.dispose()
   }
 

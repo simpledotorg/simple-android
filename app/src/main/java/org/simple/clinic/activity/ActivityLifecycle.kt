@@ -2,7 +2,10 @@ package org.simple.clinic.activity
 
 import org.simple.clinic.widgets.UiEvent
 
-private fun event(activityName: String?, event: String): String = activityName?.let { "$activityName:$event" } ?: ""
+private fun event(
+    activityName: String?,
+    event: String
+): String = activityName?.let { "$activityName:$event" } ?: ""
 
 sealed class ActivityLifecycle : UiEvent {
 

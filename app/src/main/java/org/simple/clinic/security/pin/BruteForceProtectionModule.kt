@@ -11,7 +11,10 @@ import org.simple.clinic.util.preference.MoshiObjectPreferenceConverter
 open class BruteForceProtectionModule {
 
   @Provides
-  fun state(rxSharedPrefs: RxSharedPreferences, moshi: Moshi): Preference<BruteForceProtectionState> {
+  fun state(
+      rxSharedPrefs: RxSharedPreferences,
+      moshi: Moshi
+  ): Preference<BruteForceProtectionState> {
     val typeConverter = MoshiObjectPreferenceConverter(moshi, BruteForceProtectionState::class.java)
     return rxSharedPrefs.getObject("brute_force_state_v1", BruteForceProtectionState(), typeConverter)
   }

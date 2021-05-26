@@ -43,8 +43,8 @@ data class Identifier(
       IndiaNationalHealthId -> {
         val enteredCode = value
         val prefix = enteredCode.substring(0, 2)
-        val subString1 = enteredCode.substring(2,6)
-        val subString2 = enteredCode.substring(6,10)
+        val subString1 = enteredCode.substring(2, 6)
+        val subString2 = enteredCode.substring(6, 10)
         val suffix = enteredCode.substring(10)
 
         "$prefix${Unicode.nonBreakingSpace}$subString1${Unicode.nonBreakingSpace}$subString2${Unicode.nonBreakingSpace}$suffix"

@@ -31,7 +31,10 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import javax.inject.Inject
 
-class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), SyncIndicatorUi, SyncIndicatorUiActions {
+class SyncIndicatorView(
+    context: Context,
+    attrs: AttributeSet
+) : LinearLayout(context, attrs), SyncIndicatorUi, SyncIndicatorUiActions {
 
   @Inject
   lateinit var activity: AppCompatActivity

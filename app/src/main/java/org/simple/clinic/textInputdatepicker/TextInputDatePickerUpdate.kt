@@ -16,7 +16,10 @@ class TextInputDatePickerUpdate(
     private val dateValidator: TextInputDatePickerValidator,
     private val inputDatePaddingCharacter: UserInputDatePaddingCharacter
 ) : Update<TextInputDatePickerModel, TextInputDatePickerEvent, TextInputDatePickerEffect> {
-  override fun update(model: TextInputDatePickerModel, event: TextInputDatePickerEvent): Next<TextInputDatePickerModel, TextInputDatePickerEffect> {
+  override fun update(
+      model: TextInputDatePickerModel,
+      event: TextInputDatePickerEvent
+  ): Next<TextInputDatePickerModel, TextInputDatePickerEffect> {
     return when (event) {
       DismissSheetClicked -> dispatch(DismissSheet)
       is DayChanged -> dateChanged(model.dayChanged(event.day))

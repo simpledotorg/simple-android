@@ -12,7 +12,7 @@ data class ShortCodeSearchResultState(
     val shortCode: String,
     val fetchPatientsAsyncOp: AsyncOp,
     val patients: PatientSearchResults
-): Parcelable {
+) : Parcelable {
   companion object {
     fun fetchingPatients(
         bpPassportNumber: String

@@ -177,7 +177,8 @@ class TeleconsultMedicinesView(
   }
 
   override fun openDrugDurationSheet(prescription: PrescribedDrug) {
-    val durationInDays = prescription.durationInDays?.toString() ?: teleconsultMedicinesConfig.defaultDuration.toDays().toString()
+    val durationInDays = prescription.durationInDays?.toString()
+        ?: teleconsultMedicinesConfig.defaultDuration.toDays().toString()
     val intent = DrugDurationSheet.intent(
         context = context,
         drugDuration = DrugDuration(

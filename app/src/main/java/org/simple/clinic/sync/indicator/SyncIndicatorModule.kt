@@ -11,7 +11,10 @@ import org.simple.clinic.sync.LastSyncedState
 class SyncIndicatorModule {
 
   @Provides
-  fun lastFrequentSyncResult(rxSharedPreferences: RxSharedPreferences, moshi: Moshi): Preference<LastSyncedState> {
+  fun lastFrequentSyncResult(
+      rxSharedPreferences: RxSharedPreferences,
+      moshi: Moshi
+  ): Preference<LastSyncedState> {
     val typeConverter = LastSyncedState.RxPreferenceConverter(moshi)
     return rxSharedPreferences.getObject("last_frequent_sync_result_v1", LastSyncedState(), typeConverter)
   }

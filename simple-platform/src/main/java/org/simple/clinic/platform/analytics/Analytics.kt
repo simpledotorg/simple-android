@@ -60,7 +60,13 @@ object Analytics {
     reporters.forEach { it.createEvent("InputValidationError", props) }
   }
 
-  fun reportNetworkCall(url: String, method: String, responseCode: Int, contentLength: Int, durationMillis: Int) {
+  fun reportNetworkCall(
+      url: String,
+      method: String,
+      responseCode: Int,
+      contentLength: Int,
+      durationMillis: Int
+  ) {
     val props = mapOf(
         "url" to url,
         "method" to method,

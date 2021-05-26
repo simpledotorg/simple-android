@@ -28,7 +28,10 @@ class InstantSearchUpdate @Inject constructor(
    **/
   private val digitsRegex = Regex("[\\s*\\d+]+")
 
-  override fun update(model: InstantSearchModel, event: InstantSearchEvent): Next<InstantSearchModel, InstantSearchEffect> {
+  override fun update(
+      model: InstantSearchModel,
+      event: InstantSearchEvent
+  ): Next<InstantSearchModel, InstantSearchEffect> {
     return when (event) {
       is CurrentFacilityLoaded -> next(
           model.facilityLoaded(event.facility)
@@ -83,7 +86,10 @@ class InstantSearchUpdate @Inject constructor(
     return dispatch(SaveNewOngoingPatientEntry(ongoingPatientEntry))
   }
 
-  private fun searchResultClickedWithoutNHID(model: InstantSearchModel, patientId: UUID): Next<InstantSearchModel, InstantSearchEffect> {
+  private fun searchResultClickedWithoutNHID(
+      model: InstantSearchModel,
+      patientId: UUID
+  ): Next<InstantSearchModel, InstantSearchEffect> {
     val effect = if (model.hasAdditionalIdentifier)
       OpenLinkIdWithPatientScreen(patientId, model.additionalIdentifier!!)
     else
@@ -92,7 +98,10 @@ class InstantSearchUpdate @Inject constructor(
     return dispatch(effect)
   }
 
-  private fun searchQueryValidated(model: InstantSearchModel, event: SearchQueryValidated): Next<InstantSearchModel, InstantSearchEffect> {
+  private fun searchQueryValidated(
+      model: InstantSearchModel,
+      event: SearchQueryValidated
+  ): Next<InstantSearchModel, InstantSearchEffect> {
     return when (val validationResult = event.result) {
       is Valid -> {
         val criteria = searchCriteriaFromInput(validationResult.searchQuery, model.additionalIdentifier)
@@ -135,7 +144,10 @@ class InstantSearchUpdate @Inject constructor(
     }
   }
 
-  private fun searchResultsLoaded(model: InstantSearchModel, event: SearchResultsLoaded): Next<InstantSearchModel, InstantSearchEffect> {
+  private fun searchResultsLoaded(
+      model: InstantSearchModel,
+      event: SearchResultsLoaded
+  ): Next<InstantSearchModel, InstantSearchEffect> {
     if (!model.hasSearchQuery) return noChange()
 
     val effect = if (event.patientsSearchResults.isNotEmpty())
@@ -146,7 +158,10 @@ class InstantSearchUpdate @Inject constructor(
     return next(model.searchResultsLoaded(), effect)
   }
 
-  private fun allPatientsLoaded(model: InstantSearchModel, event: AllPatientsLoaded): Next<InstantSearchModel, InstantSearchEffect> {
+  private fun allPatientsLoaded(
+      model: InstantSearchModel,
+      event: AllPatientsLoaded
+  ): Next<InstantSearchModel, InstantSearchEffect> {
     if (model.hasSearchQuery) return noChange()
 
     val effect = if (event.patients.isNotEmpty())

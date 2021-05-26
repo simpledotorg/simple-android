@@ -9,6 +9,6 @@ data class FacilityChangeConfirmed(val selectedFacility: Facility) : ConfirmFaci
 
 data class FacilityChanged(val newFacility: Facility) : ConfirmFacilityChangeEvent()
 
-data class CurrentFacilityLoaded(val currentFacility: Facility): ConfirmFacilityChangeEvent()
+data class CurrentFacilityLoaded(val currentFacility: Facility) : ConfirmFacilityChangeEvent()
 
-object FacilitySyncGroupSwitchedAtTimeTouched: ConfirmFacilityChangeEvent()
+object FacilitySyncGroupSwitchedAtTimeTouched : ConfirmFacilityChangeEvent()

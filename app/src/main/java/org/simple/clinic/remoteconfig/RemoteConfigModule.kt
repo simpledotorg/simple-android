@@ -6,7 +6,7 @@ import dagger.Provides
 import org.simple.clinic.remoteconfig.firebase.FirebaseRemoteConfigService
 
 @Module
-  class RemoteConfigModule {
+class RemoteConfigModule {
 
   @Provides
   fun provideRemoteConfigService(

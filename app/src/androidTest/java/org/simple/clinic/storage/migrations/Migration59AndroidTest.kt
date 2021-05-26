@@ -57,7 +57,11 @@ class Migration59AndroidTest : BaseDatabaseMigrationTest(58, 59) {
     after.assertPatient(`patient with non-blank zone and non-blank street`.withSyncStatus(PENDING).patient)
   }
 
-  private fun patientWithZoneAndStreet(uuid: UUID, zone: String = "", street: String = ""): PatientProfile {
+  private fun patientWithZoneAndStreet(
+      uuid: UUID,
+      zone: String = "",
+      street: String = ""
+  ): PatientProfile {
     val profile = testData.patientProfile(
         patientUuid = uuid,
         syncStatus = DONE,

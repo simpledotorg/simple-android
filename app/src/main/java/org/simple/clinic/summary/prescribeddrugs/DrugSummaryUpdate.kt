@@ -6,7 +6,10 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class DrugSummaryUpdate : Update<DrugSummaryModel, DrugSummaryEvent, DrugSummaryEffect> {
-  override fun update(model: DrugSummaryModel, event: DrugSummaryEvent): Next<DrugSummaryModel, DrugSummaryEffect> {
+  override fun update(
+      model: DrugSummaryModel,
+      event: DrugSummaryEvent
+  ): Next<DrugSummaryModel, DrugSummaryEffect> {
     return when (event) {
       is PatientSummaryUpdateDrugsClicked -> dispatch(LoadCurrentFacility)
       is CurrentFacilityLoaded -> dispatch(OpenUpdatePrescribedDrugScreen(model.patientUuid, event.facility))

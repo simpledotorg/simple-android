@@ -17,4 +17,4 @@ object LoadTotalFacilityCount : FacilityPickerEffect()
 
 data class ForwardSelectedFacility(val facility: Facility) : FacilityPickerEffect()
 
-data class LoadFacilitiesInCurrentGroup(val query: String): FacilityPickerEffect()
+data class LoadFacilitiesInCurrentGroup(val query: String) : FacilityPickerEffect()

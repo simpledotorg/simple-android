@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import org.simple.clinic.router.screen.FullScreenKey
 
-class HomeScreenTab: Fragment() {
+class HomeScreenTab : Fragment() {
 
   companion object {
     private const val ARG_SCREEN_KEY = "arg_screen_key"

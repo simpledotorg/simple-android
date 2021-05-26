@@ -131,7 +131,10 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
 
   class DiffCallback : DiffUtil.ItemCallback<InstantSearchResultsItemType>() {
 
-    override fun areItemsTheSame(oldItem: InstantSearchResultsItemType, newItem: InstantSearchResultsItemType): Boolean {
+    override fun areItemsTheSame(
+        oldItem: InstantSearchResultsItemType,
+        newItem: InstantSearchResultsItemType
+    ): Boolean {
       return when {
         oldItem is AssignedFacilityHeader && newItem is AssignedFacilityHeader -> oldItem.facilityName == newItem.facilityName
         oldItem is NearbyFacilitiesHeader && newItem is NearbyFacilitiesHeader -> true
@@ -140,7 +143,10 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
       }
     }
 
-    override fun areContentsTheSame(oldItem: InstantSearchResultsItemType, newItem: InstantSearchResultsItemType): Boolean {
+    override fun areContentsTheSame(
+        oldItem: InstantSearchResultsItemType,
+        newItem: InstantSearchResultsItemType
+    ): Boolean {
       return oldItem == newItem
     }
   }

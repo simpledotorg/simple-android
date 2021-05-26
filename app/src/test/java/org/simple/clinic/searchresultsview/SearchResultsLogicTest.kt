@@ -6,11 +6,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
-import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData

@@ -11,7 +11,10 @@ class EnterOtpUpdate(
     private val loginOtpRequiredLength: Int
 ) : Update<EnterOtpModel, EnterOtpEvent, EnterOtpEffect> {
 
-  override fun update(model: EnterOtpModel, event: EnterOtpEvent): Next<EnterOtpModel, EnterOtpEffect> {
+  override fun update(
+      model: EnterOtpModel,
+      event: EnterOtpEvent
+  ): Next<EnterOtpModel, EnterOtpEffect> {
     return when (event) {
       is UserLoaded -> next(model.userLoaded(event.user))
       is EnterOtpSubmitted -> otpSubmitted(event, model)

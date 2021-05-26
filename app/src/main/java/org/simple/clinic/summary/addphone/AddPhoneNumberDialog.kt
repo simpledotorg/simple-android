@@ -8,9 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -101,7 +101,11 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi, UiActi
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View? {
     return layout
   }
 

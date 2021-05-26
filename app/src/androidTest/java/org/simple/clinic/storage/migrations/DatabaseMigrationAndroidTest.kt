@@ -2299,7 +2299,11 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migrate_patient_phone_number_type_from_41_to_42() {
-    fun savePatientPhoneNumber(db: SupportSQLiteDatabase, phoneNumberUuid: UUID, phoneNumberType: String) {
+    fun savePatientPhoneNumber(
+        db: SupportSQLiteDatabase,
+        phoneNumberUuid: UUID,
+        phoneNumberType: String
+    ) {
       val addressUuid = UUID.randomUUID()
       val patientUuid = UUID.randomUUID()
 
@@ -2338,7 +2342,11 @@ class DatabaseMigrationAndroidTest {
       """)
     }
 
-    fun verifyPatientPhoneNumber(db: SupportSQLiteDatabase, phoneNumberUuid: UUID, expectedPhoneNumberType: String) {
+    fun verifyPatientPhoneNumber(
+        db: SupportSQLiteDatabase,
+        phoneNumberUuid: UUID,
+        expectedPhoneNumberType: String
+    ) {
       db.query("""
         SELECT * FROM "PatientPhoneNumber" WHERE "uuid" = '$phoneNumberUuid'
       """).use { cursor ->

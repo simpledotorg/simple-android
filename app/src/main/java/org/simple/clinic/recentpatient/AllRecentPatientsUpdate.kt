@@ -7,8 +7,11 @@ import org.simple.clinic.mobius.next
 
 class AllRecentPatientsUpdate : Update<AllRecentPatientsModel, AllRecentPatientsEvent, AllRecentPatientsEffect> {
 
-  override fun update(model: AllRecentPatientsModel, event: AllRecentPatientsEvent): Next<AllRecentPatientsModel, AllRecentPatientsEffect> {
-    return when(event) {
+  override fun update(
+      model: AllRecentPatientsModel,
+      event: AllRecentPatientsEvent
+  ): Next<AllRecentPatientsModel, AllRecentPatientsEffect> {
+    return when (event) {
       is RecentPatientsLoaded -> next(model.recentPatientsLoaded(event.recentPatients))
       is RecentPatientItemClicked -> dispatch(OpenPatientSummary(event.patientUuid))
     }

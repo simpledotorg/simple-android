@@ -41,10 +41,10 @@ import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import java.net.UnknownHostException
 import java.time.Duration
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.net.UnknownHostException
 
 @RunWith(JUnitParamsRunner::class)
 class SyncIndicatorLogicTest {

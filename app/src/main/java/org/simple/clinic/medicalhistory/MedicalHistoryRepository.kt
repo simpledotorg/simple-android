@@ -137,7 +137,10 @@ class MedicalHistoryRepository @Inject constructor(
     return dao.count().toObservable()
   }
 
-  private fun toDatabaseModel(payload: MedicalHistoryPayload, syncStatus: SyncStatus): MedicalHistory {
+  private fun toDatabaseModel(
+      payload: MedicalHistoryPayload,
+      syncStatus: SyncStatus
+  ): MedicalHistory {
     return payload.run {
       MedicalHistory(
           uuid = uuid,

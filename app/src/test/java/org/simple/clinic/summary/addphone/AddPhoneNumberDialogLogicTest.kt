@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import com.spotify.mobius.Init
 import io.reactivex.Completable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After

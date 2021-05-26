@@ -1,7 +1,6 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
 import org.simple.clinic.drugs.PrescribedDrug
-import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientProfile
 import java.time.LocalDate
 

@@ -88,4 +88,4 @@ class RegistrationPhoneDoneClicked : RegistrationPhoneEvent() {
 
 object UserCreatedLocally : RegistrationPhoneEvent()
 
-data class CurrentUserUnauthorizedStatusLoaded(val isUserUnauthorized: Boolean): RegistrationPhoneEvent()
+data class CurrentUserUnauthorizedStatusLoaded(val isUserUnauthorized: Boolean) : RegistrationPhoneEvent()

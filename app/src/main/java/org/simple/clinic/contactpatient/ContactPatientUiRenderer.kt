@@ -71,7 +71,8 @@ class ContactPatientUiRenderer(
       model: ContactPatientModel
   ) {
     val exactlyMatchingReminderPeriod = findReminderPeriodExactlyMatchingDate(model.potentialAppointments, model.selectedAppointmentDate)
-    val selectedReminderPeriod = exactlyMatchingReminderPeriod ?: daysUntilTodayFrom(model.selectedAppointmentDate)
+    val selectedReminderPeriod = exactlyMatchingReminderPeriod
+        ?: daysUntilTodayFrom(model.selectedAppointmentDate)
 
     ui.renderSelectedAppointmentDate(
         selectedReminderPeriod,

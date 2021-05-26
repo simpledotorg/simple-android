@@ -52,6 +52,10 @@ object BackPressed : BloodPressureEntryEvent() {
   override val analyticsName = "Blood Pressure Entry:Hardware Back Pressed"
 }
 
-data class BloodPressureMeasurementFetched(val systolic: Int, val diastolic: Int, val recordedAt: Instant) : BloodPressureEntryEvent()
+data class BloodPressureMeasurementFetched(
+    val systolic: Int,
+    val diastolic: Int,
+    val recordedAt: Instant
+) : BloodPressureEntryEvent()
 
 data class DatePrefilled(val prefilledDate: LocalDate) : BloodPressureEntryEvent()

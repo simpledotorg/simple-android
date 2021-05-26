@@ -7,8 +7,8 @@ import java.util.UUID
 sealed class OpenAs : Parcelable {
 
   @Parcelize
-  data class New(val patientUuid: UUID): OpenAs()
+  data class New(val patientUuid: UUID) : OpenAs()
 
   @Parcelize
-  data class Update(val bpUuid: UUID): OpenAs()
+  data class Update(val bpUuid: UUID) : OpenAs()
 }

@@ -17,7 +17,10 @@ class PinEntryUpdate(
     private val submitPinAtLength: Int
 ) : Update<PinEntryModel, PinEntryEvent, PinEntryEffect> {
 
-  override fun update(model: PinEntryModel, event: PinEntryEvent): Next<PinEntryModel, PinEntryEffect> {
+  override fun update(
+      model: PinEntryModel,
+      event: PinEntryEvent
+  ): Next<PinEntryModel, PinEntryEffect> {
     return when (event) {
       is PinTextChanged -> {
         val updatedModel = model.enteredPinChanged(event.pin)

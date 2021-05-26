@@ -88,7 +88,8 @@ class ScheduleAppointmentUpdate(
         .find { potentialAppointmentDate -> potentialAppointmentDate.scheduledFor == userSelectedDate }
         ?.timeToAppointment
 
-    val timeToAppointment = matchingTimeToAppointmentFromPotentials ?: Days(currentDate.daysTill(userSelectedDate))
+    val timeToAppointment = matchingTimeToAppointmentFromPotentials
+        ?: Days(currentDate.daysTill(userSelectedDate))
     val potentialAppointmentDate = PotentialAppointmentDate(userSelectedDate, timeToAppointment)
 
     return next(model.appointmentDateSelected(potentialAppointmentDate))

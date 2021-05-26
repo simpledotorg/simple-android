@@ -192,7 +192,10 @@ sealed class Continuation : Parcelable {
   data class ContinueToScreen(val screenKey: ScreenKey) : Continuation()
 
   @Parcelize
-  data class ContinueToScreenExpectingResult(val requestType: Parcelable, val screenKey: ScreenKey) : Continuation()
+  data class ContinueToScreenExpectingResult(
+      val requestType: Parcelable,
+      val screenKey: ScreenKey
+  ) : Continuation()
 
   @Parcelize
   data class ContinueToActivity(val intent: Intent, val requestCode: Int) : Continuation()

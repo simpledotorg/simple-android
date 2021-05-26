@@ -6,7 +6,10 @@ import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem.Bl
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem.NewBloodSugarButton
 
 class BloodSugarHistoryListItemDiffCallback : DiffUtil.ItemCallback<BloodSugarHistoryListItem>() {
-  override fun areItemsTheSame(oldItem: BloodSugarHistoryListItem, newItem: BloodSugarHistoryListItem): Boolean {
+  override fun areItemsTheSame(
+      oldItem: BloodSugarHistoryListItem,
+      newItem: BloodSugarHistoryListItem
+  ): Boolean {
     return when {
       oldItem is NewBloodSugarButton && newItem is NewBloodSugarButton -> true
       oldItem is BloodSugarHistoryItem && newItem is BloodSugarHistoryItem -> oldItem.measurement.uuid == newItem.measurement.uuid
@@ -15,7 +18,10 @@ class BloodSugarHistoryListItemDiffCallback : DiffUtil.ItemCallback<BloodSugarHi
   }
 
   @SuppressLint("DiffUtilEquals")
-  override fun areContentsTheSame(oldItem: BloodSugarHistoryListItem, newItem: BloodSugarHistoryListItem): Boolean {
+  override fun areContentsTheSame(
+      oldItem: BloodSugarHistoryListItem,
+      newItem: BloodSugarHistoryListItem
+  ): Boolean {
     return oldItem == newItem
   }
 }

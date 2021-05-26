@@ -33,14 +33,20 @@ class DatePickerKeyFactory @Inject constructor(
     }
   }
 
-  private fun showTextInputDatePicker(preselectedDate: LocalDate, allowedDateRange: ClosedRange<LocalDate>): ScreenKey {
+  private fun showTextInputDatePicker(
+      preselectedDate: LocalDate,
+      allowedDateRange: ClosedRange<LocalDate>
+  ): ScreenKey {
     return TextInputDatePickerSheet.Key(prefilledDate = preselectedDate,
         minDate = allowedDateRange.start,
         maxDate = allowedDateRange.endInclusive
     )
   }
 
-  private fun showCalendarDatePicker(preselectedDate: LocalDate, allowedDateRange: ClosedRange<LocalDate>): ScreenKey {
+  private fun showCalendarDatePicker(
+      preselectedDate: LocalDate,
+      allowedDateRange: ClosedRange<LocalDate>
+  ): ScreenKey {
     return CalendarDatePicker.Key(preselectedDate = preselectedDate,
         minDate = allowedDateRange.start,
         maxDate = allowedDateRange.endInclusive)

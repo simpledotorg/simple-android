@@ -33,6 +33,7 @@ proguard/
 .idea/modules
 .idea/$CACHE_FILE$
 .idea/*.xml
+.idea/codeStyles
 .navigation/
 captures/
 *.iml

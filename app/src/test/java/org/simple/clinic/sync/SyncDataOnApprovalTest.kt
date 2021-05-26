@@ -34,7 +34,9 @@ class SyncDataOnApprovalTest {
 
   @Parameters(method = "params for syncing on user status changed")
   @Test
-  fun `when the user status changes to ApprovedFromSyncing from anything, the sync should be triggered`(previousUserStatus: UserStatus) {
+  fun `when the user status changes to ApprovedFromSyncing from anything, the sync should be triggered`(
+      previousUserStatus: UserStatus
+  ) {
     // given
     val user = TestData.loggedInUser(status = previousUserStatus)
     val userSubject = PublishSubject.create<Optional<User>>()

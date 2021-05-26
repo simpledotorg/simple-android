@@ -6,7 +6,7 @@ import org.simple.clinic.storage.inTransaction
 import javax.inject.Inject
 
 @Suppress("ClassName")
-class Migration_63 @Inject constructor(): Migration(62, 63) {
+class Migration_63 @Inject constructor() : Migration(62, 63) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     database.inTransaction {

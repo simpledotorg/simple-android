@@ -318,7 +318,8 @@ class EditPatientScreenSaveTest {
             createExpectedPatient = { it.copy(fullName = "Name", gender = Gender.Male, dateOfBirth = LocalDate.of(1985, Month.MAY, 20)) },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
-              alreadyPresentPhoneNumber?.copy(number = "12345678") ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "12345678")
+              alreadyPresentPhoneNumber?.copy(number = "12345678")
+                  ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "12345678")
             }),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = false, shouldHaveAge = false),
@@ -340,7 +341,8 @@ class EditPatientScreenSaveTest {
             },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
-              alreadyPresentPhoneNumber?.copy(number = "12345678") ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "12345678")
+              alreadyPresentPhoneNumber?.copy(number = "12345678")
+                  ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "12345678")
             }),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = false, shouldHaveAge = false),
@@ -371,7 +373,8 @@ class EditPatientScreenSaveTest {
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
-              alreadyPresentPhoneNumber?.copy(number = "123456") ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "123456")
+              alreadyPresentPhoneNumber?.copy(number = "123456")
+                  ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "123456")
             }),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
@@ -393,7 +396,8 @@ class EditPatientScreenSaveTest {
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
-              alreadyPresentPhoneNumber?.copy(number = "123456") ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "123456")
+              alreadyPresentPhoneNumber?.copy(number = "123456")
+                  ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "123456")
             }),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
@@ -413,7 +417,8 @@ class EditPatientScreenSaveTest {
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
-              alreadyPresentPhoneNumber?.copy(number = "123456") ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "123456")
+              alreadyPresentPhoneNumber?.copy(number = "123456")
+                  ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "123456")
             }),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
@@ -430,7 +435,8 @@ class EditPatientScreenSaveTest {
             createExpectedPatient = { it.copy(fullName = "Name 2", gender = Gender.Transgender) },
             createExpectedAddress = { it.copy(district = "District", state = "State 2") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
-              alreadyPresentPhoneNumber?.copy(number = "1234567") ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "1234567")
+              alreadyPresentPhoneNumber?.copy(number = "1234567")
+                  ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "1234567")
             }),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
@@ -561,7 +567,10 @@ class EditPatientScreenSaveTest {
     )
   }
 
-  private fun createPatientProfile(shouldAddNumber: Boolean, shouldHaveAge: Boolean): PatientProfile {
+  private fun createPatientProfile(
+      shouldAddNumber: Boolean,
+      shouldHaveAge: Boolean
+  ): PatientProfile {
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
 
@@ -926,7 +935,11 @@ class EditPatientScreenSaveTest {
     verify(ui, never()).showValidationErrors(any())
   }
 
-  private fun screenCreated(patient: Patient, address: PatientAddress, phoneNumber: PatientPhoneNumber?) {
+  private fun screenCreated(
+      patient: Patient,
+      address: PatientAddress,
+      phoneNumber: PatientPhoneNumber?
+  ) {
     val editPatientEffectHandler = EditPatientEffectHandler(
         userClock = TestUserClock(),
         patientRepository = patientRepository,

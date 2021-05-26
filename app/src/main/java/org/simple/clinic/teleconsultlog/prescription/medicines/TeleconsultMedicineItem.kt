@@ -67,11 +67,17 @@ data class TeleconsultMedicineItem(
 }
 
 class TeleconsultMedicineDiffCallback : DiffUtil.ItemCallback<TeleconsultMedicineItem>() {
-  override fun areItemsTheSame(oldItem: TeleconsultMedicineItem, newItem: TeleconsultMedicineItem): Boolean {
+  override fun areItemsTheSame(
+      oldItem: TeleconsultMedicineItem,
+      newItem: TeleconsultMedicineItem
+  ): Boolean {
     return oldItem.prescribedDrug.uuid == newItem.prescribedDrug.uuid
   }
 
-  override fun areContentsTheSame(oldItem: TeleconsultMedicineItem, newItem: TeleconsultMedicineItem): Boolean {
+  override fun areContentsTheSame(
+      oldItem: TeleconsultMedicineItem,
+      newItem: TeleconsultMedicineItem
+  ): Boolean {
     return oldItem == newItem
   }
 }

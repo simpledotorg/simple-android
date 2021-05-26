@@ -80,7 +80,10 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  private fun searchByPhoneNumber2(phoneNumber: String, facilityId: UUID): List<PatientSearchResult> {
+  private fun searchByPhoneNumber2(
+      phoneNumber: String,
+      facilityId: UUID
+  ): List<PatientSearchResult> {
     return reportTimeTaken(
         clock = utcClock,
         operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
@@ -88,7 +91,10 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  private fun searchByNumericCriteria2(numericCriteria: String, facilityId: UUID): List<PatientSearchResult> {
+  private fun searchByNumericCriteria2(
+      numericCriteria: String,
+      facilityId: UUID
+  ): List<PatientSearchResult> {
     return reportTimeTaken(
         clock = utcClock,
         operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
@@ -823,7 +829,10 @@ class PatientRepository @Inject constructor(
     return database.patientDao().allPatientProfiles()
   }
 
-  private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: MetaDataVersion)
+  private data class BusinessIdMetaAndVersion(
+      val metaData: String,
+      val metaDataVersion: MetaDataVersion
+  )
 }
 
 private inline fun <reified T> reportTimeTaken(

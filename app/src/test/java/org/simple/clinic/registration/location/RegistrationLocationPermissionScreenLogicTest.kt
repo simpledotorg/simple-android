@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED

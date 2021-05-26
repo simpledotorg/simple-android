@@ -1,10 +1,10 @@
 package org.simple.clinic.forgotpin.confirmpin
 
 import com.spotify.mobius.rx2.RxMobius
+import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer

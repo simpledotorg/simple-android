@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
 
-abstract class ScreenKey: Parcelable {
+abstract class ScreenKey : Parcelable {
 
   companion object {
     private const val ARGS_KEY = "org.simple.clinic.navigation.v2.ScreenKey.ARGS_KEY"
 
-    fun <T: ScreenKey> key(fragment: Fragment): T {
+    fun <T : ScreenKey> key(fragment: Fragment): T {
       return fragment.requireArguments().getParcelable(ARGS_KEY)!!
     }
   }

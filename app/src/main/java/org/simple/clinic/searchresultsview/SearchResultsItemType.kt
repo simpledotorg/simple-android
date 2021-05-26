@@ -158,7 +158,10 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
 
   class DiffCallback : DiffUtil.ItemCallback<SearchResultsItemType>() {
 
-    override fun areItemsTheSame(oldItem: SearchResultsItemType, newItem: SearchResultsItemType): Boolean {
+    override fun areItemsTheSame(
+        oldItem: SearchResultsItemType,
+        newItem: SearchResultsItemType
+    ): Boolean {
       return when {
         oldItem is InCurrentFacilityHeader && newItem is InCurrentFacilityHeader -> oldItem.facilityName == newItem.facilityName
         oldItem is NotInCurrentFacilityHeader && newItem is NotInCurrentFacilityHeader -> true
@@ -168,7 +171,10 @@ sealed class SearchResultsItemType : ItemAdapter.Item<SearchResultsItemType.Even
       }
     }
 
-    override fun areContentsTheSame(oldItem: SearchResultsItemType, newItem: SearchResultsItemType): Boolean {
+    override fun areContentsTheSame(
+        oldItem: SearchResultsItemType,
+        newItem: SearchResultsItemType
+    ): Boolean {
       return oldItem == newItem
     }
   }

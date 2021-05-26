@@ -7,7 +7,7 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 @Parcelize
 data class RegistrationLocationPermissionModel(
     val ongoingRegistrationEntry: OngoingRegistrationEntry
-): Parcelable {
+) : Parcelable {
 
   companion object {
     fun create(ongoingRegistrationEntry: OngoingRegistrationEntry): RegistrationLocationPermissionModel {

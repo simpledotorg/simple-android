@@ -71,7 +71,8 @@ class ContactPatientUpdate(
 
     val matchingPotentialAppointmentDate = model.potentialAppointments.firstOrNull { it.scheduledFor == selectedDate }
 
-    val reminderDate = matchingPotentialAppointmentDate ?: PotentialAppointmentDate(selectedDate, Days(currentDate daysTill selectedDate))
+    val reminderDate = matchingPotentialAppointmentDate
+        ?: PotentialAppointmentDate(selectedDate, Days(currentDate daysTill selectedDate))
 
     return next(model.reminderDateSelected(reminderDate))
   }

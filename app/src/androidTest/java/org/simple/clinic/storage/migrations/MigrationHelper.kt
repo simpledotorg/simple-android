@@ -63,7 +63,10 @@ private fun savePatient(patientProfile: PatientProfile, database: SupportSQLiteD
   }
 }
 
-private fun savePatientBusinessIds(patientProfile: PatientProfile, database: SupportSQLiteDatabase) {
+private fun savePatientBusinessIds(
+    patientProfile: PatientProfile,
+    database: SupportSQLiteDatabase
+) {
   patientProfile.businessIds.forEach { businessId ->
     with(businessId) {
       database.insert(

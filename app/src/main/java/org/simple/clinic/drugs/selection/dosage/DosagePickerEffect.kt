@@ -7,17 +7,17 @@ sealed class DosagePickerEffect
 
 data class LoadProtocolDrugsByName(val drugName: String) : DosagePickerEffect()
 
-data class DeleteExistingPrescription(val prescriptionUuid: UUID): DosagePickerEffect()
+data class DeleteExistingPrescription(val prescriptionUuid: UUID) : DosagePickerEffect()
 
 object CloseScreen : DosagePickerEffect()
 
 data class CreateNewPrescription(
     val patientUuid: UUID,
     val protocolDrug: ProtocolDrug
-): DosagePickerEffect()
+) : DosagePickerEffect()
 
 data class ChangeExistingPrescription(
     val patientUuid: UUID,
     val prescriptionUuid: UUID,
     val protocolDrug: ProtocolDrug
-): DosagePickerEffect()
+) : DosagePickerEffect()

@@ -43,7 +43,7 @@ class PurgeOnSync(
 
     val shouldPurgeData = !facilitySyncSwitchedAtInstant.isPresent() || isSafeToPurgeData(facilitySyncSwitchedAtInstant.get())
 
-    if(shouldPurgeData) appDatabase.deletePatientsNotInFacilitySyncGroup(currentFacility.get())
+    if (shouldPurgeData) appDatabase.deletePatientsNotInFacilitySyncGroup(currentFacility.get())
   }
 
   private fun isSafeToPurgeData(

@@ -229,7 +229,10 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     )
   }
 
-  override fun updateScheduledAppointment(appointmentDate: LocalDate, timeToAppointment: TimeToAppointment) {
+  override fun updateScheduledAppointment(
+      appointmentDate: LocalDate,
+      timeToAppointment: TimeToAppointment
+  ) {
     currentAppointmentDate.text = dateFormatter.format(appointmentDate)
     currentDateTextView.text = displayTextForTimeToAppointment(timeToAppointment)
   }
@@ -300,7 +303,10 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
   }
 
   @Parcelize
-  data class Key(val patientId: UUID, val sheetOpenedFrom: AppointmentSheetOpenedFrom) : ScreenKey() {
+  data class Key(
+      val patientId: UUID,
+      val sheetOpenedFrom: AppointmentSheetOpenedFrom
+  ) : ScreenKey() {
 
     override val analyticsName = "Schedule Appointment Sheet"
 

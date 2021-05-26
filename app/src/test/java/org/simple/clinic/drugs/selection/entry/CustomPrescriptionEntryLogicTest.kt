@@ -76,7 +76,9 @@ class CustomPrescriptionEntryLogicTest {
 
   @Test
   @Parameters(value = ["", "10mg"])
-  fun `when sheet is opened in new mode and save is clicked then a new prescription should be saved`(dosage: String) {
+  fun `when sheet is opened in new mode and save is clicked then a new prescription should be saved`(
+      dosage: String
+  ) {
     //given
     whenever(prescriptionRepository.savePrescription(
         uuid = prescriptionUuid,
@@ -225,7 +227,10 @@ class CustomPrescriptionEntryLogicTest {
     instantiateFixture(openAsNew)
   }
 
-  private fun createSheetForUpdatingPrescription(prescriptionUuid: UUID, uuidGenerator: UuidGenerator = this.uuidGenerator) {
+  private fun createSheetForUpdatingPrescription(
+      prescriptionUuid: UUID,
+      uuidGenerator: UuidGenerator = this.uuidGenerator
+  ) {
     val openAsUpdate = OpenAs.Update(patientUuid, prescriptionUuid)
     instantiateFixture(openAsUpdate, uuidGenerator)
   }

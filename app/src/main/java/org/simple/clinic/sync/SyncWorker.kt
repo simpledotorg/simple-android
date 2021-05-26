@@ -7,7 +7,10 @@ import androidx.work.WorkerParameters
 import org.simple.clinic.ClinicApp
 import javax.inject.Inject
 
-class SyncWorker(context: Context, private val workerParams: WorkerParameters) : Worker(context, workerParams) {
+class SyncWorker(
+    context: Context,
+    private val workerParams: WorkerParameters
+) : Worker(context, workerParams) {
 
   companion object {
     private const val NO_GROUP = "no_group_id"

@@ -16,7 +16,6 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy

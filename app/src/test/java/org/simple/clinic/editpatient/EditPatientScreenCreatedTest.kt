@@ -58,7 +58,9 @@ class EditPatientScreenCreatedTest {
 
   @Test
   @Parameters(method = "params for prefilling fields on screen created")
-  fun `when screen is created then the existing patient data must be prefilled`(patientFormTestParams: PatientFormTestParams) {
+  fun `when screen is created then the existing patient data must be prefilled`(
+      patientFormTestParams: PatientFormTestParams
+  ) {
     val (patient, address, phoneNumber) = patientFormTestParams
 
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
@@ -163,7 +165,11 @@ class EditPatientScreenCreatedTest {
       get() = patient.dateOfBirth != null
   }
 
-  private fun screenCreated(patient: Patient, address: PatientAddress, phoneNumber: PatientPhoneNumber?) {
+  private fun screenCreated(
+      patient: Patient,
+      address: PatientAddress,
+      phoneNumber: PatientPhoneNumber?
+  ) {
     val editPatientEffectHandler = EditPatientEffectHandler(
         userClock = TestUserClock(),
         patientRepository = patientRepository,

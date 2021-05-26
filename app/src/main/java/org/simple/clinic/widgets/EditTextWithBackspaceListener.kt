@@ -18,7 +18,10 @@ import io.reactivex.subjects.PublishSubject
  * from the hardware keyboard and *only* after the text has been changed, making
  * it difficult to read the text before backspace.
  */
-class EditTextWithBackspaceListener(context: Context, attrs: AttributeSet?) : TextInputEditText(context, attrs) {
+class EditTextWithBackspaceListener(
+    context: Context,
+    attrs: AttributeSet?
+) : TextInputEditText(context, attrs) {
 
   private val backspaceClicksSubject = PublishSubject.create<Any>()
   val backspaceClicks: Observable<Any> = backspaceClicksSubject.hide()

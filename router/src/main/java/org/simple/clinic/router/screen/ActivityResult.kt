@@ -9,7 +9,7 @@ data class ActivityResult(var requestCode: Int, var resultCode: Int, var data: I
     return resultCode == Activity.RESULT_OK
   }
 
-  fun canceled(): Boolean{
+  fun canceled(): Boolean {
     return resultCode == Activity.RESULT_CANCELED
   }
 }

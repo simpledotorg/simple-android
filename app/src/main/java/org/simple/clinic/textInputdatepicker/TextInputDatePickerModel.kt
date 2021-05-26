@@ -6,22 +6,26 @@ import java.time.LocalDate
 
 @Parcelize
 data class TextInputDatePickerModel(
-  val day: String,
-  val month: String,
-  val year: String,
-  val minDate: LocalDate,
-  val maxDate: LocalDate,
-  val prefilledDate: LocalDate?
+    val day: String,
+    val month: String,
+    val year: String,
+    val minDate: LocalDate,
+    val maxDate: LocalDate,
+    val prefilledDate: LocalDate?
 ) : Parcelable {
 
   companion object {
-    fun create(minDate: LocalDate, maxDate: LocalDate, prefilledDate: LocalDate?) = TextInputDatePickerModel(
-      day = "",
-      month = "",
-      year = "",
-      minDate = minDate,
-      maxDate = maxDate,
-      prefilledDate = prefilledDate
+    fun create(
+        minDate: LocalDate,
+        maxDate: LocalDate,
+        prefilledDate: LocalDate?
+    ) = TextInputDatePickerModel(
+        day = "",
+        month = "",
+        year = "",
+        minDate = minDate,
+        maxDate = maxDate,
+        prefilledDate = prefilledDate
     )
   }
 

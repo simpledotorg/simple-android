@@ -11,7 +11,7 @@ on:
 
 jobs:
   qa_lint:
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
 
@@ -24,7 +24,7 @@ jobs:
         run: ./gradlew lintQaDebug
 
   qa_unit_tests:
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
 
@@ -37,7 +37,7 @@ jobs:
         run: ./gradlew testQaDebugUnitTest
 
   qa_purge_env:
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
     steps:
       - name: Purge QA server
         run: |
@@ -49,7 +49,7 @@ jobs:
   # https://github.com/ReactiveCircus/android-emulator-runner
   qa_android_tests:
     runs-on: [ macos-latest ]
-    needs: [qa_purge_env]
+    needs: [ qa_purge_env ]
     steps:
       - uses: actions/checkout@v2
 
@@ -68,7 +68,7 @@ jobs:
           script: ./gradlew connectedQaDebugAndroidTest
 
   mobius_migration_tests:
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
 
@@ -81,10 +81,10 @@ jobs:
         run: ./gradlew :mobius-migration:test
 
   verify_release_bundles:
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
     strategy:
       matrix:
-        buildType: ['Production']
+        buildType: [ 'Production' ]
     steps:
       - uses: actions/checkout@v2
 
@@ -101,7 +101,7 @@ jobs:
           bundle${{ matrix.buildType }}Release
 
   verify_room_schemas:
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout master
         uses: actions/checkout@v2
@@ -118,7 +118,7 @@ jobs:
         run: current/.github/scripts/compare_directory_contents.sh master/app/schemas/org.simple.clinic.AppDatabase current/app/schemas/org.simple.clinic.AppDatabase
 
   verify_pr_description:
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
       - name: Verify PR description
@@ -135,7 +135,7 @@ jobs:
           fi
 
   verify_changelog_updated:
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
       - name: Checkout master
@@ -153,7 +153,7 @@ jobs:
         run: current/.github/scripts/verify_file_was_changed.sh master/CHANGELOG.md current/CHANGELOG.md
 
   fix_strings_ellipsise:
-    runs-on: [ubuntu-latest]
+    runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v2

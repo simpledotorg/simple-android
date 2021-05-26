@@ -11,7 +11,7 @@ class LatestRecentPatientsUpdate : Update<LatestRecentPatientsModel, LatestRecen
       model: LatestRecentPatientsModel,
       event: LatestRecentPatientsEvent
   ): Next<LatestRecentPatientsModel, LatestRecentPatientsEffect> {
-    return when(event) {
+    return when (event) {
       is RecentPatientsLoaded -> next(model.recentPatientsLoaded(event.recentPatients))
       is RecentPatientItemClicked -> dispatch(OpenPatientSummary(event.patientUuid))
       SeeAllItemClicked -> dispatch(OpenAllRecentPatientsScreen)

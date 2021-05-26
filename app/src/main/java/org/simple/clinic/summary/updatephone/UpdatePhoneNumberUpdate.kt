@@ -7,7 +7,10 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator
 
 class UpdatePhoneNumberUpdate : Update<UpdatePhoneNumberModel, UpdatePhoneNumberEvent, UpdatePhoneNumberEffect> {
 
-  override fun update(model: UpdatePhoneNumberModel, event: UpdatePhoneNumberEvent): Next<UpdatePhoneNumberModel, UpdatePhoneNumberEffect> {
+  override fun update(
+      model: UpdatePhoneNumberModel,
+      event: UpdatePhoneNumberEvent
+  ): Next<UpdatePhoneNumberModel, UpdatePhoneNumberEffect> {
     return when (event) {
       is PhoneNumberLoaded -> dispatch(PrefillPhoneNumber(event.phoneNumber))
       is PhoneNumberValidated -> phoneNumberValidated(event, model)

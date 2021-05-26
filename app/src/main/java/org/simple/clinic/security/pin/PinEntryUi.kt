@@ -6,7 +6,7 @@ import java.time.Instant
 
 interface PinEntryUi {
 
-  sealed class Mode: Parcelable {
+  sealed class Mode : Parcelable {
 
     @Parcelize
     object PinEntry : Mode()

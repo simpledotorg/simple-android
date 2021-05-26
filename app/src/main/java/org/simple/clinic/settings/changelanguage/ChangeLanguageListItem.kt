@@ -45,11 +45,17 @@ data class ChangeLanguageListItem(
   }
 
   class DiffCallback : DiffUtil.ItemCallback<ChangeLanguageListItem>() {
-    override fun areItemsTheSame(oldItem: ChangeLanguageListItem, newItem: ChangeLanguageListItem): Boolean {
+    override fun areItemsTheSame(
+        oldItem: ChangeLanguageListItem,
+        newItem: ChangeLanguageListItem
+    ): Boolean {
       return oldItem.language.languageCode == newItem.language.languageCode
     }
 
-    override fun areContentsTheSame(oldItem: ChangeLanguageListItem, newItem: ChangeLanguageListItem): Boolean {
+    override fun areContentsTheSame(
+        oldItem: ChangeLanguageListItem,
+        newItem: ChangeLanguageListItem
+    ): Boolean {
       return oldItem == newItem
     }
   }

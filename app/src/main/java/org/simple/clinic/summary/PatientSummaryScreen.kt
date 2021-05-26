@@ -186,7 +186,10 @@ class PatientSummaryScreen :
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
   }
 
-  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): ScreenPatientSummaryBinding {
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ): ScreenPatientSummaryBinding {
     return ScreenPatientSummaryBinding.inflate(layoutInflater, container, false)
   }
 

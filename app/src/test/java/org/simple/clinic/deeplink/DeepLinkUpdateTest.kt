@@ -80,7 +80,7 @@ class DeepLinkUpdateTest {
   }
 
   @Test
-  fun `if user is logged in and is not allowed to log teleconsult, then show user is not authorised to teleconsult log`(){
+  fun `if user is logged in and is not allowed to log teleconsult, then show user is not authorised to teleconsult log`() {
     val model = DeepLinkModel.default(patientUuid, null, false)
 
     updateSpec
@@ -94,7 +94,7 @@ class DeepLinkUpdateTest {
 
 
   @Test
-  fun `if user is logged in and is not aware of teleconsult, then show user is not authorised to teleconsult log`(){
+  fun `if user is logged in and is not aware of teleconsult, then show user is not authorised to teleconsult log`() {
     val model = DeepLinkModel.default(patientUuid, null, false)
     val userWithOldAppVersion = TestData.loggedInUser(
         uuid = UUID.fromString("ce7af001-5b38-4f4b-9d7c-62af2a47643e"),

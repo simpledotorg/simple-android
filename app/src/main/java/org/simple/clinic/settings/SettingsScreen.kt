@@ -20,7 +20,6 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreenKey
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject

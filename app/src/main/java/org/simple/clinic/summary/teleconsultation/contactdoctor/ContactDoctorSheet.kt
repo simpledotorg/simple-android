@@ -138,7 +138,10 @@ class ContactDoctorSheet : BottomSheetActivity(), ContactDoctorUi, ContactDoctor
     itemAdapter.submitList(DoctorListItem.from(medicalOfficers))
   }
 
-  override fun sendTeleconsultMessage(teleconsultInfo: PatientTeleconsultationInfo, messageTarget: MessageTarget) {
+  override fun sendTeleconsultMessage(
+      teleconsultInfo: PatientTeleconsultationInfo,
+      messageTarget: MessageTarget
+  ) {
     when (messageTarget) {
       MessageTarget.WHATSAPP -> sendWhatsAppMessage(teleconsultInfo)
       MessageTarget.SMS -> sendSmsMessage(teleconsultInfo)

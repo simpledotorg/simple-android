@@ -14,7 +14,10 @@ import org.simple.clinic.onboarding.OnboardingScreen.OnboardingScreenKey
 import org.simple.clinic.router.screen.FullScreenKey
 import javax.inject.Inject
 
-class SplashScreen(context: Context, attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet) {
+class SplashScreen(
+    context: Context,
+    attributeSet: AttributeSet
+) : ConstraintLayout(context, attributeSet) {
 
   @Inject
   lateinit var router: Router

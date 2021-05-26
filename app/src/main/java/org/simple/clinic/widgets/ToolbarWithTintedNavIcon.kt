@@ -3,10 +3,10 @@ package org.simple.clinic.widgets
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import androidx.annotation.ColorInt
-import androidx.core.graphics.drawable.DrawableCompat
-import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
+import androidx.annotation.ColorInt
+import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.drawable.DrawableCompat
 import org.simple.clinic.R
 
 class ToolbarWithTintedNavIcon(context: Context, attrs: AttributeSet) : Toolbar(context, attrs) {

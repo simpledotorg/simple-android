@@ -15,7 +15,10 @@ class EditMedicinesUpdate(
     private val timeZone: ZoneId
 ) : Update<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect> {
 
-  override fun update(model: EditMedicinesModel, event: EditMedicinesEvent): Next<EditMedicinesModel, EditMedicinesEffect> {
+  override fun update(
+      model: EditMedicinesModel,
+      event: EditMedicinesEvent
+  ): Next<EditMedicinesModel, EditMedicinesEffect> {
     return when (event) {
       AddNewPrescriptionClicked -> dispatch(ShowNewPrescriptionEntrySheet(model.patientUuid))
       is ProtocolDrugClicked -> dispatch(OpenDosagePickerSheet(event.drugName, model.patientUuid, event.prescription?.uuid))

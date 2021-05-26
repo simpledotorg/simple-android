@@ -2,11 +2,11 @@ package org.simple.clinic.home.patients
 
 import android.app.Dialog
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.view.View
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import androidx.appcompat.app.AppCompatDialogFragment
-import android.view.View
+import com.google.android.material.snackbar.Snackbar
 import org.simple.clinic.R
 
 class LoggedOutOnOtherDeviceDialog : AppCompatDialogFragment() {

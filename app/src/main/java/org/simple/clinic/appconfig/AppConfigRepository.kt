@@ -8,7 +8,6 @@ import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.toOptional
 import javax.inject.Inject
 
 /**

@@ -15,6 +15,12 @@ data class OpenDrugDurationSheet(val prescription: PrescribedDrug) : Teleconsult
 
 data class OpenDrugFrequencySheet(val prescription: PrescribedDrug) : TeleconsultMedicinesEffect()
 
-data class UpdateDrugDuration(val prescribedDrugUuid: UUID, val duration: Duration) : TeleconsultMedicinesEffect()
+data class UpdateDrugDuration(
+    val prescribedDrugUuid: UUID,
+    val duration: Duration
+) : TeleconsultMedicinesEffect()
 
-data class UpdateDrugFrequency(val prescribedDrugUuid: UUID, val drugFrequency: MedicineFrequency) : TeleconsultMedicinesEffect()
+data class UpdateDrugFrequency(
+    val prescribedDrugUuid: UUID,
+    val drugFrequency: MedicineFrequency
+) : TeleconsultMedicinesEffect()

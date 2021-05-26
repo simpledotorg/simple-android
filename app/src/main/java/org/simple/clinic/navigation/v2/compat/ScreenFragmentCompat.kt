@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.ScreenKey
 
-class ScreenFragmentCompat: Fragment(), HandlesBack {
+class ScreenFragmentCompat : Fragment(), HandlesBack {
 
   companion object {
     fun create() = ScreenFragmentCompat()

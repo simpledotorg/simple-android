@@ -155,11 +155,17 @@ data class OverdueAppointmentRow(
   }
 
   class DiffCallback : DiffUtil.ItemCallback<OverdueAppointmentRow>() {
-    override fun areItemsTheSame(oldItem: OverdueAppointmentRow, newItem: OverdueAppointmentRow): Boolean {
+    override fun areItemsTheSame(
+        oldItem: OverdueAppointmentRow,
+        newItem: OverdueAppointmentRow
+    ): Boolean {
       return oldItem.patientUuid == newItem.patientUuid
     }
 
-    override fun areContentsTheSame(oldItem: OverdueAppointmentRow, newItem: OverdueAppointmentRow): Boolean {
+    override fun areContentsTheSame(
+        oldItem: OverdueAppointmentRow,
+        newItem: OverdueAppointmentRow
+    ): Boolean {
       return oldItem == newItem
     }
   }

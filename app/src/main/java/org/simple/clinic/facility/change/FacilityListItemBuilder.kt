@@ -54,7 +54,11 @@ class FacilityListItemBuilder @Inject constructor(val distanceCalculator: Distan
         .map { (facility, _) -> facility }
   }
 
-  private fun uiModel(facility: Facility, searchQuery: String, isLastItemInSection: Boolean): FacilityOption {
+  private fun uiModel(
+      facility: Facility,
+      searchQuery: String,
+      isLastItemInSection: Boolean
+  ): FacilityOption {
     val canHighlight = searchQuery.isNotBlank() && facility.name.contains(searchQuery, ignoreCase = true)
 
     val highlightedName = if (canHighlight) {

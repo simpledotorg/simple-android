@@ -6,7 +6,7 @@ import org.simple.clinic.storage.inTransaction
 import javax.inject.Inject
 
 @Suppress("ClassName")
-class Migration_81 @Inject constructor(): Migration(80, 81) {
+class Migration_81 @Inject constructor() : Migration(80, 81) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     database.execSQL("PRAGMA foreign_keys = OFF")

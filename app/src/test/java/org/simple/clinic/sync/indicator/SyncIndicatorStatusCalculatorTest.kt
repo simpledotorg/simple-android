@@ -15,7 +15,6 @@ import org.junit.runner.RunWith
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.DataSync.SyncGroupResult
 import org.simple.clinic.sync.LastSyncedState
-import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncGroup.DAILY
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.sync.SyncProgress
@@ -86,7 +85,9 @@ class SyncIndicatorStatusCalculatorTest {
 
   @Test
   @Parameters(value = ["SUCCESS", "FAILURE", "SYNCING"])
-  fun `when the daily sync group sync status changes, the last synced state preference should not be affected`(progress: SyncProgress) {
+  fun `when the daily sync group sync status changes, the last synced state preference should not be affected`(
+      progress: SyncProgress
+  ) {
     // given
     val lastSyncSucceededAt = Instant.now(clock).minusSeconds(1)
     val initialState = LastSyncedState(lastSyncProgress = SUCCESS, lastSyncSucceededAt = lastSyncSucceededAt)

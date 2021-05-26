@@ -14,7 +14,11 @@ interface ContactPatientUi {
   fun showSecureCallUi()
   fun hideSecureCallUi()
 
-  fun renderSelectedAppointmentDate(selectedAppointmentReminderPeriod: TimeToAppointment, selectedDate: LocalDate)
+  fun renderSelectedAppointmentDate(
+      selectedAppointmentReminderPeriod: TimeToAppointment,
+      selectedDate: LocalDate
+  )
+
   fun disablePreviousReminderDateStepper()
   fun enablePreviousReminderDateStepper()
   fun disableNextReminderDateStepper()

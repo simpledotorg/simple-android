@@ -358,7 +358,7 @@ class WeightedLevenshteinSearchTest {
 
     return listOf(
         testCase(
-            names = listOf("Ashok Sharma", "Ashok Sharma123", "Ashok 123 Sharma","Ashok Sharma(2345)", "Ashok(134) Sharma"),
+            names = listOf("Ashok Sharma", "Ashok Sharma123", "Ashok 123 Sharma", "Ashok Sharma(2345)", "Ashok(134) Sharma"),
             searchTerm = "Ashok Sharma",
             expectedResultIndices = listOf(0, 1, 2, 3, 4)
         ),
@@ -378,17 +378,17 @@ class WeightedLevenshteinSearchTest {
             expectedResultIndices = listOf(0, 1, 2)
         ),
         testCase(
-            names = listOf("रक्षक हेगड़े(123)","रक्षक हेगड़े", "रक्षक हेगड़े(१२३)"),
+            names = listOf("रक्षक हेगड़े(123)", "रक्षक हेगड़े", "रक्षक हेगड़े(१२३)"),
             searchTerm = "रक्षक हेगड़े",
             expectedResultIndices = listOf(0, 1, 2)
         ),
         testCase(
-            names = listOf("ਸਾਕੇਤ ਨਾਰਾਇਣ(123)","ਸਾਕੇਤ ਨਾਰਾਇਣ", "ਸਾਕੇਤ ਨਾਰਾਇਣ(੧੨੩)"),
+            names = listOf("ਸਾਕੇਤ ਨਾਰਾਇਣ(123)", "ਸਾਕੇਤ ਨਾਰਾਇਣ", "ਸਾਕੇਤ ਨਾਰਾਇਣ(੧੨੩)"),
             searchTerm = "ਸਾਕੇਤ ਨਾਰਾਇਣ",
             expectedResultIndices = listOf(0, 1, 2)
         ),
         testCase(
-            names = listOf("പ്രതുൽ കാലിലെ(123)","പ്രതുൽ കാലിലെ", "പ്രതുൽ കാലിലെ(൧൨൩)"),
+            names = listOf("പ്രതുൽ കാലിലെ(123)", "പ്രതുൽ കാലിലെ", "പ്രതുൽ കാലിലെ(൧൨൩)"),
             searchTerm = "പ്രതുൽ കാലിലെ",
             expectedResultIndices = listOf(0, 1, 2)
         )

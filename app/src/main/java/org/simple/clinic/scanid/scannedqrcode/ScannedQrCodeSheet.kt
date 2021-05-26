@@ -56,7 +56,10 @@ class ScannedQrCodeSheet :
 
   override fun uiRenderer() = ScannedQrCodeUiRenderer(this)
 
-  override fun bindView(inflater: LayoutInflater, container: ViewGroup?): SheetScannedQrCodeBinding {
+  override fun bindView(
+      inflater: LayoutInflater,
+      container: ViewGroup?
+  ): SheetScannedQrCodeBinding {
     return SheetScannedQrCodeBinding.inflate(layoutInflater, container, false)
   }
 

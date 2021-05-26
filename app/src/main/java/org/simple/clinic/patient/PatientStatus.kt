@@ -8,7 +8,7 @@ import com.squareup.moshi.ToJson
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
-sealed class PatientStatus: Parcelable {
+sealed class PatientStatus : Parcelable {
 
   @Parcelize
   object Active : PatientStatus()

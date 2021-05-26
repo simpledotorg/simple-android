@@ -109,12 +109,12 @@ class BloodPressureValidationMockDateValidatorTest {
   @Suppress("unused")
   fun `params for showing date validation errors`(): List<InvalidDateTestParams> {
     return listOf(
-        InvalidDateTestParams(New(patientUuid), "01", "01", "2099", DateIsInFuture) {
-          ui: Ui -> verify(ui).showDateIsInFutureError()
+        InvalidDateTestParams(New(patientUuid), "01", "01", "2099", DateIsInFuture) { ui: Ui ->
+          verify(ui).showDateIsInFutureError()
         },
 
-        InvalidDateTestParams(Update(existingBpUuid), "01", "01", "2099", DateIsInFuture) {
-          ui: Ui -> verify(ui).showDateIsInFutureError()
+        InvalidDateTestParams(Update(existingBpUuid), "01", "01", "2099", DateIsInFuture) { ui: Ui ->
+          verify(ui).showDateIsInFutureError()
         }
     )
   }

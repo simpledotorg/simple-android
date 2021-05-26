@@ -50,7 +50,11 @@ class LengthBasedNumberValidator(
     }
   }
 
-  fun validateLandlinesOrMobile(number: String, minimumRequiredLength: Int, maximumAllowedLength: Int): Result {
+  fun validateLandlinesOrMobile(
+      number: String,
+      minimumRequiredLength: Int,
+      maximumAllowedLength: Int
+  ): Result {
     return when {
       number.isBlank() -> Blank
       number.length < minimumRequiredLength -> LengthTooShort(minimumRequiredLength)
@@ -59,7 +63,11 @@ class LengthBasedNumberValidator(
     }
   }
 
-  private fun validateMobile(number: String, minimumRequiredLength: Int, maximumAllowedLength: Int): Result {
+  private fun validateMobile(
+      number: String,
+      minimumRequiredLength: Int,
+      maximumAllowedLength: Int
+  ): Result {
     return when {
       number.isBlank() -> Blank
       number.length < minimumRequiredLength -> LengthTooShort(minimumRequiredLength)

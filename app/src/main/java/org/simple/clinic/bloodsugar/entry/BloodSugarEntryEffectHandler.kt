@@ -100,7 +100,10 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
   private fun getExistingBloodSugarMeasurement(bloodSugarMeasurementUuid: UUID): BloodSugarMeasurement? =
       bloodSugarRepository.measurement(bloodSugarMeasurementUuid)
 
-  private fun showBloodSugarValidationError(result: ValidationResult, unitPreference: BloodSugarUnitPreference) {
+  private fun showBloodSugarValidationError(
+      result: ValidationResult,
+      unitPreference: BloodSugarUnitPreference
+  ) {
     when (result) {
       ErrorBloodSugarEmpty -> ui.showBloodSugarEmptyError()
       is ErrorBloodSugarTooHigh -> ui.showBloodSugarHighError(result.measurementType, unitPreference)

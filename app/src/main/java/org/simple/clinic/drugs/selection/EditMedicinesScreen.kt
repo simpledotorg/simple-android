@@ -195,7 +195,11 @@ class EditMedicinesScreen :
     router.pop()
   }
 
-  override fun showDosageSelectionSheet(drugName: String, patientUuid: UUID, prescribedDrugUuid: UUID?) {
+  override fun showDosageSelectionSheet(
+      drugName: String,
+      patientUuid: UUID,
+      prescribedDrugUuid: UUID?
+  ) {
     activity.startActivity(DosagePickerSheet.intent(requireContext(), drugName, patientUuid, prescribedDrugUuid))
   }
 

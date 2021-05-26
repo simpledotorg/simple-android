@@ -128,7 +128,10 @@ class TeleconsultSharePrescriptionScreen :
     return TeleconsultSharePrescriptionModel.create(screenKey.patientUuid, LocalDate.now(userClock))
   }
 
-  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): ScreenTeleconsultSharePrescriptionBinding {
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ): ScreenTeleconsultSharePrescriptionBinding {
     return ScreenTeleconsultSharePrescriptionBinding.inflate(layoutInflater, container, false)
   }
 

@@ -1,10 +1,8 @@
 package org.simple.clinic.router.screen
 
 import android.os.Parcelable
-
-import java.util.ArrayList
-
 import flow.MultiKey
+import java.util.ArrayList
 
 /**
  * Implemented by [FullScreenKeys][FullScreenKey] that have nested screens.

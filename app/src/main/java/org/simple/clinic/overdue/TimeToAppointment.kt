@@ -3,7 +3,7 @@ package org.simple.clinic.overdue
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-sealed class TimeToAppointment(val value: Int): Parcelable {
+sealed class TimeToAppointment(val value: Int) : Parcelable {
 
   @Parcelize
   data class Days(val daysTillAppointment: Int) : TimeToAppointment(daysTillAppointment)

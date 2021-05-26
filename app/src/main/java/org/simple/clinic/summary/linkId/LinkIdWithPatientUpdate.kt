@@ -7,7 +7,10 @@ import org.simple.clinic.mobius.next
 
 class LinkIdWithPatientUpdate : Update<LinkIdWithPatientModel, LinkIdWithPatientEvent, LinkIdWithPatientEffect> {
 
-  override fun update(model: LinkIdWithPatientModel, event: LinkIdWithPatientEvent): Next<LinkIdWithPatientModel, LinkIdWithPatientEffect> {
+  override fun update(
+      model: LinkIdWithPatientModel,
+      event: LinkIdWithPatientEvent
+  ): Next<LinkIdWithPatientModel, LinkIdWithPatientEffect> {
     return when (event) {
       LinkIdWithPatientCancelClicked -> dispatch(CloseSheetWithOutIdLinked)
       IdentifierAddedToPatient -> next(model.linkedIdToPatient(), CloseSheetWithLinkedId)

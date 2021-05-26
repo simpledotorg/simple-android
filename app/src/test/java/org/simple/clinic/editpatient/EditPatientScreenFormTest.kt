@@ -189,7 +189,9 @@ class EditPatientScreenFormTest {
 
   @Test
   @Parameters(method = "params for confirming discard changes")
-  fun `when back is clicked, the confirm discard changes popup must be shown if there have been changes`(testParams: ConfirmDiscardChangesTestParams) {
+  fun `when back is clicked, the confirm discard changes popup must be shown if there have been changes`(
+      testParams: ConfirmDiscardChangesTestParams
+  ) {
     val (existingSavedPatient,
         existingSavedAddress,
         existingSavedPhoneNumber,
@@ -803,7 +805,11 @@ class EditPatientScreenFormTest {
     }
   }
 
-  private fun screenCreated(patient: Patient, address: PatientAddress, phoneNumber: PatientPhoneNumber?) {
+  private fun screenCreated(
+      patient: Patient,
+      address: PatientAddress,
+      phoneNumber: PatientPhoneNumber?
+  ) {
     val editPatientEffectHandler = EditPatientEffectHandler(
         userClock = TestUserClock(),
         patientRepository = patientRepository,

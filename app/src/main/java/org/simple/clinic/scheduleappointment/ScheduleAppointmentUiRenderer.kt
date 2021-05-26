@@ -54,7 +54,10 @@ class ScheduleAppointmentUiRenderer(
     }
   }
 
-  private fun manageRequestCompletedStatus(model: ScheduleAppointmentModel, teleconsultRecord: TeleconsultRecord) {
+  private fun manageRequestCompletedStatus(
+      model: ScheduleAppointmentModel,
+      teleconsultRecord: TeleconsultRecord
+  ) {
     if (teleconsultRecord.teleconsultRequestInfo != null)
       manageNextButtonVisibility(model)
   }

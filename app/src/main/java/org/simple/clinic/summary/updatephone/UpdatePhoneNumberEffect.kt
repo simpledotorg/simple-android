@@ -18,6 +18,9 @@ data class ShowPhoneNumberTooLongError(val maximumRequiredNumberLength: Int) : U
 
 object CloseDialog : UpdatePhoneNumberEffect()
 
-data class SaveNewPhoneNumber(val patientUuid: PatientUuid, val newPhoneNumber: String) : UpdatePhoneNumberEffect()
+data class SaveNewPhoneNumber(
+    val patientUuid: PatientUuid,
+    val newPhoneNumber: String
+) : UpdatePhoneNumberEffect()
 
 data class SaveExistingPhoneNumber(val patientUuid: PatientUuid) : UpdatePhoneNumberEffect()

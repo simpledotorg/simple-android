@@ -1,11 +1,11 @@
 package org.simple.clinic.text.style
 
 import android.content.Context
+import android.text.ParcelableSpan
+import android.text.Spanned
 import android.text.TextPaint
 import android.text.style.TextAppearanceSpan
 import androidx.annotation.StyleRes
-import android.text.ParcelableSpan
-import android.text.Spanned
 
 /**
  * The platform [TextAppearanceSpan] does not support setting letter spacing for the spanned text.

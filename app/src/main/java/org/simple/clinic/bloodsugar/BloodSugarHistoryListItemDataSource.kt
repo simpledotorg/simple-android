@@ -45,7 +45,10 @@ class BloodSugarHistoryListItemDataSource(
     appDatabase.invalidationTracker.addObserver(invalidationTracker)
   }
 
-  override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<BloodSugarHistoryListItem>) {
+  override fun loadRange(
+      params: LoadRangeParams,
+      callback: LoadRangeCallback<BloodSugarHistoryListItem>
+  ) {
     // we are subtracting 1 from load size and page size to avoid the source data source
     // from using the params because we will be adding a header to the BloodSugarHistoryListItemDataSource list, which
     // is not present in the source data source
@@ -63,7 +66,10 @@ class BloodSugarHistoryListItemDataSource(
     })
   }
 
-  override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<BloodSugarHistoryListItem>) {
+  override fun loadInitial(
+      params: LoadInitialParams,
+      callback: LoadInitialCallback<BloodSugarHistoryListItem>
+  ) {
     // we are subtracting 1 from load size and page size to avoid the source data source
     // from using the params because we will be adding a header to the BloodSugarHistoryListItemDataSource list, which
     // is not present in the source data source
@@ -74,7 +80,11 @@ class BloodSugarHistoryListItemDataSource(
         params.placeholdersEnabled
     )
     source.loadInitial(loadParamsForDatabaseSource, object : LoadInitialCallback<BloodSugarMeasurement>() {
-      override fun onResult(measurements: MutableList<BloodSugarMeasurement>, position: Int, totalCount: Int) {
+      override fun onResult(
+          measurements: MutableList<BloodSugarMeasurement>,
+          position: Int,
+          totalCount: Int
+      ) {
         // Adding 1 to the total count so that BloodSugarHistoryListItemDataSource knows that we are
         // adding a another item on top the measurements total count
         val finalTotalCount = totalCount + 1
@@ -160,7 +170,10 @@ class BloodSugarHistoryListItemDataSourceFactory @AssistedInject constructor(
     ): BloodSugarHistoryListItemDataSourceFactory
   }
 
-  fun toObservable(config: PagedList.Config, detaches: Observable<Unit>): Observable<PagedList<BloodSugarHistoryListItem>> {
+  fun toObservable(
+      config: PagedList.Config,
+      detaches: Observable<Unit>
+  ): Observable<PagedList<BloodSugarHistoryListItem>> {
     disposable.add(
         detaches.subscribe {
           dataSource?.dispose()

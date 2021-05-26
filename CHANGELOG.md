@@ -4,6 +4,7 @@
 ### Internal
 - Bump Kotlin to v1.5.10
 - Bump AGP to v4.2.1
+- Use `.editorconfig` for project code style
 
 ## Features
 - Add NHID support in `PatientEntryScreen`

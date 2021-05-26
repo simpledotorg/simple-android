@@ -99,7 +99,9 @@ class BloodPressureEntrySheetLogicTest {
 
   @Test
   @Parameters(value = ["66", "44"])
-  fun `when invalid systolic value is entered, don't move cursor to diastolic field`(sampleSystolicBp: String) {
+  fun `when invalid systolic value is entered, don't move cursor to diastolic field`(
+      sampleSystolicBp: String
+  ) {
     sheetCreatedForNew(patientUuid)
     uiEvents.onNext(SystolicChanged(sampleSystolicBp))
     uiEvents.onNext(SystolicChanged(""))

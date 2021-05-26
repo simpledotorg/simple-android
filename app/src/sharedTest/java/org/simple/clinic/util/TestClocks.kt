@@ -12,7 +12,10 @@ class TestUtcClock(instant: Instant) : UtcClock() {
 
   constructor() : this(Instant.EPOCH)
 
-  constructor(localDate: LocalDate, zoneOffset: ZoneOffset = UTC) : this(instantFromDateAtZone(localDate, zoneOffset))
+  constructor(
+      localDate: LocalDate,
+      zoneOffset: ZoneOffset = UTC
+  ) : this(instantFromDateAtZone(localDate, zoneOffset))
 
   private var clock = fixed(instant, UTC)
 
@@ -40,7 +43,10 @@ class TestUserClock(instant: Instant) : UserClock() {
 
   constructor() : this(Instant.EPOCH)
 
-  constructor(localDate: LocalDate, zoneOffset: ZoneOffset = UTC) : this(instantFromDateAtZone(localDate, zoneOffset))
+  constructor(
+      localDate: LocalDate,
+      zoneOffset: ZoneOffset = UTC
+  ) : this(instantFromDateAtZone(localDate, zoneOffset))
 
   private var clock = fixed(instant, UTC)
 

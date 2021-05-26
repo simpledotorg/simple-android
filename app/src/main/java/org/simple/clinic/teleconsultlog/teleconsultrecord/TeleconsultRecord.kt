@@ -53,7 +53,12 @@ data class TeleconsultRecord(
     fun getCompleteTeleconsultLog(teleconsultRecordId: UUID): TeleconsultRecord
 
     @Query("UPDATE TeleconsultRecord SET record_medicalOfficerNumber = :medicalOfficerNumber, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE id = :teleconsultRecordId")
-    fun updateMedicalRegistrationId(teleconsultRecordId: UUID, medicalOfficerNumber: String, updatedAt: Instant, syncStatus: SyncStatus)
+    fun updateMedicalRegistrationId(
+        teleconsultRecordId: UUID,
+        medicalOfficerNumber: String,
+        updatedAt: Instant,
+        syncStatus: SyncStatus
+    )
 
     @Query("SELECT * FROM TeleconsultRecord WHERE syncStatus = :syncStatus")
     fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultRecord>
@@ -74,7 +79,12 @@ data class TeleconsultRecord(
     fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
 
     @Query("UPDATE TeleconsultRecord SET request_requesterCompletionStatus = :teleconsultStatus, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE id = :teleconsultRecordId")
-    fun updateRequesterCompletionStatus(teleconsultRecordId: UUID, teleconsultStatus: TeleconsultStatus, updatedAt: Instant, syncStatus: SyncStatus)
+    fun updateRequesterCompletionStatus(
+        teleconsultRecordId: UUID,
+        teleconsultStatus: TeleconsultStatus,
+        updatedAt: Instant,
+        syncStatus: SyncStatus
+    )
 
     @Query("""
       SELECT * FROM TeleconsultRecord

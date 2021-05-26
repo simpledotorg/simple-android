@@ -5,7 +5,10 @@ import android.util.AttributeSet
 import android.view.KeyEvent
 import android.widget.LinearLayout
 
-class LinearLayoutWithPreImeKeyEventListener(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
+class LinearLayoutWithPreImeKeyEventListener(
+    context: Context,
+    attrs: AttributeSet
+) : LinearLayout(context, attrs) {
 
   var backKeyPressInterceptor: (() -> Unit)? = null
 

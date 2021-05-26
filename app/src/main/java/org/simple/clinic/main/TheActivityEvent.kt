@@ -19,4 +19,4 @@ object UserWasUnauthorized : TheActivityEvent()
 
 object UserWasDisapproved : TheActivityEvent()
 
-object PatientDataCleared: TheActivityEvent()
+object PatientDataCleared : TheActivityEvent()

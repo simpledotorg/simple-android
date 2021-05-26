@@ -5,6 +5,6 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 
 sealed class RegistrationFacilitySelectionEffect
 
-data class OpenConfirmFacilitySheet(val facility: Facility): RegistrationFacilitySelectionEffect()
+data class OpenConfirmFacilitySheet(val facility: Facility) : RegistrationFacilitySelectionEffect()
 
 data class MoveToIntroVideoScreen(val registrationEntry: OngoingRegistrationEntry) : RegistrationFacilitySelectionEffect()

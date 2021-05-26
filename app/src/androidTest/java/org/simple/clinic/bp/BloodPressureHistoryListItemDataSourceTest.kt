@@ -105,7 +105,11 @@ class BloodPressureHistoryListItemDataSourceTest {
 
     appDatabase.bloodPressureDao().save(listOf(bloodPressureNow, bloodPressureInPast))
     dataSource.loadInitial(params, object : LoadInitialCallback<BloodPressureHistoryListItem>() {
-      override fun onResult(data: MutableList<BloodPressureHistoryListItem>, position: Int, totalCount: Int) {
+      override fun onResult(
+          data: MutableList<BloodPressureHistoryListItem>,
+          position: Int,
+          totalCount: Int
+      ) {
         assertThat(data)
             .containsExactly(
                 NewBpButton,

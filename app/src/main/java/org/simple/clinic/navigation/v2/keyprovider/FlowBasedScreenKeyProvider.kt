@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class FlowBasedScreenKeyProvider @Inject constructor(
     private val router: ScreenRouter
-): ScreenKeyProvider {
+) : ScreenKeyProvider {
 
   override fun <T> keyFor(view: View) = router.key<T>(view)
 }

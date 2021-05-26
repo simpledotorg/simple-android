@@ -7,7 +7,7 @@ import org.simple.clinic.patient.RecentPatient
 @Parcelize
 data class AllRecentPatientsModel(
     val recentPatients: List<RecentPatient>?
-): Parcelable {
+) : Parcelable {
 
   companion object {
     fun create(): AllRecentPatientsModel {

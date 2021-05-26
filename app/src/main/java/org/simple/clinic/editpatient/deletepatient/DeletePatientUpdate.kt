@@ -8,7 +8,10 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.DeletedReason
 
 class DeletePatientUpdate : Update<DeletePatientModel, DeletePatientEvent, DeletePatientEffect> {
-  override fun update(model: DeletePatientModel, event: DeletePatientEvent): Next<DeletePatientModel, DeletePatientEffect> {
+  override fun update(
+      model: DeletePatientModel,
+      event: DeletePatientEvent
+  ): Next<DeletePatientModel, DeletePatientEffect> {
     return when (event) {
       is PatientDeleteReasonClicked -> patientDeleteReasonClicked(model, event)
       is PatientLoaded -> patientNameLoaded(model, event)

@@ -7,7 +7,7 @@
 
     <meta-data
       android:name="listener"
-      android:value="org.simple.clinic.QuarantineRunListener"/>
+      android:value="org.simple.clinic.QuarantineRunListener" />
 
   </instrumentation>
 </manifest>

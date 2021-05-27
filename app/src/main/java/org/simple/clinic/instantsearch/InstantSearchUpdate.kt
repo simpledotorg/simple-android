@@ -79,6 +79,10 @@ class InstantSearchUpdate @Inject constructor(
       is NumericCriteria -> OngoingNewPatientEntry.default()
     }
 
+    if (model.canBePrefilled) {
+      ongoingPatientEntry = ongoingPatientEntry.withPatientPrefillInfo(model.patientPrefillInfo!!, model.additionalIdentifier!!)
+    }
+
     if (model.hasAdditionalIdentifier) {
       ongoingPatientEntry = ongoingPatientEntry.withIdentifier(model.additionalIdentifier!!)
     }

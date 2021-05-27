@@ -7,6 +7,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier
@@ -14,6 +15,8 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 class InstantSearchUpdateTest {
@@ -293,6 +296,40 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SaveNewOngoingPatientEntry(ongoingPatientEntry))
+        ))
+  }
+
+  @Test
+  fun `when register new patient is clicked and patient prefill info is not empty, then save it in ongoing patient entry`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("885c6339-9a96-4c8d-bfea-7eea74de6862"),
+    )
+    val searchQueryModel = defaultModel
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    val indiaNationalHealthID = "28-3123-2283-6682"
+    val patientPrefillInfo = TestData.indiaNHIDInfoPayload(
+        healthIdNumber = indiaNationalHealthID
+    ).toPatientPrefillInfo()
+
+    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
+
+    val ongoingNewPatientEntry = OngoingNewPatientEntry(
+        personalDetails = OngoingNewPatientEntry.PersonalDetails(
+            fullName = patientPrefillInfo.fullName,
+            dateOfBirth = null,
+            gender = Gender.Unknown("M"),
+            age = null),
+        address = OngoingNewPatientEntry.Address.BLANK.withColonyOrVillage(patientPrefillInfo.address),
+        identifier = identifier)
+
+    updateSpec
+        .given(searchQueryModel.patientPrefillInfoUpdated(patientPrefillInfo).additionalIdentifierUpdated(identifier))
+        .whenEvent(RegisterNewPatientClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SaveNewOngoingPatientEntry(ongoingNewPatientEntry))
         ))
   }
 

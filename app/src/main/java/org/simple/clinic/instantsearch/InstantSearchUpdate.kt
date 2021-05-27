@@ -86,7 +86,7 @@ class InstantSearchUpdate @Inject constructor(
       ongoingPatientEntry = ongoingPatientEntry.withPatientPrefillInfo(model.patientPrefillInfo!!, model.additionalIdentifier!!, dateTimeFormatter)
     }
 
-    if (model.hasAdditionalIdentifier) {
+    if (model.isAdditionalIdentifierBpPassport) {
       ongoingPatientEntry = ongoingPatientEntry.withIdentifier(model.additionalIdentifier!!)
     }
 

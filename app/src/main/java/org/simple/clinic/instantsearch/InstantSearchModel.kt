@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.scanid.PatientPrefillInfo
 
@@ -25,6 +26,9 @@ data class InstantSearchModel(
 
   val hasAdditionalIdentifier: Boolean
     get() = additionalIdentifier != null
+
+  val isAdditionalIdentifierBpPassport: Boolean
+  get() = additionalIdentifier?.type == BpPassport && hasAdditionalIdentifier
 
   val isAdditionalIdentifierAnNHID: Boolean
     get() = additionalIdentifier?.type == IndiaNationalHealthId && hasAdditionalIdentifier

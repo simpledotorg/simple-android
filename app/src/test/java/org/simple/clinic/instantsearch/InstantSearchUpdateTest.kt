@@ -324,7 +324,7 @@ class InstantSearchUpdateTest {
             gender = Gender.Male,
             age = null),
         address = OngoingNewPatientEntry.Address.BLANK.withColonyOrVillage(patientPrefillInfo.address),
-        identifier = identifier)
+        alternativeId = identifier)
 
     updateSpec
         .given(searchQueryModel.patientPrefillInfoUpdated(patientPrefillInfo).additionalIdentifierUpdated(identifier))
@@ -336,7 +336,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when register new patient is clicked and patient prefill info is not empty and dob is in wrong format, then save it in ongoing patient entry with dob in correct format`(){
+  fun `when register new patient is clicked and patient prefill info is not empty and dob is in wrong format, then save it in ongoing patient entry with dob in correct format`() {
     val facility = TestData.facility()
     val searchQueryModel = defaultModel
         .facilityLoaded(facility)
@@ -361,7 +361,7 @@ class InstantSearchUpdateTest {
             gender = Gender.Male,
             age = null),
         address = OngoingNewPatientEntry.Address.BLANK.withColonyOrVillage(patientPrefillInfo.address),
-        identifier = identifier)
+        alternativeId = identifier)
 
     updateSpec
         .given(searchQueryModel.patientPrefillInfoUpdated(patientPrefillInfo).additionalIdentifierUpdated(identifier))

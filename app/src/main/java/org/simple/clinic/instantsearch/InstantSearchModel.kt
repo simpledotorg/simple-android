@@ -28,7 +28,7 @@ data class InstantSearchModel(
     get() = additionalIdentifier != null
 
   val isAdditionalIdentifierBpPassport: Boolean
-  get() = additionalIdentifier?.type == BpPassport && hasAdditionalIdentifier
+    get() = additionalIdentifier?.type == BpPassport && hasAdditionalIdentifier
 
   val isAdditionalIdentifierAnNHID: Boolean
     get() = additionalIdentifier?.type == IndiaNationalHealthId && hasAdditionalIdentifier
@@ -37,7 +37,10 @@ data class InstantSearchModel(
     get() = patientPrefillInfo != null && isAdditionalIdentifierAnNHID
 
   companion object {
-    fun create(additionalIdentifier: Identifier?, patientPrefillInfo: PatientPrefillInfo?) = InstantSearchModel(
+    fun create(
+        additionalIdentifier: Identifier?,
+        patientPrefillInfo: PatientPrefillInfo?
+    ) = InstantSearchModel(
         facility = null,
         searchQuery = null,
         additionalIdentifier = additionalIdentifier,

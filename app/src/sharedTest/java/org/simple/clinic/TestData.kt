@@ -1232,7 +1232,7 @@ object TestData {
       indiaNHIDGender: IndiaNHIDGender = IndiaNHIDGender.MALE,
       state: String = "Maharashtra",
       district: String = "Thane",
-      dateOfBirth: LocalDate = LocalDate.parse("12/12/1997", DateTimeFormatter.ofPattern("d/M/yyyy")),
+      dateOfBirth: LocalDate = LocalDate.parse("1997-12-12"),
       address: String = "Obvious HQ"
   ) = IndiaNHIDInfoPayload(
       healthIdNumber = healthIdNumber,

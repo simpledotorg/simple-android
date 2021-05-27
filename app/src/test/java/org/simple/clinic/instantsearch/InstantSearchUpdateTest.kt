@@ -15,7 +15,6 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -343,7 +342,7 @@ class InstantSearchUpdateTest {
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
-    val dateOfBirthWithWrongFormat = LocalDate.parse("2/3/2012", DateTimeFormatter.ofPattern("d/M/yyyy"))
+    val dateOfBirthWithWrongFormat = LocalDate.parse("2012-03-02")
     val dateOfBirthWithCorrectFormat = "02/03/2012"
 
     val indiaNationalHealthID = "28-3123-2283-6682"

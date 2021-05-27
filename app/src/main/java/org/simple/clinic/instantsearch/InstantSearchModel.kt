@@ -74,4 +74,8 @@ data class InstantSearchModel(
   fun additionalIdentifierUpdated(additionalIdentifier: Identifier): InstantSearchModel {
     return copy(additionalIdentifier = additionalIdentifier)
   }
+
+  fun patientPrefillInfoUpdated(patientPrefillInfo: PatientPrefillInfo): InstantSearchModel {
+    return copy(patientPrefillInfo = patientPrefillInfo)
+  }
 }

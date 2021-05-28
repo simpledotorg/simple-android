@@ -82,6 +82,7 @@ import java.net.URI
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset.UTC
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import kotlin.random.nextInt
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer as TeleconsultRecordAnswer
@@ -1230,7 +1231,7 @@ object TestData {
       gender: String = "M",
       state: String = "Maharashtra",
       district: String = "Thane",
-      dateOfBirth: String = "12/12/1997",
+      dateOfBirth: LocalDate = LocalDate.parse("12/12/1997", DateTimeFormatter.ofPattern("d/M/yyyy")),
       address: String = "Obvious HQ"
   ) = IndiaNHIDInfoPayload(
       healthIdNumber = healthIdNumber,

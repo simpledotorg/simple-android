@@ -16,6 +16,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNatio
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
@@ -318,7 +319,7 @@ class InstantSearchUpdateTest {
     val ongoingNewPatientEntry = OngoingNewPatientEntry(
         personalDetails = OngoingNewPatientEntry.PersonalDetails(
             fullName = patientPrefillInfo.fullName,
-            dateOfBirth = null,
+            dateOfBirth = patientPrefillInfo.dateOfBirth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
             gender = Gender.Unknown("M"),
             age = null),
         address = OngoingNewPatientEntry.Address.BLANK.withColonyOrVillage(patientPrefillInfo.address),

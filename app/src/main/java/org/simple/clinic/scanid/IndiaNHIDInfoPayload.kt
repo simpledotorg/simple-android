@@ -2,6 +2,7 @@ package org.simple.clinic.scanid
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.simple.clinic.patient.Gender
 import java.time.LocalDate
 
 @JsonClass(generateAdapter = true)
@@ -17,7 +18,7 @@ data class IndiaNHIDInfoPayload(
     val fullName: String,
 
     @Json(name = "gender")
-    val gender: String,
+    val indiaNHIDGender: IndiaNHIDGender,
 
     @Json(name = "statelgd")
     val state: String?,
@@ -35,7 +36,7 @@ data class IndiaNHIDInfoPayload(
   fun toPatientPrefillInfo(): PatientPrefillInfo {
     return PatientPrefillInfo(
         fullName = fullName,
-        gender = gender,
+        gender = Gender.fromIndiaNHIDToGender(indiaNHIDGender),
         dateOfBirth = dateOfBirth,
         address = address
     )

@@ -279,9 +279,10 @@ class ScanSimpleIdScreen : BaseScreen<
     router.replaceTop(ShortCodeSearchResultScreenKey(shortCode))
   }
 
-  override fun openPatientSearch(additionalIdentifier: Identifier?, initialSearchQuery: String?) {
+  override fun openPatientSearch(additionalIdentifier: Identifier?, initialSearchQuery: String?, patientPrefillInfo: PatientPrefillInfo?) {
     val keyToPush = InstantSearchScreenKey(additionalIdentifier = additionalIdentifier,
-        initialSearchQuery = null)
+        initialSearchQuery = null,
+        patientPrefillInfo = patientPrefillInfo)
 
     when (val openedFrom = screenKey.openedFrom) {
       OpenedFrom.InstantSearchScreen -> router.replaceKeyOfSameType(keyToPush)

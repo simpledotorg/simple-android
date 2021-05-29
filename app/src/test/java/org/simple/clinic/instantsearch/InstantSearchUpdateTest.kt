@@ -7,22 +7,27 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import java.util.UUID
 
 class InstantSearchUpdateTest {
 
-  private val updateSpec = UpdateSpec(InstantSearchUpdate(false))
+  private val dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+  private val updateSpec = UpdateSpec(InstantSearchUpdate(false, dateOfBirthFormatter))
   private val identifier = TestData.identifier(
       value = "3e5500fe-e10e-4009-a0bb-3db9009fdef6",
       type = BpPassport
   )
-  private val defaultModel = InstantSearchModel.create(identifier)
+  private val defaultModel = InstantSearchModel.create(identifier, null)
 
   @Test
   fun `when current facility is loaded, then update the model and load all patients`() {
@@ -177,7 +182,7 @@ class InstantSearchUpdateTest {
         name = "PHC Obvious"
     )
     val model = InstantSearchModel
-        .create(additionalIdentifier = null)
+        .create(additionalIdentifier = null, patientPrefillInfo = null)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -198,11 +203,16 @@ class InstantSearchUpdateTest {
         name = "PHC Obvious"
     )
 
+    val indiaNationalHealthID = "28-3123-2283-6682"
+    val patientPrefillInfo = TestData.indiaNHIDInfoPayload(
+        healthIdNumber = indiaNationalHealthID
+    ).toPatientPrefillInfo()
+
+    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
+
     val model = InstantSearchModel
-        .create(additionalIdentifier =
-        TestData.identifier(
-            value = "28-3123-2283-6682",
-            type = IndiaNationalHealthId))
+        .create(additionalIdentifier = identifier,
+            patientPrefillInfo = patientPrefillInfo)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -224,7 +234,7 @@ class InstantSearchUpdateTest {
         name = "PHC Obvious"
     )
     val model = InstantSearchModel
-        .create(additionalIdentifier = identifier)
+        .create(additionalIdentifier = identifier, patientPrefillInfo = null)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -291,6 +301,40 @@ class InstantSearchUpdateTest {
   }
 
   @Test
+  fun `when register new patient is clicked and patient prefill info is not empty, then save it in ongoing patient entry`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("885c6339-9a96-4c8d-bfea-7eea74de6862"),
+    )
+    val searchQueryModel = defaultModel
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    val indiaNationalHealthID = "28-3123-2283-6682"
+    val patientPrefillInfo = TestData.indiaNHIDInfoPayload(
+        healthIdNumber = indiaNationalHealthID
+    ).toPatientPrefillInfo()
+
+    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
+
+    val ongoingNewPatientEntry = OngoingNewPatientEntry(
+        personalDetails = OngoingNewPatientEntry.PersonalDetails(
+            fullName = patientPrefillInfo.fullName,
+            dateOfBirth = patientPrefillInfo.dateOfBirth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+            gender = Gender.Male,
+            age = null),
+        address = OngoingNewPatientEntry.Address.BLANK.withColonyOrVillage(patientPrefillInfo.address),
+        identifier = identifier)
+
+    updateSpec
+        .given(searchQueryModel.patientPrefillInfoUpdated(patientPrefillInfo).additionalIdentifierUpdated(identifier))
+        .whenEvent(RegisterNewPatientClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SaveNewOngoingPatientEntry(ongoingNewPatientEntry))
+        ))
+  }
+
+  @Test
   fun `when register new patient is selected in blank scanned qr code sheet, then register new patient`() {
     val ongoingPatientEntry = OngoingNewPatientEntry.fromFullName("")
         .withIdentifier(identifier)
@@ -340,7 +384,7 @@ class InstantSearchUpdateTest {
 
   @Test
   fun `when search query is valid with a numeric criteria and instant search by patient identifier feature flag is enabled, then load search results with numeric criteria`() {
-    val updateSpec = UpdateSpec(InstantSearchUpdate(true))
+    val updateSpec = UpdateSpec(InstantSearchUpdate(true, dateOfBirthFormatter))
     val facility = TestData.facility(
         uuid = UUID.fromString("f7951ae6-e6c0-4b79-bf3e-2ddd637fa7b4"),
         name = "PHC Obvious"
@@ -365,7 +409,7 @@ class InstantSearchUpdateTest {
 
   @Test
   fun `when search query is valid with a numeric criteria and instant search by patient identifier feature flag is disabled, then load search results with phone number criteria`() {
-    val updateSpec = UpdateSpec(InstantSearchUpdate(false))
+    val updateSpec = UpdateSpec(InstantSearchUpdate(false, dateOfBirthFormatter))
     val facility = TestData.facility(
         uuid = UUID.fromString("f7951ae6-e6c0-4b79-bf3e-2ddd637fa7b4"),
         name = "PHC Obvious"
@@ -395,11 +439,16 @@ class InstantSearchUpdateTest {
         name = "PHC Obvious"
     )
 
+    val indiaNationalHealthID = "28-3123-2283-6682"
+    val patientPrefillInfo = TestData.indiaNHIDInfoPayload(
+        healthIdNumber = indiaNationalHealthID
+    ).toPatientPrefillInfo()
+
+    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
+
     val model = InstantSearchModel
-        .create(additionalIdentifier =
-        TestData.identifier(
-            value = "28-3123-2283-6682",
-            type = IndiaNationalHealthId))
+        .create(additionalIdentifier = identifier,
+            patientPrefillInfo = patientPrefillInfo)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -420,13 +469,17 @@ class InstantSearchUpdateTest {
         name = "PHC Obvious"
     )
 
-    val identifier = TestData.identifier(
-        value = "28-3123-2283-6682",
-        type = IndiaNationalHealthId)
+    val indiaNationalHealthID = "28-3123-2283-6682"
+    val patientPrefillInfo = TestData.indiaNHIDInfoPayload(
+        healthIdNumber = indiaNationalHealthID
+    ).toPatientPrefillInfo()
+
+    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
 
     val model = InstantSearchModel
         .create(
-            additionalIdentifier = identifier)
+            additionalIdentifier = identifier,
+            patientPrefillInfo = patientPrefillInfo)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 

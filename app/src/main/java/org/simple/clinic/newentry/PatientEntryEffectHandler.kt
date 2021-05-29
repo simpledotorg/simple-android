@@ -105,8 +105,13 @@ class PatientEntryEffectHandler @AssistedInject constructor(
           .flatMapSingle { getPatientEntryAndFacility }
           .subscribeOn(scheduler)
           .map { (entry, facility) ->
-            entry.takeIf { it.address != null }
-                ?: entry.withAddress(Address.withDistrictAndState(facility.district, facility.state))
+            if (entry.address != null && entry.address.doesNotHaveDistrictAndState) {
+              entry.withDistrict(facility.district).withState(facility.state)
+            } else if (entry.address != null) {
+              entry
+            } else {
+              entry.withAddress(Address.withDistrictAndState(facility.district, facility.state))
+            }
           }
           .map { OngoingEntryFetched(it) }
     }

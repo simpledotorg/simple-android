@@ -62,7 +62,7 @@ class PatientEntryUpdate(
   ): PatientEntryNext {
     val updatedModel = model.genderChanged(gender)
     return if (gender.isNotEmpty() && model.isSelectingGenderForTheFirstTime) {
-      next(updatedModel, HideValidationError(Gender), ScrollFormOnGenderSelection)
+      next(updatedModel, HideValidationError(Field.Gender), ScrollFormOnGenderSelection)
     } else {
       next(updatedModel)
     }

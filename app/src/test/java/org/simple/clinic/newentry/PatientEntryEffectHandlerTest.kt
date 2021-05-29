@@ -15,6 +15,8 @@ import org.simple.clinic.newentry.Field.PhoneNumber
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
+import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestUserClock
@@ -111,6 +113,65 @@ class PatientEntryEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(ColonyOrVillagesFetched(colonyOrVillages))
+    verifyZeroInteractions(ui)
+  }
+
+  @Test
+  fun `when fetch patient entry effect is received and address is not empty but there is no district and state in patient entry, then fetch ongoing patient entry from the repo and add the district and state fields`() {
+    // given
+    val ongoingNewPatientEntry = OngoingNewPatientEntry(
+        personalDetails = OngoingNewPatientEntry.PersonalDetails(
+            fullName = "Riya Oberoi",
+            dateOfBirth = "22/03/2009",
+            gender = Gender.Female,
+            age = null),
+        address = OngoingNewPatientEntry.Address.BLANK.withColonyOrVillage("34B, Rajpur Road"),
+        identifier = null)
+    val facility = TestData.facility(state = "Punjab", district = "Bathinda")
+    whenever(patientRepository.ongoingEntry()).thenReturn(ongoingNewPatientEntry)
+    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))
+
+    // when
+    testCase = EffectHandlerTestCase(effectHandler.build())
+    testCase.dispatch(FetchPatientEntry)
+
+    // then
+    testCase.assertOutgoingEvents(OngoingEntryFetched(ongoingNewPatientEntry.withDistrict(facility.district).withState(facility.state)))
+    verifyZeroInteractions(ui)
+  }
+
+  @Test
+  fun `when fetch patient entry effect is received with filled address fields, then fetch ongoing patient entry and don't add district and state fields`() {
+    // when
+    setupTestCase()
+    testCase.dispatch(FetchPatientEntry)
+
+    // then
+    testCase.assertOutgoingEvents(OngoingEntryFetched(entry))
+    verifyZeroInteractions(ui)
+  }
+
+  @Test
+  fun `when fetch patient entry effect is received and address is not empty but there is district and state in patient entry, then fetch ongoing patient entry from the repo and don't add the district and state fields`() {
+    // given
+    val ongoingNewPatientEntry = OngoingNewPatientEntry(
+        personalDetails = OngoingNewPatientEntry.PersonalDetails(
+            fullName = "Riya Oberoi",
+            dateOfBirth = "22/03/2009",
+            gender = Gender.Female,
+            age = null),
+        address = null,
+        identifier = null)
+    val facility = TestData.facility(state = "Punjab", district = "Bathinda")
+    whenever(patientRepository.ongoingEntry()).thenReturn(ongoingNewPatientEntry)
+    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))
+
+    // when
+    testCase = EffectHandlerTestCase(effectHandler.build())
+    testCase.dispatch(FetchPatientEntry)
+
+    // then
+    testCase.assertOutgoingEvents(OngoingEntryFetched(ongoingNewPatientEntry.withDistrict(facility.district).withState(facility.state)))
     verifyZeroInteractions(ui)
   }
 

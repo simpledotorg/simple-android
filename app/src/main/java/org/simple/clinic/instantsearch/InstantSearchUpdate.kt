@@ -16,11 +16,14 @@ import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 class InstantSearchUpdate @Inject constructor(
-    private val isInstantSearchByIdentifierEnabled: Boolean
+    private val isInstantSearchByIdentifierEnabled: Boolean,
+    @Named("date_for_user_input") private val dateTimeFormatter: DateTimeFormatter
 ) : Update<InstantSearchModel, InstantSearchEvent, InstantSearchEffect> {
 
   /**
@@ -77,6 +80,10 @@ class InstantSearchUpdate @Inject constructor(
       is Name -> OngoingNewPatientEntry.fromFullName(searchCriteria.patientName)
       is PhoneNumber -> OngoingNewPatientEntry.fromPhoneNumber(searchCriteria.phoneNumber)
       is NumericCriteria -> OngoingNewPatientEntry.default()
+    }
+
+    if (model.canBePrefilled) {
+      ongoingPatientEntry = ongoingPatientEntry.withPatientPrefillInfo(model.patientPrefillInfo!!, model.additionalIdentifier!!, dateTimeFormatter)
     }
 
     if (model.hasAdditionalIdentifier) {

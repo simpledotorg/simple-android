@@ -25,5 +25,6 @@ data class OpenShortCodeSearch(val shortCode: String) : ScanSimpleIdEffect()
 
 data class OpenPatientSearch(
     val additionalIdentifier: Identifier?,
-    val initialSearchQuery: String?
+    val initialSearchQuery: String?,
+    val patientPrefillInfo: PatientPrefillInfo?
 ) : ScanSimpleIdEffect()

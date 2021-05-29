@@ -9,7 +9,7 @@ class InstantSearchUiRendererTest {
 
   private val ui = mock<InstantSearchUi>()
   private val uiRenderer = InstantSearchUiRenderer(ui)
-  private val model = InstantSearchModel.create(null)
+  private val model = InstantSearchModel.create(null, null)
 
   @Test
   fun `when the instant search progress state is in progress, then show search progress`() {

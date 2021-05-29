@@ -28,6 +28,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
+import org.simple.clinic.scanid.PatientPrefillInfo
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
@@ -37,6 +38,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
+import java.time.format.DateTimeFormatter
 
 /**
  * Represents user input on the UI, which is why every field is a String.
@@ -116,6 +118,16 @@ data class OngoingNewPatientEntry(
 
   fun withZone(zone: String): OngoingNewPatientEntry =
       copy(address = addressOrBlank().copy(zone = zone))
+
+  fun withPatientPrefillInfo(patientProfileInfo: PatientPrefillInfo, identifier: Identifier, dateTimeFormatter: DateTimeFormatter): OngoingNewPatientEntry =
+      copy(
+          personalDetails = PersonalDetails(
+              fullName = patientProfileInfo.fullName,
+              dateOfBirth = patientProfileInfo.dateOfBirth.format(dateTimeFormatter),
+              gender = patientProfileInfo.gender,
+              age = null),
+          address = addressOrBlank().withColonyOrVillage(patientProfileInfo.address),
+          identifier = identifier)
 
   fun validationErrors(
       dobValidator: UserInputDateValidator,
@@ -276,6 +288,9 @@ data class OngoingNewPatientEntry(
       fun withDistrictAndState(district: String, state: String): Address =
           Address("", district, state, "", "")
     }
+
+    val doesNotHaveDistrictAndState: Boolean
+      get() = district.isBlank() && state.isBlank()
 
     fun withColonyOrVillage(colonyOrVillage: String): Address =
         copy(colonyOrVillage = colonyOrVillage)

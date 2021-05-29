@@ -6,6 +6,7 @@ import android.graphics.Typeface.BOLD
 import android.os.Parcelable
 import android.text.style.StyleSpan
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
@@ -30,6 +31,7 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.databinding.PatientEntryAlternateIdViewBinding
 import org.simple.clinic.databinding.ScreenManualPatientEntryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
@@ -212,8 +214,11 @@ class PatientEntryScreen(
   private val saveButton
     get() = binding!!.saveButton
 
-  private val identifierTypeTextView
-    get() = binding!!.identifierTypeTextView
+  private val alternateIdLabel
+    get() = binding!!.alternateIdLabel
+
+  private val alternateIdContainer
+    get() = binding!!.alternateIdContainer
 
   private val villageTypeAheadAdapter by unsafeLazy {
     ArrayAdapter<String>(
@@ -471,6 +476,7 @@ class PatientEntryScreen(
     stateEditText.setTextAndCursor(entry.address?.state)
     entry.personalDetails?.gender?.let(this::prefillGender)
     entry.identifier?.let(this::prefillIdentifier)
+    entry.alternativeId?.let(this::prefillAlternateId)
 
     showKeyboardForFirstEmptyTextField()
   }
@@ -483,21 +489,36 @@ class PatientEntryScreen(
     }
   }
 
-  private fun prefillIdentifier(identifier: Identifier) {
-    when (identifier.type) {
-      Identifier.IdentifierType.IndiaNationalHealthId -> prefillIndiaNationalHealthID(identifier)
-      Identifier.IdentifierType.BpPassport -> prefillBpPassport(identifier)
-      else -> throw IllegalArgumentException("Unknown alternate id: $identifier")
+  private fun prefillAlternateId(alternateId: Identifier) {
+    when (alternateId.type) {
+      Identifier.IdentifierType.BangladeshNationalId -> setAlternateIdTextField(alternateId)
+      Identifier.IdentifierType.EthiopiaMedicalRecordNumber -> setAlternateIdTextField(alternateId)
+      Identifier.IdentifierType.IndiaNationalHealthId -> setAlternateIdContainer(alternateId)
+      else -> throw IllegalArgumentException("Unknown alternate id: $alternateId")
     }
   }
 
-  private fun prefillIndiaNationalHealthID(identifier: Identifier) {
-    identifierTypeTextView.text = resources.getString(R.string.patiententry_identifier_national_health_id)
-    identifierTextView.text = identifier.displayValue()
+  private fun setAlternateIdContainer(alternateId: Identifier) {
+    alternateIdLabel.visibility = View.VISIBLE
+    alternateIdLabel.text = alternateId.displayType(resources)
+
+    alternateIdContainer.visibility = View.VISIBLE
+
+    inflateAlternateIdView(alternateId.displayValue())
   }
 
-  private fun prefillBpPassport(identifier: Identifier) {
-    identifierTypeTextView.text = resources.getString(R.string.patiententry_identifier_bp_passport)
+  private fun inflateAlternateIdView(identifier: String) {
+    val layoutInflater = LayoutInflater.from(context)
+    val alternateIdView = PatientEntryAlternateIdViewBinding.inflate(layoutInflater, this, false)
+    alternateIdView.alternateIdentifier.text = identifier
+    alternateIdContainer.addView(alternateIdView.root)
+  }
+
+  private fun setAlternateIdTextField(alternateId: Identifier) {
+    alternativeIdInputEditText.setTextAndCursor(alternateId.displayValue())
+  }
+
+  private fun prefillIdentifier(identifier: Identifier) {
     identifierTextView.text = identifier.displayValue()
   }
 

@@ -51,7 +51,7 @@ data class OngoingNewPatientEntry(
     val address: Address? = null,
     val phoneNumber: PhoneNumber? = null,
     val identifier: Identifier? = null,
-    val alternativeId: Identifier? = null,
+    val alternateId: Identifier? = null,
     val reminderConsent: ReminderConsent = Granted
 ) : Parcelable {
 
@@ -111,7 +111,7 @@ data class OngoingNewPatientEntry(
       copy(reminderConsent = reminderConsent)
 
   fun withAlternativeId(identifier: Identifier): OngoingNewPatientEntry =
-      copy(alternativeId = identifier)
+      copy(alternateId = identifier)
 
   fun withStreetAddress(streetAddress: String): OngoingNewPatientEntry =
       copy(address = addressOrBlank().copy(streetAddress = streetAddress))
@@ -131,7 +131,7 @@ data class OngoingNewPatientEntry(
               gender = patientProfileInfo.gender,
               age = null),
           address = addressOrBlank().withColonyOrVillage(patientProfileInfo.address),
-          alternativeId = alternateId)
+          alternateId = alternateId)
 
   fun validationErrors(
       dobValidator: UserInputDateValidator,

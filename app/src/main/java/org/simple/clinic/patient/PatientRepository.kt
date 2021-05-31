@@ -445,11 +445,11 @@ class PatientRepository @Inject constructor(
         businessIds.add(bpPassport)
       }
 
-      if (alternativeId != null && alternativeId.value.isNotBlank()) {
+      if (alternateId != null && alternateId.value.isNotBlank()) {
         val alternativeBusinessId = createBusinessIdFromIdentifier(
             id = supplyUuidForAlternativeId(),
             patientUuid = patientUuid,
-            identifier = alternativeId,
+            identifier = alternateId,
             user = user
         )
 

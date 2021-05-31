@@ -243,7 +243,7 @@ class PatientEntryScreenLogicTest {
             zone = "zone"
         ),
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890"),
-        alternativeId = bangladeshNationalId
+        alternateId = bangladeshNationalId
     ))
     verify(patientRepository).allColoniesOrVillagesInPatientAddress()
     verifyNoMoreInteractions(patientRepository)

@@ -290,7 +290,7 @@ class InstantSearchUpdateTest {
 
     val ongoingPatientEntry = OngoingNewPatientEntry.fromFullName("Pat")
         .withIdentifier(identifier)
-        .copy(alternativeId = null)
+        .copy(alternateId = null)
 
     updateSpec
         .given(searchQueryModel)
@@ -324,7 +324,7 @@ class InstantSearchUpdateTest {
             gender = Gender.Male,
             age = null),
         address = OngoingNewPatientEntry.Address.BLANK.withColonyOrVillage(patientPrefillInfo.address),
-        alternativeId = alternateId,
+        alternateId = alternateId,
         identifier = null)
 
     updateSpec

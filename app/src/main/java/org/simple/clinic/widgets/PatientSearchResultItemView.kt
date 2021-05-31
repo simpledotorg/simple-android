@@ -16,6 +16,7 @@ import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.util.resolveColor
@@ -215,7 +216,8 @@ class PatientSearchResultItemView(
       val dateOfBirth: LocalDate?,
       val address: PatientAddress,
       val phoneNumber: String?,
-      val lastSeen: PatientSearchResult.LastSeen?
+      val lastSeen: PatientSearchResult.LastSeen?,
+      val identifier: Identifier?
   )
 
   sealed class Name(open val patientName: String) {

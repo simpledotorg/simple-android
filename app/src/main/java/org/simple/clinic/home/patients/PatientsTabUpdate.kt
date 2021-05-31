@@ -40,10 +40,6 @@ class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTab
     val effects = mutableSetOf<PatientsTabEffect>()
 
     when {
-      previousUser == null && newUser.isPendingSmsVerification -> {
-        effects.add(ShowUserPendingSmsVerification)
-      }
-
       newUser.isWaitingForApproval -> {
         // User is waiting for approval (new registration or login on a new device before being approved).
         effects.add(ShowUserAwaitingApproval)

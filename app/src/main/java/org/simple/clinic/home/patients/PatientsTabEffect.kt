@@ -20,8 +20,6 @@ data class SetDismissedApprovalStatus(val dismissedStatus: Boolean) : PatientsTa
 
 object ShowUserWasApproved : PatientsTabEffect()
 
-object ShowUserPendingSmsVerification : PatientsTabEffect()
-
 object HideUserAccountStatus : PatientsTabEffect()
 
 object OpenScanBpPassportScreen : PatientsTabEffect()

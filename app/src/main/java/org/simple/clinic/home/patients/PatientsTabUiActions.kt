@@ -8,7 +8,6 @@ interface PatientsTabUiActions {
   fun openPatientSearchScreen(additionalIdentifier: Identifier?)
   fun showUserStatusAsWaiting()
   fun showUserStatusAsApproved()
-  fun showUserStatusAsPendingVerification()
   fun hideUserAccountStatus()
   fun openScanSimpleIdCardScreen()
   fun openYouTubeLinkForSimpleVideo()

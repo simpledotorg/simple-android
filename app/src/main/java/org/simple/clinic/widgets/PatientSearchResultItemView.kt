@@ -240,6 +240,16 @@ class PatientSearchResultItemView(
     data class Plain(override val patientNumber: String) : PhoneNumber(patientNumber)
   }
 
+  sealed class Id(open val value: String) {
+
+    data class Highlighted(
+        override val value: String,
+        val highlightStart: Int,
+        val highlightEnd: Int
+    ) : Id(value)
+
+    data class Plain(override val value: String) : Id(value)
+  }
 
   interface Injector {
     fun inject(target: PatientSearchResultItemView)

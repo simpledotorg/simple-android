@@ -119,7 +119,11 @@ data class OngoingNewPatientEntry(
   fun withZone(zone: String): OngoingNewPatientEntry =
       copy(address = addressOrBlank().copy(zone = zone))
 
-  fun withPatientPrefillInfo(patientProfileInfo: PatientPrefillInfo, identifier: Identifier, dateTimeFormatter: DateTimeFormatter): OngoingNewPatientEntry =
+  fun withPatientPrefillInfo(
+      patientProfileInfo: PatientPrefillInfo,
+      alternateId: Identifier,
+      dateTimeFormatter: DateTimeFormatter
+  ): OngoingNewPatientEntry =
       copy(
           personalDetails = PersonalDetails(
               fullName = patientProfileInfo.fullName,
@@ -127,7 +131,7 @@ data class OngoingNewPatientEntry(
               gender = patientProfileInfo.gender,
               age = null),
           address = addressOrBlank().withColonyOrVillage(patientProfileInfo.address),
-          identifier = identifier)
+          alternativeId = alternateId)
 
   fun validationErrors(
       dobValidator: UserInputDateValidator,

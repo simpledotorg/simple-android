@@ -1,12 +1,11 @@
 package org.simple.clinic.widgets
 
 import android.content.Context
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.BackgroundColorSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import androidx.core.text.backgroundColor
+import androidx.core.text.buildSpannedString
 import com.google.android.material.card.MaterialCardView
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ViewPatientSearchResultBinding
@@ -17,6 +16,11 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.util.resolveColor
@@ -68,6 +72,15 @@ class PatientSearchResultItemView(
   private val patientNameAgeGenderLabel
     get() = binding.patientNameAgeGenderLabel
 
+  private val identifierContainer
+    get() = binding.identifierContainer
+
+  private val identifierLabelTextView
+    get() = binding.identifierLabelTextView
+
+  private val identifierTextView
+    get() = binding.identifierTextView
+
   @Inject
   @Named("full_date")
   lateinit var dateTimeFormatter: DateTimeFormatter
@@ -93,6 +106,40 @@ class PatientSearchResultItemView(
     renderPatientPhoneNumber(searchQuery, model)
     renderVisited(model.lastSeen)
     renderLastSeen(model.lastSeen, currentFacilityId)
+    renderIdentifier(model.identifier, searchQuery)
+  }
+
+  private fun getId(identifier: Identifier, searchQuery: String): Id {
+    val id = when (identifier.type) {
+      BpPassport -> BpPassport.shortCode(identifier)
+      BangladeshNationalId, EthiopiaMedicalRecordNumber, IndiaNationalHealthId, is Unknown -> identifier.value
+    }
+    val indexOfIdentifier = id.indexOf(searchQuery, ignoreCase = true)
+    return if (indexOfIdentifier >= 0) {
+      Id.Highlighted(
+          value = id,
+          highlightStart = indexOfIdentifier,
+          highlightEnd = indexOfIdentifier + searchQuery.length
+      )
+    } else {
+      Id.Plain(value = id)
+    }
+  }
+
+  private fun renderIdentifier(identifier: Identifier?, searchQuery: String?) {
+    if (identifier == null || searchQuery == null) {
+      identifierContainer.visibility = View.GONE
+    } else {
+      identifierContainer.visibility = View.VISIBLE
+      val id = when (val id = getId(identifier, searchQuery)) {
+        is Id.Highlighted -> highlight(text = id.value,
+            startIndex = id.highlightStart,
+            endIndex = id.highlightEnd)
+        is Id.Plain -> id.value
+      }
+      identifierLabelTextView.text = identifier.displayType(resources)
+      identifierTextView.text = id
+    }
   }
 
   private fun getPatientPhoneNumber(
@@ -144,12 +191,9 @@ class PatientSearchResultItemView(
     phoneNumberContainer.visibility = View.VISIBLE
 
     val patientPhoneNumber = when (val number = getPatientPhoneNumber(patientSearchResult.phoneNumber, searchQuery)) {
-      is PhoneNumber.Highlighted -> {
-        val highlightNumber = SpannableStringBuilder(number.patientNumber)
-        val highlightColor = context.resolveColor(colorRes = R.color.search_query_highlight)
-        highlightNumber.setSpan(BackgroundColorSpan(highlightColor), number.highlightStart, number.highlightEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        highlightNumber
-      }
+      is PhoneNumber.Highlighted -> highlight(text = number.patientNumber,
+          startIndex = number.highlightStart,
+          endIndex = number.highlightEnd)
       is PhoneNumber.Plain -> {
         number.patientNumber
       }
@@ -195,17 +239,24 @@ class PatientSearchResultItemView(
   ) {
 
     val patientName = when (val name = getPatientName(searchQuery, model, DateOfBirth.fromPatientSearchResultViewModel(model, userClock))) {
-      is Name.Highlighted -> {
-        val highlightName = SpannableStringBuilder(name.patientName)
-        val highlightColor = context.resolveColor(colorRes = R.color.search_query_highlight)
-        highlightName.setSpan(BackgroundColorSpan(highlightColor), name.highlightStart, name.highlightEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        highlightName
-      }
-      is Name.Plain -> {
-        name.patientName
-      }
+      is Name.Highlighted -> highlight(text = name.patientName,
+          startIndex = name.highlightStart,
+          endIndex = name.highlightEnd)
+      is Name.Plain -> name.patientName
     }
     patientNameAgeGenderLabel.text = patientName
+  }
+
+  private fun highlight(
+      text: String,
+      startIndex: Int,
+      endIndex: Int
+  ) = buildSpannedString {
+    append(text.substring(0, startIndex))
+    backgroundColor(context.resolveColor(colorRes = R.color.search_query_highlight)) {
+      append(text.substring(startIndex, endIndex))
+    }
+    append(text.substring(endIndex, text.length))
   }
 
   data class PatientSearchResultViewModel(

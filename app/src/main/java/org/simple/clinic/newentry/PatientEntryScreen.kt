@@ -476,7 +476,7 @@ class PatientEntryScreen(
     stateEditText.setTextAndCursor(entry.address?.state)
     entry.personalDetails?.gender?.let(this::prefillGender)
     entry.identifier?.let(this::prefillIdentifier)
-    entry.alternativeId?.let(this::prefillAlternateId)
+    entry.alternateId?.let(this::prefillAlternateId)
 
     showKeyboardForFirstEmptyTextField()
   }

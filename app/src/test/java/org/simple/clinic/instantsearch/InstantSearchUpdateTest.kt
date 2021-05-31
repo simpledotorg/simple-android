@@ -282,7 +282,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when register new patient is clicked, then save ongoing patient entry`() {
+  fun `when register new patient is clicked with bp passport, then save ongoing patient entry with identifier and without alternateId id`() {
     val facility = TestData.facility()
     val searchQueryModel = defaultModel
         .facilityLoaded(facility)
@@ -290,6 +290,7 @@ class InstantSearchUpdateTest {
 
     val ongoingPatientEntry = OngoingNewPatientEntry.fromFullName("Pat")
         .withIdentifier(identifier)
+        .copy(alternateId = null)
 
     updateSpec
         .given(searchQueryModel)
@@ -301,7 +302,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when register new patient is clicked and patient prefill info is not empty, then save it in ongoing patient entry`() {
+  fun `when register new patient is clicked and patient prefill info is not empty, then save it in ongoing patient entry with alternate id`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("885c6339-9a96-4c8d-bfea-7eea74de6862"),
     )
@@ -314,7 +315,7 @@ class InstantSearchUpdateTest {
         healthIdNumber = indiaNationalHealthID
     ).toPatientPrefillInfo()
 
-    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
+    val alternateId = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
 
     val ongoingNewPatientEntry = OngoingNewPatientEntry(
         personalDetails = OngoingNewPatientEntry.PersonalDetails(
@@ -323,10 +324,11 @@ class InstantSearchUpdateTest {
             gender = Gender.Male,
             age = null),
         address = OngoingNewPatientEntry.Address.BLANK.withColonyOrVillage(patientPrefillInfo.address),
-        identifier = identifier)
+        alternateId = alternateId,
+        identifier = null)
 
     updateSpec
-        .given(searchQueryModel.patientPrefillInfoUpdated(patientPrefillInfo).additionalIdentifierUpdated(identifier))
+        .given(searchQueryModel.patientPrefillInfoUpdated(patientPrefillInfo).additionalIdentifierUpdated(alternateId))
         .whenEvent(RegisterNewPatientClicked)
         .then(assertThatNext(
             hasNoModel(),

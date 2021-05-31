@@ -125,6 +125,36 @@
       </LinearLayout>
 
       <LinearLayout
+        android:id="@+id/identifierContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_12"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+          android:id="@+id/identifierLabelTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textAppearance="?attr/textAppearanceBody2Bold"
+          android:textColor="@color/color_on_surface_67"
+          tools:text="BP Passport" />
+
+        <TextView
+          android:id="@+id/identifierTextView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/spacing_8"
+          android:ellipsize="end"
+          android:maxLines="1"
+          android:textAppearance="?attr/textAppearanceBody2"
+          android:textColor="@color/color_on_surface_67"
+          tools:text="123 4567" />
+
+      </LinearLayout>
+
+      <LinearLayout
         android:id="@+id/lastSeenContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

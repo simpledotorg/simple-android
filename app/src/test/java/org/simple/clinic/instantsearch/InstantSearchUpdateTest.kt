@@ -282,7 +282,7 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when register new patient is clicked, then save ongoing patient entry`() {
+  fun `when register new patient is clicked with bp passport, then save ongoing patient entry with identifier and without alternateId id`() {
     val facility = TestData.facility()
     val searchQueryModel = defaultModel
         .facilityLoaded(facility)
@@ -290,6 +290,7 @@ class InstantSearchUpdateTest {
 
     val ongoingPatientEntry = OngoingNewPatientEntry.fromFullName("Pat")
         .withIdentifier(identifier)
+        .copy(alternativeId = null)
 
     updateSpec
         .given(searchQueryModel)

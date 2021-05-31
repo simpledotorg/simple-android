@@ -42,7 +42,6 @@ class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTab
     when {
       newUser.isWaitingForApproval -> {
         // User is waiting for approval (new registration or login on a new device before being approved).
-        effects.add(ShowUserAwaitingApproval)
         clearDismissedApprovalStatusIfNeeded(previousUser, effects)
       }
 

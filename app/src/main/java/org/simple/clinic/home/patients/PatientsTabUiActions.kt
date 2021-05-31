@@ -6,7 +6,6 @@ import java.util.UUID
 interface PatientsTabUiActions {
   fun openEnterCodeManuallyScreen()
   fun openPatientSearchScreen(additionalIdentifier: Identifier?)
-  fun showUserStatusAsWaiting()
   fun showUserStatusAsApproved()
   fun hideUserAccountStatus()
   fun openScanSimpleIdCardScreen()

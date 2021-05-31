@@ -21,6 +21,10 @@ class PatientsTabUiRenderer(
         currentUser.isPendingSmsVerification -> {
           ui.showUserStatusAsPendingVerification()
         }
+        currentUser.isWaitingForApproval -> {
+          // User is waiting for approval (new registration or login on a new device before being approved).
+          ui.showUserStatusAsWaitingForApproval()
+        }
         else -> ui.hideUserAccountStatus()
       }
     }

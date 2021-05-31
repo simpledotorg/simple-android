@@ -7,4 +7,5 @@ interface PatientsTabUi {
   fun showIllustration()
   fun showUserStatusAsPendingVerification()
   fun hideUserAccountStatus()
+  fun showUserStatusAsWaitingForApproval()
 }

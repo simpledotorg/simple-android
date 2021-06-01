@@ -36,15 +36,9 @@
   <string name="instantsearch_hint">ስም፣ ስልክ ቁጥር ወይም መታወቂያ</string>
 
   <!-- Patient search results -->
-  <string name="patientsearchresults_empty_state">ከታካሚው ጋር አይዛመድም</string>
   <string name="patientsearchresults_register_patient_rationale">በዚህ ዝርዝር ውስጥ ታካሚውንውን ማግኘት አልተቻለም?</string>
-  <string name="patientsearchresults_register_patient_rationale_for_empty_state">ታካሚው አልተመዘገበም</string>
   <string name="patientsearchresults_register_patient">እንደ አዲስ ታካሚ ይመዝገቡ</string>
-  <string name="patientsearchresults_register_patient_for_empty_state">ታካሚውን ይመዝግቡ</string>
   <string name="patientsearchresults_item_last_seen">ጎብኝተዋል</string>
-  <string name="patientsearchresults_current_facility_header">ጎብኝተዋል %s</string>
-  <string name="patientsearchresults_other_results_header">ሌሎች ውጤቶች</string>
-  <string name="patientsearchresults_no_patients_match">ከታካሚው ጋር አይዛመድም</string>
   <string name="patientsearchresults_item_phone_number">ስልክ ቁጥር</string>
   <string name="patientsearchresults_item_birthdate">የትውልድ ቀን</string>
 
@@ -396,7 +390,6 @@
   <string name="registrationloader_retry">ድጋሚ ይሞክሩ</string>
 
   <!-- Short code search -->
-  <string name="shortcodesearchresult_enter_patient_name_button">የታካሚውን ስም ያስገቡ</string>
 
   <!-- Simple video -->
   <string name="simple_video_watch_video">ቪዲዮን ይመልከቱ</string>

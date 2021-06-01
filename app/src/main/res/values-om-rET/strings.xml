@@ -36,15 +36,9 @@
   <string name="instantsearch_hint">Maqaa, bilbila yookaan Waraqaa Eenyummaa</string>
 
   <!-- Patient search results -->
-  <string name="patientsearchresults_empty_state">Dhukkubsataan firoomu hin jiru</string>
   <string name="patientsearchresults_register_patient_rationale">Tarree kana irratti dhubbubsataa argachuu hin dandanyee?</string>
-  <string name="patientsearchresults_register_patient_rationale_for_empty_state">Dhukkubsataan hin galmoofne</string>
   <string name="patientsearchresults_register_patient">Akka dhukkubsataa haaraatti galmeessi</string>
-  <string name="patientsearchresults_register_patient_for_empty_state">Dhukkubsataa galmeessi</string>
   <string name="patientsearchresults_item_last_seen">Daawwatameera</string>
-  <string name="patientsearchresults_current_facility_header">%s Daawwateera</string>
-  <string name="patientsearchresults_other_results_header">Bu’aawwan bira</string>
-  <string name="patientsearchresults_no_patients_match">Dhukkubsataan firoomu hin jiru</string>
   <string name="patientsearchresults_item_phone_number">Bilbila</string>
   <string name="patientsearchresults_item_birthdate">Guyyaa dhalootaa</string>
 
@@ -397,7 +391,6 @@
   <string name="registrationloader_retry">Deebisii yaali</string>
 
   <!-- Short code search -->
-  <string name="shortcodesearchresult_enter_patient_name_button">Maqaa dhukkubsataa\ttootaa galchi</string>
 
   <!-- Simple video -->
   <string name="simple_video_watch_video">Viidiyoo daawwadhu</string>

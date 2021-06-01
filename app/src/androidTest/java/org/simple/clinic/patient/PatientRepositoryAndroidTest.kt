@@ -2761,7 +2761,7 @@ class PatientRepositoryAndroidTest {
 
     //when
     val searchResults = patientRepository
-        .search2(PhoneNumber("12"), currentFacility.uuid)
+        .search(PhoneNumber("12"), currentFacility.uuid)
         .map { it.uuid }
 
     //then
@@ -2792,7 +2792,7 @@ class PatientRepositoryAndroidTest {
 
     fun searchResults(patientName: String, facilityUuid: UUID): List<UUID> {
       return patientRepository
-          .search2(Name(patientName), facilityUuid)
+          .search(Name(patientName), facilityUuid)
           .map { it.uuid }
     }
 
@@ -2948,7 +2948,7 @@ class PatientRepositoryAndroidTest {
 
     fun searchResults(numericCriteria: String, assignedFacilityUUID: UUID): List<UUID> {
       return patientRepository
-          .search2(NumericCriteria(numericCriteria), assignedFacilityUUID)
+          .search(NumericCriteria(numericCriteria), assignedFacilityUUID)
           .map { it.uuid }
           .toList()
     }
@@ -3049,7 +3049,7 @@ class PatientRepositoryAndroidTest {
 
     //when
     val searchResults = patientRepository
-        .search2(NumericCriteria("12"), currentFacility.uuid)
+        .search(NumericCriteria("12"), currentFacility.uuid)
         .map { it.uuid }
 
     val searchResultsWithExactMatch = searchResults("1234567890", currentFacility.uuid)

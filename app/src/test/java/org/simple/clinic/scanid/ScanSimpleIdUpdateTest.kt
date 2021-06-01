@@ -86,7 +86,7 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when the entered short code is valid, then open short code search`() {
+  fun `when the entered short code is valid, then open patient search`() {
     val enteredShortCode = "1234567"
     val model = defaultModel.enteredCodeChanged(EnteredCodeInput(enteredShortCode))
 
@@ -95,7 +95,7 @@ class ScanSimpleIdUpdateTest {
         .whenEvent(EnteredCodeValidated(EnteredCodeValidationResult.Success))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenShortCodeSearch(enteredShortCode))
+            hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredShortCode, patientPrefillInfo = null))
         ))
   }
 

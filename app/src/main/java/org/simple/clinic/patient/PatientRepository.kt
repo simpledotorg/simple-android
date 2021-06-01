@@ -55,6 +55,7 @@ class PatientRepository @Inject constructor(
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
   @WorkerThread
+  @Deprecated(message = "Use PatientRepository#search2 instead")
   fun search(criteria: PatientSearchCriteria): List<PatientSearchResult> {
     return when (criteria) {
       is Name -> searchByName(criteria.patientName)

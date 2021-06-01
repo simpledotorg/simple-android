@@ -42,7 +42,7 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
-import org.simple.clinic.widgets.PagingItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter_Old
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.dp
 import java.time.format.DateTimeFormatter
@@ -103,7 +103,7 @@ class BloodSugarHistoryScreen(
     screenKeyProvider.keyFor<BloodSugarHistoryScreenKey>(this)
   }
 
-  private val bloodSugarHistoryAdapter = PagingItemAdapter(
+  private val bloodSugarHistoryAdapter = PagingItemAdapter_Old(
       diffCallback = BloodSugarHistoryListItemDiffCallback(),
       bindings = mapOf(
           R.layout.list_new_blood_sugar_button to { layoutInflater, parent ->

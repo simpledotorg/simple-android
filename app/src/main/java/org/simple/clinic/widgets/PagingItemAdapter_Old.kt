@@ -10,7 +10,7 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
-open class PagingItemAdapter<I : PagingItemAdapter.Item<E>, E>(
+open class PagingItemAdapter_Old<I : PagingItemAdapter_Old.Item<E>, E>(
     diffCallback: DiffUtil.ItemCallback<I>,
     private val bindings: BindingsCallback
 ) : PagedListAdapter<I, BindingViewHolder>(diffCallback) {

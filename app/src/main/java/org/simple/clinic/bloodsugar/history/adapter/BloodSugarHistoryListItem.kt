@@ -13,11 +13,11 @@ import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.databinding.ListBloodSugarHistoryItemBinding
 import org.simple.clinic.databinding.ListNewBloodSugarButtonBinding
-import org.simple.clinic.widgets.PagingItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter_Old
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.visibleOrGone
 
-sealed class BloodSugarHistoryListItem : PagingItemAdapter.Item<Event> {
+sealed class BloodSugarHistoryListItem : PagingItemAdapter_Old.Item<Event> {
 
   object NewBloodSugarButton : BloodSugarHistoryListItem() {
     override fun layoutResId(): Int = R.layout.list_new_blood_sugar_button

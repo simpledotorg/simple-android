@@ -26,7 +26,7 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.widgets.PagingItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter_Old
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.time.LocalDate
@@ -65,7 +65,7 @@ class OverdueScreen : BaseScreen<
   @Named("for_overdue_appointments")
   lateinit var pagedListConfig: PagedList.Config
 
-  private val overdueListAdapter = PagingItemAdapter(
+  private val overdueListAdapter = PagingItemAdapter_Old(
       diffCallback = OverdueAppointmentRow.DiffCallback(),
       bindings = mapOf(
           R.layout.item_overdue_list_patient to { layoutInflater, parent ->

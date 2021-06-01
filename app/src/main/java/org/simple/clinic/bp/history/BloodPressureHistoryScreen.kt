@@ -34,7 +34,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
-import org.simple.clinic.widgets.PagingItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter_Old
 import org.simple.clinic.widgets.dp
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -76,7 +76,7 @@ class BloodPressureHistoryScreen(
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
 
-  private val bloodPressureHistoryAdapter = PagingItemAdapter(
+  private val bloodPressureHistoryAdapter = PagingItemAdapter_Old(
       diffCallback = BloodPressureHistoryListItemDiffCallback(),
       bindings = mapOf(
           R.layout.list_new_bp_button to { layoutInflater, parent ->

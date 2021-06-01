@@ -425,7 +425,6 @@ dependencies {
   implementation("com.google.android.gms:play-services-auth:${versions.playServicesAuth}")
   implementation("io.github.inflationx:viewpump:${versions.viewPump}")
   implementation("com.alimuzaffar.lib:pinentryedittext:${versions.pinEntryEditText}")
-  implementation("info.debatty:java-string-similarity:${versions.javaStringSimilarity}")
 
   implementation("com.google.android.play:core:${versions.playCore}")
 

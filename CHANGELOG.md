@@ -6,6 +6,7 @@
 - Bump AGP to v4.2.1
 - Use `.editorconfig` for project code style
 - Prefill NHID as `alternateId` in `PatientEntryScreen`
+- Update facility picker search edit text hint
 
 ## Features
 - Add NHID support in `PatientEntryScreen`

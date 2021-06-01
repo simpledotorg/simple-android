@@ -76,7 +76,7 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun multiplePatientsWithId(identifier: Identifier): ScanSimpleIdEffect {
     return when (identifier.type) {
-      BpPassport -> OpenShortCodeSearch(BpPassport.shortCode(identifier))
+      BpPassport -> OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = BpPassport.shortCode(identifier), patientPrefillInfo = null)
       else -> OpenPatientSearch(null, initialSearchQuery = identifier.value, null)
     }
   }

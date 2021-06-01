@@ -154,7 +154,7 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when identifier is scanned and more than 1 patient is found with bp passport, then open short code search`() {
+  fun `when identifier is scanned and more than 1 patient is found with bp passport, then open patient search`() {
     val patientId1 = UUID.fromString("60822507-9151-4836-944b-9cbbd1530c0b")
     val patientId2 = UUID.fromString("de90d491-29ab-4bb7-938c-d436815794c6")
 
@@ -168,7 +168,7 @@ class ScanSimpleIdUpdateTest {
         .whenEvent(PatientSearchByIdentifierCompleted(listOf(patient1, patient2), identifier))
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
-            hasEffects(OpenShortCodeSearch("4751081"))
+            hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = "4751081", patientPrefillInfo = null))
         ))
   }
 

@@ -55,7 +55,7 @@ class PatientRepository @Inject constructor(
     return when (criteria) {
       is Name -> searchByName2(criteria.patientName, facilityId)
       is PhoneNumber -> searchByPhoneNumber(criteria.phoneNumber, facilityId)
-      is NumericCriteria -> searchByNumericCriteria2(criteria.numericCriteria, facilityId)
+      is NumericCriteria -> searchByNumericCriteria(criteria.numericCriteria, facilityId)
     }
   }
 
@@ -78,14 +78,14 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  private fun searchByNumericCriteria2(
+  private fun searchByNumericCriteria(
       numericCriteria: String,
       facilityId: UUID
   ): List<PatientSearchResult> {
     return reportTimeTaken(
         clock = utcClock,
         operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
-      database.patientSearchDao().searchByNumericCriteria2(numericCriteria, facilityId)
+      database.patientSearchDao().searchByNumericCriteria(numericCriteria, facilityId)
     }
   }
 

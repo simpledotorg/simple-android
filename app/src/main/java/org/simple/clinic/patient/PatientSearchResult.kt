@@ -176,7 +176,7 @@ data class PatientSearchResult(
         GROUP BY P.uuid
         ORDER BY priority ASC, phoneNumberPosition ASC, identifierPosition ASC
         """)
-    fun searchByNumericCriteria2(
+    fun searchByNumericCriteria(
         numericCriteria: String,
         facilityId: UUID
     ): List<PatientSearchResult>

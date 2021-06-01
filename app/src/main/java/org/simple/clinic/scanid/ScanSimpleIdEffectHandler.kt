@@ -34,7 +34,6 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       .addTransformer(SearchPatientByIdentifier::class.java, searchPatientByIdentifier())
       .addTransformer(ParseScannedJson::class.java, parseJsonIntoObject())
       .addConsumer(OpenPatientSummary::class.java, ::openPatientSummary, schedulersProvider.ui())
-      .addConsumer(OpenShortCodeSearch::class.java, ::openShortCodeSearch, schedulersProvider.ui())
       .addConsumer(OpenPatientSearch::class.java, ::openPatientSearch, schedulersProvider.ui())
       .build()
 
@@ -42,10 +41,6 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
     uiActions.openPatientSearch(openPatientSearch.additionalIdentifier,
         openPatientSearch.initialSearchQuery,
         openPatientSearch.patientPrefillInfo)
-  }
-
-  private fun openShortCodeSearch(openShortCodeSearch: OpenShortCodeSearch) {
-    uiActions.openShortCodeSearch(openShortCodeSearch.shortCode)
   }
 
   private fun openPatientSummary(openPatientSummary: OpenPatientSummary) {

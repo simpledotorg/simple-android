@@ -158,7 +158,7 @@ data class PatientSearchResult(
         WHERE P.deletedAt IS NULL AND phoneNumberPosition > 0
         ORDER BY priority ASC, phoneNumberPosition ASC
     """)
-    fun searchByPhoneNumber2(phoneNumber: String, facilityId: UUID): List<PatientSearchResult>
+    fun searchByPhoneNumber(phoneNumber: String, facilityId: UUID): List<PatientSearchResult>
 
     @Query("""
         SELECT DISTINCT

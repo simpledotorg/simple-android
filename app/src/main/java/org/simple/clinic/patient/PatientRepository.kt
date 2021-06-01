@@ -23,7 +23,6 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.reports.ReportsRepository
@@ -32,7 +31,6 @@ import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
-import timber.log.Timber
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -46,23 +44,11 @@ typealias PatientUuid = UUID
 class PatientRepository @Inject constructor(
     private val database: AppDatabase,
     private val utcClock: UtcClock,
-    private val searchPatientByName: SearchPatientByName,
-    private val config: PatientConfig,
     private val reportsRepository: ReportsRepository,
     private val businessIdMetaDataMoshiAdapter: JsonAdapter<BusinessIdMetaData>
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
-
-  @WorkerThread
-  @Deprecated(message = "Use PatientRepository#search2 instead")
-  fun search(criteria: PatientSearchCriteria): List<PatientSearchResult> {
-    return when (criteria) {
-      is Name -> searchByName(criteria.patientName)
-      is PhoneNumber -> searchByPhoneNumber(criteria.phoneNumber)
-      is NumericCriteria -> searchByNumericCriteria(criteria.numericCriteria)
-    }
-  }
 
   @WorkerThread
   fun search2(criteria: PatientSearchCriteria, facilityId: UUID): List<PatientSearchResult> {
@@ -101,78 +87,6 @@ class PatientRepository @Inject constructor(
         operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
       database.patientSearchDao().searchByNumericCriteria2(numericCriteria, facilityId)
     }
-  }
-
-  private fun searchByName(name: String): List<PatientSearchResult> {
-    Timber.tag("Search").i("Search by name")
-    val patientIdsMatchingName = findPatientIdsMatchingName(name)
-
-    return when {
-      patientIdsMatchingName.isEmpty() -> emptyList()
-      else -> searchResultsByPatientUuids(patientIdsMatchingName)
-    }
-  }
-
-  private fun searchResultsByPatientUuids(patientUuids: List<UUID>): List<PatientSearchResult> {
-    Timber.tag("Search").i("Load search results for matching IDs")
-    val searchResults = reportTimeTaken(
-        utcClock,
-        "Search Patient:Fetch Patient Details"
-    ) {
-      database
-          .patientSearchDao()
-          .searchByIds(patientUuids, PatientStatus.Active)
-    }
-
-    // This is needed to maintain the order of the search results
-    // so that its in the same order of the list of the UUIDs.
-    // Otherwise, the order is dependent on the SQLite default
-    // implementation.
-    val resultsByUuid = searchResults.associateBy { it.uuid }
-
-    return patientUuids.map { resultsByUuid.getValue(it) }
-  }
-
-  private fun findPatientIdsMatchingName(name: String): List<UUID> {
-    Timber.tag("Search").i("Find patient IDs matching name")
-    val allPatientNamesAndIds = reportTimeTaken(
-        utcClock,
-        "Search Patient:Fetch Name and Id"
-    ) {
-      database
-          .patientSearchDao()
-          .nameAndId(PatientStatus.Active)
-    }
-
-    return findPatientsWithNameMatching(allPatientNamesAndIds, name)
-  }
-
-  private fun findPatientsWithNameMatching(
-      allPatientNamesAndIds: List<PatientSearchResult.PatientNameAndId>,
-      name: String
-  ): List<UUID> {
-    Timber.tag("Search").i("Fuzzy filter patient names")
-    return reportTimeTaken(
-        utcClock,
-        "Search Patient:Fuzzy Filtering By Name"
-    ) {
-      searchPatientByName
-          .search(searchTerm = name, names = allPatientNamesAndIds)
-          .take(config.limitOfSearchResults)
-    }
-  }
-
-  private fun searchByPhoneNumber(phoneNumber: String): List<PatientSearchResult> {
-    Timber.tag("Search").i("Search by phone number")
-    return database
-        .patientSearchDao()
-        .searchByPhoneNumber(phoneNumber, config.limitOfSearchResults)
-  }
-
-  private fun searchByNumericCriteria(numericCriteria: String): List<PatientSearchResult> {
-    return database
-        .patientSearchDao()
-        .searchByNumericCriteria(numericCriteria, config.limitOfSearchResults)
   }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {
@@ -698,13 +612,6 @@ class PatientRepository @Inject constructor(
         .isPatientDefaulter(patientUuid)
   }
 
-  fun allPatientsInFacility_Old(facility: Facility): Observable<List<PatientSearchResult>> {
-    return database
-        .patientSearchDao()
-        .searchInFacilityAndSortByName_Old(facility.uuid, PatientStatus.Active)
-        .toObservable()
-  }
-
   fun allPatientsInFacility(facility: Facility): List<PatientSearchResult> {
     return reportTimeTaken(
         clock = utcClock,
@@ -714,24 +621,6 @@ class PatientRepository @Inject constructor(
           .patientSearchDao()
           .searchInFacilityAndSortByName(facility.uuid, PatientStatus.Active)
     }
-  }
-
-  fun searchByShortCode(shortCode: String): Observable<List<PatientSearchResult>> {
-    val allPatients = database
-        .businessIdDao()
-        .allBusinessIdsWithType(BpPassport)
-        .toObservable()
-
-    val shortCodeSearchResult = allPatients
-        .map { businessIds ->
-          businessIds
-              .map { businessId -> Pair(businessId.patientUuid, BpPassport.shortCode(businessId.identifier)) }
-              .filter { (_, uuidShortCode) -> shortCode == uuidShortCode }
-              .map { (uuid, _) -> uuid }
-        }
-
-    return shortCodeSearchResult
-        .map { database.patientSearchDao().searchByIds(it, PatientStatus.Active) }
   }
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

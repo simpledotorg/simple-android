@@ -277,7 +277,7 @@ class ScanSimpleIdScreen : BaseScreen<
 
   override fun openPatientSearch(additionalIdentifier: Identifier?, initialSearchQuery: String?, patientPrefillInfo: PatientPrefillInfo?) {
     val keyToPush = InstantSearchScreenKey(additionalIdentifier = additionalIdentifier,
-        initialSearchQuery = null,
+        initialSearchQuery = initialSearchQuery,
         patientPrefillInfo = patientPrefillInfo)
 
     when (val openedFrom = screenKey.openedFrom) {

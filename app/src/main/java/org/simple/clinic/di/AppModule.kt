@@ -26,7 +26,6 @@ import org.simple.clinic.login.LoginOtpSmsListenerModule
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.SimpleVideoModule
-import org.simple.clinic.patient.filter.PatientSearchModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.remoteconfig.RemoteConfigModule
 import org.simple.clinic.remoteconfig.firebase.FirebaseRemoteConfigModule
@@ -77,7 +76,6 @@ import javax.inject.Named
   HttpInterceptorsModule::class,
   RetrofitModule::class,
   FirebaseRemoteConfigModule::class,
-  PatientSearchModule::class,
   LoginOtpSmsListenerModule::class,
   HttpInterceptorsModule::class,
   RetrofitModule::class,

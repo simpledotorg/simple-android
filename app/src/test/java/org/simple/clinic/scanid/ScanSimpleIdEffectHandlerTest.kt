@@ -6,13 +6,11 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import com.squareup.moshi.Moshi
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -23,11 +21,11 @@ class ScanSimpleIdEffectHandlerTest {
 
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<ScanSimpleIdUiActions>()
-  private val moshi = Moshi.Builder().add(IndiaNHIDDateOfBirthMoshiAdapter()).add(IndiaNHIDGender.MoshiTypeAdapter()).build()
+  private val qrCodeJsonParser = mock<QRCodeJsonParser>()
   private val testCase = EffectHandlerTestCase(ScanSimpleIdEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
-      moshi = moshi,
+      qrCodeJsonParser = qrCodeJsonParser,
       country = TestData.country(isoCountryCode = Country.INDIA),
       uiActions = uiActions
   ).build())
@@ -95,7 +93,7 @@ class ScanSimpleIdEffectHandlerTest {
     val testCase = EffectHandlerTestCase(ScanSimpleIdEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = patientRepository,
-        moshi = moshi,
+        qrCodeJsonParser = qrCodeJsonParser,
         country = TestData.country(isoCountryCode = Country.BANGLADESH),
         uiActions = uiActions
     ).build())

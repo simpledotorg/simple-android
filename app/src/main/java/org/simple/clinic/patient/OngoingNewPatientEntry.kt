@@ -28,7 +28,6 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
-import org.simple.clinic.scanid.PatientPrefillInfo
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator

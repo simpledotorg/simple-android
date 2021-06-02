@@ -1,6 +1,7 @@
 package org.simple.clinic.scanid
 
 import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.widgets.UiEvent
 

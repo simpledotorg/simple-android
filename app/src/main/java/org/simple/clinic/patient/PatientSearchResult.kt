@@ -115,13 +115,11 @@ data class PatientSearchResult(
   interface RoomDao {
 
     @Query("""
-        SELECT * FROM (
-            SELECT searchResult.*, 1 priority FROM 
-            PatientSearchResult searchResult
-            LEFT JOIN Patient P ON P.uuid = searchResult.uuid
-            WHERE P.status = :status AND P.deletedAt IS NULL AND P.assignedFacilityId = :facilityUuid
-            )
-        ORDER BY priority DESC, fullName COLLATE NOCASE
+      SELECT * FROM 
+      PatientSearchResult searchResult
+      LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+      WHERE P.status = :status AND P.deletedAt IS NULL AND P.assignedFacilityId = :facilityUuid
+      ORDER BY fullName COLLATE NOCASE
     """)
     fun searchInFacilityAndSortByName(
         facilityUuid: UUID,

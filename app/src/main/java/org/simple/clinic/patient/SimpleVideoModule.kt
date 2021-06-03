@@ -22,6 +22,7 @@ class SimpleVideoModule {
     return when (locale.language) {
       "hi" -> "nHsQ06tiLzw"
       "am" -> "05dnOSyHXYs"
+      "om" -> "yca12Ec5Fg4"
       // Default to English
       else -> "YO3D1paAuqU"
     }

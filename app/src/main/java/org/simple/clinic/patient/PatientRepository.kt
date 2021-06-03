@@ -2,6 +2,7 @@ package org.simple.clinic.patient
 
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
+import androidx.paging.PagingSource
 import com.squareup.moshi.JsonAdapter
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -621,6 +622,12 @@ class PatientRepository @Inject constructor(
           .patientSearchDao()
           .searchInFacilityAndSortByName(facility.uuid, PatientStatus.Active)
     }
+  }
+
+  fun allPatientsInFacilityPagingSource(facility: Facility): PagingSource<Int, PatientSearchResult> {
+    return database
+        .patientSearchDao()
+        .allPatientsInFacility(facilityUuid = facility.uuid, status = PatientStatus.Active)
   }
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

@@ -1,6 +1,7 @@
 package org.simple.clinic.patient
 
 import android.os.Parcelable
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.DatabaseView
 import androidx.room.Embedded
@@ -125,6 +126,18 @@ data class PatientSearchResult(
         facilityUuid: UUID,
         status: PatientStatus
     ): List<PatientSearchResult>
+
+    @Query("""
+      SELECT * FROM 
+      PatientSearchResult searchResult
+      LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+      WHERE P.status = :status AND P.deletedAt IS NULL AND P.assignedFacilityId = :facilityUuid
+      ORDER BY fullName COLLATE NOCASE
+    """)
+    fun allPatientsInFacility(
+        facilityUuid: UUID,
+        status: PatientStatus
+    ): PagingSource<Int, PatientSearchResult>
 
     @Query("""
         SELECT 

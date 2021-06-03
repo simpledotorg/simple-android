@@ -1,8 +1,11 @@
 package org.simple.clinic.patient
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.paging.PagingSource.LoadParams.Refresh
+import androidx.paging.PagingSource.LoadResult.Page
 import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.JsonAdapter
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -3129,5 +3132,77 @@ class PatientRepositoryAndroidTest {
         patientOneUuid,
         patientTwoUuid
     )
+  }
+
+  @Test
+  fun loading_all_patients_in_facility_paging_source_should_work_correctly() = runBlocking {
+    fun createPatientWithNameAndAssignedFacilityID(
+        patientUuid: UUID,
+        patientName: String,
+        assignedFacilityId: UUID?
+    ) {
+      val patientProfile = TestData
+          .patientProfile(
+              patientUuid = patientUuid,
+              patientName = patientName,
+              patientAssignedFacilityId = assignedFacilityId
+          )
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+    }
+
+    // given
+    val currentFacility = TestData.facility(
+        uuid = UUID.fromString("c0056c11-105d-4079-80fa-c745128f7fc5"),
+        name = "CHC Bucho"
+    )
+    val otherFacility = TestData.facility(
+        uuid = UUID.fromString("532264e6-b358-445e-8b48-c6253677db24"),
+        name = "CHC Bagta"
+    )
+    database.facilityDao().save(listOf(currentFacility, otherFacility))
+
+
+    val patientWithCurrentFacilityAsAssigned1 = UUID.fromString("d47ae2e7-7453-4a6f-806e-88eb130823d8")
+    createPatientWithNameAndAssignedFacilityID(
+        patientUuid = patientWithCurrentFacilityAsAssigned1,
+        patientName = "Patient 1",
+        assignedFacilityId = currentFacility.uuid)
+
+    val patientWithCurrentFacilityAsAssigned2 = UUID.fromString("9b927cc9-bc45-4beb-93dc-db5f0c1fee01")
+    createPatientWithNameAndAssignedFacilityID(
+        patientUuid = patientWithCurrentFacilityAsAssigned2,
+        patientName = "Patient 4",
+        assignedFacilityId = currentFacility.uuid)
+
+    val patientWithOtherFacilityAssigned1 = UUID.fromString("f6cfd657-bf32-40c1-9dd2-4c956fd910a8")
+    createPatientWithNameAndAssignedFacilityID(
+        patientUuid = patientWithOtherFacilityAssigned1,
+        patientName = "Patient 5",
+        assignedFacilityId = otherFacility.uuid
+    )
+
+    val patientWithOtherFacilityAssigned2 = UUID.fromString("b269b1d1-98c7-4a46-bd05-5b46ada941f4")
+    createPatientWithNameAndAssignedFacilityID(
+        patientUuid = patientWithOtherFacilityAssigned2,
+        patientName = "Patient 2",
+        assignedFacilityId = otherFacility.uuid
+    )
+
+    //when
+    val params = Refresh<Int>(key = null,
+        loadSize = 10,
+        placeholdersEnabled = false)
+
+    val loadResult = patientRepository
+        .allPatientsInFacilityPagingSource(facility = currentFacility)
+        .load(params) as Page<Int, PatientSearchResult>
+
+    val searchResults = loadResult.data.map { it.fullName }
+
+    //then
+    assertThat(searchResults)
+        .containsExactly("Patient 1", "Patient 4")
+        .inOrder()
   }
 }

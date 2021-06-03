@@ -156,6 +156,22 @@ data class PatientSearchResult(
     fun searchByName(name: String, facilityId: UUID): List<PatientSearchResult>
 
     @Query("""
+        SELECT searchResult.*, INSTR(lower(P.fullName), lower(:name)) namePosition FROM PatientSearchResult searchResult
+        LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+        WHERE P.deletedAt IS NULL AND namePosition > 0 AND P.assignedFacilityId == :facilityId
+        ORDER BY namePosition ASC
+    """)
+    fun searchByNameAssignedFacility(name: String, facilityId: UUID): PagingSource<Int, PatientSearchResult>
+
+    @Query("""
+        SELECT searchResult.*, INSTR(lower(P.fullName), lower(:name)) namePosition FROM PatientSearchResult searchResult
+        LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+        WHERE P.deletedAt IS NULL AND namePosition > 0 AND P.assignedFacilityId != :facilityId
+        ORDER BY namePosition ASC
+    """)
+    fun searchByNameOtherFacility(name: String, facilityId: UUID): PagingSource<Int, PatientSearchResult>
+
+    @Query("""
         SELECT 
             searchResult.*, 
             (

@@ -60,12 +60,34 @@ class PatientRepository @Inject constructor(
     }
   }
 
+  fun search(criteria: PatientSearchCriteria, facilityId: UUID) = when (criteria) {
+    is Name -> {
+      val searchByNameAssignedFacility = searchByNameAssignedFacility(criteria.patientName, facilityId)
+      val searchByNameOtherFacility = searchByNameOtherFacility(criteria.patientName, facilityId)
+
+      Pair(searchByNameAssignedFacility, searchByNameOtherFacility)
+    }
+    else -> throw IllegalArgumentException("Not implemented yet")
+  }
+
   private fun searchByName(patientName: String, facilityId: UUID): List<PatientSearchResult> {
     return reportTimeTaken(
         clock = utcClock,
         operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
       database.patientSearchDao().searchByName(patientName, facilityId)
     }
+  }
+
+  private fun searchByNameAssignedFacility(patientName: String, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
+    return database
+        .patientSearchDao()
+        .searchByNameAssignedFacility(name = patientName, facilityId = facilityId)
+  }
+
+  private fun searchByNameOtherFacility(patientName: String, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
+    return database
+        .patientSearchDao()
+        .searchByNameOtherFacility(name = patientName, facilityId = facilityId)
   }
 
   private fun searchByPhoneNumber(

@@ -309,4 +309,12 @@
     </item>
   </style>
 
+  <style name="Widget.Simple.DateInputSeparator" parent="android:Widget">
+    <item name="android:layout_marginStart">@dimen/spacing_8</item>
+    <item name="android:layout_marginEnd">@dimen/spacing_8</item>
+    <item name="android:textAppearance">?attr/textAppearanceHeadline3</item>
+    <item name="android:textColor">@color/color_on_surface_34</item>
+    <item name="android:text">/</item>
+  </style>
+
 </resources>

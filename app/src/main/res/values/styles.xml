@@ -302,4 +302,11 @@
     <item name="android:textAppearance">?attr/textAppearanceHeadline3</item>
     <item name="android:textAlignment">center</item>
   </style>
+
+  <style name="Widget.Simple.TextField.Layout.Large.DateInput">
+    <item name="materialThemeOverlay">
+      @style/ThemeOverlay.Simple.TextField.Large.DateInput
+    </item>
+  </style>
+
 </resources>

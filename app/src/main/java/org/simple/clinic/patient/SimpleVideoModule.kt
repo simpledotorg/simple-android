@@ -21,6 +21,7 @@ class SimpleVideoModule {
   fun provideSimpleVideoUrlBasedOnLocale(locale: Locale): String {
     return when (locale.language) {
       "hi" -> "nHsQ06tiLzw"
+      "am" -> "05dnOSyHXYs"
       // Default to English
       else -> "YO3D1paAuqU"
     }

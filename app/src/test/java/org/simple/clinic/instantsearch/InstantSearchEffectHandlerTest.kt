@@ -1,20 +1,26 @@
 package org.simple.clinic.instantsearch
 
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import org.simple.clinic.util.SimplePagerFactory
+import org.simple.clinic.util.TestPagingSource
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import java.util.UUID
@@ -27,13 +33,19 @@ class InstantSearchEffectHandlerTest {
   )
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<InstantSearchUiActions>()
+  private val simplePagerFactory = mock<SimplePagerFactory>()
+  private val instantSearchConfig = InstantSearchConfig(
+      minLengthOfSearchQuery = 2,
+      pagingConfig = PagingConfig(
+          pageSize = 15
+      )
+  )
   private val effectHandler = InstantSearchEffectHandler(
       currentFacility = { facility },
       patientRepository = patientRepository,
       instantSearchValidator = InstantSearchValidator(),
-      instantSearchConfig = InstantSearchConfig(
-          minLengthOfSearchQuery = 2
-      ),
+      instantSearchConfig = instantSearchConfig,
+      simplePagerFactory = simplePagerFactory,
       schedulers = TestSchedulersProvider.trampoline(),
       uiActions = uiActions
   ).build()
@@ -61,13 +73,17 @@ class InstantSearchEffectHandlerTest {
         TestData.patientSearchResult(uuid = UUID.fromString("24be0305-04a3-4111-94e2-e0a254e38a04"))
     )
 
-    whenever(patientRepository.allPatientsInFacility(facility)) doReturn patients
+    val pagingSource = TestPagingSource<Int, PatientSearchResult>(patients)
+    val expectedPagingData = PagingData.from(patients)
+
+    whenever(patientRepository.allPatientsInFacilityPagingSource(facility)) doReturn pagingSource
+    whenever(simplePagerFactory.createPager(config = instantSearchConfig.pagingConfig, source = pagingSource)) doReturn Observable.just(expectedPagingData)
 
     // when
     testCase.dispatch(LoadAllPatients(facility))
 
     // then
-    testCase.assertOutgoingEvents(AllPatientsLoaded(patients))
+    testCase.assertOutgoingEvents(AllPatientsLoaded(expectedPagingData))
 
     verifyZeroInteractions(uiActions)
   }

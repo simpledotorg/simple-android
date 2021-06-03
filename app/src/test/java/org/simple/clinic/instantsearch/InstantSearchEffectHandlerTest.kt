@@ -103,7 +103,7 @@ class InstantSearchEffectHandlerTest {
     )
     val searchCriteria = PatientSearchCriteria.Name("Pat")
 
-    whenever(patientRepository.search(searchCriteria, facility.uuid)) doReturn patients
+    whenever(patientRepository.search_old(searchCriteria, facility.uuid)) doReturn patients
 
     // when
     testCase.dispatch(SearchWithCriteria(searchCriteria, facility))

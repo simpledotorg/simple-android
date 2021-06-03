@@ -52,7 +52,7 @@ class PatientRepository @Inject constructor(
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
   @WorkerThread
-  fun search(criteria: PatientSearchCriteria, facilityId: UUID): List<PatientSearchResult> {
+  fun search_old(criteria: PatientSearchCriteria, facilityId: UUID): List<PatientSearchResult> {
     return when (criteria) {
       is Name -> searchByName(criteria.patientName, facilityId)
       is PhoneNumber -> searchByPhoneNumber(criteria.phoneNumber, facilityId)

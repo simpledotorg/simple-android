@@ -8,6 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
+import androidx.paging.PagingData
+import androidx.paging.TerminalSeparatorType
+import androidx.paging.insertHeaderItem
+import androidx.paging.map
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.jakewharton.rxbinding3.view.clicks
@@ -32,6 +36,7 @@ import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.feature.Feature.InstantSearchByPatientIdentifier
 import org.simple.clinic.feature.Feature.InstantSearchQrCode
 import org.simple.clinic.feature.Features
+import org.simple.clinic.instantsearch.InstantSearchResultsItemType.AssignedFacilityHeader
 import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenResult
@@ -50,7 +55,7 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
@@ -128,7 +133,7 @@ class InstantSearchScreen :
   private val qrCodeScannerButton
     get() = binding.qrCodeScannerButton
 
-  private val allPatientsAdapter = ItemAdapter(
+  private val allPatientsAdapter = PagingItemAdapter(
       diffCallback = InstantSearchResultsItemType.DiffCallback(),
       bindings = mapOf(
           R.layout.list_patient_search_header to { layoutInflater, parent ->
@@ -209,9 +214,15 @@ class InstantSearchScreen :
     subscriptions.clear()
   }
 
-  override fun showAllPatients(patients: List<PatientSearchResult>, facility: Facility) {
+  override fun showAllPatients(patients: PagingData<PatientSearchResult>, facility: Facility) {
+    val instantSearchResults = patients
+        .map { InstantSearchResultsItemType.SearchResult.forSearchResult(it, facility, searchQuery = null) }
+        .insertHeaderItem(terminalSeparatorType = TerminalSeparatorType.SOURCE_COMPLETE,
+            item = AssignedFacilityHeader(facility.name))
+
+    allPatientsAdapter.submitData(lifecycle, instantSearchResults)
+
     searchResultsView.visibility = View.VISIBLE
-    allPatientsAdapter.submitList(InstantSearchResultsItemType.from(patients, facility, searchQuery = null))
 
     searchResultsView.swapAdapter(allPatientsAdapter, false)
     searchResultsView.scrollToPosition(0)

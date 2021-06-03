@@ -129,14 +129,15 @@ class InstantSearchEffectHandlerTest {
             uuid = UUID.fromString("a96ebfe1-a59c-4518-86ef-2ad2174cca03")
         )
     )
+    val pagingData = PagingData.from(patients)
 
     // when
-    testCase.dispatch(ShowAllPatients(patients, facility))
+    testCase.dispatch(ShowAllPatients(pagingData, facility))
 
     // then
     testCase.assertNoOutgoingEvents()
 
-    verify(uiActions).showAllPatients(patients, facility)
+    verify(uiActions).showAllPatients(pagingData, facility)
     verifyNoMoreInteractions(uiActions)
   }
 

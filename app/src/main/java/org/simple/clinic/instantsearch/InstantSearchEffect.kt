@@ -1,5 +1,6 @@
 package org.simple.clinic.instantsearch
 
+import androidx.paging.PagingData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
@@ -19,7 +20,7 @@ data class SearchWithCriteria(
 ) : InstantSearchEffect()
 
 data class ShowAllPatients(
-    val patients: List<PatientSearchResult>,
+    val patients: PagingData<PatientSearchResult>,
     val facility: Facility
 ) : InstantSearchEffect()
 

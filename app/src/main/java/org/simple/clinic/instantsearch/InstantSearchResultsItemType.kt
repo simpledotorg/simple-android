@@ -8,12 +8,12 @@ import org.simple.clinic.databinding.ListPatientSearchBinding
 import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
-import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import java.util.UUID
 
-sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResultsItemType.Event> {
+sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearchResultsItemType.Event> {
 
   companion object {
 
@@ -102,6 +102,15 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
             .map { searchResultViewModel -> SearchResult(searchResultViewModel, currentFacilityId, searchQuery) }
       }
 
+      fun forSearchResult(
+          searchResult: PatientSearchResult,
+          currentFacility: Facility,
+          searchQuery: String?
+      ): InstantSearchResultsItemType {
+        val viewModel = mapPatientSearchResultToViewModel(searchResult)
+        return SearchResult(viewModel, currentFacility.uuid, searchQuery)
+      }
+
       private fun mapPatientSearchResultToViewModel(searchResult: PatientSearchResult): PatientSearchResultViewModel {
         return PatientSearchResultViewModel(
             uuid = searchResult.uuid,
@@ -116,7 +125,6 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
         )
       }
     }
-
 
     override fun layoutResId(): Int = R.layout.list_patient_search
 

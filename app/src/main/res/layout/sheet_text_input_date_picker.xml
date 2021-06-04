@@ -46,7 +46,7 @@
 
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/dayTextFieldLayout"
-    style="@style/Widget.Simple.TextField.Layout.Large.MeasurementInput.Date"
+    style="@style/Widget.Simple.TextField.Layout.Large.DateInput"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_24"
@@ -89,7 +89,7 @@
 
   <TextView
     android:id="@+id/daySeparator"
-    style="@style/Widget.Simple.MeasurementInputSeparator"
+    style="@style/Widget.Simple.DateInputSeparator"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:layout_constraintBottom_toBottomOf="@id/dayTextFieldLayout"
@@ -99,7 +99,7 @@
 
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/monthTextFieldLayout"
-    style="@style/Widget.Simple.TextField.Layout.Large.MeasurementInput.Date"
+    style="@style/Widget.Simple.TextField.Layout.Large.DateInput"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:layout_constraintEnd_toStartOf="@id/monthSeparator"
@@ -136,7 +136,7 @@
 
   <TextView
     android:id="@+id/monthSeparator"
-    style="@style/Widget.Simple.MeasurementInputSeparator"
+    style="@style/Widget.Simple.DateInputSeparator"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:layout_constraintBottom_toBottomOf="@+id/monthTextFieldLayout"
@@ -146,7 +146,7 @@
 
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/yearTextFieldLayout"
-    style="@style/Widget.Simple.TextField.Layout.Large.MeasurementInput.Date"
+    style="@style/Widget.Simple.TextField.Layout.Large.DateInput"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/spacing_24"

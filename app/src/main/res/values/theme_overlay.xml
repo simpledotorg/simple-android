@@ -162,4 +162,8 @@
     <item name="colorPrimaryVariant">@color/simple_green_100</item>
   </style>
 
+  <style name="ThemeOverlay.Simple.TextField.Large.DateInput">
+    <item name="editTextStyle">@style/Widget.Simple.TextField.Large.DateInput</item>
+  </style>
+
 </resources>

@@ -67,6 +67,12 @@ class PatientRepository @Inject constructor(
 
       Pair(searchByNameAssignedFacility, searchByNameOtherFacility)
     }
+    is NumericCriteria -> {
+      val searchByNumericCriteriaAssignedFacility = searchByNumericCriteriaAssignedFacility(criteria.numericCriteria, facilityId)
+      val searchByNumericCriteriaOtherFacility = searchByNumericCriteriaOtherFacility(criteria.numericCriteria, facilityId)
+
+      Pair(searchByNumericCriteriaAssignedFacility, searchByNumericCriteriaOtherFacility)
+    }
     else -> throw IllegalArgumentException("Not implemented yet")
   }
 
@@ -88,6 +94,18 @@ class PatientRepository @Inject constructor(
     return database
         .patientSearchDao()
         .searchByNameOtherFacility(name = patientName, facilityId = facilityId)
+  }
+
+  private fun searchByNumericCriteriaAssignedFacility(query: String, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
+    return database
+        .patientSearchDao()
+        .searchByNumericCriteriaAssignedFacility(query = query, facilityId = facilityId)
+  }
+
+  private fun searchByNumericCriteriaOtherFacility(query: String, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
+    return database
+        .patientSearchDao()
+        .searchByNumericCriteriaOtherFacility(query = query, facilityId = facilityId)
   }
 
   private fun searchByPhoneNumber(

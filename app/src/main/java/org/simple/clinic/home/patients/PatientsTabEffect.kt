@@ -14,13 +14,9 @@ object LoadUser : PatientsTabEffect()
 
 object LoadInfoForShowingApprovalStatus : PatientsTabEffect()
 
-object ShowUserAwaitingApproval : PatientsTabEffect()
-
 data class SetDismissedApprovalStatus(val dismissedStatus: Boolean) : PatientsTabEffect()
 
 object ShowUserWasApproved : PatientsTabEffect()
-
-object ShowUserPendingSmsVerification : PatientsTabEffect()
 
 object HideUserAccountStatus : PatientsTabEffect()
 

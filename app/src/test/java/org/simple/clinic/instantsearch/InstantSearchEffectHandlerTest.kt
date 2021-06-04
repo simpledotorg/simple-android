@@ -91,7 +91,7 @@ class InstantSearchEffectHandlerTest {
   @Test
   fun `when search by criteria effect is received, then search by criteria`() {
     // given
-    val patients = listOf(
+    val assignedFacilityPatients = listOf(
         TestData.patientSearchResult(
             uuid = UUID.fromString("c9ecb8c1-93a2-4a9e-92ee-2231670ef91e"),
             fullName = "Patient 1"
@@ -101,15 +101,31 @@ class InstantSearchEffectHandlerTest {
             fullName = "Patient 2"
         )
     )
+    val otherFacilityPatients = listOf(
+        TestData.patientSearchResult(
+            uuid = UUID.fromString("7ad00879-556d-40b6-8d96-6f9aeabd1a96"),
+            fullName = "Patient 3"
+        )
+    )
     val searchCriteria = PatientSearchCriteria.Name("Pat")
 
-    whenever(patientRepository.search_old(searchCriteria, facility.uuid)) doReturn patients
+    val assignedFacilityPagingSource = TestPagingSource<Int, PatientSearchResult>(assignedFacilityPatients)
+    val otherFacilityPagingSource = TestPagingSource<Int, PatientSearchResult>(otherFacilityPatients)
+
+    val expectedAssignedFacilityPagingData = PagingData.from(assignedFacilityPatients)
+    val expectedOtherFacilityPagingData = PagingData.from(otherFacilityPatients)
+
+    whenever(patientRepository.search(searchCriteria, facility.uuid)) doReturn Pair(assignedFacilityPagingSource, otherFacilityPagingSource)
+    whenever(simplePagerFactory.createPager(config = instantSearchConfig.pagingConfig, source = assignedFacilityPagingSource)) doReturn
+        Observable.just(expectedAssignedFacilityPagingData)
+    whenever(simplePagerFactory.createPager(config = instantSearchConfig.pagingConfig, source = otherFacilityPagingSource)) doReturn
+        Observable.just(expectedOtherFacilityPagingData)
 
     // when
     testCase.dispatch(SearchWithCriteria(searchCriteria, facility))
 
     // then
-    testCase.assertOutgoingEvents(SearchResultsLoaded(patients))
+    testCase.assertOutgoingEvents(SearchResultsLoaded(expectedAssignedFacilityPagingData, expectedOtherFacilityPagingData))
 
     verifyZeroInteractions(uiActions)
   }

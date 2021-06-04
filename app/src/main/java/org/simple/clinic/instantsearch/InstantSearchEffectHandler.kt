@@ -5,6 +5,7 @@ import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientProfile
@@ -94,8 +95,19 @@ class InstantSearchEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { patientRepository.search_old(it.criteria, it.facility.uuid) }
-          .map(::SearchResultsLoaded)
+          .map { patientRepository.search(it.criteria, it.facility.uuid) }
+          .switchMap { (assignedFacilityPatients, otherFacilityPatients) ->
+            Observable.zip(
+                simplePagerFactory.createPager(config = instantSearchConfig.pagingConfig, source = assignedFacilityPatients),
+                simplePagerFactory.createPager(config = instantSearchConfig.pagingConfig, source = otherFacilityPatients),
+                { assignedFacilityPatientsPagingData, otherFacilityPatientsPagingData ->
+                  Pair(assignedFacilityPatientsPagingData, otherFacilityPatientsPagingData)
+                }
+            )
+          }
+          .map { (assignedFacilityPatients, otherFacilityPatients) ->
+            SearchResultsLoaded(assignedFacilityPatients = assignedFacilityPatients, otherFacilityPatients = otherFacilityPatients)
+          }
     }
   }
 

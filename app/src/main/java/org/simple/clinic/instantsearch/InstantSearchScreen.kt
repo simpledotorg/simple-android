@@ -369,8 +369,8 @@ class InstantSearchScreen :
   private fun searchQueryChanges(): Observable<UiEvent> {
     return searchQueryEditText
         .textChanges()
-        .skipInitialValue()
         .debounce(500, TimeUnit.MILLISECONDS)
+        .skip(1)
         .map { searchQuery ->
           val trimmedSearchQuery = searchQuery
               .trim()

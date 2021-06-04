@@ -3,8 +3,8 @@ package org.simple.clinic.widgets
 import android.content.Context
 import android.util.AttributeSet
 import com.alimuzaffar.lib.pin.PinEntryEditText
-import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
+import com.jakewharton.rxbinding3.widget.textChanges as rxBindingTextChanges
 
 /**
  * This class exists because a lot of libraries do not extend EditText.
@@ -19,6 +19,6 @@ class StaggeredEditText(context: Context, attrs: AttributeSet) : PinEntryEditTex
   }
 
   fun textChanges(): Observable<CharSequence> {
-    return RxTextView.textChanges(this)
+    return rxBindingTextChanges()
   }
 }

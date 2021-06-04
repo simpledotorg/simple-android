@@ -111,7 +111,8 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
             dateOfBirth = searchResult.dateOfBirth,
             address = searchResult.address,
             phoneNumber = searchResult.phoneNumber,
-            lastSeen = searchResult.lastSeen
+            lastSeen = searchResult.lastSeen,
+            identifier = searchResult.identifier
         )
       }
     }

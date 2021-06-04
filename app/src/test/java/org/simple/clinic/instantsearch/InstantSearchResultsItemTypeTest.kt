@@ -46,7 +46,8 @@ class InstantSearchResultsItemTypeTest {
                 dateOfBirth = patientSearchResult1.dateOfBirth,
                 address = patientSearchResult1.address,
                 phoneNumber = patientSearchResult1.phoneNumber,
-                lastSeen = patientSearchResult1.lastSeen
+                lastSeen = patientSearchResult1.lastSeen,
+                identifier = patientSearchResult1.identifier
             ),
             currentFacilityId = currentFacilityUuid,
             searchQuery = searchQueryReceived
@@ -61,7 +62,8 @@ class InstantSearchResultsItemTypeTest {
                 dateOfBirth = patientSearchResult2.dateOfBirth,
                 address = patientSearchResult2.address,
                 phoneNumber = patientSearchResult2.phoneNumber,
-                lastSeen = patientSearchResult2.lastSeen
+                lastSeen = patientSearchResult2.lastSeen,
+                identifier = patientSearchResult2.identifier
             ),
             currentFacilityId = currentFacilityUuid,
             searchQuery = searchQueryReceived
@@ -101,7 +103,8 @@ class InstantSearchResultsItemTypeTest {
                 dateOfBirth = patientSearchResult1.dateOfBirth,
                 address = patientSearchResult1.address,
                 phoneNumber = patientSearchResult1.phoneNumber,
-                lastSeen = patientSearchResult1.lastSeen
+                lastSeen = patientSearchResult1.lastSeen,
+                identifier = patientSearchResult1.identifier
             ),
             currentFacilityId = currentFacilityUuid,
             searchQuery = searchQueryEmpty
@@ -115,7 +118,8 @@ class InstantSearchResultsItemTypeTest {
                 dateOfBirth = patientSearchResult2.dateOfBirth,
                 address = patientSearchResult2.address,
                 phoneNumber = patientSearchResult2.phoneNumber,
-                lastSeen = patientSearchResult2.lastSeen
+                lastSeen = patientSearchResult2.lastSeen,
+                identifier = patientSearchResult2.identifier
             ),
             currentFacilityId = currentFacilityUuid,
             searchQuery = searchQueryEmpty
@@ -155,7 +159,8 @@ class InstantSearchResultsItemTypeTest {
                 dateOfBirth = patientSearchResult1.dateOfBirth,
                 address = patientSearchResult1.address,
                 phoneNumber = patientSearchResult1.phoneNumber,
-                lastSeen = patientSearchResult1.lastSeen
+                lastSeen = patientSearchResult1.lastSeen,
+                identifier = patientSearchResult1.identifier
             ),
             currentFacilityId = currentFacilityUuid,
             searchQuery = searchQueryEmpty
@@ -170,7 +175,8 @@ class InstantSearchResultsItemTypeTest {
                 dateOfBirth = patientSearchResult2.dateOfBirth,
                 address = patientSearchResult2.address,
                 phoneNumber = patientSearchResult2.phoneNumber,
-                lastSeen = patientSearchResult2.lastSeen
+                lastSeen = patientSearchResult2.lastSeen,
+                identifier = patientSearchResult2.identifier
             ),
             currentFacilityId = currentFacilityUuid,
             searchQuery = searchQueryEmpty

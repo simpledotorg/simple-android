@@ -92,7 +92,7 @@ class InstantSearchEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { patientRepository.search2(it.criteria, it.facility.uuid) }
+          .map { patientRepository.search(it.criteria, it.facility.uuid) }
           .map(::SearchResultsLoaded)
     }
   }

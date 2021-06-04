@@ -163,21 +163,6 @@ class ScanSimpleIdEffectHandlerTest {
   }
 
   @Test
-  fun `when open short code search effect is received, then open short code search`() {
-    // given
-    val shortCode = "1234567"
-
-    // when
-    testCase.dispatch(OpenShortCodeSearch(shortCode))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-
-    verify(uiActions).openShortCodeSearch(shortCode)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
   fun `when open patient search effect is received without NHID, then open patient search without patient prefill info`() {
     // given
     val identifier = TestData.identifier(

@@ -41,7 +41,6 @@ object Versions {
   const val playServicesAuth = "19.0.0"
   const val viewPump = "2.0.3"
   const val pinEntryEditText = "2.0.6"
-  const val javaStringSimilarity = "1.1.0"
   const val leakCanary = "2.6"
   const val constraintLayout = "2.0.4"
   const val playServicesLocation = "16.0.0"

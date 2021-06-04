@@ -267,7 +267,6 @@ class LatestRecentPatientsLogicTest {
     whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimitPlusOne)) doReturn Observable.just(recentPatients)
 
     val config = PatientConfig(
-        limitOfSearchResults = 1,
         recentPatientLimit = recentPatientLimit
     )
 

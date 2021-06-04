@@ -27,7 +27,6 @@ import java.util.Locale
   TestStorageModule::class,
   TestClockModule::class,
   AppConfigModule::class,
-  TestPatientSearchModule::class,
   BruteForceProtectionModule::class,
   LoginModule::class,
   NetworkModule::class,

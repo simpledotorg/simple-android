@@ -9,6 +9,8 @@
 - Update facility picker search edit text hint
 - Move `PatientPrefillInfo` to `patient` package to resolve coupling
 - Add a new style and a theme overlay for `TextInputDatePicker` textfields
+- Remove `ShortCodeResultsScreen`
+- Deprecate `PatientRepository#search`
 
 ## Features
 - Add NHID support in `PatientEntryScreen`

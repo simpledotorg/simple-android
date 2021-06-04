@@ -11,6 +11,7 @@
 - Add a new style and a theme overlay for `TextInputDatePicker` textfields
 - Remove `ShortCodeResultsScreen`
 - Deprecate `PatientRepository#search`
+- Remove RxBinding2
 
 ### Features
 - Add NHID support in `PatientEntryScreen`

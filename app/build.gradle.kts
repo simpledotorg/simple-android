@@ -396,8 +396,6 @@ dependencies {
 
   implementation("io.reactivex.rxjava2:rxjava:${versions.rxJava}")
   implementation("io.reactivex.rxjava2:rxandroid:${versions.rxAndroid}")
-  implementation("com.jakewharton.rxbinding2:rxbinding:${versions.rxBinding}")
-  implementation("com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:${versions.rxBinding}")
   implementation("com.jakewharton.rxbinding3:rxbinding:${versions.rxBinding3}")
   implementation("com.jakewharton.rxbinding3:rxbinding-recyclerview:${versions.rxBinding3}")
   implementation("com.jakewharton.rxbinding3:rxbinding-appcompat:${versions.rxBinding3}")

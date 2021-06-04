@@ -49,11 +49,9 @@ import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
-import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.settings.SettingsScreen
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
-import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreen
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.assignedfacility.AssignedFacilityView
@@ -74,7 +72,6 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultNotR
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreen
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerSheet
 import org.simple.clinic.widgets.PatientSearchResultItemView
-import org.simple.clinic.widgets.PatientSearchResultItemView_Old
 
 @Subcomponent(modules = [TheActivityModule::class])
 interface TheActivityComponent :
@@ -106,7 +103,6 @@ interface TheActivityComponent :
     EditPatientScreen.Injector,
     LinkIdWithPatientSheet.Injector,
     AppLockScreen.Injector,
-    PatientSearchView.Injector,
     TeleConsultSuccessScreen.Injector,
     TeleconsultRecordScreen.Injector,
     TeleconsultNotRecordedDialog.Injector,
@@ -120,8 +116,6 @@ interface TheActivityComponent :
     ConfirmDiscardChangesDialog.Injector,
     EditMedicinesScreen.Injector,
     SyncIndicatorView.Injector,
-    PatientSearchResultItemView_Old.Injector,
-    ShortCodeSearchResultScreen.Injector,
     SettingsScreen.Injector,
     ChangeLanguageScreen.Injector,
     TeleconsultSharePrescriptionScreen.Injector,

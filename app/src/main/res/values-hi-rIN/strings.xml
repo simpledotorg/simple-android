@@ -36,15 +36,9 @@
   <string name="instantsearch_hint">नाम, फोन या आईडी</string>
 
   <!-- Patient search results -->
-  <string name="patientsearchresults_empty_state">इस नाम का कोई रोगी मौजूद नहीं है</string>
   <string name="patientsearchresults_register_patient_rationale">क्या आप इस सूची में रोगी का नाम ढूंढ नहीं पाए?</string>
-  <string name="patientsearchresults_register_patient_rationale_for_empty_state">रोगी रजिस्टर किया हुआ नहीं है</string>
   <string name="patientsearchresults_register_patient">नए रोगी के तौर पर रजिस्टर करें</string>
-  <string name="patientsearchresults_register_patient_for_empty_state">रोगी को रजिस्टर करें</string>
   <string name="patientsearchresults_item_last_seen">विज़िट की गई</string>
-  <string name="patientsearchresults_current_facility_header">इसने %s पर विजिट किया</string>
-  <string name="patientsearchresults_other_results_header">अन्य परिणाम</string>
-  <string name="patientsearchresults_no_patients_match">इस नाम का कोई रोगी मौजूद नहीं है</string>
   <string name="patientsearchresults_item_phone_number">फोन</string>
   <string name="patientsearchresults_item_birthdate">जन्मदिन</string>
 
@@ -396,7 +390,6 @@
   <string name="registrationloader_retry">फिर से कोशिश करें</string>
 
   <!-- Short code search -->
-  <string name="shortcodesearchresult_enter_patient_name_button">रोगी का नाम दर्ज करे</string>
 
   <!-- Simple video -->
   <string name="simple_video_watch_video">वीडियो देखें</string>

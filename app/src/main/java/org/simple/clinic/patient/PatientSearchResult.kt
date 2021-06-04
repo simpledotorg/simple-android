@@ -5,7 +5,6 @@ import androidx.room.Dao
 import androidx.room.DatabaseView
 import androidx.room.Embedded
 import androidx.room.Query
-import io.reactivex.Flowable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.businessid.Identifier
 import java.time.Instant
@@ -116,38 +115,6 @@ data class PatientSearchResult(
   interface RoomDao {
 
     @Query("""
-      SELECT * FROM 
-      PatientSearchResult searchResult
-      LEFT JOIN Patient P ON P.uuid = searchResult.uuid
-      WHERE P.uuid IN (:uuids) AND P.status = :status AND P.deletedAt IS NULL
-      """)
-    fun searchByIds(uuids: List<UUID>, status: PatientStatus): List<PatientSearchResult>
-
-    @Query("""SELECT Patient.uuid, Patient.fullName FROM Patient WHERE Patient.status = :status AND Patient.deletedAt IS NULL""")
-    fun nameAndId(status: PatientStatus): List<PatientNameAndId>
-
-    @Suppress("AndroidUnresolvedRoomSqlReference")
-    @Query("""
-      SELECT * FROM PatientSearchResult searchResults
-      INNER JOIN (
-        SELECT DISTINCT P.uuid FROM Patient P
-          LEFT JOIN BloodPressureMeasurement BP ON BP.patientUuid = P.uuid
-          LEFT JOIN BloodSugarMeasurements BloodSugar ON BloodSugar.patientUuid = P.uuid
-          WHERE
-            (P.deletedAt IS NULL AND P.status = :status) AND
-            (
-                (BP.deletedAt IS NULL AND BP.facilityUuid = :facilityUuid) OR
-                (BloodSugar.deletedAt IS NULL AND BloodSugar.facilityUuid = :facilityUuid)
-            )
-      ) PatientsAtFacility ON searchResults.uuid = PatientsAtFacility.uuid
-      ORDER BY searchResults.fullName COLLATE NOCASE ASC
-    """)
-    fun searchInFacilityAndSortByName_Old(
-        facilityUuid: UUID,
-        status: PatientStatus
-    ): Flowable<List<PatientSearchResult>>
-
-    @Query("""
         SELECT * FROM (
             SELECT searchResult.*, 1 priority FROM 
             PatientSearchResult searchResult
@@ -160,16 +127,6 @@ data class PatientSearchResult(
         facilityUuid: UUID,
         status: PatientStatus
     ): List<PatientSearchResult>
-
-    @Suppress("AndroidUnresolvedRoomSqlReference")
-    @Query("""
-        SELECT * FROM 
-        PatientSearchResult searchResult
-        LEFT JOIN Patient P ON P.uuid = searchResult.uuid
-        WHERE phoneNumber LIKE '%' || :phoneNumber || '%' AND P.deletedAt IS NULL
-        ORDER BY P.fullName COLLATE NOCASE ASC LIMIT :limit
-    """)
-    fun searchByPhoneNumber(phoneNumber: String, limit: Int): List<PatientSearchResult>
 
     @Query("""
         SELECT 
@@ -201,17 +158,7 @@ data class PatientSearchResult(
         WHERE P.deletedAt IS NULL AND phoneNumberPosition > 0
         ORDER BY priority ASC, phoneNumberPosition ASC
     """)
-    fun searchByPhoneNumber2(phoneNumber: String, facilityId: UUID): List<PatientSearchResult>
-
-    @Query("""
-         SELECT DISTINCT * FROM 
-        PatientSearchResult searchResult
-        LEFT JOIN Patient P ON P.uuid = searchResult.uuid
-        WHERE identifierSearchHelp LIKE '%' || :numericCriteria || '%' OR phoneNumber LIKE '%' || :numericCriteria || '%'  AND P.deletedAt IS NULL
-        GROUP BY P.uuid
-        ORDER BY id_identifier, phoneNumber COLLATE NOCASE ASC LIMIT :limit
-        """)
-    fun searchByNumericCriteria(numericCriteria: String, limit: Int): List<PatientSearchResult>
+    fun searchByPhoneNumber(phoneNumber: String, facilityId: UUID): List<PatientSearchResult>
 
     @Query("""
         SELECT DISTINCT
@@ -229,7 +176,7 @@ data class PatientSearchResult(
         GROUP BY P.uuid
         ORDER BY priority ASC, phoneNumberPosition ASC, identifierPosition ASC
         """)
-    fun searchByNumericCriteria2(
+    fun searchByNumericCriteria(
         numericCriteria: String,
         facilityId: UUID
     ): List<PatientSearchResult>

@@ -42,7 +42,6 @@ import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.qrcodeanalyzer.MLKitQrCodeAnalyzer
 import org.simple.clinic.scanid.qrcodeanalyzer.ZxingQrCodeAnalyzer
-import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.BitmapUtils
@@ -276,13 +275,9 @@ class ScanSimpleIdScreen : BaseScreen<
         screenCreatedTimestamp = Instant.now(utcClock)))
   }
 
-  override fun openShortCodeSearch(shortCode: String) {
-    router.replaceTop(ShortCodeSearchResultScreenKey(shortCode))
-  }
-
   override fun openPatientSearch(additionalIdentifier: Identifier?, initialSearchQuery: String?, patientPrefillInfo: PatientPrefillInfo?) {
     val keyToPush = InstantSearchScreenKey(additionalIdentifier = additionalIdentifier,
-        initialSearchQuery = null,
+        initialSearchQuery = initialSearchQuery,
         patientPrefillInfo = patientPrefillInfo)
 
     when (val openedFrom = screenKey.openedFrom) {

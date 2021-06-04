@@ -36,15 +36,9 @@
   <string name="instantsearch_hint">பெயர், தொலைபேசி அல்லது ID</string>
 
   <!-- Patient search results -->
-  <string name="patientsearchresults_empty_state">இந்த பெயரில் எந்த நோயாளியும் பதிவு செய்யப்படவில்லை</string>
   <string name="patientsearchresults_register_patient_rationale">இந்தப் பட்டியலில் நோயாளியின் விவரங்களைக் கண்டறிய முடியவில்லையா?</string>
-  <string name="patientsearchresults_register_patient_rationale_for_empty_state">நோயாளி பதிவு செய்யப்படவில்லை</string>
   <string name="patientsearchresults_register_patient">புதிய நோயாளியாகப் பதிவு செய்யவும்</string>
-  <string name="patientsearchresults_register_patient_for_empty_state">நோயாளியைப் பதிவு செய்யவும்</string>
   <string name="patientsearchresults_item_last_seen">வந்துள்ளார்</string>
-  <string name="patientsearchresults_current_facility_header">%s அன்று வந்துள்ளார்</string>
-  <string name="patientsearchresults_other_results_header">பிற முடிவுகள்</string>
-  <string name="patientsearchresults_no_patients_match">இந்த பெயரில் எந்த நோயாளியும் பதிவு செய்யப்படவில்லை</string>
   <string name="patientsearchresults_item_phone_number">தொலைபேசி</string>
   <string name="patientsearchresults_item_birthdate">பிறந்த தேதி</string>
 
@@ -396,7 +390,6 @@
   <string name="registrationloader_retry">மீண்டும் முயலவும்</string>
 
   <!-- Short code search -->
-  <string name="shortcodesearchresult_enter_patient_name_button">நோயாளியின் பெயரை எழுதவும்</string>
 
   <!-- Simple video -->
   <string name="simple_video_watch_video">வீடியோ பார்க்கவும்</string>

@@ -291,5 +291,30 @@
     <item name="android:minWidth">@dimen/spacing_56</item>
     <item name="android:textAlignment">center</item>
   </style>
+  
+  <style name="Widget.Simple.TextField.Large.DateInput">
+    <item name="android:minWidth">64dp</item>
+    <item name="android:minEms">1</item>
+    <item name="android:paddingTop">@dimen/spacing_8</item>
+    <item name="android:paddingBottom">@dimen/spacing_8</item>
+    <item name="android:paddingStart">@dimen/spacing_4</item>
+    <item name="android:paddingEnd">@dimen/spacing_4</item>
+    <item name="android:textAppearance">?attr/textAppearanceHeadline3</item>
+    <item name="android:textAlignment">center</item>
+  </style>
+
+  <style name="Widget.Simple.TextField.Layout.Large.DateInput">
+    <item name="materialThemeOverlay">
+      @style/ThemeOverlay.Simple.TextField.Large.DateInput
+    </item>
+  </style>
+
+  <style name="Widget.Simple.DateInputSeparator" parent="android:Widget">
+    <item name="android:layout_marginStart">@dimen/spacing_8</item>
+    <item name="android:layout_marginEnd">@dimen/spacing_8</item>
+    <item name="android:textAppearance">?attr/textAppearanceHeadline3</item>
+    <item name="android:textColor">@color/color_on_surface_34</item>
+    <item name="android:text">/</item>
+  </style>
 
 </resources>

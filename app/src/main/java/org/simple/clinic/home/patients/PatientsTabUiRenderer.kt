@@ -4,7 +4,9 @@ import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.user.User
 import org.simple.clinic.util.ValueChangedCallback
 
-class PatientsTabUiRenderer(private val ui: PatientsTabUi) : ViewRenderer<PatientsTabModel> {
+class PatientsTabUiRenderer(
+    private val ui: PatientsTabUi
+) : ViewRenderer<PatientsTabModel> {
 
   private val userChangedCallback = ValueChangedCallback<User>()
 
@@ -13,10 +15,26 @@ class PatientsTabUiRenderer(private val ui: PatientsTabUi) : ViewRenderer<Patien
   override fun render(model: PatientsTabModel) {
     if (model.hasLoadedUser) {
       toggleSyncIndicatorVisibility(model)
+
+      showAccountNotifications(model)
     }
 
     if (model.hasLoadedNumberOfPatientsRegistered) {
       toggleTrainingViewVisibility(model)
+    }
+  }
+
+  private fun showAccountNotifications(model: PatientsTabModel) {
+    val currentUser = model.user!!
+    when {
+      currentUser.isPendingSmsVerification -> {
+        ui.showUserStatusAsPendingVerification()
+      }
+      currentUser.isWaitingForApproval -> {
+        // User is waiting for approval (new registration or login on a new device before being approved).
+        ui.showUserStatusAsWaitingForApproval()
+      }
+      else -> ui.hideUserAccountStatus()
     }
   }
 

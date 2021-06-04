@@ -12,11 +12,14 @@
 - Remove `ShortCodeResultsScreen`
 - Deprecate `PatientRepository#search`
 
-## Features
+### Features
 - Add NHID support in `PatientEntryScreen`
 - Use `PatientPrefillInfo` for prefilling patient entry information
 - Show NHID in `PatientEntryScreen`
 - Highlight patient identifiers in search
+
+### Fixes
+- Fix user cannot see sync button
 
 ## 2021-05-31-7801
 ### Internal

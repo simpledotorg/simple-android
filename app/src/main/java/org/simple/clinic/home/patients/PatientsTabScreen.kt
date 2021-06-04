@@ -236,7 +236,7 @@ class PatientsTabScreen : BaseScreen<
     currentStatusViewId = userStatusViewflipper.currentView.id
   }
 
-  override fun showUserStatusAsWaiting() {
+  override fun showUserStatusAsWaitingForApproval() {
     showUserAccountStatus(R.id.userStatusAwaitingApproval)
   }
 

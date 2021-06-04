@@ -5,4 +5,7 @@ interface PatientsTabUi {
   fun showSyncIndicator()
   fun showSimpleVideo()
   fun showIllustration()
+  fun showUserStatusAsPendingVerification()
+  fun hideUserAccountStatus()
+  fun showUserStatusAsWaitingForApproval()
 }

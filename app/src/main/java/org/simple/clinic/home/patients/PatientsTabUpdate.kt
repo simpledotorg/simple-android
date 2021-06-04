@@ -28,7 +28,6 @@ class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTab
     }
   }
 
-  // TODO (vs) 26/05/20: This should actually be rendered and not be as effects. Move later.
   private fun showAccountNotifications(
       model: PatientsTabModel,
       event: UserDetailsLoaded
@@ -39,26 +38,22 @@ class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTab
 
     val effects = mutableSetOf<PatientsTabEffect>()
 
-    when {
-      previousUser == null && newUser.isPendingSmsVerification -> {
-        effects.add(ShowUserPendingSmsVerification)
-      }
-
-      newUser.isWaitingForApproval -> {
-        // User is waiting for approval (new registration or login on a new device before being approved).
-        effects.add(ShowUserAwaitingApproval)
-        clearDismissedApprovalStatusIfNeeded(previousUser, effects)
-      }
-
-      newUser.isApprovedForSyncing && (previousUser == null || previousUser.isWaitingForApproval) -> {
-        // User was just approved
-        effects.add(LoadInfoForShowingApprovalStatus)
-      }
-
-      else -> effects.add(HideUserAccountStatus)
+    if (newUser.isWaitingForApproval) {
+      // User is waiting for approval (new registration or login on a new device before being approved).
+      clearDismissedApprovalStatusIfNeeded(previousUser, effects)
     }
 
+    if (previousUser == null || previousUser.isWaitingForApproval) {
+      checkIfUserIsApproved(newUser, effects)
+    }
     return next(updatedModel, effects)
+  }
+
+  private fun checkIfUserIsApproved(newUser: User, effects: MutableSet<PatientsTabEffect>) {
+    if (newUser.isApprovedForSyncing && !newUser.isPendingSmsVerification) {
+      // User was just approved
+      effects.add(LoadInfoForShowingApprovalStatus)
+    }
   }
 
   private fun clearDismissedApprovalStatusIfNeeded(

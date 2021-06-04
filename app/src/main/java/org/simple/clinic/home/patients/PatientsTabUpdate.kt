@@ -43,12 +43,17 @@ class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTab
       clearDismissedApprovalStatusIfNeeded(previousUser, effects)
     }
 
-    if (newUser.isApprovedForSyncing && (previousUser == null || previousUser.isWaitingForApproval) && !newUser.isPendingSmsVerification) {
+    if (previousUser == null || previousUser.isWaitingForApproval) {
+      checkIfUserIsApproved(newUser, effects)
+    }
+    return next(updatedModel, effects)
+  }
+
+  private fun checkIfUserIsApproved(newUser: User, effects: MutableSet<PatientsTabEffect>) {
+    if (newUser.isApprovedForSyncing && !newUser.isPendingSmsVerification) {
       // User was just approved
       effects.add(LoadInfoForShowingApprovalStatus)
     }
-    
-    return next(updatedModel, effects)
   }
 
   private fun clearDismissedApprovalStatusIfNeeded(

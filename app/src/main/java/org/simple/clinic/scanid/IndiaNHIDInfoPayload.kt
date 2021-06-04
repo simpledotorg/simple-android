@@ -3,6 +3,7 @@ package org.simple.clinic.scanid
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.PatientPrefillInfo
 import java.time.LocalDate
 
 @JsonClass(generateAdapter = true)

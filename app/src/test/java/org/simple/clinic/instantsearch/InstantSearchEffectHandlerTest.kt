@@ -165,22 +165,34 @@ class InstantSearchEffectHandlerTest {
         uuid = UUID.fromString("f1e9ad5c-7de0-4566-b1fc-392bdfdc8490"),
         name = "PHC Obvious"
     )
-    val patients = listOf(
+    val assignedFacilityPatients = PagingData.from(listOf(
         TestData.patientSearchResult(
             uuid = UUID.fromString("14edda47-c177-4b5b-9d72-832e262255a3")
         ),
         TestData.patientSearchResult(
             uuid = UUID.fromString("a96ebfe1-a59c-4518-86ef-2ad2174cca03")
         )
-    )
+    ))
+
+    val otherFacilityPatients = PagingData.from(listOf(
+        TestData.patientSearchResult(
+            uuid = UUID.fromString("80ee8487-666f-4f2e-bbb6-0c7d937ef6fd")
+        )
+    ))
 
     // when
-    testCase.dispatch(ShowPatientSearchResults(patients, facility, searchQuery))
+    testCase.dispatch(ShowPatientSearchResults(assignedFacilityPatients,
+        otherFacilityPatients,
+        facility,
+        searchQuery))
 
     // then
     testCase.assertNoOutgoingEvents()
 
-    verify(uiActions).showPatientsSearchResults(patients, facility, searchQuery)
+    verify(uiActions).showPatientsSearchResults(assignedFacilityPatients,
+        otherFacilityPatients,
+        facility,
+        searchQuery)
     verifyNoMoreInteractions(uiActions)
   }
 

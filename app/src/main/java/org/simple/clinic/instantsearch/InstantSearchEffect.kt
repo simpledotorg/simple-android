@@ -25,7 +25,8 @@ data class ShowAllPatients(
 ) : InstantSearchEffect()
 
 data class ShowPatientSearchResults(
-    val patients: List<PatientSearchResult>,
+    val assignedFacilityPatients: PagingData<PatientSearchResult>,
+    val otherFacilityPatients: PagingData<PatientSearchResult>,
     val facility: Facility,
     val searchQuery: String
 ) : InstantSearchEffect()

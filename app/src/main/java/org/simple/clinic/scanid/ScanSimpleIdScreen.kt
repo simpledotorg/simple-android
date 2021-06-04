@@ -36,6 +36,7 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty

@@ -1,4 +1,4 @@
-package org.simple.clinic.scanid
+package org.simple.clinic.patient
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

@@ -6,7 +6,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
-import org.simple.clinic.scanid.PatientPrefillInfo
+import org.simple.clinic.patient.PatientPrefillInfo
 
 @Parcelize
 data class InstantSearchModel(

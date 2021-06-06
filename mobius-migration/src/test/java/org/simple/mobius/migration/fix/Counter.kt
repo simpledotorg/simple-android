@@ -5,10 +5,10 @@ import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
+import kotlin.properties.Delegates
 import org.simple.mobius.migration.fix.CounterEffect.NegativeNumberEffect
 import org.simple.mobius.migration.fix.CounterEvent.Decrement
 import org.simple.mobius.migration.fix.CounterEvent.Increment
-import kotlin.properties.Delegates
 
 typealias CounterModel = Int
 

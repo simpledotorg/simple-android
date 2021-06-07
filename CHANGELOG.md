@@ -20,7 +20,7 @@
 - Highlight patient identifiers in search
 
 ### Changes
-- Update translations: `hi-IN`
+- Update translations: `hi-IN`, `bn_BD`
 
 ### Fixes
 - Fix user cannot see sync button

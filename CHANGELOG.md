@@ -19,6 +19,9 @@
 - Show NHID in `PatientEntryScreen`
 - Highlight patient identifiers in search
 
+### Changes
+- Update translations: `hi-IN`
+
 ### Fixes
 - Fix user cannot see sync button
 

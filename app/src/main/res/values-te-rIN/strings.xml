@@ -77,6 +77,7 @@
   <string name="patiententry_error_phonenumber_blank">ఫోన్ నంబర్ ఫీల్డ్ ఖాళీగా ఉండకూడదు</string>
   <string name="patiententry_error_phonenumber_length_less">ఫోన్ నంబర్ %1$s అంకెల కంటే తక్కువగా ఉండకూడదు</string>
   <string name="patiententry_error_phonenumber_length_more">ఫోన్ నంబర్ %1$s అంకెల కంటే ఎక్కువగా ఉండకూడదు</string>
+  <string name="patiententry_identifier_bp_passport">బిపి పాస్‌పోర్ట్</string>
   <string name="patiententry_consent_header">సమ్మతి:\u0020</string>
   <string name="patiententry_consent_first_para">దిగువ నొక్కడం ద్వారా, మీరు సముచిత సూచిత సమ్మతితో తీసుకున్న రోగి డేటాను మాత్రమే నమోదు చేస్తున్నట్లు మీరు నిర్ధారిస్తున్నారు. అంటే, రోగికి లేదా చట్టపరమైన సంరక్షకునికి మీరు వారి వ్యక్తిగత డేటాను యాప్‌లో నమోదు చేస్తున్నట్లు తెలియజేయాలి, ఏ డేటా సేకరించబడుతోంది తెలియజేయాలి, యాప్‌లోని ఫోన్ నంబర్‌ను ఉపయోగించి SMS, WhatsApp లేదా మరో పద్ధతిలో వారిని సంప్రదించవచ్చు అని వారికి చెప్పాలి.</string>
   <string name="patiententry_consent_second_para">మీరు అనుమతించిన వ్యక్తులు లేదా మీకు పని ఇచ్చిన ఆరోగ్య సంరక్షణ ప్రదాత, మీరు ఇక్కడ నమోదు చేసిన రోగి డేటాను, సమాచారాన్ని యాక్సెస్ చేయగలరు. యాప్‌ను ఉపయోగించడం ద్వారా, ఈ యాప్ నుండి సేకరించే డేటాను ఎవరు యాక్సెస్ చేయగలరో రోగికి లేదా చట్టపరమైన సంరక్షకునికి తెలియజేసినట్లు, అందుకు వారు సమ్మతించినట్లు మీరు నిర్ధారిస్తున్నారు.</string>
@@ -338,8 +339,12 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s మోతాదు</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">కార్డ్ ఐడిని స్కాన్ చేయండి</string>
+  <string name="scansimpleid_title">బిపి పాస్‌పోర్ట్ లేదా జాతీయ ID</string>
+  <string name="scansimpleid_enteredcode_error_empty">బిపి పాస్‌పోర్ట్ సంఖ్య లేదా జాతీయ ఆరోగ్య IDని నమోదు చేయండి</string>
+  <string name="scansimpleid_enteredcode_error_not_required_length">బిపి పాస్‌పోర్ట్ సంఖ్య 7 అంకెల కంటే తక్కువ ఉంటుంది</string>
   <string name="scansimpleid_type_number">లేదా నంబర్ టైప్ చేయండి</string>
+  <string name="scansimpleid_invalid_qr_code">చెల్లుబాటు అయ్యే ఆరోగ్య IDని స్కాన్ చేయండి</string>
+  <string name="scansimpleid_bp_passport_or_national_health_id">బిపి పాస్‌పోర్ట్ లేదా జాతీయ ఆరోగ్య ID</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">సింక్ పెండింగ్‌లో ఉంది</string>
@@ -360,7 +365,7 @@
   <!-- Link Id Sheet-->
   <string name="linkidwithpatient_button_yes">అవును</string>
   <string name="linkidwithpatient_button_back">వెనుకకు</string>
-  <string name="linkidwithpatient_text">దీనికి బిపి పాస్‌పోర్ట్‌ను జోడించండి</string>
+  <string name="linkidwithpatient_text">దీనికి ID జోడించు</string>
   <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
@@ -574,7 +579,7 @@
   <string name="assigned_facility_view_change">మార్చు</string>
 
   <!-- Facility Picker -->
-  <string name="facilitypicker_search_hint">మీ క్లినిక్ కోసం వెతకండి</string>
+  <string name="facilitypicker_search_hint">సదుపాయం పేరుని నమోదు చేయండి</string>
   <!-- Street, District, State -->
   <string name="facilitypicker_header_suggested_facilities">సూచించిన క్లినిక్‌లు</string>
   <string name="facilitypicker_header_all_facilities">అన్ని క్లినిక్‌లు</string>
@@ -668,7 +673,7 @@
   <string name="sheet_bp_passport_register_new_patient">కొత్త రోగిని నమోదు చేయండి</string>
   <string name="sheet_bp_passport_add_to_existing_patient">ఇప్పటికే ఉన్న రోగికి జోడించండి</string>
   <string name="sheet_bp_passport_number">బిపి పాస్‌పోర్ట్ %1$s</string>
-  <string name="sheet_national_health_id">జాతీయ ఆరోగ్య Id %1$s</string>
+  <string name="sheet_national_health_id">జాతీయ ఆరోగ్య ID %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$sకు కేటాయించబడ్డారు</string>
@@ -687,7 +692,7 @@
   <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">తేదీ సంవత్సరం తరువాతది కాకూడదు</string>
 
   <!-- National Health Id -->
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">ఇదివరకే జాతీయ ఆరోగ్య ID ని కలిగి ఉన్న రోగికి జాతీయ ఆరోగ్య IDని కేటాయించలేము</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">ఇదివరకే జాతీయ ఆరోగ్య IDని కలిగి ఉన్న రోగికి జాతీయ ఆరోగ్య IDని కేటాయించలేము</string>
   <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">సరే</string>
 
 </resources>

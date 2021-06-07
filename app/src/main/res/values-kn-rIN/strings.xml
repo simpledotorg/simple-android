@@ -77,6 +77,7 @@
   <string name="patiententry_error_phonenumber_blank">ಫೋನ್ ಸಂಖ್ಯೆ ಖಾಲಿ ಇರಬಾರದು</string>
   <string name="patiententry_error_phonenumber_length_less">ಫೋನ್ ನಂಬರ್ %1$s ಅಂಕಿಗಳಿಗಿಂತ ಕಡಿಮೆ ಇರಬಾರದು</string>
   <string name="patiententry_error_phonenumber_length_more">ಫೋನ್ ನಂಬರ್ %1$s ಅಂಕಿಗಳಿಗಿಂತ ಹೆಚ್ಚು ಇರಬಾರದು</string>
+  <string name="patiententry_identifier_bp_passport">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್</string>
   <string name="patiententry_consent_header">ಸಮ್ಮತಿ:\u0020</string>
   <string name="patiententry_consent_first_para">ಕೆಳಗೆ ಟ್ಯಾಪ್ ಮಾಡುವ ಮೂಲಕ, ನೀವು ಇಲ್ಲಿ ನಮೂದಿಸುವ ಯಾವುದೇ ರೋಗಿಯ ಡೇಟಾವನ್ನು ಸೂಕ್ತ ಮಾಹಿತಿಯುಕ್ತ ಸಮ್ಮತಿಯ ಅಡಿಯಲ್ಲಿ ಪಡೆಯಲಾಗಿದೆ ಎಂದು ನೀವು ದೃಢಪಡಿಸುತ್ತೀರಿ. ಇದರರ್ಥ ನೀವು ಅವರ ವೈಯಕ್ತಿಕ ಡೇಟಾವನ್ನು ಆ್ಯಪ್‌ನಲ್ಲಿ ನಮೂದಿಸುತ್ತಿದ್ದೀರಿ ಎಂಬುದು ರೋಗಿಗೆ ಅಥವಾ ಕಾನೂನು ಪೋಷಕರಿಗೆ ತಿಳಿದಿದೆ, ಯಾವ ಡೇಟಾವನ್ನು ಸಂಗ್ರಹಿಸಲಾಗುತ್ತಿದೆ ಎಂಬುದನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳುತ್ತಾರೆ ಮತ್ತು ಆ್ಯಪ್‌ನಲ್ಲಿ ಒದಗಿಸಲಾದ ಫೋನ್ ನಂಬರ್ ಬಳಸಿಕೊಂಡು ಅವರನ್ನು SMS, WhatsApp ಅಥವಾ ಇತರ ವಿಧಾನಗಳ ಮೂಲಕ ಸಂಪರ್ಕಿಸಬಹುದು ಎಂಬುದು ಅವರಿಗೆ ತಿಳಿದಿದೆ.</string>
   <string name="patiententry_consent_second_para">ನಿಮ್ಮಿಂದ ಅಧಿಕಾರ ಪಡೆದ ಯಾರಾದರೂ ಅಥವಾ ನೀವು ಕೆಲಸ ಮಾಡುವ ಆರೋಗ್ಯ ಸೇವೆ ಒದಗಿಸುವವರು, ನೀವು ಇಲ್ಲಿ ನಮೂದಿಸುವ ರೋಗಿಯ ಡೇಟಾ ಮತ್ತು ಮಾಹಿತಿಗೆ ಪ್ರವೇಶವನ್ನು ಹೊಂದಿರುತ್ತಾರೆ. ಆ್ಯಪ್ ಬಳಸುವ ಮೂಲಕ ಈ ಆ್ಯಪ್‌ನ ಮೂಲಕ ಪಡೆದ ಡೇಟಾಗೆ ಯಾರು ಪ್ರವೇಶವನ್ನು ಹೊಂದಿರುತ್ತಾರೆ ಎಂಬುದನ್ನು ರೋಗಿ ಅಥವಾ ಕಾನೂನು ಪೋಷಕರು ಅರ್ಥಮಾಡಿಕೊಂಡಿದ್ದಾರೆ ಮತ್ತು ಆ ಪ್ರವೇಶಕ್ಕೆ ಸಮ್ಮತಿಸುತ್ತಾರೆ ಎಂಬುದನ್ನು ನೀವು ಖಚಿತಪಡಿಸುತ್ತೀರಿ.</string>
@@ -338,8 +339,12 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s ಡೋಸೇಜ್</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">ಕಾರ್ಡ್ ಐಡಿ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ</string>
+  <string name="scansimpleid_title">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಅಥವಾ ರಾಷ್ಟ್ರೀಯ ID</string>
+  <string name="scansimpleid_enteredcode_error_empty">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಸಂಖ್ಯೆ ಅಥವಾ ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ ID ನಮೂದಿಸಿ</string>
+  <string name="scansimpleid_enteredcode_error_not_required_length">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಸಂಖ್ಯೆಯ ಉದ್ದ 7 ಅಂಕಿಗಳಿಗಿಂತ ಕಡಿಮೆ ಇರಬೇಕು</string>
   <string name="scansimpleid_type_number">ಅಥವಾ ಸಂಖ್ಯೆಯನ್ನು ಟೈಪ್ ಮಾಡಿ</string>
+  <string name="scansimpleid_invalid_qr_code">ಮಾನ್ಯವಾದ ಆರೋಗ್ಯ ID ಸ್ಕ್ಯಾನ್ ಮಾಡಿ</string>
+  <string name="scansimpleid_bp_passport_or_national_health_id">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಅಥವಾ ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ ID</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ಸಿಂಕ್ ಬಾಕಿ ಇದೆ</string>
@@ -360,7 +365,7 @@
   <!-- Link Id Sheet-->
   <string name="linkidwithpatient_button_yes">ಹೌದು</string>
   <string name="linkidwithpatient_button_back">ಹಿಂದೆ</string>
-  <string name="linkidwithpatient_text">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಸೇರಿಸಿ</string>
+  <string name="linkidwithpatient_text">ID ಅನ್ನು ಇಲ್ಲಿಗೆ ಸೇರಿಸಿ</string>
   <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
@@ -574,7 +579,7 @@
   <string name="assigned_facility_view_change">ಬದಲಾಯಿಸಿ</string>
 
   <!-- Facility Picker -->
-  <string name="facilitypicker_search_hint">ನಿಮ್ಮ ಕ್ಲಿನಿಕ್‌ಗಾಗಿ ಶೋಧಿಸಿ</string>
+  <string name="facilitypicker_search_hint">ಸೌಲಭ್ಯ ಕೇಂದ್ರದ ಹೆಸರು ನಮೂದಿಸಿ</string>
   <!-- Street, District, State -->
   <string name="facilitypicker_header_suggested_facilities">ಸಲಹೆ ಮಾಡಲಾದ ಕ್ಲಿನಿಕ್‌ಗಳು</string>
   <string name="facilitypicker_header_all_facilities">ಎಲ್ಲಾ ಕ್ಲಿನಿಕ್‌ಗಳು</string>
@@ -668,7 +673,7 @@
   <string name="sheet_bp_passport_register_new_patient">ಹೊಸ ರೋಗಿಯನ್ನು ನೋಂದಾಯಿಸಿ</string>
   <string name="sheet_bp_passport_add_to_existing_patient">ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ರೋಗಿಗೆ ಸೇರಿಸಿ</string>
   <string name="sheet_bp_passport_number">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್‌ %1$s</string>
-  <string name="sheet_national_health_id">ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ Id %1$s</string>
+  <string name="sheet_national_health_id">ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s ಗೆ ನಿಯೋಜಿಸಲಾಗಿದೆ</string>

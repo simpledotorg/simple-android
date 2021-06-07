@@ -33,7 +33,7 @@
   <string name="identifiertype_india_national_health_id">राष्ट्रीय स्वास्थ्य आईडी</string>
 
   <!-- Patient search -->
-  <string name="instantsearch_hint">नाम, फोन या आईडी</string>
+  <string name="instantsearch_hint">नाम, फोन या ID</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">क्या आप इस सूची में रोगी का नाम ढूंढ नहीं पाए?</string>
@@ -77,6 +77,7 @@
   <string name="patiententry_error_phonenumber_blank">फ़ोन नंबर को खाली नहीं छोड़ा जा सकता</string>
   <string name="patiententry_error_phonenumber_length_less">फ़ोन नंबर में  %1$s से कम अंक नहीं हो सकते</string>
   <string name="patiententry_error_phonenumber_length_more">फ़ोन नंबर में  %1$s से अधिक अंक नहीं हो सकते</string>
+  <string name="patiententry_identifier_bp_passport">बीपी पासपोर्ट</string>
   <string name="patiententry_consent_header">सहमति:\u0020</string>
   <string name="patiententry_consent_first_para">नीचे टैप करके, आप इस बात की पुष्टि करते हैं कि रोगी के संबंध में आपके द्वारा लिखा गया कोई भी डेटा उचित सूचित सहमति के अंतर्गत प्राप्त किया गया है। इसका मतलब यह है कि रोगी या कानूनी अभिभावक को इस बात की जानकारी है कि आप ऐप में उनका व्यक्तिगत डेटा लिख रहे हैं, वह इस बात को समझता है कि किस डेटा को एकत्र किया जा रहा है, और उसे यह पता है कि वे ऐप में दिए गए फ़ोन नंबर का उपयोग करके SMS, WhatsApp, या अन्य तरीकों से संपर्क कर सकते हैं।</string>
   <string name="patiententry_consent_second_para">आपके द्वारा अधिकृत कोई भी, या स्वास्थ्य सेवा प्रदाता जिसके लिए आप काम करते हैं, के पास यहां दर्ज किए गए रोगी डेटा और जानकारी तक पहुंच होगी। ऐप का उपयोग करके आप रोगी या कानूनी अभिभावक द्वारा यह समझे जाने की पुष्टि करते हैं कि इस ऐप के माध्यम से प्राप्त डेटा तक पहुंच किसके पास होगी और रोगी उस पहुँच के लिए सहमति देता है।</string>
@@ -338,8 +339,12 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s मात्रा</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">कार्ड आईडी स्कैन करें</string>
+  <string name="scansimpleid_title">बीपी पासपोर्ट या राष्ट्रीय ID</string>
+  <string name="scansimpleid_enteredcode_error_empty">BP पासपोर्ट नंबर या एक राष्ट्रीय स्वास्थ्य ID दर्ज करें</string>
+  <string name="scansimpleid_enteredcode_error_not_required_length">बीपी पासपोर्ट नंबर की लंबाई 7 अंकों से कम है</string>
   <string name="scansimpleid_type_number">या संख्या टाइप करें</string>
+  <string name="scansimpleid_invalid_qr_code">मान्य स्वास्थ्य ID स्कैन करें</string>
+  <string name="scansimpleid_bp_passport_or_national_health_id">BP पासपोर्ट या राष्ट्रीय स्वास्थ्य ID</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">सिंक लंबित है</string>
@@ -360,7 +365,7 @@
   <!-- Link Id Sheet-->
   <string name="linkidwithpatient_button_yes">हाँ</string>
   <string name="linkidwithpatient_button_back">वापस जाएँ</string>
-  <string name="linkidwithpatient_text">बीपी पासपोर्ट को इसमें जोड़ें</string>
+  <string name="linkidwithpatient_text">इसमें ID जोड़ें</string>
   <string name="linkidwithpatient_patient_text">रोगी %1$s?</string>
 
   <!-- Add ID to Patient: Search -->
@@ -574,7 +579,7 @@
   <string name="assigned_facility_view_change">बदलें</string>
 
   <!-- Facility Picker -->
-  <string name="facilitypicker_search_hint">अपने क्लिनिक को ढूंढें</string>
+  <string name="facilitypicker_search_hint">सुविधा का नाम दर्ज करें</string>
   <!-- Street, District, State -->
   <string name="facilitypicker_header_suggested_facilities">सुझाए गए क्लिनिक</string>
   <string name="facilitypicker_header_all_facilities">सभी क्लिनिक</string>
@@ -668,7 +673,7 @@
   <string name="sheet_bp_passport_register_new_patient">नए रोगी को रजिस्टर करें</string>
   <string name="sheet_bp_passport_add_to_existing_patient">मौजूदा रोगी में जोड़ें</string>
   <string name="sheet_bp_passport_number">बीपी पासपोर्ट %1$s</string>
-  <string name="sheet_national_health_id">राष्ट्रीय स्वास्थ्य आईडी %1$s</string>
+  <string name="sheet_national_health_id">राष्ट्रीय स्वास्थ्य ID %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s को असाइन किया गया</string>
@@ -687,7 +692,7 @@
   <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">तारीख 1 साल बाद की नहीं हो सकती</string>
 
   <!-- National Health Id -->
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">राष्ट्रीय स्वास्थ्य आईडी, मौजूदा राष्ट्रीय स्वास्थ्य आईडी के साथ मरीज को निर्धारित नहीं की जा सकती है</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">राष्ट्रीय स्वास्थ्य ID, मौजूदा राष्ट्रीय स्वास्थ्य ID के साथ मरीज को निर्धारित नहीं की जा सकती है</string>
   <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">ठीक है</string>
 
 </resources>

@@ -25,7 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.NestedScrollView
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import timber.log.Timber
 import java.time.Duration
@@ -262,7 +262,7 @@ var ViewFlipper.displayedChildResId: Int
   }
 
 fun <T> EditText.textChanges(mapper: (String) -> T): Observable<T> {
-  return RxTextView.textChanges(this)
+  return this.textChanges()
       .map { it.toString() }
       .map(mapper)
 }

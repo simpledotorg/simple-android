@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Next Release
+### Changes
+- Updated translations: `hi-IN`, `bn_BD`, `te_IN`, `bn_IN`, `am_ET`, `pa-IN`
+
 ## On Demo
 ### Internal
 - Bump Kotlin to v1.5.10
@@ -18,9 +22,6 @@
 - Use `PatientPrefillInfo` for prefilling patient entry information
 - Show NHID in `PatientEntryScreen`
 - Highlight patient identifiers in search
-
-### Changes
-- Updated translations: `hi-IN`, `bn_BD`, `te_IN`, `bn_IN`, `am_ET`
 
 ### Fixes
 - Fix user cannot see sync button

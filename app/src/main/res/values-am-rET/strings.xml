@@ -33,7 +33,7 @@
   <string name="identifiertype_india_national_health_id">ብሔራዊ የጤና መታወቂያ</string>
 
   <!-- Patient search -->
-  <string name="instantsearch_hint">ስም፣ ስልክ ቁጥር ወይም መታወቂያ</string>
+  <string name="instantsearch_hint">ስም ፣ ስልክ ወይም መታወቂያ</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">በዚህ ዝርዝር ውስጥ ታካሚውንውን ማግኘት አልተቻለም?</string>
@@ -77,6 +77,7 @@
   <string name="patiententry_error_phonenumber_blank">የስልክ ቁጥር ባዶ ልሆን አይችልም</string>
   <string name="patiententry_error_phonenumber_length_less">የስልክ ቁጥር ከ %1$s ዲጂቶች በታች መሆን አይችልም</string>
   <string name="patiententry_error_phonenumber_length_more">የስልክ ቁጥር ከ %1$s ዲጂቶች በላይ መሆን አይችልም</string>
+  <string name="patiententry_identifier_bp_passport">የደም ግፊት ፓስፖርት</string>
   <string name="patiententry_consent_header">ስምምነት:\u0020</string>
   <string name="patiententry_consent_first_para">ከዚህ በታች መታ በማድረግ እዚህ ያስገቡት ማንኛውም የታካሚ መረጃ በተገቢው በተረጋገጠ ስምምነት የተገኘ መሆኑን ያረጋግጣሉ። ይህ ማለት ታካሚው ወይም የታካሚው ሞግዚት የግል መረጃ ወደ መተግበሪያው ውስጥ እንደሚገቡ ያውቃሉ፣ ምን መረጃ እየተሰበሰበ እንዳለ ይገነዘባሉ፣ እንዲሁም በመተግበሪያው ውስጥ የሚገኘውን የስልክ ቁጥር በመጠቀም በኤስኤምኤስ፣ በ WhatsApp ወይም በሌሎች መንገዶች ሊገናኙ እንደሚችሉ ያውቃሉ።</string>
   <string name="patiententry_consent_second_para">እርስዎ የፈቀዱለት ማንኛውም ሰው ወይም እርስዎ የሚሰሩለት የጤና ባለሙያ ፤ እዚህ ያስገቡትን የታካሚ መረጃዎች ማግኘት ይችላል። መተግበሪያውን በመጠቀም ታካሚው ወይም የታካሚው ሞግዚት በዚህ መተግበሪያ አማካኝነት የተገኘውን መረጃ ማን መድረስ እንደሚችል መገንዘባቸውን እና ተሰማሚነታቸውን አረጋግጠዋል።</string>
@@ -338,8 +339,12 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s የመድኃኒት መጠን</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">የካርድ መታወቂያ ይቃኙ</string>
+  <string name="scansimpleid_title">BP ፓስፖርት ወይም ብሄራዊ መታወቂያ</string>
+  <string name="scansimpleid_enteredcode_error_empty">BP ፓስፖርት ቁጥር ወይም የብሔራዊ የጤና መታወቂያ ያስገቡ</string>
+  <string name="scansimpleid_enteredcode_error_not_required_length">የደም ግፊት ፓስፖርት ቁጥር ከ 7 ቁጥሮች በታች ነው</string>
   <string name="scansimpleid_type_number">ወይም ቁጥር ይተይቡ</string>
+  <string name="scansimpleid_invalid_qr_code">ትክክለኛ የጤና መታወቂያ ይቃኙ</string>
+  <string name="scansimpleid_bp_passport_or_national_health_id">BP ፓስፖርት ቁጥር ወይም የብሔራዊ የጤና መታወቂያ</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ለመጣመር በመጠባበቅ ላይ </string>
@@ -360,7 +365,7 @@
   <!-- Link Id Sheet-->
   <string name="linkidwithpatient_button_yes">አዎ</string>
   <string name="linkidwithpatient_button_back">ወደኋላ</string>
-  <string name="linkidwithpatient_text">የ ደም ግፊት ፓስፖርት ይጨምሩ</string>
+  <string name="linkidwithpatient_text">መታወቅያዎን ያስገቡ</string>
   <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
@@ -574,7 +579,7 @@
   <string name="assigned_facility_view_change">ለውጥ</string>
 
   <!-- Facility Picker -->
-  <string name="facilitypicker_search_hint">ክሊኒክዎን ይፈልጉ</string>
+  <string name="facilitypicker_search_hint">የመገልገያ ስም ያስገቡ</string>
   <!-- Street, District, State -->
   <string name="facilitypicker_header_suggested_facilities">የተጠቆሙ ክሊኒኮች</string>
   <string name="facilitypicker_header_all_facilities">ሁሉም ክሊኒኮች</string>
@@ -668,7 +673,7 @@
   <string name="sheet_bp_passport_register_new_patient">አዲስ ታካሚ ይመዝግቡ</string>
   <string name="sheet_bp_passport_add_to_existing_patient">ወደ ነባር ህመምተኛ ያክሉ</string>
   <string name="sheet_bp_passport_number">የ BP  ፓስፖርት %1$s</string>
-  <string name="sheet_national_health_id">ብሔራዊ የጤና መታወቂያ %1$s</string>
+  <string name="sheet_national_health_id">ብሄራዊ የጤና መታወቂያ%1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">ለ %1$s ተመድቧል</string>
@@ -687,7 +692,7 @@
   <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">ቀን ከአንድ ዓመት በኋላ መሆን አይችልም</string>
 
   <!-- National Health Id -->
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">አሁን ነባር ብሔራዊ የጤና መታወቂያ ላለው ታካሚ ብሔራዊ የጤና መታወቂያ ሊመደብ አይችልም</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">ብሄራዊ የጤና መታወቂያ ነባር ብሄራዊ የጤና መታወቂያ ጋር በሽተኛ እንዲመደብ አይችልም</string>
   <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">እሺ</string>
 
 </resources>

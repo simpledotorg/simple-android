@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
@@ -151,14 +151,14 @@ class SelectCountryScreen(
   }
 
   private fun retryClicks(): Observable<RetryClicked> {
-    return RxView
-        .clicks(tryAgain)
+    return tryAgain
+        .clicks()
         .map { RetryClicked }
   }
 
   private fun nextClicks(): Observable<NextClicked> {
-    return RxView
-        .clicks(nextButton)
+    return nextButton
+        .clicks()
         .map { NextClicked }
   }
 

@@ -33,7 +33,7 @@
   <string name="identifiertype_india_national_health_id">Aqoonsiga Caafimaadka Qaran</string>
 
   <!-- Patient search -->
-  <string name="instantsearch_hint">Magaca, taleefanka ama Aqoonsiga</string>
+  <string name="instantsearch_hint">Magaca, Talefoonka ama Aqoonsiga Qaran</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">Kuma jiro bukaanka liiskan?</string>
@@ -77,6 +77,7 @@
   <string name="patiententry_error_phonenumber_blank">Lambarka taleefanka ma noqon karo mid madhan</string>
   <string name="patiententry_error_phonenumber_length_less">Lambarka taleefanka kama yaraan karo%1$s lambar</string>
   <string name="patiententry_error_phonenumber_length_more">Lambarka taleefanka kama badnaan karo %1$s lambar</string>
+  <string name="patiententry_identifier_bp_passport">Baasaboorka BP</string>
   <string name="patiententry_consent_header">Ogolaanshi:\u0020</string>
   <string name="patiententry_consent_first_para">Adiga oo taabanaya hoosta, waxaad xaqiijineysaa in xog kasta oo bukaan ah oo aad halkan gasho lagu helay ogolaansho ku habboon oo la oggol yahay. Tan macnaheedu waa in bukaanku ama masuulka sharciga ah uu ogyahay inaad ku dareyso xogtooda shaqsi barnaamijka, fahmay waxa xogta la aruurinayo, uuna ogyahay in lagala soo xiriiri karo fariinta gaaban, WhatsApp, ama qaabab kale iyadoo la adeegsanayo lambarka taleefanka ee ku jira barnaamijka. .</string>
   <string name="patiententry_consent_second_para">Qof kasta oo aad idman, ama daryeel caafimaad bixiyaha aad u shaqeysid, wuxuu heli doonaa xogta bukaanka iyo macluumaadka aad gasho halkan. Adiga oo adeegsanaya barnaamijka waxaad xaqiijineysaa in bukaanku ama masuulka sharciga ah uu fahmayo cidda marin u yeelan doonta xogta laga helay barnaamijkan isla markaana ogolaanaya marinkaas</string>
@@ -338,9 +339,12 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s qiyaas qaadashada daawo</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">Iskaan garee kaarka aqoonsiga</string>
+  <string name="scansimpleid_title">Baasaboorka BP ama Aqoonsiga Qaranka</string>
+  <string name="scansimpleid_enteredcode_error_empty">Gali lambarka Baasaboorka BP ama Aqoonsiga Caafimaadka Qaranka</string>
+  <string name="scansimpleid_enteredcode_error_not_required_length">Dhererka lambarka Baasaboorka BP wuxuu ka yar yahay 7 lambar</string>
   <string name="scansimpleid_type_number">ama lambarka nooca</string>
-
+  <string name="scansimpleid_invalid_qr_code">Iskaan garee Aqoonsiga Caafimaadka oo Sax ah</string>
+  <string name="scansimpleid_bp_passport_or_national_health_id">Baasaboorka BP ama Aqoonsiga Caafimaadka Qaranka</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Hawlgalinta ayaa hakad la galiyay</string>
@@ -361,7 +365,7 @@
   <!-- Link Id Sheet-->
   <string name="linkidwithpatient_button_yes">Haa</string>
   <string name="linkidwithpatient_button_back">Gadaal</string>
-  <string name="linkidwithpatient_text">Ku dar baasaboorka BP</string>
+  <string name="linkidwithpatient_text">Ku dar Aqoonsiga</string>
   <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
@@ -575,7 +579,7 @@
   <string name="assigned_facility_view_change">Baddel</string>
 
   <!-- Facility Picker -->
-  <string name="facilitypicker_search_hint">Raadi rugtaada caafimaad</string>
+  <string name="facilitypicker_search_hint">Geli magaca xarunta</string>
   <!-- Street, District, State -->
   <string name="facilitypicker_header_suggested_facilities">Rugaha caafimaad ee lasoo jeediyay</string>
   <string name="facilitypicker_header_all_facilities">Dhamaan rugaha caafimaad</string>
@@ -688,7 +692,7 @@
   <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">Taariikhda waa inayna ka dambaynin ha sano</string>
 
   <!-- National Health Id -->
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">Aqoonsiga caafimaadka qaran waa in aan la siinin bukaan haysa aqoonsi caafimaad oo hore</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">Aqoonsiga Caafimaadka Qaranka looma qoondeyn karo bukaanka leh Aqoonsiga Caafimaadka Qaranka ee hadda jira</string>
   <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">Haye</string>
 
 </resources>

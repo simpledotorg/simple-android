@@ -2,7 +2,7 @@
 
 ## Next Release
 ### Changes
-- Updated translations: `hi-IN`, `bn-BD`, `te-IN`, `bn-IN`, `am-ET`, `pa-IN`, `ti-ET`, `kn-IN`, `mr-IN`
+- Updated translations: `hi-IN`, `bn-BD`, `te-IN`, `bn-IN`, `am-ET`, `pa-IN`, `ti-ET`, `kn-IN`, `mr-IN`, `ta-IN`
 
 ## On Demo
 ### Internal

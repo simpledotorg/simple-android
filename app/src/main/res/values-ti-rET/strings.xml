@@ -33,7 +33,7 @@
   <string name="identifiertype_india_national_health_id">ሃገራዊ ናይ ጥዕና መለለዪ መንነት</string>
 
   <!-- Patient search -->
-  <string name="instantsearch_hint">ስም፣ ስልኪ ቑፅሪ ወይ መለለዪ መንነት</string>
+  <string name="instantsearch_hint">ስም፣ ስልኪ ቑፅሪ፣ ወይ መለለዪ መንነት</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">ተሓካሚ ኣብዚ ዝርዝር ኣይተረኽበን?</string>
@@ -77,6 +77,7 @@
   <string name="patiententry_error_phonenumber_blank">ቑፅሪ ስልኪ ክፍቲ ክኽውን ኣይግባእን</string>
   <string name="patiententry_error_phonenumber_length_less">ቁፅሪ ተሌፎን ካብ %1$s ኣሃዛት ንታሕቲ ክኸውን የብሉን</string>
   <string name="patiententry_error_phonenumber_length_more">ቁፅሪ ተሌፎን ካብ %1$s ኣሃዛት ንላዕሊ ክኸውን የብሉን</string>
+  <string name="patiententry_identifier_bp_passport">BP Passport</string>
   <string name="patiententry_consent_header">ስምምዕ፥\ u0020</string>
   <string name="patiententry_consent_first_para">ኣብ ታሕቲ ብምትንካፍ፡ ኩሉ ኣብዚ ዘእተኻዮ/ኽዮ ናይ ተሓካሚ ሓበሬታ ብኣገባብን ስምምዕን ከም ዝረኸብካዮ/ዝረኸብኪዮ  ኣረጋግጽ/ጺ እዚ ማለት፡ ተሓካሚ ወይ ድማ ሕጋዊ ኣላዪኡ/ኣ ግላዊ ሓበሬታታቶም ከም ዝተኣከበን ኣብ ኣፕሊኬሽን ከምዝኣተወን ከምኡ ውን ብ ኣገልግሎት ሓጺር መልእኽቲ፡ ዋትስኣፕ ወይ ካልኦት ኣገባባት ብምጥቃም በቲ ዝተመዝገበ ስልኪ ቁጽሪ ከም ነዘራርቦም ይፈልጡ ማለት’ዩ።</string>
   <string name="patiententry_consent_second_para">ዝኾነ ብኣኻ ስልጣን ዝተወሃቦ ወይ’ውን እቲ ንስኻ ተቖጺርካ ትሰርሓሉ በዓል ሞያ ጥዕና፡ ነቲ ዝኣከብካዮ ናይ ተሓካሚ ሓበሬታ ክኸፍቶን ክጥቀመሉን ምዃኑ። ነዚ ኣፕሊኬሽን ብምጥቃም፡ ተሓካሚ ወይ’ውን ሕጋዊ ኣላዪ እዚ ሓበሬታ ኣብ ጥቕሚ ከም ዝውዕልን መን ከም ዝጥቀመሉን ተሰማሚዑ ኣሎ ማለት’ዩ።</string>
@@ -338,8 +339,12 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%sዓቐን</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">BP ፓስፖርት ወይ ሃገራዊ ናይ ጥዕና መለለዪ መንነት</string>
+  <string name="scansimpleid_title">BP ፓስፖርት ወይ ሃገራዊ መለለዪ መንነት</string>
+  <string name="scansimpleid_enteredcode_error_empty">ናይ BP ፓስፖርት ወይ ሃገራዊ ናይ ጥዕና መለለዪ መንነት የእቱ</string>
+  <string name="scansimpleid_enteredcode_error_not_required_length">ቅኑዕ ዝኾነ ናይ BP ፓስፖርት ወይ ሃገራዊ ናይ ጥዕና መለለዪ መንነት የእቱ</string>
   <string name="scansimpleid_type_number">ወይ ቁጽሪ ጸሓፍ</string>
+  <string name="scansimpleid_invalid_qr_code">ቅኑዕ ዝኾነ ናይ ጥዕና መለለዪ መንነት ስካን ግበር</string>
+  <string name="scansimpleid_bp_passport_or_national_health_id">ናይ BP ፓስፖርት ወይ ሃገራዊ ናይ ጥዕና መለለዪ መንነት</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending"> ምስናይ ንውሳነ ይፅበይ ኣሎ</string>
@@ -360,7 +365,7 @@
   <!-- Link Id Sheet-->
   <string name="linkidwithpatient_button_yes">እወ</string>
   <string name="linkidwithpatient_button_back">ተመለስ</string>
-  <string name="linkidwithpatient_text">ናይ ጸቕጢ ደም ፓስፖርት ናብዚ ደምር</string>
+  <string name="linkidwithpatient_text">መለለይ መንነት ናብዚ ዝስዕብ የእቱ</string>
   <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
@@ -574,7 +579,7 @@
   <string name="assigned_facility_view_change">ለውጢ</string>
 
   <!-- Facility Picker -->
-  <string name="facilitypicker_search_hint">ሕክምናኻ ድለይ</string>
+  <string name="facilitypicker_search_hint">ሽም ትካል ኣእትው/ዊ</string>
   <!-- Street, District, State -->
   <string name="facilitypicker_header_suggested_facilities">ከም ሓሳብ ዝቐረቡ ሕክምናታት</string>
   <string name="facilitypicker_header_all_facilities">ኩሎም ሕክምናታት</string>

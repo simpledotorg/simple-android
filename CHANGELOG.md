@@ -25,6 +25,7 @@
 
 ### Fixes
 - Fix user cannot see sync button
+- Fix progress view for manual OTP entry screen is not hidden when login fails
 
 ## 2021-05-31-7801
 ### Internal

@@ -3,8 +3,8 @@ name: Code formatting
 # Scheduled at 11:30 PM UTC (Sunday to Thursday)
 # Scheduled at 05:00 AM IST (Monday to Friday)
 on:
-  schedule:
-    - cron: "30 23 * * 0-4"
+#  schedule:
+#    - cron: "30 23 * * 0-4"
   workflow_dispatch:
 
 jobs:

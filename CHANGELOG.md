@@ -12,6 +12,7 @@
 - Remove `ShortCodeResultsScreen`
 - Deprecate `PatientRepository#search`
 - Remove RxBinding2
+- Disable scheduled code formatting GH Action
 
 ### Features
 - Add NHID support in `PatientEntryScreen`

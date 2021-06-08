@@ -33,7 +33,7 @@
   <string name="identifiertype_india_national_health_id">ਰਾਸ਼ਟਰੀ ਸਿਹਤ ID</string>
 
   <!-- Patient search -->
-  <string name="instantsearch_hint">ਨਾਮ, ਫ਼ੋਨ ਜਾਂ ID</string>
+  <string name="instantsearch_hint">ਨਾਮ, ਫ਼ੋਨ, ਜਾਂ ID</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">ਇਸ ਸੂਚੀ ਵਿੱਚ ਮਰੀਜ਼ ਨਹੀਂ ਮਿਲਿਆ?</string>
@@ -77,6 +77,7 @@
   <string name="patiententry_error_phonenumber_blank">ਫੋਨ ਨੰਬਰ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
   <string name="patiententry_error_phonenumber_length_less">ਫ਼ੋਨ ਨੰਬਰ %1$s ਅੰਕਾਂ ਤੋਂ ਛੋਟਾ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
   <string name="patiententry_error_phonenumber_length_more">ਫ਼ੋਨ ਨੰਬਰ %1$s ਅੰਕਾਂ ਤੋਂ ਵੱਡਾ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
+  <string name="patiententry_identifier_bp_passport">ਬੀਪੀ ਪਾਸਪੋਰਟ</string>
   <string name="patiententry_consent_header">ਸਹਿਮਤੀ:\u0020</string>
   <string name="patiententry_consent_first_para">ਹੇਠਾਂ ਟੈਪ ਕਰਕੇ, ਤੁਸੀਂ ਪੁਸ਼ਟੀ ਕਰਦੇ ਹੋ ਕਿ ਤੁਹਾਡੇ ਵਲੋਂ ਇੱਥੇ ਦਾਖ਼ਲ ਕੀਤਾ ਕੋਈ ਵੀ ਮਰੀਜ਼ ਡੇਟਾ ਢੁਕਵੀਂ ਸੂਚਿਤ ਸਹਿਮਤੀ ਤਹਿਤ ਹਾਸਲ ਕੀਤਾ ਗਿਆ ਹੈ। ਇਸਦਾ ਮਤਲਬ ਇਹ ਹੈ ਕਿ ਮਰੀਜ਼ ਜਾਂ ਕਨੂੰਨੀ ਸਰਪ੍ਰਸਤ ਨੂੰ ਪਤਾ ਹੈ ਕਿ ਤੁਸੀਂ ਉਸਦਾ ਨਿੱਜੀ ਡਾਟਾ ਐਪ ਵਿੱਚ ਦਰਜ ਕਰ ਰਹੇ ਹੋ, ਸਮਝਦਾ/ਸਮਝਦੀ ਹੈ ਕਿ ਕਿਹੜਾ ਡਾਟਾ ਇਕੱਤਰ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ, ਅਤੇ ਜਾਣਦਾ/ਜਾਣਦੀ ਹੈ ਕਿ ਐਪ ਵਿੱਚ ਪ੍ਰਦਾਨ ਕੀਤੇ ਫ਼ੋਨ ਨੰਬਰ ਦੀ ਵਰਤੋਂ ਕਰਕੇ SMS, WhatsApp, ਜਾਂ ਹੋਰ ਵਿਧੀਆਂ ਰਾਹੀਂ ਉਹਨਾਂ ਨਾਲ ਸੰਪਰਕ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ।</string>
   <string name="patiententry_consent_second_para">ਤੁਹਾਡੇ ਵਲੋਂ ਅਧਿਕਾਰ ਦਿੱਤੇ ਵਿਅਕਤੀ ਦੀ, ਜਾਂ ਸਿਹਤ-ਸੰਭਾਲ ਪ੍ਰਦਾਤੇ ਦੀ ਜਿਸ ਲਈ ਤੁਸੀਂ ਕੰਮ ਕਰਦੇ ਹੋ, ਮਰੀਜ਼ ਡੇਟਾ ਤੱਕ ਅਤੇ ਤੁਹਾਡੇ ਵਲੋਂ ਇੱਥੇ ਦਾਖ਼ਲ ਕੀਤੀ ਜਾਣਕਾਰੀ ਤੱਕ ਪਹੁੰਚ ਹੋਵੇਗੀ। ਐਪ ਦੀ ਵਰਤੋਂ ਕਰਕੇ, ਤੁਸੀਂ ਪੁਸ਼ਟੀ ਕਰਦੇ ਹੋ ਕਿ ਮਰੀਜ਼ ਜਾਂ ਕਨੂੰਨੀ ਸਰਪ੍ਰਸਤ ਸਮਝਦਾ/ਸਮਝਦੀ ਹੈ ਕਿ ਇਸ ਐਪ ਦੁਆਰਾ ਹਾਸਲ ਕੀਤੇ ਡਾਟਾ ਤੱਕ ਕਿਸ ਵਿਅਕਤੀ ਦੀ ਪਹੁੰਚ ਹੋਵੇਗੀ ਅਤੇ ਉਸ ਪਹੁੰਚ ਲਈ ਸਹਿਮਤੀ ਦਿੰਦਾ/ਦਿੰਦੀ ਹੈ।</string>
@@ -338,8 +339,12 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s ਖੁਰਾਕ</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">ਕਾਰਡ ਦਾ ਆਈਡੀ ਸਕੈਨ ਕਰੋ</string>
+  <string name="scansimpleid_title">ਬੀਪੀ ਪਾਸਪੋਰਟ ਜਾਂ ਨੈਸ਼ਨਲ ID</string>
+  <string name="scansimpleid_enteredcode_error_empty">ਬੀਪੀ ਪਾਸਪੋਰਟ ਨੰਬਰ ਜਾਂ ਰਾਸ਼ਟਰੀ ਸਿਹਤ ID ਦਰਜ ਕਰੋ</string>
+  <string name="scansimpleid_enteredcode_error_not_required_length">ਬੀਪੀ ਪਾਸਪੋਰਟ ਨੰਬਰ 7 ਅੰਕਾਂ ਤੋਂ ਛੋਟਾ ਹੈ</string>
   <string name="scansimpleid_type_number">ਜਾਂ ਨੰਬਰ ਟਾਈਪ ਕਰੋ</string>
+  <string name="scansimpleid_invalid_qr_code">ਵੈਧ ਸਿਹਤ ID ਸਕੈਨ ਕਰੋ</string>
+  <string name="scansimpleid_bp_passport_or_national_health_id">ਬੀਪੀ ਪਾਸਪੋਰਟ ਜਾਂ ਰਾਸ਼ਟਰੀ ਸਿਹਤ ID</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ਸਿੰਕ ਕਰਨਾ ਬਕਾਇਆ ਹੈ</string>
@@ -360,7 +365,7 @@
   <!-- Link Id Sheet-->
   <string name="linkidwithpatient_button_yes">ਹਾਂ</string>
   <string name="linkidwithpatient_button_back">ਵਾਪਸ</string>
-  <string name="linkidwithpatient_text">ਵਿੱਚ ਬੀਪੀ ਪਾਸਪੋਰਟ ਸ਼ਾਮਲ ਕਰੋ</string>
+  <string name="linkidwithpatient_text">ਇਸ ਵਿੱਚ ID ਜੋੜੋ</string>
   <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
@@ -574,7 +579,7 @@
   <string name="assigned_facility_view_change">ਬਦਲੋ</string>
 
   <!-- Facility Picker -->
-  <string name="facilitypicker_search_hint">ਆਪਣੇ ਕਲੀਨਿਕ ਦੀ ਖੋਜ ਕਰੋ</string>
+  <string name="facilitypicker_search_hint">ਸਹੂਲਤ ਦਾ ਨਾਮ ਦਰਜ ਕਰੋ</string>
   <!-- Street, District, State -->
   <string name="facilitypicker_header_suggested_facilities">ਸੁਝਾਏ ਗਏ ਕਲੀਨਿਕ</string>
   <string name="facilitypicker_header_all_facilities">ਸਾਰੇ ਕਲੀਨਿਕ</string>
@@ -668,7 +673,7 @@
   <string name="sheet_bp_passport_register_new_patient">ਨਵੇਂ ਮਰੀਜ਼ ਨੂੰ ਰਜਿਸਟਰ ਕਰੋ</string>
   <string name="sheet_bp_passport_add_to_existing_patient">ਮੌਜੂਦਾ ਮਰੀਜ਼ ਵਿੱਚ ਸ਼ਾਮਲ ਕਰੋ</string>
   <string name="sheet_bp_passport_number">ਬੀਪੀ ਪਾਸਪੋਰਟ %1$s</string>
-  <string name="sheet_national_health_id">ਰਾਸ਼ਟਰੀ ਸਿਹਤ Id %1$s</string>
+  <string name="sheet_national_health_id">ਰਾਸ਼ਟਰੀ ਸਿਹਤ ID %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s ਨੂੰ ਸਪੁਰਦ ਕੀਤਾ ਹੈ</string>

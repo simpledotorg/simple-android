@@ -2,7 +2,7 @@
 
 ## Next Release
 ### Changes
-- Updated translations: `hi-IN`, `bn_BD`, `te_IN`, `bn_IN`, `am_ET`, `pa-IN`
+- Updated translations: `hi-IN`, `bn-BD`, `te-IN`, `bn-IN`, `am-ET`, `pa-IN`, `ti-ET`
 
 ## On Demo
 ### Internal

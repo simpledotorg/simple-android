@@ -80,6 +80,7 @@ object Versions {
   const val androidXCoreKtx = "1.3.2"
   const val threetenExtra = "1.6.0"
   const val spotless = "5.6.1"
+  const val annotation = "1.2.0"
 }
 
 val versions = Versions

@@ -130,7 +130,7 @@ class InstantSearchScreen :
     get() = binding.qrCodeScannerButton
 
   private val allPatientsAdapter = ItemAdapter(
-      diffCallback = InstantSearchResultsItemType.DiffCallback(),
+      diffCallback = InstantSearchResultsItemType_old.DiffCallback(),
       bindings = mapOf(
           R.layout.list_patient_search_header to { layoutInflater, parent ->
             ListPatientSearchHeaderBinding.inflate(layoutInflater, parent, false)
@@ -142,7 +142,7 @@ class InstantSearchScreen :
   )
 
   private val searchResultsAdapter = ItemAdapter(
-      diffCallback = InstantSearchResultsItemType.DiffCallback(),
+      diffCallback = InstantSearchResultsItemType_old.DiffCallback(),
       bindings = mapOf(
           R.layout.list_patient_search_header to { layoutInflater, parent ->
             ListPatientSearchHeaderBinding.inflate(layoutInflater, parent, false)
@@ -210,7 +210,7 @@ class InstantSearchScreen :
 
   override fun showAllPatients(patients: List<PatientSearchResult>, facility: Facility) {
     searchResultsView.visibility = View.VISIBLE
-    allPatientsAdapter.submitList(InstantSearchResultsItemType.from(patients, facility, searchQuery = null))
+    allPatientsAdapter.submitList(InstantSearchResultsItemType_old.from(patients, facility, searchQuery = null))
 
     searchResultsView.swapAdapter(allPatientsAdapter, false)
     searchResultsView.scrollToPosition(0)
@@ -222,7 +222,7 @@ class InstantSearchScreen :
       searchQuery: String
   ) {
     searchResultsView.visibility = View.VISIBLE
-    searchResultsAdapter.submitList(InstantSearchResultsItemType.from(patients, facility, searchQuery))
+    searchResultsAdapter.submitList(InstantSearchResultsItemType_old.from(patients, facility, searchQuery))
 
     searchResultsView.swapAdapter(searchResultsAdapter, false)
     searchResultsView.scrollToPosition(0)
@@ -308,14 +308,14 @@ class InstantSearchScreen :
   private fun allPatientsItemClicks(): Observable<UiEvent> {
     return allPatientsAdapter
         .itemEvents
-        .ofType<InstantSearchResultsItemType.Event.ResultClicked>()
+        .ofType<InstantSearchResultsItemType_old.Event.ResultClicked>()
         .map { SearchResultClicked(it.patientUuid) }
   }
 
   private fun searchItemClicks(): Observable<UiEvent> {
     return searchResultsAdapter
         .itemEvents
-        .ofType<InstantSearchResultsItemType.Event.ResultClicked>()
+        .ofType<InstantSearchResultsItemType_old.Event.ResultClicked>()
         .map { SearchResultClicked(it.patientUuid) }
   }
 

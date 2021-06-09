@@ -7,7 +7,7 @@ import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.widgets.PatientSearchResultItemView
 import java.util.UUID
 
-class InstantSearchResultsItemTypeTest {
+class InstantSearchResultsItemTypeTest_old {
 
   private val currentFacilityUuid = UUID.fromString("69cf85c8-6788-4071-b985-0536ae606b70")
   private val otherFacilityUuid = UUID.fromString("28ed7dca-828e-4178-942f-fd6937f37155")
@@ -28,7 +28,7 @@ class InstantSearchResultsItemTypeTest {
     )
 
     // when
-    val listItems = InstantSearchResultsItemType.from(
+    val listItems = InstantSearchResultsItemType_old.from(
         patientSearchResults = searchResults,
         currentFacility = currentFacility,
         searchQuery = searchQueryReceived
@@ -36,8 +36,8 @@ class InstantSearchResultsItemTypeTest {
 
     // then
     val expected = listOf(
-        InstantSearchResultsItemType.AssignedFacilityHeader(facilityName = currentFacility.name),
-        InstantSearchResultsItemType.SearchResult(
+        InstantSearchResultsItemType_old.AssignedFacilityHeader(facilityName = currentFacility.name),
+        InstantSearchResultsItemType_old.SearchResult(
             searchResultViewModel = PatientSearchResultItemView.PatientSearchResultViewModel(
                 uuid = patientSearchResult1.uuid,
                 fullName = patientSearchResult1.fullName,
@@ -52,8 +52,8 @@ class InstantSearchResultsItemTypeTest {
             currentFacilityId = currentFacilityUuid,
             searchQuery = searchQueryReceived
         ),
-        InstantSearchResultsItemType.NearbyFacilitiesHeader,
-        InstantSearchResultsItemType.SearchResult(
+        InstantSearchResultsItemType_old.NearbyFacilitiesHeader,
+        InstantSearchResultsItemType_old.SearchResult(
             searchResultViewModel = PatientSearchResultItemView.PatientSearchResultViewModel(
                 uuid = patientSearchResult2.uuid,
                 fullName = patientSearchResult2.fullName,
@@ -85,7 +85,7 @@ class InstantSearchResultsItemTypeTest {
     )
 
     // when
-    val listItems = InstantSearchResultsItemType.from(
+    val listItems = InstantSearchResultsItemType_old.from(
         patientSearchResults = searchResults,
         currentFacility = currentFacility,
         searchQuery = searchQueryEmpty
@@ -93,8 +93,8 @@ class InstantSearchResultsItemTypeTest {
 
     // then
     val expected = listOf(
-        InstantSearchResultsItemType.AssignedFacilityHeader(facilityName = currentFacility.name),
-        InstantSearchResultsItemType.SearchResult(
+        InstantSearchResultsItemType_old.AssignedFacilityHeader(facilityName = currentFacility.name),
+        InstantSearchResultsItemType_old.SearchResult(
             searchResultViewModel = PatientSearchResultItemView.PatientSearchResultViewModel(
                 uuid = patientSearchResult1.uuid,
                 fullName = patientSearchResult1.fullName,
@@ -109,7 +109,7 @@ class InstantSearchResultsItemTypeTest {
             currentFacilityId = currentFacilityUuid,
             searchQuery = searchQueryEmpty
         ),
-        InstantSearchResultsItemType.SearchResult(
+        InstantSearchResultsItemType_old.SearchResult(
             searchResultViewModel = PatientSearchResultItemView.PatientSearchResultViewModel(
                 uuid = patientSearchResult2.uuid,
                 fullName = patientSearchResult2.fullName,
@@ -141,7 +141,7 @@ class InstantSearchResultsItemTypeTest {
     )
 
     // when
-    val listItems = InstantSearchResultsItemType.from(
+    val listItems = InstantSearchResultsItemType_old.from(
         patientSearchResults = searchResults,
         currentFacility = currentFacility,
         searchQuery = searchQueryEmpty
@@ -149,8 +149,8 @@ class InstantSearchResultsItemTypeTest {
 
     // then
     val expected = listOf(
-        InstantSearchResultsItemType.NearbyFacilitiesHeader,
-        InstantSearchResultsItemType.SearchResult(
+        InstantSearchResultsItemType_old.NearbyFacilitiesHeader,
+        InstantSearchResultsItemType_old.SearchResult(
             searchResultViewModel = PatientSearchResultItemView.PatientSearchResultViewModel(
                 uuid = patientSearchResult1.uuid,
                 fullName = patientSearchResult1.fullName,
@@ -166,7 +166,7 @@ class InstantSearchResultsItemTypeTest {
             searchQuery = searchQueryEmpty
 
         ),
-        InstantSearchResultsItemType.SearchResult(
+        InstantSearchResultsItemType_old.SearchResult(
             searchResultViewModel = PatientSearchResultItemView.PatientSearchResultViewModel(
                 uuid = patientSearchResult2.uuid,
                 fullName = patientSearchResult2.fullName,
@@ -191,7 +191,7 @@ class InstantSearchResultsItemTypeTest {
     val searchResults = emptyList<PatientSearchResult>()
 
     // when
-    val listItems = InstantSearchResultsItemType.from(
+    val listItems = InstantSearchResultsItemType_old.from(
         patientSearchResults = searchResults,
         currentFacility = currentFacility,
         searchQuery = searchQueryEmpty

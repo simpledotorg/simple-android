@@ -13,7 +13,7 @@ import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResult
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import java.util.UUID
 
-sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResultsItemType.Event> {
+sealed class InstantSearchResultsItemType_old : ItemAdapter.Item<InstantSearchResultsItemType_old.Event> {
 
   companion object {
 
@@ -21,7 +21,7 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
         patientSearchResults: List<PatientSearchResult>,
         currentFacility: Facility,
         searchQuery: String?
-    ): List<InstantSearchResultsItemType> {
+    ): List<InstantSearchResultsItemType_old> {
       val (assignedFacilityPatients, nearbyFacilitiesPatients) = patientSearchResults
           .partition { it.assignedFacilityId == currentFacility.uuid }
 
@@ -57,7 +57,7 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
     data class ResultClicked(val patientUuid: UUID) : Event()
   }
 
-  data class AssignedFacilityHeader(val facilityName: String) : InstantSearchResultsItemType() {
+  data class AssignedFacilityHeader(val facilityName: String) : InstantSearchResultsItemType_old() {
 
     override fun layoutResId(): Int = R.layout.list_patient_search_header
 
@@ -71,7 +71,7 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
     }
   }
 
-  object NearbyFacilitiesHeader : InstantSearchResultsItemType() {
+  object NearbyFacilitiesHeader : InstantSearchResultsItemType_old() {
 
     override fun layoutResId(): Int = R.layout.list_patient_search_header
 
@@ -89,7 +89,7 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
       val searchResultViewModel: PatientSearchResultViewModel,
       val currentFacilityId: UUID,
       val searchQuery: String?
-  ) : InstantSearchResultsItemType() {
+  ) : InstantSearchResultsItemType_old() {
 
     companion object {
       fun forSearchResults(
@@ -130,11 +130,11 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
     }
   }
 
-  class DiffCallback : DiffUtil.ItemCallback<InstantSearchResultsItemType>() {
+  class DiffCallback : DiffUtil.ItemCallback<InstantSearchResultsItemType_old>() {
 
     override fun areItemsTheSame(
-        oldItem: InstantSearchResultsItemType,
-        newItem: InstantSearchResultsItemType
+        oldItem: InstantSearchResultsItemType_old,
+        newItem: InstantSearchResultsItemType_old
     ): Boolean {
       return when {
         oldItem is AssignedFacilityHeader && newItem is AssignedFacilityHeader -> oldItem.facilityName == newItem.facilityName
@@ -145,8 +145,8 @@ sealed class InstantSearchResultsItemType : ItemAdapter.Item<InstantSearchResult
     }
 
     override fun areContentsTheSame(
-        oldItem: InstantSearchResultsItemType,
-        newItem: InstantSearchResultsItemType
+        oldItem: InstantSearchResultsItemType_old,
+        newItem: InstantSearchResultsItemType_old
     ): Boolean {
       return oldItem == newItem
     }

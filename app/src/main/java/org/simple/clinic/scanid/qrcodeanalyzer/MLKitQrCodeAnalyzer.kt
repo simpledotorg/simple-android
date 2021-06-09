@@ -22,7 +22,6 @@ class MLKitQrCodeAnalyzer(
       .build()
   private val scanner = BarcodeScanning.getClient(options)
 
-  @SuppressLint("UnsafeExperimentalUsageError")
   override fun analyze(imageProxy: ImageProxy) {
     val bitmap = bitmapUtils.getBitmap(imageProxy)
     if (bitmap == null) {

@@ -22,7 +22,7 @@ import android.graphics.Matrix
 import android.graphics.Rect
 import android.graphics.YuvImage
 import android.media.Image.Plane
-import androidx.camera.core.ExperimentalGetImage
+import androidx.annotation.experimental.UseExperimental
 import androidx.camera.core.ImageProxy
 import org.simple.clinic.platform.crash.CrashReporter
 import java.io.ByteArrayOutputStream
@@ -55,7 +55,7 @@ class BitmapUtils @Inject constructor(private val crashReporter: CrashReporter) 
   }
 
   /** Converts a YUV_420_888 image from CameraX API to a bitmap.  */
-  @ExperimentalGetImage
+  @UseExperimental(markerClass = androidx.camera.core.ExperimentalGetImage::class)
   fun getBitmap(image: ImageProxy): Bitmap? {
     val frameMetadata = FrameMetadata.Builder()
         .setWidth(image.width)

@@ -104,7 +104,7 @@ class BloodSugarHistoryListItemDataSourceTest {
     appDatabase.bloodSugarDao().save(listOf(bloodSugarNow, bloodSugarInPast))
     dataSource.loadInitial(params, object : LoadInitialCallback<BloodSugarHistoryListItem>() {
       override fun onResult(
-          data: MutableList<BloodSugarHistoryListItem>,
+          data: List<BloodSugarHistoryListItem>,
           position: Int,
           totalCount: Int
       ) {
@@ -116,7 +116,7 @@ class BloodSugarHistoryListItemDataSourceTest {
             )
       }
 
-      override fun onResult(data: MutableList<BloodSugarHistoryListItem>, position: Int) {
+      override fun onResult(data: List<BloodSugarHistoryListItem>, position: Int) {
       }
     })
   }
@@ -172,7 +172,7 @@ class BloodSugarHistoryListItemDataSourceTest {
 
     appDatabase.bloodSugarDao().save(listOf(bloodSugarNow, bloodSugar15MinutesInPast, bloodSugar40MinutesInPast, bloodSugar1DayInPast))
     dataSource.loadRange(params, object : PositionalDataSource.LoadRangeCallback<BloodSugarHistoryListItem>() {
-      override fun onResult(data: MutableList<BloodSugarHistoryListItem>) {
+      override fun onResult(data: List<BloodSugarHistoryListItem>) {
         assertThat(data)
             .containsExactly(
                 BloodSugarHistoryItem(measurement = bloodSugarNow, bloodSugarDate = "1-Jan-2020", bloodSugarTime = null, isBloodSugarEditable = true, bloodSugarUnitPreference = bloodSugarUnitPreference),
@@ -234,7 +234,7 @@ class BloodSugarHistoryListItemDataSourceTest {
 
     appDatabase.bloodSugarDao().save(listOf(bloodSugarNow, bloodSugar15MinutesInPast, bloodSugar40MinutesInPast, bloodSugar1DayInPast))
     dataSource.loadRange(params, object : PositionalDataSource.LoadRangeCallback<BloodSugarHistoryListItem>() {
-      override fun onResult(data: MutableList<BloodSugarHistoryListItem>) {
+      override fun onResult(data: List<BloodSugarHistoryListItem>) {
         assertThat(data)
             .containsExactly(
                 NewBloodSugarButton,

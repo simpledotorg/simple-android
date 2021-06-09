@@ -106,7 +106,7 @@ class BloodPressureHistoryListItemDataSourceTest {
     appDatabase.bloodPressureDao().save(listOf(bloodPressureNow, bloodPressureInPast))
     dataSource.loadInitial(params, object : LoadInitialCallback<BloodPressureHistoryListItem>() {
       override fun onResult(
-          data: MutableList<BloodPressureHistoryListItem>,
+          data: List<BloodPressureHistoryListItem>,
           position: Int,
           totalCount: Int
       ) {
@@ -118,7 +118,7 @@ class BloodPressureHistoryListItemDataSourceTest {
             )
       }
 
-      override fun onResult(data: MutableList<BloodPressureHistoryListItem>, position: Int) {
+      override fun onResult(data: List<BloodPressureHistoryListItem>, position: Int) {
       }
     })
   }
@@ -181,7 +181,7 @@ class BloodPressureHistoryListItemDataSourceTest {
 
     appDatabase.bloodPressureDao().save(listOf(bloodPressureNow, bloodPressure15MinutesInPast, bloodPressure40MinutesInPast, bloodPressure1DayInPast))
     dataSource.loadRange(params, object : PositionalDataSource.LoadRangeCallback<BloodPressureHistoryListItem>() {
-      override fun onResult(data: MutableList<BloodPressureHistoryListItem>) {
+      override fun onResult(data: List<BloodPressureHistoryListItem>) {
         assertThat(data)
             .containsExactly(
                 BloodPressureHistoryItem(measurement = bloodPressureNow, isBpEditable = true, isBpHigh = false, bpDate = "1-Jan-2020", bpTime = null),
@@ -250,7 +250,7 @@ class BloodPressureHistoryListItemDataSourceTest {
 
     appDatabase.bloodPressureDao().save(listOf(bloodPressureNow, bloodPressure15MinutesInPast, bloodPressure40MinutesInPast, bloodPressure1DayInPast))
     dataSource.loadRange(params, object : PositionalDataSource.LoadRangeCallback<BloodPressureHistoryListItem>() {
-      override fun onResult(data: MutableList<BloodPressureHistoryListItem>) {
+      override fun onResult(data: List<BloodPressureHistoryListItem>) {
         assertThat(data)
             .containsExactly(
                 NewBpButton,

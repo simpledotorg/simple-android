@@ -39,7 +39,7 @@ class OverdueAppointmentRowDataSource(
       callback: LoadRangeCallback<OverdueAppointmentRow>
   ) {
     source.loadRange(params, object : LoadRangeCallback<OverdueAppointment>() {
-      override fun onResult(data: MutableList<OverdueAppointment>) {
+      override fun onResult(data: List<OverdueAppointment>) {
         val listItems = OverdueAppointmentRow.from(
             appointments = data,
             clock = userClock,
@@ -57,7 +57,7 @@ class OverdueAppointmentRowDataSource(
       callback: LoadInitialCallback<OverdueAppointmentRow>
   ) {
     source.loadInitial(params, object : LoadInitialCallback<OverdueAppointment>() {
-      override fun onResult(data: MutableList<OverdueAppointment>, position: Int, totalCount: Int) {
+      override fun onResult(data: List<OverdueAppointment>, position: Int, totalCount: Int) {
         val listItems = OverdueAppointmentRow.from(
             appointments = data,
             clock = userClock,
@@ -68,7 +68,7 @@ class OverdueAppointmentRowDataSource(
         callback.onResult(listItems, position, totalCount)
       }
 
-      override fun onResult(data: MutableList<OverdueAppointment>, position: Int) {
+      override fun onResult(data: List<OverdueAppointment>, position: Int) {
         // Nothing happens here, source data source results are passed to onResult(data, position, totalCount)
       }
     })

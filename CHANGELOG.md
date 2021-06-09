@@ -1,6 +1,13 @@
 # CHANGELOG
 
 ## Next Release
+### Internal
+- Use `ExperimentalGetImage` for `BitmapUtils#getBitmap`
+- Bump Annotation library to v1.2.0
+- Add Annotation experimental library
+- Bump Room to v2.3.0
+- Bump Paging to v3.0.0
+
 ### Changes
 - Updated translations: `hi-IN`, `bn-BD`, `te-IN`, `bn-IN`, `am-ET`, `pa-IN`, `ti-ET`, `kn-IN`, `mr-IN`, `ta-IN`, `so-ET`, `om-ET`
 
@@ -16,9 +23,6 @@
 - Remove `ShortCodeResultsScreen`
 - Deprecate `PatientRepository#search`
 - Remove RxBinding2
-- Use `ExperimentalGetImage` for `BitmapUtils#getBitmap`
-- Bump Annotation library to v1.2.0
-- Add Annotation experimental library
 
 ### Features
 - Add NHID support in `PatientEntryScreen`

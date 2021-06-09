@@ -64,7 +64,7 @@ object Versions {
   const val cameraView = "1.0.0-alpha23"
   const val cameraLifecycle = "1.0.0-rc04"
   const val zxing = "3.3.3"
-  const val paging = "2.1.2"
+  const val paging = "3.0.0"
 
   // When bumping this dependency verify whether `org.simple.clinic.feature.Feature.ChangeLanguage`
   // can be enabled again.

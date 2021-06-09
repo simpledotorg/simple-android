@@ -370,6 +370,8 @@ dependencies {
 
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}")
 
+  implementation("androidx.annotation:annotation:${versions.annotation}")
+
   implementation("androidx.recyclerview:recyclerview:${versions.recyclerView}")
   implementation("com.google.android.material:material:${versions.material}")
   implementation("androidx.cardview:cardview:${versions.cardview}")

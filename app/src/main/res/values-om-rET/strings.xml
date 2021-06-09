@@ -33,7 +33,7 @@
   <string name="identifiertype_india_national_health_id">Waraqaa Eenyummaa Fayyaa Biyyaalessaa</string>
 
   <!-- Patient search -->
-  <string name="instantsearch_hint">Maqaa, bilbila yookaan Waraqaa Eenyummaa</string>
+  <string name="instantsearch_hint">Maqaa, Bilbila, yookan Waraqaa Eenyummaa</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">Tarree kana irratti dhubbubsataa argachuu hin dandanyee?</string>
@@ -77,6 +77,7 @@
   <string name="patiententry_error_phonenumber_blank">Lakkoofsi bilbilaa duwwaa ta\'uu hin danda\'u</string>
   <string name="patiententry_error_phonenumber_length_less">Lakkoofsi bilbilaa dijitii %1$sgadi ta\'uu hin danda\'u</string>
   <string name="patiententry_error_phonenumber_length_more">Lakkoofsi bilbilaa dijitii %1$sol ta\'uu hin danda\'u</string>
+  <string name="patiententry_identifier_bp_passport">Paaspoortii BP</string>
   <string name="patiententry_consent_header">Hayyama:\u0020</string>
   <string name="patiententry_consent_first_para">Kan armaan gadii kana tuquudhaan, ati ragaan dhukkuubsataa ati galchite kamiyyuu hayyama hubatamaa jalatti kan funaaname ta’uu mirkaneessita. Kana jechuun dhukkubsataan yookan eegduun seera qabeessi ati ragaalee kanniin akka apppiitti galchaa jirtu ni beeku jechuudha, ragaan maalii akka sassaabbamu, fii tarii karaa SMS, WhatsApp, yookan maloota biraa lakkoofsa bilbilaa appicha keessatti kenname fayyadamanii qunammamuu akka danda’an beeku.</string>
   <string name="patiententry_consent_second_para">Namni siin mirkaneeffame kamiyyuu, yookan namni eegumsa fayyaa kennukan ati hojjattuuf, ragaalee fii odeeffannoo dhukkubsataa ati asittu galchitu ni argatu. Appicha fayyadamuudhaan ati dhukkubsataan yookan eegduun seera qabeessi odeeffannoo karaa appii kanaa walitti qabame eenyu argachuu akka danda’u hubachuu fii kuna akka ta’uufis hayyamuu isaanii mirkaneessita.</string>
@@ -339,8 +340,12 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">Hamma fudhanna%s</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">Kaardii eenyummeessaa iskaan godhi</string>
+  <string name="scansimpleid_title">Paaspoortii BP yookan Waraqaa Eenyummaa Biyyaalessaa</string>
+  <string name="scansimpleid_enteredcode_error_empty">Paaspoortii BP yookan Waraqaa Eenyummaa Fayyaa Biyyaalessaa Galchi</string>
+  <string name="scansimpleid_enteredcode_error_not_required_length">Lakkoofsi paaspoortii PB dijitiiwwan 7 gadi</string>
   <string name="scansimpleid_type_number">Yookaan lakkoobsa barreessi</string>
+  <string name="scansimpleid_invalid_qr_code">Waraqaa eenyummaa fayyaa sirrii garagalchi</string>
+  <string name="scansimpleid_bp_passport_or_national_health_id">Paaspoortii BP yookan Waraqaa Eenyummaa Fayyaa Biyyaalessaa</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Mirkana ilaalamaa jira</string>
@@ -361,7 +366,7 @@
   <!-- Link Id Sheet-->
   <string name="linkidwithpatient_button_yes">Eeyyee</string>
   <string name="linkidwithpatient_button_back">Gara Duuba</string>
-  <string name="linkidwithpatient_text">Passport kan Dhiibbaa Dhiigaa dabali</string>
+  <string name="linkidwithpatient_text">Waraqaa Eenyummaa Galchi</string>
   <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
@@ -575,7 +580,7 @@
   <string name="assigned_facility_view_change">Jijjiiri</string>
 
   <!-- Facility Picker -->
-  <string name="facilitypicker_search_hint">Kilinikii kee barbaadi</string>
+  <string name="facilitypicker_search_hint">Maqaa Bakka</string>
   <!-- Street, District, State -->
   <string name="facilitypicker_header_suggested_facilities">Kilinikiiwwan eeraman</string>
   <string name="facilitypicker_header_all_facilities">Kilinikiiwwan hunda</string>
@@ -669,7 +674,7 @@
   <string name="sheet_bp_passport_register_new_patient">Dhukkubsattoota haaraa galmeessi</string>
   <string name="sheet_bp_passport_add_to_existing_patient">Dhukkumbsattoota jiranitti dabali</string>
   <string name="sheet_bp_passport_number">Paaspoortii BP%1$s</string>
-  <string name="sheet_national_health_id">Waraqaa Eenyummaa fayyaa biyyaalessaa %1$s</string>
+  <string name="sheet_national_health_id">Waraqaa Eenyummaa Fayyaa Biyyaalessaa %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">Gara %1$s qajeelfame</string>
@@ -688,7 +693,7 @@
   <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">Guyyaan waggaa tokko booda tahuu hin danda\'u</string>
 
   <!-- National Health Id -->
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">Waraqaan Eenyummaa Fayyaa Biyyaalessaa dhukkubsataa kanneen Waraqaa Eenyummaa Fayyaa Biyyaalessaa duraa qabaniif hin ramadamuu</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">Waraqaa Eenyummaa Fayyaa Biyyaalessaa Waraqaa Eenyummaa Biyyaalessaa Amma Jiru Kanaan Dhukkubsataaf Hin Kennamu</string>
   <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">Tole</string>
 
 </resources>

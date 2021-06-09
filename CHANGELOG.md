@@ -16,6 +16,7 @@
 - Remove `ShortCodeResultsScreen`
 - Deprecate `PatientRepository#search`
 - Remove RxBinding2
+- Use `ExperimentalGetImage` for `BitmapUtils#getBitmap`
 
 ### Features
 - Add NHID support in `PatientEntryScreen`

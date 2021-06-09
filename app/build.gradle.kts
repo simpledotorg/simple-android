@@ -404,6 +404,8 @@ dependencies {
   implementation("com.jakewharton.rxbinding3:rxbinding-recyclerview:${versions.rxBinding3}")
   implementation("com.jakewharton.rxbinding3:rxbinding-appcompat:${versions.rxBinding3}")
   implementation("io.reactivex.rxjava2:rxkotlin:${versions.rxKotlin}")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${versions.coroutines}")
+
   implementation("com.squareup.retrofit2:retrofit:${versions.retrofit}")
   implementation("com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit}")
   implementation("com.squareup.retrofit2:converter-moshi:${versions.retrofit}")

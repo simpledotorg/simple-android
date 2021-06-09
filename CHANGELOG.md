@@ -17,6 +17,8 @@
 - Deprecate `PatientRepository#search`
 - Remove RxBinding2
 - Use `ExperimentalGetImage` for `BitmapUtils#getBitmap`
+- Bump Annotation library to v1.2.0
+- Add Annotation experimental library
 
 ### Features
 - Add NHID support in `PatientEntryScreen`

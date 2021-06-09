@@ -2871,7 +2871,7 @@ class PatientRepositoryAndroidTest {
 
     fun searchResults(facility: Facility): List<String> {
       return patientRepository
-          .allPatientsInFacility(facility)
+          .allPatientsInFacility_old(facility)
           .map { it.fullName }
     }
 

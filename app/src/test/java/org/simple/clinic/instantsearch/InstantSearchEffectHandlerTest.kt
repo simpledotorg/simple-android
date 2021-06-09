@@ -61,7 +61,7 @@ class InstantSearchEffectHandlerTest {
         TestData.patientSearchResult(uuid = UUID.fromString("24be0305-04a3-4111-94e2-e0a254e38a04"))
     )
 
-    whenever(patientRepository.allPatientsInFacility(facility)) doReturn patients
+    whenever(patientRepository.allPatientsInFacility_old(facility)) doReturn patients
 
     // when
     testCase.dispatch(LoadAllPatients(facility))

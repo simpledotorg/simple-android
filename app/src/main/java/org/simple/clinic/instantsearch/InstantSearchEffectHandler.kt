@@ -106,7 +106,7 @@ class InstantSearchEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { patientRepository.allPatientsInFacility(it.facility) }
+          .map { patientRepository.allPatientsInFacility_old(it.facility) }
           .map(::AllPatientsLoaded)
     }
   }

@@ -612,7 +612,7 @@ class PatientRepository @Inject constructor(
         .isPatientDefaulter(patientUuid)
   }
 
-  fun allPatientsInFacility(facility: Facility): List<PatientSearchResult> {
+  fun allPatientsInFacility_old(facility: Facility): List<PatientSearchResult> {
     return reportTimeTaken(
         clock = utcClock,
         operation = "Instant Search Patient:Loading All Patients in Facility: ${facility.uuid}"

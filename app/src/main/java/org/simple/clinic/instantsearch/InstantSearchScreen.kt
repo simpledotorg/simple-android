@@ -262,20 +262,9 @@ class InstantSearchScreen :
     router.pushExpectingResult(BlankScannedQrCode, ScannedQrCodeSheet.Key(identifier))
   }
 
-  override fun showNoPatientsInFacility(facility: Facility) {
-    searchResultsView.visibility = View.GONE
-    noPatientsInFacilityContainer.visibility = View.VISIBLE
-    noPatientsInFacilityTextView.text = getString(R.string.patientsearch_error_no_patients_in_facility_heading, facility.name)
-  }
-
   override fun showNoSearchResults() {
     searchResultsView.visibility = View.GONE
     noSearchResultsContainer.visibility = View.VISIBLE
-  }
-
-  override fun hideNoPatientsInFacility() {
-    noPatientsInFacilityContainer.visibility = View.GONE
-    searchResultsView.visibility = View.VISIBLE
   }
 
   override fun hideNoSearchResults() {
@@ -318,6 +307,17 @@ class InstantSearchScreen :
       val scannedQrCodeResult = ScannedQrCodeSheet.blankScannedQrCodeResult(result)
       blankScannedQrCodeResults.onNext(BlankScannedQrCodeResultReceived(scannedQrCodeResult))
     }
+  }
+
+  private fun hideNoPatientsInFacility() {
+    noPatientsInFacilityContainer.visibility = View.GONE
+    searchResultsView.visibility = View.VISIBLE
+  }
+
+  private fun showNoPatientsInFacility(facility: Facility) {
+    searchResultsView.visibility = View.GONE
+    noPatientsInFacilityContainer.visibility = View.VISIBLE
+    noPatientsInFacilityTextView.text = getString(R.string.patientsearch_error_no_patients_in_facility_heading, facility.name)
   }
 
   private fun allPatientsAdapterLoadStateListener(loadStates: CombinedLoadStates) {

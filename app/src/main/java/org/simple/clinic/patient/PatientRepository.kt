@@ -614,17 +614,6 @@ class PatientRepository @Inject constructor(
         .isPatientDefaulter(patientUuid)
   }
 
-  fun allPatientsInFacility_old(facility: Facility): List<PatientSearchResult> {
-    return reportTimeTaken(
-        clock = utcClock,
-        operation = "Instant Search Patient:Loading All Patients in Facility: ${facility.uuid}"
-    ) {
-      database
-          .patientSearchDao()
-          .searchInFacilityAndSortByName(facility.uuid, PatientStatus.Active)
-    }
-  }
-
   fun allPatientsInFacility(facilityId: UUID): PagingSource<Int, PatientSearchResult> {
     return database
         .patientSearchDao()

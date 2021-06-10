@@ -127,7 +127,6 @@ class InstantSearchUpdate @Inject constructor(
         val criteria = searchCriteriaFromInput(validationResult.searchQuery, model.additionalIdentifier)
         next(
             model.loadingSearchResults(),
-            HideNoPatientsInFacility,
             HideNoSearchResults,
             SearchWithCriteria(criteria, model.facility!!)
         )
@@ -135,7 +134,6 @@ class InstantSearchUpdate @Inject constructor(
       LengthTooShort -> noChange()
       Empty -> next(
           model.loadingAllPatients(),
-          HideNoPatientsInFacility,
           HideNoSearchResults,
           LoadAllPatients(model.facility!!)
       )

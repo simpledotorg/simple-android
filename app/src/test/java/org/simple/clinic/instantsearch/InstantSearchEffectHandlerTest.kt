@@ -236,36 +236,6 @@ class InstantSearchEffectHandlerTest {
   }
 
   @Test
-  fun `when show no patients in facility effect is received, then show no patients in facility`() {
-    // given
-    val facility = TestData.facility(
-        uuid = UUID.fromString("6889f6fb-aa9f-4e5f-8d48-4d22420bd811"),
-        name = "PHC Obvious"
-    )
-
-    // when
-    testCase.dispatch(ShowNoPatientsInFacility(facility))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-
-    verify(uiActions).showNoPatientsInFacility(facility)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when hide no patients in facility effect is received, then hide no patients in facility`() {
-    // when
-    testCase.dispatch(HideNoPatientsInFacility)
-
-    // then
-    testCase.assertNoOutgoingEvents()
-
-    verify(uiActions).hideNoPatientsInFacility()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
   fun `when show no search results effect is received, then show no search results`() {
     // when
     testCase.dispatch(ShowNoSearchResults)

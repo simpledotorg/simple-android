@@ -41,11 +41,7 @@ data class OpenLinkIdWithPatientScreen(
 
 data class OpenScannedQrCodeSheet(val identifier: Identifier) : InstantSearchEffect()
 
-data class ShowNoPatientsInFacility(val facility: Facility) : InstantSearchEffect()
-
 object ShowNoSearchResults : InstantSearchEffect()
-
-object HideNoPatientsInFacility : InstantSearchEffect()
 
 object HideNoSearchResults : InstantSearchEffect()
 

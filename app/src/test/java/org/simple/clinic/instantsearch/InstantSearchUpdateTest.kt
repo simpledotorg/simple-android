@@ -150,7 +150,6 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasModel(searchQueryModel.loadingSearchResults()),
             hasEffects(
-                HideNoPatientsInFacility,
                 HideNoSearchResults,
                 SearchWithCriteria(PatientSearchCriteria.Name("Pat", identifier), facility)
             )
@@ -386,56 +385,6 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenQrCodeScanner)
-        ))
-  }
-
-  @Test
-  fun `when search query is valid with a numeric criteria and instant search by patient identifier feature flag is enabled, then load search results with numeric criteria`() {
-    val updateSpec = UpdateSpec(InstantSearchUpdate(true, dateOfBirthFormatter))
-    val facility = TestData.facility(
-        uuid = UUID.fromString("f7951ae6-e6c0-4b79-bf3e-2ddd637fa7b4"),
-        name = "PHC Obvious"
-    )
-    val numericSearchQuery = "9876"
-    val searchQueryModel = defaultModel
-        .facilityLoaded(facility)
-        .searchQueryChanged(numericSearchQuery)
-
-    updateSpec
-        .given(searchQueryModel)
-        .whenEvent(SearchQueryValidated(InstantSearchValidator.Result.Valid(numericSearchQuery)))
-        .then(assertThatNext(
-            hasModel(searchQueryModel.loadingSearchResults()),
-            hasEffects(
-                HideNoPatientsInFacility,
-                HideNoSearchResults,
-                SearchWithCriteria(PatientSearchCriteria.NumericCriteria(numericSearchQuery, identifier), facility)
-            )
-        ))
-  }
-
-  @Test
-  fun `when search query is valid with a numeric criteria and instant search by patient identifier feature flag is disabled, then load search results with phone number criteria`() {
-    val updateSpec = UpdateSpec(InstantSearchUpdate(false, dateOfBirthFormatter))
-    val facility = TestData.facility(
-        uuid = UUID.fromString("f7951ae6-e6c0-4b79-bf3e-2ddd637fa7b4"),
-        name = "PHC Obvious"
-    )
-    val numericSearchQuery = "9876"
-    val searchQueryModel = defaultModel
-        .facilityLoaded(facility)
-        .searchQueryChanged(numericSearchQuery)
-
-    updateSpec
-        .given(searchQueryModel)
-        .whenEvent(SearchQueryValidated(InstantSearchValidator.Result.Valid(numericSearchQuery)))
-        .then(assertThatNext(
-            hasModel(searchQueryModel.loadingSearchResults()),
-            hasEffects(
-                HideNoPatientsInFacility,
-                HideNoSearchResults,
-                SearchWithCriteria(PatientSearchCriteria.PhoneNumber(numericSearchQuery, identifier), facility)
-            )
         ))
   }
 

@@ -97,7 +97,12 @@ class InstantSearchEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { patientRepository.search(it.criteria, it.facility.uuid) }
+          .switchMap {
+            pagerFactory.createPager(
+                sourceFactory = { patientRepository.searchPagingSource(it.criteria, it.facility.uuid) },
+                pageSize = instantSearchConfig.pagingLoadSize
+            )
+          }
           .map(::SearchResultsLoaded)
     }
   }

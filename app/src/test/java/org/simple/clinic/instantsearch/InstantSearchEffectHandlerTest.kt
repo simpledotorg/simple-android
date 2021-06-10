@@ -1,6 +1,7 @@
 package org.simple.clinic.instantsearch
 
 import androidx.paging.PagingData
+import androidx.paging.PagingDataAdapter
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
@@ -93,7 +94,7 @@ class InstantSearchEffectHandlerTest {
   @Test
   fun `when search by criteria effect is received, then search by criteria`() {
     // given
-    val patients = listOf(
+    val patients = PagingData.from(listOf(
         TestData.patientSearchResult(
             uuid = UUID.fromString("c9ecb8c1-93a2-4a9e-92ee-2231670ef91e"),
             fullName = "Patient 1"
@@ -102,10 +103,14 @@ class InstantSearchEffectHandlerTest {
             uuid = UUID.fromString("4e615da0-eed2-4e8d-b9e9-a84021db9d3d"),
             fullName = "Patient 2"
         )
-    )
+    ))
     val searchCriteria = PatientSearchCriteria.Name("Pat")
 
-    whenever(patientRepository.search(searchCriteria, facility.uuid)) doReturn patients
+    whenever(pagerFactory.createPager(
+        sourceFactory = any<PagingSourceFactory<Int, PatientSearchResult>>(),
+        pageSize = eq(pagingLoadSize),
+        initialKey = eq(null)
+    )) doReturn Observable.just(patients)
 
     // when
     testCase.dispatch(SearchWithCriteria(searchCriteria, facility))

@@ -211,15 +211,18 @@ class InstantSearchScreen :
     subscriptions.clear()
 
     allPatientsAdapter.removeLoadStateListener(::allPatientsAdapterLoadStateListener)
+    searchResultsAdapter.removeLoadStateListener(::searchResultsAdapterLoadStateListener)
   }
 
   override fun showAllPatients(patients: PagingData<PatientSearchResult>, facility: Facility) {
+    searchResultsAdapter.removeLoadStateListener(::searchResultsAdapterLoadStateListener)
+    allPatientsAdapter.addLoadStateListener(::allPatientsAdapterLoadStateListener)
+
     allPatientsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(
         patientSearchResults = patients,
         currentFacility = facility,
         searchQuery = null
     ))
-    allPatientsAdapter.addLoadStateListener(::allPatientsAdapterLoadStateListener)
 
     searchResultsView.visibility = View.VISIBLE
 
@@ -233,9 +236,15 @@ class InstantSearchScreen :
       searchQuery: String
   ) {
     allPatientsAdapter.removeLoadStateListener(::allPatientsAdapterLoadStateListener)
+    searchResultsAdapter.addLoadStateListener(::searchResultsAdapterLoadStateListener)
+
+    searchResultsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(
+        patientSearchResults = patients,
+        currentFacility = facility,
+        searchQuery = searchQuery
+    ))
 
     searchResultsView.visibility = View.VISIBLE
-    searchResultsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(patients, facility, searchQuery))
 
     searchResultsView.adapter = searchResultsAdapter
     searchResultsView.scrollToPosition(0)
@@ -329,6 +338,19 @@ class InstantSearchScreen :
       showNoPatientsInFacility(currentModel.facility!!)
     } else {
       hideNoPatientsInFacility()
+    }
+  }
+
+  private fun searchResultsAdapterLoadStateListener(loadStates: CombinedLoadStates) {
+    val isNotLoading = loadStates.refresh is NotLoading
+    val endOfPaginationReached = loadStates.append.endOfPaginationReached
+    val hasAdapterItems = searchResultsAdapter.itemCount > 0
+
+    val showNoSearchResults = isNotLoading && endOfPaginationReached && !hasAdapterItems
+    if (showNoSearchResults) {
+      showNoSearchResults()
+    } else {
+      hideNoSearchResults()
     }
   }
 

@@ -32,7 +32,6 @@ import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
-import java.security.Key
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -61,12 +60,25 @@ class PatientRepository @Inject constructor(
     }
   }
 
+  fun searchPagingSource(criteria: PatientSearchCriteria, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
+    return when (criteria) {
+      is Name -> searchByNamePagingSource(criteria.patientName, facilityId)
+      else -> throw IllegalArgumentException("Unknown search criteria: $criteria")
+    }
+  }
+
   private fun searchByName(patientName: String, facilityId: UUID): List<PatientSearchResult> {
     return reportTimeTaken(
         clock = utcClock,
         operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
       database.patientSearchDao().searchByName(patientName, facilityId)
     }
+  }
+
+  private fun searchByNamePagingSource(patientName: String, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
+    return database
+        .patientSearchDao()
+        .searchByNamePagingSource(patientName, facilityId)
   }
 
   private fun searchByPhoneNumber(

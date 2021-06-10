@@ -1,5 +1,6 @@
 package org.simple.clinic.instantsearch
 
+import androidx.paging.PagingData
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoModel
@@ -68,11 +69,11 @@ class InstantSearchUpdateTest {
 
   @Test
   fun `when all patients are loaded, then show patient search results if the search query is empty`() {
-    val patients = listOf(
+    val patients = PagingData.from(listOf(
         TestData.patientSearchResult(
             uuid = UUID.fromString("4b991b4d-6c19-4ec5-9524-7d478754775e")
         )
-    )
+    ))
     val facility = TestData.facility(
         uuid = UUID.fromString("69d8f870-2499-47e3-8775-e39cf7cdab52"),
         name = "PHC Obvious"
@@ -86,24 +87,6 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasModel(facilityLoadedModel.allPatientsLoaded()),
             hasEffects(ShowAllPatients(patients, facility))
-        ))
-  }
-
-  @Test
-  fun `when all patients list is empty, then show no patients in facility`() {
-    val facility = TestData.facility(
-        uuid = UUID.fromString("3ccb34f2-dabb-4baa-8576-00fe59827682"),
-        name = "PHC Obvious"
-    )
-    val facilityLoadedModel = defaultModel
-        .facilityLoaded(facility)
-
-    updateSpec
-        .given(facilityLoadedModel)
-        .whenEvent(AllPatientsLoaded(emptyList()))
-        .then(assertThatNext(
-            hasModel(facilityLoadedModel.allPatientsLoaded()),
-            hasEffects(ShowNoPatientsInFacility(facility))
         ))
   }
 

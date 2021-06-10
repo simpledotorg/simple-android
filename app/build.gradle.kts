@@ -288,6 +288,7 @@ android {
     }
 
     val kaptTasks = mapOf(
+        "kaptQaDebugKotlin" to "qaDebug",
         "kaptSandboxReleaseKotlin" to "sandboxRelease",
         "kaptStagingReleaseKotlin" to "stagingRelease",
         "kaptSecurityReleaseKotlin" to "securityRelease",

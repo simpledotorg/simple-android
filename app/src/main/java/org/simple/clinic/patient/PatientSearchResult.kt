@@ -192,6 +192,27 @@ data class PatientSearchResult(
         numericCriteria: String,
         facilityId: UUID
     ): List<PatientSearchResult>
+
+    @Query("""
+        SELECT DISTINCT
+            searchResult.*, 
+            (
+                CASE
+                    WHEN P.assignedFacilityId = :facilityId THEN 0
+                    ELSE 1
+                END
+            ) AS priority,
+            INSTR(phoneNumber, :query) phoneNumberPosition, 
+            INSTR(identifierSearchHelp, :query) identifierPosition FROM PatientSearchResult searchResult
+        LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+        WHERE P.deletedAt IS NULL AND phoneNumberPosition > 0 OR identifierPosition > 0
+        GROUP BY P.uuid
+        ORDER BY priority ASC, phoneNumberPosition ASC, identifierPosition ASC
+        """)
+    fun searchByNumberPagingSource(
+        query: String,
+        facilityId: UUID
+    ): PagingSource<Int, PatientSearchResult>
   }
 
   data class PatientNameAndId(val uuid: UUID, val fullName: String)

@@ -63,6 +63,7 @@ class PatientRepository @Inject constructor(
   fun searchPagingSource(criteria: PatientSearchCriteria, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
     return when (criteria) {
       is Name -> searchByNamePagingSource(criteria.patientName, facilityId)
+      is NumericCriteria -> searchByNumberPagingSource(criteria.numericCriteria, facilityId)
       else -> throw IllegalArgumentException("Unknown search criteria: $criteria")
     }
   }
@@ -101,6 +102,12 @@ class PatientRepository @Inject constructor(
         operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
       database.patientSearchDao().searchByNumericCriteria(numericCriteria, facilityId)
     }
+  }
+
+  private fun searchByNumberPagingSource(query: String, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
+    return database
+        .patientSearchDao()
+        .searchByNumberPagingSource(query, facilityId)
   }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {

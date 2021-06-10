@@ -227,7 +227,6 @@ class InstantSearchScreen :
     searchResultsView.visibility = View.VISIBLE
 
     searchResultsView.adapter = allPatientsAdapter
-    searchResultsView.scrollToPosition(0)
   }
 
   override fun showPatientsSearchResults(
@@ -247,7 +246,6 @@ class InstantSearchScreen :
     searchResultsView.visibility = View.VISIBLE
 
     searchResultsView.adapter = searchResultsAdapter
-    searchResultsView.scrollToPosition(0)
   }
 
   override fun openPatientSummary(patientId: UUID) {

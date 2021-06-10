@@ -168,12 +168,7 @@ class InstantSearchUpdate @Inject constructor(
   ): Next<InstantSearchModel, InstantSearchEffect> {
     if (!model.hasSearchQuery) return noChange()
 
-    val effect = if (event.patientsSearchResults.isNotEmpty())
-      ShowPatientSearchResults(event.patientsSearchResults, model.facility!!, model.searchQuery!!)
-    else
-      ShowNoSearchResults
-
-    return next(model.searchResultsLoaded(), effect)
+    return next(model.searchResultsLoaded(), ShowPatientSearchResults(event.patientsSearchResults, model.facility!!, model.searchQuery!!))
   }
 
   private fun allPatientsLoaded(

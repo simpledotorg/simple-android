@@ -92,11 +92,11 @@ class InstantSearchUpdateTest {
 
   @Test
   fun `when search results are loaded, then show the patient search results if the query is not empty`() {
-    val patients = listOf(
+    val patients = PagingData.from(listOf(
         TestData.patientSearchResult(
             uuid = UUID.fromString("0f27dabe-5a9e-41ce-bf3c-e0c6fd6a4a6a")
         )
-    )
+    ))
     val facility = TestData.facility(
         uuid = UUID.fromString("34eb57a9-d80a-4f43-9f89-1e2dade3de3f"),
         name = "PHC Obvious"
@@ -112,25 +112,6 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasModel(searchQueryModel.searchResultsLoaded()),
             hasEffects(ShowPatientSearchResults(patients, facility, searchQuery))
-        ))
-  }
-
-  @Test
-  fun `when search results are empty, then show no search results`() {
-    val facility = TestData.facility(
-        uuid = UUID.fromString("9cede3eb-e47a-47df-b14e-10eefc6b272f"),
-        name = "PHC Obvious"
-    )
-    val searchQueryModel = defaultModel
-        .facilityLoaded(facility)
-        .searchQueryChanged("Pat")
-
-    updateSpec
-        .given(searchQueryModel)
-        .whenEvent(SearchResultsLoaded(emptyList()))
-        .then(assertThatNext(
-            hasModel(searchQueryModel.searchResultsLoaded()),
-            hasEffects(ShowNoSearchResults)
         ))
   }
 

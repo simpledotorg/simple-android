@@ -154,7 +154,7 @@ class InstantSearchScreen :
 
   private val blankScannedQrCodeResults = PublishSubject.create<UiEvent>()
 
-  override fun defaultModel() = InstantSearchModel.create(screenKey.additionalIdentifier, screenKey.patientPrefillInfo)
+  override fun defaultModel() = InstantSearchModel.create(screenKey.additionalIdentifier, screenKey.patientPrefillInfo, screenKey.initialSearchQuery)
 
   override fun uiRenderer() = InstantSearchUiRenderer(this)
 

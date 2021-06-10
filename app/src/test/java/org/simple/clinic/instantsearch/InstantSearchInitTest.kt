@@ -17,11 +17,11 @@ class InstantSearchInitTest {
       value = "f16ebf24-14fb-46c7-9b34-b49cdc1c9453",
       type = BpPassport
   )
-  private val defaultModel = InstantSearchModel.create(identifier, null)
+  private val defaultModel = InstantSearchModel.create(identifier, null, null)
 
   @Test
   fun `when screen is created, then load current facility and show keyboard`() {
-    val model = InstantSearchModel.create(additionalIdentifier = null, patientPrefillInfo = null)
+    val model = InstantSearchModel.create(additionalIdentifier = null, patientPrefillInfo = null, searchQuery = null)
 
     initSpec
         .whenInit(model)

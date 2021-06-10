@@ -9,7 +9,7 @@ import java.util.UUID
 interface InstantSearchUiActions {
   fun showAllPatients(patients: PagingData<PatientSearchResult>, facility: Facility)
   fun showPatientsSearchResults(
-      patients: List<PatientSearchResult>,
+      patients: PagingData<PatientSearchResult>,
       facility: Facility,
       searchQuery: String
   )

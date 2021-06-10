@@ -53,7 +53,6 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -145,8 +144,8 @@ class InstantSearchScreen :
       )
   )
 
-  private val searchResultsAdapter = ItemAdapter(
-      diffCallback = InstantSearchResultsItemType_old.DiffCallback(),
+  private val searchResultsAdapter = PagingItemAdapter(
+      diffCallback = InstantSearchResultsItemType.DiffCallback(),
       bindings = mapOf(
           R.layout.list_patient_search_header to { layoutInflater, parent ->
             ListPatientSearchHeaderBinding.inflate(layoutInflater, parent, false)
@@ -229,14 +228,14 @@ class InstantSearchScreen :
   }
 
   override fun showPatientsSearchResults(
-      patients: List<PatientSearchResult>,
+      patients: PagingData<PatientSearchResult>,
       facility: Facility,
       searchQuery: String
   ) {
     allPatientsAdapter.removeLoadStateListener(::allPatientsAdapterLoadStateListener)
 
     searchResultsView.visibility = View.VISIBLE
-    searchResultsAdapter.submitList(InstantSearchResultsItemType_old.from(patients, facility, searchQuery))
+    searchResultsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(patients, facility, searchQuery))
 
     searchResultsView.adapter = searchResultsAdapter
     searchResultsView.scrollToPosition(0)
@@ -343,7 +342,7 @@ class InstantSearchScreen :
   private fun searchItemClicks(): Observable<UiEvent> {
     return searchResultsAdapter
         .itemEvents
-        .ofType<InstantSearchResultsItemType_old.Event.ResultClicked>()
+        .ofType<InstantSearchResultsItemType.Event.ResultClicked>()
         .map { SearchResultClicked(it.patientUuid) }
   }
 

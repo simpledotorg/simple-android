@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.jakewharton.rxbinding3.view.clicks
@@ -51,6 +52,7 @@ import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.setTextAndCursor
@@ -129,8 +131,8 @@ class InstantSearchScreen :
   private val qrCodeScannerButton
     get() = binding.qrCodeScannerButton
 
-  private val allPatientsAdapter = ItemAdapter(
-      diffCallback = InstantSearchResultsItemType_old.DiffCallback(),
+  private val allPatientsAdapter = PagingItemAdapter(
+      diffCallback = InstantSearchResultsItemType.DiffCallback(),
       bindings = mapOf(
           R.layout.list_patient_search_header to { layoutInflater, parent ->
             ListPatientSearchHeaderBinding.inflate(layoutInflater, parent, false)
@@ -208,11 +210,12 @@ class InstantSearchScreen :
     subscriptions.clear()
   }
 
-  override fun showAllPatients(patients: List<PatientSearchResult>, facility: Facility) {
-    searchResultsView.visibility = View.VISIBLE
-    allPatientsAdapter.submitList(InstantSearchResultsItemType_old.from(patients, facility, searchQuery = null))
+  override fun showAllPatients(patients: PagingData<PatientSearchResult>, facility: Facility) {
+    allPatientsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(patients, facility, searchQuery = null))
 
-    searchResultsView.swapAdapter(allPatientsAdapter, false)
+    searchResultsView.visibility = View.VISIBLE
+
+    searchResultsView.adapter = allPatientsAdapter
     searchResultsView.scrollToPosition(0)
   }
 
@@ -224,7 +227,7 @@ class InstantSearchScreen :
     searchResultsView.visibility = View.VISIBLE
     searchResultsAdapter.submitList(InstantSearchResultsItemType_old.from(patients, facility, searchQuery))
 
-    searchResultsView.swapAdapter(searchResultsAdapter, false)
+    searchResultsView.adapter = searchResultsAdapter
     searchResultsView.scrollToPosition(0)
   }
 
@@ -308,7 +311,7 @@ class InstantSearchScreen :
   private fun allPatientsItemClicks(): Observable<UiEvent> {
     return allPatientsAdapter
         .itemEvents
-        .ofType<InstantSearchResultsItemType_old.Event.ResultClicked>()
+        .ofType<InstantSearchResultsItemType.Event.ResultClicked>()
         .map { SearchResultClicked(it.patientUuid) }
   }
 

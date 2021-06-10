@@ -123,14 +123,14 @@ class InstantSearchEffectHandlerTest {
         uuid = UUID.fromString("f1e9ad5c-7de0-4566-b1fc-392bdfdc8490"),
         name = "PHC Obvious"
     )
-    val patients = listOf(
+    val patients = PagingData.from(listOf(
         TestData.patientSearchResult(
             uuid = UUID.fromString("14edda47-c177-4b5b-9d72-832e262255a3")
         ),
         TestData.patientSearchResult(
             uuid = UUID.fromString("a96ebfe1-a59c-4518-86ef-2ad2174cca03")
         )
-    )
+    ))
 
     // when
     testCase.dispatch(ShowAllPatients(patients, facility))

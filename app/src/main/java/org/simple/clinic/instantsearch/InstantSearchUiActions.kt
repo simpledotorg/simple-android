@@ -1,12 +1,13 @@
 package org.simple.clinic.instantsearch
 
+import androidx.paging.PagingData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import java.util.UUID
 
 interface InstantSearchUiActions {
-  fun showAllPatients(patients: List<PatientSearchResult>, facility: Facility)
+  fun showAllPatients(patients: PagingData<PatientSearchResult>, facility: Facility)
   fun showPatientsSearchResults(
       patients: List<PatientSearchResult>,
       facility: Facility,

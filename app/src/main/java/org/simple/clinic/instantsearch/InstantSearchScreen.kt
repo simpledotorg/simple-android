@@ -198,8 +198,6 @@ class InstantSearchScreen :
 
     qrCodeScannerButton.visibleOrGone(features.isEnabled(InstantSearchQrCode))
 
-    searchResultsView.adapter = allPatientsAdapter
-
     subscriptions.addAll(
         hideKeyboardOnSearchResultsScroll(),
         hideKeyboardOnImeAction()

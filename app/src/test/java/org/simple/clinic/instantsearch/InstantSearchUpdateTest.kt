@@ -30,7 +30,7 @@ class InstantSearchUpdateTest {
   private val defaultModel = InstantSearchModel.create(identifier, null, null)
 
   @Test
-  fun `when current facility is loaded, then update the model and load all patients`() {
+  fun `when current facility is loaded and search query is not present, then update the model and load all patients`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("a613b2fc-c91c-40a3-9e8b-6da7010ce51b"),
         name = "PHC Obvious"
@@ -42,6 +42,27 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.facilityLoaded(facility).loadingAllPatients()),
             hasEffects(LoadAllPatients(facility))
+        ))
+  }
+
+  @Test
+  fun `when current facility is loaded and search query is present, then update the model and prefill the search query`() {
+    val model = InstantSearchModel.create(
+        additionalIdentifier = identifier,
+        patientPrefillInfo = null,
+        searchQuery = "Pat"
+    )
+    val facility = TestData.facility(
+        uuid = UUID.fromString("a613b2fc-c91c-40a3-9e8b-6da7010ce51b"),
+        name = "PHC Obvious"
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(CurrentFacilityLoaded(facility))
+        .then(assertThatNext(
+            hasModel(model.facilityLoaded(facility)),
+            hasEffects(PrefillSearchQuery("Pat"))
         ))
   }
 

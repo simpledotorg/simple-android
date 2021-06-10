@@ -9,6 +9,7 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class InstantSearchEffectHandler @AssistedInject constructor(
@@ -16,6 +17,7 @@ class InstantSearchEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val instantSearchValidator: InstantSearchValidator,
     private val instantSearchConfig: InstantSearchConfig,
+    private val pagerFactory: PagerFactory,
     private val schedulers: SchedulersProvider,
     @Assisted private val uiActions: InstantSearchUiActions
 ) {
@@ -106,7 +108,12 @@ class InstantSearchEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { patientRepository.allPatientsInFacility_old(it.facility) }
+          .switchMap { (facility) ->
+            pagerFactory.createPager(
+                sourceFactory = { patientRepository.allPatientsInFacility(facilityId = facility.uuid) },
+                pageSize = instantSearchConfig.pagingLoadSize
+            )
+          }
           .map(::AllPatientsLoaded)
     }
   }

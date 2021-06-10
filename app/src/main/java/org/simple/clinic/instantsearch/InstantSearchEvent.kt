@@ -1,6 +1,7 @@
 package org.simple.clinic.instantsearch
 
 import android.Manifest
+import androidx.paging.PagingData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.platform.util.RuntimePermissionResult
@@ -14,7 +15,7 @@ sealed class InstantSearchEvent : UiEvent
 
 data class CurrentFacilityLoaded(val facility: Facility) : InstantSearchEvent()
 
-data class AllPatientsLoaded(val patients: List<PatientSearchResult>) : InstantSearchEvent()
+data class AllPatientsLoaded(val patients: PagingData<PatientSearchResult>) : InstantSearchEvent()
 
 data class SearchResultsLoaded(val patientsSearchResults: List<PatientSearchResult>) : InstantSearchEvent()
 

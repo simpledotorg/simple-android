@@ -1,25 +1,34 @@
 package org.simple.clinic.instantsearch
 
+import androidx.paging.PagingData
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import org.simple.clinic.util.PagerFactory
+import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import java.util.UUID
 
 class InstantSearchEffectHandlerTest {
+
+  private val pagingLoadSize = 15
 
   private val facility = TestData.facility(
       uuid = UUID.fromString("9cb066b5-ffa4-412e-b345-dfa98850fcce"),
@@ -27,13 +36,16 @@ class InstantSearchEffectHandlerTest {
   )
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<InstantSearchUiActions>()
+  private val pagerFactory = mock<PagerFactory>()
   private val effectHandler = InstantSearchEffectHandler(
       currentFacility = { facility },
       patientRepository = patientRepository,
       instantSearchValidator = InstantSearchValidator(),
       instantSearchConfig = InstantSearchConfig(
-          minLengthOfSearchQuery = 2
+          minLengthOfSearchQuery = 2,
+          pagingLoadSize = pagingLoadSize
       ),
+      pagerFactory = pagerFactory,
       schedulers = TestSchedulersProvider.trampoline(),
       uiActions = uiActions
   ).build()
@@ -61,13 +73,19 @@ class InstantSearchEffectHandlerTest {
         TestData.patientSearchResult(uuid = UUID.fromString("24be0305-04a3-4111-94e2-e0a254e38a04"))
     )
 
-    whenever(patientRepository.allPatientsInFacility_old(facility)) doReturn patients
+    val expectedPagingData = PagingData.from(patients)
+
+    whenever(pagerFactory.createPager(
+        sourceFactory = any<PagingSourceFactory<Int, PatientSearchResult>>(),
+        pageSize = eq(pagingLoadSize),
+        initialKey = eq(null)
+    )) doReturn Observable.just(expectedPagingData)
 
     // when
     testCase.dispatch(LoadAllPatients(facility))
 
     // then
-    testCase.assertOutgoingEvents(AllPatientsLoaded(patients))
+    testCase.assertOutgoingEvents(AllPatientsLoaded(expectedPagingData))
 
     verifyZeroInteractions(uiActions)
   }

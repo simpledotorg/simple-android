@@ -15,4 +15,11 @@ class SqlPerformanceReporter {
 
     }
   }
+  interface ReportSink {
+    fun report(
+        daoName: String,
+        methodName: String,
+        timeTaken: Duration
+    )
+  }
 }

@@ -74,7 +74,6 @@ class InstantSearchScreen :
         InstantSearchModel,
         InstantSearchEvent,
         InstantSearchEffect>(),
-    InstantSearchUi,
     InstantSearchUiActions,
     ExpectsResult {
 
@@ -160,8 +159,6 @@ class InstantSearchScreen :
   private val blankScannedQrCodeResults = PublishSubject.create<UiEvent>()
 
   override fun defaultModel() = InstantSearchModel.create(screenKey.additionalIdentifier, screenKey.patientPrefillInfo, screenKey.initialSearchQuery)
-
-  override fun uiRenderer() = InstantSearchUiRenderer(this)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenInstantSearchBinding.inflate(layoutInflater, container, false)
@@ -281,14 +278,6 @@ class InstantSearchScreen :
         currentFacilityName = facility.name,
         continuation = Continuation.ContinueToScreen_Old(PatientEntryScreenKey())
     ))
-  }
-
-  override fun showSearchProgress() {
-    instantSearchProgressIndicator.visibility = View.VISIBLE
-  }
-
-  override fun hideSearchProgress() {
-    instantSearchProgressIndicator.visibility = View.GONE
   }
 
   override fun showKeyboard() {

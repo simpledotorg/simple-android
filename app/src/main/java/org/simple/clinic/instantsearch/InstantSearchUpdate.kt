@@ -53,19 +53,13 @@ class InstantSearchUpdate @Inject constructor(
 
   private fun currentFacilityLoaded(model: InstantSearchModel, event: CurrentFacilityLoaded): Next<InstantSearchModel, InstantSearchEffect> {
     val facilityLoadedModel = model.facilityLoaded(event.facility)
-    val updatedModel = if (!model.hasSearchQuery) {
-      facilityLoadedModel.loadingAllPatients()
-    } else {
-      facilityLoadedModel
-    }
-
     val effect = if (model.hasSearchQuery) {
       PrefillSearchQuery(model.searchQuery!!)
     } else {
       LoadAllPatients(event.facility)
     }
 
-    return next(updatedModel, effect)
+    return next(facilityLoadedModel, effect)
   }
 
   private fun searchResultClicked(
@@ -125,15 +119,13 @@ class InstantSearchUpdate @Inject constructor(
     return when (val validationResult = event.result) {
       is Valid -> {
         val criteria = searchCriteriaFromInput(validationResult.searchQuery, model.additionalIdentifier)
-        next(
-            model.loadingSearchResults(),
+        dispatch(
             HideNoSearchResults,
             SearchWithCriteria(criteria, model.facility!!)
         )
       }
       LengthTooShort -> noChange()
-      Empty -> next(
-          model.loadingAllPatients(),
+      Empty -> dispatch(
           HideNoSearchResults,
           LoadAllPatients(model.facility!!)
       )
@@ -168,7 +160,7 @@ class InstantSearchUpdate @Inject constructor(
   ): Next<InstantSearchModel, InstantSearchEffect> {
     if (!model.hasSearchQuery) return noChange()
 
-    return next(model.searchResultsLoaded(), ShowPatientSearchResults(event.patientsSearchResults, model.facility!!, model.searchQuery!!))
+    return dispatch(ShowPatientSearchResults(event.patientsSearchResults, model.facility!!, model.searchQuery!!))
   }
 
   private fun allPatientsLoaded(
@@ -177,6 +169,6 @@ class InstantSearchUpdate @Inject constructor(
   ): Next<InstantSearchModel, InstantSearchEffect> {
     if (model.hasSearchQuery) return noChange()
 
-    return next(model.allPatientsLoaded(), ShowAllPatients(event.patients, model.facility!!))
+    return dispatch(ShowAllPatients(event.patients, model.facility!!))
   }
 }

@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState.NotLoading
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
@@ -208,10 +210,17 @@ class InstantSearchScreen :
   override fun onDestroyView() {
     super.onDestroyView()
     subscriptions.clear()
+
+    allPatientsAdapter.removeLoadStateListener(::allPatientsAdapterLoadStateListener)
   }
 
   override fun showAllPatients(patients: PagingData<PatientSearchResult>, facility: Facility) {
-    allPatientsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(patients, facility, searchQuery = null))
+    allPatientsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(
+        patientSearchResults = patients,
+        currentFacility = facility,
+        searchQuery = null
+    ))
+    allPatientsAdapter.addLoadStateListener(::allPatientsAdapterLoadStateListener)
 
     searchResultsView.visibility = View.VISIBLE
 
@@ -224,6 +233,8 @@ class InstantSearchScreen :
       facility: Facility,
       searchQuery: String
   ) {
+    allPatientsAdapter.removeLoadStateListener(::allPatientsAdapterLoadStateListener)
+
     searchResultsView.visibility = View.VISIBLE
     searchResultsAdapter.submitList(InstantSearchResultsItemType_old.from(patients, facility, searchQuery))
 
@@ -264,6 +275,7 @@ class InstantSearchScreen :
 
   override fun hideNoPatientsInFacility() {
     noPatientsInFacilityContainer.visibility = View.GONE
+    searchResultsView.visibility = View.VISIBLE
   }
 
   override fun hideNoSearchResults() {
@@ -305,6 +317,19 @@ class InstantSearchScreen :
     if (requestType == BlankScannedQrCode && result is Succeeded) {
       val scannedQrCodeResult = ScannedQrCodeSheet.blankScannedQrCodeResult(result)
       blankScannedQrCodeResults.onNext(BlankScannedQrCodeResultReceived(scannedQrCodeResult))
+    }
+  }
+
+  private fun allPatientsAdapterLoadStateListener(loadStates: CombinedLoadStates) {
+    val isNotLoading = loadStates.refresh is NotLoading
+    val endOfPaginationReached = loadStates.append.endOfPaginationReached
+    val hasAdapterItems = allPatientsAdapter.itemCount > 0
+
+    val showNoPatientsInFacility = isNotLoading && endOfPaginationReached && !hasAdapterItems
+    if (showNoPatientsInFacility) {
+      showNoPatientsInFacility(currentModel.facility!!)
+    } else {
+      hideNoPatientsInFacility()
     }
   }
 

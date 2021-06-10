@@ -46,7 +46,12 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addAction(OpenQrCodeScanner::class.java, uiActions::openQrCodeScanner, schedulers.ui())
       .addTransformer(CheckIfPatientAlreadyHasAnExistingNHID::class.java, checkIfPatientAlreadyHasAnExistingNHID())
       .addAction(ShowNHIDErrorDialog::class.java, uiActions::showNHIDErrorDialog, schedulers.ui())
+      .addConsumer(PrefillSearchQuery::class.java, ::prefillSearchQuery, schedulers.ui())
       .build()
+
+  private fun prefillSearchQuery(effect: PrefillSearchQuery) {
+    uiActions.prefillSearchQuery(effect.searchQuery)
+  }
 
   private fun saveNewOngoingPatientEntry(): ObservableTransformer<SaveNewOngoingPatientEntry, InstantSearchEvent> {
     return ObservableTransformer { effects ->

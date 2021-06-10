@@ -53,6 +53,7 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
+import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
@@ -192,8 +193,6 @@ class InstantSearchScreen :
       router.pop()
     }
 
-    searchQueryEditText.setText(screenKey.initialSearchQuery.orEmpty())
-
     qrCodeScannerButton.visibleOrGone(features.isEnabled(InstantSearchQrCode))
 
     searchResultsView.adapter = allPatientsAdapter
@@ -291,15 +290,19 @@ class InstantSearchScreen :
     router.push(ScanSimpleIdScreenKey(OpenedFrom.InstantSearchScreen))
   }
 
+  override fun showNHIDErrorDialog() {
+    NationalHealthIDErrorDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun prefillSearchQuery(initialSearchQuery: String) {
+    searchQueryEditText.setTextAndCursor(initialSearchQuery)
+  }
+
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
     if (requestType == BlankScannedQrCode && result is Succeeded) {
       val scannedQrCodeResult = ScannedQrCodeSheet.blankScannedQrCodeResult(result)
       blankScannedQrCodeResults.onNext(BlankScannedQrCodeResultReceived(scannedQrCodeResult))
     }
-  }
-
-  override fun showNHIDErrorDialog() {
-    NationalHealthIDErrorDialog.show(activity.supportFragmentManager)
   }
 
   private fun allPatientsItemClicks(): Observable<UiEvent> {

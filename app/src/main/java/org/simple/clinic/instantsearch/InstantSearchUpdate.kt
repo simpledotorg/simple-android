@@ -120,13 +120,11 @@ class InstantSearchUpdate @Inject constructor(
       is Valid -> {
         val criteria = searchCriteriaFromInput(validationResult.searchQuery, model.additionalIdentifier)
         dispatch(
-            HideNoSearchResults,
             SearchWithCriteria(criteria, model.facility!!)
         )
       }
       LengthTooShort -> noChange()
       Empty -> dispatch(
-          HideNoSearchResults,
           LoadAllPatients(model.facility!!)
       )
     }

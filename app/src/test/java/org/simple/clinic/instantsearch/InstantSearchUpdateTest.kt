@@ -131,7 +131,6 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(
-                HideNoSearchResults,
                 SearchWithCriteria(PatientSearchCriteria.Name("Pat", identifier), facility)
             )
         ))
@@ -152,7 +151,6 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(
-                HideNoSearchResults,
                 LoadAllPatients(facility)
             )
         ))

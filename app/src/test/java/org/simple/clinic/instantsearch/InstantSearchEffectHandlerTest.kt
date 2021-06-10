@@ -240,30 +240,6 @@ class InstantSearchEffectHandlerTest {
   }
 
   @Test
-  fun `when show no search results effect is received, then show no search results`() {
-    // when
-    testCase.dispatch(ShowNoSearchResults)
-
-    // then
-    testCase.assertNoOutgoingEvents()
-
-    verify(uiActions).showNoSearchResults()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when hide no search results effect is received, then hide no search results`() {
-    // when
-    testCase.dispatch(HideNoSearchResults)
-
-    // then
-    testCase.assertNoOutgoingEvents()
-
-    verify(uiActions).hideNoSearchResults()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
   fun `when save on going patient entry effect is received, then save on going patient entry`() {
     // given
     val ongoingNewPatientEntry = TestData.ongoingPatientEntry()

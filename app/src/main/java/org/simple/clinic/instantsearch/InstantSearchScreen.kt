@@ -264,15 +264,6 @@ class InstantSearchScreen :
     router.pushExpectingResult(BlankScannedQrCode, ScannedQrCodeSheet.Key(identifier))
   }
 
-  override fun showNoSearchResults() {
-    searchResultsView.visibility = View.GONE
-    noSearchResultsContainer.visibility = View.VISIBLE
-  }
-
-  override fun hideNoSearchResults() {
-    noSearchResultsContainer.visibility = View.GONE
-  }
-
   override fun openPatientEntryScreen(facility: Facility) {
     router.push(AlertFacilityChangeSheet.Key(
         currentFacilityName = facility.name,
@@ -327,6 +318,16 @@ class InstantSearchScreen :
     } else {
       hideNoPatientsInFacility()
     }
+  }
+
+  private fun showNoSearchResults() {
+    searchResultsView.visibility = View.GONE
+    noSearchResultsContainer.visibility = View.VISIBLE
+  }
+
+  private fun hideNoSearchResults() {
+    noSearchResultsContainer.visibility = View.GONE
+    searchResultsView.visibility = View.VISIBLE
   }
 
   private fun searchResultsAdapterLoadStateListener(loadStates: CombinedLoadStates) {

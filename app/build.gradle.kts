@@ -479,3 +479,19 @@ abstract class GenerateRoomMetadataTask : DefaultTask() {
     rmg.run(project.projectDir.absolutePath, sourceSet.get(), outputCsvPath)
   }
 }
+
+abstract class TransformGeneratedRoomDaoTask : DefaultTask() {
+
+  @get:Input
+  abstract val sourceSet: Property<String>
+
+  @get:Input
+  abstract val reporterClassName: Property<String>
+
+  @TaskAction
+  fun run() {
+    val rmg = RoomMetadataGenerator()
+
+    rmg.run(project.projectDir.absolutePath, sourceSet.get(), reporterClassName.get())
+  }
+}

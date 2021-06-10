@@ -299,15 +299,15 @@ android {
           .replace("kapt", "")
           .replace("Kotlin", "")
 
-      val taskName = "generate${taskQualifier}RoomMetadata"
-      val generateTask = tasks.create<GenerateRoomMetadataTask>(taskName) {
+      val taskName = "transform${taskQualifier}GeneratedRoomDao"
+      val transformRoomDaoTask = tasks.create<TransformGeneratedRoomDaoTask>(taskName) {
         sourceSet.set(sourceSetName)
-        csvAssetName.set("db_metadata.csv")
+        reporterClassName.set("org.simple.clinic.storage.monitoring.SqlPerformanceReporter")
       }
 
-      tasks.findByName(buildType)?.finalizedBy(generateTask)
-      tasks.named("merge${taskQualifier}Assets").configure {
-        dependsOn(generateTask)
+      tasks.findByName(buildType)?.finalizedBy(transformRoomDaoTask)
+      tasks.named("compile${taskQualifier}JavaWithJavac").configure {
+        dependsOn(transformRoomDaoTask)
       }
     }
   }

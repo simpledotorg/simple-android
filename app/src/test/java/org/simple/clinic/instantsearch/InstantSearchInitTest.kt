@@ -41,9 +41,8 @@ class InstantSearchInitTest {
         ))
   }
 
-
   @Test
-  fun `when screen is restored and facility is loaded, then validate search query`() {
+  fun `when screen is restored and facility is loaded, then prefill search query`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("df98a72b-3392-4364-80b3-c73328bafed3"),
         name = "PHC Obvious"
@@ -57,7 +56,7 @@ class InstantSearchInitTest {
         .whenInit(facilityLoadedModel)
         .then(assertThatFirst(
             hasModel(facilityLoadedModel),
-            hasEffects(ValidateSearchQuery("Pa"))
+            hasEffects(PrefillSearchQuery("Pa"))
         ))
   }
 

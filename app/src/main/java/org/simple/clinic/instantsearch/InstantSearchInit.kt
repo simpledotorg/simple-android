@@ -16,7 +16,7 @@ class InstantSearchInit : Init<InstantSearchModel, InstantSearchEffect> {
     }
 
     if (modelToEmit.hasFacility)
-      effects.add(ValidateSearchQuery(modelToEmit.searchQuery.orEmpty()))
+      effects.add(PrefillSearchQuery(modelToEmit.searchQuery.orEmpty()))
     else
       effects.add(LoadCurrentFacility)
 

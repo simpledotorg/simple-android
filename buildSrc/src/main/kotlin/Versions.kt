@@ -9,7 +9,7 @@ object Versions {
   const val recyclerView = "1.0.0"
   const val material = "1.3.0"
   const val cardview = "1.0.0"
-  const val room = "2.2.6"
+  const val room = "2.3.0"
   const val androidXTestExt = "1.1.1"
   const val androidXTest = "1.2.0"
   const val timber = "4.7.0"
@@ -64,7 +64,7 @@ object Versions {
   const val cameraView = "1.0.0-alpha23"
   const val cameraLifecycle = "1.0.0-rc04"
   const val zxing = "3.3.3"
-  const val paging = "2.1.2"
+  const val paging = "3.0.0"
 
   // When bumping this dependency verify whether `org.simple.clinic.feature.Feature.ChangeLanguage`
   // can be enabled again.

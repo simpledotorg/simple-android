@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.paging.LoadState.NotLoading
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
@@ -329,6 +330,8 @@ class InstantSearchScreen :
     val endOfPaginationReached = loadStates.append.endOfPaginationReached
     val hasAdapterItems = allPatientsAdapter.itemCount > 0
 
+    instantSearchProgressIndicator.visibleOrGone(loadStates.refresh is LoadState.Loading)
+
     val showNoPatientsInFacility = isNotLoading && endOfPaginationReached && !hasAdapterItems
     if (showNoPatientsInFacility) {
       showNoPatientsInFacility(currentModel.facility!!)
@@ -341,6 +344,8 @@ class InstantSearchScreen :
     val isNotLoading = loadStates.refresh is NotLoading
     val endOfPaginationReached = loadStates.append.endOfPaginationReached
     val hasAdapterItems = searchResultsAdapter.itemCount > 0
+
+    instantSearchProgressIndicator.visibleOrGone(loadStates.refresh is LoadState.Loading)
 
     val showNoSearchResults = isNotLoading && endOfPaginationReached && !hasAdapterItems
     if (showNoSearchResults) {

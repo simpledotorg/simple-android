@@ -54,7 +54,7 @@ class BloodSugarHistoryListItemDataSource(
     // is not present in the source data source
     val loadParamsForDatabaseSource = LoadRangeParams(params.startPosition - 1, params.loadSize)
     source.loadRange(loadParamsForDatabaseSource, object : LoadRangeCallback<BloodSugarMeasurement>() {
-      override fun onResult(measurements: MutableList<BloodSugarMeasurement>) {
+      override fun onResult(measurements: List<BloodSugarMeasurement>) {
         val measurementListItems = convertToBloodSugarHistoryListItems(measurements)
         val data = if (params.startPosition == 0) {
           listOf(NewBloodSugarButton) + measurementListItems
@@ -81,7 +81,7 @@ class BloodSugarHistoryListItemDataSource(
     )
     source.loadInitial(loadParamsForDatabaseSource, object : LoadInitialCallback<BloodSugarMeasurement>() {
       override fun onResult(
-          measurements: MutableList<BloodSugarMeasurement>,
+          measurements: List<BloodSugarMeasurement>,
           position: Int,
           totalCount: Int
       ) {
@@ -99,7 +99,7 @@ class BloodSugarHistoryListItemDataSource(
         callback.onResult(data, position, finalTotalCount)
       }
 
-      override fun onResult(data: MutableList<BloodSugarMeasurement>, position: Int) {
+      override fun onResult(data: List<BloodSugarMeasurement>, position: Int) {
         // Nothing happens here, source data source results are passed to onResult(data, position, totalCount)
       }
     })

@@ -465,22 +465,6 @@ dependencies {
 // https://console.firebase.google.com/u/2/project/simple-org/settings/general/
 apply(plugin = "com.google.gms.google-services")
 
-abstract class GenerateRoomMetadataTask : DefaultTask() {
-
-  @get:Input
-  abstract val sourceSet: Property<String>
-
-  @get:Input
-  abstract val csvAssetName: Property<String>
-
-  @TaskAction
-  fun run() {
-    val rmg = RoomMetadataGenerator()
-    val outputCsvPath = "${project.buildDir}/generated/assets/room_dao_metadata/${csvAssetName.get()}"
-    rmg.run(project.projectDir.absolutePath, sourceSet.get(), outputCsvPath)
-  }
-}
-
 abstract class TransformGeneratedRoomDaoTask : DefaultTask() {
 
   @get:Input

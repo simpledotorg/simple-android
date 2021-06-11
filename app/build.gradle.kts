@@ -288,6 +288,7 @@ android {
     }
 
     val kaptTasks = mapOf(
+        "kaptQaDebugKotlin" to "qaDebug",
         "kaptSandboxReleaseKotlin" to "sandboxRelease",
         "kaptStagingReleaseKotlin" to "stagingRelease",
         "kaptSecurityReleaseKotlin" to "securityRelease",
@@ -299,15 +300,15 @@ android {
           .replace("kapt", "")
           .replace("Kotlin", "")
 
-      val taskName = "generate${taskQualifier}RoomMetadata"
-      val generateTask = tasks.create<GenerateRoomMetadataTask>(taskName) {
+      val taskName = "transform${taskQualifier}GeneratedRoomDao"
+      val transformRoomDaoTask = tasks.create<TransformGeneratedRoomDaoTask>(taskName) {
         sourceSet.set(sourceSetName)
-        csvAssetName.set("db_metadata.csv")
+        reporterClassName.set("org.simple.clinic.storage.monitoring.SqlPerformanceReporter")
       }
 
-      tasks.findByName(buildType)?.finalizedBy(generateTask)
-      tasks.named("merge${taskQualifier}Assets").configure {
-        dependsOn(generateTask)
+      tasks.findByName(buildType)?.finalizedBy(transformRoomDaoTask)
+      tasks.named("compile${taskQualifier}JavaWithJavac").configure {
+        dependsOn(transformRoomDaoTask)
       }
     }
   }
@@ -464,18 +465,18 @@ dependencies {
 // https://console.firebase.google.com/u/2/project/simple-org/settings/general/
 apply(plugin = "com.google.gms.google-services")
 
-abstract class GenerateRoomMetadataTask : DefaultTask() {
+abstract class TransformGeneratedRoomDaoTask : DefaultTask() {
 
   @get:Input
   abstract val sourceSet: Property<String>
 
   @get:Input
-  abstract val csvAssetName: Property<String>
+  abstract val reporterClassName: Property<String>
 
   @TaskAction
   fun run() {
     val rmg = RoomMetadataGenerator()
-    val outputCsvPath = "${project.buildDir}/generated/assets/room_dao_metadata/${csvAssetName.get()}"
-    rmg.run(project.projectDir.absolutePath, sourceSet.get(), outputCsvPath)
+
+    rmg.run(project.projectDir.absolutePath, sourceSet.get(), reporterClassName.get())
   }
 }

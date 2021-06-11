@@ -384,4 +384,18 @@ class InstantSearchEffectHandlerTest {
     verify(uiActions).showNHIDErrorDialog()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when prefill initial search query effect is received, then prefill instant search query`() {
+    // given
+    val initialSearchQuery = "Ramesh"
+
+    // when
+    testCase.dispatch(PrefillSearchQuery(initialSearchQuery))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).prefillSearchQuery(initialSearchQuery)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

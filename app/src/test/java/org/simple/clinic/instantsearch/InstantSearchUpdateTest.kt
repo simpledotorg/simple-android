@@ -27,10 +27,10 @@ class InstantSearchUpdateTest {
       value = "3e5500fe-e10e-4009-a0bb-3db9009fdef6",
       type = BpPassport
   )
-  private val defaultModel = InstantSearchModel.create(identifier, null)
+  private val defaultModel = InstantSearchModel.create(identifier, null, null)
 
   @Test
-  fun `when current facility is loaded, then update the model and load all patients`() {
+  fun `when current facility is loaded and search query is not present, then update the model and load all patients`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("a613b2fc-c91c-40a3-9e8b-6da7010ce51b"),
         name = "PHC Obvious"
@@ -42,6 +42,27 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.facilityLoaded(facility).loadingAllPatients()),
             hasEffects(LoadAllPatients(facility))
+        ))
+  }
+
+  @Test
+  fun `when current facility is loaded and search query is present, then update the model and prefill the search query`() {
+    val model = InstantSearchModel.create(
+        additionalIdentifier = identifier,
+        patientPrefillInfo = null,
+        searchQuery = "Pat"
+    )
+    val facility = TestData.facility(
+        uuid = UUID.fromString("a613b2fc-c91c-40a3-9e8b-6da7010ce51b"),
+        name = "PHC Obvious"
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(CurrentFacilityLoaded(facility))
+        .then(assertThatNext(
+            hasModel(model.facilityLoaded(facility)),
+            hasEffects(PrefillSearchQuery("Pat"))
         ))
   }
 
@@ -182,7 +203,7 @@ class InstantSearchUpdateTest {
         name = "PHC Obvious"
     )
     val model = InstantSearchModel
-        .create(additionalIdentifier = null, patientPrefillInfo = null)
+        .create(additionalIdentifier = null, patientPrefillInfo = null, searchQuery = null)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -212,7 +233,8 @@ class InstantSearchUpdateTest {
 
     val model = InstantSearchModel
         .create(additionalIdentifier = identifier,
-            patientPrefillInfo = patientPrefillInfo)
+            patientPrefillInfo = patientPrefillInfo,
+            searchQuery = null)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -234,7 +256,7 @@ class InstantSearchUpdateTest {
         name = "PHC Obvious"
     )
     val model = InstantSearchModel
-        .create(additionalIdentifier = identifier, patientPrefillInfo = null)
+        .create(additionalIdentifier = identifier, patientPrefillInfo = null, searchQuery = null)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -450,7 +472,8 @@ class InstantSearchUpdateTest {
 
     val model = InstantSearchModel
         .create(additionalIdentifier = identifier,
-            patientPrefillInfo = patientPrefillInfo)
+            patientPrefillInfo = patientPrefillInfo,
+            searchQuery = null)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -481,7 +504,8 @@ class InstantSearchUpdateTest {
     val model = InstantSearchModel
         .create(
             additionalIdentifier = identifier,
-            patientPrefillInfo = patientPrefillInfo)
+            patientPrefillInfo = patientPrefillInfo,
+            searchQuery = null)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 

@@ -17,11 +17,11 @@ class InstantSearchInitTest {
       value = "f16ebf24-14fb-46c7-9b34-b49cdc1c9453",
       type = BpPassport
   )
-  private val defaultModel = InstantSearchModel.create(identifier, null)
+  private val defaultModel = InstantSearchModel.create(identifier, null, null)
 
   @Test
   fun `when screen is created, then load current facility and show keyboard`() {
-    val model = InstantSearchModel.create(additionalIdentifier = null, patientPrefillInfo = null)
+    val model = InstantSearchModel.create(additionalIdentifier = null, patientPrefillInfo = null, searchQuery = null)
 
     initSpec
         .whenInit(model)
@@ -41,9 +41,8 @@ class InstantSearchInitTest {
         ))
   }
 
-
   @Test
-  fun `when screen is restored and facility is loaded, then validate search query`() {
+  fun `when screen is restored and facility is loaded, then prefill search query`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("df98a72b-3392-4364-80b3-c73328bafed3"),
         name = "PHC Obvious"
@@ -57,7 +56,7 @@ class InstantSearchInitTest {
         .whenInit(facilityLoadedModel)
         .then(assertThatFirst(
             hasModel(facilityLoadedModel),
-            hasEffects(ValidateSearchQuery("Pa"))
+            hasEffects(PrefillSearchQuery("Pa"))
         ))
   }
 

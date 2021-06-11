@@ -3,7 +3,7 @@ object Versions {
   const val compileSdk = 30
   const val kotlin = "1.5.10"
   const val agp = "4.2.1"
-  const val roomMetadataGenerator = "1.1.0"
+  const val roomMetadataGenerator = "1.2.0"
 
   const val supportLib = "1.0.0"
   const val recyclerView = "1.0.0"

@@ -13,6 +13,8 @@ import org.simple.clinic.di.AppComponent
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.storage.monitoring.AnalyticsSqlPerformanceReportingSink
+import org.simple.clinic.storage.monitoring.SqlPerformanceReporter
 import timber.log.Timber
 import java.io.IOException
 import java.net.SocketException
@@ -32,6 +34,9 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
 
   @Inject
   lateinit var closeActivitiesWhenUserIsUnauthorized: CloseActivitiesWhenUserIsUnauthorized
+
+  @Inject
+  lateinit var analyticsSqlPerformanceReportingSink: AnalyticsSqlPerformanceReportingSink
 
   protected open val analyticsReporters = emptyList<AnalyticsReporter>()
 
@@ -54,6 +59,7 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
     analyticsReporters.forEach { reporter ->
       Analytics.addReporter(reporter)
     }
+    SqlPerformanceReporter.addSink(analyticsSqlPerformanceReportingSink)
 
     updateAnalyticsUserId.listen()
 

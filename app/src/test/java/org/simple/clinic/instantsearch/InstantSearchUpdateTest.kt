@@ -23,7 +23,7 @@ import java.util.UUID
 class InstantSearchUpdateTest {
 
   private val dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-  private val updateSpec = UpdateSpec(InstantSearchUpdate(false, dateOfBirthFormatter))
+  private val updateSpec = UpdateSpec(InstantSearchUpdate(dateOfBirthFormatter))
   private val identifier = TestData.identifier(
       value = "3e5500fe-e10e-4009-a0bb-3db9009fdef6",
       type = BpPassport

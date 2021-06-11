@@ -12,7 +12,6 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.NumericCriteria
-import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
@@ -22,7 +21,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class InstantSearchUpdate @Inject constructor(
-    private val isInstantSearchByIdentifierEnabled: Boolean,
     @Named("date_for_user_input") private val dateTimeFormatter: DateTimeFormatter
 ) : Update<InstantSearchModel, InstantSearchEvent, InstantSearchEffect> {
 
@@ -85,7 +83,6 @@ class InstantSearchUpdate @Inject constructor(
   private fun registerNewPatient(model: InstantSearchModel): Next<InstantSearchModel, InstantSearchEffect> {
     var ongoingPatientEntry = when (val searchCriteria = searchCriteriaFromInput(model.searchQuery.orEmpty(), model.additionalIdentifier)) {
       is Name -> OngoingNewPatientEntry.fromFullName(searchCriteria.patientName)
-      is PhoneNumber -> OngoingNewPatientEntry.fromPhoneNumber(searchCriteria.phoneNumber)
       is NumericCriteria -> OngoingNewPatientEntry.default()
     }
 
@@ -135,20 +132,8 @@ class InstantSearchUpdate @Inject constructor(
       additionalIdentifier: Identifier?
   ): PatientSearchCriteria {
     return when {
-      digitsRegex.matches(inputString) -> numericPatientSearchCriteriaBasedOnFeatureFlag(isInstantSearchByIdentifierEnabled, inputString.filterNot { it.isWhitespace() }, additionalIdentifier)
+      digitsRegex.matches(inputString) -> NumericCriteria(inputString.filterNot { it.isWhitespace() }, additionalIdentifier)
       else -> Name(inputString, additionalIdentifier)
-    }
-  }
-
-  private fun numericPatientSearchCriteriaBasedOnFeatureFlag(
-      isInstantSearchByIdentifierEnabled: Boolean,
-      inputString: String,
-      additionalIdentifier: Identifier?
-  ): PatientSearchCriteria {
-    return if (isInstantSearchByIdentifierEnabled) {
-      NumericCriteria(inputString, additionalIdentifier)
-    } else {
-      PhoneNumber(inputString, additionalIdentifier)
     }
   }
 

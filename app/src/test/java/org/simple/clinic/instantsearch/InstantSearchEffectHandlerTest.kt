@@ -1,25 +1,34 @@
 package org.simple.clinic.instantsearch
 
+import androidx.paging.PagingData
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import org.simple.clinic.util.PagerFactory
+import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import java.util.UUID
 
 class InstantSearchEffectHandlerTest {
+
+  private val pagingLoadSize = 15
 
   private val facility = TestData.facility(
       uuid = UUID.fromString("9cb066b5-ffa4-412e-b345-dfa98850fcce"),
@@ -27,13 +36,16 @@ class InstantSearchEffectHandlerTest {
   )
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<InstantSearchUiActions>()
+  private val pagerFactory = mock<PagerFactory>()
   private val effectHandler = InstantSearchEffectHandler(
       currentFacility = { facility },
       patientRepository = patientRepository,
       instantSearchValidator = InstantSearchValidator(),
       instantSearchConfig = InstantSearchConfig(
-          minLengthOfSearchQuery = 2
+          minLengthOfSearchQuery = 2,
+          pagingLoadSize = pagingLoadSize
       ),
+      pagerFactory = pagerFactory,
       schedulers = TestSchedulersProvider.trampoline(),
       uiActions = uiActions
   ).build()
@@ -61,13 +73,19 @@ class InstantSearchEffectHandlerTest {
         TestData.patientSearchResult(uuid = UUID.fromString("24be0305-04a3-4111-94e2-e0a254e38a04"))
     )
 
-    whenever(patientRepository.allPatientsInFacility(facility)) doReturn patients
+    val expectedPagingData = PagingData.from(patients)
+
+    whenever(pagerFactory.createPager(
+        sourceFactory = any<PagingSourceFactory<Int, PatientSearchResult>>(),
+        pageSize = eq(pagingLoadSize),
+        initialKey = eq(null)
+    )) doReturn Observable.just(expectedPagingData)
 
     // when
     testCase.dispatch(LoadAllPatients(facility))
 
     // then
-    testCase.assertOutgoingEvents(AllPatientsLoaded(patients))
+    testCase.assertOutgoingEvents(AllPatientsInFacilityLoaded(expectedPagingData))
 
     verifyZeroInteractions(uiActions)
   }
@@ -105,14 +123,14 @@ class InstantSearchEffectHandlerTest {
         uuid = UUID.fromString("f1e9ad5c-7de0-4566-b1fc-392bdfdc8490"),
         name = "PHC Obvious"
     )
-    val patients = listOf(
+    val patients = PagingData.from(listOf(
         TestData.patientSearchResult(
             uuid = UUID.fromString("14edda47-c177-4b5b-9d72-832e262255a3")
         ),
         TestData.patientSearchResult(
             uuid = UUID.fromString("a96ebfe1-a59c-4518-86ef-2ad2174cca03")
         )
-    )
+    ))
 
     // when
     testCase.dispatch(ShowAllPatients(patients, facility))
@@ -214,36 +232,6 @@ class InstantSearchEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
 
     verify(uiActions).openScannedQrCodeSheet(identifier)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when show no patients in facility effect is received, then show no patients in facility`() {
-    // given
-    val facility = TestData.facility(
-        uuid = UUID.fromString("6889f6fb-aa9f-4e5f-8d48-4d22420bd811"),
-        name = "PHC Obvious"
-    )
-
-    // when
-    testCase.dispatch(ShowNoPatientsInFacility(facility))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-
-    verify(uiActions).showNoPatientsInFacility(facility)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when hide no patients in facility effect is received, then hide no patients in facility`() {
-    // when
-    testCase.dispatch(HideNoPatientsInFacility)
-
-    // then
-    testCase.assertNoOutgoingEvents()
-
-    verify(uiActions).hideNoPatientsInFacility()
     verifyNoMoreInteractions(uiActions)
   }
 

@@ -82,6 +82,7 @@ object Versions {
   const val spotless = "5.6.1"
   const val annotation = "1.2.0"
   const val annotationExperimental = "1.1.0"
+  const val coroutines = "1.5.0"
 }
 
 val versions = Versions

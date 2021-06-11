@@ -37,7 +37,7 @@ class InstantSearchUpdate @Inject constructor(
   ): Next<InstantSearchModel, InstantSearchEffect> {
     return when (event) {
       is CurrentFacilityLoaded -> currentFacilityLoaded(model, event)
-      is AllPatientsLoaded -> allPatientsLoaded(model, event)
+      is AllPatientsInFacilityLoaded -> allPatientsLoaded(model, event)
       is SearchResultsLoaded -> searchResultsLoaded(model, event)
       is SearchQueryValidated -> searchQueryValidated(model, event)
       is SearchResultClicked -> searchResultClicked(model, event)
@@ -127,7 +127,6 @@ class InstantSearchUpdate @Inject constructor(
         val criteria = searchCriteriaFromInput(validationResult.searchQuery, model.additionalIdentifier)
         next(
             model.loadingSearchResults(),
-            HideNoPatientsInFacility,
             HideNoSearchResults,
             SearchWithCriteria(criteria, model.facility!!)
         )
@@ -135,7 +134,6 @@ class InstantSearchUpdate @Inject constructor(
       LengthTooShort -> noChange()
       Empty -> next(
           model.loadingAllPatients(),
-          HideNoPatientsInFacility,
           HideNoSearchResults,
           LoadAllPatients(model.facility!!)
       )
@@ -180,15 +178,10 @@ class InstantSearchUpdate @Inject constructor(
 
   private fun allPatientsLoaded(
       model: InstantSearchModel,
-      event: AllPatientsLoaded
+      event: AllPatientsInFacilityLoaded
   ): Next<InstantSearchModel, InstantSearchEffect> {
     if (model.hasSearchQuery) return noChange()
 
-    val effect = if (event.patients.isNotEmpty())
-      ShowAllPatients(event.patients, model.facility!!)
-    else
-      ShowNoPatientsInFacility(model.facility!!)
-
-    return next(model.allPatientsLoaded(), effect)
+    return next(model.allPatientsLoaded(), ShowAllPatients(event.patients, model.facility!!))
   }
 }

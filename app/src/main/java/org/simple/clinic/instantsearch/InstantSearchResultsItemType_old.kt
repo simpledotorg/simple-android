@@ -1,11 +1,6 @@
 package org.simple.clinic.instantsearch
 
-import androidx.annotation.VisibleForTesting
 import androidx.core.content.ContextCompat
-import androidx.paging.PagingData
-import androidx.paging.TerminalSeparatorType.SOURCE_COMPLETE
-import androidx.paging.insertSeparators
-import androidx.paging.map
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
@@ -13,56 +8,56 @@ import org.simple.clinic.databinding.ListPatientSearchBinding
 import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
-import org.simple.clinic.widgets.PagingItemAdapter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import java.util.UUID
 
-sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearchResultsItemType.Event> {
+sealed class InstantSearchResultsItemType_old : ItemAdapter.Item<InstantSearchResultsItemType_old.Event> {
 
   companion object {
 
     fun from(
-        patientSearchResults: PagingData<PatientSearchResult>,
+        patientSearchResults: List<PatientSearchResult>,
         currentFacility: Facility,
         searchQuery: String?
-    ): PagingData<InstantSearchResultsItemType> {
-      return patientSearchResults
-          .map { SearchResult.forSearchResult(it, currentFacility.uuid, searchQuery) }
-          .insertSeparators(SOURCE_COMPLETE) { before, after -> insertHeaders(before, after, currentFacility) }
+    ): List<InstantSearchResultsItemType_old> {
+      val (assignedFacilityPatients, nearbyFacilitiesPatients) = patientSearchResults
+          .partition { it.assignedFacilityId == currentFacility.uuid }
+
+      val assignedFacilityPatientsGroup = generateAssignedFacilityPatientsGroup(assignedFacilityPatients, currentFacility, searchQuery)
+      val nearbyFacilitiesPatientsGroup = generateNearbyFacilitiesPatientsGroup(nearbyFacilitiesPatients, currentFacility, searchQuery)
+
+      return assignedFacilityPatientsGroup + nearbyFacilitiesPatientsGroup
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun insertHeaders(
-        beforeSearchResult: SearchResult?,
-        afterSearchResult: SearchResult?,
-        currentFacility: Facility
-    ): InstantSearchResultsItemType? {
-      return when {
-        shouldAddAssignedFacility(beforeSearchResult, afterSearchResult) -> AssignedFacilityHeader(facilityName = currentFacility.name)
-        shouldAddNearbyFacilityHeader(beforeSearchResult, afterSearchResult) -> NearbyFacilitiesHeader
-        else -> null
-      }
+    private fun generateAssignedFacilityPatientsGroup(
+        assignedFacilityPatients: List<PatientSearchResult>,
+        currentFacility: Facility,
+        searchQuery: String?
+    ) = if (assignedFacilityPatients.isNotEmpty()) {
+      listOf(AssignedFacilityHeader(currentFacility.name)) + SearchResult.forSearchResults(assignedFacilityPatients, currentFacility.uuid, searchQuery)
+    } else {
+      emptyList()
     }
 
-    private fun shouldAddAssignedFacility(beforeSearchResult: SearchResult?, afterSearchResult: SearchResult?) =
-        beforeSearchResult == null && afterSearchResult != null && afterSearchResult.isAtCurrentFacility
-
-    private fun shouldAddNearbyFacilityHeader(beforeSearchResult: SearchResult?, afterSearchResult: SearchResult?) =
-        isFirstSearchResultNotAtCurrentFacility(beforeSearchResult, afterSearchResult) || shouldAddNearbyFacilityHeaderInBetweenSearchResults(beforeSearchResult, afterSearchResult)
-
-    private fun isFirstSearchResultNotAtCurrentFacility(beforeSearchResult: SearchResult?, afterSearchResult: SearchResult?) =
-        beforeSearchResult == null && afterSearchResult != null && !afterSearchResult.isAtCurrentFacility
-
-    private fun shouldAddNearbyFacilityHeaderInBetweenSearchResults(beforeSearchResult: SearchResult?, afterSearchResult: SearchResult?) =
-        beforeSearchResult != null && afterSearchResult != null && beforeSearchResult.isAtCurrentFacility && !afterSearchResult.isAtCurrentFacility
+    private fun generateNearbyFacilitiesPatientsGroup(
+        nearbyFacilitiesPatients: List<PatientSearchResult>,
+        currentFacility: Facility,
+        searchQuery: String?
+    ) =
+        if (nearbyFacilitiesPatients.isNotEmpty()) {
+          listOf(NearbyFacilitiesHeader) + SearchResult.forSearchResults(nearbyFacilitiesPatients, currentFacility.uuid, searchQuery)
+        } else {
+          emptyList()
+        }
   }
 
   sealed class Event {
     data class ResultClicked(val patientUuid: UUID) : Event()
   }
 
-  data class AssignedFacilityHeader(val facilityName: String) : InstantSearchResultsItemType() {
+  data class AssignedFacilityHeader(val facilityName: String) : InstantSearchResultsItemType_old() {
 
     override fun layoutResId(): Int = R.layout.list_patient_search_header
 
@@ -76,7 +71,7 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
     }
   }
 
-  object NearbyFacilitiesHeader : InstantSearchResultsItemType() {
+  object NearbyFacilitiesHeader : InstantSearchResultsItemType_old() {
 
     override fun layoutResId(): Int = R.layout.list_patient_search_header
 
@@ -93,22 +88,18 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
   data class SearchResult(
       val searchResultViewModel: PatientSearchResultViewModel,
       val currentFacilityId: UUID,
-      val assignedFacilityId: UUID?,
       val searchQuery: String?
-  ) : InstantSearchResultsItemType() {
+  ) : InstantSearchResultsItemType_old() {
 
     companion object {
-      fun forSearchResult(
-          searchResult: PatientSearchResult,
+      fun forSearchResults(
+          searchResults: List<PatientSearchResult>,
           currentFacilityId: UUID,
           searchQuery: String?
-      ): SearchResult {
-        return SearchResult(
-            searchResultViewModel = mapPatientSearchResultToViewModel(searchResult),
-            currentFacilityId = currentFacilityId,
-            assignedFacilityId = searchResult.assignedFacilityId,
-            searchQuery = searchQuery
-        )
+      ): List<SearchResult> {
+        return searchResults
+            .map(::mapPatientSearchResultToViewModel)
+            .map { searchResultViewModel -> SearchResult(searchResultViewModel, currentFacilityId, searchQuery) }
       }
 
       private fun mapPatientSearchResultToViewModel(searchResult: PatientSearchResult): PatientSearchResultViewModel {
@@ -126,8 +117,6 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
       }
     }
 
-    val isAtCurrentFacility
-      get() = assignedFacilityId == currentFacilityId
 
     override fun layoutResId(): Int = R.layout.list_patient_search
 
@@ -141,11 +130,11 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
     }
   }
 
-  class DiffCallback : DiffUtil.ItemCallback<InstantSearchResultsItemType>() {
+  class DiffCallback : DiffUtil.ItemCallback<InstantSearchResultsItemType_old>() {
 
     override fun areItemsTheSame(
-        oldItem: InstantSearchResultsItemType,
-        newItem: InstantSearchResultsItemType
+        oldItem: InstantSearchResultsItemType_old,
+        newItem: InstantSearchResultsItemType_old
     ): Boolean {
       return when {
         oldItem is AssignedFacilityHeader && newItem is AssignedFacilityHeader -> oldItem.facilityName == newItem.facilityName
@@ -156,8 +145,8 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
     }
 
     override fun areContentsTheSame(
-        oldItem: InstantSearchResultsItemType,
-        newItem: InstantSearchResultsItemType
+        oldItem: InstantSearchResultsItemType_old,
+        newItem: InstantSearchResultsItemType_old
     ): Boolean {
       return oldItem == newItem
     }

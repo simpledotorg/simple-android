@@ -2,6 +2,7 @@ package org.simple.clinic.patient
 
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
+import androidx.paging.PagingSource
 import com.squareup.moshi.JsonAdapter
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -31,6 +32,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
+import java.security.Key
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -612,15 +614,10 @@ class PatientRepository @Inject constructor(
         .isPatientDefaulter(patientUuid)
   }
 
-  fun allPatientsInFacility(facility: Facility): List<PatientSearchResult> {
-    return reportTimeTaken(
-        clock = utcClock,
-        operation = "Instant Search Patient:Loading All Patients in Facility: ${facility.uuid}"
-    ) {
-      database
-          .patientSearchDao()
-          .searchInFacilityAndSortByName(facility.uuid, PatientStatus.Active)
-    }
+  fun allPatientsInFacility(facilityId: UUID): PagingSource<Int, PatientSearchResult> {
+    return database
+        .patientSearchDao()
+        .allPatientsInFacility(facilityId = facilityId, status = PatientStatus.Active)
   }
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

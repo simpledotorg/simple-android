@@ -3,17 +3,17 @@ package org.simple.clinic.widgets
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import androidx.paging.PagingDataAdapter
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
-class PagingItemAdapter<I : PagingItemAdapter.Item<E>, E>(
+open class PagingItemAdapter_old<I : PagingItemAdapter_old.Item<E>, E>(
     diffCallback: DiffUtil.ItemCallback<I>,
     private val bindings: BindingsCallback
-) : PagingDataAdapter<I, BindingViewHolder>(diffCallback) {
+) : PagedListAdapter<I, BindingViewHolder>(diffCallback) {
 
   private val eventSubject = PublishSubject.create<E>()
   val itemEvents: Observable<E> = eventSubject.hide()

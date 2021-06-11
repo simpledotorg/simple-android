@@ -9,6 +9,7 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class InstantSearchEffectHandler @AssistedInject constructor(
@@ -16,6 +17,7 @@ class InstantSearchEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val instantSearchValidator: InstantSearchValidator,
     private val instantSearchConfig: InstantSearchConfig,
+    private val pagerFactory: PagerFactory,
     private val schedulers: SchedulersProvider,
     @Assisted private val uiActions: InstantSearchUiActions
 ) {
@@ -36,9 +38,7 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientId) }, schedulers.ui())
       .addConsumer(OpenLinkIdWithPatientScreen::class.java, { uiActions.openLinkIdWithPatientScreen(it.patientId, it.identifier) }, schedulers.ui())
       .addConsumer(OpenScannedQrCodeSheet::class.java, { uiActions.openScannedQrCodeSheet(it.identifier) }, schedulers.ui())
-      .addConsumer(ShowNoPatientsInFacility::class.java, { uiActions.showNoPatientsInFacility(it.facility) }, schedulers.ui())
       .addAction(ShowNoSearchResults::class.java, { uiActions.showNoSearchResults() }, schedulers.ui())
-      .addAction(HideNoPatientsInFacility::class.java, uiActions::hideNoPatientsInFacility, schedulers.ui())
       .addAction(HideNoSearchResults::class.java, uiActions::hideNoSearchResults, schedulers.ui())
       .addTransformer(SaveNewOngoingPatientEntry::class.java, saveNewOngoingPatientEntry())
       .addConsumer(OpenPatientEntryScreen::class.java, { uiActions.openPatientEntryScreen(it.facility) }, schedulers.ui())
@@ -106,8 +106,13 @@ class InstantSearchEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { patientRepository.allPatientsInFacility(it.facility) }
-          .map(::AllPatientsLoaded)
+          .switchMap { (facility) ->
+            pagerFactory.createPager(
+                sourceFactory = { patientRepository.allPatientsInFacility(facilityId = facility.uuid) },
+                pageSize = instantSearchConfig.pagingLoadSize
+            )
+          }
+          .map(::AllPatientsInFacilityLoaded)
     }
   }
 

@@ -45,6 +45,9 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F> 
   protected val binding: B
     get() = _binding!!
 
+  val currentModel
+    get() = controller.model
+
   abstract fun defaultModel(): M
 
   abstract fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): B

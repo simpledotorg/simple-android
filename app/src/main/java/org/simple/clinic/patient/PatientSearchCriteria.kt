@@ -13,12 +13,6 @@ sealed class PatientSearchCriteria(val additionalIdentifier: Identifier?) : Parc
   ) : PatientSearchCriteria(_additionalIdentifier)
 
   @Parcelize
-  data class PhoneNumber(
-      val phoneNumber: String,
-      private val _additionalIdentifier: Identifier? = null
-  ) : PatientSearchCriteria(_additionalIdentifier)
-
-  @Parcelize
   data class NumericCriteria(
       val numericCriteria: String,
       private val _additionalIdentifier: Identifier? = null

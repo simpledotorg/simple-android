@@ -53,7 +53,6 @@ class PatientRepository @Inject constructor(
     return when (criteria) {
       is Name -> searchByNamePagingSource(criteria.patientName, facilityId)
       is NumericCriteria -> searchByNumberPagingSource(criteria.numericCriteria, facilityId)
-      else -> throw IllegalArgumentException("Unknown search criteria: $criteria")
     }
   }
 

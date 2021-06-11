@@ -3,10 +3,10 @@ package org.simple.clinic.instantsearch
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
-import org.simple.clinic.patient.PatientPrefillInfo
 
 @Parcelize
 data class InstantSearchModel(
@@ -39,10 +39,11 @@ data class InstantSearchModel(
   companion object {
     fun create(
         additionalIdentifier: Identifier?,
-        patientPrefillInfo: PatientPrefillInfo?
+        patientPrefillInfo: PatientPrefillInfo?,
+        searchQuery: String?
     ) = InstantSearchModel(
         facility = null,
-        searchQuery = null,
+        searchQuery = searchQuery,
         additionalIdentifier = additionalIdentifier,
         instantSearchProgressState = null,
         scannedQrCodeSheetAlreadyOpened = false,

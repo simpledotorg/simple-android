@@ -45,6 +45,7 @@
             android:textAppearance="?attr/textAppearanceBody0"
             android:textColor="?attr/colorOnSurface"
             android:textColorHint="@color/color_on_surface_67"
+            android:saveEnabled="false"
             tools:ignore="UnusedAttribute" />
 
         </com.google.android.material.textfield.TextInputLayout>

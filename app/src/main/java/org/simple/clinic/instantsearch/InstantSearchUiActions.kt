@@ -24,4 +24,5 @@ interface InstantSearchUiActions {
   fun showKeyboard()
   fun openQrCodeScanner()
   fun showNHIDErrorDialog()
+  fun prefillSearchQuery(initialSearchQuery: String)
 }

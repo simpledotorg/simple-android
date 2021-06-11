@@ -59,3 +59,5 @@ object OpenQrCodeScanner : InstantSearchEffect()
 data class CheckIfPatientAlreadyHasAnExistingNHID(val patientId: UUID) : InstantSearchEffect()
 
 object ShowNHIDErrorDialog : InstantSearchEffect()
+
+data class PrefillSearchQuery(val searchQuery: String) : InstantSearchEffect()

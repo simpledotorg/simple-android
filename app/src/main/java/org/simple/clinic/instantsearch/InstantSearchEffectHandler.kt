@@ -112,7 +112,7 @@ class InstantSearchEffectHandler @AssistedInject constructor(
                 pageSize = instantSearchConfig.pagingLoadSize
             )
           }
-          .map(::AllPatientsLoaded)
+          .map(::AllPatientsInFacilityLoaded)
     }
   }
 

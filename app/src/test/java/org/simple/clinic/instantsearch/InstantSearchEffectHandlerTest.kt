@@ -85,7 +85,7 @@ class InstantSearchEffectHandlerTest {
     testCase.dispatch(LoadAllPatients(facility))
 
     // then
-    testCase.assertOutgoingEvents(AllPatientsLoaded(expectedPagingData))
+    testCase.assertOutgoingEvents(AllPatientsInFacilityLoaded(expectedPagingData))
 
     verifyZeroInteractions(uiActions)
   }

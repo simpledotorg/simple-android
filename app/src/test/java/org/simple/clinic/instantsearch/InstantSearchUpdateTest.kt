@@ -83,7 +83,7 @@ class InstantSearchUpdateTest {
 
     updateSpec
         .given(facilityLoadedModel)
-        .whenEvent(AllPatientsLoaded(patients))
+        .whenEvent(AllPatientsInFacilityLoaded(patients))
         .then(assertThatNext(
             hasModel(facilityLoadedModel.allPatientsLoaded()),
             hasEffects(ShowAllPatients(patients, facility))

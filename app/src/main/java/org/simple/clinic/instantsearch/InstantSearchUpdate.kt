@@ -37,7 +37,7 @@ class InstantSearchUpdate @Inject constructor(
   ): Next<InstantSearchModel, InstantSearchEffect> {
     return when (event) {
       is CurrentFacilityLoaded -> currentFacilityLoaded(model, event)
-      is AllPatientsLoaded -> allPatientsLoaded(model, event)
+      is AllPatientsInFacilityLoaded -> allPatientsLoaded(model, event)
       is SearchResultsLoaded -> searchResultsLoaded(model, event)
       is SearchQueryValidated -> searchQueryValidated(model, event)
       is SearchResultClicked -> searchResultClicked(model, event)
@@ -178,7 +178,7 @@ class InstantSearchUpdate @Inject constructor(
 
   private fun allPatientsLoaded(
       model: InstantSearchModel,
-      event: AllPatientsLoaded
+      event: AllPatientsInFacilityLoaded
   ): Next<InstantSearchModel, InstantSearchEffect> {
     if (model.hasSearchQuery) return noChange()
 

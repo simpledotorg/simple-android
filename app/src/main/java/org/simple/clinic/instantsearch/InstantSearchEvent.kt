@@ -15,7 +15,7 @@ sealed class InstantSearchEvent : UiEvent
 
 data class CurrentFacilityLoaded(val facility: Facility) : InstantSearchEvent()
 
-data class AllPatientsLoaded(val patients: PagingData<PatientSearchResult>) : InstantSearchEvent()
+data class AllPatientsInFacilityLoaded(val patients: PagingData<PatientSearchResult>) : InstantSearchEvent()
 
 data class SearchResultsLoaded(val patientsSearchResults: List<PatientSearchResult>) : InstantSearchEvent()
 

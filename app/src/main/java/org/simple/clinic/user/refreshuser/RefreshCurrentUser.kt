@@ -9,7 +9,7 @@ import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.RoomDao
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import timber.log.Timber
 import javax.inject.Inject
 

@@ -4,7 +4,7 @@ import android.Manifest
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.platform.util.RuntimePermissionResult
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.RequiresPermission
 import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate

@@ -11,7 +11,7 @@ import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate

@@ -40,7 +40,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.registration.phone.LengthBasedNumberValidator
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserClock

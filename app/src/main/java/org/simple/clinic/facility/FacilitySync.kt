@@ -5,7 +5,7 @@ import io.reactivex.Completable
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.read
 import java.io.IOException
 import javax.inject.Inject

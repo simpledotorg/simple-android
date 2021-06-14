@@ -16,7 +16,7 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.storage.DaoWithUpsert
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID

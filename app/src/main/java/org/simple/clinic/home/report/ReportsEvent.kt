@@ -1,6 +1,6 @@
 package org.simple.clinic.home.report
 
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.widgets.UiEvent
 
 sealed class ReportsEvent : UiEvent

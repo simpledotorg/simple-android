@@ -4,7 +4,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.f2prateek.rx.preferences2.Preference
 import org.simple.clinic.storage.inTransaction
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
 

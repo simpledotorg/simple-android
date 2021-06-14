@@ -6,7 +6,7 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.toOptional
 import java.util.UUID
 import javax.inject.Inject

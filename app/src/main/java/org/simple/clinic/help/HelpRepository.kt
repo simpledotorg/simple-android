@@ -4,7 +4,7 @@ import androidx.annotation.VisibleForTesting
 import io.reactivex.Observable
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.storage.text.TextStore
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import javax.inject.Inject
 
 @AppScope

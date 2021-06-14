@@ -25,7 +25,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.sync.BusinessIdPayload
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 import java.time.Instant
 import java.util.UUID

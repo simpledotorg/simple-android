@@ -6,7 +6,7 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import java.time.Instant
 
 private val SHOW_APP_LOCK_FOR_USER_STATES = setOf(

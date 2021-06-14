@@ -1,7 +1,7 @@
 package org.simple.clinic.util.preference
 
 import com.f2prateek.rx.preferences2.Preference
-import org.simple.clinic.util.Optional
+import java.util.Optional
 
 class OptionalRxPreferencesConverter<T>(private val valueConverter: Preference.Converter<T>) : Preference.Converter<Optional<T>> {
 

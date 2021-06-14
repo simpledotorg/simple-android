@@ -9,7 +9,7 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.readErrorResponseJson
 import retrofit2.HttpException
 import timber.log.Timber

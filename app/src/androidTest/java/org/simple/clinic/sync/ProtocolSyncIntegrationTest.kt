@@ -15,7 +15,7 @@ import org.simple.clinic.protocol.ProtocolSyncApi
 import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.Rules
 import javax.inject.Inject
 import javax.inject.Named

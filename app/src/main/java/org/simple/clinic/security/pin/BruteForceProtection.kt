@@ -7,7 +7,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.timer
 import java.time.Duration

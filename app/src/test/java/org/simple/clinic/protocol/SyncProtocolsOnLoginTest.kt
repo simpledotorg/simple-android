@@ -14,7 +14,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 
 class SyncProtocolsOnLoginTest {

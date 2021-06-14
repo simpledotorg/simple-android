@@ -42,7 +42,7 @@ import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionModu
 import org.simple.clinic.user.SessionModule
 import org.simple.clinic.user.clearpatientdata.ClearPatientDataModule
 import org.simple.clinic.util.ElapsedRealtimeClock
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.RealUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock

@@ -15,7 +15,7 @@ import org.simple.clinic.remoteconfig.RemoteConfigService
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ErrorResolver
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError

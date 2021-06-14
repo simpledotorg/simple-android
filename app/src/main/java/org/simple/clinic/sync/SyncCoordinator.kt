@@ -2,7 +2,7 @@ package org.simple.clinic.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.toNullable
 import timber.log.Timber
 import javax.inject.Inject

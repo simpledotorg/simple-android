@@ -1,7 +1,7 @@
 package org.simple.clinic.security.pin
 
 import com.squareup.moshi.JsonClass
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
 import java.time.Instant

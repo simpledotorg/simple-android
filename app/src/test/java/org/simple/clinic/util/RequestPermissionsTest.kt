@@ -16,6 +16,7 @@ import org.simple.clinic.util.RequestPermissionsTest.Event.FirstEvent
 import org.simple.clinic.util.RequestPermissionsTest.Event.FourthEvent
 import org.simple.clinic.util.RequestPermissionsTest.Event.SecondEvent
 import org.simple.clinic.util.RequestPermissionsTest.Event.ThirdEvent
+import java.util.Optional
 
 class RequestPermissionsTest {
 

@@ -1,7 +1,7 @@
 package org.simple.clinic.bp
 
 import org.simple.clinic.R
-import org.simple.clinic.util.Optional
+import java.util.Optional
 
 enum class BloodPressureLevel(private val urgency: Int, val displayTextRes: Optional<Int>) {
 

@@ -9,7 +9,7 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.Instant
 

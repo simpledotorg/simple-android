@@ -8,6 +8,7 @@ import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.overdue.Appointment.AppointmentType
 import org.simple.clinic.overdue.Appointment.Status
+import org.simple.clinic.util.Unicode
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
@@ -30,6 +31,10 @@ data class RecentPatient(
 
     val updatedAt: Instant
 ) : Parcelable {
+
+  override fun toString(): String {
+    return "RecentPatient(${Unicode.redacted})"
+  }
 
   @Dao
   interface RoomDao {

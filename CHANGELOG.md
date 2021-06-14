@@ -9,6 +9,7 @@
 - Bump Paging to v3.0.0
 - Use new method of SQL performance profiling (transform generated Room DAOs)
 - Prefill search query in `InstantSearchScreen`
+- Redact logs with `RecentPatient`
 - [In Progress: 10 June 2021] Paginate search results in `InstantSearchScreen`
 
 ### Changes

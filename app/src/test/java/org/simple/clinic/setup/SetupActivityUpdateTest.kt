@@ -12,7 +12,6 @@ import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason.Rooted
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUtcClock
@@ -191,7 +190,7 @@ class SetupActivityUpdateTest {
   }
 
   private fun previouslyLoggedInUserFetched(user: User): UserDetailsFetched {
-    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Just(user), userSelectedCountry = None())
+    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Optional.of(user), userSelectedCountry = None())
   }
 
   private fun onboardedUserWithoutLoggingInFetched(): UserDetailsFetched {
@@ -203,13 +202,13 @@ class SetupActivityUpdateTest {
   }
 
   private fun loggedInUserFetched(user: User, country: Country): UserDetailsFetched {
-    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Just(user), userSelectedCountry = Just(country))
+    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Optional.of(user), userSelectedCountry = Optional.of(country))
   }
 }
 
 private fun SetupActivityModel.previouslyLoggedInUser(user: User): SetupActivityModel {
   return this
-      .withLoggedInUser(Just(user))
+      .withLoggedInUser(Optional.of(user))
       .withSelectedCountry(None())
 }
 
@@ -221,6 +220,6 @@ private fun SetupActivityModel.completelyNewUser(): SetupActivityModel {
 
 private fun SetupActivityModel.loggedInUser(user: User, country: Country): SetupActivityModel {
   return this
-      .withLoggedInUser(Just(user))
-      .withSelectedCountry(Just(country))
+      .withLoggedInUser(Optional.of(user))
+      .withSelectedCountry(Optional.of(country))
 }

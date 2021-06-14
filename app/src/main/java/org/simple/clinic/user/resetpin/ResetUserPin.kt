@@ -15,7 +15,6 @@ import org.simple.clinic.user.resetpin.ResetPinResult.NetworkError
 import org.simple.clinic.user.resetpin.ResetPinResult.Success
 import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
 import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import timber.log.Timber
@@ -53,7 +52,7 @@ class ResetUserPin @Inject constructor(
 
   private fun storeUserAndAccessToken(response: ForgotPinResponse): Completable {
     Timber.i("Storing user and access token. Is token blank? ${response.accessToken.isBlank()}")
-    accessTokenPreference.set(Just(response.accessToken))
+    accessTokenPreference.set(Optional.of(response.accessToken))
 
     val user = userFromPayload(response.loggedInUser)
     return storeUser(user, response.loggedInUser.registrationFacilityId)

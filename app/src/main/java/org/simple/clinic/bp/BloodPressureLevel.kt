@@ -1,23 +1,22 @@
 package org.simple.clinic.bp
 
 import org.simple.clinic.R
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 
 enum class BloodPressureLevel(private val urgency: Int, val displayTextRes: Optional<Int>) {
 
-  EXTREMELY_HIGH(4, Just(R.string.bloodpressure_level_high)),
+  EXTREMELY_HIGH(4, Optional.of(R.string.bloodpressure_level_high)),
 
-  VERY_HIGH(3, Just(R.string.bloodpressure_level_high)),
+  VERY_HIGH(3, Optional.of(R.string.bloodpressure_level_high)),
 
-  MODERATELY_HIGH(2, Just(R.string.bloodpressure_level_high)),
+  MODERATELY_HIGH(2, Optional.of(R.string.bloodpressure_level_high)),
 
   MILDLY_HIGH(1, None()),
 
   NORMAL(0, None()),
 
-  LOW(-1, Just(R.string.bloodpressure_level_low));
+  LOW(-1, Optional.of(R.string.bloodpressure_level_low));
 
   val isHigh: Boolean
     get() = when (this) {

@@ -11,8 +11,8 @@ import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
@@ -99,7 +99,7 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel().overdueAppointmentLoaded(Just(overdueAppointment)))
+    uiRenderer.render(defaultModel().overdueAppointmentLoaded(Optional.of(overdueAppointment)))
 
     // then
     verify(ui).hideSecureCallUi()

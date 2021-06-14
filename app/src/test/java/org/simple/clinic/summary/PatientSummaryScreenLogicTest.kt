@@ -33,7 +33,6 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
@@ -80,7 +79,7 @@ class PatientSummaryScreenLogicTest {
 
   @Before
   fun setUp() {
-    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Just(patientProfile))
+    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Optional.of(patientProfile))
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn None()
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None()
   }
@@ -97,12 +96,12 @@ class PatientSummaryScreenLogicTest {
       cancelReason: AppointmentCancelReason
   ) {
     val canceledAppointment = TestData.appointment(status = Cancelled, cancelReason = cancelReason)
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Just(canceledAppointment)
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Optional.of(canceledAppointment)
 
     val phoneNumber = TestData.patientPhoneNumber(
         patientUuid = patientUuid,
         updatedAt = canceledAppointment.updatedAt - Duration.ofHours(2))
-    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Just(phoneNumber)
+    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Optional.of(phoneNumber)
 
     startMobiusLoop(openIntention)
 
@@ -120,12 +119,12 @@ class PatientSummaryScreenLogicTest {
       cancelReason: AppointmentCancelReason
   ) {
     val canceledAppointment = TestData.appointment(status = Cancelled, cancelReason = cancelReason)
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Just(canceledAppointment)
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Optional.of(canceledAppointment)
 
     val phoneNumber = TestData.patientPhoneNumber(
         patientUuid = patientUuid,
         updatedAt = canceledAppointment.updatedAt + Duration.ofHours(2))
-    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Just(phoneNumber)
+    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Optional.of(phoneNumber)
 
     startMobiusLoop(openIntention)
 

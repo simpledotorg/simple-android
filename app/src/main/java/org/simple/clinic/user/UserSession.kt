@@ -17,7 +17,6 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.extractIfPresent
@@ -74,7 +73,7 @@ class UserSession @Inject constructor(
   }
 
   fun storeUserAndAccessToken(userPayload: LoggedInUserPayload, accessToken: String): Completable {
-    accessTokenPreference.set(Just(accessToken))
+    accessTokenPreference.set(Optional.of(accessToken))
     return storeUser(
         userFromPayload(userPayload, LOGGED_IN)
     )
@@ -134,7 +133,7 @@ class UserSession @Inject constructor(
   fun loggedInUser(): Observable<Optional<User>> {
     return appDatabase.userDao().user()
         .toObservable()
-        .map { if (it.isEmpty()) None<User>() else Just(it.first()) }
+        .map { if (it.isEmpty()) None<User>() else Optional.of(it.first()) }
   }
 
   @Deprecated(

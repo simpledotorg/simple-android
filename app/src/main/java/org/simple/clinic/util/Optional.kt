@@ -57,14 +57,14 @@ sealed class Optional<T>(
   companion object {
 
     private fun <T> fromJavaOptional(optional: JOptional<T>): Optional<T> {
-      return if (optional.isPresent) Just(optional.get()) else None()
+      return if (optional.isPresent) of(optional.get()) else None()
     }
 
     fun <T> empty(): Optional<T> = None()
 
     fun <T> of(value: T): Optional<T> = Just(value)
 
-    fun <T> ofNullable(value: T?): Optional<T> = if (value != null) Just(value) else None()
+    fun <T> ofNullable(value: T?): Optional<T> = if (value != null) of(value) else None()
   }
 }
 

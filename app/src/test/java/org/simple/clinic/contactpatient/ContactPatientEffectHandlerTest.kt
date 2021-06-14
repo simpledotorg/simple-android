@@ -14,7 +14,7 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
-import org.simple.clinic.util.Just
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -52,7 +52,7 @@ class ContactPatientEffectHandlerTest {
   fun `when the load patient profile effect is received, the patient profile must be loaded`() {
     // given
     val patientProfile = TestData.patientProfile(patientUuid = patientUuid)
-    whenever(patientRepository.patientProfileImmediate(patientUuid)) doReturn Just(patientProfile)
+    whenever(patientRepository.patientProfileImmediate(patientUuid)) doReturn Optional.of(patientProfile)
 
     // when
     testCase.dispatch(LoadPatientProfile(patientUuid))
@@ -65,7 +65,7 @@ class ContactPatientEffectHandlerTest {
   @Test
   fun `when the load overdue appointment effect is received, the latest overdue appointment for the patient must be loaded`() {
     // given
-    val overdueAppointment = Just(TestData.overdueAppointment(
+    val overdueAppointment = Optional.of(TestData.overdueAppointment(
         appointmentUuid = UUID.fromString("bb291aca-f953-4012-a9c3-aa05685f86f9"),
         patientUuid = patientUuid
     ))

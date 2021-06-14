@@ -35,7 +35,7 @@ class MoshiOptionalAdapterFactory : JsonAdapter.Factory {
       return if (reader.peek() == JsonReader.Token.NULL) {
         None<Any>()
       } else {
-        Just(moshi.adapter<Any>(type).fromJson(reader)!!)
+        Optional.of(moshi.adapter<Any>(type).fromJson(reader)!!)
       }
     }
   }

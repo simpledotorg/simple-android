@@ -17,7 +17,6 @@ import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
@@ -45,7 +44,7 @@ class BloodSugarHistoryScreenEffectHandlerTest {
   fun `when load patient effect is received, then load patient`() {
     // given
     val patient = TestData.patient(uuid = patientUuid)
-    whenever(patientRepository.patient(patientUuid)) doReturn Observable.just<Optional<Patient>>(Just(patient))
+    whenever(patientRepository.patient(patientUuid)) doReturn Observable.just<Optional<Patient>>(Optional.of(patient))
 
     // when
     testCase.dispatch(LoadPatient(patientUuid))

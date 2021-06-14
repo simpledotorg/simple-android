@@ -10,7 +10,7 @@ class OptionalRxPreferencesConverter<T>(private val valueConverter: Preference.C
   override fun deserialize(serialized: String): Optional<T> {
     return when {
       serialized.isEmpty() -> None()
-      else -> Just(valueConverter.deserialize(serialized))
+      else -> Optional.of(valueConverter.deserialize(serialized))
     }
   }
 

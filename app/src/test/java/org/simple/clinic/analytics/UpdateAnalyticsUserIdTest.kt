@@ -15,8 +15,8 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 
 @RunWith(JUnitParamsRunner::class)
@@ -60,7 +60,7 @@ class UpdateAnalyticsUserIdTest {
   ) {
     // given
     val user = TestData.loggedInUser(loggedInStatus = loggedInStatus)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
     // when
     updateAnalyticsUserId.listen()
@@ -79,7 +79,7 @@ class UpdateAnalyticsUserIdTest {
   ) {
     // given
     val user = TestData.loggedInUser(loggedInStatus = loggedInStatus)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
     // when
     updateAnalyticsUserId.listen()

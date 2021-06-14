@@ -7,7 +7,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Rules
 import java.net.URI
@@ -55,6 +54,6 @@ class SelectedCountryPersistenceAndroidTest {
         isdCode = "91"
     )
     assertThat(selectedCountryPreference.get())
-        .isEqualTo(Just(expectedSavedCountry))
+        .isEqualTo(Optional.of(expectedSavedCountry))
   }
 }

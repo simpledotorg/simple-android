@@ -9,7 +9,6 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.readErrorResponseJson
 import retrofit2.HttpException
@@ -44,7 +43,7 @@ class LoginUserWithOtp @Inject constructor(
     return Completable
         .fromAction { userDao.createOrUpdate(user) }
         .andThen(facilityRepository.setCurrentFacility(facilityUuid))
-        .andThen(Completable.fromAction { accessTokenPreference.set(Just(response.accessToken)) })
+        .andThen(Completable.fromAction { accessTokenPreference.set(Optional.of(response.accessToken)) })
         .andThen(Single.just(user))
   }
 

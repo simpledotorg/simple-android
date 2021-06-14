@@ -34,7 +34,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
-import org.simple.clinic.util.Just
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -662,7 +662,7 @@ class ScheduleAppointmentLogicTest {
     val updatedFacilityUuid = updatedFacility.uuid
     val date = LocalDate.parse("2019-01-28")
 
-    whenever(facilityRepository.facility(updatedFacilityUuid)).thenReturn(Just(updatedFacility))
+    whenever(facilityRepository.facility(updatedFacilityUuid)).thenReturn(Optional.of(updatedFacility))
 
     //when
     sheetCreated()
@@ -709,7 +709,7 @@ class ScheduleAppointmentLogicTest {
     val updatedFacilityUuid = UUID.fromString("60b32059-fe85-4b90-8a5d-984e56f9b001")
     val updatedFacility = TestData.facility(uuid = updatedFacilityUuid, name = "new facility")
 
-    whenever(facilityRepository.facility(updatedFacilityUuid)).thenReturn(Just(updatedFacility))
+    whenever(facilityRepository.facility(updatedFacilityUuid)).thenReturn(Optional.of(updatedFacility))
 
     //when
     sheetCreated()

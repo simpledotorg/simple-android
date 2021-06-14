@@ -27,7 +27,6 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toUser
@@ -87,7 +86,7 @@ class LoginUserWithOtpTest {
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
 
     // then
-    verify(accessTokenPref).set(Just(accessToken))
+    verify(accessTokenPref).set(Optional.of(accessToken))
     assertThat(loginResult).isEqualTo(Success)
   }
 

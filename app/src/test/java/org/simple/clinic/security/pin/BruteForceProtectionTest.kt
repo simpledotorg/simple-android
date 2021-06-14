@@ -7,8 +7,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
@@ -47,7 +47,7 @@ class BruteForceProtectionTest {
 
     verify(state).set(BruteForceProtectionState(
         failedAuthCount = config.limitOfFailedAttempts,
-        limitReachedAt = Just(Instant.now(clock))))
+        limitReachedAt = Optional.of(Instant.now(clock))))
   }
 
   @Test
@@ -55,7 +55,7 @@ class BruteForceProtectionTest {
     val timeOfLastAttempt = Instant.now(clock)
     val bruteForceProtectionState = BruteForceProtectionState(
         failedAuthCount = config.limitOfFailedAttempts,
-        limitReachedAt = Just(timeOfLastAttempt))
+        limitReachedAt = Optional.of(timeOfLastAttempt))
     whenever(state.asObservable()).thenReturn(Observable.just(bruteForceProtectionState))
 
     clock.advanceBy(Duration.ofMinutes(2))
@@ -63,7 +63,7 @@ class BruteForceProtectionTest {
 
     verify(state).set(BruteForceProtectionState(
         failedAuthCount = config.limitOfFailedAttempts + 1,
-        limitReachedAt = Just(timeOfLastAttempt)))
+        limitReachedAt = Optional.of(timeOfLastAttempt)))
   }
 
   @Test

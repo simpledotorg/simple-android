@@ -54,17 +54,6 @@ sealed class Optional<T>(
     return wrapped.toString()
   }
 
-  /**
-   * Unwraps this optional into the value it holds or null if there is no value held.
-   */
-  @Deprecated(message = """
-    Destructuring `Optional` is deprecated since we are moving to the Java Optional class (https://github.com/simpledotorg/simple-android/issues/1381).
-    
-    Do not use this anymore and use some of the alternate methods on the class.
-  """)
-  @Suppress("DeprecatedCallableAddReplaceWith")
-  operator fun component1(): T? = if (isPresent()) get() else null
-
   companion object {
 
     private fun <T> fromJavaOptional(optional: JOptional<T>): Optional<T> {

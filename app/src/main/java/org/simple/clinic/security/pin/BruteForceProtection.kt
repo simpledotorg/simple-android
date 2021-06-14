@@ -7,7 +7,6 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.timer
@@ -48,7 +47,7 @@ class BruteForceProtection @Inject constructor(
       maxAllowedFailedAttempts: Int
   ): BruteForceProtectionState {
     val isLimitReached = state.failedAuthCount >= maxAllowedFailedAttempts
-    return if (isLimitReached && state.limitReachedAt is None) {
+    return if (isLimitReached && !state.limitReachedAt.isPresent()) {
       state.failedAttemptLimitReached(utcClock)
     } else {
       state

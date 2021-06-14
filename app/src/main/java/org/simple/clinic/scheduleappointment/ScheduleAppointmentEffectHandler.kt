@@ -17,7 +17,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.plus
@@ -108,11 +107,9 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
   }
 
   private fun defaultTimeToAppointment(protocol: Optional<Protocol>): TimeToAppointment {
-    return if (protocol is Just) {
-      TimeToAppointment.Days(protocol.value.followUpDays)
-    } else {
-      appointmentConfig.defaultTimeToAppointment
-    }
+    return protocol
+        .map { TimeToAppointment.Days(it.followUpDays) as TimeToAppointment }
+        .orElse(appointmentConfig.defaultTimeToAppointment)
   }
 
   private fun generatePotentialAppointmentDate(scheduleAppointmentIn: TimeToAppointment): PotentialAppointmentDate {

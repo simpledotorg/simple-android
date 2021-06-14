@@ -4,10 +4,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonReader
 import com.squareup.moshi.JsonWriter
 import com.squareup.moshi.Moshi
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-
 import java.io.IOException
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
@@ -24,9 +21,11 @@ class MoshiOptionalAdapterFactory : JsonAdapter.Factory {
 
     @Throws(IOException::class)
     override fun toJson(writer: JsonWriter, value: Optional<*>?) {
-      when (value) {
-        is Just -> moshi.adapter<Any>(type).toJson(writer, value.value)
-        is None -> writer.nullValue()
+      value?.run {
+        if (value.isPresent())
+          moshi.adapter<Any>(type).toJson(writer, value.get())
+        else
+          writer.nullValue()
       }
     }
 

@@ -24,10 +24,8 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityR
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
-import org.simple.clinic.util.isEmpty
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.uuid.UuidGenerator
@@ -243,10 +241,10 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     val appointment = appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)
 
     return when {
-      phoneNumber.isEmpty() || appointment.isEmpty() -> false
+      !phoneNumber.isPresent() || !appointment.isPresent() -> false
       else -> {
-        val actualNumber = (phoneNumber as Just).value
-        val actualAppointment = (appointment as Just).value
+        val actualNumber = phoneNumber.get()
+        val actualAppointment = appointment.get()
 
         val wasAppointmentUpdatedAfterPhoneNumber = actualAppointment.updatedAt > actualNumber.updatedAt
         actualAppointment.wasCancelledBecauseOfInvalidPhoneNumber() && wasAppointmentUpdatedAfterPhoneNumber

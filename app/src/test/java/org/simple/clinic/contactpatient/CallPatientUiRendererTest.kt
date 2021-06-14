@@ -11,7 +11,6 @@ import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUserClock
 import java.time.Instant
@@ -112,7 +111,7 @@ class CallPatientUiRendererTest {
   @Test
   fun `hide the call result section if there is no overdue appointment`() {
     // when
-    uiRenderer.render(defaultModel().overdueAppointmentLoaded(None()))
+    uiRenderer.render(defaultModel().overdueAppointmentLoaded(Optional.empty()))
 
     // then
     verify(ui).hideSecureCallUi()

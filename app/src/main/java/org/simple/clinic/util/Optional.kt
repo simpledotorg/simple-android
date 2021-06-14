@@ -41,7 +41,7 @@ sealed class Optional<T>(
   fun <U> map(mapper: Function<T, U>): Optional<U> = fromJavaOptional(wrapped.map(mapper))
 
   fun <U> flatMap(mapper: Function<T, Optional<U>>): Optional<U> {
-    return if (isPresent()) mapper.apply(get()) else None()
+    return if (isPresent()) mapper.apply(get()) else empty()
   }
 
   fun orElse(other: T): T = wrapped.orElse(other)
@@ -57,14 +57,14 @@ sealed class Optional<T>(
   companion object {
 
     private fun <T> fromJavaOptional(optional: JOptional<T>): Optional<T> {
-      return if (optional.isPresent) of(optional.get()) else None()
+      return if (optional.isPresent) of(optional.get()) else empty()
     }
 
     fun <T> empty(): Optional<T> = None()
 
     fun <T> of(value: T): Optional<T> = Just(value)
 
-    fun <T> ofNullable(value: T?): Optional<T> = if (value != null) of(value) else None()
+    fun <T> ofNullable(value: T?): Optional<T> = if (value != null) of(value) else empty()
   }
 }
 

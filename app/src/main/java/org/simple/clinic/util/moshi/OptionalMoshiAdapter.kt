@@ -33,7 +33,7 @@ class MoshiOptionalAdapterFactory : JsonAdapter.Factory {
     @Throws(IOException::class)
     override fun fromJson(reader: JsonReader): Optional<*>? {
       return if (reader.peek() == JsonReader.Token.NULL) {
-        None<Any>()
+        Optional.empty<Any>()
       } else {
         Optional.of(moshi.adapter<Any>(type).fromJson(reader)!!)
       }

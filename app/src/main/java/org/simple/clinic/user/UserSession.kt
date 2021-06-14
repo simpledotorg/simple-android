@@ -17,7 +17,6 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.filterAndUnwrapJust
@@ -133,7 +132,7 @@ class UserSession @Inject constructor(
   fun loggedInUser(): Observable<Optional<User>> {
     return appDatabase.userDao().user()
         .toObservable()
-        .map { if (it.isEmpty()) None<User>() else Optional.of(it.first()) }
+        .map { if (it.isEmpty()) Optional.empty() else Optional.of(it.first()) }
   }
 
   @Deprecated(

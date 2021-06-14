@@ -31,7 +31,6 @@ import org.simple.clinic.drugs.selection.dosage.DosagePickerUpdate
 import org.simple.clinic.drugs.selection.dosage.DosageSelected
 import org.simple.clinic.drugs.selection.dosage.NoneSelected
 import org.simple.clinic.protocol.ProtocolRepository
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -166,7 +165,7 @@ class DosagePickerSheetLogicTest {
   }
 
   private fun setupController(
-      existingPrescriptionUuid: Optional<UUID> = None()
+      existingPrescriptionUuid: Optional<UUID> = Optional.empty()
   ) {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),

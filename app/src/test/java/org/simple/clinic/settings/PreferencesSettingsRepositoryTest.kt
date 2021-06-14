@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import java.util.Locale
 
@@ -22,7 +21,7 @@ class PreferencesSettingsRepositoryTest {
   @Test
   fun `if user selected locale is not set, fetching the current language should return the default language`() {
     // given
-    whenever(preference.get()).doReturn(None())
+    whenever(preference.get()).doReturn(Optional.empty())
 
     // then
     repository

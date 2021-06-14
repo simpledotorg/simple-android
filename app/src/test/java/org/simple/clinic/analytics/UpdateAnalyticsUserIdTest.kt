@@ -15,7 +15,6 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 
@@ -40,7 +39,7 @@ class UpdateAnalyticsUserIdTest {
   @Test
   fun `when there is no logged in user present, the user id must not be set`() {
     // given
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(None()))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.empty()))
 
     // when
     updateAnalyticsUserId.listen()

@@ -12,7 +12,6 @@ import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason.Rooted
 import org.simple.clinic.user.User
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
@@ -190,15 +189,15 @@ class SetupActivityUpdateTest {
   }
 
   private fun previouslyLoggedInUserFetched(user: User): UserDetailsFetched {
-    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Optional.of(user), userSelectedCountry = None())
+    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Optional.of(user), userSelectedCountry = Optional.empty())
   }
 
   private fun onboardedUserWithoutLoggingInFetched(): UserDetailsFetched {
-    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = None(), userSelectedCountry = None())
+    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Optional.empty(), userSelectedCountry = Optional.empty())
   }
 
   private fun completelyNewUserFetched(): UserDetailsFetched {
-    return UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = None(), userSelectedCountry = None())
+    return UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = Optional.empty(), userSelectedCountry = Optional.empty())
   }
 
   private fun loggedInUserFetched(user: User, country: Country): UserDetailsFetched {
@@ -209,13 +208,13 @@ class SetupActivityUpdateTest {
 private fun SetupActivityModel.previouslyLoggedInUser(user: User): SetupActivityModel {
   return this
       .withLoggedInUser(Optional.of(user))
-      .withSelectedCountry(None())
+      .withSelectedCountry(Optional.empty())
 }
 
 private fun SetupActivityModel.completelyNewUser(): SetupActivityModel {
   return this
-      .withLoggedInUser(None())
-      .withSelectedCountry(None())
+      .withLoggedInUser(Optional.empty())
+      .withSelectedCountry(Optional.empty())
 }
 
 private fun SetupActivityModel.loggedInUser(user: User, country: Country): SetupActivityModel {

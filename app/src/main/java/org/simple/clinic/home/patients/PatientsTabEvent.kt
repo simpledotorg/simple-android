@@ -3,7 +3,6 @@ package org.simple.clinic.home.patients
 import android.Manifest
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.user.User
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RequiresPermission
 import org.simple.clinic.widgets.UiEvent
@@ -35,7 +34,7 @@ class UserApprovedStatusDismissed : PatientsTabEvent() {
 }
 
 data class ScanCardIdButtonClicked(
-    override var permission: Optional<RuntimePermissionResult> = None(),
+    override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
     override val permissionString: String = Manifest.permission.CAMERA,
     override val permissionRequestCode: Int = 1
 ) : PatientsTabEvent(), RequiresPermission {

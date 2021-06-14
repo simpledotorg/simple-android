@@ -1,7 +1,6 @@
 package org.simple.clinic.bp
 
 import org.simple.clinic.R
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 
 enum class BloodPressureLevel(private val urgency: Int, val displayTextRes: Optional<Int>) {
@@ -12,9 +11,9 @@ enum class BloodPressureLevel(private val urgency: Int, val displayTextRes: Opti
 
   MODERATELY_HIGH(2, Optional.of(R.string.bloodpressure_level_high)),
 
-  MILDLY_HIGH(1, None()),
+  MILDLY_HIGH(1, Optional.empty()),
 
-  NORMAL(0, None()),
+  NORMAL(0, Optional.empty()),
 
   LOW(-1, Optional.of(R.string.bloodpressure_level_low));
 

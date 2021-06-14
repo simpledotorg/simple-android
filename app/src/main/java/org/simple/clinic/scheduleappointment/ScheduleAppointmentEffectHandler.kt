@@ -18,7 +18,6 @@ import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.plus
@@ -103,7 +102,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
 
   private fun currentProtocol(facility: Facility): Optional<Protocol> {
     return if (facility.protocolUuid == null)
-      None()
+      Optional.empty()
     else
       protocolRepository.protocolImmediate(facility.protocolUuid).toOptional()
   }

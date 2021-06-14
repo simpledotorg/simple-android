@@ -24,7 +24,6 @@ import org.simple.clinic.insert
 import org.simple.clinic.integer
 import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.string
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUserClock
@@ -75,8 +74,8 @@ class DatabaseMigrationAndroidTest {
 
     helper.migrations = migrations
 
-    lastFacilityPullToken.set(None())
-    lastPatientPullToken.set(None())
+    lastFacilityPullToken.set(Optional.empty())
+    lastPatientPullToken.set(Optional.empty())
   }
 
   @Test
@@ -842,7 +841,7 @@ class DatabaseMigrationAndroidTest {
       assertThat(it.string("deletedAt")).isEqualTo("2018-09-25T11:20:42.008Z")
     }
 
-    assertThat(lastFacilityPullToken.get()).isEqualTo(None<String>())
+    assertThat(lastFacilityPullToken.get()).isEqualTo(Optional.empty<String>())
   }
 
   @Test
@@ -1326,7 +1325,7 @@ class DatabaseMigrationAndroidTest {
     val db_v30 = helper.migrateTo(30)
 
     db_v30.assertColumnCount(tableName, expectedColumnCount)
-    assertThat(lastPatientPullToken.get()).isEqualTo(None<String>())
+    assertThat(lastPatientPullToken.get()).isEqualTo(Optional.empty<String>())
   }
 
   @Test

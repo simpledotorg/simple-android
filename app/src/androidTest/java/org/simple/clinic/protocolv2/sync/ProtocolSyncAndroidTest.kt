@@ -11,7 +11,6 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.rules.LocalAuthenticationRule
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Rules
 import javax.inject.Inject
@@ -45,7 +44,7 @@ class ProtocolSyncAndroidTest {
 
   @Test
   fun when_pulling_protocols_from_server_then_paginate_till_server_has_no_records_anymore() {
-    lastPullToken.set(None())
+    lastPullToken.set(Optional.empty())
 
     sync.pull()
 

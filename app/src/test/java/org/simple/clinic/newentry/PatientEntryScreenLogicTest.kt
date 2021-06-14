@@ -40,7 +40,6 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.registration.phone.LengthBasedNumberValidator
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -344,7 +343,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged(""))
       onNext(DateOfBirthChanged(""))
       onNext(AgeChanged(""))
-      onNext(GenderChanged(None()))
+      onNext(GenderChanged(Optional.empty()))
       onNext(ColonyOrVillageChanged(""))
       onNext(DistrictChanged(""))
       onNext(StateChanged(""))
@@ -402,7 +401,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged(""))
       onNext(DateOfBirthChanged(""))
       onNext(AgeChanged(""))
-      onNext(GenderChanged(None()))
+      onNext(GenderChanged(Optional.empty()))
       onNext(ColonyOrVillageChanged(""))
       onNext(DistrictChanged(""))
       onNext(StateChanged(""))
@@ -517,7 +516,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged(""))
       onNext(DateOfBirthChanged(""))
       onNext(AgeChanged("20"))
-      onNext(GenderChanged(None()))
+      onNext(GenderChanged(Optional.empty()))
       onNext(ColonyOrVillageChanged(""))
       onNext(DistrictChanged("District"))
       onNext(StateChanged("State"))
@@ -561,7 +560,7 @@ class PatientEntryScreenLogicTest {
     screenCreated()
 
     with(uiEvents) {
-      onNext(GenderChanged(None()))
+      onNext(GenderChanged(Optional.empty()))
       onNext(GenderChanged(Optional.of(gender)))
       onNext(GenderChanged(Optional.of(gender)))
     }

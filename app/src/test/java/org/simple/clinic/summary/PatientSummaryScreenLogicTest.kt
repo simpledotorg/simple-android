@@ -33,7 +33,6 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -80,8 +79,8 @@ class PatientSummaryScreenLogicTest {
   @Before
   fun setUp() {
     whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Optional.of(patientProfile))
-    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn None()
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None()
+    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Optional.empty()
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Optional.empty()
   }
 
   @After
@@ -142,7 +141,7 @@ class PatientSummaryScreenLogicTest {
   fun `when a canceled appointment with the patient does not exist then update phone dialog should not be shown`(
       openIntention: OpenIntention
   ) {
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None()
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Optional.empty()
 
     startMobiusLoop(openIntention)
 
@@ -151,7 +150,7 @@ class PatientSummaryScreenLogicTest {
 
   @Test
   fun `when a new patient is missing a phone number, then avoid showing update phone dialog`() {
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None()
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Optional.empty()
 
     startMobiusLoop(ViewExistingPatient)
 

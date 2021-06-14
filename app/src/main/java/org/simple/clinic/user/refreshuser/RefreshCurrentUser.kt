@@ -10,7 +10,6 @@ import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.RoomDao
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import timber.log.Timber
 import javax.inject.Inject
@@ -45,7 +44,7 @@ class RefreshCurrentUser @Inject constructor(
   private fun fetchUserDetails(): Optional<LoggedInUserPayload> {
     val response = usersApi.self().execute()
 
-    return if (response.code() == 200) Optional.of(response.body()!!.user) else None()
+    return if (response.code() == 200) Optional.of(response.body()!!.user) else Optional.empty()
   }
 
   private fun newLoggedInStatus(

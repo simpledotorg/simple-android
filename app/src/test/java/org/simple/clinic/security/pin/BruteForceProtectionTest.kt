@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
@@ -39,7 +38,7 @@ class BruteForceProtectionTest {
   fun `when incrementing the count of failed attempts and the limit is reached then the blocked-at time should be set`() {
     val bruteForceProtectionState = BruteForceProtectionState(
         failedAuthCount = config.limitOfFailedAttempts - 1,
-        limitReachedAt = None()
+        limitReachedAt = Optional.empty()
     )
     whenever(state.asObservable()).thenReturn(Observable.just(bruteForceProtectionState))
 

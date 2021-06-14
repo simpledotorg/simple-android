@@ -7,15 +7,13 @@
 - Add Annotation experimental library
 - Bump Room to v2.3.0
 - Bump Paging to v3.0.0
-- Use new method of SQL performance profiling (transform generated Room DAOs)
 - Prefill search query in `InstantSearchScreen`
-- Redact logs with `RecentPatient`
 - [In Progress: 10 June 2021] Paginate search results in `InstantSearchScreen`
 
 ### Changes
 - Updated translations: `hi-IN`, `bn-BD`, `te-IN`, `bn-IN`, `am-ET`, `pa-IN`, `ti-ET`, `kn-IN`, `mr-IN`, `ta-IN`, `so-ET`, `om-ET`
 
-## On Demo
+## 2021-06-14-7821
 ### Internal
 - Bump Kotlin to v1.5.10
 - Bump AGP to v4.2.1
@@ -27,6 +25,8 @@
 - Remove `ShortCodeResultsScreen`
 - Deprecate `PatientRepository#search`
 - Remove RxBinding2
+- Use new method of SQL performance profiling (transform generated Room DAOs)
+- Redact logs with `RecentPatient`
 
 ### Features
 - Add NHID support in `PatientEntryScreen`

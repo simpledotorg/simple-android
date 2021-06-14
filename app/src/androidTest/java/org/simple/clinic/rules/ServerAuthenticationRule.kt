@@ -26,6 +26,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.user.registeruser.RegistrationResult
+import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.unsafeLazy
 import java.io.File
 import java.util.UUID
@@ -193,14 +194,14 @@ class ServerAuthenticationRule : TestRule {
   }
 
   private fun verifyAccessTokenIsPresent() {
-    val (accessToken) = userSession.accessToken()
+    val accessToken = userSession.accessToken().toNullable()
     assertThat(accessToken).isNotNull()
   }
 
   private fun verifyUserCanSyncData() {
-    val (loggedInUser) = userSession.loggedInUser().blockingFirst()
+    val loggedInUser = userSession.loggedInUser().blockingFirst().get()
     assertThat(userSession.isUserPresentLocally()).isTrue()
-    assertThat(loggedInUser!!.status).isEqualTo(UserStatus.ApprovedForSyncing)
+    assertThat(loggedInUser.status).isEqualTo(UserStatus.ApprovedForSyncing)
     assertThat(loggedInUser.loggedInStatus).isEqualTo(User.LoggedInStatus.LOGGED_IN)
   }
 

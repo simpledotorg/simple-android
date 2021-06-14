@@ -20,6 +20,7 @@ import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.filterAndUnwrapJust
 import timber.log.Timber
 import java.util.UUID
@@ -90,8 +91,7 @@ class UserSession @Inject constructor(
     Timber.i("Clearing logged-in user")
     return loggedInUser()
         .firstOrError()
-        .filter { it is Just<User> }
-        .map { (user) -> user!! }
+        .extractIfPresent()
         .flatMapCompletable {
           Completable.fromAction {
             appDatabase.userDao().deleteUser(it)

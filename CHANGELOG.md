@@ -13,6 +13,7 @@
 - Deprecate `PatientRepository#search`
 - Remove RxBinding2
 - Use new method of SQL performance profiling (transform generated Room DAOs)
+- Redact logs with `RecentPatient`
 
 ### Features
 - Add NHID support in `PatientEntryScreen`

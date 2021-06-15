@@ -2,6 +2,7 @@ package org.simple.clinic.scanid
 
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.moshi.JsonDataException
+import com.squareup.moshi.JsonEncodingException
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -54,6 +55,8 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
             try {
               parseJsonBasedOnCountry(it)
             } catch (e: JsonDataException) {
+              InvalidQrCode
+            } catch (e: JsonEncodingException) {
               InvalidQrCode
             }
           }

@@ -74,7 +74,10 @@ class OverdueLogicTest {
         schedulers = TestSchedulersProvider.trampoline(),
         appointmentRepository = repository,
         currentFacility = { facility },
-        dataSourceFactory = overdueAppointmentRowDataSourceFactoryInjectionFactory,
+        pagerFactory = mock(),
+        overdueAppointmentsConfig = OverdueAppointmentsConfig(
+            overdueAppointmentsLoadSize = 10
+        ),
         uiActions = uiActions
     )
     testFixture = MobiusTestFixture(

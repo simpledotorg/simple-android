@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.paging.PagedList
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -112,10 +114,13 @@ class OverdueScreen : BaseScreen<
     super.onViewCreated(view, savedInstanceState)
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
+
+    overdueListAdapter.addLoadStateListener(::overdueListAdapterLoadStateListener)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
+    overdueListAdapter.removeLoadStateListener(::overdueListAdapterLoadStateListener)
     screenDestroys.onNext(Unit)
   }
 
@@ -157,6 +162,17 @@ class OverdueScreen : BaseScreen<
             screenCreatedTimestamp = Instant.now(utcClock)
         )
     )
+  }
+
+  private fun overdueListAdapterLoadStateListener(loadStates: CombinedLoadStates) {
+    val isLoading = loadStates.refresh is LoadState.Loading
+    val endOfPaginationReached = loadStates.append.endOfPaginationReached
+    val hasNoAdapterItems = overdueListAdapter.itemCount == 0
+
+    val shouldShowEmptyView = endOfPaginationReached && hasNoAdapterItems
+
+    viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView && !isLoading)
+    overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
   }
 
   interface Injector {

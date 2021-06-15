@@ -4,11 +4,11 @@ import com.squareup.moshi.Moshi
 import javax.inject.Inject
 
 class QRCodeJsonParser @Inject constructor(
-    private val moshi: Moshi
+    moshi: Moshi
 ) {
+  private val adapter = moshi.adapter(IndiaNHIDInfoPayload::class.java)
 
   fun parseQRCodeJson(text: String): IndiaNHIDInfoPayload? {
-    val adapter = moshi.adapter(IndiaNHIDInfoPayload::class.java)
     return adapter.fromJson(text)
   }
 }

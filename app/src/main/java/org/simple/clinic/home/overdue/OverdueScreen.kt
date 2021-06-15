@@ -1,6 +1,5 @@
 package org.simple.clinic.home.overdue
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +8,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.paging.PagedList
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spotify.mobius.Update
@@ -63,10 +61,6 @@ class OverdueScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandlerFactory: OverdueEffectHandler.Factory
-
-  @Inject
-  @Named("for_overdue_appointments")
-  lateinit var pagedListConfig: PagedList.Config
 
   private val overdueListAdapter = PagingItemAdapter(
       diffCallback = OverdueAppointmentRow.DiffCallback(),
@@ -129,20 +123,6 @@ class OverdueScreen : BaseScreen<
 
   override fun openPhoneMaskBottomSheet(patientUuid: UUID) {
     router.push(ContactPatientBottomSheet.Key(patientUuid))
-  }
-
-  @SuppressLint("CheckResult")
-  override fun showOverdueAppointments(dataSource: OverdueAppointmentRowDataSource.Factory) {
-    dataSource
-        .toObservable(pagedListConfig, screenDestroys)
-        .takeUntil(screenDestroys)
-        .doOnNext { appointmentsList ->
-          val areOverdueAppointmentsAvailable = appointmentsList.isNotEmpty()
-
-          viewForEmptyList.visibleOrGone(isVisible = !areOverdueAppointmentsAvailable)
-          overdueRecyclerView.visibleOrGone(isVisible = areOverdueAppointmentsAvailable)
-        }
-        .subscribe(overdueListAdapter::submitList)
   }
 
   override fun showOverdueAppointments(

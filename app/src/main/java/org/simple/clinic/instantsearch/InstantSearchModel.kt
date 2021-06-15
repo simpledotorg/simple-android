@@ -13,7 +13,6 @@ data class InstantSearchModel(
     val facility: Facility?,
     val searchQuery: String?,
     val additionalIdentifier: Identifier?,
-    val instantSearchProgressState: InstantSearchProgressState?,
     val scannedQrCodeSheetAlreadyOpened: Boolean,
     val patientPrefillInfo: PatientPrefillInfo?
 ) : Parcelable {
@@ -45,7 +44,6 @@ data class InstantSearchModel(
         facility = null,
         searchQuery = searchQuery,
         additionalIdentifier = additionalIdentifier,
-        instantSearchProgressState = null,
         scannedQrCodeSheetAlreadyOpened = false,
         patientPrefillInfo = patientPrefillInfo
     )
@@ -57,22 +55,6 @@ data class InstantSearchModel(
 
   fun searchQueryChanged(searchQuery: String): InstantSearchModel {
     return copy(searchQuery = searchQuery)
-  }
-
-  fun loadingAllPatients(): InstantSearchModel {
-    return copy(instantSearchProgressState = InstantSearchProgressState.IN_PROGRESS)
-  }
-
-  fun allPatientsLoaded(): InstantSearchModel {
-    return copy(instantSearchProgressState = InstantSearchProgressState.DONE)
-  }
-
-  fun loadingSearchResults(): InstantSearchModel {
-    return copy(instantSearchProgressState = InstantSearchProgressState.IN_PROGRESS)
-  }
-
-  fun searchResultsLoaded(): InstantSearchModel {
-    return copy(instantSearchProgressState = InstantSearchProgressState.DONE)
   }
 
   fun scannedQrCodeSheetOpened(): InstantSearchModel {

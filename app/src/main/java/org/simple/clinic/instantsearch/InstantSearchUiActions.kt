@@ -9,7 +9,7 @@ import java.util.UUID
 interface InstantSearchUiActions {
   fun showAllPatients(patients: PagingData<PatientSearchResult>, facility: Facility)
   fun showPatientsSearchResults(
-      patients: List<PatientSearchResult>,
+      patients: PagingData<PatientSearchResult>,
       facility: Facility,
       searchQuery: String
   )
@@ -17,8 +17,6 @@ interface InstantSearchUiActions {
   fun openPatientSummary(patientId: UUID)
   fun openLinkIdWithPatientScreen(patientId: UUID, identifier: Identifier)
   fun openScannedQrCodeSheet(identifier: Identifier)
-  fun showNoSearchResults()
-  fun hideNoSearchResults()
   fun openPatientEntryScreen(facility: Facility)
   fun showKeyboard()
   fun openQrCodeScanner()

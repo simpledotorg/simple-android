@@ -18,7 +18,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.unsafeLazy
 import java.util.UUID

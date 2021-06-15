@@ -9,7 +9,7 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.DatabaseMaintenanceRunAt
 import org.simple.clinic.main.TypedPreference.Type.FallbackCountry
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.preference.InstantRxPreferencesConverter
 import org.simple.clinic.util.preference.getOptional
 import java.net.URI

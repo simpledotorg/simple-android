@@ -14,7 +14,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.signature.SignatureRepository
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID
 

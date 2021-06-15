@@ -15,8 +15,7 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
+import java.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 
 @RunWith(JUnitParamsRunner::class)
@@ -40,7 +39,7 @@ class UpdateAnalyticsUserIdTest {
   @Test
   fun `when there is no logged in user present, the user id must not be set`() {
     // given
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(None()))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.empty()))
 
     // when
     updateAnalyticsUserId.listen()
@@ -60,7 +59,7 @@ class UpdateAnalyticsUserIdTest {
   ) {
     // given
     val user = TestData.loggedInUser(loggedInStatus = loggedInStatus)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
     // when
     updateAnalyticsUserId.listen()
@@ -79,7 +78,7 @@ class UpdateAnalyticsUserIdTest {
   ) {
     // given
     val user = TestData.loggedInUser(loggedInStatus = loggedInStatus)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.of(user)))
 
     // when
     updateAnalyticsUserId.listen()

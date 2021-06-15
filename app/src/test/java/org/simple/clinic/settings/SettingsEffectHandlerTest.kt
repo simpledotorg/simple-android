@@ -17,8 +17,7 @@ import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import java.util.UUID
@@ -76,7 +75,7 @@ class SettingsEffectHandlerTest {
   @Test
   fun `when the user gets logged out, there must not be any error`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(None()))
+    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Optional.empty()))
 
     // when
     testCase.dispatch(LoadUserDetailsEffect)

@@ -7,7 +7,7 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcherModule
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.preference.MoshiObjectPreferenceConverter
 import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit

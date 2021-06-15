@@ -19,6 +19,7 @@ import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.user.registeruser.RegistrationResult
 import org.simple.clinic.util.Rules
+import org.simple.clinic.util.toNullable
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -88,7 +89,7 @@ class RegisterUserServerIntegrationTest {
         .blockingGet()
 
     assertThat(registrationResult).isInstanceOf(RegistrationResult.Success::class.java)
-    val (accessToken) = userSession.accessToken()
+    val accessToken = userSession.accessToken().toNullable()
     assertThat(accessToken).isNotNull()
 
     val savedUser = userSession.loggedInUserImmediate()!!

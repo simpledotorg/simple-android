@@ -19,8 +19,7 @@ import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
@@ -78,8 +77,8 @@ class SetupActivityEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(UserDetailsFetched(
         hasUserCompletedOnboarding = true,
-        loggedInUser = Just(user),
-        userSelectedCountry = Just(country)
+        loggedInUser = Optional.of(user),
+        userSelectedCountry = Optional.of(country)
     ))
     verifyZeroInteractions(uiActions)
   }

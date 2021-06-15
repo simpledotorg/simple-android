@@ -11,8 +11,7 @@ import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.junit.Test
 import org.simple.clinic.appconfig.api.ManifestFetchApi
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.ResolvedError
 import retrofit2.HttpException
 import retrofit2.Response
@@ -133,7 +132,7 @@ class AppConfigRepositoryTest {
         .test()
         .assertNoErrors()
         .assertComplete()
-    verify(selectedCountryPreference).set(Just(country))
+    verify(selectedCountryPreference).set(Optional.of(country))
     verifyNoMoreInteractions(selectedCountryPreference)
   }
 }

@@ -3,7 +3,7 @@ package org.simple.clinic.newentry
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.ValueChangedCallback
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility

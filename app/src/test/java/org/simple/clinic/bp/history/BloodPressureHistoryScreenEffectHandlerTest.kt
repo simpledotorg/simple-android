@@ -18,8 +18,7 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
 
@@ -48,7 +47,7 @@ class BloodPressureHistoryScreenEffectHandlerTest {
     // given
     val patientUuid = UUID.fromString("46044a13-012e-439b-81c9-8bbb15307629")
     val patient = TestData.patient(uuid = patientUuid)
-    whenever(patientRepository.patient(patientUuid)) doReturn Observable.just<Optional<Patient>>(Just(patient))
+    whenever(patientRepository.patient(patientUuid)) doReturn Observable.just<Optional<Patient>>(Optional.of(patient))
 
     // when
     testCase.dispatch(LoadPatient(patientUuid))

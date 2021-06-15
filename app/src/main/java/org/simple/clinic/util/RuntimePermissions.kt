@@ -14,6 +14,7 @@ import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.router.screen.ActivityPermissionResult
+import java.util.Optional
 import javax.inject.Inject
 
 class RuntimePermissions @Inject constructor(
@@ -36,7 +37,7 @@ interface RequiresPermission {
   val permissionRequestCode: Int
 
   val isPermissionGranted: Boolean
-    get() = permission == Just(GRANTED)
+    get() = permission == Optional.of(GRANTED)
 }
 
 class RequestPermissions<T : Any>(

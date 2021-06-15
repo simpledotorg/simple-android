@@ -15,7 +15,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import java.io.IOException
 import java.net.SocketTimeoutException
 import java.time.Duration

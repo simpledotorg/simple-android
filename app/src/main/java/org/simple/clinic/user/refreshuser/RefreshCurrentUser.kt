@@ -9,9 +9,7 @@ import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.RoomDao
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -25,8 +23,7 @@ class RefreshCurrentUser @Inject constructor(
         .fromAction {
           val fetchedUserInfo = fetchUserDetails()
 
-          if (fetchedUserInfo is Just) {
-            val userPayload = fetchedUserInfo.value
+          fetchedUserInfo.ifPresent { userPayload ->
             val storedUser = userDao.userImmediate()!!
             val updatedUserDetails = mapPayloadToUser(storedUser, userPayload, newLoggedInStatus(storedUser, userPayload))
 
@@ -45,7 +42,7 @@ class RefreshCurrentUser @Inject constructor(
   private fun fetchUserDetails(): Optional<LoggedInUserPayload> {
     val response = usersApi.self().execute()
 
-    return if (response.code() == 200) Just(response.body()!!.user) else None()
+    return if (response.code() == 200) Optional.of(response.body()!!.user) else Optional.empty()
   }
 
   private fun newLoggedInStatus(

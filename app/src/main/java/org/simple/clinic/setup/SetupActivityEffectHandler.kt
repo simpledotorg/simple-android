@@ -18,7 +18,7 @@ import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional

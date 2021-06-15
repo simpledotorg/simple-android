@@ -17,7 +17,7 @@ import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.registration.phone.LengthBasedNumberValidator
-import org.simple.clinic.util.Just
+import java.util.Optional
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
@@ -85,7 +85,7 @@ class PatientEntryUpdateTest {
     val model = defaultModel
         .fullNameChanged("")
         .ageChanged("21")
-        .genderChanged(Just(Gender.Male))
+        .genderChanged(Optional.of(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")
         .colonyOrVillageChanged("village")
@@ -110,7 +110,7 @@ class PatientEntryUpdateTest {
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("21")
-        .genderChanged(Just(Gender.Male))
+        .genderChanged(Optional.of(Gender.Male))
         .phoneNumberChanged("77210")
         .streetAddressChanged("street")
         .colonyOrVillageChanged("village")
@@ -135,7 +135,7 @@ class PatientEntryUpdateTest {
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("21")
-        .genderChanged(Just(Gender.Male))
+        .genderChanged(Optional.of(Gender.Male))
         .phoneNumberChanged("7721083838380")
         .streetAddressChanged("street")
         .colonyOrVillageChanged("village")
@@ -160,7 +160,7 @@ class PatientEntryUpdateTest {
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.BothDateOfBirthAndAgeAbsent)
     val model = defaultModel
         .fullNameChanged("Name")
-        .genderChanged(Just(Gender.Male))
+        .genderChanged(Optional.of(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")
         .colonyOrVillageChanged("village")
@@ -185,7 +185,7 @@ class PatientEntryUpdateTest {
     val model = defaultModel
         .fullNameChanged("Name")
         .dateOfBirthChanged("02-19-2000")
-        .genderChanged(Just(Gender.Male))
+        .genderChanged(Optional.of(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")
         .colonyOrVillageChanged("village")
@@ -210,7 +210,7 @@ class PatientEntryUpdateTest {
     val model = defaultModel
         .fullNameChanged("Name")
         .dateOfBirthChanged("02/02/2021")
-        .genderChanged(Just(Gender.Male))
+        .genderChanged(Optional.of(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")
         .colonyOrVillageChanged("village")
@@ -259,7 +259,7 @@ class PatientEntryUpdateTest {
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
-        .genderChanged(Just(Gender.Male))
+        .genderChanged(Optional.of(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")
         .districtChanged("district")
@@ -283,7 +283,7 @@ class PatientEntryUpdateTest {
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
-        .genderChanged(Just(Gender.Male))
+        .genderChanged(Optional.of(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")
         .colonyOrVillageChanged("village")
@@ -307,7 +307,7 @@ class PatientEntryUpdateTest {
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
-        .genderChanged(Just(Gender.Male))
+        .genderChanged(Optional.of(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")
         .colonyOrVillageChanged("village")
@@ -331,7 +331,7 @@ class PatientEntryUpdateTest {
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged(MAX_ALLOWED_PATIENT_AGE.plus(1).toString())
-        .genderChanged(Just(Gender.Male))
+        .genderChanged(Optional.of(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")
         .colonyOrVillageChanged("village")
@@ -356,7 +356,7 @@ class PatientEntryUpdateTest {
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged(MIN_ALLOWED_PATIENT_AGE.minus(1).toString())
-        .genderChanged(Just(Gender.Male))
+        .genderChanged(Optional.of(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")
         .colonyOrVillageChanged("village")
@@ -382,7 +382,7 @@ class PatientEntryUpdateTest {
     val model = defaultModel
         .fullNameChanged("Name")
         .dateOfBirthChanged(enteredDate)
-        .genderChanged(Just(Gender.Male))
+        .genderChanged(Optional.of(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")
         .colonyOrVillageChanged("village")
@@ -408,7 +408,7 @@ class PatientEntryUpdateTest {
     val model = defaultModel
         .fullNameChanged("Name")
         .dateOfBirthChanged(enteredDate)
-        .genderChanged(Just(Gender.Male))
+        .genderChanged(Optional.of(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")
         .colonyOrVillageChanged("village")

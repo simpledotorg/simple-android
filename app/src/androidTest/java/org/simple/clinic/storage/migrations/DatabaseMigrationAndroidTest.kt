@@ -24,9 +24,7 @@ import org.simple.clinic.insert
 import org.simple.clinic.integer
 import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.string
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -76,8 +74,8 @@ class DatabaseMigrationAndroidTest {
 
     helper.migrations = migrations
 
-    lastFacilityPullToken.set(None())
-    lastPatientPullToken.set(None())
+    lastFacilityPullToken.set(Optional.empty())
+    lastPatientPullToken.set(Optional.empty())
   }
 
   @Test
@@ -817,7 +815,7 @@ class DatabaseMigrationAndroidTest {
         '2018-09-25T11:20:42.008Z')
     """)
 
-    lastFacilityPullToken.set(Just("old-token"))
+    lastFacilityPullToken.set(Optional.of("old-token"))
 
     val db_v28 = helper.migrateTo(28)
     db_v28.query("""SELECT * FROM Facility""").use {
@@ -843,7 +841,7 @@ class DatabaseMigrationAndroidTest {
       assertThat(it.string("deletedAt")).isEqualTo("2018-09-25T11:20:42.008Z")
     }
 
-    assertThat(lastFacilityPullToken.get()).isEqualTo(None<String>())
+    assertThat(lastFacilityPullToken.get()).isEqualTo(Optional.empty<String>())
   }
 
   @Test
@@ -1320,14 +1318,14 @@ class DatabaseMigrationAndroidTest {
     val tableName = "BusinessId"
     val expectedColumnCount = 9
 
-    lastPatientPullToken.set(Just("old_token"))
+    lastPatientPullToken.set(Optional.of("old_token"))
     val db_v29 = helper.createDatabase(29)
     db_v29.assertTableDoesNotExist(tableName)
 
     val db_v30 = helper.migrateTo(30)
 
     db_v30.assertColumnCount(tableName, expectedColumnCount)
-    assertThat(lastPatientPullToken.get()).isEqualTo(None<String>())
+    assertThat(lastPatientPullToken.get()).isEqualTo(Optional.empty<String>())
   }
 
   @Test

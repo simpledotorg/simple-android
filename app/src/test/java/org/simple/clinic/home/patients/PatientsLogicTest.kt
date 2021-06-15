@@ -33,8 +33,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -465,7 +464,7 @@ class PatientsLogicTest {
     setupController()
 
     // when
-    uiEvents.onNext(ScanCardIdButtonClicked(permission = Just(GRANTED)))
+    uiEvents.onNext(ScanCardIdButtonClicked(permission = Optional.of(GRANTED)))
 
     // then
     verify(ui, times(2)).hideUserAccountStatus()
@@ -480,7 +479,7 @@ class PatientsLogicTest {
     setupController()
 
     // when
-    uiEvents.onNext(ScanCardIdButtonClicked(permission = Just(DENIED)))
+    uiEvents.onNext(ScanCardIdButtonClicked(permission = Optional.of(DENIED)))
 
     // then
     verify(ui, times(2)).hideUserAccountStatus()

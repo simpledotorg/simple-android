@@ -11,7 +11,7 @@ import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.MedicalRegistrationId
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.signature.SignatureRepository
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.scheduler.SchedulersProvider
 

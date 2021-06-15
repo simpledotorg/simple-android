@@ -36,7 +36,7 @@ import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationSync
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordSync
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.preference.InstantRxPreferencesConverter
 import org.simple.clinic.util.preference.getOptional
 import java.time.Instant

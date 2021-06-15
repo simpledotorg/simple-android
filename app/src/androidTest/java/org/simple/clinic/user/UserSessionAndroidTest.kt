@@ -15,7 +15,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional

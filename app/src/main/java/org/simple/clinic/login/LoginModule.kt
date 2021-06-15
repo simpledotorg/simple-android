@@ -8,7 +8,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.security.BCryptPasswordHasher
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.OngoingLoginEntry
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.preference.StringPreferenceConverter
 import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit

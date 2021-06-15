@@ -10,7 +10,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestData
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant

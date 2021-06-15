@@ -6,8 +6,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.util.ErrorResolver
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import javax.inject.Inject
 
 /**
@@ -41,6 +40,6 @@ class AppConfigRepository @Inject constructor(
   }
 
   fun saveCurrentCountry(country: Country): Completable {
-    return Completable.fromAction { selectedCountryPreference.set(Just(country)) }
+    return Completable.fromAction { selectedCountryPreference.set(Optional.of(country)) }
   }
 }

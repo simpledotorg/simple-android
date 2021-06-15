@@ -11,7 +11,7 @@ import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
-import org.simple.clinic.util.None
+import java.util.Optional
 import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
@@ -45,7 +45,7 @@ class ContactPatientInitTest {
   fun `when the screen is restored, do not load the patient profile and latest appointment if they are already loaded`() {
     val model = defaultModel()
         .patientProfileLoaded(TestData.patientProfile(patientUuid = patientUuid))
-        .overdueAppointmentLoaded(None())
+        .overdueAppointmentLoaded(Optional.empty())
 
     spec
         .whenInit(model)

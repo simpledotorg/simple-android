@@ -118,17 +118,6 @@ class AppointmentRepository @Inject constructor(
     return appointmentDao.count().toObservable()
   }
 
-  fun overdueAppointments(
-      since: LocalDate,
-      facility: Facility
-  ): Observable<List<OverdueAppointment>> {
-    return overdueDao.overdueAtFacility(
-        facilityUuid = facility.uuid,
-        scheduledBefore = since,
-        scheduledAfter = since.minus(appointmentConfig.periodForIncludingOverdueAppointments)
-    )
-  }
-
   fun overdueAppointmentsDataSource(
       since: LocalDate,
       facility: Facility

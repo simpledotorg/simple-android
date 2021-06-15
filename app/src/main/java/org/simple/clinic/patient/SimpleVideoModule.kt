@@ -2,8 +2,11 @@ package org.simple.clinic.patient
 
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import dagger.Module
 import dagger.Provides
+import org.simple.clinic.remoteconfig.ConfigReader
 import java.util.Locale
 import javax.inject.Named
 
@@ -18,13 +21,22 @@ class SimpleVideoModule {
 
   @Provides
   @Named("training_video_youtube_id")
-  fun provideSimpleVideoUrlBasedOnLocale(locale: Locale): String {
-    return when (locale.language) {
-      "hi" -> "nHsQ06tiLzw"
-      "am" -> "05dnOSyHXYs"
-      "om" -> "yca12Ec5Fg4"
-      // Default to English
-      else -> "YO3D1paAuqU"
+  fun provideSimpleVideoUrlBasedOnLocale(
+      remoteConfigReader: ConfigReader,
+      locale: Locale,
+      moshi: Moshi
+  ): String {
+    val type = Types.newParameterizedType(Map::class.java, String::class.java, String::class.java)
+    val stringMapAdapter = moshi.adapter<Map<String, String>>(type)
+
+    val defaultVideoIdJson = """
+    {
+       "_default": "YO3D1paAuqU"
     }
+    """
+    val youtubeVideoIds: Map<String, String> = stringMapAdapter.fromJson(remoteConfigReader.string("simple_youtube_video_ids", defaultVideoIdJson))!!
+
+    return (youtubeVideoIds[locale.language] ?: youtubeVideoIds["_default"]).toString()
   }
+
 }

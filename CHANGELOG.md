@@ -14,6 +14,7 @@
 - Remove RxBinding2
 - Use new method of SQL performance profiling (transform generated Room DAOs)
 - Redact logs with `RecentPatient`
+- Implement QR code JSON parser and extracted direct Moshi usage in `ScanSimpleIdEffectHandler`
 
 ### Features
 - Add NHID support in `PatientEntryScreen`

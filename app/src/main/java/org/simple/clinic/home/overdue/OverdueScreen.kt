@@ -83,6 +83,9 @@ class OverdueScreen : BaseScreen<
   private val overdueRecyclerView
     get() = binding.overdueRecyclerView
 
+  private val overdueProgressBar
+    get() = binding.overdueProgressBar
+
   private val screenDestroys = PublishSubject.create<Unit>()
 
   override fun defaultModel() = OverdueModel.create()
@@ -171,6 +174,7 @@ class OverdueScreen : BaseScreen<
 
     val shouldShowEmptyView = endOfPaginationReached && hasNoAdapterItems
 
+    overdueProgressBar.visibleOrGone(isVisible = isLoading && hasNoAdapterItems)
     viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView && !isLoading)
     overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
   }

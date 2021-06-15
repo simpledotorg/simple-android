@@ -1,5 +1,6 @@
 package org.simple.clinic.overdue
 
+import androidx.paging.PagingSource
 import androidx.paging.PositionalDataSource
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -139,6 +140,18 @@ class AppointmentRepository @Inject constructor(
             scheduledAfter = since.minus(appointmentConfig.periodForIncludingOverdueAppointments)
         )
         .create() as PositionalDataSource<OverdueAppointment>
+  }
+
+  fun overdueAppointmentsInFacility(
+      since: LocalDate,
+      facilityId: UUID
+  ): PagingSource<Int, OverdueAppointment> {
+    return overdueDao
+        .overdueInFacilityPagingSource(
+            facilityUuid = facilityId,
+            scheduledBefore = since,
+            scheduledAfter = since.minus(appointmentConfig.periodForIncludingOverdueAppointments)
+        )
   }
 
   fun overdueAppointmentsCount(

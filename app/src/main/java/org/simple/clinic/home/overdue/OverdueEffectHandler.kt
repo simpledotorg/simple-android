@@ -30,7 +30,14 @@ class OverdueEffectHandler @AssistedInject constructor(
         .addConsumer(LoadOverdueAppointments::class.java, ::loadOverdueAppointments, schedulers.ui())
         .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPhoneMaskBottomSheet(it.patientUuid) }, schedulers.ui())
         .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid) }, schedulers.ui())
+        .addConsumer(ShowOverdueAppointments::class.java, ::showOverdueAppointments, schedulers.ui())
         .build()
+  }
+
+  private fun showOverdueAppointments(effect: ShowOverdueAppointments) {
+    uiActions.showOverdueAppointments(
+        overdueAppointments = effect.overdueAppointments,
+        isDiabetesManagementEnabled = effect.isDiabetesManagementEnabled)
   }
 
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, OverdueEvent> {

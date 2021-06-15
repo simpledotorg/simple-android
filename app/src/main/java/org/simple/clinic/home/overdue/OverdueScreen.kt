@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.PagedList
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spotify.mobius.Update
 import io.reactivex.rxkotlin.cast
@@ -134,6 +135,13 @@ class OverdueScreen : BaseScreen<
           overdueRecyclerView.visibleOrGone(isVisible = areOverdueAppointmentsAvailable)
         }
         .subscribe(overdueListAdapter::submitList)
+  }
+
+  override fun showOverdueAppointments(
+      overdueAppointments: PagingData<OverdueAppointment>,
+      isDiabetesManagementEnabled: Boolean
+  ) {
+
   }
 
   override fun openPatientSummary(patientUuid: UUID) {

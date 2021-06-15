@@ -1,5 +1,6 @@
 package org.simple.clinic.home.overdue
 
+import androidx.paging.PagingData
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -55,5 +56,27 @@ class OverdueEffectHandlerTest {
     // then
     effectHandlerTestCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
     verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when show overdue appointments effect is received, then show overdue appointments`() {
+    // given
+    val overdueAppointments = listOf(
+        TestData.overdueAppointment(
+            appointmentUuid = UUID.fromString("e960f0dd-e575-4a1d-b8c1-6676097b4b54")
+        ),
+        TestData.overdueAppointment(
+            appointmentUuid = UUID.fromString("65c380ad-d2e4-49f5-a348-07e8d489dab1")
+        )
+    )
+    val pagingData = PagingData.from(overdueAppointments)
+
+    // when
+    effectHandlerTestCase.dispatch(ShowOverdueAppointments(overdueAppointments = pagingData,
+        isDiabetesManagementEnabled = true))
+
+    // then
+    verify(uiActions).showOverdueAppointments(overdueAppointments = pagingData,
+        isDiabetesManagementEnabled = true)
   }
 }

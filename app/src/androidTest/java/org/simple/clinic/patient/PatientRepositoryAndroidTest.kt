@@ -57,7 +57,7 @@ import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.storage.text.TextStore
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock

@@ -8,7 +8,7 @@ import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.MedicalRegistrationId
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.prescription.medicines.TeleconsultMedicinesConfig
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.preference.StringPreferenceConverter
 import org.simple.clinic.util.preference.getOptional
 import java.time.Duration

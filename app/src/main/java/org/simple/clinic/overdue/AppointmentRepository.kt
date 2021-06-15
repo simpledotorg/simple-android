@@ -11,7 +11,7 @@ import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.SynceableRepository
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional

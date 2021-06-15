@@ -17,9 +17,8 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
+import java.util.Optional
+import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.filterAndUnwrapJust
 import timber.log.Timber
 import java.util.UUID
@@ -73,7 +72,7 @@ class UserSession @Inject constructor(
   }
 
   fun storeUserAndAccessToken(userPayload: LoggedInUserPayload, accessToken: String): Completable {
-    accessTokenPreference.set(Just(accessToken))
+    accessTokenPreference.set(Optional.of(accessToken))
     return storeUser(
         userFromPayload(userPayload, LOGGED_IN)
     )
@@ -90,8 +89,7 @@ class UserSession @Inject constructor(
     Timber.i("Clearing logged-in user")
     return loggedInUser()
         .firstOrError()
-        .filter { it is Just<User> }
-        .map { (user) -> user!! }
+        .extractIfPresent()
         .flatMapCompletable {
           Completable.fromAction {
             appDatabase.userDao().deleteUser(it)
@@ -134,7 +132,7 @@ class UserSession @Inject constructor(
   fun loggedInUser(): Observable<Optional<User>> {
     return appDatabase.userDao().user()
         .toObservable()
-        .map { if (it.isEmpty()) None<User>() else Just(it.first()) }
+        .map { if (it.isEmpty()) Optional.empty() else Optional.of(it.first()) }
   }
 
   @Deprecated(

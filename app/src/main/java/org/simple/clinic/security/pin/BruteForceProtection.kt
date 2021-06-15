@@ -7,9 +7,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.timer
 import java.time.Duration
@@ -49,7 +47,7 @@ class BruteForceProtection @Inject constructor(
       maxAllowedFailedAttempts: Int
   ): BruteForceProtectionState {
     val isLimitReached = state.failedAuthCount >= maxAllowedFailedAttempts
-    return if (isLimitReached && state.limitReachedAt is None) {
+    return if (isLimitReached && !state.limitReachedAt.isPresent()) {
       state.failedAttemptLimitReached(utcClock)
     } else {
       state
@@ -95,26 +93,24 @@ class BruteForceProtection @Inject constructor(
       maxAllowedFailedAttempts: Int,
       blockAttemptsFor: Duration
   ): ProtectedState {
-    return when (blockedAt) {
-      is None -> {
-        val attemptsRemaining = max(0, maxAllowedFailedAttempts - attemptsMade)
-        Allowed(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
-      }
-      is Just -> Blocked(attemptsMade = attemptsMade, blockedTill = blockedAt.value + blockAttemptsFor)
-    }
+    return blockedAt
+        .map { Blocked(attemptsMade = attemptsMade, blockedTill = it + blockAttemptsFor) as ProtectedState }
+        .orElseGet {
+          val attemptsRemaining = max(0, maxAllowedFailedAttempts - attemptsMade)
+          Allowed(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
+        }
   }
 
   private fun signalBruteForceTimerReset(
       blockedAt: Optional<Instant>,
       blockDuration: Duration
   ): Observable<Long> {
-    return when (blockedAt) {
-      is None -> Observable.empty()
-      is Just -> {
-        val resetDuration = resetBruteForceTimerIn(blockedAt.value, blockDuration)
-        Observables.timer(resetDuration)
-      }
-    }
+    return blockedAt
+        .map {
+          val resetDuration = resetBruteForceTimerIn(it, blockDuration)
+          Observables.timer(resetDuration)
+        }
+        .orElse(Observable.empty())
   }
 
   private fun resetBruteForceTimerIn(

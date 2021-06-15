@@ -9,7 +9,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.util.function.Function
 

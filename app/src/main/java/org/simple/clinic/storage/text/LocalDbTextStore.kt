@@ -1,7 +1,7 @@
 package org.simple.clinic.storage.text
 
 import io.reactivex.Observable
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import javax.inject.Inject
 
 class LocalDbTextStore @Inject constructor(

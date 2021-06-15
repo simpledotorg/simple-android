@@ -8,7 +8,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import java.util.UUID
 
 class AssignedFacilityUpdateTest {

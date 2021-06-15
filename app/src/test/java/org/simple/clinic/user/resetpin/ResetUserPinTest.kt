@@ -26,8 +26,7 @@ import org.simple.clinic.user.resetpin.ResetPinResult.NetworkError
 import org.simple.clinic.user.resetpin.ResetPinResult.Success
 import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
 import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.httpErrorResponse
 import org.simple.clinic.util.toPayload
 import java.io.IOException
@@ -108,7 +107,7 @@ class ResetUserPinTest {
 
     resetUserPin.resetPin(newPin).blockingGet()
 
-    verify(accessTokenPref).set(Just(updatedAccessToken))
+    verify(accessTokenPref).set(Optional.of(updatedAccessToken))
   }
 
   @Test

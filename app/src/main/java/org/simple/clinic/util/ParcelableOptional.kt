@@ -2,6 +2,7 @@ package org.simple.clinic.util
 
 import android.os.Parcel
 import android.os.Parcelable
+import java.util.Optional
 
 /**
  * We already have an [Optional] class that we use for representing

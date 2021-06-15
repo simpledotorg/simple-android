@@ -12,6 +12,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Rules
+import org.simple.clinic.util.toNullable
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -55,12 +56,12 @@ class LoginUserWithOtpServerIntegrationTest {
         .blockingGet()
 
     assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
-    val (accessToken) = userSession.accessToken()
+    val accessToken = userSession.accessToken().toNullable()
     assertThat(accessToken).isNotNull()
 
-    val (loggedInUser) = userSession.loggedInUser().blockingFirst()
+    val loggedInUser = userSession.loggedInUser().blockingFirst().get()
     assertThat(userSession.isUserPresentLocally()).isTrue()
-    assertThat(loggedInUser!!.status).isEqualTo(UserStatus.ApprovedForSyncing)
+    assertThat(loggedInUser.status).isEqualTo(UserStatus.ApprovedForSyncing)
     assertThat(loggedInUser.loggedInStatus).isEqualTo(User.LoggedInStatus.LOGGED_IN)
   }
 }

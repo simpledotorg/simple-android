@@ -18,7 +18,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.registration.phone.LengthBasedNumberValidator
-import org.simple.clinic.util.Just
+import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
@@ -57,7 +57,7 @@ class UpdatePhoneNumberDialogLogicTest {
         uuid = UUID.fromString("4ada8db2-71dc-4a3b-8d17-69032cab2155"),
         patientUuid = patientUuid
     )
-    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(phoneNumber)))
+    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Optional.of(phoneNumber)))
 
     // when
     setupController(patientUuid = patientUuid)
@@ -77,7 +77,7 @@ class UpdatePhoneNumberDialogLogicTest {
         number = "0987654321"
     )
 
-    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
+    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Optional.of(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))).thenReturn(Completable.complete())
 
     // when
@@ -104,7 +104,7 @@ class UpdatePhoneNumberDialogLogicTest {
         number = "1234567890"
     )
 
-    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
+    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Optional.of(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))).thenReturn(Completable.never())
 
     // when
@@ -129,7 +129,7 @@ class UpdatePhoneNumberDialogLogicTest {
         number = "1234567890"
     )
 
-    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
+    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Optional.of(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))).thenReturn(Completable.never())
 
     // when
@@ -154,7 +154,7 @@ class UpdatePhoneNumberDialogLogicTest {
         number = "1234567890"
     )
 
-    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
+    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Optional.of(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))).thenReturn(Completable.never())
 
     // when
@@ -173,7 +173,7 @@ class UpdatePhoneNumberDialogLogicTest {
   fun `when cancel is clicked then the existing number should be saved again`() {
     // given
     val existingPhoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
-    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
+    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Optional.of(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber)).thenReturn(Completable.complete())
 
     // when

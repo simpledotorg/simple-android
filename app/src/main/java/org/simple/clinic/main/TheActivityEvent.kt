@@ -1,7 +1,7 @@
 package org.simple.clinic.main
 
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 

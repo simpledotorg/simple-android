@@ -45,8 +45,7 @@ import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
+import java.util.Optional
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -2312,14 +2311,14 @@ class AppointmentRepositoryAndroidTest {
     )).blockingAwait()
 
     // then
-    val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, today.plusDays(1)) as Just
-    assertThat(latest_appointment_today.value.appointment).isEqualTo(appointment_scheduled_for_today)
+    val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, today.plusDays(1))
+    assertThat(latest_appointment_today.get().appointment).isEqualTo(appointment_scheduled_for_today)
 
-    val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, aWeekInFuture.plusDays(1)) as Just
-    assertThat(latest_appointment_a_week_later.value.appointment).isEqualTo(appointment_scheduled_a_week_in_the_future)
+    val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, aWeekInFuture.plusDays(1))
+    assertThat(latest_appointment_a_week_later.get().appointment).isEqualTo(appointment_scheduled_a_week_in_the_future)
 
-    val latest_appointment_two_weeks_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, twoWeeksInFuture.plusDays(1)) as Just
-    assertThat(latest_appointment_two_weeks_later.value.appointment).isEqualTo(appointment_scheduled_a_week_in_the_future)
+    val latest_appointment_two_weeks_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, twoWeeksInFuture.plusDays(1))
+    assertThat(latest_appointment_two_weeks_later.get().appointment).isEqualTo(appointment_scheduled_a_week_in_the_future)
   }
 
   @Suppress("LocalVariableName")
@@ -2363,10 +2362,10 @@ class AppointmentRepositoryAndroidTest {
 
     // then
     val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, today.plusDays(1))
-    assertThat(latest_appointment_today).isEqualTo(None<OverdueAppointment>())
+    assertThat(latest_appointment_today).isEqualTo(Optional.empty<OverdueAppointment>())
 
-    val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, aWeekInFuture.plusDays(1)) as Just
-    assertThat(latest_appointment_a_week_later.value.appointment).isEqualTo(appointment_scheduled_for_today_with_reminder_a_week_in_the_future)
+    val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, aWeekInFuture.plusDays(1))
+    assertThat(latest_appointment_a_week_later.get().appointment).isEqualTo(appointment_scheduled_for_today_with_reminder_a_week_in_the_future)
   }
 
   @Test

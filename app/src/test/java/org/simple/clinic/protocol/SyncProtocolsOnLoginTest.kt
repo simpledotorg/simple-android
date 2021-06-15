@@ -14,8 +14,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
+import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 
 class SyncProtocolsOnLoginTest {
@@ -37,7 +36,7 @@ class SyncProtocolsOnLoginTest {
 
   @Test
   fun `when user is not available then protocol drugs should not be synced`() {
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(None()))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Optional.empty()))
     whenever(protocolRepository.recordCount()).thenReturn(Observable.just(1))
 
     syncProtocolOnLogin.listen()
@@ -48,8 +47,8 @@ class SyncProtocolsOnLoginTest {
   @Test
   fun `when user is available and existing drugs are empty then protocol drugs should be sync`() {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(
-        None(),
-        Just(TestData.loggedInUser())))
+        Optional.empty(),
+        Optional.of(TestData.loggedInUser())))
     whenever(protocolRepository.recordCount()).thenReturn(Observable.just(0))
 
     syncProtocolOnLogin.listen()
@@ -60,8 +59,8 @@ class SyncProtocolsOnLoginTest {
   @Test
   fun `when user is available and existing drugs are not empty then protocol drugs should not be synced`() {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(
-        None(),
-        Just(TestData.loggedInUser())))
+        Optional.empty(),
+        Optional.of(TestData.loggedInUser())))
     whenever(protocolRepository.recordCount()).thenReturn(Observable.just(1))
 
     syncProtocolOnLogin.listen()

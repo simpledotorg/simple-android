@@ -12,7 +12,7 @@ import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.FacilitySyncGroupSwitchedAt
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.Instant

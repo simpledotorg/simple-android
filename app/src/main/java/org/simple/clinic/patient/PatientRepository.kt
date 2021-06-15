@@ -27,7 +27,7 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
 import java.time.Duration

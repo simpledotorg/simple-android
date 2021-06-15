@@ -8,7 +8,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.read
 import javax.inject.Inject
 import javax.inject.Named

@@ -16,6 +16,7 @@ import org.simple.clinic.util.RequestPermissionsTest.Event.FirstEvent
 import org.simple.clinic.util.RequestPermissionsTest.Event.FourthEvent
 import org.simple.clinic.util.RequestPermissionsTest.Event.SecondEvent
 import org.simple.clinic.util.RequestPermissionsTest.Event.ThirdEvent
+import java.util.Optional
 
 class RequestPermissionsTest {
 
@@ -150,7 +151,7 @@ class RequestPermissionsTest {
     object FirstEvent : Event()
 
     data class SecondEvent(
-        override var permission: Optional<RuntimePermissionResult> = None(),
+        override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
         override val permissionRequestCode: Int = 1,
         override val permissionString: String = "permission_1"
     ) : Event(), RequiresPermission
@@ -158,7 +159,7 @@ class RequestPermissionsTest {
     object ThirdEvent : Event()
 
     data class FourthEvent(
-        override var permission: Optional<RuntimePermissionResult> = None(),
+        override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
         override val permissionRequestCode: Int = 2,
         override val permissionString: String = "permission_2"
     ) : Event(), RequiresPermission

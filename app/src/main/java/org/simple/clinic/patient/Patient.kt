@@ -16,9 +16,7 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.storage.DaoWithUpsert
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
@@ -249,7 +247,7 @@ data class Patient(
     fun patientProfile(patientUuid: UUID): Observable<Optional<PatientProfile>> {
       return loadPatientQueryModelsForPatientUuid(patientUuid)
           .map { queryModelsToPatientProfiles(it) }
-          .map { if (it.isEmpty()) None<PatientProfile>() else Just(it.first()) }
+          .map { if (it.isEmpty()) Optional.empty() else Optional.of(it.first()) }
           .toObservable()
     }
 

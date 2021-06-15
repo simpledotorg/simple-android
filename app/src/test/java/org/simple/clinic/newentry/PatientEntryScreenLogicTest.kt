@@ -40,8 +40,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.registration.phone.LengthBasedNumberValidator
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
+import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserClock
@@ -177,7 +176,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged("1234567890"))
       onNext(DateOfBirthChanged("12/04/1993"))
       onNext(AgeChanged(""))
-      onNext(GenderChanged(Just(Transgender)))
+      onNext(GenderChanged(Optional.of(Transgender)))
       onNext(ColonyOrVillageChanged("colony"))
       onNext(DistrictChanged("district"))
       onNext(StateChanged("state"))
@@ -223,7 +222,7 @@ class PatientEntryScreenLogicTest {
       onNext(AlternativeIdChanged(bangladeshNationalId))
       onNext(DateOfBirthChanged("12/04/1993"))
       onNext(AgeChanged(""))
-      onNext(GenderChanged(Just(Transgender)))
+      onNext(GenderChanged(Optional.of(Transgender)))
       onNext(ColonyOrVillageChanged("colony"))
       onNext(DistrictChanged("district"))
       onNext(StateChanged("state"))
@@ -344,7 +343,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged(""))
       onNext(DateOfBirthChanged(""))
       onNext(AgeChanged(""))
-      onNext(GenderChanged(None()))
+      onNext(GenderChanged(Optional.empty()))
       onNext(ColonyOrVillageChanged(""))
       onNext(DistrictChanged(""))
       onNext(StateChanged(""))
@@ -402,7 +401,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged(""))
       onNext(DateOfBirthChanged(""))
       onNext(AgeChanged(""))
-      onNext(GenderChanged(None()))
+      onNext(GenderChanged(Optional.empty()))
       onNext(ColonyOrVillageChanged(""))
       onNext(DistrictChanged(""))
       onNext(StateChanged(""))
@@ -440,7 +439,7 @@ class PatientEntryScreenLogicTest {
       onNext(FullNameChanged("Ashok"))
       onNext(PhoneNumberChanged("1234567890"))
       onNext(DateOfBirthChanged("12/04/1993"))
-      onNext(GenderChanged(Just(Transgender)))
+      onNext(GenderChanged(Optional.of(Transgender)))
       onNext(ColonyOrVillageChanged("colony"))
       onNext(DistrictChanged("district"))
       onNext(StateChanged("state"))
@@ -473,7 +472,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged(""))
       onNext(DateOfBirthChanged(""))
       onNext(AgeChanged("20"))
-      onNext(GenderChanged(Just(Male)))
+      onNext(GenderChanged(Optional.of(Male)))
       onNext(ColonyOrVillageChanged(""))
       onNext(DistrictChanged("District"))
       onNext(StateChanged("State"))
@@ -495,7 +494,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged(""))
       onNext(DateOfBirthChanged(""))
       onNext(AgeChanged("20"))
-      onNext(GenderChanged(Just(Male)))
+      onNext(GenderChanged(Optional.of(Male)))
       onNext(ColonyOrVillageChanged(""))
       onNext(DistrictChanged("District"))
       onNext(StateChanged("State"))
@@ -517,7 +516,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged(""))
       onNext(DateOfBirthChanged(""))
       onNext(AgeChanged("20"))
-      onNext(GenderChanged(None()))
+      onNext(GenderChanged(Optional.empty()))
       onNext(ColonyOrVillageChanged(""))
       onNext(DistrictChanged("District"))
       onNext(StateChanged("State"))
@@ -541,7 +540,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged(""))
       onNext(DateOfBirthChanged(""))
       onNext(AgeChanged("20"))
-      onNext(GenderChanged(Just(Female)))
+      onNext(GenderChanged(Optional.of(Female)))
       onNext(ColonyOrVillageChanged("Colony"))
       onNext(DistrictChanged("District"))
       onNext(StateChanged("State"))
@@ -561,9 +560,9 @@ class PatientEntryScreenLogicTest {
     screenCreated()
 
     with(uiEvents) {
-      onNext(GenderChanged(None()))
-      onNext(GenderChanged(Just(gender)))
-      onNext(GenderChanged(Just(gender)))
+      onNext(GenderChanged(Optional.empty()))
+      onNext(GenderChanged(Optional.of(gender)))
+      onNext(GenderChanged(Optional.of(gender)))
     }
 
     verify(ui, times(1)).scrollFormOnGenderSelection()
@@ -584,7 +583,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged(""))
       onNext(DateOfBirthChanged(""))
       onNext(AgeChanged("20"))
-      onNext(GenderChanged(Just(Transgender)))
+      onNext(GenderChanged(Optional.of(Transgender)))
       onNext(ColonyOrVillageChanged(""))
       onNext(DistrictChanged(""))
       onNext(StateChanged(""))
@@ -611,7 +610,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged(""))
       onNext(DateOfBirthChanged(""))
       onNext(AgeChanged("20"))
-      onNext(GenderChanged(Just(Female)))
+      onNext(GenderChanged(Optional.of(Female)))
       onNext(ColonyOrVillageChanged("Colony"))
       onNext(DistrictChanged("District"))
       onNext(StateChanged("State"))

@@ -6,9 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import java.util.Locale
 
 class PreferencesSettingsRepositoryTest {
@@ -23,7 +21,7 @@ class PreferencesSettingsRepositoryTest {
   @Test
   fun `if user selected locale is not set, fetching the current language should return the default language`() {
     // given
-    whenever(preference.get()).doReturn(None())
+    whenever(preference.get()).doReturn(Optional.empty())
 
     // then
     repository
@@ -36,7 +34,7 @@ class PreferencesSettingsRepositoryTest {
   fun `if user selected locale is in the list of provided languages, fetching the current language should return the provided language`() {
     // given
     val locale = kannada.toLocale()
-    whenever(preference.get()).doReturn(Just(locale))
+    whenever(preference.get()).doReturn(Optional.of(locale))
 
     // then
     repository
@@ -49,7 +47,7 @@ class PreferencesSettingsRepositoryTest {
   fun `if user selected locale is not in the list of provided languages, fetching the current language should return the default language`() {
     // given
     val locale = Locale.forLanguageTag("hi-IN")
-    whenever(preference.get()).doReturn(Just(locale))
+    whenever(preference.get()).doReturn(Optional.of(locale))
 
     // then
     repository
@@ -67,6 +65,6 @@ class PreferencesSettingsRepositoryTest {
     repository.setCurrentLanguage(kannada).blockingAwait()
 
     // then
-    verify(preference).set(Just(locale))
+    verify(preference).set(Optional.of(locale))
   }
 }

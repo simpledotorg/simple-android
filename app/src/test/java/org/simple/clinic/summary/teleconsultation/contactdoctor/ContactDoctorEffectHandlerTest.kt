@@ -22,7 +22,7 @@ import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientTeleconsultationInfo
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
-import org.simple.clinic.util.Optional
+import java.util.Optional
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator

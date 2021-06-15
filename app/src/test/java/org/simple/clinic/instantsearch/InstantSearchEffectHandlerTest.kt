@@ -93,7 +93,7 @@ class InstantSearchEffectHandlerTest {
   @Test
   fun `when search by criteria effect is received, then search by criteria`() {
     // given
-    val patients = listOf(
+    val patients = PagingData.from(listOf(
         TestData.patientSearchResult(
             uuid = UUID.fromString("c9ecb8c1-93a2-4a9e-92ee-2231670ef91e"),
             fullName = "Patient 1"
@@ -102,10 +102,14 @@ class InstantSearchEffectHandlerTest {
             uuid = UUID.fromString("4e615da0-eed2-4e8d-b9e9-a84021db9d3d"),
             fullName = "Patient 2"
         )
-    )
+    ))
     val searchCriteria = PatientSearchCriteria.Name("Pat")
 
-    whenever(patientRepository.search(searchCriteria, facility.uuid)) doReturn patients
+    whenever(pagerFactory.createPager(
+        sourceFactory = any<PagingSourceFactory<Int, PatientSearchResult>>(),
+        pageSize = eq(pagingLoadSize),
+        initialKey = eq(null)
+    )) doReturn Observable.just(patients)
 
     // when
     testCase.dispatch(SearchWithCriteria(searchCriteria, facility))
@@ -150,14 +154,14 @@ class InstantSearchEffectHandlerTest {
         uuid = UUID.fromString("f1e9ad5c-7de0-4566-b1fc-392bdfdc8490"),
         name = "PHC Obvious"
     )
-    val patients = listOf(
+    val patients = PagingData.from(listOf(
         TestData.patientSearchResult(
             uuid = UUID.fromString("14edda47-c177-4b5b-9d72-832e262255a3")
         ),
         TestData.patientSearchResult(
             uuid = UUID.fromString("a96ebfe1-a59c-4518-86ef-2ad2174cca03")
         )
-    )
+    ))
 
     // when
     testCase.dispatch(ShowPatientSearchResults(patients, facility, searchQuery))
@@ -232,30 +236,6 @@ class InstantSearchEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
 
     verify(uiActions).openScannedQrCodeSheet(identifier)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when show no search results effect is received, then show no search results`() {
-    // when
-    testCase.dispatch(ShowNoSearchResults)
-
-    // then
-    testCase.assertNoOutgoingEvents()
-
-    verify(uiActions).showNoSearchResults()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when hide no search results effect is received, then hide no search results`() {
-    // when
-    testCase.dispatch(HideNoSearchResults)
-
-    // then
-    testCase.assertNoOutgoingEvents()
-
-    verify(uiActions).hideNoSearchResults()
     verifyNoMoreInteractions(uiActions)
   }
 

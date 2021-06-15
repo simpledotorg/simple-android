@@ -8,7 +8,7 @@
 - Bump Room to v2.3.0
 - Bump Paging to v3.0.0
 - Prefill search query in `InstantSearchScreen`
-- [In Progress: 10 June 2021] Paginate search results in `InstantSearchScreen`
+- Paginate search results in `InstantSearchScreen`
 
 ### Changes
 - Updated translations: `hi-IN`, `bn-BD`, `te-IN`, `bn-IN`, `am-ET`, `pa-IN`, `ti-ET`, `kn-IN`, `mr-IN`, `ta-IN`, `so-ET`, `om-ET`

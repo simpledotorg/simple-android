@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.paging.LoadState.NotLoading
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +33,6 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation
-import org.simple.clinic.feature.Feature.InstantSearchByPatientIdentifier
 import org.simple.clinic.feature.Feature.InstantSearchQrCode
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.ExpectsResult
@@ -53,7 +53,6 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -74,7 +73,6 @@ class InstantSearchScreen :
         InstantSearchModel,
         InstantSearchEvent,
         InstantSearchEffect>(),
-    InstantSearchUi,
     InstantSearchUiActions,
     ExpectsResult {
 
@@ -145,8 +143,8 @@ class InstantSearchScreen :
       )
   )
 
-  private val searchResultsAdapter = ItemAdapter(
-      diffCallback = InstantSearchResultsItemType_old.DiffCallback(),
+  private val searchResultsAdapter = PagingItemAdapter(
+      diffCallback = InstantSearchResultsItemType.DiffCallback(),
       bindings = mapOf(
           R.layout.list_patient_search_header to { layoutInflater, parent ->
             ListPatientSearchHeaderBinding.inflate(layoutInflater, parent, false)
@@ -160,8 +158,6 @@ class InstantSearchScreen :
   private val blankScannedQrCodeResults = PublishSubject.create<UiEvent>()
 
   override fun defaultModel() = InstantSearchModel.create(screenKey.additionalIdentifier, screenKey.patientPrefillInfo, screenKey.initialSearchQuery)
-
-  override fun uiRenderer() = InstantSearchUiRenderer(this)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenInstantSearchBinding.inflate(layoutInflater, container, false)
@@ -179,7 +175,7 @@ class InstantSearchScreen :
       .compose(ReportAnalyticsEvents())
       .cast<InstantSearchEvent>()
 
-  override fun createUpdate() = InstantSearchUpdate(features.isEnabled(InstantSearchByPatientIdentifier), dateTimeFormatter)
+  override fun createUpdate() = InstantSearchUpdate(dateTimeFormatter)
 
   override fun createInit() = InstantSearchInit()
 
@@ -199,8 +195,6 @@ class InstantSearchScreen :
 
     qrCodeScannerButton.visibleOrGone(features.isEnabled(InstantSearchQrCode))
 
-    searchResultsView.adapter = allPatientsAdapter
-
     subscriptions.addAll(
         hideKeyboardOnSearchResultsScroll(),
         hideKeyboardOnImeAction()
@@ -212,34 +206,41 @@ class InstantSearchScreen :
     subscriptions.clear()
 
     allPatientsAdapter.removeLoadStateListener(::allPatientsAdapterLoadStateListener)
+    searchResultsAdapter.removeLoadStateListener(::searchResultsAdapterLoadStateListener)
   }
 
   override fun showAllPatients(patients: PagingData<PatientSearchResult>, facility: Facility) {
+    searchResultsAdapter.removeLoadStateListener(::searchResultsAdapterLoadStateListener)
+    allPatientsAdapter.addLoadStateListener(::allPatientsAdapterLoadStateListener)
+
     allPatientsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(
         patientSearchResults = patients,
         currentFacility = facility,
         searchQuery = null
     ))
-    allPatientsAdapter.addLoadStateListener(::allPatientsAdapterLoadStateListener)
 
     searchResultsView.visibility = View.VISIBLE
 
     searchResultsView.adapter = allPatientsAdapter
-    searchResultsView.scrollToPosition(0)
   }
 
   override fun showPatientsSearchResults(
-      patients: List<PatientSearchResult>,
+      patients: PagingData<PatientSearchResult>,
       facility: Facility,
       searchQuery: String
   ) {
     allPatientsAdapter.removeLoadStateListener(::allPatientsAdapterLoadStateListener)
+    searchResultsAdapter.addLoadStateListener(::searchResultsAdapterLoadStateListener)
+
+    searchResultsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(
+        patientSearchResults = patients,
+        currentFacility = facility,
+        searchQuery = searchQuery
+    ))
 
     searchResultsView.visibility = View.VISIBLE
-    searchResultsAdapter.submitList(InstantSearchResultsItemType_old.from(patients, facility, searchQuery))
 
     searchResultsView.adapter = searchResultsAdapter
-    searchResultsView.scrollToPosition(0)
   }
 
   override fun openPatientSummary(patientId: UUID) {
@@ -262,28 +263,11 @@ class InstantSearchScreen :
     router.pushExpectingResult(BlankScannedQrCode, ScannedQrCodeSheet.Key(identifier))
   }
 
-  override fun showNoSearchResults() {
-    searchResultsView.visibility = View.GONE
-    noSearchResultsContainer.visibility = View.VISIBLE
-  }
-
-  override fun hideNoSearchResults() {
-    noSearchResultsContainer.visibility = View.GONE
-  }
-
   override fun openPatientEntryScreen(facility: Facility) {
     router.push(AlertFacilityChangeSheet.Key(
         currentFacilityName = facility.name,
         continuation = Continuation.ContinueToScreen_Old(PatientEntryScreenKey())
     ))
-  }
-
-  override fun showSearchProgress() {
-    instantSearchProgressIndicator.visibility = View.VISIBLE
-  }
-
-  override fun hideSearchProgress() {
-    instantSearchProgressIndicator.visibility = View.GONE
   }
 
   override fun showKeyboard() {
@@ -325,11 +309,38 @@ class InstantSearchScreen :
     val endOfPaginationReached = loadStates.append.endOfPaginationReached
     val hasAdapterItems = allPatientsAdapter.itemCount > 0
 
+    instantSearchProgressIndicator.visibleOrGone(loadStates.refresh is LoadState.Loading)
+
     val showNoPatientsInFacility = isNotLoading && endOfPaginationReached && !hasAdapterItems
     if (showNoPatientsInFacility) {
       showNoPatientsInFacility(currentModel.facility!!)
     } else {
       hideNoPatientsInFacility()
+    }
+  }
+
+  private fun showNoSearchResults() {
+    searchResultsView.visibility = View.GONE
+    noSearchResultsContainer.visibility = View.VISIBLE
+  }
+
+  private fun hideNoSearchResults() {
+    noSearchResultsContainer.visibility = View.GONE
+    searchResultsView.visibility = View.VISIBLE
+  }
+
+  private fun searchResultsAdapterLoadStateListener(loadStates: CombinedLoadStates) {
+    val isNotLoading = loadStates.refresh is NotLoading
+    val endOfPaginationReached = loadStates.append.endOfPaginationReached
+    val hasAdapterItems = searchResultsAdapter.itemCount > 0
+
+    instantSearchProgressIndicator.visibleOrGone(loadStates.refresh is LoadState.Loading)
+
+    val showNoSearchResults = isNotLoading && endOfPaginationReached && !hasAdapterItems
+    if (showNoSearchResults) {
+      showNoSearchResults()
+    } else {
+      hideNoSearchResults()
     }
   }
 
@@ -343,7 +354,7 @@ class InstantSearchScreen :
   private fun searchItemClicks(): Observable<UiEvent> {
     return searchResultsAdapter
         .itemEvents
-        .ofType<InstantSearchResultsItemType_old.Event.ResultClicked>()
+        .ofType<InstantSearchResultsItemType.Event.ResultClicked>()
         .map { SearchResultClicked(it.patientUuid) }
   }
 

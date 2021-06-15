@@ -17,7 +17,7 @@ data class CurrentFacilityLoaded(val facility: Facility) : InstantSearchEvent()
 
 data class AllPatientsInFacilityLoaded(val patients: PagingData<PatientSearchResult>) : InstantSearchEvent()
 
-data class SearchResultsLoaded(val patientsSearchResults: List<PatientSearchResult>) : InstantSearchEvent()
+data class SearchResultsLoaded(val patientsSearchResults: PagingData<PatientSearchResult>) : InstantSearchEvent()
 
 data class SearchQueryValidated(val result: InstantSearchValidator.Result) : InstantSearchEvent()
 

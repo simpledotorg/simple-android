@@ -138,23 +138,7 @@ data class PatientSearchResult(
         WHERE P.deletedAt IS NULL AND namePosition > 0
         ORDER BY priority ASC, namePosition ASC
     """)
-    fun searchByName(name: String, facilityId: UUID): List<PatientSearchResult>
-
-    @Query("""
-        SELECT 
-            searchResult.*, 
-            (
-                CASE
-                    WHEN P.assignedFacilityId = :facilityId THEN 0
-                    ELSE 1
-                END
-            ) AS priority, 
-            INSTR(phoneNumber, :phoneNumber) phoneNumberPosition FROM PatientSearchResult searchResult
-        LEFT JOIN Patient P ON P.uuid = searchResult.uuid
-        WHERE P.deletedAt IS NULL AND phoneNumberPosition > 0
-        ORDER BY priority ASC, phoneNumberPosition ASC
-    """)
-    fun searchByPhoneNumber(phoneNumber: String, facilityId: UUID): List<PatientSearchResult>
+    fun searchByNamePagingSource(name: String, facilityId: UUID): PagingSource<Int, PatientSearchResult>
 
     @Query("""
         SELECT DISTINCT
@@ -165,17 +149,17 @@ data class PatientSearchResult(
                     ELSE 1
                 END
             ) AS priority,
-            INSTR(phoneNumber, :numericCriteria) phoneNumberPosition, 
-            INSTR(identifierSearchHelp, :numericCriteria) identifierPosition FROM PatientSearchResult searchResult
+            INSTR(phoneNumber, :query) phoneNumberPosition, 
+            INSTR(identifierSearchHelp, :query) identifierPosition FROM PatientSearchResult searchResult
         LEFT JOIN Patient P ON P.uuid = searchResult.uuid
         WHERE P.deletedAt IS NULL AND phoneNumberPosition > 0 OR identifierPosition > 0
         GROUP BY P.uuid
         ORDER BY priority ASC, phoneNumberPosition ASC, identifierPosition ASC
         """)
-    fun searchByNumericCriteria(
-        numericCriteria: String,
+    fun searchByNumberPagingSource(
+        query: String,
         facilityId: UUID
-    ): List<PatientSearchResult>
+    ): PagingSource<Int, PatientSearchResult>
   }
 
   data class PatientNameAndId(val uuid: UUID, val fullName: String)

@@ -25,7 +25,7 @@ data class ShowAllPatients(
 ) : InstantSearchEffect()
 
 data class ShowPatientSearchResults(
-    val patients: List<PatientSearchResult>,
+    val patients: PagingData<PatientSearchResult>,
     val facility: Facility,
     val searchQuery: String
 ) : InstantSearchEffect()
@@ -40,10 +40,6 @@ data class OpenLinkIdWithPatientScreen(
 ) : InstantSearchEffect()
 
 data class OpenScannedQrCodeSheet(val identifier: Identifier) : InstantSearchEffect()
-
-object ShowNoSearchResults : InstantSearchEffect()
-
-object HideNoSearchResults : InstantSearchEffect()
 
 data class SaveNewOngoingPatientEntry(val ongoingNewPatientEntry: OngoingNewPatientEntry) : InstantSearchEffect()
 

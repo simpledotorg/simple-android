@@ -1,7 +1,6 @@
 package org.simple.clinic.patient
 
 import androidx.annotation.VisibleForTesting
-import androidx.annotation.WorkerThread
 import androidx.paging.PagingSource
 import com.squareup.moshi.JsonAdapter
 import io.reactivex.Completable
@@ -14,7 +13,6 @@ import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.NumericCriteria
-import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.businessid.BusinessId
@@ -32,7 +30,6 @@ import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
-import java.security.Key
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -52,43 +49,23 @@ class PatientRepository @Inject constructor(
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
-  @WorkerThread
-  fun search(criteria: PatientSearchCriteria, facilityId: UUID): List<PatientSearchResult> {
+  fun searchPagingSource(criteria: PatientSearchCriteria, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
     return when (criteria) {
-      is Name -> searchByName(criteria.patientName, facilityId)
-      is PhoneNumber -> searchByPhoneNumber(criteria.phoneNumber, facilityId)
-      is NumericCriteria -> searchByNumericCriteria(criteria.numericCriteria, facilityId)
+      is Name -> searchByNamePagingSource(criteria.patientName, facilityId)
+      is NumericCriteria -> searchByNumberPagingSource(criteria.numericCriteria, facilityId)
     }
   }
 
-  private fun searchByName(patientName: String, facilityId: UUID): List<PatientSearchResult> {
-    return reportTimeTaken(
-        clock = utcClock,
-        operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
-      database.patientSearchDao().searchByName(patientName, facilityId)
-    }
+  private fun searchByNamePagingSource(patientName: String, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
+    return database
+        .patientSearchDao()
+        .searchByNamePagingSource(patientName, facilityId)
   }
 
-  private fun searchByPhoneNumber(
-      phoneNumber: String,
-      facilityId: UUID
-  ): List<PatientSearchResult> {
-    return reportTimeTaken(
-        clock = utcClock,
-        operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
-      database.patientSearchDao().searchByPhoneNumber(phoneNumber, facilityId)
-    }
-  }
-
-  private fun searchByNumericCriteria(
-      numericCriteria: String,
-      facilityId: UUID
-  ): List<PatientSearchResult> {
-    return reportTimeTaken(
-        clock = utcClock,
-        operation = "Instant Search Patient:Loading Search Result for Facility: $facilityId") {
-      database.patientSearchDao().searchByNumericCriteria(numericCriteria, facilityId)
-    }
+  private fun searchByNumberPagingSource(query: String, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
+    return database
+        .patientSearchDao()
+        .searchByNumberPagingSource(query, facilityId)
   }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {

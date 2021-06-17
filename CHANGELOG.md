@@ -9,13 +9,16 @@
 - Bump Paging to v3.0.0
 - Prefill search query in `InstantSearchScreen`
 - Paginate search results in `InstantSearchScreen`
-- Implement QR code JSON parser and extracted direct Moshi usage in `ScanSimpleIdEffectHandler`
 - Replace usage of custom `Optional` class with `java.util.Optional`
 - Add analytics events in teleconsult log after success
 
 ### Changes
 - Updated translations: `hi-IN`, `bn-BD`, `te-IN`, `bn-IN`, `am-ET`, `pa-IN`, `ti-ET`, `kn-IN`, `mr-IN`, `ta-IN`, `so-ET`, `om-ET`
 - New supported language: Sidama [`sid-ET`]
+
+## 2021-06-16-7826
+### Internal
+- Implement QR code JSON parser and extracted direct Moshi usage in `ScanSimpleIdEffectHandler`
 
 ## 2021-06-14-7821
 ### Internal

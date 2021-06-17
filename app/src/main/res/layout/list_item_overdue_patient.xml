@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginBottom="@dimen/spacing_8">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/patient_details"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/spacing_16">
+
+    <TextView
+      android:id="@+id/patientNameTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/spacing_12"
+      android:background="?attr/selectableItemBackground"
+      android:clickable="true"
+      android:drawablePadding="@dimen/spacing_12"
+      android:focusable="true"
+      android:textAppearance="?attr/textAppearanceBody0Medium"
+      android:textColor="?attr/colorPrimary"
+      app:layout_constraintEnd_toStartOf="@id/callButton"
+      app:layout_constraintHorizontal_bias="0"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:drawableStartCompat="@drawable/ic_patient_female"
+      tools:text="Anisha Acharya" />
+
+    <TextView
+      android:id="@+id/villageLabel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_12"
+      android:layout_marginEnd="@dimen/spacing_12"
+      android:text="@string/overdue_list_item_village"
+      android:textAppearance="?attr/textAppearanceBody2Bold"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/patientNameTextView" />
+
+    <TextView
+      android:id="@+id/villageTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_marginEnd="@dimen/spacing_12"
+      android:textAppearance="?attr/textAppearanceBody2"
+      android:textColor="?attr/colorOnSurface"
+      app:layout_constraintEnd_toStartOf="@id/callButton"
+      app:layout_constraintStart_toEndOf="@id/villageLabel"
+      app:layout_constraintTop_toTopOf="@id/villageLabel"
+      tools:text="Bathinda" />
+
+    <androidx.constraintlayout.widget.Barrier
+      android:id="@+id/villageBarrier"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:barrierDirection="bottom"
+      app:barrierMargin="@dimen/spacing_12"
+      app:constraint_referenced_ids="villageLabel, villageTextView" />
+
+    <TextView
+      android:id="@+id/isAtHighRiskTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/background_overdue_high_risk_label"
+      android:paddingStart="@dimen/spacing_8"
+      android:paddingEnd="@dimen/spacing_8"
+      android:text="@string/overduelist_high_risk"
+      android:textAllCaps="true"
+      android:textAppearance="?attr/textAppearanceTag"
+      android:textColor="?attr/colorError"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/villageBarrier" />
+
+    <TextView
+      android:id="@+id/overdueDaysTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_marginEnd="@dimen/spacing_8"
+      android:textAppearance="?attr/textAppearanceBody2"
+      android:textColor="?attr/colorError"
+      app:layout_constraintStart_toEndOf="@id/isAtHighRiskTextView"
+      app:layout_constraintTop_toBottomOf="@id/villageBarrier"
+      app:layout_goneMarginStart="@dimen/spacing_0"
+      tools:text="4 day overdue" />
+
+    <ImageView
+      android:id="@+id/callButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/ic_overdue_call"
+      tools:ignore="ContentDescription" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

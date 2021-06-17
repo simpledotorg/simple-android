@@ -18,7 +18,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
-import org.simple.clinic.databinding.ItemOverdueListPatientBinding
+import org.simple.clinic.databinding.ItemOverdueListPatientOldBinding
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
@@ -77,8 +77,8 @@ class OverdueScreen : BaseScreen<
   private val overdueListAdapter = PagingItemAdapter(
       diffCallback = OverdueAppointmentRow.DiffCallback(),
       bindings = mapOf(
-          R.layout.item_overdue_list_patient to { layoutInflater, parent ->
-            ItemOverdueListPatientBinding.inflate(layoutInflater, parent, false)
+          R.layout.item_overdue_list_patient_old to { layoutInflater, parent ->
+            ItemOverdueListPatientOldBinding.inflate(layoutInflater, parent, false)
           }
       )
   )

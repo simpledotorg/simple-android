@@ -9,7 +9,7 @@ import androidx.paging.map
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
-import org.simple.clinic.databinding.ItemOverdueListPatientBinding
+import org.simple.clinic.databinding.ItemOverdueListPatientOldBinding
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -89,16 +89,16 @@ data class OverdueAppointmentRow(
     }
   }
 
-  override fun layoutResId(): Int = R.layout.item_overdue_list_patient
+  override fun layoutResId(): Int = R.layout.item_overdue_list_patient_old
 
   override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
-    val binding = holder.binding as ItemOverdueListPatientBinding
+    val binding = holder.binding as ItemOverdueListPatientOldBinding
     setupEvents(binding, subject)
     bindUi(holder)
   }
 
   private fun setupEvents(
-      binding: ItemOverdueListPatientBinding,
+      binding: ItemOverdueListPatientOldBinding,
       eventSubject: Subject<UiEvent>
   ) {
     binding.callButton.setOnClickListener {
@@ -112,7 +112,7 @@ data class OverdueAppointmentRow(
 
   @SuppressLint("SetTextI18n")
   private fun bindUi(holder: BindingViewHolder) {
-    val binding = holder.binding as ItemOverdueListPatientBinding
+    val binding = holder.binding as ItemOverdueListPatientOldBinding
     val context = holder.itemView.context
 
     binding.patientNameTextView.text = context.getString(R.string.overdue_list_item_name_age, name, age.toString())

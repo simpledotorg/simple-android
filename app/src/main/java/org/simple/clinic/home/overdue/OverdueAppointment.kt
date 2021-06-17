@@ -59,7 +59,7 @@ import java.util.UUID
           FROM Patient P
 
           INNER JOIN Appointment A ON A.patientUuid = P.uuid
-          LEFT JOIN PatientPhoneNumber PPN ON (PPN.patientUuid = P.uuid AND PPN.deletedAt IS NULL)
+          LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
           LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
           LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid
 
@@ -77,8 +77,8 @@ import java.util.UUID
             P.deletedAt IS NULL
             AND P.status != 'dead'
             AND A.deletedAt IS NULL
+            AND PPN.deletedAt IS NULL
             AND A.status = 'scheduled'
-            AND PPN.number IS NOT NULL
             AND (BP.recordedAt IS NOT NULL OR BloodSugar.recordedAt IS NOT NULL)
     """
 )

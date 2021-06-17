@@ -10,6 +10,7 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.Update
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
@@ -25,6 +26,8 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.sync.LastSyncedState
+import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.PagingItemAdapter
@@ -61,6 +64,9 @@ class OverdueScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandlerFactory: OverdueEffectHandler.Factory
+
+  @Inject
+  lateinit var lastSyncedState: Preference<LastSyncedState>
 
   private val overdueListAdapter = PagingItemAdapter(
       diffCallback = OverdueAppointmentRow.DiffCallback(),
@@ -148,14 +154,15 @@ class OverdueScreen : BaseScreen<
   }
 
   private fun overdueListAdapterLoadStateListener(loadStates: CombinedLoadStates) {
+    val isSyncingPatientData = lastSyncedState.get().lastSyncProgress == SyncProgress.SYNCING
     val isLoading = loadStates.refresh is LoadState.Loading
     val endOfPaginationReached = loadStates.append.endOfPaginationReached
     val hasNoAdapterItems = overdueListAdapter.itemCount == 0
 
     val shouldShowEmptyView = endOfPaginationReached && hasNoAdapterItems
 
-    overdueProgressBar.visibleOrGone(isVisible = isLoading && hasNoAdapterItems)
-    viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView && !isLoading)
+    overdueProgressBar.visibleOrGone(isVisible = (isLoading || isSyncingPatientData) && hasNoAdapterItems)
+    viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView && !isLoading && !isSyncingPatientData)
     overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
   }
 

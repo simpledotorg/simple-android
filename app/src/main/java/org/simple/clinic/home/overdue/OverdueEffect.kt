@@ -1,5 +1,6 @@
 package org.simple.clinic.home.overdue
 
+import androidx.paging.PagingData
 import org.simple.clinic.facility.Facility
 import java.time.LocalDate
 import java.util.UUID
@@ -16,3 +17,8 @@ data class LoadOverdueAppointments(
 data class OpenContactPatientScreen(val patientUuid: UUID) : OverdueEffect()
 
 data class OpenPatientSummary(val patientUuid: UUID) : OverdueEffect()
+
+data class ShowOverdueAppointments(
+    val overdueAppointments: PagingData<OverdueAppointment>,
+    val isDiabetesManagementEnabled: Boolean
+) : OverdueEffect()

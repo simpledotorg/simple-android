@@ -7,6 +7,7 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import javax.inject.Provider
 
@@ -14,7 +15,8 @@ class OverdueEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val appointmentRepository: AppointmentRepository,
     private val currentFacility: Provider<Facility>,
-    private val dataSourceFactory: OverdueAppointmentRowDataSource.Factory.InjectionFactory,
+    private val pagerFactory: PagerFactory,
+    private val overdueAppointmentsConfig: OverdueAppointmentsConfig,
     @Assisted private val uiActions: OverdueUiActions
 ) {
 
@@ -27,10 +29,17 @@ class OverdueEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<OverdueEffect, OverdueEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
-        .addConsumer(LoadOverdueAppointments::class.java, ::loadOverdueAppointments, schedulers.ui())
+        .addTransformer(LoadOverdueAppointments::class.java, loadOverdueAppointments())
         .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPhoneMaskBottomSheet(it.patientUuid) }, schedulers.ui())
         .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid) }, schedulers.ui())
+        .addConsumer(ShowOverdueAppointments::class.java, ::showOverdueAppointments, schedulers.ui())
         .build()
+  }
+
+  private fun showOverdueAppointments(effect: ShowOverdueAppointments) {
+    uiActions.showOverdueAppointments(
+        overdueAppointments = effect.overdueAppointments,
+        isDiabetesManagementEnabled = effect.isDiabetesManagementEnabled)
   }
 
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, OverdueEvent> {
@@ -42,12 +51,24 @@ class OverdueEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun loadOverdueAppointments(loadOverdueAppointments: LoadOverdueAppointments) {
-    val overdueAppointmentsDataSource = appointmentRepository.overdueAppointmentsDataSource(
-        since = loadOverdueAppointments.overdueSince,
-        facility = loadOverdueAppointments.facility
-    )
-
-    uiActions.showOverdueAppointments(dataSourceFactory.create(loadOverdueAppointments.facility, overdueAppointmentsDataSource))
+  private fun loadOverdueAppointments(): ObservableTransformer<LoadOverdueAppointments, OverdueEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .switchMap { (overdueSince, facility) ->
+            pagerFactory.createPager(
+                sourceFactory = {
+                  appointmentRepository.overdueAppointmentsInFacility(
+                      since = overdueSince,
+                      facilityId = facility.uuid
+                  )
+                },
+                pageSize = overdueAppointmentsConfig.overdueAppointmentsLoadSize
+            )
+          }
+          .map { pagingData ->
+            OverdueAppointmentsLoaded(pagingData)
+          }
+    }
   }
 }

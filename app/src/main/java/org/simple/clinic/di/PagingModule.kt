@@ -19,15 +19,4 @@ class PagingModule {
         enablePlaceholders = false
     )
   }
-
-  @Provides
-  @Named("for_overdue_appointments")
-  fun providePagingConfigForOverdueAppointments(): PagedList.Config {
-    return Config(
-        pageSize = 50,
-        prefetchDistance = 15,
-        initialLoadSizeHint = 100,
-        enablePlaceholders = false
-    )
-  }
 }

@@ -321,6 +321,7 @@ class InstantSearchScreen :
 
   private fun showNoSearchResults() {
     searchResultsView.visibility = View.GONE
+    noPatientsInFacilityContainer.visibility = View.GONE
     noSearchResultsContainer.visibility = View.VISIBLE
   }
 

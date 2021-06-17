@@ -300,6 +300,7 @@ class InstantSearchScreen :
 
   private fun showNoPatientsInFacility(facility: Facility) {
     searchResultsView.visibility = View.GONE
+    noSearchResultsContainer.visibility = View.GONE
     noPatientsInFacilityContainer.visibility = View.VISIBLE
     noPatientsInFacilityTextView.text = getString(R.string.patientsearch_error_no_patients_in_facility_heading, facility.name)
   }
@@ -321,6 +322,7 @@ class InstantSearchScreen :
 
   private fun showNoSearchResults() {
     searchResultsView.visibility = View.GONE
+    noPatientsInFacilityContainer.visibility = View.GONE
     noSearchResultsContainer.visibility = View.VISIBLE
   }
 

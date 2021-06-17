@@ -1,14 +1,16 @@
 package org.simple.clinic.home.overdue
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.paging.PagedList
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.Update
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
@@ -24,9 +26,11 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.sync.LastSyncedState
+import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.widgets.PagingItemAdapter_old
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.time.LocalDate
@@ -62,10 +66,9 @@ class OverdueScreen : BaseScreen<
   lateinit var effectHandlerFactory: OverdueEffectHandler.Factory
 
   @Inject
-  @Named("for_overdue_appointments")
-  lateinit var pagedListConfig: PagedList.Config
+  lateinit var lastSyncedState: Preference<LastSyncedState>
 
-  private val overdueListAdapter = PagingItemAdapter_old(
+  private val overdueListAdapter = PagingItemAdapter(
       diffCallback = OverdueAppointmentRow.DiffCallback(),
       bindings = mapOf(
           R.layout.item_overdue_list_patient to { layoutInflater, parent ->
@@ -79,6 +82,9 @@ class OverdueScreen : BaseScreen<
 
   private val overdueRecyclerView
     get() = binding.overdueRecyclerView
+
+  private val overdueProgressBar
+    get() = binding.overdueProgressBar
 
   private val screenDestroys = PublishSubject.create<Unit>()
 
@@ -111,10 +117,13 @@ class OverdueScreen : BaseScreen<
     super.onViewCreated(view, savedInstanceState)
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
+
+    overdueListAdapter.addLoadStateListener(::overdueListAdapterLoadStateListener)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
+    overdueListAdapter.removeLoadStateListener(::overdueListAdapterLoadStateListener)
     screenDestroys.onNext(Unit)
   }
 
@@ -122,18 +131,16 @@ class OverdueScreen : BaseScreen<
     router.push(ContactPatientBottomSheet.Key(patientUuid))
   }
 
-  @SuppressLint("CheckResult")
-  override fun showOverdueAppointments(dataSource: OverdueAppointmentRowDataSource.Factory) {
-    dataSource
-        .toObservable(pagedListConfig, screenDestroys)
-        .takeUntil(screenDestroys)
-        .doOnNext { appointmentsList ->
-          val areOverdueAppointmentsAvailable = appointmentsList.isNotEmpty()
-
-          viewForEmptyList.visibleOrGone(isVisible = !areOverdueAppointmentsAvailable)
-          overdueRecyclerView.visibleOrGone(isVisible = areOverdueAppointmentsAvailable)
-        }
-        .subscribe(overdueListAdapter::submitList)
+  override fun showOverdueAppointments(
+      overdueAppointments: PagingData<OverdueAppointment>,
+      isDiabetesManagementEnabled: Boolean
+  ) {
+    overdueListAdapter.submitData(lifecycle, OverdueAppointmentRow.from(
+        appointments = overdueAppointments,
+        clock = userClock,
+        dateFormatter = dateFormatter,
+        isDiabetesManagementEnabled = isDiabetesManagementEnabled
+    ))
   }
 
   override fun openPatientSummary(patientUuid: UUID) {
@@ -144,6 +151,19 @@ class OverdueScreen : BaseScreen<
             screenCreatedTimestamp = Instant.now(utcClock)
         )
     )
+  }
+
+  private fun overdueListAdapterLoadStateListener(loadStates: CombinedLoadStates) {
+    val isSyncingPatientData = lastSyncedState.get().lastSyncProgress == SyncProgress.SYNCING
+    val isLoading = loadStates.refresh is LoadState.Loading
+    val endOfPaginationReached = loadStates.append.endOfPaginationReached
+    val hasNoAdapterItems = overdueListAdapter.itemCount == 0
+
+    val shouldShowEmptyView = endOfPaginationReached && hasNoAdapterItems
+
+    overdueProgressBar.visibleOrGone(isVisible = (isLoading || isSyncingPatientData) && hasNoAdapterItems)
+    viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView && !isLoading && !isSyncingPatientData)
+    overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
   }
 
   interface Injector {

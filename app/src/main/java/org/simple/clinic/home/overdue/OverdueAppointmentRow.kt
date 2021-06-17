@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.paging.PagingData
+import androidx.paging.map
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
@@ -14,7 +16,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
-import org.simple.clinic.widgets.PagingItemAdapter_old
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.setCompoundDrawableStart
@@ -40,17 +42,18 @@ data class OverdueAppointmentRow(
     val patientAddress: OverduePatientAddress,
     val isAppointmentAtAssignedFacility: Boolean,
     val appointmentFacilityName: String?
-) : PagingItemAdapter_old.Item<UiEvent> {
+) : PagingItemAdapter.Item<UiEvent> {
 
   companion object {
 
     fun from(
-        appointments: List<OverdueAppointment>,
+        appointments: PagingData<OverdueAppointment>,
         clock: UserClock,
         dateFormatter: DateTimeFormatter,
         isDiabetesManagementEnabled: Boolean
-    ): List<OverdueAppointmentRow> {
-      return appointments.map { overdueAppointment -> from(overdueAppointment, clock, dateFormatter, isDiabetesManagementEnabled) }
+    ): PagingData<OverdueAppointmentRow> {
+      return appointments
+          .map { overdueAppointment -> from(overdueAppointment, clock, dateFormatter, isDiabetesManagementEnabled) }
     }
 
     private fun from(

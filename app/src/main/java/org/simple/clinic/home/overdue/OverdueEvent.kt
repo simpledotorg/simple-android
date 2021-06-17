@@ -1,5 +1,6 @@
 package org.simple.clinic.home.overdue
 
+import androidx.paging.PagingData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -15,3 +16,7 @@ data class CallPatientClicked(val patientUuid: UUID) : OverdueEvent() {
 data class PatientNameClicked(val patientUuid: UUID) : OverdueEvent() {
   override val analyticsName = "Overdue Screen:Patient name clicked"
 }
+
+data class OverdueAppointmentsLoaded(
+    val overdueAppointments: PagingData<OverdueAppointment>
+) : OverdueEvent()

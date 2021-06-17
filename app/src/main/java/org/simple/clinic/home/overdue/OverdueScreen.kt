@@ -19,6 +19,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ItemOverdueListPatientOldBinding
+import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
@@ -33,6 +34,7 @@ import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
@@ -75,10 +77,13 @@ class OverdueScreen : BaseScreen<
   lateinit var lastSyncedState: Preference<LastSyncedState>
 
   private val overdueListAdapter = PagingItemAdapter(
-      diffCallback = OverdueAppointmentRow_Old.DiffCallback(),
+      diffCallback = OverdueAppointmentListItem.DiffCallback(),
       bindings = mapOf(
           R.layout.item_overdue_list_patient_old to { layoutInflater, parent ->
             ItemOverdueListPatientOldBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_item_overdue_patient to { layoutInflater, parent ->
+            ListItemOverduePatientBinding.inflate(layoutInflater, parent, false)
           }
       )
   )
@@ -93,6 +98,10 @@ class OverdueScreen : BaseScreen<
     get() = binding.overdueProgressBar
 
   private val screenDestroys = PublishSubject.create<Unit>()
+
+  private val overdueListChangesEnabled by unsafeLazy {
+    features.isEnabled(OverdueListChanges)
+  }
 
   override fun defaultModel() = OverdueModel.create()
 
@@ -141,11 +150,12 @@ class OverdueScreen : BaseScreen<
       overdueAppointments: PagingData<OverdueAppointment>,
       isDiabetesManagementEnabled: Boolean
   ) {
-    overdueListAdapter.submitData(lifecycle, OverdueAppointmentRow_Old.from(
+    overdueListAdapter.submitData(lifecycle, OverdueAppointmentListItem.from(
         appointments = overdueAppointments,
         clock = userClock,
         dateFormatter = dateFormatter,
-        isDiabetesManagementEnabled = isDiabetesManagementEnabled
+        isDiabetesManagementEnabled = isDiabetesManagementEnabled,
+        overdueListChangesEnabled = overdueListChangesEnabled
     ))
   }
 

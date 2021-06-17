@@ -75,7 +75,7 @@ class OverdueScreen : BaseScreen<
   lateinit var lastSyncedState: Preference<LastSyncedState>
 
   private val overdueListAdapter = PagingItemAdapter(
-      diffCallback = OverdueAppointmentRow.DiffCallback(),
+      diffCallback = OverdueAppointmentRow_Old.DiffCallback(),
       bindings = mapOf(
           R.layout.item_overdue_list_patient_old to { layoutInflater, parent ->
             ItemOverdueListPatientOldBinding.inflate(layoutInflater, parent, false)
@@ -141,7 +141,7 @@ class OverdueScreen : BaseScreen<
       overdueAppointments: PagingData<OverdueAppointment>,
       isDiabetesManagementEnabled: Boolean
   ) {
-    overdueListAdapter.submitData(lifecycle, OverdueAppointmentRow.from(
+    overdueListAdapter.submitData(lifecycle, OverdueAppointmentRow_Old.from(
         appointments = overdueAppointments,
         clock = userClock,
         dateFormatter = dateFormatter,

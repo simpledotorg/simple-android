@@ -26,7 +26,8 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.UUID
 
-data class OverdueAppointmentRow(
+@Suppress("ClassName")
+data class OverdueAppointmentRow_Old(
     val appointmentUuid: UUID,
     val patientUuid: UUID,
     val name: String,
@@ -51,7 +52,7 @@ data class OverdueAppointmentRow(
         clock: UserClock,
         dateFormatter: DateTimeFormatter,
         isDiabetesManagementEnabled: Boolean
-    ): PagingData<OverdueAppointmentRow> {
+    ): PagingData<OverdueAppointmentRow_Old> {
       return appointments
           .map { overdueAppointment -> from(overdueAppointment, clock, dateFormatter, isDiabetesManagementEnabled) }
     }
@@ -61,8 +62,8 @@ data class OverdueAppointmentRow(
         clock: UserClock,
         dateFormatter: DateTimeFormatter,
         isDiabetesManagementEnabled: Boolean
-    ): OverdueAppointmentRow {
-      return OverdueAppointmentRow(
+    ): OverdueAppointmentRow_Old {
+      return OverdueAppointmentRow_Old(
           appointmentUuid = overdueAppointment.appointment.uuid,
           patientUuid = overdueAppointment.appointment.patientUuid,
           name = overdueAppointment.fullName,
@@ -157,17 +158,17 @@ data class OverdueAppointmentRow(
         .joinToString { context.getString(it) }
   }
 
-  class DiffCallback : DiffUtil.ItemCallback<OverdueAppointmentRow>() {
+  class DiffCallback : DiffUtil.ItemCallback<OverdueAppointmentRow_Old>() {
     override fun areItemsTheSame(
-        oldItem: OverdueAppointmentRow,
-        newItem: OverdueAppointmentRow
+        oldItem: OverdueAppointmentRow_Old,
+        newItem: OverdueAppointmentRow_Old
     ): Boolean {
       return oldItem.patientUuid == newItem.patientUuid
     }
 
     override fun areContentsTheSame(
-        oldItem: OverdueAppointmentRow,
-        newItem: OverdueAppointmentRow
+        oldItem: OverdueAppointmentRow_Old,
+        newItem: OverdueAppointmentRow_Old
     ): Boolean {
       return oldItem == newItem
     }

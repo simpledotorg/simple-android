@@ -48,7 +48,7 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
     appComponent.inject(this)
 
     crashReporter.init(this)
-    Timber.plant(CrashBreadcrumbsTimberTree(crashReporter))
+    Timber.plant(CrashBreadcrumbsTimberTree())
     RxJavaPlugins.setErrorHandler { error ->
       if (!error.canBeIgnoredSafely()) {
         val cause = if (error is UndeliverableException) error.cause else error

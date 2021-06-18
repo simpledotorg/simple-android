@@ -8,11 +8,10 @@ import org.simple.clinic.platform.crash.Breadcrumb.Priority.ERROR
 import org.simple.clinic.platform.crash.Breadcrumb.Priority.INFO
 import org.simple.clinic.platform.crash.Breadcrumb.Priority.VERBOSE
 import org.simple.clinic.platform.crash.Breadcrumb.Priority.WARN
-import org.simple.clinic.platform.crash.CrashReporter_Old
+import org.simple.clinic.platform.crash.CrashReporter
 import timber.log.Timber
 
 class CrashBreadcrumbsTimberTree(
-    private val crashReporter: CrashReporter_Old,
     private val priorityToReport: Breadcrumb.Priority = INFO
 ) : Timber.Tree() {
 
@@ -27,7 +26,7 @@ class CrashBreadcrumbsTimberTree(
           tag = tag,
           message = breadcrumbMessage
       )
-      crashReporter.dropBreadcrumb(breadcrumb)
+      CrashReporter.dropBreadcrumb(breadcrumb)
     }
   }
 

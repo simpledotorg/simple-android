@@ -316,14 +316,14 @@ android {
 }
 
 dependencies {
-  implementation(project(":router"))
-  implementation(project(":mobius-base"))
-  implementation(project(":simple-platform"))
-  implementation(project(":simple-visuals"))
+  implementation(projects.router)
+  implementation(projects.mobiusBase)
+  implementation(projects.simplePlatform)
+  implementation(projects.simpleVisuals)
 
-  lintChecks(project(":lint"))
+  lintChecks(projects.lint)
 
-  testImplementation(project(":mobius-migration"))
+  testImplementation(projects.mobiusMigration)
 
   testImplementation("junit:junit:${versions.junit}")
   testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${versions.mockitoKotlin}")

@@ -4,6 +4,7 @@
 ### Internal
 - Migrate `OverdueAppointment` to add patients without phone number
 - Migrate `kotlinx.android.parcel` usage to `kotlinx.parcelize`
+- Change `CrashReporter` to be a facade instead of a discrete interface
 
 ### Changes
 - [In Progress: 17 Jun 2021] Overdue list improvements

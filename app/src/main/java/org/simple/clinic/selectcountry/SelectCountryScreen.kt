@@ -63,9 +63,6 @@ class SelectCountryScreen(
   lateinit var schedulersProvider: SchedulersProvider
 
   @Inject
-  lateinit var crashReporter: CrashReporter
-
-  @Inject
   lateinit var countryDisplayNameFetcher: CountryDisplayNameFetcher
 
   @Inject
@@ -88,14 +85,13 @@ class SelectCountryScreen(
   }
 
   private val delegate by unsafeLazy {
-    MobiusDelegate(
+    MobiusDelegate.forView(
         events = events,
         defaultModel = SelectCountryModel.FETCHING,
         init = SelectCountryInit(),
         update = SelectCountryUpdate(),
         effectHandler = SelectCountryEffectHandler.create(appConfigRepository, this, schedulersProvider),
-        modelUpdateListener = uiRenderer::render,
-        crashReporter = crashReporter
+        modelUpdateListener = uiRenderer::render
     )
   }
 

@@ -9,14 +9,13 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
-import org.simple.clinic.platform.crash.CrashReporter_Old
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Success
 import java.util.UUID
 import javax.inject.Inject
 
 class ScanSimpleIdUpdate @Inject constructor(
-    private val crashReporter: CrashReporter_Old,
     private val isIndianNHIDSupportEnabled: Boolean
 ) : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimpleIdEffect> {
 
@@ -93,7 +92,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       val identifier = Identifier(bpPassportCode.toString(), BpPassport)
       next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
     } catch (e: Exception) {
-      crashReporter.report(e)
+      CrashReporter.report(e)
       searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
     }
   }

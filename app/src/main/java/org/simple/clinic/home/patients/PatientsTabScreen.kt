@@ -34,7 +34,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.platform.crash.CrashReporter_Old
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
@@ -68,9 +68,6 @@ class PatientsTabScreen : BaseScreen<
 
   @Inject
   lateinit var activity: AppCompatActivity
-
-  @Inject
-  lateinit var crashReporter: CrashReporter_Old
 
   @Inject
   lateinit var country: Country
@@ -310,7 +307,7 @@ class PatientsTabScreen : BaseScreen<
     if (resolvedIntent != null) {
       requireContext().startActivity(resolvedIntent)
     } else {
-      crashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
+      CrashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }
   }
 

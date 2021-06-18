@@ -32,7 +32,7 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent
 import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent.OptimizationType.PurgeDeleted
 import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent.OptimizationType.PurgeFromOtherSyncGroup
-import org.simple.clinic.platform.crash.CrashReporter_Old
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.storage.text.TextRecord
@@ -174,9 +174,7 @@ abstract class AppDatabase : RoomDatabase() {
     }
   }
 
-  fun prune(
-      crashReporter: CrashReporter_Old
-  ) {
+  fun prune() {
     optimizeWithAnalytics(PurgeDeleted) {
       purge()
       try {
@@ -185,7 +183,7 @@ abstract class AppDatabase : RoomDatabase() {
         // Vacuuming is an optimization that's unlikely to fail. But if it
         // does, we can ignore it and just report the exception and let
         // the original sqlite file continue to be used.
-        crashReporter.report(e)
+        CrashReporter.report(e)
       }
     }
   }

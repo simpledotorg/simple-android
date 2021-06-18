@@ -25,7 +25,7 @@ import android.media.Image.Plane
 import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageProxy
-import org.simple.clinic.platform.crash.CrashReporter_Old
+import org.simple.clinic.platform.crash.CrashReporter
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import javax.inject.Inject
@@ -34,7 +34,7 @@ import javax.inject.Inject
  * Utils functions for bitmap conversions.
  * Based on : https://github.com/googlesamples/mlkit/blob/f9b6689015301b3380c38201c3f92813b388891d/android/vision-quickstart/app/src/main/java/com/google/mlkit/vision/demo/BitmapUtils.java
  * */
-class BitmapUtils @Inject constructor(private val crashReporter: CrashReporter_Old) {
+class BitmapUtils @Inject constructor() {
 
   /** Converts NV21 format byte buffer to bitmap.  */
   private fun getBitmap(data: ByteBuffer, metadata: FrameMetadata): Bitmap? {
@@ -50,7 +50,7 @@ class BitmapUtils @Inject constructor(private val crashReporter: CrashReporter_O
       stream.close()
       return rotateBitmap(bmp, metadata.rotation, flipX = false, flipY = false)
     } catch (e: Exception) {
-      crashReporter.report(e)
+      CrashReporter.report(e)
     }
     return null
   }

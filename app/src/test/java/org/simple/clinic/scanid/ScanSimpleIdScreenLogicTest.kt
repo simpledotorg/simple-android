@@ -14,7 +14,6 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.first
-import org.simple.clinic.platform.crash.NoOpCrashReporter
 import org.simple.clinic.remoteconfig.DefaultValueConfigReader
 import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
@@ -147,7 +146,7 @@ class ScanSimpleIdScreenLogicTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         init = Init { first(it) },
-        update = ScanSimpleIdUpdate(crashReporter = NoOpCrashReporter(), isIndianNHIDSupportEnabled = true),
+        update = ScanSimpleIdUpdate(isIndianNHIDSupportEnabled = true),
         effectHandler = effectHandler.build(),
         defaultModel = ScanSimpleIdModel.create(),
         modelUpdateListener = { /* no-op */ }

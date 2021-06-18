@@ -59,7 +59,7 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.platform.crash.CrashReporter_Old
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
@@ -85,9 +85,6 @@ class PatientEntryScreen(
 
   @Inject
   lateinit var router: Router
-
-  @Inject
-  lateinit var crashReporter: CrashReporter_Old
 
   @Inject
   lateinit var phoneNumberValidator: PhoneNumberValidator
@@ -528,7 +525,7 @@ class PatientEntryScreen(
       Female -> femaleRadioButton
       Transgender -> transgenderRadioButton
       is Unknown -> {
-        crashReporter.report(IllegalStateException("Heads-up: unknown gender ${gender.actualValue} found in ${PatientEntryScreen::class.java.name}"))
+        CrashReporter.report(IllegalStateException("Heads-up: unknown gender ${gender.actualValue} found in ${PatientEntryScreen::class.java.name}"))
         null
       }
     }

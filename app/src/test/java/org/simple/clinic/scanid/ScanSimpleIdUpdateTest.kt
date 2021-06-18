@@ -12,7 +12,6 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
-import org.simple.clinic.platform.crash.NoOpCrashReporter
 import java.util.UUID
 
 class ScanSimpleIdUpdateTest {
@@ -32,7 +31,6 @@ class ScanSimpleIdUpdateTest {
      """
 
   private val spec = UpdateSpec(ScanSimpleIdUpdate(
-      crashReporter = NoOpCrashReporter(),
       isIndianNHIDSupportEnabled = true
   ))
 

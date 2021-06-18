@@ -68,7 +68,7 @@ import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.platform.crash.CrashReporter_Old
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.unsafeLazy
@@ -112,9 +112,6 @@ class EditPatientScreen(
 
   @Inject
   lateinit var activity: AppCompatActivity
-
-  @Inject
-  lateinit var crashReporter: CrashReporter_Old
 
   @Inject
   lateinit var effectHandlerFactory: EditPatientEffectHandler.Factory
@@ -491,7 +488,7 @@ class EditPatientScreen(
       Female -> femaleRadioButton
       Transgender -> transgenderRadioButton
       is Unknown -> {
-        crashReporter.report(IllegalStateException("Heads-up: unknown gender ${gender.actualValue} found in ${EditPatientScreen::class.java.name}"))
+        CrashReporter.report(IllegalStateException("Heads-up: unknown gender ${gender.actualValue} found in ${EditPatientScreen::class.java.name}"))
         null
       }
     }

@@ -38,7 +38,6 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.platform.crash.CrashReporter_Old
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.qrcodeanalyzer.MLKitQrCodeAnalyzer
 import org.simple.clinic.scanid.qrcodeanalyzer.ZxingQrCodeAnalyzer
@@ -77,9 +76,6 @@ class ScanSimpleIdScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandlerFactory: ScanSimpleIdEffectHandler.Factory
-
-  @Inject
-  lateinit var crashReporter: CrashReporter_Old
 
   @Inject
   lateinit var router: Router
@@ -131,7 +127,7 @@ class ScanSimpleIdScreen : BaseScreen<
       .compose(ReportAnalyticsEvents())
       .cast<ScanSimpleIdEvent>()
 
-  override fun createUpdate() = ScanSimpleIdUpdate(crashReporter, features.isEnabled(IndiaNationalHealthID))
+  override fun createUpdate() = ScanSimpleIdUpdate(features.isEnabled(IndiaNationalHealthID))
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 

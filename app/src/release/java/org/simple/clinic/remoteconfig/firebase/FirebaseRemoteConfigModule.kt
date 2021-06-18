@@ -5,7 +5,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.di.AppScope
-import org.simple.clinic.platform.crash.CrashReporter_Old
+import org.simple.clinic.platform.crash.CrashReporter
 import java.time.Duration
 import timber.log.Timber
 
@@ -14,7 +14,7 @@ class FirebaseRemoteConfigModule {
 
   @Provides
   @AppScope
-  fun remoteConfig(crashReporter: dagger.Lazy<CrashReporter_Old>): FirebaseRemoteConfig {
+  fun remoteConfig(): FirebaseRemoteConfig {
     return FirebaseRemoteConfig.getInstance().apply {
       val settings = FirebaseRemoteConfigSettings
           .Builder()
@@ -23,7 +23,7 @@ class FirebaseRemoteConfigModule {
 
       setConfigSettingsAsync(settings)
           .addOnSuccessListener { Timber.tag("FRC").i("Set remote config settings") }
-          .addOnFailureListener { crashReporter.get().report(it) }
+          .addOnFailureListener { CrashReporter.report(it) }
     }
   }
 }

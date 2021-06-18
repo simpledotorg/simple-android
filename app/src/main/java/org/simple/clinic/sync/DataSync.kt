@@ -10,12 +10,11 @@ import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.di.AppScope
-import org.simple.clinic.platform.crash.CrashReporter_Old
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.remoteconfig.RemoteConfigService
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ErrorResolver
-import java.util.Optional
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
@@ -27,6 +26,7 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import timber.log.Timber
 import java.io.IOException
+import java.util.Optional
 import javax.inject.Inject
 
 private fun createScheduler(workers: Int): Scheduler {
@@ -38,7 +38,6 @@ private fun createScheduler(workers: Int): Scheduler {
 @AppScope
 class DataSync(
     private val modelSyncs: List<ModelSync>,
-    private val crashReporter: CrashReporter_Old,
     private val userSession: UserSession,
     private val schedulersProvider: SchedulersProvider,
     private val syncScheduler: Scheduler,
@@ -48,14 +47,12 @@ class DataSync(
   @Inject
   constructor(
       modelSyncs: List<@JvmSuppressWildcards ModelSync>,
-      crashReporter: CrashReporter_Old,
       userSession: UserSession,
       schedulersProvider: SchedulersProvider,
       remoteConfigService: RemoteConfigService,
       purgeOnSync: PurgeOnSync
   ) : this(
       modelSyncs = modelSyncs,
-      crashReporter = crashReporter,
       userSession = userSession,
       schedulersProvider = schedulersProvider,
       syncScheduler = createScheduler(remoteConfigService.reader().long("max_parallel_syncs", 1L).toInt()),
@@ -181,7 +178,7 @@ class DataSync(
     when (resolvedError) {
       is Unexpected, is ServerError -> {
         Timber.i("(breadcrumb) Reporting to sentry. Error: ${actualCause}. Resolved error: $resolvedError")
-        crashReporter.report(actualCause)
+        CrashReporter.report(actualCause)
         Timber.e(actualCause)
       }
       is NetworkRelated, is Unauthenticated -> Timber.e(actualCause)

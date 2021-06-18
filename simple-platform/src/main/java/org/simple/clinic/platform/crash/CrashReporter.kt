@@ -12,4 +12,10 @@ object CrashReporter: CrashReporter_Old {
 
   override fun report(e: Throwable) {
   }
+
+  interface Sink {
+    fun dropBreadcrumb(breadcrumb: Breadcrumb)
+
+    fun report(throwable: Throwable)
+  }
 }

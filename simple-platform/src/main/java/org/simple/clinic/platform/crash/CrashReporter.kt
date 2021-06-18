@@ -1,25 +1,18 @@
 package org.simple.clinic.platform.crash
 
-import android.app.Application
 import timber.log.Timber
 
-object CrashReporter : CrashReporter_Old {
+object CrashReporter {
 
   private var sinks = emptyList<Sink>()
 
-  override fun init(appContext: Application) {
-    // We will leave initialization to the individual sink constructor implementation
-    // since we do not know their requirements
-    // TODO: Remove this method in a later commit
-  }
-
-  override fun dropBreadcrumb(breadcrumb: Breadcrumb) {
+  fun dropBreadcrumb(breadcrumb: Breadcrumb) {
     sinks.forEach { sink ->
       runSafely { sink.dropBreadcrumb(breadcrumb) }
     }
   }
 
-  override fun report(e: Throwable) {
+  fun report(e: Throwable) {
     sinks.forEach { sink ->
       runSafely { sink.report(e) }
     }

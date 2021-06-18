@@ -11,8 +11,6 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.onboarding.OnboardingModule
-import org.simple.clinic.platform.crash.CrashReporter_Old
-import org.simple.clinic.platform.crash.NoOpCrashReporter
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.sync.SyncModule
@@ -46,9 +44,6 @@ class TestAppModule(private val application: Application) {
 
   @Provides
   fun schedulersProvider(): SchedulersProvider = DefaultSchedulersProvider()
-
-  @Provides
-  fun crashReporter(): CrashReporter_Old = NoOpCrashReporter()
 
   @Provides
   fun zoneId(): ZoneId = ZoneOffset.UTC

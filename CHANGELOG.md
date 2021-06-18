@@ -20,6 +20,9 @@
 - New supported language: Sidama [`sid-ET`]
 - Updated home screen illustrations
 
+### Fixes
+- Fix confirm reset pin error text is not hidden by default
+
 ## 2021-06-16-7826
 ### Internal
 - Implement QR code JSON parser and extracted direct Moshi usage in `ScanSimpleIdEffectHandler`

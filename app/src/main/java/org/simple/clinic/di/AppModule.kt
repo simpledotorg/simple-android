@@ -15,7 +15,6 @@ import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.appconfig.AppLockModule
 import org.simple.clinic.appconfig.CountryModule
 import org.simple.clinic.appupdate.AppUpdateModule
-import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.di.network.HttpInterceptorsModule
 import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.di.network.RetrofitModule
@@ -61,7 +60,6 @@ import javax.inject.Named
   LoginModule::class,
   RegistrationModule::class,
   FacilityChangeModule::class,
-  CrashReporterModule::class,
   BruteForceProtectionModule::class,
   PatientSummaryModule::class,
   DateFormatterModule::class,

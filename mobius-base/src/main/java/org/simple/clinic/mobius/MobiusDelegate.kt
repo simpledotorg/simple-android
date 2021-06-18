@@ -73,7 +73,7 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
       )
     }
   }
-  
+
   private val controller: MobiusLoop.Controller<M, E> by lazy(NONE) {
     MobiusAndroid.controller(loop, lastKnownModel ?: defaultModel, init)
   }

@@ -111,7 +111,7 @@ class OverdueEffectHandlerTest {
         initialKey = eq(null))) doReturn Observable.just(overdueAppointments)
 
     // when
-    effectHandlerTestCase.dispatch(LoadOverdueAppointments(overdueSince = LocalDate.parse("2018-01-01"), facility = facility))
+    effectHandlerTestCase.dispatch(LoadOverdueAppointments_old(overdueSince = LocalDate.parse("2018-01-01"), facility = facility))
 
     // then
     verifyZeroInteractions(uiActions)

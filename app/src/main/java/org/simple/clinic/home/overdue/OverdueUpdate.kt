@@ -12,7 +12,7 @@ class OverdueUpdate(
 
   override fun update(model: OverdueModel, event: OverdueEvent): Next<OverdueModel, OverdueEffect> {
     return when (event) {
-      is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility), LoadOverdueAppointments(date, event.facility))
+      is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility), LoadOverdueAppointments_old(date, event.facility))
       is CallPatientClicked -> dispatch(OpenContactPatientScreen(event.patientUuid))
       is PatientNameClicked -> dispatch(OpenPatientSummary(event.patientUuid))
       is OverdueAppointmentsLoaded -> dispatch(ShowOverdueAppointments(event.overdueAppointments, model.isDiabetesManagementEnabled))

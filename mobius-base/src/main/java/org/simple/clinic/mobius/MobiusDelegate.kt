@@ -74,29 +74,6 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
     }
   }
 
-  @Deprecated(
-      message = "This constructor is left to not break existing code. Use the version without the crashreporter parameter",
-      replaceWith = ReplaceWith("MobiusDelegate.forView(events, defaultModel, init, update, effectHandler, modelUpdateListener)")
-  )
-  constructor(
-      events: Observable<E>,
-      defaultModel: M,
-      init: Init<M, F>?,
-      update: Update<M, E, F>,
-      effectHandler: ObservableTransformer<F, E>,
-      modelUpdateListener: (M) -> Unit,
-      @Suppress("UNUSED_PARAMETER") crashReporter: CrashReporter
-  ) : this(
-      events = events,
-      defaultModel = defaultModel,
-      init = init ?: Init { first(defaultModel) },
-      update = update,
-      effectHandler = effectHandler,
-      modelUpdateListener = modelUpdateListener,
-      savedStateHandle = ViewSavedStateHandle(defaultModel::class.java.name),
-      additionalEventSources = emptyList()
-  )
-
   private val controller: MobiusLoop.Controller<M, E> by lazy(NONE) {
     MobiusAndroid.controller(loop, lastKnownModel ?: defaultModel, init)
   }

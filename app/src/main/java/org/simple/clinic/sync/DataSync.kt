@@ -10,7 +10,7 @@ import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.di.AppScope
-import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.platform.crash.CrashReporter_Old
 import org.simple.clinic.remoteconfig.RemoteConfigService
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -38,7 +38,7 @@ private fun createScheduler(workers: Int): Scheduler {
 @AppScope
 class DataSync(
     private val modelSyncs: List<ModelSync>,
-    private val crashReporter: CrashReporter,
+    private val crashReporter: CrashReporter_Old,
     private val userSession: UserSession,
     private val schedulersProvider: SchedulersProvider,
     private val syncScheduler: Scheduler,
@@ -48,7 +48,7 @@ class DataSync(
   @Inject
   constructor(
       modelSyncs: List<@JvmSuppressWildcards ModelSync>,
-      crashReporter: CrashReporter,
+      crashReporter: CrashReporter_Old,
       userSession: UserSession,
       schedulersProvider: SchedulersProvider,
       remoteConfigService: RemoteConfigService,

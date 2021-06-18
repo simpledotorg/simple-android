@@ -34,7 +34,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.platform.crash.CrashReporter_Old
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
@@ -70,7 +70,7 @@ class PatientsTabScreen : BaseScreen<
   lateinit var activity: AppCompatActivity
 
   @Inject
-  lateinit var crashReporter: CrashReporter
+  lateinit var crashReporter: CrashReporter_Old
 
   @Inject
   lateinit var country: Country

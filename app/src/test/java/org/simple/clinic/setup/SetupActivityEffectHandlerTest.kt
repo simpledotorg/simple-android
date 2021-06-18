@@ -14,7 +14,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.platform.crash.CrashReporter_Old
 import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason
@@ -34,7 +34,7 @@ class SetupActivityEffectHandlerTest {
   private val appConfigRepository = mock<AppConfigRepository>()
   private val fallbackCountry = TestData.country()
   private val appDatabase = mock<org.simple.clinic.AppDatabase>()
-  private val crashReporter = mock<CrashReporter>()
+  private val crashReporter = mock<CrashReporter_Old>()
   private val databaseMaintenanceRunAtPreference = mock<Preference<Optional<Instant>>>()
   private val clock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
   private val allowApplicationToRun = mock<AllowApplicationToRun>()

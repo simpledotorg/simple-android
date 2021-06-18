@@ -17,7 +17,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.platform.crash.CrashReporter_Old
 import org.simple.clinic.registration.register.RegistrationLoadingScreenKey
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
@@ -56,7 +56,7 @@ class IntroVideoScreen(
   lateinit var introVideoEffectHandler: IntroVideoEffectHandler.Factory
 
   @Inject
-  lateinit var crashReporter: CrashReporter
+  lateinit var crashReporter: CrashReporter_Old
 
   private val events: Observable<IntroVideoEvent> by unsafeLazy {
     Observable

@@ -32,7 +32,7 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent
 import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent.OptimizationType.PurgeDeleted
 import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent.OptimizationType.PurgeFromOtherSyncGroup
-import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.platform.crash.CrashReporter_Old
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.storage.text.TextRecord
@@ -175,7 +175,7 @@ abstract class AppDatabase : RoomDatabase() {
   }
 
   fun prune(
-      crashReporter: CrashReporter
+      crashReporter: CrashReporter_Old
   ) {
     optimizeWithAnalytics(PurgeDeleted) {
       purge()

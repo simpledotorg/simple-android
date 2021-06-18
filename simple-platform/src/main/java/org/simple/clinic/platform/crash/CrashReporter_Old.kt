@@ -2,7 +2,7 @@ package org.simple.clinic.platform.crash
 
 import android.app.Application
 
-interface CrashReporter {
+interface CrashReporter_Old {
 
   fun init(appContext: Application)
 
@@ -11,7 +11,7 @@ interface CrashReporter {
   fun report(e: Throwable)
 }
 
-class NoOpCrashReporter : CrashReporter {
+class NoOpCrashReporter : CrashReporter_Old {
 
   override fun report(e: Throwable) {}
 

@@ -12,7 +12,7 @@ import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.EthiopiaInputFieldsProvider
 import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsProvider
-import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.platform.crash.CrashReporter_Old
 import org.simple.clinic.remoteconfig.RemoteConfigService
 import org.simple.clinic.util.UserClock
 import java.time.LocalDate
@@ -45,7 +45,7 @@ class InputFieldsFactoryModule {
   fun readChennaiFacilityGroupIds(
       uuidSetJsonAdapter: JsonAdapter<Set<UUID>>,
       remoteConfigService: RemoteConfigService,
-      crashReporter: CrashReporter
+      crashReporter: CrashReporter_Old
   ): Set<UUID> {
     val chennaiFacilityIdJsonArray = remoteConfigService.reader().string("chennai_facility_group_ids", "[]")
 

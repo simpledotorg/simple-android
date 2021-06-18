@@ -68,7 +68,7 @@ import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.platform.crash.CrashReporter_Old
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.unsafeLazy
@@ -114,7 +114,7 @@ class EditPatientScreen(
   lateinit var activity: AppCompatActivity
 
   @Inject
-  lateinit var crashReporter: CrashReporter
+  lateinit var crashReporter: CrashReporter_Old
 
   @Inject
   lateinit var effectHandlerFactory: EditPatientEffectHandler.Factory

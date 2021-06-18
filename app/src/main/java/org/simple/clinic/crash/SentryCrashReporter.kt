@@ -14,7 +14,7 @@ import org.simple.clinic.platform.crash.Breadcrumb.Priority.ERROR
 import org.simple.clinic.platform.crash.Breadcrumb.Priority.INFO
 import org.simple.clinic.platform.crash.Breadcrumb.Priority.VERBOSE
 import org.simple.clinic.platform.crash.Breadcrumb.Priority.WARN
-import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.platform.crash.CrashReporter_Old
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.extractIfPresent
 import javax.inject.Inject
@@ -26,7 +26,7 @@ class SentryCrashReporter @Inject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val appConfigRepository: AppConfigRepository
-) : CrashReporter {
+) : CrashReporter_Old {
 
   override fun init(appContext: Application) {
     identifyUserAndCurrentFacility()

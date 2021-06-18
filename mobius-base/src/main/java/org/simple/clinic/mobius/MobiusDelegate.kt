@@ -16,7 +16,6 @@ import com.spotify.mobius.functions.Function
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.platform.crash.CrashReporter
 import kotlin.LazyThreadSafetyMode.NONE
 
 class MobiusDelegate<M : Parcelable, E, F> private constructor(

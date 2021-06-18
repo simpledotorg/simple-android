@@ -15,7 +15,7 @@ import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.DatabaseMaintenanceRunAt
 import org.simple.clinic.main.TypedPreference.Type.FallbackCountry
 import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
-import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.platform.crash.CrashReporter_Old
 import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.user.User
 import java.util.Optional
@@ -30,7 +30,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     private val appConfigRepository: AppConfigRepository,
     private val schedulersProvider: SchedulersProvider,
     private val appDatabase: AppDatabase,
-    private val crashReporter: CrashReporter,
+    private val crashReporter: CrashReporter_Old,
     private val clock: UtcClock,
     private val allowApplicationToRun: AllowApplicationToRun,
     @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,

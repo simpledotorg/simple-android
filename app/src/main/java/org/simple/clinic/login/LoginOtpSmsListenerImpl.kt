@@ -4,14 +4,14 @@ import android.app.Application
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
-import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.platform.crash.CrashReporter_Old
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class LoginOtpSmsListenerImpl @Inject constructor(
     private val application: Application,
-    private val crashReporter: CrashReporter
+    private val crashReporter: CrashReporter_Old
 ) : LoginOtpSmsListener {
 
   override fun listenForLoginOtp() {

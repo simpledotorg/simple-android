@@ -59,7 +59,7 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.platform.crash.CrashReporter_Old
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
@@ -87,7 +87,7 @@ class PatientEntryScreen(
   lateinit var router: Router
 
   @Inject
-  lateinit var crashReporter: CrashReporter
+  lateinit var crashReporter: CrashReporter_Old
 
   @Inject
   lateinit var phoneNumberValidator: PhoneNumberValidator

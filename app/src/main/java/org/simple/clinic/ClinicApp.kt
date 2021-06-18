@@ -12,7 +12,7 @@ import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsReporter
-import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.platform.crash.CrashReporter_Old
 import org.simple.clinic.storage.monitoring.AnalyticsSqlPerformanceReportingSink
 import org.simple.clinic.storage.monitoring.SqlPerformanceReporter
 import timber.log.Timber
@@ -30,7 +30,7 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
   lateinit var updateAnalyticsUserId: UpdateAnalyticsUserId
 
   @Inject
-  lateinit var crashReporter: CrashReporter
+  lateinit var crashReporter: CrashReporter_Old
 
   @Inject
   lateinit var closeActivitiesWhenUserIsUnauthorized: CloseActivitiesWhenUserIsUnauthorized

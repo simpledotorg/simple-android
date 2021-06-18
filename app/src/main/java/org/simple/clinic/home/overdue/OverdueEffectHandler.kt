@@ -58,7 +58,7 @@ class OverdueEffectHandler @AssistedInject constructor(
           .switchMap { (overdueSince, facility) ->
             pagerFactory.createPager(
                 sourceFactory = {
-                  appointmentRepository.overdueAppointmentsInFacility(
+                  appointmentRepository.overdueAppointmentsInFacility_old(
                       since = overdueSince,
                       facilityId = facility.uuid
                   )

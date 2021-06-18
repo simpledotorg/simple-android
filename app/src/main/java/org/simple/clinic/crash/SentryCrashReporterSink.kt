@@ -1,7 +1,6 @@
 package org.simple.clinic.crash
 
 import android.annotation.SuppressLint
-import android.app.Application
 import io.reactivex.schedulers.Schedulers.io
 import io.sentry.Sentry
 import io.sentry.SentryLevel
@@ -14,7 +13,7 @@ import org.simple.clinic.platform.crash.Breadcrumb.Priority.ERROR
 import org.simple.clinic.platform.crash.Breadcrumb.Priority.INFO
 import org.simple.clinic.platform.crash.Breadcrumb.Priority.VERBOSE
 import org.simple.clinic.platform.crash.Breadcrumb.Priority.WARN
-import org.simple.clinic.platform.crash.CrashReporter_Old
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.extractIfPresent
 import javax.inject.Inject
@@ -22,13 +21,13 @@ import io.sentry.Breadcrumb as SentryBreadCrumb
 
 typealias SentryBreadcrumbLevel = SentryLevel
 
-class SentryCrashReporter @Inject constructor(
+class SentryCrashReporterSink @Inject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val appConfigRepository: AppConfigRepository
-) : CrashReporter_Old {
+) : CrashReporter.Sink {
 
-  override fun init(appContext: Application) {
+  init {
     identifyUserAndCurrentFacility()
     identifyCurrentCountryCode()
   }
@@ -87,7 +86,7 @@ class SentryCrashReporter @Inject constructor(
     }
   }
 
-  override fun report(e: Throwable) {
-    Sentry.captureException(e)
+  override fun report(throwable: Throwable) {
+    Sentry.captureException(throwable)
   }
 }

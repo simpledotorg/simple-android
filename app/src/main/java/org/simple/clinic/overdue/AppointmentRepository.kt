@@ -129,7 +129,7 @@ class AppointmentRepository @Inject constructor(
         )
   }
 
-  fun overdueAppointmentsInFacility2(
+  fun overdueAppointmentsInFacility(
       since: LocalDate,
       facilityId: UUID
   ): PagingSource<Int, OverdueAppointment> {

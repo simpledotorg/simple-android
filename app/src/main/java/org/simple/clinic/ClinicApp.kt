@@ -9,6 +9,7 @@ import io.reactivex.plugins.RxJavaPlugins
 import org.simple.clinic.activity.CloseActivitiesWhenUserIsUnauthorized
 import org.simple.clinic.analytics.UpdateAnalyticsUserId
 import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
+import org.simple.clinic.crash.SentryCrashReporterSink
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsReporter
@@ -34,6 +35,9 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
 
   @Inject
   lateinit var analyticsSqlPerformanceReportingSink: AnalyticsSqlPerformanceReportingSink
+
+  @Inject
+  lateinit var sentryCrashReporterSink: SentryCrashReporterSink
 
   protected open val analyticsReporters = emptyList<AnalyticsReporter>()
 

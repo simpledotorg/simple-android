@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next Release
+## On Demo
 ### Internal
 - Use `ExperimentalGetImage` for `BitmapUtils#getBitmap`
 - Bump Annotation library to v1.2.0

@@ -9,6 +9,11 @@ sealed class OverdueEffect
 
 object LoadCurrentFacility : OverdueEffect()
 
+data class LoadOverdueAppointments_old(
+    val overdueSince: LocalDate,
+    val facility: Facility
+) : OverdueEffect()
+
 data class LoadOverdueAppointments(
     val overdueSince: LocalDate,
     val facility: Facility

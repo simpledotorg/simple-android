@@ -11,7 +11,9 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.f2prateek.rx.preferences2.Preference
+import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.Update
+import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
@@ -36,6 +38,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PagingItemAdapter
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.time.LocalDate
@@ -100,6 +103,9 @@ class OverdueScreen : BaseScreen<
   private val buttonsFrame
     get() = binding.buttonsFrame
 
+  private val downloadOverdueListButton
+    get() = binding.downloadOverduelist
+
   private val screenDestroys = PublishSubject.create<Unit>()
 
   private val overdueListChangesEnabled by unsafeLazy {
@@ -111,8 +117,10 @@ class OverdueScreen : BaseScreen<
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenOverdueBinding.inflate(layoutInflater, container, false)
 
-  override fun events() = overdueListAdapter
-      .itemEvents
+  override fun events() = Observable.mergeArray(
+      overdueListAdapter.itemEvents,
+      downloadOverdueListClicks()
+  )
       .compose(ReportAnalyticsEvents())
       .share()
       .cast<OverdueEvent>()
@@ -185,6 +193,12 @@ class OverdueScreen : BaseScreen<
     overdueProgressBar.visibleOrGone(isVisible = (isLoading || isSyncingPatientData) && hasNoAdapterItems)
     viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView && !isLoading && !isSyncingPatientData)
     overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
+  }
+
+  private fun downloadOverdueListClicks(): Observable<UiEvent> {
+    return downloadOverdueListButton
+        .clicks()
+        .map { DownloadOverdueListClicked }
   }
 
   interface Injector {

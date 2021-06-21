@@ -21,6 +21,9 @@ import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ItemOverdueListPatientBinding
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Feature.OverdueListChanges
+import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -48,6 +51,9 @@ class OverdueScreen : BaseScreen<
 
   @Inject
   lateinit var activity: AppCompatActivity
+
+  @Inject
+  lateinit var features: Features
 
   @Inject
   lateinit var router: Router
@@ -101,7 +107,7 @@ class OverdueScreen : BaseScreen<
 
   override fun createUpdate(): Update<OverdueModel, OverdueEvent, OverdueEffect> {
     val date = LocalDate.now(userClock)
-    return OverdueUpdate(date)
+    return OverdueUpdate(date, features.isEnabled(OverdueListChanges))
   }
 
   override fun createInit() = OverdueInit()

@@ -99,7 +99,28 @@ class OverdueEffectHandlerTest {
   }
 
   @Test
-  fun `when load overdue appointments effect is received, then load overdue appointments`() {
+  fun `when old load overdue appointments effect is received, then load overdue appointments without patients with no phone numbers`() {
+    // given
+    val overdueAppointments = PagingData.from(listOf(
+        TestData.overdueAppointment(appointmentUuid = UUID.fromString("94295f1e-9087-427e-be9d-552ab0581443")),
+        TestData.overdueAppointment(appointmentUuid = UUID.fromString("3379cdf4-9693-4ad8-b0d6-1006f6dd48ff"))
+    ))
+
+    whenever(pagerFactory.createPager(sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment>>(),
+        pageSize = eq(overdueAppointmentsConfig.overdueAppointmentsLoadSize),
+        initialKey = eq(null))) doReturn Observable.just(overdueAppointments)
+
+    // when
+    effectHandlerTestCase.dispatch(LoadOverdueAppointments_old(overdueSince = LocalDate.parse("2018-01-01"), facility = facility))
+
+    // then
+    verifyZeroInteractions(uiActions)
+
+    effectHandlerTestCase.assertOutgoingEvents(OverdueAppointmentsLoaded(overdueAppointments))
+  }
+
+  @Test
+  fun `when load overdue appointments effect is received, then load overdue appointments with patients with no phone numbers`() {
     // given
     val overdueAppointments = PagingData.from(listOf(
         TestData.overdueAppointment(appointmentUuid = UUID.fromString("94295f1e-9087-427e-be9d-552ab0581443")),

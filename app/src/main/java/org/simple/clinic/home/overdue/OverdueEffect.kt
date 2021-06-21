@@ -14,6 +14,11 @@ data class LoadOverdueAppointments_old(
     val facility: Facility
 ) : OverdueEffect()
 
+data class LoadOverdueAppointments(
+    val overdueSince: LocalDate,
+    val facility: Facility
+) : OverdueEffect()
+
 data class OpenContactPatientScreen(val patientUuid: UUID) : OverdueEffect()
 
 data class OpenPatientSummary(val patientUuid: UUID) : OverdueEffect()

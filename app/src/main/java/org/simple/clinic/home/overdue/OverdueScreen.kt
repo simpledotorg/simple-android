@@ -22,8 +22,8 @@ import org.simple.clinic.databinding.ItemOverdueListPatientOldBinding
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Feature.OverdueListChanges
+import org.simple.clinic.feature.Feature.OverdueListDownloadAndShare
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -97,6 +97,9 @@ class OverdueScreen : BaseScreen<
   private val overdueProgressBar
     get() = binding.overdueProgressBar
 
+  private val buttonsFrame
+    get() = binding.buttonsFrame
+
   private val screenDestroys = PublishSubject.create<Unit>()
 
   private val overdueListChangesEnabled by unsafeLazy {
@@ -134,6 +137,8 @@ class OverdueScreen : BaseScreen<
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
 
     overdueListAdapter.addLoadStateListener(::overdueListAdapterLoadStateListener)
+
+    buttonsFrame.visibleOrGone(isVisible = features.isEnabled(OverdueListDownloadAndShare))
   }
 
   override fun onDestroyView() {

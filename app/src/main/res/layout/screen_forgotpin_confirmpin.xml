@@ -107,6 +107,7 @@
         android:text="@string/forgotpin_error_pin_mismatch"
         android:textAppearance="?attr/textAppearanceBody2"
         android:textColor="?attr/colorError"
+        android:visibility="gone"
         tools:visibility="visible" />
 
       <TextView

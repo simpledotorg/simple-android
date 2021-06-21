@@ -27,5 +27,6 @@ enum class Feature(
   VillageTypeAhead(false, "village_type_ahead"),
   InstantSearchQrCode(true, "instant_search_qr_code"),
   EthiopianCalendar(true, "ethiopian_calendar"),
-  IndiaNationalHealthID(true, "india_national_health_id")
+  IndiaNationalHealthID(true, "india_national_health_id"),
+  OverdueListChanges(false, "overdue_list_changes")
 }

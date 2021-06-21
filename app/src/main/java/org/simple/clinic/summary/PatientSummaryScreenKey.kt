@@ -2,7 +2,7 @@ package org.simple.clinic.summary
 
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
-import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.navigation.v2.ScreenKey
 import java.time.Instant

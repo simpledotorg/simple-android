@@ -25,3 +25,8 @@ object DownloadOverdueListClicked : OverdueEvent() {
 
   override val analyticsName = "Overdue Screen:Download clicked"
 }
+
+object ShareOverdueListClicked : OverdueEvent() {
+
+  override val analyticsName = "Overdue Screen:Share clicked"
+}

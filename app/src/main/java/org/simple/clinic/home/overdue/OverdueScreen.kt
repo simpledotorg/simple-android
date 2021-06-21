@@ -106,6 +106,9 @@ class OverdueScreen : BaseScreen<
   private val downloadOverdueListButton
     get() = binding.downloadOverduelist
 
+  private val shareOverdueListButton
+    get() = binding.shareOverdueList
+
   private val screenDestroys = PublishSubject.create<Unit>()
 
   private val overdueListChangesEnabled by unsafeLazy {
@@ -119,7 +122,8 @@ class OverdueScreen : BaseScreen<
 
   override fun events() = Observable.mergeArray(
       overdueListAdapter.itemEvents,
-      downloadOverdueListClicks()
+      downloadOverdueListClicks(),
+      shareOverdueListClicks()
   )
       .compose(ReportAnalyticsEvents())
       .share()
@@ -199,6 +203,12 @@ class OverdueScreen : BaseScreen<
     return downloadOverdueListButton
         .clicks()
         .map { DownloadOverdueListClicked }
+  }
+
+  private fun shareOverdueListClicks(): Observable<UiEvent> {
+    return shareOverdueListButton
+        .clicks()
+        .map { ShareOverdueListClicked }
   }
 
   interface Injector {

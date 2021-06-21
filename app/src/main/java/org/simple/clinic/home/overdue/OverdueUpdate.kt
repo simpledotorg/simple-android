@@ -19,7 +19,13 @@ class OverdueUpdate(
       is OverduePatientClicked -> dispatch(OpenPatientSummary(event.patientUuid))
       is OverdueAppointmentsLoaded -> dispatch(ShowOverdueAppointments(event.overdueAppointments, model.isDiabetesManagementEnabled))
       DownloadOverdueListClicked -> downloadOverdueListClicked()
+      ShareOverdueListClicked -> shareOverdueListClicked()
     }
+  }
+
+  // TODO: Trigger share overdue list effect
+  private fun shareOverdueListClicked(): Next<OverdueModel, OverdueEffect> {
+    return noChange()
   }
 
   // TODO: Trigger download overdue list effect

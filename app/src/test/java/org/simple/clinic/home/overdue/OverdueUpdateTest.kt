@@ -106,4 +106,15 @@ class OverdueUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when share overdue list button is clicked, then do nothing`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(ShareOverdueListClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasNoEffects()
+        ))
+  }
 }

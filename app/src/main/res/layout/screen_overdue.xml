@@ -23,7 +23,10 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:clipToPadding="false"
-      android:padding="@dimen/spacing_8"
+      android:paddingTop="@dimen/spacing_8"
+      android:paddingStart="@dimen/spacing_8"
+      android:paddingEnd="@dimen/spacing_8"
+      android:paddingBottom="@dimen/spacing_64"
       android:visibility="gone" />
 
   </org.simple.clinic.util.NestedScrollableHost>

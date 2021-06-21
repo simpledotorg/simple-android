@@ -1,6 +1,6 @@
 package org.simple.clinic.editpatient
 
-import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.patient.Patient

@@ -1,7 +1,7 @@
 package org.simple.clinic.teleconsultlog.shareprescription
 
 import androidx.fragment.app.Fragment
-import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.navigation.v2.ScreenKey
 import java.util.UUID

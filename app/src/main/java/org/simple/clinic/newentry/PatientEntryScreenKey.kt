@@ -1,6 +1,6 @@
 package org.simple.clinic.newentry
 
-import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.router.screen.FullScreenKey

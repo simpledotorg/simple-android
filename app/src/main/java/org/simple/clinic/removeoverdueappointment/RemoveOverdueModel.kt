@@ -1,7 +1,7 @@
 package org.simple.clinic.removeoverdueappointment
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.contactpatient.RemoveAppointmentReason
 import java.util.UUID
 

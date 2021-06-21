@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
 import io.reactivex.Observable
-import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.patient.SyncStatus

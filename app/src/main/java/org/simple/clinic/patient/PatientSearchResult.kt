@@ -6,7 +6,7 @@ import androidx.room.Dao
 import androidx.room.DatabaseView
 import androidx.room.Embedded
 import androidx.room.Query
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.businessid.Identifier
 import java.time.Instant
 import java.time.LocalDate

@@ -83,4 +83,19 @@ class AllRecentPatientsEffectHandlerTest {
 
     effectHandlerTestCase.assertOutgoingEvents(RecentPatientsLoaded(recentPatients))
   }
+
+  @Test
+  fun `when open patient summary effect is received, then open patient summary screen`() {
+    // given
+    val patientUuid = UUID.fromString("6891045b-7c6a-4b4f-89b8-9bc25f114295")
+
+    // when
+    effectHandlerTestCase.dispatch(OpenPatientSummary(patientUuid))
+
+    // then
+    verify(uiActions).openPatientSummary(patientUuid)
+    verifyNoMoreInteractions(uiActions)
+
+    effectHandlerTestCase.assertNoOutgoingEvents()
+  }
 }

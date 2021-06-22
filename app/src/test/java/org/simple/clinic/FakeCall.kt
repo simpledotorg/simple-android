@@ -1,6 +1,7 @@
 package org.simple.clinic
 
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.ResponseBody
 import okio.Timeout
@@ -25,7 +26,7 @@ class FakeCall<T> private constructor(
     fun <T> error(
         data: String,
         responseCode: Int,
-        mediaType: MediaType = MediaType.parse("application/json")!!
+        mediaType: MediaType = "application/json".toMediaType()
     ): FakeCall<T> {
       return FakeCall(responseErrorData = Triple(mediaType, responseCode, data))
     }

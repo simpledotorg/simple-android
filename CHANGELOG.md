@@ -7,6 +7,7 @@
 - Change `CrashReporter` to be a facade instead of a discrete interface
 - Show download and share buttons in overdue list
 - Show invalid json error when `NHID` number is empty or less than 14 digits   
+- Explicitly pin OkHttp version to 4.X
 
 ### Changes
 - Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`

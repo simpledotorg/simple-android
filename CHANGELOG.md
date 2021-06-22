@@ -7,7 +7,7 @@
 - Change `CrashReporter` to be a facade instead of a discrete interface
 
 ### Changes
-- Updated translations: `pa-IN`, `hi-IN`
+- Updated translations: `pa-IN`, `hi-IN`, `ta-IN`
 - [In Progress: 17 Jun 2021] Overdue list improvements
   - Change overdue list UI
   - Load overdue patients without phone number

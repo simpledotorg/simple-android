@@ -273,6 +273,7 @@
     <item quantity="one">குறித்த நாளை விட %s நாள் அதிகம்</item>
     <item quantity="other">குறித்த நாளை விட %s நாட்கள் அதிகம்</item>
   </plurals>
+  <string name="overdue_list_item_village">கிராமம்</string>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">வந்துள்ளார்</string>
   <string name="overduelist_high_risk">அதிக ஆபத்து</string>

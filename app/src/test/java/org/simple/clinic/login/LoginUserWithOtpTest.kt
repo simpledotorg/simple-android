@@ -10,8 +10,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
 import io.reactivex.Single
-import okhttp3.MediaType
-import okhttp3.ResponseBody
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -27,12 +27,12 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toUser
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
+import java.util.Optional
 import java.util.UUID
 
 class LoginUserWithOtpTest {
@@ -148,7 +148,7 @@ class LoginUserWithOtpTest {
           ]
         }
       }"""
-    val error = HttpException(Response.error<LoginResponse>(401, ResponseBody.create(MediaType.parse("text"), errorJson)))
+    val error = HttpException(Response.error<LoginResponse>(401, errorJson.toResponseBody("text/plain".toMediaType())))
     whenever(usersApi.login(loginRequest)) doReturn Single.error<LoginResponse>(error)
 
     // when

@@ -1,8 +1,11 @@
 package org.simple.clinic.recentpatient
 
 import android.os.Parcelable
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
@@ -44,18 +47,39 @@ class RecentPatientsScreen : BaseScreen<
   @Inject
   lateinit var uiRendererFactory: AllRecentPatientsUiRenderer.Factory
 
-  private var binding: RecentPatientsScreenBinding? = null
-
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   private val recyclerView
-    get() = binding!!.recyclerView
+    get() = binding.recyclerView
 
-  private val events by unsafeLazy {
-    adapterEvents()
+  private val recentAdapter = ItemAdapter(
+      diffCallback = RecentPatientItemDiffCallback(),
+      bindings = mapOf(
+          R.layout.recent_patient_item_view to { layoutInflater, parent ->
+            RecentPatientItemViewBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
+
+  override fun events(): Observable<AllRecentPatientsEvent> {
+    return adapterEvents()
         .compose(ReportAnalyticsEvents())
+        .cast()
   }
+
+  override fun createInit() = AllRecentPatientsInit()
+
+  override fun createUpdate() = AllRecentPatientsUpdate()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun defaultModel() = AllRecentPatientsModel.create()
+
+  override fun uiRenderer() = uiRendererFactory.create(this)
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenRecentPatientsBinding.inflate(layoutInflater, container, false)
 
   private val delegate by unsafeLazy {
     val uiRenderer = uiRendererFactory.create(this)
@@ -69,15 +93,6 @@ class RecentPatientsScreen : BaseScreen<
         modelUpdateListener = uiRenderer::render
     )
   }
-
-  private val recentAdapter = ItemAdapter(
-      diffCallback = RecentPatientItemDiffCallback(),
-      bindings = mapOf(
-          R.layout.recent_patient_item_view to { layoutInflater, parent ->
-            RecentPatientItemViewBinding.inflate(layoutInflater, parent, false)
-          }
-      )
-  )
 
   override fun onFinishInflate() {
     super.onFinishInflate()

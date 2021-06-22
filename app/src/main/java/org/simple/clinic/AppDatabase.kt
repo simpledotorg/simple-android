@@ -174,9 +174,7 @@ abstract class AppDatabase : RoomDatabase() {
     }
   }
 
-  fun prune(
-      crashReporter: CrashReporter
-  ) {
+  fun prune() {
     optimizeWithAnalytics(PurgeDeleted) {
       purge()
       try {
@@ -185,7 +183,7 @@ abstract class AppDatabase : RoomDatabase() {
         // Vacuuming is an optimization that's unlikely to fail. But if it
         // does, we can ignore it and just report the exception and let
         // the original sqlite file continue to be used.
-        crashReporter.report(e)
+        CrashReporter.report(e)
       }
     }
   }

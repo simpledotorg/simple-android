@@ -45,7 +45,6 @@ class InputFieldsFactoryModule {
   fun readChennaiFacilityGroupIds(
       uuidSetJsonAdapter: JsonAdapter<Set<UUID>>,
       remoteConfigService: RemoteConfigService,
-      crashReporter: CrashReporter
   ): Set<UUID> {
     val chennaiFacilityIdJsonArray = remoteConfigService.reader().string("chennai_facility_group_ids", "[]")
 
@@ -54,7 +53,7 @@ class InputFieldsFactoryModule {
     } catch (e: Exception) {
       // We do not want crash the app in this scenario, just report
       // the exception and go with the default behaviour.
-      crashReporter.report(e)
+      CrashReporter.report(e)
       emptySet()
     }
   }

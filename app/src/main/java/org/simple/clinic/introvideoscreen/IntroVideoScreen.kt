@@ -55,9 +55,6 @@ class IntroVideoScreen(
   @Inject
   lateinit var introVideoEffectHandler: IntroVideoEffectHandler.Factory
 
-  @Inject
-  lateinit var crashReporter: CrashReporter
-
   private val events: Observable<IntroVideoEvent> by unsafeLazy {
     Observable
         .mergeArray(
@@ -138,7 +135,7 @@ class IntroVideoScreen(
     if (resolvedIntent != null) {
       context.startActivity(resolvedIntent)
     } else {
-      crashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
+      CrashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }
   }
 }

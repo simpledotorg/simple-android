@@ -70,9 +70,6 @@ class PatientsTabScreen : BaseScreen<
   lateinit var activity: AppCompatActivity
 
   @Inject
-  lateinit var crashReporter: CrashReporter
-
-  @Inject
   lateinit var country: Country
 
   @Inject
@@ -310,7 +307,7 @@ class PatientsTabScreen : BaseScreen<
     if (resolvedIntent != null) {
       requireContext().startActivity(resolvedIntent)
     } else {
-      crashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
+      CrashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }
   }
 

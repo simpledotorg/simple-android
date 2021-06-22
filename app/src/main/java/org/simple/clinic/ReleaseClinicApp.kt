@@ -18,6 +18,8 @@ class ReleaseClinicApp : ClinicApp() {
     listOf(MixpanelAnalyticsReporter(this).swallowErrors())
   }
 
+  override val crashReporterSinks by unsafeLazy { listOf(sentryCrashReporterSink) }
+
   override fun onCreate() {
     super.onCreate()
 

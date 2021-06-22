@@ -14,7 +14,7 @@ class FirebaseRemoteConfigModule {
 
   @Provides
   @AppScope
-  fun remoteConfig(crashReporter: dagger.Lazy<CrashReporter>): FirebaseRemoteConfig {
+  fun remoteConfig(): FirebaseRemoteConfig {
     return FirebaseRemoteConfig.getInstance().apply {
       val settings = FirebaseRemoteConfigSettings
           .Builder()
@@ -23,7 +23,7 @@ class FirebaseRemoteConfigModule {
 
       setConfigSettingsAsync(settings)
           .addOnSuccessListener { Timber.tag("FRC").i("Set remote config settings") }
-          .addOnFailureListener { crashReporter.get().report(it) }
+          .addOnFailureListener { CrashReporter.report(it) }
     }
   }
 }

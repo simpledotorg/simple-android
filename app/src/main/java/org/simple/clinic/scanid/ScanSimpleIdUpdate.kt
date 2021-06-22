@@ -16,7 +16,6 @@ import java.util.UUID
 import javax.inject.Inject
 
 class ScanSimpleIdUpdate @Inject constructor(
-    private val crashReporter: CrashReporter,
     private val isIndianNHIDSupportEnabled: Boolean
 ) : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimpleIdEffect> {
 
@@ -93,7 +92,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       val identifier = Identifier(bpPassportCode.toString(), BpPassport)
       next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
     } catch (e: Exception) {
-      crashReporter.report(e)
+      CrashReporter.report(e)
       searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
     }
   }

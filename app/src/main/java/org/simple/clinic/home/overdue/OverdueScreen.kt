@@ -104,10 +104,10 @@ class OverdueScreen : BaseScreen<
     get() = binding.buttonsFrame
 
   private val downloadOverdueListButton
-    get() = binding.downloadOverduelist
+    get() = binding.downloadOverdueListButton
 
   private val shareOverdueListButton
-    get() = binding.shareOverdueList
+    get() = binding.shareOverdueListButton
 
   private val screenDestroys = PublishSubject.create<Unit>()
 

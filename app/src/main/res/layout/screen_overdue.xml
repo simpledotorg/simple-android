@@ -81,14 +81,14 @@
     tools:visibility="visible">
 
     <com.google.android.material.button.MaterialButton
-      android:id="@+id/downloadOverduelist"
+      android:id="@+id/downloadOverdueListButton"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_weight="1"
       android:text="@string/overdue_download" />
 
     <com.google.android.material.button.MaterialButton
-      android:id="@+id/shareOverdueList"
+      android:id="@+id/shareOverdueListButton"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_16"

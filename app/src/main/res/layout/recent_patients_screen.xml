@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.recentpatient.RecentPatientsScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical">
+  android:layout_height="match_parent">
 
   <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/appbar_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent">
 
     <com.google.android.material.appbar.MaterialToolbar
       android:id="@+id/toolbar"
@@ -22,9 +23,11 @@
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/recyclerView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="0dp"
     android:clipToPadding="false"
     android:paddingTop="@dimen/spacing_8"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/appbar_layout"
     tools:listitem="@layout/recent_patient_item_view" />
 
-</org.simple.clinic.recentpatient.RecentPatientsScreen>
+</androidx.constraintlayout.widget.ConstraintLayout>

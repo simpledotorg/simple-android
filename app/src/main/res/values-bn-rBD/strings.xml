@@ -273,6 +273,7 @@
     <item quantity="one">%s দিন সময়াতীত</item>
     <item quantity="other">%s দিন সময়াতীত</item>
   </plurals>
+  <string name="overdue_list_item_village">গ্রাম</string>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">দেখা হয়েছে</string>
   <string name="overduelist_high_risk">অতিরিক্ত ঝুঁকি</string>

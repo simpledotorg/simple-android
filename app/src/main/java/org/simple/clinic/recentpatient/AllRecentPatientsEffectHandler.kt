@@ -8,12 +8,14 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class AllRecentPatientsEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
     private val currentFacility: Lazy<Facility>,
+    private val pagerFactory: PagerFactory,
     @Assisted private val uiActions: AllRecentPatientsUiActions
 ) {
 
@@ -40,10 +42,14 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .switchMap {
-            patientRepository
-                .recentPatients_old(currentFacility.get().uuid)
-                .map(::RecentPatientsLoaded)
+            val facilityId = currentFacility.get().uuid
+
+            pagerFactory.createPager(
+                sourceFactory = { patientRepository.recentPatients(facilityUuid = facilityId) },
+                pageSize = 20
+            )
           }
+          .map(::RecentPatientsLoaded)
     }
   }
 }

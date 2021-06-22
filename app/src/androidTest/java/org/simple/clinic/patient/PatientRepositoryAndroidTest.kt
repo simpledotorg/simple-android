@@ -57,7 +57,6 @@ import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.storage.text.TextStore
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import java.util.Optional
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -68,6 +67,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -820,9 +820,12 @@ class PatientRepositoryAndroidTest {
     savePatientWithBp(facilityUuid = facilityUuid, deletedAt = Instant.now())
     val recentPatient3 = savePatientWithBp(facilityUuid = facilityUuid)
 
-    val recentPatients = patientRepository
-        .recentPatients_old(facilityUuid)
+    val recentPatients = PagingTestCase(
+        pagingSource = patientRepository.recentPatients(facilityUuid),
+        loadSize = 20)
+        .data
         .blockingFirst()
+
     assertThat(recentPatients).isEqualTo(listOf(recentPatient3, recentPatient1))
   }
 
@@ -930,9 +933,12 @@ class PatientRepositoryAndroidTest {
     val recentPatient2 = savePatientWithPrescribedDrug(facilityUuid = facilityUuid, deletedAt = Instant.now())
     val recentPatient3 = savePatientWithPrescribedDrug(facilityUuid = facilityUuid)
 
-    val recentPatients = patientRepository
-        .recentPatients_old(facilityUuid)
+    val recentPatients = PagingTestCase(
+        pagingSource = patientRepository.recentPatients(facilityUuid),
+        loadSize = 20)
+        .data
         .blockingFirst()
+
     assertThat(recentPatients).isEqualTo(listOf(recentPatient3, recentPatient1))
   }
 
@@ -974,9 +980,12 @@ class PatientRepositoryAndroidTest {
     val recentPatient2 = savePatientWithAppointment(facilityUuid = facilityUuid, creationFacilityUuid = facilityUuid, deletedAt = Instant.now())
     val recentPatient3 = savePatientWithAppointment(facilityUuid = facilityUuid, creationFacilityUuid = facilityUuid)
 
-    val recentPatients = patientRepository
-        .recentPatients_old(facilityUuid)
+    val recentPatients = PagingTestCase(
+        pagingSource = patientRepository.recentPatients(facilityUuid),
+        loadSize = 20)
+        .data
         .blockingFirst()
+
     assertThat(recentPatients).isEqualTo(listOf(recentPatient3, recentPatient1))
   }
 
@@ -999,9 +1008,12 @@ class PatientRepositoryAndroidTest {
         status = Visited
     )
 
-    val recentPatients = patientRepository
-        .recentPatients_old(facilityUuid)
+    val recentPatients = PagingTestCase(
+        pagingSource = patientRepository.recentPatients(facilityUuid),
+        loadSize = 20)
+        .data
         .blockingFirst()
+
     assertThat(recentPatients).isEqualTo(listOf(recentPatient1))
   }
 
@@ -1033,10 +1045,17 @@ class PatientRepositoryAndroidTest {
         status = Scheduled
     )
 
-    val recentPatientsInFromFacility = patientRepository.recentPatients_old(fromFacilityUuid).blockingFirst()
+    val recentPatientsInFromFacility = PagingTestCase(
+        pagingSource = patientRepository.recentPatients(fromFacilityUuid),
+        loadSize = 20
+    ).data.blockingFirst()
     assertThat(recentPatientsInFromFacility).isEqualTo(listOf(recentPatient))
 
-    val recentPatientsInToFacility = patientRepository.recentPatients_old(toFacilityUuid).blockingFirst()
+    val recentPatientsInToFacility = PagingTestCase(
+        pagingSource = patientRepository.recentPatients(toFacilityUuid),
+        loadSize = 20
+    ).data.blockingFirst()
+
     assertThat(recentPatientsInToFacility).isEqualTo(emptyList<RecentPatient>())
   }
 
@@ -1048,9 +1067,12 @@ class PatientRepositoryAndroidTest {
     val recentPatient3 = savePatientWithAppointment(facilityUuid = facilityUuid, creationFacilityUuid = facilityUuid,
         appointmentType = AppointmentType.Unknown(""))
 
-    val recentPatients = patientRepository
-        .recentPatients_old(facilityUuid)
+    val recentPatients = PagingTestCase(
+        pagingSource = patientRepository.recentPatients(facilityUuid),
+        loadSize = 20)
+        .data
         .blockingFirst()
+
     assertThat(recentPatients).isEqualTo(listOf(recentPatient2))
   }
 

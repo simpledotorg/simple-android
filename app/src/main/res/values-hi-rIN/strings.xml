@@ -273,6 +273,7 @@
     <item quantity="one">%s दिन अधिक हो गया है</item>
     <item quantity="other">%s दिन अधिक हो गए हैं</item>
   </plurals>
+  <string name="overdue_list_item_village">गांव</string>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">विज़िट की गई</string>
   <string name="overduelist_high_risk">उच्च जोखिम</string>

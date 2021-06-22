@@ -37,7 +37,7 @@ class RecentPatientsScreen : BaseScreen<
     ScreenRecentPatientsBinding,
     AllRecentPatientsModel,
     AllRecentPatientsEvent,
-    AllRecentPatientsEffect>(), AllRecentPatientsUi, AllRecentPatientsUiActions {
+    AllRecentPatientsEffect>(), AllRecentPatientsUiActions {
 
   @Inject
   lateinit var router: Router
@@ -50,9 +50,6 @@ class RecentPatientsScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandlerFactory: AllRecentPatientsEffectHandler.Factory
-
-  @Inject
-  lateinit var uiRendererFactory: AllRecentPatientsUiRenderer.Factory
 
   @Named("full_date")
   @Inject
@@ -85,9 +82,7 @@ class RecentPatientsScreen : BaseScreen<
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
-  override fun defaultModel() = AllRecentPatientsModel.create()
-
-  override fun uiRenderer() = uiRendererFactory.create(this)
+  override fun defaultModel() = AllRecentPatientsModel
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenRecentPatientsBinding.inflate(layoutInflater, container, false)
@@ -127,10 +122,6 @@ class RecentPatientsScreen : BaseScreen<
             screenCreatedTimestamp = Instant.now(utcClock)
         )
     )
-  }
-
-  override fun updateRecentPatients(allItemTypes: List<RecentPatientItem>) {
-    recentAdapter.submitList(allItemTypes)
   }
 
   override fun showRecentPatients(recentPatients: PagingData<RecentPatient>) {

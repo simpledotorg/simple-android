@@ -10,7 +10,7 @@ class AllRecentPatientsInitTest {
 
   @Test
   fun `when screen is created, then load all recent patients`() {
-    val defaultModel = AllRecentPatientsModel.create()
+    val defaultModel = AllRecentPatientsModel
 
     InitSpec(AllRecentPatientsInit())
         .whenInit(defaultModel)

@@ -11,7 +11,7 @@ import java.util.UUID
 
 class AllRecentPatientsUpdateTest {
 
-  private val defaultModel = AllRecentPatientsModel.create()
+  private val defaultModel = AllRecentPatientsModel
   private val updateSpec = UpdateSpec(AllRecentPatientsUpdate())
 
   @Test

@@ -2,9 +2,12 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/overdueCardView"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginBottom="@dimen/spacing_8">
+  android:layout_marginBottom="@dimen/spacing_8"
+  android:clickable="true"
+  android:focusable="true">
 
   <LinearLayout
     android:id="@+id/patient_details"
@@ -28,10 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_16"
         android:layout_marginBottom="@dimen/spacing_4"
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
         android:drawablePadding="@dimen/spacing_16"
-        android:focusable="true"
         android:textAppearance="?attr/textAppearanceBody0Medium"
         android:textColor="?attr/colorPrimary"
         app:drawableStartCompat="@drawable/ic_patient_female"

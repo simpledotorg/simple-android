@@ -124,7 +124,7 @@ sealed class OverdueAppointmentListItem : PagingItemAdapter.Item<UiEvent> {
         eventSubject.onNext(CallPatientClicked(patientUuid))
       }
 
-      binding.patientNameTextView.setOnClickListener {
+      binding.overdueCardView.setOnClickListener {
         eventSubject.onNext(PatientNameClicked(patientUuid))
       }
     }
@@ -205,7 +205,7 @@ sealed class OverdueAppointmentListItem : PagingItemAdapter.Item<UiEvent> {
         eventSubject.onNext(CallPatientClicked(patientUuid))
       }
 
-      binding.patientNameTextView.setOnClickListener {
+      binding.overdueCardView.setOnClickListener {
         eventSubject.onNext(PatientNameClicked(patientUuid))
       }
     }

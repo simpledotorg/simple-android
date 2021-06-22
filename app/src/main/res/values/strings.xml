@@ -330,6 +330,7 @@
     <item quantity="one">%s day overdue</item>
     <item quantity="other">%s days overdue</item>
   </plurals>
+  <string name="overdue_list_item_village">Village</string>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">Visited</string>
   <string name="overduelist_high_risk">High risk</string>

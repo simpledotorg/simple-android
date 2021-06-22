@@ -87,9 +87,6 @@ class PatientEntryScreen(
   lateinit var router: Router
 
   @Inject
-  lateinit var crashReporter: CrashReporter
-
-  @Inject
   lateinit var phoneNumberValidator: PhoneNumberValidator
 
   @Inject
@@ -528,7 +525,7 @@ class PatientEntryScreen(
       Female -> femaleRadioButton
       Transgender -> transgenderRadioButton
       is Unknown -> {
-        crashReporter.report(IllegalStateException("Heads-up: unknown gender ${gender.actualValue} found in ${PatientEntryScreen::class.java.name}"))
+        CrashReporter.report(IllegalStateException("Heads-up: unknown gender ${gender.actualValue} found in ${PatientEntryScreen::class.java.name}"))
         null
       }
     }

@@ -10,8 +10,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class LoginOtpSmsListenerImpl @Inject constructor(
-    private val application: Application,
-    private val crashReporter: CrashReporter
+    private val application: Application
 ) : LoginOtpSmsListener {
 
   override fun listenForLoginOtp() {
@@ -22,7 +21,7 @@ class LoginOtpSmsListenerImpl @Inject constructor(
           // We don't care about any failures here since we have an option
           // to manually enter the OTP. We'll just report this to the crash
           // tracking tool.
-          crashReporter.report(error)
+          CrashReporter.report(error)
         }
   }
 }

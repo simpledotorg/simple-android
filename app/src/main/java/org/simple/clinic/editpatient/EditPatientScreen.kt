@@ -114,9 +114,6 @@ class EditPatientScreen(
   lateinit var activity: AppCompatActivity
 
   @Inject
-  lateinit var crashReporter: CrashReporter
-
-  @Inject
   lateinit var effectHandlerFactory: EditPatientEffectHandler.Factory
 
   @Inject
@@ -491,7 +488,7 @@ class EditPatientScreen(
       Female -> femaleRadioButton
       Transgender -> transgenderRadioButton
       is Unknown -> {
-        crashReporter.report(IllegalStateException("Heads-up: unknown gender ${gender.actualValue} found in ${EditPatientScreen::class.java.name}"))
+        CrashReporter.report(IllegalStateException("Heads-up: unknown gender ${gender.actualValue} found in ${EditPatientScreen::class.java.name}"))
         null
       }
     }

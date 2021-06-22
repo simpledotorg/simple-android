@@ -273,6 +273,7 @@
     <item quantity="one">%s రోజు క్రితం గడువు ముగిసింది</item>
     <item quantity="other">%s రోజుల క్రితం గడువు ముగిసింది</item>
   </plurals>
+  <string name="overdue_list_item_village">గ్రామం</string>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">సందర్శించినవి</string>
   <string name="overduelist_high_risk">అధిక ప్రమాదం</string>

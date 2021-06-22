@@ -21,7 +21,7 @@ import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import java.util.UUID
@@ -52,7 +52,7 @@ class RecentPatientsScreen : BaseScreen<
   private val recyclerView
     get() = binding.recyclerView
 
-  private val recentAdapter = ItemAdapter(
+  private val recentAdapter = PagingItemAdapter(
       diffCallback = RecentPatientItemDiffCallback(),
       bindings = mapOf(
           R.layout.recent_patient_item_view to { layoutInflater, parent ->

@@ -1,5 +1,7 @@
 package org.simple.clinic.recentpatient
 
+import androidx.paging.PagingData
+import androidx.paging.map
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
@@ -10,7 +12,7 @@ import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
-import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.visibleOrGone
@@ -28,14 +30,14 @@ data class RecentPatientItem(
     val dateFormatter: DateTimeFormatter,
     val clock: UserClock,
     val isNewRegistration: Boolean
-) : ItemAdapter.Item<UiEvent> {
+) : PagingItemAdapter.Item<UiEvent> {
 
   companion object {
     fun create(
-        recentPatients: List<RecentPatient>,
+        recentPatients: PagingData<RecentPatient>,
         userClock: UserClock,
         dateFormatter: DateTimeFormatter
-    ): List<RecentPatientItem> {
+    ): PagingData<RecentPatientItem> {
       val today = LocalDate.now(userClock)
 
       return recentPatients.map { recentPatientItem(it, today, userClock, dateFormatter) }
@@ -53,7 +55,7 @@ data class RecentPatientItem(
       return RecentPatientItem(
           uuid = recentPatient.uuid,
           name = recentPatient.fullName,
-          age = RecentPatientItem.age(recentPatient, userClock),
+          age = age(recentPatient, userClock),
           gender = recentPatient.gender,
           updatedAt = recentPatient.updatedAt,
           dateFormatter = dateFormatter,

@@ -273,6 +273,7 @@
     <item quantity="one">%s ਦਿਨ ਓਵਰਡਿਊ ਹੈ</item>
     <item quantity="other">%s ਦਿਨ ਓਵਰਡਿਊ ਹਨ</item>
   </plurals>
+  <string name="overdue_list_item_village">ਪਿੰਡ</string>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">ਵਿਜ਼ਿਟਡ</string>
   <string name="overduelist_high_risk">ਵੱਧ ਜੋਖਮ</string>

@@ -1,5 +1,6 @@
 package org.simple.clinic.recentpatient
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -94,6 +95,9 @@ class RecentPatientsScreen : BaseScreen<
         init = AllRecentPatientsInit(),
         modelUpdateListener = uiRenderer::render
     )
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
   }
 
 

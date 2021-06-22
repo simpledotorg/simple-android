@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -18,14 +19,18 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 class RecentPatientsScreen : BaseScreen<
     RecentPatientsScreen.Key,
@@ -41,10 +46,17 @@ class RecentPatientsScreen : BaseScreen<
   lateinit var utcClock: UtcClock
 
   @Inject
+  lateinit var userClock: UserClock
+
+  @Inject
   lateinit var effectHandlerFactory: AllRecentPatientsEffectHandler.Factory
 
   @Inject
   lateinit var uiRendererFactory: AllRecentPatientsUiRenderer.Factory
+
+  @Named("full_date")
+  @Inject
+  lateinit var fullDateFormatter: DateTimeFormatter
 
   private val toolbar
     get() = binding.toolbar
@@ -119,6 +131,10 @@ class RecentPatientsScreen : BaseScreen<
 
   override fun updateRecentPatients(allItemTypes: List<RecentPatientItem>) {
     recentAdapter.submitList(allItemTypes)
+  }
+
+  override fun showRecentPatients(recentPatients: PagingData<RecentPatient>) {
+    recentAdapter.submitData(lifecycle, RecentPatientItem.create(recentPatients, userClock, fullDateFormatter))
   }
 
   interface Injector {

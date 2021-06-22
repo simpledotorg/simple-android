@@ -27,7 +27,12 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<AllRecentPatientsEffect, AllRecentPatientsEvent>()
         .addTransformer(LoadAllRecentPatients::class.java, loadAllRecentPatients())
         .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid) }, schedulersProvider.ui())
+        .addConsumer(ShowRecentPatients::class.java, ::showRecentPatients, schedulersProvider.ui())
         .build()
+  }
+
+  private fun showRecentPatients(effect: ShowRecentPatients) {
+    uiActions.showRecentPatients(effect.recentPatients)
   }
 
   private fun loadAllRecentPatients(): ObservableTransformer<LoadAllRecentPatients, AllRecentPatientsEvent> {

@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState.Loading
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.Observable
@@ -26,6 +28,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -60,6 +63,9 @@ class RecentPatientsScreen : BaseScreen<
 
   private val recyclerView
     get() = binding.recyclerView
+
+  private val progressIndicator
+    get() = binding.progressIndicator
 
   private val recentAdapter = PagingItemAdapter(
       diffCallback = RecentPatientItemDiffCallback(),
@@ -106,6 +112,13 @@ class RecentPatientsScreen : BaseScreen<
       layoutManager = LinearLayoutManager(context)
       adapter = recentAdapter
     }
+
+    recentAdapter.addLoadStateListener(::loadStateListener)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    recentAdapter.removeLoadStateListener(::loadStateListener)
   }
 
   private fun adapterEvents(): Observable<UiEvent> {
@@ -126,6 +139,13 @@ class RecentPatientsScreen : BaseScreen<
 
   override fun showRecentPatients(recentPatients: PagingData<RecentPatient>) {
     recentAdapter.submitData(lifecycle, RecentPatientItem.create(recentPatients, userClock, fullDateFormatter))
+  }
+
+  private fun loadStateListener(loadStates: CombinedLoadStates) {
+    val isLoading = loadStates.refresh is Loading
+
+    progressIndicator.visibleOrGone(isVisible = isLoading)
+    recyclerView.visibleOrGone(isVisible = !isLoading)
   }
 
   interface Injector {

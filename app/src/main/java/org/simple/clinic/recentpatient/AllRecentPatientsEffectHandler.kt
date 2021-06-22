@@ -36,7 +36,7 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .switchMap {
             patientRepository
-                .recentPatients(currentFacility.get().uuid)
+                .recentPatients_old(currentFacility.get().uuid)
                 .map(::RecentPatientsLoaded)
           }
     }

@@ -58,7 +58,7 @@ class AllRecentPatientsLogicTest {
     val today = Instant.now(userClock)
     val yesterday = today.minus(Duration.ofDays(1))
     val twoDaysAgo = today.minus(Duration.ofDays(2))
-    whenever(patientRepository.recentPatients(facility.uuid)).thenReturn(Observable.just(listOf(
+    whenever(patientRepository.recentPatients_old(facility.uuid)).thenReturn(Observable.just(listOf(
         TestData.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
@@ -130,7 +130,7 @@ class AllRecentPatientsLogicTest {
     val patientUuid = UUID.fromString("c5070a89-d848-4822-80c2-d7c306e437b1")
     val today = Instant.now(userClock)
 
-    whenever(patientRepository.recentPatients(facility.uuid)).thenReturn(Observable.just(listOf(
+    whenever(patientRepository.recentPatients_old(facility.uuid)).thenReturn(Observable.just(listOf(
         TestData.recentPatient(
             uuid = patientUuid,
             fullName = "Ajay Kumar",

@@ -821,7 +821,7 @@ class PatientRepositoryAndroidTest {
     val recentPatient3 = savePatientWithBp(facilityUuid = facilityUuid)
 
     val recentPatients = patientRepository
-        .recentPatients(facilityUuid)
+        .recentPatients_old(facilityUuid)
         .blockingFirst()
     assertThat(recentPatients).isEqualTo(listOf(recentPatient3, recentPatient1))
   }
@@ -931,7 +931,7 @@ class PatientRepositoryAndroidTest {
     val recentPatient3 = savePatientWithPrescribedDrug(facilityUuid = facilityUuid)
 
     val recentPatients = patientRepository
-        .recentPatients(facilityUuid)
+        .recentPatients_old(facilityUuid)
         .blockingFirst()
     assertThat(recentPatients).isEqualTo(listOf(recentPatient3, recentPatient1))
   }
@@ -975,7 +975,7 @@ class PatientRepositoryAndroidTest {
     val recentPatient3 = savePatientWithAppointment(facilityUuid = facilityUuid, creationFacilityUuid = facilityUuid)
 
     val recentPatients = patientRepository
-        .recentPatients(facilityUuid)
+        .recentPatients_old(facilityUuid)
         .blockingFirst()
     assertThat(recentPatients).isEqualTo(listOf(recentPatient3, recentPatient1))
   }
@@ -1000,7 +1000,7 @@ class PatientRepositoryAndroidTest {
     )
 
     val recentPatients = patientRepository
-        .recentPatients(facilityUuid)
+        .recentPatients_old(facilityUuid)
         .blockingFirst()
     assertThat(recentPatients).isEqualTo(listOf(recentPatient1))
   }
@@ -1033,10 +1033,10 @@ class PatientRepositoryAndroidTest {
         status = Scheduled
     )
 
-    val recentPatientsInFromFacility = patientRepository.recentPatients(fromFacilityUuid).blockingFirst()
+    val recentPatientsInFromFacility = patientRepository.recentPatients_old(fromFacilityUuid).blockingFirst()
     assertThat(recentPatientsInFromFacility).isEqualTo(listOf(recentPatient))
 
-    val recentPatientsInToFacility = patientRepository.recentPatients(toFacilityUuid).blockingFirst()
+    val recentPatientsInToFacility = patientRepository.recentPatients_old(toFacilityUuid).blockingFirst()
     assertThat(recentPatientsInToFacility).isEqualTo(emptyList<RecentPatient>())
   }
 
@@ -1049,7 +1049,7 @@ class PatientRepositoryAndroidTest {
         appointmentType = AppointmentType.Unknown(""))
 
     val recentPatients = patientRepository
-        .recentPatients(facilityUuid)
+        .recentPatients_old(facilityUuid)
         .blockingFirst()
     assertThat(recentPatients).isEqualTo(listOf(recentPatient2))
   }

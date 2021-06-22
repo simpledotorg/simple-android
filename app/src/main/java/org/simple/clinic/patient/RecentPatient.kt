@@ -115,14 +115,6 @@ data class RecentPatient(
     ): Flowable<List<RecentPatient>>
 
     @Query(RECENT_PATIENT_QUERY)
-    fun recentPatients_old(
-        facilityUuid: UUID,
-        appointmentStatus: Status,
-        appointmentType: AppointmentType,
-        patientStatus: PatientStatus
-    ): Flowable<List<RecentPatient>>
-
-    @Query(RECENT_PATIENT_QUERY)
     fun recentPatients(
         facilityUuid: UUID,
         appointmentStatus: Status,

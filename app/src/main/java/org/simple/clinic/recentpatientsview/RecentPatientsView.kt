@@ -15,9 +15,8 @@ import org.simple.clinic.databinding.SeeAllItemViewBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.patient.PatientConfig
-import org.simple.clinic.recentpatient.RecentPatientsScreenKey
+import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
@@ -134,7 +133,7 @@ class RecentPatientsView(
   }
 
   override fun openRecentPatientsScreen() {
-    router.push(RecentPatientsScreenKey().wrap())
+    router.push(RecentPatientsScreen.Key())
   }
 
   override fun openPatientSummary(patientUuid: UUID) {

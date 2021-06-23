@@ -5,6 +5,7 @@
 - Migrate `OverdueAppointment` to add patients without phone number
 - Migrate `kotlinx.android.parcel` usage to `kotlinx.parcelize`
 - Change `CrashReporter` to be a facade instead of a discrete interface
+- Show download and share buttons in overdue list
 
 ### Changes
 - Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`

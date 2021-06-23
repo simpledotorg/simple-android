@@ -1,6 +1,7 @@
 package org.simple.clinic.home.overdue
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -17,7 +18,19 @@ class OverdueUpdate(
       is CallPatientClicked -> dispatch(OpenContactPatientScreen(event.patientUuid))
       is OverduePatientClicked -> dispatch(OpenPatientSummary(event.patientUuid))
       is OverdueAppointmentsLoaded -> dispatch(ShowOverdueAppointments(event.overdueAppointments, model.isDiabetesManagementEnabled))
+      DownloadOverdueListClicked -> downloadOverdueListClicked()
+      ShareOverdueListClicked -> shareOverdueListClicked()
     }
+  }
+
+  // TODO: Trigger share overdue list effect
+  private fun shareOverdueListClicked(): Next<OverdueModel, OverdueEffect> {
+    return noChange()
+  }
+
+  // TODO: Trigger download overdue list effect
+  private fun downloadOverdueListClicked(): Next<OverdueModel, OverdueEffect> {
+    return noChange()
   }
 
   private fun loadOverduePatients(

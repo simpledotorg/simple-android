@@ -20,3 +20,13 @@ data class OverduePatientClicked(val patientUuid: UUID) : OverdueEvent() {
 data class OverdueAppointmentsLoaded(
     val overdueAppointments: PagingData<OverdueAppointment>
 ) : OverdueEvent()
+
+object DownloadOverdueListClicked : OverdueEvent() {
+
+  override val analyticsName = "Overdue Screen:Download clicked"
+}
+
+object ShareOverdueListClicked : OverdueEvent() {
+
+  override val analyticsName = "Overdue Screen:Share clicked"
+}

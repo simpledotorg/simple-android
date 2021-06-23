@@ -335,6 +335,8 @@
   <string name="overduelist_visited">Visited</string>
   <string name="overduelist_high_risk">High risk</string>
   <string name="overduelist_transferred">Transferred to</string>
+  <string name="overdue_download">Download</string>
+  <string name="overdue_share">Share</string>
 
   <!-- Facility change -->
 

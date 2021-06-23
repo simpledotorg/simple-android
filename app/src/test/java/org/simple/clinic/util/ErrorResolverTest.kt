@@ -6,8 +6,8 @@ import com.squareup.moshi.JsonDataException
 import io.reactivex.exceptions.CompositeException
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
-import okhttp3.MediaType
-import okhttp3.ResponseBody
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.internal.http2.ConnectionShutdownException
 import okhttp3.internal.http2.ErrorCode
 import okhttp3.internal.http2.StreamResetException
@@ -155,7 +155,7 @@ class ErrorResolverTest {
   private fun httpException(responseCode: Int): HttpException {
     val response = Response.error<String>(
         responseCode,
-        ResponseBody.create(MediaType.parse("text/plain"), "FAIL")
+        "FAIL".toResponseBody("text/plain".toMediaType())
     )
     return HttpException(response)
   }

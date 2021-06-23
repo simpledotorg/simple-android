@@ -10,8 +10,8 @@ class LoggedInUserHttpInterceptor @Inject constructor(
     private val userSession: UserSession
 ) : Interceptor {
 
-  override fun intercept(chain: Interceptor.Chain?): Response {
-    val originalRequest = chain!!.request()
+  override fun intercept(chain: Interceptor.Chain): Response {
+    val originalRequest = chain.request()
 
     val userDetails = userSession.userFacilityDetails()
     val accessToken = userSession.accessToken().toNullable()

@@ -273,6 +273,7 @@
     <item quantity="one">%s ದಿನ ತಡವಾಗಿದೆ</item>
     <item quantity="other">%s ದಿನಗಳಷ್ಟು ತಡವಾಗಿದೆ</item>
   </plurals>
+  <string name="overdue_list_item_village">ಗ್ರಾಮ</string>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">ಭೇಟಿ ನೀಡಲಾಗಿದೆ</string>
   <string name="overduelist_high_risk">ಹೆಚ್ಚಿನ ಅಪಾಯ</string>

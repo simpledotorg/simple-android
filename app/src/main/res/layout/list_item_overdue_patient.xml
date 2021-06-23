@@ -2,9 +2,12 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/overdueCardView"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginBottom="@dimen/spacing_8">
+  android:layout_marginBottom="@dimen/spacing_8"
+  android:clickable="true"
+  android:focusable="true">
 
   <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/patient_details"
@@ -17,10 +20,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginEnd="@dimen/spacing_12"
-      android:background="?attr/selectableItemBackground"
-      android:clickable="true"
       android:drawablePadding="@dimen/spacing_12"
-      android:focusable="true"
       android:textAppearance="?attr/textAppearanceBody0Medium"
       android:textColor="?attr/colorPrimary"
       app:layout_constraintEnd_toStartOf="@id/callButton"

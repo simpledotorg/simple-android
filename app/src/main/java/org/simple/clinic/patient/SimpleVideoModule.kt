@@ -20,7 +20,7 @@ class SimpleVideoModule {
   }
 
   @Provides
-  @Named("training_video_youtube_id")
+  @SimpleVideo(TrainingVideoYoutubeId)
   fun provideSimpleVideoUrlBasedOnLocale(
       remoteConfigReader: ConfigReader,
       locale: Locale,

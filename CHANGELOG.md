@@ -10,7 +10,7 @@
 - Explicitly pin OkHttp version to 4.X
 
 ### Changes
-- Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `pa-IN`
+- Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `pa-IN`, `te-IN`
 - Click on overdue patient to open patient summary  
 - [In Progress: 17 Jun 2021] Overdue list improvements
   - Change overdue list UI

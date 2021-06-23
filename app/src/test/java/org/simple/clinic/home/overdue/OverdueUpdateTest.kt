@@ -19,12 +19,12 @@ class OverdueUpdateTest {
   private val defaultModel = OverdueModel.create()
 
   @Test
-  fun `when patient name is clicked, then open patient summary screen`() {
+  fun `when overdue patient is clicked, then open patient summary screen`() {
     val patientUuid = UUID.fromString("1211bce0-0b5d-4203-b5e3-004709059eca")
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(PatientNameClicked(patientUuid))
+        .whenEvent(OverduePatientClicked(patientUuid))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenPatientSummary(patientUuid))

@@ -8,6 +8,7 @@
 - Show download and share buttons in overdue list
 - Show invalid json error when `NHID` number is empty or less than 14 digits   
 - Explicitly pin OkHttp version to 4.X
+- Use macos version 11.0 to run instrumentation tests on CI
 
 ### Changes
 - Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `pa-IN`, `te-IN`

@@ -30,7 +30,7 @@
 
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">Mundeete xiiwo passporte</string>
-  <string name="identifiertype_bangladesh_national_id">I’maate afanishi  kiro</string>
+  <string name="identifiertype_bangladesh_national_id">Dagoomu ayimma</string>
   <string name="identifiertype_ethiopia_medical_record_number">Fayimate afanishi kiro</string>
   <string name="identifiertype_unknown">I’mate Afanishu kaarde</string>
 
@@ -101,7 +101,7 @@
   <!--suppress UnusedResources -->
   <string name="tab_progress">Bunixegunidonikiha</string>
 
-  <string name="home_search_patient_name_phone">Xiwamanichu su’ma esi</string>
+  <string name="home_search_patient_name_phone">Su’ma, bilbila,woy ayimma eessi</string>
   <string name="patients_user_awaiting_approval_title">Agadhi afashaho</string>
   <string name="patients_user_awaiting_approval_message">Muleki noo fayimate mini gidoni  Mite hinige buxoniha ikkiro xa’moto xiwamanichi taje afira danidato.</string>
   <string name="patients_user_approved_title">Koni alibani buxonihe!</string>
@@ -114,7 +114,7 @@
   <string name="patients_loggedoutalert_title">Baruni mite hige  horote gidora e’a danidato</string>
   <string name="patients_loggedoutalert_message">Baruni mite hige  horote gidora fulla  danidato</string>
   <string name="patients_loggedoutalert_dismiss">Afirito</string>
-  <string name="patients_scan_simple_card">Mundeete xiiwo passporte sikane asi</string>
+  <string name="patients_scan_simple_card">Iskaanete Ayimma</string>
   <string name="patients_recentpatients_title">Muli</string>
   <string name="patients_recentpatients_no_recent_patients">Xaa xiwamanichu dino</string>
   <string name="patients_recentpatients_see_all">Womanika la’i</string>
@@ -334,7 +334,7 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s Shima yanara chala keshano gede fajjinonihu</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">Afanishu karide sikane asi</string>
+  <string name="scansimpleid_title">BP Paasipoorte woy Dagoommitete ayyimma</string>
   <string name="syncindicator_status_pending">Lawishishuni asii</string>
   <string name="syncindicator_status_failed">Lawishishu dixadino</string>
   <string name="syncindicator_status_syncing">Lawishisha ana …….</string>
@@ -353,7 +353,7 @@
   <!-- Link Id Sheet-->
   <string name="linkidwithpatient_button_yes">E’e</string>
   <string name="linkidwithpatient_button_back">Badhera</string>
-  <string name="linkidwithpatient_text">Ledi Mundeete xiiwo passporte esi</string>
+  <string name="linkidwithpatient_text">Aymma giddora eesse</string>
   <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Recent Patients -->
@@ -554,7 +554,7 @@
   <string name="assigned_facility_view_change">Soori</string>
 
   <!-- Facility Picker -->
-  <string name="facilitypicker_search_hint">Ate kilinike hasate</string>
+  <string name="facilitypicker_search_hint">Horote/owaantete su’ma eessi</string>
   <string name="facilitypicker_header_suggested_facilities">Doroni kilinike</string>
   <string name="facilitypicker_header_all_facilities">Wo’ma  fayimate kilinike</string>
 
@@ -656,5 +656,26 @@
   <string name="patientsearch_error_no_patients_in_facility">boresaminohu Wominiku xiwamanote sumi koni woroni no dafira hasirato taje la’a danidato.</string>
   <string name="patientsearch_error_no_search_results">Hasito xiwamanichi dino</string>
   <string name="patientsearch_error_no_patients_in_facility_heading">E’no xiwamanichi dino %1$s</string>
+
+  <string name="identifiertype_india_national_health_id">Dagoomu Fayyimate ayimma</string>
+  <string name="instantsearch_hint">Su’ma,bilbila,woy ayimma</string>
+  <string name="scansimpleid_enteredcode_error_empty">BP Paasipoorte kiiro woy Dagoommitte fayyimate ayimma essi</string>
+  <string name="scansimpleid_enteredcode_error_not_required_length">Wodho agartino BP paasipoorte kiiro woy Dagoomu fayyimate ayimma eessi</string>
+  <string name="scansimpleid_type_number">Woy kiiro boreessi.</string>
+  <string name="scansimpleid_invalid_qr_code">Garunnita fayyimate ayimma iskaane assi</string>
+  <string name="scansimpleid_bp_passport_or_national_health_id">BP Passipoorte woy Dagoomu fayyimate ayimma</string>
+  <string name="contactpatient_change">Soorro</string>
+  <string name="sheet_national_health_id">Dagoomu fayyimmate ayimma %1$s</string>
+  <string name="sheet_text_input_date_picker_enter_a_date">Barra eesse</string>
+  <string name="sheet_text_input_date_picker_day">Barra</string>
+  <string name="sheet_text_input_date_picker_month">Agana</string>
+  <string name="sheet_text_input_date_picker_year">Diro</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">Horote/garu barra eesse Barra/Agana/Diro</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">Barra Albilicho eessi </string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">Diru Mitu aleeni ikka dinosi</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">Dagoomu fayyimmate ayimma noote yaalaanchu   Ayimma ledo digaammanni</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">Mahoye</string>
+  <string name="medicalhistorysummaryview_history">Xagge</string>
+  <string name="medicalhistorysummaryview_diagnosis">Diaginoosise (hansoonniri)</string>
 
 </resources>

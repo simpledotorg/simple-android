@@ -41,17 +41,18 @@ import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberLengthTo
 import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberNonNullButBlank
 import org.simple.clinic.patient.PatientEntryValidationError.StateEmpty
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.SimpleVideo
+import org.simple.clinic.patient.SimpleVideo.Type.NumberOfPatientsRegistered
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.util.ValueChangedCallback
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import javax.inject.Named
 
 class PatientEntryEffectHandler @AssistedInject constructor(
     private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
     private val inputFieldsFactory: InputFieldsFactory,
-    @Named("number_of_patients_registered") private val patientRegisteredCount: Preference<Int>,
+    @SimpleVideo(NumberOfPatientsRegistered) private val patientRegisteredCount: Preference<Int>,
     @Assisted private val ui: PatientEntryUi,
     @Assisted private val validationActions: PatientEntryValidationActions
 ) {

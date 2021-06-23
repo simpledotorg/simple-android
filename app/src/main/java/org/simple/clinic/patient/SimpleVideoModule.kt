@@ -6,15 +6,16 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import dagger.Module
 import dagger.Provides
+import org.simple.clinic.patient.SimpleVideo.Type.NumberOfPatientsRegistered
+import org.simple.clinic.patient.SimpleVideo.Type.TrainingVideoYoutubeId
 import org.simple.clinic.remoteconfig.ConfigReader
 import java.util.Locale
-import javax.inject.Named
 
 @Module
 class SimpleVideoModule {
 
   @Provides
-  @Named("number_of_patients_registered")
+  @SimpleVideo(NumberOfPatientsRegistered)
   fun provideCountOfRegisteredPatients(rxSharedPreferences: RxSharedPreferences): Preference<Int> {
     return rxSharedPreferences.getInteger("number_of_patients_registered", 0)
   }

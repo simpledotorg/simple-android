@@ -23,7 +23,10 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:clipToPadding="false"
-      android:padding="@dimen/spacing_8"
+      android:paddingStart="@dimen/spacing_8"
+      android:paddingTop="@dimen/spacing_8"
+      android:paddingEnd="@dimen/spacing_8"
+      android:paddingBottom="@dimen/spacing_64"
       android:visibility="gone" />
 
   </org.simple.clinic.util.NestedScrollableHost>
@@ -65,6 +68,33 @@
       android:textAlignment="center"
       android:textAppearance="?attr/textAppearanceSubtitle1"
       android:textColor="@color/color_on_surface_67" />
+
+  </LinearLayout>
+
+  <LinearLayout
+    android:id="@+id/buttonsFrame"
+    style="@style/Widget.Simple.Button.Frame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/downloadOverdueListButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="@string/overdue_download" />
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/shareOverdueListButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_16"
+      android:layout_weight="1"
+      android:text="@string/overdue_share"
+      android:theme="@style/ThemeOverlay.Simple.Green1Primary" />
 
   </LinearLayout>
 

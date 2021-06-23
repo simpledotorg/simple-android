@@ -3,9 +3,11 @@ package org.simple.clinic.scanid
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.INDIA_NHID_LENGTH
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
@@ -42,10 +44,28 @@ class ScanSimpleIdUpdate @Inject constructor(
       event: ScannedQRCodeJsonParsed
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return if (event.patientPrefillInfo != null && event.healthIdNumber != null) {
-      val identifier = Identifier(event.healthIdNumber.filter { it.isDigit() }, IndiaNationalHealthId)
-      next(model = model.searching().patientPrefillInfoChanged(event.patientPrefillInfo), SearchPatientByIdentifier(identifier))
+      searchPatientByIdentifierIfHealthIdNumberIsValid(event.patientPrefillInfo, event.healthIdNumber, model)
     } else {
       noChange()
+    }
+  }
+
+  private fun searchPatientByIdentifierIfHealthIdNumberIsValid(
+      patientPrefillInfo: PatientPrefillInfo,
+      healthIdNumber: String,
+      model: ScanSimpleIdModel
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> =
+      if (healthIdNumberIsValid(healthIdNumber)) {
+        val identifier = Identifier(healthIdNumber.filter { it.isDigit() }, IndiaNationalHealthId)
+        next(model = model.searching().patientPrefillInfoChanged(patientPrefillInfo), SearchPatientByIdentifier(identifier))
+      } else {
+        next(model = model.notSearching().invalidQrCode())
+      }
+
+  private fun healthIdNumberIsValid(healthIdNumber: String): Boolean {
+    return when (healthIdNumber.length) {
+      INDIA_NHID_LENGTH -> true
+      else -> false
     }
   }
 

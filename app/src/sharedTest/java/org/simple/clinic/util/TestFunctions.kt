@@ -2,8 +2,8 @@ package org.simple.clinic.util
 
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.TestScheduler
-import okhttp3.MediaType
-import okhttp3.ResponseBody
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
@@ -89,7 +89,7 @@ fun httpErrorResponse(
     contentType: String = "text/plain",
     body: String = ""
 ): HttpException {
-  val error = Response.error<Any>(code, ResponseBody.create(MediaType.parse(contentType), body))
+  val error = Response.error<Any>(code, body.toResponseBody(contentType.toMediaType()))
   return HttpException(error)
 }
 

@@ -9,7 +9,7 @@ import junitparams.Parameters
 import okhttp3.Call
 import okhttp3.Connection
 import okhttp3.Interceptor
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -138,7 +138,7 @@ class NetworkAnalyticsInterceptorTest {
   fun `the request method must be reported`(method: String, hasBody: Boolean) {
     var body: RequestBody? = null
     if (hasBody) {
-      body = RequestBody.create(MediaType.parse("text/plain"), "Body")
+      body = RequestBody.create("text/plain".toMediaType(), "Body")
     }
 
     val request = requestBuilder("https://simple.org")

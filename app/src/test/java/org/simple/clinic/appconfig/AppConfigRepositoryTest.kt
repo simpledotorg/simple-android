@@ -7,16 +7,16 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
-import okhttp3.MediaType
-import okhttp3.ResponseBody
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Test
 import org.simple.clinic.appconfig.api.ManifestFetchApi
-import java.util.Optional
 import org.simple.clinic.util.ResolvedError
 import retrofit2.HttpException
 import retrofit2.Response
 import java.net.ConnectException
 import java.net.URI
+import java.util.Optional
 
 class AppConfigRepositoryTest {
 
@@ -116,7 +116,7 @@ class AppConfigRepositoryTest {
   private fun httpException(responseCode: Int): HttpException {
     val response = Response.error<String>(
         responseCode,
-        ResponseBody.create(MediaType.parse("text/plain"), "FAIL")
+        "FAIL".toResponseBody("text/plain".toMediaType())
     )
     return HttpException(response)
   }

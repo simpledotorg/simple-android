@@ -18,9 +18,9 @@ class NetworkAnalyticsInterceptor @Inject constructor(private val networkCapabil
       val response = chain.proceed(request)
 
       Analytics.reportNetworkCall(
-          url = sanitizeUrl(request.url()),
-          method = request.method(),
-          responseCode = response.code(),
+          url = sanitizeUrl(request.url),
+          method = request.method,
+          responseCode = response.code,
           contentLength = response.header("Content-Length")?.toInt() ?: -1,
           durationMillis = (System.currentTimeMillis() - now).toInt()
       )
@@ -29,8 +29,8 @@ class NetworkAnalyticsInterceptor @Inject constructor(private val networkCapabil
       if (e is SocketTimeoutException) {
         networkCapabilitiesProvider.activeNetworkCapabilities()?.let { networkCapabilities ->
           Analytics.reportNetworkTimeout(
-              url = sanitizeUrl(request.url()),
-              method = request.method(),
+              url = sanitizeUrl(request.url),
+              method = request.method,
               metered = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED).not(),
               networkTransportType = Analytics.NetworkTransportType.fromNetworkCapabilities(networkCapabilities),
               downstreamBandwidthKbps = networkCapabilities.linkDownstreamBandwidthKbps,
@@ -44,7 +44,7 @@ class NetworkAnalyticsInterceptor @Inject constructor(private val networkCapabil
   }
 
   private fun sanitizeUrl(url: HttpUrl): String {
-    val urlString = "${protocol(url)}://${url.host()}${url.encodedPath()}"
+    val urlString = "${protocol(url)}://${url.host}${url.encodedPath}"
     return if (urlString.endsWith('/')) urlString.substringBeforeLast('/') else urlString
   }
 

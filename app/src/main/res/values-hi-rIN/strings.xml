@@ -278,6 +278,8 @@
   <string name="overduelist_visited">विज़िट की गई</string>
   <string name="overduelist_high_risk">उच्च जोखिम</string>
   <string name="overduelist_transferred">पर स्थानांतरित किया गया</string>
+  <string name="overdue_download">डाउनलोड</string>
+  <string name="overdue_share">साझा करें</string>
 
   <!-- Facility change -->
 

@@ -15,10 +15,10 @@ import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
-import java.util.Optional
 import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
+import java.util.Optional
 import java.util.UUID
 
 class ContactPatientUpdateTest {
@@ -58,6 +58,21 @@ class ContactPatientUpdateTest {
         .whenEvent(PatientProfileLoaded(patientProfile))
         .then(assertThatNext(
             hasModel(defaultModel.patientProfileLoaded(patientProfile)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when the patient profile is loaded and overdue appointment is loaded, then ui must be updated`() {
+    val defaultModel = defaultModel()
+        .overdueAppointmentLoaded(Optional.of(overdueAppointment))
+
+    spec
+        .given(defaultModel)
+        .whenEvent(PatientProfileLoaded(patientProfile))
+        .then(assertThatNext(
+            hasModel(defaultModel.patientProfileLoaded(patientProfile)
+                .contactPatientInfoLoaded()),
             hasNoEffects()
         ))
   }

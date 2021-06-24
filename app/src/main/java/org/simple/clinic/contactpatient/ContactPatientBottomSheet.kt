@@ -277,6 +277,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     progressIndicator.visibility = VISIBLE
   }
 
+  override fun hideProgress() {
+    progressIndicator.visibility = GONE
+  }
+
   private fun backPressed() {
     hotEvents.onNext(BackClicked)
   }

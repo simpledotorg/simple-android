@@ -59,9 +59,11 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile))
+    uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile)
+        .contactPatientInfoLoaded())
 
     // then
+    verify(ui).hideProgress()
     verify(ui).hideSecureCallUi()
     verify(ui).switchToCallPatientView()
 
@@ -88,9 +90,11 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile))
+    uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile)
+        .contactPatientInfoLoaded())
 
     // then
+    verify(ui).hideProgress()
     verify(ui).hideSecureCallUi()
     verify(ui).switchToCallPatientView()
 
@@ -108,9 +112,11 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel().overdueAppointmentLoaded(Optional.of(overdueAppointment)))
+    uiRenderer.render(defaultModel().overdueAppointmentLoaded(Optional.of(overdueAppointment))
+        .contactPatientInfoLoaded())
 
     // then
+    verify(ui).hideProgress()
     verify(ui).hideSecureCallUi()
     verify(ui).switchToCallPatientView()
 
@@ -121,9 +127,11 @@ class CallPatientUiRendererTest {
   @Test
   fun `hide the call result section if there is no overdue appointment`() {
     // when
-    uiRenderer.render(defaultModel().overdueAppointmentLoaded(Optional.empty()))
+    uiRenderer.render(defaultModel().overdueAppointmentLoaded(Optional.empty())
+        .contactPatientInfoLoaded())
 
     // then
+    verify(ui).hideProgress()
     verify(ui).hideSecureCallUi()
     verify(ui).switchToCallPatientView()
 
@@ -135,9 +143,11 @@ class CallPatientUiRendererTest {
   fun `if the secure call feature is enabled, show the secure call ui`() {
     // when
     val model = defaultModel(phoneMaskFeatureEnabled = true)
+        .contactPatientInfoLoaded()
     uiRenderer.render(model)
 
     // then
+    verify(ui).hideProgress()
     verify(ui).switchToCallPatientView()
 
     verify(ui).showSecureCallUi()
@@ -148,9 +158,11 @@ class CallPatientUiRendererTest {
   fun `if the secure call feature is disabled, hide the secure call ui`() {
     // when
     val model = defaultModel(phoneMaskFeatureEnabled = false)
+        .contactPatientInfoLoaded()
     uiRenderer.render(model)
 
     // then
+    verify(ui).hideProgress()
     verify(ui).switchToCallPatientView()
 
     verify(ui).hideSecureCallUi()

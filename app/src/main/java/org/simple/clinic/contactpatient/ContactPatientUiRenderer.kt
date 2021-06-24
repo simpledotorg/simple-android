@@ -24,6 +24,7 @@ class ContactPatientUiRenderer(
       return
     }
 
+    ui.hideProgress()
     when (model.uiMode) {
       CallPatient -> renderCallPatientView(model)
       SetAppointmentReminder -> renderSetAppointmentReminderView(model)

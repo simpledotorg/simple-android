@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Features
+- [In Progress: 24 Jun 2021] Add support for finding a patient online from ID scan
+
 ### Internal
 - Migrate `OverdueAppointment` to add patients without phone number
 - Migrate `kotlinx.android.parcel` usage to `kotlinx.parcelize`

@@ -6,14 +6,19 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.di.PagingSize
+import org.simple.clinic.di.PagingSize.Page.AllRecentPatients
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class AllRecentPatientsEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
     private val currentFacility: Lazy<Facility>,
+    private val pagerFactory: PagerFactory,
+    @PagingSize(AllRecentPatients) private val allRecentPatientsPagingSize: Int,
     @Assisted private val uiActions: AllRecentPatientsUiActions
 ) {
 
@@ -27,7 +32,12 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<AllRecentPatientsEffect, AllRecentPatientsEvent>()
         .addTransformer(LoadAllRecentPatients::class.java, loadAllRecentPatients())
         .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid) }, schedulersProvider.ui())
+        .addConsumer(ShowRecentPatients::class.java, ::showRecentPatients, schedulersProvider.ui())
         .build()
+  }
+
+  private fun showRecentPatients(effect: ShowRecentPatients) {
+    uiActions.showRecentPatients(effect.recentPatients)
   }
 
   private fun loadAllRecentPatients(): ObservableTransformer<LoadAllRecentPatients, AllRecentPatientsEvent> {
@@ -35,10 +45,14 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .switchMap {
-            patientRepository
-                .recentPatients(currentFacility.get().uuid)
-                .map(::RecentPatientsLoaded)
+            val facilityId = currentFacility.get().uuid
+
+            pagerFactory.createPager(
+                sourceFactory = { patientRepository.recentPatients(facilityUuid = facilityId) },
+                pageSize = allRecentPatientsPagingSize
+            )
           }
+          .map(::RecentPatientsLoaded)
     }
   }
 }

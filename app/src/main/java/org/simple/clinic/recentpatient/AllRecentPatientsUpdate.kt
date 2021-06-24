@@ -3,7 +3,6 @@ package org.simple.clinic.recentpatient
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
-import org.simple.clinic.mobius.next
 
 class AllRecentPatientsUpdate : Update<AllRecentPatientsModel, AllRecentPatientsEvent, AllRecentPatientsEffect> {
 
@@ -12,7 +11,7 @@ class AllRecentPatientsUpdate : Update<AllRecentPatientsModel, AllRecentPatients
       event: AllRecentPatientsEvent
   ): Next<AllRecentPatientsModel, AllRecentPatientsEffect> {
     return when (event) {
-      is RecentPatientsLoaded -> next(model.recentPatientsLoaded(event.recentPatients))
+      is RecentPatientsLoaded -> dispatch(ShowRecentPatients(event.recentPatients))
       is RecentPatientItemClicked -> dispatch(OpenPatientSummary(event.patientUuid))
     }
   }

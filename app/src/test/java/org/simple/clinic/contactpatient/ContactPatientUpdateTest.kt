@@ -86,7 +86,24 @@ class ContactPatientUpdateTest {
         .given(defaultModel)
         .whenEvent(OverdueAppointmentLoaded(appointment))
         .then(assertThatNext(
-            hasModel(defaultModel.overdueAppointmentLoaded(appointment))
+            hasModel(defaultModel.overdueAppointmentLoaded(appointment)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when the overdue appointment is loaded and patient profile is loaded, the ui must be updated`() {
+    val appointment = Optional.of(overdueAppointment)
+    val defaultModel = defaultModel()
+        .patientProfileLoaded(patientProfile)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(OverdueAppointmentLoaded(appointment))
+        .then(assertThatNext(
+            hasModel(defaultModel.overdueAppointmentLoaded(appointment)
+                .contactPatientInfoLoaded()),
+            hasNoEffects()
         ))
   }
 

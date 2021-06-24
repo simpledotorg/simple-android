@@ -25,7 +25,7 @@ class ContactPatientUpdate(
   ): Next<ContactPatientModel, ContactPatientEffect> {
     return when (event) {
       is PatientProfileLoaded -> patientProfileLoaded(model, event)
-      is OverdueAppointmentLoaded -> next(model.overdueAppointmentLoaded(event.overdueAppointment))
+      is OverdueAppointmentLoaded -> overdueAppointmentLoaded(model, event)
       is NormalCallClicked -> directlyCallPatient(model, event)
       is SecureCallClicked -> maskedCallPatient(model, event)
       PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointmentUuid))
@@ -44,6 +44,17 @@ class ContactPatientUpdate(
       PatientMarkedAsAgreedToVisit,
       ReminderSetForAppointment -> dispatch(CloseScreen)
     }
+  }
+
+  private fun overdueAppointmentLoaded(model: ContactPatientModel, event: OverdueAppointmentLoaded): Next<ContactPatientModel, ContactPatientEffect> {
+    val updatedModel = if (!model.hasLoadedPatientProfile) {
+      model.overdueAppointmentLoaded(event.overdueAppointment)
+    } else {
+      model.overdueAppointmentLoaded(event.overdueAppointment)
+          .contactPatientInfoLoaded()
+    }
+
+    return next(updatedModel)
   }
 
   private fun patientProfileLoaded(model: ContactPatientModel, event: PatientProfileLoaded): Next<ContactPatientModel, ContactPatientEffect> {

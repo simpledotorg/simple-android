@@ -33,6 +33,8 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.patient.SimpleVideo
+import org.simple.clinic.patient.SimpleVideo.Type.TrainingVideoYoutubeId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
@@ -48,7 +50,6 @@ import org.simple.clinic.widgets.indexOfChildId
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
-import javax.inject.Named
 
 class PatientsTabScreen : BaseScreen<
     PatientsTabScreen.Key,
@@ -73,7 +74,7 @@ class PatientsTabScreen : BaseScreen<
   lateinit var country: Country
 
   @Inject
-  @Named("training_video_youtube_id")
+  @SimpleVideo(TrainingVideoYoutubeId)
   lateinit var youTubeVideoId: String
 
   @Inject

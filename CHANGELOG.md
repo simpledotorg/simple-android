@@ -38,6 +38,9 @@
 - Fix instant search error views overlapping each other
 - Remove usage of deprecated constructor from `MobiusDelegate`
 
+### Features
+- Add training videos depending on language for `Amharic` and `Oromo`
+
 ### Changes
 - Updated translations: `hi-IN`, `bn-BD`, `te-IN`, `bn-IN`, `am-ET`, `pa-IN`, `ti-ET`, `kn-IN`, `mr-IN`, `ta-IN`, `so-ET`, `om-ET`
 - New supported language: Sidama [`sid-ET`]

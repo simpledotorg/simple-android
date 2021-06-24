@@ -17,11 +17,12 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.patient.SimpleVideo
+import org.simple.clinic.patient.SimpleVideo.Type.TrainingVideoYoutubeId
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.register.RegistrationLoadingScreenKey
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
-import javax.inject.Named
 
 class IntroVideoScreen(
     context: Context,
@@ -49,7 +50,7 @@ class IntroVideoScreen(
   lateinit var screenKeyProvider: ScreenKeyProvider
 
   @Inject
-  @Named("training_video_youtube_id")
+  @SimpleVideo(TrainingVideoYoutubeId)
   lateinit var youTubeVideoId: String
 
   @Inject

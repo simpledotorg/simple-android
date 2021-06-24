@@ -11,11 +11,11 @@ import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
-import java.util.Optional
 import org.simple.clinic.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
+import java.util.Optional
 import java.util.UUID
 
 class CallPatientUiRendererTest {
@@ -30,6 +30,16 @@ class CallPatientUiRendererTest {
   )
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val uiRenderer = ContactPatientUiRenderer(ui, clock)
+
+  @Test
+  fun `when contact patient information is loading, then show progress`() {
+    // when
+    uiRenderer.render(defaultModel())
+
+    // then
+    verify(ui).showProgress()
+    verifyNoMoreInteractions(ui)
+  }
 
   @Test
   fun `when the patient details are loaded with date of birth, render the patient details`() {

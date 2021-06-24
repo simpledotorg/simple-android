@@ -62,6 +62,9 @@ data class ContactPatientModel(
   val appointmentUuid: UUID
     get() = appointment!!.get().appointment.uuid
 
+  val isPatientContactInfoLoaded: Boolean
+    get() = contactPatientInfoProgressState == DONE
+
   fun patientProfileLoaded(patientProfile: PatientProfile): ContactPatientModel {
     return copy(patientProfile = patientProfile)
   }

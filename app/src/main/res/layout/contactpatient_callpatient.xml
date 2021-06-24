@@ -183,7 +183,7 @@
     android:id="@+id/callResultsGroup"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:visibility="gone"
+    android:visibility="invisible"
     app:constraint_referenced_ids="divider,resultOfCallLabel,agreedToVisitTextView, agreedToVisitSeparator, remindToCallLaterTextView, remindToCallLaterSeparator, removeFromOverdueListTextView"
     tools:visibility="visible" />
 
@@ -191,7 +191,7 @@
     android:id="@+id/secureCallingGroup"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:visibility="gone"
+    android:visibility="invisible"
     app:constraint_referenced_ids="secureCallButton, helpTextView"
     tools:visibility="visible" />
 

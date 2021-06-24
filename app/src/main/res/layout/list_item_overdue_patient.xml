@@ -15,19 +15,26 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/spacing_16">
 
+    <ImageView
+      android:id="@+id/patientGenderIcon"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:src="@drawable/ic_patient_female" />
+
     <TextView
       android:id="@+id/patientNameTextView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_12"
       android:layout_marginEnd="@dimen/spacing_12"
-      android:drawablePadding="@dimen/spacing_12"
       android:textAppearance="?attr/textAppearanceBody0Medium"
       android:textColor="?attr/colorPrimary"
       app:layout_constraintEnd_toStartOf="@id/callButton"
       app:layout_constraintHorizontal_bias="0"
-      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintStart_toEndOf="@id/patientGenderIcon"
       app:layout_constraintTop_toTopOf="parent"
-      tools:drawableStartCompat="@drawable/ic_patient_female"
       tools:text="Anisha Acharya" />
 
     <TextView

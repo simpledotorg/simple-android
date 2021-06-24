@@ -17,6 +17,7 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.onlinelookup.DurationFromSecondsMoshiAdapter
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.scanid.IndiaNHIDDateOfBirthMoshiAdapter
@@ -66,6 +67,7 @@ class NetworkModule {
         .add(TeleconsultStatus.MoshiTypeAdapter())
         .add(IndiaNHIDDateOfBirthMoshiAdapter())
         .add(IndiaNHIDGender.MoshiTypeAdapter())
+        .add(DurationFromSecondsMoshiAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

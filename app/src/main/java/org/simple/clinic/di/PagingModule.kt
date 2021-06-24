@@ -4,6 +4,7 @@ import androidx.paging.Config
 import androidx.paging.PagedList
 import dagger.Module
 import dagger.Provides
+import org.simple.clinic.di.PagingSize.Page.AllRecentPatients
 import javax.inject.Named
 
 @Module
@@ -18,5 +19,11 @@ class PagingModule {
         initialLoadSizeHint = 40,
         enablePlaceholders = false
     )
+  }
+
+  @Provides
+  @PagingSize(AllRecentPatients)
+  fun providesAllRecentPatientsPageSize(): Int {
+    return 25
   }
 }

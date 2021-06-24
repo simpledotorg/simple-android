@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState.Loading
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -18,21 +21,26 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 class RecentPatientsScreen : BaseScreen<
     RecentPatientsScreen.Key,
     ScreenRecentPatientsBinding,
     AllRecentPatientsModel,
     AllRecentPatientsEvent,
-    AllRecentPatientsEffect>(), AllRecentPatientsUi, AllRecentPatientsUiActions {
+    AllRecentPatientsEffect>(), AllRecentPatientsUiActions {
 
   @Inject
   lateinit var router: Router
@@ -41,10 +49,14 @@ class RecentPatientsScreen : BaseScreen<
   lateinit var utcClock: UtcClock
 
   @Inject
-  lateinit var effectHandlerFactory: AllRecentPatientsEffectHandler.Factory
+  lateinit var userClock: UserClock
 
   @Inject
-  lateinit var uiRendererFactory: AllRecentPatientsUiRenderer.Factory
+  lateinit var effectHandlerFactory: AllRecentPatientsEffectHandler.Factory
+
+  @Named("full_date")
+  @Inject
+  lateinit var fullDateFormatter: DateTimeFormatter
 
   private val toolbar
     get() = binding.toolbar
@@ -52,7 +64,10 @@ class RecentPatientsScreen : BaseScreen<
   private val recyclerView
     get() = binding.recyclerView
 
-  private val recentAdapter = ItemAdapter(
+  private val progressIndicator
+    get() = binding.progressIndicator
+
+  private val recentAdapter = PagingItemAdapter(
       diffCallback = RecentPatientItemDiffCallback(),
       bindings = mapOf(
           R.layout.recent_patient_item_view to { layoutInflater, parent ->
@@ -73,9 +88,7 @@ class RecentPatientsScreen : BaseScreen<
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
-  override fun defaultModel() = AllRecentPatientsModel.create()
-
-  override fun uiRenderer() = uiRendererFactory.create(this)
+  override fun defaultModel() = AllRecentPatientsModel
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenRecentPatientsBinding.inflate(layoutInflater, container, false)
@@ -99,6 +112,13 @@ class RecentPatientsScreen : BaseScreen<
       layoutManager = LinearLayoutManager(context)
       adapter = recentAdapter
     }
+
+    recentAdapter.addLoadStateListener(::loadStateListener)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    recentAdapter.removeLoadStateListener(::loadStateListener)
   }
 
   private fun adapterEvents(): Observable<UiEvent> {
@@ -117,8 +137,15 @@ class RecentPatientsScreen : BaseScreen<
     )
   }
 
-  override fun updateRecentPatients(allItemTypes: List<RecentPatientItem>) {
-    recentAdapter.submitList(allItemTypes)
+  override fun showRecentPatients(recentPatients: PagingData<RecentPatient>) {
+    recentAdapter.submitData(lifecycle, RecentPatientItem.create(recentPatients, userClock, fullDateFormatter))
+  }
+
+  private fun loadStateListener(loadStates: CombinedLoadStates) {
+    val isLoading = loadStates.refresh is Loading
+
+    progressIndicator.visibleOrGone(isVisible = isLoading)
+    recyclerView.visibleOrGone(isVisible = !isLoading)
   }
 
   interface Injector {

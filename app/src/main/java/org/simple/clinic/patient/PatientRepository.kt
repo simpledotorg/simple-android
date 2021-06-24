@@ -27,13 +27,13 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
-import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 
@@ -485,10 +485,14 @@ class PatientRepository @Inject constructor(
           .recentPatientsWithLimit(facilityUuid, Scheduled, Manual, PatientStatus.Active, limit)
           .toObservable()
 
-  fun recentPatients(facilityUuid: UUID): Observable<List<RecentPatient>> =
+  fun recentPatients(facilityUuid: UUID): PagingSource<Int, RecentPatient> =
       database.recentPatientDao()
-          .recentPatients(facilityUuid, Scheduled, Manual, PatientStatus.Active)
-          .toObservable()
+          .recentPatients(
+              facilityUuid = facilityUuid,
+              appointmentStatus = Scheduled,
+              appointmentType = Manual,
+              patientStatus = PatientStatus.Active
+          )
 
   fun allColoniesOrVillagesInPatientAddress(): List<String> =
       database.addressDao()

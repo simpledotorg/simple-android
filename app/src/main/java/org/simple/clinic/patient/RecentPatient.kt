@@ -1,6 +1,7 @@
 package org.simple.clinic.patient
 
 import android.os.Parcelable
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Query
@@ -119,6 +120,6 @@ data class RecentPatient(
         appointmentStatus: Status,
         appointmentType: AppointmentType,
         patientStatus: PatientStatus
-    ): Flowable<List<RecentPatient>>
+    ): PagingSource<Int, RecentPatient>
   }
 }

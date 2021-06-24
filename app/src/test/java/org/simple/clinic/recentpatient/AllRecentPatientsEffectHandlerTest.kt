@@ -27,11 +27,13 @@ class AllRecentPatientsEffectHandlerTest {
   private val currentFacility = { TestData.facility(uuid = UUID.fromString("43adbee6-a7cf-4482-b673-8f1111bb09a4")) }
   private val uiActions = mock<AllRecentPatientsUiActions>()
   private val pagerFactory = mock<PagerFactory>()
+  private val pagingSize = 25
   private val effectHandler = AllRecentPatientsEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
       currentFacility = currentFacility,
       pagerFactory = pagerFactory,
+      allRecentPatientsPagingSize = pagingSize,
       uiActions = uiActions
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(
@@ -71,7 +73,7 @@ class AllRecentPatientsEffectHandlerTest {
 
     whenever(pagerFactory.createPager(
         sourceFactory = any<PagingSourceFactory<Int, RecentPatient>>(),
-        pageSize = eq(20),
+        pageSize = eq(pagingSize),
         initialKey = eq(null)
     )) doReturn Observable.just(recentPatients)
 

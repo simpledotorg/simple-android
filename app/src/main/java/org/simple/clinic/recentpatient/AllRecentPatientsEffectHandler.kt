@@ -6,6 +6,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.di.PagingSize
+import org.simple.clinic.di.PagingSize.Page.AllRecentPatients
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.PagerFactory
@@ -16,6 +18,7 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val currentFacility: Lazy<Facility>,
     private val pagerFactory: PagerFactory,
+    @PagingSize(AllRecentPatients) private val allRecentPatientsPagingSize: Int,
     @Assisted private val uiActions: AllRecentPatientsUiActions
 ) {
 
@@ -46,7 +49,7 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
 
             pagerFactory.createPager(
                 sourceFactory = { patientRepository.recentPatients(facilityUuid = facilityId) },
-                pageSize = 20
+                pageSize = allRecentPatientsPagingSize
             )
           }
           .map(::RecentPatientsLoaded)

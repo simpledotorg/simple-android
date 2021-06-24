@@ -2,15 +2,17 @@ package org.simple.clinic.contactpatient
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.contactpatient.ContactPatientInfoProgressState.DONE
+import org.simple.clinic.contactpatient.ContactPatientInfoProgressState.IN_PROGRESS
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.patient.PatientProfile
-import java.util.Optional
 import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.parcelable
 import java.time.LocalDate
+import java.util.Optional
 import java.util.UUID
 
 @Parcelize
@@ -22,7 +24,8 @@ data class ContactPatientModel(
     val secureCallingFeatureEnabled: Boolean,
     val potentialAppointments: List<PotentialAppointmentDate>,
     val selectedAppointmentDate: LocalDate,
-    val selectedRemoveAppointmentReason: RemoveAppointmentReason?
+    val selectedRemoveAppointmentReason: RemoveAppointmentReason?,
+    val contactPatientInfoProgressState: ContactPatientInfoProgressState?
 ) : Parcelable {
 
   companion object {
@@ -41,7 +44,8 @@ data class ContactPatientModel(
           secureCallingFeatureEnabled = secureCallFeatureEnabled,
           potentialAppointments = potentialAppointments,
           selectedAppointmentDate = potentialAppointments.first().scheduledFor,
-          selectedRemoveAppointmentReason = null
+          selectedRemoveAppointmentReason = null,
+          contactPatientInfoProgressState = null
       )
     }
   }
@@ -76,5 +80,13 @@ data class ContactPatientModel(
 
   fun removeAppointmentReasonSelected(reason: RemoveAppointmentReason): ContactPatientModel {
     return copy(selectedRemoveAppointmentReason = reason)
+  }
+
+  fun contactPatientInfoLoaded(): ContactPatientModel {
+    return copy(contactPatientInfoProgressState = DONE)
+  }
+
+  fun contactPatientInfoLoading(): ContactPatientModel {
+    return copy(contactPatientInfoProgressState = IN_PROGRESS)
   }
 }

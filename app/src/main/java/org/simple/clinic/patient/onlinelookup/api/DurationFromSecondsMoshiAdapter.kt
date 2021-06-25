@@ -1,4 +1,4 @@
-package org.simple.clinic.patient.onlinelookup
+package org.simple.clinic.patient.onlinelookup.api
 
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson

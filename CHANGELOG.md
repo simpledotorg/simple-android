@@ -16,6 +16,7 @@
 - Paginate recent patients list
 - Pin Android emulator build version to resolve emulator timeout error
 - Fix overdue list item UI indentation
+- Bump Kotlin to v1.5.20
 
 ### Changes
 - Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `pa-IN`, `te-IN`, `sid-ET`, `kn-IN`, `ta-IN`, `bn-BD`

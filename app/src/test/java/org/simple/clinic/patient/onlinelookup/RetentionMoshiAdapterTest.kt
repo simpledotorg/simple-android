@@ -3,6 +3,9 @@ package org.simple.clinic.patient.onlinelookup
 import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.Moshi
 import org.junit.Test
+import org.simple.clinic.patient.onlinelookup.api.DurationFromSecondsMoshiAdapter
+import org.simple.clinic.patient.onlinelookup.api.RecordRetention
+import org.simple.clinic.patient.onlinelookup.api.RetentionType
 import java.time.Duration
 
 class RetentionMoshiAdapterTest {

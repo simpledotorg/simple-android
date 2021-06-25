@@ -17,7 +17,7 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.patient.onlinelookup.DurationFromSecondsMoshiAdapter
+import org.simple.clinic.patient.onlinelookup.api.DurationFromSecondsMoshiAdapter
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.scanid.IndiaNHIDDateOfBirthMoshiAdapter

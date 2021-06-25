@@ -215,7 +215,7 @@ sealed class OverdueAppointmentListItem : PagingItemAdapter.Item<UiEvent> {
       val context = holder.itemView.context
 
       binding.patientNameTextView.text = context.getString(R.string.overdue_list_item_name_age, name, age.toString())
-      binding.patientNameTextView.setCompoundDrawableStart(gender.displayIconRes)
+      binding.patientGenderIcon.setImageResource(gender.displayIconRes)
       binding.villageTextView.text = villageName.orEmpty()
       binding.villageTextView.visibleOrGone(isVisible = !villageName.isNullOrBlank())
 

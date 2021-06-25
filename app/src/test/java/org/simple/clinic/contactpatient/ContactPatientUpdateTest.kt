@@ -15,10 +15,10 @@ import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
-import java.util.Optional
 import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
+import java.util.Optional
 import java.util.UUID
 
 class ContactPatientUpdateTest {
@@ -63,6 +63,21 @@ class ContactPatientUpdateTest {
   }
 
   @Test
+  fun `when the patient profile is loaded and overdue appointment is loaded, then ui must be updated`() {
+    val defaultModel = defaultModel()
+        .overdueAppointmentLoaded(Optional.of(overdueAppointment))
+
+    spec
+        .given(defaultModel)
+        .whenEvent(PatientProfileLoaded(patientProfile))
+        .then(assertThatNext(
+            hasModel(defaultModel.patientProfileLoaded(patientProfile)
+                .contactPatientInfoLoaded()),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
   fun `when the overdue appointment is loaded, the ui must be updated`() {
     val appointment = Optional.of(overdueAppointment)
     val defaultModel = defaultModel()
@@ -71,7 +86,24 @@ class ContactPatientUpdateTest {
         .given(defaultModel)
         .whenEvent(OverdueAppointmentLoaded(appointment))
         .then(assertThatNext(
-            hasModel(defaultModel.overdueAppointmentLoaded(appointment))
+            hasModel(defaultModel.overdueAppointmentLoaded(appointment)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when the overdue appointment is loaded and patient profile is loaded, the ui must be updated`() {
+    val appointment = Optional.of(overdueAppointment)
+    val defaultModel = defaultModel()
+        .patientProfileLoaded(patientProfile)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(OverdueAppointmentLoaded(appointment))
+        .then(assertThatNext(
+            hasModel(defaultModel.overdueAppointmentLoaded(appointment)
+                .contactPatientInfoLoaded()),
+            hasNoEffects()
         ))
   }
 

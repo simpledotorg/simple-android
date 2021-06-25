@@ -11,11 +11,11 @@ import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
-import java.util.Optional
 import org.simple.clinic.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
+import java.util.Optional
 import java.util.UUID
 
 class CallPatientUiRendererTest {
@@ -30,6 +30,16 @@ class CallPatientUiRendererTest {
   )
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val uiRenderer = ContactPatientUiRenderer(ui, clock)
+
+  @Test
+  fun `when contact patient information is loading, then show progress`() {
+    // when
+    uiRenderer.render(defaultModel())
+
+    // then
+    verify(ui).showProgress()
+    verifyNoMoreInteractions(ui)
+  }
 
   @Test
   fun `when the patient details are loaded with date of birth, render the patient details`() {
@@ -49,9 +59,11 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile))
+    uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile)
+        .contactPatientInfoLoaded())
 
     // then
+    verify(ui).hideProgress()
     verify(ui).hideSecureCallUi()
     verify(ui).switchToCallPatientView()
 
@@ -78,9 +90,11 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile))
+    uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile)
+        .contactPatientInfoLoaded())
 
     // then
+    verify(ui).hideProgress()
     verify(ui).hideSecureCallUi()
     verify(ui).switchToCallPatientView()
 
@@ -98,9 +112,11 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel().overdueAppointmentLoaded(Optional.of(overdueAppointment)))
+    uiRenderer.render(defaultModel().overdueAppointmentLoaded(Optional.of(overdueAppointment))
+        .contactPatientInfoLoaded())
 
     // then
+    verify(ui).hideProgress()
     verify(ui).hideSecureCallUi()
     verify(ui).switchToCallPatientView()
 
@@ -111,9 +127,11 @@ class CallPatientUiRendererTest {
   @Test
   fun `hide the call result section if there is no overdue appointment`() {
     // when
-    uiRenderer.render(defaultModel().overdueAppointmentLoaded(Optional.empty()))
+    uiRenderer.render(defaultModel().overdueAppointmentLoaded(Optional.empty())
+        .contactPatientInfoLoaded())
 
     // then
+    verify(ui).hideProgress()
     verify(ui).hideSecureCallUi()
     verify(ui).switchToCallPatientView()
 
@@ -125,9 +143,11 @@ class CallPatientUiRendererTest {
   fun `if the secure call feature is enabled, show the secure call ui`() {
     // when
     val model = defaultModel(phoneMaskFeatureEnabled = true)
+        .contactPatientInfoLoaded()
     uiRenderer.render(model)
 
     // then
+    verify(ui).hideProgress()
     verify(ui).switchToCallPatientView()
 
     verify(ui).showSecureCallUi()
@@ -138,9 +158,11 @@ class CallPatientUiRendererTest {
   fun `if the secure call feature is disabled, hide the secure call ui`() {
     // when
     val model = defaultModel(phoneMaskFeatureEnabled = false)
+        .contactPatientInfoLoaded()
     uiRenderer.render(model)
 
     // then
+    verify(ui).hideProgress()
     verify(ui).switchToCallPatientView()
 
     verify(ui).hideSecureCallUi()

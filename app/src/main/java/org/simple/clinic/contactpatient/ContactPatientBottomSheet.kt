@@ -101,6 +101,9 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   private val setAppointmentReminderView
     get() = binding.setAppointmentReminderView
 
+  private val progressIndicator
+    get() = binding.progressIndicator
+
   override fun defaultModel() = ContactPatientModel.create(
       patientUuid = patientUuid,
       appointmentConfig = appointmentConfig,
@@ -268,6 +271,14 @@ class ContactPatientBottomSheet : BaseBottomSheet<
         RemoveOverdueAppointmentResult,
         RemoveOverdueAppointmentScreen.Key(appointmentId, patientId)
     )
+  }
+
+  override fun showProgress() {
+    progressIndicator.visibility = VISIBLE
+  }
+
+  override fun hideProgress() {
+    progressIndicator.visibility = GONE
   }
 
   private fun backPressed() {

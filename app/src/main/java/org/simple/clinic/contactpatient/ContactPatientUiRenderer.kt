@@ -19,6 +19,12 @@ class ContactPatientUiRenderer(
 ) : ViewRenderer<ContactPatientModel> {
 
   override fun render(model: ContactPatientModel) {
+    if (!model.isPatientContactInfoLoaded) {
+      ui.showProgress()
+      return
+    }
+
+    ui.hideProgress()
     when (model.uiMode) {
       CallPatient -> renderCallPatientView(model)
       SetAppointmentReminder -> renderSetAppointmentReminderView(model)

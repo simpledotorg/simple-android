@@ -23,4 +23,6 @@ interface ContactPatientUi {
   fun enablePreviousReminderDateStepper()
   fun disableNextReminderDateStepper()
   fun enableNextReminderDateStepper()
+  fun showProgress()
+  fun hideProgress()
 }

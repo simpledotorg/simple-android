@@ -11,10 +11,10 @@ import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
-import java.util.Optional
 import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
+import java.util.Optional
 import java.util.UUID
 
 class ContactPatientInitTest {
@@ -36,7 +36,7 @@ class ContactPatientInitTest {
     spec
         .whenInit(defaultModel)
         .then(assertThatFirst(
-            hasModel(defaultModel),
+            hasModel(defaultModel.contactPatientInfoLoading()),
             hasEffects(LoadPatientProfile(patientUuid), LoadLatestOverdueAppointment(patientUuid))
         ))
   }
@@ -50,7 +50,7 @@ class ContactPatientInitTest {
     spec
         .whenInit(model)
         .then(assertThatFirst(
-            hasModel(model),
+            hasModel(model.contactPatientInfoLoaded()),
             hasNoEffects()
         ))
   }

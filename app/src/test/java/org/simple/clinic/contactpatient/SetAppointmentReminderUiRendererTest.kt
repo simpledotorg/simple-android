@@ -38,9 +38,11 @@ class SetAppointmentReminderUiRendererTest {
 
     // when
     val model = defaultModel().reminderDateSelected(selectedReminderDate)
+        .contactPatientInfoLoaded()
     uiRenderer.render(model)
 
     // then
+    verify(ui).hideProgress()
     verify(ui).switchToSetAppointmentReminderView()
     verify(ui).enablePreviousReminderDateStepper()
     verify(ui).enableNextReminderDateStepper()
@@ -60,9 +62,11 @@ class SetAppointmentReminderUiRendererTest {
 
     // when
     val model = defaultModel().reminderDateSelected(selectedReminderDate)
+        .contactPatientInfoLoaded()
     uiRenderer.render(model)
 
     // then
+    verify(ui).hideProgress()
     verify(ui).switchToSetAppointmentReminderView()
     verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enableNextReminderDateStepper()
@@ -82,9 +86,11 @@ class SetAppointmentReminderUiRendererTest {
 
     // when
     val model = defaultModel().reminderDateSelected(selectedReminderDate)
+        .contactPatientInfoLoaded()
     uiRenderer.render(model)
 
     // then
+    verify(ui).hideProgress()
     verify(ui).switchToSetAppointmentReminderView()
     verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enableNextReminderDateStepper()
@@ -104,9 +110,11 @@ class SetAppointmentReminderUiRendererTest {
 
     // when
     val model = defaultModel().reminderDateSelected(selectedReminderDate)
+        .contactPatientInfoLoaded()
     uiRenderer.render(model)
 
     // then
+    verify(ui).hideProgress()
     verify(ui).switchToSetAppointmentReminderView()
     verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enablePreviousReminderDateStepper()
@@ -126,9 +134,11 @@ class SetAppointmentReminderUiRendererTest {
 
     // when
     val model = defaultModel().reminderDateSelected(selectedReminderDate)
+        .contactPatientInfoLoaded()
     uiRenderer.render(model)
 
     // then
+    verify(ui).hideProgress()
     verify(ui).switchToSetAppointmentReminderView()
     verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enablePreviousReminderDateStepper()
@@ -148,9 +158,11 @@ class SetAppointmentReminderUiRendererTest {
 
     // when
     val model = defaultModel().reminderDateSelected(selectedReminderDate)
+        .contactPatientInfoLoaded()
     uiRenderer.render(model)
 
     // then
+    verify(ui).hideProgress()
     verify(ui).switchToSetAppointmentReminderView()
     verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enablePreviousReminderDateStepper()

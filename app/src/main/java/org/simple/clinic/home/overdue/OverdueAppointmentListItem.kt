@@ -2,6 +2,8 @@ package org.simple.clinic.home.overdue
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Rect
+import android.view.TouchDelegate
 import android.view.View
 import androidx.paging.PagingData
 import androidx.paging.map
@@ -18,6 +20,8 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.dp
+import org.simple.clinic.widgets.executeOnNextMeasure
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.visibleOrGone
@@ -225,6 +229,7 @@ sealed class OverdueAppointmentListItem : PagingItemAdapter.Item<UiEvent> {
         R.drawable.ic_overdue_call
       }
       binding.callButton.setImageResource(callButtonDrawable)
+      increaseCallButtonTapArea(callButton = binding.callButton)
 
       binding.isAtHighRiskTextView.visibility = if (isAtHighRisk) View.VISIBLE else View.GONE
 
@@ -233,6 +238,30 @@ sealed class OverdueAppointmentListItem : PagingItemAdapter.Item<UiEvent> {
           overdueDays,
           "$overdueDays"
       )
+    }
+
+    private fun increaseCallButtonTapArea(callButton: View) {
+      val parent = callButton.parent as View
+
+      parent.executeOnNextMeasure {
+        val touchableArea = Rect()
+        callButton.getHitRect(touchableArea)
+
+        val buttonHeight = callButton.height
+        val parentHeight = parent.height
+
+        val verticalSpace = (parentHeight - buttonHeight) / 2
+        val horizontalSpace = 24.dp
+
+        with(touchableArea) {
+          left -= horizontalSpace
+          top -= verticalSpace
+          right += horizontalSpace
+          bottom += verticalSpace
+        }
+
+        parent.touchDelegate = TouchDelegate(touchableArea, callButton)
+      }
     }
   }
 

@@ -1,12 +1,12 @@
-package org.simple.clinic.patient.onlinelookup
+package org.simple.clinic.patient.onlinelookup.api
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.simple.clinic.bloodsugar.BloodSugarMeasurement
-import org.simple.clinic.bp.BloodPressureMeasurement
-import org.simple.clinic.drugs.PrescribedDrug
-import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.bloodsugar.sync.BloodSugarMeasurementPayload
+import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
+import org.simple.clinic.drugs.sync.PrescribedDrugPayload
+import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
+import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientStatus
@@ -75,19 +75,19 @@ data class PatientOnlineLookupResponsePayload(
     val assignedFacilityId: UUID?,
 
     @Json(name = "appointments")
-    val appointments: List<Appointment>,
+    val appointments: List<AppointmentPayload>,
 
     @Json(name = "blood_pressures")
-    val bloodPressures: List<BloodPressureMeasurement>,
+    val bloodPressures: List<BloodPressureMeasurementPayload>,
 
     @Json(name = "blood_sugars")
-    val bloodSugars: List<BloodSugarMeasurement>,
+    val bloodSugars: List<BloodSugarMeasurementPayload>,
 
     @Json(name = "medical_history")
-    val medicalHistory: MedicalHistory,
+    val medicalHistory: MedicalHistoryPayload,
 
     @Json(name = "prescribed_drugs")
-    val prescribedDrugs: List<PrescribedDrug>,
+    val prescribedDrugs: List<PrescribedDrugPayload>,
 
     @Json(name = "retention")
     val retention: RecordRetention

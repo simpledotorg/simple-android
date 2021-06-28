@@ -24,7 +24,6 @@ import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.mobius.eventSources
 import org.simple.clinic.mobius.first
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.util.overrideCancellation
 import org.simple.clinic.util.unsafeLazy
 
 abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F> : BottomSheetDialogFragment() {
@@ -94,11 +93,6 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
 
     behavior = dialog.behavior
     behavior?.addBottomSheetCallback(bottomSheetCallback)
-
-    // This is needed because the router is not aware of the changes
-    // in the history when the bottom sheet dialog is dismissed in the
-    // normal fashion.
-    dialog.overrideCancellation(::backPressed)
 
     return dialog
   }

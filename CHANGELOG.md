@@ -2,7 +2,7 @@
 
 ## Next Release
 ### Features
-- [In Progress: 25 Jun 2021] Add support for finding a patient online from ID scan
+- [In Progress: 28 Jun 2021] Add support for finding a patient online from ID scan
 
 ### Internal
 - Migrate `OverdueAppointment` to add patients without phone number

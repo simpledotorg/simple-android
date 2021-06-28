@@ -53,8 +53,9 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
   private var behavior: BottomSheetBehavior<FrameLayout>? = null
   private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
     override fun onStateChanged(bottomSheet: View, newState: Int) {
-      if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-        behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+      if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+        backPressed()
+        dismiss()
       }
     }
 

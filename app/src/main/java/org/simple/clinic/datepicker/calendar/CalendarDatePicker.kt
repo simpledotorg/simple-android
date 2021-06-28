@@ -13,7 +13,6 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.overrideCancellation
 import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.util.unsafeLazy
 import java.time.LocalDate
@@ -37,7 +36,6 @@ class CalendarDatePicker : DialogFragment() {
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val dialog = datePickerDialog()
 
-    dialog.overrideCancellation(::backPressed)
     dialog.setButton(BUTTON_NEGATIVE, getString(android.R.string.cancel)) { _, _ -> backPressed() }
 
     return dialog

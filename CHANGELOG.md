@@ -16,6 +16,7 @@
 - Fix overdue list item UI indentation
 - Bump Kotlin to v1.5.20
 - Increase tappable area of overdue call button
+- Add `retainUntil` column to the `Patient` table
 
 ### Changes
 - Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `pa-IN`, `te-IN`, `sid-ET`, `kn-IN`, `ta-IN`, `bn-BD`

@@ -3,6 +3,7 @@ package org.simple.clinic.datepicker.calendar
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.DialogInterface.BUTTON_NEGATIVE
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
@@ -39,6 +40,11 @@ class CalendarDatePicker : DialogFragment() {
     dialog.setButton(BUTTON_NEGATIVE, getString(android.R.string.cancel)) { _, _ -> backPressed() }
 
     return dialog
+  }
+
+  override fun onCancel(dialog: DialogInterface) {
+    backPressed()
+    super.onCancel(dialog)
   }
 
   private fun datePickerDialog(): DatePickerDialog {

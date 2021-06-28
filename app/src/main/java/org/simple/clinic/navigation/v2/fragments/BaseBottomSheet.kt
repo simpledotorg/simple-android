@@ -1,6 +1,7 @@
 package org.simple.clinic.navigation.v2.fragments
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -136,8 +137,8 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
     outState.putParcelable(KEY_MODEL, controller.model)
   }
 
-  override fun dismiss() {
+  override fun onCancel(dialog: DialogInterface) {
     backPressed()
-    super.dismiss()
+    super.onCancel(dialog)
   }
 }

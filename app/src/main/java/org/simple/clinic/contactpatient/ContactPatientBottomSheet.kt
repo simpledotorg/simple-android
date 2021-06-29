@@ -20,6 +20,7 @@ import org.simple.clinic.datepicker.DatePickerKeyFactory
 import org.simple.clinic.datepicker.DatePickerResult
 import org.simple.clinic.datepicker.SelectedDate
 import org.simple.clinic.di.injector
+import org.simple.clinic.feature.Feature.OverdueListChanges
 import org.simple.clinic.feature.Feature.SecureCalling
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.ExpectsResult
@@ -105,7 +106,8 @@ class ContactPatientBottomSheet : BaseBottomSheet<
       appointmentConfig = appointmentConfig,
       userClock = userClock,
       mode = UiMode.CallPatient,
-      secureCallFeatureEnabled = features.isEnabled(SecureCalling) && phoneMaskConfig.proxyPhoneNumber.isNotBlank()
+      secureCallFeatureEnabled = features.isEnabled(SecureCalling) && phoneMaskConfig.proxyPhoneNumber.isNotBlank(),
+      overdueListChangesFeatureEnabled = features.isEnabled(OverdueListChanges)
   )
 
   override fun bindView(inflater: LayoutInflater, container: ViewGroup?) =

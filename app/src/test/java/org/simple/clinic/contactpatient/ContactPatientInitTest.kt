@@ -58,7 +58,8 @@ class ContactPatientInitTest {
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       timeToAppointments: List<TimeToAppointment> = this.timeToAppointments,
-      mode: UiMode = UiMode.CallPatient
+      mode: UiMode = UiMode.CallPatient,
+      overdueListChangesFeatureEnabled: Boolean = false
   ): ContactPatientModel {
     val appointmentConfig = AppointmentConfig(
         appointmentDuePeriodForDefaulters = Period.ZERO,
@@ -73,7 +74,8 @@ class ContactPatientInitTest {
         appointmentConfig = appointmentConfig,
         userClock = userClock,
         mode = mode,
-        secureCallFeatureEnabled = phoneMaskFeatureEnabled
+        secureCallFeatureEnabled = phoneMaskFeatureEnabled,
+        overdueListChangesFeatureEnabled = overdueListChangesFeatureEnabled
     )
   }
 }

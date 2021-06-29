@@ -173,7 +173,8 @@ class SetAppointmentReminderUiRendererTest {
 
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
-      timeToAppointments: List<TimeToAppointment> = this.timeToAppointments
+      timeToAppointments: List<TimeToAppointment> = this.timeToAppointments,
+      overdueListChangesFeatureEnabled: Boolean = false
   ): ContactPatientModel {
     val appointmentConfig = AppointmentConfig(
         appointmentDuePeriodForDefaulters = Period.ZERO,
@@ -188,7 +189,8 @@ class SetAppointmentReminderUiRendererTest {
         appointmentConfig = appointmentConfig,
         userClock = clock,
         mode = UiMode.SetAppointmentReminder,
-        secureCallFeatureEnabled = phoneMaskFeatureEnabled
+        secureCallFeatureEnabled = phoneMaskFeatureEnabled,
+        overdueListChangesFeatureEnabled = overdueListChangesFeatureEnabled
     )
   }
 }

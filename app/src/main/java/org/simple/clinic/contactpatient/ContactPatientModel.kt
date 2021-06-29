@@ -25,7 +25,8 @@ data class ContactPatientModel(
     val potentialAppointments: List<PotentialAppointmentDate>,
     val selectedAppointmentDate: LocalDate,
     val selectedRemoveAppointmentReason: RemoveAppointmentReason?,
-    val contactPatientInfoProgressState: ContactPatientInfoProgressState?
+    val contactPatientInfoProgressState: ContactPatientInfoProgressState?,
+    val overdueListChangesFeatureEnabled: Boolean
 ) : Parcelable {
 
   companion object {
@@ -34,7 +35,8 @@ data class ContactPatientModel(
         appointmentConfig: AppointmentConfig,
         userClock: UserClock,
         mode: UiMode,
-        secureCallFeatureEnabled: Boolean
+        secureCallFeatureEnabled: Boolean,
+        overdueListChangesFeatureEnabled: Boolean
     ): ContactPatientModel {
       val potentialAppointments = PotentialAppointmentDate.from(appointmentConfig.remindAppointmentsIn, userClock)
 
@@ -45,7 +47,8 @@ data class ContactPatientModel(
           potentialAppointments = potentialAppointments,
           selectedAppointmentDate = potentialAppointments.first().scheduledFor,
           selectedRemoveAppointmentReason = null,
-          contactPatientInfoProgressState = null
+          contactPatientInfoProgressState = null,
+          overdueListChangesFeatureEnabled = overdueListChangesFeatureEnabled
       )
     }
   }

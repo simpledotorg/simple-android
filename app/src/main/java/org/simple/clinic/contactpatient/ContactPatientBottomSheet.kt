@@ -94,6 +94,9 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   private val callPatientView_Old
     get() = binding.callPatientViewOld
 
+  private val callPatientView
+    get() = binding.callPatientView
+
   private val setAppointmentReminderView
     get() = binding.setAppointmentReminderView
 

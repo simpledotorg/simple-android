@@ -7,8 +7,8 @@
   android:clipChildren="false"
   android:clipToPadding="false"
   tools:background="?attr/colorSurface"
-  tools:context="org.simple.clinic.contactpatient.views.CallPatientView"
-  tools:parentTag="org.simple.clinic.contactpatient.views.CallPatientView">
+  tools:context="org.simple.clinic.contactpatient.views.CallPatientView_Old"
+  tools:parentTag="org.simple.clinic.contactpatient.views.CallPatientView_Old">
 
   <TextView
     android:id="@+id/nameTextView"

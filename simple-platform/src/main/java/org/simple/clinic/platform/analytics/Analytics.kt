@@ -98,15 +98,6 @@ object Analytics {
     reporters.forEach { it.createEvent("NetworkTimeout", props) }
   }
 
-  fun reportTimeTaken(operationName: String, timeTaken: Duration) {
-    val props = mapOf(
-        "operationName" to operationName,
-        "timeTakenInMillis" to timeTaken.toMillis()
-    )
-
-    reporters.forEach { it.createEvent("TimeTaken", props) }
-  }
-
   fun reportDataCleared(
       patientCount: Int,
       bloodPressureCount: Int,

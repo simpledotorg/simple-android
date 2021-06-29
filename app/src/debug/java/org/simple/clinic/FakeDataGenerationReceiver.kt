@@ -225,7 +225,8 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
         reminderConsent = ReminderConsent.Granted,
         deletedReason = null,
         registeredFacilityId = null,
-        assignedFacilityId = null
+        assignedFacilityId = null,
+        retainUntil = null
     )
   }
 

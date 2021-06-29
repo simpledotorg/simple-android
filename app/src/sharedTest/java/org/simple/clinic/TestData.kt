@@ -163,7 +163,8 @@ object TestData {
       reminderConsent: ReminderConsent = Granted,
       deletedReason: DeletedReason? = null,
       registeredFacilityId: UUID? = null,
-      assignedFacilityId: UUID? = null
+      assignedFacilityId: UUID? = null,
+      retainUntil: Instant? = null
   ): Patient {
     return Patient(
         uuid = uuid,
@@ -181,8 +182,8 @@ object TestData {
         reminderConsent = reminderConsent,
         deletedReason = deletedReason,
         registeredFacilityId = registeredFacilityId,
-        assignedFacilityId = assignedFacilityId
-
+        assignedFacilityId = assignedFacilityId,
+        retainUntil = retainUntil
     )
   }
 

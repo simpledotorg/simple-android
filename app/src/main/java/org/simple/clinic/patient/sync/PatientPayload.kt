@@ -94,7 +94,8 @@ data class PatientPayload(
         reminderConsent = reminderConsent,
         deletedReason = deletedReason,
         registeredFacilityId = registeredFacilityId,
-        assignedFacilityId = assignedFacilityId
+        assignedFacilityId = assignedFacilityId,
+        retainUntil = null
     )
   }
 }

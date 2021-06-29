@@ -31,7 +31,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<ContactPatientEffect, ContactPatientEvent>()
         .addTransformer(LoadPatientProfile::class.java, loadPatientProfile(schedulers.io()))
-        .addTransformer(LoadLatestOverdueAppointment::class.java, loadLatestOverdueAppointment(schedulers.io()))
+        .addTransformer(LoadLatestOverdueAppointment_Old::class.java, loadLatestOverdueAppointment_Old(schedulers.io()))
         .addConsumer(DirectCallWithAutomaticDialer::class.java, { uiActions.directlyCallPatient(it.patientPhoneNumber, Dialer.Automatic) }, schedulers.ui())
         .addConsumer(DirectCallWithManualDialer::class.java, { uiActions.directlyCallPatient(it.patientPhoneNumber, Dialer.Manual) }, schedulers.ui())
         .addConsumer(MaskedCallWithAutomaticDialer::class.java, { uiActions.maskedCallPatient(it.patientPhoneNumber, it.proxyPhoneNumber, Dialer.Automatic) }, schedulers.ui())
@@ -61,9 +61,9 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun loadLatestOverdueAppointment(
+  private fun loadLatestOverdueAppointment_Old(
       scheduler: Scheduler
-  ): ObservableTransformer<LoadLatestOverdueAppointment, ContactPatientEvent> {
+  ): ObservableTransformer<LoadLatestOverdueAppointment_Old, ContactPatientEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)

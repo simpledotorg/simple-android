@@ -37,7 +37,7 @@ class ContactPatientInitTest {
         .whenInit(defaultModel)
         .then(assertThatFirst(
             hasModel(defaultModel.contactPatientInfoLoading()),
-            hasEffects(LoadPatientProfile(patientUuid), LoadLatestOverdueAppointment(patientUuid))
+            hasEffects(LoadPatientProfile(patientUuid), LoadLatestOverdueAppointment_Old(patientUuid))
         ))
   }
 

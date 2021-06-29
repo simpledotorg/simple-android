@@ -73,7 +73,7 @@ class ContactPatientEffectHandlerTest {
     whenever(appointmentRepository.latestOverdueAppointmentForPatient_Old(patientUuid, date)) doReturn overdueAppointment
 
     // when
-    testCase.dispatch(LoadLatestOverdueAppointment(patientUuid))
+    testCase.dispatch(LoadLatestOverdueAppointment_Old(patientUuid))
 
     // then
     testCase.assertOutgoingEvents(OverdueAppointmentLoaded(overdueAppointment))

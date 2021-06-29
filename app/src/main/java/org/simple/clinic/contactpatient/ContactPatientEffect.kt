@@ -7,7 +7,7 @@ sealed class ContactPatientEffect
 
 data class LoadPatientProfile(val patientUuid: UUID) : ContactPatientEffect()
 
-data class LoadLatestOverdueAppointment(val patientUuid: UUID) : ContactPatientEffect()
+data class LoadLatestOverdueAppointment_Old(val patientUuid: UUID) : ContactPatientEffect()
 
 data class DirectCallWithAutomaticDialer(val patientPhoneNumber: String) : ContactPatientEffect()
 

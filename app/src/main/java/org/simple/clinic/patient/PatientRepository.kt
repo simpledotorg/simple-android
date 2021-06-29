@@ -704,6 +704,17 @@ class PatientRepository @Inject constructor(
     return database.patientDao().allPatientProfiles()
   }
 
+  fun saveCompleteMedicalRecord(medicalRecord: CompleteMedicalRecord) {
+    database.runInTransaction {
+      saveRecords(listOf(medicalRecord.patient))
+      database.medicalHistoryDao().save(medicalRecord.medicalHistory)
+      database.bloodPressureDao().save(medicalRecord.bloodPressures)
+      database.bloodSugarDao().save(medicalRecord.bloodSugars)
+      database.appointmentDao().save(medicalRecord.appointments)
+      database.prescriptionDao().save(medicalRecord.prescribedDrugs)
+    }
+  }
+
   private data class BusinessIdMetaAndVersion(
       val metaData: String,
       val metaDataVersion: MetaDataVersion

@@ -176,7 +176,7 @@ data class OverdueAppointment(
         AND (appt_remindOn < :scheduledDate OR appt_remindOn IS NULL)
       GROUP BY appt_patientUuid HAVING MAX(appt_scheduledDate)
     """)
-    fun latestForPatient(
+    fun latestForPatient_Old(
         patientUUID: UUID,
         scheduledDate: LocalDate
     ): OverdueAppointment?

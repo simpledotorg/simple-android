@@ -2444,13 +2444,13 @@ class AppointmentRepositoryAndroidTest {
     )).blockingAwait()
 
     // then
-    val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, today.plusDays(1))
+    val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient_Old(patientUuid, today.plusDays(1))
     assertThat(latest_appointment_today.get().appointment).isEqualTo(appointment_scheduled_for_today)
 
-    val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, aWeekInFuture.plusDays(1))
+    val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient_Old(patientUuid, aWeekInFuture.plusDays(1))
     assertThat(latest_appointment_a_week_later.get().appointment).isEqualTo(appointment_scheduled_a_week_in_the_future)
 
-    val latest_appointment_two_weeks_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, twoWeeksInFuture.plusDays(1))
+    val latest_appointment_two_weeks_later = appointmentRepository.latestOverdueAppointmentForPatient_Old(patientUuid, twoWeeksInFuture.plusDays(1))
     assertThat(latest_appointment_two_weeks_later.get().appointment).isEqualTo(appointment_scheduled_a_week_in_the_future)
   }
 
@@ -2494,10 +2494,10 @@ class AppointmentRepositoryAndroidTest {
     )).blockingAwait()
 
     // then
-    val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, today.plusDays(1))
+    val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient_Old(patientUuid, today.plusDays(1))
     assertThat(latest_appointment_today).isEqualTo(Optional.empty<OverdueAppointment>())
 
-    val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, aWeekInFuture.plusDays(1))
+    val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient_Old(patientUuid, aWeekInFuture.plusDays(1))
     assertThat(latest_appointment_a_week_later.get().appointment).isEqualTo(appointment_scheduled_for_today_with_reminder_a_week_in_the_future)
   }
 

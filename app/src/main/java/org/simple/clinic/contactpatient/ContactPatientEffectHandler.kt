@@ -67,7 +67,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .map { appointmentRepository.latestOverdueAppointmentForPatient(it.patientUuid, LocalDate.now(clock)) }
+          .map { appointmentRepository.latestOverdueAppointmentForPatient_Old(it.patientUuid, LocalDate.now(clock)) }
           .map(::OverdueAppointmentLoaded)
     }
   }

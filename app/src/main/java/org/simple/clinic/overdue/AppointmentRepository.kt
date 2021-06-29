@@ -225,10 +225,10 @@ class AppointmentRepository @Inject constructor(
         .toObservable()
   }
 
-  fun latestOverdueAppointmentForPatient(
+  fun latestOverdueAppointmentForPatient_Old(
       patientUuid: UUID,
       date: LocalDate
   ): Optional<OverdueAppointment> {
-    return overdueDao.latestForPatient(patientUuid, date).toOptional()
+    return overdueDao.latestForPatient_Old(patientUuid, date).toOptional()
   }
 }

@@ -53,6 +53,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_KIDNEY_DISEASE, Unanswered)
     verify(ui).showDiagnosisRequiredError(false)
     verify(ui).hideNextButtonProgress()
+    verify(ui).hideHypertensionTreatmentQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -96,6 +97,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, Yes)
     verify(ui).showDiagnosisRequiredError(false)
     verify(ui).hideNextButtonProgress()
+    verify(ui).hideHypertensionTreatmentQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -117,6 +119,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
     verify(ui).showDiagnosisRequiredError(true)
     verify(ui).hideNextButtonProgress()
+    verify(ui).hideHypertensionTreatmentQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -133,6 +136,7 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders()
     verify(ui).showDiagnosisRequiredError(false)
     verify(ui).showNextButtonProgress()
+    verify(ui).hideHypertensionTreatmentQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -177,6 +181,28 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
     verify(ui).showDiagnosisRequiredError(false)
     verify(ui).hideNextButtonProgress()
+    verify(ui).hideHypertensionTreatmentQuestion()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient does not have hypertension, then hide hypertension treatment question`() {
+    // given
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyImplicitRenders()
+    verify(ui).showDiagnosisView()
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
+    verify(ui).hideDiabetesHistorySection()
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
+    verify(ui).showDiagnosisRequiredError(false)
+    verify(ui).hideNextButtonProgress()
+    verify(ui).hideHypertensionTreatmentQuestion()
     verifyNoMoreInteractions(ui)
   }
 

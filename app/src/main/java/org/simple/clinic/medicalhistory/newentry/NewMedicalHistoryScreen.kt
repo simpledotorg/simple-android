@@ -93,6 +93,9 @@ class NewMedicalHistoryScreen(
   private val hypertensionTreatmentContainer
     get() = binding!!.hypertensionTreatmentContainer
 
+  private val hypertensionTreatmentChipGroup
+    get() = hypertensionTreatmentBinding!!.chipGroup
+
   private val hypertensionTreatmentYesChip
     get() = hypertensionTreatmentBinding!!.yesChip
 
@@ -236,6 +239,11 @@ class NewMedicalHistoryScreen(
     hypertensionTreatmentContainer.visibility = View.VISIBLE
     hypertensionTreatmentYesChip.isChecked = answer == Yes
     hypertensionTreatmentNoChip.isChecked = answer == No
+  }
+
+  override fun hideHypertensionTreatmentQuestion() {
+    hypertensionTreatmentContainer.visibility = View.GONE
+    hypertensionTreatmentChipGroup.clearCheck()
   }
 
   interface Injector {

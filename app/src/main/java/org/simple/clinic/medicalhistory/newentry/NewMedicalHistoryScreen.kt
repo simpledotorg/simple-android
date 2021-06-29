@@ -11,6 +11,7 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.ScreenNewMedicalHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.medicalhistory.Answer
@@ -52,6 +53,9 @@ class NewMedicalHistoryScreen(
   @Inject
   lateinit var effectHandlerFactory: NewMedicalHistoryEffectHandler.Factory
 
+  @Inject
+  lateinit var country: Country
+
   private var binding: ScreenNewMedicalHistoryBinding? = null
 
   private val toolbar
@@ -90,7 +94,7 @@ class NewMedicalHistoryScreen(
         .cast<NewMedicalHistoryEvent>()
   }
 
-  private val uiRenderer: ViewRenderer<NewMedicalHistoryModel> = NewMedicalHistoryUiRenderer(this)
+  private val uiRenderer: ViewRenderer<NewMedicalHistoryModel> = NewMedicalHistoryUiRenderer(this, country)
 
   private val mobiusDelegate: MobiusDelegate<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect> by unsafeLazy {
     MobiusDelegate.forView(

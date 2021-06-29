@@ -11,6 +11,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.ListMedicalhistoryHypertensionTreatmentBinding
@@ -25,6 +26,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HY
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.mobius.ViewRenderer
@@ -137,6 +139,15 @@ class NewMedicalHistoryScreen(
 
     toolbar.setNavigationOnClickListener {
       router.pop()
+    }
+
+    hypertensionTreatmentChipGroup.setOnCheckedChangeListener { _, checkedId ->
+      val answer = when (checkedId) {
+        R.id.yesChip -> Yes
+        R.id.noChip -> No
+        else -> Answer.Unanswered
+      }
+      questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_HYPERTENSION_TREATMENT, answer))
     }
 
     post {

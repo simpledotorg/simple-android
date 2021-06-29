@@ -2504,6 +2504,53 @@ class AppointmentRepositoryAndroidTest {
   @Suppress("LocalVariableName")
   @Test
   fun fetching_the_latest_overdue_appointment_for_a_patient_should_return_overdue_appointment_of_patient_with_phone_number() {
+      // given
+      val patientProfile = TestData.patientProfile(
+          patientUuid = patientUuid,
+          generatePhoneNumber = false
+      )
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+      val today = LocalDate.now(clock)
+      val aWeekInThePast = today.minusWeeks(1)
+      val aWeekInFuture = today.plusWeeks(1)
+
+      val bp_recorded_a_week_ago = TestData.bloodPressureMeasurement(
+          uuid = UUID.fromString("b916ca18-3e60-4e3c-a1b9-46504ddf0662"),
+          recordedAt = aWeekInThePast.toUtcInstant(userClock),
+          patientUuid = patientUuid,
+          userUuid = user.uuid,
+          facilityUuid = facility.uuid
+      )
+
+      val appointment_scheduled_for_today_with_reminder_a_week_in_the_future = TestData.appointment(
+          uuid = UUID.fromString("d7c7fdca-74e2-4248-93ea-ffb57c81c995"),
+          patientUuid = patientUuid,
+          facilityUuid = facility.uuid,
+          status = Scheduled,
+          scheduledDate = today,
+          remindOn = aWeekInFuture
+      )
+
+      bpRepository.save(listOf(
+          bp_recorded_a_week_ago
+      )).blockingAwait()
+
+      appointmentRepository.save(listOf(
+          appointment_scheduled_for_today_with_reminder_a_week_in_the_future
+      )).blockingAwait()
+
+      // then
+      val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient_Old(patientUuid, today.plusDays(1))
+      assertThat(latest_appointment_today.isPresent).isEqualTo(false)
+
+      val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient_Old(patientUuid, aWeekInFuture.plusDays(1))
+      assertThat(latest_appointment_a_week_later.isPresent).isEqualTo(false)
+    }
+
+  @Suppress("LocalVariableName")
+  @Test
+  fun fetching_the_latest_overdue_appointment_for_a_patient_should_return_overdue_appointment_of_patient_with_and_without_phone_number() {
     // given
     val patientProfile = TestData.patientProfile(
         patientUuid = patientUuid,
@@ -2541,11 +2588,11 @@ class AppointmentRepositoryAndroidTest {
     )).blockingAwait()
 
     // then
-    val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient_Old(patientUuid, today.plusDays(1))
-    assertThat(latest_appointment_today.isPresent).isEqualTo(false)
+    val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, today.plusDays(1))
+    assertThat(latest_appointment_today).isEqualTo(Optional.empty<OverdueAppointment>())
 
-    val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient_Old(patientUuid, aWeekInFuture.plusDays(1))
-    assertThat(latest_appointment_a_week_later.isPresent).isEqualTo(false)
+    val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, aWeekInFuture.plusDays(1))
+    assertThat(latest_appointment_a_week_later.get().appointment).isEqualTo(appointment_scheduled_for_today_with_reminder_a_week_in_the_future)
   }
 
   @Test

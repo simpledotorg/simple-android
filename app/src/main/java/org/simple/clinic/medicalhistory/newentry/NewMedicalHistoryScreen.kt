@@ -3,6 +3,7 @@ package org.simple.clinic.medicalhistory.newentry
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
@@ -12,9 +13,12 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.databinding.ListMedicalhistoryHypertensionTreatmentBinding
 import org.simple.clinic.databinding.ScreenNewMedicalHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.Answer.No
+import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
@@ -57,6 +61,7 @@ class NewMedicalHistoryScreen(
   lateinit var country: Country
 
   private var binding: ScreenNewMedicalHistoryBinding? = null
+  private var hypertensionTreatmentBinding: ListMedicalhistoryHypertensionTreatmentBinding? = null
 
   private val toolbar
     get() = binding!!.toolbar
@@ -85,6 +90,15 @@ class NewMedicalHistoryScreen(
   private val hypertensionDiagnosisView
     get() = binding!!.hypertensionDiagnosisView
 
+  private val hypertensionTreatmentContainer
+    get() = binding!!.hypertensionTreatmentContainer
+
+  private val hypertensionTreatmentYesChip
+    get() = hypertensionTreatmentBinding!!.yesChip
+
+  private val hypertensionTreatmentNoChip
+    get() = hypertensionTreatmentBinding!!.noChip
+
   private val questionViewEvents: Subject<NewMedicalHistoryEvent> = PublishSubject.create()
 
   private val events: Observable<NewMedicalHistoryEvent> by unsafeLazy {
@@ -94,9 +108,9 @@ class NewMedicalHistoryScreen(
         .cast<NewMedicalHistoryEvent>()
   }
 
-  private val uiRenderer: ViewRenderer<NewMedicalHistoryModel> = NewMedicalHistoryUiRenderer(this, country)
-
   private val mobiusDelegate: MobiusDelegate<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect> by unsafeLazy {
+    val uiRenderer: ViewRenderer<NewMedicalHistoryModel> = NewMedicalHistoryUiRenderer(this, country)
+
     MobiusDelegate.forView(
         events = events,
         defaultModel = NewMedicalHistoryModel.default(),
@@ -114,6 +128,7 @@ class NewMedicalHistoryScreen(
     }
 
     binding = ScreenNewMedicalHistoryBinding.bind(this)
+    hypertensionTreatmentBinding = ListMedicalhistoryHypertensionTreatmentBinding.bind(binding!!.hypertensionTreatmentContainer)
 
     context.injector<Injector>().inject(this)
 
@@ -134,6 +149,7 @@ class NewMedicalHistoryScreen(
   override fun onDetachedFromWindow() {
     mobiusDelegate.stop()
     binding = null
+    hypertensionTreatmentBinding = null
     super.onDetachedFromWindow()
   }
 
@@ -214,6 +230,12 @@ class NewMedicalHistoryScreen(
 
   override fun hideNextButtonProgress() {
     nextButton.setButtonState(Enabled)
+  }
+
+  override fun showHypertensionTreatmentQuestion(answer: Answer) {
+    hypertensionTreatmentContainer.visibility = View.VISIBLE
+    hypertensionTreatmentYesChip.isChecked = answer == Yes
+    hypertensionTreatmentNoChip.isChecked = answer == No
   }
 
   interface Injector {

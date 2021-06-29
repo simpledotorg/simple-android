@@ -35,11 +35,19 @@ class NewMedicalHistoryUiRenderer(
           ui.renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, hasDiabetes)
         }
       }
+
+      renderHypertensionTreatmentQuestion(model)
     }
 
     ui.showDiagnosisRequiredError(model.showDiagnosisRequiredError)
 
     renderNextButton(model)
+  }
+
+  private fun renderHypertensionTreatmentQuestion(model: NewMedicalHistoryModel) {
+    if (country.isoCountryCode == Country.INDIA && model.diagnosedWithHypertension) {
+      ui.showHypertensionTreatmentQuestion(model.ongoingMedicalHistoryEntry.isOnHypertensionTreatment)
+    }
   }
 
   private fun renderNextButton(model: NewMedicalHistoryModel) {

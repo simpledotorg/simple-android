@@ -75,6 +75,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, No)
     verify(ui).showDiagnosisRequiredError(false)
     verify(ui).hideNextButtonProgress()
+    verify(ui).showHypertensionTreatmentQuestion(Unanswered)
     verifyNoMoreInteractions(ui)
   }
 
@@ -132,6 +133,50 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders()
     verify(ui).showDiagnosisRequiredError(false)
     verify(ui).showNextButtonProgress()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient has hypertension and country is india, then show hypertension treatment question`() {
+    // given
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyImplicitRenders()
+    verify(ui).showDiagnosisView()
+    verify(ui).hideDiabetesHistorySection()
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
+    verify(ui).showDiagnosisRequiredError(false)
+    verify(ui).hideNextButtonProgress()
+    verify(ui).showHypertensionTreatmentQuestion(Unanswered)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient has hypertension and country is not from india, then show hypertension treatment question`() {
+    // given
+    val uiRenderer = NewMedicalHistoryUiRenderer(ui, TestData.country(isoCountryCode = Country.BANGLADESH))
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyImplicitRenders()
+    verify(ui).showDiagnosisView()
+    verify(ui).hideDiabetesHistorySection()
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
+    verify(ui).showDiagnosisRequiredError(false)
+    verify(ui).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
   }
 

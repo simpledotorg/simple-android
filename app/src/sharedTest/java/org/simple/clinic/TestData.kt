@@ -83,7 +83,6 @@ import java.net.URI
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset.UTC
-import java.time.format.DateTimeFormatter
 import java.util.UUID
 import kotlin.random.nextInt
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer as TeleconsultRecordAnswer
@@ -687,6 +686,7 @@ object TestData {
       hasHadStroke: Answer = randomMedicalHistoryAnswer(),
       hasHadKidneyDisease: Answer = randomMedicalHistoryAnswer(),
       diagnosedWithHypertension: Answer = randomMedicalHistoryAnswer(),
+      isOnHypertensionTreatment: Answer = randomMedicalHistoryAnswer(),
       hasDiabetes: Answer = randomMedicalHistoryAnswer(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
@@ -697,6 +697,7 @@ object TestData {
         uuid = uuid,
         patientUuid = patientUuid,
         diagnosedWithHypertension = diagnosedWithHypertension,
+        isOnHypertensionTreatment = isOnHypertensionTreatment,
         hasHadHeartAttack = hasHadHeartAttack,
         hasHadStroke = hasHadStroke,
         hasHadKidneyDisease = hasHadKidneyDisease,
@@ -704,7 +705,8 @@ object TestData {
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt
+    )
   }
 
   fun medicalHistoryPayload(

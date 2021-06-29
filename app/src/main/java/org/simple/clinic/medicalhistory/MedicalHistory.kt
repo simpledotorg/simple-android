@@ -16,6 +16,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HY
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
 import java.time.Instant
@@ -30,6 +31,8 @@ data class MedicalHistory(
     val patientUuid: UUID,
 
     val diagnosedWithHypertension: Answer,
+
+    val isOnHypertensionTreatment: Answer,
 
     val hasHadHeartAttack: Answer,
 
@@ -58,6 +61,7 @@ data class MedicalHistory(
       HAS_HAD_A_STROKE -> copy(hasHadStroke = answer)
       HAS_HAD_A_KIDNEY_DISEASE -> copy(hasHadKidneyDisease = answer)
       DIAGNOSED_WITH_DIABETES -> copy(diagnosedWithDiabetes = answer)
+      IS_ON_HYPERTENSION_TREATMENT -> copy(isOnHypertensionTreatment = answer)
       else -> this
     }
   }

@@ -20,6 +20,7 @@
 - Updated translations: `hi-IN`, `bn-BD`, `te-IN`, `bn-IN`, `am-ET`, `pa-IN`, `ti-ET`, `kn-IN`, `mr-IN`, `ta-IN`, `so-ET`, `om-ET`
 - New supported language: Sidama [`sid-ET`]
 - Updated home screen illustrations
+- [In Progress: 29 Jun 2021] Added a question about hypertension treatment when creating patient
 
 ### Fixes
 - Fix confirm reset pin error text is not hidden by default

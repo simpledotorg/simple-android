@@ -252,7 +252,8 @@ class PatientRepository @Inject constructor(
           reminderConsent = reminderConsent,
           deletedReason = null,
           registeredFacilityId = facility.uuid,
-          assignedFacilityId = facility.uuid
+          assignedFacilityId = facility.uuid,
+          retainUntil = null
       )
 
       val address = PatientAddress(

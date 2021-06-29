@@ -21,9 +21,6 @@ data class MedicalHistoryPayload(
     @Json(name = "diagnosed_with_hypertension")
     val diagnosedWithHypertension: Answer,
 
-    @Deprecated(
-        message = "This property is no longer in use and has been left here for API compatibility purposes. Scheduled to be removed in api v4."
-    )
     @Json(name = "receiving_treatment_for_hypertension")
     val isOnTreatmentForHypertension: Answer,
 

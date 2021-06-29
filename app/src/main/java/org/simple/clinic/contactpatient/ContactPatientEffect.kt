@@ -9,6 +9,8 @@ data class LoadPatientProfile(val patientUuid: UUID) : ContactPatientEffect()
 
 data class LoadLatestOverdueAppointment_Old(val patientUuid: UUID) : ContactPatientEffect()
 
+data class LoadLatestOverdueAppointment(val patientUuid: UUID) : ContactPatientEffect()
+
 data class DirectCallWithAutomaticDialer(val patientPhoneNumber: String) : ContactPatientEffect()
 
 data class DirectCallWithManualDialer(val patientPhoneNumber: String) : ContactPatientEffect()

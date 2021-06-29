@@ -63,7 +63,7 @@ class ContactPatientEffectHandlerTest {
   }
 
   @Test
-  fun `when the load overdue appointment effect is received, the latest overdue appointment for the patient must be loaded`() {
+  fun `when the old load overdue appointment effect is received, the latest overdue appointment for the patient must be loaded`() {
     // given
     val overdueAppointment = Optional.of(TestData.overdueAppointment(
         appointmentUuid = UUID.fromString("bb291aca-f953-4012-a9c3-aa05685f86f9"),
@@ -76,6 +76,24 @@ class ContactPatientEffectHandlerTest {
     testCase.dispatch(LoadLatestOverdueAppointment_Old(patientUuid))
 
     // then
+    testCase.assertOutgoingEvents(OverdueAppointmentLoaded(overdueAppointment))
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the load overdue appointment effect is received, the latest overdue appointment for the patient must be loaded`() {
+    // given
+    val overdueAppointment = Optional.of(TestData.overdueAppointment(
+        appointmentUuid = UUID.fromString("bb291aca-f953-4012-a9c3-aa05685f86f9"),
+        patientUuid = patientUuid
+    ))
+    val date = LocalDate.now(clock)
+    whenever(appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, date)) doReturn overdueAppointment
+
+    // when
+    testCase.dispatch(LoadLatestOverdueAppointment(patientUuid))
+
+    // then2
     testCase.assertOutgoingEvents(OverdueAppointmentLoaded(overdueAppointment))
     verifyZeroInteractions(uiActions)
   }

@@ -6,6 +6,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.transition.TransitionManager
+import com.google.android.material.transition.MaterialFade
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -95,6 +97,9 @@ class NewMedicalHistoryScreen(
   private val hypertensionTreatmentContainer
     get() = binding!!.hypertensionTreatmentContainer
 
+  private val scrollView
+    get() = binding!!.scrollView
+
   private val hypertensionTreatmentChipGroup
     get() = hypertensionTreatmentBinding!!.chipGroup
 
@@ -124,6 +129,13 @@ class NewMedicalHistoryScreen(
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render
     )
+  }
+
+  private val hypertensionContainerFade by unsafeLazy {
+    MaterialFade().apply {
+      duration = 150L
+      addTarget(hypertensionTreatmentContainer)
+    }
   }
 
   override fun onFinishInflate() {
@@ -247,12 +259,16 @@ class NewMedicalHistoryScreen(
   }
 
   override fun showHypertensionTreatmentQuestion(answer: Answer) {
+    TransitionManager.beginDelayedTransition(scrollView, hypertensionContainerFade)
+
     hypertensionTreatmentContainer.visibility = View.VISIBLE
     hypertensionTreatmentYesChip.isChecked = answer == Yes
     hypertensionTreatmentNoChip.isChecked = answer == No
   }
 
   override fun hideHypertensionTreatmentQuestion() {
+    TransitionManager.beginDelayedTransition(scrollView, hypertensionContainerFade)
+
     hypertensionTreatmentContainer.visibility = View.GONE
     hypertensionTreatmentChipGroup.clearCheck()
   }

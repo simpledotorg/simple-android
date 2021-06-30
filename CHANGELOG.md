@@ -22,7 +22,7 @@
 - Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `pa-IN`, `te-IN`, `sid-ET`, `kn-IN`, `ta-IN`, `bn-BD`
 - Click on overdue patient to open patient summary
 - Show progress when loading overdue patient contact information
-- [In Progress: 29 Jun 2021] Added a question about hypertension treatment when creating patient
+- [In Progress: 30 Jun 2021] Added a question about hypertension treatment when creating patient
 - [In Progress: 17 Jun 2021] Overdue list improvements
   - Change overdue list UI
   - Load overdue patients without phone number

@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.Unanswered
+import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry
@@ -35,6 +36,9 @@ data class NewMedicalHistoryModel(
 
   val registeringPatient: Boolean
     get() = nextButtonState == ButtonState.SAVING
+
+  val diagnosedWithHypertension: Boolean
+    get() = ongoingMedicalHistoryEntry.diagnosedWithHypertension == Yes
 
   companion object {
     fun default(): NewMedicalHistoryModel = NewMedicalHistoryModel(

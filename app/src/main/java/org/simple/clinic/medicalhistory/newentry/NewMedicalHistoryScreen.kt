@@ -280,6 +280,10 @@ class NewMedicalHistoryScreen(
     SelectOngoingHypertensionTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
   }
 
+  override fun showDiagnosisRequiredErrorDialog() {
+    SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
+  }
+
   interface Injector {
     fun inject(target: NewMedicalHistoryScreen)
   }

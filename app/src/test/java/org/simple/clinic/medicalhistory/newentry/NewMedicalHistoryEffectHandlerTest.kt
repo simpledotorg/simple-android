@@ -80,4 +80,16 @@ class NewMedicalHistoryEffectHandlerTest {
 
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when show diagnosis required effect is received, then show diagnosis required error dialog`() {
+    // when
+    testCase.dispatch(ShowDiagnosisRequiredError)
+
+    // then
+    verify(uiActions).showDiagnosisRequiredErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
 }

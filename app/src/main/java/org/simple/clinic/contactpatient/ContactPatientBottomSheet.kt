@@ -1,15 +1,12 @@
 package org.simple.clinic.contactpatient
 
-import android.app.Dialog
 import android.content.Context
-import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.transition.TransitionManager
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.transition.MaterialFade
 import com.google.android.material.transition.MaterialSharedAxis
 import io.reactivex.Observable
@@ -42,7 +39,6 @@ import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.overrideCancellation
 import org.simple.clinic.util.unsafeLazy
 import java.time.LocalDate
 import java.util.Locale
@@ -145,14 +141,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     super.onAttach(context)
 
     context.injector<Injector>().inject(this)
-  }
-
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-
-    dialog.overrideCancellation(::backPressed)
-
-    return dialog
   }
 
   override fun onRequestPermissionsResult(

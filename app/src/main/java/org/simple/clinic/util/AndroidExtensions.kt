@@ -64,16 +64,3 @@ private fun Configuration.isLocaleAlreadyOverriden(): Boolean {
     else -> false
   }
 }
-
-inline fun Dialog.overrideCancellation(crossinline backPressed: () -> Unit) {
-  setCancelable(false)
-  setCanceledOnTouchOutside(false)
-  setOnKeyListener { _, keyCode, event ->
-    if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-      backPressed()
-      true
-    } else {
-      false
-    }
-  }
-}

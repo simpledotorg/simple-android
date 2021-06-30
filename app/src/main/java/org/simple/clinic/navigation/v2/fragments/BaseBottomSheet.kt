@@ -1,6 +1,7 @@
 package org.simple.clinic.navigation.v2.fragments
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -24,7 +25,6 @@ import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.mobius.eventSources
 import org.simple.clinic.mobius.first
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.util.overrideCancellation
 import org.simple.clinic.util.unsafeLazy
 
 abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F> : BottomSheetDialogFragment() {
@@ -53,8 +53,9 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
   private var behavior: BottomSheetBehavior<FrameLayout>? = null
   private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
     override fun onStateChanged(bottomSheet: View, newState: Int) {
-      if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-        behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+      if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+        backPressed()
+        dismiss()
       }
     }
 
@@ -94,11 +95,6 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
 
     behavior = dialog.behavior
     behavior?.addBottomSheetCallback(bottomSheetCallback)
-
-    // This is needed because the router is not aware of the changes
-    // in the history when the bottom sheet dialog is dismissed in the
-    // normal fashion.
-    dialog.overrideCancellation(::backPressed)
 
     return dialog
   }
@@ -142,8 +138,8 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
     outState.putParcelable(KEY_MODEL, controller.model)
   }
 
-  override fun dismiss() {
+  override fun onCancel(dialog: DialogInterface) {
     backPressed()
-    super.dismiss()
+    super.onCancel(dialog)
   }
 }

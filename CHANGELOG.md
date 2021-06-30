@@ -30,6 +30,8 @@
   - Change overdue list UI
   - Load overdue patients without phone number
   - Add option to download & share overdue list
+- [In Progress: 30 Jun 2021] Update contact patient bottom sheet behaviour 
+  - Add query to load latest overdue appointments without phone numbers
 
 ## On Demo
 ### Internal

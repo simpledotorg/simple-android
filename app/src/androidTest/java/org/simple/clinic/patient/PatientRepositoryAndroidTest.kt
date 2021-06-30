@@ -3046,4 +3046,129 @@ class PatientRepositoryAndroidTest {
         )
         .inOrder()
   }
+
+  @Test
+  fun saving_the_complete_medical_record_must_save_the_patient_profile_and_the_medical_record() {
+    // given
+    val phcObvious = TestData.facility(uuid = UUID.fromString("6d875f1e-3d96-4caa-abd6-0f5746edd65d"))
+    database.facilityDao().save(listOf(phcObvious))
+
+    val patientId = UUID.fromString("7bce9958-2bcc-47c3-8a3b-8620098b35f2")
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patientId,
+        patientAddressUuid = UUID.fromString("54ffa5de-535c-4d3e-a39e-9a231ec44d89"),
+        patientRegisteredFacilityId = phcObvious.uuid,
+        patientAssignedFacilityId = phcObvious.uuid,
+        patientPhoneNumber = "1234567890",
+        businessId = TestData.businessId(
+            uuid = UUID.fromString("1f099ca9-2366-42f1-89fd-10a42092f163"),
+            patientUuid = patientId,
+            identifier = Identifier(
+                value = "21a0dc98-8023-42d4-9ca6-723eb708358a",
+                type = BpPassport
+            )
+        ),
+        retainUntil = Instant.parse("2018-01-07T00:00:00Z")
+    )
+
+    val bloodPressures = listOf(
+        TestData.bloodPressureMeasurement(
+            uuid = UUID.fromString("1bc03697-bba5-4d95-b64e-ffece3b7e28a"),
+            patientUuid = patientId,
+            facilityUuid = phcObvious.uuid
+        ),
+        TestData.bloodPressureMeasurement(
+            uuid = UUID.fromString("c01f1937-238e-489a-aa8b-4525d31ecdde"),
+            patientUuid = patientId,
+            facilityUuid = phcObvious.uuid
+        )
+    )
+
+    val bloodSugars = listOf(
+        TestData.bloodSugarMeasurement(
+            uuid = UUID.fromString("60db2eba-76a2-4581-83db-ad47e84a66ec"),
+            patientUuid = patientId,
+            facilityUuid = phcObvious.uuid
+        ),
+        TestData.bloodSugarMeasurement(
+            uuid = UUID.fromString("2971eac3-0624-4cdf-8aba-428c8ae5be88"),
+            patientUuid = patientId,
+            facilityUuid = phcObvious.uuid
+        ),
+        TestData.bloodSugarMeasurement(
+            uuid = UUID.fromString("362d64ca-9e2b-4205-b834-c9af45346b85"),
+            patientUuid = patientId,
+            facilityUuid = phcObvious.uuid
+        )
+    )
+
+    val appointments = listOf(
+        TestData.appointment(
+            uuid = UUID.fromString("bf7728ac-75e7-4c25-a143-3969fc5eb47c"),
+            patientUuid = patientId,
+            facilityUuid = phcObvious.uuid,
+            creationFacilityUuid = phcObvious.uuid
+        ),
+        TestData.appointment(
+            uuid = UUID.fromString("c0865cc6-4c79-4897-b98c-01b40069fdb3"),
+            patientUuid = patientId,
+            facilityUuid = phcObvious.uuid,
+            creationFacilityUuid = phcObvious.uuid
+        )
+    )
+
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("afebc8b5-7bd6-469c-9aa0-3ce601c7f6ae"),
+        patientUuid = patientId
+    )
+
+    val prescribedDrugs = listOf(
+        TestData.prescription(
+            uuid = UUID.fromString("73768ca4-a81c-4fd4-ac1c-a0cec872f452"),
+            patientUuid = patientId,
+            facilityUuid = phcObvious.uuid
+        ),
+        TestData.prescription(
+            uuid = UUID.fromString("7f4f7ac7-231b-49a5-acff-f135cf414878"),
+            patientUuid = patientId,
+            facilityUuid = phcObvious.uuid
+        ),
+        TestData.prescription(
+            uuid = UUID.fromString("5ec63bf5-2ec0-4b70-950d-c87dfaaca0b0"),
+            patientUuid = patientId,
+            facilityUuid = phcObvious.uuid
+        )
+    )
+
+    val medicalRecord = CompleteMedicalRecord(
+        patient = patientProfile,
+        medicalHistory = medicalHistory,
+        appointments = appointments,
+        bloodPressures = bloodPressures,
+        bloodSugars = bloodSugars,
+        prescribedDrugs = prescribedDrugs
+    )
+
+    // when
+    patientRepository.saveCompleteMedicalRecord(medicalRecord)
+
+    // then
+    val savedPatient = patientRepository.patientProfileImmediate(patientId).get()
+    assertThat(savedPatient).isEqualTo(patientProfile)
+
+    val savedMedicalHistories = database.medicalHistoryDao().getAllMedicalHistories()
+    assertThat(savedMedicalHistories).containsExactly(medicalHistory)
+
+    val savedBloodPressureMeasurements = database.bloodPressureDao().getAllBloodPressureMeasurements()
+    assertThat(savedBloodPressureMeasurements).containsExactlyElementsIn(bloodPressures)
+
+    val savedBloodSugarMeasurements = database.bloodSugarDao().getAllBloodSugarMeasurements()
+    assertThat(savedBloodSugarMeasurements).containsExactlyElementsIn(bloodSugars)
+
+    val savedAppointments = database.appointmentDao().getAllAppointments()
+    assertThat(savedAppointments).containsExactlyElementsIn(appointments)
+
+    val savedPrescribedDrugs = database.prescriptionDao().getAllPrescribedDrugs()
+    assertThat(savedPrescribedDrugs).containsExactlyElementsIn(prescribedDrugs)
+  }
 }

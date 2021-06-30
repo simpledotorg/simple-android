@@ -7,7 +7,6 @@ interface NewMedicalHistoryUi {
   fun setPatientName(patientName: String)
   fun renderAnswerForQuestion(question: MedicalHistoryQuestion, answer: Answer)
   fun renderDiagnosisAnswer(question: MedicalHistoryQuestion, answer: Answer)
-  fun showDiagnosisRequiredError(showError: Boolean)
   fun showDiagnosisView()
   fun hideDiagnosisView()
   fun showDiabetesHistorySection()

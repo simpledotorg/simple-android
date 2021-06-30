@@ -31,10 +31,11 @@ class NewMedicalHistoryUiRendererTest {
           facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
       )
 
-  private val defaultModel = NewMedicalHistoryModel.default()
+  private val country = TestData.country(isoCountryCode = Country.INDIA)
+  private val defaultModel = NewMedicalHistoryModel.default(country)
 
   private val ui = mock<NewMedicalHistoryUi>()
-  private val uiRenderer = NewMedicalHistoryUiRenderer(ui, TestData.country(isoCountryCode = Country.INDIA))
+  private val uiRenderer = NewMedicalHistoryUiRenderer(ui)
 
   @Test
   fun `the medical history answers must be rendered`() {
@@ -51,7 +52,6 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_HEART_ATTACK, Yes)
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_STROKE, No)
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_KIDNEY_DISEASE, Unanswered)
-    verify(ui).showDiagnosisRequiredError(false)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verifyNoMoreInteractions(ui)
@@ -74,7 +74,6 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, No)
-    verify(ui).showDiagnosisRequiredError(false)
     verify(ui).hideNextButtonProgress()
     verify(ui).showHypertensionTreatmentQuestion(Unanswered)
     verifyNoMoreInteractions(ui)
@@ -95,29 +94,6 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).hideDiagnosisView()
     verify(ui).showDiabetesHistorySection()
     verify(ui).renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, Yes)
-    verify(ui).showDiagnosisRequiredError(false)
-    verify(ui).hideNextButtonProgress()
-    verify(ui).hideHypertensionTreatmentQuestion()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `if the facility supports diabetes management and the user has not selected a diagnosis, show the error`() {
-    // given
-    val model = defaultModel
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .diagnosisRequired()
-
-    // when
-    uiRenderer.render(model)
-
-    // then
-    verifyImplicitRenders()
-    verify(ui).showDiagnosisView()
-    verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
-    verify(ui).showDiagnosisRequiredError(true)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verifyNoMoreInteractions(ui)
@@ -134,7 +110,6 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
-    verify(ui).showDiagnosisRequiredError(false)
     verify(ui).showNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verifyNoMoreInteractions(ui)
@@ -156,7 +131,6 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
-    verify(ui).showDiagnosisRequiredError(false)
     verify(ui).hideNextButtonProgress()
     verify(ui).showHypertensionTreatmentQuestion(Unanswered)
     verifyNoMoreInteractions(ui)
@@ -165,8 +139,8 @@ class NewMedicalHistoryUiRendererTest {
   @Test
   fun `when patient has hypertension and country is not from india, then show hypertension treatment question`() {
     // given
-    val uiRenderer = NewMedicalHistoryUiRenderer(ui, TestData.country(isoCountryCode = Country.BANGLADESH))
-    val model = defaultModel
+    val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
+    val model = NewMedicalHistoryModel.default(country = bangladesh)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
 
@@ -179,7 +153,6 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
-    verify(ui).showDiagnosisRequiredError(false)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verifyNoMoreInteractions(ui)
@@ -200,7 +173,6 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
-    verify(ui).showDiagnosisRequiredError(false)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verifyNoMoreInteractions(ui)

@@ -7,24 +7,25 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class NewMedicalHistoryUpdateTest {
 
-  private val defaultModel = NewMedicalHistoryModel.default()
+  private val country = TestData.country(isoCountryCode = Country.INDIA)
+  private val defaultModel = NewMedicalHistoryModel.default(country)
   private val facilityWithDiabetesManagementEnabled = TestData.facility(
       uuid = UUID.fromString("3c7bc1c8-1bb6-4c3a-b6d0-52700bdaac5c"),
       facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
@@ -80,8 +81,8 @@ class NewMedicalHistoryUpdateTest {
         .whenEvent(SaveMedicalHistoryClicked())
         .then(
             assertThatNext(
-                hasModel(model.diagnosisRequired()),
-                hasNoEffects()
+                hasNoModel(),
+                hasEffects(ShowDiagnosisRequiredError)
             )
         )
   }
@@ -93,14 +94,15 @@ class NewMedicalHistoryUpdateTest {
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
         .answerChanged(DIAGNOSED_WITH_DIABETES, Unanswered)
+        .answerChanged(IS_ON_HYPERTENSION_TREATMENT, No)
 
     updateSpec
         .given(model)
         .whenEvent(SaveMedicalHistoryClicked())
         .then(
             assertThatNext(
-                hasModel(model.diagnosisRequired()),
-                hasNoEffects()
+                hasNoModel(),
+                hasEffects(ShowDiagnosisRequiredError)
             )
         )
   }
@@ -118,8 +120,8 @@ class NewMedicalHistoryUpdateTest {
         .whenEvent(SaveMedicalHistoryClicked())
         .then(
             assertThatNext(
-                hasModel(model.diagnosisRequired()),
-                hasNoEffects()
+                hasNoModel(),
+                hasEffects(ShowDiagnosisRequiredError)
             )
         )
   }
@@ -139,77 +141,6 @@ class NewMedicalHistoryUpdateTest {
             assertThatNext(
                 hasModel(model.registeringPatient()),
                 hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry) as NewMedicalHistoryEffect)
-            )
-        )
-  }
-
-  @Test
-  fun `when the diagnosis required error is being shown and the user changes the hypertension diagnosis answer, clear the error`() {
-    val model = defaultModel
-        .ongoingPatientEntryLoaded(patientEntry)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .diagnosisRequired()
-
-    updateSpec
-        .given(model)
-        .whenEvent(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, Yes))
-        .then(
-            assertThatNext(
-                hasModel(
-                    model
-                        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
-                        .clearDiagnosisRequiredError()
-                ),
-                hasNoEffects()
-            )
-        )
-  }
-
-  @Test
-  fun `when the diagnosis required error is being shown and the user changes the diabetes diagnosis answer, clear the error`() {
-    val model = defaultModel
-        .ongoingPatientEntryLoaded(patientEntry)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .diagnosisRequired()
-
-    updateSpec
-        .given(model)
-        .whenEvent(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_DIABETES, No))
-        .then(
-            assertThatNext(
-                hasModel(
-                    model
-                        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
-                        .clearDiagnosisRequiredError()
-                ),
-                hasNoEffects()
-            )
-        )
-  }
-
-  @Test
-  @Parameters(
-      value = [
-        "HAS_HAD_A_HEART_ATTACK",
-        "HAS_HAD_A_STROKE",
-        "HAS_HAD_A_KIDNEY_DISEASE"
-      ]
-  )
-  fun `when the diagnosis required error is being shown and the user changes the history answers, do not clear the error`(
-      question: MedicalHistoryQuestion
-  ) {
-    val model = defaultModel
-        .ongoingPatientEntryLoaded(patientEntry)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .diagnosisRequired()
-
-    updateSpec
-        .given(model)
-        .whenEvent(NewMedicalHistoryAnswerToggled(question, Yes))
-        .then(
-            assertThatNext(
-                hasModel(model.answerChanged(question, Yes)),
-                hasNoEffects()
             )
         )
   }
@@ -252,6 +183,47 @@ class NewMedicalHistoryUpdateTest {
             assertThatNext(
                 hasNoModel(),
                 hasEffects(OpenPatientSummaryScreen(patientUuid) as NewMedicalHistoryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when save is clicked and patient is diagnosed with hypertension and ongoing hypertension treatment question is not answered and selected country is india, then show error`() {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
+        .answerChanged(IS_ON_HYPERTENSION_TREATMENT, Unanswered)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowOngoingHypertensionTreatmentError)
+            )
+        )
+  }
+
+  @Test
+  fun `when save is clicked and patient is diagnosed with hypertension and ongoing hypertension treatment question is not answered and selected country is not india, then register patient`() {
+    val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
+    val model = NewMedicalHistoryModel.default(country = bangladesh)
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
+        .answerChanged(IS_ON_HYPERTENSION_TREATMENT, Unanswered)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(
+            assertThatNext(
+                hasModel(model.registeringPatient()),
+                hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry))
             )
         )
   }

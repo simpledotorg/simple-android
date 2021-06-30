@@ -18,6 +18,7 @@ import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import java.util.UUID
 
@@ -93,6 +94,7 @@ class NewMedicalHistoryUpdateTest {
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
         .answerChanged(DIAGNOSED_WITH_DIABETES, Unanswered)
+        .answerChanged(IS_ON_HYPERTENSION_TREATMENT, No)
 
     updateSpec
         .given(model)
@@ -252,6 +254,26 @@ class NewMedicalHistoryUpdateTest {
             assertThatNext(
                 hasNoModel(),
                 hasEffects(OpenPatientSummaryScreen(patientUuid) as NewMedicalHistoryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when save is clicked and patient is diagnosed with hypertension and ongoing hypertension treatment question is not answered, then show error`() {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
+        .answerChanged(IS_ON_HYPERTENSION_TREATMENT, Unanswered)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowOngoingHypertensionTreatmentError)
             )
         )
   }

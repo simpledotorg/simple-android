@@ -40,6 +40,9 @@ data class NewMedicalHistoryModel(
   val diagnosedWithHypertension: Boolean
     get() = ongoingMedicalHistoryEntry.diagnosedWithHypertension == Yes
 
+  val answeredIsOnHypertensionTreatment: Boolean
+    get() = ongoingMedicalHistoryEntry.isOnHypertensionTreatment != Unanswered
+
   companion object {
     fun default(): NewMedicalHistoryModel = NewMedicalHistoryModel(
         ongoingPatientEntry = null,

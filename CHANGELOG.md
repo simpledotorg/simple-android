@@ -23,7 +23,7 @@
 - Bump AGP to v4.2.2
 
 ### Changes
-- Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `te-IN`, `sid-ET`, `kn-IN`, `ta-IN`, `bn-BD`, `bn_IN`, `so-ET`, `ti-ET`, `am-ET`, `ta-LK`
+- Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `te-IN`, `sid-ET`, `kn-IN`, `ta-IN`, `bn-BD`, `bn_IN`, `so-ET`, `ti-ET`, `am-ET`, `ta-LK`, `om-ET`
 - New supported language: Tamil (Sri Lanka) [`ta-LK`]
 - Click on overdue patient to open patient summary
 - Show progress when loading overdue patient contact information

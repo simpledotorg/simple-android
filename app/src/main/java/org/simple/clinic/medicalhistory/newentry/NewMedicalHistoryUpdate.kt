@@ -36,7 +36,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
     } else if (!model.facilityDiabetesManagementEnabled || model.hasAnsweredBothDiagnosisQuestions) {
       next(model.registeringPatient(), RegisterPatient(model.ongoingMedicalHistoryEntry))
     } else {
-      next(model.diagnosisRequired())
+      dispatch(ShowDiagnosisRequiredError)
     }
   }
 
@@ -62,12 +62,6 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       answeredQuestion: MedicalHistoryQuestion,
       newAnswer: Answer
   ): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
-    var updatedModel = model.answerChanged(answeredQuestion, newAnswer)
-
-    if (answeredQuestion in diagnosisQuestions) {
-      updatedModel = updatedModel.clearDiagnosisRequiredError()
-    }
-
-    return next(updatedModel)
+    return next(model.answerChanged(answeredQuestion, newAnswer))
   }
 }

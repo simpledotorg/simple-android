@@ -83,8 +83,8 @@ class NewMedicalHistoryUpdateTest {
         .whenEvent(SaveMedicalHistoryClicked())
         .then(
             assertThatNext(
-                hasModel(model.diagnosisRequired()),
-                hasNoEffects()
+                hasNoModel(),
+                hasEffects(ShowDiagnosisRequiredError)
             )
         )
   }
@@ -103,8 +103,8 @@ class NewMedicalHistoryUpdateTest {
         .whenEvent(SaveMedicalHistoryClicked())
         .then(
             assertThatNext(
-                hasModel(model.diagnosisRequired()),
-                hasNoEffects()
+                hasNoModel(),
+                hasEffects(ShowDiagnosisRequiredError)
             )
         )
   }
@@ -122,8 +122,8 @@ class NewMedicalHistoryUpdateTest {
         .whenEvent(SaveMedicalHistoryClicked())
         .then(
             assertThatNext(
-                hasModel(model.diagnosisRequired()),
-                hasNoEffects()
+                hasNoModel(),
+                hasEffects(ShowDiagnosisRequiredError)
             )
         )
   }
@@ -143,77 +143,6 @@ class NewMedicalHistoryUpdateTest {
             assertThatNext(
                 hasModel(model.registeringPatient()),
                 hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry) as NewMedicalHistoryEffect)
-            )
-        )
-  }
-
-  @Test
-  fun `when the diagnosis required error is being shown and the user changes the hypertension diagnosis answer, clear the error`() {
-    val model = defaultModel
-        .ongoingPatientEntryLoaded(patientEntry)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .diagnosisRequired()
-
-    updateSpec
-        .given(model)
-        .whenEvent(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, Yes))
-        .then(
-            assertThatNext(
-                hasModel(
-                    model
-                        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
-                        .clearDiagnosisRequiredError()
-                ),
-                hasNoEffects()
-            )
-        )
-  }
-
-  @Test
-  fun `when the diagnosis required error is being shown and the user changes the diabetes diagnosis answer, clear the error`() {
-    val model = defaultModel
-        .ongoingPatientEntryLoaded(patientEntry)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .diagnosisRequired()
-
-    updateSpec
-        .given(model)
-        .whenEvent(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_DIABETES, No))
-        .then(
-            assertThatNext(
-                hasModel(
-                    model
-                        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
-                        .clearDiagnosisRequiredError()
-                ),
-                hasNoEffects()
-            )
-        )
-  }
-
-  @Test
-  @Parameters(
-      value = [
-        "HAS_HAD_A_HEART_ATTACK",
-        "HAS_HAD_A_STROKE",
-        "HAS_HAD_A_KIDNEY_DISEASE"
-      ]
-  )
-  fun `when the diagnosis required error is being shown and the user changes the history answers, do not clear the error`(
-      question: MedicalHistoryQuestion
-  ) {
-    val model = defaultModel
-        .ongoingPatientEntryLoaded(patientEntry)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .diagnosisRequired()
-
-    updateSpec
-        .given(model)
-        .whenEvent(NewMedicalHistoryAnswerToggled(question, Yes))
-        .then(
-            assertThatNext(
-                hasModel(model.answerChanged(question, Yes)),
-                hasNoEffects()
             )
         )
   }

@@ -24,7 +24,7 @@
 - Show progress when loading overdue patient contact information
 - Tap outside or swipe to dismiss the bottom sheets
 - Tap outside to dismiss the dialogs
-- [In Progress: 30 Jun 2021] Added a question about hypertension treatment when creating patient
+- Added a question about hypertension treatment when creating patient
 - [In Progress: 17 Jun 2021] Overdue list improvements
   - Change overdue list UI
   - Load overdue patients without phone number

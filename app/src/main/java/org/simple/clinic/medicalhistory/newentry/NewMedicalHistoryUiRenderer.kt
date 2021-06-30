@@ -1,6 +1,5 @@
 package org.simple.clinic.medicalhistory.newentry
 
-import org.simple.clinic.appconfig.Country
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
@@ -9,8 +8,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.mobius.ViewRenderer
 
 class NewMedicalHistoryUiRenderer(
-    private val ui: NewMedicalHistoryUi,
-    private val country: Country
+    private val ui: NewMedicalHistoryUi
 ) : ViewRenderer<NewMedicalHistoryModel> {
 
   override fun render(model: NewMedicalHistoryModel) {
@@ -39,13 +37,11 @@ class NewMedicalHistoryUiRenderer(
       renderHypertensionTreatmentQuestion(model)
     }
 
-    ui.showDiagnosisRequiredError(model.showDiagnosisRequiredError)
-
     renderNextButton(model)
   }
 
   private fun renderHypertensionTreatmentQuestion(model: NewMedicalHistoryModel) {
-    if (country.isoCountryCode == Country.INDIA && model.diagnosedWithHypertension) {
+    if (model.showOngoingHypertensionTreatment) {
       ui.showHypertensionTreatmentQuestion(model.ongoingMedicalHistoryEntry.isOnHypertensionTreatment)
     } else {
       ui.hideHypertensionTreatmentQuestion()

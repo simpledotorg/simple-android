@@ -30,6 +30,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
+import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
@@ -119,11 +120,11 @@ class NewMedicalHistoryScreen(
   }
 
   private val mobiusDelegate: MobiusDelegate<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect> by unsafeLazy {
-    val uiRenderer: ViewRenderer<NewMedicalHistoryModel> = NewMedicalHistoryUiRenderer(this, country)
+    val uiRenderer: ViewRenderer<NewMedicalHistoryModel> = NewMedicalHistoryUiRenderer(this)
 
     MobiusDelegate.forView(
         events = events,
-        defaultModel = NewMedicalHistoryModel.default(),
+        defaultModel = NewMedicalHistoryModel.default(country),
         update = NewMedicalHistoryUpdate(),
         init = NewMedicalHistoryInit(),
         effectHandler = effectHandlerFactory.create(this).build(),
@@ -151,15 +152,6 @@ class NewMedicalHistoryScreen(
 
     toolbar.setNavigationOnClickListener {
       router.pop()
-    }
-
-    hypertensionTreatmentChipGroup.setOnCheckedChangeListener { _, checkedId ->
-      val answer = when (checkedId) {
-        R.id.yesChip -> Yes
-        R.id.noChip -> No
-        else -> Answer.Unanswered
-      }
-      questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_HYPERTENSION_TREATMENT, answer))
     }
 
     post {
@@ -245,11 +237,6 @@ class NewMedicalHistoryScreen(
     }
   }
 
-  override fun showDiagnosisRequiredError(showError: Boolean) {
-    if (showError)
-      SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
-  }
-
   override fun showNextButtonProgress() {
     nextButton.setButtonState(InProgress)
   }
@@ -259,11 +246,22 @@ class NewMedicalHistoryScreen(
   }
 
   override fun showHypertensionTreatmentQuestion(answer: Answer) {
+    hypertensionTreatmentChipGroup.setOnCheckedChangeListener(null)
+
     TransitionManager.beginDelayedTransition(scrollView, hypertensionContainerFade)
 
     hypertensionTreatmentContainer.visibility = View.VISIBLE
     hypertensionTreatmentYesChip.isChecked = answer == Yes
     hypertensionTreatmentNoChip.isChecked = answer == No
+
+    hypertensionTreatmentChipGroup.setOnCheckedChangeListener { _, checkedId ->
+      val checkedAnswer = when (checkedId) {
+        R.id.yesChip -> Yes
+        R.id.noChip -> No
+        else -> Answer.Unanswered
+      }
+      questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_HYPERTENSION_TREATMENT, checkedAnswer))
+    }
   }
 
   override fun hideHypertensionTreatmentQuestion() {
@@ -271,6 +269,14 @@ class NewMedicalHistoryScreen(
 
     hypertensionTreatmentContainer.visibility = View.GONE
     hypertensionTreatmentChipGroup.clearCheck()
+  }
+
+  override fun showOngoingHypertensionTreatmentErrorDialog() {
+    SelectOngoingHypertensionTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
+  }
+
+  override fun showDiagnosisRequiredErrorDialog() {
+    SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
   }
 
   interface Injector {

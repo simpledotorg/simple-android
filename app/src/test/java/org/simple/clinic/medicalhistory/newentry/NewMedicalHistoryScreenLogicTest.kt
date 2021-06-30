@@ -24,6 +24,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HY
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.Gender
@@ -48,7 +49,7 @@ class NewMedicalHistoryScreenLogicTest {
 
   private val screen: NewMedicalHistoryUi = mock()
   private val uiActions: NewMedicalHistoryUiActions = mock()
-  private val viewRenderer = NewMedicalHistoryUiRenderer(screen, TestData.country(isoCountryCode = Country.INDIA))
+  private val viewRenderer = NewMedicalHistoryUiRenderer(screen)
   private val medicalHistoryRepository: MedicalHistoryRepository = mock()
   private val patientRepository: PatientRepository = mock()
 
@@ -176,6 +177,8 @@ class NewMedicalHistoryScreenLogicTest {
     // when
     startMobiusLoop(uuidGenerator = uuidGenerator, ongoingPatientEntry = patientEntry)
 
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_HYPERTENSION_TREATMENT, Yes))
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     // then
@@ -202,7 +205,8 @@ class NewMedicalHistoryScreenLogicTest {
               hasHadStroke = Unanswered,
               hasHadKidneyDisease = Unanswered,
               diagnosedWithHypertension = Yes,
-              hasDiabetes = Unanswered))
+              hasDiabetes = Unanswered,
+          isOnHypertensionTreatment = Yes))
       verify(uiActions).openPatientSummaryScreen(savedPatient.patientUuid)
     }
   }
@@ -248,6 +252,7 @@ class NewMedicalHistoryScreenLogicTest {
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, Unanswered))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_DIABETES, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_HYPERTENSION_TREATMENT, Yes))
 
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
@@ -272,7 +277,8 @@ class NewMedicalHistoryScreenLogicTest {
               hasHadStroke = Unanswered,
               hasHadKidneyDisease = No,
               diagnosedWithHypertension = Yes,
-              hasDiabetes = No
+              hasDiabetes = No,
+              isOnHypertensionTreatment = Yes
           )
       )
       verify(uiActions).openPatientSummaryScreen(savedPatient.patientUuid)
@@ -298,9 +304,11 @@ class NewMedicalHistoryScreenLogicTest {
         dateOfBirthFormatter = dateOfBirthFormatter
     ).build()
 
+    val country = TestData.country(isoCountryCode = Country.INDIA)
+
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = NewMedicalHistoryModel.default(),
+        defaultModel = NewMedicalHistoryModel.default(country),
         init = NewMedicalHistoryInit(),
         update = NewMedicalHistoryUpdate(),
         effectHandler = effectHandler,

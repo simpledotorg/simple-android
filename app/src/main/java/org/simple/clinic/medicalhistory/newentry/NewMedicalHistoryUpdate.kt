@@ -6,14 +6,11 @@ import com.spotify.mobius.Update
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect> {
-
-  private val diagnosisQuestions = setOf(DIAGNOSED_WITH_HYPERTENSION, DIAGNOSED_WITH_DIABETES)
 
   override fun update(
       model: NewMedicalHistoryModel,
@@ -31,10 +28,16 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
   }
 
   private fun saveClicked(model: NewMedicalHistoryModel): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
-    return if (!model.facilityDiabetesManagementEnabled || model.hasAnsweredBothDiagnosisQuestions) {
-      next(model.registeringPatient(), RegisterPatient(model.ongoingMedicalHistoryEntry))
-    } else {
-      next(model.diagnosisRequired())
+    return when {
+      model.facilityDiabetesManagementEnabled && !model.hasAnsweredBothDiagnosisQuestions -> {
+        dispatch(ShowDiagnosisRequiredError)
+      }
+      model.showOngoingHypertensionTreatment && !model.answeredIsOnHypertensionTreatment -> {
+        dispatch(ShowOngoingHypertensionTreatmentError)
+      }
+      else -> {
+        next(model.registeringPatient(), RegisterPatient(model.ongoingMedicalHistoryEntry))
+      }
     }
   }
 
@@ -60,12 +63,6 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       answeredQuestion: MedicalHistoryQuestion,
       newAnswer: Answer
   ): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
-    var updatedModel = model.answerChanged(answeredQuestion, newAnswer)
-
-    if (answeredQuestion in diagnosisQuestions) {
-      updatedModel = updatedModel.clearDiagnosisRequiredError()
-    }
-
-    return next(updatedModel)
+    return next(model.answerChanged(answeredQuestion, newAnswer))
   }
 }

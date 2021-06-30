@@ -2,6 +2,7 @@ package org.simple.clinic.medicalhistory.newentry
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -12,10 +13,10 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 
 @Parcelize
 data class NewMedicalHistoryModel(
+    val country: Country,
     val ongoingPatientEntry: OngoingNewPatientEntry?,
     val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry,
     val currentFacility: Facility?,
-    val showDiagnosisRequiredError: Boolean,
     val nextButtonState: ButtonState?
 ) : Parcelable {
 
@@ -40,12 +41,18 @@ data class NewMedicalHistoryModel(
   val diagnosedWithHypertension: Boolean
     get() = ongoingMedicalHistoryEntry.diagnosedWithHypertension == Yes
 
+  val answeredIsOnHypertensionTreatment: Boolean
+    get() = ongoingMedicalHistoryEntry.isOnHypertensionTreatment != Unanswered
+
+  val showOngoingHypertensionTreatment: Boolean
+    get() = diagnosedWithHypertension && country.isoCountryCode == Country.INDIA
+
   companion object {
-    fun default(): NewMedicalHistoryModel = NewMedicalHistoryModel(
+    fun default(country: Country): NewMedicalHistoryModel = NewMedicalHistoryModel(
+        country = country,
         ongoingPatientEntry = null,
         ongoingMedicalHistoryEntry = OngoingMedicalHistoryEntry(),
         currentFacility = null,
-        showDiagnosisRequiredError = false,
         nextButtonState = null
     )
   }
@@ -60,14 +67,6 @@ data class NewMedicalHistoryModel(
 
   fun currentFacilityLoaded(facility: Facility): NewMedicalHistoryModel {
     return copy(currentFacility = facility)
-  }
-
-  fun diagnosisRequired(): NewMedicalHistoryModel {
-    return copy(showDiagnosisRequiredError = true)
-  }
-
-  fun clearDiagnosisRequiredError(): NewMedicalHistoryModel {
-    return copy(showDiagnosisRequiredError = false)
   }
 
   fun registeringPatient(): NewMedicalHistoryModel {

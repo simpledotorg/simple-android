@@ -30,7 +30,7 @@ class ContactPatientInitTest {
   private val spec = InitSpec(ContactPatientInit())
 
   @Test
-  fun `when the screen is created, load the patient profile and the latest appointment`() {
+  fun `when the screen is created and overdue list changes feature is disabled, load the patient profile and the latest appointment`() {
     val defaultModel = defaultModel()
 
     spec
@@ -38,6 +38,18 @@ class ContactPatientInitTest {
         .then(assertThatFirst(
             hasModel(defaultModel.contactPatientInfoLoading()),
             hasEffects(LoadPatientProfile(patientUuid), LoadLatestOverdueAppointment_Old(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when the screen is created and overdue list changes feature is enabled, load the patient profile and the latest appointment`() {
+    val defaultModel = defaultModel(overdueListChangesFeatureEnabled = true)
+
+    spec
+        .whenInit(defaultModel)
+        .then(assertThatFirst(
+            hasModel(defaultModel.contactPatientInfoLoading()),
+            hasEffects(LoadPatientProfile(patientUuid), LoadLatestOverdueAppointment(patientUuid))
         ))
   }
 

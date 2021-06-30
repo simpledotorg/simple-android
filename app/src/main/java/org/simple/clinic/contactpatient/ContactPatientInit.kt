@@ -15,8 +15,12 @@ class ContactPatientInit : Init<ContactPatientModel, ContactPatientEffect> {
       effects.add(LoadPatientProfile(model.patientUuid))
     }
 
-    if (!model.hasLoadedAppointment) {
+    if (!model.hasLoadedAppointment && !model.overdueListChangesFeatureEnabled) {
       effects.add(LoadLatestOverdueAppointment_Old(model.patientUuid))
+    }
+
+    if (!model.hasLoadedAppointment && model.overdueListChangesFeatureEnabled) {
+      effects.add(LoadLatestOverdueAppointment(model.patientUuid))
     }
 
     val updatedModel = if (model.hasLoadedAppointment && model.hasLoadedPatientProfile) {

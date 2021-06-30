@@ -277,6 +277,8 @@
   <string name="overduelist_visited">Booqday</string>
   <string name="overduelist_high_risk">Halis sare</string>
   <string name="overduelist_transferred">Loo gudbiyay</string>
+  <string name="overdue_download">Soo dejiso</string>
+  <string name="overdue_share">La wadaag</string>
 
   <!-- Facility change -->
 
@@ -332,7 +334,6 @@
   <string name="newmedicalhistory_no">Maya</string>
   <string name="newmedicalhistory_history">Taariikh</string>
   <string name="newmedicalhistory_diagnosis">Baaritaan (Loo baahanyahay)</string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">Midna</string>
   <string name="prescribed_drugs_dosage_remove">Saar</string>

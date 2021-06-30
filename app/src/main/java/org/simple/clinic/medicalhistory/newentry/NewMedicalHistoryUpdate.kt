@@ -29,12 +29,16 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
   }
 
   private fun saveClicked(model: NewMedicalHistoryModel): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
-    return if (model.diagnosedWithHypertension && !model.answeredIsOnHypertensionTreatment) {
-      dispatch(ShowOngoingHypertensionTreatmentError)
-    } else if (!model.facilityDiabetesManagementEnabled || model.hasAnsweredBothDiagnosisQuestions) {
-      next(model.registeringPatient(), RegisterPatient(model.ongoingMedicalHistoryEntry))
-    } else {
-      dispatch(ShowDiagnosisRequiredError)
+    return when {
+      model.facilityDiabetesManagementEnabled && !model.hasAnsweredBothDiagnosisQuestions -> {
+        dispatch(ShowDiagnosisRequiredError)
+      }
+      model.diagnosedWithHypertension && !model.answeredIsOnHypertensionTreatment -> {
+        dispatch(ShowOngoingHypertensionTreatmentError)
+      }
+      else -> {
+        next(model.registeringPatient(), RegisterPatient(model.ongoingMedicalHistoryEntry))
+      }
     }
   }
 

@@ -277,6 +277,8 @@
   <string name="overduelist_visited">ዝተርአየ</string>
   <string name="overduelist_high_risk">ልዑል ስግኣት</string>
   <string name="overduelist_transferred">ናብ ካሊእ ዝተዛወረ</string>
+  <string name="overdue_download">ዳውንሎድ</string>
+  <string name="overdue_share">ኣካፍል</string>
 
   <!-- Facility change -->
 
@@ -332,7 +334,6 @@
   <string name="newmedicalhistory_no">ኣይፋሉን</string>
   <string name="newmedicalhistory_history">ታሪኽ</string>
   <string name="newmedicalhistory_diagnosis">ምርመራ (ተደልዩ)</string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ዋላ ሓደ የለን</string>
   <string name="prescribed_drugs_dosage_remove">ምልጋስ </string>

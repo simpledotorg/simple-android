@@ -15,6 +15,7 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
@@ -47,7 +48,7 @@ class NewMedicalHistoryScreenLogicTest {
 
   private val screen: NewMedicalHistoryUi = mock()
   private val uiActions: NewMedicalHistoryUiActions = mock()
-  private val viewRenderer = NewMedicalHistoryUiRenderer(screen)
+  private val viewRenderer = NewMedicalHistoryUiRenderer(screen, TestData.country(isoCountryCode = Country.INDIA))
   private val medicalHistoryRepository: MedicalHistoryRepository = mock()
   private val patientRepository: PatientRepository = mock()
 

@@ -390,7 +390,7 @@
   <string name="newmedicalhistory_no">No</string>
   <string name="newmedicalhistory_history">History</string>
   <string name="newmedicalhistory_diagnosis">Diagnosis (Required)</string>
-  <string name="medicalhistory_question_is_on_hypertension_treatment">BP medicines taken any time in the last month?</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">Did patient take BP medicines any time in the last month? (Required)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">None</string>

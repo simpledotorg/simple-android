@@ -154,15 +154,6 @@ class NewMedicalHistoryScreen(
       router.pop()
     }
 
-    hypertensionTreatmentChipGroup.setOnCheckedChangeListener { _, checkedId ->
-      val answer = when (checkedId) {
-        R.id.yesChip -> Yes
-        R.id.noChip -> No
-        else -> Answer.Unanswered
-      }
-      questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_HYPERTENSION_TREATMENT, answer))
-    }
-
     post {
       hideKeyboard()
     }
@@ -260,11 +251,22 @@ class NewMedicalHistoryScreen(
   }
 
   override fun showHypertensionTreatmentQuestion(answer: Answer) {
+    hypertensionTreatmentChipGroup.setOnCheckedChangeListener(null)
+
     TransitionManager.beginDelayedTransition(scrollView, hypertensionContainerFade)
 
     hypertensionTreatmentContainer.visibility = View.VISIBLE
     hypertensionTreatmentYesChip.isChecked = answer == Yes
     hypertensionTreatmentNoChip.isChecked = answer == No
+
+    hypertensionTreatmentChipGroup.setOnCheckedChangeListener { _, checkedId ->
+      val checkedAnswer = when (checkedId) {
+        R.id.yesChip -> Yes
+        R.id.noChip -> No
+        else -> Answer.Unanswered
+      }
+      questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_HYPERTENSION_TREATMENT, checkedAnswer))
+    }
   }
 
   override fun hideHypertensionTreatmentQuestion() {

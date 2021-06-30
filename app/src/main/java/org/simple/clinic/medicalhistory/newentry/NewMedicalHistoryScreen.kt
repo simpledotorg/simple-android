@@ -30,6 +30,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
+import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
@@ -271,6 +272,10 @@ class NewMedicalHistoryScreen(
 
     hypertensionTreatmentContainer.visibility = View.GONE
     hypertensionTreatmentChipGroup.clearCheck()
+  }
+
+  override fun showOngoingHypertensionTreatmentErrorDialog() {
+    SelectOngoingHypertensionTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
   }
 
   interface Injector {

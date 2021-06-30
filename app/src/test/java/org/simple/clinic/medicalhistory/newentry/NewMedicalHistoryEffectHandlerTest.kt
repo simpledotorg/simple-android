@@ -68,4 +68,16 @@ class NewMedicalHistoryEffectHandlerTest {
     testCase.assertOutgoingEvents(SyncTriggered(patientUuid))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when show select ongoing hypertension treatment error effect is received, then show ongoing hypertension treatment error dialog`() {
+    // when
+    testCase.dispatch(ShowOngoingHypertensionTreatmentError)
+
+    // then
+    verify(uiActions).showOngoingHypertensionTreatmentErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
 }

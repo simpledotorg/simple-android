@@ -19,7 +19,7 @@
 - Add `retainUntil` column to the `Patient` table
 
 ### Changes
-- Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `pa-IN`, `te-IN`, `sid-ET`, `kn-IN`, `ta-IN`, `bn-BD`
+- Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `pa-IN`, `te-IN`, `sid-ET`, `kn-IN`, `ta-IN`, `bn-BD`, `bn_IN`
 - Click on overdue patient to open patient summary
 - Show progress when loading overdue patient contact information
 - Tap outside or swipe to dismiss the bottom sheets

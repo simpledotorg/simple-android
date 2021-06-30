@@ -45,6 +45,9 @@ data class NewMedicalHistoryModel(
   val answeredIsOnHypertensionTreatment: Boolean
     get() = ongoingMedicalHistoryEntry.isOnHypertensionTreatment != Unanswered
 
+  val showOngoingHypertensionTreatment: Boolean
+    get() = diagnosedWithHypertension && country.isoCountryCode == Country.INDIA
+
   companion object {
     fun default(country: Country): NewMedicalHistoryModel = NewMedicalHistoryModel(
         country = country,

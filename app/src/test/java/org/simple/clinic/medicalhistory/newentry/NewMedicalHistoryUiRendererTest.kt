@@ -166,8 +166,8 @@ class NewMedicalHistoryUiRendererTest {
   @Test
   fun `when patient has hypertension and country is not from india, then show hypertension treatment question`() {
     // given
-    val uiRenderer = NewMedicalHistoryUiRenderer(ui, TestData.country(isoCountryCode = Country.BANGLADESH))
-    val model = defaultModel
+    val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
+    val model = NewMedicalHistoryModel.default(country = bangladesh)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
 

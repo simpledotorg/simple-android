@@ -45,7 +45,7 @@ class NewMedicalHistoryUiRenderer(
   }
 
   private fun renderHypertensionTreatmentQuestion(model: NewMedicalHistoryModel) {
-    if (country.isoCountryCode == Country.INDIA && model.diagnosedWithHypertension) {
+    if (model.showOngoingHypertensionTreatment) {
       ui.showHypertensionTreatmentQuestion(model.ongoingMedicalHistoryEntry.isOnHypertensionTreatment)
     } else {
       ui.hideHypertensionTreatmentQuestion()
